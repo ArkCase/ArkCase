@@ -24,10 +24,16 @@ import java.util.Map;
 
 /**
  * Create audit event remotely.
- * <p>
+ * <p/>
  * This is just a prototype to show that page deletion in Snowbound can result
  * in raising an event on ArkCase side (https://project.armedia.com/jira/browse/AFDP-1293)
- * <p>
+ * <p/>
+ * UPDATE:
+ * - /api/v1/plugin/audit/event is used for Snowbound generated events
+ * <p/>
+ * - /api/v1/plugin/audit/generic is used for all other events
+ * <p/>
+ * <p/>
  * Created by Petar Ilin <petar.ilin@armedia.com> on 19.08.2015.
  */
 @Controller
@@ -61,13 +67,47 @@ public class PostAuditEventAPIController implements ApplicationEventPublisherAwa
         log.debug("audit event type: " + auditEventType);
 
         // Publishes an event of the specified type
-        if (auditEventType.equals("delete")) {
+        if (auditEventType.equals("delete"))
+        {
             createDeleteEvent(user, ip, userId, pages, fileId, deleteReason);
-        } else if (auditEventType.equals("reorder")) {
+        } else if (auditEventType.equals("reorder"))
+        {
             createReorderEvent(user, ip, userId, fileId, pageReorderOperation);
-        } else if (auditEventType.equals("viewed")) {
+        } else if (auditEventType.equals("viewed"))
+        {
             createViewedEvent(user, ip, userId, fileId, documentViewed);
         }
+    }
+
+
+    /**
+     * Remotely trigger publish a generic event.
+     *
+     * @param type    fully qualified event type
+     * @param auth    authentication token
+     * @param session http session object
+     */
+    @RequestMapping(value = "/generic", method = RequestMethod.POST)
+    @ResponseBody
+    public void createGenericEvent(
+            @RequestParam(value = "type") String type,
+            Authentication auth,
+            HttpSession session
+    )
+    {
+        // Common generic audit event information
+        String user = auth.getName();
+        String ip = (String) session.getAttribute("acm_ip_address");
+
+        log.debug("audit event type [{}]", type);
+
+        AcmGenericApplicationEvent event = new AcmGenericApplicationEvent(session);
+        event.setIpAddress(ip);
+        event.setUserId(user);
+        event.setEventDate(new Date());
+        event.setEventType(type);
+        event.setSucceeded(true);
+        applicationEventPublisher.publishEvent(event);
     }
 
     private void createViewedEvent(String user, String ip, String userId, Long fileId, String documentViewed)
@@ -142,7 +182,9 @@ public class PostAuditEventAPIController implements ApplicationEventPublisherAwa
     {
         this.applicationEventPublisher = applicationEventPublisher;
     }
-    public void setEcmFileDao(EcmFileDao ecmFileDao) {
+
+    public void setEcmFileDao(EcmFileDao ecmFileDao)
+    {
         this.ecmFileDao = ecmFileDao;
     }
 }

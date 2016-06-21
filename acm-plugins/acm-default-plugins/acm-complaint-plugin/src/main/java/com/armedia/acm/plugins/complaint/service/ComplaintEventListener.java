@@ -5,6 +5,7 @@ import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.ComplaintConstants;
+import com.armedia.acm.plugins.outlook.service.OutlookContainerCalendarService;
 import com.armedia.acm.service.objecthistory.dao.AcmAssignmentDao;
 import com.armedia.acm.service.objecthistory.model.AcmAssignment;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistory;
@@ -13,11 +14,10 @@ import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryEventPublis
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryService;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
+import microsoft.exchange.webservices.data.enumeration.DeleteMode;
 import org.springframework.context.ApplicationListener;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class ComplaintEventListener implements ApplicationListener<AcmObjectHistoryEvent>
 {
@@ -26,6 +26,9 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
     private AcmObjectHistoryEventPublisher acmObjectHistoryEventPublisher;
     private ComplaintEventPublisher complaintEventPublisher;
     private AcmAssignmentDao acmAssignmentDao;
+    private OutlookContainerCalendarService calendarService;
+    private boolean shouldDeleteCalendarFolder;
+    private String complaintStatusClosed;
 
     @Override
     public void onApplicationEvent(AcmObjectHistoryEvent event)
@@ -46,7 +49,8 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
 
                 AcmAssignment acmAssignment = createAcmAssignment(updatedComplaint);
 
-                AcmObjectHistory acmObjectHistoryExisting = getAcmObjectHistoryService().getAcmObjectHistory(updatedComplaint.getComplaintId(), ComplaintConstants.OBJECT_TYPE);
+                AcmObjectHistory acmObjectHistoryExisting = getAcmObjectHistoryService().
+                        getAcmObjectHistory(updatedComplaint.getComplaintId(), ComplaintConstants.OBJECT_TYPE);
 
                 if (acmObjectHistoryExisting != null)
                 {
@@ -68,6 +72,14 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
 
                     if (isStatusChanged(existing, updatedComplaint))
                     {
+                        String calId = updatedComplaint.getContainer().getCalendarFolderId();
+                        if (updatedComplaint.getStatus().equals(complaintStatusClosed) &&
+                                shouldDeleteCalendarFolder && calId != null){
+
+                            //delete shared calendar if complaint closed
+                            getCalendarService().deleteFolder(updatedComplaint.getContainer().getContainerObjectId(),
+                                    calId, DeleteMode.MoveToDeletedItems);
+                        }
                         getComplaintEventPublisher().publishComplaintModified(updatedComplaint, event.getIpAddress(), "status.changed");
                     }
 
@@ -235,5 +247,35 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
     public void setAcmAssignmentDao(AcmAssignmentDao acmAssignmentDao)
     {
         this.acmAssignmentDao = acmAssignmentDao;
+    }
+
+    public OutlookContainerCalendarService getCalendarService()
+    {
+        return calendarService;
+    }
+
+    public void setCalendarService(OutlookContainerCalendarService calendarService)
+    {
+        this.calendarService = calendarService;
+    }
+
+    public boolean isShouldDeleteCalendarFolder()
+    {
+        return shouldDeleteCalendarFolder;
+    }
+
+    public void setShouldDeleteCalendarFolder(boolean shouldDeleteCalendarFolder)
+    {
+        this.shouldDeleteCalendarFolder = shouldDeleteCalendarFolder;
+    }
+
+    public String getComplaintStatusClosed()
+    {
+        return complaintStatusClosed;
+    }
+
+    public void setComplaintStatusClosed(String complaintStatusClosed)
+    {
+        this.complaintStatusClosed = complaintStatusClosed;
     }
 }

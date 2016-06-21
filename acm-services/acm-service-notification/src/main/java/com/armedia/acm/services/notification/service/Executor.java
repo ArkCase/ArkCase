@@ -11,6 +11,6 @@ import com.armedia.acm.services.notification.model.Notification;
  */
 public interface Executor {
 
-	public Notification execute(Notification notification);
+	Notification execute(Notification notification);
 	
 }

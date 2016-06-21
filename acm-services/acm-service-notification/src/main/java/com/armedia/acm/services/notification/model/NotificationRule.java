@@ -1,22 +1,29 @@
-/**
- * 
- */
 package com.armedia.acm.services.notification.model;
 
 import java.util.Map;
 
 import com.armedia.acm.services.notification.service.Executor;
+import com.armedia.acm.services.notification.service.CustomTitleFormatter;
+import com.armedia.acm.services.notification.service.UsersNotified;
 
 /**
  * @author riste.tutureski
- *
  */
-public interface NotificationRule {
+public interface NotificationRule
+{
 
-	public boolean isGlobalRule();
-	public QueryType getQueryType();
-	public Executor getExecutor();
-	public Map<String, Object> getJpaProperties();
-	public String getJpaQuery();
-	
+    boolean isGlobalRule();
+
+    QueryType getQueryType();
+
+    Executor getExecutor();
+
+    Map<String, Object> getJpaProperties();
+
+    String getJpaQuery();
+
+    CustomTitleFormatter getCustomTitleFormatter();
+
+    UsersNotified getUsersNotified();
+
 }

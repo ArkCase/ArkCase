@@ -1,5 +1,7 @@
 package com.armedia.acm.files.propertymanager;
 
+import com.armedia.acm.core.exceptions.AcmEncryptionException;
+import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,6 +40,8 @@ public class PropertyFileManager
             throw e;
         }
     }
+
+    private AcmEncryptablePropertyUtils encryptablePropertyUtils;
 
     public void store(String key, String value, String filename)
     {
@@ -106,7 +110,7 @@ public class PropertyFileManager
         }
     }
 
-    public String load(String filename, String key, String defaultValue)
+    public String load(String filename, String key, String defaultValue) throws AcmEncryptionException
     {
 
 
@@ -117,7 +121,7 @@ public class PropertyFileManager
         {
             p.load(fis);
 
-            retval = p.getProperty(key, defaultValue);
+            retval = encryptablePropertyUtils.decryptPropertyValue(p.getProperty(key, defaultValue));
 
         } catch (IOException e)
         {
@@ -125,5 +129,21 @@ public class PropertyFileManager
         }
 
         return retval;
+    }
+
+    /**
+     * @return the encryptablePropertyUtils
+     */
+    public AcmEncryptablePropertyUtils getEncryptablePropertyUtils()
+    {
+        return encryptablePropertyUtils;
+    }
+
+    /**
+     * @param encryptablePropertyUtils the encryptablePropertyUtils to set
+     */
+    public void setEncryptablePropertyUtils(AcmEncryptablePropertyUtils encryptablePropertyUtils)
+    {
+        this.encryptablePropertyUtils = encryptablePropertyUtils;
     }
 }

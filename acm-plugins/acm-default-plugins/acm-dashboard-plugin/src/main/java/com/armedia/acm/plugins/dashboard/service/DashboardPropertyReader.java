@@ -37,29 +37,20 @@ public class DashboardPropertyReader
         isNewWidgetForAdding = Boolean.valueOf((String) dashboardPlugin.getPluginProperties().
                 get(DashboardConstants.IS_NEW_DASHBOARD_WIDGETS_FOR_ADDING));
 
-        if (log.isInfoEnabled())
-        {
-            log.info("Initializing - setting moduleNameList and widgetList in the  DashboardPropertyReader bean");
-        }
+        log.info("Initializing - setting moduleNameList and widgetList in the  DashboardPropertyReader bean");
         try
         {
             this.moduleNameList = getModuleNamesAndCreateList();
         } catch (AcmDashboardException e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error("Module name list was not populated, error occurred: " + e.getMessage(), e);
-            }
+            log.error("Module name list was not populated, error occurred: [{}]", e.getMessage(), e);
         }
         try
         {
             this.widgetList = readWidgetNamesAndCreateWidgetList();
         } catch (AcmDashboardException e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error("Widgets list was not populated, error occurred: " + e.getMessage(), e);
-            }
+            log.error("Widgets list was not populated, error occurred: [{}]", e.getMessage(), e);
         }
 
         try
@@ -67,10 +58,7 @@ public class DashboardPropertyReader
             this.dashboardWidgetsOnly = getDashboardWidgets();
         } catch (AcmDashboardException e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error("Dashboard Widgets list was not populated, error occurred: " + e.getMessage(), e);
-            }
+            log.error("Dashboard Widgets list was not populated, error occurred: [{}] ", e.getMessage(), e);
         }
         if (isNewWidgetForAdding)
         {
@@ -86,10 +74,7 @@ public class DashboardPropertyReader
         String modulesString;
         try
         {
-            if (log.isInfoEnabled())
-            {
-                log.info("Fetching all module names from the property file");
-            }
+            log.info("Fetching all module names from the property file");
             modulesString = (String) dashboardPlugin.getPluginProperties().get(DashboardConstants.MODULES_STRING);
         } catch (Exception e)
         {
@@ -169,17 +154,11 @@ public class DashboardPropertyReader
                 try
                 {
                     moduleDao.save(m);
-                    if (log.isInfoEnabled())
-                    {
-                        log.info("Module with module name: " + m.getModuleId() + " added!");
-                    }
+                    log.info("Module with module name: [{}] is added! ", m.getModuleId());
                     moduleEventPublisher.publishModuleCreated(m, null, null, true);
                 } catch (Exception e1)
                 {
-                    if (log.isErrorEnabled())
-                    {
-                        log.error("Persisting new module name failed due to error: " + e1.getMessage(), e1);
-                    }
+                    log.error("Persisting new module name failed due to error: [{}]", e1.getMessage(), e1);
                     moduleEventPublisher.publishModuleCreated(m, null, null, false);
                 }
             }
@@ -208,10 +187,7 @@ public class DashboardPropertyReader
                 widgetList.add(widgetDao.getWidgetByWidgetName(widget));
             } catch (AcmObjectNotFoundException e)
             {
-                if (log.isErrorEnabled())
-                {
-                    log.error("Fetching widget with widget name: " + widget + " failed! " + e.getMessage(), e);
-                }
+                log.error("Fetching widget with widget name: [{}] failed! Error msg: [{}]", widget, e.getMessage(), e);
             }
         });
         return widgetList;

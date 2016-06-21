@@ -4,28 +4,20 @@ import com.armedia.acm.core.exceptions.AcmEncryptionBadKeyOrDataException;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.IOException;
 
 import static org.junit.Assert.*;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {
-        "/spring/spring-library-acm-encryption.xml"
-})
+
 public class AcmCryptoUtilsImplTest
 {
 
     private String passwordToBeEncrypted;
     private String userPassword;
     private String md5Hex;
-    @Autowired
     private AcmCryptoUtils cryptoUtils;
 
     @Before
@@ -34,6 +26,8 @@ public class AcmCryptoUtilsImplTest
         passwordToBeEncrypted = "password";
         userPassword = "userPassword";
         md5Hex = DigestUtils.md5Hex(userPassword);
+
+        cryptoUtils = new AcmCryptoUtilsImpl();
     }
 
     @Test

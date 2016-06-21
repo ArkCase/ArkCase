@@ -24,10 +24,8 @@ public class UserPreferenceEventPublisher implements ApplicationEventPublisherAw
 
     public void publishUserPreferenceCreated(UserPreference source, String ipAddress, boolean succeeded)
     {
-        if (log.isDebugEnabled())
-        {
-            log.debug("Publishing a User Preference event. New User Preferred Widget Added Event.");
-        }
+
+        log.debug("Publishing a User Preference event. New User Preferred Widget Added Event.");
         UserPreferenceCreatedEvent userPreferenceCreatedEvent = new UserPreferenceCreatedEvent(source);
 
         userPreferenceCreatedEvent.setIpAddress(ipAddress);
@@ -38,10 +36,7 @@ public class UserPreferenceEventPublisher implements ApplicationEventPublisherAw
 
     public void publishUserPreferenceDeleted(UserPreference source, String ipAddress, boolean succeeded)
     {
-        if (log.isDebugEnabled())
-        {
-            log.debug("Publishing a User Preference event. User Preferred Widget Removed/Deleted Event.");
-        }
+        log.debug("Publishing a User Preference event. User Preferred Widget Removed/Deleted Event.");
 
         UserPreferenceDeletedEvent userPreferenceDeletedEvent = new UserPreferenceDeletedEvent(source);
 
