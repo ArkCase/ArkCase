@@ -45,6 +45,9 @@ angular.module('document-details').controller('DocumentDetailsController', ['$sc
         // Retrieves the properties from the ecmFileService.properties file (including Snowbound configuration)
         var ecmFileConfig = LookupService.getConfig("ecmFileService");
 
+        var formsConfig = LookupService.getConfig("acm-forms");
+
+
         // Retrieves the metadata for the file which is being opened in the viewer
         var ecmFileInfo = EcmService.getFile({fileId: $stateParams['id']});
         var ecmFileEvents = EcmService.getFileEvents({fileId: $stateParams['id']});
@@ -52,7 +55,7 @@ angular.module('document-details').controller('DocumentDetailsController', ['$sc
         var ecmFileParticipants = EcmService.getFileParticipants({fileId: $stateParams['id']});
 
         $q.all([ticketInfo, userInfo, totalUserInfo, ecmFileConfig,
-                ecmFileInfo.$promise, ecmFileEvents.$promise, ecmFileNotes.$promise, ecmFileParticipants.$promise])
+                ecmFileInfo.$promise, ecmFileEvents.$promise, ecmFileNotes.$promise, ecmFileParticipants.$promise, formsConfig])
             .then(function (data) {
                     $scope.acmTicket = data[0].data;
                     $scope.userId = data[1].userId;
@@ -62,11 +65,20 @@ angular.module('document-details').controller('DocumentDetailsController', ['$sc
                     $scope.ecmFileEvents = data[5];
                     $scope.ecmFileNotes = data[6];
                     $scope.ecmFileParticipants = data[7];
+                    $scope.formsConfig = data[8];
                     $timeout(function () {
                         $scope.$broadcast('document-data', $scope.ecmFile);
                     }, 1000);
 
-                    // Opens the selected document in the snowbound viewer
+                var key = $scope.ecmFile.fileType + ".name";
+                // Search for descriptive file type in acm-forms.properties
+                $scope.fileType = $scope.formsConfig[key];
+                if ($scope.fileType === undefined){
+                    // If descriptive file type does not exist, fallback to previous raw file type
+                    $scope.fileType = $scope.ecmFile.fileType;
+                }
+
+                // Opens the selected document in the snowbound viewer
                     $scope.openSnowboundViewer();
                 }
             );

@@ -1,12 +1,14 @@
 package com.armedia.acm.plugins.ecm.model;
 
 import com.armedia.acm.core.AcmObject;
+import com.armedia.acm.core.AcmParentObjectInfo;
 import com.armedia.acm.core.AcmStatefulEntity;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.AcmLegacySystemEntity;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.services.tag.model.AcmAssociatedTag;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
@@ -44,7 +46,7 @@ import java.util.List;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.plugins.ecm.model.EcmFile")
-public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulEntity, AcmLegacySystemEntity
+public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulEntity, AcmLegacySystemEntity, AcmParentObjectInfo
 {
     private static final long serialVersionUID = -5177153023458655846L;
     private static final String OBJECT_TYPE = "FILE";
@@ -417,5 +419,19 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     public void setClassName(String className)
     {
         this.className = className;
+    }
+
+    @Override
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    public Long getParentObjectId()
+    {
+        return getContainer() != null ? getContainer().getContainerObjectId() : null;
+    }
+
+    @Override
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    public String getParentObjectType()
+    {
+        return getContainer() != null ? getContainer().getContainerObjectType() : null;
     }
 }

@@ -5,6 +5,7 @@ import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
+import com.armedia.acm.plugins.outlook.service.OutlookContainerCalendarService;
 import com.armedia.acm.service.objecthistory.dao.AcmAssignmentDao;
 import com.armedia.acm.service.objecthistory.model.AcmAssignment;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistory;
@@ -13,11 +14,10 @@ import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryEventPublis
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryService;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
+import microsoft.exchange.webservices.data.enumeration.DeleteMode;
 import org.springframework.context.ApplicationListener;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class CaseFileEventListener implements ApplicationListener<AcmObjectHistoryEvent>
 {
@@ -26,6 +26,9 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
     private AcmObjectHistoryEventPublisher acmObjectHistoryEventPublisher;
     private CaseFileEventUtility caseFileEventUtility;
     private AcmAssignmentDao acmAssignmentDao;
+    private OutlookContainerCalendarService calendarService;
+    private boolean shouldDeleteCalendarFolder;
+    private String caseFileStatusClosed;
 
     @Override
     public void onApplicationEvent(AcmObjectHistoryEvent event)
@@ -71,6 +74,14 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
 
                     if (isStatusChanged(existing, updatedCaseFile))
                     {
+                        String calId = updatedCaseFile.getContainer().getCalendarFolderId();
+                        if (updatedCaseFile.getStatus().equals(caseFileStatusClosed)
+                                && shouldDeleteCalendarFolder && calId != null){
+
+                            //delete shared calendar if case closed
+                            getCalendarService().deleteFolder(updatedCaseFile.getContainer().getContainerObjectId(),
+                                    calId, DeleteMode.MoveToDeletedItems);
+                        }
                         getCaseFileEventUtility().raiseCaseFileModifiedEvent(updatedCaseFile, event.getIpAddress(), "status.changed");
                     }
                 }
@@ -217,5 +228,35 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
     public void setAcmAssignmentDao(AcmAssignmentDao acmAssignmentDao)
     {
         this.acmAssignmentDao = acmAssignmentDao;
+    }
+
+    public OutlookContainerCalendarService getCalendarService()
+    {
+        return calendarService;
+    }
+
+    public void setCalendarService(OutlookContainerCalendarService calendarService)
+    {
+        this.calendarService = calendarService;
+    }
+
+    public boolean isShouldDeleteCalendarFolder()
+    {
+        return shouldDeleteCalendarFolder;
+    }
+
+    public void setShouldDeleteCalendarFolder(boolean shouldDeleteCalendarFolder)
+    {
+        this.shouldDeleteCalendarFolder = shouldDeleteCalendarFolder;
+    }
+
+    public String getCaseFileStatusClosed()
+    {
+        return caseFileStatusClosed;
+    }
+
+    public void setCaseFileStatusClosed(String caseFileStatusClosed)
+    {
+        this.caseFileStatusClosed = caseFileStatusClosed;
     }
 }

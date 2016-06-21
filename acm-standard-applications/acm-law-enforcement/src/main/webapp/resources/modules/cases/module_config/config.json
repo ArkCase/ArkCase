@@ -1094,7 +1094,9 @@
         {
           "name": "tally",
           "displayName": "cases.comp.cost.table.columns.tally",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellFilter" : "currency",
+          "cellClass" : "text-right"
         },
         {
           "name": "modified",

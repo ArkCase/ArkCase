@@ -13,8 +13,7 @@
         <div class="panel-body">
             <doc-tree object-type="objectType" object-id="objectId" tree-control="treeControl" file-types="fileTypes"
                       upload-form="uploadForm" tree-config="treeConfig" object-info="objectInfo" on-init-tree="onInitTree"
-                      on-allow-cmd="onAllowCmd" on-pre-cmd="onPreCmd" on-post-cmd="onPostCmd"
-                      ng-if="objectInfo">
+                      ng-if="objectInfo && fileTypes && treeConfig">
             </doc-tree>
         </div>
     </div>

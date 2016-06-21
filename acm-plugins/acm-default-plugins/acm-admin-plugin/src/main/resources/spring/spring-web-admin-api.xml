@@ -134,6 +134,7 @@
 
     <!-- LDAP configuration API -->
     <bean id="ldapConfigurationService" class="com.armedia.acm.plugins.admin.web.api.LdapConfigurationService">
+        <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
         <property name="ldapConfigurationTemplatesLocation"
                   value="#{ systemProperties ['user.home'] }/.arkcase/acm/spring/ldap-config-templates/"/>
         <property name="ldapTemplateFile" value="spring-config-ldap.xml.ftl"/>
@@ -166,20 +167,6 @@
     </bean>
 
     <!-- Roles Priveleges API-->
-    <bean id="rolesPrivilegesService" class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesService">
-        <property name="applicationRolesFile"
-                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/applicationRoles.properties"/>
-        <property name="applicationPrivilegesFile"
-                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/applicationPrivileges.properties"/>
-        <property name="applicationRolesPrivilegesPropertiesFile"
-                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/applicationRolesPrivileges.properties"/>
-        <property name="applicationRolesPrivilegesTemplatesLocation"
-                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/spring/roles-privileges-templates/"/>
-        <property name="applicationRolesPrivilegesTemplateFile" value="spring-acm-global-privileges.xml.ftl"/>
-        <property name="applicationRolesPrivilegesFile"
-                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/spring/spring-config-acm-plugins/spring-acm-global-privileges.xml"/>
-    </bean>
-
     <bean id="rolesPrivilegesCreateRole" class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesCreateRole">
         <property name="rolesPrivilegesService" ref="rolesPrivilegesService"/>
     </bean>
@@ -325,9 +312,7 @@
         <property name="plainConfigurationFormFactory" ref="plainConfigurationFormFactory"/>
         <property name="plainFormPropertiesLocation"
                   value="#{ systemProperties ['user.home'] }/.arkcase/acm/acm-forms-plain.properties"/>
-        <property name="propertyFileManager">
-            <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
-        </property>
+        <property name="propertyFileManager" ref="propertyFileManager"/>
     </bean>
 
     <bean id="getPlainFormTargetsAPIController"

@@ -1,5 +1,7 @@
 package com.armedia.acm.plugins.complaint.model;
 
+import com.armedia.acm.core.AcmNotifiableEntity;
+import com.armedia.acm.core.AcmNotificationReceiver;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.AcmLegacySystemEntity;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
@@ -15,7 +17,6 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,15 +43,15 @@ import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Created by armdev on 4/4/14.
@@ -60,7 +61,8 @@ import java.util.Optional;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "className")
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.plugins.complaint.model.Complaint")
-public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, AcmContainerEntity, AcmChildObjectEntity, AcmLegacySystemEntity
+public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, AcmContainerEntity, AcmChildObjectEntity,
+        AcmLegacySystemEntity, AcmNotifiableEntity
 {
     private static final long serialVersionUID = -1154137631399833851L;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
@@ -126,8 +128,8 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     @JoinColumn(name = "cm_container_id")
     private AcmContainer container = new AcmContainer();
 
-    @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.REFRESH })
-    @JoinColumns({ @JoinColumn(name = "cm_parent_id", referencedColumnName = "cm_complaint_id"), @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type") })
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumns({@JoinColumn(name = "cm_parent_id", referencedColumnName = "cm_complaint_id"), @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type")})
     private Collection<ObjectAssociation> childObjects = new ArrayList<>();
 
     /**
@@ -138,8 +140,8 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     private List<String> approvers;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumns({ @JoinColumn(name = "cm_person_assoc_parent_id", referencedColumnName = "cm_complaint_id"),
-            @JoinColumn(name = "cm_person_assoc_parent_type", referencedColumnName = "cm_object_type") })
+    @JoinColumns({@JoinColumn(name = "cm_person_assoc_parent_id", referencedColumnName = "cm_complaint_id"),
+            @JoinColumn(name = "cm_person_assoc_parent_type", referencedColumnName = "cm_object_type")})
     @OrderBy("created ASC")
     private List<PersonAssociation> personAssociations = new ArrayList<>();
 
@@ -147,8 +149,11 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     private String objectType = ComplaintConstants.OBJECT_TYPE;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumns({ @JoinColumn(name = "cm_object_id"), @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type") })
+    @JoinColumns({@JoinColumn(name = "cm_object_id"), @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type")})
     private List<AcmParticipant> participants = new ArrayList<>();
+
+    @Transient
+    private Set<AcmNotificationReceiver> receivers = new HashSet<>();
 
     @Column(name = "cm_due_date")
     @Temporal(TemporalType.TIMESTAMP)
@@ -468,10 +473,13 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
 
         if (personAssoc.getPerson().getPersonAssociations() == null)
         {
-            personAssoc.getPerson().setPersonAssociations(new ArrayList<PersonAssociation>());
+            personAssoc.getPerson().setPersonAssociations(new ArrayList<>());
         }
 
-        personAssoc.getPerson().getPersonAssociations().addAll(Arrays.asList(personAssoc));
+        if (!personAssoc.getPerson().getPersonAssociations().contains(personAssoc))
+        {
+            personAssoc.getPerson().getPersonAssociations().add(personAssoc);
+        }
     }
 
     public Date getDueDate()
@@ -592,5 +600,21 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     public void setLegacySystemId(String legacySystemId)
     {
         this.legacySystemId = legacySystemId;
+    }
+
+
+    @Override
+    @JsonIgnore
+    public Set<AcmNotificationReceiver> getReceivers()
+    {
+        receivers.addAll(participants);
+        return receivers;
+    }
+
+    @Override
+    @JsonIgnore
+    public String getNotifiableEntityTitle()
+    {
+        return complaintNumber;
     }
 }
