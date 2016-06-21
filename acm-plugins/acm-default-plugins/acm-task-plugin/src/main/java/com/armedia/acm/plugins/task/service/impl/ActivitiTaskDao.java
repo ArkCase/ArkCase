@@ -130,10 +130,7 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
 
     private AcmTask updateExistingActivitiTask(AcmTask in, Task activitiTask) throws AcmTaskException
     {
-        if (!in.getAssignee().isEmpty())
-        {
-            activitiTask.setAssignee(in.getAssignee());
-        }
+        activitiTask.setAssignee(in.getAssignee());
         activitiTask.setOwner(in.getOwner());
         Integer activitiPriority = activitiPriorityFromAcmPriority(in.getPriority());
         activitiTask.setPriority(activitiPriority);
@@ -259,7 +256,7 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
                 }
             }
         }
-        
+
         if (in.getParticipants() == null)
         {
             in.setParticipants(new ArrayList<>());
