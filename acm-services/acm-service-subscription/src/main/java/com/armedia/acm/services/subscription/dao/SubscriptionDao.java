@@ -50,7 +50,7 @@ public class SubscriptionDao extends AcmAbstractDao<AcmSubscription>
 
         Query query = getEm().createQuery("SELECT sub FROM AcmSubscription sub " + "WHERE sub.userId =:userId " + "ORDER BY sub.created");
         query.setParameter("userId", userId);
-        if (numrows != -1)
+        if (numrows > -1)
         {
             query.setFirstResult(start);
             query.setMaxResults(numrows);
