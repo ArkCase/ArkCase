@@ -223,7 +223,10 @@
         "title": "User names display configuration",
         "userId.label": "Use user identifier",
         "userName.label": "Use full user name",
-        "apply": "Apply"
+        "apply": "Apply",
+        "modal.title":"Information",
+        "modal.info":"Settings will take effect after refresh",
+        "modal.ok":"OK"
       }
     },
     "branding.title": "Branding",
