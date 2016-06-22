@@ -51,7 +51,7 @@ angular.module('audit').factory('AuditController.BuildUrl', ['$sce', '$location'
                     + "&objectType=" + objectType
                     + "&objectId=" + objectId
                     + "&dateFormat=" + encodeURIComponent(dateFormat)
-                    + "&user=" + pentahoUser
+                    + "&userid=" + pentahoUser
                     + "&password=" + pentahoPassword;
                 if (useUrl) {
                     var absUrl = $location.absUrl();
