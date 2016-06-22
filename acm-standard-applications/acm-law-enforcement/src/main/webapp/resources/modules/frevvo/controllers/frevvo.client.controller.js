@@ -16,7 +16,7 @@ angular.module('frevvo').controller('FrevvoController', ['$scope', '$stateParams
             var found = _.find(Util.goodArray($scope.config.forms), {name: Util.goodValue($stateParams.name)});
             if (found && (found.formKey || found.formDefault)) {
                 var formType = Util.goodValue($scope.acmFormsProperties[found.formKey], found.formDefault);
-                var formUrl = FrevvoFormService.buildFrevvoUrl($scope.acmFormsProperties, formType, $scope.acmTicket, $stateParams.arg);
+                var formUrl = FrevvoFormService.buildFrevvoUrl($scope.acmFormsProperties, formType, $scope.acmTicket, $stateParams);
                 $scope.frevvoFormUrl = $sce.trustAsResourceUrl(formUrl);
 
                 ServCommService.request($scope, "frevvo", $stateParams.name, found);

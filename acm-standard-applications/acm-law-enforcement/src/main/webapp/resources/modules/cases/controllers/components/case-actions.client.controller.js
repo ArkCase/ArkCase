@@ -7,8 +7,7 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
     , function ($scope, $state, $stateParams, $q, $modal
         , Util, ConfigService, ObjectService, Authentication, ObjectLookupService, CaseLookupService
         , ObjectSubscriptionService, ObjectModelService, CaseInfoService, MergeSplitService
-        , HelperObjectBrowserService
-    ) {
+        , HelperObjectBrowserService) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -53,6 +52,26 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
                     $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
                 });
             });
+
+            $scope.editParams = {
+                caseId: objectInfo.id
+                , caseNumber: objectInfo.caseNumber
+                , containerId: objectInfo.container.id
+                , folderId: objectInfo.container.folder.id
+            };
+
+            $scope.reinvestigateParams = {
+                caseId: objectInfo.id
+                , caseNumber: objectInfo.caseNumber
+                , containerId: objectInfo.container.id
+                , folderId: objectInfo.container.folder.id
+            };
+
+            $scope.changeCaseStatusParams = {
+                caseId: objectInfo.id
+                , caseNumber: objectInfo.caseNumber
+                , status: objectInfo.status
+            };
         };
 
         $scope.restricted = false;
@@ -65,47 +84,6 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
             }
         };
 
-        $scope.createNew = function () {
-            $state.go("frevvo", {
-                name: "new-case"
-            });
-        };
-
-        $scope.edit = function (caseInfo) {
-            $state.go("frevvo", {
-                name: "edit-case"
-                , arg: {
-                    caseId: caseInfo.id
-                    , caseNumber: caseInfo.caseNumber
-                    , mode: "edit"
-                    , containerId: caseInfo.container.id
-                    , folderId: caseInfo.container.folder.id
-                }
-            });
-        };
-
-        $scope.changeStatus = function (caseInfo) {
-            $state.go("frevvo", {
-                name: "change-case-status"
-                , arg: {
-                    caseId: caseInfo.id
-                    , caseNumber: caseInfo.caseNumber //or is it actionNumber?
-                    , status: caseInfo.status
-                }
-            });
-        };
-        $scope.reinvestigate = function (caseInfo) {
-            $state.go("frevvo", {
-                name: "reinvestigate"
-                , arg: {
-                    caseId: caseInfo.id
-                    , caseNumber: caseInfo.caseNumber
-                    , mode: "reinvestigate"
-                    , containerId: caseInfo.container.id
-                    , folderId: caseInfo.container.folder.id
-                }
-            });
-        };
         $scope.subscribe = function (caseInfo) {
             ObjectSubscriptionService.subscribe($scope.userId, ObjectService.ObjectTypes.CASE_FILE, caseInfo.id).then(function (data) {
                 $scope.showBtnSubscribe = false;
