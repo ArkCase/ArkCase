@@ -114,7 +114,7 @@
         },
         {
           "name": "parentObjectId",
-          "displayName": "dashboard.widgets.myTasks.table.header.caseComplaintId",
+          "displayName": "dashboard.widgets.myTasks.table.header.objectId",
           "headerCellFilter": "translate",
           "cellTemplate": "<button class='btn-link' ng-click='grid.appScope.myTasks.onClickCaseComplaintId(row.entity.parentObjectType,row.entity.parentObjectId)'>{{COL_FIELD}}</button>",
           "width": 100
