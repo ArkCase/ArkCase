@@ -1,10 +1,16 @@
 package web.api;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
-import com.armedia.acm.services.subscription.dao.SubscriptionDao;
 import com.armedia.acm.services.subscription.model.AcmSubscription;
 import com.armedia.acm.services.subscription.service.SubscriptionService;
 import com.armedia.acm.services.subscription.web.api.ListSubscriptionByUserAPIController;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -24,26 +30,17 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
-import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 /**
  * Created by marjan.stefanoski on 12.02.2015.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {
-        "classpath:/spring/spring-web-acm-web.xml",
-        "classpath:/spring/spring-library-subscription-web-api-test.xml"
-})
-public class ListSubscriptionByUserAPIControllerTest extends EasyMockSupport {
+@ContextConfiguration(locations = { "classpath:/spring/spring-web-acm-web.xml",
+        "classpath:/spring/spring-library-subscription-web-api-test.xml" })
+public class ListSubscriptionByUserAPIControllerTest extends EasyMockSupport
+{
 
     private MockMvc mockMvc;
     private Authentication mockAuthentication;
@@ -59,7 +56,8 @@ public class ListSubscriptionByUserAPIControllerTest extends EasyMockSupport {
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws Exception
+    {
 
         mockListSubscriptionByUserAPIController = new ListSubscriptionByUserAPIController();
         mockSubscriptionService = createMock(SubscriptionService.class);
@@ -70,50 +68,32 @@ public class ListSubscriptionByUserAPIControllerTest extends EasyMockSupport {
         mockListSubscriptionByUserAPIController.setSubscriptionService(mockSubscriptionService);
         mockListSubscriptionByUserAPIController.setSubscriptionPlugin(mockSubscriptionPlugin);
 
-        mockMvc = MockMvcBuilders.standaloneSetup(mockListSubscriptionByUserAPIController).setHandlerExceptionResolvers(exceptionResolver).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(mockListSubscriptionByUserAPIController).setHandlerExceptionResolvers(exceptionResolver)
+                .build();
         mockAuthentication = createMock(Authentication.class);
     }
 
-    @Test
-    public void getAllSubscriptionsByUserId() throws Exception{
-
-        String userId="user-acm";
-        Long objectId=100L;
-        String objectType="NEW_OBJ_TYPE";
-
-        int startRow = 0;
-        int maxRow = 10;
-
-        AcmSubscription subscription= new AcmSubscription();
+    private AcmSubscription insertSubscription(String userId, Long objectId, String objectType)
+    {
+        AcmSubscription subscription = new AcmSubscription();
         subscription.setSubscriptionObjectType(objectType);
         subscription.setUserId(userId);
         subscription.setObjectId(objectId);
+        return subscription;
+    }
 
-        AcmSubscription subscription1 = new AcmSubscription();
-        subscription1.setObjectId(200L);
-        subscription1.setSubscriptionObjectType("OLD_OBJ_TYPE");
-        subscription1.setUserId(userId);
-
+    private List<AcmSubscription> insertSubscriptionList(String userId)
+    {
+        AcmSubscription subscription1 = insertSubscription(userId, 100L, "NEW_OBJ_TYPE");
+        AcmSubscription subscription2 = insertSubscription(userId, 200L, "OLD_OBJ_TYPE");
         List<AcmSubscription> subscriptionList = new ArrayList<>();
-        subscriptionList.add(subscription);
         subscriptionList.add(subscription1);
+        subscriptionList.add(subscription2);
+        return subscriptionList;
+    }
 
-        expect(mockSubscriptionService.getSubscriptionsByUser(userId, startRow, maxRow)).andReturn(subscriptionList).atLeastOnce();
-
-        // MVC test classes must call getName() somehow
-        expect(mockAuthentication.getName()).andReturn(userId).atLeastOnce();
-
-        replayAll();
-
-        MvcResult result = mockMvc.perform(
-                get("/api/latest/service/subscription/{userId}",userId)
-                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-                        .session(mockHttpSession)
-                        .principal(mockAuthentication))
-                .andReturn();
-
-        verifyAll();
-
+    private void testAssertions(MvcResult result, List<AcmSubscription> subscriptionList) throws Exception
+    {
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
         assertTrue(result.getResponse().getContentType().startsWith(MediaType.APPLICATION_JSON_VALUE));
 
@@ -127,35 +107,127 @@ public class ListSubscriptionByUserAPIControllerTest extends EasyMockSupport {
 
         assertNotNull(foundSubscription);
 
-        assertEquals(2,foundSubscription.size());
+        assertEquals(2, foundSubscription.size());
 
-        assertEquals(subscription.getObjectId(), foundSubscription.get(0).getObjectId());
-        assertEquals(subscription1.getObjectType(), foundSubscription.get(1).getObjectType());
-        assertEquals(subscription.getUserId(), foundSubscription.get(0).getUserId());
+        assertEquals(subscriptionList.get(0).getObjectId(), foundSubscription.get(0).getObjectId());
+        assertEquals(subscriptionList.get(1).getObjectType(), foundSubscription.get(1).getObjectType());
+        assertEquals(subscriptionList.get(0).getUserId(), foundSubscription.get(0).getUserId());
+    }
+
+    @Test
+    public void getAllSubscriptionsByUserId() throws Exception
+    {
+
+        String userId = "user-acm";
+        int startRow = 0;
+        int maxRow = -1;
+
+        List<AcmSubscription> subscriptionList = insertSubscriptionList(userId);
+
+        expect(mockSubscriptionService.getSubscriptionsByUser(userId, startRow, maxRow)).andReturn(subscriptionList).atLeastOnce();
+
+        // MVC test classes must call getName() somehow
+        expect(mockAuthentication.getName()).andReturn(userId).atLeastOnce();
+
+        replayAll();
+
+        MvcResult result = mockMvc.perform(get("/api/latest/service/subscription/{userId}", userId)
+                .accept(MediaType.parseMediaType("application/json;charset=UTF-8")).session(mockHttpSession).principal(mockAuthentication))
+                .andReturn();
+
+        verifyAll();
+
+        testAssertions(result, subscriptionList);
 
     }
 
-    public MockMvc getMockMvc() {
+    @Test
+    public void getAllSubscriptionsByUserIdUsingStartrowAndPagesize() throws Exception
+    {
+
+        String userId = "user-acm";
+
+        int startRow = 0;
+        int maxRow = 10;
+
+        List<AcmSubscription> subscriptionList = insertSubscriptionList(userId);
+
+        expect(mockSubscriptionService.getSubscriptionsByUser(userId, startRow, maxRow)).andReturn(subscriptionList).atLeastOnce();
+
+        // MVC test classes must call getName() somehow
+        expect(mockAuthentication.getName()).andReturn(userId).atLeastOnce();
+
+        replayAll();
+
+        MvcResult result = mockMvc
+                .perform(get("/api/latest/service/subscription/{userId}?start={startRow}&n={maxRow}", userId, startRow, maxRow)
+                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8")).session(mockHttpSession)
+                        .principal(mockAuthentication))
+                .andReturn();
+
+        verifyAll();
+
+        testAssertions(result, subscriptionList);
+
+    }
+
+    @Test
+    public void getAllSubscriptionsByUserIdPreventNegativePagesize() throws Exception
+    {
+
+        String userId = "user-acm";
+
+        int startRow = 0;
+        int maxRow = -10;
+
+        List<AcmSubscription> subscriptionList = insertSubscriptionList(userId);
+
+        expect(mockSubscriptionService.getSubscriptionsByUser(userId, startRow, maxRow)).andReturn(subscriptionList).atLeastOnce();
+
+        // MVC test classes must call getName() somehow
+        expect(mockAuthentication.getName()).andReturn(userId).atLeastOnce();
+
+        replayAll();
+
+        MvcResult result = mockMvc
+                .perform(get("/api/latest/service/subscription/{userId}?start={startRow}&n={maxRow}", userId, startRow, maxRow)
+                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8")).session(mockHttpSession)
+                        .principal(mockAuthentication))
+                .andReturn();
+
+        verifyAll();
+
+        testAssertions(result, subscriptionList);
+
+    }
+
+    public MockMvc getMockMvc()
+    {
         return mockMvc;
     }
 
-    public void setMockMvc(MockMvc mockMvc) {
+    public void setMockMvc(MockMvc mockMvc)
+    {
         this.mockMvc = mockMvc;
     }
 
-    public Authentication getMockAuthentication() {
+    public Authentication getMockAuthentication()
+    {
         return mockAuthentication;
     }
 
-    public void setMockAuthentication(Authentication mockAuthentication) {
+    public void setMockAuthentication(Authentication mockAuthentication)
+    {
         this.mockAuthentication = mockAuthentication;
     }
 
-    public ExceptionHandlerExceptionResolver getExceptionResolver() {
+    public ExceptionHandlerExceptionResolver getExceptionResolver()
+    {
         return exceptionResolver;
     }
 
-    public void setExceptionResolver(ExceptionHandlerExceptionResolver exceptionResolver) {
+    public void setExceptionResolver(ExceptionHandlerExceptionResolver exceptionResolver)
+    {
         this.exceptionResolver = exceptionResolver;
     }
 }
