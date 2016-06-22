@@ -5,12 +5,14 @@ import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.subscription.model.AcmSubscription;
 import com.armedia.acm.services.subscription.model.AcmSubscriptionEvent;
 import com.armedia.acm.services.subscription.model.SubscriptionConstants;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -48,8 +50,11 @@ public class SubscriptionDao extends AcmAbstractDao<AcmSubscription>
 
         Query query = getEm().createQuery("SELECT sub FROM AcmSubscription sub " + "WHERE sub.userId =:userId " + "ORDER BY sub.created");
         query.setParameter("userId", userId);
-        query.setFirstResult(start);
-        query.setMaxResults(numrows);
+        if (numrows > -1)
+        {
+            query.setFirstResult(start);
+            query.setMaxResults(numrows);
+        }
 
         List<AcmSubscription> results;
 
