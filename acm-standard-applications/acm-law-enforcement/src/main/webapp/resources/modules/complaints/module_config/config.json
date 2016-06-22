@@ -13,7 +13,7 @@
     },
     {
       "menuId": "topbar",
-      "menuItemURL": "frevvo-new-complaint",
+      "menuItemURL": "frevvo.new-complaint",
       "menuItemTitle": "Complaint",
       "iconClass": "fa fa-exclamation-triangle",
       "position": 10

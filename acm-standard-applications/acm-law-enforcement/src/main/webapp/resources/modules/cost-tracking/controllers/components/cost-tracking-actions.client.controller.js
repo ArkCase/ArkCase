@@ -11,23 +11,17 @@ angular.module('cost-tracking').controller('CostTracking.ActionsController', ['$
             , componentId: "actions"
             , retrieveObjectInfo: CostTrackingInfoService.getCostsheetInfo
             , validateObjectInfo: CostTrackingInfoService.validateCostsheet
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
+            }
         });
 
-
-        $scope.createNew = function () {
-            $state.go("frevvo", {
-                name: "new-costsheet"
-            });
+        var onObjectInfoRetrieved = function (objectInfo) {
+            $scope.editCostsheetParams = {
+                id: objectInfo.id
+            };
         };
 
-        $scope.edit = function (costsheetInfo) {
-            $state.go("frevvo", {
-                name: "edit-costsheet",
-                arg: {
-                    id: costsheetInfo.id
-                }
-            });
-        };
 
         $scope.refresh = function () {
             $scope.$emit('report-object-refreshed', $stateParams.id);
