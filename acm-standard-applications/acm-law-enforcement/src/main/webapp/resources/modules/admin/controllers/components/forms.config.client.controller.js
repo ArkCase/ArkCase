@@ -29,13 +29,21 @@ angular.module('admin').controller('Admin.FormsConfigController', ['$scope', '$s
             reloadGrid();
         });
 
+
+        $scope.change = function() {
+            $scope.openNewFrevvoFormParams = {
+                target: $scope.selectedTarget
+            };
+        }
+
         function addEditColumn() {
             var columnDef = {
                 name: "edit",
                 cellEditableCondition: false,
                 width: 40,
                 headerCellTemplate: "<span></span>",
-                cellTemplate: "<span><i class='fa fa-pencil fa-lg' style='cursor :pointer' ng-click='grid.appScope.editRow(row.entity)'></i></span>"
+                cellTemplate: "<span><i class='fa fa-pencil fa-lg' style='cursor :pointer' " +
+                "ui-sref='frevvo.edit-plainform({ formKey: row.entity.key, formTarget: row.entity.target })'></i></span>"
             };
             return columnDef;
         }
@@ -48,15 +56,6 @@ angular.module('admin').controller('Admin.FormsConfigController', ['$scope', '$s
             });
         }
 
-        $scope.editRow = function (rowEntity) {
-            $state.go('frevvo', {
-                name: "edit-plainform"
-                , arg: {
-                    formKey: rowEntity.key, formTarget: rowEntity.target, mode: "edit"
-                }
-            });
-        };
-
         $scope.deleteRow = function (rowEntity) {
             $scope.deletePlainForm = rowEntity;
             FormConfigService.deletePlainForm($scope.deletePlainForm.key, $scope.deletePlainForm.target).then(function () {
@@ -66,15 +65,5 @@ angular.module('admin').controller('Admin.FormsConfigController', ['$scope', '$s
                 messageService.error($translate.instant('admin.forms.message.delete.error'));
             });
         };
-
-        $scope.openNewFrevvoForm = function () {
-            $state.go('frevvo', {
-                name: "new-plainform"
-                , arg: {
-                    target: $scope.selectedTarget
-                }
-            });
-        }
-
     }
 ]);

@@ -13,7 +13,7 @@
     },
     {
       "menuId": "topbar",
-      "menuItemURL": "frevvo-new-costsheet",
+      "menuItemURL": "frevvo.new-costsheet",
       "menuItemTitle": "Costsheet",
       "iconClass": "fa fa-money",
       "position": 50

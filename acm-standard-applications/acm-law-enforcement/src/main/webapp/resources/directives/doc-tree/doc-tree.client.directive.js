@@ -3368,9 +3368,11 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 }
 
                 var cacheKey = DocTree.getCacheKeyByNode(folderNode);
+                var tempData = null;
                 if (DocTree.uploadSetting.uploadFileNew) {
                     DocTree.Op.uploadFiles(fd, folderNode, names, fileType)
                         .then(function (data) {
+                                tempData = data;
                                 dfd.resolve(data);
                             },
                             function (error) {
@@ -3381,12 +3383,13 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             //    DocTree.Command.onPostCmd(DocTree.uploadSetting.cmd, DocTree.uploadSetting.actNodes);
                             //    DocTree.uploadSetting = null;
                             //}
-                            DocTree.uploadSetting.deferUploadFile.resolve();
+                            DocTree.uploadSetting.deferUploadFile.resolve(tempData);
                         });
                 } else {
                     var replaceNode = DocTree.uploadSetting.replaceFileNode;
                     DocTree.Op.replaceFile(fd, replaceNode, names[0], refresh)
                         .then(function (data) {
+                                tempData = data;
                                 dfd.resolve(data);
                             },
                             function (error) {
@@ -3397,7 +3400,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             //    DocTree.Command.onPostCmd(DocTree.uploadSetting.cmd, DocTree.uploadSetting.actNodes);
                             //    DocTree.uploadSetting = null;
                             //}
-                            DocTree.uploadSetting.deferUploadFile.resolve();
+                            DocTree.uploadSetting.deferUploadFile.resolve(tempData);
                         });
                 }
                 return dfd.promise();
@@ -3820,7 +3823,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 });
 
                 modalInstance.result.then(function (data) {
-                    DocTree.replaceFileWithSelectedFile(node, data.files)
+                    DocTree.replaceFileWithSelectedFile(node, data.files);
+                    $q.when(DocTree.uploadSetting.deferUploadFile.promise)
                         .then(function (result) {
                                 if (data.note.note != null && data.note.note.length > 0) {
                                     //we have text in note so we will save the note

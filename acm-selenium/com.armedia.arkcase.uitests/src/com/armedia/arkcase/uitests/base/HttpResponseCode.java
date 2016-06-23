@@ -40,16 +40,14 @@ public class HttpResponseCode extends ArkCaseTestBase {
 						Assert.assertFalse("HTTP 500 Forbidden # " + i + " " + links.get(i).getAttribute("href"),
 								statusCode == 500);
 					}
-					
-					
-					
+					if(statusCode==404){
+						Assert.assertFalse("HTTP 404 Not found # " + i + " " + links.get(i).getAttribute("href"),
+								statusCode == 404);
+					}
 
 				}
 			}
 		}
 	}
-	
-	
-	
-		
+
 }

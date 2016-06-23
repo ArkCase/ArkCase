@@ -9,10 +9,10 @@ public class ArkCaseAuthentication {
 
 	public static void logIn(String username, String password, WebDriver driver, String baseUrl) {
 		driver.get(baseUrl + "arkcase/login");
-		LocalStorage localStorage=new LocalStorage(driver);
-	    localStorage.clearLocalStorage();
-	    SessionStorage sessionStorage=new SessionStorage(driver);
-	    sessionStorage.clearSessionStorage();
+		LocalStorage localStorage = new LocalStorage(driver);
+		localStorage.clearLocalStorage();
+		SessionStorage sessionStorage = new SessionStorage(driver);
+		sessionStorage.clearSessionStorage();
 		WebElement username1 = driver.findElement(By.xpath("/html/body/div/form/div/div[1]/input"));
 		username1.clear();
 		username1.sendKeys(username);
@@ -39,7 +39,5 @@ public class ArkCaseAuthentication {
 		WebElement logOutsuccesfull = driver.findElement(By.xpath("/html/body/div/div[2]"));
 		Assert.assertTrue(logOutsuccesfull.getText().equals("You have been logged out successfully."));
 	}
-	
-	
-	
+
 }

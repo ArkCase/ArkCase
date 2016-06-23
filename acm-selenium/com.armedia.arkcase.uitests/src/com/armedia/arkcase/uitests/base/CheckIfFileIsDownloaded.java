@@ -7,8 +7,8 @@ import org.junit.Assert;
 public class CheckIfFileIsDownloaded {
 
 	public void checkIfFileIsDownloaded(String name) {
-		String downloadPath = "C:\\Users\\milan.jovanovski\\SleniumTests\\SeleniumDownload";
-		Assert.assertTrue("File is not downloaded", isFileDownloaded_Ext(downloadPath, name));
+		String downloadPath = System.getProperty("user.home") + "/.arkcase/seleniumTests/SeleniumDownload";
+		Assert.assertTrue("File does not exist in SeleniumDownload folder", isFileDownloaded_Ext(downloadPath, name));
 
 	}
 
@@ -20,8 +20,8 @@ public class CheckIfFileIsDownloaded {
 			flag = false;
 		}
 
-		for (int i = 0; i < files.length; i++) {
-			if (files[i].getName().startsWith(ext)) {
+		for (File file : files) {
+			if (file.getName().startsWith(ext)) {
 				flag = true;
 			}
 		}

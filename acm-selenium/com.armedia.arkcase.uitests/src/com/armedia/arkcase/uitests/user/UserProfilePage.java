@@ -148,17 +148,15 @@ public class UserProfilePage {
 	WebElement websiteFieldInput;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[2]/div[2]/div[2]/section/ul/li/div/div[2]/h4[3]/form/div/span/button[1]")
 	WebElement websiteFieldAddButton;
-	
-	@FindBy(how=How.XPATH,using="/html/body/div[1]/div/div[2]/section/section/div/div[1]/div[2]/div[3]/section/div/div[1]/div/span")
+
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[1]/div[2]/div[3]/section/div/div[1]/div/span")
 	WebElement subscriptionsTitle;
-	@FindBy(how=How.XPATH,using="/html/body/div[1]/div/div[2]/section/section/div/div[1]/div[2]/div[3]/section/div/div[2]/div[1]/div[2]/div[2]/div/div/div/div[1]/div")
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[1]/div[2]/div[3]/section/div/div[2]/div[1]/div[2]/div[2]/div/div/div/div[1]/div")
 	WebElement subsciptionTitleFiled;
-	@FindBy(how=How.XPATH,using="/html/body/div[1]/div/div[2]/section/section/div/div[1]/div[2]/div[3]/section/div/div[2]/div[1]/div[2]/div[2]/div/div/div/div[2]/div")
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[1]/div[2]/div[3]/section/div/div[2]/div[1]/div[2]/div[2]/div/div/div/div[2]/div")
 	WebElement subscriptionDateFiled;
-	public
-	@FindBy(how=How.XPATH,using="/html/body/div[1]/div/div[2]/section/section/div/div[1]/div[2]/div[3]/section/div/div[2]/div[1]/div[2]/div[2]/div/div/div/div[3]/div/button")
-	WebElement deleteSubscription;
-	@FindBy(how=How.XPATH,using="/html/body/div[1]/div/div[2]/section/section/div/div[1]/div[2]/div[3]/section/div/div[2]/div[1]/div[2]/div[2]")
+	public @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[1]/div[2]/div[3]/section/div/div[2]/div[1]/div[2]/div[2]/div/div/div/div[3]/div/button") WebElement deleteSubscription;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[1]/div[2]/div[3]/section/div/div[2]/div[1]/div[2]/div[2]")
 	WebElement subscriptionEmptyTable;
 
 	public void verifyIfEditDashboardButtonIsEnabled() {
@@ -476,29 +474,25 @@ public class UserProfilePage {
 		websiteFieldAddButton.click();
 
 	}
-	
-	
-	public void verifySubscriptionsTable(String name){
-	
-	Date date = new Date(System.currentTimeMillis());
-	SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
-    String createdDate = formatter.format(date);	
-	SoftAssert softAssert=new SoftAssert();
-	softAssert.assertEquals(subscriptionsTitle.getText(), "Subscriptions", "Subscriptions table title is wrong");
-	softAssert.assertEquals(subsciptionTitleFiled.getText(), name, "Subscription name is wrong");
-	softAssert.assertEquals(subscriptionDateFiled.getText(), createdDate, "Subscriptions credated date is wrong");
-	softAssert.assertTrue(deleteSubscription.isDisplayed(), "Delete subscription button is not displayed");
-	softAssert.assertAll();
-	
-}
-	public void verifyEmptySubscriptionTable(){
-		
-	Assert.assertTrue("Subscription should not be there", subscriptionEmptyTable.isDisplayed());	
-		
+
+	public void verifySubscriptionsTable(String name) {
+
+		Date date = new Date(System.currentTimeMillis());
+		SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
+		String createdDate = formatter.format(date);
+		SoftAssert softAssert = new SoftAssert();
+		softAssert.assertEquals(subscriptionsTitle.getText(), "Subscriptions", "Subscriptions table title is wrong");
+		softAssert.assertEquals(subsciptionTitleFiled.getText(), name, "Subscription name is wrong");
+		softAssert.assertEquals(subscriptionDateFiled.getText(), createdDate, "Subscriptions credated date is wrong");
+		softAssert.assertTrue(deleteSubscription.isDisplayed(), "Delete subscription button is not displayed");
+		softAssert.assertAll();
+
 	}
-	
-	
-	
-	
+
+	public void verifyEmptySubscriptionTable() {
+
+		Assert.assertTrue("Subscription should not be there", subscriptionEmptyTable.isDisplayed());
+
+	}
 
 }

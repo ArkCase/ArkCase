@@ -1,5 +1,6 @@
 package com.armedia.arkcase.uitests.cases;
 
+import java.awt.AWTException;
 import java.io.IOException;
 
 import org.junit.Assert;
@@ -10,11 +11,12 @@ import org.openqa.selenium.support.ui.Select;
 
 import com.armedia.arkcase.uitests.base.ArkCaseAuthentication;
 import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
+import com.armedia.arkcase.uitests.base.TestsPoperties;
 import com.armedia.arkcase.uitests.task.TaskPage;
 import com.armedia.arkcase.uitests.task.TasksPage;
 
 public class CaseWithTasksTests extends ArkCaseTestBase {
-	
+
 	CasePage casePom = PageFactory.initElements(driver, CasePage.class);
 	CasesPage casesPom = PageFactory.initElements(driver, CasesPage.class);
 	TaskPage task = PageFactory.initElements(driver, TaskPage.class);
@@ -23,7 +25,8 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseAddTask() throws InterruptedException, IOException {
 		// create new case add task from case page,delete the case
-		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -72,7 +75,6 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		task.verifyTaskTitle();
 		task.verifySubjectTitleInput();
 		task.verifyAssighnToLabelInput();
-
 		task.verifyStartDate();
 		task.verifyDueDate();
 		task.verifyPriority();
@@ -112,7 +114,8 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseAddTaskAddDeleteTagDeleteCase() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -207,9 +210,10 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 	}
 
 	@Test
-	public void createNewCaseAddTaskTaskDetailsDeleteCase() throws InterruptedException, IOException {
+	public void createNewCaseAddTaskTaskDetailsDeleteCase() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -318,7 +322,8 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseAddTaskAddDeleteNoteDeleteCase() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -422,7 +427,8 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseAddTaskVerifyWorkflowTable() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -518,7 +524,8 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseAddTaskVerifyHistoryTableDeleteCase() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -612,7 +619,8 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseAsociateTaskWithCase() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -690,7 +698,8 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseAddTaskEditInformationRibonOfTaskDeleteCase() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -806,7 +815,8 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseAddTaskChangeAssigneeCheckButtonsAreDisplayed() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -908,7 +918,8 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseAddTaskDeleteTaskTryToAddNote() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1008,7 +1019,8 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseAddTaskDeleteTaskTryToAddDocument() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);

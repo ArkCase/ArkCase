@@ -13,7 +13,7 @@
     },
     {
       "menuId": "topbar",
-      "menuItemURL": "frevvo-new-timesheet",
+      "menuItemURL": "frevvo.new-timesheet",
       "menuItemTitle": "Timesheet",
       "iconClass": "fa fa-clock-o",
       "position": 40

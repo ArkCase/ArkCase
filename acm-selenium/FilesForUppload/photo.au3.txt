@@ -1,3 +1,0 @@
-WinWaitActive("File Upload")
-Send("C:\\Users\\milan.jovanovski\\Desktop\\picture.jpg")   
-Send("{ENTER}")
