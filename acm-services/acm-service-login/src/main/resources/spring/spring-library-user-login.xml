@@ -87,7 +87,7 @@
 
     <bean id="acmStaticResourcesAuthenticationEntryPoint" class="com.armedia.acm.auth.AcmRestAuthenticationEntryPoint"/>
 
-    <beans profile="ldap">
+    <beans profile="ldap,kerberos">
         <bean id="acmLogoutSuccessHandler" class="com.armedia.acm.auth.AcmLogoutSuccessHandler">
             <property name="authenticationDetailsFactory" ref="acmAuthenticationDetailsFactory"/>
             <property name="defaultTargetUrl" value="/login?logout"/>
