@@ -5,6 +5,7 @@ import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.services.subscription.exception.AcmSubscriptionException;
 import com.armedia.acm.services.subscription.model.AcmSubscription;
 import com.armedia.acm.services.subscription.service.SubscriptionService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +26,7 @@ import java.util.List;
  * Created by marjan.stefanoski on 03.02.2015.
  */
 @Controller
-@RequestMapping({"/api/v1/service/subscription", "/api/latest/service/subscription"})
+@RequestMapping({ "/api/v1/service/subscription", "/api/latest/service/subscription" })
 public class ListSubscriptionByUserAPIController
 {
 
@@ -34,9 +36,10 @@ public class ListSubscriptionByUserAPIController
 
     @RequestMapping(value = "/{userId:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<AcmSubscription> listSubscriptionsByUser(@PathVariable("userId") String userId, @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-                                                         @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows, Authentication authentication,
-                                                         HttpSession httpSession) throws AcmSubscriptionException
+    public List<AcmSubscription> listSubscriptionsByUser(@PathVariable("userId") String userId,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+            @RequestParam(value = "n", required = false, defaultValue = "-1") int maxRows, Authentication authentication,
+            HttpSession httpSession) throws AcmSubscriptionException
     {
         log.info("Listing subscriptions for user:" + userId);
         List<AcmSubscription> subscriptionList = null;

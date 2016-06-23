@@ -12,24 +12,18 @@ angular.module('time-tracking').controller('TimeTracking.ActionsController', ['$
             , componentId: "actions"
             , retrieveObjectInfo: TimeTrackingInfoService.getTimesheetInfo
             , validateObjectInfo: TimeTrackingInfoService.validateTimesheet
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
+            }
         });
 
-
-        $scope.createNew = function () {
-            $state.go("frevvo", {
-                name: "new-timesheet"
-            });
-        };
-
-        $scope.edit = function (timesheetInfo) {
+        var onObjectInfoRetrieved = function (objectInfo) {
             var frevvoDateFormat = $translate.instant("common.frevvo.defaultDateFormat");
-            var starDate = moment(timesheetInfo.startDate).format(frevvoDateFormat);
-            $state.go("frevvo", {
-                name: "edit-timesheet",
-                arg: {
-                    period: starDate
-                }
-            });
+            var startDate = moment(objectInfo.startDate).format(frevvoDateFormat);
+
+            $scope.editTimesheetParams = {
+                period: startDate
+            };
         };
 
         $scope.refresh = function () {

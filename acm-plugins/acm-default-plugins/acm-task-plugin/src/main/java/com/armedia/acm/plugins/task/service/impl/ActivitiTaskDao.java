@@ -257,6 +257,11 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
             }
         }
 
+        if (in.getParticipants() == null)
+        {
+            in.setParticipants(new ArrayList<>());
+        }
+
         if (!assigneeFound && in.getAssignee() != null)
         {
             AcmParticipant assignee = new AcmParticipant();
@@ -265,10 +270,6 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
             assignee.setObjectId(in.getTaskId());
             assignee.setObjectType(TaskConstants.OBJECT_TYPE);
 
-            if (in.getParticipants() == null)
-            {
-                in.setParticipants(new ArrayList<>());
-            }
             in.getParticipants().add(assignee);
         }
     }

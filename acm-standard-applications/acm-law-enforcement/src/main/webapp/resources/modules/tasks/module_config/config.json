@@ -899,20 +899,9 @@
           "headerCellFilter": "translate"
         },
         {
-          "name": "parent",
-          "displayName": "tasks.userSearch.assigneeGridColumns.parent",
+          "name": "object_id_s",
+          "displayName": "tasks.userSearch.assigneeGridColumns.username",
           "headerCellFilter": "translate"
-        },
-        {
-          "name": "assignee",
-          "displayName": "tasks.userSearch.assigneeGridColumns.assignee",
-          "headerCellFilter": "translate"
-        },
-        {
-          "name": "modified_date_tdt",
-          "displayName": "tasks.userSearch.assigneeGridColumns.modified",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
         }
       ],
       "paginationPageSizes": [
