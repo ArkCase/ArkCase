@@ -14,7 +14,7 @@
     },
     {
       "menuId": "topbar",
-      "menuItemURL": "frevvo-new-case",
+      "menuItemURL": "frevvo.new-case",
       "menuItemTitle": "Case",
       "iconClass": "fa fa-folder",
       "position": 20
