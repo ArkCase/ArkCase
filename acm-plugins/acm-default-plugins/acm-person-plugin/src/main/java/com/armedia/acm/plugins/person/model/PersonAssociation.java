@@ -1,53 +1,56 @@
 package com.armedia.acm.plugins.person.model;
 
 import com.armedia.acm.data.AcmEntity;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-
 /**
  * Created by armdev on 8/11/14.
  */
 @Entity
 @Table(name = "acm_person_assoc")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("com.armedia.acm.plugins.person.model.PersonAssociation")
 public class PersonAssociation implements Serializable, AcmEntity
 {
     private static final long serialVersionUID = 7413755227864370548L;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Id
-    @TableGenerator(name = "acm_person_assoc_gen",
-            table = "acm_person_assoc_id",
-            pkColumnName = "cm_seq_name",
-            valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_person_assoc",
-            initialValue = 100,
-            allocationSize = 1)
+    @TableGenerator(name = "acm_person_assoc_gen", table = "acm_person_assoc_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_person_assoc", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_person_assoc_gen")
     @Column(name = "cm_person_assoc_id")
     private Long id;
 
-    @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.MERGE}, optional = false)
+    @ManyToOne(cascade = { CascadeType.REFRESH, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.MERGE }, optional = false)
     @JoinColumn(name = "cm_person_assoc_person_id", nullable = false)
     private Person person;
 
@@ -81,13 +84,12 @@ public class PersonAssociation implements Serializable, AcmEntity
     private String notes;
 
     @ElementCollection
-    @CollectionTable(
-            name = "acm_person_assoc_tag",
-            joinColumns = @JoinColumn(name = "cm_person_assoc_id", referencedColumnName = "cm_person_assoc_id")
-    )
+    @CollectionTable(name = "acm_person_assoc_tag", joinColumns = @JoinColumn(name = "cm_person_assoc_id", referencedColumnName = "cm_person_assoc_id"))
     @Column(name = "cm_tag")
     private List<String> tags = new ArrayList<>();
 
+    @Column(name = "cm_class_name")
+    private String className = this.getClass().getName();
 
     public PersonAssociation copy()
     {
@@ -200,7 +202,6 @@ public class PersonAssociation implements Serializable, AcmEntity
         return modifier;
     }
 
-
     @Override
     public void setModifier(String modifier)
     {
@@ -227,15 +228,29 @@ public class PersonAssociation implements Serializable, AcmEntity
         this.tags = tags;
     }
 
+    public String getClassName()
+    {
+        return className;
+    }
+
+    public void setClassName(String className)
+    {
+        this.className = className;
+    }
+
     @Override
     public boolean equals(Object obj)
     {
         Objects.requireNonNull(obj, "Comparable object must not be null");
         if (!(obj instanceof PersonAssociation))
+        {
             return false;
+        }
         PersonAssociation other = (PersonAssociation) obj;
-        if (this.getId() == null || other.getId() == null)
+        if (getId() == null || other.getId() == null)
+        {
             return false;
+        }
         return getId().equals(other.getId());
     }
 
@@ -243,27 +258,19 @@ public class PersonAssociation implements Serializable, AcmEntity
     public int hashCode()
     {
         if (getId() == null)
+        {
             return super.hashCode();
-        else
+        } else
+        {
             return getId().hashCode();
+        }
     }
 
     @Override
     public String toString()
     {
-        return "PersonAssociation{" +
-                "id=" + id +
-                ", person=" + person +
-                ", parentId=" + parentId +
-                ", personType='" + personType + '\'' +
-                ", parentType='" + parentType + '\'' +
-                ", personDescription='" + personDescription + '\'' +
-                ", created=" + created +
-                ", creator='" + creator + '\'' +
-                ", modified=" + modified +
-                ", modifier='" + modifier + '\'' +
-                ", notes='" + notes + '\'' +
-                ", tags=" + tags +
-                '}';
+        return "PersonAssociation{" + "id=" + id + ", person=" + person + ", parentId=" + parentId + ", personType='" + personType + '\'' + ", parentType='" + parentType + '\''
+                + ", personDescription='" + personDescription + '\'' + ", created=" + created + ", creator='" + creator + '\'' + ", modified=" + modified + ", modifier='" + modifier + '\''
+                + ", notes='" + notes + '\'' + ", tags=" + tags + '}';
     }
 }
