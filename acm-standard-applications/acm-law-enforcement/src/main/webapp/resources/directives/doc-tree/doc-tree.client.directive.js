@@ -4493,55 +4493,58 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     //+ '</tr>'
                     //+ '</tbody>'
                     //+ '</table>'
-                    if (Util.isEmpty(DocTree.jqTree)) {
-                        if (Util.goodMapValue(DocTree.treeConfig, "columnDefs")) {
-                            var columnDefs = DocTree.treeConfig.columnDefs;
-                            var jqTable = $("<table/>")
-                                .addClass("table table-striped th-sortable table-hover")
-                                .appendTo($(element));
-                            var jqThead = $("<thead/>").appendTo(jqTable);
-                            var jqTrHead = $("<tr/>")
-                                .appendTo(jqThead);
-                            var jqTbody = $("<tbody/>").appendTo(jqTable);
-                            var jqTrBody = $("<tr/>")
-                                .appendTo(jqTbody);
 
-                            var jqTh, jqTd;
-                            _.each(columnDefs, function(columnDef) {
-                                var name = columnDef.name;
-                                var field = Util.goodValue(columnDef.field, name);
-                                var cellTemplate = columnDef.cellTemplate;
-                                var displayName = $translate.instant(columnDef.displayName);
-                                var headTemplate = columnDef.headTemplate;
-                                if ("checkbox" == name) {
-                                    headTemplate = "<input type='checkbox'/>";
-                                }
-                                var width = Util.goodValue(columnDef.width, "10%");
-                                jqTh = $("<th/>")
-                                    .attr("width", width)
-                                    //.text(displayName)
-                                    .appendTo(jqTrHead);
-                                if (headTemplate) {
-                                    $(headTemplate).appendTo(jqTh);
-                                } else {
-                                    jqTh.text(displayName);
-                                }
+                    if (!Util.isEmpty(DocTree.jqTree)) {
+                        DocTree.jqTree.empty();
+                    }
 
-                                jqTd = $("<td/>")
-                                    .appendTo(jqTrBody);
-                            });
+                    if (Util.goodMapValue(DocTree.treeConfig, "columnDefs")) {
+                        var columnDefs = DocTree.treeConfig.columnDefs;
+                        var jqTable = $("<table/>")
+                            .addClass("table table-striped th-sortable table-hover")
+                            .appendTo($(element));
+                        var jqThead = $("<thead/>").appendTo(jqTable);
+                        var jqTrHead = $("<tr/>")
+                            .appendTo(jqThead);
+                        var jqTbody = $("<tbody/>").appendTo(jqTable);
+                        var jqTrBody = $("<tr/>")
+                            .appendTo(jqTbody);
 
-                            DocTree.jqTree = jqTable;
-
-                            DocTree.create();
-                            DocTree.makeDownloadDocForm(DocTree.jqTree);
-                            DocTree.makeUploadDocForm(DocTree.jqTree);
-
-                            if (Util.goodValue(fileTypes)) {
-                                DocTree.fileTypes = fileTypes;
-                                var jqTreeBody = DocTree.jqTree.find("tbody");
-                                DocTree.Menu.useContextMenu(jqTreeBody);
+                        var jqTh, jqTd;
+                        _.each(columnDefs, function(columnDef) {
+                            var name = columnDef.name;
+                            var field = Util.goodValue(columnDef.field, name);
+                            var cellTemplate = columnDef.cellTemplate;
+                            var displayName = $translate.instant(columnDef.displayName);
+                            var headTemplate = columnDef.headTemplate;
+                            if ("checkbox" == name) {
+                                headTemplate = "<input type='checkbox'/>";
                             }
+                            var width = Util.goodValue(columnDef.width, "10%");
+                            jqTh = $("<th/>")
+                                .attr("width", width)
+                                //.text(displayName)
+                                .appendTo(jqTrHead);
+                            if (headTemplate) {
+                                $(headTemplate).appendTo(jqTh);
+                            } else {
+                                jqTh.text(displayName);
+                            }
+
+                            jqTd = $("<td/>")
+                                .appendTo(jqTrBody);
+                        });
+
+                        DocTree.jqTree = jqTable;
+
+                        DocTree.create();
+                        DocTree.makeDownloadDocForm(DocTree.jqTree);
+                        DocTree.makeUploadDocForm(DocTree.jqTree);
+
+                        if (Util.goodValue(fileTypes)) {
+                            DocTree.fileTypes = fileTypes;
+                            var jqTreeBody = DocTree.jqTree.find("tbody");
+                            DocTree.Menu.useContextMenu(jqTreeBody);
                         }
                     }
 
