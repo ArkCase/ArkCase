@@ -60,14 +60,6 @@ angular.module('dashboard.my-tasks')
                     }
                 );
             }
-            vm.filterColumnId=function(input){
-                if(input == null){
-                    return;
-                    }
-                var caseId = input.split('_',2);
-                return caseId[1];
-            }
-
             vm.onClickCaseComplaintId = function (objectType, objectId) {
                     ObjectService.gotoUrl(objectType, objectId);
             };

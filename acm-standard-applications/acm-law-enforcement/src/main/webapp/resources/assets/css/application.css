@@ -1152,3 +1152,7 @@ tags-input .tags {
 	color: #000000;
 	color: rgba(0, 0, 0, 0.7);
 }
+
+.hidden-button {
+    display: none;
+}

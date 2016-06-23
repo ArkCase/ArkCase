@@ -24,7 +24,7 @@ public class ScreenshotTaker extends TestWatcher {
 	SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
 	String createdDate = formatter.format(date);
 
-	private String filenameOfReport = "C:\\Users\\milan.jovanovski\\SleniumTests\\SeleniumReports\\SeleniumReport"
+	private String filenameOfReport = System.getProperty("user.home") + "/.arkcase/seleniumTests/SeleniumReports/SeleniumReport"
 			+ createdDate + ".html";
 
 	public ScreenshotTaker(WebDriver browser, String screenshotLocatie, ExtentReports report) {
@@ -58,6 +58,7 @@ public class ScreenshotTaker extends TestWatcher {
 		test.log(LogStatus.INFO, "Screenshot below" + test.addScreenCapture(destFile));
 
 		flushReports(extent, test);
+
 	}
 
 	// When passed only write to the log.

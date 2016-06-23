@@ -172,7 +172,7 @@ public class DashboardPage extends ArkCaseTestBase {
 	public void casesByStatusClick() {
 
 		SoftAssert softAssert = new SoftAssert();
-		softAssert.assertEquals(casesByStatus.getText(), "Cases by Status", "Cases by status name is wrong");
+		softAssert.assertEquals(casesByStatus.getText(), "Cases By Status", "Cases by status name is wrong");
 		softAssert.assertAll();
 		casesByStatus.click();
 
@@ -248,7 +248,7 @@ public class DashboardPage extends ArkCaseTestBase {
 	public void verifyCasesByStatusTitle() {
 
 		SoftAssert softAssert = new SoftAssert();
-		softAssert.assertEquals(casesByStatusTitle.getText(), "Cases by Status", "Cases by status title is wrong");
+		softAssert.assertEquals(casesByStatusTitle.getText(), "Cases By Status", "Cases by status title is wrong");
 		softAssert.assertAll();
 	}
 
@@ -580,10 +580,11 @@ public class DashboardPage extends ArkCaseTestBase {
 				.findElements(
 						By.xpath("/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/div/div[2]/div/div[3]"))
 				.size();
-		if (i == 0)
+		if (i == 0) {
 			assertTrue(true);
-		else
+		} else {
 			assertTrue(false);
+		}
 
 	}
 

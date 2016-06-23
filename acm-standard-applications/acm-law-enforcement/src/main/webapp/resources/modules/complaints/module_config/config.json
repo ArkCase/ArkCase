@@ -13,7 +13,7 @@
     },
     {
       "menuId": "topbar",
-      "menuItemURL": "frevvo-new-complaint",
+      "menuItemURL": "frevvo.new-complaint",
       "menuItemTitle": "Complaint",
       "iconClass": "fa fa-exclamation-triangle",
       "position": 10
@@ -848,6 +848,16 @@
           {
             "name": "name",
             "displayName": "complaints.comp.participants.dialogUserPicker.table.columns.name",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "object_type_s",
+            "displayName": "complaints.comp.participants.dialogUserPicker.table.columns.type",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "title",
+            "displayName": "complaints.comp.participants.dialogUserPicker.table.columns.title",
             "headerCellFilter": "translate"
           },
           {

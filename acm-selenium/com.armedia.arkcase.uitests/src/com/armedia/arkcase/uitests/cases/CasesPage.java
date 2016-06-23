@@ -1,5 +1,6 @@
 package com.armedia.arkcase.uitests.cases;
 
+import java.awt.AWTException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -27,11 +28,9 @@ public class CasesPage extends ArkCaseTestBase {
 	WebElement firtsCaseInCaseList;
 	// frames
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/iframe")
-	public
-	WebElement frameOne;
+	public WebElement frameOne;
 	@FindBy(how = How.XPATH, using = "/html/body/iframe")
-	public
-	WebElement frameTwo;
+	public WebElement frameTwo;
 	// Information ribbon
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[1]/h3/span")
 	WebElement casesListTitle;
@@ -63,29 +62,29 @@ public class CasesPage extends ArkCaseTestBase {
 	WebElement priorityConfirmBtn;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[2]/div[3]/div/form/div/select/option[3]")
 	WebElement priorityHigh;
-	@FindBy(how=How.XPATH,using="/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[2]/div[3]/div/form/div/select/option[4]")
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[2]/div[3]/div/form/div/select/option[4]")
 	WebElement priorityExpedite;
-	@FindBy(how=How.XPATH,using="/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[3]/div[1]/div/form/div/select")
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[3]/div[1]/div/form/div/select")
 	WebElement assignedToDropDown;
-	@FindBy(how=How.XPATH,using="/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[3]/div[1]/div/form/div/select/option[5]")
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[3]/div[1]/div/form/div/select/option[5]")
 	WebElement assignedToAnn;
-	@FindBy(how=How.XPATH,using="/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[3]/div[1]/div/form/div/span/button[1]")
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[3]/div[1]/div/form/div/span/button[1]")
 	WebElement assignedToConfirmBtn;
-	@FindBy(how=How.XPATH,using="/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[1]/div[1]/h4/form/div/input")
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[1]/div[1]/h4/form/div/input")
 	WebElement caseTitleInput;
-	@FindBy(how=How.XPATH,using="/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[1]/div[1]/h4/form/div/span/button[1]")
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[1]/div[1]/h4/form/div/span/button[1]")
 	WebElement caseTitleConfirmBtn;
-	@FindBy(how=How.XPATH,using="/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[2]/div[1]/div/form/div/select")
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[2]/div[1]/div/form/div/select")
 	WebElement caseTypeDropDown;
-	@FindBy(how=How.XPATH,using="/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[2]/div[1]/div/form/div/select/option[10]")
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[2]/div[1]/div/form/div/select/option[10]")
 	WebElement caseTypeDrugTrafficking;
-	@FindBy(how=How.XPATH,using="/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[2]/div[1]/div/form/div/span/button[1]")
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[2]/div[1]/div/form/div/span/button[1]")
 	WebElement editCaseTypeConfirmBtn;
-	@FindBy(how=How.XPATH,using="/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[3]/div[2]/div/form/div/select")
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[3]/div[2]/div/form/div/select")
 	WebElement caseOwningGroupDropDown;
-	@FindBy(how=How.XPATH,using="/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[3]/div[2]/div/form/div/select/option[5]")
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[3]/div[2]/div/form/div/select/option[5]")
 	WebElement ownigGroupACM_SUPERVISOR_DEV;
-	@FindBy(how=How.XPATH,using="/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[3]/div[2]/div/form/div/span/button[1]")
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[3]/div[2]/div/form/div/span/button[1]")
 	WebElement owningGroupConfirmBtn;
 
 	// case buttons
@@ -116,15 +115,13 @@ public class CasesPage extends ArkCaseTestBase {
 	WebElement caseDetails;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[3]/a")
 	WebElement casePeople;
-	public
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[4]/a")
-	WebElement caseDocuments;
+	public @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[4]/a") WebElement caseDocuments;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[5]/a")
 	WebElement caseParticipants;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[6]/a")
 	WebElement caseNotes;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[7]/a")
-	WebElement caseTasks;
+	public WebElement caseTasks;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[8]/a")
 	WebElement caseReferences;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[9]/a")
@@ -149,7 +146,7 @@ public class CasesPage extends ArkCaseTestBase {
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[1]/div[1]/h4")
 	WebElement caseTitleDraft;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/iframe")
-    public	WebElement chnageCaseStausFrameOne;
+	public WebElement chnageCaseStausFrameOne;
 	@FindBy(how = How.XPATH, using = "/html/body/iframe")
 	public WebElement chnageCaseStatusFrameTwo;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[4]/div[2]/div/div[2]/table/tbody/tr")
@@ -164,13 +161,13 @@ public class CasesPage extends ArkCaseTestBase {
 	WebElement addUser;
 	// Cases tasks
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[1]")
-	WebElement ReviewREquestToChange;
+	public WebElement ReviewREquestToChange;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[7]")
-	WebElement approveDocumenButton;
+	public WebElement approveDocumenButton;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[9]")
-	WebElement refreshbuttons;
+	public WebElement refreshbuttons;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[6]/div")
-	WebElement reviewRequestState;
+	public WebElement reviewRequestState;
 	// case details
 	@FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[2]/div[3]/div[4]")
 	WebElement detailsText;
@@ -181,8 +178,7 @@ public class CasesPage extends ArkCaseTestBase {
 	@FindBy(how = How.XPATH, using = " /html/body/div[5]/div[1]")
 	WebElement caseDetailsSavedPopup;
 	@FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[3]")
-	public
-	WebElement detailChangeStatusButton;
+	public WebElement detailChangeStatusButton;
 	@FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[2]/div[2]/div[9]/button[1]")
 	WebElement detailsInsertLink;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/div/div/div[2]/div[1]/input")
@@ -261,7 +257,7 @@ public class CasesPage extends ArkCaseTestBase {
 	WebElement peopleDeleteIconC;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[3]")
 	WebElement peopleChangeCaseStatusButton;
-	
+
 	// people initiator contact Methods
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-people/div/div[2]/div/div[1]/div[2]/div[2]/div/div[1]/div[2]/div[1]/div[1]/div/span")
 	WebElement contactMethodsTableTitle;
@@ -765,7 +761,7 @@ public class CasesPage extends ArkCaseTestBase {
 	// task page associate with case
 
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div[1]/div[1]/div[1]/h4/a")
-	WebElement caseTitleInTasks;
+	public WebElement caseTitleInTasks;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div[1]/div[1]/div[2]/h4/span")
 	WebElement caseIdInTaskPage;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[1]")
@@ -1552,7 +1548,7 @@ public class CasesPage extends ArkCaseTestBase {
 		detailsLinkInsertButton.click();
 	}
 
-	public void insertPicture(String file) throws InterruptedException, IOException {
+	public void insertPicture(String file) throws InterruptedException, IOException, AWTException {
 
 		insertPicture.click();
 		Thread.sleep(2000);
@@ -1562,6 +1558,7 @@ public class CasesPage extends ArkCaseTestBase {
 		softAssert.assertFalse(insertImageButton.isEnabled(), "Insert image button should be disabled");
 		softAssert.assertAll();
 		browsePictureButton.click();
+		Thread.sleep(3000);
 		ArkCaseTestUtils.uploadPdf();
 		Thread.sleep(2000);
 		detailsSaveButton.click();
@@ -2419,94 +2416,78 @@ public class CasesPage extends ArkCaseTestBase {
 		priorityConfirmBtn.click();
 
 	}
-	
-	public void clickPriorityHigh(){
-		
-	priorityHigh.click();	
-	}
-	
-	public void clickPriorityExpedite(){
-		
-	priorityExpedite.click();	
+
+	public void clickPriorityHigh() {
+
+		priorityHigh.click();
 	}
 
-	
-	public void assignedToDropDownClick(){
-		
-	assignedToDropDown.click();	
+	public void clickPriorityExpedite() {
+
+		priorityExpedite.click();
 	}
-	
-	public void assignedToSelectAnnAdministrator(){
-		
-	assignedToAnn.click();	
+
+	public void assignedToDropDownClick() {
+
+		assignedToDropDown.click();
 	}
-	
-	
-	public void assignedToConfirmButtonClick(){
-		
-	assignedToConfirmBtn.click();	
-		
+
+	public void assignedToSelectAnnAdministrator() {
+
+		assignedToAnn.click();
 	}
-	
-	public void caseTitleInput(String name) throws InterruptedException{
-		
+
+	public void assignedToConfirmButtonClick() {
+
+		assignedToConfirmBtn.click();
+
+	}
+
+	public void caseTitleInput(String name) throws InterruptedException {
+
 		createdCaseTitle.click();
 		Thread.sleep(3000);
 		caseTitleInput.click();
 		caseTitleInput.clear();
 		caseTitleInput.sendKeys(name);
-		
-		
-		
+
 	}
-	
-	public void clickCaseTitleConfirmButton(){
-		
+
+	public void clickCaseTitleConfirmButton() {
+
 		caseTitleConfirmBtn.click();
 	}
-	
-	
-	public void clickCaseTypeDropDown(){
-		
-		caseTypeDropDown.click();	
+
+	public void clickCaseTypeDropDown() {
+
+		caseTypeDropDown.click();
 	}
-	
-	
-	public void selectCaseTypeDrugTrafficking(){
-		
+
+	public void selectCaseTypeDrugTrafficking() {
+
 		caseTypeDrugTrafficking.click();
-	
+
 	}
-	
-	public void clickCaseTypeConfirmButton(){
-		
+
+	public void clickCaseTypeConfirmButton() {
+
 		editCaseTypeConfirmBtn.click();
 	}
-	
-	public void clickCaseOwningGroupDropDown(){
-		
-		
+
+	public void clickCaseOwningGroupDropDown() {
+
 		caseOwningGroupDropDown.click();
-		
+
 	}
-	
-	public void selectOwningGroupACM_SUPERVISOR_DEV(){
-		
+
+	public void selectOwningGroupACM_SUPERVISOR_DEV() {
+
 		ownigGroupACM_SUPERVISOR_DEV.click();
 	}
-	
-	
-	
-	public void clickOwningGroupConfirmBtn(){
-		
+
+	public void clickOwningGroupConfirmBtn() {
+
 		owningGroupConfirmBtn.click();
 	}
-	
-	
-	
-	
-	
-	
-	
-	
+
 }
