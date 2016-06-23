@@ -27,7 +27,7 @@ public class ListTasksAPIController
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(value = "/forUser/{user}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/forUser/{user:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<AcmTask> tasksForUser(
             @PathVariable("user") String user,
@@ -55,8 +55,7 @@ public class ListTasksAPIController
             }
 
             return retval;
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             log.error("List Tasks Failed: " + e.getMessage(), e);
             throw new AcmListObjectsFailedException("task", e.getMessage(), e);
