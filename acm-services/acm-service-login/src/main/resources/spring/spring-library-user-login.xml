@@ -66,12 +66,6 @@
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
 
-    <bean id="acmLoginSuccessHandler" class="com.armedia.acm.auth.AcmLoginSuccessHandler">
-        <property name="loginSuccessOperations" ref="acmLoginSuccessOperations"/>
-        <property name="defaultTargetUrl" value="/home.html#!/welcome"/>
-        <property name="alwaysUseDefaultTargetUrl" value="false"></property>
-    </bean>
-
     <bean id="acmLoginFailureListener" class="com.armedia.acm.auth.AcmLoginFailureEventListener"/>
 
     <bean id="ssAuthenticationEventPublisher"
@@ -86,6 +80,22 @@
     <bean id="acmRestAuthenticationEntryPoint" class="com.armedia.acm.auth.AcmRestAuthenticationEntryPoint"/>
 
     <bean id="acmStaticResourcesAuthenticationEntryPoint" class="com.armedia.acm.auth.AcmRestAuthenticationEntryPoint"/>
+
+
+    <bean id="acmLoginSuccessHandler" class="com.armedia.acm.auth.AcmLoginSuccessHandler">
+        <property name="loginSuccessOperations" ref="acmLoginSuccessOperations"/>
+        <property name="defaultTargetUrl" value="/home.html#!/welcome"/>
+        <property name="alwaysUseDefaultTargetUrl" value="false"></property>
+    </bean>
+
+
+    <!-- when Kerberos has been used, then the login success handler should not do any redirects, since Kerberos
+         has already caused the redirect we would need. This Kerberos login handler bean only sets up the
+         ArkCase session, it performs no redirects. -->
+    <bean id="acmKerberosLoginSuccessHandler" class="com.armedia.acm.auth.AcmKerberosLoginSuccessHandler">
+        <property name="loginSuccessOperations" ref="acmLoginSuccessOperations"/>
+    </bean>
+
 
     <beans profile="ldap,kerberos">
         <bean id="acmLogoutSuccessHandler" class="com.armedia.acm.auth.AcmLogoutSuccessHandler">
