@@ -15,7 +15,7 @@ http://www.mulesoft.org/schema/mule/smtp http://www.mulesoft.org/schema/mule/smt
 http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
 
     <flow name="sendEmailViaOutlook" doc:name="Send notification to the user by email.">
-    
+
         <vm:inbound-endpoint
                 address="vm://sendEmailViaOutlook.in"
                 exchange-pattern="request-response"
@@ -32,8 +32,8 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
             </scripting:script>
 
         </scripting:transformer>
-					   
-		<catch-exception-strategy>
+
+        <catch-exception-strategy>
             <set-property propertyName="sendEmailException" value="#[exception]"/>
         </catch-exception-strategy>
 
