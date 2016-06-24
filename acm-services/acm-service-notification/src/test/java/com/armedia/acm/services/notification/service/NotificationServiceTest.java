@@ -178,6 +178,8 @@ public class NotificationServiceTest extends EasyMockSupport
                 .andReturn("password").anyTimes();
         expect(mockPropertyFileManager.load(capture(stringCapture), eq("notification.user.email.from"), capture(stringCapture)))
                 .andReturn("from").anyTimes();
+        expect(mockPropertyFileManager.load(capture(stringCapture), eq("notification.user.email.flow.type"), capture(stringCapture)))
+                .andReturn("smtp").anyTimes();
         try
         {
             Capture<Map<String, Object>> messagePropsCapture = EasyMock.newCapture();
@@ -306,6 +308,8 @@ public class NotificationServiceTest extends EasyMockSupport
                 .andReturn("password").anyTimes();
         expect(mockPropertyFileManager.load(capture(stringCapture), eq("notification.user.email.from"), capture(stringCapture)))
                 .andReturn("from").anyTimes();
+        expect(mockPropertyFileManager.load(capture(stringCapture), eq("notification.user.email.flow.type"), capture(stringCapture)))
+                .andReturn("smtp").anyTimes();
 
         expect(mockNotificationFormatter.replaceFormatPlaceholders(notification1)).andReturn(notification1).atLeastOnce();
         expect(mockNotificationFormatter.replaceFormatPlaceholders(notification2)).andReturn(notification2).atLeastOnce();
