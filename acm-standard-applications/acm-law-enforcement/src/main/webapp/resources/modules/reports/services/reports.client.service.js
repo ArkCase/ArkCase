@@ -40,9 +40,10 @@ angular.module('reports').factory('Reports.BuildUrl', ['$sce', 'Util.DateService
 
                 function getTimeZoneOffset(){
                     var currentTimeZoneOffsetInMinutes = new Date().getTimezoneOffset();
-                    var currentTimeZoneOffsetInHours = currentTimeZoneOffsetInMinutes / 60;
-                    currentTimeZoneOffsetInHours = "UTC" + currentTimeZoneOffsetInHours + ":00";
-                    return currentTimeZoneOffsetInHours;
+                    var currentTimeZoneOffsetInHours = Math.floor(currentTimeZoneOffsetInMinutes / 60);
+                    currentTimeZoneOffsetInMinutes = Math.abs(currentTimeZoneOffsetInMinutes % 60);
+                    var currentTimeZoneOffset = "UTC" + currentTimeZoneOffsetInHours + ":" + currentTimeZoneOffsetInMinutes;
+                    return currentTimeZoneOffset;
                 }
 
                 var reportUrl = params.reportsHost + (params.reportsPort ? ":" + params.reportsPort : "") + params.reports[params.reportSelected]
