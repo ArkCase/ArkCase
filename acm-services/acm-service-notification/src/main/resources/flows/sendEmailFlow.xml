@@ -15,7 +15,7 @@ http://www.mulesoft.org/schema/mule/smtp http://www.mulesoft.org/schema/mule/smt
 http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
 
     <flow name="sendEmail" doc:name="Send notification to the user by email.">
-    
+
         <vm:inbound-endpoint
                 address="vm://sendEmail.in"
                 exchange-pattern="request-response"
@@ -23,18 +23,16 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
         </vm:inbound-endpoint>
 
         <smtp:outbound-endpoint
-			host="#[message.inboundProperties.host]" 
-			port="#[message.inboundProperties.port]" 
-        	user="#[message.inboundProperties.user]" 
-        	password="#[message.inboundProperties.password]" 
-        	from="#[message.inboundProperties.from]" 
-        	to="#[message.inboundProperties.to]" 
-        	subject="#[message.inboundProperties.subject]" 
-        	responseTimeout="30000"/>
+            host="#[message.inboundProperties.host]" 
+            port="#[message.inboundProperties.port]" 
+            user="#[message.inboundProperties.user]" 
+            password="#[message.inboundProperties.password]" 
+            from="#[message.inboundProperties.from]" 
+            to="#[message.inboundProperties.to]" 
+            subject="#[message.inboundProperties.subject]" 
+            responseTimeout="30000"/>
 
-       
-					   
-		<catch-exception-strategy>
+        <catch-exception-strategy>
             <set-property propertyName="sendEmailException" value="#[exception]"/>
         </catch-exception-strategy>
 
