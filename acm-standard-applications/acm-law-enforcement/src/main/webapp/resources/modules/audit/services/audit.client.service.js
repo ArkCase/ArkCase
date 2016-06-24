@@ -49,9 +49,10 @@ angular.module('audit').factory('AuditController.BuildUrl', ['$sce', '$location'
 
                 function getTimeZoneOffset(){
                     var currentTimeZoneOffsetInMinutes = new Date().getTimezoneOffset();
-                    var currentTimeZoneOffsetInHours = currentTimeZoneOffsetInMinutes / 60;
-                    currentTimeZoneOffsetInHours = "UTC" + currentTimeZoneOffsetInHours + ":00";
-                    return currentTimeZoneOffsetInHours;
+                    var currentTimeZoneOffsetInHours = Math.floor(currentTimeZoneOffsetInMinutes / 60);
+                    currentTimeZoneOffsetInMinutes = Math.abs(currentTimeZoneOffsetInMinutes % 60);
+                    var currentTimeZoneOffset = "UTC" + currentTimeZoneOffsetInHours + ":" + currentTimeZoneOffsetInMinutes;
+                    return currentTimeZoneOffset;
                 }
 
                 var reportUrl = pentahoHost + amendedPentahoPort + auditReportUri
