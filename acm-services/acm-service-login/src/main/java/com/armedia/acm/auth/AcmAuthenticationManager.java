@@ -8,6 +8,7 @@ import com.armedia.acm.services.users.service.group.GroupService;
 import com.armedia.acm.spring.SpringContextHolder;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.DefaultAuthenticationEventPublisher;
 import org.springframework.security.authentication.ProviderNotFoundException;
 import org.springframework.security.core.Authentication;
@@ -38,34 +39,36 @@ public class AcmAuthenticationManager implements AuthenticationManager
         Map<String, AuthenticationProvider> providerMap =
                 getSpringContextHolder().getAllBeansOfType(AuthenticationProvider.class);
         Authentication providerAuthentication = null;
-        AuthenticationException lastException = null;
-        for ( Map.Entry<String, AuthenticationProvider> providerEntry : providerMap.entrySet() )
+        Exception lastException = null;
+        for (Map.Entry<String, AuthenticationProvider> providerEntry : providerMap.entrySet())
         {
             try
             {
                 providerAuthentication = providerEntry.getValue().authenticate(authentication);
-                if ( providerAuthentication != null )
+                if (providerAuthentication != null)
                 {
                     break;
                 }
-            }
-            catch (AuthenticationException ae)
+            } catch (Exception ae)
             {
                 lastException = ae;
             }
         }
 
-        if ( providerAuthentication != null )
+        if (providerAuthentication != null)
         {
             // Spring Security publishes an authentication success event all by itself, so we do not have to raise
             // one here.
             AcmAuthentication acmAuth = getAcmAuthentication(providerAuthentication);
             return acmAuth;
         }
-        if ( lastException != null )
+        if (lastException != null)
         {
-            getAuthenticationEventPublisher().publishAuthenticationFailure(lastException, authentication);
-            throw lastException;
+            AuthenticationException ae = (lastException instanceof AuthenticationException)
+                    ? (AuthenticationException) lastException
+                    : new AuthenticationServiceException(lastException.getMessage(), lastException);
+            getAuthenticationEventPublisher().publishAuthenticationFailure(ae, authentication);
+            throw ae;
         }
 
         // didn't get an exception, or an authentication either, so we can throw a provider not found exception, since
@@ -77,42 +80,43 @@ public class AcmAuthenticationManager implements AuthenticationManager
         throw providerNotFoundException;
     }
 
-    private AcmAuthentication getAcmAuthentication(Authentication providerAuthentication) {
+    private AcmAuthentication getAcmAuthentication(Authentication providerAuthentication)
+    {
 
         AcmUser user = getUserDao().findByUserIdAnyCase(providerAuthentication.getName());
 
         Collection<AcmGrantedAuthority> acmAuths =
                 getAuthoritiesMapper().mapAuthorities(providerAuthentication.getAuthorities());
-        
+
         // Collection with LDAP and ADHOC authority groups that the user belongs to
         Collection<AcmGrantedAuthority> acmAuthsGroups = getAuthorityGroups(user);
-        
+
         // Collection with application roles for LDAP and ADHOC groups/subgroups that the user belongs to
         Collection<AcmGrantedAuthority> acmAuthsRoles = getAuthoritiesMapper().mapAuthorities(acmAuthsGroups);
-        
+
         // Add to all
         acmAuths.addAll(acmAuthsGroups);
         acmAuths.addAll(acmAuthsRoles);
-        
+
         return new AcmAuthentication(
                 acmAuths, providerAuthentication.getCredentials(), providerAuthentication.getDetails(),
                 providerAuthentication.isAuthenticated(), user.getUserId());
     }
-    
+
     private Collection<AcmGrantedAuthority> getAuthorityGroups(AcmUser user)
     {
-    	// Result
-    	Set<AcmGrantedAuthority> authGroups = null;
-    	
-    	// All LDAP and ADHOC groups that the user belongs to (all these we are keeping in the database)
-    	List<AcmGroup> groups = getGroupDao().findByUserMember(user);
-    	
-    	if (groups != null)
-    	{
+        // Result
+        Set<AcmGrantedAuthority> authGroups = null;
+
+        // All LDAP and ADHOC groups that the user belongs to (all these we are keeping in the database)
+        List<AcmGroup> groups = getGroupDao().findByUserMember(user);
+
+        if (groups != null)
+        {
             authGroups = groups.stream().map(group -> new AcmGrantedAuthority(groupService.isUUIDPresentInTheGroupName(group.getName()) ? group.getName().substring(0, group.getName().lastIndexOf("-UUID-")) : group.getName())).collect(Collectors.toSet());
-    	}
-    	
-    	return authGroups;
+        }
+
+        return authGroups;
     }
 
     public SpringContextHolder getSpringContextHolder()
@@ -125,37 +129,45 @@ public class AcmAuthenticationManager implements AuthenticationManager
         this.springContextHolder = springContextHolder;
     }
 
-    public AcmGrantedAuthoritiesMapper getAuthoritiesMapper() {
+    public AcmGrantedAuthoritiesMapper getAuthoritiesMapper()
+    {
         return authoritiesMapper;
     }
 
-    public void setAuthoritiesMapper(AcmGrantedAuthoritiesMapper authoritiesMapper) {
+    public void setAuthoritiesMapper(AcmGrantedAuthoritiesMapper authoritiesMapper)
+    {
         this.authoritiesMapper = authoritiesMapper;
     }
 
-    public void setAuthenticationEventPublisher(DefaultAuthenticationEventPublisher authenticationEventPublisher) {
+    public void setAuthenticationEventPublisher(DefaultAuthenticationEventPublisher authenticationEventPublisher)
+    {
         this.authenticationEventPublisher = authenticationEventPublisher;
     }
 
-    public DefaultAuthenticationEventPublisher getAuthenticationEventPublisher() {
+    public DefaultAuthenticationEventPublisher getAuthenticationEventPublisher()
+    {
         return authenticationEventPublisher;
     }
 
-	public UserDao getUserDao() {
-		return userDao;
-	}
+    public UserDao getUserDao()
+    {
+        return userDao;
+    }
 
-	public void setUserDao(UserDao userDao) {
-		this.userDao = userDao;
-	}
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
+    }
 
-	public AcmGroupDao getGroupDao() {
-		return groupDao;
-	}
+    public AcmGroupDao getGroupDao()
+    {
+        return groupDao;
+    }
 
-	public void setGroupDao(AcmGroupDao groupDao) {
-		this.groupDao = groupDao;
-	}
+    public void setGroupDao(AcmGroupDao groupDao)
+    {
+        this.groupDao = groupDao;
+    }
 
     public GroupService getGroupService()
     {
