@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('dashboard.my-tasks')
-    .controller('Dashboard.MyTasksController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService', '$state',
-        function ($scope, $translate, Authentication, DashboardService, $state) {
+    .controller('Dashboard.MyTasksController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService', 'ObjectService', '$state',
+        function ($scope, $translate, Authentication, DashboardService, ObjectService, $state) {
 
             var vm = this;
 
@@ -60,12 +60,8 @@ angular.module('dashboard.my-tasks')
                     }
                 );
             }
-            vm.filterCaseId=function(input){
-                if(input == null){
-                    return;
-                    }
-                var caseId = input.split('_',2);
-                return caseId[1];
-            }
+            vm.onClickCaseComplaintId = function (objectType, objectId) {
+                    ObjectService.gotoUrl(objectType, objectId);
+            };
         }
     ]);

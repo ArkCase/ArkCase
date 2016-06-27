@@ -5,7 +5,8 @@
              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
                             http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
-    <beans:bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <beans:bean class="com.armedia.acm.crypto.properties.AcmEncryptablePropertySourcesPlaceholderConfigurer">
+        <beans:property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
         <beans:property name="location" value="file:${r'${user.home}'}/.arkcase/acm/spring/spring-config-${id}-ldap.properties"/>
     </beans:bean>
 

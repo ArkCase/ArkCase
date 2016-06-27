@@ -1,5 +1,6 @@
 package com.armedia.acm.services.subscription.service;
 
+import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
@@ -44,7 +45,7 @@ public class SubscriptionEventBatchInsertService
 
     // this method is used by scheduled jobs in Spring beans loaded dynamically from the ACM configuration
     // folder ($HOME/.acm).
-    public void insertNewSubscriptionEvents()
+    public void insertNewSubscriptionEvents() throws AcmEncryptionException
     {
         setFullPath(getUserHomeDir() + getLastBatchInsertPropertyFileLocation().replace("/", getFileSeparator()));
         getAuditPropertyEntityAdapter().setUserId(SubscriptionConstants.SUBSCRIPTION_USER);
@@ -69,7 +70,8 @@ public class SubscriptionEventBatchInsertService
             List<AcmSubscriptionEvent> subscriptionEventList = null;
             try
             {
-                subscriptionEventList = getSubscriptionDao().createListOfNewSubscriptionEventsForInserting(lastBatchRunDate, eventsToBeRemoved);
+                subscriptionEventList = getSubscriptionDao().createListOfNewSubscriptionEventsForInserting(lastBatchRunDate,
+                        eventsToBeRemoved);
                 for (AcmSubscriptionEvent subscriptionEvent : subscriptionEventList)
                 {
                     AcmSubscriptionEvent subscriptionEventSaved = getSubscriptionEventDao().save(subscriptionEvent);
@@ -77,19 +79,20 @@ public class SubscriptionEventBatchInsertService
                 }
             } catch (AcmObjectNotFoundException e)
             {
-                if (log.isInfoEnabled())
-                    log.info("There are no new events to be added", e);
+                log.debug("There are no new events to be added");
             }
         } catch (ParseException e)
         {
             if (log.isErrorEnabled())
+            {
                 log.error("Parsing exception occurred while fetching lastBatchRunDate ", e);
+            }
         }
     }
 
     private void storeCurrentDateForNextBatchRun(DateFormat dateFormat)
     {
-        // store the current time as the last run date to use the next time this job runs.  This allows us to
+        // store the current time as the last run date to use the next time this job runs. This allows us to
         // scan only for objects updated since this date.
         String solrNow = dateFormat.format(new Date());
         getPropertyFileManager().store(SubscriptionConstants.SUBSCRIPTION_EVENT_LAST_RUN_DATE_PROPERTY_KEY, solrNow, getFullPath());

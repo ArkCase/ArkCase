@@ -13,8 +13,8 @@
  * Tree helper uses 'object-tree' directive. Content helper includes component links and data loading. Component helper includes common object info handling
  */
 angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resource', '$translate'
-    , 'Acm.StoreService', 'UtilService', 'ConfigService', 'ServCommService'
-    , function ($q, $resource, $translate, Store, Util, ConfigService, ServCommService) {
+    , 'Acm.StoreService', 'UtilService', 'ConfigService', 'ServCommService', 'MessageService'
+    , function ($q, $resource, $translate, Store, Util, ConfigService, ServCommService, MessageService) {
 
         var Service = {
             VariableNames: {
@@ -310,6 +310,29 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                                 that.scope.componentLinks = that.initComponentLinks(that.scope.config);
 
                                 that.scope.$broadcast('object-updated', objectInfo);
+
+                                //when object is loaded we want to subscribe to change events
+                                var objectId = id;
+                                var objectType = that.getObjectTypeFromInfo(that.scope.objectInfo);
+
+                                //temp fix for task
+                                if (objectType == 'ADHOC') {
+                                    objectType = 'TASK';
+                                }
+
+                                var eventName = "object.changed/" + objectType + "/" + objectId;
+
+                                //if there is subscription from other object we want to unsubscribe
+                                //we want to have only one subscription from the current object
+                                if (that.scope.subscription) {
+                                    that.scope.$bus.unsubscribe(that.scope.subscription);
+                                }
+                                that.scope.subscription = that.scope.$bus.subscribe(eventName, function (data) {
+                                    //when we receive message that object was changed show it
+                                    //we can change to show other popups with generated links etc...
+                                    MessageService.info(objectType + " with ID " + objectId + " was updated.");
+                                });
+
                                 return objectInfo;
                             }
                             , function (error) {

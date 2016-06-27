@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.task.model;
 
 import com.armedia.acm.core.AcmNotifiableEntity;
 import com.armedia.acm.core.AcmNotificationReceiver;
+import com.armedia.acm.core.AcmParentObjectInfo;
 import com.armedia.acm.data.AcmLegacySystemEntity;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -19,8 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystemEntity, AcmNotifiableEntity
-{
+public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystemEntity, AcmParentObjectInfo, AcmNotifiableEntity {
     private static final long serialVersionUID = 8087833770464474147L;
 
     private Long taskId;
@@ -92,405 +92,328 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
     private String legacySystemId;
 
 
-    public AcmContainer getContainer()
-    {
+    public AcmContainer getContainer() {
         return container;
     }
 
-    public void setContainer(AcmContainer container)
-    {
+    public void setContainer(AcmContainer container) {
         this.container = container;
     }
 
-    public String getEcmFolderPath()
-    {
+    public String getEcmFolderPath() {
         return ecmFolderPath;
     }
 
-    public void setEcmFolderPath(String ecmFolderPath)
-    {
+    public void setEcmFolderPath(String ecmFolderPath) {
         this.ecmFolderPath = ecmFolderPath;
     }
 
-    public Long getTaskId()
-    {
+    public Long getTaskId() {
         return taskId;
     }
 
-    public void setTaskId(Long taskId)
-    {
+    public void setTaskId(Long taskId) {
         this.taskId = taskId;
     }
 
-    public String getPriority()
-    {
+    public String getPriority() {
         return priority;
     }
 
-    public void setPriority(String priority)
-    {
+    public void setPriority(String priority) {
         this.priority = priority;
     }
 
-    public String getTitle()
-    {
+    public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title)
-    {
+    public void setTitle(String title) {
         this.title = title;
     }
 
-    public Date getDueDate()
-    {
+    public Date getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(Date dueDate)
-    {
+    public void setDueDate(Date dueDate) {
         this.dueDate = dueDate;
     }
 
-    public String getAttachedToObjectType()
-    {
+    public String getAttachedToObjectType() {
         return attachedToObjectType;
     }
 
-    public void setAttachedToObjectType(String attachedToObjectType)
-    {
+    public void setAttachedToObjectType(String attachedToObjectType) {
         this.attachedToObjectType = attachedToObjectType;
     }
 
-    public Long getAttachedToObjectId()
-    {
+    public Long getAttachedToObjectId() {
         return attachedToObjectId;
     }
 
-    public void setAttachedToObjectId(Long attachedToObjectId)
-    {
+    public void setAttachedToObjectId(Long attachedToObjectId) {
         this.attachedToObjectId = attachedToObjectId;
     }
 
-    public String getAssignee()
-    {
+    public void setParentObjectId(Long parentObjectId) {
+        this.parentObjectId = parentObjectId;
+    }
+
+    @Override
+    public Long getParentObjectId() {
+        return parentObjectId;
+    }
+
+    @Override
+    public String getParentObjectType() {
+        return parentObjectType;
+    }
+
+    public void setParentObjectType(String parentObjectType) {
+        this.parentObjectType = parentObjectType;
+    }
+
+    public String getAssignee() {
         return assignee;
     }
 
-    public void setAssignee(String assignee)
-    {
+    public void setAssignee(String assignee) {
         this.assignee = assignee;
     }
 
-    public String getBusinessProcessName()
-    {
+    public String getBusinessProcessName() {
         return businessProcessName;
     }
 
-    public void setBusinessProcessName(String businessProcessName)
-    {
+    public void setBusinessProcessName(String businessProcessName) {
         this.businessProcessName = businessProcessName;
     }
 
-    public boolean isAdhocTask()
-    {
+    public boolean isAdhocTask() {
         return adhocTask;
     }
 
-    public void setAdhocTask(boolean adhocTask)
-    {
+    public void setAdhocTask(boolean adhocTask) {
         this.adhocTask = adhocTask;
     }
 
-    public boolean isCompleted()
-    {
+    public boolean isCompleted() {
         return completed;
     }
 
-    public void setCompleted(boolean completed)
-    {
+    public void setCompleted(boolean completed) {
         this.completed = completed;
     }
 
-    public Date getTaskStartDate()
-    {
+    public Date getTaskStartDate() {
         return taskStartDate;
     }
 
-    public void setTaskStartDate(Date taskStartDate)
-    {
+    public void setTaskStartDate(Date taskStartDate) {
         this.taskStartDate = taskStartDate;
     }
 
-    public Date getTaskFinishedDate()
-    {
+    public Date getTaskFinishedDate() {
         return taskFinishedDate;
     }
 
-    public void setTaskFinishedDate(Date taskFinishedDate)
-    {
+    public void setTaskFinishedDate(Date taskFinishedDate) {
         this.taskFinishedDate = taskFinishedDate;
     }
 
-    public Long getTaskDurationInMillis()
-    {
+    public Long getTaskDurationInMillis() {
         return taskDurationInMillis;
     }
 
-    public void setTaskDurationInMillis(Long taskDurationInMillis)
-    {
+    public void setTaskDurationInMillis(Long taskDurationInMillis) {
         this.taskDurationInMillis = taskDurationInMillis;
     }
 
     @Override
-    public String getStatus()
-    {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(String status)
-    {
+    public void setStatus(String status) {
         this.status = status;
     }
 
-    public Integer getPercentComplete()
-    {
+    public Integer getPercentComplete() {
         return percentComplete;
     }
 
-    public void setPercentComplete(Integer percentComplete)
-    {
+    public void setPercentComplete(Integer percentComplete) {
         this.percentComplete = percentComplete;
     }
 
-    public String getDetails()
-    {
+    public String getDetails() {
         return details;
     }
 
-    public void setDetails(String details)
-    {
+    public void setDetails(String details) {
         this.details = details;
     }
 
-    public String getAttachedToObjectName()
-    {
+    public String getAttachedToObjectName() {
         return attachedToObjectName;
     }
 
-    public void setAttachedToObjectName(String attachedToObjectName)
-    {
+    public void setAttachedToObjectName(String attachedToObjectName) {
         this.attachedToObjectName = attachedToObjectName;
     }
 
     @Override
     @JsonIgnore
-    public String getObjectType()
-    {
+    public String getObjectType() {
         return "TASK";
     }
 
     @Override
     @JsonIgnore
-    public Long getId()
-    {
+    public Long getId() {
         return taskId;
     }
 
-    public String getOwner()
-    {
+    public String getOwner() {
         return owner;
     }
 
-    public void setOwner(String owner)
-    {
+    public void setOwner(String owner) {
         this.owner = owner;
     }
 
-    public Date getCreateDate()
-    {
+    public Date getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Date createDate)
-    {
+    public void setCreateDate(Date createDate) {
         this.createDate = createDate;
     }
 
-    public String getWorkflowRequestType()
-    {
+    public String getWorkflowRequestType() {
         return workflowRequestType;
     }
 
-    public void setWorkflowRequestType(String workflowRequestType)
-    {
+    public void setWorkflowRequestType(String workflowRequestType) {
         this.workflowRequestType = workflowRequestType;
     }
 
-    public Long getWorkflowRequestId()
-    {
+    public Long getWorkflowRequestId() {
         return workflowRequestId;
     }
 
-    public void setWorkflowRequestId(Long workflowRequestId)
-    {
+    public void setWorkflowRequestId(Long workflowRequestId) {
         this.workflowRequestId = workflowRequestId;
     }
 
-    public Long getReviewDocumentPdfRenditionId()
-    {
+    public Long getReviewDocumentPdfRenditionId() {
         return reviewDocumentPdfRenditionId;
     }
 
-    public void setReviewDocumentPdfRenditionId(Long reviewDocumentPdfRenditionId)
-    {
+    public void setReviewDocumentPdfRenditionId(Long reviewDocumentPdfRenditionId) {
         this.reviewDocumentPdfRenditionId = reviewDocumentPdfRenditionId;
     }
 
-    public Long getReviewDocumentFormXmlId()
-    {
+    public Long getReviewDocumentFormXmlId() {
         return reviewDocumentFormXmlId;
     }
 
-    public void setReviewDocumentFormXmlId(Long reviewDocumentFormXmlId)
-    {
+    public void setReviewDocumentFormXmlId(Long reviewDocumentFormXmlId) {
         this.reviewDocumentFormXmlId = reviewDocumentFormXmlId;
     }
 
-    public EcmFile getDocumentUnderReview()
-    {
+    public EcmFile getDocumentUnderReview() {
         return documentUnderReview;
     }
 
-    public void setDocumentUnderReview(EcmFile documentUnderReview)
-    {
+    public void setDocumentUnderReview(EcmFile documentUnderReview) {
         this.documentUnderReview = documentUnderReview;
     }
 
-    public List<ObjectAssociation> getChildObjects()
-    {
+    public List<ObjectAssociation> getChildObjects() {
         return childObjects;
     }
 
-    public void setChildObjects(List<ObjectAssociation> childObjects)
-    {
+    public void setChildObjects(List<ObjectAssociation> childObjects) {
         this.childObjects = childObjects;
     }
 
-    public Long getBusinessProcessId()
-    {
+    public Long getBusinessProcessId() {
         return businessProcessId;
     }
 
-    public void setBusinessProcessId(Long businessProcessId)
-    {
+    public void setBusinessProcessId(Long businessProcessId) {
         this.businessProcessId = businessProcessId;
     }
 
-    public String getOutcomeName()
-    {
+    public String getOutcomeName() {
         return outcomeName;
     }
 
-    public void setOutcomeName(String outcomeName)
-    {
+    public void setOutcomeName(String outcomeName) {
         this.outcomeName = outcomeName;
     }
 
-    public List<TaskOutcome> getAvailableOutcomes()
-    {
+    public List<TaskOutcome> getAvailableOutcomes() {
         return availableOutcomes;
     }
 
-    public void setAvailableOutcomes(List<TaskOutcome> availableOutcomes)
-    {
+    public void setAvailableOutcomes(List<TaskOutcome> availableOutcomes) {
         this.availableOutcomes = availableOutcomes;
     }
 
-    public String getReworkInstructions()
-    {
+    public String getReworkInstructions() {
         return reworkInstructions;
     }
 
-    public void setReworkInstructions(String reworkInstructions)
-    {
+    public void setReworkInstructions(String reworkInstructions) {
         this.reworkInstructions = reworkInstructions;
     }
 
-    public TaskOutcome getTaskOutcome()
-    {
+    public TaskOutcome getTaskOutcome() {
         return taskOutcome;
     }
 
-    public void setTaskOutcome(TaskOutcome taskOutcome)
-    {
+    public void setTaskOutcome(TaskOutcome taskOutcome) {
         this.taskOutcome = taskOutcome;
     }
 
     @Override
-    public List<AcmParticipant> getParticipants()
-    {
+    public List<AcmParticipant> getParticipants() {
         return participants;
     }
 
-    public void setParticipants(List<AcmParticipant> participants)
-    {
+    public void setParticipants(List<AcmParticipant> participants) {
         this.participants = participants;
     }
 
-    public Long getParentObjectId()
-    {
-        return parentObjectId;
-    }
-
-    public void setParentObjectId(Long parentObjectId)
-    {
-        this.parentObjectId = parentObjectId;
-    }
-
-    public String getParentObjectType()
-    {
-        return parentObjectType;
-    }
-
-    public void setParentObjectType(String parentObjectType)
-    {
-        this.parentObjectType = parentObjectType;
-    }
-
-    public String getParentObjectTitle()
-    {
+    public String getParentObjectTitle() {
         return parentObjectTitle;
     }
 
-    public void setParentObjectTitle(String parentObjectTitle)
-    {
+    public void setParentObjectTitle(String parentObjectTitle) {
         this.parentObjectTitle = parentObjectTitle;
     }
 
-    public String getNextAssignee()
-    {
+    public String getNextAssignee() {
         return nextAssignee;
     }
 
-    public void setNextAssignee(String nextAssignee)
-    {
+    public void setNextAssignee(String nextAssignee) {
         this.nextAssignee = nextAssignee;
     }
 
-    public List<String> getCandidateGroups()
-    {
+    public List<String> getCandidateGroups() {
         return candidateGroups;
     }
 
-    public void setCandidateGroups(List<String> candidateGroups)
-    {
+    public void setCandidateGroups(List<String> candidateGroups) {
         this.candidateGroups = candidateGroups;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "AcmTask{" +
                 "taskId=" + taskId +
                 ", priority='" + priority + '\'' +
@@ -535,23 +458,19 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
     }
 
     @Override
-    public String getLegacySystemId()
-    {
+    public String getLegacySystemId() {
         return legacySystemId;
     }
 
     @Override
-    public void setLegacySystemId(String legacySystemId)
-    {
+    public void setLegacySystemId(String legacySystemId) {
         this.legacySystemId = legacySystemId;
     }
 
     @Override
     @JsonIgnore
-    public Set<AcmNotificationReceiver> getReceivers()
-    {
-        if(participants != null)
-        {
+    public Set<AcmNotificationReceiver> getReceivers() {
+        if (participants != null) {
             receivers.addAll(participants);
         }
         return receivers;
@@ -559,8 +478,7 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
 
     @Override
     @JsonIgnore
-    public String getNotifiableEntityTitle()
-    {
+    public String getNotifiableEntityTitle() {
         return title;
     }
 }
