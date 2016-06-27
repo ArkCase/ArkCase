@@ -1,0 +1,23 @@
+<panel-view header="{{'admin.application.login.config.title' | translate}}" collapsible="false">
+    <div ng-controller="Admin.LoginConfigController">
+        <form>
+            <div class="text">
+                <label class="control-label" for="idleLimit">
+                    <span translate>admin.application.login.config.idleLimit.label</span>
+                </label>
+                <input ng-model="idleLimit"
+                       class="form-control input-sm"
+                       type="text"
+                       id="idleLimit"
+                />
+            </div>
+            <br/>
+
+            <div class="form-group">
+                <button ng-click="applyChanges()" class="btn btn-sm btn-primary" translate>
+                    admin.application.userName.config.apply
+                </button>
+            </div>
+        </form>
+    </div>
+</panel-view>
