@@ -342,6 +342,12 @@
             <artifactId>acm-pdf-utilities</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-websockets</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
 
         <dependency>
             <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
@@ -357,6 +363,12 @@
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-webdav</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-proxy-http</artifactId>
             <version>${acm.version}</version>
         </dependency>
 

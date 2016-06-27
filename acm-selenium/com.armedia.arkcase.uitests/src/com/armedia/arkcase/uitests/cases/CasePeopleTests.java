@@ -8,19 +8,21 @@ import org.openqa.selenium.support.PageFactory;
 
 import com.armedia.arkcase.uitests.base.ArkCaseAuthentication;
 import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
+import com.armedia.arkcase.uitests.base.TestsPoperties;
 
-public class CasePeopleTests extends ArkCaseTestBase{
+public class CasePeopleTests extends ArkCaseTestBase {
 
 	CasePage casePom = PageFactory.initElements(driver, CasePage.class);
 	CasesPage casesPom = PageFactory.initElements(driver, CasesPage.class);
-	
+
 	@Test
 	public void createNewCaseExtortion() throws InterruptedException, IOException {
 		// create case type extortion and verify/edit/delete people initiator
 		// contact
 		// methods
 
-		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -175,7 +177,8 @@ public class CasePeopleTests extends ArkCaseTestBase{
 		// create case fraud verif/edit/delete people initiator organization
 		// table
 
-		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -331,7 +334,8 @@ public class CasePeopleTests extends ArkCaseTestBase{
 		// create case investor complaint verify/edit/delete people initiator
 		// address
 
-		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -489,7 +493,8 @@ public class CasePeopleTests extends ArkCaseTestBase{
 		// create case investor complaint add/edit/delete people initiator
 		// aliases table
 
-		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -645,7 +650,8 @@ public class CasePeopleTests extends ArkCaseTestBase{
 	@Test
 	public void createNewCasePayOff() throws InterruptedException, IOException {
 		// create case type payoff and verify/edit Complaintant section table
-		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -787,7 +793,8 @@ public class CasePeopleTests extends ArkCaseTestBase{
 
 		// create case type Pollution and verify/edit/delete complaintant
 		// organization
-		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -940,7 +947,8 @@ public class CasePeopleTests extends ArkCaseTestBase{
 
 		// create case type Pollution and verify/edit/delete complaintant type
 		// address
-		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1098,7 +1106,8 @@ public class CasePeopleTests extends ArkCaseTestBase{
 	public void createNewCaseDomesticDispute() throws InterruptedException, IOException {
 
 		// create case type Domestic Dispute and add alias in complaintant
-		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1260,7 +1269,8 @@ public class CasePeopleTests extends ArkCaseTestBase{
 		// contact
 		// methods
 
-		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1414,7 +1424,8 @@ public class CasePeopleTests extends ArkCaseTestBase{
 	public void createNewCaseBackgroundInvestigationAddDeletePerson() throws InterruptedException, IOException {
 		// create case type Background Investigation add/delete person
 
-		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1514,7 +1525,8 @@ public class CasePeopleTests extends ArkCaseTestBase{
 	public void createNewCaseBackgroundInvestigationAddEditPerson() throws InterruptedException, IOException {
 		// create case type Background Investigation add/edit person
 
-		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1618,7 +1630,8 @@ public class CasePeopleTests extends ArkCaseTestBase{
 		// create case type Background Investigation add person, add contact
 		// methods
 
-		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1726,7 +1739,8 @@ public class CasePeopleTests extends ArkCaseTestBase{
 		// create case type Background Investigation add person, add/delete
 		// organization
 
-		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1834,7 +1848,8 @@ public class CasePeopleTests extends ArkCaseTestBase{
 		// create case type Background Investigation add person, add/delete
 		// address
 
-		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1941,7 +1956,8 @@ public class CasePeopleTests extends ArkCaseTestBase{
 		// create case type Background Investigation add person, add/delete
 		// alias
 
-		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -2051,7 +2067,8 @@ public class CasePeopleTests extends ArkCaseTestBase{
 		// create case type Background Investigation add person, check the type/
 		// filters
 
-		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -2140,7 +2157,8 @@ public class CasePeopleTests extends ArkCaseTestBase{
 		// create case type Background Investigation add person, check the first
 		// name filter
 
-		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -2229,7 +2247,8 @@ public class CasePeopleTests extends ArkCaseTestBase{
 		// create case type Background Investigation add person, check the first
 		// name filter
 
-		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -2311,6 +2330,5 @@ public class CasePeopleTests extends ArkCaseTestBase{
 		ArkCaseAuthentication.logOut(driver);
 
 	}
-
 
 }

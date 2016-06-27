@@ -33,6 +33,8 @@
         <module>acm-ephesoft</module>
         <module>acm-pdf-utilities</module>
         <module>acm-form-configuration</module>
+        <module>acm-websockets</module>
+        <module>acm-proxy-http</module>
     </modules>
 
 </project>

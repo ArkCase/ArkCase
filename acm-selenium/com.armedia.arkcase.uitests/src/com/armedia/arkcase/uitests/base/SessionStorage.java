@@ -11,26 +11,23 @@ public class SessionStorage {
 	}
 
 	public void removeItemFromSessionStorage(String item) {
-		js.executeScript(String.format(
-				"window.sessionStorage.removeItem('%s');", item));
+		js.executeScript(String.format("window.sessionStorage.removeItem('%s');", item));
 	}
 
 	public boolean isItemPresentInSessionStorage(String item) {
-		if (js.executeScript(String.format(
-				"return window.sessionStorage.getItem('%s');", item)) == null)
+		if (js.executeScript(String.format("return window.sessionStorage.getItem('%s');", item)) == null) {
 			return false;
-		else
+		} else {
 			return true;
+		}
 	}
 
 	public String getItemFromSessionStorage(String key) {
-		return (String) js.executeScript(String.format(
-				"return window.sessionStorage.getItem('%s');", key));
+		return (String) js.executeScript(String.format("return window.sessionStorage.getItem('%s');", key));
 	}
 
 	public String getKeyFromSessionStorage(int key) {
-		return (String) js.executeScript(String.format(
-				"return window.sessionStorage.key('%s');", key));
+		return (String) js.executeScript(String.format("return window.sessionStorage.key('%s');", key));
 	}
 
 	public Long getSessionStorageLength() {
@@ -38,8 +35,7 @@ public class SessionStorage {
 	}
 
 	public void setItemInSessionStorage(String item, String value) {
-		js.executeScript(String.format(
-				"window.sessionStorage.setItem('%s','%s');", item, value));
+		js.executeScript(String.format("window.sessionStorage.setItem('%s','%s');", item, value));
 	}
 
 	public void clearSessionStorage() {

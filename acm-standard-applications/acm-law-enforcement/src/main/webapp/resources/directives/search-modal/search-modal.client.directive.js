@@ -26,6 +26,7 @@
  * @param {Object} search-control - (Optional)Search dialog API for caller:
  * @param {Function} search-control.getSelectedItems returns list of selected search items
  * @param {Function} on-items-selected Callback function in response to selected items in search result.
+ * @param {boolean} draggable - whether or not modal dialog be draggable or not
  * If response contains only 1 item, then display it.
  **/
 
@@ -48,11 +49,15 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 modalInstance: '=',     //= : two way binding (read-write both, parent scope and directive's isolated scope have two way binding)
                 searchControl: '=?',    //=? : two way binding but property is optional
                 onItemsSelected: '=?',   //=? : two way binding but property is optional
-                onNoDataMessage: '@'
+                onNoDataMessage: '@',
+                draggable: '@'
             },
 
             link: function (scope, el, attrs) {
                 //dom operations
+                if (scope.draggable) {
+                    el.parent().draggable();
+                }
                 scope.header = Util.goodValue(scope.header, $translate.instant("common.directive.searchModal.header"));
                 scope.onNoDataMessage = Util.goodValue(scope.onNoDataMessage, $translate.instant("common.directive.searchModal.noData.text"));
                 scope.search = Util.goodValue(scope.search, $translate.instant("common.directive.searchModal.btnSearch.text"));

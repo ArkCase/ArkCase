@@ -30,14 +30,29 @@ angular.module('reports').factory('Reports.BuildUrl', ['$sce', 'Util.DateService
              * @param {String} params.reportUri Represents report URL
              * @param {String} params.startDate Represents value for date chosen from dateFrom input
              * @param {String} params.endDate Represents value for date chosen from dateTo input
+             * @param {String} params.timeZone Represents the time zone offset for the client
+             * @param {String} params.reportsUser The Pentaho user name
+             * @param {String} params.reportsPassword The Pentaho password
              * @param {String} params.stateSelected Represents report server date format
              * @returns {Object} Object assigned as trusted for angular to display the report in an iFrame
              */
             getUrl: function (params) {
+
+                function getTimeZoneOffset(){
+                    var currentTimeZoneOffsetInMinutes = new Date().getTimezoneOffset();
+                    var currentTimeZoneOffsetInHours = Math.floor(currentTimeZoneOffsetInMinutes / 60);
+                    currentTimeZoneOffsetInMinutes = Math.abs(currentTimeZoneOffsetInMinutes % 60);
+                    var currentTimeZoneOffset = "UTC" + currentTimeZoneOffsetInHours + ":" + currentTimeZoneOffsetInMinutes;
+                    return currentTimeZoneOffset;
+                }
+
                 var reportUrl = params.reportsHost + (params.reportsPort ? ":" + params.reportsPort : "") + params.reports[params.reportSelected]
-                    + "&startDate=" + UtilDateService.goodIsoDate(params.startDate)
+                    + "?startDate=" + UtilDateService.goodIsoDate(params.startDate)
                     + "&endDate=" + UtilDateService.goodIsoDate(params.endDate)
-                    + "&dateFormat=" + encodeURIComponent(UtilDateService.defaultDateFormat);
+                    + "&dateFormat=" + encodeURIComponent(UtilDateService.defaultDateFormat)
+                    + "&timeZone=" + encodeURIComponent(getTimeZoneOffset())
+                    + "&userid=" + params.reportsUser
+                    + "&password=" + params.reportsPassword;
                 if (params.stateSelected) {
                     reportUrl += "&caseStatus=" + params.stateSelected;
                 }

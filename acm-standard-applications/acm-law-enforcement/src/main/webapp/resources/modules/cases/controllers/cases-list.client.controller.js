@@ -1,22 +1,41 @@
 'use strict';
 
 angular.module('cases').controller('CasesListController', ['$scope', '$state', '$stateParams', '$translate'
-    , 'UtilService', 'ObjectService', 'Case.ListService', 'Case.InfoService', 'Helper.ObjectBrowserService', 'ServCommService'
+    , 'UtilService', 'ObjectService', 'Case.ListService', 'Case.InfoService', 'Helper.ObjectBrowserService'
+    , 'ServCommService', 'MessageService'
     , function ($scope, $state, $stateParams, $translate
-        , Util, ObjectService, CaseListService, CaseInfoService, HelperObjectBrowserService, ServCommService) {
+        , Util, ObjectService, CaseListService, CaseInfoService, HelperObjectBrowserService
+        , ServCommService, MessageService) {
 
-        //
-        // Check to see if complaint page is shown as a result returned by Frevvo
-        // Reset the tree cache so that new entry created by Frevvo can be shown.
-        // This is a temporary solution until UI and backend communication is implemented
-        //
-        var topics = ["new-case", "edit-case", "change-case-status", "reinvestigate"];
-        _.each(topics, function (topic) {
-            var data = ServCommService.popRequest("frevvo", topic);
-            if (data) {
-                CaseListService.resetCasesTreeData();
+        /*//
+         // Check to see if complaint page is shown as a result returned by Frevvo
+         // Reset the tree cache so that new entry created by Frevvo can be shown.
+         // This is a temporary solution until UI and backend communication is implemented
+         //
+         var topics = ["new-case", "edit-case", "change-case-status", "reinvestigate"];
+         _.each(topics, function (topic) {
+         var data = ServCommService.popRequest("frevvo", topic);
+         if (data) {
+         CaseListService.resetCasesTreeData();
+         }
+         });*/
+        //we will ignore previous implementation with ServCommService
+        //but we will use it to see if the changes were made from current user and apply something different
+
+        //one solution is to wait for object.inserted messages
+        //when we will get a callback for them we will check the ServCommService if it is current user
+        //subscribe to the bus for the object
+        var eventName = "object.inserted";
+        $scope.$bus.subscribe(eventName, function (data) {
+            var frevvoRequest = ServCommService.popRequest("frevvo", "new-case");
+            if (frevvoRequest) {
+                ObjectService.gotoUrl(ObjectService.ObjectTypes.CASE_FILE, data.objectId);
+            }
+            else {
+                MessageService.info(data.objectType + " with ID " + data.objectId + " was created.");
             }
         });
+
 
         //"treeConfig", "treeData", "onLoad", and "onSelect" will be set by Tree Helper
         new HelperObjectBrowserService.Tree({

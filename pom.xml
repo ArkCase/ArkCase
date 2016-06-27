@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.armedia</groupId>
@@ -28,6 +29,7 @@
         <apache-commons-lang.version>2.6</apache-commons-lang.version>
         <apache-commons-vfs2.version>2.0</apache-commons-vfs2.version>
         <apache-commons-codec>1.9</apache-commons-codec>
+        <apache-httpcomponents-httpclient.version>4.5</apache-httpcomponents-httpclient.version>
         <apache-poi.version>3.10.1</apache-poi.version>
         <aspectj.version>1.7.4</aspectj.version>
         <c3p0.version>0.9.2.1</c3p0.version>
@@ -47,7 +49,7 @@
         <hibernate-validator.version>5.1.1.Final</hibernate-validator.version>
         <jackson-mapper-asl.version>1.9.13</jackson-mapper-asl.version>
         <javax-el.version>3.0.0</javax-el.version>
-        <javax.servlet.version>3.0.1</javax.servlet.version>
+        <javax.servlet.version>3.1.0</javax.servlet.version>
         <javax-persistence.version>2.1.0</javax-persistence.version>
         <javax-validation.version>1.1.0.Final</javax-validation.version>
 
@@ -608,7 +610,7 @@
                     <compilerArgument>-Xlint:all</compilerArgument>
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>
-                </configuration>         
+                </configuration>
                 <executions>
                     <execution>
                         <id>log4j-plugin-processor</id>
@@ -884,6 +886,11 @@
                 <artifactId>spring-integration-sftp</artifactId>
                 <version>${spring.integration.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.springframework.integration</groupId>
+                <artifactId>spring-integration-core</artifactId>
+                <version>${spring.integration.version}</version>
+            </dependency>
 
             <!-- surf -->
             <dependency>
@@ -929,6 +936,16 @@
                         <artifactId>servlet-api</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-websocket</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-messaging</artifactId>
+                <version>${spring.version}</version>
             </dependency>
 
 
@@ -1268,6 +1285,11 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-exec</artifactId>
                 <version>${apache-commons-exec.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${apache-httpcomponents-httpclient.version}</version>
             </dependency>
 
             <!-- json -->
