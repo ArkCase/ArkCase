@@ -231,7 +231,8 @@
       "login.config": {
         "title": "Login configuration",
         "idleLimit.label": "Login idle limit (in milliseconds)",
-        "inform":"Settings will take effect for all new user sessions"
+        "inform":"Settings will take effect for all new user sessions",
+        "apply.label": "Apply"
       }
     },
     "branding.title": "Branding",
