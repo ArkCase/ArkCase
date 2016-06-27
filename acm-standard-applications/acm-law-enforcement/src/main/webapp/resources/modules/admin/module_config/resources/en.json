@@ -227,6 +227,11 @@
         "modal.title":"Information",
         "modal.info":"Settings will take effect after refresh",
         "modal.ok":"OK"
+      },
+      "login.config": {
+        "title": "Login configuration",
+        "idleLimit.label": "Login idle limit",
+        "inform":"Settings will take effect after relogin"
       }
     },
     "branding.title": "Branding",
