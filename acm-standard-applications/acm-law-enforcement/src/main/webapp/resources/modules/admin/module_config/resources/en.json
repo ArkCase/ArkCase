@@ -230,8 +230,8 @@
       },
       "login.config": {
         "title": "Login configuration",
-        "idleLimit.label": "Login idle limit",
-        "inform":"Settings will take effect after relogin"
+        "idleLimit.label": "Login idle limit (in milliseconds)",
+        "inform":"Settings will take effect for all new user sessions"
       }
     },
     "branding.title": "Branding",
