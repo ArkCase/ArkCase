@@ -82,6 +82,7 @@
         <sonar.version>2.6</sonar.version>
         <spring.ldap.version>1.3.2.RELEASE</spring.ldap.version>
         <spring-retry-version>1.1.2.RELEASE</spring-retry-version>
+        <spring.security.kerberos.version>1.0.1.RELEASE</spring.security.kerberos.version>
         <spring.security.version>3.2.7.RELEASE</spring.security.version>
         <spring.security.saml2.core.version>1.0.2.RELEASE</spring.security.saml2.core.version>
         <!-- by default spring.security.saml2.core uses opensaml version 2.6.1, which uses bouncycastle version 1.46, but we require version 1.54 -->
@@ -628,7 +629,9 @@
                             <showDeprecation>true</showDeprecation>
                             <proc>only</proc>
                             <annotationProcessors>
-                                <annotationProcessor>org.apache.logging.log4j.core.config.plugins.processor.PluginProcessor</annotationProcessor>
+                                <annotationProcessor>
+                                    org.apache.logging.log4j.core.config.plugins.processor.PluginProcessor
+                                </annotationProcessor>
                             </annotationProcessors>
                         </configuration>
                     </execution>
@@ -1005,6 +1008,16 @@
                         <artifactId>spring-core</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security.kerberos</groupId>
+                <artifactId>spring-security-kerberos-web</artifactId>
+                <version>${spring.security.kerberos.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security.kerberos</groupId>
+                <artifactId>spring-security-kerberos-client</artifactId>
+                <version>${spring.security.kerberos.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.security</groupId>
