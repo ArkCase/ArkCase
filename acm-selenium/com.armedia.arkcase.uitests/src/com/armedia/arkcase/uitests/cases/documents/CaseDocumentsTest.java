@@ -73,7 +73,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 		documentsPage.verifyDocumentsTable();
 		documentsPage.clickRootExpander();
 		Thread.sleep(3000);
-		documentsPage.verifyFirstDocument("ACTIVE");
+		documentsPage.verifyFirstDocument("Case File.pdf", "Case File", "Samuel Supervisor", "1.0", "ACTIVE");
 		documentsPage.chnageCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(cases.chnageCaseStausFrameOne);
@@ -898,7 +898,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 	}
 
 	@Test
-	public void createNewkCaseCheckChangeCaseStatusInDocumentsTable()
+	public void createNewCaseCheckChangeCaseStatusInDocumentsTable()
 			throws InterruptedException, IOException, AWTException {
 
 		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
@@ -1108,7 +1108,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 		Thread.sleep(5000);
 		documentsPage.verifyLockedDocument();
 		Thread.sleep(3000);
-		documentsPage.clearCachBtn.click();
+		documentsPage.refreshCase.click();
 		Thread.sleep(4000);
 		documentsPage.performRightClickOnFirstDocument();
 		Thread.sleep(2000);
@@ -1199,7 +1199,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 		Thread.sleep(5000);
 		documentsPage.verifyLockedDocument();
 		Thread.sleep(3000);
-		documentsPage.clearCachBtn.click();
+		documentsPage.refreshCase.click();
 		Thread.sleep(4000);
 		documentsPage.performRightClickOnFirstDocument();
 		Thread.sleep(2000);
@@ -1295,11 +1295,10 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 		ArkCaseAuthentication.logOut(driver);
 
 	}
-	
-	
+
 	@Test
-	public void createNewCaseAddDocumentRenameTheDocument() throws InterruptedException,IOException, AWTException{
-		
+	public void createNewCaseAddDocumentRenameTheDocument() throws InterruptedException, IOException, AWTException {
+
 		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
 				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
 		casePom.newCase();
@@ -1379,14 +1378,13 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 		driver.switchTo().defaultContent();
 		cases.changeCaseStatusAproved();
 		Thread.sleep(3000);
-		ArkCaseAuthentication.logOut(driver);	
-		
-		
-		
-}
+		ArkCaseAuthentication.logOut(driver);
+
+	}
+
 	@Test
-	public void createNewCaseReplaceDocument() throws InterruptedException,IOException, AWTException{
-		
+	public void createNewCaseReplaceDocument() throws InterruptedException, IOException, AWTException {
+
 		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
 				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
 		casePom.newCase();
@@ -1453,18 +1451,893 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 		driver.switchTo().defaultContent();
 		cases.changeCaseStatusAproved();
 		Thread.sleep(3000);
-		ArkCaseAuthentication.logOut(driver);	
+		ArkCaseAuthentication.logOut(driver);
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+	@Test
+	public void createNewCaseCreateFolderDeleteFolder() throws InterruptedException, IOException, AWTException {
+
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		casePom.newCase();
+		Thread.sleep(20000);
+		driver.switchTo().frame(cases.frameOne);
+		driver.switchTo().frame(cases.frameTwo);
+		casePom.vrifyGeneralInformationTabName();
+		casePom.caseTitleInput("Create Folder");
+		casePom.verifyCaseTypeTitle();
+		casePom.caseTypeInputClick();
+		Thread.sleep(2000);
+		casePom.caseTypeBackgroundInvestigation();
+		Thread.sleep(2000);
+		casePom.nextButton.click();
+		Thread.sleep(3000);
+		casePom.verifyInitiatorTab();
+		casePom.initiatorTitle.click();
+		Thread.sleep(2000);
+		casePom.clickInitiatorMr();
+		Thread.sleep(2000);
+		casePom.initiatorFirstName("Milan");
+		casePom.initiatorLastName("Jovanovski");
+		Thread.sleep(2000);
+		casePom.nextButtonClick();
+		Thread.sleep(3000);
+		casePom.nextButtonClick();
+		Thread.sleep(3000);
+		casePom.verifyAttachmentTab();
+		Thread.sleep(2000);
+		casePom.participantnsTab.click();
+		Thread.sleep(2000);
+		casePom.selectParticipantTypeClick();
+		Thread.sleep(2000);
+		casePom.selectparticipantOwner();
+		casePom.selectParticipantClick();
+		Thread.sleep(3000);
+		casePom.searchForUsers();
+		Thread.sleep(3000);
+		casePom.searchedName();
+		casePom.addSearchedNameClick();
+		Thread.sleep(2000);
+		casePom.submit.click();
+		Thread.sleep(10000);
+		driver.switchTo().defaultContent();
+		cases.caseDocuments.click();
+		Thread.sleep(5000);
+		documentsPage.performRightClickOnRoot();
+		Thread.sleep(4000);
+		documentsPage.checkIfRightClickOnRootIsWorking();
+		Thread.sleep(3000);
+		documentsPage.clickNewFolder();
+		Thread.sleep(4000);
+		documentsPage.nameTheNewFolder("folder");
+		Thread.sleep(3000);
+		documentsPage.documentsTableTitle.click();
+		Thread.sleep(3000);
+		documentsPage.verifyCreatedFolder("folder");
+		Thread.sleep(3000);
+		documentsPage.performRightClickOnFolder();
+		Thread.sleep(3000);
+		documentsPage.deleteFolder();
+		Thread.sleep(3000);
+		documentsPage.verifyFolderIsDeleted();
+		Thread.sleep(3000);
+		documentsPage.chnageCaseStatusButton.click();
+		Thread.sleep(10000);
+		driver.switchTo().frame(cases.chnageCaseStausFrameOne);
+		Thread.sleep(2000);
+		driver.switchTo().frame(cases.chnageCaseStatusFrameTwo);
+		Thread.sleep(2000);
+		cases.deleteCase();
+		driver.switchTo().defaultContent();
+		cases.changeCaseStatusAproved();
+		Thread.sleep(3000);
+		ArkCaseAuthentication.logOut(driver);
+
+	}
+
+	@Test
+	public void createNewCaseAddFolderRenameFolder() throws InterruptedException, IOException {
+
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		casePom.newCase();
+		Thread.sleep(20000);
+		driver.switchTo().frame(cases.frameOne);
+		driver.switchTo().frame(cases.frameTwo);
+		casePom.vrifyGeneralInformationTabName();
+		casePom.caseTitleInput("rename Folder");
+		casePom.verifyCaseTypeTitle();
+		casePom.caseTypeInputClick();
+		Thread.sleep(2000);
+		casePom.caseTypeBackgroundInvestigation();
+		Thread.sleep(2000);
+		casePom.nextButton.click();
+		Thread.sleep(3000);
+		casePom.verifyInitiatorTab();
+		casePom.initiatorTitle.click();
+		Thread.sleep(2000);
+		casePom.clickInitiatorMr();
+		Thread.sleep(2000);
+		casePom.initiatorFirstName("Milan");
+		casePom.initiatorLastName("Jovanovski");
+		Thread.sleep(2000);
+		casePom.nextButtonClick();
+		Thread.sleep(3000);
+		casePom.nextButtonClick();
+		Thread.sleep(3000);
+		casePom.verifyAttachmentTab();
+		Thread.sleep(2000);
+		casePom.participantnsTab.click();
+		Thread.sleep(2000);
+		casePom.selectParticipantTypeClick();
+		Thread.sleep(2000);
+		casePom.selectparticipantOwner();
+		casePom.selectParticipantClick();
+		Thread.sleep(3000);
+		casePom.searchForUsers();
+		Thread.sleep(3000);
+		casePom.searchedName();
+		casePom.addSearchedNameClick();
+		Thread.sleep(2000);
+		casePom.submit.click();
+		Thread.sleep(10000);
+		driver.switchTo().defaultContent();
+		cases.caseDocuments.click();
+		Thread.sleep(5000);
+		documentsPage.performRightClickOnRoot();
+		Thread.sleep(4000);
+		documentsPage.checkIfRightClickOnRootIsWorking();
+		Thread.sleep(3000);
+		documentsPage.clickNewFolder();
+		Thread.sleep(4000);
+		documentsPage.nameTheNewFolder("folder");
+		Thread.sleep(3000);
+		documentsPage.documentsTableTitle.click();
+		Thread.sleep(3000);
+		documentsPage.verifyCreatedFolder("folder");
+		Thread.sleep(3000);
+		documentsPage.performRightClickOnFolder();
+		Thread.sleep(3000);
+		documentsPage.clickRenameFolder();
+		Thread.sleep(3000);
+		documentsPage.renameTheFolder("folder2");
+		Thread.sleep(2000);
+		documentsPage.documentsTableTitle.click();
+		Thread.sleep(5000);
+		documentsPage.verifyCreatedFolder("folder2");
+		documentsPage.chnageCaseStatusButton.click();
+		Thread.sleep(10000);
+		driver.switchTo().frame(cases.chnageCaseStausFrameOne);
+		Thread.sleep(2000);
+		driver.switchTo().frame(cases.chnageCaseStatusFrameTwo);
+		Thread.sleep(2000);
+		cases.deleteCase();
+		driver.switchTo().defaultContent();
+		cases.changeCaseStatusAproved();
+		Thread.sleep(3000);
+		ArkCaseAuthentication.logOut(driver);
+
+	}
+
+	@Test
+	public void createNewCaseCopyDocumentPasteInFolder() throws InterruptedException, IOException {
+
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		casePom.newCase();
+		Thread.sleep(20000);
+		driver.switchTo().frame(cases.frameOne);
+		driver.switchTo().frame(cases.frameTwo);
+		casePom.vrifyGeneralInformationTabName();
+		casePom.caseTitleInput("copy document");
+		casePom.verifyCaseTypeTitle();
+		casePom.caseTypeInputClick();
+		Thread.sleep(2000);
+		casePom.caseTypeBackgroundInvestigation();
+		Thread.sleep(2000);
+		casePom.nextButton.click();
+		Thread.sleep(3000);
+		casePom.verifyInitiatorTab();
+		casePom.initiatorTitle.click();
+		Thread.sleep(2000);
+		casePom.clickInitiatorMr();
+		Thread.sleep(2000);
+		casePom.initiatorFirstName("Milan");
+		casePom.initiatorLastName("Jovanovski");
+		Thread.sleep(2000);
+		casePom.nextButtonClick();
+		Thread.sleep(3000);
+		casePom.nextButtonClick();
+		Thread.sleep(3000);
+		casePom.verifyAttachmentTab();
+		Thread.sleep(2000);
+		casePom.participantnsTab.click();
+		Thread.sleep(2000);
+		casePom.selectParticipantTypeClick();
+		Thread.sleep(2000);
+		casePom.selectparticipantOwner();
+		casePom.selectParticipantClick();
+		Thread.sleep(3000);
+		casePom.searchForUsers();
+		Thread.sleep(3000);
+		casePom.searchedName();
+		casePom.addSearchedNameClick();
+		Thread.sleep(2000);
+		casePom.submit.click();
+		Thread.sleep(10000);
+		driver.switchTo().defaultContent();
+		cases.caseDocuments.click();
+		Thread.sleep(5000);
+		documentsPage.performRightClickOnRoot();
+		Thread.sleep(4000);
+		documentsPage.checkIfRightClickOnRootIsWorking();
+		Thread.sleep(3000);
+		documentsPage.clickNewFolder();
+		Thread.sleep(4000);
+		documentsPage.nameTheNewFolder("folder");
+		Thread.sleep(3000);
+		documentsPage.documentsTableTitle.click();
+		Thread.sleep(3000);
+		documentsPage.verifyCreatedFolder("folder");
+		Thread.sleep(3000);
+		documentsPage.performRightClickOnFirstDocument();
+		Thread.sleep(3000);
+		documentsPage.copyDocument();
+		Thread.sleep(3000);
+		documentsPage.performRightClickOnFolder();
+		Thread.sleep(3000);
+		documentsPage.pasteInFolder();
+		Thread.sleep(3000);
+		documentsPage.verifyCopyPastedDocumentInFolder("ACTIVE");
+		Thread.sleep(3000);
+		documentsPage.chnageCaseStatusButton.click();
+		Thread.sleep(10000);
+		driver.switchTo().frame(cases.chnageCaseStausFrameOne);
+		Thread.sleep(2000);
+		driver.switchTo().frame(cases.chnageCaseStatusFrameTwo);
+		Thread.sleep(2000);
+		cases.deleteCase();
+		driver.switchTo().defaultContent();
+		cases.changeCaseStatusAproved();
+		Thread.sleep(3000);
+		ArkCaseAuthentication.logOut(driver);
+
+	}
+
+	@Test
+	public void createNewCaseCutDocumentPasteInFolder() throws InterruptedException, IOException {
+
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		casePom.newCase();
+		Thread.sleep(20000);
+		driver.switchTo().frame(cases.frameOne);
+		driver.switchTo().frame(cases.frameTwo);
+		casePom.vrifyGeneralInformationTabName();
+		casePom.caseTitleInput("cut document");
+		casePom.verifyCaseTypeTitle();
+		casePom.caseTypeInputClick();
+		Thread.sleep(2000);
+		casePom.caseTypeBackgroundInvestigation();
+		Thread.sleep(2000);
+		casePom.nextButton.click();
+		Thread.sleep(3000);
+		casePom.verifyInitiatorTab();
+		casePom.initiatorTitle.click();
+		Thread.sleep(2000);
+		casePom.clickInitiatorMr();
+		Thread.sleep(2000);
+		casePom.initiatorFirstName("Milan");
+		casePom.initiatorLastName("Jovanovski");
+		Thread.sleep(2000);
+		casePom.nextButtonClick();
+		Thread.sleep(3000);
+		casePom.nextButtonClick();
+		Thread.sleep(3000);
+		casePom.verifyAttachmentTab();
+		Thread.sleep(2000);
+		casePom.participantnsTab.click();
+		Thread.sleep(2000);
+		casePom.selectParticipantTypeClick();
+		Thread.sleep(2000);
+		casePom.selectparticipantOwner();
+		casePom.selectParticipantClick();
+		Thread.sleep(3000);
+		casePom.searchForUsers();
+		Thread.sleep(3000);
+		casePom.searchedName();
+		casePom.addSearchedNameClick();
+		Thread.sleep(2000);
+		casePom.submit.click();
+		Thread.sleep(10000);
+		driver.switchTo().defaultContent();
+		cases.caseDocuments.click();
+		Thread.sleep(5000);
+		documentsPage.performRightClickOnRoot();
+		Thread.sleep(4000);
+		documentsPage.checkIfRightClickOnRootIsWorking();
+		Thread.sleep(3000);
+		documentsPage.clickNewFolder();
+		Thread.sleep(4000);
+		documentsPage.nameTheNewFolder("folder");
+		Thread.sleep(3000);
+		documentsPage.documentsTableTitle.click();
+		Thread.sleep(3000);
+		documentsPage.verifyCreatedFolder("folder");
+		Thread.sleep(3000);
+		documentsPage.performRightClickOnFirstDocument();
+		Thread.sleep(3000);
+		documentsPage.cutDocument();
+		Thread.sleep(3000);
+		documentsPage.performRightClickOnFolder();
+		Thread.sleep(3000);
+		documentsPage.pasteInFolder();
+		Thread.sleep(3000);
+		documentsPage.verifyCutPastedDocumentInFolder("Case File.pdf", "Case File", "1.0", "ACTIVE");
+		Thread.sleep(300);
+		documentsPage.verifyIfCutDocumentIsStillPresent("folder");
+		Thread.sleep(3000);
+		documentsPage.chnageCaseStatusButton.click();
+		Thread.sleep(10000);
+		driver.switchTo().frame(cases.chnageCaseStausFrameOne);
+		Thread.sleep(2000);
+		driver.switchTo().frame(cases.chnageCaseStatusFrameTwo);
+		Thread.sleep(2000);
+		cases.deleteCase();
+		driver.switchTo().defaultContent();
+		cases.changeCaseStatusAproved();
+		Thread.sleep(3000);
+		ArkCaseAuthentication.logOut(driver);
+
+	}
+
+	@Test
+	public void createNewCaseAddWordDocumentEditWithWord() throws InterruptedException, IOException, AWTException {
+
+		// first turn of protected view in office
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPasswordCore(), driver, TestsPoperties.getBaseUrlCore());
+		Thread.sleep(5000);
+		casePom.newCase();
+		Thread.sleep(20000);
+		driver.switchTo().frame(cases.frameOne);
+		driver.switchTo().frame(cases.frameTwo);
+		casePom.vrifyGeneralInformationTabName();
+		casePom.caseTitleInput("edit word document");
+		casePom.verifyCaseTypeTitle();
+		casePom.caseTypeInputClick();
+		Thread.sleep(2000);
+		casePom.caseTypeBackgroundInvestigation();
+		Thread.sleep(2000);
+		casePom.nextButton.click();
+		Thread.sleep(3000);
+		casePom.verifyInitiatorTab();
+		casePom.initiatorTitle.click();
+		Thread.sleep(2000);
+		casePom.clickInitiatorMr();
+		Thread.sleep(2000);
+		casePom.initiatorFirstName("Milan");
+		Thread.sleep(2000);
+		casePom.initiatorLastName("Jovanovski");
+		Thread.sleep(2000);
+		casePom.nextButtonClick();
+		Thread.sleep(3000);
+		casePom.nextButtonClick();
+		Thread.sleep(3000);
+		casePom.verifyAttachmentTab();
+		Thread.sleep(2000);
+		casePom.participantnsTab.click();
+		Thread.sleep(2000);
+		casePom.selectParticipantTypeClick();
+		Thread.sleep(2000);
+		casePom.selectparticipantOwner();
+		casePom.selectParticipantClick();
+		Thread.sleep(3000);
+		casePom.searchForUsers();
+		Thread.sleep(3000);
+		casePom.searchedName();
+		casePom.addSearchedNameClick();
+		Thread.sleep(2000);
+		casePom.submit.click();
+		Thread.sleep(10000);
+		driver.switchTo().defaultContent();
+		cases.caseDocuments.click();
+		Thread.sleep(5000);
+		driver.navigate().refresh();
+		Thread.sleep(10000);
+		cases.caseDocuments.click();
+		Thread.sleep(5000);
+		documentsPage.performRightClickOnRoot();
+		Thread.sleep(4000);
+		documentsPage.newDocumentClick();
+		Thread.sleep(3000);
+		documentsPage.clickDocumentOther();
+		Thread.sleep(3000);
+		ArkCaseTestUtils.uploadDocx();
+		Thread.sleep(3000);
+		documentsPage.performRighClickOnSecondDocument();
+		Thread.sleep(3000);
+		documentsPage.editWithWordClick();
+		Thread.sleep(5000);
+		ArkCaseTestUtils.presEnter();
+		Thread.sleep(3000);
+		ArkCaseTestUtils.shiftLeftAndPressEnter();
+		Thread.sleep(8000);
+		ArkCaseTestUtils.uploadDocx();
+		Thread.sleep(4000);
+		ArkCaseTestUtils.saveWordDocument();
+		Thread.sleep(3000);
+		ArkCaseTestUtils.closeWordDocument();
+		Thread.sleep(6000);
+		documentsPage.verifyLockedDocument();
+		Thread.sleep(4000);
+		documentsPage.refreshTableButton.click();
+		Thread.sleep(6000);
+		documentsPage.verifyModifiedDocument("ArkCaseTesting.docx", "Other", "Samuel Supervisor", "2.0", "ACTIVE");
+		documentsPage.performRightClickOnFirstDocument();
+		Thread.sleep(3000);
+		documentsPage.clickCancelEditing();
+		Thread.sleep(3000);
+		documentsPage.verifyUnlockedDocument();
+		Thread.sleep(4000);
+		documentsPage.chnageCaseStatusButton.click();
+		Thread.sleep(10000);
+		driver.switchTo().frame(cases.chnageCaseStausFrameOne);
+		Thread.sleep(2000);
+		driver.switchTo().frame(cases.chnageCaseStatusFrameTwo);
+		Thread.sleep(2000);
+		cases.deleteCase();
+		driver.switchTo().defaultContent();
+		cases.changeCaseStatusAproved();
+		Thread.sleep(3000);
+		ArkCaseAuthentication.logOut(driver);
+
+	}
+
+	@Test
+	public void createNewCaseAddDocumentDeclareAsRecord() throws InterruptedException, IOException, AWTException {
+
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		casePom.newCase();
+		Thread.sleep(20000);
+		driver.switchTo().frame(cases.frameOne);
+		driver.switchTo().frame(cases.frameTwo);
+		casePom.vrifyGeneralInformationTabName();
+		casePom.caseTitleInput("declare as record");
+		casePom.verifyCaseTypeTitle();
+		casePom.caseTypeInputClick();
+		Thread.sleep(2000);
+		casePom.caseTypeBackgroundInvestigation();
+		Thread.sleep(2000);
+		casePom.nextButton.click();
+		Thread.sleep(3000);
+		casePom.verifyInitiatorTab();
+		casePom.initiatorTitle.click();
+		Thread.sleep(2000);
+		casePom.clickInitiatorMr();
+		Thread.sleep(2000);
+		casePom.initiatorFirstName("Milan");
+		Thread.sleep(2000);
+		casePom.initiatorLastName("Jovanovski");
+		Thread.sleep(2000);
+		casePom.nextButtonClick();
+		Thread.sleep(3000);
+		casePom.nextButtonClick();
+		Thread.sleep(3000);
+		casePom.verifyAttachmentTab();
+		Thread.sleep(2000);
+		casePom.participantnsTab.click();
+		Thread.sleep(2000);
+		casePom.selectParticipantTypeClick();
+		Thread.sleep(2000);
+		casePom.selectparticipantOwner();
+		casePom.selectParticipantClick();
+		Thread.sleep(3000);
+		casePom.searchForUsers();
+		Thread.sleep(3000);
+		casePom.searchedName();
+		casePom.addSearchedNameClick();
+		Thread.sleep(2000);
+		casePom.submit.click();
+		Thread.sleep(10000);
+		driver.switchTo().defaultContent();
+		cases.caseDocuments.click();
+		Thread.sleep(5000);
+		driver.navigate().refresh();
+		Thread.sleep(10000);
+		documentsPage.performRightClickOnRoot();
+		Thread.sleep(4000);
+		documentsPage.checkIfRightClickOnRootIsWorking();
+		Thread.sleep(3000);
+		documentsPage.newDocumentClick();
+		Thread.sleep(3000);
+		documentsPage.clickDocumentOther();
+		Thread.sleep(3000);
+		ArkCaseTestUtils.uploadDocx();
+		Thread.sleep(5000);
+		documentsPage.performRighClickOnSecondDocument();
+		Thread.sleep(3000);
+		documentsPage.clickDeclareAsRecordDocument();
+		Thread.sleep(4000);
+		documentsPage.verifyFirstDocument("ArkCaseTesting.docx", "Other", "Samuel Supervisor", "1.0", "RECORD");
+		Thread.sleep(3000);
+		documentsPage.performRightClickOnFirstDocument();
+		Thread.sleep(3000);
+		documentsPage.checkIfRightClickWorksInRecordDocument();
+		documentsPage.verifyOptionOnRightClickOnRecordDocument();
+		documentsPage.chnageCaseStatusButton.click();
+		Thread.sleep(10000);
+		driver.switchTo().frame(cases.chnageCaseStausFrameOne);
+		Thread.sleep(2000);
+		driver.switchTo().frame(cases.chnageCaseStatusFrameTwo);
+		Thread.sleep(2000);
+		cases.deleteCase();
+		driver.switchTo().defaultContent();
+		cases.changeCaseStatusAproved();
+		Thread.sleep(3000);
+		ArkCaseAuthentication.logOut(driver);
+
+	}
+
+	@Test
+	public void createNewCaseAddDocumentDeclareAsRecordDownload()
+			throws InterruptedException, IOException, AWTException {
+
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		casePom.newCase();
+		Thread.sleep(20000);
+		driver.switchTo().frame(cases.frameOne);
+		driver.switchTo().frame(cases.frameTwo);
+		casePom.vrifyGeneralInformationTabName();
+		casePom.caseTitleInput("download record");
+		casePom.verifyCaseTypeTitle();
+		casePom.caseTypeInputClick();
+		Thread.sleep(2000);
+		casePom.caseTypeBackgroundInvestigation();
+		Thread.sleep(2000);
+		casePom.nextButton.click();
+		Thread.sleep(3000);
+		casePom.verifyInitiatorTab();
+		casePom.initiatorTitle.click();
+		Thread.sleep(2000);
+		casePom.initiatorFirstName("Milan");
+		Thread.sleep(2000);
+		casePom.initiatorLastName("Jovanovski");
+		Thread.sleep(2000);
+		casePom.nextButtonClick();
+		Thread.sleep(3000);
+		casePom.nextButtonClick();
+		Thread.sleep(3000);
+		casePom.verifyAttachmentTab();
+		Thread.sleep(2000);
+		casePom.participantnsTab.click();
+		Thread.sleep(2000);
+		casePom.selectParticipantTypeClick();
+		Thread.sleep(2000);
+		casePom.selectparticipantOwner();
+		casePom.selectParticipantClick();
+		Thread.sleep(3000);
+		casePom.searchForUsers();
+		Thread.sleep(3000);
+		casePom.searchedName();
+		casePom.addSearchedNameClick();
+		Thread.sleep(2000);
+		casePom.submit.click();
+		Thread.sleep(10000);
+		driver.switchTo().defaultContent();
+		cases.caseDocuments.click();
+		Thread.sleep(5000);
+		driver.navigate().refresh();
+		Thread.sleep(10000);
+		documentsPage.performRightClickOnRoot();
+		Thread.sleep(4000);
+		documentsPage.checkIfRightClickOnRootIsWorking();
+		Thread.sleep(3000);
+		documentsPage.newDocumentClick();
+		Thread.sleep(3000);
+		documentsPage.clickDocumentOther();
+		Thread.sleep(3000);
+		ArkCaseTestUtils.uploadDocx();
+		Thread.sleep(5000);
+		documentsPage.performRighClickOnSecondDocument();
+		Thread.sleep(3000);
+		documentsPage.clickDeclareAsRecordDocument();
+		Thread.sleep(4000);
+		documentsPage.verifyFirstDocument("ArkCaseTesting.docx", "Other", "Samuel Supervisor", "1.0", "RECORD");
+		Thread.sleep(3000);
+		documentsPage.performRightClickOnFirstDocument();
+		Thread.sleep(3000);
+		documentsPage.checkIfRightClickWorksInRecordDocument();
+		documentsPage.verifyOptionOnRightClickOnRecordDocument();
+		Thread.sleep(2000);
+		documentsPage.recordDownload.click();
+		Thread.sleep(10000);
+		check.checkIfFileIsDownloaded("ArkCaseTesting");
+		Thread.sleep(4000);
+		documentsPage.chnageCaseStatusButton.click();
+		Thread.sleep(5000);
+		driver.switchTo().frame(cases.chnageCaseStausFrameOne);
+		Thread.sleep(2000);
+		driver.switchTo().frame(cases.chnageCaseStatusFrameTwo);
+		Thread.sleep(2000);
+		cases.deleteCase();
+		driver.switchTo().defaultContent();
+		cases.changeCaseStatusAproved();
+		Thread.sleep(3000);
+		ArkCaseAuthentication.logOut(driver);
+
+	}
+
+	@Test
+	public void createNewCaseAddDocumendSendEmail() throws InterruptedException, IOException, AWTException {
+
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		casePom.newCase();
+		Thread.sleep(20000);
+		driver.switchTo().frame(cases.frameOne);
+		driver.switchTo().frame(cases.frameTwo);
+		casePom.vrifyGeneralInformationTabName();
+		casePom.caseTitleInput("email document");
+		casePom.verifyCaseTypeTitle();
+		casePom.caseTypeInputClick();
+		Thread.sleep(2000);
+		casePom.caseTypeBackgroundInvestigation();
+		Thread.sleep(2000);
+		casePom.nextButton.click();
+		Thread.sleep(3000);
+		casePom.verifyInitiatorTab();
+		casePom.initiatorTitle.click();
+		Thread.sleep(2000);
+		casePom.initiatorFirstName("Milan");
+		Thread.sleep(2000);
+		casePom.initiatorLastName("Jovanovski");
+		Thread.sleep(2000);
+		casePom.nextButtonClick();
+		Thread.sleep(3000);
+		casePom.nextButtonClick();
+		Thread.sleep(3000);
+		casePom.verifyAttachmentTab();
+		Thread.sleep(2000);
+		casePom.participantnsTab.click();
+		Thread.sleep(2000);
+		casePom.selectParticipantTypeClick();
+		Thread.sleep(2000);
+		casePom.selectparticipantOwner();
+		casePom.selectParticipantClick();
+		Thread.sleep(3000);
+		casePom.searchForUsers();
+		Thread.sleep(3000);
+		casePom.searchedName();
+		casePom.addSearchedNameClick();
+		Thread.sleep(2000);
+		casePom.submit.click();
+		Thread.sleep(10000);
+		driver.switchTo().defaultContent();
+		cases.caseDocuments.click();
+		Thread.sleep(5000);
+		driver.navigate().refresh();
+		Thread.sleep(10000);
+		documentsPage.performRightClickOnRoot();
+		Thread.sleep(4000);
+		documentsPage.checkIfRightClickOnRootIsWorking();
+		Thread.sleep(3000);
+		documentsPage.newDocumentClick();
+		Thread.sleep(3000);
+		documentsPage.clickDocumentOther();
+		Thread.sleep(3000);
+		ArkCaseTestUtils.uploadDocx();
+		Thread.sleep(5000);
+		documentsPage.performRighClickOnSecondDocument();
+		Thread.sleep(3000);
+		documentsPage.clickEmailDocument();
+		Thread.sleep(3000);
+		documentsPage.verifyEmailPopUpTitle();
+		Thread.sleep(2000);
+		documentsPage.searchEmailUserInput("Samuel Supervisor");
+		Thread.sleep(3000);
+		documentsPage.clickEmailSearchBtn();
+		Thread.sleep(3000);
+		documentsPage.verifySearchedUser("Samuel Supervisor", "samuel-acm@armedia.com");
+		Thread.sleep(3000);
+		documentsPage.searchedUserName.click();
+		Thread.sleep(3000);
+		documentsPage.clickSendEmailBtn();
+		Thread.sleep(3000);
+		documentsPage.chnageCaseStatusButton.click();
+		Thread.sleep(10000);
+		driver.switchTo().frame(cases.chnageCaseStausFrameOne);
+		Thread.sleep(2000);
+		driver.switchTo().frame(cases.chnageCaseStatusFrameTwo);
+		Thread.sleep(2000);
+		cases.deleteCase();
+		driver.switchTo().defaultContent();
+		cases.changeCaseStatusAproved();
+		Thread.sleep(3000);
+		ArkCaseAuthentication.logOut(driver);
+
+	}
+
+	@Test
+	public void createNewCaseAddDocumentDeclareAsRecordSendEmail()
+			throws InterruptedException, IOException, AWTException {
+
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		casePom.newCase();
+		Thread.sleep(20000);
+		driver.switchTo().frame(cases.frameOne);
+		driver.switchTo().frame(cases.frameTwo);
+		casePom.vrifyGeneralInformationTabName();
+		casePom.caseTitleInput("email record");
+		casePom.verifyCaseTypeTitle();
+		casePom.caseTypeInputClick();
+		Thread.sleep(2000);
+		casePom.caseTypeBackgroundInvestigation();
+		Thread.sleep(2000);
+		casePom.nextButton.click();
+		Thread.sleep(3000);
+		casePom.verifyInitiatorTab();
+		casePom.initiatorTitle.click();
+		Thread.sleep(2000);
+		casePom.initiatorFirstName("Milan");
+		Thread.sleep(2000);
+		casePom.initiatorLastName("Jovanovski");
+		Thread.sleep(2000);
+		casePom.nextButtonClick();
+		Thread.sleep(3000);
+		casePom.nextButtonClick();
+		Thread.sleep(3000);
+		casePom.verifyAttachmentTab();
+		Thread.sleep(2000);
+		casePom.participantnsTab.click();
+		Thread.sleep(2000);
+		casePom.selectParticipantTypeClick();
+		Thread.sleep(2000);
+		casePom.selectparticipantOwner();
+		casePom.selectParticipantClick();
+		Thread.sleep(3000);
+		casePom.searchForUsers();
+		Thread.sleep(3000);
+		casePom.searchedName();
+		casePom.addSearchedNameClick();
+		Thread.sleep(2000);
+		casePom.submit.click();
+		Thread.sleep(10000);
+		driver.switchTo().defaultContent();
+		cases.caseDocuments.click();
+		Thread.sleep(5000);
+		driver.navigate().refresh();
+		Thread.sleep(10000);
+		documentsPage.rootExpander.click();
+		Thread.sleep(3000);
+		documentsPage.performRightClickOnFirstDocument();
+		Thread.sleep(3000);
+		documentsPage.clickDeclareAsRecordDocument();
+		Thread.sleep(3000);
+		documentsPage.verifyFirstDocument("Case File.pdf", "Case File", "Samuel Supervisor", "1.0", "RECORD");
+		Thread.sleep(3000);
+		documentsPage.performRightClickOnFirstDocument();
+		Thread.sleep(3000);
+		documentsPage.recordEmail.click();
+		Thread.sleep(3000);
+		documentsPage.verifyEmailPopUpTitle();
+		Thread.sleep(2000);
+		documentsPage.searchEmailUserInput("Samuel Supervisor");
+		Thread.sleep(3000);
+		documentsPage.clickEmailSearchBtn();
+		Thread.sleep(3000);
+		documentsPage.verifySearchedUser("Samuel Supervisor", "samuel-acm@armedia.com");
+		Thread.sleep(3000);
+		documentsPage.searchedUserName.click();
+		Thread.sleep(3000);
+		documentsPage.clickSendEmailBtn();
+		Thread.sleep(3000);
+		documentsPage.chnageCaseStatusButton.click();
+		Thread.sleep(5000);
+		driver.switchTo().frame(cases.chnageCaseStausFrameOne);
+		Thread.sleep(2000);
+		driver.switchTo().frame(cases.chnageCaseStatusFrameTwo);
+		Thread.sleep(2000);
+		cases.deleteCase();
+		driver.switchTo().defaultContent();
+		cases.changeCaseStatusAproved();
+		Thread.sleep(3000);
+		ArkCaseAuthentication.logOut(driver);
+
+	}
+
+	@Test
+	public void createNewCaseAddDocumentDeclareAsRecordCopyToFOlder()
+			throws InterruptedException, IOException, AWTException {
+
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		casePom.newCase();
+		Thread.sleep(20000);
+		driver.switchTo().frame(cases.frameOne);
+		driver.switchTo().frame(cases.frameTwo);
+		casePom.vrifyGeneralInformationTabName();
+		casePom.caseTitleInput("email record");
+		casePom.verifyCaseTypeTitle();
+		casePom.caseTypeInputClick();
+		Thread.sleep(2000);
+		casePom.caseTypeBackgroundInvestigation();
+		Thread.sleep(2000);
+		casePom.nextButton.click();
+		Thread.sleep(3000);
+		casePom.verifyInitiatorTab();
+		casePom.initiatorTitle.click();
+		Thread.sleep(2000);
+		casePom.initiatorFirstName("Milan");
+		Thread.sleep(2000);
+		casePom.initiatorLastName("Jovanovski");
+		Thread.sleep(2000);
+		casePom.nextButtonClick();
+		Thread.sleep(3000);
+		casePom.nextButtonClick();
+		Thread.sleep(3000);
+		casePom.verifyAttachmentTab();
+		Thread.sleep(2000);
+		casePom.participantnsTab.click();
+		Thread.sleep(2000);
+		casePom.selectParticipantTypeClick();
+		Thread.sleep(2000);
+		casePom.selectparticipantOwner();
+		casePom.selectParticipantClick();
+		Thread.sleep(3000);
+		casePom.searchForUsers();
+		Thread.sleep(3000);
+		casePom.searchedName();
+		casePom.addSearchedNameClick();
+		Thread.sleep(2000);
+		casePom.submit.click();
+		Thread.sleep(10000);
+		driver.switchTo().defaultContent();
+		cases.caseDocuments.click();
+		Thread.sleep(5000);
+		driver.navigate().refresh();
+		Thread.sleep(10000);
+		documentsPage.rootExpander.click();
+		Thread.sleep(3000);
+		documentsPage.performRightClickOnFirstDocument();
+		Thread.sleep(3000);
+		documentsPage.clickDeclareAsRecordDocument();
+		Thread.sleep(3000);
+		documentsPage.verifyFirstDocument("Case File.pdf", "Case File", "Samuel Supervisor", "1.0", "RECORD");
+		Thread.sleep(3000);
+		documentsPage.performRightClickOnFirstDocument();
+		Thread.sleep(3000);
+		documentsPage.recordCopy.click();
+		Thread.sleep(3000);
+		documentsPage.performRightClickOnRoot();
+		Thread.sleep(3000);
+		documentsPage.clickNewFolder();
+		Thread.sleep(3000);
+		documentsPage.nameTheNewFolder("folder");
+		Thread.sleep(2000);
+		documentsPage.documentsTableTitle.click();
+		Thread.sleep(3000);
+		documentsPage.performRightClickOnFolder();
+		Thread.sleep(3000);
+		documentsPage.pasteInFolder();
+		Thread.sleep(3000);
+		documentsPage.verifyCopyPastedDocumentInFolder("RECORD");
+		Thread.sleep(3000);
+		documentsPage.chnageCaseStatusButton.click();
+		Thread.sleep(5000);
+		driver.switchTo().frame(cases.chnageCaseStausFrameOne);
+		Thread.sleep(2000);
+		driver.switchTo().frame(cases.chnageCaseStatusFrameTwo);
+		Thread.sleep(2000);
+		cases.deleteCase();
+		driver.switchTo().defaultContent();
+		cases.changeCaseStatusAproved();
+		Thread.sleep(3000);
+		ArkCaseAuthentication.logOut(driver);
+
+	}
 
 }
