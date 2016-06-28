@@ -10,8 +10,8 @@
  *
  * This service package contains objects and functions for data storage
  */
-angular.module('services').factory('Acm.StoreService', ['$rootScope', 'UtilService', '$window'
-    , function ($rootScope, Util, $window
+angular.module('services').factory('Acm.StoreService', ['$rootScope', 'UtilService', '$window', 'Util.TimerService'
+    , function ($rootScope, Util, $window, UtilTimerService
     ) {
         var Store = {
             /**
@@ -340,15 +340,15 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', 'UtilServi
              *
              * var dataCache = new CacheFifo({name: "MyData", maxSize: 3});
              *
-             * dataCache.set("k1", "v1");
+             * dataCache.put("k1", "v1");
              *
-             * dataCache.set("k2", "v2");
+             * dataCache.put("k2", "v2");
              *
-             * dataCache.set("k3", "v3");
+             * dataCache.put("k3", "v3");
              *
-             * dataCache.set("k4", "v4");
+             * dataCache.put("k4", "v4");
              *
-             * dataCache.set("k3", "v31");
+             * dataCache.put("k3", "v31");
              *
              * var v1 = dataCache.get("k1");     // null, because it is pushed out by "k4"
              *
@@ -384,15 +384,15 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', 'UtilServi
              *
              * var dataCache = new CacheFifo({name: "MyData", maxSize: 3});
              *
-             * dataCache.set("k1", "v1");
+             * dataCache.put("k1", "v1");
              *
-             * dataCache.set("k2", "v2");
+             * dataCache.put("k2", "v2");
              *
-             * dataCache.set("k3", "v3");
+             * dataCache.put("k3", "v3");
              *
-             * dataCache.set("k4", "v4");
+             * dataCache.put("k4", "v4");
              *
-             * dataCache.set("k3", "v31");
+             * dataCache.put("k3", "v31");
              *
              * var v1 = dataCache.get("k1");     // null, because it is pushed out by "k4"
              *
@@ -543,27 +543,26 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', 'UtilServi
             }
 
             , _evict: function (name, expiration) {
-                //fixme: need a timer
-
-                //if (0 < expiration) {
-                //    var that = this;
-                //    Util.Timer.useTimer(name
-                //        , 300000     //every 5 minutes = 5 * 60 * 1000 milliseconds
-                //        , function () {
-                //            var keys = that.keys;
-                //            var len = keys.length;
-                //            for (var i = 0; i < that.size; i++) {
-                //                var key = keys[i];
-                //                var ts = that.timeStamp[key];
-                //                var now = new Date().getTime();
-                //                if (expiration < now - ts) {
-                //                    that.remove(key);
-                //                }
-                //            }
-                //            return true;
-                //        }
-                //    );
-                //}
+                if (0 < expiration) {
+                    var that = this;
+                    var thisCache = this._getThis();
+                    UtilTimerService.useTimer(name
+                        , 300000     //every 5 minutes = 5 * 60 * 1000 milliseconds
+                        , function () {
+                            var keys = thisCache.keys;
+                            var len = keys.length;
+                            for (var i = 0; i < thisCache.size; i++) {
+                                var key = keys[i];
+                                var ts = thisCache.timeStamp[key];
+                                var now = new Date().getTime();
+                                if (expiration < now - ts) {
+                                    that.remove(key);
+                                }
+                            }
+                            return true;
+                        }
+                    );
+                }
             }
 
             /**
