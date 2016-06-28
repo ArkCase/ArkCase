@@ -40,7 +40,6 @@
         <dependency>
             <groupId>com.microsoft.ews-java-api</groupId>
             <artifactId>ews-java-api</artifactId>
-            <classifier>arkcase</classifier>
         </dependency>
 
         <dependency>
