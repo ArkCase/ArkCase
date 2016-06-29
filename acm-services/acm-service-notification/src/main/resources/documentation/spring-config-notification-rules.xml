@@ -829,12 +829,11 @@
     </bean>
 
     <!-- Senders Definition -->
-    <bean id="emailNotificationSender"
-          class="com.armedia.acm.services.notification.service.EmailNotificationSender">
-        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
-        <property name="propertyFileManager" ref="propertyFileManager" />
-        <property name="notificationPropertyFileLocation" ref="notificationPropertyFileLocation"/>
-        <property name="muleContextManager" ref="muleContextManager"/>
+    <bean id="notificationSenderFactory" class="com.armedia.acm.services.notification.service.NotificationSenderFactory">
+        <property name="propertyFileManager" ref="propertyFileManager"/>
+        <property name="notificationPropertyFileLocation" ref="notificationPropertyFileLocation" />
+        <property name="smtpNotificationSender" ref="smtpNotificationSender"/>
+        <property name="microsoftExchangeNotificationSender" ref="microsoftExchangeNotificationSender"/>
     </bean>
 
     <!-- Task Scheduler -->
