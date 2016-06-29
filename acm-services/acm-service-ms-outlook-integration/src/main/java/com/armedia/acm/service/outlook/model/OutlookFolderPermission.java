@@ -1,15 +1,17 @@
 package com.armedia.acm.service.outlook.model;
 
-import microsoft.exchange.webservices.data.enumeration.FolderPermissionLevel;
-import microsoft.exchange.webservices.data.enumeration.FolderPermissionReadAccess;
-import microsoft.exchange.webservices.data.enumeration.PermissionScope;
+import microsoft.exchange.webservices.data.core.enumeration.permission.PermissionScope;
+import microsoft.exchange.webservices.data.core.enumeration.permission.folder.FolderPermissionLevel;
+import microsoft.exchange.webservices.data.core.enumeration.permission.folder.FolderPermissionReadAccess;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * Created by nebojsha on 09.05.2015.
  */
-public class OutlookFolderPermission {
+public class OutlookFolderPermission
+{
+
     private String email;
     private FolderPermissionLevel level;
     private boolean canCreateItems;
@@ -21,97 +23,120 @@ public class OutlookFolderPermission {
     private PermissionScope deleteItems;
     private FolderPermissionReadAccess readItems;
 
-    public OutlookFolderPermission() {
+    public OutlookFolderPermission()
+    {
         level = FolderPermissionLevel.Custom;
     }
 
-    public String getEmail() {
+    public String getEmail()
+    {
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(String email)
+    {
         this.email = email;
     }
 
-    public FolderPermissionLevel getLevel() {
+    public FolderPermissionLevel getLevel()
+    {
         return level;
     }
 
-    public void setLevel(FolderPermissionLevel level) {
+    public void setLevel(FolderPermissionLevel level)
+    {
         this.level = level;
     }
 
-    public boolean canCreateItems() {
+    public boolean canCreateItems()
+    {
         return canCreateItems;
     }
 
-    public void setCanCreateItems(boolean canCreateItems) {
+    public void setCanCreateItems(boolean canCreateItems)
+    {
         this.canCreateItems = canCreateItems;
     }
 
-    public boolean canCreateSubFolders() {
+    public boolean canCreateSubFolders()
+    {
         return canCreateSubFolders;
     }
 
-    public void setCanCreateSubFolders(boolean canCreateSubFolders) {
+    public void setCanCreateSubFolders(boolean canCreateSubFolders)
+    {
         this.canCreateSubFolders = canCreateSubFolders;
     }
 
-    public boolean isFolderOwner() {
+    public boolean isFolderOwner()
+    {
         return folderOwner;
     }
 
-    public void setFolderOwner(boolean folderOwner) {
+    public void setFolderOwner(boolean folderOwner)
+    {
         this.folderOwner = folderOwner;
     }
 
-    public boolean isFolderVisible() {
+    public boolean isFolderVisible()
+    {
         return folderVisible;
     }
 
-    public void setFolderVisible(boolean folderVisible) {
+    public void setFolderVisible(boolean folderVisible)
+    {
         this.folderVisible = folderVisible;
     }
 
-    public boolean isFolderContact() {
+    public boolean isFolderContact()
+    {
         return folderContact;
     }
 
-    public void setFolderContact(boolean folderContact) {
+    public void setFolderContact(boolean folderContact)
+    {
         this.folderContact = folderContact;
     }
 
-    public PermissionScope getEditItems() {
+    public PermissionScope getEditItems()
+    {
         return editItems;
     }
 
-    public void setEditItems(PermissionScope editItems) {
+    public void setEditItems(PermissionScope editItems)
+    {
         this.editItems = editItems;
     }
 
-    public PermissionScope getDeleteItems() {
+    public PermissionScope getDeleteItems()
+    {
         return deleteItems;
     }
 
-    public void setDeleteItems(PermissionScope deleteItems) {
+    public void setDeleteItems(PermissionScope deleteItems)
+    {
         this.deleteItems = deleteItems;
     }
 
-    public FolderPermissionReadAccess getReadItems() {
+    public FolderPermissionReadAccess getReadItems()
+    {
         return readItems;
     }
 
-    public void setReadItems(FolderPermissionReadAccess readItems) {
+    public void setReadItems(FolderPermissionReadAccess readItems)
+    {
         this.readItems = readItems;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return ToStringBuilder.reflectionToString(this);
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object obj)
+    {
         if (!(obj instanceof OutlookFolderPermission))
             return false;
         OutlookFolderPermission other = (OutlookFolderPermission) obj;
@@ -120,7 +145,8 @@ public class OutlookFolderPermission {
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         if (getEmail() == null)
             return super.hashCode();
         if (getLevel() == null)
