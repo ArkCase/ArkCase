@@ -72,19 +72,15 @@ public class SpringLdapDao
         for (String memberDn : memberDns)
         {
             log.debug("Looking up LDAP user '{}'", memberDn);
-            AcmLdapEntity ldapEntity = null;
-            try
+
+            memberDn = memberDn.replaceAll("\\/", "\\\\/"); // some of the DNs contain (/) which is a special character to JNDI
+            AcmLdapEntity ldapEntity = (AcmLdapEntity) template.lookup(memberDn, mapper);
+
+            // The context mapper returns null if the group member is a disabled user
+            if (ldapEntity != null)
             {
-                ldapEntity = (AcmLdapEntity) template.lookup(memberDn, mapper);
-                // The context mapper returns null if the group member is a disabled user
-                if (ldapEntity != null)
-                {
-                    ldapEntity.setDistinguishedName(memberDn);
-                    retval.add(ldapEntity);
-                }
-            } catch (NamingException e)
-            {
-                log.warn("LDAP user lookup exception", e);
+                ldapEntity.setDistinguishedName(memberDn);
+                retval.add(ldapEntity);
             }
         }
 
