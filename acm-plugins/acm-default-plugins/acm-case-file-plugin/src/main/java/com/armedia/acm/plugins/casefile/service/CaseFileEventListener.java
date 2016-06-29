@@ -14,13 +14,14 @@ import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryEventPublis
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryService;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
-import microsoft.exchange.webservices.data.enumeration.DeleteMode;
+import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 import org.springframework.context.ApplicationListener;
 
 import java.util.List;
 
 public class CaseFileEventListener implements ApplicationListener<AcmObjectHistoryEvent>
 {
+
 
     private AcmObjectHistoryService acmObjectHistoryService;
     private AcmObjectHistoryEventPublisher acmObjectHistoryEventPublisher;
@@ -76,7 +77,8 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                     {
                         String calId = updatedCaseFile.getContainer().getCalendarFolderId();
                         if (updatedCaseFile.getStatus().equals(caseFileStatusClosed)
-                                && shouldDeleteCalendarFolder && calId != null){
+                                && shouldDeleteCalendarFolder && calId != null)
+                        {
 
                             //delete shared calendar if case closed
                             getCalendarService().deleteFolder(updatedCaseFile.getContainer().getContainerObjectId(),
