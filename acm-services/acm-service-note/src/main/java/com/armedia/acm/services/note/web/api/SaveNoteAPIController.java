@@ -48,16 +48,6 @@ public class SaveNoteAPIController
                 throw new AcmNoteException("Could not save note, missing parent type and ID");
             }
 
-            // to db
-            Note newNote = new Note();
-            newNote.setId(note.getId());
-            newNote.setParentId(note.getParentId());
-            newNote.setParentType(note.getParentType());
-            newNote.setNote(note.getNote());
-            newNote.setCreator(note.getCreator());
-            newNote.setCreated(note.getCreated());
-            newNote.setTag(note.getTag());
-
             Note savedNote = getNoteDao().save(note);
 
             String noteEvent = note.getId() == null ? NoteConstants.NOTE_ADDED : NoteConstants.NOTE_UPDATED;
@@ -65,12 +55,12 @@ public class SaveNoteAPIController
             {
                 noteEvent = String.format("rejectcomment.%s", noteEvent);
             }
-            publishNoteEvent(httpSession, authentication, savedNote, noteEvent, true);
+            publishNoteEvent(httpSession, savedNote, noteEvent, true);
 
             return savedNote;
         } catch (Exception e)
         {
-            // gen up a fake task so we can audit the failure
+            // Create a fake note to audit the failure.
             Note fakeNote = new Note();
             fakeNote.setId(note.getId());
             log.info("fake id : ()", fakeNote.getId());
@@ -91,20 +81,15 @@ public class SaveNoteAPIController
                 noteEvent = String.format("rejectcomment.%s", noteEvent);
             }
 
-            publishNoteEvent(httpSession, authentication, fakeNote, noteEvent, false);
+            publishNoteEvent(httpSession, fakeNote, noteEvent, false);
             throw new AcmUserActionFailedException("unable to add note from ", note.getParentType(), note.getParentId(), e.getMessage(), e);
         }
     }
 
-    protected void publishNoteEvent(HttpSession httpSession, Authentication auth, Note note, String eventType, boolean succeeded)
+    protected void publishNoteEvent(HttpSession httpSession, Note note, String eventType, boolean succeeded)
     {
         String ipAddress = (String) httpSession.getAttribute("acm_ip_address");
         ApplicationNoteEvent event = new ApplicationNoteEvent(note, eventType, succeeded, ipAddress);
-        if (eventType.equalsIgnoreCase(NoteConstants.NOTE_UPDATED))
-        {
-            //When updating a note, the event's userid should be the user who updated the note, not the creator.
-            event.setUserId(auth.getName());
-        }
         getNoteEventPublisher().publishNoteEvent(event);
     }
 
