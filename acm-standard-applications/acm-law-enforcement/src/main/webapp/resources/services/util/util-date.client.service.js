@@ -143,6 +143,24 @@ angular.module('services').factory('Util.DateService', ['$translate', 'UtilServi
                 return (dt.isValid()) ? dt.format(Service.defaultDateTimeFormat) : replacement;
             }
 
+            /**
+             * @ngdoc method
+             * @name getTimeZoneOffset
+             * @methodOf services:Util.DateService
+             *
+             * @description
+             * Get user's time difference between UTC time and local time
+             *
+             * @Returns {String} (eg: UTC-2:30)
+             */
+            , getTimeZoneOffset: function () {
+                var currentTimeZoneOffsetInMinutes = new Date().getTimezoneOffset();
+                var currentTimeZoneOffsetInHours = Math.floor(currentTimeZoneOffsetInMinutes / 60);
+                currentTimeZoneOffsetInMinutes = Math.abs(currentTimeZoneOffsetInMinutes % 60);
+                var currentTimeZoneOffset = "UTC" + currentTimeZoneOffsetInHours + ":" + currentTimeZoneOffsetInMinutes;
+                return currentTimeZoneOffset;
+            }
+
         };
 
         return Service;

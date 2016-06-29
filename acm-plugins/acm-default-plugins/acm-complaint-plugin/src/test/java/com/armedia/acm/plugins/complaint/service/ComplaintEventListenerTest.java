@@ -16,7 +16,7 @@ import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryEventPublis
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryService;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantConstants;
-import microsoft.exchange.webservices.data.enumeration.DeleteMode;
+import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -450,13 +450,14 @@ public class ComplaintEventListenerTest extends EasyMockSupport
     }
 
     public void runAndTestComplaintModifiedEventStatusClosed(AcmObjectHistory currentHistory, AcmObjectHistory previousHistory,
-                                                 String statusToCheck, Complaint complaint)
+                                                             String statusToCheck, Complaint complaint)
     {
         AcmObjectHistoryEvent event = new AcmObjectHistoryEvent(currentHistory);
         event.setIpAddress(IP_ADDRESS);
         event.setUserId(USER_ID);
 
         expect(mockAcmObjectHistoryService.getAcmObjectHistory(OBJECT_ID, ComplaintConstants.OBJECT_TYPE)).andReturn(previousHistory);
+
 
         Capture<Complaint> complaintCapture = Capture.newInstance();
         Capture<String> ipAddressCapture = Capture.newInstance();
