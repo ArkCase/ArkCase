@@ -25,7 +25,15 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
         <scripting:transformer name="sendEmailTransformer">
             <scripting:script engine="groovy">
                 <scripting:text><![CDATA[
+                var withAttachments = message.getInboundProperty("withAttachments");
+                if (withAttachments == "true")
+                {
+                
+                }
+                else
+                {
                     muleContext.registry.get("arkContext").getBean("outlookService").sendEmail(message.getInboundProperty("emailInfo"), message.getInboundProperty("user"), message.getInboundProperty("authentication"));
+                }
                     return payload;
                     ]]>
                 </scripting:text>
