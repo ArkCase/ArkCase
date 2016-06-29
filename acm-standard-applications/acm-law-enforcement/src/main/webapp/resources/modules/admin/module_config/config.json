@@ -489,6 +489,10 @@
         {
           "title": "admin.application.userName.config.title",
           "templateName": "application-user-name.config"
+        },
+        {
+          "title": "admin.application.login.config.title",
+          "templateName": "application-login.config"
         }
       ]
     },
