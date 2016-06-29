@@ -27,24 +27,14 @@ angular.module('reports').factory('Reports.BuildUrl', ['$sce', 'Util.DateService
              * @param {Array}  params.reports List of reports
              * @param {String} params.reportsHost Represents reports server URL
              * @param {String} params.reportsPort Represents reports server port
-             * @param {String} params.reportUri Represents report URL
              * @param {String} params.startDate Represents value for date chosen from dateFrom input
              * @param {String} params.endDate Represents value for date chosen from dateTo input
-             * @param {String} params.timeZone Represents the time zone offset for the client
              * @param {String} params.reportsUser The Pentaho user name
              * @param {String} params.reportsPassword The Pentaho password
              * @param {String} params.stateSelected Represents report server date format
              * @returns {Object} Object assigned as trusted for angular to display the report in an iFrame
              */
             getUrl: function (params) {
-
-                function getTimeZoneOffset(){
-                    var currentTimeZoneOffsetInMinutes = new Date().getTimezoneOffset();
-                    var currentTimeZoneOffsetInHours = Math.floor(currentTimeZoneOffsetInMinutes / 60);
-                    currentTimeZoneOffsetInMinutes = Math.abs(currentTimeZoneOffsetInMinutes % 60);
-                    var currentTimeZoneOffset = "UTC" + currentTimeZoneOffsetInHours + ":" + currentTimeZoneOffsetInMinutes;
-                    return currentTimeZoneOffset;
-                }
 
                 var reportUrl = params.reportsHost + (params.reportsPort ? ":" + params.reportsPort : "") + params.reports[params.reportSelected]
                     + "?startDate=" + UtilDateService.goodIsoDate(params.startDate)
