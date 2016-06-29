@@ -30,7 +30,6 @@ angular.module('audit').factory('AuditController.BuildUrl', ['$sce', '$location'
              * @param {String} objectType String that represents selected value from audit dropdown(default is ALL)
              * @param {String} objectId String that represents value from text input(default is empty string "")
              * @param {String} dateFormat String that represents pentaho date format
-             * @param {String} timeZone String that represents the time zone offset for the client
              * @param {Boolean} useBaseUrl boolean that represent should baseUrl should be generated and sent as parameter
              * @param {String} pentahoUser Pentaho user name
              * @param {String} pentahoPassword Pentaho password
@@ -45,14 +44,6 @@ angular.module('audit').factory('AuditController.BuildUrl', ['$sce', '$location'
                     if (pentahoPort.charAt(0) != ':' && pentahoHost.charAt(pentahoHost.length - 1) != ':') {
                         amendedPentahoPort = ':' + amendedPentahoPort;
                     }
-                }
-
-                function getTimeZoneOffset(){
-                    var currentTimeZoneOffsetInMinutes = new Date().getTimezoneOffset();
-                    var currentTimeZoneOffsetInHours = Math.floor(currentTimeZoneOffsetInMinutes / 60);
-                    currentTimeZoneOffsetInMinutes = Math.abs(currentTimeZoneOffsetInMinutes % 60);
-                    var currentTimeZoneOffset = "UTC" + currentTimeZoneOffsetInHours + ":" + currentTimeZoneOffsetInMinutes;
-                    return currentTimeZoneOffset;
                 }
 
                 var reportUrl = pentahoHost + amendedPentahoPort + auditReportUri
