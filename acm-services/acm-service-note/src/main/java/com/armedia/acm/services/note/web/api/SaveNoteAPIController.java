@@ -60,12 +60,12 @@ public class SaveNoteAPIController
 
             Note savedNote = getNoteDao().save(note);
 
-            String noteEvent = note.getId() == null ? "added" : "updated";
+            String noteEvent = note.getId() == null ? NoteConstants.NOTE_ADDED : NoteConstants.NOTE_UPDATED;
             if (savedNote.getType().equals(NoteConstants.NOTE_REJECT_COMMENT))
             {
                 noteEvent = String.format("rejectcomment.%s", noteEvent);
             }
-            publishNoteEvent(httpSession, savedNote, noteEvent, true);
+            publishNoteEvent(httpSession, authentication, savedNote, noteEvent, true);
 
             return savedNote;
         } catch (Exception e)
@@ -84,22 +84,27 @@ public class SaveNoteAPIController
             fakeNote.setType(NoteConstants.NOTE_GENERAL);
             fakeNote.setTag(note.getTag());
 
-            String noteEvent = note.getId() == null ? "added" : "updated";
+            String noteEvent = note.getId() == null ? NoteConstants.NOTE_ADDED : NoteConstants.NOTE_UPDATED;
 
             if (fakeNote.getType().equals(NoteConstants.NOTE_REJECT_COMMENT))
             {
                 noteEvent = String.format("rejectcomment.%s", noteEvent);
             }
 
-            publishNoteEvent(httpSession, fakeNote, noteEvent, false);
+            publishNoteEvent(httpSession, authentication, fakeNote, noteEvent, false);
             throw new AcmUserActionFailedException("unable to add note from ", note.getParentType(), note.getParentId(), e.getMessage(), e);
         }
     }
 
-    protected void publishNoteEvent(HttpSession httpSession, Note note, String eventType, boolean succeeded)
+    protected void publishNoteEvent(HttpSession httpSession, Authentication auth, Note note, String eventType, boolean succeeded)
     {
         String ipAddress = (String) httpSession.getAttribute("acm_ip_address");
         ApplicationNoteEvent event = new ApplicationNoteEvent(note, eventType, succeeded, ipAddress);
+        if (eventType.equalsIgnoreCase(NoteConstants.NOTE_UPDATED))
+        {
+            //When updating a note, the event's userid should be the user who updated the note, not the creator.
+            event.setUserId(auth.getName());
+        }
         getNoteEventPublisher().publishNoteEvent(event);
     }
 
