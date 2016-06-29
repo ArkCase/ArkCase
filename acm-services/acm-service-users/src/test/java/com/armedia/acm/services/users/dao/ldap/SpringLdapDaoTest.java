@@ -4,16 +4,15 @@ import com.armedia.acm.services.users.model.AcmLdapEntity;
 import com.armedia.acm.services.users.model.LdapGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapEntityContextMapper;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
+import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.ldap.UncategorizedLdapException;
 import org.springframework.ldap.core.LdapTemplate;
 
 import java.util.List;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
@@ -84,22 +83,27 @@ public class SpringLdapDaoTest extends EasyMockSupport
     }
 
     @Test
-    public void findGroupMembersWithInvalidName() throws Exception
+    public void findGroupMembersWithInvalidName()
     {
         String[] memberDns = new String[]{"NAME WITH FORWARD SLASH /"};
 
         testGroupMemberExpectations(memberDns);
 
-        expect(mockLdapTemplate.lookup(memberDns[0], mockMapper))
-                .andThrow(new UncategorizedLdapException("Uncategorized exception occurred during LDAP processing"));
+        String escapedDn = memberDns[0].toString().replaceAll("\\/", "\\\\/");
+
+        Capture<String> dnCapture = newCapture();
+
+        expect(mockLdapTemplate.lookup(capture(dnCapture), eq(mockMapper))).andReturn(mockEntity);
+        mockEntity.setDistinguishedName(capture(dnCapture));
+        expectLastCall();
 
         replayAll();
-
         List<AcmLdapEntity> actual = springLdapDao.findGroupMembers(mockLdapTemplate, mockAcmLdapSyncConfig, mockLdapGroup);
 
         verifyAll();
         assertThat("List should not be null", actual, is(notNullValue()));
         assertThat("List should have 0 or more elements", actual.size(), is(greaterThanOrEqualTo(0)));
+        assertThat("DN with '/' character should be escaped", dnCapture.getValue(), is(equalTo(escapedDn)));
     }
 
     void testGroupMemberExpectations(String [] memberDns)
