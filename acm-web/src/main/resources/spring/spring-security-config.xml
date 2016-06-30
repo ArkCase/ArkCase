@@ -22,6 +22,9 @@
         security="none"
         pattern="/login.jsp" />
     <http
+            security="none"
+            pattern="/warning" />
+    <http
         security="none"
         pattern="/assets/css/login.css" />
     <http

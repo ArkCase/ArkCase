@@ -2,13 +2,17 @@
 
 angular.module('goodbye').controller('GoodbyeController', ['$window'
     , 'UtilService', 'Acm.LoginService', 'LookupService', 'Acm.AppService'
-    , function ($window, Util, AcmLoginService, LookupService, AcmAppService
-    ) {
+    , function ($window, Util, AcmLoginService, LookupService, AcmAppService) {
         // Retrieves the app properties from app-config.xml file
         var appConfig = LookupService.getConfig('app').then(function (data) {
             // clear redirectURL and redirectState
             localStorage.removeItem('redirectURL');
             sessionStorage.removeItem('redirectState');
+
+            //clear warning from localStorage
+            sessionStorage.removeItem('warningAccepted');
+
+
             AcmLoginService.resetCaches();
             AcmLoginService.setLogin(false);
 
