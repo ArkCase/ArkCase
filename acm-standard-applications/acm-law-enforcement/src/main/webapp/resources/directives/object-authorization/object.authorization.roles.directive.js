@@ -59,8 +59,9 @@
  </file>
  </example>
  */
-angular.module('directives').directive('objectAuthorizationRoles', ['$translate',
-    function ($translate) {
+angular.module('directives').directive('objectAuthorizationRoles', ['$translate', 'Menus',
+    function ($translate, Menus)
+    {
         return {
             restrict: 'E',
             scope: {
@@ -72,9 +73,12 @@ angular.module('directives').directive('objectAuthorizationRoles', ['$translate'
                 objectTitle: "@"
             },
             templateUrl: 'directives/object-authorization/object.authorization.roles.html',
-            link: function (scope) {
-                scope.$watch('data', function (newValue) {
-                    if (newValue && newValue.length > 0) {
+            link: function (scope)
+            {
+                scope.$watch('data', function (newValue)
+                {
+                    if (newValue && newValue.length > 0)
+                    {
                         scope.selectedObject = scope.data[0];
                         scope.selectObject();
                     }
@@ -87,10 +91,13 @@ angular.module('directives').directive('objectAuthorizationRoles', ['$translate'
                 scope.notAuthorized = [];
 
                 //authorize button is clicked
-                scope.authorize = function () {
+                scope.authorize = function ()
+                {
                     //don't do anything if array null or empty
-                    if (scope.selectedNotAuthorized && scope.selectedNotAuthorized.length > 0) {
-                        angular.forEach(scope.selectedNotAuthorized, function (sel) {
+                    if (scope.selectedNotAuthorized && scope.selectedNotAuthorized.length > 0)
+                    {
+                        angular.forEach(scope.selectedNotAuthorized, function (sel)
+                        {
                             var indexOf = scope.notAuthorized.indexOf(sel);
                             scope.notAuthorized.splice(indexOf, 1);
                             scope.authorized.push(sel);
@@ -100,10 +107,13 @@ angular.module('directives').directive('objectAuthorizationRoles', ['$translate'
                 };
 
                 //unauthorize button is clicked
-                scope.unAuthorize = function () {
+                scope.unAuthorize = function ()
+                {
                     //don't do anything if array null or empty
-                    if (scope.selectedAuthorized && scope.selectedAuthorized.length > 0) {
-                        angular.forEach(scope.selectedAuthorized, function (sel) {
+                    if (scope.selectedAuthorized && scope.selectedAuthorized.length > 0)
+                    {
+                        angular.forEach(scope.selectedAuthorized, function (sel)
+                        {
                             var indexOf = scope.authorized.indexOf(sel);
                             scope.authorized.splice(indexOf, 1);
                             scope.notAuthorized.push(sel);
@@ -114,15 +124,33 @@ angular.module('directives').directive('objectAuthorizationRoles', ['$translate'
 
 
                 //object is selected event, call callback function
-                scope.selectObject = function () {
+                scope.selectObject = function ()
+                {
                     scope.authorized = [];
                     scope.notAuthorized = [];
                     scope.onObjectSelected(scope.selectedObject, scope.authorized, scope.notAuthorized);
                 };
 
                 //roles has been changed, call callback function with changed values
-                scope.authRoleChange = function () {
+                scope.authRoleChange = function ()
+                {
                     scope.onAuthRoleChange(scope.selectedObject, scope.authorized, scope.notAuthorized);
+                    var allMenuObj = [];
+                    angular.forEach(Menus.allMenuObjects, function (menuO)
+                    {
+                        allMenuObj.push(menuO);
+                    });
+                    Menus.allMenuObjects.splice(0, Menus.allMenuObjects.length);
+                    Menus.menus.leftnav.items.splice(0, Menus.menus.leftnav.items.length);
+                    Menus.menus.topbar.items.splice(0, Menus.menus.topbar.items.length);
+                    Menus.menus.usermenu.items.splice(0, Menus.menus.usermenu.items.length);
+                    for (var i = 0; i < allMenuObj.length; i++)
+                    {
+                        var mO = [];
+                        mO.push(allMenuObj[i]);
+                        Menus.addMenuItems(mO);
+                    }
+                    scope.$bus.publish('refreshLeftMenu', null);
                 };
             }
         };

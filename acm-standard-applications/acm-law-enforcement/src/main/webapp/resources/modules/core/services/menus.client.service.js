@@ -1,29 +1,55 @@
 'use strict';
 
 //Menu service used for managing  menus
-angular.module('core').service('Menus', ['$q', 'PermissionsService',
-    function ($q, PermissionsService) {
+angular.module('core').service('Menus', ['$q', 'PermissionsService', 'Admin.ModulesService', 'Authentication', 'ConfigService',
+    function ($q, PermissionsService, ModuleService, Authentication, ConfigService)
+    {
         // Define a set of default roles
         this.defaultRoles = ['*'];
 
         // Define the menus object
         this.menus = {};
+        // $scope.allMenuObjects = [];
+        this.allMenuObjects = [];
+        var appModules = [];
+        var userRoles = [];
+        var appModulesPromise = ModuleService.getAppModules();
+        var userRolesPromise = Authentication.queryUserInfo();
+
+        $q.all([appModulesPromise]).then(function (modules)
+        {
+            appModules = modules[0].data;
+        })
+
+        $q.all([userRolesPromise]).then(function (roles)
+        {
+            userRoles = roles[0].authorities;
+        })
+
 
         // A private function for rendering decision
-        var shouldRender = function (user) {
-            if (user) {
-                if (!!~this.roles.indexOf('*')) {
+        var shouldRender = function (user)
+        {
+            if (user)
+            {
+                if (!!~this.roles.indexOf('*'))
+                {
                     return true;
-                } else {
-                    for (var userRoleIndex in user.roles) {
-                        for (var roleIndex in this.roles) {
-                            if (this.roles[roleIndex] === user.roles[userRoleIndex]) {
+                } else
+                {
+                    for (var userRoleIndex in user.roles)
+                    {
+                        for (var roleIndex in this.roles)
+                        {
+                            if (this.roles[roleIndex] === user.roles[userRoleIndex])
+                            {
                                 return true;
                             }
                         }
                     }
                 }
-            } else {
+            } else
+            {
                 return this.isPublic;
             }
 
@@ -31,14 +57,19 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService',
         };
 
         // Validate menu existance
-        this.validateMenuExistance = function (menuId) {
-            if (menuId && menuId.length) {
-                if (this.menus[menuId]) {
+        this.validateMenuExistance = function (menuId)
+        {
+            if (menuId && menuId.length)
+            {
+                if (this.menus[menuId])
+                {
                     return true;
-                } else {
+                } else
+                {
                     throw new Error('Menu does not exists');
                 }
-            } else {
+            } else
+            {
                 throw new Error('MenuId was not provided');
             }
 
@@ -46,7 +77,8 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService',
         };
 
         // Get the menu object by menu id
-        this.getMenu = function (menuId) {
+        this.getMenu = function (menuId)
+        {
             // Validate that the menu exists
             this.validateMenuExistance(menuId);
 
@@ -55,7 +87,8 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService',
         };
 
         // Add new menu object by menu id
-        this.addMenu = function (menuId, isPublic, roles) {
+        this.addMenu = function (menuId, isPublic, roles)
+        {
             // Create the new menu
             this.menus[menuId] = {
                 isPublic: isPublic || false,
@@ -69,7 +102,8 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService',
         };
 
         // Remove existing menu object by menu id
-        this.removeMenu = function (menuId) {
+        this.removeMenu = function (menuId)
+        {
             // Validate that the menu exists
             this.validateMenuExistance(menuId);
 
@@ -78,7 +112,8 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService',
         };
 
         // Add menu item object
-        this.addMenuItem = function (menuId, menuItemTitle, menuItemURL, menuItemType, menuItemUIRoute, isPublic, roles, position) {
+        this.addMenuItem = function (menuId, menuItemTitle, menuItemURL, menuItemType, menuItemUIRoute, isPublic, roles, position)
+        {
             // Validate that the menu exists
             this.validateMenuExistance(menuId);
             var context = this;
@@ -103,42 +138,99 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService',
         };
 
         // Add menu item object
-        this.addMenuItems = function (menuObjects) {
+        this.addMenuItems = function (menuObjects)
+        {
             var context = this;
-            for (var i = 0; i < menuObjects.length; i++) {
+            for (var i = 0; i < menuObjects.length; i++)
+            {
                 var menuObj = menuObjects[i];
+                this.allMenuObjects.push(menuObj);
                 // Validate that the menu exists
                 this.validateMenuExistance(menuObj.menuId);
                 // Check if we have defined permission rule with name of menu
-                (function processMenuPermission(menuObj) {
-                    PermissionsService.getActionPermission(menuObj.menuItemURL, null).then(function(moduleAllowed){
-                        if (moduleAllowed) {
-                            // Push new menu item
-                            context.menus[menuObj.menuId].items.push({
-                                title: 'core.menus.' + menuObj.menuId + '.' + menuObj.menuItemURL,
-                                link: menuObj.menuItemURL,
-                                menuItemType: 'item',
-                                uiRoute: '/' + menuObj.menuItemURL,
-                                isPublic: true,
-                                position: menuObj.position || 0,
-                                iconClass: menuObj.iconClass,
-                                permissionAction: menuObj.permissionAction || 'noAction'
-                            });
+                (function processMenuPermission(menuObj)
+                {
+                    PermissionsService.getActionPermission(menuObj.menuItemURL, null).then(function (moduleAllowedByActionPermission)
+                    {
+                        var moduleObject = null;
+                        var moduleAllowedByRoles = false;
+                        angular.forEach(appModules, function (module)
+                        {
+                            if (menuObj.menuItemURL === module.id || menuObj.menuItemURL === module.name.toLowerCase() || menuObj.menuItemTitle === module.name)
+                            {
+                                moduleObject = module
+                            }
+                        })
+
+                        if (menuObj.menuId != "leftnav")
+                        {
+                            moduleAllowedByRoles = true;
+
+                            if (moduleAllowedByActionPermission && moduleAllowedByRoles)
+                            {
+                                // Push new menu item
+                                context.menus[menuObj.menuId].items.push({
+                                    title: 'core.menus.' + menuObj.menuId + '.' + menuObj.menuItemURL,
+                                    link: menuObj.menuItemURL,
+                                    menuItemType: 'item',
+                                    uiRoute: '/' + menuObj.menuItemURL,
+                                    isPublic: true,
+                                    position: menuObj.position || 0,
+                                    iconClass: menuObj.iconClass,
+                                    permissionAction: menuObj.permissionAction || 'noAction'
+                                });
+                            }
                         }
-                    });
+
+                        if (moduleObject != null)
+                        {
+                            ModuleService.getRolesForModulePrivilege(moduleObject.privilege).then(function (rolesForModule)
+                            {
+                                angular.forEach(rolesForModule.data, function (role)
+                                {
+                                    angular.forEach(userRoles, function (userRole)
+                                    {
+                                        if (role === userRole)
+                                        {
+                                            moduleAllowedByRoles = true;
+                                        }
+                                    })
+                                })
+
+                                if (moduleAllowedByActionPermission && moduleAllowedByRoles)
+                                {
+                                    // Push new menu item
+                                    context.menus[menuObj.menuId].items.push({
+                                        title: 'core.menus.' + menuObj.menuId + '.' + menuObj.menuItemURL,
+                                        link: menuObj.menuItemURL,
+                                        menuItemType: 'item',
+                                        uiRoute: '/' + menuObj.menuItemURL,
+                                        isPublic: true,
+                                        position: menuObj.position || 0,
+                                        iconClass: menuObj.iconClass,
+                                        permissionAction: menuObj.permissionAction || 'noAction'
+                                    });
+                                }
+                            })
+                        }
+                    })
                 })(menuObj);
             }
         };
 
 
+
         // Add submenu item object
-        this.addSubMenuItem = function (menuId, rootMenuItemURL, menuItemTitle, menuItemURL, menuItemUIRoute, isPublic, roles, position) {
+        this.addSubMenuItem = function (menuId, rootMenuItemURL, menuItemTitle, menuItemURL, menuItemUIRoute, isPublic, roles, position)
+        {
             // Validate that the menu exists
             this.validateMenuExistance(menuId);
 
             // Search for menu item
-            for (var itemIndex in this.menus[menuId].items) {
-                if (this.menus[menuId].items[itemIndex].link === rootMenuItemURL) {
+            for (var itemIndex in this.menus[menuId].items)
+            {
+                if (this.menus[menuId].items[itemIndex].link === rootMenuItemURL)
+                {
                     // Push new submenu item
                     this.menus[menuId].items[itemIndex].items.push({
                         title: 'core.menus.' + menuId + '.' + menuItemURL,
@@ -157,13 +249,16 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService',
         };
 
         // Remove existing menu object by menu id
-        this.removeMenuItem = function (menuId, menuItemURL) {
+        this.removeMenuItem = function (menuId, menuItemURL)
+        {
             // Validate that the menu exists
             this.validateMenuExistance(menuId);
 
             // Search for menu item to remove
-            for (var itemIndex in this.menus[menuId].items) {
-                if (this.menus[menuId].items[itemIndex].link === menuItemURL) {
+            for (var itemIndex in this.menus[menuId].items)
+            {
+                if (this.menus[menuId].items[itemIndex].link === menuItemURL)
+                {
                     this.menus[menuId].items.splice(itemIndex, 1);
                 }
             }
@@ -173,14 +268,18 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService',
         };
 
         // Remove existing menu object by menu id
-        this.removeSubMenuItem = function (menuId, submenuItemURL) {
+        this.removeSubMenuItem = function (menuId, submenuItemURL)
+        {
             // Validate that the menu exists
             this.validateMenuExistance(menuId);
 
             // Search for menu item to remove
-            for (var itemIndex in this.menus[menuId].items) {
-                for (var subitemIndex in this.menus[menuId].items[itemIndex].items) {
-                    if (this.menus[menuId].items[itemIndex].items[subitemIndex].link === submenuItemURL) {
+            for (var itemIndex in this.menus[menuId].items)
+            {
+                for (var subitemIndex in this.menus[menuId].items[itemIndex].items)
+                {
+                    if (this.menus[menuId].items[itemIndex].items[subitemIndex].link === submenuItemURL)
+                    {
                         this.menus[menuId].items[itemIndex].items.splice(subitemIndex, 1);
                     }
                 }
