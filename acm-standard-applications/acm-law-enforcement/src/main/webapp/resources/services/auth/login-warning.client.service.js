@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc service
- * @name services.service:Authentication
+ * @name services.service:LoginWarningService
  *
  * @description
- * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/auth/authentication.client.service.js services/auth/authentication.client.service.js}
+ * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/auth/login-warning.client.service.js services/auth/login-warning.client.service.js}
  *
- * The Authentication service retrieves user information from server
+ * The LoginWarningService service retrieves warning configuration for login from server
  */
 angular.module('services').factory('LoginWarningService', ['$resource', 'Acm.StoreService', 'UtilService',
     function ($resource, Store, Util) {
