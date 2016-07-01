@@ -6,7 +6,6 @@ package com.armedia.acm.services.notification.service;
 import com.armedia.acm.service.outlook.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksResultDTO;
-import com.armedia.acm.services.notification.model.EmailNotificationDto;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -31,10 +30,6 @@ public interface NotificationSender
      * @return the notification with state set
      */
     public Notification send(Notification notification);
-
-    public List<Notification> sendEmailNotificationWithLinks(List<EmailNotificationDto> in, Authentication authentication);
-
-    public void sendEmailNotificationWithLinks(EmailNotificationDto in, Authentication authentication);
 
     public void sendEmailWithAttachments(EmailWithAttachmentsDTO in, Authentication authentication, AcmUser user) throws Exception;
 
