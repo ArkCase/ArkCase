@@ -6,13 +6,18 @@
         "logout": "Logout"
       }
     },
-    "leftNav":{
+    "leftNav": {
       "title": "Navigation"
     },
-    "topBar":{
+    "topBar": {
       "new": "New",
       "toggle.btn": "Toggle navigation",
       "search.placeholder": "Search"
+    },
+    "loginWarning": {
+      "btnOK.text": "OK",
+      "btnCancel.text": "Cancel",
+      "checkbox_warning.label": "I acknowledge this warning."
     }
   }
 }

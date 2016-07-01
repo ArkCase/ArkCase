@@ -109,8 +109,10 @@
             $('#submit').attr('disabled', 'disabled');
             $('#j_terms').click(function () {
                 if (!$(this).is(':checked')) {
+                    sessionStorage.removeItem('warningAccepted');
                     $('#submit').attr('disabled', 'disabled');
                 } else {
+                    sessionStorage.setItem('warningAccepted', true);
                     $('#submit').removeAttr('disabled');
                 }
             });
