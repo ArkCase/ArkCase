@@ -21,10 +21,6 @@
         <property name="notificationEventPublisher" ref="notificationEventPublisher"/>
     </bean>
 
-    <bean id="sendEmailNotification" class="com.armedia.acm.services.notification.web.api.EmailNotificationAPIController">
-        <property name="notificationSender" ref="notificationSender"/>
-    </bean>
-
     <bean id="sendEmailWithAttachmentsAPIController"
           class="com.armedia.acm.services.notification.web.api.SendEmailWithAttachmentsAPIController">
         <property name="notificationSender" ref="notificationSender"/>

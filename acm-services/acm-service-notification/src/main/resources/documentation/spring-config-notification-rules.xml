@@ -834,6 +834,12 @@
         <property name="notificationPropertyFileLocation" ref="notificationPropertyFileLocation" />
         <property name="smtpNotificationSender" ref="smtpNotificationSender"/>
         <property name="microsoftExchangeNotificationSender" ref="microsoftExchangeNotificationSender"/>
+        <property name="notificationSenderMap">  
+            <map>  
+                <entry key="smtp" value-ref="smtpNotificationSender"></entry>  
+                <entry key="outlook" value-ref="microsoftExchangeNotificationSender"></entry>  
+            </map>  
+        </property>
     </bean>
 
     <!-- Task Scheduler -->

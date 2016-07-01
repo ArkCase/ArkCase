@@ -4,6 +4,8 @@ import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.service.outlook.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksResultDTO;
@@ -11,7 +13,6 @@ import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
-import com.armedia.acm.services.notification.model.EmailNotificationDto;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -22,6 +23,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 
+import javax.activation.DataHandler;
+
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,6 +42,8 @@ public class SmtpNotificationSender implements NotificationSender
     private MuleContextManager muleContextManager;
     private AuthenticationTokenService authenticationTokenService;
     private AuthenticationTokenDao authenticationTokenDao;
+    private EcmFileService ecmFileService;
+    String flow = "vm://sendEmailViaSmtp.in";
 
     @Override
     public Notification send(Notification notification)
@@ -51,24 +57,10 @@ public class SmtpNotificationSender implements NotificationSender
 
         try
         {
+            // Notifications are always send as system user
             getAuditPropertyEntityAdapter().setUserId(NotificationConstants.SYSTEM_USER);
-
-            String flow = "vm://sendEmail.in";
-
-            Map<String, Object> messageProps = new HashMap<>();
-
-            messageProps.put("host",
-                    getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_HOST_KEY, null));
-            messageProps.put("port",
-                    getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_PORT_KEY, null));
-            messageProps.put("user",
-                    getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_USER_KEY, null));
-            messageProps.put("password",
-                    getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_PASSWORD_KEY, null));
-            messageProps.put("from",
-                    getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_FROM_KEY, null));
-            // messageProps.put("to", notification.getUserEmail());
-            messageProps.put("to", "sasko.tanaskoski@armedia.com");
+            Map<String, Object> messageProps = loadSmtpAndOriginatingProperties();
+            messageProps.put("to", notification.getUserEmail());
             messageProps.put("subject", notification.getTitle());
 
             MuleMessage received = getMuleContextManager().send(flow, notification.getNote(), messageProps);
@@ -95,47 +87,121 @@ public class SmtpNotificationSender implements NotificationSender
     }
 
     @Override
-    public List<Notification> sendEmailNotificationWithLinks(List<EmailNotificationDto> emailNotificationDtoList,
-            Authentication authentication)
+    public void sendEmailWithAttachments(EmailWithAttachmentsDTO in, Authentication authentication, AcmUser user) throws Exception
     {
-        List<Notification> notificationList = new ArrayList<>();
-        for (EmailNotificationDto emailNotificationDto : emailNotificationDtoList)
+        Exception exception = null;
+        Map<String, Object> messageProps = loadSmtpAndOriginatingProperties();
+        messageProps.put("subject", in.getSubject());
+
+        for (String emailAddress : in.getEmailAddresses())
         {
-            Notification notification = new Notification();
-            notification.setTitle(emailNotificationDto.getTitle());
-            for (String emailAddress : emailNotificationDto.getEmailAddresses())
+            try
             {
-                notification.setNote(makeNote(emailAddress, emailNotificationDto, authentication));
-                notification.setUserEmail(emailAddress);
-                notification.setStatus(NotificationConstants.STATUS_NEW);
-                notificationList.add(send(notification));
+                messageProps.put("to", emailAddress);
+                Map<String, DataHandler> attachments = new HashMap<String, DataHandler>();
+                for (Long attachmentId : in.getAttachmentIds())
+                {
+                    InputStream contents = getEcmFileService().downloadAsInputStream(attachmentId);
+                    EcmFile ecmFile = getEcmFileService().findById(attachmentId);
+                    attachments.put(ecmFile.getFileName(), new DataHandler(new InputStreamDataSource(contents, ecmFile.getFileName())));
+                }
+                MuleMessage received = getMuleContextManager().send(flow, makeNote(emailAddress, in, authentication), attachments,
+                        messageProps);
+                exception = received.getInboundProperty("sendEmailException");
+
+            } catch (MuleException e)
+            {
+                exception = e;
+            }
+            if (exception != null)
+            {
+                LOG.error("Email message not sent ...", exception);
             }
         }
-        return notificationList;
     }
 
-    public String makeNote(String emailAddress, EmailNotificationDto emailNotificationDto, Authentication authentication)
+    @Override
+    public List<EmailWithEmbeddedLinksResultDTO> sendEmailWithEmbeddedLinks(EmailWithEmbeddedLinksDTO in, Authentication authentication,
+            AcmUser user) throws Exception
+    {
+        List<EmailWithEmbeddedLinksResultDTO> emailResultList = new ArrayList<>();
+        Exception exception = null;
+
+        Map<String, Object> messageProps = loadSmtpAndOriginatingProperties();
+        messageProps.put("subject", in.getSubject());
+        for (String emailAddress : in.getEmailAddresses())
+        {
+            try
+            {
+                messageProps.put("to", emailAddress);
+                MuleMessage received = getMuleContextManager().send(flow, makeNote(emailAddress, in, authentication), messageProps);
+                exception = received.getInboundProperty("sendEmailException");
+            } catch (MuleException e)
+            {
+                exception = e;
+            }
+            if (exception != null)
+            {
+                emailResultList.add(new EmailWithEmbeddedLinksResultDTO(emailAddress, false));
+                LOG.error("Email message not sent ...", exception);
+            } else
+            {
+                emailResultList.add(new EmailWithEmbeddedLinksResultDTO(emailAddress, true));
+            }
+        }
+
+        return emailResultList;
+    }
+
+    private Map<String, Object> loadSmtpAndOriginatingProperties() throws AcmEncryptionException
+    {
+        Map<String, Object> messageProps = new HashMap<>();
+
+        messageProps.put("host",
+                getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_HOST_KEY, null));
+        messageProps.put("port",
+                getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_PORT_KEY, null));
+        messageProps.put("user",
+                getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_USER_KEY, null));
+        messageProps.put("password",
+                getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_PASSWORD_KEY, null));
+        messageProps.put("from",
+                getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_FROM_KEY, null));
+        return messageProps;
+    }
+
+    private String makeNote(String emailAddress, EmailWithAttachmentsDTO emailWithAttachmentsDTO, Authentication authentication)
     {
         String note = "";
-        note += emailNotificationDto.getHeader();
-        for (Long fileId : emailNotificationDto.getFileIds())
-        {
-            String token = generateAndSaveAuthenticationToken(fileId, emailAddress, emailNotificationDto, authentication);
-            note += emailNotificationDto.getBaseUrl() + fileId + "&acm_email_ticket=" + token + "\n";
-        }
-        note += emailNotificationDto.getFooter();
+        note += emailWithAttachmentsDTO.getHeader();
+        note += "\r\r";
+        note += emailWithAttachmentsDTO.getBody();
+        note += "\r\r\r";
+        note += emailWithAttachmentsDTO.getFooter();
         return note;
     }
 
-    public String generateAndSaveAuthenticationToken(Long fileId, String emailAddress, EmailNotificationDto emailNotificationDto,
-            Authentication authentication)
+    private String makeNote(String emailAddress, EmailWithEmbeddedLinksDTO emailWithEmbeddedLinksDTO, Authentication authentication)
+    {
+        String note = "";
+        note += emailWithEmbeddedLinksDTO.getHeader();
+        for (Long fileId : emailWithEmbeddedLinksDTO.getFileIds())
+        {
+            String token = generateAndSaveAuthenticationToken(fileId, emailAddress, authentication);
+            note += " http://" + emailWithEmbeddedLinksDTO.getBaseUrl() + fileId + "&acm_email_ticket=" + token + "\n";
+        }
+        note += emailWithEmbeddedLinksDTO.getFooter();
+        return note;
+    }
+
+    private String generateAndSaveAuthenticationToken(Long fileId, String emailAddress, Authentication authentication)
     {
         String token = getAuthenticationTokenService().getUncachedTokenForAuthentication(authentication);
         saveAuthenticationToken(emailAddress, fileId, token);
         return token;
     }
 
-    public void saveAuthenticationToken(String email, Long fileId, String token)
+    private void saveAuthenticationToken(String email, Long fileId, String token)
     {
         AuthenticationToken authenticationToken = new AuthenticationToken();
         authenticationToken.setKey(token);
@@ -205,23 +271,14 @@ public class SmtpNotificationSender implements NotificationSender
         this.authenticationTokenDao = authenticationTokenDao;
     }
 
-    @Override
-    public void sendEmailWithAttachments(EmailWithAttachmentsDTO in, Authentication authentication, AcmUser user)
+    public EcmFileService getEcmFileService()
     {
-
+        return ecmFileService;
     }
 
-    @Override
-    public void sendEmailNotificationWithLinks(EmailNotificationDto in, Authentication authentication)
+    public void setEcmFileService(EcmFileService ecmFileService)
     {
-
-    }
-
-    @Override
-    public List<EmailWithEmbeddedLinksResultDTO> sendEmailWithEmbeddedLinks(EmailWithEmbeddedLinksDTO in, Authentication authentication,
-            AcmUser user)
-    {
-        return null;
+        this.ecmFileService = ecmFileService;
     }
 
 }

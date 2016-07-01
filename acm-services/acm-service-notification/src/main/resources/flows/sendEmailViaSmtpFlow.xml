@@ -14,10 +14,10 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 http://www.mulesoft.org/schema/mule/smtp http://www.mulesoft.org/schema/mule/smtp/current/mule-smtp.xsd
 http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
 
-    <flow name="sendEmail" doc:name="Send notification to the user by email.">
+    <flow name="sendEmailViaSmtp" doc:name="Send notification to the user by email using Smtp protocol.">
 
         <vm:inbound-endpoint
-                address="vm://sendEmail.in"
+                address="vm://sendEmailViaSmtp.in"
                 exchange-pattern="request-response"
                 doc:name="Send Email">
         </vm:inbound-endpoint>
