@@ -13,16 +13,16 @@
 
     <context:annotation-config/>
 
-    <bean id="websocketsProperties"
-          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <property name="location" value="file:${user.home}/.arkcase/acm/websockets.properties"/>
-    </bean>
+    <context:property-placeholder
+            ignore-unresolvable="true"
+            local-override="false"
+            location="file:${user.home}/.arkcase/acm/websockets.properties"/>
 
-    <websocket:message-broker application-destination-prefix="${acm.websockets.application_destination_prefix}" >
+    <websocket:message-broker application-destination-prefix="${acm.websockets.application_destination_prefix}">
         <websocket:stomp-endpoint path="${acm.websockets.stomp_endpoint}">
             <websocket:sockjs websocket-enabled="${acm.websockets.socksjs.enabled}"/>
         </websocket:stomp-endpoint>
-        <websocket:stomp-broker-relay prefix="${acm.websockets.stomp_broker_relay.prefix}"
+        <websocket:stomp-broker-relay prefix="/topic,/queue"
                                       relay-host="${acm.websockets.stomp_broker_relay.relay_host}"
                                       relay-port="${acm.websockets.stomp_broker_relay.relay_port}"
                                       heartbeat-send-interval="${acm.websockets.stomp_broker_relay.heartbeat_send_interval}"
