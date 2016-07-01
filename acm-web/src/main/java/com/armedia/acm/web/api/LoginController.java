@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Map;
+
 /**
  * Created by dragan.simonovski on 05/11/2016.
  */
@@ -33,9 +35,9 @@ public class LoginController
      */
     @RequestMapping(value = "/warning", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public LoginWarningMessageService getWarning()
+    public Map<String, Object> getWarning()
     {
-        return loginWarningMessageService;
+        return loginWarningMessageService.getWarning();
     }
 
     public void setLoginWarningMessageService(LoginWarningMessageService loginWarningMessageService)
