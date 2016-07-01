@@ -13,11 +13,20 @@
 
     <context:annotation-config/>
 
-    <websocket:message-broker application-destination-prefix="/app">
-        <websocket:stomp-endpoint path="/stomp">
-            <websocket:sockjs websocket-enabled="true"/>
+    <bean id="websocketsProperties"
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="location" value="file:${user.home}/.arkcase/acm/websockets.properties"/>
+    </bean>
+
+    <websocket:message-broker application-destination-prefix="${acm.websockets.application_destination_prefix}" >
+        <websocket:stomp-endpoint path="${acm.websockets.stomp_endpoint}">
+            <websocket:sockjs websocket-enabled="${acm.websockets.socksjs.enabled}"/>
         </websocket:stomp-endpoint>
-        <websocket:simple-broker prefix="/topic, /queue"/>
+        <websocket:stomp-broker-relay prefix="${acm.websockets.stomp_broker_relay.prefix}"
+                                      relay-host="${acm.websockets.stomp_broker_relay.relay_host}"
+                                      relay-port="${acm.websockets.stomp_broker_relay.relay_port}"
+                                      heartbeat-send-interval="${acm.websockets.stomp_broker_relay.heartbeat_send_interval}"
+                                      heartbeat-receive-interval="${acm.websockets.stomp_broker_relay.heartbeat_receive_interval}"/>
     </websocket:message-broker>
 
     <bean id="objectChangeNotificationProperties"
