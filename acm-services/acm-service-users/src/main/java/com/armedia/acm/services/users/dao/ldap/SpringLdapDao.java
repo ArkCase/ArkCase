@@ -11,6 +11,7 @@ import com.armedia.acm.services.users.model.ldap.SimpleAuthenticationSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.AuthenticationSource;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
@@ -27,6 +28,8 @@ public class SpringLdapDao
 {
 
     private final GroupMembersContextMapper groupMembersContextMapper = new GroupMembersContextMapper();
+
+    private AcmLdapEntityContextMapper mapper;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -62,19 +65,15 @@ public class SpringLdapDao
 
         List<AcmLdapEntity> retval = new ArrayList<>(memberDns.length);
 
-        AcmLdapEntityContextMapper mapper = new AcmLdapEntityContextMapper();
         mapper.setUserIdAttributeName(syncConfig.getUserIdAttributeName());
         mapper.setMailAttributeName(syncConfig.getMailAttributeName());
 
-        boolean debug = log.isDebugEnabled();
 
         for (String memberDn : memberDns)
         {
-            if (debug)
-            {
-                log.debug("Looking up user '" + memberDn + "'");
-            }
+            log.debug("Looking up LDAP user '{}'", memberDn);
 
+            memberDn = memberDn.replaceAll("\\/", "\\\\/"); // some of the DNs contain (/) which is a special character to JNDI
             AcmLdapEntity ldapEntity = (AcmLdapEntity) template.lookup(memberDn, mapper);
 
             // The context mapper returns null if the group member is a disabled user
@@ -110,7 +109,6 @@ public class SpringLdapDao
         SearchControls searchControls = new SearchControls();
         searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
 
-        AcmLdapEntityContextMapper mapper = new AcmLdapEntityContextMapper();
         mapper.setUserIdAttributeName(config.getUserIdAttributeName());
         mapper.setMailAttributeName(config.getMailAttributeName());
 
@@ -149,4 +147,13 @@ public class SpringLdapDao
         return groups;
     }
 
+    public AcmLdapEntityContextMapper getMapper()
+    {
+        return mapper;
+    }
+
+    public void setMapper(AcmLdapEntityContextMapper mapper)
+    {
+        this.mapper = mapper;
+    }
 }
