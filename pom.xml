@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -110,6 +110,7 @@
         <barcode4j.version>2.1</barcode4j.version>
         <jai-imageio-core.version>1.3.1</jai-imageio-core.version>
         <milton.version>2.7.1.3</milton.version>
+        <hamcrest.version>1.3</hamcrest.version>
     </properties>
 
     <organization>
@@ -1609,6 +1610,12 @@
                 <scope>test</scope>
             </dependency>
 
+            <dependency>
+                <groupId>org.hamcrest</groupId>
+                <artifactId>hamcrest-all</artifactId>
+                <version>${hamcrest.version}</version>
+                <scope>test</scope>
+            </dependency>
             <!-- end of testing -->
 
             <dependency>
