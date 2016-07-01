@@ -219,7 +219,6 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService', 'Admin.Modu
         };
 
 
-
         // Add submenu item object
         this.addSubMenuItem = function (menuId, rootMenuItemURL, menuItemTitle, menuItemURL, menuItemUIRoute, isPublic, roles, position)
         {
