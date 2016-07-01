@@ -20,7 +20,7 @@
 
     <websocket:message-broker application-destination-prefix="${acm.websockets.application_destination_prefix}">
         <websocket:stomp-endpoint path="${acm.websockets.stomp_endpoint}">
-            <websocket:sockjs websocket-enabled="${acm.websockets.socksjs.enabled}"/>
+            <websocket:sockjs websocket-enabled="true"/>
         </websocket:stomp-endpoint>
         <websocket:stomp-broker-relay prefix="/topic,/queue"
                                       relay-host="${acm.websockets.stomp_broker_relay.relay_host}"
