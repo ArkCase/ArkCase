@@ -1,6 +1,5 @@
 package com.armedia.acm.services.notification.service;
 
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
@@ -19,17 +18,13 @@ import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MicrosoftExchangeNotificationSender implements NotificationSender
 {
@@ -61,14 +56,12 @@ public class MicrosoftExchangeNotificationSender implements NotificationSender
         {
             getAuditPropertyEntityAdapter().setUserId(NotificationConstants.SYSTEM_USER);
 
-            String flow = "vm://sendEmailViaOutlook.in";
-
-            EmailWithAttachmentsDTO emailInfo = new EmailWithAttachmentsDTO();
-            emailInfo.setHeader("");
-            emailInfo.setFooter("");
-            emailInfo.setBody(notification.getNote());
-            emailInfo.setSubject(notification.getTitle());
-            emailInfo.setEmailAddresses(Arrays.asList(notification.getUserEmail()));
+            EmailWithAttachmentsDTO in = new EmailWithAttachmentsDTO();
+            in.setHeader("");
+            in.setFooter("");
+            in.setBody(notification.getNote());
+            in.setSubject(notification.getTitle());
+            in.setEmailAddresses(Arrays.asList(notification.getUserEmail()));
 
             String userId = getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_USER_KEY,
                     null);
@@ -77,28 +70,16 @@ public class MicrosoftExchangeNotificationSender implements NotificationSender
             String userPass = getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_PASSWORD_KEY,
                     null);
 
-            AcmOutlookUser user = new AcmOutlookUser(userId, userEmail, userPass);
+            AcmOutlookUser outlookUser = new AcmOutlookUser(userId, userEmail, userPass);
 
-            Authentication auth = SecurityContextHolder.getContext() != null ? SecurityContextHolder.getContext().getAuthentication()
-                    : null;
+            Authentication authentication = SecurityContextHolder.getContext() != null
+                    ? SecurityContextHolder.getContext().getAuthentication() : null;
 
-            Map<String, Object> messageProps = new HashMap<>();
-
-            messageProps.put("emailInfo", emailInfo);
-            messageProps.put("user", user);
-            messageProps.put("authentication", auth);
-
-            MuleMessage received = getMuleContextManager().send(flow, notification.getNote(), messageProps);
-
-            exception = received.getInboundProperty("sendEmailException");
-        } catch (MuleException e)
-        {
-            exception = e;
-        } catch (AcmEncryptionException e)
+            getOutlookService().sendEmail(in, outlookUser, authentication);
+        } catch (Exception e)
         {
             exception = e;
         }
-
         if (exception == null)
         {
             notification.setState(NotificationConstants.STATE_SENT);

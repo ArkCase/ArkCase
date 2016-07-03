@@ -1,5 +1,8 @@
 package com.armedia.acm.services.notification.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.activation.DataSource;
 import javax.activation.MimetypesFileTypeMap;
 
@@ -12,6 +15,7 @@ import java.io.OutputStream;
 public class InputStreamDataSource implements DataSource
 {
 
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
     ByteArrayOutputStream buffer = new ByteArrayOutputStream();
     private final String name;
 
@@ -30,7 +34,7 @@ public class InputStreamDataSource implements DataSource
             buffer.flush();
         } catch (IOException e)
         {
-            e.printStackTrace();
+            LOG.error("Problem while adding attachment...", e);
         }
 
     }
