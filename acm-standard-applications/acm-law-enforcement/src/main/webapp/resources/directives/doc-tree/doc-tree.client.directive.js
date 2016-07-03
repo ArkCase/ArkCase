@@ -1472,13 +1472,20 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                                 var files = args.files;
                                 var refresh = Util.goodValue(args.refresh, true);
-                                DocTree.doSubmitFormUploadFile(files, refresh);
+                                //DocTree.doSubmitFormUploadFile(files, refresh);
 
-                                $q.when(DocTree.uploadSetting.deferUploadFile.promise).then(function () {
+                                var promiseUploadFile = DocTree.doSubmitFormUploadFile(files, refresh);
+                                $q.when(promiseUploadFile).then(function (data) {
+                                    //DocTree.uploadSetting.deferUploadFile.resolve(tempData);
                                     DocTree.uploadSetting = null;
                                 });
 
-                                return DocTree.uploadSetting.deferUploadFile.promise;
+                                //$q.when(DocTree.uploadSetting.deferUploadFile.promise).then(function () {
+                                //    DocTree.uploadSetting = null;
+                                //});
+
+                                //return DocTree.uploadSetting.deferUploadFile.promise;
+                                return promiseUploadFile;
                             }
                         }
                         , {
@@ -2197,7 +2204,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                             fileNode.setStatus("ok");
                                         }
                                     } //end for
-                                    dfd.resolve(uploadedFiles);
+                                    dfd.resolve({files: uploadedFiles, nodes: fileNodes});
                                 }
                             }
                             , function (errorData) {
@@ -2259,14 +2266,14 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             }
                         }).then(
                             function (replacedFile) {
+                                if (replacedFile && fileNode) {
+                                    fileNode.renderTitle();
+                                    fileNode.setStatus("ok");
+                                }
                                 if (refresh) {
-                                    if (replacedFile && fileNode) {
-                                        fileNode.renderTitle();
-                                        fileNode.setStatus("ok");
-                                    }
                                     DocTree.refreshTree();
                                 }
-                                dfd.resolve(replacedFile);
+                                dfd.resolve({files: [replacedFile], nodes: [fileNode]});
                             }
                             , function (errorData) {
                                 DocTree.markNodeError(fileNode);
@@ -3339,12 +3346,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             }
             , doSubmitFormUploadFile: function (files, doRefresh) {
                 if (!DocTree.uploadSetting) {
-                    return;
+                    return Util.errorPromise("upload file error");
                 }
 
-                //var refresh = true;
-                //if (doRefresh == false)
-                //    refresh = false;
                 var refresh = Util.goodValue(doRefresh, true);
 
                 var dfd = $.Deferred();
@@ -3368,40 +3372,42 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 }
 
                 var cacheKey = DocTree.getCacheKeyByNode(folderNode);
-                var tempData = null;
+                //var tempData = null;
                 if (DocTree.uploadSetting.uploadFileNew) {
                     DocTree.Op.uploadFiles(fd, folderNode, names, fileType)
                         .then(function (data) {
-                                tempData = data;
+                                //tempData = data;
                                 dfd.resolve(data);
                             },
                             function (error) {
                                 dfd.reject(error);
                             })
-                        .always(function () {
-                            //if (DocTree.uploadSetting) {
-                            //    DocTree.Command.onPostCmd(DocTree.uploadSetting.cmd, DocTree.uploadSetting.actNodes);
-                            //    DocTree.uploadSetting = null;
-                            //}
-                            DocTree.uploadSetting.deferUploadFile.resolve(tempData);
-                        });
+                        //.always(function () {
+                        //    //if (DocTree.uploadSetting) {
+                        //    //    DocTree.Command.onPostCmd(DocTree.uploadSetting.cmd, DocTree.uploadSetting.actNodes);
+                        //    //    DocTree.uploadSetting = null;
+                        //    //}
+                        //    DocTree.uploadSetting.deferUploadFile.resolve(tempData);
+                        //})
+                    ;
                 } else {
                     var replaceNode = DocTree.uploadSetting.replaceFileNode;
                     DocTree.Op.replaceFile(fd, replaceNode, names[0], refresh)
                         .then(function (data) {
-                                tempData = data;
+                                //tempData = data;
                                 dfd.resolve(data);
                             },
                             function (error) {
                                 dfd.reject(error);
                             })
-                        .always(function () {
-                            //if (DocTree.uploadSetting) {
-                            //    DocTree.Command.onPostCmd(DocTree.uploadSetting.cmd, DocTree.uploadSetting.actNodes);
-                            //    DocTree.uploadSetting = null;
-                            //}
-                            DocTree.uploadSetting.deferUploadFile.resolve(tempData);
-                        });
+                        //.always(function () {
+                        //    //if (DocTree.uploadSetting) {
+                        //    //    DocTree.Command.onPostCmd(DocTree.uploadSetting.cmd, DocTree.uploadSetting.actNodes);
+                        //    //    DocTree.uploadSetting = null;
+                        //    //}
+                        //    DocTree.uploadSetting.deferUploadFile.resolve(tempData);
+                        //})
+                    ;
                 }
                 return dfd.promise();
             }
