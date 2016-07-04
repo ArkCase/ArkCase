@@ -8,8 +8,7 @@ import org.openqa.selenium.support.How;
 import org.testng.asserts.SoftAssert;
 
 public class TaskPage {
-     public
-	@FindBy(how = How.ID, using = "saveButton")
+	public @FindBy(how = How.ID, using = "saveButton")
 
 	WebElement saveButton;
 	@FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/form/div[1]/h3/span")
@@ -172,24 +171,20 @@ public class TaskPage {
 	WebElement parentTypeDropDown;
 	@FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/form/div[2]/div[2]/div[2]/label/select/option[2]")
 	WebElement associateWithCAase;
-	@FindBy(how=How.XPATH,using="/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div[1]/div[1]/div[1]/h4/a")
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div[1]/div[1]/div[1]/h4/a")
 	WebElement casename;
-	@FindBy(how=How.XPATH,using="/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[7]/a")
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[7]/a")
 	WebElement casestaskLink;
-	@FindBy(how=How.XPATH,using="/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[1]/a")
-    WebElement taskInTaskTable;	
-	@FindBy(how=How.XPATH,using="/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[2]/div[1]/div[1]/button[3]")
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[1]/a")
+	WebElement taskInTaskTable;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[2]/div[1]/div[1]/button[3]")
 	WebElement tableForward;
-	public
-	@FindBy(how=How.XPATH,using="/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[4]")
-	WebElement deleteTask;
-	
-	
+	public @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[4]") WebElement deleteTask;
 
 	public void newTask() throws InterruptedException {
 
 		editButton.isEnabled();
-		
+
 		Thread.sleep(2000);
 		newButton.isDisplayed();
 		newButton.isEnabled();
@@ -199,20 +194,19 @@ public class TaskPage {
 		mainTaskButton.click();
 		Thread.sleep(2000);
 	}
-	public void newButtonClick() throws InterruptedException{
-		
-	newButton.click();
-	Thread.sleep(3000);
+
+	public void newButtonClick() throws InterruptedException {
+
+		newButton.click();
+		Thread.sleep(3000);
 	}
-	
-	public void newTaskButtonClick() throws InterruptedException{
-		
-	mainTaskButton.click();
-	Thread.sleep(5000);
-		
-		
+
+	public void newTaskButtonClick() throws InterruptedException {
+
+		mainTaskButton.click();
+		Thread.sleep(5000);
+
 	}
-	
 
 	public void verifySubjectTitleInput() {
 
@@ -224,7 +218,7 @@ public class TaskPage {
 
 	public void verifyTaskTitle() {
 
-		SoftAssert softAssert=new SoftAssert();
+		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertEquals(taskTitle.getText(), "New Task", "Task title is wrong");
 		softAssert.assertAll();
 
@@ -239,15 +233,16 @@ public class TaskPage {
 
 	public void verifyAssociateWith() {
 		Assert.assertEquals("Associate with Complaint or Case", associeteWithLabel.getText());
-		Assert.assertTrue("Associate with input is not displayed",associeteWithInput.isDisplayed());
-		Assert.assertTrue("Associate with input is enabled",associeteWithInput.isEnabled());
+		Assert.assertTrue("Associate with input is not displayed", associeteWithInput.isDisplayed());
+		Assert.assertTrue("Associate with input is enabled", associeteWithInput.isEnabled());
 	}
-	public void VerifyAssociateWithEmptyTask(){
-		
+
+	public void VerifyAssociateWithEmptyTask() {
+
 		Assert.assertEquals("Associate with Complaint or Case", associeteWithLabel.getText());
-		Assert.assertTrue("Associate with input is not displayed",associeteWithInput.isDisplayed());
-		Assert.assertFalse("Associate with input is enabled",associeteWithInput.isEnabled());	
-		
+		Assert.assertTrue("Associate with input is not displayed", associeteWithInput.isDisplayed());
+		Assert.assertFalse("Associate with input is enabled", associeteWithInput.isEnabled());
+
 	}
 
 	public void verifyStartDate() {
@@ -508,36 +503,26 @@ public class TaskPage {
 		associeteWithInput.sendKeys(associate);
 
 	}
-	
-	
-	
-	public void verifyTaskInCasesTaskTable(){
-		
-	Assert.assertEquals("Task in cases task table is wrong", "TestMilanassociate", taskInTaskTable.getText());	
-		
-		
-		
+
+	public void verifyTaskInCasesTaskTable() {
+
+		Assert.assertEquals("Task in cases task table is wrong", "TestMilanassociate", taskInTaskTable.getText());
+
 	}
-	
-	public void parentTypeDropDownClick(){
-		
-	parentTypeDropDown.click();	
+
+	public void parentTypeDropDownClick() {
+
+		parentTypeDropDown.click();
 	}
-	
-	public void caseNameClick(){
-		
+
+	public void caseNameClick() {
+
 		casename.click();
 	}
-	
-	public void casesTaskLinkClick(){
-		
-		casestaskLink.click();	
+
+	public void casesTaskLinkClick() {
+
+		casestaskLink.click();
 	}
-	
-	
-	
-	
-	
-	
 
 }

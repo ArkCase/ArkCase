@@ -50,6 +50,12 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
                     $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
                 });
             });
+
+            $scope.closeParams = {
+                complaintId: objectInfo.complaintId
+                , complaintNumber: objectInfo.complaintNumber
+            };
+
         };
 
         $scope.restricted = false;
@@ -60,28 +66,6 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
                 var complaintInfo = Util.omitNg($scope.objectInfo);
                 ComplaintInfoService.saveComplaintInfo(complaintInfo);
             }
-        };
-
-        $scope.createNew = function () {
-            $state.go("frevvo", {
-                name: "new-complaint"
-            });
-
-
-            var targetType = ObjectService.ObjectTypes.COMPLAINT;
-            var targetId = Util.goodMapValue(rowEntity, "object_id_s");
-            gridHelper.showObject(targetType, targetId);
-        };
-
-        $scope.close = function (complaintInfo) {
-            $state.go("frevvo", {
-                name: "close-complaint"
-                , arg: {
-                    complaintId: complaintInfo.complaintId
-                    , complaintNumber: complaintInfo.complaintNumber
-                    , mode: "create"
-                }
-            });
         };
 
         $scope.subscribe = function (complaintInfo) {
