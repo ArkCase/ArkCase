@@ -41,7 +41,8 @@ public interface NotificationConstants
     String STATE_SENT = "SENT";
 
     /**
-     * Notification message state when the message is not successfully sent to the user after numbers of retries (if any)
+     * Notification message state when the message is not successfully sent to the user after numbers of retries (if
+     * any)
      */
     String STATE_NOT_SENT = "NOT_SENT";
 
@@ -76,6 +77,11 @@ public interface NotificationConstants
     String EMAIL_FROM_KEY = "notification.user.email.from";
 
     /**
+     * The property key to use in the properties file that keeps flow type
+     */
+    String EMAIL_FLOW_TYPE = "notification.user.email.flow.type";
+
+    /**
      * The property key to use in the properties file that keeps email response timeout
      */
     String EMAIL_RESPONSE_TIMEOUT_KEY = "notification.user.email.responseTimeout";
@@ -101,8 +107,8 @@ public interface NotificationConstants
     String PARENT_TYPE_LABEL_PLACEHOLDER = "${parentTypeLabel}";
 
     /**
-     * When this string appears in a notification note to be e-mailed, it will be replaced with a URL to the
-     * object in the notification.
+     * When this string appears in a notification note to be e-mailed, it will be replaced with a URL to the object in
+     * the notification.
      */
     String ANCHOR_PLACEHOLDER = "${urlanchor}";
 

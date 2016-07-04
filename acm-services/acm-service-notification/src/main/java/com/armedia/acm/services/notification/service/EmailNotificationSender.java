@@ -59,54 +59,60 @@ public class EmailNotificationSender implements NotificationSender
         {
             getAuditPropertyEntityAdapter().setUserId(NotificationConstants.SYSTEM_USER);
 
-            // TODO: Riste Tutureski 30 March 2016 - We have problem with using Mule for sending emails to Office365. I've changed to use
-            // our outlook service for now.
-            /*
-             * Map<String, Object> messageProps = new HashMap<>(); messageProps.put("host",
-             * getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_HOST_KEY, null));
-             * messageProps.put("port", getPropertyFileManager().load(getNotificationPropertyFileLocation(),
-             * NotificationConstants.EMAIL_PORT_KEY, null)); messageProps.put("user",
-             * getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_USER_KEY, null));
-             * messageProps.put("password", getPropertyFileManager().load(getNotificationPropertyFileLocation(),
-             * NotificationConstants.EMAIL_PASSWORD_KEY, null)); messageProps.put("from",
-             * getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_FROM_KEY, null));
-             * messageProps.put("to", notification.getUserEmail()); messageProps.put("subject", notification.getTitle()); MuleMessage
-             * received = getMuleContextManager().send("vm://sendEmail.in", notification.getNote(), messageProps);
-             */
-
-            EmailWithAttachmentsDTO emailInfo = new EmailWithAttachmentsDTO();
-            emailInfo.setHeader("");
-            emailInfo.setFooter("");
-            emailInfo.setBody(notification.getNote());
-            emailInfo.setSubject(notification.getTitle());
-            emailInfo.setEmailAddresses(Arrays.asList(notification.getUserEmail()));
-
-            String userId = getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_USER_KEY,
-                    null);
-            String userEmail = getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_FROM_KEY,
-                    null);
-            String userPass = getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_PASSWORD_KEY,
+            String flowType = getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_FLOW_TYPE,
                     null);
 
-            AcmOutlookUser user = new AcmOutlookUser(userId, userEmail, userPass);
-
-            Authentication auth = SecurityContextHolder.getContext() != null ? SecurityContextHolder.getContext().getAuthentication()
-                    : null;
+            String flow = "vm://sendEmail.in";
 
             Map<String, Object> messageProps = new HashMap<>();
-            messageProps.put("emailInfo", emailInfo);
-            messageProps.put("user", user);
-            messageProps.put("authentication", auth);
 
-            MuleMessage received = getMuleContextManager().send("vm://sendEmail.in", notification.getNote(), messageProps);
+            if ("outlook".equalsIgnoreCase(flowType))
+            {
+                EmailWithAttachmentsDTO emailInfo = new EmailWithAttachmentsDTO();
+                emailInfo.setHeader("");
+                emailInfo.setFooter("");
+                emailInfo.setBody(notification.getNote());
+                emailInfo.setSubject(notification.getTitle());
+                emailInfo.setEmailAddresses(Arrays.asList(notification.getUserEmail()));
+
+                String userId = getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_USER_KEY,
+                        null);
+                String userEmail = getPropertyFileManager().load(getNotificationPropertyFileLocation(),
+                        NotificationConstants.EMAIL_FROM_KEY, null);
+                String userPass = getPropertyFileManager().load(getNotificationPropertyFileLocation(),
+                        NotificationConstants.EMAIL_PASSWORD_KEY, null);
+
+                AcmOutlookUser user = new AcmOutlookUser(userId, userEmail, userPass);
+
+                Authentication auth = SecurityContextHolder.getContext() != null ? SecurityContextHolder.getContext().getAuthentication()
+                        : null;
+                messageProps.put("emailInfo", emailInfo);
+                messageProps.put("user", user);
+                messageProps.put("authentication", auth);
+                flow = "vm://sendEmailViaOutlook.in";
+            } else
+            {
+                messageProps.put("host",
+                        getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_HOST_KEY, null));
+                messageProps.put("port",
+                        getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_PORT_KEY, null));
+                messageProps.put("user",
+                        getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_USER_KEY, null));
+                messageProps.put("password", getPropertyFileManager().load(getNotificationPropertyFileLocation(),
+                        NotificationConstants.EMAIL_PASSWORD_KEY, null));
+                messageProps.put("from",
+                        getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_FROM_KEY, null));
+                messageProps.put("to", notification.getUserEmail());
+                messageProps.put("subject", notification.getTitle());
+            }
+
+            MuleMessage received = getMuleContextManager().send(flow, notification.getNote(), messageProps);
 
             exception = received.getInboundProperty("sendEmailException");
-        }
-        catch (MuleException e)
+        } catch (MuleException e)
         {
             exception = e;
-        }
-        catch (AcmEncryptionException e)
+        } catch (AcmEncryptionException e)
         {
             exception = e;
         }
@@ -114,8 +120,7 @@ public class EmailNotificationSender implements NotificationSender
         if (exception == null)
         {
             notification.setState(NotificationConstants.STATE_SENT);
-        }
-        else
+        } else
         {
             LOG.error("Notification message not sent ...", exception);
             notification.setState(NotificationConstants.STATE_NOT_SENT);

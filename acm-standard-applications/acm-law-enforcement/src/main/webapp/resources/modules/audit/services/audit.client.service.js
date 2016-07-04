@@ -10,8 +10,8 @@
  *
  * The BuildUrl is used for building audit report url with given parametars.
  */
-angular.module('audit').factory('AuditController.BuildUrl', ['$sce', '$location', '$browser',
-    function ($sce, $location, $browser) {
+angular.module('audit').factory('AuditController.BuildUrl', ['$sce', '$location', '$browser', 'Util.DateService',
+    function ($sce, $location, $browser,UtilDateService) {
         return {
 
             /**
@@ -45,13 +45,15 @@ angular.module('audit').factory('AuditController.BuildUrl', ['$sce', '$location'
                         amendedPentahoPort = ':' + amendedPentahoPort;
                     }
                 }
+
                 var reportUrl = pentahoHost + amendedPentahoPort + auditReportUri
                     + "?startDate=" + startDate
                     + "&endDate=" + endDate
                     + "&objectType=" + objectType
                     + "&objectId=" + objectId
                     + "&dateFormat=" + encodeURIComponent(dateFormat)
-                    + "&user=" + pentahoUser
+                    + "&timeZone=" + encodeURIComponent(UtilDateService.getTimeZoneOffset())
+                    + "&userid=" + pentahoUser
                     + "&password=" + pentahoPassword;
                 if (useUrl) {
                     var absUrl = $location.absUrl();

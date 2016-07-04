@@ -10,8 +10,8 @@
  *
  * This service package contains objects and functions for data storage
  */
-angular.module('services').factory('Acm.StoreService', ['$rootScope', 'UtilService', '$window'
-    , function ($rootScope, Util, $window
+angular.module('services').factory('Acm.StoreService', ['$rootScope', 'UtilService', '$window', 'Util.TimerService'
+    , function ($rootScope, Util, $window, UtilTimerService
     ) {
         var Store = {
             /**
@@ -116,7 +116,7 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', 'UtilServi
              * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/acm/acm-store.client.service.js services/acm/acm-store.client.service.js}
              *
              * CacheFifo is cache using first in first out aging algorithm. Each cache is identified by a name.
-             * Cache data persists in Angular $rootScope. Data is evicted after expiration limit.
+             * Cache data persists in Angular $rootScope. Data is evicted after timeToLive limit.
              */
             /**
              * @ngdoc method
@@ -126,7 +126,8 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', 'UtilServi
              * @param {Object} arg Argument. It can be an object or a name string. If a string, it is equivalent to {name: arg}
              * @param {String} arg.name (Optional)Name. If not provided, a random name is generated for use
              * @param {Number} arg.maxSize (Optional)Max size. If not provided, default size is 8
-             * @param {Number} arg.expiration (Optional)Expiration in milliseconds. If not provided, default value is 7200000 (2 hours)
+             * @param {Number} arg.timeToLive (Optional)Cache item time to live in milliseconds.
+             *        If not provided, default value is 7200000 (2 hours); if -1, cache items live forever
              *
              * @description
              * Create a reference object to a CacheFifo.
@@ -149,10 +150,10 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', 'UtilServi
                     var thisCache = this._getThis();
                     thisCache.name = this.name;
                     thisCache.maxSize = Util.goodMapValue(arg, "maxSize", this.DEFAULT_MAX_CACHE_SIZE);
-                    thisCache.expiration = Util.goodMapValue(arg, "expiration", this.DEFAULT_EXPIRATION);   //arg.expiration in milliseconds; -1 if never expired
+                    thisCache.timeToLive = Util.goodMapValue(arg, "timeToLive", this.DEFAULT_SHELF_LIFE);   //arg.timeToLive in milliseconds; -1 if live forever
 
                     this.reset();
-                    this._evict(thisCache.name, thisCache.expiration);
+                    this._evict(thisCache.name, thisCache.timeToLive);
                 }
             }
         };
@@ -318,7 +319,7 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', 'UtilServi
 
         Store.CacheFifo.prototype = {
             DEFAULT_MAX_CACHE_SIZE: 8
-            , DEFAULT_EXPIRATION: 7200000           //2 hours = 2 * 3600 * 1000 milliseconds
+            , DEFAULT_SHELF_LIFE: 7200000           //2 hours = 2 * 3600 * 1000 milliseconds
 
             , _getThis: function () {
                 return $rootScope._storeCacheMap[this.name];
@@ -340,15 +341,15 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', 'UtilServi
              *
              * var dataCache = new CacheFifo({name: "MyData", maxSize: 3});
              *
-             * dataCache.set("k1", "v1");
+             * dataCache.put("k1", "v1");
              *
-             * dataCache.set("k2", "v2");
+             * dataCache.put("k2", "v2");
              *
-             * dataCache.set("k3", "v3");
+             * dataCache.put("k3", "v3");
              *
-             * dataCache.set("k4", "v4");
+             * dataCache.put("k4", "v4");
              *
-             * dataCache.set("k3", "v31");
+             * dataCache.put("k3", "v31");
              *
              * var v1 = dataCache.get("k1");     // null, because it is pushed out by "k4"
              *
@@ -384,15 +385,15 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', 'UtilServi
              *
              * var dataCache = new CacheFifo({name: "MyData", maxSize: 3});
              *
-             * dataCache.set("k1", "v1");
+             * dataCache.put("k1", "v1");
              *
-             * dataCache.set("k2", "v2");
+             * dataCache.put("k2", "v2");
              *
-             * dataCache.set("k3", "v3");
+             * dataCache.put("k3", "v3");
              *
-             * dataCache.set("k4", "v4");
+             * dataCache.put("k4", "v4");
              *
-             * dataCache.set("k3", "v31");
+             * dataCache.put("k3", "v31");
              *
              * var v1 = dataCache.get("k1");     // null, because it is pushed out by "k4"
              *
@@ -542,28 +543,27 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', 'UtilServi
                 return thisCache.keys;
             }
 
-            , _evict: function (name, expiration) {
-                //fixme: need a timer
-
-                //if (0 < expiration) {
-                //    var that = this;
-                //    Util.Timer.useTimer(name
-                //        , 300000     //every 5 minutes = 5 * 60 * 1000 milliseconds
-                //        , function () {
-                //            var keys = that.keys;
-                //            var len = keys.length;
-                //            for (var i = 0; i < that.size; i++) {
-                //                var key = keys[i];
-                //                var ts = that.timeStamp[key];
-                //                var now = new Date().getTime();
-                //                if (expiration < now - ts) {
-                //                    that.remove(key);
-                //                }
-                //            }
-                //            return true;
-                //        }
-                //    );
-                //}
+            , _evict: function (name, timeToLive) {
+                if (0 < timeToLive) {
+                    var that = this;
+                    var thisCache = this._getThis();
+                    var now = new Date().getTime();
+                    UtilTimerService.useTimer(name
+                        , 300000     //every 5 minutes = 5 * 60 * 1000 milliseconds
+                        , function () {
+                            var keys = thisCache.keys;
+                            var len = keys.length;
+                            for (var i = 0; i < thisCache.size; i++) {
+                                var key = keys[i];
+                                var ts = thisCache.timeStamp[key];
+                                if (timeToLive < now - ts) {
+                                    that.remove(key);
+                                }
+                            }
+                            return true;
+                        }
+                    );
+                }
             }
 
             /**
@@ -656,32 +656,32 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', 'UtilServi
 
             /**
              * @ngdoc method
-             * @name getExpiration
+             * @name getTimeToLive
              * @methodOf Acm.StoreService.CacheFifo
              *
              * @description
-             * Get expiration of CacheFifo setting.
+             * Get timeToLive of CacheFifo setting.
              *
              */
-            , getExpiration: function () {
+            , getTimeToLive: function () {
                 var thisCache = this._getThis();
-                return thisCache.expiration;
+                return thisCache.timeToLive;
             }
 
             /**
              * @ngdoc method
-             * @name setExpiration
+             * @name setTimeToLive
              * @methodOf Acm.StoreService.CacheFifo
              *
-             * @param {Number} expiration Expiration in milliseconds
+             * @param {Number} timeToLive Expiration in milliseconds
              *
              * @description
-             * Set expiration of CacheFifo.
+             * Set timeToLive of CacheFifo.
              *
              */
-            , setExpiration: function (expiration) {
+            , setTimeToLive: function (timeToLive) {
                 var thisCache = this._getThis();
-                thisCache.expiration = expiration;
+                thisCache.timeToLive = timeToLive;
             }
         };
 

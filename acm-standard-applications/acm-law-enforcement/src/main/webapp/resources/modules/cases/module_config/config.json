@@ -14,7 +14,7 @@
     },
     {
       "menuId": "topbar",
-      "menuItemURL": "frevvo-new-case",
+      "menuItemURL": "frevvo.new-case",
       "menuItemTitle": "Case",
       "iconClass": "fa fa-folder",
       "position": 20
@@ -765,6 +765,16 @@
           {
             "name": "name",
             "displayName": "cases.comp.participants.dialogUserPicker.table.columns.name",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "object_type_s",
+            "displayName": "cases.comp.participants.dialogUserPicker.table.columns.type",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "title",
+            "displayName": "cases.comp.participants.dialogUserPicker.table.columns.title",
             "headerCellFilter": "translate"
           },
           {

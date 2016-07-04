@@ -113,10 +113,10 @@
           "width": 100
         },
         {
-          "name": "attachedToObjectName",
-          "displayName": "dashboard.widgets.myTasks.table.header.caseComplaintId",
+          "name": "parentObjectId",
+          "displayName": "dashboard.widgets.myTasks.table.header.objectId",
           "headerCellFilter": "translate",
-          "cellTemplate": "<button class='btn-link' ng-click='grid.appScope.myTasks.onClickCaseComplaintId(row.entity.attachedToObjectType,grid.appScope.myTasks.filterColumnId(row.entity.attachedToObjectName))'>{{COL_FIELD | filterColumn:'_'}}</button>",
+          "cellTemplate": "<button class='btn-link' ng-click='grid.appScope.myTasks.onClickCaseComplaintId(row.entity.parentObjectType,row.entity.parentObjectId)'>{{COL_FIELD}}</button>",
           "width": 100
         }
       ]

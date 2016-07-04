@@ -14,7 +14,10 @@ angular.module('admin').factory('Admin.ApplicationSettingsService', ['$http',
     function ($http) {
         return {
             PROPERTIES : {
-                DISPLAY_USERNAME: 'displayUserName'
+                DISPLAY_USERNAME: 'displayUserName',
+                IDLE_LIMIT: 'idleLimit',
+                IDLE_PULL: 'idlePull',
+                IDLE_CONFIRM: 'idleConfirm'
             },
 
 

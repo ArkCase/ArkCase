@@ -52,7 +52,8 @@ public class DeleteNoteByIdAPIControllerTest extends EasyMockSupport
     private Note mockNote;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws Exception
+    {
         mockNote = createMock(Note.class);
         mockNoteDao = createMock(NoteDao.class);
         mockHttpSession = new MockHttpSession();
@@ -73,7 +74,7 @@ public class DeleteNoteByIdAPIControllerTest extends EasyMockSupport
         Long parentId = 800L;
         expect(mockNote.getId()).andReturn(noteId);
         expect(mockNote.getCreated()).andReturn(new Date());
-        expect(mockNote.getCreator()).andReturn("user");
+        expect(mockNote.getModifier()).andReturn("user");
         expect(mockNote.getParentId()).andReturn(parentId);
         expect(mockNote.getParentType()).andReturn("PARENT_TYPE");
 
@@ -112,13 +113,14 @@ public class DeleteNoteByIdAPIControllerTest extends EasyMockSupport
     }
 
     @Test
-    public void deleteNoteById_notFound() throws Exception {
+    public void deleteNoteById_notFound() throws Exception
+    {
 
-        Long noteId =234L;
+        Long noteId = 234L;
         Long parentId = 800L;
         expect(mockNote.getId()).andReturn(noteId);
         expect(mockNote.getCreated()).andReturn(new Date());
-        expect(mockNote.getCreator()).andReturn("user");
+        expect(mockNote.getModifier()).andReturn("user");
         expect(mockNote.getParentId()).andReturn(parentId);
         expect(mockNote.getParentType()).andReturn("PARENT_TYPE");
 
