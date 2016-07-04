@@ -119,7 +119,6 @@
           "tasks",
           "references",
           "history",
-          "correspondence",
           "time",
           "cost",
           "tags",
@@ -196,14 +195,6 @@
         "icon": "fa fa-bell-o",
         "components": [
           "history"
-        ]
-      },
-      {
-        "type": "p/COMPLAINT/tpl",
-        "label": "Correspondence",
-        "icon": "fa fa-envelope",
-        "components": [
-          "correspondence"
         ]
       },
       {
@@ -412,32 +403,6 @@
         {
           "id": "history",
           "type": "component"
-        },
-        {
-          "id": "correspondence",
-          "type": "component",
-          "columnDefs": [
-            {
-              "name": "name",
-              "displayName": "complaints.comp.correspondence.table.columns.name",
-              "headerCellFilter": "translate",
-              "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.name}}</a>"
-            },
-            {
-              "name": "created",
-              "displayName": "complaints.comp.correspondence.table.columns.created",
-              "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
-              "enableCellEdit": false
-            },
-            {
-              "name": "creator",
-              "displayName": "complaints.comp.correspondence.table.columns.creator",
-              "headerCellFilter": "translate",
-              "enableCellEdit": false,
-              "lookup": "userFullNames"
-            }
-          ]
         },
         {
           "id": "time",
@@ -1071,43 +1036,6 @@
           "name": "userId",
           "displayName": "complaints.comp.history.table.columns.userId",
           "headerCellFilter": "translate",
-          "lookup": "userFullNames"
-        }
-      ]
-    },
-    {
-      "id": "correspondence",
-      "title": "Correspondence",
-      "icon": "fa fa-envelope",
-      "enabled": true,
-      "type": "grid",
-      "enableFiltering": true,
-      "paginationPageSizes": [
-        5,
-        10,
-        20,
-        50
-      ],
-      "paginationPageSize": 5,
-      "columnDefs": [
-        {
-          "name": "name",
-          "displayName": "complaints.comp.correspondence.table.columns.name",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.name}}</a>"
-        },
-        {
-          "name": "created",
-          "displayName": "complaints.comp.correspondence.table.columns.created",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
-          "enableCellEdit": false
-        },
-        {
-          "name": "creator",
-          "displayName": "complaints.comp.correspondence.table.columns.creator",
-          "headerCellFilter": "translate",
-          "enableCellEdit": false,
           "lookup": "userFullNames"
         }
       ]
