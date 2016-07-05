@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.activation.DataSource;
 import javax.activation.MimetypesFileTypeMap;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -16,7 +15,7 @@ public class InputStreamDataSource implements DataSource
 {
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
-    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+    private final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
     private final String name;
 
     public InputStreamDataSource(InputStream inputStream, String name)

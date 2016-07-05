@@ -3,7 +3,6 @@ package com.armedia.acm.service.outlook.dao;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.service.outlook.model.OutlookDTO;
 import com.armedia.acm.service.outlook.model.OutlookPassword;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -30,17 +29,30 @@ public class OutlookPasswordDao extends AcmAbstractDao<OutlookPassword>
 
         String sql = "UPDATE acm_outlook_password " + "SET cm_outlook_password = ?1 " + "WHERE cm_user_id = ?2 ";
 
-        Query q = getEm().createNativeQuery(sql);
-        q.setParameter(1, in.getOutlookPassword());
-        q.setParameter(2, authentication.getName());
-
-        int updated = q.executeUpdate();
+        int updated = updatePassword(authentication, in, sql);
 
         if (updated == 0)
         {
-            throw new IllegalStateException("No outlook password for user '" + authentication.getName() + "'");
+            // no existing password, so we have to insert the row
+            sql = "INSERT INTO acm_outlook_password (cm_outlook_password, cm_user_id) VALUES (?1 , ?2) ";
+            updated = updatePassword(authentication, in, sql);
+
+            if (updated == 0)
+            {
+                throw new IllegalStateException("Could not set Outlook password for user '" + authentication.getName() + "'");
+            }
+
         }
 
+    }
+
+    private int updatePassword(Authentication authentication, OutlookDTO in, String sql)
+    {
+        Query q = getEm().createNativeQuery(sql);
+        q.setParameter(1, in.getOutlookPassword());
+        q.setParameter(2, authentication.getName().toUpperCase());
+
+        return q.executeUpdate();
     }
 
     @Transactional
@@ -52,7 +64,7 @@ public class OutlookPasswordDao extends AcmAbstractDao<OutlookPassword>
         String sql = "SELECT cm_outlook_password " + "FROM acm_outlook_password op " + "WHERE op.cm_user_id = ?1 ";
 
         Query q = getEm().createNativeQuery(sql);
-        q.setParameter(1, authentication.getName());
+        q.setParameter(1, authentication.getName().toUpperCase());
 
         try
         {

@@ -7,7 +7,6 @@ import com.armedia.acm.service.outlook.model.OutlookContactItem;
 import com.armedia.acm.service.outlook.model.OutlookDTO;
 import com.armedia.acm.service.outlook.service.OutlookService;
 import com.armedia.acm.services.users.model.AcmUser;
-
 import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping({ "/api/v1/plugin/outlook/contacts", "/api/latest/plugin/outlook/contacts" })
+@RequestMapping({"/api/v1/plugin/outlook/contacts", "/api/latest/plugin/outlook/contacts"})
 public class CreateContactItemAPIController
 {
 
