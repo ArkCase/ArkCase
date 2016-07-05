@@ -13,11 +13,39 @@
 
     <context:annotation-config/>
 
-    <websocket:message-broker application-destination-prefix="/app">
-        <websocket:stomp-endpoint path="/stomp">
+    <bean id="websocketProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="location" value="file:${user.home}/.arkcase/acm/websockets.properties"/>
+        <property name="localOverride" value="false"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="properties">
+            <props>
+                <prop key="acm.websockets.enabled">true</prop>
+                <prop key="acm.websockets.stomp_endpoint">/stomp</prop>
+                <prop key="acm.websockets.application_destination_prefix">/app</prop>
+                <prop key="acm.websockets.stomp_broker_relay.relay_host">acm-activemq</prop>
+                <prop key="acm.websockets.stomp_broker_relay.relay_port">61613</prop>
+                <prop key="acm.websockets.stomp_broker_relay.heartbeat_send_interval">20000</prop>
+                <prop key="acm.websockets.stomp_broker_relay.heartbeat_receive_interval">20000</prop>
+                <prop key="acm.websockets.socksjs.enabled">true</prop>
+            </props>
+        </property>
+    </bean>
+
+    <context:property-placeholder
+            ignore-unresolvable="true"
+            local-override="false"
+            order="29831"
+            properties-ref="websocketProperties"/>
+
+    <websocket:message-broker application-destination-prefix="${acm.websockets.application_destination_prefix}">
+        <websocket:stomp-endpoint path="${acm.websockets.stomp_endpoint}">
             <websocket:sockjs websocket-enabled="true"/>
         </websocket:stomp-endpoint>
-        <websocket:simple-broker prefix="/topic, /queue"/>
+        <websocket:stomp-broker-relay prefix="/topic,/queue"
+                                      relay-host="${acm.websockets.stomp_broker_relay.relay_host}"
+                                      relay-port="${acm.websockets.stomp_broker_relay.relay_port}"
+                                      heartbeat-send-interval="${acm.websockets.stomp_broker_relay.heartbeat_send_interval}"
+                                      heartbeat-receive-interval="${acm.websockets.stomp_broker_relay.heartbeat_receive_interval}"/>
     </websocket:message-broker>
 
     <bean id="objectChangeNotificationProperties"

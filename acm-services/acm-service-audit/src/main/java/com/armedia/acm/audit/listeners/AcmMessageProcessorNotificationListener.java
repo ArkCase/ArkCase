@@ -50,7 +50,7 @@ public class AcmMessageProcessorNotificationListener implements MessageProcessor
     @Override
     public void onNotification(MessageProcessorNotification notification)
     {
-        log.debug("Mule message processor notification listener called");
+        log.trace("Mule message processor notification listener called");
 
         MuleEvent event = notification.getSource();
 
@@ -102,7 +102,7 @@ public class AcmMessageProcessorNotificationListener implements MessageProcessor
 
     private void audit(MessageProcessorNotification notification)
     {
-        log.debug("Mule event auditing handling");
+        log.trace("Mule event auditing handling");
 
         MuleEvent event = notification.getSource();
 

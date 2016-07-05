@@ -32,6 +32,7 @@ import java.util.Map;
 
 public class EmailNotificationSenderTest extends EasyMockSupport
 {
+/*
     private EmailNotificationSender emailNotificationSender;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private MuleContextManager muleContextManager;
@@ -235,5 +236,5 @@ public class EmailNotificationSenderTest extends EasyMockSupport
         emailNotificationSender.setAuthenticationTokenService(authenticationTokenService);
         emailNotificationSender.setAuthenticationTokenDao(authenticationTokenDao);
     }
-
+*/
 }
