@@ -1,12 +1,19 @@
 package com.armedia.acm.plugins.outlook.web.api;
 
-import com.armedia.acm.plugins.profile.model.OutlookDTO;
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.armedia.acm.plugins.profile.service.UserOrgService;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.model.OutlookContactItem;
+import com.armedia.acm.service.outlook.model.OutlookDTO;
 import com.armedia.acm.service.outlook.service.OutlookService;
 import com.armedia.acm.services.users.model.AcmUser;
-import microsoft.exchange.webservices.data.enumeration.WellKnownFolderName;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.easymock.Capture;
@@ -28,18 +35,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.eq;
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertNotNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import microsoft.exchange.webservices.data.enumeration.WellKnownFolderName;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(locations = {
-        "classpath:/spring-web-ms-outlook-plugin-api.xml"})
-public class CreateContactItemAPIControllerTest extends EasyMockSupport {
+@ContextConfiguration(locations = { "classpath:/spring-web-ms-outlook-plugin-api.xml" })
+public class CreateContactItemAPIControllerTest extends EasyMockSupport
+{
     @Autowired
     WebApplicationContext wac;
     @Autowired
@@ -59,17 +61,20 @@ public class CreateContactItemAPIControllerTest extends EasyMockSupport {
     private UserOrgService userOrgService;
 
     @Before
-    public void setup() {
+    public void setup()
+    {
         outlookService = createMock(OutlookService.class);
         userOrgService = createMock(UserOrgService.class);
         mockAuthentication = createMock(Authentication.class);
         createContactItemAPIController.setUserOrgService(userOrgService);
         createContactItemAPIController.setOutlookService(outlookService);
-        this.mockMvc = MockMvcBuilders.standaloneSetup(createContactItemAPIController).setHandlerExceptionResolvers(exceptionResolver).build();
+        this.mockMvc = MockMvcBuilders.standaloneSetup(createContactItemAPIController).setHandlerExceptionResolvers(exceptionResolver)
+                .build();
     }
 
     @Test
-    public void testCreateContactItem() throws Exception {
+    public void testCreateContactItem() throws Exception
+    {
         OutlookContactItem contactItem = new OutlookContactItem();
         contactItem.setDisplayName("John Doe");
         contactItem.setBody("Body");
@@ -87,7 +92,7 @@ public class CreateContactItemAPIControllerTest extends EasyMockSupport {
         expect(mockAuthentication.getName()).andReturn("user").times(2);
         OutlookDTO password = new OutlookDTO();
         password.setOutlookPassword("outlookPassword");
-        expect(userOrgService.retrieveOutlookPassword(mockAuthentication)).andReturn(password);
+        expect(outlookService.retrieveOutlookPassword(mockAuthentication)).andReturn(password);
         AcmUser user = new AcmUser();
         user.setMail("test@armedia.com");
         session.setAttribute("acm_user", user);
@@ -96,21 +101,14 @@ public class CreateContactItemAPIControllerTest extends EasyMockSupport {
         Capture<OutlookContactItem> contactItemCapture = new Capture<>();
 
         contactItem.setId("some_fake_id");
-        expect(outlookService.createOutlookContactItem(capture(outlookUserCapture),
-                eq(WellKnownFolderName.Contacts),
-                capture(contactItemCapture))).
-                andReturn(contactItem);
+        expect(outlookService.createOutlookContactItem(capture(outlookUserCapture), eq(WellKnownFolderName.Contacts),
+                capture(contactItemCapture))).andReturn(contactItem);
         replayAll();
 
-        MvcResult result = mockMvc.perform(
-                post("/api/latest/plugin/outlook/contacts")
-                        .session(session)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .principal(mockAuthentication)
-                        .content(content))
-                .andExpect(status().isOk())
-                .andReturn();
+        MvcResult result = mockMvc
+                .perform(post("/api/latest/plugin/outlook/contacts").session(session).accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON).principal(mockAuthentication).content(content))
+                .andExpect(status().isOk()).andReturn();
 
         OutlookContactItem item = objectMapper.readValue(result.getResponse().getContentAsString(), OutlookContactItem.class);
         assertNotNull(item.getId());

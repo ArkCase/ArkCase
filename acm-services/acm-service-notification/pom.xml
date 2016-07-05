@@ -128,11 +128,6 @@
             <artifactId>acm-service-ms-outlook-integration</artifactId>
             <version>${acm.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
-            <artifactId>acm-profile-plugin</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
 
         <!-- bean validation -->
         <dependency>

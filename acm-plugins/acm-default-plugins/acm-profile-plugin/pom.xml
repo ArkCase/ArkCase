@@ -135,6 +135,11 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+        	<groupId>com.armedia.acm.acm-services</groupId>
+        	<artifactId>acm-service-ms-outlook-integration</artifactId>
+        	<version>${acm.version}</version>
+        </dependency>
     </dependencies>
 
 

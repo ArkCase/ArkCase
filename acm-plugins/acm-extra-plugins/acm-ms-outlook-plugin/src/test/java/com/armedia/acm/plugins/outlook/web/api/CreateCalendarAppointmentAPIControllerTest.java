@@ -1,12 +1,18 @@
 package com.armedia.acm.plugins.outlook.web.api;
 
-import com.armedia.acm.plugins.profile.model.OutlookDTO;
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.armedia.acm.plugins.profile.service.UserOrgService;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.model.OutlookCalendarItem;
+import com.armedia.acm.service.outlook.model.OutlookDTO;
 import com.armedia.acm.service.outlook.service.OutlookService;
 import com.armedia.acm.services.users.model.AcmUser;
-import microsoft.exchange.webservices.data.enumeration.WellKnownFolderName;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.easymock.Capture;
@@ -30,18 +36,11 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 
 import java.util.Date;
 
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.eq;
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertNotNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(locations = {
-        "classpath:/spring-web-ms-outlook-plugin-api.xml"})
-public class CreateCalendarAppointmentAPIControllerTest extends EasyMockSupport {
+@ContextConfiguration(locations = { "classpath:/spring-web-ms-outlook-plugin-api.xml" })
+public class CreateCalendarAppointmentAPIControllerTest extends EasyMockSupport
+{
     @Autowired
     WebApplicationContext wac;
     @Autowired
@@ -61,29 +60,32 @@ public class CreateCalendarAppointmentAPIControllerTest extends EasyMockSupport 
     private UserOrgService userOrgService;
 
     @Before
-    public void setup() {
+    public void setup()
+    {
         outlookService = createMock(OutlookService.class);
         userOrgService = createMock(UserOrgService.class);
         mockAuthentication = createMock(Authentication.class);
         createCalendarAppointmentAPIController.setUserOrgService(userOrgService);
         createCalendarAppointmentAPIController.setOutlookService(outlookService);
-        this.mockMvc = MockMvcBuilders.standaloneSetup(createCalendarAppointmentAPIController).setHandlerExceptionResolvers(exceptionResolver).build();
+        this.mockMvc = MockMvcBuilders.standaloneSetup(createCalendarAppointmentAPIController)
+                .setHandlerExceptionResolvers(exceptionResolver).build();
     }
 
     @Test
-    public void testCreateCalendarAppointment() throws Exception {
+    public void testCreateCalendarAppointment() throws Exception
+    {
         OutlookCalendarItem appointmentItem = new OutlookCalendarItem();
         appointmentItem.setBody("Body");
         appointmentItem.setSubject("Subject");
         appointmentItem.setAllDayEvent(false);
 
-        long tomorrow = System.currentTimeMillis() + 1000 * 60 * 60 * 24;//start tomorrow
+        long tomorrow = System.currentTimeMillis() + 1000 * 60 * 60 * 24;// start tomorrow
         appointmentItem.setStartDate(new Date(tomorrow));
-        appointmentItem.setEndDate(new Date(tomorrow + 1000 * 60 * 60));//start + 1 hour
+        appointmentItem.setEndDate(new Date(tomorrow + 1000 * 60 * 60));// start + 1 hour
         appointmentItem.setMeeting(false);
         appointmentItem.setRecurring(true);
         appointmentItem.setRecurringInterval(1);
-        appointmentItem.setRecurringEndDate(new Date(tomorrow + 1000 * 60 * 60 * 48));//ends after 2 days
+        appointmentItem.setRecurringEndDate(new Date(tomorrow + 1000 * 60 * 60 * 48));// ends after 2 days
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
@@ -93,7 +95,7 @@ public class CreateCalendarAppointmentAPIControllerTest extends EasyMockSupport 
 
         OutlookDTO password = new OutlookDTO();
         password.setOutlookPassword("outlookPassword");
-        expect(userOrgService.retrieveOutlookPassword(mockAuthentication)).andReturn(password);
+        expect(outlookService.retrieveOutlookPassword(mockAuthentication)).andReturn(password);
         AcmUser user = new AcmUser();
         user.setMail("test@armedia.com");
         session.setAttribute("acm_user", user);
@@ -101,19 +103,15 @@ public class CreateCalendarAppointmentAPIControllerTest extends EasyMockSupport 
         Capture<AcmOutlookUser> outlookUserCapture = new Capture<>();
         Capture<OutlookCalendarItem> apointmentItemCapture = new Capture<>();
         appointmentItem.setId("some_fake_id");
-        expect(outlookService.createOutlookAppointment(capture(outlookUserCapture), capture(apointmentItemCapture))).andReturn(appointmentItem);
+        expect(outlookService.createOutlookAppointment(capture(outlookUserCapture), capture(apointmentItemCapture)))
+                .andReturn(appointmentItem);
 
         replayAll();
 
-        MvcResult result = mockMvc.perform(
-                post("/api/latest/plugin/outlook/calendar")
-                        .session(session)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .principal(mockAuthentication)
-                        .content(content))
-                .andExpect(status().isOk())
-                .andReturn();
+        MvcResult result = mockMvc
+                .perform(post("/api/latest/plugin/outlook/calendar").session(session).accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON).principal(mockAuthentication).content(content))
+                .andExpect(status().isOk()).andReturn();
 
         OutlookCalendarItem item = objectMapper.readValue(result.getResponse().getContentAsString(), OutlookCalendarItem.class);
         assertNotNull(item.getId());
