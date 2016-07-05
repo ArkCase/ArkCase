@@ -26,6 +26,7 @@
 
             <property name="useSystemUser" value="${outlook.exchange.calendar.use.system.user}" />
             <property name="userOrgService" ref="acmUserOrgService"/>
+            <property name="outlookService" ref="outlookService"/>
         </bean>
 
 </beans>
