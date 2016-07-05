@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:task="http://www.springframework.org/schema/task"
+       xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd">
 
     <task:scheduler id="ldapSyncTaskScheduler" pool-size="1"/>
 
-    <bean id="springLdapDao" class="com.armedia.acm.services.users.dao.ldap.SpringLdapDao"/>
+    <bean id="acmLdapEntityContextMapper" class="com.armedia.acm.services.users.model.ldap.AcmLdapEntityContextMapper"/>
+
+    <bean id="springLdapDao" class="com.armedia.acm.services.users.dao.ldap.SpringLdapDao">
+        <property name="mapper" ref="acmLdapEntityContextMapper"/>
+    </bean>
 
     <bean id="userJpaDao" class="com.armedia.acm.services.users.dao.ldap.UserDao"/>
 
@@ -49,6 +53,6 @@
         <property name="groupDao" ref="groupDao"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="groupService" ref="groupService"/>
-     </bean>
+    </bean>
 
 </beans>

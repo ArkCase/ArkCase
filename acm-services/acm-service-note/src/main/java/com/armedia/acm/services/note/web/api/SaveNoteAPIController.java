@@ -48,19 +48,9 @@ public class SaveNoteAPIController
                 throw new AcmNoteException("Could not save note, missing parent type and ID");
             }
 
-            // to db
-            Note newNote = new Note();
-            newNote.setId(note.getId());
-            newNote.setParentId(note.getParentId());
-            newNote.setParentType(note.getParentType());
-            newNote.setNote(note.getNote());
-            newNote.setCreator(note.getCreator());
-            newNote.setCreated(note.getCreated());
-            newNote.setTag(note.getTag());
-
             Note savedNote = getNoteDao().save(note);
 
-            String noteEvent = note.getId() == null ? "added" : "updated";
+            String noteEvent = note.getId() == null ? NoteConstants.NOTE_ADDED : NoteConstants.NOTE_UPDATED;
             if (savedNote.getType().equals(NoteConstants.NOTE_REJECT_COMMENT))
             {
                 noteEvent = String.format("rejectcomment.%s", noteEvent);
@@ -70,7 +60,7 @@ public class SaveNoteAPIController
             return savedNote;
         } catch (Exception e)
         {
-            // gen up a fake task so we can audit the failure
+            // Create a fake note to audit the failure.
             Note fakeNote = new Note();
             fakeNote.setId(note.getId());
             log.info("fake id : ()", fakeNote.getId());
@@ -84,7 +74,7 @@ public class SaveNoteAPIController
             fakeNote.setType(NoteConstants.NOTE_GENERAL);
             fakeNote.setTag(note.getTag());
 
-            String noteEvent = note.getId() == null ? "added" : "updated";
+            String noteEvent = note.getId() == null ? NoteConstants.NOTE_ADDED : NoteConstants.NOTE_UPDATED;
 
             if (fakeNote.getType().equals(NoteConstants.NOTE_REJECT_COMMENT))
             {

@@ -8,7 +8,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.Date;
+import com.armedia.acm.plugins.person.model.Person;
+import com.armedia.acm.plugins.person.model.PersonAssociation;
+import com.armedia.acm.plugins.person.service.PersonAssociationEventPublisher;
+import com.armedia.acm.plugins.person.service.SavePersonAssociationTransaction;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.easymock.Capture;
@@ -30,16 +33,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.CannotCreateTransactionException;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
-import com.armedia.acm.plugins.person.model.Person;
-import com.armedia.acm.plugins.person.model.PersonAssociation;
-import com.armedia.acm.plugins.person.service.PersonAssociationEventPublisher;
-import com.armedia.acm.plugins.person.service.SavePersonAssociationTransaction;
+import java.util.Date;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {
-        "classpath:/spring/spring-web-acm-web.xml",
-        "classpath:/spring/spring-library-person-plugin-test.xml"
-})
+@ContextConfiguration(locations = { "classpath:/spring/spring-web-acm-web.xml", "classpath:/spring/spring-library-person-plugin-test.xml" })
 public class SavePersonAssociationAPIControllerTest extends EasyMockSupport
 {
     private MockMvc mockMvc;
@@ -70,9 +67,9 @@ public class SavePersonAssociationAPIControllerTest extends EasyMockSupport
 
     @Test
     public void addPersonAssociation_saveExistingPersonAssociation() throws Exception
-    {   
+    {
         Person person = new Person();
-        
+
         person.setId(500L);
         person.setTitle("Dr");
         person.setCreator("testCreator");
@@ -81,8 +78,7 @@ public class SavePersonAssociationAPIControllerTest extends EasyMockSupport
         person.setFamilyName("Person");
         person.setGivenName("ACM");
         person.setStatus("testStatus");
-        
-        
+
         PersonAssociation perAssoc = new PersonAssociation();
         perAssoc.setId(998L);
         perAssoc.setParentId(999L);
@@ -94,10 +90,10 @@ public class SavePersonAssociationAPIControllerTest extends EasyMockSupport
         perAssoc.setModifier("testModifier");
         perAssoc.setCreated(new Date());
         perAssoc.setModified(new Date());
-        
+
         PersonAssociation saved = new PersonAssociation();
         saved.setId(perAssoc.getId());
-        
+
         ObjectMapper objectMapper = new ObjectMapper();
         String in = objectMapper.writeValueAsString(perAssoc);
 
@@ -113,13 +109,8 @@ public class SavePersonAssociationAPIControllerTest extends EasyMockSupport
 
         replayAll();
 
-        MvcResult result = mockMvc.perform(
-            post("/api/latest/plugin/personAssociation")
-                    .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .principal(mockAuthentication)
-                    .content(in))
-                .andReturn();
+        MvcResult result = mockMvc.perform(post("/api/latest/plugin/personAssociation").accept(MediaType.parseMediaType("application/json;charset=UTF-8")).contentType(MediaType.APPLICATION_JSON)
+                .principal(mockAuthentication).content(in)).andReturn();
 
         log.info("results: " + result.getResponse().getContentAsString());
 
@@ -134,25 +125,19 @@ public class SavePersonAssociationAPIControllerTest extends EasyMockSupport
     @Test
     public void invalidInput() throws Exception
     {
-        String notPersonAssociationJson = "{ \"user\": \"com\" }";
-        
+        String notPersonAssociationJson = "{ \"user\": \"com\", \"className\": \"com.armedia.acm.plugins.person.model.PersonAssociation\" }";
+
         Capture<PersonAssociation> found = new Capture<>();
         // With upgrading spring version, bad JSON is not the problem for entering the execution in the controller
         expect(mockSaveTransaction.savePersonAsssociation(capture(found), eq(mockAuthentication))).andThrow(new RuntimeException());
-        
+
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");
 
         replayAll();
 
-        mockMvc.perform(
-                post("/api/latest/plugin/personAssociation")
-                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .principal(mockAuthentication)
-                        .content(notPersonAssociationJson))
-                .andExpect(status().isInternalServerError())
-                .andExpect(content().contentType(MediaType.TEXT_PLAIN));
+        mockMvc.perform(post("/api/latest/plugin/personAssociation").accept(MediaType.parseMediaType("application/json;charset=UTF-8")).contentType(MediaType.APPLICATION_JSON)
+                .principal(mockAuthentication).content(notPersonAssociationJson)).andExpect(status().isInternalServerError()).andExpect(content().contentType(MediaType.TEXT_PLAIN));
 
         verifyAll();
 
@@ -161,8 +146,8 @@ public class SavePersonAssociationAPIControllerTest extends EasyMockSupport
     @Test
     public void addPersonAssociation_exception() throws Exception
     {
-      Person person = new Person();
-        
+        Person person = new Person();
+
         person.setId(500L);
         person.setTitle("Dr");
         person.setCreator("testCreator");
@@ -171,8 +156,7 @@ public class SavePersonAssociationAPIControllerTest extends EasyMockSupport
         person.setFamilyName("Person");
         person.setGivenName("ACM");
         person.setStatus("testStatus");
-        
-        
+
         PersonAssociation perAssoc = new PersonAssociation();
         perAssoc.setId(998L);
         perAssoc.setParentId(999L);
@@ -185,7 +169,7 @@ public class SavePersonAssociationAPIControllerTest extends EasyMockSupport
         perAssoc.setCreated(new Date());
         perAssoc.setModified(new Date());
         perAssoc.setNotes("simple note describing the association");
-        
+
         PersonAssociation saved = new PersonAssociation();
         saved.setId(perAssoc.getId());
 
@@ -196,8 +180,7 @@ public class SavePersonAssociationAPIControllerTest extends EasyMockSupport
 
         Capture<PersonAssociation> found = new Capture<>();
 
-        expect(mockSaveTransaction.savePersonAsssociation(capture(found), eq(mockAuthentication))).
-                andThrow(new CannotCreateTransactionException("testException"));
+        expect(mockSaveTransaction.savePersonAsssociation(capture(found), eq(mockAuthentication))).andThrow(new CannotCreateTransactionException("testException"));
         mockEventPublisher.publishPersonAssociationEvent(capture(found), eq(mockAuthentication), eq(false), eq(false));
 
         // MVC test classes must call getName() somehow
@@ -205,14 +188,8 @@ public class SavePersonAssociationAPIControllerTest extends EasyMockSupport
 
         replayAll();
 
-        mockMvc.perform(
-                post("/api/latest/plugin/personAssociation")
-                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .principal(mockAuthentication)
-                        .content(in))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(MediaType.TEXT_PLAIN));
+        mockMvc.perform(post("/api/latest/plugin/personAssociation").accept(MediaType.parseMediaType("application/json;charset=UTF-8")).contentType(MediaType.APPLICATION_JSON)
+                .principal(mockAuthentication).content(in)).andExpect(status().isBadRequest()).andExpect(content().contentType(MediaType.TEXT_PLAIN));
 
         verifyAll();
 
