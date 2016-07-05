@@ -140,7 +140,7 @@ public class PersonContactToSolrTransformer implements AcmObjectToSolrDocTransfo
         boolean classNames = theirClassName.equals(ourClassName);
         boolean isSupported = objectNotNull && classNames;
 
-        log.debug("Incoming: " + acmObjectType.getName() + "; do we handle it? " + isSupported);
+        log.trace("Incoming: {}; do we handle it? {}", acmObjectType.getName(), isSupported);
 
         return isSupported;
     }
