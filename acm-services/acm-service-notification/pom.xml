@@ -129,7 +129,6 @@
             <version>${acm.version}</version>
         </dependency>
 
-
         <!-- bean validation -->
         <dependency>
             <groupId>javax.validation</groupId>
