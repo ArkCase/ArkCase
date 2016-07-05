@@ -4,13 +4,12 @@ import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
-import com.armedia.acm.plugins.profile.model.OutlookDTO;
-import com.armedia.acm.plugins.profile.service.UserOrgService;
 import com.armedia.acm.service.outlook.dao.impl.ExchangeWebServicesOutlookDao;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksResultDTO;
+import com.armedia.acm.service.outlook.model.OutlookDTO;
 import com.armedia.acm.service.outlook.service.OutlookService;
 import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
@@ -40,7 +39,6 @@ public class MicrosoftExchangeNotificationSender implements NotificationSender
     private OutlookService outlookService;
     private ExchangeWebServicesOutlookDao dao;
     private EcmFileService ecmFileService;
-    private UserOrgService userOrgService;
 
     @Override
     public Notification send(Notification notification)
@@ -95,7 +93,7 @@ public class MicrosoftExchangeNotificationSender implements NotificationSender
     @Override
     public void sendEmailWithAttachments(EmailWithAttachmentsDTO in, Authentication authentication, AcmUser user) throws Exception
     {
-        OutlookDTO outlookDTO = getUserOrgService().retrieveOutlookPassword(authentication);
+        OutlookDTO outlookDTO = getOutlookService().retrieveOutlookPassword(authentication);
         AcmOutlookUser outlookUser = new AcmOutlookUser(authentication.getName(), user.getMail(), outlookDTO.getOutlookPassword());
         getOutlookService().sendEmailWithAttachments(in, outlookUser, authentication);
     }
@@ -104,7 +102,7 @@ public class MicrosoftExchangeNotificationSender implements NotificationSender
     public List<EmailWithEmbeddedLinksResultDTO> sendEmailWithEmbeddedLinks(EmailWithEmbeddedLinksDTO in, Authentication authentication,
             AcmUser user) throws Exception
     {
-        OutlookDTO outlookDTO = getUserOrgService().retrieveOutlookPassword(authentication);
+        OutlookDTO outlookDTO = getOutlookService().retrieveOutlookPassword(authentication);
         AcmOutlookUser outlookUser = new AcmOutlookUser(authentication.getName(), user.getMail(), outlookDTO.getOutlookPassword());
         return getOutlookService().sendEmailWithEmbeddedLinks(in, outlookUser, authentication);
     }
@@ -197,16 +195,6 @@ public class MicrosoftExchangeNotificationSender implements NotificationSender
     public void setEcmFileService(EcmFileService ecmFileService)
     {
         this.ecmFileService = ecmFileService;
-    }
-
-    public UserOrgService getUserOrgService()
-    {
-        return userOrgService;
-    }
-
-    public void setUserOrgService(UserOrgService userOrgService)
-    {
-        this.userOrgService = userOrgService;
     }
 
 }

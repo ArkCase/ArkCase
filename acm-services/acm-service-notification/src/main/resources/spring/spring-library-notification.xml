@@ -109,7 +109,6 @@
         <property name="authenticationTokenService" ref="authenticationTokenService"/>
         <property name="authenticationTokenDao" ref="authenticationTokenDao"/>
         <property name="outlookService" ref="outlookService"/>
-        <property name="userOrgService" ref="acmUserOrgService"/>
     </bean>
 
     <bean id="notificationSenderFactory" class="com.armedia.acm.services.notification.service.NotificationSenderFactory">
