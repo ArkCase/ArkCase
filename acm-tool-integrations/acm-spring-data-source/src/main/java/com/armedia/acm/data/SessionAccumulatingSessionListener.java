@@ -49,8 +49,8 @@ public class SessionAccumulatingSessionListener extends SessionEventAdapter impl
     public void postCommitTransaction(SessionEvent event)
     {
         super.postCommitTransaction(event);
-        log.debug("Session committed: " + event.getSession().getName());
-        log.debug("Raising database event: " +
+        log.trace("Session committed: " + event.getSession().getName());
+        log.trace("Raising database event: " +
                 getDescriptorListener().getChangesBySession().get(event.getSession().getName()));
 
         AcmObjectChangelist changelist = getDescriptorListener().getChangesBySession().get(event.getSession().getName());

@@ -47,11 +47,7 @@ public class SpringContextHolder implements ApplicationContextAware, Application
     @Override
     public void onApplicationEvent(AbstractConfigurationFileEvent fileEvent)
     {
-        if (log.isDebugEnabled())
-        {
-            log.debug("Event type: " + fileEvent.getClass().getName());
-            log.debug("event base filename: " + fileEvent.getBaseFileName());
-        }
+        log.debug("Event type: [{}]. Event base filename: [{}]", fileEvent.getClass().getName(), fileEvent.getBaseFileName());
 
         File eventFile = fileEvent.getConfigFile();
 
