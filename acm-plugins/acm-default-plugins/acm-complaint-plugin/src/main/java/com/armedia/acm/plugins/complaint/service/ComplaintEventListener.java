@@ -14,7 +14,7 @@ import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryEventPublis
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryService;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
-import microsoft.exchange.webservices.data.enumeration.DeleteMode;
+import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 import org.springframework.context.ApplicationListener;
 
 import java.util.List;

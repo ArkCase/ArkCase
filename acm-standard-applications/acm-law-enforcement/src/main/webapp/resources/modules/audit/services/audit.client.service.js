@@ -10,8 +10,8 @@
  *
  * The BuildUrl is used for building audit report url with given parametars.
  */
-angular.module('audit').factory('AuditController.BuildUrl', ['$sce', '$location', '$browser',
-    function ($sce, $location, $browser) {
+angular.module('audit').factory('AuditController.BuildUrl', ['$sce', '$location', '$browser', 'Util.DateService',
+    function ($sce, $location, $browser,UtilDateService) {
         return {
 
             /**
@@ -30,7 +30,6 @@ angular.module('audit').factory('AuditController.BuildUrl', ['$sce', '$location'
              * @param {String} objectType String that represents selected value from audit dropdown(default is ALL)
              * @param {String} objectId String that represents value from text input(default is empty string "")
              * @param {String} dateFormat String that represents pentaho date format
-             * @param {String} timeZone String that represents the time zone offset for the client
              * @param {Boolean} useBaseUrl boolean that represent should baseUrl should be generated and sent as parameter
              * @param {String} pentahoUser Pentaho user name
              * @param {String} pentahoPassword Pentaho password
@@ -47,21 +46,13 @@ angular.module('audit').factory('AuditController.BuildUrl', ['$sce', '$location'
                     }
                 }
 
-                function getTimeZoneOffset(){
-                    var currentTimeZoneOffsetInMinutes = new Date().getTimezoneOffset();
-                    var currentTimeZoneOffsetInHours = Math.floor(currentTimeZoneOffsetInMinutes / 60);
-                    currentTimeZoneOffsetInMinutes = Math.abs(currentTimeZoneOffsetInMinutes % 60);
-                    var currentTimeZoneOffset = "UTC" + currentTimeZoneOffsetInHours + ":" + currentTimeZoneOffsetInMinutes;
-                    return currentTimeZoneOffset;
-                }
-
                 var reportUrl = pentahoHost + amendedPentahoPort + auditReportUri
                     + "?startDate=" + startDate
                     + "&endDate=" + endDate
                     + "&objectType=" + objectType
                     + "&objectId=" + objectId
                     + "&dateFormat=" + encodeURIComponent(dateFormat)
-                    + "&timeZone=" + encodeURIComponent(getTimeZoneOffset())
+                    + "&timeZone=" + encodeURIComponent(UtilDateService.getTimeZoneOffset())
                     + "&userid=" + pentahoUser
                     + "&password=" + pentahoPassword;
                 if (useUrl) {

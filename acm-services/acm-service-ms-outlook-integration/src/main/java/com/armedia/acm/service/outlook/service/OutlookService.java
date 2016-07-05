@@ -18,24 +18,21 @@ import com.armedia.acm.service.outlook.model.OutlookMailItem;
 import com.armedia.acm.service.outlook.model.OutlookPassword;
 import com.armedia.acm.service.outlook.model.OutlookResults;
 import com.armedia.acm.service.outlook.model.OutlookTaskItem;
-
+import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
+import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
+import microsoft.exchange.webservices.data.property.definition.ExtendedPropertyDefinition;
+import microsoft.exchange.webservices.data.search.filter.SearchFilter;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
-import microsoft.exchange.webservices.data.enumeration.DeleteMode;
-import microsoft.exchange.webservices.data.enumeration.WellKnownFolderName;
-import microsoft.exchange.webservices.data.property.definition.ExtendedPropertyDefinition;
-import microsoft.exchange.webservices.data.search.filter.SearchFilter;
-
 /**
  * Created by armdev on 4/20/15.
  */
 public interface OutlookService
 {
-
     @Retryable(maxAttempts = 3, value = AcmOutlookException.class, backoff = @Backoff(delay = 500))
     OutlookResults<OutlookMailItem> findMailItems(AcmOutlookUser user, int start, int maxItems, String sortField, boolean sortAscending,
             SearchFilter filter) throws AcmOutlookConnectionFailedException, AcmOutlookListItemsFailedException;

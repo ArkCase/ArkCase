@@ -15,6 +15,7 @@ import com.armedia.acm.service.outlook.model.OutlookTaskItem;
 import com.armedia.acm.service.outlook.service.OutlookService;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.easymock.Capture;
@@ -38,7 +39,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 
 import java.util.Date;
 
-import microsoft.exchange.webservices.data.enumeration.WellKnownFolderName;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration

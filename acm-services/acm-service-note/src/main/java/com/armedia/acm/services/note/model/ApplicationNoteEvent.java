@@ -13,7 +13,7 @@ public class ApplicationNoteEvent extends AcmEvent
 
         setObjectId(source.getId());
         setEventDate(source.getCreated());
-        setUserId(source.getCreator());
+        setUserId(source.getModifier());
         setEventType(String.format("%s.%s", NoteConstants.EVENT_TYPE, noteEvent));
         setSucceeded(succeeded);
         setIpAddress(ipAddress);

@@ -16,6 +16,9 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import microsoft.exchange.webservices.data.core.enumeration.permission.folder.FolderPermissionLevel;
+import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
+import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,15 +32,12 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import microsoft.exchange.webservices.data.enumeration.DeleteMode;
-import microsoft.exchange.webservices.data.enumeration.FolderPermissionLevel;
-import microsoft.exchange.webservices.data.enumeration.WellKnownFolderName;
-
 /**
  * Created by nebojsha on 25.05.2015.
  */
 public class OutlookContainerCalendarServiceImpl implements OutlookContainerCalendarService
 {
+
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private OutlookFolderService outlookFolderService;
@@ -60,8 +60,10 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public OutlookFolder createFolder(String folderName, AcmContainer container, List<AcmParticipant> participants)
-            throws AcmOutlookItemNotFoundException, AcmOutlookCreateItemFailedException
+    public OutlookFolder createFolder(
+            String folderName,
+            AcmContainer container,
+            List<AcmParticipant> participants) throws AcmOutlookItemNotFoundException, AcmOutlookCreateItemFailedException
     {
 
         OutlookFolder outlookFolder = new OutlookFolder();
@@ -78,7 +80,9 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
 
     @Override
     @Transactional
-    public void deleteFolder(Long containerId, String folderId, DeleteMode deleteMode) throws AcmOutlookItemNotFoundException
+    public void deleteFolder(Long containerId,
+                             String folderId,
+                             DeleteMode deleteMode) throws AcmOutlookItemNotFoundException
     {
         outlookFolderService.deleteFolder(getOutlookUser(), folderId, deleteMode);
         AcmContainer container = acmContainerDao.find(containerId);
