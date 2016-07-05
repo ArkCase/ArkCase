@@ -15,7 +15,6 @@ import com.armedia.acm.service.outlook.service.OutlookService;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-
 import microsoft.exchange.webservices.data.core.enumeration.permission.folder.FolderPermissionLevel;
 import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
 import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
@@ -121,46 +120,46 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
                     outlookFolderPermission.setEmail(user.getMail());
                     switch (ap.getParticipantType())
                     {
-                    case "follower":
-                        if (getFollowerAccess() != null)
-                        {
-                            outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(getFollowerAccess()));
-                            break;
-                        } else
-                        {
-                            outlookFolderPermission.setLevel(FolderPermissionLevel.PublishingEditor);
-                            break;
-                        }
-                    case "assignee":
-                        if (getAssigneeAccess() != null)
-                        {
-                            outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(getAssigneeAccess()));
-                            break;
-                        } else
-                        {
-                            outlookFolderPermission.setLevel(FolderPermissionLevel.Author);
-                            break;
-                        }
-                    case "approver":
-                        if (getApproverAccess() != null)
-                        {
-                            outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(getApproverAccess()));
-                            break;
-                        } else
-                        {
-                            outlookFolderPermission.setLevel(FolderPermissionLevel.Reviewer);
-                            break;
-                        }
-                    default:
-                        if (getDefaultAccess() != null)
-                        {
-                            outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(getDefaultAccess()));
-                            break;
-                        } else
-                        {
-                            outlookFolderPermission.setLevel(FolderPermissionLevel.None);
-                            break;
-                        }
+                        case "follower":
+                            if (getFollowerAccess() != null)
+                            {
+                                outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(getFollowerAccess()));
+                                break;
+                            } else
+                            {
+                                outlookFolderPermission.setLevel(FolderPermissionLevel.PublishingEditor);
+                                break;
+                            }
+                        case "assignee":
+                            if (getAssigneeAccess() != null)
+                            {
+                                outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(getAssigneeAccess()));
+                                break;
+                            } else
+                            {
+                                outlookFolderPermission.setLevel(FolderPermissionLevel.Author);
+                                break;
+                            }
+                        case "approver":
+                            if (getApproverAccess() != null)
+                            {
+                                outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(getApproverAccess()));
+                                break;
+                            } else
+                            {
+                                outlookFolderPermission.setLevel(FolderPermissionLevel.Reviewer);
+                                break;
+                            }
+                        default:
+                            if (getDefaultAccess() != null)
+                            {
+                                outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(getDefaultAccess()));
+                                break;
+                            } else
+                            {
+                                outlookFolderPermission.setLevel(FolderPermissionLevel.None);
+                                break;
+                            }
                     }
                     folderPermissionsToBeAdded.add(outlookFolderPermission);
                 }
