@@ -3,11 +3,12 @@ package com.armedia.acm.plugins.profile.web.api;
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.plugins.profile.model.OutlookDTO;
-import com.armedia.acm.plugins.profile.model.UserOrg;
-import com.armedia.acm.plugins.profile.model.UserOrgConstants;
 import com.armedia.acm.plugins.profile.service.ProfileEventPublisher;
-import com.armedia.acm.plugins.profile.service.UserOrgService;
+import com.armedia.acm.service.outlook.model.OutlookConstants;
+import com.armedia.acm.service.outlook.model.OutlookDTO;
+import com.armedia.acm.service.outlook.model.OutlookPassword;
+import com.armedia.acm.service.outlook.service.OutlookService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -19,63 +20,48 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+
 import java.util.Objects;
 
 @Controller
-@RequestMapping({"/api/v1/plugin/profile/outlook","/api/latest/plugin/profile/outlook"})
+@RequestMapping({ "/api/v1/plugin/profile/savepassword", "/api/latest/plugin/profile/savepassword" })
 public class SaveOutlookPasswordAPIController
 {
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private ProfileEventPublisher eventPublisher;
-    private UserOrgService userOrgService;
+    private OutlookService outlookService;
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public OutlookDTO saveOutlookPassword(
-            @RequestBody OutlookDTO in,
-            Authentication authentication,
-            HttpSession session
-    ) throws AcmUserActionFailedException, AcmObjectNotFoundException
+    public OutlookDTO saveOutlookPassword(@RequestBody OutlookDTO in, Authentication authentication, HttpSession session)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
-        Long userProfileId = null;
-        UserOrg userOrg = null;
+        OutlookPassword outlookPassword = null;
         String ipAddress = (String) session.getAttribute("acm_ip_address");
 
         try
         {
-            Objects.requireNonNull(in, UserOrgConstants.ERROR_PASSWORD_MISSING);
-            Objects.requireNonNull(in.getOutlookPassword(), UserOrgConstants.ERROR_PASSWORD_MISSING);
-            if ( in.getOutlookPassword().trim().isEmpty() )
+            Objects.requireNonNull(in, OutlookConstants.ERROR_PASSWORD_MISSING);
+            Objects.requireNonNull(in.getOutlookPassword(), OutlookConstants.ERROR_PASSWORD_MISSING);
+            if (in.getOutlookPassword().trim().isEmpty())
             {
-                throw new IllegalArgumentException(UserOrgConstants.ERROR_PASSWORD_EMPTY);
+                throw new IllegalArgumentException(OutlookConstants.ERROR_PASSWORD_EMPTY);
             }
 
-            // need the user profile ID for events and error reporting
-            userOrg = getUserOrgService().getUserOrgForUserId(authentication.getName());
-            userProfileId = userOrg.getUserOrgId();
+            getOutlookService().saveOutlookPassword(authentication, in);
 
-            getUserOrgService().saveOutlookPassword(authentication, in);
-
-            getEventPublisher().outlookPasswordSavedEvent(userOrg, authentication, ipAddress, true);
+            getEventPublisher().outlookPasswordSavedEvent(outlookPassword, authentication, ipAddress, true);
 
             return in;
-        }
-        catch (AcmObjectNotFoundException e)
-        {
-            // only happens when there is no user profile
-            getEventPublisher().outlookPasswordSavedEvent(null, authentication, ipAddress, false);
-            throw e;
-        }
-        catch (AcmEncryptionException | NullPointerException | IllegalStateException | IllegalArgumentException e)
+        } catch (AcmEncryptionException | NullPointerException | IllegalStateException | IllegalArgumentException e)
         {
             log.error("Could not update Outlook password for user: " + e.getMessage(), e);
 
-            getEventPublisher().outlookPasswordSavedEvent(userOrg, authentication, ipAddress, false);
-            throw new AcmUserActionFailedException(UserOrgConstants.ACTION_UPDATE_OUTLOOK_PASSWORD,
-                    UserOrgConstants.OBJECT_TYPE, userProfileId, e.getMessage(), e);
+            getEventPublisher().outlookPasswordSavedEvent(outlookPassword, authentication, ipAddress, false);
+            throw new AcmUserActionFailedException(OutlookConstants.ACTION_UPDATE_OUTLOOK_PASSWORD, OutlookConstants.OBJECT_TYPE, null,
+                    e.getMessage(), e);
         }
-
 
     }
 
@@ -89,11 +75,13 @@ public class SaveOutlookPasswordAPIController
         this.eventPublisher = eventPublisher;
     }
 
-    public UserOrgService getUserOrgService() {
-        return userOrgService;
+    public OutlookService getOutlookService()
+    {
+        return outlookService;
     }
 
-    public void setUserOrgService(UserOrgService userOrgService) {
-        this.userOrgService = userOrgService;
+    public void setOutlookService(OutlookService outlookService)
+    {
+        this.outlookService = outlookService;
     }
 }

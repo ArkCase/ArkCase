@@ -1,4 +1,4 @@
-package com.armedia.acm.plugins.profile.model;
+package com.armedia.acm.service.outlook.model;
 
 /**
  * Created by armdev on 4/16/15.

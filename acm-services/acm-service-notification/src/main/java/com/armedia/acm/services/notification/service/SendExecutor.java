@@ -12,36 +12,39 @@ import java.util.Map;
  * @author riste.tutureski
  *
  */
-public class SendExecutor implements Executor {
+public class SendExecutor implements Executor
+{
 
-	private SpringContextHolder springContextHolder;
+    private SpringContextHolder springContextHolder;
 
-	@Override
-	public Notification execute(Notification notification) 
-	{
+    @Override
+    public Notification execute(Notification notification)
+    {
 
-		// Get all registered senders
-		Map<String, NotificationSender> senders = getSpringContextHolder().getAllBeansOfType(NotificationSender.class);
-		
-		if (senders != null)
-		{
-			for (NotificationSender sender : senders.values())
-			{
-				// Send notification
-				notification = sender.send(notification);
-			}
-		}
-				
-		return notification;
-	}
+        // Get all registered senders
+        Map<String, NotificationSenderFactory> senderFactoryList = getSpringContextHolder()
+                .getAllBeansOfType(NotificationSenderFactory.class);
 
+        if (senderFactoryList != null)
+        {
+            for (NotificationSenderFactory senderFactory : senderFactoryList.values())
+            {
+                // Send notification
+                notification = senderFactory.getNotificationSender().send(notification);
+            }
+        }
 
-    public SpringContextHolder getSpringContextHolder() {
-		return springContextHolder;
-	}
+        return notification;
+    }
 
-	public void setSpringContextHolder(SpringContextHolder springContextHolder) {
-		this.springContextHolder = springContextHolder;
-	}
+    public SpringContextHolder getSpringContextHolder()
+    {
+        return springContextHolder;
+    }
+
+    public void setSpringContextHolder(SpringContextHolder springContextHolder)
+    {
+        this.springContextHolder = springContextHolder;
+    }
 
 }

@@ -41,6 +41,7 @@
                 <value>file:${user.home}/.arkcase/acm/subscriptionPlugin.properties</value>
                 <value>file:${user.home}/.arkcase/acm/taskPlugin.properties</value>
                 <value>file:${user.home}/.arkcase/acm/login.properties</value>
+                <value>file:${user.home}/.arkcase/acm/websockets.properties</value>
             </list>
         </property>
     </bean>

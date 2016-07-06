@@ -58,10 +58,7 @@ public class ConfigFileWatcher implements FileListener, ApplicationEventPublishe
 
             for (FileObject current : existingFilesAndFolders)
             {
-                if (log.isDebugEnabled())
-                {
-                    log.debug("Raising event for file " + current.getName());
-                }
+                log.trace("Raising event for file [{}]", current.getName());
                 fileCreated(new FileChangeEvent(current));
             }
         } catch (Exception e)
