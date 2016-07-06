@@ -18,4 +18,4 @@ angular.module('core').controller('LeftNavigationController', ['$scope', '$state
             $scope.menu = Menus.getMenu('leftnav');
         });
     }
-]);
+]); 

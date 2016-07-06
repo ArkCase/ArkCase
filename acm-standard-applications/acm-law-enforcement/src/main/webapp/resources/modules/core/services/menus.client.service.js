@@ -156,17 +156,27 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService', 'Admin.Modu
                         var moduleAllowedByRoles = false;
                         angular.forEach(appModules, function (module)
                         {
-                            if (menuObj.menuItemURL === module.id || menuObj.menuItemURL === module.name.toLowerCase() || menuObj.menuItemTitle === module.name)
+
+                            if (menuObj.menuId === "leftnav")
                             {
-                                moduleObject = module
+                                if (menuObj.menuItemURL === module.id || menuObj.menuItemURL === module.name.toLowerCase() || menuObj.menuItemTitle === module.name)
+                                {
+                                    moduleObject = module;
+                                }
+                            }
+                            if (menuObj.menuId === "topbar")
+                            {
+                                if (menuObj.menuItemTitle.toLowerCase() === module.id || menuObj.menuItemTitle.toLowerCase().substring(0, module.id.length) === module.id)
+                                {
+                                    moduleObject = module;
+                                }
                             }
                         })
 
-                        if (menuObj.menuId != "leftnav")
+                        if (menuObj.menuId === "usermenu")
                         {
-                            moduleAllowedByRoles = true;
 
-                            if (moduleAllowedByActionPermission && moduleAllowedByRoles)
+                            if (moduleAllowedByActionPermission)
                             {
                                 // Push new menu item
                                 context.menus[menuObj.menuId].items.push({
@@ -296,5 +306,68 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService', 'Admin.Modu
 
         //Adding the user menu
         this.addMenu('usermenu');
+
+        function topbarCheckPoint(menuObj, moduleAllowedByActionPermission, context)
+        {
+            if (moduleAllowedByActionPermission)
+            {
+                pushMenuItem(menuObj, context);
+            }
+        }
+
+        function leftnavCheckPoint(menuObj, module, moduleAllowedByActionPermission, context)
+        {
+            var moduleObject = null;
+            var moduleAllowedByRoles = false;
+
+            if (menuObj.menuItemURL === module.id || menuObj.menuItemURL === module.name.toLowerCase() || menuObj.menuItemTitle === module.name)
+            {
+                moduleObject = module;
+            }
+
+            if (moduleObject != null)
+            {
+                ModuleService.getRolesForModulePrivilege(moduleObject.privilege).then(function (rolesForModule)
+                {
+                    angular.forEach(rolesForModule.data, function (role)
+                    {
+                        angular.forEach(userRoles, function (userRole)
+                        {
+                            if (role === userRole)
+                            {
+                                moduleAllowedByRoles = true;
+                            }
+                        })
+                    })
+                })
+            }
+            if (moduleAllowedByActionPermission && moduleAllowedByRoles)
+            {
+                pushMenuItem(menuObj, context);
+            }
+        }
+
+        function usermenuCheckPoint(menuObj, moduleAllowedByActionPermission, context)
+        {
+            if (moduleAllowedByActionPermission)
+            {
+                pushMenuItem(menuObj, context);
+            }
+        }
+
+        function pushMenuItem(menuObj, context)
+        {
+            // Push new menu item
+            context.menus[menuObj.menuId].items.push({
+                title: 'core.menus.' + menuObj.menuId + '.' + menuObj.menuItemURL,
+                link: menuObj.menuItemURL,
+                menuItemType: 'item',
+                uiRoute: '/' + menuObj.menuItemURL,
+                isPublic: true,
+                position: menuObj.position || 0,
+                iconClass: menuObj.iconClass,
+                permissionAction: menuObj.permissionAction || 'noAction'
+            });
+        }
     }
 ]);
