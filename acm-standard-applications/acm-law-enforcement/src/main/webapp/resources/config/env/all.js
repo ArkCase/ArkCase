@@ -131,6 +131,14 @@ module.exports = {
         jsCustomDirectives: [
             'custom_directives/*/*.js',
             'custom_directives/*/**/*.js'
+        ],
+        jsServices: [
+            'services/*/*.js',
+            'services/*/**/*.js'
+        ],
+        jsCustomServices: [
+            'custom_services/*/*.js',
+            'custom_services/*/**/*.js'
         ]
     }
 }
