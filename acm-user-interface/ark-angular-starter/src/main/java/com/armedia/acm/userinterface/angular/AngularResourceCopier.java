@@ -237,7 +237,7 @@ public class AngularResourceCopier implements ServletContextAware
 
             if (targetFile != null)
             {
-                log.debug("Copying file {}", targetFile.getCanonicalPath());
+                log.trace("Copying file {}", targetFile.getCanonicalPath());
                 createFolderStructure(targetFile.getParentFile());
                 FileCopyUtils.copy(r.getInputStream(), new FileOutputStream(targetFile));
             }
@@ -275,7 +275,7 @@ public class AngularResourceCopier implements ServletContextAware
         int metaInfPortionLength = AngularResourceConstants.JAR_PATH_META_INF_PORTION.length();
 
         String webappPath = path.substring(path.indexOf(AngularResourceConstants.JAR_PATH_META_INF_PORTION) + metaInfPortionLength + 1);
-        log.debug("webapp path for URL {} is {}: ", url, webappPath);
+        log.trace("webapp path for URL {} is {}: ", url, webappPath);
         return webappPath;
     }
 
@@ -284,11 +284,11 @@ public class AngularResourceCopier implements ServletContextAware
         String resourceFullPath = r.getFile().getCanonicalPath();
         String relativePath = resourceFullPath.replace(rootPath, "");
 
-        log.debug("relative path: {}", relativePath);
+        log.trace("relative path: {}", relativePath);
 
         relativePath = relativePath.replaceFirst(moduleRoot, targetRoot);
 
-        log.debug("new relative path: {}", relativePath);
+        log.trace("new relative path: {}", relativePath);
 
         return new File(tmpDir, relativePath);
     }

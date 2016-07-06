@@ -3,13 +3,16 @@
  */
 package com.armedia.acm.services.notification.service;
 
-import java.util.List;
+import com.armedia.acm.service.outlook.model.EmailWithAttachmentsDTO;
+import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksDTO;
+import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksResultDTO;
+import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.notification.model.NotificationConstants;
+import com.armedia.acm.services.users.model.AcmUser;
 
 import org.springframework.security.core.Authentication;
 
-import com.armedia.acm.services.notification.model.EmailNotificationDto;
-import com.armedia.acm.services.notification.model.Notification;
-import com.armedia.acm.services.notification.model.NotificationConstants;
+import java.util.List;
 
 /**
  * @author riste.tutureski
@@ -19,8 +22,8 @@ public interface NotificationSender
 {
 
     /**
-     * Sends the notification to user's email. If successful, sets the notification state to {@link NotificationConstants#STATE_SENT},
-     * otherwise it sets it to {@link NotificationConstants#STATE_NOT_SENT}
+     * Sends the notification to user's email. If successful, sets the notification state to
+     * {@link NotificationConstants#STATE_SENT}, otherwise it sets it to {@link NotificationConstants#STATE_NOT_SENT}
      * 
      * @param notification
      *            the notification to send
@@ -28,6 +31,9 @@ public interface NotificationSender
      */
     public Notification send(Notification notification);
 
-    public List<Notification> sendEmailNotificationWithLinks(List<EmailNotificationDto> in, Authentication authentication);
+    public void sendEmailWithAttachments(EmailWithAttachmentsDTO in, Authentication authentication, AcmUser user) throws Exception;
+
+    public List<EmailWithEmbeddedLinksResultDTO> sendEmailWithEmbeddedLinks(EmailWithEmbeddedLinksDTO in, Authentication authentication,
+            AcmUser user) throws Exception;
 
 }

@@ -1,10 +1,8 @@
 package com.armedia.acm.plugins.outlook.web.api;
 
-import com.armedia.acm.plugins.profile.dao.UserOrgDao;
-import com.armedia.acm.plugins.profile.model.OutlookDTO;
 import com.armedia.acm.plugins.profile.service.UserOrgService;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
-import com.armedia.acm.service.outlook.model.OutlookCalendarItem;
+import com.armedia.acm.service.outlook.model.OutlookDTO;
 import com.armedia.acm.service.outlook.model.OutlookTaskItem;
 import com.armedia.acm.service.outlook.service.OutlookService;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -32,19 +30,17 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 
 import java.util.Date;
 
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.eq;
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(locations = {
-        "classpath:/spring-web-ms-outlook-plugin-api.xml"})
-public class CreateTaskItemAPIControllerTest extends EasyMockSupport {
+@ContextConfiguration(locations = {"classpath:/spring-web-ms-outlook-plugin-api.xml"})
+public class CreateTaskItemAPIControllerTest extends EasyMockSupport
+{
     @Autowired
     WebApplicationContext wac;
     @Autowired
@@ -64,7 +60,8 @@ public class CreateTaskItemAPIControllerTest extends EasyMockSupport {
     private UserOrgService userOrgService;
 
     @Before
-    public void setup() {
+    public void setup()
+    {
         outlookService = createMock(OutlookService.class);
         userOrgService = createMock(UserOrgService.class);
         mockAuthentication = createMock(Authentication.class);
@@ -74,15 +71,16 @@ public class CreateTaskItemAPIControllerTest extends EasyMockSupport {
     }
 
     @Test
-    public void testCreateTaskItem() throws Exception {
+    public void testCreateTaskItem() throws Exception
+    {
         OutlookTaskItem taskItem = new OutlookTaskItem();
         taskItem.setSubject("Task 1");
         taskItem.setBody("");
-        long tomorrow = System.currentTimeMillis() + 1000 * 60 * 60 * 24;//due to tomorrow
+        long tomorrow = System.currentTimeMillis() + 1000 * 60 * 60 * 24;// due to tomorrow
         taskItem.setDueDate(new Date(tomorrow));
         taskItem.setPercentComplete(20);
         taskItem.setComplete(false);
-        taskItem.setStartDate(new Date(System.currentTimeMillis() + 1000 * 60));//start next minute
+        taskItem.setStartDate(new Date(System.currentTimeMillis() + 1000 * 60));// start next minute
         assertNull(taskItem.getId());
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -92,7 +90,7 @@ public class CreateTaskItemAPIControllerTest extends EasyMockSupport {
         expect(mockAuthentication.getName()).andReturn("user").times(2);
         OutlookDTO password = new OutlookDTO();
         password.setOutlookPassword("outlookPassword");
-        expect(userOrgService.retrieveOutlookPassword(mockAuthentication)).andReturn(password);
+        expect(outlookService.retrieveOutlookPassword(mockAuthentication)).andReturn(password);
         AcmUser user = new AcmUser();
         user.setMail("test@armedia.com");
         session.setAttribute("acm_user", user);
@@ -101,19 +99,15 @@ public class CreateTaskItemAPIControllerTest extends EasyMockSupport {
         Capture<OutlookTaskItem> taskItemCapture = new Capture<>();
 
         taskItem.setId("some_fake_id");
-        expect(outlookService.createOutlookTaskItem(capture(outlookUserCapture), eq(WellKnownFolderName.Tasks), capture(taskItemCapture))).andReturn(taskItem);
+        expect(outlookService.createOutlookTaskItem(capture(outlookUserCapture), eq(WellKnownFolderName.Tasks), capture(taskItemCapture)))
+                .andReturn(taskItem);
 
         replayAll();
 
-        MvcResult result = mockMvc.perform(
-                post("/api/latest/plugin/outlook/tasks")
-                        .session(session)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .principal(mockAuthentication)
-                        .content(content))
-                .andExpect(status().isOk())
-                .andReturn();
+        MvcResult result = mockMvc
+                .perform(post("/api/latest/plugin/outlook/tasks").session(session).accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON).principal(mockAuthentication).content(content))
+                .andExpect(status().isOk()).andReturn();
 
         OutlookTaskItem item = objectMapper.readValue(result.getResponse().getContentAsString(), OutlookTaskItem.class);
         assertNotNull(item.getId());

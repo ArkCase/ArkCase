@@ -41,6 +41,8 @@
         <property name="systemUserId" value="${outlook.exchange.system_user_id}" />
         <property name="authenticationTokenService" ref="authenticationTokenService" />
         <property name="authenticationTokenDao" ref="authenticationTokenDao" />
+        <property name="acmCryptoUtils" ref="acmCryptoUtils"/>
+        <property name="outlookPasswordDao" ref="outlookPasswordDao"/>
     </bean>
 
     <bean id="outlookCacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
@@ -77,6 +79,9 @@
             </map>
         </property>
     </bean>
+
+    <bean id="outlookPasswordDao" class="com.armedia.acm.service.outlook.dao.OutlookPasswordDao"/>
+    
 
     <util:constant id="propertyDefinitionSubject"
                    static-field="microsoft.exchange.webservices.data.core.service.schema.ItemSchema.Subject"/>
