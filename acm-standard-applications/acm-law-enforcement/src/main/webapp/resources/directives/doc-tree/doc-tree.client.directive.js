@@ -3092,7 +3092,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 DocTree.jqFileInput.click();
             }
 
-            , replaceFileWithSelectedFile: function (node, files) {
+            , replaceFileWithSelectedFile: function (node, files, callback) {
                 var fileType = Util.goodValue(node.data.type);
                 if (!Util.isEmpty(fileType)) {
                     DocTree.uploadSetting = {
@@ -3104,6 +3104,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     };
                     var args = {files: files, refresh: false};
                     var submitFiles = DocTree.Command.findHandler("submitFiles/");
+                    submitFiles.onPostCmd = callback;
                     DocTree.Command.handleCommand(submitFiles, [node], args);
                 }
             }
@@ -3792,25 +3793,22 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 });
 
                 modalInstance.result.then(function (data) {
-                    DocTree.replaceFileWithSelectedFile(node, data.files);
-                    $q.when(DocTree.uploadSetting.deferUploadFile.promise)
-                        .then(function (result) {
-                                if (data.note.note != null && data.note.note.length > 0) {
-                                    //we have text in note so we will save the note
-                                    data.note.tag = result.version;
-                                    ObjectNoteService.saveNote(data.note);
-                                }
-                                var fileId = result.objectId;
-                                LockingService.unlockObject(fileId, ObjectService.ObjectTypes.FILE,
-                                    ObjectService.LockTypes.CHECKIN_LOCK).then(function () {
-                                    DocTree.markNodeOk(node.parent);
-                                    node.parent.renderTitle();
-                                    DocTree.refreshTree();
-                                });
-                            },
-                            function () {
-                                DocTree.markNodeError(node);
+                    DocTree.replaceFileWithSelectedFile(node, data.files, function(nodes){
+
+                            var result = nodes[0].data;
+                            if (data.note.note != null && data.note.note.length > 0) {
+                                //we have text in note so we will save the note
+                                data.note.tag = result.version;
+                                ObjectNoteService.saveNote(data.note);
+                            }
+                            var fileId = result.objectId;
+                            LockingService.unlockObject(fileId, ObjectService.ObjectTypes.FILE,
+                                ObjectService.LockTypes.CHECKIN_LOCK).then(function () {
+                                DocTree.markNodeOk(node.parent);
+                                node.parent.renderTitle();
+                                DocTree.refreshTree();
                             });
+                        });
                 });
 
             }
