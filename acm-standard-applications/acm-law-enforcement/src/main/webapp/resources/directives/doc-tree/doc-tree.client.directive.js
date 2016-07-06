@@ -14,6 +14,7 @@
  * @param {String} object-type Object type of document container object
  * @param {Number} object-id Object ID of document container object
  * @param {Number} file-types List of file types and form types the tree can upload
+ * @param {Array} correspondence-forms List of correspondence form types the tree can upload
  * @param {Function} upload-form (Optional)Function used to upload Frevvo form
  * @param {Object} tree-config Tree configuration used to add to default configuration. Default doc tree configuration
  * is saved in config.json file of common module.
@@ -37,7 +38,7 @@
  <example>
  <file name="index.html">
  <doc-tree object-type="objectType" object-id="objectId" tree-control="treeControl" file-types="fileTypes"
- upload-form="uploadForm" tree-config="treeConfig" object-info="objectInfo">
+ correspondence-forms = "correspondenceForms" upload-form="uploadForm" tree-config="treeConfig" object-info="objectInfo">
  </doc-tree>
  </file>
  <file name="app.js">
@@ -84,11 +85,11 @@
 angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', '$filter', '$log', '$timeout'
     , 'Acm.StoreService', 'UtilService', 'Util.DateService', 'ConfigService', 'LookupService'
     , 'EcmService', 'Ecm.EmailService', 'Ecm.RecordService', 'Authentication', 'Helper.NoteService', 'Object.NoteService'
-    , '$browser', '$location', 'Object.LockingService', 'ObjectService'
+    , '$browser', '$location', 'Object.LockingService', 'ObjectService', 'Object.CorrespondenceService'
     , function ($q, $translate, $modal, $filter, $log, $timeout
         , Store, Util, UtilDateService, ConfigService, LookupService
         , Ecm, EcmEmailService, EcmRecordService, Authentication, HelperNoteService, ObjectNoteService
-        , $browser, $location, LockingService, ObjectService) {
+        , $browser, $location, LockingService, ObjectService, ObjectCorrespondenceService) {
         var user = "";
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -1463,6 +1464,44 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             }
                         }
                         , {
+                            name: "template/",
+                            execute: function (nodes, args) {
+
+                                var names = [args.label];
+                                var template = args.templateType;
+
+                                var promiseCorrespondence = ObjectCorrespondenceService.createCorrespondence(template,
+                                    DocTree.getObjType(), DocTree.getObjId(), DocTree.objectInfo.container.folder.cmisFolderId);
+
+                                var promiseAddNodes = DocTree._addingFileNodes(nodes[0], names, names[0]);
+
+                                var cacheKey = DocTree.getCacheKeyByNode(nodes[0]);
+                                $q.all([promiseCorrespondence, promiseAddNodes]).then(
+                                    function (successData) {
+                                        var uploadedFile = successData[0];
+                                        var fileNodes = successData[1];
+                                        var file = DocTree.fileToSolrData(uploadedFile);
+                                        var folderList = DocTree.cacheFolderList.get(cacheKey);
+
+                                        if (Validator.validateFolderList(folderList)) {
+                                            folderList.children.push(file);
+                                            folderList.totalChildren++;
+                                            DocTree.cacheFolderList.put(cacheKey, folderList);
+                                            if (!Util.isEmpty(uploadedFile) && Validator.validateFancyTreeNodes(fileNodes)) {
+                                                var type = Util.goodValue(uploadedFile.fileType);
+                                                var fileNode = DocTree._matchFileNode(type, type, fileNodes);
+                                                if (fileNode) {
+                                                    DocTree._fileDataToNodeData(file, fileNode);
+                                                    fileNode.renderTitle();
+                                                    fileNode.setStatus("ok");
+                                                }
+                                            }
+                                        }
+
+                                    });
+                            }
+                        }
+                        , {
                             name: "submitFiles/",
                             execute: function (nodes, args) {
                                 if (!DocTree.uploadSetting) {
@@ -1526,7 +1565,11 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     } else if (0 == data.cmd.indexOf("file/")) {
                         cmd = "file/";
                         args = {fileType: data.cmd.substring(5)};  //5 = length of "file/"
-                    } else {
+                    } else if (0 == data.cmd.indexOf("template/")) {
+                        cmd = "template/";
+                        args = {templateType: data.cmd.substring(cmd.length), label: data.label};
+                    }
+                    else {
                         cmd = data.cmd;
                     }
                     var handler = DocTree.Command.findHandler(cmd);
@@ -1571,9 +1614,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             }
                         });
                     }
-
-
-
                 }
 
                 , onKeyDown: function (event, data) {
@@ -1685,9 +1725,14 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             // delay the event, so the menu can close and the click event does
                             // not interfere with the edit control
                             var uploadFile = Util.goodMapValue(ui.item.data(), "uploadFile", false);
+                            var uploadFileLabel = Util.goodMapValue(ui.item.data(), "label", "");
                             var that = this;
                             setTimeout(function () {
-                                $(that).trigger("command", {cmd: ui.cmd, uploadFile: uploadFile});
+                                $(that).trigger("command", {
+                                    cmd: ui.cmd,
+                                    uploadFile: uploadFile,
+                                    label: uploadFileLabel
+                                });
                             }, 100);
                         }
                     });
@@ -1757,7 +1802,11 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         menu = _.clone(menu);
                         var menuFileTypes = _.find(menu, {"cmd": "subMenuFileTypes"});
                         if (menuFileTypes) {
-                            menuFileTypes.children = this.makeMenuFileTypes();
+                            menuFileTypes.children = this.makeSubMenu(DocTree.fileTypes);
+                        }
+                        var menuCorrespondenceForms = _.find(menu, {cmd: "subMenuCorrespondenceForms"});
+                        if (menuCorrespondenceForms) {
+                            menuCorrespondenceForms.children = this.makeSubMenu(DocTree.correspondenceForms);
                         }
                         //} else {
                         //    var menu0 = [Util.goodMapValue(DocTree.treeConfig, "noop")];
@@ -1843,23 +1892,32 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 //            ,{title: "Witness Interview Request", cmd: "file/wir"}
                 //            ,{title: "Other", cmd: "file/other"}
                 //        ];
-                , makeMenuFileTypes: function () {
-                    var fileTypes = DocTree.fileTypes;
+                , makeSubMenu: function (subTypes) {
                     var menu = [], item;
-                    if (Util.isArray(fileTypes)) {
-                        for (var i = 0; i < fileTypes.length; i++) {
-                            item = {};
-                            if (!Util.isEmpty(fileTypes[i].label) && !Util.isEmpty(fileTypes[i].type)) {
-                                item.title = fileTypes[i].label;
-                                if (!Util.isEmpty(fileTypes[i].form)) {
-                                    item.cmd = "form/" + fileTypes[i].type;
-                                } else {
-                                    item.cmd = "file/" + fileTypes[i].type;
-                                    item.data = {};
-                                    item.data.uploadFile = true;
+                    if (subTypes) {
+                        if (Util.isArray(subTypes)) {
+                            for (var i = 0; i < subTypes.length; i++) {
+                                item = {};
+                                if (!Util.isEmpty(subTypes[i].label)) {
+                                    item.title = subTypes[i].label;
                                 }
+                                if (!Util.isEmpty(subTypes[i].type)) {
+                                    if (!Util.isEmpty(subTypes[i].form)) {
+                                        item.cmd = "form/" + subTypes[i].type;
+                                    }
+                                    else {
+                                        item.cmd = "file/" + subTypes[i].type;
+                                        item.data = {};
+                                        item.data.uploadFile = true;
+                                    }
+                                }
+                                else if (!Util.isEmpty(subTypes[i].template)) {
+                                    item.cmd = "template/" + subTypes[i].template;
+                                    item.data = {};
+                                    item.data.label = subTypes[i].label;
+                                }
+                                menu.push(item);
                             }
-                            menu.push(item);
                         }
                     }
                     return menu;
@@ -4418,6 +4476,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 , objectType: '='
                 , objectId: '='
                 , fileTypes: '='
+                , correspondenceForms: '='
                 , uploadForm: '&'
                 , onInitTree: '&'
                 , readOnly: '@'
@@ -4462,10 +4521,11 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     return moduleConfig;
                 });
 
-                scope.$watchGroup(['treeConfig', 'objectInfo', 'fileTypes'], function (newValues, oldValues, scope) {
+                scope.$watchGroup(['treeConfig', 'objectInfo', 'fileTypes', 'correspondenceForms'], function (newValues, oldValues, scope) {
                     var treeConfig = newValues[0];
                     var objectInfo = newValues[1];
                     var fileTypes = newValues[2];
+                    var correspondenceForms = newValues[3];
                     _.merge(DocTree.treeConfig, treeConfig);
 
                     DocTree.objectInfo = objectInfo;
@@ -4547,6 +4607,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                         if (Util.goodValue(fileTypes)) {
                             DocTree.fileTypes = fileTypes;
+                            var jqTreeBody = DocTree.jqTree.find("tbody");
+                            DocTree.Menu.useContextMenu(jqTreeBody);
+                        }
+
+                        if (Util.goodValue(correspondenceForms)) {
+                            DocTree.correspondenceForms = correspondenceForms;
                             var jqTreeBody = DocTree.jqTree.find("tbody");
                             DocTree.Menu.useContextMenu(jqTreeBody);
                         }
