@@ -26,7 +26,7 @@ public class TaskChangeNotifier implements ApplicationListener<AcmApplicationTas
         } else if (acmApplicationTaskEvent.getEventType().endsWith(".delete"))
         {
             getAcmObjectChangedNotifier().notifyChange(AcmObjectEventConstants.ACTION_DELETE, acmApplicationTaskEvent.getAcmTask());
-        } else
+        } else if(acmApplicationTaskEvent.getEventType().endsWith(".changed"))
         {
             getAcmObjectChangedNotifier().notifyChange(AcmObjectEventConstants.ACTION_UPDATE, acmApplicationTaskEvent.getAcmTask());
         }

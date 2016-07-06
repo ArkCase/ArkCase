@@ -32,6 +32,14 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
             }
         );
 
+        ObjectLookupService.getComplaintCorrespondenceForms().then(
+            function (correspondenceForms) {
+                $scope.correspondenceForms = $scope.correspondenceForms || [];
+                $scope.correspondenceForms = $scope.correspondenceForms.concat(Util.goodArray(correspondenceForms));
+                return correspondenceForms;
+            }
+        );
+
         $scope.uploadForm = function (type, folderId, onCloseForm) {
             return DocTreeService.uploadFrevvoForm(type, folderId, onCloseForm, $scope.objectInfo, $scope.fileTypes);
         };

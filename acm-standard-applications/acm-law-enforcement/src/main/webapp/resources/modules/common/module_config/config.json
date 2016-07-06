@@ -148,6 +148,10 @@
             ]
           },
           {
+            "title": "New Correspondence",
+            "cmd": "subMenuCorrespondenceForms"
+          },
+          {
             "title": "----"
           },
           {
@@ -331,6 +335,10 @@
           {
             "title": "New Document",
             "cmd": "subMenuFileTypes"
+          },
+          {
+            "title": "New Correspondence",
+            "cmd": "subMenuCorrespondenceForms"
           },
           {
             "title": "----"

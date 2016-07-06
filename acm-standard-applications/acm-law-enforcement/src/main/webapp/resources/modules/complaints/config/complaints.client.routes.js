@@ -36,11 +36,6 @@ angular.module('complaints').config(['$stateProvider',
                 templateUrl: 'modules/complaints/views/components/complaint-calendar.client.view.html'
             })
 
-            .state('complaints.correspondence', {
-                url: '/:id/correspondence',
-                templateUrl: 'modules/complaints/views/components/complaint-correspondence.client.view.html'
-            })
-
             .state('complaints.cost', {
                 url: '/:id/cost',
                 templateUrl: 'modules/complaints/views/components/complaint-cost.client.view.html'
