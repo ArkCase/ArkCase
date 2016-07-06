@@ -31,6 +31,7 @@ public class CasesPage extends ArkCaseTestBase {
 	public WebElement frameOne;
 	@FindBy(how = How.XPATH, using = "/html/body/iframe")
 	public WebElement frameTwo;
+	
 	// Information ribbon
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[1]/h3/span")
 	WebElement casesListTitle;
@@ -43,11 +44,11 @@ public class CasesPage extends ArkCaseTestBase {
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[1]/nav/div[1]/div/div/div[2]/a/strong/span[1]")
 	WebElement userLogedIn;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[3]/div[1]/div/a")
-	WebElement assignedTo;
+	public WebElement assignedTo;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[2]/div[2]/div")
-	WebElement createdDateCase;
+	public WebElement createdDateCase;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[3]/div[2]/div/a")
-	WebElement owningGroup;
+	public WebElement owningGroup;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[2]/div[3]/div/a")
 	WebElement priority;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[1]/div[2]/h4")
@@ -92,6 +93,7 @@ public class CasesPage extends ArkCaseTestBase {
 	WebElement newCaseButton;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[2]")
 	WebElement editCaseButton;
+	public
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[3]")
 	WebElement changeCaseStatusButton;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[4]")
@@ -107,6 +109,7 @@ public class CasesPage extends ArkCaseTestBase {
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[1]/div/label/span")
 	WebElement restrictCaseButton;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[9]")
+	public
 	WebElement refreshButtons;
 	// case links
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[1]/a")
@@ -115,7 +118,9 @@ public class CasesPage extends ArkCaseTestBase {
 	WebElement caseDetails;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[3]/a")
 	WebElement casePeople;
-	public @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[4]/a") WebElement caseDocuments;
+	public @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[4]/a")
+	WebElement caseDocuments;
+	public
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[5]/a")
 	WebElement caseParticipants;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[6]/a")
