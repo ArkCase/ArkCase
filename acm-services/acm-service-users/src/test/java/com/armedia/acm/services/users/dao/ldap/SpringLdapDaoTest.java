@@ -106,7 +106,7 @@ public class SpringLdapDaoTest extends EasyMockSupport
         assertThat("DN with '/' character should be escaped", dnCapture.getValue(), is(equalTo(escapedDn)));
     }
 
-    void testGroupMemberExpectations(String [] memberDns)
+    void testGroupMemberExpectations(String[] memberDns)
     {
         expect(mockLdapGroup.getMemberDistinguishedNames()).andReturn(memberDns);
         expect(mockAcmLdapSyncConfig.getUserIdAttributeName()).andReturn("userIdAttributeName");
