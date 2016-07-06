@@ -167,8 +167,6 @@
         <property name="caseFileDao" ref="caseFileDao"/>
     </bean>
 
-    <bean id="acmQueueDao" class="com.armedia.acm.plugins.casefile.dao.AcmQueueDao"/>
-    
     <bean id="acmQueueNamesProperties"
           class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
         <!-- note: must leave "file:" at the start of the file name for spring
@@ -179,18 +177,16 @@
         <property name="localOverride" value="false"/>
     </bean>
 
-    <bean id="acmQueuePropertyNamesDao" class="com.armedia.acm.plugins.casefile.dao.QueuePropertyFileDao">
+    <bean id="acmQueueDao" class="com.armedia.acm.plugins.casefile.dao.QueuePropertyFileDao">
         <property name="queueNamesProperties" ref="acmQueueNamesProperties"/>
     </bean>
 
     <bean id="acmQueueService" class="com.armedia.acm.plugins.casefile.service.AcmQueueServiceImpl">
-        <property name="acmQueueDao" ref="acmQueuePropertyNamesDao"/>
-<!--         <property name="acmQueueDao" ref="acmQueueDao"/> -->
+        <property name="acmQueueDao" ref="acmQueueDao"/>
     </bean>
 
     <bean id="queueToSolrTranformer" class="com.armedia.acm.plugins.casefile.service.QueueToSolrTransformer">
-        <property name="acmQueueDao" ref="acmQueuePropertyNamesDao"/>
-<!--         <property name="acmQueueDao" ref="acmQueueDao"/> -->
+         <property name="acmQueueDao" ref="acmQueueDao"/>
         <property name="userDao" ref="userJpaDao"/>
     </bean>
 
