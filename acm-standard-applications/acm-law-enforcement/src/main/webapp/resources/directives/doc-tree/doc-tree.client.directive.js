@@ -541,6 +541,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     }
                 });
             }
+            /**
+             * @description Refresh tree and try to keep current open branches
+             */
             , refreshTree: function () {
                 var objType = DocTree.getObjType();
                 var objId = DocTree.getObjId();
@@ -583,16 +586,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     //}
                 }
 
-                /**
-                 * @description Array in which the tree structure will be replicated before the reload is started
-                 */
-                var nodesStatusBeforeRefresh = [];
-
-                /**
-                 * @description We want the iteration to start from the root node of the tree
-                 */
-                var rootNode = DocTree.getTopNode();
-
+                var nodesStatusBeforeRefresh = [];// Array in which the tree structure will be replicated before the reload is started
+                var rootNode = DocTree.getTopNode();// We want the iteration to start from the root node of the tree
                 DocTree.saveNodesStatus(rootNode, nodesStatusBeforeRefresh);
 
                 DocTree.tree.reload(DocTree.Source.source()).then(function () {
@@ -603,6 +598,17 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         })
                     }
                 });
+            }
+            /**
+             * @description Refresh a tree node
+             *
+             * @param node Tree node to refresh. If not specified, current active node is refreshed
+             */
+            , refreshNode: function (node) {
+                node = node || DocTree.tree.getActiveNode();
+                if (node) {
+                    node.render(true);
+                }
             }
             , switchObject: function (activeObjType, activeObjId) {
                 if (!DocTree.tree) {
@@ -774,7 +780,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 }
                 return topMostNodes;
             }
-
 
             , onDblClick: function (event, data) {
                 if (DocTree.readOnly) {
@@ -1459,7 +1464,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 $q.when(DocTree.uploadSetting.deferSelectFile.promise).then(function (files) {
                                     args.files = files;
                                     var submitFiles = DocTree.Command.findHandler("submitFiles/");
-                                    submitFiles.execute(nodes, args);
+                                    DocTree.Command.handleCommand(submitFiles, nodes, args);
                                 });
                             }
                         }
@@ -1511,13 +1516,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                                 var files = args.files;
                                 var refresh = Util.goodValue(args.refresh, true);
-                                DocTree.doSubmitFormUploadFile(files, refresh);
-
-                                $q.when(DocTree.uploadSetting.deferUploadFile.promise).then(function () {
+                                var promiseUploadFile = DocTree.doSubmitFormUploadFile(files, refresh);
+                                $q.when(promiseUploadFile).then(function (data) {
+                                    args.data = data;
                                     DocTree.uploadSetting = null;
                                 });
-
-                                return DocTree.uploadSetting.deferUploadFile.promise;
+                                return promiseUploadFile;
                             }
                         }
                         , {
@@ -1526,7 +1530,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 if (DocTree.uploadSetting) {
                                     $log.warn("Warning: Trying to upload file before previous upload");
                                 }
-                                //var handler = this;
                                 var node = nodes[0];
                                 DocTree.uploadSetting = {
                                     uploadToFolderNode: node
@@ -1534,10 +1537,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     , uploadFileNew: true
                                     , deferUploadFile: $q.defer()
                                     , deferSelectFile: $q.defer()
-                                    //, nodes: nodes
-                                    //, args: args
-                                    //, cmd: "file/"
-                                    //, handler: handler
                                 };
 
                                 DocTree.uploadFile();
@@ -1575,14 +1574,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     var handler = DocTree.Command.findHandler(cmd);
                     if (handler) {
                         if ("file/" == cmd) {
-                            var selectFiles = DocTree.Command.findHandler("selectFiles/");
-                            selectFiles.execute(nodes, args);
-                            $q.when(DocTree.uploadSetting.deferSelectFile.promise).then(function (files) {
-                                args.files = files;
-                                var submitFiles = DocTree.Command.findHandler("submitFiles/");
-                                DocTree.Command.handleCommand(submitFiles, nodes, args);
-                            });
-
+                            handler.execute(nodes, args);
                         } else {
                             DocTree.Command.handleCommand(handler, nodes, args);
                         }
@@ -1682,7 +1674,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
             , Menu: {
                 useContextMenu: function ($s) {
-
                     $s.contextmenu({
                         menu: []
                         //,delegate: "span.fancytree-node"
@@ -2255,7 +2246,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                             fileNode.setStatus("ok");
                                         }
                                     } //end for
-                                    dfd.resolve(uploadedFiles);
+                                    dfd.resolve({files: uploadedFiles, nodes: fileNodes});
                                 }
                             }
                             , function (errorData) {
@@ -2317,14 +2308,14 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             }
                         }).then(
                             function (replacedFile) {
+                                if (replacedFile && fileNode) {
+                                    fileNode.renderTitle();
+                                    fileNode.setStatus("ok");
+                                }
                                 if (refresh) {
-                                    if (replacedFile && fileNode) {
-                                        fileNode.renderTitle();
-                                        fileNode.setStatus("ok");
-                                    }
                                     DocTree.refreshTree();
                                 }
-                                dfd.resolve(replacedFile);
+                                dfd.resolve({files: [replacedFile], nodes: [fileNode]});
                             }
                             , function (errorData) {
                                 DocTree.markNodeError(fileNode);
@@ -3162,7 +3153,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 DocTree.jqFileInput.click();
             }
 
-            , replaceFileWithSelectedFile: function (node, files) {
+            , replaceFileWithSelectedFile: function (node, files, callback) {
                 var fileType = Util.goodValue(node.data.type);
                 if (!Util.isEmpty(fileType)) {
                     DocTree.uploadSetting = {
@@ -3172,9 +3163,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         , uploadFileNew: false
                         , deferUploadFile: $q.defer()
                     };
-                    //return DocTree.doSubmitFormUploadFile(files, false);
                     var args = {files: files, refresh: false};
                     var submitFiles = DocTree.Command.findHandler("submitFiles/");
+                    submitFiles.onPostCmd = callback;
                     DocTree.Command.handleCommand(submitFiles, [node], args);
                 }
             }
@@ -3397,12 +3388,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             }
             , doSubmitFormUploadFile: function (files, doRefresh) {
                 if (!DocTree.uploadSetting) {
-                    return;
+                    return Util.errorPromise("upload file error");
                 }
 
-                //var refresh = true;
-                //if (doRefresh == false)
-                //    refresh = false;
                 var refresh = Util.goodValue(doRefresh, true);
 
                 var dfd = $.Deferred();
@@ -3426,40 +3414,25 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 }
 
                 var cacheKey = DocTree.getCacheKeyByNode(folderNode);
-                var tempData = null;
                 if (DocTree.uploadSetting.uploadFileNew) {
                     DocTree.Op.uploadFiles(fd, folderNode, names, fileType)
                         .then(function (data) {
-                                tempData = data;
                                 dfd.resolve(data);
                             },
                             function (error) {
                                 dfd.reject(error);
-                            })
-                        .always(function () {
-                            //if (DocTree.uploadSetting) {
-                            //    DocTree.Command.onPostCmd(DocTree.uploadSetting.cmd, DocTree.uploadSetting.actNodes);
-                            //    DocTree.uploadSetting = null;
-                            //}
-                            DocTree.uploadSetting.deferUploadFile.resolve(tempData);
-                        });
+                            }
+                        );
                 } else {
                     var replaceNode = DocTree.uploadSetting.replaceFileNode;
                     DocTree.Op.replaceFile(fd, replaceNode, names[0], refresh)
                         .then(function (data) {
-                                tempData = data;
                                 dfd.resolve(data);
                             },
                             function (error) {
                                 dfd.reject(error);
-                            })
-                        .always(function () {
-                            //if (DocTree.uploadSetting) {
-                            //    DocTree.Command.onPostCmd(DocTree.uploadSetting.cmd, DocTree.uploadSetting.actNodes);
-                            //    DocTree.uploadSetting = null;
-                            //}
-                            DocTree.uploadSetting.deferUploadFile.resolve(tempData);
-                        });
+                            }
+                        );
                 }
                 return dfd.promise();
             }
@@ -3881,25 +3854,22 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 });
 
                 modalInstance.result.then(function (data) {
-                    DocTree.replaceFileWithSelectedFile(node, data.files);
-                    $q.when(DocTree.uploadSetting.deferUploadFile.promise)
-                        .then(function (result) {
-                                if (data.note.note != null && data.note.note.length > 0) {
-                                    //we have text in note so we will save the note
-                                    data.note.tag = result.version;
-                                    ObjectNoteService.saveNote(data.note);
-                                }
-                                var fileId = result.objectId;
-                                LockingService.unlockObject(fileId, ObjectService.ObjectTypes.FILE,
-                                    ObjectService.LockTypes.CHECKIN_LOCK).then(function () {
-                                    DocTree.markNodeOk(node.parent);
-                                    node.parent.renderTitle();
-                                    DocTree.refreshTree();
-                                });
-                            },
-                            function () {
-                                DocTree.markNodeError(node);
+                    DocTree.replaceFileWithSelectedFile(node, data.files, function(nodes){
+
+                            var result = nodes[0].data;
+                            if (data.note.note != null && data.note.note.length > 0) {
+                                //we have text in note so we will save the note
+                                data.note.tag = result.version;
+                                ObjectNoteService.saveNote(data.note);
+                            }
+                            var fileId = result.objectId;
+                            LockingService.unlockObject(fileId, ObjectService.ObjectTypes.FILE,
+                                ObjectService.LockTypes.CHECKIN_LOCK).then(function () {
+                                DocTree.markNodeOk(node.parent);
+                                node.parent.renderTitle();
+                                DocTree.refreshTree();
                             });
+                        });
                 });
 
             }
@@ -4495,6 +4465,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                 scope.treeControl = {
                     refreshTree: DocTree.refreshTree
+                    , refreshNode: DocTree.refreshNode
                     , getSelectedNodes: DocTree.getSelectedNodes
                     , addCommandHandler: function(args) {
                         DocTree.Command.addHandler(args);
