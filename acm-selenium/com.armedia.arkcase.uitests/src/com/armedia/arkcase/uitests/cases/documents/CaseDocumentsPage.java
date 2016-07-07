@@ -805,7 +805,11 @@ public class CaseDocumentsPage extends ArkCaseTestBase {
 		sendEmailBtn.click();
 	}
 
-	
+	public void verifyIfSecondRowDocumentIsPresent(){
+		
+	int i=driver.findElements(By.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/doc-tree/table/tbody/tr[3]/td[3]/span/span[3]")).size();
+	Assert.assertTrue("Document si not added", i>0);
+	}
 	
 		
 	
