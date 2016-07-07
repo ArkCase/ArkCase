@@ -61,8 +61,11 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
 
 
             groupsPromise.then(function (payload) {
-                var tempGroups = _.get(payload, 'data.response.docs');
-                $scope.totalGroups = payload.data.response.numFound;
+                var tempGroups = [];
+                if (!Util.isArrayEmpty(_.get(payload, 'data.response.docs'))) {
+                    tempGroups = _.get(payload, 'data.response.docs');
+                }
+                $scope.totalGroups = _.get(payload, 'data.response.numFound');
                 //create map from groups
                 for (var i = 0; i < tempGroups.length; i++) {
                     var tempGroup = tempGroups[i];
@@ -254,7 +257,10 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
             //find child groups
             var subGroupsPromise = organizationalHierarchyService.getSubGroupsForGroup(parentId);
             subGroupsPromise.then(function (payload) {
-                var tempGroups = _.get(payload, 'data.response.docs');
+                var tempGroups = [];
+                if (!Util.isArrayEmpty(_.get(payload, 'data.response.docs'))) {
+                    tempGroups = _.get(payload, 'data.response.docs');
+                }
                 //create map from groups
                 for (var i = 0; i < tempGroups.length; i++) {
                     var tempGroup = tempGroups[i];
