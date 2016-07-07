@@ -71,6 +71,7 @@ module.exports.getModulesJavaScriptAssets = function(){
     //  Remove duplicated JS files from modules
     jsModules = _.difference(jsModules, jsCustomModules);
     jsDirectives = _.difference(jsDirectives, jsCustomDirectives);
+    jsServices = _.difference(jsServices, jsCustomServices);
 
     _.forEach(jsModules, function (item, index, arr) {
         item = 'modules/' + item;
