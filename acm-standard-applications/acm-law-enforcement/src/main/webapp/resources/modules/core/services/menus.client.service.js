@@ -156,16 +156,7 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService', 'Admin.Modu
 
                             if (moduleAllowedByActionPermission) {
                                 // Push new menu item
-                                context.menus[menuObj.menuId].items.push({
-                                    title: 'core.menus.' + menuObj.menuId + '.' + menuObj.menuItemURL,
-                                    link: menuObj.menuItemURL,
-                                    menuItemType: 'item',
-                                    uiRoute: '/' + menuObj.menuItemURL,
-                                    isPublic: true,
-                                    position: menuObj.position || 0,
-                                    iconClass: menuObj.iconClass,
-                                    permissionAction: menuObj.permissionAction || 'noAction'
-                                });
+                                pushMenuItem(menuObj, context);
                             }
                         }
 
@@ -181,16 +172,7 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService', 'Admin.Modu
 
                                 if (moduleAllowedByActionPermission && moduleAllowedByRoles) {
                                     // Push new menu item
-                                    context.menus[menuObj.menuId].items.push({
-                                        title: 'core.menus.' + menuObj.menuId + '.' + menuObj.menuItemURL,
-                                        link: menuObj.menuItemURL,
-                                        menuItemType: 'item',
-                                        uiRoute: '/' + menuObj.menuItemURL,
-                                        isPublic: true,
-                                        position: menuObj.position || 0,
-                                        iconClass: menuObj.iconClass,
-                                        permissionAction: menuObj.permissionAction || 'noAction'
-                                    });
+                                    pushMenuItem(menuObj, context);
                                 }
                             })
                         }
@@ -267,6 +249,20 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService', 'Admin.Modu
 
         //Adding the user menu
         this.addMenu('usermenu');
+
+        function pushMenuItem(menuObj, context) {
+            // Push new menu item
+            context.menus[menuObj.menuId].items.push({
+                title: 'core.menus.' + menuObj.menuId + '.' + menuObj.menuItemURL,
+                link: menuObj.menuItemURL,
+                menuItemType: 'item',
+                uiRoute: '/' + menuObj.menuItemURL,
+                isPublic: true,
+                position: menuObj.position || 0,
+                iconClass: menuObj.iconClass,
+                permissionAction: menuObj.permissionAction || 'noAction'
+            });
+        }
 
     }
 ]);
