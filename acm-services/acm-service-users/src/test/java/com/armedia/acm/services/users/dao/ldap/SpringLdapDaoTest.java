@@ -17,7 +17,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.core.IsNull.notNullValue;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 public class SpringLdapDaoTest extends EasyMockSupport
 {
@@ -106,7 +106,7 @@ public class SpringLdapDaoTest extends EasyMockSupport
         assertThat("DN with '/' character should be escaped", dnCapture.getValue(), is(equalTo(escapedDn)));
     }
 
-    void testGroupMemberExpectations(String [] memberDns)
+    void testGroupMemberExpectations(String[] memberDns)
     {
         expect(mockLdapGroup.getMemberDistinguishedNames()).andReturn(memberDns);
         expect(mockAcmLdapSyncConfig.getUserIdAttributeName()).andReturn("userIdAttributeName");
