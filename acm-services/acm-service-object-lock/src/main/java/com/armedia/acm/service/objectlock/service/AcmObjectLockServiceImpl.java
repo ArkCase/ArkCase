@@ -7,6 +7,7 @@ import com.armedia.acm.service.objectlock.model.AcmObjectLockEvent;
 import com.armedia.acm.service.objectlock.model.AcmObjectUnlockEvent;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
+
 import org.apache.commons.lang.StringUtils;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -30,21 +31,24 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
 
     @Override
     @Transactional
-    public AcmObjectLock createLock(Long objectId, String objectType, String lockType, Authentication auth)
+    public AcmObjectLock createLock(Long objectId, String objectType, String lockType, Boolean lockInDB, Authentication auth)
     {
 
-        log.debug("[{}] about to create object lock[objectId={}, objectType={}, lockType={}]", auth.getName(), objectId, objectType, lockType);
+        log.debug("[{}] about to create object lock[objectId={}, objectType={}, lockType={}]", auth != null ? auth.getName() : "", objectId,
+                objectType, lockType);
         AcmObjectLock existingLock = acmObjectLockDao.findLock(objectId, objectType);
 
-        if (existingLock != null)
+        if (existingLock != null && auth != null)
         {
-            //if current user is same as creator of the lock than just return existingLock, else throw an exception
+            // if current user is same as creator of the lock than just return existingLock, else throw an exception
             if (existingLock.getCreator().equals(auth.getName()))
             {
                 return existingLock;
             } else
             {
-                log.warn("[{}] not able to create object lock[objectId={}, objectType={}, lockType={}]. Reason: Object lock already exists for: [{}]", auth.getName(), objectId, objectType, lockType, existingLock.getCreator());
+                log.warn(
+                        "[{}] not able to create object lock[objectId={}, objectType={}, lockType={}]. Reason: Object lock already exists for: [{}]",
+                        auth.getName(), objectId, objectType, lockType, existingLock.getCreator());
                 throw new AcmObjectLockException("Lock already exist for different user.");
             }
         }
@@ -54,12 +58,17 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
         ol.setObjectType(objectType);
         ol.setLockType(lockType);
 
-        AcmObjectLock lock = acmObjectLockDao.save(ol);
+        if (lockInDB)
+        {
+            AcmObjectLock lock = acmObjectLockDao.save(ol);
+            AcmObjectLockEvent event = new AcmObjectLockEvent(lock, auth != null ? auth.getName() : "", true);
+            getApplicationEventPublisher().publishEvent(event);
 
-        AcmObjectLockEvent event = new AcmObjectLockEvent(lock, auth.getName(), true);
-        getApplicationEventPublisher().publishEvent(event);
-
-        return lock;
+            return lock;
+        } else
+        {
+            return ol;
+        }
     }
 
     @Override
@@ -68,18 +77,20 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
     {
         AcmObjectLock ol = acmObjectLockDao.findLock(objectId, objectType);
         if (ol == null)
-            throw new AcmObjectLockException("Error removing. Lock for [objectId, objectType] = [" + objectId + ", " + objectType + "] doesn't exists!");
+            throw new AcmObjectLockException(
+                    "Error removing. Lock for [objectId, objectType] = [" + objectId + ", " + objectType + "] doesn't exists!");
 
         acmObjectLockDao.remove(ol);
 
         ol.setLockType(lockType);
 
-        AcmObjectUnlockEvent event = new AcmObjectUnlockEvent(ol, auth.getName(), true);
+        AcmObjectUnlockEvent event = new AcmObjectUnlockEvent(ol, auth != null ? auth.getName() : "", true);
         getApplicationEventPublisher().publishEvent(event);
     }
 
     @Override
-    public String getDocumentsWithoutLock(String objectType, Authentication auth, int firstRow, int maxRows, String sort, String fqParams) throws MuleException
+    public String getDocumentsWithoutLock(String objectType, Authentication auth, int firstRow, int maxRows, String sort, String fqParams)
+            throws MuleException
     {
         StringBuilder query = new StringBuilder();
         query.append("-({!join from=parent_ref_s to=id}object_type_s:OBJECT_LOCK)");
@@ -90,9 +101,9 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
         return executeQuery(query.toString(), auth, firstRow, maxRows, sort, fqParams);
     }
 
-
     @Override
-    public String getDocumentsWithLock(String objectType, Authentication auth, String lockHeldByUser, int firstRow, int maxRows, String sort, String fqParams) throws MuleException
+    public String getDocumentsWithLock(String objectType, Authentication auth, String lockHeldByUser, int firstRow, int maxRows,
+            String sort, String fqParams) throws MuleException
     {
         StringBuilder query = new StringBuilder();
         query.append("{!join from=parent_ref_s to=id}object_type_s:OBJECT_LOCK ");
@@ -112,7 +123,8 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
     }
 
     @Override
-    public String getObjectLocks(String parentObjectType, Authentication auth, String lockHeldByUser, int firstRow, int maxRows, String sort, String fqParams) throws MuleException
+    public String getObjectLocks(String parentObjectType, Authentication auth, String lockHeldByUser, int firstRow, int maxRows,
+            String sort, String fqParams) throws MuleException
     {
         StringBuilder query = new StringBuilder();
         query.append("object_type_s:OBJECT_LOCK");
@@ -131,12 +143,15 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
         return executeQuery(query.toString(), auth, firstRow, maxRows, sort, fqParams);
     }
 
-    private String executeQuery(String query, Authentication auth, int firstRow, int maxRows, String sort, String fqParams) throws MuleException
+    private String executeQuery(String query, Authentication auth, int firstRow, int maxRows, String sort, String fqParams)
+            throws MuleException
     {
         if (!StringUtils.isEmpty(fqParams))
-            return getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query.toString(), firstRow, maxRows, sort, fqParams);
+            return getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query.toString(), firstRow, maxRows,
+                    sort, fqParams);
         else
-            return getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query.toString(), firstRow, maxRows, sort);
+            return getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query.toString(), firstRow, maxRows,
+                    sort);
     }
 
     public void setAcmObjectLockDao(AcmObjectLockDao acmObjectLockDao)
