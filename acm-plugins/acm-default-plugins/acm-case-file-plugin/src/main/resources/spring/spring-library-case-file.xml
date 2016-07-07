@@ -192,7 +192,10 @@
     
     <bean id="caseFileStartBusinessProcessModel" class="com.armedia.acm.plugins.casefile.model.CaseFileStartBusinessProcessModel"/>
     
-    <bean id="caseFileStartBusinessProcessBusinessRule" class="com.armedia.acm.plugins.casefile.service.CaseFileStartBusinessProcessBusinessRule"/>
+    <bean id="caseFileStartBusinessProcessBusinessRule" class="com.armedia.acm.plugins.casefile.service.CaseFileStartBusinessProcessBusinessRule">
+        <!-- The rules file will change, now any proper rules file can be used just to enable the application to boot up. -->
+        <property name="ruleSpreadsheetFilename" value="drools-case-file-rules.xlsx"/>
+    </bean>
     
     <bean id="caseFileStartBusinessProcessIfNeededHandler"
           class="com.armedia.acm.plugins.casefile.pipeline.postsave.CaseFileStartBusinessProcessIfNeededHandler">
