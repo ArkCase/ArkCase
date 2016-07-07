@@ -46,6 +46,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		casePom.clickInitiatorMr();
 		Thread.sleep(2000);
 		casePom.initiatorFirstName("Milan");
+		Thread.sleep(2000);
 		casePom.initiatorLastName("Jovanovski");
 		Thread.sleep(2000);
 		casePom.participantnsTab.click();
@@ -53,6 +54,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		casePom.selectParticipantTypeClick();
 		Thread.sleep(2000);
 		casePom.selectparticipantOwner();
+		Thread.sleep(2000);
 		casePom.selectParticipantClick();
 		Thread.sleep(3000);
 		casePom.searchForUsers();
@@ -135,6 +137,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		casePom.clickInitiatorMr();
 		Thread.sleep(2000);
 		casePom.initiatorFirstName("Milan");
+		Thread.sleep(2000);
 		casePom.initiatorLastName("Jovanovski");
 		Thread.sleep(2000);
 		casePom.participantnsTab.click();
@@ -142,6 +145,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		casePom.selectParticipantTypeClick();
 		Thread.sleep(2000);
 		casePom.selectparticipantOwner();
+		Thread.sleep(2000);
 		casePom.selectParticipantClick();
 		Thread.sleep(3000);
 		casePom.searchForUsers();
@@ -233,6 +237,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		casePom.clickInitiatorMr();
 		Thread.sleep(2000);
 		casePom.initiatorFirstName("Milan");
+		Thread.sleep(2000);
 		casePom.initiatorLastName("Jovanovski");
 		Thread.sleep(2000);
 		casePom.participantnsTab.click();
@@ -240,6 +245,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		casePom.selectParticipantTypeClick();
 		Thread.sleep(2000);
 		casePom.selectparticipantOwner();
+		Thread.sleep(2000);
 		casePom.selectParticipantClick();
 		Thread.sleep(3000);
 		casePom.searchForUsers();
@@ -343,6 +349,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		casePom.clickInitiatorMr();
 		Thread.sleep(2000);
 		casePom.initiatorFirstName("Milan");
+		Thread.sleep(2000);
 		casePom.initiatorLastName("Jovanovski");
 		Thread.sleep(2000);
 		casePom.participantnsTab.click();
@@ -350,6 +357,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		casePom.selectParticipantTypeClick();
 		Thread.sleep(2000);
 		casePom.selectparticipantOwner();
+		Thread.sleep(2000);
 		casePom.selectParticipantClick();
 		Thread.sleep(3000);
 		casePom.searchForUsers();
@@ -448,6 +456,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		casePom.clickInitiatorMr();
 		Thread.sleep(2000);
 		casePom.initiatorFirstName("Milan");
+		Thread.sleep(2000);
 		casePom.initiatorLastName("Jovanovski");
 		Thread.sleep(2000);
 		casePom.participantnsTab.click();
@@ -455,6 +464,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		casePom.selectParticipantTypeClick();
 		Thread.sleep(2000);
 		casePom.selectparticipantOwner();
+		Thread.sleep(2000);
 		casePom.selectParticipantClick();
 		Thread.sleep(3000);
 		casePom.searchForUsers();
@@ -545,6 +555,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		casePom.clickInitiatorMr();
 		Thread.sleep(2000);
 		casePom.initiatorFirstName("Milan");
+		Thread.sleep(2000);
 		casePom.initiatorLastName("Jovanovski");
 		Thread.sleep(2000);
 		casePom.participantnsTab.click();
@@ -552,6 +563,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		casePom.selectParticipantTypeClick();
 		Thread.sleep(2000);
 		casePom.selectparticipantOwner();
+		Thread.sleep(2000);
 		casePom.selectParticipantClick();
 		Thread.sleep(3000);
 		casePom.searchForUsers();
@@ -640,6 +652,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		casePom.clickInitiatorMr();
 		Thread.sleep(2000);
 		casePom.initiatorFirstName("Milan");
+		Thread.sleep(2000);
 		casePom.initiatorLastName("Jovanovski");
 		Thread.sleep(2000);
 		casePom.participantnsTab.click();
@@ -647,6 +660,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		casePom.selectParticipantTypeClick();
 		Thread.sleep(2000);
 		casePom.selectparticipantOwner();
+		Thread.sleep(2000);
 		casePom.selectParticipantClick();
 		Thread.sleep(3000);
 		casePom.searchForUsers();
@@ -719,6 +733,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		casePom.clickInitiatorMr();
 		Thread.sleep(2000);
 		casePom.initiatorFirstName("Milan");
+		Thread.sleep(2000);
 		casePom.initiatorLastName("Jovanovski");
 		Thread.sleep(2000);
 		casePom.participantnsTab.click();
@@ -726,6 +741,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		casePom.selectParticipantTypeClick();
 		Thread.sleep(2000);
 		casePom.selectparticipantOwner();
+		Thread.sleep(2000);
 		casePom.selectParticipantClick();
 		Thread.sleep(3000);
 		casePom.searchForUsers();
@@ -836,6 +852,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		casePom.clickInitiatorMr();
 		Thread.sleep(2000);
 		casePom.initiatorFirstName("Milan");
+		Thread.sleep(2000);
 		casePom.initiatorLastName("Jovanovski");
 		Thread.sleep(2000);
 		casePom.participantnsTab.click();
@@ -843,6 +860,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		casePom.selectParticipantTypeClick();
 		Thread.sleep(2000);
 		casePom.selectparticipantOwner();
+		Thread.sleep(2000);
 		casePom.selectParticipantClick();
 		Thread.sleep(3000);
 		casePom.searchForUsers();
@@ -939,6 +957,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		casePom.clickInitiatorMr();
 		Thread.sleep(2000);
 		casePom.initiatorFirstName("Milan");
+		Thread.sleep(2000);
 		casePom.initiatorLastName("Jovanovski");
 		Thread.sleep(2000);
 		casePom.participantnsTab.click();
@@ -946,6 +965,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		casePom.selectParticipantTypeClick();
 		Thread.sleep(2000);
 		casePom.selectparticipantOwner();
+		Thread.sleep(2000);
 		casePom.selectParticipantClick();
 		Thread.sleep(3000);
 		casePom.searchForUsers();
@@ -1040,6 +1060,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		casePom.clickInitiatorMr();
 		Thread.sleep(2000);
 		casePom.initiatorFirstName("Milan");
+		Thread.sleep(2000);
 		casePom.initiatorLastName("Jovanovski");
 		Thread.sleep(2000);
 		casePom.participantnsTab.click();
@@ -1047,6 +1068,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		casePom.selectParticipantTypeClick();
 		Thread.sleep(2000);
 		casePom.selectparticipantOwner();
+		Thread.sleep(2000);
 		casePom.selectParticipantClick();
 		Thread.sleep(3000);
 		casePom.searchForUsers();
