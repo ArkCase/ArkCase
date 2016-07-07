@@ -56,8 +56,11 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
 
         ObjectLookupService.getCaseFileCorrespondenceForms().then(
             function (correspondenceForms) {
-                $scope.correspondenceForms = $scope.correspondenceForms || [];
-                $scope.correspondenceForms = $scope.correspondenceForms.concat(Util.goodArray(correspondenceForms));
+                $timeout(function() {
+                    $scope.correspondenceForms = Util.goodArray(correspondenceForms);
+                    //$scope.correspondenceForms = $scope.correspondenceForms || [];
+                    //$scope.correspondenceForms = $scope.correspondenceForms.concat(Util.goodArray(correspondenceForms));
+                }, 0);
                 return correspondenceForms;
             }
         );
