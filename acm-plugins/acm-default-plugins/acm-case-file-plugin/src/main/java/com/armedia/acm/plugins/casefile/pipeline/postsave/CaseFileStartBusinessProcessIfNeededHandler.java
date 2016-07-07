@@ -7,18 +7,32 @@ import com.armedia.acm.plugins.casefile.service.CaseFileStartBusinessProcessBusi
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class CaseFileStartBusinessProcessIfNeededHandler implements PipelineHandler<CaseFile, CaseFilePipelineContext>
 {
 
-    private CaseFileStartBusinessProcessModel startBusinessProcessModel;
+    private CaseFileStartBusinessProcessBusinessRule startBusinessProcessBusinessRule;
 
-    private CaseFileStartBusinessProcessBusinessRule businessProcessRule;
+    /**
+     * Logger instance.
+     */
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     public void execute(CaseFile entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException
     {
-        // TODO Auto-generated method stub
+        log.info("CaseFile entering CaseFileStartBusinessProcessIfNeededHandler : [{}]", entity);
 
+        CaseFileStartBusinessProcessModel model = new CaseFileStartBusinessProcessModel();
+        model.setBusinessObject(entity);
+        model.setPipelineContext(pipelineContext);
+
+        CaseFileStartBusinessProcessModel result = startBusinessProcessBusinessRule.applyRules(model);
+
+        log.info("Process started [{}]", result.isStartProcess());
+        log.info("CaseFile exiting CaseFileStartBusinessProcessIfNeededHandler : [{}]", entity);
     }
 
     @Override
@@ -28,24 +42,14 @@ public class CaseFileStartBusinessProcessIfNeededHandler implements PipelineHand
 
     }
 
-    public CaseFileStartBusinessProcessModel getStartBusinessProcessModel()
+    public CaseFileStartBusinessProcessBusinessRule getStartBusinessProcessBusinessRule()
     {
-        return startBusinessProcessModel;
+        return startBusinessProcessBusinessRule;
     }
 
-    public void setStartBusinessProcessModel(CaseFileStartBusinessProcessModel startBusinessProcessModel)
+    public void setStartBusinessProcessBusinessRule(CaseFileStartBusinessProcessBusinessRule startBusinessProcessBusinessRule)
     {
-        this.startBusinessProcessModel = startBusinessProcessModel;
-    }
-
-    public CaseFileStartBusinessProcessBusinessRule getBusinessProcessRule()
-    {
-        return businessProcessRule;
-    }
-
-    public void setBusinessProcessRule(CaseFileStartBusinessProcessBusinessRule businessProcessRule)
-    {
-        this.businessProcessRule = businessProcessRule;
+        this.startBusinessProcessBusinessRule = startBusinessProcessBusinessRule;
     }
 
 }
