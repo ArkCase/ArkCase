@@ -108,8 +108,7 @@ module.exports = {
             'config.js',
             'application.js',
             'scripts/*/**/*.js',
-            'services/*.js',
-            'services/*/*.js',
+            'services/*.js',   // Includes services/services.client.module.js file only
             'directives/*.js', // Includes directives/directives.client.js file only
             'filters/*.js',
             'filters/*/*.js'
