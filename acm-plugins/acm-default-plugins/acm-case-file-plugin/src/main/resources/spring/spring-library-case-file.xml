@@ -117,6 +117,7 @@
                 <ref bean="caseFileOutlookHandler"/>
                 <ref bean="caseFileFolderStructureHandler"/>
                 <ref bean="caseFileEventHandler"/>
+                <ref bean="caseFileStartBusinessProcessIfNeededHandler"/>
             </list>
         </property>
     </bean>
@@ -190,16 +191,12 @@
         <property name="userDao" ref="userJpaDao"/>
     </bean>
     
-    <bean id="caseFileStartBusinessProcessModel" class="com.armedia.acm.plugins.casefile.model.CaseFileStartBusinessProcessModel"/>
-    
     <bean id="caseFileStartBusinessProcessBusinessRule" class="com.armedia.acm.plugins.casefile.service.CaseFileStartBusinessProcessBusinessRule">
-        <!-- The rules file will change, now any proper rules file can be used just to enable the application to boot up. -->
-        <property name="ruleSpreadsheetFilename" value="drools-case-file-rules.xlsx"/>
+        <property name="ruleSpreadsheetFilename" value="drools-start-business-process-rules.xlsx"/>
     </bean>
     
     <bean id="caseFileStartBusinessProcessIfNeededHandler"
           class="com.armedia.acm.plugins.casefile.pipeline.postsave.CaseFileStartBusinessProcessIfNeededHandler">
-        <property name="startBusinessProcessModel" ref="caseFileStartBusinessProcessModel"/>
         <property name="startBusinessProcessBusinessRule" ref="caseFileStartBusinessProcessBusinessRule"/>
     </bean>
 
