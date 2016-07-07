@@ -74,7 +74,7 @@ public class AcmObjectLockAPIControllerTest extends EasyMockSupport
         expect(mockAuthentication.getName()).andReturn(user).anyTimes();
 
         Capture<Authentication> authenticationCapture = EasyMock.newCapture();
-        expect(objectLockServiceMock.createLock(eq(1123l), eq("CASE_FILE"), eq("OBJECT_LOCK"), true, capture(authenticationCapture)))
+        expect(objectLockServiceMock.createLock(eq(1123l), eq("CASE_FILE"), eq("OBJECT_LOCK"), eq(true), capture(authenticationCapture)))
                 .andAnswer(() -> {
                     AcmObjectLock lock = new AcmObjectLock();
                     lock.setCreator(user);
