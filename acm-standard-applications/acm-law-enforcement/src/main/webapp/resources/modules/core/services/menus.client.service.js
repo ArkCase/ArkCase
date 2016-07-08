@@ -134,16 +134,8 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService', 'Admin.Modu
                         //iterate trough all application modules to isolate it and check later if module is allowed to be used
                         //based on the user roles
                         angular.forEach(appModules, function (module) {
-
-                            //check if module matches the menuObj from the 'leftnav' menu
-                            if (menuObj.menuId === "leftnav") {
-                                if (menuObj.menuItemURL === module.id || menuObj.menuItemURL === module.name.toLowerCase() || menuObj.menuItemTitle === module.name) {
-                                    moduleObject = module;
-                                }
-                            }
-                            //check if module matches the menuObj from the 'topbar' menu
-                            if (menuObj.menuId === "topbar") {
-                                if (menuObj.menuItemTitle.toLowerCase() === module.id || menuObj.menuItemTitle.toLowerCase().substring(0, module.id.length) === module.id) {
+                            if (menuObj.menuId != "usermenu" && menuObj.moduleId != null) {
+                                if (menuObj.moduleId === module.id) {
                                     moduleObject = module;
                                 }
                             }
@@ -159,7 +151,6 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService', 'Admin.Modu
                                 pushMenuItem(menuObj, context);
                             }
                         }
-
                         if (moduleObject != null) {
                             ModuleService.getRolesForModulePrivilege(moduleObject.privilege).then(function (rolesForModule) {
                                 angular.forEach(rolesForModule.data, function (role) {
