@@ -50,10 +50,6 @@
     </c:if>
 
     <c:if test="${'1'.equals(param.login_error)}">
-        <div class="alert alert-danger">Your session has expired!</div>
-    </c:if>
-
-    <c:if test="${'2'.equals(param.login_error)}">
         <div class="alert alert-danger">Your session has been invalidated due to concurrent session limit!</div>
     </c:if>
 
