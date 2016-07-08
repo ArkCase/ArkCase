@@ -88,7 +88,9 @@ module.exports = {
                 'lib/fullcalendar/dist/gcal.js',
                 'lib/angular-ui-calendar/src/calendar.js',
                 'lib/Chart.js/Chart.min.js',
-                'lib/angular-chart.js/dist/angular-chart.min.js'
+                'lib/angular-chart.js/dist/angular-chart.min.js',
+                'lib/sockjs-client/dist/sockjs.min.js',
+                'lib/stomp-websocket/lib/stomp.min.js'
             ]
         },
         css: [
@@ -106,8 +108,7 @@ module.exports = {
             'config.js',
             'application.js',
             'scripts/*/**/*.js',
-            'services/*.js',
-            'services/*/*.js',
+            'services/*.js',   // Includes services/services.client.module.js file only
             'directives/*.js', // Includes directives/directives.client.js file only
             'filters/*.js',
             'filters/*/*.js'
@@ -129,6 +130,14 @@ module.exports = {
         jsCustomDirectives: [
             'custom_directives/*/*.js',
             'custom_directives/*/**/*.js'
+        ],
+        jsServices: [
+            'services/*/*.js',
+            'services/*/**/*.js'
+        ],
+        jsCustomServices: [
+            'custom_services/*/*.js',
+            'custom_services/*/**/*.js'
         ]
     }
 }

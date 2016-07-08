@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+    <!-- Map URLs to Controllers based on bean id -->
+    <bean id="beanNameUrlHandlerMapping" class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"/>
+
+    <bean id="/VirtualViewerJavaHTML5/**" class="org.springframework.web.servlet.mvc.ServletWrappingController">
+        <property name="servletClass" value="com.armedia.acm.proxy.http.ProxyServlet"/>
+        <property name="servletName" value="snowbound"/>
+        <property name="initParameters">
+            <props>
+                <!-- TODO: parameterize the URLs -->
+                <prop key="targetUri">http://acm-snowbound:8084/</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="/pentaho/**" class="org.springframework.web.servlet.mvc.ServletWrappingController">
+        <property name="servletClass" value="com.armedia.acm.proxy.http.ProxyServlet"/>
+        <property name="servletName" value="pentaho"/>
+        <property name="initParameters">
+            <props>
+                <!-- TODO: parameterize the URLs -->
+                <prop key="targetUri">http://acm-pentaho:8083/</prop>
+            </props>
+        </property>
+    </bean>
+</beans>

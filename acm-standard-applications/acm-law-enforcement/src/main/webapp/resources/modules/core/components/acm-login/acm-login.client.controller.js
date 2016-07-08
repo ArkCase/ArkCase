@@ -1,18 +1,26 @@
 'use strict';
 
 var AcmLoginController = ["$q", "$scope", "$document", "$state", "$translate"
-    , "UtilService", "ConfigService", "Util.TimerService", "Authentication", "Acm.LoginService", "Dialog.BootboxService"
+    , "UtilService", "Util.TimerService", "Authentication", "Acm.LoginService", "Dialog.BootboxService", "AuditService"
+    , "ConfigService", 'Admin.ApplicationSettingsService'
     , function($q, $scope, $document, $state, $translate
-        , Util, ConfigService, UtilTimerService, Authentication, AcmLoginService, Dialog
+        , Util, UtilTimerService, Authentication, AcmLoginService, Dialog, AuditService
+        , ConfigService, ApplicationSettingsService
     ) {
         var ctrl = this;
 
-        var promiseConfig = ConfigService.getComponentConfig("core", "acmLogin").then(function (config) {
-            ctrl.idleLimit = Util.goodValue(config.idleLimit, 600000);     //600000 - limit of 10 minutes
-            ctrl.idlePull = Util.goodValue(config.idlePull, 5000);         //5000   - every 5 seconds
-            ctrl.idleConfirm = Util.goodValue(config.idleConfirm, 15000);   //15000 - limit of 15 seconds
-            return config;
+        var promiseAppSetting = ApplicationSettingsService.getProperty(ApplicationSettingsService.PROPERTIES.IDLE_LIMIT).then(function (response) {
+            ctrl.idleLimit = Util.goodValue(response.data[ApplicationSettingsService.PROPERTIES.IDLE_LIMIT], 600000);
+            ctrl.idlePull = Util.goodValue(response.data[ApplicationSettingsService.PROPERTIES.IDLE_PULL], 5000);
+            ctrl.idleConfirm = Util.goodValue(response.data[ApplicationSettingsService.PROPERTIES.IDLE_CONFIRM], 15000);
+            return response;
         });
+        //var promiseConfig = ConfigService.getComponentConfig("core", "acmLogin").then(function (config) {
+        //    ctrl.idleLimit = Util.goodValue(config.idleLimit, 600000);     //600000 - limit of 10 minutes
+        //    ctrl.idlePull = Util.goodValue(config.idlePull, 5000);         //5000   - every 5 seconds
+        //    ctrl.idleConfirm = Util.goodValue(config.idleConfirm, 15000);   //15000 - limit of 15 seconds
+        //    return config;
+        //});
 
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -22,7 +30,7 @@ var AcmLoginController = ["$q", "$scope", "$document", "$state", "$translate"
         );
 
         var promiseSetLogin = AcmLoginService.getSetLoginPromise();
-        $q.all([promiseConfig, promiseSetLogin]).then(function(data){
+        $q.all([promiseAppSetting, promiseSetLogin]).then(function(data){
             ctrl.waitConfirm = false;
             UtilTimerService.useTimer("AutoLogout", ctrl.idlePull, function() {
                 var isLogin = AcmLoginService.isLogin();
@@ -55,6 +63,7 @@ var AcmLoginController = ["$q", "$scope", "$document", "$state", "$translate"
         };
 
         ctrl.onIdleDetected = function () {
+            AuditService.genericAudit('com.armedia.acm.session.timeout');
             UtilTimerService.useTimer("AboutToLogout", ctrl.idleConfirm, function() {
                 removeCanceledConfirmDialog();
                 AcmLoginService.logout();

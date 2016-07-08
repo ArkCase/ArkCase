@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="createSubscriptionAPIController" class="com.armedia.acm.services.subscription.web.api.CreateSubscriptionAPIController">
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
-        <property name="subscriptionDao" ref="subscriptionDao"/>
+        <property name="subscriptionService" ref="subscriptionService"/>
         <property name="subscriptionPlugin" ref="subscriptionPlugin"/>
         <property name="subscriptionEventPublisher" ref="subscriptionEventPublisher"/>
     </bean>
 
     <bean id="listSubscriptionByUserAPIController" class="com.armedia.acm.services.subscription.web.api.ListSubscriptionByUserAPIController">
         <property name="subscriptionPlugin" ref="subscriptionPlugin"/>
-        <property name="subscriptionDao" ref="subscriptionDao"/>
+        <property name="subscriptionService" ref="subscriptionService"/>
     </bean>
 
     <bean id="removingSubscriptionAPIController" class="com.armedia.acm.services.subscription.web.api.RemovingSubscriptionAPIController">
-        <property name="subscriptionDao" ref="subscriptionDao"/>
         <property name="subscriptionPlugin" ref="subscriptionPlugin"/>
-        <property name="subscriptionEventPublisher" ref="subscriptionEventPublisher"/>
+        <property name="subscriptionService" ref="subscriptionService"/>
     </bean>
 
     <bean class="com.armedia.acm.services.subscription.web.api.GetUserSubscriptionAPIController">
-        <property name="subscriptionDao" ref="subscriptionDao"/>
+        <property name="subscriptionService" ref="subscriptionService"/>
     </bean>
 
     <bean id="subscriptionUiController" class="com.armedia.acm.services.subscription.web.SubscriptionUiController">

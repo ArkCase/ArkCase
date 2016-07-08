@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.armedia.acm.acm-plugins</groupId>
         <artifactId>acm-default-plugins</artifactId>
-        <version>3.0.54</version>
+        <version>3.0.55</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -102,6 +102,11 @@
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-object-lock</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
+            <artifactId>acm-business-process-plugin</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <!-- JSON -->

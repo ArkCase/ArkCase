@@ -31,7 +31,7 @@ public class AcmApplicationTaskEvent extends AcmEvent implements AcmTaskEvent
 
         setSucceeded(succeeded);
         setIpAddress(ipAddress);
-        setObjectType("TASK");
+        setObjectType(TaskConstants.OBJECT_TYPE);
         setEventType("com.armedia.acm.app.task." + taskEvent);
         setObjectId(source.getTaskId());
         setEventDate(new Date());

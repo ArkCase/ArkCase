@@ -1,8 +1,11 @@
 package com.armedia.acm.plugins.admin.web.api;
 
+import com.armedia.acm.core.exceptions.AcmEncryptionException;
+import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
 import com.armedia.acm.plugins.admin.exception.AcmLdapConfigurationException;
 
 import org.apache.commons.io.FileUtils;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +30,8 @@ import freemarker.template.Template;
 public class LdapConfigurationService
 {
     private Logger log = LoggerFactory.getLogger(LdapConfigurationService.class);
+
+    private AcmEncryptablePropertyUtils encryptablePropertyUtils;
 
     private String ldapConfigurationLocation;
     private String ldapFile;
@@ -262,8 +267,10 @@ public class LdapConfigurationService
      *
      * @param jsonObj
      * @return
+     * @throws AcmEncryptionException
+     * @throws JSONException
      */
-    public HashMap<String, Object> getProperties(JSONObject jsonObj)
+    public HashMap<String, Object> getProperties(JSONObject jsonObj) throws JSONException, AcmEncryptionException
     {
         HashMap<String, Object> props = new HashMap<String, Object>();
         props.put(LdapConfigurationProperties.LDAP_PROP_ID, jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_ID));
@@ -272,7 +279,8 @@ public class LdapConfigurationService
         props.put("base", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_BASE));
         props.put("directoryName", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_DIR_NAME));
         props.put("authUserDn", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_AUTH_USER_DN));
-        props.put("authUserPassword", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_AUTH_USER_PASSWORD));
+        props.put("authUserPassword",
+                encryptablePropertyUtils.encryptPropertyValue(jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_AUTH_USER_PASSWORD)));
         props.put("userSearchBase", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_USER_SEARCH_BASE));
         props.put("userSearchFilter", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_USER_SEARCH_FILTER));
         props.put("groupSearchBase", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_GROUP_SEARCH_BASE));
@@ -280,7 +288,8 @@ public class LdapConfigurationService
         props.put("groupSearchFilterForUser", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_GROUP_SEARCH_FILTER_FOR_USER));
         props.put("ldapUrl", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_LDAP_URL));
         props.put("userIdAttributeName", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_USER_ID_ATTR_NAME));
-        props.put("userDomain", jsonObj.has(LdapConfigurationProperties.LDAP_PROP_USER_DOMAIN) ? jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_USER_DOMAIN) : "");
+        props.put("userDomain", jsonObj.has(LdapConfigurationProperties.LDAP_PROP_USER_DOMAIN)
+                ? jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_USER_DOMAIN) : "");
         return props;
     }
 
@@ -387,5 +396,15 @@ public class LdapConfigurationService
     public void setLdapPropertiesFileRegex(String ldapPropertiesFileRegex)
     {
         this.ldapPropertiesFileRegex = ldapPropertiesFileRegex;
+    }
+
+    public AcmEncryptablePropertyUtils getEncryptablePropertyUtils()
+    {
+        return encryptablePropertyUtils;
+    }
+
+    public void setEncryptablePropertyUtils(AcmEncryptablePropertyUtils encryptablePropertyUtils)
+    {
+        this.encryptablePropertyUtils = encryptablePropertyUtils;
     }
 }

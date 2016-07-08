@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:util="http://www.springframework.org/schema/util"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.1.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
@@ -41,6 +41,8 @@
         <property name="systemUserId" value="${outlook.exchange.system_user_id}" />
         <property name="authenticationTokenService" ref="authenticationTokenService" />
         <property name="authenticationTokenDao" ref="authenticationTokenDao" />
+        <property name="acmCryptoUtils" ref="acmCryptoUtils"/>
+        <property name="outlookPasswordDao" ref="outlookPasswordDao"/>
     </bean>
 
     <bean id="outlookCacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
@@ -77,6 +79,9 @@
             </map>
         </property>
     </bean>
+
+    <bean id="outlookPasswordDao" class="com.armedia.acm.service.outlook.dao.OutlookPasswordDao"/>
+    
 
     <util:constant id="propertyDefinitionSubject"
                    static-field="microsoft.exchange.webservices.data.core.service.schema.ItemSchema.Subject"/>

@@ -4,7 +4,9 @@ package com.armedia.acm.services.notification.dao;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
-import com.armedia.acm.services.notification.model.QueryType;
+import com.armedia.acm.services.notification.model.NotificationRule;
+import com.armedia.acm.services.notification.service.CustomTitleFormatter;
+import com.armedia.acm.services.notification.service.UsersNotified;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +32,12 @@ public class NotificationDao extends AcmAbstractDao<Notification>
     protected Class<Notification> getPersistenceClass()
     {
         return Notification.class;
+    }
+
+    @Override
+    public String getSupportedObjectType()
+    {
+        return NotificationConstants.OBJECT_TYPE;
     }
 
     /*public Notification findNotificationsById(Long id)
@@ -90,22 +98,22 @@ public class NotificationDao extends AcmAbstractDao<Notification>
      * @param create
      * @return
      */
-    public List<Notification> executeQuery(Map<String, Object> parameters, int firstResult, int maxResult, String query, QueryType queryType)
+    public List<Notification> executeQuery(Map<String, Object> parameters, int firstResult, int maxResult, NotificationRule rule)
     {
-        List<Notification> retval = new ArrayList<>();
+        List<Notification> notifications = new ArrayList<>();
 
-        switch (queryType)
+        switch (rule.getQueryType())
         {
             case CREATE:
-                retval = createNotifications(parameters, firstResult, maxResult, query);
+                notifications = createNotifications(parameters, firstResult, maxResult, rule);
                 break;
 
             case SELECT:
-                retval = getNotifications(parameters, firstResult, maxResult, query);
+                notifications = getNotifications(parameters, firstResult, maxResult, rule.getJpaQuery());
                 break;
         }
 
-        return retval;
+        return notifications;
     }
 
     /**
@@ -117,39 +125,38 @@ public class NotificationDao extends AcmAbstractDao<Notification>
      * @param query
      * @return
      */
-    private List<Notification> createNotifications(Map<String, Object> parameters, int firstResult, int maxResult, String query)
+    private List<Notification> createNotifications(Map<String, Object> parameters, int firstResult, int maxResult, NotificationRule rule)
     {
-        TypedQuery<Object[]> select = getEm().createQuery(query, Object[].class);
+        TypedQuery<Object[]> select = getEm().createQuery(rule.getJpaQuery(), Object[].class);
 
         select = (TypedQuery<Object[]>) populateQueryParameters(select, parameters);
         select.setFirstResult(firstResult);
         select.setMaxResults(maxResult);
 
-        List<Notification> retval = new ArrayList<>();
+        List<Notification> notifications = new ArrayList<>();
 
         for (Object[] obj : select.getResultList())
         {
-            Notification notification = new Notification();
-
-            notification.setUser((String) obj[0]);
-            notification.setTitle((String) obj[1]);
-            notification.setNote((String) obj[2]);
-            notification.setType((String) obj[3]);
-            notification.setParentId((Long) obj[4]);
-            notification.setParentType((String) obj[5]);
-            notification.setParentName((String) obj[6]);
-            notification.setParentTitle((String) obj[7]);
-            notification.setRelatedObjectId((Long) obj[8]);
-            notification.setRelatedObjectType((String) obj[9]);
-            notification.setUserEmail((String) obj[10]);
-            notification.setStatus(NotificationConstants.STATUS_NEW);
-            notification.setAction(NotificationConstants.ACTION_DEFAULT);
-            notification.setData("{\"usr\":\"/plugin/" + ((String) obj[5]).toLowerCase() + "/" + obj[4] + "\"}");
-
-            retval.add(notification);
+            Long parentId = (Long) obj[3];
+            String parentType = (String) obj[4];
+            Long relatedObjectId = (Long) obj[7];
+            String relatedObjectType = (String) obj[8];
+            String objectType = relatedObjectType != null ? relatedObjectType : parentType;
+            Long objectId = relatedObjectType != null ? relatedObjectId : parentId;
+            UsersNotified usersNotified = rule.getUsersNotified();
+            List<Notification> notificationsForAssociatedUsers = usersNotified.getNotifications(obj, objectId, objectType);
+            notificationsForAssociatedUsers.stream()
+                    .filter(notification -> rule.getCustomTitleFormatter() != null)
+                    .forEach(notification -> {
+                        CustomTitleFormatter customTitleFormatter = rule.getCustomTitleFormatter();
+                        String title = customTitleFormatter.format(notification);
+                        notification.setTitle(title);
+                        notification.setNote(String.format("%s. Link: %s", title, NotificationConstants.ANCHOR_PLACEHOLDER));
+                    });
+            notifications.addAll(notificationsForAssociatedUsers);
         }
 
-        return retval;
+        return notifications;
     }
 
     /**

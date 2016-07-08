@@ -223,7 +223,16 @@
         "title": "User names display configuration",
         "userId.label": "Use user identifier",
         "userName.label": "Use full user name",
-        "apply": "Apply"
+        "apply": "Apply",
+        "modal.title":"Information",
+        "modal.info":"Settings will take effect after refresh",
+        "modal.ok":"OK"
+      },
+      "login.config": {
+        "title": "Login configuration",
+        "idleLimit.label": "Login idle limit (in milliseconds)",
+        "inform":"Settings will take effect for all new user sessions",
+        "apply.label": "Apply"
       }
     },
     "branding.title": "Branding",

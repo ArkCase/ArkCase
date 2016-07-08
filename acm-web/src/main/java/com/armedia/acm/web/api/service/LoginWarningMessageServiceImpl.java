@@ -1,5 +1,8 @@
 package com.armedia.acm.web.api.service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by dragan.simonovski on 05/11/2016.
  */
@@ -18,6 +21,15 @@ public class LoginWarningMessageServiceImpl implements LoginWarningMessageServic
     public String getMessage()
     {
         return warningMessage == null ? "" : warningMessage;
+    }
+
+    @Override
+    public Map<String, Object> getWarning()
+    {
+        Map<String, Object> map = new HashMap<>();
+        map.put("enabled", warningEnabled);
+        map.put("message", warningMessage);
+        return map;
     }
 
     public void setWarningEnabled(String warningEnabled)

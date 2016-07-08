@@ -23,13 +23,22 @@ public class NotificationFormatter
     {
 
         String objectTypeLabelPlaceholder = NotificationConstants.OBJECT_TYPE_LABEL_PLACEHOLDER;
+        String parentTypeLabelPlaceholder = NotificationConstants.PARENT_TYPE_LABEL_PLACEHOLDER;
         String anchorPlaceholder = NotificationConstants.ANCHOR_PLACEHOLDER;
-        String notificationTitle = notification.getTitle();
 
+        String notificationTitle = notification.getTitle();
         if (notificationTitle != null && notificationTitle.contains(objectTypeLabelPlaceholder))
         {
             String updatedTitle = replaceObjectTypeLabel(notificationTitle, objectTypeLabelPlaceholder,
                     notification.getParentType());
+            notification.setTitle(updatedTitle);
+            notificationTitle = updatedTitle;
+        }
+
+        if (notificationTitle != null && notificationTitle.contains(parentTypeLabelPlaceholder))
+        {
+            String updatedTitle = replaceObjectTypeLabel(notificationTitle, parentTypeLabelPlaceholder,
+                    notification.getRelatedObjectType());
             notification.setTitle(updatedTitle);
         }
 
@@ -42,6 +51,14 @@ public class NotificationFormatter
             notificationNote = updatedNote;
         }
 
+        if (notificationNote != null && notificationNote.contains(parentTypeLabelPlaceholder))
+        {
+            String updatedNote = replaceObjectTypeLabel(notificationNote, parentTypeLabelPlaceholder,
+                    notification.getRelatedObjectType());
+            notification.setNote(updatedNote);
+            notificationNote = updatedNote;
+        }
+
         if (notificationNote != null && notificationNote.contains(anchorPlaceholder))
         {
             String updatedNote = replaceAnchor(notificationNote, anchorPlaceholder, notification.getParentType(),
@@ -50,7 +67,6 @@ public class NotificationFormatter
         }
 
         return notification;
-
 
     }
 
@@ -96,6 +112,12 @@ public class NotificationFormatter
         String keyLabel = parentType + ".label";
         String objectTypeLabel = getNotificationProperties().getProperty(keyLabel);
         return withPlaceholder.replace(placeholder, objectTypeLabel);
+    }
+
+    private String replaceParentTypeLabel(String withPlaceholder, String placeholder, String relatedType){
+        String keyLabel = relatedType + ".label";
+        String parentTypeLabel = getNotificationProperties().getProperty(keyLabel);
+        return withPlaceholder.replace(placeholder, parentTypeLabel);
     }
 
     public Properties getNotificationProperties()

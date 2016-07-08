@@ -10,8 +10,8 @@
  *
  * The BuildUrl is used for building audit report url with given parametars.
  */
-angular.module('audit').factory('AuditController.BuildUrl', ['$sce', '$location', '$browser',
-    function ($sce, $location, $browser) {
+angular.module('audit').factory('AuditController.BuildUrl', ['$sce', '$location', '$browser', 'Util.DateService',
+    function ($sce, $location, $browser,UtilDateService) {
         return {
 
             /**
@@ -31,9 +31,12 @@ angular.module('audit').factory('AuditController.BuildUrl', ['$sce', '$location'
              * @param {String} objectId String that represents value from text input(default is empty string "")
              * @param {String} dateFormat String that represents pentaho date format
              * @param {Boolean} useBaseUrl boolean that represent should baseUrl should be generated and sent as parameter
+             * @param {String} pentahoUser Pentaho user name
+             * @param {String} pentahoPassword Pentaho password
              * @returns {String} Builded url for audit report url that will be shown in iframe
              */
-            getUrl: function (pentahoHost, pentahoPort, auditReportUri, startDate, endDate, objectType, objectId, dateFormat, useBaseUrl) {
+            getUrl: function (pentahoHost, pentahoPort, auditReportUri, startDate, endDate, objectType, objectId,
+                              dateFormat, useBaseUrl, pentahoUser, pentahoPassword) {
                 var useUrl = useBaseUrl || false;
                 var amendedPentahoPort = "";
                 if (pentahoPort && pentahoPort.length > 0) {
@@ -42,12 +45,16 @@ angular.module('audit').factory('AuditController.BuildUrl', ['$sce', '$location'
                         amendedPentahoPort = ':' + amendedPentahoPort;
                     }
                 }
+
                 var reportUrl = pentahoHost + amendedPentahoPort + auditReportUri
-                    + "&startDate=" + startDate
+                    + "?startDate=" + startDate
                     + "&endDate=" + endDate
                     + "&objectType=" + objectType
                     + "&objectId=" + objectId
-                    + "&dateFormat=" + encodeURIComponent(dateFormat);
+                    + "&dateFormat=" + encodeURIComponent(dateFormat)
+                    + "&timeZone=" + encodeURIComponent(UtilDateService.getTimeZoneOffset())
+                    + "&userid=" + pentahoUser
+                    + "&password=" + pentahoPassword;
                 if (useUrl) {
                     var absUrl = $location.absUrl();
                     var baseHref = $browser.baseHref();

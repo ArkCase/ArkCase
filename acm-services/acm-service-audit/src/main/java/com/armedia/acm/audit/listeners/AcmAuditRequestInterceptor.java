@@ -8,6 +8,8 @@ import com.armedia.acm.web.api.MDCConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.Cookie;
@@ -15,9 +17,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -37,11 +41,12 @@ public class AcmAuditRequestInterceptor extends HandlerInterceptorAdapter
     private boolean requestsLoggingHeadersEnabled;
     private boolean requestsLoggingCookiesEnabled;
     private boolean requestsLoggingBodyEnabled;
+    private List<String> contentTypesToLog;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception
     {
-        log.debug("Request audit interceptor called");
+        log.trace("Request audit interceptor called");
 
         if (isRequestsLoggingEnabled())
         {
@@ -118,10 +123,40 @@ public class AcmAuditRequestInterceptor extends HandlerInterceptorAdapter
                 parameters.append(String.join(", ", parameterMap.get(parameterKey)));
                 parameters.append("]");
             }
+
+            if (request instanceof MultipartHttpServletRequest)
+            {
+                MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+
+                for (Map.Entry<String, List<MultipartFile>> entry : multipartRequest.getMultiFileMap().entrySet())
+                {
+                    String paramName = entry.getKey();
+
+                    List<MultipartFile> multipartFiles = entry.getValue();
+                    for (int i = 0; i < multipartFiles.size(); i++)
+                    {
+                        MultipartFile multipartFile = multipartFiles.get(i);
+                        parameters.append(separator);
+                        separator = "|";
+                        parameters.append(paramName + "[" + multipartFile.getOriginalFilename() + "]" + ": [");
+                        if (getContentTypesToLog().contains(multipartFile.getContentType()))
+                        {
+                            parameters.append(new String(multipartFile.getBytes(), Charset.forName("UTF-8")));
+                        }
+                        else
+                        {
+                            parameters.append("Content not logged for contenttype=" + multipartFile.getContentType());
+                        }
+                        parameters.append("]");
+                    }
+                }
+            }
+
             eventProperties.put("Body", parameters.toString());
         }
 
         return eventProperties;
+
     }
 
     private String getCookiesAsString(HttpServletRequest request)
@@ -209,5 +244,15 @@ public class AcmAuditRequestInterceptor extends HandlerInterceptorAdapter
     public void setRequestsLoggingBodyEnabled(boolean requestsLoggingBodyEnabled)
     {
         this.requestsLoggingBodyEnabled = requestsLoggingBodyEnabled;
+    }
+
+    public List<String> getContentTypesToLog()
+    {
+        return contentTypesToLog;
+    }
+
+    public void setContentTypesToLog(List<String> contentTypesToLog)
+    {
+        this.contentTypesToLog = contentTypesToLog;
     }
 }

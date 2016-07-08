@@ -6,6 +6,7 @@
       "menuId": "leftnav",
       "menuItemURL": "admin",
       "menuItemTitle": "Admin",
+      "moduleId": "admin",
       "iconClass": "fa fa-wrench",
       "position": 150
     }
@@ -379,6 +380,15 @@
       ],
       "paginationPageSize": 10,
       "start": 0
+    },
+    {
+      "id": "orgHierarchy",
+      "title": "Organization Hierarchy",
+      "enabled": "true",
+      "topLevelGroupTypes": [
+        "LDAP_GROUP",
+        "ADHOC_GROUP"
+      ]
     }
   ],
   "adminTree": [
@@ -480,6 +490,10 @@
         {
           "title": "admin.application.userName.config.title",
           "templateName": "application-user-name.config"
+        },
+        {
+          "title": "admin.application.login.config.title",
+          "templateName": "application-login.config"
         }
       ]
     },

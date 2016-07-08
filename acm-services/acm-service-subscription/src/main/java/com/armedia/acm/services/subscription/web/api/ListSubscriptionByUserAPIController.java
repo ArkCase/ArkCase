@@ -2,9 +2,9 @@ package com.armedia.acm.services.subscription.web.api;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
-import com.armedia.acm.services.subscription.dao.SubscriptionDao;
 import com.armedia.acm.services.subscription.exception.AcmSubscriptionException;
 import com.armedia.acm.services.subscription.model.AcmSubscription;
+import com.armedia.acm.services.subscription.service.SubscriptionService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +30,7 @@ import java.util.List;
 public class ListSubscriptionByUserAPIController
 {
 
-    private SubscriptionDao subscriptionDao;
+    private SubscriptionService subscriptionService;
     private AcmPlugin subscriptionPlugin;
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -38,37 +38,20 @@ public class ListSubscriptionByUserAPIController
     @ResponseBody
     public List<AcmSubscription> listSubscriptionsByUser(@PathVariable("userId") String userId,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-            @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows, Authentication authentication,
+            @RequestParam(value = "n", required = false, defaultValue = "-1") int maxRows, Authentication authentication,
             HttpSession httpSession) throws AcmSubscriptionException
     {
-        if (log.isInfoEnabled())
-        {
-            log.info("Listing subscriptions for user:" + userId);
-        }
+        log.info("Listing subscriptions for user:" + userId);
         List<AcmSubscription> subscriptionList = null;
         try
         {
-            subscriptionList = getSubscriptionDao().getListOfSubscriptionsByUser(userId, startRow, maxRows);
-        }
-        catch (AcmObjectNotFoundException e)
+            subscriptionList = getSubscriptionService().getSubscriptionsByUser(userId, startRow, maxRows);
+        } catch (AcmObjectNotFoundException e)
         {
-            if (log.isDebugEnabled())
-            {
-                log.debug("No Subscriptions Found for user: " + userId, e);
-            }
+            log.debug("No Subscriptions Found for user: " + userId, e);
             return new ArrayList<>();
         }
         return subscriptionList;
-    }
-
-    public SubscriptionDao getSubscriptionDao()
-    {
-        return subscriptionDao;
-    }
-
-    public void setSubscriptionDao(SubscriptionDao subscriptionDao)
-    {
-        this.subscriptionDao = subscriptionDao;
     }
 
     public AcmPlugin getSubscriptionPlugin()
@@ -79,5 +62,15 @@ public class ListSubscriptionByUserAPIController
     public void setSubscriptionPlugin(AcmPlugin subscriptionPlugin)
     {
         this.subscriptionPlugin = subscriptionPlugin;
+    }
+
+    public SubscriptionService getSubscriptionService()
+    {
+        return subscriptionService;
+    }
+
+    public void setSubscriptionService(SubscriptionService subscriptionService)
+    {
+        this.subscriptionService = subscriptionService;
     }
 }

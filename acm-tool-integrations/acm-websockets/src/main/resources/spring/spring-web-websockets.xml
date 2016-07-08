@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:websocket="http://www.springframework.org/schema/websocket"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/websocket
+        http://www.springframework.org/schema/websocket/spring-websocket.xsd
+        http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:annotation-config/>
+
+    <bean id="websocketProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="location" value="file:${user.home}/.arkcase/acm/websockets.properties"/>
+        <property name="localOverride" value="false"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="properties">
+            <props>
+                <prop key="acm.websockets.enabled">true</prop>
+                <prop key="acm.websockets.stomp_endpoint">/stomp</prop>
+                <prop key="acm.websockets.application_destination_prefix">/app</prop>
+                <prop key="acm.websockets.stomp_broker_relay.relay_host">acm-activemq</prop>
+                <prop key="acm.websockets.stomp_broker_relay.relay_port">61613</prop>
+                <prop key="acm.websockets.stomp_broker_relay.heartbeat_send_interval">20000</prop>
+                <prop key="acm.websockets.stomp_broker_relay.heartbeat_receive_interval">20000</prop>
+                <prop key="acm.websockets.socksjs.enabled">true</prop>
+            </props>
+        </property>
+    </bean>
+
+    <context:property-placeholder
+            ignore-unresolvable="true"
+            local-override="false"
+            order="29831"
+            properties-ref="websocketProperties"/>
+
+    <websocket:message-broker application-destination-prefix="${acm.websockets.application_destination_prefix}">
+        <websocket:stomp-endpoint path="${acm.websockets.stomp_endpoint}">
+            <websocket:sockjs websocket-enabled="true"/>
+        </websocket:stomp-endpoint>
+        <websocket:stomp-broker-relay prefix="/topic,/queue"
+                                      relay-host="${acm.websockets.stomp_broker_relay.relay_host}"
+                                      relay-port="${acm.websockets.stomp_broker_relay.relay_port}"
+                                      heartbeat-send-interval="${acm.websockets.stomp_broker_relay.heartbeat_send_interval}"
+                                      heartbeat-receive-interval="${acm.websockets.stomp_broker_relay.heartbeat_receive_interval}"/>
+    </websocket:message-broker>
+
+    <bean id="objectChangeNotificationProperties"
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <!-- note: must leave "file:" at the start of the file name for spring
+        to be able to read the file; otherwise it will try to read from the
+        classpath -->
+        <property name="location" value="file:${user.home}/.arkcase/acm/acmObjectsNotifications.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
+        <property name="properties">
+            <props>
+                <prop key="acm.object.changed.notification.filter.include.classNames">
+                    com.armedia.acm.plugins.casefile.model.CaseFile,com.armedia.acm.plugins.complaint.model.Complaint,com.armedia.acm.plugins.task.model.AcmTask,com.armedia.acm.plugins.ecm.model.EcmFile,com.armedia.acm.plugins.casefile.model.ChangeCaseStatus,com.armedia.acm.plugins.complaint.model.CloseComplaintRequest,com.armedia.acm.services.costsheet.model.AcmCostsheet
+                </prop>
+                <prop key="acm.object.changed.notification.filter.include.object_types">CASE_FILE,COMPLAINT,TASK,FILE
+                </prop>
+                <prop key="acm.object.changed.notification.filter.include.parent_object_types">
+                    CASE_FILE,COMPLAINT,TASK,FILE
+                </prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="messageReceiver" class="com.armedia.acm.websockets.MessageReceiver"/>
+    <bean id="objectUpdateNotifier" class="com.armedia.acm.websockets.ObjectUpdateNotifier" init-method="initBean">
+        <property name="objectChangeNotificationProperties" ref="objectChangeNotificationProperties"/>
+    </bean>
+    <int:service-activator ref="objectUpdateNotifier" input-channel="objectEventChannel" method="notifyChange"/>
+
+</beans>

@@ -4,6 +4,7 @@ package com.armedia.acm.plugins.dashboard.web.api;
 import com.armedia.acm.plugins.dashboard.dao.WidgetDao;
 import com.armedia.acm.plugins.dashboard.model.widget.Widget;
 import com.armedia.acm.plugins.dashboard.service.DashboardPropertyReader;
+import com.armedia.acm.plugins.dashboard.service.DashboardService;
 import com.armedia.acm.plugins.dashboard.service.WidgetEventPublisher;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmRole;
@@ -57,6 +58,7 @@ public class GetWidgetsByUserRolesAPIControllerTest extends EasyMockSupport
     private WidgetEventPublisher mockWidgetEventPublisher;
     private Authentication mockAuthentication;
     private DashboardPropertyReader mockDashboardPropertyReader;
+    private DashboardService mockDashboardService;
 
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
@@ -72,6 +74,7 @@ public class GetWidgetsByUserRolesAPIControllerTest extends EasyMockSupport
         mockHttpSession = new MockHttpSession();
         mockAuthentication = createMock(Authentication.class);
         mockDashboardPropertyReader = createMock(DashboardPropertyReader.class);
+        mockDashboardService = createMock(DashboardService.class);
 
 
         unit = new GetWidgetsByUserRolesAPIController();
@@ -80,6 +83,7 @@ public class GetWidgetsByUserRolesAPIControllerTest extends EasyMockSupport
         unit.setEventPublisher(mockWidgetEventPublisher);
         unit.setUserDao(mockUserDao);
         unit.setDashboardPropertyReader(mockDashboardPropertyReader);
+        unit.setDashboardService(mockDashboardService);
 
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
     }
@@ -105,6 +109,7 @@ public class GetWidgetsByUserRolesAPIControllerTest extends EasyMockSupport
 
         expect(mockWidgetDao.getAllWidgetsByRoles(Arrays.asList(userRole))).andReturn(Arrays.asList(returned));
         expect(mockUserDao.findAllRolesByUser(user.getUserId())).andReturn(Arrays.asList(userRole));
+        expect(mockDashboardService.onlyUniqueValues(Arrays.asList(returned))).andReturn(Arrays.asList(returned));
         mockWidgetEventPublisher.publishGetWidgetsByUserRoles(
                 eq(Arrays.asList(returned)),
                 eq(mockAuthentication),

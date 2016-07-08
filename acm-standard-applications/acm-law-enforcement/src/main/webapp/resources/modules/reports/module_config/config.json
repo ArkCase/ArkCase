@@ -6,6 +6,7 @@
       "menuId": "leftnav",
       "menuItemURL": "reports",
       "menuItemTitle": "Reports",
+      "moduleId": "report",
       "iconClass": "fa fa-bar-chart",
       "position": 80
     }
@@ -25,13 +26,30 @@
     },
     {
       "id": "caseStates",
-      "resetCaseStateValues": ["COMPLAINT_DISPOSITION_COUNT"],
+      "resetCaseStateValues": [
+        "COMPLAINT_DISPOSITION_COUNT"
+      ],
       "states": [
-        {"id":"DRAFT", "name": "Draft"},
-        {"id":"IN APPROVAL", "name": "In Approval"},
-        {"id":"ACTIVE", "name": "Active"},
-        {"id":"INACTIVE", "name": "Inactive"},
-        {"id":"CLOSED", "name": "Closed"}
+        {
+          "id": "DRAFT",
+          "name": "Draft"
+        },
+        {
+          "id": "IN APPROVAL",
+          "name": "In Approval"
+        },
+        {
+          "id": "ACTIVE",
+          "name": "Active"
+        },
+        {
+          "id": "INACTIVE",
+          "name": "Inactive"
+        },
+        {
+          "id": "CLOSED",
+          "name": "Closed"
+        }
       ]
     }
   ]

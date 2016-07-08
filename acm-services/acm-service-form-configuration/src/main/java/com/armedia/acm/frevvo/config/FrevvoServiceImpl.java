@@ -62,7 +62,7 @@ public class FrevvoServiceImpl implements FrevvoService {
 			
 			service = new FormsService(protocol, host, port, null);
 			
-			String designer = getFormUrl().getDesignerUser() + "@" + getFormUrl().getTenant();
+			String designer = getFormUrl().getDesignerUser();
 			String admin = getFormUrl().getAdminUser() + "@" + getFormUrl().getTenant();
 			String adminPass = getFormUrl().getAdminPassword();
 			

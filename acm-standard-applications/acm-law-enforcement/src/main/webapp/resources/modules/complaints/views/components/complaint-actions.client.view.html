@@ -10,14 +10,14 @@
 
     <div class="pull-right">
         <div class="btn-group">
-            <button class="btn btn-sm btn-default" ng-click="createNew()">
+            <a class="btn btn-sm btn-default" ui-sref="frevvo.new-complaint()" ng-show="showCreateAndClose">
                 <i class="fa fa-edit"></i>
                 <span translate>complaints.comp.actions.new.button</span>
-            </button>
-            <button class="btn btn-sm btn-default" ng-click="close(objectInfo)">
+            </a>
+            <a class="btn btn-sm btn-default" ui-sref="frevvo.close-complaint(closeParams)" ng-show="showCreateAndClose">
                 <i class="fa fa-times"></i>
                 <span translate>complaints.comp.actions.close.button</span>
-            </button>
+            </a>
             <button class="btn btn-sm btn-default" ng-show="showBtnUnsubscribe" ng-click="unsubscribe(objectInfo)">
                 <i class="fa fa-bullhorn"></i>
                 <span translate>complaints.comp.actions.unsubscribe.button</span>

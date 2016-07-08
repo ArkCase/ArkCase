@@ -45,6 +45,15 @@
       "noop": "(Select Item)",
       "editWithWord": "Edit in Word"
     },
+    "table.columns": {
+      "title": "Title",
+      "type": "Type",
+      "created": "Created",
+      "modified": "Modified",
+      "author": "Author",
+      "version": "Version",
+      "status": "Status"
+    },
     "dndDialog": {
       "title": "Drag and Drop",
       "radReplace.text": "Replace document (If more then one files are dropped, only first one is used)",
@@ -105,7 +114,8 @@
     "btnSearch.text": "Search",
     "btnOk.text": "OK",
     "btnCancel.text": "Cancel",
-    "edtPlaceholder": "Type in to search"
+    "edtPlaceholder": "Type in to search",
+    "noData.text": "No Results"
   },
   "common.directive.coreNotes": {
     "title": "Notes",
@@ -195,6 +205,6 @@
     "modal.dialogGroupPicker.header": "Search Group"
   },
   "common.comp.acmLogin": {
-    "confirmLogout": "For your protection, application is about to logout. Press Cancel to stay log in."
+    "confirmLogout": "For your protection, application is about to logout. Click Cancel to stay logged in."
   }
 }

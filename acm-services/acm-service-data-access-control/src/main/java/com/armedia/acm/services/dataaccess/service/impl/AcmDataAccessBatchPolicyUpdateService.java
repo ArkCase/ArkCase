@@ -1,11 +1,13 @@
 package com.armedia.acm.services.dataaccess.service.impl;
 
+import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.services.dataaccess.model.DataAccessControlConstants;
 import com.armedia.acm.services.dataaccess.service.AcmObjectDataAccessBatchUpdateLocator;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.spring.SpringContextHolder;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,8 +27,8 @@ public class AcmDataAccessBatchPolicyUpdateService
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     /**
-     * The default run date to use if this generator has never run before (or if the properties file that stores the
-     * last run date is missing)
+     * The default run date to use if this generator has never run before (or if the properties file that stores the last run date is
+     * missing)
      */
     private static final String DEFAULT_LAST_RUN_DATE = "1970-01-01T00:00:00Z";
 
@@ -43,23 +45,21 @@ public class AcmDataAccessBatchPolicyUpdateService
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private AcmDataAccessBatchUpdater dataAccessBatchUpdater;
 
-    public void batchPolicyUpdate()
+    public void batchPolicyUpdate() throws AcmEncryptionException
     {
-        if ( log.isDebugEnabled() )
+        if (log.isDebugEnabled())
         {
             log.debug("DAC batch update enabled: " + isBatchUpdateBasedOnLastModifiedEnabled());
         }
 
-        if ( !isBatchUpdateBasedOnLastModifiedEnabled() )
+        if (!isBatchUpdateBasedOnLastModifiedEnabled())
         {
             return;
         }
 
         getAuditPropertyEntityAdapter().setUserId("DAC-BATCH-UPDATE");
 
-        String lastRunDate = getPropertyFileManager().load(
-                getLastBatchUpdatePropertyFileLocation(),
-                DAC_LAST_RUN_DATE_PROPERTY_KEY,
+        String lastRunDate = getPropertyFileManager().load(getLastBatchUpdatePropertyFileLocation(), DAC_LAST_RUN_DATE_PROPERTY_KEY,
                 DEFAULT_LAST_RUN_DATE);
         DateFormat solrDateFormat = new SimpleDateFormat(DataAccessControlConstants.LAST_RUN_DATE_FORMAT);
 
@@ -68,28 +68,28 @@ public class AcmDataAccessBatchPolicyUpdateService
             Date lastBatchRunDate = getLastBatchRunDate(lastRunDate, solrDateFormat);
             storeCurrentDateForNextBatchRun(solrDateFormat);
 
-            if ( log.isDebugEnabled() )
+            if (log.isDebugEnabled())
             {
                 log.debug("Checking for objects modified since: " + lastBatchRunDate);
             }
 
-            Collection<? extends AcmObjectDataAccessBatchUpdateLocator> locators =
-                    getSpringContextHolder().getAllBeansOfType(AcmObjectDataAccessBatchUpdateLocator.class).values();
-            if ( log.isDebugEnabled() )
+            Collection<? extends AcmObjectDataAccessBatchUpdateLocator> locators = getSpringContextHolder()
+                    .getAllBeansOfType(AcmObjectDataAccessBatchUpdateLocator.class).values();
+            if (log.isDebugEnabled())
             {
                 log.debug(locators.size() + " object locators found.");
             }
 
             for (AcmObjectDataAccessBatchUpdateLocator locator : locators)
             {
-            	try
-            	{
-            		updateDataAccessControlPolicy(lastBatchRunDate, locator);
-            	}
-            	catch(Exception exception)
-            	{
-            		log.error("Could not update data access controls for locator " + locator.getClass(), exception);
-            	}
+                try
+                {
+                    updateDataAccessControlPolicy(lastBatchRunDate, locator);
+                }
+                catch (Exception exception)
+                {
+                    log.error("Could not update data access controls for locator " + locator.getClass(), exception);
+                }
             }
         }
         catch (ParseException e)
@@ -100,7 +100,7 @@ public class AcmDataAccessBatchPolicyUpdateService
 
     private void storeCurrentDateForNextBatchRun(DateFormat dateFormat)
     {
-        // store the current time as the last run date to use the next time this job runs.  This allows us to
+        // store the current time as the last run date to use the next time this job runs. This allows us to
         // scan only for objects updated since this date.
         String now = dateFormat.format(new Date());
         getPropertyFileManager().store(DAC_LAST_RUN_DATE_PROPERTY_KEY, now, getLastBatchUpdatePropertyFileLocation());
@@ -122,7 +122,7 @@ public class AcmDataAccessBatchPolicyUpdateService
     {
         boolean debug = log.isDebugEnabled();
 
-        if ( debug )
+        if (debug)
         {
             log.debug("Handling locator type: " + locator.getClass().getName() + "; last mod date: " + lastUpdate);
         }
@@ -135,21 +135,20 @@ public class AcmDataAccessBatchPolicyUpdateService
         do
         {
             updatedObjects = locator.getObjectsModifiedSince(lastUpdate, current, batchSize);
-            if ( debug )
+            if (debug)
             {
                 log.debug("Number of objects for " + locator.getClass().getName() + ": " + updatedObjects.size());
             }
 
-            if ( !updatedObjects.isEmpty() )
+            if (!updatedObjects.isEmpty())
             {
                 current += batchSize;
                 getDataAccessBatchUpdater().updateDataAccessPolicy(updatedObjects, locator);
             }
         }
-        while ( !updatedObjects.isEmpty() );
+        while (!updatedObjects.isEmpty());
 
     }
-
 
     public boolean isBatchUpdateBasedOnLastModifiedEnabled()
     {
@@ -200,7 +199,6 @@ public class AcmDataAccessBatchPolicyUpdateService
     {
         return batchSize;
     }
-
 
     public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
     {
