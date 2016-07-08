@@ -14,10 +14,6 @@
     <name>Tool Integrations: ArkCase Web Sockets</name>
     <description>Handling websocket connection and sending messages to the browser.</description>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
