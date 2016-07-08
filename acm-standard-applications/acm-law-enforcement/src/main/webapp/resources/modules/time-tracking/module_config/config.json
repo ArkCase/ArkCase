@@ -8,6 +8,7 @@
       "menuId": "leftnav",
       "menuItemURL": "time-tracking.main",
       "menuItemTitle": "Time Tracking",
+      "moduleId": "time",
       "iconClass": "fa fa-clock-o",
       "position": 130
     },
@@ -15,6 +16,7 @@
       "menuId": "topbar",
       "menuItemURL": "frevvo.new-timesheet",
       "menuItemTitle": "Timesheet",
+      "moduleId": "time",
       "iconClass": "fa fa-clock-o",
       "position": 40
     }
@@ -120,7 +122,7 @@
               "name": "modified",
               "displayName": "timeTracking.comp.details.table.columns.modified",
               "headerCellFilter": "translate",
-			  "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+              "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
             },
             {
               "name": "modifier",
