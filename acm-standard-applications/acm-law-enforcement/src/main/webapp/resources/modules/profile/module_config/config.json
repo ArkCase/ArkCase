@@ -6,7 +6,7 @@
       "menuId": "usermenu",
       "menuItemURL": "profile",
       "menuItemTitle": "Profile",
-      "moduleId": "profile",
+      "moduleId": "none",
       "iconClass": "glyphicon glyphicon-asterisk",
       "position": 100
     }
