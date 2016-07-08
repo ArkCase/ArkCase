@@ -134,17 +134,17 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService', 'Admin.Modu
                         //iterate trough all application modules to isolate it and check later if module is allowed to be used
                         //based on the user roles
                         angular.forEach(appModules, function (module) {
-                            if (menuObj.menuId != "usermenu" && menuObj.moduleId != null) {
+                            if (menuObj.moduleId != null && menuObj.moduleId != "none") {
                                 if (menuObj.moduleId === module.id) {
                                     moduleObject = module;
                                 }
                             }
                         })
 
-                        //no need to check for role base permition for 'usermenu' items,
-                        // all menu items allowed by ActionPermitions based on the ruules in 
-                        // accessControlRules.json will be visible in 'usermenu'.
-                        if (menuObj.menuId === "usermenu") {
+                        // No need to check for role base permissions for items that does not belongs to ArkCase module.
+                        // All menu items allowed by ActionPermissions based on the rules in 
+                        // accessControlRules.json will be visible in this case.
+                        if (menuObj.moduleId != null && menuObj.moduleId === "none") {
 
                             if (moduleAllowedByActionPermission) {
                                 // Push new menu item

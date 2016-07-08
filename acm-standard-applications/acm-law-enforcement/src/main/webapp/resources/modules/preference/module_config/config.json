@@ -6,7 +6,7 @@
       "menuId": "usermenu",
       "menuItemURL": "preference",
       "menuItemTitle": "Preferences",
-      "moduleId": "preference",
+      "moduleId": "none",
       "iconClass": "glyphicon glyphicon-asterisk",
       "position": 120
     }
