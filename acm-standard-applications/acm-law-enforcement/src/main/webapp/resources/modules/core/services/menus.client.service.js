@@ -134,32 +134,23 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService', 'Admin.Modu
                         //iterate trough all application modules to isolate it and check later if module is allowed to be used
                         //based on the user roles
                         angular.forEach(appModules, function (module) {
-
-                            //check if module matches the menuObj from the 'leftnav' menu
-                            if (menuObj.menuId === "leftnav") {
-                                if (menuObj.menuItemURL === module.id || menuObj.menuItemURL === module.name.toLowerCase() || menuObj.menuItemTitle === module.name) {
-                                    moduleObject = module;
-                                }
-                            }
-                            //check if module matches the menuObj from the 'topbar' menu
-                            if (menuObj.menuId === "topbar") {
-                                if (menuObj.menuItemTitle.toLowerCase() === module.id || menuObj.menuItemTitle.toLowerCase().substring(0, module.id.length) === module.id) {
+                            if (menuObj.moduleId != null && menuObj.moduleId != "none") {
+                                if (menuObj.moduleId === module.id) {
                                     moduleObject = module;
                                 }
                             }
                         })
 
-                        //no need to check for role base permition for 'usermenu' items,
-                        // all menu items allowed by ActionPermitions based on the ruules in 
-                        // accessControlRules.json will be visible in 'usermenu'.
-                        if (menuObj.menuId === "usermenu") {
+                        // No need to check for role base permissions for items that does not belongs to ArkCase module.
+                        // All menu items allowed by ActionPermissions based on the rules in 
+                        // accessControlRules.json will be visible in this case.
+                        if (menuObj.moduleId != null && menuObj.moduleId === "none") {
 
                             if (moduleAllowedByActionPermission) {
                                 // Push new menu item
                                 pushMenuItem(menuObj, context);
                             }
                         }
-
                         if (moduleObject != null) {
                             ModuleService.getRolesForModulePrivilege(moduleObject.privilege).then(function (rolesForModule) {
                                 angular.forEach(rolesForModule.data, function (role) {
