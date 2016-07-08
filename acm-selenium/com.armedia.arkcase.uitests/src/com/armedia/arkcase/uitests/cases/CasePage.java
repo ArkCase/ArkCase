@@ -24,7 +24,7 @@ public class CasePage {
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[1]/div[2]/span[3]/label")
 	WebElement caseTitle;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[1]/div[2]/div[1]/input")
-	WebElement caseTitleInput;
+	public WebElement caseTitleInput;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[1]/div[3]/span[3]/label")
 	WebElement caseTypeTitle;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[1]/div[3]/div[1]/input[1]")
@@ -57,7 +57,7 @@ public class CasePage {
 	WebElement initiatorLastName;
 	// Initiator Comunication Device
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[2]/div/div[2]/div[6]/div[2]/div/div[2]/div[2]/div[1]/input[1]")
-	WebElement typeCD;
+	public WebElement typeCD;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[2]/div/div[2]/div[6]/div[2]/div/div[2]/div[2]/div[1]/ul/li[2]/a")
 	WebElement homePhoneCD;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[2]/div/div[2]/div[6]/div[2]/div/div[2]/div[2]/div[1]/ul/li[3]/a")
@@ -76,7 +76,7 @@ public class CasePage {
 	WebElement addedByCD;
 	// Organization Information
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[2]/div/div[2]/div[7]/div[2]/div/div[2]/div[2]/div[1]/input[1]")
-	WebElement typeOI;
+	public WebElement typeOI;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[2]/div/div[2]/div[7]/div[2]/div/div[2]/div[2]/div[1]/ul/li[2]/a")
 	WebElement nonProfitOI;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[2]/div/div[2]/div[7]/div[2]/div/div[2]/div[2]/div[1]/ul/li[3]/a")
@@ -91,7 +91,7 @@ public class CasePage {
 	WebElement addedbyOI;
 	// Location Information
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[2]/div/div[2]/div[8]/div[2]/div/div[2]/div[2]/div[1]/input[1]")
-	WebElement typeLI;
+	public WebElement typeLI;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[2]/div/div[2]/div[8]/div[2]/div/div[2]/div[2]/div[1]/ul/li[2]/a")
 	WebElement buisnessLI;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[2]/div/div[2]/div[8]/div[2]/div/div[2]/div[2]/div[1]/ul/li[3]/a")
@@ -111,7 +111,7 @@ public class CasePage {
 	// People
 	// People Information
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[3]/div/div[2]/div/div[2]/div[2]/div[1]/input[1]")
-	WebElement titlePeople;
+	public WebElement titlePeople;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[3]/div/div[2]/div/div[2]/div[2]/div[1]/ul/li[2]/a")
 	WebElement titlePeopleMr;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[3]/div/div[2]/div/div[2]/div[2]/div[1]/ul/li[3]/a")
@@ -196,8 +196,19 @@ public class CasePage {
 	WebElement selectParticipantType;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[5]/div[3]/div[2]/table/tbody/tr/td[5]/div/div[1]/ul/li[2]/a")
 	WebElement selectParticipantOwner;
+	@FindBy(how=How.XPATH,using="/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[5]/div[3]/div[2]/table/tbody/tr/td[5]/div/div[1]/ul/li[3]/a")
+	WebElement selectParticipantFollower;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[5]/div[3]/div[2]/table/tbody/tr/td[8]/div")
 	WebElement selectParticipant;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[5]/div[3]/div[2]/table/tbody/tr/td[2]")
+	WebElement participantTypePlusBtn;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[5]/div[3]/div[2]/table/tbody/tr[2]/td[5]/div/div[1]/input[1]")
+	WebElement secondRowSelectParticipantType;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[5]/div[3]/div[2]/table/tbody/tr[2]/td[5]/div/div[1]/ul/li[2]/a")
+	WebElement selectParticipantFolower;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[5]/div[3]/div[2]/table/tbody/tr[2]/td[8]")
+	WebElement selectSecondParticipant;
+
 	// add user
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/div/div/div/div/header/div/div/div/input")
 	WebElement serachForUsers;
@@ -296,6 +307,7 @@ public class CasePage {
 	public void caseTitleInput(String caseName) {
 
 		Assert.assertTrue(caseTitleInput.isDisplayed());
+		caseTitleInput.click();
 		caseTitleInput.sendKeys(caseName);
 	}
 
@@ -914,4 +926,28 @@ public class CasePage {
 		Assert.assertTrue(participantnsTab.getText().equals("Participants"));
 	}
 
+	public void clickParticipantTypePlusBtn() {
+		participantTypePlusBtn.click();
+	}
+
+	public void selectSecondTypeParticipant() {
+
+		secondRowSelectParticipantType.click();
+	}
+
+	public void selectParticipantTypeFolower() {
+
+		Assert.assertEquals("Folower label name is wrong", "Follower", selectParticipantFolower.getText());
+		selectParticipantFolower.click();
+	}
+
+	public void clickSecondParticipant() {
+		selectSecondParticipant.click();
+
+	}
+
+	public void selectParticipantFollower(){
+		selectParticipantFollower.click();
+	}
+	
 }

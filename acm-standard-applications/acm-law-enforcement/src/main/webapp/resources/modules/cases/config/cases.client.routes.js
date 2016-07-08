@@ -36,11 +36,6 @@ angular.module('cases').config(['$stateProvider',
                 templateUrl: 'modules/cases/views/components/case-calendar.client.view.html'
             })
 
-            .state('cases.correspondence', {
-                url: '/:id/correspondence',
-                templateUrl: 'modules/cases/views/components/case-correspondence.client.view.html'
-            })
-
             .state('cases.cost', {
                 url: '/:id/cost',
                 templateUrl: 'modules/cases/views/components/case-cost.client.view.html'
