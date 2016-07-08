@@ -74,6 +74,11 @@ angular
                             // return to the same page after login
                             // Spring security on the server
                             // remembers the last requested page
+                            var redirectUrl = response.headers()['concurrent_session_redirect'];
+                            if(redirectUrl){
+                                $window.location.href=redirectUrl;
+                                return ($q.reject(null));
+                            }
                             sessionStorage.redirectState = angular
                                 .toJson($window.location);
                             $window.location.reload();

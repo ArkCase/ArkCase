@@ -53,6 +53,10 @@
         <div class="alert alert-danger">Your session has expired!</div>
     </c:if>
 
+    <c:if test="${'2'.equals(param.login_error)}">
+        <div class="alert alert-danger">Your session has been invalidated due to concurrent session limit!</div>
+    </c:if>
+
     <c:if test="${param.logout != null}">
         <div class="alert alert-success">You have been logged out successfully.</div>
     </c:if>
