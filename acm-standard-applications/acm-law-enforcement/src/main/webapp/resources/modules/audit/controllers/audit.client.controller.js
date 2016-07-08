@@ -93,6 +93,8 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', '
                 $scope.pentahoHost = $scope.acmReportsProperties['PENTAHO_SERVER_URL'];
                 $scope.pentahoPort = $scope.acmReportsProperties['PENTAHO_SERVER_PORT'];
                 $scope.auditReportUri = $scope.auditPluginProperties['AUDIT_REPORT'];
+                $scope.pentahoUser = $scope.acmReportsProperties['PENTAHO_SERVER_USER'];
+                $scope.pentahoPassword = $scope.acmReportsProperties['PENTAHO_SERVER_PASSWORD'];
             });
 
         /**
@@ -107,7 +109,8 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', '
          */
         $scope.showIframe = function () {
             $scope.auditReportUrl = BuildUrl.getUrl($scope.pentahoHost, $scope.pentahoPort, $scope.auditReportUri,
-                $scope.dateFrom, $scope.dateTo, $scope.objectType, $scope.objectId, UtilDateService.defaultDateFormat, true);
+                $scope.dateFrom, $scope.dateTo, $scope.objectType, $scope.objectId, UtilDateService.defaultDateFormat,
+                true, $scope.pentahoUser, $scope.pentahoPassword);
         }
     }
 ]);

@@ -6,12 +6,13 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
         var UUIDRegExString = ".*-UUID-[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}";
 
         var UUIDRegEx = new RegExp(UUIDRegExString);
-        
+
         $scope.data = [];
         var groupsMap = {};
 
         $scope.config.$promise.then(function (config) {
             $scope.cfg = _.find(config.components, {id: 'usersPicker'});
+            $scope.cfgOrgHierarchy = _.find(config.components, {id: 'orgHierarchy'});
         });
 
         function createTreeData(groups) {
@@ -50,12 +51,21 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
         }
 
         $scope.onLoadMore = function (currentPage, pageSize) {
+            var groupsPromise;
+            if ($scope.cfgOrgHierarchy && Util.isArray($scope.cfgOrgHierarchy.topLevelGroupTypes)) {
+                groupsPromise = organizationalHierarchyService.getGroupsTopLevel(currentPage, pageSize, $scope.cfgOrgHierarchy.topLevelGroupTypes);
+            }
+            else {
+                groupsPromise = organizationalHierarchyService.getGroupsTopLevel(currentPage, pageSize, []);
+            }
 
-            var groupsPromise = organizationalHierarchyService.getGroupsTopLevel(currentPage, pageSize);
 
             groupsPromise.then(function (payload) {
-                var tempGroups = payload.data.response.docs;
-                $scope.totalGroups = payload.data.response.numFound;
+                var tempGroups = [];
+                if (!Util.isArrayEmpty(_.get(payload, 'data.response.docs'))) {
+                    tempGroups = _.get(payload, 'data.response.docs');
+                }
+                $scope.totalGroups = _.get(payload, 'data.response.numFound');
                 //create map from groups
                 for (var i = 0; i < tempGroups.length; i++) {
                     var tempGroup = tempGroups[i];
@@ -247,7 +257,10 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
             //find child groups
             var subGroupsPromise = organizationalHierarchyService.getSubGroupsForGroup(parentId);
             subGroupsPromise.then(function (payload) {
-                var tempGroups = payload.data.response.docs;
+                var tempGroups = [];
+                if (!Util.isArrayEmpty(_.get(payload, 'data.response.docs'))) {
+                    tempGroups = _.get(payload, 'data.response.docs');
+                }
                 //create map from groups
                 for (var i = 0; i < tempGroups.length; i++) {
                     var tempGroup = tempGroups[i];
@@ -255,7 +268,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                 }
                 createTreeData(tempGroups);
 
-                if (group.child_id_ss) {
+                if (group && group.child_id_ss) {
                     for (var i = 0; i < group.child_id_ss.length; i++) {
                         var groupId = group.child_id_ss[i];
                         children.push(getGroup(groupId));
@@ -263,10 +276,10 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                 }
 
                 //find child users
-                if (group.member_id_ss) {
+                if (group && group.member_id_ss) {
                     organizationalHierarchyService.getUsersForGroup(group.object_id_s.replace(/\./g, '_002E_')).then(function (payload) {
                         //successfully users received, insert with groups in same array
-                        var data = payload.data.response.docs;
+                        var data = _.get(payload, 'data.response.docs');
                         if (data) {
                             for (var i = 0; i < data.length; i++) {
                                 data[i].title = data[i].name;

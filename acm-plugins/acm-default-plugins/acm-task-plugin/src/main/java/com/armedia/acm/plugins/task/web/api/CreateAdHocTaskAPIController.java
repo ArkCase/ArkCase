@@ -4,6 +4,7 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
+import com.armedia.acm.plugins.task.model.TaskConstants;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
 import com.armedia.acm.services.search.model.SearchConstants;
@@ -49,14 +50,11 @@ public class CreateAdHocTaskAPIController
         {
             in.setOwner(authentication.getName());
             // find the complaint id by name
-            String objectNumber;
             String parentObjectType = null;
             String obj;
-            Long objectId = 0L;
+            Long objectId = null;
             if (in.getAttachedToObjectName() != "")
             {
-                objectNumber = in.getAttachedToObjectName();
-                in.setAttachedToObjectName(objectNumber);
                 obj = getObjectsFromSolr(in.getAttachedToObjectType(), in.getAttachedToObjectName(), authentication, 0, 10, "", null);
                 if (obj != null && getSearchResults().getNumFound(obj) > 0)
                 {
@@ -64,11 +62,13 @@ public class CreateAdHocTaskAPIController
                     JSONObject result = results.getJSONObject(0);
                     objectId = getSearchResults().extractLong(result, SearchConstants.PROPERTY_OBJECT_ID_S);
                     parentObjectType = getSearchResults().extractString(result, SearchConstants.PROPERTY_OBJECT_TYPE_S);
+                } else
+                {
+                    in.setAttachedToObjectName(null);
+
                 }
-            } else
-            {
-                objectId = null;
             }
+
             if (objectId != null)
             {
                 in.setAttachedToObjectId(objectId);
@@ -99,6 +99,11 @@ public class CreateAdHocTaskAPIController
         String ipAddress = (String) httpSession.getAttribute("acm_ip_address");
         AcmApplicationTaskEvent event = new AcmApplicationTaskEvent(created, "create", authentication.getName(), succeeded, ipAddress);
         getTaskEventPublisher().publishTaskEvent(event);
+        if (created.getStatus() != null && created.getStatus().equalsIgnoreCase(TaskConstants.STATE_CLOSED))
+        {
+            event = new AcmApplicationTaskEvent(created, "complete", authentication.getName(), succeeded, ipAddress);
+            getTaskEventPublisher().publishTaskEvent(event);
+        }
     }
 
     public String getObjectsFromSolr(String objectType, String objectName, Authentication authentication, int startRow, int maxRows, String sortParams, String userId)

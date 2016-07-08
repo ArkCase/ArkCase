@@ -567,4 +567,20 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="36-1-acm-person-add-place-of-birth" author="lazo.lazarev">
+        <addColumn tableName="acm_person">
+            <column name="cm_place_of_birth" type="varchar(512)"/>
+        </addColumn>
+    </changeSet>
+
+    <!-- adding discriminator column, needed for extensibility -->
+    <changeSet id="36-2-acm-person-association-add-class-name-column" author="lazo.lazarev">
+        <addColumn tableName="acm_person_assoc">
+            <column name="cm_class_name" type="varchar(400)"
+                    defaultValue="com.armedia.acm.plugins.person.model.PersonAssociation">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    
 </databaseChangeLog>

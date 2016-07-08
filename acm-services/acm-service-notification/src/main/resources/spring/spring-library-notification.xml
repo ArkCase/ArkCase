@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
 
@@ -44,6 +44,13 @@
     </bean>
 
     <bean id="notificationDao" class="com.armedia.acm.services.notification.dao.NotificationDao"/>
+
+    <bean id="participantsNotified" class="com.armedia.acm.services.notification.service.ParticipantsNotified">
+        <property name="userDao" ref="userJpaDao"/>
+        <property name="groupDao" ref="groupDao"/>
+        <property name="acmDataService" ref="acmDataService"/>
+    </bean>
+
     <bean id="notificationEventPublisher"
           class="com.armedia.acm.services.notification.service.NotificationEventPublisher"/>
 
@@ -62,6 +69,10 @@
     </bean>
     <bean id="noopExecutor" class="com.armedia.acm.services.notification.service.NoopExecutor"/>
 
+    <bean id="objectNameTitleFormatter" class="com.armedia.acm.services.notification.service.ObjectNameTitleFormatter">
+        <property name="acmDataService" ref="acmDataService"/>
+    </bean>
+
     <bean id="acmNotificationPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Save Notification Service Plugin"/>
     </bean>
@@ -71,15 +82,48 @@
     <!--<bean id="authenticationTokenDao" class="com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao"/>-->
 
 
-    <bean id="emailNotificationSender" class="com.armedia.acm.services.notification.service.EmailNotificationSender">
+<!--     <bean id="emailNotificationSender" class="com.armedia.acm.services.notification.service.EmailNotificationSender">
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
-        <property name="propertyFileManager">
-            <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
-        </property>
+        <property name="propertyFileManager" ref="propertyFileManager" />
         <property name="notificationPropertyFileLocation" ref="notificationPropertyFileLocation"/>
         <property name="muleContextManager" ref="muleContextManager"/>
         <property name="authenticationTokenService" ref="authenticationTokenService"/>
         <property name="authenticationTokenDao" ref="authenticationTokenDao"/>
+    </bean> -->
+
+    <bean id="smtpNotificationSender" class="com.armedia.acm.services.notification.service.SmtpNotificationSender">
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="propertyFileManager" ref="propertyFileManager" />
+        <property name="notificationPropertyFileLocation" ref="notificationPropertyFileLocation"/>
+        <property name="muleContextManager" ref="muleContextManager"/>
+        <property name="authenticationTokenService" ref="authenticationTokenService"/>
+        <property name="authenticationTokenDao" ref="authenticationTokenDao"/>
+        <property name="ecmFileService" ref="ecmFileService" />
     </bean>
 
+    <bean id="microsoftExchangeNotificationSender" class="com.armedia.acm.services.notification.service.MicrosoftExchangeNotificationSender">
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="propertyFileManager" ref="propertyFileManager" />
+        <property name="notificationPropertyFileLocation" ref="notificationPropertyFileLocation"/>
+        <property name="muleContextManager" ref="muleContextManager"/>
+        <property name="authenticationTokenService" ref="authenticationTokenService"/>
+        <property name="authenticationTokenDao" ref="authenticationTokenDao"/>
+        <property name="outlookService" ref="outlookService"/>
+    </bean>
+
+    <bean id="notificationSenderFactory" class="com.armedia.acm.services.notification.service.NotificationSenderFactory">
+        <property name="propertyFileManager" ref="propertyFileManager" />
+        <property name="notificationPropertyFileLocation" ref="notificationPropertyFileLocation"/>
+        <property name="smtpNotificationSender" ref="smtpNotificationSender"/>
+        <property name="microsoftExchangeNotificationSender" ref="microsoftExchangeNotificationSender"/>
+        <property name="notificationSenderMap">  
+            <map>  
+                <entry key="smtp" value-ref="smtpNotificationSender"></entry>  
+                <entry key="outlook" value-ref="microsoftExchangeNotificationSender"></entry>  
+            </map>  
+        </property>
+    </bean>
+    
+    <bean id="notificationSender" factory-bean="notificationSenderFactory" factory-method="getNotificationSender">
+    </bean>
 </beans>

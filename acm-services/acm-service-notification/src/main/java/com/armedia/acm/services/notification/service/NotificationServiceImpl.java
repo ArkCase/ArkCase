@@ -11,6 +11,7 @@ import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.model.NotificationRule;
 import com.armedia.acm.spring.SpringContextHolder;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,10 +57,11 @@ public class NotificationServiceImpl implements NotificationService
 
         LOG.debug("Getting last batch run date from {}", NotificationConstants.LAST_BATCH_RUN_PROPERTY_FILE);
 
-        String lastRunDate = getPropertyFileManager().load(NotificationConstants.LAST_BATCH_RUN_PROPERTY_FILE, NotificationConstants.SOLR_LAST_RUN_DATE_PROPERTY_KEY, NotificationConstants.DEFAULT_LAST_RUN_DATE);
-
         try
         {
+            String lastRunDate = getPropertyFileManager().load(NotificationConstants.LAST_BATCH_RUN_PROPERTY_FILE,
+                    NotificationConstants.SOLR_LAST_RUN_DATE_PROPERTY_KEY, NotificationConstants.DEFAULT_LAST_RUN_DATE);
+
             SimpleDateFormat dateFormat = new SimpleDateFormat(NotificationConstants.DATE_FORMAT);
 
             Date lastRun = getLastRunDate(lastRunDate, dateFormat);
@@ -75,7 +77,8 @@ public class NotificationServiceImpl implements NotificationService
                 }
             }
 
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             LOG.error("Cannot send notifications to the users: " + e.getMessage(), e);
         }
@@ -95,18 +98,17 @@ public class NotificationServiceImpl implements NotificationService
         do
         {
             Map<String, Object> properties = getJpaProperties(rule, lastRun);
-            notifications = getNotificationDao().executeQuery(properties, firstResult, maxResult, rule.getJpaQuery(), rule.getQueryType());
+            notifications = getNotificationDao().executeQuery(properties, firstResult, maxResult, rule);
 
             if (!notifications.isEmpty())
             {
                 firstResult += maxResult;
 
-                notifications.stream()
-                        .map(element -> getNotificationFormatter().replaceFormatPlaceholders(element))
-                        .map(element -> rule.getExecutor().execute(element))
-                        .map(element -> getNotificationDao().save(element))
+                notifications.stream().map(element -> getNotificationFormatter().replaceFormatPlaceholders(element))
+                        .map(element -> rule.getExecutor().execute(element)).map(element -> getNotificationDao().save(element))
                         .forEach(element -> {
-                            ApplicationNotificationEvent event = new ApplicationNotificationEvent(element, NotificationConstants.OBJECT_TYPE.toLowerCase(), true, null);
+                            ApplicationNotificationEvent event = new ApplicationNotificationEvent(element,
+                                    NotificationConstants.OBJECT_TYPE.toLowerCase(), true, null);
                             getNotificationEventPublisher().publishNotificationEvent(event);
                         });
             }
@@ -244,7 +246,6 @@ public class NotificationServiceImpl implements NotificationService
     {
         this.notificationDao = notificationDao;
     }
-
 
     public NotificationEventPublisher getNotificationEventPublisher()
     {

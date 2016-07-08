@@ -31,11 +31,77 @@
       "paginationPageSize": 10,
       "start": 0
     },
+    "columnDefs": [
+      {
+        "name": "checkbox",
+        "displayName": "",
+        "headTemplate": "<input type='checkbox'/>",
+        "width": "6%",
+        "index": 0
+      },
+      {
+        "name": "lock",
+        "displayName": "",
+        "width": "1%",
+        "index": 1
+      },
+      {
+        "name": "title",
+        "displayName": "common.directive.docTree.table.columns.title",
+        "width": "35%",
+        "index": 2
+      },
+      {
+        "name": "type",
+        "displayName": "common.directive.docTree.table.columns.type",
+        "__todo__cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+        "width": "12%",
+        "index": 3
+      },
+      {
+        "name": "created",
+        "displayName": "common.directive.docTree.table.columns.created",
+        "__todo__cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+        "width": "10%",
+        "index": 4
+      },
+      {
+        "name": "modified",
+        "displayName": "common.directive.docTree.table.columns.modified",
+        "__todo__cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+        "width": "10%",
+        "index": 5
+      },
+      {
+        "name": "author",
+        "field": "creator",
+        "displayName": "common.directive.docTree.table.columns.author",
+        "__todo__cellTemplate": "<div>{{ row.entity.creator }}</div>",
+        "__todo__lookup": "userFullNames",
+        "width": "16%",
+        "index": 6
+      },
+      {
+        "name": "version",
+        "displayName": "common.directive.docTree.table.columns.version",
+        "__todo__cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+        "width": "6%",
+        "index": 7
+      },
+      {
+        "name": "status",
+        "displayName": "common.directive.docTree.table.columns.status",
+        "__todo__cellTemplate": "{{node.data.status}}",
+        "width": "8%",
+        "index": 8
+      }
+    ],
     "menu": {
       "basic": {
         "root": [
           {
-            "title": "New Folder <kbd>Ctrl+N</kbd>",
+            "___title": "New Folder <kbd>Ctrl+N</kbd>",
+            "title": "New Folder",
             "cmd": "newFolder",
             "uiIcon": "ui-icon-plus"
           },
@@ -82,10 +148,15 @@
             ]
           },
           {
+            "title": "New Correspondence",
+            "cmd": "subMenuCorrespondenceForms"
+          },
+          {
             "title": "----"
           },
           {
-            "title": "Paste <kbd>Ctrl+V</kbd>",
+            "___title": "Paste <kbd>Ctrl+V</kbd>",
+            "title": "Paste",
             "cmd": "paste",
             "uiIcon": "ui-icon-clipboard",
             "disabled": true
@@ -93,7 +164,8 @@
         ],
         "folder": [
           {
-            "title": "New Folder <kbd>Ctrl+N</kbd>",
+            "___title": "New Folder <kbd>Ctrl+N</kbd>",
+            "title": "New Folder",
             "cmd": "newFolder",
             "uiIcon": "ui-icon-plus"
           },
@@ -105,17 +177,20 @@
             "title": "----"
           },
           {
-            "title": "Cut <kbd>Ctrl+X</kbd>",
+            "___title": "Cut <kbd>Ctrl+X</kbd>",
+            "title": "Cut",
             "cmd": "cut",
             "uiIcon": "ui-icon-scissors"
           },
           {
-            "title": "Copy <kbd>Ctrl+C</kbd>",
+            "___title": "Copy <kbd>Ctrl+C</kbd>",
+            "title": "Copy",
             "cmd": "copy",
             "uiIcon": "ui-icon-copy"
           },
           {
-            "title": "Paste <kbd>Ctrl+V</kbd>",
+            "___title": "Paste <kbd>Ctrl+V</kbd>",
+            "title": "Paste",
             "cmd": "paste",
             "uiIcon": "ui-icon-clipboard",
             "disabled": true
@@ -124,12 +199,14 @@
             "title": "----"
           },
           {
-            "title": "Rename <kbd>[F2]</kbd>",
+            "___title": "Rename <kbd>[F2]</kbd>",
+            "title": "Rename",
             "cmd": "rename",
             "uiIcon": "ui-icon-pencil"
           },
           {
-            "title": "Delete <kbd>Ctrl+D</kbd>",
+            "___title": "Delete <kbd>Ctrl+D</kbd>",
+            "title": "Delete",
             "cmd": "remove",
             "uiIcon": "ui-icon-trash"
           },
@@ -188,17 +265,20 @@
             "title": "----"
           },
           {
-            "title": "Cut <kbd>Ctrl+X</kbd>",
+            "___title": "Cut <kbd>Ctrl+X</kbd>",
+            "title": "Cut",
             "cmd": "cut",
             "uiIcon": "ui-icon-scissors"
           },
           {
-            "title": "Copy <kbd>Ctrl+C</kbd>",
+            "___title": "Copy <kbd>Ctrl+C</kbd>",
+            "title": "Copy",
             "cmd": "copy",
             "uiIcon": "ui-icon-copy"
           },
           {
-            "title": "Paste <kbd>Ctrl+V</kbd>",
+            "___title": "Paste <kbd>Ctrl+V</kbd>",
+            "title": "Paste",
             "cmd": "paste",
             "uiIcon": "ui-icon-clipboard",
             "disabled": true
@@ -207,12 +287,14 @@
             "title": "----"
           },
           {
-            "title": "Rename <kbd>[F2]</kbd>",
+            "___title": "Rename <kbd>[F2]</kbd>",
+            "title": "Rename",
             "cmd": "rename",
             "uiIcon": "ui-icon-pencil"
           },
           {
-            "title": "Delete <kbd>Ctrl+D</kbd>",
+            "___title": "Delete <kbd>Ctrl+D</kbd>",
+            "title": "Delete",
             "cmd": "remove",
             "uiIcon": "ui-icon-trash"
           },
@@ -245,7 +327,8 @@
       "record": {
         "root": [
           {
-            "title": "New Folder <kbd>Ctrl+N</kbd>",
+            "___title": "New Folder <kbd>Ctrl+N</kbd>",
+            "title": "New Folder",
             "cmd": "newFolder",
             "uiIcon": "ui-icon-plus"
           },
@@ -254,10 +337,15 @@
             "cmd": "subMenuFileTypes"
           },
           {
+            "title": "New Correspondence",
+            "cmd": "subMenuCorrespondenceForms"
+          },
+          {
             "title": "----"
           },
           {
-            "title": "Paste <kbd>Ctrl+V</kbd>",
+            "___title": "Paste <kbd>Ctrl+V</kbd>",
+            "title": "Paste",
             "cmd": "paste",
             "uiIcon": "ui-icon-clipboard",
             "disabled": true
@@ -265,7 +353,8 @@
         ],
         "folder": [
           {
-            "title": "New Folder <kbd>Ctrl+N</kbd>",
+            "___title": "New Folder <kbd>Ctrl+N</kbd>",
+            "title": "New Folder",
             "cmd": "newFolder",
             "uiIcon": "ui-icon-plus"
           },
@@ -277,17 +366,20 @@
             "title": "----"
           },
           {
-            "title": "Rename <kbd>[F2]</kbd>",
+            "___title": "Rename <kbd>[F2]</kbd>",
+            "title": "Rename",
             "cmd": "rename",
             "uiIcon": "ui-icon-pencil"
           },
           {
-            "title": "Copy <kbd>Ctrl+C</kbd>",
+            "___title": "Copy <kbd>Ctrl+C</kbd>",
+            "title": "Copy",
             "cmd": "copy",
             "uiIcon": "ui-icon-copy"
           },
           {
-            "title": "Paste <kbd>Ctrl+V</kbd>",
+            "___title": "Paste <kbd>Ctrl+V</kbd>",
+            "title": "Paste",
             "cmd": "paste",
             "uiIcon": "ui-icon-clipboard",
             "disabled": true
@@ -314,7 +406,8 @@
             "title": "----"
           },
           {
-            "title": "Copy <kbd>Ctrl+C</kbd>",
+            "___title": "Copy <kbd>Ctrl+C</kbd>",
+            "title": "Copy",
             "cmd": "copy",
             "uiIcon": "ui-icon-copy"
           },
@@ -367,17 +460,20 @@
         ],
         "folders": [
           {
-            "title": "Cut <kbd>Ctrl+X</kbd>",
+            "___title": "Cut <kbd>Ctrl+X</kbd>",
+            "title": "Cut",
             "cmd": "cut",
             "uiIcon": "ui-icon-scissors"
           },
           {
-            "title": "Copy <kbd>Ctrl+C</kbd>",
+            "___title": "Copy <kbd>Ctrl+C</kbd>",
+            "title": "Copy",
             "cmd": "copy",
             "uiIcon": "ui-icon-copy"
           },
           {
-            "title": "Delete <kbd>Ctrl+D</kbd>",
+            "___title": "Delete <kbd>Ctrl+D</kbd>",
+            "title": "Delete",
             "cmd": "remove",
             "uiIcon": "ui-icon-trash"
           },
@@ -389,17 +485,20 @@
         ],
         "filesAndFolders": [
           {
-            "title": "Cut <kbd>Ctrl+X</kbd>",
+            "___title": "Cut <kbd>Ctrl+X</kbd>",
+            "title": "Cut",
             "cmd": "cut",
             "uiIcon": "ui-icon-scissors"
           },
           {
-            "title": "Copy <kbd>Ctrl+C</kbd>",
+            "___title": "Copy <kbd>Ctrl+C</kbd>",
+            "title": "Copy",
             "cmd": "copy",
             "uiIcon": "ui-icon-copy"
           },
           {
-            "title": "Delete <kbd>Ctrl+D</kbd>",
+            "___title": "Delete <kbd>Ctrl+D</kbd>",
+            "title": "Delete",
             "cmd": "remove",
             "uiIcon": "ui-icon-trash"
           },
@@ -411,12 +510,14 @@
         ],
         "filesOrFoldersRecord": [
           {
-            "title": "Cut <kbd>Ctrl+X</kbd>",
+            "___title": "Cut <kbd>Ctrl+X</kbd>",
+            "title": "Cut",
             "cmd": "cut",
             "uiIcon": "ui-icon-scissors"
           },
           {
-            "title": "Copy <kbd>Ctrl+C</kbd>",
+            "___title": "Copy <kbd>Ctrl+C</kbd>",
+            "title": "Copy",
             "cmd": "copy",
             "uiIcon": "ui-icon-copy"
           },
@@ -433,7 +534,8 @@
         "uiIcon": ""
       },
       "___menu_item_to_be_implemented_print": {
-        "title": "Print <kbd>Ctrl+P</kbd>",
+        "___title": "Print <kbd>Ctrl+P</kbd>",
+        "title": "Print",
         "cmd": "print",
         "uiIcon": "ui-icon-print",
         "data": {

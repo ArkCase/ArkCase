@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.armedia.acm</groupId>
         <artifactId>acm-tool-integrations</artifactId>
-        <version>3.0.54</version>
+        <version>3.0.55</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -13,6 +13,16 @@
     <description>This module contains the ACM data source Spring bean.</description>
 
     <dependencies>
+        <!-- Spring -->
+        <dependency>
+            <groupId>org.springframework.integration</groupId>
+            <artifactId>spring-integration-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-messaging</artifactId>
+        </dependency>
+
         <!-- acm -->
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
@@ -128,34 +138,34 @@
         </dependency>
     </dependencies>
 
-    <profiles>
-        <profile>
-            <id>postgresql</id>
-            <properties>
-                <dbms.name>postgresql</dbms.name>
-            </properties>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-        </profile>
-        <profile>
-            <id>oracle</id>
-            <properties>
-                <dbms.name>oracle</dbms.name>
-            </properties>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-        </profile>
-        <profile>
-            <id>mysql</id>
-            <properties>
-                <dbms.name>mysql</dbms.name>
-            </properties>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-        </profile>
-    </profiles>
+    <!--<profiles>-->
+    <!--<profile>-->
+    <!--<id>postgresql</id>-->
+    <!--<properties>-->
+    <!--<dbms.name>postgresql</dbms.name>-->
+    <!--</properties>-->
+    <!--<activation>-->
+    <!--<activeByDefault>true</activeByDefault>-->
+    <!--</activation>-->
+    <!--</profile>-->
+    <!--<profile>-->
+    <!--<id>oracle</id>-->
+    <!--<properties>-->
+    <!--<dbms.name>oracle</dbms.name>-->
+    <!--</properties>-->
+    <!--<activation>-->
+    <!--<activeByDefault>false</activeByDefault>-->
+    <!--</activation>-->
+    <!--</profile>-->
+    <!--<profile>-->
+    <!--<id>mysql</id>-->
+    <!--<properties>-->
+    <!--<dbms.name>mysql</dbms.name>-->
+    <!--</properties>-->
+    <!--<activation>-->
+    <!--<activeByDefault>false</activeByDefault>-->
+    <!--</activation>-->
+    <!--</profile>-->
+    <!--</profiles>-->
 
 </project>

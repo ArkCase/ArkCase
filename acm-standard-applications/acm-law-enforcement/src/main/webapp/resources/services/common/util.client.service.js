@@ -398,7 +398,11 @@ angular.module('services').factory('UtilService', ['$q', '$log'
                     }
                     d.reject(rc);
 
-                    $log.error("service call error:[" + Util.goodMapValue(rc, "status") + ", " + Util.goodMapValue(rc, "statusText") + "]" + Util.goodMapValue(rc, "data"));
+                    if (rc) {
+                        $log.error("service call error:[" + Util.goodMapValue(rc, "status") + ", " + Util.goodMapValue(rc, "statusText") + "]" + Util.goodMapValue(rc, "data"));
+                    } else {
+                        $log.error("service call error: (No error info)");
+                    }
                     return rc;
                 };
 

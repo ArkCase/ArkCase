@@ -68,7 +68,14 @@ angular.module('complaints').controller('Complaints.ReferencesController', ['$sc
                 size: 'lg',
                 resolve: {
                     $filter: function () {
-                        return $scope.modalConfig.searchFilter;
+                    	var filter = $scope.modalConfig.searchFilter + "&-id:" + $scope.currentObjectId + "-COMPLAINT";
+                        if ($scope.gridOptions.data.length > 0) {
+                            for (var i = 0; i < $scope.gridOptions.data.length; i++) {
+                                var data = $scope.gridOptions.data[i];
+                                filter += "&-id:" + data.targetId + "-" + data.targetType;
+                            }
+                        }
+                        return filter.replace(/&/gi, '%26');
                     },
                     $config: function () {
                         return $scope.modalConfig;

@@ -66,6 +66,7 @@ public class FacetedSearchAPIController
 
         // true if the filter should check for parent object access
         boolean isParentRef = true;
+        boolean isSubscriptionSearch = false;
         String filterQueries = "";
         if (filters != null)
         {
@@ -75,9 +76,11 @@ public class FacetedSearchAPIController
                 String decodedFilter = URLDecoder.decode(filter, SearchConstants.FACETED_SEARCH_ENCODING);
                 decodedFilter = decodedFilter.replaceAll("\\s+", "");
 
+                isSubscriptionSearch = decodedFilter.contains("\"ObjectType\":SUBSCRIPTION_EVENT");
+
                 // do not check for parent-object access for NOTIFICATION and SUBSCRIPTION_EVENT object types
                 isParentRef = isParentRef && !decodedFilter.contains("\"ObjectType\":NOTIFICATION");
-                isParentRef = isParentRef && !decodedFilter.contains("\"ObjectType\":SUBSCRIPTION_EVENT");
+                isParentRef = isParentRef && !isSubscriptionSearch;
             }
         }
 
@@ -103,7 +106,7 @@ public class FacetedSearchAPIController
 
 
         String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH,
-                query, startRow, maxRows, sort, rowQueryParameters, isParentRef);
+                query, startRow, maxRows, sort, rowQueryParameters, isParentRef, isSubscriptionSearch);
         String res = getFacetedSearchService().replaceEventTypeName(results);
 
         if (StringUtils.isNotEmpty(export))

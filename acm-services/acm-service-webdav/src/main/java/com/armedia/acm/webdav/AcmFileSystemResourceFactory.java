@@ -7,14 +7,15 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import io.milton.http.LockManager;
 import io.milton.http.ResourceFactory;
 import io.milton.http.exceptions.BadRequestException;
 import io.milton.http.exceptions.NotAuthorizedException;
 import io.milton.resource.Resource;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity
@@ -59,7 +60,7 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
 
     private String removeFileExtension(String path)
     {
-        //remove word file extensions
+        // remove word file extensions
         Matcher m = wordFileExtensionPattern.matcher(path);
         if (m.find())
         {
@@ -191,10 +192,14 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
         public AcmFileSystemResource getResource(String host, String path) throws BadRequestException
         {
 
-            Long fileId = Long.valueOf(path.substring(path.indexOf('/') + 1));
+            String[] fileArgs = path.split("/");
+            Long fileId = Long.valueOf(fileArgs[fileArgs.length - 1]);
+
+            String fileType = fileArgs[0];
+            String lockType = fileArgs[1];
 
             EcmFile ecmFile = fileDao.find(fileId);
-            return new AcmFileResource(host, ecmFile, AcmFileSystemResourceFactory.this);
+            return new AcmFileResource(host, ecmFile, fileType, lockType, AcmFileSystemResourceFactory.this);
 
         }
 

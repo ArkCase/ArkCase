@@ -30,6 +30,12 @@
       "assignee.label": "Assigned To",
       "owningGroup.label": "Owning Group"
     },
+    "costsheet": {
+      "approver.label": "Approver"
+    },
+    "timesheet":{
+      "approver.label": "Approver"
+    },
     "_xxx_courtRoomName": "Court Room Name:"
   },
   "tasks.comp.actions": {
@@ -178,9 +184,7 @@
       "name": "Name",
       "type": "Type",
       "title": "Title",
-      "parent": "Parent",
-      "assignee": "Assignee",
-      "modified": "Modified"
+      "username": "Username"
     }
   }
 }
