@@ -8,6 +8,7 @@
       "menuId": "leftnav",
       "menuItemURL": "cost-tracking.main",
       "menuItemTitle": "Cost Tracking",
+      "moduleId": "cost",
       "iconClass": "fa fa-money",
       "position": 120
     },
@@ -15,6 +16,7 @@
       "menuId": "topbar",
       "menuItemURL": "frevvo.new-costsheet",
       "menuItemTitle": "Costsheet",
+      "moduleId": "cost",
       "iconClass": "fa fa-money",
       "position": 50
     }
@@ -120,7 +122,7 @@
               "name": "modified",
               "displayName": "costTracking.comp.details.table.columns.modified",
               "headerCellFilter": "translate",
-			  "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+              "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
             },
             {
               "name": "modifier",
