@@ -7,7 +7,6 @@ import com.armedia.acm.service.objectlock.model.AcmObjectLockEvent;
 import com.armedia.acm.service.objectlock.model.AcmObjectUnlockEvent;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
-
 import org.apache.commons.lang.StringUtils;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -28,6 +27,13 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
     private AcmObjectLockDao acmObjectLockDao;
     private ExecuteSolrQuery executeSolrQuery;
     private ApplicationEventPublisher applicationEventPublisher;
+
+    @Override
+    @Transactional
+    public AcmObjectLock createLock(Long objectId, String objectType, String lockType, Authentication auth)
+    {
+        return createLock(objectId, objectType, lockType, Boolean.TRUE, auth);
+    }
 
     @Override
     @Transactional
@@ -103,7 +109,7 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
 
     @Override
     public String getDocumentsWithLock(String objectType, Authentication auth, String lockHeldByUser, int firstRow, int maxRows,
-            String sort, String fqParams) throws MuleException
+                                       String sort, String fqParams) throws MuleException
     {
         StringBuilder query = new StringBuilder();
         query.append("{!join from=parent_ref_s to=id}object_type_s:OBJECT_LOCK ");
@@ -124,7 +130,7 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
 
     @Override
     public String getObjectLocks(String parentObjectType, Authentication auth, String lockHeldByUser, int firstRow, int maxRows,
-            String sort, String fqParams) throws MuleException
+                                 String sort, String fqParams) throws MuleException
     {
         StringBuilder query = new StringBuilder();
         query.append("object_type_s:OBJECT_LOCK");
