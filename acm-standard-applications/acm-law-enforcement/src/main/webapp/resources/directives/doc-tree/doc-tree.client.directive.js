@@ -1254,7 +1254,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 var node = nodes[0];
                                 var fileId = node.data.objectId;
                                 LockingService.lockObject(fileId, ObjectService.ObjectTypes.FILE,
-                                    ObjectService.LockTypes.CHECKOUT_LOCK).then(
+                                    ObjectService.LockTypes.CHECKOUT_LOCK, true).then(
                                     function (lockedFile) {
                                         DocTree._doDownload(node);
                                         DocTree.refreshTree();
@@ -1397,7 +1397,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 var node = nodes[0];
                                 var fileId = node.data.objectId;
                                 LockingService.lockObject(fileId, ObjectService.ObjectTypes.FILE,
-                                    ObjectService.LockTypes.WORD_EDIT_LOCK).then(
+                                    ObjectService.LockTypes.WORD_EDIT_LOCK, false).then(
                                     function (lockedFile) {
                                         var absUrl = $location.absUrl();
                                         var baseHref = $browser.baseHref();
@@ -1409,7 +1409,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                         if (hasExt && hasExt[0])
                                             fileExt = hasExt[0];
 
-                                        ITHit.WebDAV.Client.DocManager.EditDocument(appUrl + "webdav/" + node.parent.data.objectId + "/" + node.data.objectId + fileExt);
+                                        ITHit.WebDAV.Client.DocManager.EditDocument(appUrl + "webdav/" + ObjectService.ObjectTypes.FILE + "/" + ObjectService.LockTypes.WORD_EDIT_LOCK + "/" +
+                                                node.parent.data.objectId + "/" + node.data.objectId + fileExt);
                                         DocTree.refreshTree();
                                     }
                                 );
