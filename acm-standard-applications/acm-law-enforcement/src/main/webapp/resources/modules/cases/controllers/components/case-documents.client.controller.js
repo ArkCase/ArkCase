@@ -54,6 +54,14 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
             }
         );
 
+        ObjectLookupService.getCaseFileCorrespondenceForms().then(
+            function (correspondenceForms) {
+                $scope.correspondenceForms = $scope.correspondenceForms || [];
+                $scope.correspondenceForms = $scope.correspondenceForms.concat(Util.goodArray(correspondenceForms));
+                return correspondenceForms;
+            }
+        );
+
 
         $scope.objectType = ObjectService.ObjectTypes.CASE_FILE;
         $scope.objectId = componentHelper.currentObjectId; //$stateParams.id;
