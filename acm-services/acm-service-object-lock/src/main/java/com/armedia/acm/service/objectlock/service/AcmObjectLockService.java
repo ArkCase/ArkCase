@@ -9,6 +9,18 @@ import org.springframework.security.core.Authentication;
  */
 public interface AcmObjectLockService
 {
+    AcmObjectLock createLock(Long objectId, String objectType, String lockType, Boolean lockInDB, Authentication auth);
+
+    /**
+     * This version of createLock is to maintain backwards compatibility with the method that takes a "LockInDB"
+     * parameter.  It calls the new method with a value of TRUE for lockInDB.
+     *
+     * @param objectId
+     * @param objectType
+     * @param lockType
+     * @param auth
+     * @return
+     */
     AcmObjectLock createLock(Long objectId, String objectType, String lockType, Authentication auth);
 
     void removeLock(Long objectId, String objectType, String lockType, Authentication auth);
@@ -25,7 +37,8 @@ public interface AcmObjectLockService
      * @return return response from solr as String
      * @throws MuleException
      */
-    String getDocumentsWithoutLock(String objectType, Authentication auth, int firstRow, int maxRows, String sort, String fqParams) throws MuleException;
+    String getDocumentsWithoutLock(String objectType, Authentication auth, int firstRow, int maxRows, String sort, String fqParams)
+            throws MuleException;
 
     /**
      * queries documents which have lock.
@@ -40,7 +53,8 @@ public interface AcmObjectLockService
      * @return return response from solr as String
      * @throws MuleException
      */
-    String getDocumentsWithLock(String objectType, Authentication auth, String lockHeldByUser, int firstRow, int maxRows, String sort, String fqParams) throws MuleException;
+    String getDocumentsWithLock(String objectType, Authentication auth, String lockHeldByUser, int firstRow, int maxRows, String sort,
+                                String fqParams) throws MuleException;
 
     /**
      * queries documents which holders for object lock
@@ -55,5 +69,6 @@ public interface AcmObjectLockService
      * @return return response from solr as String
      * @throws MuleException
      */
-    String getObjectLocks(String parentObjectType, Authentication auth, String lockHeldByUser, int firstRow, int maxRows, String sort, String fqParams) throws MuleException;
+    String getObjectLocks(String parentObjectType, Authentication auth, String lockHeldByUser, int firstRow, int maxRows, String sort,
+                          String fqParams) throws MuleException;
 }

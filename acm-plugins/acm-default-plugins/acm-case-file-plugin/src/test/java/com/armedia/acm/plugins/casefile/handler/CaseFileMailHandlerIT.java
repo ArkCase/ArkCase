@@ -24,14 +24,19 @@ import javax.mail.Message;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
  * Created by nebojsha on 25.06.2015.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:/spring/spring-integration-case-file-test.xml", "classpath:/spring/spring-library-property-file-manager.xml"})
-public class CaseFileMailHandlerIT extends EasyMockSupport {
+@ContextConfiguration(locations = {
+        "/spring/spring-integration-case-file-test.xml",
+        "/spring/spring-library-property-file-manager.xml",
+        "/spring/spring-library-acm-encryption.xml"
+})
+public class CaseFileMailHandlerIT extends EasyMockSupport
+{
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private Message messageMock;
@@ -45,7 +50,8 @@ public class CaseFileMailHandlerIT extends EasyMockSupport {
     private String mailDir;
 
     @Before
-    public void setUp() {
+    public void setUp()
+    {
         messageMock = createMock(Message.class);
         caseFileDaoMock = createMock(CaseFileDao.class);
         ecmFileServiceMock = createMock(EcmFileService.class);
@@ -63,8 +69,10 @@ public class CaseFileMailHandlerIT extends EasyMockSupport {
     }
 
     @Test
-    public void testHandle() {
-        try {
+    public void testHandle()
+    {
+        try
+        {
             String caseNumber = "20150511_123123";
             EasyMock.expect(messageMock.getSubject()).andReturn("aadasdasdasd_" + caseNumber + " some random text here and numbers 123123").anyTimes();
             CaseFile cf = new CaseFile();
@@ -97,7 +105,8 @@ public class CaseFileMailHandlerIT extends EasyMockSupport {
 
             replayAll();
             handler.handle(messageMock);
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             log.error("Error:", e);
             fail();
         }
