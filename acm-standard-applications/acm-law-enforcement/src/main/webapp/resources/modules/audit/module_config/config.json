@@ -1,34 +1,48 @@
 {
-    "id": "audit",
-    "title": "Audit",
-    "menus": [
-
+  "id": "audit",
+  "title": "Audit",
+  "menus": [
+    {
+      "menuId": "leftnav",
+      "menuItemURL": "audit",
+      "menuItemTitle": "Audit",
+      "moduleId": "audit",
+      "iconClass": "fa fa-bolt",
+      "position": 140
+    }
+  ],
+  "components": [
+    {
+      "id": "auditselection",
+      "title": "Audit",
+      "enabled": true,
+      "auditDropdown": [
         {
-            "menuId": "leftnav",
-            "menuItemURL": "audit",
-            "menuItemTitle": "Audit",
-            "iconClass": "fa fa-bolt",
-            "position": 140
-        }
-        
-    ],
-    "components": [
-        {
-            "id": "auditselection",
-            "title": "Audit",
-            "enabled": true,
-            "auditDropdown": [
-                {"id": "", "name": "ALL"},
-                {"id": "CASE", "name": "Case Files"},
-                {"id": "COMPLAINT", "name": "Complaints"},
-                {"id": "TASK", "name": "Tasks"},
-                {"id": "FILE", "name": "Files"}
-            ]
+          "id": "",
+          "name": "ALL"
         },
         {
-            "id": "datepickers",
-            "title": "Audits",
-            "enabled": true
+          "id": "CASE",
+          "name": "Case Files"
+        },
+        {
+          "id": "COMPLAINT",
+          "name": "Complaints"
+        },
+        {
+          "id": "TASK",
+          "name": "Tasks"
+        },
+        {
+          "id": "FILE",
+          "name": "Files"
         }
-   ]
+      ]
+    },
+    {
+      "id": "datepickers",
+      "title": "Audits",
+      "enabled": true
+    }
+  ]
 }

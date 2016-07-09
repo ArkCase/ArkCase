@@ -33,7 +33,8 @@ import static org.junit.Assert.*;
 @ContextConfiguration(locations = {
         "/spring/spring-mule-activemq.xml",
         "/spring/spring-mule-activemq-test.xml",
-        "/spring/spring-library-property-file-manager.xml"
+        "/spring/spring-library-property-file-manager.xml",
+        "/spring/spring-library-acm-encryption.xml"
 })
 /**
  * To see ActiveMQ flow control happening in this test, ensure the queue memory limit is set to "1 mb" in the
