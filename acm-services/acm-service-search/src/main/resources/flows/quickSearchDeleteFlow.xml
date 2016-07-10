@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+<mule xmlns:https="http://www.mulesoft.org/schema/mule/https"
       xmlns="http://www.mulesoft.org/schema/mule/core"
       xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
       xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
@@ -9,19 +9,19 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/https/current/mule-https.xsd
 http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
 http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
 
-    <http:endpoint name="http.quickSearchDelete"
-                   address="http://${solr.host}:${solr.port}/${solr.contextRoot}/${solr.quicksearch.core}/${solr.updateHandler}"
+    <https:endpoint name="quickSearchDeleteSolrEndpoint"
+                   address="https://${solr.host}:${solr.port}/${solr.contextRoot}/${solr.quicksearch.core}/${solr.updateHandler}"
                    contentType="application/x-www-form-urlencoded; charset=UTF-8"
                    mimeType="application/json"
                    encoding="UTF-8"
                    method="POST"
                    exchange-pattern="request-response"
                    doc:name="Issue a quick search document delete in SOLR">
-    </http:endpoint>
+    </https:endpoint>
 
     <flow name="quickSearchDelete" doc:name="Quick Search Delete Flow">
         <vm:inbound-endpoint
@@ -40,11 +40,11 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 
         <logger category="com.armedia.acm.plugins.search" level="DEBUG" />
 
-        <http:outbound-endpoint ref="http.quickSearchDelete">
+        <https:outbound-endpoint ref="quickSearchDeleteSolrEndpoint">
             <response>
                 <object-to-string-transformer/>
             </response>
-        </http:outbound-endpoint>
+        </https:outbound-endpoint>
 
     </flow>
 
