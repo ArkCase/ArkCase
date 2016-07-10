@@ -9,6 +9,7 @@
       "menuId": "leftnav",
       "menuItemURL": "cases.main",
       "menuItemTitle": "Case Files",
+      "moduleId": "case",
       "iconClass": "fa fa-folder",
       "position": 50
     },
@@ -16,6 +17,7 @@
       "menuId": "topbar",
       "menuItemURL": "frevvo.new-case",
       "menuItemTitle": "Case",
+      "moduleId": "case",
       "iconClass": "fa fa-folder",
       "position": 20
     }
@@ -1034,8 +1036,8 @@
           "name": "tally",
           "displayName": "cases.comp.cost.table.columns.tally",
           "headerCellFilter": "translate",
-          "cellFilter" : "currency",
-          "cellClass" : "text-right"
+          "cellFilter": "currency",
+          "cellClass": "text-right"
         },
         {
           "name": "modified",
@@ -1116,7 +1118,7 @@
         },
         {
           "name": "title_parseable",
-		  "sortField": "title_parseable_lcs",
+          "sortField": "title_parseable_lcs",
           "displayName": "cases.comp.merge.table.columns.title",
           "headerCellFilter": "translate",
           "width": 75
@@ -1178,7 +1180,7 @@
         },
         {
           "name": "title_parseable",
-		  "sortField": "title_parseable_lcs",
+          "sortField": "title_parseable_lcs",
           "displayName": "cases.comp.addreference.grid.columns.title",
           "headerCellFilter": "translate"
         },

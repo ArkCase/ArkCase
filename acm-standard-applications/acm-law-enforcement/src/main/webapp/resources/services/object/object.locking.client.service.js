@@ -68,14 +68,15 @@ angular.module('services').factory('Object.LockingService', ['$resource', '$tran
          *
          * @returns {Object} Object returned by $resource
          */
-        Service.lockObject = function (objectId, objectType, lockType) {
+        Service.lockObject = function (objectId, objectType, lockType, lockInDB) {
 
             return Util.serviceCall({
                 service: Service._lockObject
                 , param: {
                     objectId: objectId,
                     objectType: objectType,
-                    lockType: lockType
+                    lockType: lockType,
+                    lockInDB: lockInDB
                 }
                 , data: {}
                 , onSuccess: function (data) {

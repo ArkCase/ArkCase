@@ -8,6 +8,7 @@
       "menuId": "leftnav",
       "menuItemURL": "complaints.main",
       "menuItemTitle": "Complaints",
+      "moduleId": "complaint",
       "iconClass": "fa fa-exclamation-triangle",
       "position": 40
     },
@@ -15,6 +16,7 @@
       "menuId": "topbar",
       "menuItemURL": "frevvo.new-complaint",
       "menuItemTitle": "Complaint",
+      "moduleId": "complaint",
       "iconClass": "fa fa-exclamation-triangle",
       "position": 10
     }
@@ -349,7 +351,7 @@
             {
               "name": "title",
               "field": "title_parseable",
-			  "sortField": "title_parseable_lcs",
+              "sortField": "title_parseable_lcs",
               "displayName": "complaints.comp.tasks.table.columns.title",
               "headerCellFilter": "translate",
               "cellTemplate": "<div ng-bind-html='row.entity.title_parseable' title='{{row.entity.title_parseable}}' class='ui-grid-cell-contents'></div>"
@@ -915,7 +917,7 @@
         {
           "name": "title",
           "field": "title_parseable",
-		  "sortField": "title_parseable_lcs",
+          "sortField": "title_parseable_lcs",
           "displayName": "complaints.comp.tasks.table.columns.title",
           "headerCellFilter": "translate",
           "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.title_parseable}}</a>"
@@ -1116,8 +1118,8 @@
           "name": "tally",
           "displayName": "complaints.comp.cost.table.columns.tally",
           "headerCellFilter": "translate",
-          "cellFilter" : "currency",
-          "cellClass" : "text-right"
+          "cellFilter": "currency",
+          "cellClass": "text-right"
         },
         {
           "name": "modified",
@@ -1208,7 +1210,7 @@
         },
         {
           "name": "title_parseable",
-		  "sortField": "title_parseable_lcs",
+          "sortField": "title_parseable_lcs",
           "displayName": "complaints.comp.addreference.grid.columns.title",
           "headerCellFilter": "translate"
         },
