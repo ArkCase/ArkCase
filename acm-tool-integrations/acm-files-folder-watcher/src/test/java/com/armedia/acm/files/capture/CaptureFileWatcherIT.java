@@ -1,11 +1,5 @@
 package com.armedia.acm.files.capture;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-
 import org.apache.commons.vfs2.FileObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +13,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.FileCopyUtils;
 
-import com.armedia.acm.files.capture.CaptureFileEventListener;
+import java.io.File;
+
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -27,8 +23,9 @@ import com.armedia.acm.files.capture.CaptureFileEventListener;
         "/spring-test-config-file-watcher.xml"
         // this is needed because all beans are loaded in spring-library-folder-watcher.xml and it depends on this, also need access to
         // capture.properties properties
-        ,"/spring/spring-library-property-file-manager.xml"       
-        })
+        , "/spring/spring-library-property-file-manager.xml"
+        , "/spring/spring-library-acm-encryption.xml"
+})
 public class CaptureFileWatcherIT
 {
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -45,7 +42,7 @@ public class CaptureFileWatcherIT
     @Test
     public void captureFolderMonitor_allowed() throws Exception
     {
-        if ( !captureFolder.exists() )
+        if (!captureFolder.exists())
         {
             captureFolder.createFolder();
         }
@@ -73,11 +70,11 @@ public class CaptureFileWatcherIT
         // expect listener to get an event here
         assertEquals(originalAdded + 1, listener.getAddedCount());
     }
-    
+
     @Test
     public void captureFolderMonitor_notallowed() throws Exception
     {
-        if ( !captureFolder.exists() )
+        if (!captureFolder.exists())
         {
             captureFolder.createFolder();
         }

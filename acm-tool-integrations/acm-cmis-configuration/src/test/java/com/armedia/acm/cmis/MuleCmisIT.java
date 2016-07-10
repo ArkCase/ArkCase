@@ -13,7 +13,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "/spring/spring-library-mule-context-manager.xml",
-        "/spring/spring-library-property-file-manager.xml"
+        "/spring/spring-library-property-file-manager.xml",
+        "/spring/spring-library-acm-encryption.xml"
 })
 public class MuleCmisIT
 {
@@ -31,7 +32,6 @@ public class MuleCmisIT
         MuleMessage reply = muleContextManager.send("vm://createFolder.in", path, null);
 
         log.info("Reply payload of type: " + reply.getPayload().getClass().getName());
-
 
 
     }
