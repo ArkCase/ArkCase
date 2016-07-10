@@ -49,7 +49,7 @@ angular.module("services").factory("WebSocketsListener", ['$q', '$timeout', 'Web
             //console.log('initialize');
             socket.client = new SockJS(service.SOCKET_URL);
             socket.stomp = Stomp.over(socket.client);
-            //socket.stomp.debug = null; //for those who want to disable the annoying debug messages
+            socket.stomp.debug = null; //for those who want to disable the annoying debug messages
             //connect() with headers and success callback
             socket.stomp.connect({}, startListener);
             socket.stomp.onclose = reconnect;

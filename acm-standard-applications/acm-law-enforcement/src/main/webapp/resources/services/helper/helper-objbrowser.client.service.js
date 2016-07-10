@@ -195,9 +195,16 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
 
                 ConfigService.getModuleConfig(that.moduleId).then(function (moduleConfig) {
                     that.scope.config = moduleConfig;
-                    if (that.initComponentLinks) {  //if initComponentLinks is not define, use initComponentLinksDefault but postpone after objectInfo retrieved
-                        that.scope.componentLinks = that.initComponentLinks(moduleConfig);
+                    //xxxx
+                    //if (that.initComponentLinks) {  //if initComponentLinks is not define, use initComponentLinksDefault but postpone after objectInfo retrieved
+                    //    that.scope.componentLinks = that.initComponentLinks(moduleConfig);
+                    //}
+
+                    if (!that.initComponentLinks) {
+                        that.initComponentLinks = that.initComponentLinksDefault;
                     }
+                    that.initComponentLinks(moduleConfig);
+
                     that.scope.linksShown = Util.goodValue(moduleConfig.initialLinksShown, true);
                     return moduleConfig;
                 });
@@ -268,7 +275,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
 
                 that.scope.$on('req-select-object', function (e, selectedObject) {
                     that.scope.$broadcast('object-selected', selectedObject);
-
+var a1 = that.scope.componentLinks;
                     var leadComponent = selectedObject.leadComponent;
                     if (!leadComponent) {
                         var components = Util.goodArray(selectedObject.components);
@@ -279,11 +286,17 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     var objectId = Util.goodMapValue(selectedObject, "nodeId", null);
                     var objectType = Util.goodMapValue(selectedObject, "nodeType", null);
                     Service.updateObjectSetting(that.moduleId, that.scope.activeLinkId, objectId, objectType);
-                    if (that.selectComponentLinks && that.initComponentLinks) {     //initComponentLinks serves as flag to indicate initComponentLinks() has called
+                    //xxxx
+                    //if (that.selectComponentLinks && that.initComponentLinks) {     //initComponentLinks serves as flag to indicate initComponentLinks() has called
+                    //    that.scope.componentLinks = that.selectComponentLinks(selectedObject);
+                    //}
+                    if (that.selectComponentLinks) {
                         that.scope.componentLinks = that.selectComponentLinks(selectedObject);
                     }
-
+var a2 = that.scope.componentLinks;
                     loadObject(objectId);
+var a4 = that.scope.componentLinks;
+                    var z = 1;
                 });
 
                 ServCommService.handleResponse(that.scope);
@@ -304,10 +317,11 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                                 that.scope.progressMsg = null;
                                 that.scope.objectInfo = objectInfo;
 
-                                if (!that.initComponentLinks) {
-                                    that.initComponentLinks = that.initComponentLinksDefault;
-                                }
-                                that.scope.componentLinks = that.initComponentLinks(that.scope.config);
+                                //xxxx
+                                //if (!that.initComponentLinks) {
+                                //    that.initComponentLinks = that.initComponentLinksDefault;
+                                //}
+                                //that.scope.componentLinks = that.initComponentLinks(that.scope.config);
 
                                 that.scope.$broadcast('object-updated', objectInfo);
 
