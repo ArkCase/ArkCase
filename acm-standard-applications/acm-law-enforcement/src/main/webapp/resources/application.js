@@ -74,7 +74,7 @@ angular
                             // return to the same page after login
                             // Spring security on the server
                             // remembers the last requested page
-                            var redirectUrl = response.headers()['concurrent_session_redirect'];
+                            var redirectUrl = response.headers()['acm_concurrent_session_redirect'];
                             if(redirectUrl){
                                 $window.location.href=redirectUrl;
                                 return ($q.reject(null));
