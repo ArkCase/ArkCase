@@ -60,7 +60,7 @@
     <bean id="contentNegotiationManager"
           class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
         <property name="defaultContentType" value="application/json"/>
-        <property name="favorPathExtension" value="true"/>
+        <property name="favorPathExtension" value="false"/>
         <property name="mediaTypes">
             <props>
                 <prop key="xml">text/xml</prop>
