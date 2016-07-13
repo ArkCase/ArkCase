@@ -9,6 +9,7 @@ import com.armedia.acm.services.users.model.AcmUserRolePrimaryKey;
 import com.armedia.acm.services.users.model.RoleType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -47,6 +48,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         return user;
     }
 
+    @Cacheable(value = "quiet-user-cache")
     public AcmUser quietFindByUserId(String userId)
     {
         if (userId == null || userId.trim().isEmpty())
