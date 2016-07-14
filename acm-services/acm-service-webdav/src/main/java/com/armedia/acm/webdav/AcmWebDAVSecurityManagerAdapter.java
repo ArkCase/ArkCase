@@ -1,13 +1,14 @@
 package com.armedia.acm.webdav;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import io.milton.http.Auth;
 import io.milton.http.Request;
 import io.milton.http.Request.Method;
 import io.milton.http.fs.NullSecurityManager;
 import io.milton.http.http11.auth.DigestResponse;
 import io.milton.resource.Resource;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity
