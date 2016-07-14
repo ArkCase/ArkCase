@@ -22,6 +22,11 @@
             <artifactId>acm-service-data</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-users</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <!-- logging -->
         <dependency>
