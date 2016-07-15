@@ -1,0 +1,27 @@
+package com.armedia.acm.services.users.model.ldap;
+
+import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.junit.Assert.*;
+
+public class MapperUtilsTest
+{
+    @Test
+    public void arrayToSetMembers()
+    {
+        String[] array = new String[]{
+                "CN=John Doe,OU=Promotions,OU=Marketing,DC=noam,dc=reskit,dc=com",
+                "CN=Jane Doe ,OU=Promotions,OU=Marketing,DC=noam,dc=reskit,dc=com",
+        };
+        Set<String> expected = new HashSet<>(Arrays.asList("JOHN DOE", "JANE DOE"));
+        Set<String> actual = MapperUtils.arrayToSet(array, MapperUtils.MEMBER_TO_COMMON_NAME_UPPERCASE);
+
+        assertThat("Sets should be equal", actual, containsInAnyOrder(expected.toArray()));
+    }
+
+}
