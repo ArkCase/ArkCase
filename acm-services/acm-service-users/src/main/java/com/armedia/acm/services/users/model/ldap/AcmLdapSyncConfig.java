@@ -14,6 +14,8 @@ public class AcmLdapSyncConfig extends AcmLdapConfig
     private String userDomain;
     private String userSearchBase;
     private String userSearchFilter;
+    private String allUsersFilter;
+    private String allUsersSearchBase;
     private String groupSearchFilterForUser;
 
     public Map<String, String> getRoleToGroupMap()
@@ -94,5 +96,25 @@ public class AcmLdapSyncConfig extends AcmLdapConfig
     public void setGroupSearchFilterForUser(String groupSearchFilterForUser)
     {
         this.groupSearchFilterForUser = groupSearchFilterForUser;
+    }
+
+    public String getAllUsersFilter()
+    {
+        return allUsersFilter;
+    }
+
+    public void setAllUsersFilter(String allUsersFilter)
+    {
+        this.allUsersFilter = allUsersFilter;
+    }
+
+    public String getAllUsersSearchBase()
+    {
+        return allUsersSearchBase;
+    }
+
+    public void setAllUsersSearchBase(String allUsersSearchBase)
+    {
+        this.allUsersSearchBase = allUsersSearchBase;
     }
 }

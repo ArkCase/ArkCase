@@ -3,15 +3,16 @@ package com.armedia.acm.services.users.dao.ldap;
 import com.armedia.acm.services.users.model.AcmLdapEntity;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.LdapGroup;
+import com.armedia.acm.services.users.model.ldap.AcmGroupContextMapper;
 import com.armedia.acm.services.users.model.ldap.AcmLdapConfig;
 import com.armedia.acm.services.users.model.ldap.AcmLdapEntityContextMapper;
+import com.armedia.acm.services.users.model.ldap.AcmLdapEntitySimpleContextMapper;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
+import com.armedia.acm.services.users.model.ldap.AcmUserGroupsContextMapper;
 import com.armedia.acm.services.users.model.ldap.GroupMembersContextMapper;
 import com.armedia.acm.services.users.model.ldap.SimpleAuthenticationSource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.AuthenticationSource;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
@@ -29,7 +30,13 @@ public class SpringLdapDao
 
     private final GroupMembersContextMapper groupMembersContextMapper = new GroupMembersContextMapper();
 
+    private AcmGroupContextMapper acmGroupContextMapper;
+
     private AcmLdapEntityContextMapper mapper;
+
+    private AcmLdapEntitySimpleContextMapper simpleContextMapper;
+
+    private AcmUserGroupsContextMapper userGroupsContextMapper;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -87,12 +94,46 @@ public class SpringLdapDao
         return retval;
     }
 
+    public List<AcmUser> findUsers(LdapTemplate template, final AcmLdapSyncConfig syncConfig)
+    {
+        return findUsers(template, syncConfig, null);
+    }
+
+    public List<AcmUser> findUsers(LdapTemplate template, final AcmLdapSyncConfig syncConfig, String[] attributes)
+    {
+        SearchControls searchControls = new SearchControls();
+        searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+        if (attributes != null)
+        {
+            searchControls.setReturningAttributes(attributes);
+        }
+        userGroupsContextMapper.setUserIdAttributeName(syncConfig.getUserIdAttributeName());
+        userGroupsContextMapper.setMailAttributeName(syncConfig.getMailAttributeName());
+        String searchFilter = syncConfig.getAllUsersFilter();
+        String searchBase = syncConfig.getAllUsersSearchBase();
+        String[] bases = searchBase.split("\\|");
+        List<AcmUser> acmUsers = new ArrayList<>();
+        for (String base : bases)
+        {
+            acmUsers.addAll(template.search(base, searchFilter, searchControls, userGroupsContextMapper));
+        }
+        return acmUsers;
+    }
+
+    public AcmLdapEntity lookupUser(LdapTemplate ldapTemplate, final AcmLdapSyncConfig syncConfig, String dn)
+    {
+        simpleContextMapper.setUserIdAttributeName(syncConfig.getUserIdAttributeName());
+        simpleContextMapper.setMailAttributeName(syncConfig.getMailAttributeName());
+        return (AcmLdapEntity) ldapTemplate.lookup(dn, simpleContextMapper);
+    }
+
+
     public List<LdapGroup> findGroups(LdapTemplate template, AcmLdapSyncConfig config)
     {
         List<LdapGroup> groups = template.search(
                 config.getGroupSearchBase(),
                 config.getGroupSearchFilter(),
-                groupMembersContextMapper);
+                acmGroupContextMapper);
         return groups;
     }
 
@@ -155,5 +196,35 @@ public class SpringLdapDao
     public void setMapper(AcmLdapEntityContextMapper mapper)
     {
         this.mapper = mapper;
+    }
+
+    public AcmLdapEntitySimpleContextMapper getSimpleContextMapper()
+    {
+        return simpleContextMapper;
+    }
+
+    public void setSimpleContextMapper(AcmLdapEntitySimpleContextMapper simpleContextMapper)
+    {
+        this.simpleContextMapper = simpleContextMapper;
+    }
+
+    public AcmUserGroupsContextMapper getUserGroupsContextMapper()
+    {
+        return userGroupsContextMapper;
+    }
+
+    public void setUserGroupsContextMapper(AcmUserGroupsContextMapper userGroupsContextMapper)
+    {
+        this.userGroupsContextMapper = userGroupsContextMapper;
+    }
+
+    public AcmGroupContextMapper getAcmGroupContextMapper()
+    {
+        return acmGroupContextMapper;
+    }
+
+    public void setAcmGroupContextMapper(AcmGroupContextMapper acmGroupContextMapper)
+    {
+        this.acmGroupContextMapper = acmGroupContextMapper;
     }
 }

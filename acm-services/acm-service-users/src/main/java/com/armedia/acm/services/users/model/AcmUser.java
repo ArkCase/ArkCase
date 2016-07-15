@@ -23,7 +23,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "ACM_USER")
-public class AcmUser implements Serializable, AcmLdapEntity
+public class AcmUser implements Serializable, AcmLdapEntity, AcmLdapUser
 {
     private static final long serialVersionUID = 3399640646540732944L;
 
@@ -65,6 +65,9 @@ public class AcmUser implements Serializable, AcmLdapEntity
 
     @Transient
     private String distinguishedName;
+
+    @Transient
+    private Set<String> ldapGroups = new HashSet<>();
 
     @PrePersist
     public void preInsert()
@@ -292,5 +295,17 @@ public class AcmUser implements Serializable, AcmLdapEntity
         }
         
         return user.getUserId().equals(getUserId());
+    }
+
+    @Override
+    @JsonIgnore
+    public Set<String> getLdapGroups()
+    {
+        return ldapGroups;
+    }
+
+    public void setLdapGroups(Set<String> ldapGroups)
+    {
+        this.ldapGroups = ldapGroups;
     }
 }
