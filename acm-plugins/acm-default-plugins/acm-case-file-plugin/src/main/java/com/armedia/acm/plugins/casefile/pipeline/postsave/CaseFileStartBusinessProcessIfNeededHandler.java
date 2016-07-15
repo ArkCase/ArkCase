@@ -47,7 +47,9 @@ public class CaseFileStartBusinessProcessIfNeededHandler implements PipelineHand
             processVaribales.put("OBJECT_TYPE", "CASE_FILE");
             processVaribales.put("OBJECT_ID", entity.getId());
 
-            startBusinessProcessService.startBusinessProcess("foia-extension-intake-process", processVaribales);
+            String processName = result.getProcessName();
+
+            startBusinessProcessService.startBusinessProcess(processName, processVaribales);
         }
     }
 

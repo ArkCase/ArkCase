@@ -4,5 +4,5 @@ import java.util.Map;
 
 public interface StartBusinessProcessService
 {
-    void startBusinessProcess(String processName, Map<String, Object> processVaribales);
+    void startBusinessProcess(String processName, Map<String, Object> processVariables);
 }
