@@ -17,6 +17,9 @@ public class AcmLdapSyncConfig extends AcmLdapConfig
     private String allUsersFilter;
     private String allUsersSearchBase;
     private String groupSearchFilterForUser;
+    private int syncPageSize = 500;
+    private String allUsersPageFilter;
+    private String groupSearchPageFilter;
 
     public Map<String, String> getRoleToGroupMap()
     {
@@ -116,5 +119,35 @@ public class AcmLdapSyncConfig extends AcmLdapConfig
     public void setAllUsersSearchBase(String allUsersSearchBase)
     {
         this.allUsersSearchBase = allUsersSearchBase;
+    }
+
+    public int getSyncPageSize()
+    {
+        return syncPageSize;
+    }
+
+    public void setSyncPageSize(int syncPageSize)
+    {
+        this.syncPageSize = syncPageSize;
+    }
+
+    public String getAllUsersPageFilter()
+    {
+        return allUsersPageFilter;
+    }
+
+    public void setAllUsersPageFilter(String allUsersPageFilter)
+    {
+        this.allUsersPageFilter = allUsersPageFilter;
+    }
+
+    public String getGroupSearchPageFilter()
+    {
+        return groupSearchPageFilter;
+    }
+
+    public void setGroupSearchPageFilter(String groupSearchPageFilter)
+    {
+        this.groupSearchPageFilter = groupSearchPageFilter;
     }
 }

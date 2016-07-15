@@ -68,7 +68,11 @@ public class LdapSyncService
         LdapTemplate template = getLdapDao().buildLdapTemplate(getLdapSyncConfig());
 
         List<AcmUser> ldapUsers = ldapDao.findUsers(template, getLdapSyncConfig());
+
         List<LdapGroup> ldapGroups = ldapDao.findGroups(template, getLdapSyncConfig());
+
+        log.trace("Users: {}", ldapUsers == null ? " null " : ldapUsers.size());
+        log.trace("Groups: {}", ldapGroups == null ? " null " : ldapGroups.size());
         ldapUsers = filterUsersForKnownGroups(ldapUsers, ldapGroups);
         filterUserGroups(ldapUsers, ldapGroups);
         filterParentGroups(ldapGroups);
@@ -102,7 +106,8 @@ public class LdapSyncService
         for (AcmUser user : ldapUsers)
         {
             user.getLdapGroups()
-                    .forEach(ldapGroup -> {
+                    .forEach(ldapGroup ->
+                    {
                         // Add user to the group
                         log.debug("Add user '{}' to group '{}'", user.getDistinguishedName(), ldapGroup);
                         List<AcmUser> users = usersByLdapGroup.get(ldapGroup);
@@ -160,11 +165,12 @@ public class LdapSyncService
     /**
      * Retain only users that are relevant i.e. users who are member of synced LDAP groups
      *
-     * @param ldapUsers All LDAP users
+     * @param ldapUsers  All LDAP users
      * @param ldapGroups All LDAP groups
      */
     public List<AcmUser> filterUsersForKnownGroups(List<AcmUser> ldapUsers, List<LdapGroup> ldapGroups)
     {
+
         Set<String> ldapGroupNames = ldapGroups.stream()
                 .map(LdapGroup::getGroupName)
                 .collect(Collectors.toSet());
@@ -207,7 +213,8 @@ public class LdapSyncService
         Map<String, List<String>> groupToRoleMap = reverseRoleToGroupMap(roleToGroup);
 
         // for each role in group find all users in that group, than connect users to role
-        ldapGroups.stream().filter(group -> groupToRoleMap.containsKey(group)).forEach(group -> {
+        ldapGroups.stream().filter(group -> groupToRoleMap.containsKey(group)).forEach(group ->
+        {
             log.debug("Group '{}' has roles: {} ", group, groupToRoleMap.get(group));
             for (String applicationRole : groupToRoleMap.get(group))
             {
@@ -254,7 +261,8 @@ public class LdapSyncService
 
         if (groups != null && !groups.isEmpty())
         {
-            groups.stream().forEach(group -> {
+            groups.stream().forEach(group ->
+            {
                 String groupName = group.getGroupName().toUpperCase();
                 addUsersToMap(usersByLdapGroup, groupName, Arrays.asList(user));
                 addUsersToApplicationRole(usersByApplicationRole, groupToRoleMap, Arrays.asList(user), groupName);

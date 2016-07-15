@@ -24,25 +24,29 @@ public class AcmUserGroupsContextMapper implements ContextMapper
     {
         DirContextAdapter adapter = (DirContextAdapter) ctx;
 
-        String fullName = adapter.getStringAttribute("cn");
-
-        // exclude AD disabled users
-        if (adapter.attributeExists("userAccountControl"))
-        {
-            if (isUserDisabled(adapter))
-            {
-                log.info("User '{}' is disabled and won't be synced", fullName);
-                return null;
-            }
-        }
         AcmUser user = setLdapUser(new AcmUser(), adapter);
-        log.debug("Retrieved user '{}'", user.getDistinguishedName());
+        log.trace("Retrieved user '{}'", user.getDistinguishedName());
         return user;
     }
 
     private AcmUser setLdapUser(AcmUser user, DirContextAdapter adapter)
     {
-        user.setFullName(adapter.getStringAttribute("cn"));
+
+
+        String fullName = adapter.getStringAttribute("cn");
+
+        user.setFullName(fullName);
+
+        // because of how the LDAP query paging works, we can no longer return null for the disabled accounts.
+        // so we return them, but mark them DISABLED.  The DAO will filter them.
+        if (adapter.attributeExists("userAccountControl"))
+        {
+            if (isUserDisabled(adapter))
+            {
+                log.debug("User '{}' is disabled and won't be synced", fullName);
+                user.setUserState("DISABLED");
+            }
+        }
 
         if (adapter.attributeExists("sn"))
         {
