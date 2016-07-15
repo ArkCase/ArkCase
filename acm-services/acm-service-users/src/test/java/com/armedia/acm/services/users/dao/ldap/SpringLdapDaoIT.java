@@ -95,8 +95,9 @@ public class SpringLdapDaoIT
         long time = System.currentTimeMillis() - start;
         log.debug("Time: {}ms", time);
         log.debug("Result: {}", result.size());
-        result.forEach(acmUser -> {
-            log.debug("AcmUser: {} -> {}", acmUser.getDistinguishedName(), acmUser.getLdapGroups());
+        result.forEach(acmUser ->
+        {
+            log.trace("AcmUser: {} -> {}", acmUser.getDistinguishedName(), acmUser.getLdapGroups());
         });
     }
 
@@ -109,8 +110,9 @@ public class SpringLdapDaoIT
         long time = System.currentTimeMillis() - start;
         log.debug("Time: {}ms", time);
         log.debug("Result: {}", result.size());
-        result.forEach(ldapGroup -> {
-            log.debug("Ldap Group: {} -> {}", ldapGroup.getGroupName(), ldapGroup.getMemberOfGroups());
+        result.forEach(ldapGroup ->
+        {
+            log.trace("Ldap Group: {} -> {}", ldapGroup.getGroupName(), ldapGroup.getMemberOfGroups());
         });
     }
 
