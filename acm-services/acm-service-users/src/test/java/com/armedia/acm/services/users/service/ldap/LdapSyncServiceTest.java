@@ -1,8 +1,6 @@
 package com.armedia.acm.services.users.service.ldap;
 
 import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
-import com.armedia.acm.services.users.model.AcmLdapEntity;
-import com.armedia.acm.services.users.model.AcmRole;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.LdapGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
@@ -27,7 +25,7 @@ import static org.easymock.EasyMock.expect;
 import static org.hamcrest.CoreMatchers.everyItem;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.isIn;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 /**
  * Created by armdev on 7/3/14.
@@ -53,167 +51,6 @@ public class LdapSyncServiceTest extends EasyMockSupport
 
         unit = new LdapSyncService();
         unit.setLdapDao(mockLdapDao);
-    }
-
-    @Test
-    public void reverseRoleToGroupMap_multipleGroupsPerRole()
-    {
-        Map<String, String> roleToGroups = new HashMap<>();
-        roleToGroups.put("ROLE ONE", "GROUP A,GROUP B");
-        roleToGroups.put("ROLE TWO", "GROUP B, GROUP C ");
-        roleToGroups.put("ROLE THREE", "GROUP D");
-
-        Map<String, List<String>> groupToRoles = unit.reverseRoleToGroupMap(roleToGroups);
-
-        assertNotNull(groupToRoles.get("GROUP A"));
-        assertNotNull(groupToRoles.get("GROUP B"));
-        assertNotNull(groupToRoles.get("GROUP C"));
-        assertNotNull(groupToRoles.get("GROUP D"));
-
-        assertEquals(1, groupToRoles.get("GROUP A").size());
-        assertEquals(2, groupToRoles.get("GROUP B").size());
-        assertEquals(1, groupToRoles.get("GROUP C").size());
-        assertEquals(1, groupToRoles.get("GROUP D").size());
-
-        assertEquals("ROLE ONE", groupToRoles.get("GROUP A").get(0));
-        assertEquals("ROLE TWO", groupToRoles.get("GROUP C").get(0));
-        assertEquals("ROLE THREE", groupToRoles.get("GROUP D").get(0));
-
-        assertTrue(groupToRoles.get("GROUP B").contains("ROLE ONE"));
-        assertTrue(groupToRoles.get("GROUP B").contains("ROLE TWO"));
-
-        assertFalse(groupToRoles.containsKey("GROUP A,GROUP B"));
-        assertFalse(groupToRoles.containsKey("GROUP B, GROUP C "));
-
-    }
-
-    @Test
-    public void queryLdapUsers_applicationRoles_differentCases()
-    {
-        Map<String, String> rolesToGroupMap = new HashMap<>();
-        String groupOne = "GroupOne";
-        String roleOne = "RoleOne";
-        rolesToGroupMap.put(roleOne, groupOne);
-
-        AcmLdapSyncConfig config = new AcmLdapSyncConfig();
-        config.setRoleToGroupMap(rolesToGroupMap);
-
-        String directoryName = "directoryName";
-
-        Set<String> roles = new HashSet<>();
-        List<AcmUser> users = new ArrayList<>();
-        Map<String, List<AcmUser>> usersByApplicationRole = new HashMap<>();
-        Map<String, List<AcmUser>> usersByLdapGroup = new HashMap<>();
-        Map<String, String> childParentPairs = new HashMap<>();
-
-        String userDnOne = "dn1";
-        String userDnTwo = "dn2";
-        String[] memberDns = {userDnOne, userDnTwo};
-        LdapGroup group = new LdapGroup();
-        group.setGroupName(groupOne.toLowerCase());
-        group.setMemberDistinguishedNames(memberDns);
-
-        List<LdapGroup> groups = Arrays.asList(group);
-
-        AcmLdapEntity userOne = new AcmUser();
-        userOne.setDistinguishedName(userDnOne);
-
-        AcmLdapEntity userTwo = new AcmUser();
-        userTwo.setDistinguishedName(userDnTwo);
-
-        List<AcmLdapEntity> entities = Arrays.asList(userOne, userTwo);
-
-        unit.setLdapSyncConfig(new AcmLdapSyncConfig());
-
-        expect(mockLdapDao.buildLdapTemplate(config)).andReturn(mockLdapTemplate);
-        expect(mockLdapDao.findGroups(mockLdapTemplate, config)).andReturn(groups);
-        expect(mockLdapDao.findGroupMembers(mockLdapTemplate, config, group)).andReturn(entities);
-
-        replayAll();
-
-        unit.queryLdapUsers(config, directoryName, roles, users, usersByApplicationRole, usersByLdapGroup, childParentPairs);
-
-        verifyAll();
-
-        assertEquals(1, usersByApplicationRole.size());
-        assertEquals(1, usersByLdapGroup.size());
-
-    }
-
-    @Test
-    public void queryLdapUsers_nestedGroups()
-    {
-        Map<String, String> rolesToGroupMap = new HashMap<>();
-        String groupName = "GROUP";
-        rolesToGroupMap.put("ROLE", groupName);
-        AcmLdapSyncConfig config = new AcmLdapSyncConfig();
-        config.setRoleToGroupMap(rolesToGroupMap);
-
-        String directoryName = "directoryName";
-
-        Set<String> roles = new HashSet<>();
-        List<AcmUser> users = new ArrayList<>();
-        Map<String, List<AcmUser>> usersByApplicationRole = new HashMap<>();
-        Map<String, List<AcmUser>> usersByLdapGroup = new HashMap<>();
-        Map<String, String> childParentPairs = new HashMap<>();
-
-        String userDistinguishedName = "dn1";
-        String groupDistinguishedName = "dn2";
-        String[] memberDns = {userDistinguishedName, groupDistinguishedName};
-        LdapGroup group = new LdapGroup();
-        group.setGroupName(groupName);
-        group.setMemberDistinguishedNames(memberDns);
-
-        List<LdapGroup> groups = new ArrayList<>();
-        groups.add(group);
-
-        AcmLdapEntity user = new AcmUser();
-        user.setDistinguishedName(userDistinguishedName);
-
-        AcmLdapEntity role = new AcmRole();
-        role.setDistinguishedName(groupDistinguishedName);
-
-        List<AcmLdapEntity> entities = Arrays.asList(user, role);
-
-        unit.setLdapSyncConfig(new AcmLdapSyncConfig());
-
-        expect(mockLdapDao.buildLdapTemplate(config)).andReturn(mockLdapTemplate);
-        expect(mockLdapDao.findGroups(mockLdapTemplate, config)).andReturn(groups);
-        expect(mockLdapDao.findGroupMembers(mockLdapTemplate, config, group)).andReturn(entities);
-
-        LdapGroup nestedGroup = new LdapGroup();
-        expect(mockLdapDao.findGroup(mockLdapTemplate, config, groupDistinguishedName)).andReturn(nestedGroup);
-
-        List<AcmLdapEntity> nestedUsers = new ArrayList<>();
-        AcmUser user1 = new AcmUser();
-        AcmUser user2 = new AcmUser();
-        AcmRole role1 = new AcmRole();
-        role1.setDistinguishedName("dnRole1");
-        nestedUsers.add(user1);
-        nestedUsers.add(user2);
-        nestedUsers.add(role1);
-
-        expect(mockLdapDao.findGroupMembers(mockLdapTemplate, config, nestedGroup)).andReturn(nestedUsers);
-
-        expect(mockLdapDao.findGroup(mockLdapTemplate, config, role1.getDistinguishedName())).andReturn(nestedGroup);
-
-        AcmUser user3 = new AcmUser();
-        AcmUser user4 = new AcmUser();
-        List<AcmLdapEntity> secondLevelNestedUsers = new ArrayList<>();
-        secondLevelNestedUsers.add(user3);
-        secondLevelNestedUsers.add(user4);
-
-        expect(mockLdapDao.findGroupMembers(mockLdapTemplate, config, nestedGroup)).andReturn(secondLevelNestedUsers);
-
-        replayAll();
-
-        unit.queryLdapUsers(config, directoryName, roles, users, usersByApplicationRole, usersByLdapGroup, childParentPairs);
-
-        verifyAll();
-
-        assertEquals(5, users.size());
-        assertEquals(1, usersByApplicationRole.size());
-        assertEquals(1, usersByLdapGroup.size());
     }
 
     @Test

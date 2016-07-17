@@ -1,8 +1,6 @@
 package com.armedia.acm.services.users.dao.ldap;
 
-import com.armedia.acm.services.users.model.AcmLdapEntity;
 import com.armedia.acm.services.users.model.LdapGroup;
-import com.armedia.acm.services.users.model.ldap.AcmLdapEntityContextMapper;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;

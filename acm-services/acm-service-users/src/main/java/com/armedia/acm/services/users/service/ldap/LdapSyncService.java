@@ -2,8 +2,6 @@ package com.armedia.acm.services.users.service.ldap;
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
-import com.armedia.acm.services.users.model.AcmLdapEntity;
-import com.armedia.acm.services.users.model.AcmRole;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.LdapGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
@@ -12,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.LdapTemplate;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -84,8 +81,6 @@ public class LdapSyncService
         Map<String, List<AcmUser>> usersByLdapGroup = getUsersByLdapGroup(ldapGroups, ldapUsers);
         Map<String, List<AcmUser>> usersByApplicationRole = getUsersByApplicationRole(usersByLdapGroup);
         Map<String, String> childParentPair = populateGroupParentPairs(ldapGroups);
-
-        // queryLdapUsers(getLdapSyncConfig(), getDirectoryName(), applicationRoles, users, usersByApplicationRole, usersByLdapGroup, childParentPair);
 
         // ldap work is done. now for the database work.
         getLdapSyncDatabaseHelper().updateDatabase(getDirectoryName(), applicationRoles, ldapUsers, usersByApplicationRole, usersByLdapGroup,
@@ -236,164 +231,6 @@ public class LdapSyncService
         return result;
     }
 
-    /**
-     * Try to sync user from LDAP by given username
-     *
-     * @param username - username of the user
-     */
-    public void ldapUserSync(String username)
-    {
-        log.info("Starting sync user [{}] from ldap [{}]", username, getLdapSyncConfig().getLdapUrl());
-
-        getAuditPropertyEntityAdapter().setUserId(getLdapSyncConfig().getAuditUserId());
-
-        LdapTemplate template = getLdapDao().buildLdapTemplate(getLdapSyncConfig());
-        AcmUser user = getLdapDao().findUser(username, template, getLdapSyncConfig());
-
-        Map<String, String> roleToGroup = getLdapSyncConfig().getRoleToGroupMap();
-        Map<String, List<AcmUser>> usersByApplicationRole = new HashMap<>();
-        Map<String, List<AcmUser>> usersByLdapGroup = new HashMap<>();
-        Map<String, String> childParentPair = new HashMap<>();
-
-        Map<String, List<String>> groupToRoleMap = reverseRoleToGroupMap(roleToGroup);
-
-        List<LdapGroup> groups = getLdapDao().findGroupsForUser(user, template, getLdapSyncConfig());
-
-        if (groups != null && !groups.isEmpty())
-        {
-            groups.stream().forEach(group ->
-            {
-                String groupName = group.getGroupName().toUpperCase();
-                addUsersToMap(usersByLdapGroup, groupName, Arrays.asList(user));
-                addUsersToApplicationRole(usersByApplicationRole, groupToRoleMap, Arrays.asList(user), groupName);
-
-                // Here we are interested only for populating "childParentPair"
-                calculateGroupsSubgroupsAndUsers(getLdapSyncConfig(), template, group, childParentPair, new ArrayList<>(), new ArrayList<>());
-            });
-        }
-
-        getLdapSyncDatabaseHelper().updateDatabaseForUser(getDirectoryName(), user, usersByApplicationRole, usersByLdapGroup, childParentPair);
-
-    }
-
-    protected void queryLdapUsers(AcmLdapSyncConfig config, String directoryName, Set<String> allRoles, List<AcmUser> users,
-                                  Map<String, List<AcmUser>> usersByApplicationRole, Map<String, List<AcmUser>> usersByLdapGroup,
-                                  Map<String, String> childParentPair)
-    {
-        log.debug("querying users from directory '{}'", directoryName);
-
-        LdapTemplate template = getLdapDao().buildLdapTemplate(config);
-
-        Map<String, String> roleToGroup = config.getRoleToGroupMap();
-        allRoles.addAll(roleToGroup.keySet());
-
-        Map<String, List<String>> groupToRoleMap = reverseRoleToGroupMap(roleToGroup);
-
-        // Lookup all groups. If the group is linked to an application role, add the group members to the application
-        // role map, as well as to the group map.
-        List<LdapGroup> groups = getLdapDao().findGroups(template, config);
-
-        for (LdapGroup group : groups)
-        {
-            if (log.isDebugEnabled())
-            {
-                log.debug("Found group '" + group.getGroupName() + "', with " + group.getMemberDistinguishedNames().length + " members");
-            }
-
-            List<AcmUser> usersForThisGroup = findAllUsersForGroup(config, template, group, childParentPair);
-
-            String ucGroupName = group.getGroupName().toUpperCase();
-
-            users.addAll(usersForThisGroup);
-
-            addUsersToMap(usersByLdapGroup, ucGroupName, usersForThisGroup);
-
-            addUsersToApplicationRole(usersByApplicationRole, groupToRoleMap, usersForThisGroup, ucGroupName);
-        }
-    }
-
-    private void calculateGroupsSubgroupsAndUsers(AcmLdapSyncConfig config, LdapTemplate template, LdapGroup group,
-                                                  Map<String, String> childParentPair, List<AcmRole> nestedGroups,
-                                                  List<AcmUser> allUsersForGroup)
-    {
-        List<AcmLdapEntity> foundEntities = getLdapDao().findGroupMembers(template, config, group);
-
-        splitEntitiesIntoNestedGroupsAndUsers(foundEntities, nestedGroups, allUsersForGroup);
-
-        populateChildParentPair(group, nestedGroups, childParentPair);
-    }
-
-    private List<AcmUser> findAllUsersForGroup(AcmLdapSyncConfig config, LdapTemplate template, LdapGroup group,
-                                               Map<String, String> childParentPair)
-    {
-        List<AcmRole> nestedGroups = new ArrayList<>();
-
-        List<AcmUser> allUsersForGroup = new ArrayList<>();
-
-        calculateGroupsSubgroupsAndUsers(config, template, group, childParentPair, nestedGroups, allUsersForGroup);
-
-        findUsersForNestedGroups(config, template, nestedGroups, allUsersForGroup);
-
-        return allUsersForGroup;
-    }
-
-    private void findUsersForNestedGroups(AcmLdapSyncConfig config, LdapTemplate template, List<AcmRole> nestedGroups,
-                                          List<AcmUser> usersForMainGroup)
-    {
-
-        while (!nestedGroups.isEmpty())
-        {
-            List<AcmRole> current = new ArrayList<>(nestedGroups.size());
-            current.addAll(nestedGroups);
-            nestedGroups.clear();
-
-            for (AcmRole currentNestedGroup : current)
-            {
-                LdapGroup ldapGroup = getLdapDao().findGroup(template, config, currentNestedGroup.getDistinguishedName());
-                List<AcmLdapEntity> foundEntities = getLdapDao().findGroupMembers(template, config, ldapGroup);
-
-                splitEntitiesIntoNestedGroupsAndUsers(foundEntities, nestedGroups, usersForMainGroup);
-            }
-        }
-    }
-
-    private void splitEntitiesIntoNestedGroupsAndUsers(List<AcmLdapEntity> foundEntities, List<AcmRole> nestedGroups,
-                                                       List<AcmUser> usersForThisGroup)
-    {
-        // append user domain name if set. Used in Single Sign-On scenario.
-        String userDomainSuffix = ((ldapSyncConfig.getUserDomain() == null || ldapSyncConfig.getUserDomain().trim().equals("")) ? ""
-                : "@" + ldapSyncConfig.getUserDomain());
-        log.debug("Adding user domain sufix to the usernames: {}", userDomainSuffix);
-
-        for (AcmLdapEntity found : foundEntities)
-        {
-            if (found.isGroup())
-            {
-                nestedGroups.add((AcmRole) found);
-            } else
-            {
-                AcmUser acmUser = (AcmUser) found;
-                acmUser.setUserId(acmUser.getUserId() + userDomainSuffix);
-                usersForThisGroup.add((AcmUser) found);
-            }
-        }
-    }
-
-    private void addUsersToApplicationRole(Map<String, List<AcmUser>> usersByApplicationRole, Map<String, List<String>> groupToRoleMap,
-                                           List<AcmUser> foundUsers, String ucGroupName)
-    {
-        if (groupToRoleMap.containsKey(ucGroupName))
-        {
-            if (log.isDebugEnabled())
-            {
-                log.debug("Group '" + ucGroupName + "' has roles: " + groupToRoleMap.get(ucGroupName));
-            }
-            for (String applicationRole : groupToRoleMap.get(ucGroupName))
-            {
-                addUsersToMap(usersByApplicationRole, applicationRole, foundUsers);
-            }
-        }
-    }
 
     protected Map<String, List<String>> reverseRoleToGroupMap(Map<String, String> roleToGroup)
     {
@@ -432,39 +269,6 @@ public class LdapSyncService
             }
         }
         return groupToRoleMap;
-    }
-
-    private void addUsersToMap(Map<String, List<AcmUser>> userMap, String mapKey, List<AcmUser> users)
-    {
-        if (log.isDebugEnabled())
-        {
-            log.debug("Adding " + users.size() + " users to map by key " + mapKey);
-        }
-        // ensure to initialize the map entry with an empty list, then copy from the incoming list into the new list.
-        if (!userMap.containsKey(mapKey))
-        {
-            userMap.put(mapKey, new ArrayList<>());
-        }
-        userMap.get(mapKey).addAll(users);
-    }
-
-    private void populateChildParentPair(LdapGroup parent, List<AcmRole> children, Map<String, String> childParentPair)
-    {
-        if (children != null && children.size() > 0)
-        {
-            for (AcmRole child : children)
-            {
-                if (childParentPair == null)
-                {
-                    childParentPair = new HashMap<>();
-                }
-
-                if (child.getRoleName() != null && parent.getGroupName() != null)
-                {
-                    childParentPair.put(child.getRoleName().toUpperCase(), parent.getGroupName().toUpperCase());
-                }
-            }
-        }
     }
 
     public SpringLdapDao getLdapDao()
