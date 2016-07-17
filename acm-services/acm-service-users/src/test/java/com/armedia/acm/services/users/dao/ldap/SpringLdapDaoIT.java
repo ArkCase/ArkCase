@@ -48,13 +48,13 @@ public class SpringLdapDaoIT
     {
         LdapTemplate ldapTemplate = springLdapDao.buildLdapTemplate(acmSyncLdapConfig);
         long start = System.currentTimeMillis();
-        List<AcmUser> result = springLdapDao.findUsers(ldapTemplate, acmSyncLdapConfig);
+        List<AcmUser> result = springLdapDao.findUsersPaged(ldapTemplate, acmSyncLdapConfig);
         long time = System.currentTimeMillis() - start;
         log.debug("Time: {}ms", time);
         log.debug("Result: {}", result.size());
         result.forEach(acmUser ->
         {
-            log.trace("AcmUser: {} -> {}", acmUser.getDistinguishedName(), acmUser.getLdapGroups());
+            log.debug("AcmUser: {} : {} -> {}", acmUser.getUserId(), acmUser.getDistinguishedName(), acmUser.getLdapGroups());
         });
     }
 
@@ -63,7 +63,7 @@ public class SpringLdapDaoIT
     {
         LdapTemplate ldapTemplate = springLdapDao.buildLdapTemplate(acmSyncLdapConfig);
         long start = System.currentTimeMillis();
-        List<LdapGroup> result = springLdapDao.findGroups(ldapTemplate, acmSyncLdapConfig);
+        List<LdapGroup> result = springLdapDao.findGroupsPaged(ldapTemplate, acmSyncLdapConfig);
         long time = System.currentTimeMillis() - start;
         log.debug("Time: {}ms", time);
         log.debug("Result: {}", result.size());
@@ -101,7 +101,7 @@ public class SpringLdapDaoIT
         for (int i = 0; i < RUNS; ++i)
         {
             long start = System.currentTimeMillis();
-            List<AcmUser> result = springLdapDao.findUsers(ldapTemplate, acmSyncLdapConfig, attributes);
+            List<AcmUser> result = springLdapDao.findUsersPaged(ldapTemplate, acmSyncLdapConfig, attributes);
             long time = System.currentTimeMillis() - start;
             sum += time;
             log.debug("Result: {}", result.size());

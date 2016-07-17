@@ -14,6 +14,7 @@ public class AcmLdapSyncConfig extends AcmLdapConfig
     private String userDomain;
     private String userSearchBase;
     private String userSearchFilter;
+    private String usersSearchFilter;
     private String allUsersFilter;
     private String allUsersSearchBase;
     private String groupSearchFilterForUser;
@@ -149,5 +150,15 @@ public class AcmLdapSyncConfig extends AcmLdapConfig
     public void setGroupSearchPageFilter(String groupSearchPageFilter)
     {
         this.groupSearchPageFilter = groupSearchPageFilter;
+    }
+
+    public String getUsersSearchFilter()
+    {
+        return usersSearchFilter;
+    }
+
+    public void setUsersSearchFilter(String usersSearchFilter)
+    {
+        this.usersSearchFilter = usersSearchFilter;
     }
 }

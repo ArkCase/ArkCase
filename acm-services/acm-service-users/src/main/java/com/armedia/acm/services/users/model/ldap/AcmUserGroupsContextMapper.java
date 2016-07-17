@@ -14,8 +14,16 @@ public class AcmUserGroupsContextMapper implements ContextMapper
 {
 
     public static final int ACTIVE_DIRECTORY_DISABLED_BIT = 2;
+    public static String[] USER_LDAP_ATTRIBUTES = {
+            "cn",
+            "userAccountControl",
+            "sn",
+            "givenName",
+            "dn",
+            "distinguishedname",
+            "memberOf"
+    };
     private Logger log = LoggerFactory.getLogger(getClass());
-
     private String userIdAttributeName;
     private String mailAttributeName;
 
@@ -31,36 +39,25 @@ public class AcmUserGroupsContextMapper implements ContextMapper
 
     private AcmUser setLdapUser(AcmUser user, DirContextAdapter adapter)
     {
-
-
-        String fullName = adapter.getStringAttribute("cn");
+        String fullName = MapperUtils.getAttribute(adapter, "cn");
 
         user.setFullName(fullName);
 
         // because of how the LDAP query paging works, we can no longer return null for the disabled accounts.
         // so we return them, but mark them DISABLED.  The DAO will filter them.
-        if (adapter.attributeExists("userAccountControl"))
+        String uac = MapperUtils.getAttribute(adapter, "userAccountControl");
+        if (isUserDisabled(uac))
         {
-            if (isUserDisabled(adapter))
-            {
-                log.debug("User '{}' is disabled and won't be synced", fullName);
-                user.setUserState("DISABLED");
-            }
+            log.debug("User '{}' is disabled and won't be synced", fullName);
+            user.setUserState("DISABLED");
         }
 
-        if (adapter.attributeExists("sn"))
-        {
-            user.setLastName(adapter.getStringAttribute("sn"));
-        }
-        if (adapter.attributeExists("givenName"))
-        {
-            user.setFirstName(adapter.getStringAttribute("givenName"));
-        }
+        user.setLastName(MapperUtils.getAttribute(adapter, "sn"));
+        user.setFirstName(MapperUtils.getAttribute(adapter, "givenName"));
 
-        user.setUserId(adapter.getStringAttribute(getUserIdAttributeName()));
-        user.setMail(adapter.getStringAttribute(getMailAttributeName()));
-        user.setDistinguishedName(adapter.getStringAttribute("dn") != null ?
-                adapter.getStringAttribute("dn") : adapter.getStringAttribute("distinguishedname"));
+        user.setUserId(MapperUtils.getAttribute(adapter, getUserIdAttributeName()));
+        user.setMail(MapperUtils.getAttribute(adapter, getMailAttributeName()));
+        user.setDistinguishedName(MapperUtils.getAttribute(adapter, "dn", "distinguishedname"));
 
         Set<String> ldapGroupsForUser = new HashSet<>();
         if (adapter.attributeExists("memberOf"))
@@ -73,12 +70,10 @@ public class AcmUserGroupsContextMapper implements ContextMapper
         return user;
     }
 
-    protected boolean isUserDisabled(DirContextAdapter adapter)
+    protected boolean isUserDisabled(String uac)
     {
-        String uac = adapter.getStringAttribute("userAccountControl");
-        long userAccountControl = Long.valueOf(uac).longValue();
-        boolean disabled = (userAccountControl & ACTIVE_DIRECTORY_DISABLED_BIT) == ACTIVE_DIRECTORY_DISABLED_BIT;
-        return disabled;
+        long userAccountControl = Long.valueOf(uac);
+        return (userAccountControl & ACTIVE_DIRECTORY_DISABLED_BIT) == ACTIVE_DIRECTORY_DISABLED_BIT;
     }
 
     public String getUserIdAttributeName()
@@ -100,4 +95,5 @@ public class AcmUserGroupsContextMapper implements ContextMapper
     {
         this.mailAttributeName = mailAttributeName;
     }
+
 }

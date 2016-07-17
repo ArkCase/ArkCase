@@ -16,7 +16,8 @@ public class AcmGroupContextMapper implements ContextMapper
         DirContextAdapter adapter = (DirContextAdapter) ctx;
 
         LdapGroup group = new LdapGroup();
-        String groupName = adapter.getStringAttribute("cn");
+        String groupName = MapperUtils.getAttribute(adapter, "cn");
+        // Throughout the application we use the group names in upper case only, so converting here at mapping level
         group.setGroupName(groupName.toUpperCase());
 
         Set<String> potentialParentGroups = new HashSet<>();
