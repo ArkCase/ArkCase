@@ -6,16 +6,19 @@ import com.armedia.acm.services.users.model.ldap.AcmGroupContextMapper;
 import com.armedia.acm.services.users.model.ldap.AcmLdapConfig;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.AcmUserGroupsContextMapper;
-import com.armedia.acm.services.users.model.ldap.GroupMembersContextMapper;
 import com.armedia.acm.services.users.model.ldap.SimpleAuthenticationSource;
+import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.ldap.control.PagedResultsCookie;
 import org.springframework.ldap.control.PagedResultsDirContextProcessor;
 import org.springframework.ldap.control.SortControlDirContextProcessor;
 import org.springframework.ldap.core.AuthenticationSource;
+import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.AggregateDirContextProcessor;
 import org.springframework.ldap.core.support.LdapContextSource;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import javax.naming.directory.SearchControls;
 import java.util.ArrayList;
@@ -29,11 +32,37 @@ public class SpringLdapDao
 {
     static final Logger log = LoggerFactory.getLogger(SpringLdapDao.class);
 
-    private final GroupMembersContextMapper groupMembersContextMapper = new GroupMembersContextMapper();
-
     private AcmGroupContextMapper acmGroupContextMapper;
 
     private AcmUserGroupsContextMapper userGroupsContextMapper;
+
+    static <T> List<T> fetchLdapPaged(LdapTemplate template, String searchBase, String searchFilter,
+                                      SearchControls searchControls, int pageSize, ContextMapper contextMapper)
+    {
+        List<T> result = new ArrayList<>();
+        // for the first paged-search request we pass null cookie
+        PagedResultsCookie resultsCookie = null;
+        while (true)
+        {
+            PagedResultsDirContextProcessor pagedResultsDirContextProcessor =
+                    new PagedResultsDirContextProcessor(pageSize, resultsCookie);
+            log.debug("Start fetching '{}' items from LDAP", pageSize);
+            List<T> items = template.search(searchBase, searchFilter,
+                    searchControls, contextMapper, pagedResultsDirContextProcessor);
+            log.debug("Items fetched: {}", items.size());
+            result.addAll(items);
+
+            // pass the cookie in the next calls so the server keeps track of where he left of previous time
+            resultsCookie = pagedResultsDirContextProcessor.getCookie();
+
+            // when there is no more pages to be fetched the cookie is null
+            if (resultsCookie.getCookie() == null)
+            {
+                break;
+            }
+        }
+        return result;
+    }
 
     /*
      * This builds the ldap template from the base AcmLdapConfig
@@ -59,6 +88,57 @@ public class SpringLdapDao
         LdapTemplate ldapTemplate = new LdapTemplate(ldapContextSource);
         ldapTemplate.setIgnorePartialResultException(syncConfig.isIgnorePartialResultException());
         return ldapTemplate;
+    }
+
+    public List<AcmUser> findUsersPaged(LdapTemplate template, final AcmLdapSyncConfig syncConfig)
+    {
+        return findUsersPaged(template, syncConfig, AcmUserGroupsContextMapper.USER_LDAP_ATTRIBUTES);
+    }
+
+    public List<AcmUser> findUsersPaged(LdapTemplate template, final AcmLdapSyncConfig syncConfig, String[] attributes)
+    {
+        SearchControls searchControls = new SearchControls();
+        searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+        if (attributes != null)
+        {
+            String[] allAttributes = ArrayUtils.addAll(attributes,
+                    syncConfig.getUserIdAttributeName(), syncConfig.getMailAttributeName());
+            searchControls.setReturningAttributes(allAttributes);
+        }
+
+        userGroupsContextMapper.setUserIdAttributeName(syncConfig.getUserIdAttributeName());
+        userGroupsContextMapper.setMailAttributeName(syncConfig.getMailAttributeName());
+
+        String searchBase = syncConfig.getAllUsersSearchBase();
+        String[] bases = searchBase.split("\\|");
+        List<AcmUser> acmUsers = new ArrayList<>();
+        for (String base : bases)
+        {
+            List<AcmUser> users = fetchLdapPaged(template, base, syncConfig.getUsersSearchFilter(), searchControls,
+                    syncConfig.getSyncPageSize(), userGroupsContextMapper);
+            log.info("Fetched total '{}' users for search base '{}'", users.size(), base);
+            acmUsers.addAll(users);
+        }
+
+        // filter out the DISABLED users
+        acmUsers = acmUsers.stream().filter(u -> !("DISABLED".equals(u.getUserState()))).collect(Collectors.toList());
+
+        log.info("LDAP sync number of enabled users: {}", acmUsers.size());
+        return acmUsers;
+    }
+
+    public List<LdapGroup> findGroupsPaged(LdapTemplate template, final AcmLdapSyncConfig syncConfig)
+    {
+        SearchControls searchControls = new SearchControls();
+        searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+        searchControls.setReturningAttributes(new String[]{"cn", "memberOf"});
+
+        String searchBase = syncConfig.getGroupSearchBase();
+        List<LdapGroup> acmGroups = fetchLdapPaged(template, searchBase, syncConfig.getGroupSearchFilter(),
+                searchControls, syncConfig.getSyncPageSize(), acmGroupContextMapper);
+
+        log.info("LDAP sync number of groups: {}", acmGroups.size());
+        return acmGroups;
     }
 
     public List<AcmUser> findUsers(LdapTemplate template, final AcmLdapSyncConfig syncConfig)
@@ -190,6 +270,41 @@ public class SpringLdapDao
         log.info("LDAP sync number of groups: {}", acmGroups.size());
 
         return acmGroups;
+    }
+
+    public AcmUser findUser(String username, LdapTemplate template, AcmLdapSyncConfig config)
+    {
+        AcmUser user = null;
+
+        SearchControls searchControls = new SearchControls();
+        searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+
+        userGroupsContextMapper.setUserIdAttributeName(config.getUserIdAttributeName());
+        userGroupsContextMapper.setMailAttributeName(config.getMailAttributeName());
+
+        List<AcmUser> results = template.search(config.getUserSearchBase(),
+                String.format(config.getUserSearchFilter(), username), searchControls, userGroupsContextMapper);
+
+        if (results != null && !results.isEmpty())
+        {
+            // Return the first entity that will be found. The above search can return multiple results under one domain if
+            // "sAMAccountName" is the same for two users. This in theory should not be the case, but just in case, return only the first one.
+            AcmUser acmUser = results.get(0);
+            if (acmUser != null)
+            {
+                // append user domain name if set. Used in Single Sign-On scenario.
+                String userDomainSuffix = ((config.getUserDomain() == null || config.getUserDomain().trim().equals("")) ? "" : "@" + config.getUserDomain());
+                log.debug("Adding user domain sufix to the usernames: {}", userDomainSuffix);
+                user.setUserId(user.getUserId() + userDomainSuffix);
+            }
+        }
+
+        if (user != null)
+        {
+            return user;
+        }
+
+        throw new UsernameNotFoundException("User with id [" + username + "] cannot be found");
     }
 
     public AcmUserGroupsContextMapper getUserGroupsContextMapper()

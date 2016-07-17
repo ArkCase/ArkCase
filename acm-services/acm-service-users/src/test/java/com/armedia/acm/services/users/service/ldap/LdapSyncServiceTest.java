@@ -36,7 +36,6 @@ public class LdapSyncServiceTest extends EasyMockSupport
     private LdapSyncService unit;
 
     private SpringLdapDao mockLdapDao;
-    private LdapTemplate mockLdapTemplate;
 
     static Set<String> fromArray(String... elements)
     {
@@ -47,7 +46,6 @@ public class LdapSyncServiceTest extends EasyMockSupport
     public void setUp()
     {
         mockLdapDao = createMock(SpringLdapDao.class);
-        mockLdapTemplate = createMock(LdapTemplate.class);
 
         unit = new LdapSyncService();
         unit.setLdapDao(mockLdapDao);
@@ -134,9 +132,9 @@ public class LdapSyncServiceTest extends EasyMockSupport
     {
         List<LdapGroup> ldapGroups = new ArrayList<>();
         List<AcmUser> ldapUsers = new ArrayList<>();
-        Map<String, List<AcmUser>> expected = setupTestLdapUsersGroups(ldapGroups, ldapUsers);
+        Map<String, Set<AcmUser>> expected = setupTestLdapUsersGroups(ldapGroups, ldapUsers);
 
-        Map<String, List<AcmUser>> actual = unit.getUsersByLdapGroup(ldapGroups, ldapUsers);
+        Map<String, Set<AcmUser>> actual = unit.getUsersByLdapGroup(ldapGroups, ldapUsers);
 
         printMap(expected);
         printMap(actual);
@@ -150,14 +148,14 @@ public class LdapSyncServiceTest extends EasyMockSupport
     {
         List<LdapGroup> ldapGroups = new ArrayList<>();
         List<AcmUser> ldapUsers = new ArrayList<>();
-        Map<String, List<AcmUser>> ldapGroupUsers = setupTestLdapUsersGroups(ldapGroups, ldapUsers);
+        Map<String, Set<AcmUser>> ldapGroupUsers = setupTestLdapUsersGroups(ldapGroups, ldapUsers);
 
         AcmLdapSyncConfig mockLdapSyncConfig = createMock(AcmLdapSyncConfig.class);
         unit.setLdapSyncConfig(mockLdapSyncConfig);
 
         Map<String, String> roleToGroupMap = new HashMap<>();
         List<String> groups = new ArrayList<>(ldapGroupUsers.keySet());
-        Map<String, List<AcmUser>> expected = new HashMap<>();
+        Map<String, Set<AcmUser>> expected = new HashMap<>();
         for (int i = 0; i < 3; ++i)
         {
             Collections.shuffle(groups);
@@ -171,14 +169,14 @@ public class LdapSyncServiceTest extends EasyMockSupport
                 System.out.println(group);
                 usersSet.addAll(ldapGroupUsers.get(group));
             }
-            expected.put(role, new ArrayList<>(usersSet));
+            expected.put(role, usersSet);
         }
 
         expect(mockLdapSyncConfig.getRoleToGroupMap()).andReturn(roleToGroupMap);
 
         replayAll();
 
-        Map<String, List<AcmUser>> actual = unit.getUsersByApplicationRole(ldapGroupUsers);
+        Map<String, Set<AcmUser>> actual = unit.getUsersByApplicationRole(ldapGroupUsers);
 
         verifyAll();
 
@@ -189,14 +187,14 @@ public class LdapSyncServiceTest extends EasyMockSupport
 
     }
 
-    private Map<String, List<AcmUser>> setupTestLdapUsersGroups(List<LdapGroup> ldapGroups, List<AcmUser> ldapUsers)
+    private Map<String, Set<AcmUser>> setupTestLdapUsersGroups(List<LdapGroup> ldapGroups, List<AcmUser> ldapUsers)
     {
-        Map<String, List<AcmUser>> mockResult = new TreeMap<>();
+        Map<String, Set<AcmUser>> mockResult = new TreeMap<>();
 
         for (int i = 0; i < 3; ++i)
         {
             String group = String.format("GROUP-%d", i + 1);
-            mockResult.put(group, new ArrayList<>());
+            mockResult.put(group, new HashSet<>());
             LdapGroup ldapGroup = new LdapGroup();
             ldapGroup.setGroupName(group);
             ldapGroup.setMemberOfGroups(new HashSet<>());
@@ -206,10 +204,11 @@ public class LdapSyncServiceTest extends EasyMockSupport
         parent.setGroupName("PARENT-GROUP");
         parent.setMemberOfGroups(new HashSet<>());
         ldapGroups.add(parent);
-        mockResult.put(parent.getGroupName(), new ArrayList<>());
+        mockResult.put(parent.getGroupName(), new HashSet<>());
 
-        // set parent to group
+        // set parent to groups 1 and 2
         ldapGroups.get(0).setMemberOfGroups(new HashSet<>(Arrays.asList(parent.getGroupName())));
+        ldapGroups.get(1).setMemberOfGroups(new HashSet<>(Arrays.asList(parent.getGroupName())));
 
         for (int i = 0; i < 5; ++i)
         {
@@ -244,11 +243,16 @@ public class LdapSyncServiceTest extends EasyMockSupport
         }
 
         // add parent group in result
-        mockResult.put(parent.getGroupName(), mockResult.get(ldapGroups.get(0).getGroupName()));
+        Set<AcmUser> allUsers = new HashSet<>();
+        Set<AcmUser> firstGroupUsers = mockResult.get(ldapGroups.get(0).getGroupName());
+        Set<AcmUser> secondGroupUsers = mockResult.get(ldapGroups.get(1).getGroupName());
+        allUsers.addAll(firstGroupUsers);
+        allUsers.addAll(secondGroupUsers);
+        mockResult.put(parent.getGroupName(), allUsers);
         return mockResult;
     }
 
-    private void printMap(Map<String, List<AcmUser>> map)
+    private void printMap(Map<String, Set<AcmUser>> map)
     {
         System.out.println("Printing result map");
         for (String group : map.keySet())
