@@ -1,9 +1,7 @@
 package com.armedia.acm.services.users.dao.ldap;
 
-import com.armedia.acm.services.users.model.AcmLdapEntity;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.LdapGroup;
-import com.armedia.acm.services.users.model.ldap.AcmLdapEntityContextMapper;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,47 +42,6 @@ public class SpringLdapDaoIT
 
     @Autowired
     private AcmLdapSyncConfig acmSyncLdapConfig;
-
-    @Autowired
-    private UserDao userDao;
-
-    @Test
-    public void userWithForwardSlash()
-    {
-        LdapTemplate ldapTemplate = springLdapDao.buildLdapTemplate(acmSyncLdapConfig);
-        AcmLdapEntityContextMapper mapper = springLdapDao.getMapper();
-
-        // this is the example DN from JSAP that exposed the problem
-        String dn = "CN=Long\\, Bradley D LCDR JCS J8/RAMO,OU=J8,OU=Users,OU=PNT,OU=Joint Staff,OU=Enterprise Tenants,DC=usr,DC=osd,DC=mil";
-
-        // uncomment the following line to cause the test to fail.
-        dn = dn.replaceAll("\\/", "\\\\/");
-
-        System.out.println("New DN: " + dn);
-
-        // if we get a CommunicationException / UnknownHostException, all is well, Java has procesed the DN ok
-        // see http://bugs.java.com/bugdatabase/view_bug.do?bug_id=4307193 for why this is necessary
-        try
-        {
-            ldapTemplate.lookup(dn, mapper);
-        } catch (CommunicationException ce)
-        {
-            boolean ok = false;
-            if (ce.getCause() instanceof javax.naming.CommunicationException)
-            {
-                if (ce.getCause().getCause() instanceof UnknownHostException)
-                {
-                    // good - LDAP has tried to follow to "usr.osd.mil" but of course we can't find it
-                    ok = true;
-                }
-            }
-            if (!ok)
-            {
-                throw ce;
-            }
-
-        }
-    }
 
     @Test
     public void findUsersWithAllAttributes()
@@ -152,27 +109,6 @@ public class SpringLdapDaoIT
         }
 
         log.debug("Avg Time: {}ms", sum * 1.0 / RUNS);
-    }
-
-    @Test
-    public void findUsersByLookup()
-    {
-        LdapTemplate ldapTemplate = springLdapDao.buildLdapTemplate(acmSyncLdapConfig);
-        List<AcmUser> users = userDao.findAll();
-        long sum = 0;
-        for (int i = 0; i < users.size(); ++i)
-        {
-            AcmUser user = users.get(0);
-            String dn = String.format("CN=%s,CN=Users,DC=armedia,DC=com", user.getFullName());
-            long start = System.currentTimeMillis();
-            AcmLdapEntity result = springLdapDao.lookupUser(ldapTemplate, acmSyncLdapConfig, dn);
-            long time = System.currentTimeMillis() - start;
-            sum += time;
-            log.debug("Result: {}", result);
-            log.debug("Time: {}ms", time);
-        }
-
-        log.debug("Avg Time: {}ms", sum * 1.0 / users.size());
     }
 
     @Test

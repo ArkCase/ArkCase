@@ -1,12 +1,9 @@
 package com.armedia.acm.services.users.dao.ldap;
 
-import com.armedia.acm.services.users.model.AcmLdapEntity;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.LdapGroup;
 import com.armedia.acm.services.users.model.ldap.AcmGroupContextMapper;
 import com.armedia.acm.services.users.model.ldap.AcmLdapConfig;
-import com.armedia.acm.services.users.model.ldap.AcmLdapEntityContextMapper;
-import com.armedia.acm.services.users.model.ldap.AcmLdapEntitySimpleContextMapper;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.AcmUserGroupsContextMapper;
 import com.armedia.acm.services.users.model.ldap.GroupMembersContextMapper;
@@ -19,7 +16,6 @@ import org.springframework.ldap.core.AuthenticationSource;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.AggregateDirContextProcessor;
 import org.springframework.ldap.core.support.LdapContextSource;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import javax.naming.directory.SearchControls;
 import java.util.ArrayList;
@@ -31,18 +27,13 @@ import java.util.stream.Collectors;
  */
 public class SpringLdapDao
 {
+    static final Logger log = LoggerFactory.getLogger(SpringLdapDao.class);
 
     private final GroupMembersContextMapper groupMembersContextMapper = new GroupMembersContextMapper();
 
     private AcmGroupContextMapper acmGroupContextMapper;
 
-    private AcmLdapEntityContextMapper mapper;
-
-    private AcmLdapEntitySimpleContextMapper simpleContextMapper;
-
     private AcmUserGroupsContextMapper userGroupsContextMapper;
-
-    private Logger log = LoggerFactory.getLogger(getClass());
 
     /*
      * This builds the ldap template from the base AcmLdapConfig
@@ -68,34 +59,6 @@ public class SpringLdapDao
         LdapTemplate ldapTemplate = new LdapTemplate(ldapContextSource);
         ldapTemplate.setIgnorePartialResultException(syncConfig.isIgnorePartialResultException());
         return ldapTemplate;
-    }
-
-    public List<AcmLdapEntity> findGroupMembers(LdapTemplate template, final AcmLdapSyncConfig syncConfig, LdapGroup group)
-    {
-        String[] memberDns = group.getMemberDistinguishedNames();
-
-        List<AcmLdapEntity> retval = new ArrayList<>(memberDns.length);
-
-        mapper.setUserIdAttributeName(syncConfig.getUserIdAttributeName());
-        mapper.setMailAttributeName(syncConfig.getMailAttributeName());
-
-
-        for (String memberDn : memberDns)
-        {
-            log.debug("Looking up LDAP user '{}'", memberDn);
-
-            memberDn = memberDn.replaceAll("\\/", "\\\\/"); // some of the DNs contain (/) which is a special character to JNDI
-            AcmLdapEntity ldapEntity = (AcmLdapEntity) template.lookup(memberDn, mapper);
-
-            // The context mapper returns null if the group member is a disabled user
-            if (ldapEntity != null)
-            {
-                ldapEntity.setDistinguishedName(memberDn);
-                retval.add(ldapEntity);
-            }
-        }
-
-        return retval;
     }
 
     public List<AcmUser> findUsers(LdapTemplate template, final AcmLdapSyncConfig syncConfig)
@@ -178,14 +141,6 @@ public class SpringLdapDao
         return sortedAndPaged;
     }
 
-    public AcmLdapEntity lookupUser(LdapTemplate ldapTemplate, final AcmLdapSyncConfig syncConfig, String dn)
-    {
-        simpleContextMapper.setUserIdAttributeName(syncConfig.getUserIdAttributeName());
-        simpleContextMapper.setMailAttributeName(syncConfig.getMailAttributeName());
-        return (AcmLdapEntity) ldapTemplate.lookup(dn, simpleContextMapper);
-    }
-
-
     public List<LdapGroup> findGroups(LdapTemplate template, AcmLdapSyncConfig config)
     {
         SearchControls searchControls = new SearchControls();
@@ -235,77 +190,6 @@ public class SpringLdapDao
         log.info("LDAP sync number of groups: {}", acmGroups.size());
 
         return acmGroups;
-    }
-
-    public LdapGroup findGroup(LdapTemplate template, AcmLdapSyncConfig config, String groupDistinguishedName)
-    {
-        LdapGroup group = (LdapGroup) template.lookup(groupDistinguishedName, groupMembersContextMapper);
-        return group;
-    }
-
-    public AcmUser findUser(String username, LdapTemplate template, AcmLdapSyncConfig config)
-    {
-        AcmUser user = null;
-
-        SearchControls searchControls = new SearchControls();
-        searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-
-        mapper.setUserIdAttributeName(config.getUserIdAttributeName());
-        mapper.setMailAttributeName(config.getMailAttributeName());
-
-        List<AcmLdapEntity> results = template.search(config.getUserSearchBase(), String.format(config.getUserSearchFilter(), username), searchControls, mapper);
-
-        if (results != null && !results.isEmpty())
-        {
-            // Return the first entity that will be found. The above search can return multiple results under one domain if
-            // "sAMAccountName" is the same for two users. This in theory should not be the case, but just in case, return only the first one.
-            AcmLdapEntity ldapEntity = results.get(0);
-            if (ldapEntity != null && !ldapEntity.isGroup())
-            {
-                user = (AcmUser) ldapEntity;
-                // append user domain name if set. Used in Single Sign-On scenario.
-                String userDomainSuffix = ((config.getUserDomain() == null || config.getUserDomain().trim().equals("")) ? "" : "@" + config.getUserDomain());
-                log.debug("Adding user domain sufix to the usernames: {}", userDomainSuffix);
-                user.setUserId(user.getUserId() + userDomainSuffix);
-            }
-        }
-
-        if (user != null)
-        {
-            return user;
-        }
-
-        throw new UsernameNotFoundException("User with id [" + username + "] cannot be found");
-    }
-
-    public List<LdapGroup> findGroupsForUser(AcmUser user, LdapTemplate template, AcmLdapSyncConfig config)
-    {
-        SearchControls searchControls = new SearchControls();
-        searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-
-        List<LdapGroup> groups = template.search(config.getGroupSearchBase(), String.format(config.getGroupSearchFilterForUser(), user.getDistinguishedName()), searchControls, groupMembersContextMapper);
-
-        return groups;
-    }
-
-    public AcmLdapEntityContextMapper getMapper()
-    {
-        return mapper;
-    }
-
-    public void setMapper(AcmLdapEntityContextMapper mapper)
-    {
-        this.mapper = mapper;
-    }
-
-    public AcmLdapEntitySimpleContextMapper getSimpleContextMapper()
-    {
-        return simpleContextMapper;
-    }
-
-    public void setSimpleContextMapper(AcmLdapEntitySimpleContextMapper simpleContextMapper)
-    {
-        this.simpleContextMapper = simpleContextMapper;
     }
 
     public AcmUserGroupsContextMapper getUserGroupsContextMapper()
