@@ -7,13 +7,15 @@ import com.armedia.acm.core.AcmStatefulEntity;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.services.users.service.tracker.UserTrackerService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.PersistenceContext;
+
 /**
  * @author riste.tutureski
- *
  */
 public class ChangeObjectStatusServiceImpl implements ChangeObjectStatusService
 {
@@ -23,6 +25,9 @@ public class ChangeObjectStatusServiceImpl implements ChangeObjectStatusService
     private UserTrackerService userTrackerService;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public void change(Long objectId, String objectType, String status)
@@ -34,7 +39,17 @@ public class ChangeObjectStatusServiceImpl implements ChangeObjectStatusService
 
         if (dao != null)
         {
-            AcmStatefulEntity entity = dao.find(objectId);
+            AcmStatefulEntity entity;
+
+            try
+            {
+                entity = dao.find(objectId);
+            } catch (EntityNotFoundException e)
+            {
+                // try and flush our SQL in case we are trying to operate on a brand new object
+                entityManager.flush();
+                entity = dao.find(objectId);
+            }
 
             if (entity != null)
             {
