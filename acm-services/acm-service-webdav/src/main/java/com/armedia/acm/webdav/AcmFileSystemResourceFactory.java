@@ -7,6 +7,7 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
+import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -42,6 +43,8 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
     private String filterMapping;
 
     private Pattern wordFileExtensionPattern;
+
+    private AuthenticationTokenService authenticationTokenService;
 
     @Override
     public Resource getResource(String host, String path) throws NotAuthorizedException, BadRequestException
@@ -178,6 +181,16 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
         this.muleContextManager = muleContextManager;
     }
 
+    public AuthenticationTokenService getAuthenticationTokenService()
+    {
+        return authenticationTokenService;
+    }
+
+    public void setAuthenticationTokenService(AuthenticationTokenService authenticationTokenService)
+    {
+        this.authenticationTokenService = authenticationTokenService;
+    }
+
     interface ResourceHandler
     {
 
@@ -195,11 +208,15 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
             String[] fileArgs = path.split("/");
             Long fileId = Long.valueOf(fileArgs[fileArgs.length - 1]);
 
-            String fileType = fileArgs[0];
-            String lockType = fileArgs[1];
+            String acmTicket = fileArgs[0];
+            String fileType = fileArgs[1];
+            String lockType = fileArgs[2];
+
+            getSecurityManager().setAuthentication(getAuthenticationTokenService().getAuthenticationForToken(acmTicket));
 
             EcmFile ecmFile = fileDao.find(fileId);
-            return new AcmFileResource(host, ecmFile, fileType, lockType, AcmFileSystemResourceFactory.this);
+            return new AcmFileResource(host, ecmFile, fileType, lockType, getSecurityManager().getAuthentication(),
+                    AcmFileSystemResourceFactory.this);
 
         }
 

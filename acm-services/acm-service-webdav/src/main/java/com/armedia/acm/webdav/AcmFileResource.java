@@ -38,13 +38,16 @@ public class AcmFileResource extends AcmFileSystemResource implements PropFindab
     private EcmFile acmFile;
     private String fileType;
     private String lockType;
+    private Authentication authentication;
 
-    public AcmFileResource(String host, EcmFile acmFile, String fileType, String lockType, AcmFileSystemResourceFactory resourceFactory)
+    public AcmFileResource(String host, EcmFile acmFile, String fileType, String lockType, Authentication authentication,
+            AcmFileSystemResourceFactory resourceFactory)
     {
         super(host, resourceFactory);
         this.acmFile = acmFile;
         this.fileType = fileType;
         this.lockType = lockType;
+        this.authentication = authentication;
     }
 
     public Long getId()
@@ -65,6 +68,11 @@ public class AcmFileResource extends AcmFileSystemResource implements PropFindab
     public String getLockType()
     {
         return lockType;
+    }
+
+    public Authentication getAuthentication()
+    {
+        return authentication;
     }
 
     // Resource interface methods implementation
@@ -144,8 +152,7 @@ public class AcmFileResource extends AcmFileSystemResource implements PropFindab
     {
         try
         {
-            Authentication auth = getResourceFactory().getSecurityManager().getSpringAuthentication();
-            getResourceFactory().getEcmFileTransaction().updateFileTransactionEventAware(auth, acmFile, in);
+            getResourceFactory().getEcmFileTransaction().updateFileTransactionEventAware(getAuthentication(), acmFile, in);
         } catch (MuleException e)
         {
             LOGGER.error("Error while uploading file via Mule.", e);

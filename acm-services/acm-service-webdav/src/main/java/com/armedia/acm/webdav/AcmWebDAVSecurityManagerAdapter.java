@@ -1,13 +1,13 @@
 package com.armedia.acm.webdav;
 
+import org.springframework.security.core.Authentication;
+
 import io.milton.http.Auth;
 import io.milton.http.Request;
 import io.milton.http.Request.Method;
 import io.milton.http.fs.NullSecurityManager;
 import io.milton.http.http11.auth.DigestResponse;
 import io.milton.resource.Resource;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity
@@ -16,6 +16,8 @@ public class AcmWebDAVSecurityManagerAdapter implements AcmWebDAVSecurityManager
 {
 
     private io.milton.http.SecurityManager wrapped = new NullSecurityManager();
+
+    private Authentication authentication;
 
     @Override
     public Object authenticate(DigestResponse digestRequest)
@@ -48,12 +50,15 @@ public class AcmWebDAVSecurityManagerAdapter implements AcmWebDAVSecurityManager
     }
 
     @Override
-    public Authentication getSpringAuthentication()
+    public Authentication getAuthentication()
     {
-        // can't obtain authentication like this
-        // though, authentication is not used later, so is it necessary, or there is a security problem?
-        Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
-        return currentUser;
+        return authentication;
+    }
+
+    @Override
+    public void setAuthentication(Authentication authentication)
+    {
+        this.authentication = authentication;
     }
 
 }
