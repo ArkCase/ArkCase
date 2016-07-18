@@ -3,17 +3,16 @@ package com.armedia.acm.services.users.dao.ldap;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.LdapGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
+import com.armedia.acm.services.users.model.ldap.AcmUserGroupsContextMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ldap.CommunicationException;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.net.UnknownHostException;
 import java.util.List;
 
 
@@ -121,5 +120,19 @@ public class SpringLdapDaoIT
         {
             log.debug("Group: {}", group.getGroupName());
         }
+    }
+
+    @Test
+    public void findUser()
+    {
+        LdapTemplate ldapTemplate = springLdapDao.buildLdapTemplate(acmSyncLdapConfig);
+
+        String userName = "ann-acm";
+        long start = System.currentTimeMillis();
+        AcmUser acmUser = springLdapDao.findUser(userName, ldapTemplate, acmSyncLdapConfig,
+                AcmUserGroupsContextMapper.USER_LDAP_ATTRIBUTES);
+        long time = System.currentTimeMillis() - start;
+        log.debug("Time: {}ms", time);
+        log.debug("User found: {}", acmUser.getDistinguishedName());
     }
 }
