@@ -28,6 +28,7 @@
         <property name="maxAgeSeconds" value="300"/>
         <property name="filterMapping" value="webdav"/>
         <property name="wordFileExtensionPattern" ref="wordExtensionPattern"/>
+        <property name="authenticationTokenService" ref="authenticationTokenService"/>
     </bean>
 
     <bean id="milton.http.manager" class="io.milton.ent.config.HttpManagerBuilderEnt">

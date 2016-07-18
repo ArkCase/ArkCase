@@ -11,6 +11,8 @@ import io.milton.http.SecurityManager;
 public interface AcmWebDAVSecurityManager extends SecurityManager
 {
 
-    Authentication getSpringAuthentication();
+    Authentication getAuthentication();
+
+    void setAuthentication(Authentication authentication);
 
 }
