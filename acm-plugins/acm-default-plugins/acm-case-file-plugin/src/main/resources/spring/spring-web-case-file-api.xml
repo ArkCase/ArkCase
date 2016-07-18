@@ -49,4 +49,10 @@
           class="com.armedia.acm.plugins.casefile.web.api.GetNumberOfActiveCaseFilesByQueueAPIController">
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
+    
+    <bean id="caseFileNextPossibleQueuesAPIController" class="com.armedia.acm.plugins.casefile.web.api.CaseFileNextPossibleQueuesAPIController">
+        <property name="queueService" ref="queueService"/>
+        <property name="businessRule" ref="caseFileStartBusinessProcessBusinessRule"/>
+    </bean>
+    
 </beans>

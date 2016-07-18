@@ -1,4 +1,6 @@
-package com.armedia.acm.plugins.businessprocess.service;
+package com.armedia.acm.plugins.businessprocess.service.impl;
+
+import com.armedia.acm.plugins.businessprocess.service.StartBusinessProcessService;
 
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
