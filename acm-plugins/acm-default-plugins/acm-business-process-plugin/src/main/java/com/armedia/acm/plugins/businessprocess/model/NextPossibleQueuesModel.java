@@ -4,7 +4,7 @@ import com.armedia.acm.services.pipeline.AbstractPipelineContext;
 
 import java.util.List;
 
-public class NextPossibleQueueModel<T, P extends AbstractPipelineContext>
+public class NextPossibleQueuesModel<T, P extends AbstractPipelineContext>
 {
     private T businessObject;
 

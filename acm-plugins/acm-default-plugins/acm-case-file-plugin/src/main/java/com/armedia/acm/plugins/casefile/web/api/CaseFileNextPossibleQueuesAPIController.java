@@ -1,6 +1,6 @@
 package com.armedia.acm.plugins.casefile.web.api;
 
-import com.armedia.acm.plugins.businessprocess.model.NextPossibleQueueModel;
+import com.armedia.acm.plugins.businessprocess.model.NextPossibleQueuesModel;
 import com.armedia.acm.plugins.businessprocess.service.QueueService;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
@@ -19,7 +19,7 @@ public class CaseFileNextPossibleQueuesAPIController
     {
 
         CaseFilePipelineContext context = new CaseFilePipelineContext();
-        NextPossibleQueueModel<CaseFile, CaseFilePipelineContext> nextPossibleQueues = queueService.nextPossibleQueues(caseFile, context,
+        NextPossibleQueuesModel<CaseFile, CaseFilePipelineContext> nextPossibleQueues = queueService.nextPossibleQueues(caseFile, context,
                 businessRule);
         return nextPossibleQueues.getNextPossibleQueues();
 
