@@ -1396,8 +1396,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 var node = nodes[0];
                                 var fileId = node.data.objectId;
                                 var promiseTicket = TicketService.getArkCaseTicket();
-                                $q.all([promiseTicket]).then(function (data) {
-                                    var acmTicket = data[0].data;
+                                promiseTicket.then(function (ticketData) {
+                                    var acmTicket = ticketData.data;
                                     LockingService.lockObject(fileId, ObjectService.ObjectTypes.FILE,
                                         ObjectService.LockTypes.WORD_EDIT_LOCK, false).then(function (lockedFile) {
                                             var absUrl = $location.absUrl();
