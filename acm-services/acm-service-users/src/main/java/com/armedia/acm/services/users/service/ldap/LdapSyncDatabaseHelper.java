@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -36,32 +35,21 @@ public class LdapSyncDatabaseHelper
                                List<AcmUser> users,
                                Map<String, Set<AcmUser>> usersByRole,
                                Map<String, Set<AcmUser>> usersByLdapGroup,
-                               Map<String, String> childParentPair)
+                               Map<String, String> childParentPair,
+                               boolean singleUser)
     {
-        // Mark all users invalid... users still in LDAP will change to valid during the sync
-        getUserDao().markAllUsersInvalid(directoryName);
-        getUserDao().markAllRolesInvalid(directoryName);
-        getGroupDao().markAllGroupsInactive(ROLE_TYPE_LDAP_GROUP);
+        if (!singleUser)
+        {
+            // Mark all users invalid... users still in LDAP will change to valid during the sync
+            getUserDao().markAllUsersInvalid(directoryName);
+            getUserDao().markAllRolesInvalid(directoryName);
+            getGroupDao().markAllGroupsInactive(ROLE_TYPE_LDAP_GROUP);
 
-        persistApplicationRoles(allRoles, ROLE_TYPE_APPLICATION_ROLE, null);
+            persistApplicationRoles(allRoles, ROLE_TYPE_APPLICATION_ROLE, null);
+        }
         persistApplicationRoles(usersByLdapGroup.keySet(), ROLE_TYPE_LDAP_GROUP, childParentPair);
 
         persistUsers(directoryName, users);
-
-        storeRoles(usersByRole);
-        storeRoles(usersByLdapGroup);
-    }
-
-    @Transactional
-    public void updateDatabaseForUser(String directoryName,
-                                      AcmUser user,
-                                      Map<String, Set<AcmUser>> usersByRole,
-                                      Map<String, Set<AcmUser>> usersByLdapGroup,
-                                      Map<String, String> childParentPair)
-    {
-        persistApplicationRoles(usersByLdapGroup.keySet(), ROLE_TYPE_LDAP_GROUP, childParentPair);
-
-        persistUsers(directoryName, Arrays.asList(user));
 
         storeRoles(usersByRole);
         storeRoles(usersByLdapGroup);

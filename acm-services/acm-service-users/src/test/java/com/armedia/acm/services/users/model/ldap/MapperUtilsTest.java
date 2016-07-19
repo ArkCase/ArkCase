@@ -28,10 +28,22 @@ public class MapperUtilsTest
     public void arrayToSetMembersWithUnusualNames()
     {
         String[] array = new String[]{
-                "CN=John,Doe,OU=Promotions,OU=Marketing,DC=noam,dc=reskit,dc=com",
-                "CN=Other, Name, With, Many,Comas,OU=Promotions,OU=Marketing,DC=noam,dc=reskit,dc=com",
+                "CN=John\\, Doe,OU=Promotions,OU=Marketing,DC=noam,dc=reskit,dc=com",
+                "CN=Other\\, Name\\, With\\, Many\\, Commas,OU=Promotions,OU=Marketing,DC=noam,dc=reskit,dc=com",
         };
-        Set<String> expected = new HashSet<>(Arrays.asList("JOHN DOE", "OTHER NAME WITH MANY COMAS"));
+        Set<String> expected = new HashSet<>(Arrays.asList("JOHN, DOE", "OTHER, NAME, WITH, MANY, COMMAS"));
+        Set<String> actual = MapperUtils.arrayToSet(array, MapperUtils.MEMBER_TO_COMMON_NAME_UPPERCASE);
+
+        assertThat("Sets should be equal", actual, containsInAnyOrder(expected.toArray()));
+    }
+
+    @Test
+    public void arrayToSetMembersWithInvalidName()
+    {
+        String[] array = new String[]{
+                "invalid name"
+        };
+        Set<String> expected = new HashSet<>(Arrays.asList(""));
         Set<String> actual = MapperUtils.arrayToSet(array, MapperUtils.MEMBER_TO_COMMON_NAME_UPPERCASE);
 
         assertThat("Sets should be equal", actual, containsInAnyOrder(expected.toArray()));
