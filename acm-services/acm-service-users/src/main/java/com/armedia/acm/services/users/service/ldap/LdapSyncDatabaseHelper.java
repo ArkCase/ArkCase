@@ -7,7 +7,6 @@ import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserRole;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,13 +64,24 @@ public class LdapSyncDatabaseHelper
 
     private List<AcmUserRole> persistUserRoles(Set<AcmUser> savedUsers, String roleName)
     {
-        List<AcmUserRole> retval = new ArrayList<>(savedUsers.size());
+        int userCount = savedUsers.size();
+        int current = 0;
+
+        List<AcmUserRole> retval = new ArrayList<>(userCount);
+
+        log.debug("Beginning to persist {} user roles", userCount);
 
         Set<AcmUser> users = new HashSet<>();
 
         for (AcmUser user : savedUsers)
         {
-            log.debug("persisting user role '{}' -> '{}'", user.getUserId(), roleName);
+            log.trace("persisting user role '{}' -> '{}'", user.getUserId(), roleName);
+
+            current++;
+            if (current % 100 == 0)
+            {
+                log.debug("Saving user {} of {}", current, userCount);
+            }
 
             AcmUserRole role = new AcmUserRole();
             role.setUserId(user.getUserId());
@@ -96,11 +106,21 @@ public class LdapSyncDatabaseHelper
 
     protected List<AcmUser> persistUsers(String directoryName, List<AcmUser> users)
     {
-        List<AcmUser> retval = new ArrayList<>(users.size());
+        int userCount = users.size();
+        int current = 0;
+
+        List<AcmUser> retval = new ArrayList<>(userCount);
+
+        log.debug("Beginning to persist {} users", userCount);
 
         for (AcmUser user : users)
         {
-            log.debug("Persisting user '{}'", user.getUserId());
+            log.trace("Persisting user '{}'", user.getUserId());
+            current++;
+            if (current % 100 == 0)
+            {
+                log.debug("Saving user {} of {}", current, userCount);
+            }
 
             user.setUserDirectoryName(directoryName);
             AcmUser saved = getUserDao().saveAcmUser(user);
