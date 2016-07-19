@@ -80,7 +80,7 @@ public class SpringLdapDaoIT
         for (int i = 0; i < RUNS; ++i)
         {
             long start = System.currentTimeMillis();
-            List<AcmUser> result = springLdapDao.findUsers(ldapTemplate, acmSyncLdapConfig);
+            List<AcmUser> result = springLdapDao.findUsersPaged(ldapTemplate, acmSyncLdapConfig);
             long time = System.currentTimeMillis() - start;
             sum += time;
             log.debug("Result: {}", result.size());
@@ -108,18 +108,6 @@ public class SpringLdapDaoIT
         }
 
         log.debug("Avg Time: {}ms", sum * 1.0 / RUNS);
-    }
-
-    @Test
-    public void findGroups()
-    {
-        LdapTemplate ldapTemplate = springLdapDao.buildLdapTemplate(acmSyncLdapConfig);
-
-        List<LdapGroup> result = springLdapDao.findGroups(ldapTemplate, acmSyncLdapConfig);
-        for (LdapGroup group : result)
-        {
-            log.debug("Group: {}", group.getGroupName());
-        }
     }
 
     @Test

@@ -1,7 +1,9 @@
 package com.armedia.acm.services.users.model.ldap;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.ldap.BadLdapGrammarException;
 import org.springframework.ldap.core.DirContextAdapter;
+import org.springframework.ldap.core.DistinguishedName;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -19,14 +21,14 @@ public class MapperUtils
         {
             return "";
         }
-        String[] parts = element.split(",\\w+="); // eg. (,ou=)
-        String commonName = parts[0];
-        commonName = StringUtils.substringAfter(commonName, "=");
-        if (commonName.contains(","))
+        try
         {
-            commonName = commonName.replaceAll(",\\s*", " ");
+            DistinguishedName dn = new DistinguishedName(element);
+            return dn.getValue("cn").toUpperCase();
+        } catch (BadLdapGrammarException e)
+        {
+            return "";
         }
-        return commonName.trim().toUpperCase();
     };
 
     public static Set<String> arrayToSet(String[] elements, Function<String, String> mapper)

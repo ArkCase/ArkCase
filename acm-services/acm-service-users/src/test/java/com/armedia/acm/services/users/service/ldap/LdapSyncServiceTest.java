@@ -80,8 +80,7 @@ public class LdapSyncServiceTest extends EasyMockSupport
         expected.put(ldapGroup1.getGroupName(), ldapGroup2.getGroupName());
         expected.put(ldapGroup3.getGroupName(), ldapGroup2.getGroupName());
 
-        Map<String, String> childParentPair = new TreeMap<>();
-        unit.populateGroupParentPairs(childParentPair, ldapGroups);
+        Map<String, String> childParentPair = unit.populateGroupParentPairs(ldapGroups);
 
         log.debug("Expected: {}", expected);
         log.debug("Actual: {}", childParentPair);
@@ -135,8 +134,7 @@ public class LdapSyncServiceTest extends EasyMockSupport
         List<AcmUser> ldapUsers = new ArrayList<>();
         Map<String, Set<AcmUser>> expected = setupTestLdapUsersGroups(ldapGroups, ldapUsers);
 
-        Map<String, Set<AcmUser>> actual = new TreeMap<>();
-        unit.getUsersByLdapGroup(actual, ldapGroups, ldapUsers);
+        Map<String, Set<AcmUser>> actual = unit.getUsersByLdapGroup(ldapGroups, ldapUsers);
 
         printMap(expected);
         printMap(actual);
@@ -178,8 +176,7 @@ public class LdapSyncServiceTest extends EasyMockSupport
 
         replayAll();
 
-        Map<String, Set<AcmUser>> actual = new TreeMap<>();
-        unit.getUsersByApplicationRole(actual, ldapGroupUsers);
+        Map<String, Set<AcmUser>> actual = unit.getUsersByApplicationRole(ldapGroupUsers);
 
         verifyAll();
 

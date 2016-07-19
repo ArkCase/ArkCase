@@ -116,7 +116,7 @@ public class SpringLdapDao
         List<AcmUser> acmUsers = new ArrayList<>();
         for (String base : bases)
         {
-            List<AcmUser> users = fetchLdapPaged(template, base, syncConfig.getUsersSearchFilter(), searchControls,
+            List<AcmUser> users = fetchLdapPaged(template, base, syncConfig.getAllUsersFilter(), searchControls,
                     syncConfig.getSyncPageSize(), userGroupsContextMapper);
             log.info("Fetched total '{}' users for search base '{}'", users.size(), base);
             acmUsers.addAll(users);
@@ -143,11 +143,7 @@ public class SpringLdapDao
         return acmGroups;
     }
 
-    public List<AcmUser> findUsers(LdapTemplate template, final AcmLdapSyncConfig syncConfig)
-    {
-        return findUsers(template, syncConfig, null);
-    }
-
+    // redundant code but useful if in findUsersPaged() cookie paging fails
     public List<AcmUser> findUsers(LdapTemplate template, final AcmLdapSyncConfig syncConfig, String[] attributes)
     {
         SearchControls searchControls = new SearchControls();
@@ -167,7 +163,6 @@ public class SpringLdapDao
         List<AcmUser> acmUsers = new ArrayList<>();
         for (String base : bases)
         {
-//            List<AcmUser> found
 
             boolean searchUsers = true;
             boolean skipFirst = false;
@@ -223,6 +218,7 @@ public class SpringLdapDao
         return sortedAndPaged;
     }
 
+    // redundant code but useful if in findGroupsPaged() cookie paging fails
     public List<LdapGroup> findGroups(LdapTemplate template, AcmLdapSyncConfig config)
     {
         SearchControls searchControls = new SearchControls();
