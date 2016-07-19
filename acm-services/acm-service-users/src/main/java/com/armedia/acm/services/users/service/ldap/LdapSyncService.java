@@ -52,7 +52,6 @@ public class LdapSyncService
     // folder ($HOME/.acm).
     public void ldapSync()
     {
-        if (true)return;
         if (!isSyncEnabled())
         {
             log.debug("Sync is disabled - stopping now.");
