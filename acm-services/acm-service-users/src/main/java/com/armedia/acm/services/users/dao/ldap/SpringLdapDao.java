@@ -80,6 +80,7 @@ public class SpringLdapDao
 
         LdapContextSource ldapContextSource = new LdapContextSource();
         ldapContextSource.setUrl(syncConfig.getLdapUrl());
+        ldapContextSource.setBase(syncConfig.getBaseDC());
         if (authenticationSource != null)
         {
             ldapContextSource.setAuthenticationSource(authenticationSource);
