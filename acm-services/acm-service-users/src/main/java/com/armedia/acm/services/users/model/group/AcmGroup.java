@@ -22,7 +22,6 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -87,6 +86,34 @@ public class AcmGroup implements Serializable, AcmEntity
             inverseJoinColumns = {@JoinColumn(name = "cm_user_id", referencedColumnName = "cm_user_id")})
     private Set<AcmUser> members;
 
+    @PrePersist
+    protected void beforeInsert()
+    {
+        if (StringUtils.isEmpty(getType()))
+        {
+            setType(AcmGroupType.ADHOC_GROUP);
+        }
+
+        if (StringUtils.isEmpty(getStatus()))
+        {
+            setStatus(AcmGroupStatus.ACTIVE);
+        }
+    }
+
+    @PreUpdate
+    public void beforeUpdate()
+    {
+        if (StringUtils.isEmpty(getType()))
+        {
+            setType(AcmGroupType.ADHOC_GROUP);
+        }
+
+        if (StringUtils.isEmpty(getStatus()))
+        {
+            setStatus(AcmGroupStatus.ACTIVE);
+        }
+    }
+
     public AcmGroup getParentGroup()
     {
         return parentGroup;
@@ -98,7 +125,7 @@ public class AcmGroup implements Serializable, AcmEntity
         {
             if (parentGroup.getChildGroups() == null)
             {
-                parentGroup.setChildGroups(new ArrayList<AcmGroup>());
+                parentGroup.setChildGroups(new ArrayList<>());
             }
 
             parentGroup.getChildGroups().add(this);
