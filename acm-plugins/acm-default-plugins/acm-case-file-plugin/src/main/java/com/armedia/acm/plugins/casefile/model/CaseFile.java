@@ -60,7 +60,7 @@ import java.util.Set;
 @Entity
 @Table(name = "acm_case_file")
 @XmlRootElement(name = "caseFile")
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "className")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "className")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.plugins.casefile.model.CaseFile")
@@ -129,9 +129,6 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumns({@JoinColumn(name = "cm_object_id"), @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type")})
     private List<AcmParticipant> participants = new ArrayList<>();
-
-    @Transient
-    private Set<AcmNotificationReceiver> receivers = new HashSet<>();
 
     @Column(name = "cm_due_date")
     @Temporal(TemporalType.TIMESTAMP)
@@ -686,6 +683,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     @JsonIgnore
     public Set<AcmNotificationReceiver> getReceivers()
     {
+        Set<AcmNotificationReceiver> receivers = new HashSet<>();
         receivers.addAll(participants);
         return receivers;
     }
