@@ -2,6 +2,8 @@ package com.armedia.acm.plugins.businessprocess.model;
 
 import com.armedia.acm.services.pipeline.AbstractPipelineContext;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class NextPossibleQueuesModel<T, P extends AbstractPipelineContext>
@@ -10,7 +12,7 @@ public class NextPossibleQueuesModel<T, P extends AbstractPipelineContext>
 
     private P pipelineContext;
 
-    private List<String> nextPossibleQueues;
+    private List<String> nextPossibleQueues = new ArrayList<>();
 
     public T getBusinessObject()
     {
@@ -34,12 +36,13 @@ public class NextPossibleQueuesModel<T, P extends AbstractPipelineContext>
 
     public List<String> getNextPossibleQueues()
     {
-        return nextPossibleQueues;
+        return Collections.unmodifiableList(nextPossibleQueues);
     }
 
     public void setNextPossibleQueues(List<String> nextPossibleQueues)
     {
-        this.nextPossibleQueues = nextPossibleQueues;
+        this.nextPossibleQueues.clear();
+        this.nextPossibleQueues.addAll(nextPossibleQueues);
     }
 
 }
