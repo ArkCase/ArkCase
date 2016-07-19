@@ -7,7 +7,6 @@ import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.plugins.casefile.service.CaseFileStartBusinessProcessBusinessRule;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,7 +48,7 @@ public class CaseFileStartBusinessProcessIfNeededHandler implements PipelineHand
 
             String processName = result.getProcessName();
 
-            startBusinessProcessService.startBusinessProcess(processName, processVaribales);
+            getStartBusinessProcessService().startBusinessProcess(processName, processVaribales);
         }
     }
 
@@ -70,4 +69,13 @@ public class CaseFileStartBusinessProcessIfNeededHandler implements PipelineHand
         this.startBusinessProcessBusinessRule = startBusinessProcessBusinessRule;
     }
 
+    public StartBusinessProcessService getStartBusinessProcessService()
+    {
+        return startBusinessProcessService;
+    }
+
+    public void setStartBusinessProcessService(StartBusinessProcessService startBusinessProcessService)
+    {
+        this.startBusinessProcessService = startBusinessProcessService;
+    }
 }
