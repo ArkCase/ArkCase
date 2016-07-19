@@ -6,6 +6,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import com.armedia.acm.plugins.businessprocess.model.NextPossibleQueuesModel;
+import com.armedia.acm.plugins.casefile.model.AcmQueue;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 
@@ -68,6 +69,9 @@ public class CaseFileNextPossibleQueuesBusinessRuleTest
     {
         CaseFile caseFile = new CaseFile();
         caseFile.setCaseType("Investigative");
+        AcmQueue queue = new AcmQueue();
+        queue.setName("Intake");
+        caseFile.setQueue(queue);
         CaseFilePipelineContext context = new CaseFilePipelineContext();
         context.setQueueName("any_name");
 
