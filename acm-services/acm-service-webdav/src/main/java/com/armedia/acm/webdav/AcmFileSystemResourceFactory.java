@@ -1,22 +1,27 @@
 package com.armedia.acm.webdav;
 
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
-import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
-import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
+
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 
 import io.milton.http.LockManager;
 import io.milton.http.ResourceFactory;
 import io.milton.http.exceptions.BadRequestException;
 import io.milton.http.exceptions.NotAuthorizedException;
 import io.milton.resource.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity
@@ -25,8 +30,6 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
 {
 
     private EcmFileDao fileDao;
-
-    private AcmFolderDao folderDao;
 
     private EcmFileTransaction ecmFileTransaction;
 
@@ -44,21 +47,49 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
 
     private Pattern wordFileExtensionPattern;
 
+
     private AuthenticationTokenService authenticationTokenService;
+
+    /**
+     * A pattern to distinguish between a file URL and the URL that Microsoft Office sends for an OPTIONS
+     * request.  An ArkCase WebDAV file URL is assumed to end in (someNumber.someExtension), e.g., "134.docx".
+     * If a WebDAV URL does not end with this pattern, assume Office is sending an OPTIONS request, and we can
+     * reply with an empty (that is,a dummy) resource.  We can't send the real file resource, since Office did not
+     * send us the whole URL.
+     */
+    private Pattern realDocumentUrl = Pattern.compile(".*\\d*\\.\\w*$");
+
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
+
 
     @Override
     public Resource getResource(String host, String path) throws NotAuthorizedException, BadRequestException
     {
-        path = removeFileExtension(path);
+        log.trace("host: {}, path: {}", host, path);
 
-        String strippedPath = path.substring(path.indexOf(filterMapping) + filterMapping.length());
-        if (strippedPath.endsWith("/"))
+        // if the path does not end in some-number.some-extension let's suppose it is an OPTIONS request.
+
+        Matcher m = realDocumentUrl.matcher(path);
+
+        if (m.matches())
         {
-            strippedPath = strippedPath.substring(0, strippedPath.length() - 1);
-        }
+            log.debug("The path {} seems to be a real file request", path);
+            String noExtensionPath = removeFileExtension(path);
+            String strippedPath = noExtensionPath.substring(path.indexOf(filterMapping) + filterMapping.length());
+            if (strippedPath.endsWith("/"))
+            {
+                strippedPath = strippedPath.substring(0, strippedPath.length() - 1);
+            }
 
-        ResourceHandler hanlder = getResourceHandler(strippedPath);
-        return hanlder.getResource(host, strippedPath);
+            log.trace("stripped path: {}", strippedPath);
+
+            ResourceHandler handler = getResourceHandler(strippedPath);
+            return handler.getResource(host, strippedPath);
+        } else
+        {
+            log.debug("The path {} seems to be an OPTIONS request", path);
+            return new AcmOptionsResource();
+        }
     }
 
     private String removeFileExtension(String path)
@@ -74,15 +105,8 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
 
     private ResourceHandler getResourceHandler(String path) throws BadRequestException
     {
-
-        if (path.contains("/"))
-        {
-            return new AcmFileResourceHandler();
-        } else
-        {
-            return new AcmFolderResourceHandler();
-        }
-
+        // in ArkCase, Milton only handles files.
+        return new AcmFileResourceHandler();
     }
 
     public String getCmisFileId(EcmFile ecmFile)
@@ -98,16 +122,6 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
     public void setFileDao(EcmFileDao fileDao)
     {
         this.fileDao = fileDao;
-    }
-
-    public AcmFolderDao getFolderDao()
-    {
-        return folderDao;
-    }
-
-    public void setFolderDao(AcmFolderDao folderDao)
-    {
-        this.folderDao = folderDao;
     }
 
     public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils)
@@ -200,10 +214,10 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
 
     private class AcmFileResourceHandler implements ResourceHandler
     {
-
         @Override
         public AcmFileSystemResource getResource(String host, String path) throws BadRequestException
         {
+            log.trace("host: {}, path: {}", host, path);
 
             String[] fileArgs = path.split("/");
             Long fileId = Long.valueOf(fileArgs[fileArgs.length - 1]);
@@ -214,26 +228,16 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
 
             getSecurityManager().setAuthentication(getAuthenticationTokenService().getAuthenticationForToken(acmTicket));
 
+
             EcmFile ecmFile = fileDao.find(fileId);
+
+            log.trace("fileId: {}, lock type: {}, fileType: {}", fileId, lockType, fileType);
+
+            log.trace("ecmFile exists? {}", ecmFile != null);
+
             return new AcmFileResource(host, ecmFile, fileType, lockType, getSecurityManager().getAuthentication(),
                     AcmFileSystemResourceFactory.this);
 
         }
-
     }
-
-    private class AcmFolderResourceHandler implements ResourceHandler
-    {
-
-        @Override
-        public AcmFileSystemResource getResource(String host, String path)
-        {
-            Long folderId = Long.valueOf(path);
-
-            AcmFolder acmFolder = folderDao.find(folderId);
-            return new AcmFolderResource(host, acmFolder, AcmFileSystemResourceFactory.this);
-        }
-
-    }
-
 }
