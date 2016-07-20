@@ -1493,8 +1493,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 var names = [args.label];
                                 var template = args.templateType;
 
+                                var selectedFolderId = nodes[0].data.objectId;
                                 var promiseCorrespondence = ObjectCorrespondenceService.createCorrespondence(template,
-                                    DocTree.getObjType(), DocTree.getObjId(), DocTree.objectInfo.container.folder.cmisFolderId);
+                                    DocTree.getObjType(), DocTree.getObjId(), selectedFolderId);
 
                                 var promiseAddNodes = DocTree._addingFileNodes(nodes[0], names, names[0]);
 
