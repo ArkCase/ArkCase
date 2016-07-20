@@ -38,8 +38,19 @@ public class SpringLdapDao
 
     private AcmUserGroupsContextMapper userGroupsContextMapper;
 
-    static <T> List<T> fetchLdapPaged(LdapTemplate template, String searchBase, String searchFilter,
-                                      SearchControls searchControls, int pageSize, ContextMapper contextMapper)
+    // make it possible to unit test
+    public class PagedResultsDirContextProcessorBuilder
+    {
+        public PagedResultsDirContextProcessor build(int pageSize, PagedResultsCookie cookie)
+        {
+            return new PagedResultsDirContextProcessor(pageSize, cookie);
+        }
+    }
+
+    private PagedResultsDirContextProcessorBuilder builder = new PagedResultsDirContextProcessorBuilder();
+
+    private <T> List<T> fetchLdapPaged(LdapTemplate template, String searchBase, String searchFilter,
+                                       SearchControls searchControls, int pageSize, ContextMapper contextMapper)
     {
         List<T> result = new ArrayList<>();
         // for the first paged-search request we pass null cookie
@@ -47,7 +58,7 @@ public class SpringLdapDao
         while (true)
         {
             PagedResultsDirContextProcessor pagedResultsDirContextProcessor =
-                    new PagedResultsDirContextProcessor(pageSize, resultsCookie);
+                    builder.build(pageSize, resultsCookie);
             log.debug("Start fetching '{}' items from LDAP", pageSize);
             List<T> items = template.search(searchBase, searchFilter,
                     searchControls, contextMapper, pagedResultsDirContextProcessor);
@@ -125,6 +136,14 @@ public class SpringLdapDao
 
         // filter out the DISABLED users
         acmUsers = acmUsers.stream().filter(u -> !("DISABLED".equals(u.getUserState()))).collect(Collectors.toList());
+
+        // do we need to append the domain?
+        String userDomain = syncConfig.getUserDomain();
+        if (userDomain != null && !userDomain.trim().isEmpty())
+        {
+            String userDomainSuffix = "@" + userDomain;
+            acmUsers.stream().forEach(u -> u.setUserId(u.getUserId() + userDomainSuffix));
+        }
 
         log.info("LDAP sync number of enabled users: {}", acmUsers.size());
         return acmUsers;
@@ -271,7 +290,7 @@ public class SpringLdapDao
         return acmGroups;
     }
 
-    public AcmUser findUser(String username, LdapTemplate template, AcmLdapSyncConfig config, String [] attributes)
+    public AcmUser findUser(String username, LdapTemplate template, AcmLdapSyncConfig config, String[] attributes)
     {
         SearchControls searchControls = new SearchControls();
         searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
@@ -323,5 +342,15 @@ public class SpringLdapDao
     public void setAcmGroupContextMapper(AcmGroupContextMapper acmGroupContextMapper)
     {
         this.acmGroupContextMapper = acmGroupContextMapper;
+    }
+
+    public PagedResultsDirContextProcessorBuilder getBuilder()
+    {
+        return builder;
+    }
+
+    public void setBuilder(PagedResultsDirContextProcessorBuilder builder)
+    {
+        this.builder = builder;
     }
 }
