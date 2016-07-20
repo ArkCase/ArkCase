@@ -45,7 +45,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "acm_costsheet")
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "className")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "className")
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.services.costsheet.model.AcmCostsheet")
 public class AcmCostsheet implements Serializable, AcmObject, AcmEntity, AcmStatefulEntity, AcmParentObjectInfo
