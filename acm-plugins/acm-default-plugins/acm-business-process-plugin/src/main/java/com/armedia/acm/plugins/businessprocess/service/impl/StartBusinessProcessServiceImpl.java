@@ -17,9 +17,9 @@ public class StartBusinessProcessServiceImpl implements StartBusinessProcessServ
     private RuntimeService activitiRuntimeService;
 
     @Override
-    public void startBusinessProcess(String processName, Map<String, Object> processVaribales)
+    public void startBusinessProcess(String processName, Map<String, Object> processVariables)
     {
-        ProcessInstance pi = getActivitiRuntimeService().startProcessInstanceByKey(processName, processVaribales);
+        ProcessInstance pi = getActivitiRuntimeService().startProcessInstanceByKey(processName, processVariables);
         log.debug("Started process with ID: {}.", pi.getId());
     }
 
