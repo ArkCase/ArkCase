@@ -39,7 +39,7 @@ public class ListAllNotesAPIController {
             log.info("Finding all notes");
         }
         if(type != null && parentId != null && parentType != null) {
-            String query = "object_type_s:" + NoteConstants.OBJECT_TYPE + " AND parent_object_id_i:" + parentId + " AND parent_object_type_s:" + parentType + " AND note_type_s:" + type;
+            String query = "object_type_s:" + NoteConstants.OBJECT_TYPE + " AND parent_object_id_i:" + parentId + " AND parent_object_type_s:" + parentType + " AND type_s:" + type;
             String sort = "create_date_tdt DESC";
 
             String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH,
