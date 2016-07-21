@@ -63,7 +63,7 @@ public class ListPersonAPIControllerTest extends EasyMockSupport
         mockPersonAssociationDao = createMock(PersonAssociationDao.class);      
         mockHttpSession = new MockHttpSession();
 
-        unit.setPersonAssociationDao(mockPersonAssociationDao);        
+        unit.setExecuteSolrQuery(null);
     }
 
     @Test
