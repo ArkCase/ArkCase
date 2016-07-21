@@ -7,11 +7,11 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.asserts.SoftAssert;
-
 import com.armedia.arkcase.uitests.base.ArkCaseAuthentication;
 import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
 import com.armedia.arkcase.uitests.base.ArkCaseTestUtils;
 import com.armedia.arkcase.uitests.base.TestsPoperties;
+
 
 public class UserProfileTests extends ArkCaseTestBase {
 

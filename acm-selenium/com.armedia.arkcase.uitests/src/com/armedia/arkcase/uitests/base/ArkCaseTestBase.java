@@ -26,7 +26,7 @@ public class ArkCaseTestBase {
 	@BeforeClass
 	public static void setUp() throws Exception {
 
-		CheckIfFileIsDownloaded folder = new CheckIfFileIsDownloaded();
+		ArkCaseUtils folder = new ArkCaseUtils();
 		folder.createFolder();
 		FirefoxProfile fprofile = new FirefoxProfile();
 		File file = new File("/.arkcase/seleniumTests/seleniumDownload/");
@@ -48,7 +48,7 @@ public class ArkCaseTestBase {
 	@AfterClass
 	public static void shutDown() throws Exception {
 
-		CheckIfFileIsDownloaded folder = new CheckIfFileIsDownloaded();
+		ArkCaseUtils folder = new ArkCaseUtils();
 		folder.deleteFolder();
 		driver.close();
 		driver.quit();
