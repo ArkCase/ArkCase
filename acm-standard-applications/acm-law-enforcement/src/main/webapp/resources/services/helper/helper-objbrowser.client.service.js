@@ -176,13 +176,19 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                 that.resetObjectInfo = arg.resetObjectInfo;
                 that.getObjectInfo = arg.getObjectInfo;
                 that.updateObjectInfo = arg.updateObjectInfo;
-                that.initComponentLinks = arg.initComponentLinks;
-                that.initComponentLinksDefault = function (config) {
+                that.initComponentLinks = (arg.initComponentLinks)? arg.initComponentLinks : function (config) {
                     var nodeType = Service.getCurrentObjectType();
                     return Service.createComponentLinks(config, nodeType);
                 };
-
-                that.selectComponentLinks = arg.selectComponentLinks;
+                that.selectComponentLinks = (arg.selectComponentLinks)? arg.selectComponentLinks : function (selectedObject) {
+                    if (!Util.isArrayEmpty(that.scope.componentLinks)) {
+                        return that.scope.componentLinks;
+                    } else if (that.initComponentLinks) {
+                        return that.initComponentLinks(that.scope.config);
+                    } else {
+                        return [];
+                    }
+                };
                 that.getObjectIdFromInfo = (arg.getObjectIdFromInfo) ? arg.getObjectIdFromInfo : function (objectInfo) {
                     return Util.goodMapValue(objectInfo, "id");
                 };
@@ -195,9 +201,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
 
                 ConfigService.getModuleConfig(that.moduleId).then(function (moduleConfig) {
                     that.scope.config = moduleConfig;
-                    if (that.initComponentLinks) {  //if initComponentLinks is not define, use initComponentLinksDefault but postpone after objectInfo retrieved
-                        that.scope.componentLinks = that.initComponentLinks(moduleConfig);
-                    }
+                    that.scope.componentLinks = that.initComponentLinks(moduleConfig);
                     that.scope.linksShown = Util.goodValue(moduleConfig.initialLinksShown, true);
                     return moduleConfig;
                 });
@@ -269,6 +273,12 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                 that.scope.$on('req-select-object', function (e, selectedObject) {
                     that.scope.$broadcast('object-selected', selectedObject);
 
+                    var objectId = Util.goodMapValue(selectedObject, "nodeId", null);
+                    var objectType = Util.goodMapValue(selectedObject, "nodeType", null);
+                    Service.updateObjectSetting(that.moduleId, that.scope.activeLinkId, objectId, objectType);
+
+                    loadObject(objectId);
+
                     var leadComponent = selectedObject.leadComponent;
                     if (!leadComponent) {
                         var components = Util.goodArray(selectedObject.components);
@@ -276,14 +286,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     }
                     that.scope.activeLinkId = leadComponent;
 
-                    var objectId = Util.goodMapValue(selectedObject, "nodeId", null);
-                    var objectType = Util.goodMapValue(selectedObject, "nodeType", null);
-                    Service.updateObjectSetting(that.moduleId, that.scope.activeLinkId, objectId, objectType);
-                    if (that.selectComponentLinks && that.initComponentLinks) {     //initComponentLinks serves as flag to indicate initComponentLinks() has called
-                        that.scope.componentLinks = that.selectComponentLinks(selectedObject);
-                    }
-
-                    loadObject(objectId);
+                    that.scope.componentLinks = that.selectComponentLinks(selectedObject);
                 });
 
                 ServCommService.handleResponse(that.scope);
@@ -304,18 +307,13 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                                 that.scope.progressMsg = null;
                                 that.scope.objectInfo = objectInfo;
 
-                                if (!that.initComponentLinks) {
-                                    that.initComponentLinks = that.initComponentLinksDefault;
-                                }
-                                that.scope.componentLinks = that.initComponentLinks(that.scope.config);
-
                                 that.scope.$broadcast('object-updated', objectInfo);
 
                                 //when object is loaded we want to subscribe to change events
                                 var objectId = id;
                                 var objectType = that.getObjectTypeFromInfo(that.scope.objectInfo);
 
-                                //temp fix for task
+                                //objectType fix for task
                                 if (objectType == 'ADHOC') {
                                     objectType = 'TASK';
                                 }

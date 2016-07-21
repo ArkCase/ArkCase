@@ -1,12 +1,7 @@
 package com.armedia.acm.plugins.profile.dao;
 
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import com.armedia.acm.service.outlook.dao.OutlookPasswordDao;
 import com.armedia.acm.service.outlook.model.OutlookDTO;
-
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,13 +16,27 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-
 import java.util.List;
 
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
+
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/spring/spring-library-profile-plugin-test.xml", "/spring/spring-library-data-source.xml",
-        "/spring/spring-library-context-holder.xml", "/spring/spring-library-acm-encryption.xml",
-        "/spring/spring-library-property-file-manager.xml" })
+@ContextConfiguration(locations = {
+        "/spring/spring-library-profile-plugin-test.xml",
+        "/spring/spring-library-data-source.xml",
+        "/spring/spring-library-context-holder.xml",
+        "/spring/spring-library-acm-encryption.xml",
+        "/spring/spring-library-property-file-manager.xml",
+        "/spring/spring-library-ms-outlook-integration.xml",
+        "/spring/spring-library-ecm-file.xml",
+        "/spring/spring-library-mule-context-manager.xml",
+        "/spring/spring-library-search.xml",
+        "/spring/spring-library-authentication-token.xml",
+        "/spring/spring-library-user-service.xml",
+        "/spring/spring-library-data-access-control.xml",
+        "/spring/spring-library-particpants.xml"
+})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class UserOrgDaoIT extends EasyMockSupport
 {
