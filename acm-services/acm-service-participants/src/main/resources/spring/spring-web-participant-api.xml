@@ -9,7 +9,7 @@
     </bean>
 
     <bean id="listAllParticipantsByObjectTypeAndObjectId" class="com.armedia.acm.services.participants.web.api.ListAllParticipantsByObjectTypeAndObjectId">
-        <property name="acmParticipantService" ref="acmParticipantService"/>
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
 
     <bean id="removeParticipantAPIController" class="com.armedia.acm.services.participants.web.api.RemoveParticipantAPIController">
