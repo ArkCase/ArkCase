@@ -87,7 +87,7 @@
         <property name="defaultTargetUrl" value="/home.html#!/welcome"/>
         <property name="alwaysUseDefaultTargetUrl" value="false"/>
         <property name="sessionRegistry" ref="sessionRegistry"/>
-        <property name="sessionAuthenticationStrategy" ref="sas"/>
+        <property name="sessionAuthenticationStrategy" ref="concurrentSessionControlAuthenticationStrategy"/>
     </bean>
 
     <bean id="acmRedirectStrategy" class="com.armedia.acm.auth.AcmRedirectStrategy"/>
@@ -99,10 +99,11 @@
         <property name="redirectStrategy" ref="acmRedirectStrategy"/>
     </bean>
 
-    <bean id="sas" class=
+    <bean id="concurrentSessionControlAuthenticationStrategy" class=
             "org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy">
         <constructor-arg name="sessionRegistry" ref="sessionRegistry"/>
-        <property name="maximumSessions" value="1"/>
+        <property name="maximumSessions" value="${sessionControl.maximumSessions}"/>
+        <property name="exceptionIfMaximumExceeded" value="${sessionControl.exceptionIfMaximumExceeded}"/>
     </bean>
 
     <bean id="sessionRegistry"
