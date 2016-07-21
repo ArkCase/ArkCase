@@ -8,9 +8,9 @@ import org.openqa.selenium.support.How;
 import org.testng.asserts.SoftAssert;
 
 public class TaskPage {
+	
 	public @FindBy(how = How.ID, using = "saveButton")
-
-	WebElement saveButton;
+    WebElement saveButton;
 	@FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/form/div[1]/h3/span")
 	WebElement taskTitle;
 	@FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/form/div[2]/div[2]/div[1]/label")

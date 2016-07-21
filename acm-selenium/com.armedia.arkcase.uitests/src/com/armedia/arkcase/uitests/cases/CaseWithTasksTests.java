@@ -11,16 +11,17 @@ import org.openqa.selenium.support.ui.Select;
 
 import com.armedia.arkcase.uitests.base.ArkCaseAuthentication;
 import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
-import com.armedia.arkcase.uitests.base.TestsPoperties;
 import com.armedia.arkcase.uitests.task.TaskPage;
 import com.armedia.arkcase.uitests.task.TasksPage;
+import com.armedia.arkcase.uitests.base.TestsPoperties;
 
 public class CaseWithTasksTests extends ArkCaseTestBase {
 
 	CasePage casePom = PageFactory.initElements(driver, CasePage.class);
 	CasesPage casesPom = PageFactory.initElements(driver, CasesPage.class);
-	TaskPage task = PageFactory.initElements(driver, TaskPage.class);
 	TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
+	TaskPage task=PageFactory.initElements(driver, TaskPage.class);
+	
 
 	@Test
 	public void createNewCaseAddTask() throws InterruptedException, IOException {
@@ -96,8 +97,10 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		Thread.sleep(5000);
 		casesPom.caseTasks.click();
 		Thread.sleep(5000);
+		casesPom.refreshPage.click();
+		Thread.sleep(3000);
 		casesPom.verifyTaskInTheTaskTable("CaseTask", "Samuel Supervisor", "Medium", "05/20/2016", "CLOSED");
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -105,7 +108,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertEquals("Case title is wrong", "CaseAddTask (IN APPROVAL)", casesPom.caseTitleDraft.getText());
 		casesPom.changeCaseStatusAproved();
@@ -156,7 +159,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		casePom.submit.click();
 		Thread.sleep(8000);
 		driver.switchTo().defaultContent();
-		Thread.sleep(4000);
+		Thread.sleep(5000);
 		casesPom.verifyCreatedCaseInfo("CaseAddTask", "Background Investigation");
 		casesPom.VerifycreatedDate();
 		Assert.assertEquals("Case title is wrong", "CaseAddTask (DRAFT)", casesPom.caseTitleDraft.getText());
@@ -183,20 +186,22 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		casesPom.verifyAddedTaskInCase("CaseTask", "0", "Samuel Supervisor", "05/20/2016", "Medium", "ACTIVE");
 		tasks.tagsLinkClick();
 		tasks.verifyTagsTable();
-		tasks.addNewTag("stojan");
+		tasks.addNewTag("michel");
 		Thread.sleep(3000);
-		tasks.verifyAddedTag("aredia", "Samuel Supervisor");
-		driver.navigate().refresh();
-		Thread.sleep(8000);
-		tasks.verifyAddedTag("aredia", "Samuel Supervisor");
+		tasks.verifyAddedTag("michel", "Samuel Supervisor");
+		tasks.refreshButton.click();
+		Thread.sleep(4000);
+		tasks.verifyAddedTag("michel", "Samuel Supervisor");
 		tasks.deleteAddedTag();
 		Thread.sleep(4000);
-		driver.navigate().refresh();
-		Thread.sleep(8000);
+		tasks.refreshButton.click();
+		Thread.sleep(4000);
 		tasks.verifyIfTagIsDeleted();
 		casesPom.caseTitleInTasks.click();
 		Thread.sleep(5000);
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.caseTasks.click();
+		Thread.sleep(4000);
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -204,7 +209,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertEquals("Case title is wrong", "CaseAddTask (IN APPROVAL)", casesPom.caseTitleDraft.getText());
 		casesPom.changeCaseStatusAproved();
@@ -308,7 +313,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		tasks.tagsLinkClick();
 		casesPom.caseTitleInTasks.click();
 		Thread.sleep(5000);
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -316,7 +321,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertEquals("Case title is wrong", "CaseAddTask (IN APPROVAL)", casesPom.caseTitleDraft.getText());
 		casesPom.changeCaseStatusAproved();
@@ -415,7 +420,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		casesPom.caseTitleInTasks.click();
 		Thread.sleep(5000);
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -423,7 +428,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertEquals("Case title is wrong", "CaseAddTask (IN APPROVAL)", casesPom.caseTitleDraft.getText());
 		casesPom.changeCaseStatusAproved();
@@ -508,13 +513,15 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		Thread.sleep(4000);
 		driver.navigate().refresh();
 		Thread.sleep(10000);
+		tasks.workflowLinkClick();
+		Thread.sleep(3000);
 		tasks.verifyWorkflowTableStatusClosed("Samuel Supervisor");
 		Thread.sleep(3000);
 		tasks.notestLinkClick();
 		Thread.sleep(3000);
 		casesPom.caseTitleInTasks.click();
 		Thread.sleep(5000);
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -522,7 +529,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertEquals("Case title is wrong", "CaseAddTask (IN APPROVAL)", casesPom.caseTitleDraft.getText());
 		casesPom.changeCaseStatusAproved();
@@ -606,12 +613,9 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		tasks.verifyHistoryTableData("Task Created", "Samuel Supervisor");
 		casesPom.completeButtonInTaskPage.click();
 		Thread.sleep(4000);
-		driver.navigate().refresh();
-		Thread.sleep(10000);
-		tasks.verifyHistoryTableData("Task Status Changed", "Samuel Supervisor");
 		casesPom.caseTitleInTasks.click();
 		Thread.sleep(5000);
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -619,7 +623,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertEquals("Case title is wrong", "CaseAddTask (IN APPROVAL)", casesPom.caseTitleDraft.getText());
 		casesPom.changeCaseStatusAproved();
@@ -692,7 +696,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		task.casesTaskLinkClick();
 		Thread.sleep(8000);
 		task.verifyTaskInCasesTaskTable();
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -700,7 +704,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertEquals("Case title is wrong", "CaseAddTask (IN APPROVAL)", casesPom.caseTitleDraft.getText());
 		casesPom.changeCaseStatusAproved();
@@ -812,7 +816,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		Assert.assertTrue(tasks.priority.getText().equals("Expedite"));
 		casesPom.caseTitleInTasks.click();
 		Thread.sleep(5000);
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -820,7 +824,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertEquals("Case title is wrong", "CaseAddTask (IN APPROVAL)", casesPom.caseTitleDraft.getText());
 		casesPom.changeCaseStatusAproved();
@@ -916,7 +920,9 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.caseTitleInTasks.click();
 		Thread.sleep(5000);
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.caseTasks.click();
+		Thread.sleep(5000);
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -924,7 +930,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertEquals("Case title is wrong", "CaseAddTask (IN APPROVAL)", casesPom.caseTitleDraft.getText());
 		casesPom.changeCaseStatusAproved();
@@ -1019,7 +1025,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		Assert.assertFalse("Add note button is enabled", tasks.addNewNoteButton.isEnabled());
 		casesPom.caseTitleInTasks.click();
 		Thread.sleep(5000);
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -1027,7 +1033,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertEquals("Case title is wrong", "CaseAddTask (IN APPROVAL)", casesPom.caseTitleDraft.getText());
 		casesPom.changeCaseStatusAproved();
@@ -1125,7 +1131,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		tasks.verifyAddingDocumentIfTaskIsClosed();
 		casesPom.caseTitleInTasks.click();
 		Thread.sleep(5000);
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -1133,7 +1139,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertEquals("Case title is wrong", "CaseAddTask (IN APPROVAL)", casesPom.caseTitleDraft.getText());
 		casesPom.changeCaseStatusAproved();

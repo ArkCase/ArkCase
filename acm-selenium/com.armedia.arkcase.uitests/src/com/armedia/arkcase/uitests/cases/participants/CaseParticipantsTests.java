@@ -184,7 +184,7 @@ public class CaseParticipantsTests extends ArkCaseTestBase {
 	}
 
 	@Test
-	public void createNewCaseAddFollowerVerifyParticipantsNameTableData()
+	public void createNewCaseAddFollowerVerifyParticipantsNameColumnTableData()
 			throws InterruptedException, IOException, AWTException {
 
 		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
@@ -547,7 +547,7 @@ public class CaseParticipantsTests extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		participant.searchBtn.click();
 		Thread.sleep(3000);
-		participant.verifySerarchedUser("Samuel Supervisor", "samuel-acm");
+		participant.verifySerarchedUser("Samuel Supervisor", "USER", "", "samuel-acm");
 		participant.searchedUserName.click();
 		Thread.sleep(3000);
 		participant.clickOkBtn();
@@ -635,7 +635,7 @@ public class CaseParticipantsTests extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		participant.searchBtn.click();
 		Thread.sleep(3000);
-		participant.verifySerarchedUser("Samuel Supervisor", "samuel-acm");
+		participant.verifySerarchedUser("Samuel Supervisor", "USER", "", "samuel-acm");
 		participant.searchedUserName.click();
 		Thread.sleep(3000);
 		participant.clickOkBtn();
@@ -728,7 +728,7 @@ public class CaseParticipantsTests extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		participant.searchBtn.click();
 		Thread.sleep(3000);
-		participant.verifySerarchedUser("Samuel Supervisor", "samuel-acm");
+		participant.verifySerarchedUser("Samuel Supervisor", "USER", "", "samuel-acm");
 		participant.searchedUserName.click();
 		Thread.sleep(3000);
 		participant.clickOkBtn();
@@ -817,7 +817,7 @@ public class CaseParticipantsTests extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		participant.searchBtn.click();
 		Thread.sleep(3000);
-		participant.verifySerarchedUser("Samuel Supervisor", "samuel-acm");
+		participant.verifySerarchedUser("Samuel Supervisor", "USER", "", "samuel-acm");
 		participant.searchedUserName.click();
 		Thread.sleep(3000);
 		participant.clickOkBtn();
@@ -911,7 +911,7 @@ public class CaseParticipantsTests extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		participant.searchBtn.click();
 		Thread.sleep(3000);
-		participant.verifySerarchedUser("Samuel Supervisor", "samuel-acm");
+		participant.verifySerarchedUser("Samuel Supervisor", "USER", "", "samuel-acm");
 		participant.searchedUserName.click();
 		Thread.sleep(3000);
 		participant.clickOkBtn();
@@ -1005,7 +1005,7 @@ public class CaseParticipantsTests extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		participant.searchBtn.click();
 		Thread.sleep(3000);
-		participant.verifySerarchedUser("Ann Administrator", "ann-acm");
+		participant.verifySerarchedUser("Ann Administrator", "USER", "", "ann-acm");
 		participant.searchedUserName.click();
 		Thread.sleep(3000);
 		participant.clickOkBtn();
@@ -1089,7 +1089,7 @@ public class CaseParticipantsTests extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		participant.searchBtn.click();
 		Thread.sleep(3000);
-		participant.verifySerarchedUser("Ann Administrator", "ann-acm");
+		participant.verifySerarchedUser("Ann Administrator", "USER", "", "ann-acm");
 		participant.searchedUserName.click();
 		Thread.sleep(3000);
 		participant.clickOkBtn();
@@ -1176,7 +1176,7 @@ public class CaseParticipantsTests extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		participant.searchBtn.click();
 		Thread.sleep(3000);
-		participant.verifySerarchedUser("Samuel Supervisor", "samuel-acm");
+		participant.verifySerarchedUser("Samuel Supervisor", "USER", "", "samuel-acm");
 		participant.searchedUserName.click();
 		Thread.sleep(3000);
 		participant.clickOkBtn();
@@ -1202,7 +1202,7 @@ public class CaseParticipantsTests extends ArkCaseTestBase {
 	}
 
 	@Test
-	public void createNewCaseAddFollowerFromParticipantTableDelete() throws InterruptedException, IOException {
+	public void createNewCaseAddFollowerFromParticipantColumnTableDelete() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
 				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
@@ -1263,7 +1263,7 @@ public class CaseParticipantsTests extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		participant.searchBtn.click();
 		Thread.sleep(3000);
-		participant.verifySerarchedUser("Samuel Supervisor", "samuel-acm");
+		participant.verifySerarchedUser("Samuel Supervisor", "USER", "", "samuel-acm");
 		participant.searchedUserName.click();
 		Thread.sleep(3000);
 		participant.clickOkBtn();
@@ -1354,7 +1354,7 @@ public class CaseParticipantsTests extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		participant.searchBtn.click();
 		Thread.sleep(3000);
-		participant.verifySerarchedUser("Samuel Supervisor", "samuel-acm");
+		participant.verifySerarchedUser("Samuel Supervisor", "USER", "", "samuel-acm");
 		participant.searchedUserName.click();
 		Thread.sleep(3000);
 		participant.clickOkBtn();
@@ -1429,7 +1429,7 @@ public class CaseParticipantsTests extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		participant.searchBtn.click();
 		Thread.sleep(3000);
-		participant.verifySerarchedUser("Samuel Supervisor", "samuel-acm");
+		participant.verifySerarchedUser("Samuel Supervisor", "USER", "", "samuel-acm");
 		participant.searchedUserName.click();
 		Thread.sleep(3000);
 		participant.clickOkBtn();
@@ -1516,7 +1516,7 @@ public class CaseParticipantsTests extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		participant.searchBtn.click();
 		Thread.sleep(3000);
-		participant.verifySerarchedUser("Samuel Supervisor", "samuel-acm");
+		participant.verifySerarchedUser("Samuel Supervisor", "USER", "", "samuel-acm");
 		participant.searchedUserName.click();
 		Thread.sleep(3000);
 		participant.clickOkBtn();
@@ -1889,7 +1889,7 @@ public class CaseParticipantsTests extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		participant.searchBtn.click();
 		Thread.sleep(3000);
-		participant.verifySerarchedUser("Ann Administrator", "ann-acm");
+		participant.verifySerarchedUser("Ann Administrator", "USER", "", "ann-acm");
 		participant.searchedUserName.click();
 		Thread.sleep(3000);
 		participant.clickOkBtn();
@@ -2237,7 +2237,7 @@ public class CaseParticipantsTests extends ArkCaseTestBase {
 		cases.assignedToConfirmButtonClick();
 		cases.assignedToConfirmButtonClick();
 		Thread.sleep(5000);
-		cases.refreshButtons.click();
+		cases.refreshPage.click();
 		Thread.sleep(3000);
 		participant.verifyChangedAssignee("ann-acm");
 		Thread.sleep(3000);
@@ -2249,7 +2249,7 @@ public class CaseParticipantsTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		cases.deleteCase();
 		driver.switchTo().defaultContent();
-		cases.refreshButtons.click();
+		cases.refreshPage.click();
 		Thread.sleep(3000);
 		cases.changeCaseStatusAproved();
 		ArkCaseAuthentication.logOut(driver);

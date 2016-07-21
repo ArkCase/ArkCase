@@ -15,7 +15,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
@@ -23,7 +22,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "ACM_USER")
-public class AcmUser implements Serializable, AcmLdapEntity
+public class AcmUser implements Serializable, AcmLdapUser
 {
     private static final long serialVersionUID = 3399640646540732944L;
 
@@ -56,15 +55,18 @@ public class AcmUser implements Serializable, AcmLdapEntity
     @Column(name = "cm_user_state")
     private String userState;
 
-    @Column(name="cm_mail")
+    @Column(name = "cm_mail")
     private String mail;
-    
-    @ManyToMany(mappedBy="members", cascade = CascadeType.ALL)
+
+    @ManyToMany(mappedBy = "members", cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<AcmGroup> groups;
 
     @Transient
     private String distinguishedName;
+
+    @Transient
+    private Set<String> ldapGroups = new HashSet<>();
 
     @PrePersist
     public void preInsert()
@@ -161,15 +163,138 @@ public class AcmUser implements Serializable, AcmLdapEntity
         this.lastName = lastName;
     }
 
-    public String getMail() {
+    public String getMail()
+    {
         return mail;
     }
 
-    public void setMail(String mail) {
+    public void setMail(String mail)
+    {
         this.mail = mail;
     }
 
+    public Set<AcmGroup> getGroups()
+    {
+        return groups;
+    }
+
+    public void setGroups(Set<AcmGroup> groups)
+    {
+        // Bidirectional ManyToMany relation
+        if (groups != null)
+        {
+            for (AcmGroup group : groups)
+            {
+                if (group.getMembers() != null && !group.getMembers().contains(this))
+                {
+                    group.getMembers().add(this);
+                }
+            }
+        }
+
+        this.groups = groups;
+    }
+
+    /**
+     * Because of bidirectional ManyToMany relation, this method should be used for adding
+     * groups to the user. Don't use getGroups().add(..) or getGroups().addAll(..)
+     *
+     * @param group
+     */
+    public void addGroup(AcmGroup group)
+    {
+        if (group != null)
+        {
+            if (getGroups() == null)
+            {
+                setGroups(new HashSet<>());
+            }
+
+            getGroups().add(group);
+
+            if (group.getMembers() != null && !group.getMembers().contains(this))
+            {
+                group.getMembers().add(this);
+            }
+        }
+    }
+
+    /**
+     * Because of bidirectional ManyToMany relation, this method should be used for removing
+     * groups from the user.
+     *
+     * @param group
+     */
+    public void removeGroup(AcmGroup group)
+    {
+        if (group != null)
+        {
+            if (getGroups() != null)
+            {
+                if (getGroups().contains(group))
+                {
+                    getGroups().remove(group);
+                }
+
+                if (group.getMembers() != null && group.getMembers().contains(this))
+                {
+                    group.getMembers().remove(this);
+                }
+            }
+        }
+    }
+
     @Override
+    @JsonIgnore
+    public int hashCode()
+    {
+        if (getUserId() == null)
+        {
+            return 0;
+        } else
+        {
+            return getUserId().hashCode();
+        }
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean equals(Object obj)
+    {
+        if (!(obj instanceof AcmUser))
+        {
+            return false;
+        }
+
+        AcmUser user = (AcmUser) obj;
+
+        if (user.getUserId() == null && getUserId() == null)
+        {
+            return true;
+        }
+
+        if (user.getUserId() == null && getUserId() != null)
+        {
+            return false;
+        }
+
+        return user.getUserId().equals(getUserId());
+    }
+
+    @Override
+    @JsonIgnore
+    public Set<String> getLdapGroups()
+    {
+        return ldapGroups;
+    }
+
+    public void setLdapGroups(Set<String> ldapGroups)
+    {
+        this.ldapGroups = ldapGroups;
+    }
+
+    @Override
+    @JsonIgnore
     public String getDistinguishedName()
     {
         return distinguishedName;
@@ -179,118 +304,5 @@ public class AcmUser implements Serializable, AcmLdapEntity
     public void setDistinguishedName(String distinguishedName)
     {
         this.distinguishedName = distinguishedName;
-    }
-
-    public Set<AcmGroup> getGroups() {
-		return groups;
-	}
-
-	public void setGroups(Set<AcmGroup> groups) 
-	{
-		// Bidirectional ManyToMany relation
-		if (groups != null)
-		{
-			for (AcmGroup group : groups)
-			{
-				if (group.getMembers() != null && !group.getMembers().contains(this))
-				{
-					group.getMembers().add(this);
-				}
-			}
-		}
-		
-		this.groups = groups;
-	}
-	
-	/**
-	 * Because of bidirectional ManyToMany relation, this method should be used for adding
-	 * groups to the user. Don't use getGroups().add(..) or getGroups().addAll(..)
-	 * 
-	 * @param group
-	 */
-	public void addGroup(AcmGroup group)
-	{
-		if (group != null)
-		{
-			if (getGroups() == null)
-			{
-				setGroups(new HashSet<>());
-			}
-			
-			getGroups().add(group);
-			
-			if (group.getMembers() != null && !group.getMembers().contains(this))
-			{
-				group.getMembers().add(this);
-			}
-		}
-	}
-	
-	/**
-	 * Because of bidirectional ManyToMany relation, this method should be used for removing
-	 * groups from the user.
-	 * 
-	 * @param group
-	 */
-	public void removeGroup(AcmGroup group)
-	{
-		if (group != null)
-		{
-			if (getGroups() != null)
-			{
-				if (getGroups().contains(group))
-				{
-					getGroups().remove(group);
-				}
-				
-				if (group.getMembers() != null && group.getMembers().contains(this))
-				{
-					group.getMembers().remove(this);
-				}
-			}			
-		}
-	}
-
-	@Override
-    @JsonIgnore
-    public boolean isGroup()
-    {
-        return false;
-    }
-    
-    @Override
-    @JsonIgnore
-    public int hashCode() {
-    	if (getUserId() == null)
-    	{
-    		return 0;
-    	}
-    	else
-    	{
-    		return getUserId().hashCode();
-    	}
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean equals(Object obj) {
-        if (!(obj instanceof AcmUser)) 
-        {
-            return false;
-        }
-        
-        AcmUser user = (AcmUser)obj;
-        
-        if (user.getUserId() == null && getUserId() == null)
-    	{
-    		return true;
-    	}
-        
-        if (user.getUserId() == null && getUserId() != null)
-        {
-        	return false;
-        }
-        
-        return user.getUserId().equals(getUserId());
     }
 }
