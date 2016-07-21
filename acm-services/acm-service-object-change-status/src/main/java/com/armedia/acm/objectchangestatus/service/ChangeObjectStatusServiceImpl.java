@@ -33,7 +33,7 @@ public class ChangeObjectStatusServiceImpl implements ChangeObjectStatusService
     public void change(Long objectId, String objectType, String status)
     {
 
-        log.debug("Changing object status: type [{}], id [{}], new status: [{}], from IP address [{}}",
+        log.debug("Changing object status: type [{}], id [{}], new status: [{}], from IP address [{}]",
                 objectType, objectId, status, getUserTrackerService().getTrackedUser().getIpAddress());
 
         AcmAbstractDao<AcmStatefulEntity> dao = getAcmDataService().getDaoByObjectType(objectType);
