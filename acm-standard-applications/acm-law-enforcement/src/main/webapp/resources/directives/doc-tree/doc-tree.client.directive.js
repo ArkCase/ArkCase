@@ -1815,10 +1815,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             menuFileTypes.children = this.makeSubMenu(DocTree.fileTypes);
                         }
                         var menuCorrespondenceForms = _.find(menu, {cmd: "subMenuCorrespondenceForms"});
-                        if (_.isEmpty(DocTree.correspondenceForms))
-                        {
+                        if (_.isEmpty(DocTree.correspondenceForms) && menuCorrespondenceForms) {
                             menuCorrespondenceForms.invisible = true;
-                        }else if (menuCorrespondenceForms) {
+                        } else if (menuCorrespondenceForms) {
                             menuCorrespondenceForms.children = this.makeSubMenu(DocTree.correspondenceForms);
                         }
                         //} else {
