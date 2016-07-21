@@ -1475,8 +1475,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 var names = [args.label];
                                 var template = args.templateType;
 
+                                var selectedFolderId = nodes[0].data.objectId;
                                 var promiseCorrespondence = ObjectCorrespondenceService.createCorrespondence(template,
-                                    DocTree.getObjType(), DocTree.getObjId(), DocTree.objectInfo.container.folder.cmisFolderId);
+                                    DocTree.getObjType(), DocTree.getObjId(), selectedFolderId);
 
                                 var promiseAddNodes = DocTree._addingFileNodes(nodes[0], names, names[0]);
 
@@ -1796,7 +1797,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             menuFileTypes.children = this.makeSubMenu(DocTree.fileTypes);
                         }
                         var menuCorrespondenceForms = _.find(menu, {cmd: "subMenuCorrespondenceForms"});
-                        if (menuCorrespondenceForms) {
+                        if (_.isEmpty(DocTree.correspondenceForms))
+                        {
+                            menuCorrespondenceForms.invisible = true;
+                        }else if (menuCorrespondenceForms) {
                             menuCorrespondenceForms.children = this.makeSubMenu(DocTree.correspondenceForms);
                         }
                         //} else {
