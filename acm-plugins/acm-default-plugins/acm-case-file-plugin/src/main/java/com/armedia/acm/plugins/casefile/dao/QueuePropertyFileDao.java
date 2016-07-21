@@ -1,18 +1,14 @@
 package com.armedia.acm.plugins.casefile.dao;
 
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.casefile.model.AcmQueue;
-
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import javax.persistence.TypedQuery;
-
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.util.TreeMap;
@@ -24,25 +20,13 @@ public class QueuePropertyFileDao extends AcmQueueDao implements InitializingBea
     // What should be the value of the user?
     private static final String QUEUE_CREATOR = "SYSTEM_USER";
 
-    // private final Logger log = LoggerFactory.getLogger(getClass());
-
-    /*
-     * private ThreadLocal<Date> updateId = new ThreadLocal<Date>() {
-     *
-     * @Override public Date initialValue() { return new Date(); } };
-     */
+    //private final Logger log = LoggerFactory.getLogger(getClass());
 
     private PlatformTransactionManager txManager;
 
     private Properties queueNamesProperties;
 
-    /*
-     * @Override public List<AcmQueue> findAllOrderBy(String column) { return getQueueNamesFromPropertiesFile(); }
-     *
-     * @Override public List<AcmQueue> findModifiedSince(Date lastModified, int startRow, int pageSize) { if
-     * (!updateId.get().equals(lastModified)) { updateId.set(lastModified); return getQueueNamesFromPropertiesFile(); }
-     * else { return new ArrayList<AcmQueue>(); } }
-     */
+    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
     public Properties getQueueNamesProperties()
     {
@@ -55,9 +39,10 @@ public class QueuePropertyFileDao extends AcmQueueDao implements InitializingBea
     }
 
     @Override
-    @Transactional
     public void afterPropertiesSet() throws Exception
     {
+        getAuditPropertyEntityAdapter().setUserId(QUEUE_CREATOR);
+
         List<AcmQueue> queues = getQueueNamesFromPropertiesFile();
 
         TransactionTemplate tmpl = new TransactionTemplate(txManager);
@@ -67,24 +52,11 @@ public class QueuePropertyFileDao extends AcmQueueDao implements InitializingBea
             @Override
             protected void doInTransactionWithoutResult(TransactionStatus status)
             {
+                List<AcmQueue> storedQueues = findAll();
 
-                TypedQuery<AcmQueue> queueQuery = getEm().createQuery("SELECT e FROM " + getPersistenceClass().getSimpleName() + " e",
-                        AcmQueue.class);
-                List<AcmQueue> storedQueues = queueQuery.getResultList();
                 List<String> queueNames = storedQueues.stream().map(q -> q.getName()).collect(Collectors.toList());
-                Date now = new Date();
 
-                for (AcmQueue queue : queues)
-                {
-                    if (!queueNames.contains(queue.getName()))
-                    {
-                        queue.setCreated(now);
-                        queue.setModified(now);
-                        queue.setCreator(QUEUE_CREATOR);
-                        queue.setModifier(QUEUE_CREATOR);
-                        save(queue);
-                    }
-                }
+                queues.stream().filter(q -> !queueNames.contains(q.getName())).forEach(q -> save(q));
             }
         });
 
@@ -105,7 +77,8 @@ public class QueuePropertyFileDao extends AcmQueueDao implements InitializingBea
 
         queueNamesProperties.entrySet().stream().forEach(e -> orderedProperties.put((String) e.getKey(), (String) e.getValue()));
 
-        return orderedProperties.entrySet().stream().map(e -> {
+        return orderedProperties.entrySet().stream().map(e ->
+        {
             AcmQueue queue = new AcmQueue();
             String key = e.getKey();
             // queue.setId(Long.parseLong(key.substring(key.lastIndexOf('_') + 1)));
@@ -125,4 +98,13 @@ public class QueuePropertyFileDao extends AcmQueueDao implements InitializingBea
         this.txManager = txManager;
     }
 
+    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
+    {
+        return auditPropertyEntityAdapter;
+    }
+
+    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
+    {
+        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
+    }
 }
