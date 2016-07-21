@@ -6,17 +6,16 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.junit.Assert;
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
-import org.openqa.selenium.support.PageFactory;
 import org.testng.asserts.SoftAssert;
 
 import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
 import com.armedia.arkcase.uitests.base.ArkCaseTestUtils;
 import com.armedia.arkcase.uitests.base.HttpResponseCode;
-import com.armedia.arkcase.uitests.task.TasksPage;
 
 public class CasesPage extends ArkCaseTestBase {
 
@@ -25,13 +24,12 @@ public class CasesPage extends ArkCaseTestBase {
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/object-tree/section/header/div[2]/button")
 	WebElement casesListRefresh;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/object-tree/section/div/div/div/ul/li[1]/span/span[3]")
-	WebElement firtsCaseInCaseList;
+	public WebElement firstCaseInCaseList;
 	// frames
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/iframe")
 	public WebElement frameOne;
 	@FindBy(how = How.XPATH, using = "/html/body/iframe")
 	public WebElement frameTwo;
-	
 	// Information ribbon
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[1]/h3/span")
 	WebElement casesListTitle;
@@ -89,28 +87,25 @@ public class CasesPage extends ArkCaseTestBase {
 	WebElement owningGroupConfirmBtn;
 
 	// case buttons
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[1]")
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/a[1]")
 	WebElement newCaseButton;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[2]")
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/a[2]")
 	WebElement editCaseButton;
-	public
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[3]")
-	WebElement changeCaseStatusButton;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[4]")
+	public @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/a[3]") WebElement changeCaseStatusButton;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/a[4]")
 	WebElement reinvestigateCaseButton;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[6]")
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[2]")
 	WebElement subscribeCaseButton;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[5]")
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[1]")
 	WebElement unsucribeCaseButton;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[7]")
-	WebElement megreCaseButton;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[8]")
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[3]")
+	WebElement mergeCaseButton;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[4]")
 	WebElement splitCaseButton;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[1]/div/label/span")
 	WebElement restrictCaseButton;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[9]")
-	public
-	WebElement refreshButtons;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[5]")
+	public WebElement refreshPage;
 	// case links
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[1]/a")
 	WebElement caseOverview;
@@ -118,11 +113,10 @@ public class CasesPage extends ArkCaseTestBase {
 	WebElement caseDetails;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[3]/a")
 	WebElement casePeople;
-	public @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[4]/a")
-	WebElement caseDocuments;
-	public
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[4]/a")
+	public WebElement caseDocuments;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[5]/a")
-	WebElement caseParticipants;
+	public WebElement caseParticipants;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[6]/a")
 	WebElement caseNotes;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[7]/a")
@@ -133,19 +127,31 @@ public class CasesPage extends ArkCaseTestBase {
 	WebElement caseHistory;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[10]/a")
 	WebElement caseCorrespondence;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[11]/a")
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[10]/a")
 	WebElement caseTime;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[12]/a")
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[11]/a/i")
 	WebElement caseCost;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[13]/a")
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[12]/a")
 	WebElement caseTags;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[14]/a")
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[13]/a")
 	WebElement caseCalendar;
 	// change case status
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[2]/div[2]/div[4]/div[1]/input[1]")
 	WebElement changeCaseStatus;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[2]/div[2]/div[4]/div[1]/ul/li[5]/a")
 	WebElement caseStatusDelete;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[2]/div[2]/div[4]/div[1]/ul/li[2]/a")
+	WebElement caseStatusActive;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[2]/div[2]/div[4]/div[1]/ul/li[3]/a")
+	WebElement caseStatusInactive;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[2]/div[2]/div[4]/div[1]/ul/li[4]/a")
+	WebElement caseStatusClosed;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[2]/div[2]/div[5]/fieldset/div[1]/input")
+	WebElement closedStatusDenied;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[2]/div[2]/div[5]/fieldset/div[2]/input")
+	WebElement closedStatusFull;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[2]/div[2]/div[5]/fieldset/div[3]/input")
+	WebElement closedStatusPartial;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[8]/div/input")
 	WebElement changeCaseStatusSubmit;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[1]/div[1]/h4")
@@ -164,12 +170,18 @@ public class CasesPage extends ArkCaseTestBase {
 	WebElement SearchedUser;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/div/div/div/div/div[3]/button[2]")
 	WebElement addUser;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[6]/a")
+	WebElement chnageCaseStatusAddFilesBtn;
+	@FindBy(how = How.XPATH, using = "/html/body/div[4]/div[2]/div/div[1]/div/table/tbody/tr/td/form/input")
+	WebElement changeCaseStatusBrowseBtn;
+	@FindBy(how = How.XPATH, using = "/html/body/div[4]/div[2]/div/div[2]/div/div/a")
+	WebElement changeCaseStatusUploadBtn;
 	// Cases tasks
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[1]")
 	public WebElement ReviewREquestToChange;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[7]")
 	public WebElement approveDocumenButton;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[9]")
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[5]")
 	public WebElement refreshbuttons;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[6]/div")
 	public WebElement reviewRequestState;
@@ -182,7 +194,7 @@ public class CasesPage extends ArkCaseTestBase {
 	WebElement detailsSaveButton;
 	@FindBy(how = How.XPATH, using = " /html/body/div[5]/div[1]")
 	WebElement caseDetailsSavedPopup;
-	@FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[3]")
+	@FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/a[3]")
 	public WebElement detailChangeStatusButton;
 	@FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[2]/div[2]/div[9]/button[1]")
 	WebElement detailsInsertLink;
@@ -803,44 +815,6 @@ public class CasesPage extends ArkCaseTestBase {
 	WebElement priorityTask;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[6]/div")
 	WebElement stateTask;
-	// Correspondence
-
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[1]/div/span")
-	WebElement correspondenceTabTitle;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[1]/div[1]/div[1]/div/div/div/div/div/div[1]/div[1]/div[1]/span[1]")
-	WebElement correspondenceTitleColumn;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[1]/div[1]/div[1]/div/div/div/div/div/div[2]/div[2]/div[1]/span[1]")
-	WebElement correspondenceCreatedColumn;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[1]/div[1]/div[1]/div/div/div/div/div/div[3]/div[2]/div[1]/span[1]")
-	WebElement correspondenceCreatorColumn;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[1]/div/div/span/select")
-	WebElement correspondenceDropDown;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[1]/div/div/span/select/option[1]")
-	WebElement correspondenceSelectOne;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[1]/div/div/span/select/option[2]")
-	WebElement correspondenceChairmanResponce;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[1]/div/div/span/select/option[3]")
-	WebElement correspondenceGeneralRelease;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[1]/div/div/span/select/option[4]")
-	WebElement correspondenceMedicalRelease;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[1]/div/div/span/select/option[5]")
-	WebElement correspondenceClereanceGranted;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[1]/div/div/span/select/option[6]")
-	WebElement correspondenceClearenceDenide;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[1]/div/div/span/select/option[7]")
-	WebElement correspondenceNoticeOfInvestigation;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[1]/div/div/span/select/option[8]")
-	WebElement correspondenceInterviewRequest;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[1]/div/div/span/span/button")
-	WebElement addCorrespondenceButton;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[1]/a")
-	WebElement correspondenceName;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[2]/div")
-	WebElement correspodenceCreatedDate;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[3]/div")
-	WebElement correspondenceCreator;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[1]/div[1]/div[2]")
-	WebElement correspondenceEmptyRow;
 	// References
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[1]/div/span")
 	WebElement referencesTableTitle;
@@ -890,6 +864,8 @@ public class CasesPage extends ArkCaseTestBase {
 	WebElement casesSearchInput;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/object-tree/section/header/div[1]/div/span/button")
 	WebElement casesGoButton;
+	@FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/search-modal/div[2]/div/div[2]/div/div/div[1]/div[3]/div")
+	WebElement searchedRefNoResult;
 	// second row in references table
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[1]/div[1]/div[2]/div/div[2]/div/div[1]")
 	WebElement secondRowReferenceNumber;
@@ -905,6 +881,29 @@ public class CasesPage extends ArkCaseTestBase {
 	WebElement referenceNumberLink;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[2]/a")
 	WebElement referencetitleLink;
+	// merge popup
+	@FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/search-modal/div[1]")
+	WebElement mergePopUpTitle;
+	@FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/search-modal/div[2]/div/div[1]/div/input")
+	WebElement mergeSearchForCaseInput;
+	@FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/search-modal/div[2]/div/div[1]/div/span/button")
+	WebElement mergeSearchBtn;
+	@FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/search-modal/div[2]/div/div[2]/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[1]/div")
+	WebElement searchedCaseName;
+	@FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/search-modal/div[2]/div/div[2]/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[2]/div")
+	WebElement searchedCaseType;
+	@FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/search-modal/div[2]/div/div[2]/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[3]/div")
+	WebElement searchedCaseTitle;
+	@FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/search-modal/div[2]/div/div[2]/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[4]/div")
+	WebElement searchedCaseParent;
+	@FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/search-modal/div[2]/div/div[2]/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[5]/div")
+	WebElement searchedCaseAssignee;
+	@FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/search-modal/div[2]/div/div[2]/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[6]/div")
+	WebElement searchedCaseMdofied;
+	@FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/search-modal/div[3]/button[1]")
+	WebElement mergeCancelBtn;
+	@FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/search-modal/div[3]/button[2]")
+	WebElement mergeBtn;
 
 	public void casesModuleClick() {
 
@@ -966,14 +965,14 @@ public class CasesPage extends ArkCaseTestBase {
 		softAssert.assertTrue(subscribeCaseButton.isEnabled(), "Subscribe Case  button is not enabled");
 		softAssert.assertTrue(subscribeCaseButton.getText().equals("Subscribe"),
 				"Subscribe Case   button text is not Subscribe");
-		softAssert.assertTrue(megreCaseButton.isDisplayed(), "MergeCaseButton case button is not displayed");
-		softAssert.assertTrue(megreCaseButton.isEnabled(), "MergeCaseButton  button is not enabled");
-		softAssert.assertTrue(megreCaseButton.getText().equals("Merge"), "Merge button text is not Merge");
+		softAssert.assertTrue(mergeCaseButton.isDisplayed(), "MergeCaseButton case button is not displayed");
+		softAssert.assertTrue(mergeCaseButton.isEnabled(), "MergeCaseButton  button is not enabled");
+		softAssert.assertTrue(mergeCaseButton.getText().equals("Merge"), "Merge button text is not Merge");
 		softAssert.assertTrue(splitCaseButton.isDisplayed(), "splitCaseButton case button is not displayed");
-		softAssert.assertTrue(splitCaseButton.isEnabled(), "splitCaseButton  button is not enabled");
+		softAssert.assertTrue(splitCaseButton.isEnabled(), "SplitCaseButton  button is not enabled");
 		softAssert.assertTrue(splitCaseButton.getText().equals("Split"), "Split button text is not Merge");
-		softAssert.assertTrue(refreshButtons.isDisplayed(), "refresh button is not diplayed");
-		softAssert.assertTrue(refreshButtons.isEnabled(), "refresh button is not enabled");
+		softAssert.assertTrue(refreshPage.isDisplayed(), "Refresh button is not diplayed");
+		softAssert.assertTrue(refreshPage.isEnabled(), "Refresh button is not enabled");
 		softAssert.assertTrue(caseOverview.isDisplayed(), "Overview link is not displayed");
 		softAssert.assertTrue(caseDetails.isDisplayed(), "Details link is not displayed");
 		softAssert.assertTrue(casePeople.isDisplayed(), "People link is not displayed");
@@ -1010,19 +1009,66 @@ public class CasesPage extends ArkCaseTestBase {
 		Thread.sleep(6000);
 	}
 
+	public void changeCaseStatusActive() throws InterruptedException {
+
+		changeCaseStatus.click();
+		Thread.sleep(4000);
+		Assert.assertEquals("Case status Active name is wrong", "Active", caseStatusActive.getText());
+		caseStatusActive.click();
+		Thread.sleep(4000);
+	}
+
+	public void selectApproverForChangeCaseStatus(String approver) throws InterruptedException {
+
+		caseSelectAprover.click();
+		Thread.sleep(2000);
+		searchForUsersInput.click();
+		searchForUsersInput.sendKeys(approver);
+		GoSearch.click();
+		Thread.sleep(2000);
+		SearchedUser.click();
+		Thread.sleep(1000);
+		addUser.click();
+		Thread.sleep(4000);
+		changeCaseStatusSubmit.click();
+		Thread.sleep(6000);
+
+	}
+
+	public void changeCaseStatusInactive() throws InterruptedException {
+
+		changeCaseStatus.click();
+		Thread.sleep(4000);
+		Assert.assertEquals("Case status Inactive name is wrong", "Inactive", caseStatusInactive.getText());
+		caseStatusInactive.click();
+		Thread.sleep(4000);
+	}
+
+	public void changeCaseStatusClosed() throws InterruptedException {
+
+		changeCaseStatus.click();
+		Thread.sleep(4000);
+		Assert.assertEquals("Case status closed name is wrong", "Closed", caseStatusClosed.getText());
+		caseStatusClosed.click();
+		Thread.sleep(4000);
+	}
+
 	public void changeCaseStatusAproved() throws InterruptedException, IOException {
 		HttpResponseCode responseCode = new HttpResponseCode();
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
+		// TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		caseTasks.click();
 		Thread.sleep(6000);
-		refreshButtons.click();
-		Thread.sleep(4000);
-		Assert.assertFalse("Created task for deleting the case is not shown in task table",
-				tasks.emptyTaskTable.isDisplayed());
+		refreshPage.click();
+		Thread.sleep(10000);
+		int i = driver
+				.findElements(By
+						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[1]/div[1]/div[2]"))
+				.size();
+		Assert.assertTrue("Created task for deleting the case is not shown", i > 0);
 		taskTitleColumn.click();
-		Thread.sleep(2000);
+		Thread.sleep(5000);
 		taskTitleColumn.click();
-		Thread.sleep(3000);
+		Thread.sleep(5000);
 		Assert.assertEquals(
 				"Review request to change task name is wrong or automated task for deleting case is not created",
 				"Review Request to Change Case Status" + " '" + caseId.getText() + "'",
@@ -1031,7 +1077,6 @@ public class CasesPage extends ArkCaseTestBase {
 		responseCode.checkHttpResponse(
 				"/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[1]");
 		Thread.sleep(10000);
-		refreshbuttons.click();
 		approveDocumenButton.click();
 		Thread.sleep(2000);
 		Assert.assertTrue(reviewRequestState.getText().equals("CLOSED"));
@@ -1574,7 +1619,6 @@ public class CasesPage extends ArkCaseTestBase {
 
 	public void verifyInsertedImage() {
 
-		refreshDetails.click();
 		Assert.assertTrue(insertedImage.isDisplayed());
 	}
 
@@ -1584,7 +1628,6 @@ public class CasesPage extends ArkCaseTestBase {
 		deleteImageIcon.click();
 		detailsSaveButton.click();
 		Thread.sleep(2000);
-		refreshDetails.click();
 		Assert.assertTrue(detailsText.getText().isEmpty());
 
 	}
@@ -1662,6 +1705,16 @@ public class CasesPage extends ArkCaseTestBase {
 	public void verifyAddPersonTitle() {
 
 		Assert.assertEquals("Add person title is wrong", "Add Person", addPersonTitle.getText());
+
+	}
+
+	public void verifyIfPersonIsAdded() {
+
+		int i = driver
+				.findElements(By
+						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-people/div/div[2]/div/div[1]/div[2]/div[2]/div/div[3]/div/div[2]"))
+				.size();
+		Assert.assertTrue("Person is not added", i != 0);
 
 	}
 
@@ -2083,168 +2136,6 @@ public class CasesPage extends ArkCaseTestBase {
 
 	}
 
-	public void verifyCorrespondenceTable() {
-
-		SoftAssert softAssert = new SoftAssert();
-		softAssert.assertEquals(correspondenceTabTitle.getText(), "Correspondence",
-				"Correspondence table title is wrong");
-		softAssert.assertEquals(correspondenceTitleColumn.getText(), "Title",
-				"Correspondence title column name is wrong");
-		softAssert.assertEquals(correspondenceCreatedColumn.getText(), "Created",
-				"Correspondence created column name is wrong");
-		softAssert.assertEquals(correspondenceCreatorColumn.getText(), "Creator",
-				"Correspondence creator column name is wrong");
-		softAssert.assertTrue(correspondenceDropDown.isDisplayed(), "Correspondence dropdown is not displayed");
-		softAssert.assertAll();
-
-	}
-
-	public void verifyCoreespondenceDropDownList() {
-
-		SoftAssert softAssert = new SoftAssert();
-		softAssert.assertEquals(correspondenceSelectOne.getText(), "(Select One)",
-				"Correspondence Select one text is wrong or is not displayed");
-		softAssert.assertEquals(correspondenceChairmanResponce.getText(), "Chairman Response",
-				"Correspondence Chairman Response text is wrong or is not displayed");
-		softAssert.assertEquals(correspondenceGeneralRelease.getText(), "General Release",
-				"Correspondence General Release text is wrong or is not displayed");
-		softAssert.assertEquals(correspondenceMedicalRelease.getText(), "Medical Release",
-				"Correspondence Medical Release text is wrong or is not displayed");
-		softAssert.assertEquals(correspondenceClereanceGranted.getText(), "Clearance Granted",
-				"Correspondence Clereance Granted text is wrong or is not displayed");
-		softAssert.assertEquals(correspondenceClearenceDenide.getText(), "Clearance Denied",
-				"Correspondence Clereance Denied text is wrong or is not displayed");
-		softAssert.assertEquals(correspondenceNoticeOfInvestigation.getText(), "Notice of Investigation",
-				"Correspondence Notice of Investigation text is wrong or is not displayed");
-		softAssert.assertEquals(correspondenceInterviewRequest.getText(), "Interview Request",
-				"Correspondence Interview Request text is wrong or is not displayed");
-		softAssert.assertAll();
-
-	}
-
-	public void addCorrespodenceButtonClick() throws IOException {
-
-		Assert.assertTrue("Add correspodence button is not displayed", addCorrespondenceButton.isDisplayed());
-		addCorrespondenceButton.click();
-
-	}
-
-	public void verifyIfCorrespondenceIsAdded() {
-
-		Assert.assertFalse("The correspondence is not added", correspondenceEmptyRow.getText().isEmpty());
-	}
-
-	public void verifyCorrespondenceIsAddedAfterRefresh() {
-
-		Assert.assertFalse("The correspondence is not shown after refresh", correspondenceEmptyRow.getText().isEmpty());
-
-	}
-
-	// verify first row
-	public void verifyAddedCorrespodence(String name, String user) {
-
-		Date date = new Date(System.currentTimeMillis());
-		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-		String createdDate = formatter.format(date);
-		SoftAssert softAssert = new SoftAssert();
-		softAssert.assertEquals(correspondenceName.getText(), name, "Correspodence name is wrong or is not added");
-		softAssert.assertEquals(correspodenceCreatedDate.getText(), createdDate,
-				"Correspondence created date is wrong or is not shown");
-		softAssert.assertEquals(correspondenceCreator.getText(), user,
-				"Correspodence creator is wrong or is not shown");
-		softAssert.assertAll();
-
-	}
-
-	public void addCorrespondenceMedicalRelease() throws InterruptedException {
-
-		correspondenceDropDown.click();
-		Thread.sleep(3000);
-		correspondenceMedicalRelease.click();
-		Thread.sleep(3000);
-		correspondenceDropDown.click();
-		Thread.sleep(4000);
-		correspondenceMedicalRelease.click();
-		Thread.sleep(3000);
-	}
-
-	public void addCorrespondenceInterviewrequest() throws InterruptedException {
-
-		correspondenceDropDown.click();
-		Thread.sleep(3000);
-		correspondenceInterviewRequest.click();
-		Thread.sleep(3000);
-		correspondenceDropDown.click();
-		Thread.sleep(4000);
-		correspondenceInterviewRequest.click();
-		Thread.sleep(3000);
-	}
-
-	public void addCorrespondenceNoticeOfInvestigation() throws InterruptedException {
-
-		correspondenceDropDown.click();
-		Thread.sleep(3000);
-		correspondenceNoticeOfInvestigation.click();
-		Thread.sleep(3000);
-		correspondenceDropDown.click();
-		Thread.sleep(4000);
-		correspondenceNoticeOfInvestigation.click();
-		Thread.sleep(3000);
-
-	}
-
-	public void addCorrespondenceCleranceDenied() throws InterruptedException {
-
-		correspondenceDropDown.click();
-		Thread.sleep(3000);
-		correspondenceClearenceDenide.click();
-		Thread.sleep(3000);
-		correspondenceDropDown.click();
-		Thread.sleep(4000);
-		correspondenceClearenceDenide.click();
-		Thread.sleep(3000);
-
-	}
-
-	public void addCorrespondenceGeneralRelease() throws InterruptedException {
-
-		correspondenceDropDown.click();
-		Thread.sleep(3000);
-		correspondenceGeneralRelease.click();
-		Thread.sleep(3000);
-		correspondenceDropDown.click();
-		Thread.sleep(4000);
-		correspondenceGeneralRelease.click();
-		Thread.sleep(3000);
-
-	}
-
-	public void addCorrespondenceChairmanResponse() throws InterruptedException {
-
-		correspondenceDropDown.click();
-		Thread.sleep(3000);
-		correspondenceChairmanResponce.click();
-		Thread.sleep(3000);
-		correspondenceDropDown.click();
-		Thread.sleep(4000);
-		correspondenceChairmanResponce.click();
-		Thread.sleep(3000);
-
-	}
-
-	public void addCorrespondenceClearanceGranted() throws InterruptedException {
-
-		correspondenceDropDown.click();
-		Thread.sleep(3000);
-		correspondenceClereanceGranted.click();
-		Thread.sleep(3000);
-		correspondenceDropDown.click();
-		Thread.sleep(4000);
-		correspondenceClereanceGranted.click();
-		Thread.sleep(3000);
-
-	}
-
 	public void checkMedicalReleaseHttpResponse() throws IOException {
 
 		HttpResponseCode responseCode = new HttpResponseCode();
@@ -2495,4 +2386,113 @@ public class CasesPage extends ArkCaseTestBase {
 		owningGroupConfirmBtn.click();
 	}
 
+	public void clickChnageCaseStatusAddFilesBtn() {
+
+		chnageCaseStatusAddFilesBtn.click();
+	}
+
+	public void clickChangeCaseStatusBrowseBtn() {
+		changeCaseStatusBrowseBtn.click();
+	}
+
+	public void clickChangeCaseStatusUploadBtn() {
+		changeCaseStatusUploadBtn.click();
+	}
+
+	public void verifyMergePopUpTitle() {
+		Assert.assertEquals("Title of merge popup form is wrong", "Merge", mergePopUpTitle.getText());
+	}
+
+	public void searchForCase(String name) {
+
+		mergeSearchForCaseInput.click();
+		mergeSearchForCaseInput.sendKeys(name);
+
+	}
+
+	public void clickSearchCaseBtn() {
+		mergeSearchBtn.click();
+	}
+
+	public void verifySearchedCaseForMerge(String name, String type, String title, String parent, String assignee) {
+
+		SoftAssert softAssert = new SoftAssert();
+		softAssert.assertEquals(searchedCaseName.getText(), name, "Searched case name is wrong");
+		softAssert.assertEquals(searchedCaseType.getText(), type, "Searched case type is wrong");
+		softAssert.assertEquals(searchedCaseTitle.getText(), title, "Searched case title is wrong");
+		softAssert.assertEquals(searchedCaseParent.getText(), parent, "Searched case parent is wrong");
+		softAssert.assertEquals(searchedCaseAssignee.getText(), assignee, "Searched case assignee is wrong");
+		softAssert.assertAll();
+
+	}
+
+	public void clickCancelMergeBtn() {
+		mergeCancelBtn.click();
+	}
+
+	public void clickMergeBtn() {
+		mergeBtn.click();
+	}
+
+	public void verifyIfSearchedCaseIsShown() {
+
+		int i = driver
+				.findElements(By
+						.xpath("/html/body/div[5]/div/div/search-modal/div[2]/div/div[2]/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[1]/div"))
+				.size();
+		Assert.assertTrue("The case it self should not appear to be merged", i == 0);
+
+	}
+
+	public void verifyAlertText() throws AWTException, InterruptedException {
+
+		Alert alert = driver.switchTo().alert();
+		Thread.sleep(1000);
+		driver.switchTo().alert();
+		Assert.assertEquals("Alert message is wrong", "Case can't be merged.", alert.getText());
+		alert.accept();
+		Thread.sleep(3000);
+		driver.switchTo().defaultContent();
+	}
+
+	public void verifyIfCasesAreMerged() {
+
+		int i = driver
+				.findElements(By
+						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/doc-tree/table/tbody/tr[3]/td[3]/span/span[3]"))
+				.size();
+		Assert.assertTrue("Case is not merged, is not shown in the documents table", i > 0);
+
+	}
+
+	public void changeCaseStatusAprovedWithROI() throws InterruptedException, IOException {
+		HttpResponseCode responseCode = new HttpResponseCode();
+		caseTasks.click();
+		Thread.sleep(6000);
+		refreshPage.click();
+		Thread.sleep(10000);
+		int i = driver
+				.findElements(By
+						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[1]/div[1]/div[2]"))
+				.size();
+		Assert.assertTrue("Created task for deleting the case is not shown", i > 0);
+		taskTitleColumn.click();
+		Thread.sleep(5000);
+		Assert.assertEquals(
+				"Review request to change task name is wrong or automated task for deleting case is not created",
+				"Review Request to Change Case Status" + " '" + caseId.getText() + "'",
+				ReviewREquestToChange.getText());
+		ReviewREquestToChange.click();
+		responseCode.checkHttpResponse(
+				"/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[1]");
+		Thread.sleep(10000);
+		approveDocumenButton.click();
+		Thread.sleep(2000);
+		Assert.assertTrue(reviewRequestState.getText().equals("CLOSED"));
+
+	}
+
+	public void verifySearchedReferenceNoResult() {
+		Assert.assertEquals("Searched result name is wrong", "No Results", searchedRefNoResult.getText());
+	}
 }

@@ -96,6 +96,9 @@ public class ScreenshotTaker extends TestWatcher {
 		if (test.getTest().getName().toString().startsWith("createNewCase")) {
 			test.assignCategory("Case Tests");
 		}
+		if(test.getTest().getName().toString().startsWith("createNewCostSheet")){
+			test.assignCategory("Costsheet Tests");
+		}
 
 		extent.endTest(test);
 		// writing everything to document
