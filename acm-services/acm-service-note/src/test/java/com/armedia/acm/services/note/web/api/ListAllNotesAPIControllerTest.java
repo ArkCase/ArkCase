@@ -2,6 +2,7 @@ package com.armedia.acm.services.note.web.api;
 
 import com.armedia.acm.services.note.dao.NoteDao;
 import com.armedia.acm.services.note.model.Note;
+import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -41,6 +42,7 @@ public class ListAllNotesAPIControllerTest extends EasyMockSupport
     private Authentication mockAuthentication;
     private NoteDao mockNoteDao;
     private MockHttpSession mockHttpSession;
+    private ExecuteSolrQuery mockExecuteSolrQuery;
 
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
@@ -54,12 +56,13 @@ public class ListAllNotesAPIControllerTest extends EasyMockSupport
     {
 
         mockNoteDao = createMock(NoteDao.class);
+        mockExecuteSolrQuery = createMock(ExecuteSolrQuery.class);
         mockHttpSession = new MockHttpSession();
         mockAuthentication = createMock(Authentication.class);
 
         unit = new ListAllNotesAPIController();
 
-        unit.setNoteDao(mockNoteDao);
+        unit.setExecuteSolrQuery(null);
 
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
     }
