@@ -11,7 +11,6 @@ import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenS
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 import io.milton.http.LockManager;
 import io.milton.http.ResourceFactory;
 import io.milton.http.exceptions.BadRequestException;
@@ -47,8 +46,8 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
 
     private Pattern wordFileExtensionPattern;
 
-
     private AuthenticationTokenService authenticationTokenService;
+
 
     /**
      * A pattern to distinguish between a file URL and the URL that Microsoft Office sends for an OPTIONS
@@ -57,10 +56,10 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
      * reply with an empty (that is,a dummy) resource.  We can't send the real file resource, since Office did not
      * send us the whole URL.
      */
-    private Pattern realDocumentUrl = Pattern.compile(".*\\d*\\.\\w*$");
+
+    private Pattern realDocumentUrl = Pattern.compile("^.*\\/\\d*\\.\\w*$");
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
-
 
     @Override
     public Resource getResource(String host, String path) throws NotAuthorizedException, BadRequestException
@@ -228,16 +227,15 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
 
             getSecurityManager().setAuthentication(getAuthenticationTokenService().getAuthenticationForToken(acmTicket));
 
-
-            EcmFile ecmFile = fileDao.find(fileId);
-
             log.trace("fileId: {}, lock type: {}, fileType: {}", fileId, lockType, fileType);
+
+
+            EcmFile ecmFile = getFileDao().find(fileId);
 
             log.trace("ecmFile exists? {}", ecmFile != null);
 
             return new AcmFileResource(host, ecmFile, fileType, lockType, getSecurityManager().getAuthentication(),
                     AcmFileSystemResourceFactory.this);
-
         }
     }
 }

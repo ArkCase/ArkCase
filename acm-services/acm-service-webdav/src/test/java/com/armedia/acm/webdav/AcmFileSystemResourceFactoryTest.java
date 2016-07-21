@@ -41,6 +41,17 @@ public class AcmFileSystemResourceFactoryTest extends EasyMockSupport
     }
 
     @Test
+    public void getResource_returnsOptionsForUrlThatHasAStringBeforeTheNumber() throws Exception
+    {
+        String host = "www.dead.net";
+        String path = "/FILE/EDIT_WORD_LOCK/jgarcia12345.docx";
+
+        Resource resource = unit.getResource(host, path);
+
+        assertTrue(resource instanceof AcmOptionsResource);
+    }
+
+    @Test
     public void getResource_returnsFileResourceForFileRequest() throws Exception
     {
         String host = "www.dead.net";
