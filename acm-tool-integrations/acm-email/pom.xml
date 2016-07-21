@@ -2,7 +2,7 @@
     <parent>
         <artifactId>acm-tool-integrations</artifactId>
         <groupId>com.armedia.acm</groupId>
-        <version>3.0.55-SNAPSHOT</version>
+        <version>3.0.56-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -12,10 +12,6 @@
 
     <name>Acm Mail Tools</name>
     <description>Set of tools for connecting and receiving mail</description>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
 
     <dependencies>
         <dependency>

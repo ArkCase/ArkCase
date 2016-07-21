@@ -3,7 +3,8 @@ package com.armedia.acm.plugins.admin.web.api;
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
 import com.armedia.acm.plugins.admin.exception.AcmLdapConfigurationException;
-
+import freemarker.template.Configuration;
+import freemarker.template.Template;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,9 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import freemarker.template.Configuration;
-import freemarker.template.Template;
 
 /**
  * Created by sergey.kolomiets on 6/2/15.
@@ -46,10 +44,8 @@ public class LdapConfigurationService
     /**
      * Create LDAP Directory config files
      *
-     * @param dirId
-     *            Directory identifier
-     * @param props
-     *            Directory properties data
+     * @param dirId Directory identifier
+     * @param props Directory properties data
      * @throws AcmLdapConfigurationException
      */
     public void createLdapDirectory(String dirId, Map<String, Object> props) throws AcmLdapConfigurationException
@@ -72,8 +68,7 @@ public class LdapConfigurationService
         {
             createPropertiesFile(dirId, props);
             createLdapFile(dirId, props);
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             // Delete created files quietly
             deletePropertiesFileQuietly(dirId);
@@ -90,10 +85,8 @@ public class LdapConfigurationService
     /**
      * Update LDAP Directory settings
      *
-     * @param dirId
-     *            Directory identifier
-     * @param props
-     *            Directory properties data
+     * @param dirId Directory identifier
+     * @param props Directory properties data
      */
     public void updateLdapDirectory(String dirId, Map<String, Object> props) throws AcmLdapConfigurationException
     {
@@ -110,14 +103,13 @@ public class LdapConfigurationService
     /**
      * Delete LDAP Direcory
      *
-     * @param dirId
-     *            Directory identifier
+     * @param dirId Directory identifier
      * @throws AcmLdapConfigurationException
      */
     public void deleteLdapDirectory(String dirId) throws AcmLdapConfigurationException
     {
 
-        String[] extensions = new String[] { "properties" };
+        String[] extensions = new String[]{"properties"};
         List<File> propertiesFiles = (List<File>) FileUtils.listFiles(new File(ldapConfigurationLocation), extensions, false);
 
         Pattern pattern = Pattern.compile(ldapPropertiesFileRegex);
@@ -151,10 +143,8 @@ public class LdapConfigurationService
     /**
      * Create Properties file
      *
-     * @param dirId
-     *            Directory identifier
-     * @param props
-     *            Directory properties data
+     * @param dirId Directory identifier
+     * @param props Directory properties data
      * @throws AcmLdapConfigurationException
      * @throws IOException
      */
@@ -193,8 +183,7 @@ public class LdapConfigurationService
             {
                 writerProp = new FileWriter(new File(propertiesFileName));
                 tmplProperties.process(props, writerProp);
-            }
-            finally
+            } finally
             {
                 if (writerProp != null)
                 {
@@ -202,8 +191,7 @@ public class LdapConfigurationService
                 }
             }
 
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             if (log.isErrorEnabled())
             {
@@ -216,10 +204,8 @@ public class LdapConfigurationService
     /**
      * Create LDAP file
      *
-     * @param dirId
-     *            Directory identifier
-     * @param props
-     *            Directory properties data
+     * @param dirId Directory identifier
+     * @param props Directory properties data
      * @throws IOException
      * @throws AcmLdapConfigurationException
      */
@@ -243,16 +229,14 @@ public class LdapConfigurationService
             {
                 writerSig = new FileWriter(new File(ldapFileName));
                 tmplSig.process(props, writerSig);
-            }
-            finally
+            } finally
             {
                 if (writerSig != null)
                 {
                     writerSig.close();
                 }
             }
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             if (log.isErrorEnabled())
             {
@@ -272,7 +256,7 @@ public class LdapConfigurationService
      */
     public HashMap<String, Object> getProperties(JSONObject jsonObj) throws JSONException, AcmEncryptionException
     {
-        HashMap<String, Object> props = new HashMap<String, Object>();
+        HashMap<String, Object> props = new HashMap<>();
         props.put(LdapConfigurationProperties.LDAP_PROP_ID, jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_ID));
         props.put("id", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_ID));
         props.put("name", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_NAME));
@@ -284,7 +268,6 @@ public class LdapConfigurationService
         props.put("userSearchBase", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_USER_SEARCH_BASE));
         props.put("userSearchFilter", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_USER_SEARCH_FILTER));
         props.put("groupSearchBase", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_GROUP_SEARCH_BASE));
-        props.put("groupSearchBaseOU", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_GROUP_SEARCH_BASE_OU));
         props.put("groupSearchFilterForUser", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_GROUP_SEARCH_FILTER_FOR_USER));
         props.put("ldapUrl", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_LDAP_URL));
         props.put("userIdAttributeName", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_USER_ID_ATTR_NAME));
@@ -296,9 +279,9 @@ public class LdapConfigurationService
     public List<File> getPropertiesFiles()
     {
         // Get All properties files
-        String[] extensions = new String[] { "properties" };
+        String[] extensions = new String[]{"properties"};
         List<File> files = (List<File>) FileUtils.listFiles(new File(ldapConfigurationLocation), extensions, false);
-        List<File> propertiesFiles = new ArrayList<File>();
+        List<File> propertiesFiles = new ArrayList<>();
 
         // Get all properties files that match to ldapPropertiesFileRegex
         Pattern pattern = Pattern.compile(ldapPropertiesFileRegex);
@@ -321,8 +304,7 @@ public class LdapConfigurationService
         try
         {
             FileUtils.forceDelete(new File(fileName));
-        }
-        catch (IOException e)
+        } catch (IOException e)
         {
             if (log.isErrorEnabled())
             {

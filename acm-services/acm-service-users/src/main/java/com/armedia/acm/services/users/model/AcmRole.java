@@ -8,7 +8,7 @@ import javax.persistence.Transient;
 
 @Entity
 @Table(name = "ACM_ROLE")
-public class AcmRole implements AcmLdapEntity
+public class AcmRole
 {
     @Id
     @Column(name = "CM_ROLE_NAME")
@@ -16,9 +16,6 @@ public class AcmRole implements AcmLdapEntity
 
     @Column(name = "CM_ROLE_TYPE")
     private String roleType;
-
-    @Transient
-    private String distinguishedName;
 
     public String getRoleName()
     {
@@ -39,24 +36,5 @@ public class AcmRole implements AcmLdapEntity
     {
         this.roleType = roleType;
     }
-
-    @Override
-    public String getDistinguishedName()
-    {
-        return distinguishedName;
-    }
-
-    @Override
-    public void setDistinguishedName(String distinguishedName)
-    {
-        this.distinguishedName = distinguishedName;
-    }
-
-    @Override
-    public boolean isGroup()
-    {
-        return true;
-    }
-
 
 }

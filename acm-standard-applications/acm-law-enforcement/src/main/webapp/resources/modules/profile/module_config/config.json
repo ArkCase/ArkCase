@@ -1,80 +1,84 @@
 {
-    "id": "profile",
-    "title": "Profile",
-    "menus": [
+  "id": "profile",
+  "title": "Profile",
+  "menus": [
+    {
+      "menuId": "usermenu",
+      "menuItemURL": "profile",
+      "menuItemTitle": "Profile",
+      "moduleId": "none",
+      "iconClass": "glyphicon glyphicon-asterisk",
+      "position": 100
+    }
+  ],
+  "components": [
+    {
+      "id": "subscription",
+      "title": "Subscription",
+      "enabled": true,
+      "type": "grid",
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 5,
+      "columnDefs": [
         {
-            "menuId": "usermenu",
-            "menuItemURL": "profile",
-            "menuItemTitle": "Profile",
-            "iconClass": "glyphicon glyphicon-asterisk",
-            "position": 100
+          "name": "title",
+          "displayName": "profile.subscriptions.table.columns.title",
+          "headerCellFilter": "translate",
+          "width": "40%"
+        },
+        {
+          "name": "created",
+          "displayName": "profile.subscriptions.table.columns.created",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "width": "25%"
+        },
+        {
+          "name": "delete",
+          "displayName": " ",
+          "headerCellFilter": "translate",
+          "width": "*",
+          "headerCellTemplate": "<div></div>",
+          "cellTemplate": "<div align='center'><button type='button' ng-click='grid.appScope.unsubscribe(row.entity)' class='btn btn-link fa fa-trash'></button></div>'"
+        },
+        {
+          "name": "parentID",
+          "displayName": "profile.subscriptions.table.columns.parentId",
+          "headerCellFilter": "translate",
+          "visible": false
+        },
+        {
+          "name": "userID",
+          "displayName": "profile.subscriptions.table.columns.userId",
+          "headerCellFilter": "translate",
+          "visible": false
         }
-
-    ],
-    "components": [
-        {
-            "id": "subscription",
-            "title": "Subscription",
-            "enabled": true,
-            "type": "grid",
-            "paginationPageSizes": [5, 10, 20, 50],
-            "paginationPageSize": 5,
-            "columnDefs": [
-                {
-                    "name": "title",
-                    "displayName": "profile.subscriptions.table.columns.title",
-                    "headerCellFilter": "translate",
-                    "width": "40%"
-                },
-                {
-                    "name": "created",
-                    "displayName": "profile.subscriptions.table.columns.created",
-                    "headerCellFilter": "translate",
-					"cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
-                    "width": "25%"
-                },
-                {
-                    "name": "delete",
-                    "displayName": " ",
-                    "headerCellFilter": "translate",
-                    "width": "*",
-                    "headerCellTemplate": "<div></div>",
-                    "cellTemplate": "<div align='center'><button type='button' ng-click='grid.appScope.unsubscribe(row.entity)' class='btn btn-link fa fa-trash'></button></div>'"
-                },
-                {
-                    "name": "parentID",
-                    "displayName": "profile.subscriptions.table.columns.parentId",
-                    "headerCellFilter": "translate",
-                    "visible": false
-                },
-                {
-                    "name": "userID",
-                    "displayName": "profile.subscriptions.table.columns.userId",
-                    "headerCellFilter": "translate",
-                    "visible": false
-                }
-
-            ]
-        },
-        {
-            "id":"company",
-            "title":"Company",
-            "enabled": true
-        },
-                {
-            "id":"contact",
-            "title":"Contact",
-            "enabled": true
-        },
-                {
-            "id":"group",
-            "title":"Group",
-            "enabled": true
-        },
-        {
-            "id":"picture",
-            "title":"Picture",
-            "enabled": true
-        }
-    ]
+      ]
+    },
+    {
+      "id": "company",
+      "title": "Company",
+      "enabled": true
+    },
+    {
+      "id": "contact",
+      "title": "Contact",
+      "enabled": true
+    },
+    {
+      "id": "group",
+      "title": "Group",
+      "enabled": true
+    },
+    {
+      "id": "picture",
+      "title": "Picture",
+      "enabled": true
+    }
+  ]
 }

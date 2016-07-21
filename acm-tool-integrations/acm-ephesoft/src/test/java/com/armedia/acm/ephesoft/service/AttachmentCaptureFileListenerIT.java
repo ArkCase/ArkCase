@@ -32,8 +32,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
 import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 /**
  * Created by nebojsha on 15/9/2015.
@@ -43,6 +42,7 @@ import static org.junit.Assert.assertNull;
         "/spring/spring-library-ephesoft-test.xml",
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-property-file-manager.xml",
+        "/spring/spring-library-acm-encryption.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
 public class AttachmentCaptureFileListenerIT extends EasyMockSupport

@@ -87,12 +87,12 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
         <logger level="DEBUG" category="com.armedia.acm.plugins.task.service" message="Got ACM task"/>
 
         <set-payload value="#[advancedSearchJson]"/>
-        <http:outbound-endpoint ref="submitAdvancedSearchDocuments" />
+        <http:outbound-endpoint ref="submitAdvancedSearchDocumentsSolrEndpoint" />
 
         <logger level="DEBUG" category="com.armedia.acm.plugins.task.service" message="Sent to SOLR advanced search"/>
 
         <set-payload value="#[quickSearchJson]"/>
-        <http:outbound-endpoint ref="submitQuicksearchDocuments" />
+        <http:outbound-endpoint ref="submitQuicksearchDocumentsSolrEndpoint" />
 
         <logger level="DEBUG" category="com.armedia.acm.plugins.task.service" message="Sent to SOLR quick search"/>
     </flow>

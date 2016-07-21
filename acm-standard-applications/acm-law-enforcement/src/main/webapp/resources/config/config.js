@@ -65,9 +65,13 @@ module.exports.getModulesJavaScriptAssets = function(){
     var jsDirectives = this.getGlobbedFiles(this.assets.jsDirectives, 'directives/');
     var jsCustomDirectives = this.getGlobbedFiles(this.assets.jsCustomDirectives, 'custom_directives/');
 
+    var jsServices = this.getGlobbedFiles(this.assets.jsServices, 'services/');
+    var jsCustomServices = this.getGlobbedFiles(this.assets.jsCustomServices, 'custom_services/');
+
     //  Remove duplicated JS files from modules
     jsModules = _.difference(jsModules, jsCustomModules);
     jsDirectives = _.difference(jsDirectives, jsCustomDirectives);
+    jsServices = _.difference(jsServices, jsCustomServices);
 
     _.forEach(jsModules, function (item, index, arr) {
         item = 'modules/' + item;
@@ -89,11 +93,23 @@ module.exports.getModulesJavaScriptAssets = function(){
         arr[index] = item;
     });
 
+    _.forEach(jsServices, function (item, index, arr) {
+        item = 'services/' + item;
+        arr[index] = item;
+    });
+
+    _.forEach(jsCustomServices, function (item, index, arr) {
+        item = 'custom_services/' + item;
+        arr[index] = item;
+    });
+
 
     output = output.concat(jsModules);
     output = output.concat(jsCustomModules);
     output = output.concat(jsDirectives);
     output = output.concat(jsCustomDirectives);
+    output = output.concat(jsServices);
+    output = output.concat(jsCustomServices);
     return output;
 };
 
