@@ -47,7 +47,7 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
      * reply with an empty (that is,a dummy) resource.  We can't send the real file resource, since Office did not
      * send us the whole URL.
      */
-    private Pattern realDocumentUrl = Pattern.compile(".*\\d*\\.\\w*$");
+    private Pattern realDocumentUrl = Pattern.compile("^.*\\/\\d*\\.\\w*$");
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
