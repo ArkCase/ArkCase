@@ -54,7 +54,8 @@ public class QueueCaseServiceImpl implements QueueCaseService
 
         getQueuePipelineManager().onPostSave(caseFile, ctx);
 
-        log.debug("Case file state: {}, queue: {}", caseFile.getStatus(), caseFile.getQueue() == null ? "null" : caseFile.getQueue().getName());
+        log.debug("Case file state: {}, queue: {}", caseFile.getStatus(),
+                caseFile.getQueue() == null ? "null" : caseFile.getQueue().getName());
 
         return caseFile;
     }
@@ -67,7 +68,7 @@ public class QueueCaseServiceImpl implements QueueCaseService
         // somehow the normal find and save DAO methods aren't working for me here. Changes to CaseFile itself
         // don't get persisted. But if I skip detach and add persist and flush, all seems well.
         CaseFile caseFile = getCaseFileDao().getEm().find(CaseFile.class, caseFileId);
-        getCaseFileDao().getEm().refresh(caseFile);
+        // getCaseFileDao().getEm().refresh(caseFile);
 
         CaseFilePipelineContext ctx = new CaseFilePipelineContext();
         if (caseFile.getQueue() != null)
@@ -89,7 +90,8 @@ public class QueueCaseServiceImpl implements QueueCaseService
 
         getQueuePipelineManager().onPostSave(caseFile, ctx);
 
-        log.debug("Case file state: {}, queue: {}", caseFile.getStatus(), caseFile.getQueue() == null ? "null" : caseFile.getQueue().getName());
+        log.debug("Case file state: {}, queue: {}", caseFile.getStatus(),
+                caseFile.getQueue() == null ? "null" : caseFile.getQueue().getName());
 
         return caseFile;
     }
