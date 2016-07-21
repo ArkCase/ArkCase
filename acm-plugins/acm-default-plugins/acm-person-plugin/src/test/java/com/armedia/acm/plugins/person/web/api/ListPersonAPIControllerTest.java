@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.person.web.api;
 import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
+import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Arrays;
 import java.util.Date;
@@ -42,7 +43,8 @@ public class ListPersonAPIControllerTest extends EasyMockSupport
 {
     private MockMvc mockMvc;
     private Authentication mockAuthentication;
-    private PersonAssociationDao mockPersonAssociationDao;    
+    private PersonAssociationDao mockPersonAssociationDao;
+    private ExecuteSolrQuery mockExecuteSolrQuery;
     private MockHttpSession mockHttpSession;
 
     @Autowired
@@ -60,10 +62,11 @@ public class ListPersonAPIControllerTest extends EasyMockSupport
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
 
         mockAuthentication = createMock(Authentication.class);
+        mockExecuteSolrQuery = createMock(ExecuteSolrQuery.class);
         mockPersonAssociationDao = createMock(PersonAssociationDao.class);      
         mockHttpSession = new MockHttpSession();
 
-        unit.setExecuteSolrQuery(null);
+        unit.setExecuteSolrQuery(mockExecuteSolrQuery);
     }
 
     @Test

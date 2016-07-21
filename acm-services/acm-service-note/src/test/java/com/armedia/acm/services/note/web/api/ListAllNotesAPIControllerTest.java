@@ -62,7 +62,7 @@ public class ListAllNotesAPIControllerTest extends EasyMockSupport
 
         unit = new ListAllNotesAPIController();
 
-        unit.setExecuteSolrQuery(null);
+        unit.setExecuteSolrQuery(mockExecuteSolrQuery);
 
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
     }
