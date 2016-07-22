@@ -33,7 +33,8 @@ public class ChangeObjectStatusServiceImpl implements ChangeObjectStatusService
     public void change(Long objectId, String objectType, String status)
     {
 
-        log.debug("User from IP {}.", userTrackerService.getTrackedUser().getIpAddress());
+        log.debug("Changing object status: type [{}], id [{}], new status: [{}], from IP address [{}]",
+                objectType, objectId, status, getUserTrackerService().getTrackedUser().getIpAddress());
 
         AcmAbstractDao<AcmStatefulEntity> dao = getAcmDataService().getDaoByObjectType(objectType);
 
@@ -53,8 +54,12 @@ public class ChangeObjectStatusServiceImpl implements ChangeObjectStatusService
 
             if (entity != null)
             {
+                log.debug("Found object of type [{}], setting status to [{}]", entity.getClass().getName(), status);
                 entity.setStatus(status);
                 dao.save(entity);
+
+                // now we have to flush our changes so other objects in a workflow will see our changes.
+                entityManager.flush();
             }
         }
     }
