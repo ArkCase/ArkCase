@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.person.web.api;
 
 import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
 import com.armedia.acm.plugins.person.model.Person;
+import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -43,6 +44,7 @@ public class FindPersonAPIControllerTest extends EasyMockSupport
     private FindPersonAPIController unit;
 
     private PersonAssociationDao mockDao;
+    private ExecuteSolrQuery mockExecuteSolrQuery;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -54,9 +56,10 @@ public class FindPersonAPIControllerTest extends EasyMockSupport
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
 
         mockDao = createMock(PersonAssociationDao.class);
+        mockExecuteSolrQuery = createMock(ExecuteSolrQuery.class);
         mockAuthentication = createMock(Authentication.class);
 
-        unit.setPersonAssociationDao(mockDao);
+        unit.setExecuteSolrQuery(mockExecuteSolrQuery);
     }
 
     @Test
