@@ -33,6 +33,7 @@ public class PersonAssociationToSolrTransformer implements AcmObjectToSolrDocTra
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
         solrDoc.setId(personAssociation.getId() + "-PERSON-ASSOCIATION");
+        solrDoc.setObject_id_s(personAssociation.getId() + "");
         solrDoc.setObject_type_s("PERSON-ASSOCIATION");
         solrDoc.setCreate_date_tdt(personAssociation.getCreated());
         solrDoc.setCreator_lcs(personAssociation.getCreator());
