@@ -115,7 +115,7 @@
                 
                 <bean id="nextPossibleQueues" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/plugin/casefile/nextPossibleQueues"/>
+                    <property name="url" value="/api/{version}/plugin/casefile/nextPossibleQueues/{caseFileId}"/>
                     <property name="requiredPrivilege" ref="caseFileListPrivilege"/>
                 </bean>
             </list>
