@@ -201,15 +201,14 @@
     </bean>
 
     <bean id="acmQueueDao"
-          class="com.armedia.acm.plugins.casefile.dao.QueuePropertyFileDao">
-        <property name="queueNamesProperties" ref="acmQueueNamesProperties"/>
-    </bean>
+          class="com.armedia.acm.plugins.casefile.dao.AcmQueueDao"/>
 
     <bean id="queuePropertyFileChangeWatcher"
           class="com.armedia.acm.plugins.casefile.dao.QueuePropertyFileChangeWatcher">
-        <property name="queuePropertyFileDao" ref="acmQueueDao"/>
+        <property name="acmQueueDao" ref="acmQueueDao"/>
         <property name="txManager" ref="transactionManager"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="queueNamesProperties" ref="acmQueueNamesProperties"/>
     </bean>
 
     <bean id="acmQueueService"
