@@ -56,6 +56,8 @@ public class ListPersonAPIController
                 {
                     return resultsObject.getJSONObject("response").toString();
                 }
+
+                        return null;
             }
                     throw new AcmListObjectsFailedException("wrong input", "patenType or parentId are: ", null);
                 }
