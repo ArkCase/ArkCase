@@ -10,7 +10,7 @@ angular.module("dashboard.weather").controller("Dashboard.WeatherController", ["
         function applyConfig(e, componentId, config) {
             if (componentId == 'weather') {
 
-                var url = "http://api.openweathermap.org/data/2.5/weather";
+                var url = $window.location.origin + '/arkcase/weather';
                 var appid = config.APPID;
                 var units = config.units;
 
