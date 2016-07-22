@@ -8,7 +8,6 @@ import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,16 +37,16 @@ public class AcmFileResource extends AcmFileSystemResource implements PropFindab
     private EcmFile acmFile;
     private String fileType;
     private String lockType;
-    private Authentication authentication;
+    private String acmTicket;
 
-    public AcmFileResource(String host, EcmFile acmFile, String fileType, String lockType, Authentication authentication,
+    public AcmFileResource(String host, EcmFile acmFile, String fileType, String lockType, String acmTicket,
             AcmFileSystemResourceFactory resourceFactory)
     {
         super(host, resourceFactory);
         this.acmFile = acmFile;
         this.fileType = fileType;
         this.lockType = lockType;
-        this.authentication = authentication;
+        this.acmTicket = acmTicket;
     }
 
     public Long getId()
@@ -70,9 +69,9 @@ public class AcmFileResource extends AcmFileSystemResource implements PropFindab
         return lockType;
     }
 
-    public Authentication getAuthentication()
+    public String getAcmTicket()
     {
-        return authentication;
+        return acmTicket;
     }
 
     // Resource interface methods implementation
@@ -152,7 +151,8 @@ public class AcmFileResource extends AcmFileSystemResource implements PropFindab
     {
         try
         {
-            getResourceFactory().getEcmFileTransaction().updateFileTransactionEventAware(getAuthentication(), acmFile, in);
+            getResourceFactory().getEcmFileTransaction().updateFileTransactionEventAware(
+                    getResourceFactory().getAuthenticationTokenService().getAuthenticationForToken(acmTicket), acmFile, in);
         } catch (MuleException e)
         {
             LOGGER.error("Error while uploading file via Mule.", e);

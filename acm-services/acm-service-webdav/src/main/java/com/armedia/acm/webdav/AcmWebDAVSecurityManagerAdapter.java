@@ -1,6 +1,11 @@
 package com.armedia.acm.webdav;
 
+import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
+
 import org.springframework.security.core.Authentication;
+
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import io.milton.http.Auth;
 import io.milton.http.Request;
@@ -17,7 +22,9 @@ public class AcmWebDAVSecurityManagerAdapter implements AcmWebDAVSecurityManager
 
     private io.milton.http.SecurityManager wrapped = new NullSecurityManager();
 
-    private Authentication authentication;
+    private AuthenticationTokenService authenticationTokenService;
+
+    private ConcurrentMap<String, Authentication> acmTicketToAuthentication = new ConcurrentHashMap<String, Authentication>();
 
     @Override
     public Object authenticate(DigestResponse digestRequest)
@@ -50,15 +57,31 @@ public class AcmWebDAVSecurityManagerAdapter implements AcmWebDAVSecurityManager
     }
 
     @Override
-    public Authentication getAuthentication()
+    public Authentication getAuthenticationForTicket(String acmTicket)
     {
-        return authentication;
+        return acmTicketToAuthentication.get(acmTicket);
     }
 
     @Override
-    public void setAuthentication(Authentication authentication)
+    public void addAuthenticationForTicket(String acmTicket)
     {
-        this.authentication = authentication;
+        acmTicketToAuthentication.put(acmTicket, getAuthenticationTokenService().getAuthenticationForToken(acmTicket));
+    }
+
+    @Override
+    public void removeAuthenticationForTicket(String acmTicket)
+    {
+        acmTicketToAuthentication.remove(acmTicket);
+    }
+
+    public AuthenticationTokenService getAuthenticationTokenService()
+    {
+        return authenticationTokenService;
+    }
+
+    public void setAuthenticationTokenService(AuthenticationTokenService authenticationTokenService)
+    {
+        this.authenticationTokenService = authenticationTokenService;
     }
 
 }
