@@ -98,7 +98,7 @@ public class AcmFileSystemLockManager implements LockManager
         {
             AcmFileResource fileResource = (AcmFileResource) resource;
             getObjectLockService().createLock(fileResource.getId(), fileResource.getFileType(), fileResource.getLockType(), true,
-                    fileResource.getResourceFactory().getSecurityManager().getSpringAuthentication());
+                    fileResource.getResourceFactory().getSecurityManager().getAuthenticationForTicket(fileResource.getAcmTicket()));
         }
 
         return LockResult.success(token);
@@ -168,7 +168,8 @@ public class AcmFileSystemLockManager implements LockManager
         {
             AcmFileResource fileResource = (AcmFileResource) resource;
             getObjectLockService().removeLock(fileResource.getId(), fileResource.getFileType(), fileResource.getLockType(),
-                    fileResource.getResourceFactory().getSecurityManager().getSpringAuthentication());
+                    fileResource.getResourceFactory().getSecurityManager().getAuthenticationForTicket(fileResource.getAcmTicket()));
+            fileResource.getResourceFactory().getSecurityManager().removeAuthenticationForTicket(fileResource.getAcmTicket());
         }
     }
 
