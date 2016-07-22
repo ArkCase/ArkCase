@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  */
 public class QueuePropertyFileChangeWatcher implements ApplicationListener<AbstractConfigurationFileEvent>
 {
-    private QueuePropertyFileDao queuePropertyFileDao;
+    private AcmQueueDao acmQueueDao;
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -38,6 +38,8 @@ public class QueuePropertyFileChangeWatcher implements ApplicationListener<Abstr
 
 
     private PlatformTransactionManager txManager;
+
+    private Properties queueNamesProperties;
 
 
     @Override
@@ -59,7 +61,7 @@ public class QueuePropertyFileChangeWatcher implements ApplicationListener<Abstr
             Properties queueProperties = new Properties();
             queueProperties.load(fis);
 
-            getQueuePropertyFileDao().setQueueNamesProperties(queueProperties);
+            setQueueNamesProperties(queueProperties);
 
             loadQueues(queueProperties);
         } catch (IOException e)
@@ -82,11 +84,11 @@ public class QueuePropertyFileChangeWatcher implements ApplicationListener<Abstr
             @Override
             protected void doInTransactionWithoutResult(TransactionStatus status)
             {
-                List<AcmQueue> storedQueues = getQueuePropertyFileDao().findAll();
+                List<AcmQueue> storedQueues = getAcmQueueDao().findAll();
 
                 List<String> queueNames = storedQueues.stream().map(q -> q.getName()).collect(Collectors.toList());
 
-                queues.stream().filter(q -> !queueNames.contains(q.getName())).forEach(q -> getQueuePropertyFileDao().save(q));
+                queues.stream().filter(q -> !queueNames.contains(q.getName())).forEach(q -> getAcmQueueDao().save(q));
             }
         });
 
@@ -120,14 +122,15 @@ public class QueuePropertyFileChangeWatcher implements ApplicationListener<Abstr
                 && abstractConfigurationFileEvent.getConfigFile().getName().equals("queueNames.properties");
     }
 
-    public QueuePropertyFileDao getQueuePropertyFileDao()
+
+    public AcmQueueDao getAcmQueueDao()
     {
-        return queuePropertyFileDao;
+        return acmQueueDao;
     }
 
-    public void setQueuePropertyFileDao(QueuePropertyFileDao queuePropertyFileDao)
+    public void setAcmQueueDao(AcmQueueDao acmQueueDao)
     {
-        this.queuePropertyFileDao = queuePropertyFileDao;
+        this.acmQueueDao = acmQueueDao;
     }
 
     public PlatformTransactionManager getTxManager()
@@ -148,5 +151,15 @@ public class QueuePropertyFileChangeWatcher implements ApplicationListener<Abstr
     public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
     {
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
+    }
+
+    public Properties getQueueNamesProperties()
+    {
+        return queueNamesProperties;
+    }
+
+    public void setQueueNamesProperties(Properties queueNamesProperties)
+    {
+        this.queueNamesProperties = queueNamesProperties;
     }
 }
