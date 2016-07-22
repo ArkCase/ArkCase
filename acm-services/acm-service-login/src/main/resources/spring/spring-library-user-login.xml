@@ -95,7 +95,7 @@
     <bean id="concurrencyFilter"
           class="org.springframework.security.web.session.ConcurrentSessionFilter">
         <constructor-arg name="sessionRegistry" ref="sessionRegistry"/>
-        <constructor-arg name="expiredUrl" value="/login?login_error=2"/>
+        <constructor-arg name="expiredUrl" ref="expiredUrl"/>
         <property name="redirectStrategy" ref="acmRedirectStrategy"/>
     </bean>
 

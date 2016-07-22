@@ -16,13 +16,22 @@
 </head>
 <body>
 <div class="login-wrapper">
-	<div class="logo">
-		<img src="<%= request.getContextPath()%>/branding/loginlogo.png" style="max-width: 100%;">
-	</div>
+    <div class="logo">
+        <img src="<%= request.getContextPath()%>/branding/loginlogo.png" style="max-width: 100%;">
+    </div>
 
-	<header class="text-center">
-		<div class="alert alert-danger">You have been logged out.</div>
-	</header>
+    <header class="text-center">
+        <div class="alert alert-danger">
+            <c:choose>
+                <c:when test="${'2'.equals(param.login_error)}">
+                    Your session has been invalidated due to concurrent session limit!
+                </c:when>
+                <c:otherwise>
+                    You have been logged out.
+                </c:otherwise>
+            </c:choose>
+        </div>
+    </header>
 
 	<p></p>
 
