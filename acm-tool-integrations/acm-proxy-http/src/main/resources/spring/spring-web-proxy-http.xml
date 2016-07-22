@@ -12,7 +12,7 @@
         <property name="initParameters">
             <props>
                 <!-- TODO: parameterize the URLs -->
-                <prop key="targetUri">http://acm-snowbound:8084/</prop>
+                <prop key="targetUri">https://acm-arkcase/</prop>
             </props>
         </property>
     </bean>
@@ -23,7 +23,18 @@
         <property name="initParameters">
             <props>
                 <!-- TODO: parameterize the URLs -->
-                <prop key="targetUri">http://acm-pentaho:8083/</prop>
+                <prop key="targetUri">https://acm-arkcase/</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="/weather/**" class="org.springframework.web.servlet.mvc.ServletWrappingController">
+        <property name="servletClass" value="com.armedia.acm.proxy.http.ProxyServlet"/>
+        <property name="servletName" value="openweathermap"/>
+        <property name="initParameters">
+            <props>
+                <!-- TODO: parameterize the URLs -->
+                <prop key="targetUri">http://api.openweathermap.org/data/2.5</prop>
             </props>
         </property>
     </bean>
