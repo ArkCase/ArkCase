@@ -2,6 +2,8 @@ package com.armedia.acm.webdav;
 
 import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
 
+import org.springframework.security.core.Authentication;
+
 import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -97,8 +99,12 @@ public class AcmFileSystemLockManager implements LockManager
         if (resource instanceof AcmFileResource)
         {
             AcmFileResource fileResource = (AcmFileResource) resource;
+            // Add authentication to WebDav map
+            Authentication authentication = fileResource.getResourceFactory().getSecurityManager()
+                    .addAuthenticationForTicket(fileResource.getAcmTicket());
+            // Create lock in Arkcase DB
             getObjectLockService().createLock(fileResource.getId(), fileResource.getFileType(), fileResource.getLockType(), true,
-                    fileResource.getResourceFactory().getSecurityManager().getAuthenticationForTicket(fileResource.getAcmTicket()));
+                    authentication);
         }
 
         return LockResult.success(token);
@@ -167,8 +173,11 @@ public class AcmFileSystemLockManager implements LockManager
         if (resource instanceof AcmFileResource)
         {
             AcmFileResource fileResource = (AcmFileResource) resource;
-            getObjectLockService().removeLock(fileResource.getId(), fileResource.getFileType(), fileResource.getLockType(),
-                    fileResource.getResourceFactory().getSecurityManager().getAuthenticationForTicket(fileResource.getAcmTicket()));
+            Authentication authentication = fileResource.getResourceFactory().getSecurityManager()
+                    .getAuthenticationForTicket(fileResource.getAcmTicket());
+            // Remove lock from Arkcase DB
+            getObjectLockService().removeLock(fileResource.getId(), fileResource.getFileType(), fileResource.getLockType(), authentication);
+            // Remove authentication from WebDav map
             fileResource.getResourceFactory().getSecurityManager().removeAuthenticationForTicket(fileResource.getAcmTicket());
         }
     }
