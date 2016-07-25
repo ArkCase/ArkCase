@@ -2,7 +2,6 @@ package com.armedia.arkcase.uitests.user;
 
 import java.awt.AWTException;
 import java.io.IOException;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.support.PageFactory;
@@ -10,7 +9,6 @@ import org.testng.asserts.SoftAssert;
 import com.armedia.arkcase.uitests.base.ArkCaseAuthentication;
 import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
 import com.armedia.arkcase.uitests.base.ArkCaseTestUtils;
-import com.armedia.arkcase.uitests.base.TestsPoperties;
 
 
 public class UserProfileTests extends ArkCaseTestBase {
@@ -20,8 +18,7 @@ public class UserProfileTests extends ArkCaseTestBase {
 	@Test
 	public void verifyUserProfilePageLabels() throws InterruptedException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		user.verifyIfEditDashboardButtonIsEnabled();
 		user.arrowDownClick();
 		Thread.sleep(3000);
@@ -60,8 +57,7 @@ public class UserProfileTests extends ArkCaseTestBase {
 	@Test
 	public void uploadPicture() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		user.verifyIfEditDashboardButtonIsEnabled();
 		user.arrowDownClick();
 		Thread.sleep(3000);
@@ -77,8 +73,7 @@ public class UserProfileTests extends ArkCaseTestBase {
 	@Test
 	public void editProfilePicTitle() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		user.verifyIfEditDashboardButtonIsEnabled();
 		user.arrowDownClick();
 		Thread.sleep(3000);
@@ -99,8 +94,7 @@ public class UserProfileTests extends ArkCaseTestBase {
 	@Test
 	public void editContactInformation() throws InterruptedException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		user.verifyIfEditDashboardButtonIsEnabled();
 		user.arrowDownClick();
 		Thread.sleep(3000);
@@ -143,8 +137,7 @@ public class UserProfileTests extends ArkCaseTestBase {
 	@Test
 	public void editCompanyDetail() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		user.verifyIfEditDashboardButtonIsEnabled();
 		user.arrowDownClick();
 		Thread.sleep(3000);
@@ -206,8 +199,7 @@ public class UserProfileTests extends ArkCaseTestBase {
 	@Test
 	public void editProfilePicTitleNull() throws InterruptedException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		user.verifyIfEditDashboardButtonIsEnabled();
 		user.arrowDownClick();
 		Thread.sleep(3000);
@@ -231,8 +223,7 @@ public class UserProfileTests extends ArkCaseTestBase {
 	@Test
 	public void editContactInformationNull() throws InterruptedException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		user.verifyIfEditDashboardButtonIsEnabled();
 		user.arrowDownClick();
 		Thread.sleep(3000);
@@ -274,8 +265,7 @@ public class UserProfileTests extends ArkCaseTestBase {
 	@Test
 	public void editCompanyDetailNull() throws InterruptedException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		user.verifyIfEditDashboardButtonIsEnabled();
 		user.arrowDownClick();
 		Thread.sleep(3000);

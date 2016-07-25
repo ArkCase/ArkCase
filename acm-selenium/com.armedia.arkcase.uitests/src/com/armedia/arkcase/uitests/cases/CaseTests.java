@@ -12,7 +12,6 @@ import com.armedia.arkcase.uitests.base.ArkCaseAuthentication;
 import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
 import com.armedia.arkcase.uitests.base.ArkCaseTestUtils;
 import com.armedia.arkcase.uitests.base.ArkCaseUtils;
-import com.armedia.arkcase.uitests.base.TestsPoperties;
 import com.armedia.arkcase.uitests.cases.documents.CaseDocumentsPage;
 import com.armedia.arkcase.uitests.user.UserProfilePage;
 
@@ -28,8 +27,7 @@ public class CaseTests extends ArkCaseTestBase {
 	public void createNewCaseLaborRacketeering() throws InterruptedException, IOException, AWTException {
 		// create new/delete labor recketeering case/ whole form
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -164,8 +162,7 @@ public class CaseTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseArson() throws InterruptedException, IOException {
 		// create new case/ case type arson/verify details/ delete
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -235,8 +232,7 @@ public class CaseTests extends ArkCaseTestBase {
 	public void createNewCaseDrugTrafficking() throws InterruptedException, IOException {
 		// create case type drug trafficking add/edit/delete details link
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -318,8 +314,7 @@ public class CaseTests extends ArkCaseTestBase {
 	public void createNewCaseCongressionalResponse() throws InterruptedException, IOException, AWTException {
 
 		// create case type congresional response add/remove details picture
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -396,8 +391,7 @@ public class CaseTests extends ArkCaseTestBase {
 	public void createNewCaseBenefitsAppeal() throws InterruptedException, IOException {
 		// create case type benefits appeal verify/edit* initiator people
 		// section
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -542,8 +536,7 @@ public class CaseTests extends ArkCaseTestBase {
 	public void createNewCaseEditNote() throws InterruptedException, IOException {
 		// create new case, add/edit/delete note
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -630,8 +623,7 @@ public class CaseTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseSubcribeCheckInProfilePageAndUnsuscribe() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -714,8 +706,7 @@ public class CaseTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseSubscibeDeleteSubscribeFromProfilePageVerifySubscribeButtonInCasesPage()
 			throws InterruptedException, IOException {
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -797,9 +788,7 @@ public class CaseTests extends ArkCaseTestBase {
 
 	@Test
 	public void createNewCaseFromThatCaseCreateNewCase() throws InterruptedException, IOException {
-
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -905,8 +894,7 @@ public class CaseTests extends ArkCaseTestBase {
 	public void createNewCaseVerifyReferenceTableAddReferenceToCaseTheSameCase()
 			throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -984,9 +972,7 @@ public class CaseTests extends ArkCaseTestBase {
 
 	@Test
 	public void createTwoNewCaseAddOneAsReferenceToTheAnotherOne() throws InterruptedException, IOException {
-
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1135,8 +1121,7 @@ public class CaseTests extends ArkCaseTestBase {
 	public void createTwoNewCasesAddOneAsReferenceToTheAnotherOneClickOnTheNumberLink()
 			throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1289,8 +1274,7 @@ public class CaseTests extends ArkCaseTestBase {
 	public void createTwoNewCasesAddOneAsReferenceToTheAnotherOneClickOnTheTitleLink()
 			throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1439,8 +1423,7 @@ public class CaseTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseEditPriorityChangeToLow() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1514,8 +1497,7 @@ public class CaseTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseEditPriorityChangeToHigh() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1588,9 +1570,7 @@ public class CaseTests extends ArkCaseTestBase {
 
 	@Test
 	public void createNewCaseEditPriorityChangeToExpedite() throws InterruptedException, IOException {
-
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1664,8 +1644,7 @@ public class CaseTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseEditAssignedTo() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1739,9 +1718,7 @@ public class CaseTests extends ArkCaseTestBase {
 
 	@Test
 	public void createNewCaseEditCaseTitle() throws InterruptedException, IOException {
-
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1809,8 +1786,7 @@ public class CaseTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseEditCaseType() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1883,8 +1859,7 @@ public class CaseTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseEditCaseOwningGroup() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1960,8 +1935,7 @@ public class CaseTests extends ArkCaseTestBase {
 	public void createNewCaseAddNote() throws InterruptedException, IOException {
 		// create new case add/delete note
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -2036,8 +2010,7 @@ public class CaseTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseClickEditButtonEditCaseTitleVerify() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -2127,8 +2100,7 @@ public class CaseTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseClickEditButtonEditCaseTypeVerify() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -2215,8 +2187,7 @@ public class CaseTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseClickEditButtonEditCaseDetailsVerify() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -2308,8 +2279,7 @@ public class CaseTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseClickEditButtonEditInitiatorVerify() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -2410,8 +2380,7 @@ public class CaseTests extends ArkCaseTestBase {
 	public void createNewCaseClickEditButtonAddAttachmentVerify()
 			throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -2511,8 +2480,7 @@ public class CaseTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseClickEditButtonEditPeopleVerify() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -2622,8 +2590,7 @@ public class CaseTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseClickReinvestigateEditTitle() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -2725,8 +2692,7 @@ public class CaseTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseClickReinvestigateEditCaseType() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -2825,8 +2791,7 @@ public class CaseTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseClickReinvestigatetButtonEditCaseDetailsVerify() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -2921,8 +2886,7 @@ public class CaseTests extends ArkCaseTestBase {
 	public void createNewCaseClickReinvestigateButtonAddAttachmentVerify()
 			throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -3022,8 +2986,7 @@ public class CaseTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseClickReinvestigateButtonEditInitiatorVerify() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -3126,8 +3089,7 @@ public class CaseTests extends ArkCaseTestBase {
 	public void createNewCaseClickReinvestigateButtonEditPeopleVerify()
 			throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -3236,8 +3198,7 @@ public class CaseTests extends ArkCaseTestBase {
 
 	@Test
 	public void createNewCaseChangeCaseStatusToActive() throws InterruptedException, IOException {
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -3303,8 +3264,7 @@ public class CaseTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseChangeCaseStatusToInactive() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -3370,8 +3330,7 @@ public class CaseTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseChangeCaseStatusToClosedDenied() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -3440,8 +3399,7 @@ public class CaseTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseChangeCaseStatusToClosedFull() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -3505,8 +3463,7 @@ public class CaseTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseChangeCaseStatusToClosedPartial() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -3575,8 +3532,7 @@ public class CaseTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseAddFilesFromChangeCaseStatusPage() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -3654,8 +3610,7 @@ public class CaseTests extends ArkCaseTestBase {
 	@Test
 	public void creteNewCaseTryToMergeToItself() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -3728,8 +3683,7 @@ public class CaseTests extends ArkCaseTestBase {
 	@Test
 	public void createTwoCasesMergeTheTwoCases() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);

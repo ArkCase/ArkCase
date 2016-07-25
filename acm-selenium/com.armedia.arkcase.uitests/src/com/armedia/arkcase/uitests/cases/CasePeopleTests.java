@@ -5,8 +5,8 @@ import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.support.PageFactory;
+
 import com.armedia.arkcase.uitests.base.ArkCaseAuthentication;
-import com.armedia.arkcase.uitests.base.TestsPoperties;
 import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
 
 public class CasePeopleTests extends ArkCaseTestBase {
@@ -20,8 +20,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		// contact
 		// methods
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -178,8 +177,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		// create case fraud verif/edit/delete people initiator organization
 		// table
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -337,8 +335,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		// create case investor complaint verify/edit/delete people initiator
 		// address
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -498,8 +495,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		// create case investor complaint add/edit/delete people initiator
 		// aliases table
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -657,8 +653,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCasePayOff() throws InterruptedException, IOException {
 		// create case type payoff and verify/edit Complaintant section table
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -802,8 +797,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 
 		// create case type Pollution and verify/edit/delete complaintant
 		// organization
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -958,8 +952,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 
 		// create case type Pollution and verify/edit/delete complaintant type
 		// address
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1119,8 +1112,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 	public void createNewCaseDomesticDispute() throws InterruptedException, IOException {
 
 		// create case type Domestic Dispute and add alias in complaintant
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1284,8 +1276,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		// contact
 		// methods
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1441,8 +1432,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 	public void createNewCaseBackgroundInvestigationAddDeletePerson() throws InterruptedException, IOException {
 		// create case type Background Investigation add/delete person
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1546,8 +1536,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 	public void createNewCaseBackgroundInvestigationAddEditPerson() throws InterruptedException, IOException {
 		// create case type Background Investigation add/edit person
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1655,8 +1644,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		// create case type Background Investigation add person, add contact
 		// methods
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1768,8 +1756,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		// create case type Background Investigation add person, add/delete
 		// organization
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1881,8 +1868,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		// create case type Background Investigation add person, add/delete
 		// address
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1993,8 +1979,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		// create case type Background Investigation add person, add/delete
 		// alias
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -2107,8 +2092,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		// create case type Background Investigation add person, check the type/
 		// filters
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -2199,8 +2183,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		// create case type Background Investigation add person, check the first
 		// name filter
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -2291,8 +2274,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		// create case type Background Investigation add person, check the first
 		// name filter
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
