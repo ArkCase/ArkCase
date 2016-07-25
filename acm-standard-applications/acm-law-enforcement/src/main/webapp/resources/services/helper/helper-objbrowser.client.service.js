@@ -261,9 +261,10 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                 });
 
                 that.scope.$on('report-object-updated', function (e, objectInfo) {
-                    that.updateObjectInfo(objectInfo);
+                    that.currentObjectId = Service.getCurrentObjectId();
+                    var objectId = that.getObjectIdFromInfo(objectInfo);
                     that.scope.objectInfo = objectInfo;
-                    that.scope.$broadcast('object-updated', objectInfo);
+                    that.scope.$broadcast('object-updated', objectInfo, objectId);
                 });
 
                 that.scope.$on('report-object-update-failed', function (e, objectInfo) {
@@ -306,8 +307,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                             function (objectInfo) {
                                 that.scope.progressMsg = null;
                                 that.scope.objectInfo = objectInfo;
-
-                                that.scope.$broadcast('object-updated', objectInfo);
+                                that.scope.$broadcast('object-updated', objectInfo, id);
 
                                 //when object is loaded we want to subscribe to change events
                                 var objectId = id;
@@ -411,7 +411,6 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
 
                 that.deferConfigDone = $q.defer();
                 that.promiseConfig = ConfigService.getComponentConfig(that.moduleId, that.componentId);
-                that.scope.promiseConfig = that.promiseConfig;  //phase out; keep for backward compatibility
                 that.promiseConfig.then(function (componentConfig) {
                     var done = that.onConfigRetrieved(componentConfig);
                     if (undefined === done || true === done) {
@@ -422,21 +421,20 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
 
 
                 that.previousId = null;
-                that.scope.$on('object-updated', function (e, objectInfo) {
+                that.scope.$on('object-updated', function (e, objectInfo, objectId) {
                     that.currentObjectId = Service.getCurrentObjectId();
-                    that.scope.currentObjectId = that.currentObjectId;  //phase out; keep for backward compatibility
-                    updateObjectInfo(that.currentObjectId, objectInfo);
+                    if (that.currentObjectId == objectId) {
+                        updateObjectInfo(objectId, objectInfo);
+                    }
                 });
 
                 that.scope.$on('object-refreshed', function (e, objectInfo) {
                     that.previousId = null;
                     that.currentObjectId = Service.getCurrentObjectId();
-                    that.scope.currentObjectId = that.currentObjectId;  //phase out; keep for backward compatibility
                     updateObjectInfo(that.currentObjectId, objectInfo);
                 });
 
                 that.currentObjectId = Service.getCurrentObjectId();
-                that.scope.currentObjectId = that.currentObjectId;  //phase out; keep for backward compatibility
                 if (Util.goodPositive(that.currentObjectId, false)) {
                     if (!Util.compare(that.previousId, that.currentObjectId)) {
                         that.retrieveObjectInfo(that.currentObjectId).then(function (objectInfo) {

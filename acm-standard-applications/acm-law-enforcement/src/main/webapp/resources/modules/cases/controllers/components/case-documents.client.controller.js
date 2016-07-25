@@ -58,8 +58,6 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
             function (correspondenceForms) {
                 $timeout(function() {
                     $scope.correspondenceForms = Util.goodArray(correspondenceForms);
-                    //$scope.correspondenceForms = $scope.correspondenceForms || [];
-                    //$scope.correspondenceForms = $scope.correspondenceForms.concat(Util.goodArray(correspondenceForms));
                 }, 0);
                 return correspondenceForms;
             }
