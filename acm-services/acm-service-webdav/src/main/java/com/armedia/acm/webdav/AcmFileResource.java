@@ -152,7 +152,7 @@ public class AcmFileResource extends AcmFileSystemResource implements PropFindab
         try
         {
             getResourceFactory().getEcmFileTransaction().updateFileTransactionEventAware(
-                    getResourceFactory().getAuthenticationTokenService().getAuthenticationForToken(acmTicket), acmFile, in);
+                    getResourceFactory().getSecurityManager().getAuthenticationForTicket(acmTicket), acmFile, in);
         } catch (MuleException e)
         {
             LOGGER.error("Error while uploading file via Mule.", e);

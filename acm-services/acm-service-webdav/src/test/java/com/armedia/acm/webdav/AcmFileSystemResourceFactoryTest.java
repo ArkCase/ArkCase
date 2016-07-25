@@ -66,8 +66,6 @@ public class AcmFileSystemResourceFactoryTest extends EasyMockSupport
         unit.setWordFileExtensionPattern(Pattern.compile("\\.(doc|dot|docx|dotx|docm|dotm|docb)$"));
         unit.setFilterMapping("webdav");
 
-        mockAcmWebDAVSecurityManager.addAuthenticationForTicket("123-456-78-90");
-
         expect(mockEcmFileDao.find(12345L)).andReturn(new EcmFile());
 
         replayAll();
