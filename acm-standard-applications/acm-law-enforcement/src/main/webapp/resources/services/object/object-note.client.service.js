@@ -103,7 +103,7 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'Acm.Stor
                 method: 'GET',
                 url: 'api/latest/plugin/note/:parentType/:parentId?type=:noteType',
                 cache: false,
-                isArray: true
+                isArray: false
             }
 
         });
@@ -233,6 +233,7 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'Acm.Stor
          * @returns {Boolean} Return true if data is valid
          */
         Service.validateNotes = function (data) {
+            /*
             if (Util.isEmpty(data)) {
                 return false;
             }
@@ -244,6 +245,7 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'Acm.Stor
                     return false;
                 }
             }
+            */
             return true;
         };
 
