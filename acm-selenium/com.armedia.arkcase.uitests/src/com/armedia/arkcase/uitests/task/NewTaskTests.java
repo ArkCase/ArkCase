@@ -9,12 +9,10 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
-
 import com.armedia.arkcase.uitests.base.ArkCaseAuthentication;
 import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
 import com.armedia.arkcase.uitests.base.ArkCaseTestUtils;
 import com.armedia.arkcase.uitests.base.ArkCaseUtils;
-import com.armedia.arkcase.uitests.base.TestsPoperties;
 
 public class NewTaskTests extends ArkCaseTestBase {
 
@@ -25,8 +23,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void addNewTaskCheckForLabelsAndFilds() throws IOException, InterruptedException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.verifyTaskTitle();
 		task.verifySubjectTitleInput();
@@ -45,8 +42,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskStatusActive() throws IOException, InterruptedException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("sam");
 		task.typeSubject("MilanActiveMIlan");
@@ -71,8 +67,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskSelectFromCalendarStartDateEndDate() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("sam");
 		task.typeSubject("AutomateTestTaskTwo");
@@ -102,8 +97,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTasksStatusInactive() throws IOException, InterruptedException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("sam");
 		task.typeSubject("AutomateTestTaskThreeMilan");
@@ -127,8 +121,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTasksStatusClosed() throws IOException, InterruptedException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("sam");
 		task.typeSubject("AutomateTestTaskThreeMilan");
@@ -152,8 +145,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskStatusActiveExedite() throws IOException, InterruptedException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("sam");
 		task.typeSubject("AutomateTestTaskFour");
@@ -179,8 +171,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 
 	@Test
 	public void createNewTaskStatusActiveBadPercent() throws InterruptedException, IOException {
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("sam");
 		task.typeSubject("AutomateTestTask3");
@@ -198,8 +189,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskIfSubjectEmpty() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.typeSubject("");
 		task.typeStartDate("03/18/2016");
@@ -216,8 +206,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void creteNewTaskIfStartDateIsEmpty() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.typeSubject("AutomatedTAskTest4");
 		task.typeStartDate("");
@@ -236,8 +225,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void creteNewTaskIfDueDateIsEmpty() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.typeSubject("AutomatedTAskTest5");
 		task.typeStartDate("03/19/2016");
@@ -256,8 +244,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskWithDefultUser() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.typeSubject("AutomatedTestFive123");
 		task.typeStartDate("03/19/2016");
@@ -285,8 +272,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskCheckPercentComplete() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("AutomatedTaskTest7");
@@ -307,8 +293,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskFerifyLabels() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("sam");
 		task.typeSubject("TestMilan");
@@ -340,8 +325,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskVerifyTaskList() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("TestMilan1");
@@ -401,8 +385,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskVerifyTaskLinks() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("TestMilanVerify");
@@ -446,8 +429,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskFerifyandAddTaskDetails() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Sam Supervisor");
 		task.typeSubject("TestMilan3");
@@ -498,8 +480,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskFerifyAddDeleteNote() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("TestMilan4");
@@ -541,8 +522,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskFerifyAddTag() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("TestMilan5");
@@ -576,8 +556,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskAddSearchedTagDelete() throws InterruptedException, IOException {
 		// create new task and add searched tag
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("TestMilan5");
@@ -609,8 +588,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskAddNewFolderAndRename() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("rename folder");
@@ -658,8 +636,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskAddNewFolderDeleteTheFolder() throws InterruptedException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("delete folder");
@@ -701,8 +678,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 
 	@Test
 	public void createNewTaskCreateTwoFoldersCopyPaste() throws InterruptedException, IOException, AWTException {
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("Copy Paste");
@@ -771,8 +747,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskCreateTwoFoldersCutPaste() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("Cut Paste");
@@ -842,8 +817,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskAddNewDocumentSendEmailVerifyForm()
 			throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("TestMilan9");
@@ -892,8 +866,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskAddNewDocumentWitnessRequestPdf() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("Add document pdf");
@@ -933,8 +906,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskAddNewDocumentNoticeOfInvesstigation()
 			throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("document notice");
@@ -973,8 +945,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskAddNewDocumentSfSignatureDocx() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("document sfsignature");
@@ -1011,9 +982,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 
 	@Test
 	public void createNewTaskAddNewDocumentEDelivery() throws InterruptedException, IOException, AWTException {
-
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("eDelivery");
@@ -1052,8 +1021,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskAddNewDocumentGeneralReleaseXlsx() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("General release");
@@ -1091,8 +1059,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskAddNewDocumentMedicalRelease() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("medical release");
@@ -1130,8 +1097,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskAddNewDocumentOtherRename() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("rename document");
@@ -1179,9 +1145,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 
 	@Test
 	public void createNewTaskAddNewDocumentOtherReplace() throws InterruptedException, IOException, AWTException {
-
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.typeSubject("replace document");
 		task.typeStartDate("03/18/2016");
@@ -1230,8 +1194,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskAddNewDocumentDeclareAsRecord() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("TestMilan18");
@@ -1271,8 +1234,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskVerifyAndEditInformationRibbon() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("TestMilan19");
@@ -1326,8 +1288,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskVerifyChnageAssigneeAndBack() throws InterruptedException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("TestMilan20");
@@ -1366,8 +1327,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskVerifySubscribeUnscubscribe() throws InterruptedException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("sunscribe");
@@ -1390,9 +1350,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 
 	@Test
 	public void createNewTaskVerifyClickComplete() throws InterruptedException {
-
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel SUpervisor");
 		task.typeSubject("TestComplete");
@@ -1410,8 +1368,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskVerifyIfCompleteTaskDoesNotShowInListOfOpenTasks()
 			throws InterruptedException, IOException {
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("newtasakclickcomplete");
@@ -1443,9 +1400,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 
 	@Test
 	public void createNewTaskVerifyIfDeletedIsStillShownInListOfOpenTasks() throws InterruptedException, IOException {
-
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("sunscribetestMilan");
@@ -1479,8 +1434,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskCheckifDocumentCanBeAddIfTaskIsAsignOtherUser()
 			throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("Acces Denide add document");
@@ -1521,8 +1475,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskCheckAceesDenideNotes() throws InterruptedException, IOException {
 		// verify if note can be added if is assigned another user
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("Acces Denide add note");
@@ -1554,8 +1507,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskCheckAccesDenideIftaskIsClosedAddNote() throws InterruptedException, IOException {
 		// verify if note can be added is task status is closed
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("Acces Denide add note");
@@ -1579,8 +1531,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskChecIfDocumentCanBeAddedIfTaskIsClosed()
 			throws InterruptedException, IOException, AWTException {
 		// verify if document can be added if the task status is closed
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("Acces Denide");
@@ -1619,8 +1570,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskCompleteFerifyWorkFlow() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("WorkFlow");
@@ -1644,8 +1594,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskCompleteFerifyAccessDeniedDocumentDelete()
 			throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("acces denied");
@@ -1684,8 +1633,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskAddNewDocumentDownloadTheDocument()
 			throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("download document");
@@ -1726,8 +1674,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskAddDocumentCheckOutDocument() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("checkout document");
@@ -1775,8 +1722,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskAddNewWordDocumentEditWithWord() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("checkout document");
@@ -1830,8 +1776,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskAddDocumentDeleteTheDocument() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("delete document");
@@ -1878,8 +1823,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskAddDocumentDeclareAsRecoerdDownloadRecord()
 			throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("record document download");
@@ -1929,8 +1873,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskAddDocumentDeclareAsRecordEmailTheDocument()
 			throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("record document download");

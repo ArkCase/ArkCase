@@ -2,12 +2,12 @@ package com.amedia.arkcase.uitests.costsheet;
 
 import java.awt.AWTException;
 import java.io.IOException;
+
 import org.junit.Test;
 import org.openqa.selenium.support.PageFactory;
 import com.armedia.arkcase.uitests.base.ArkCaseAuthentication;
 import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
 import com.armedia.arkcase.uitests.base.ArkCaseTestUtils;
-import com.armedia.arkcase.uitests.base.TestsPoperties;
 
 public class CostSheetTests extends ArkCaseTestBase {
 
@@ -18,8 +18,7 @@ public class CostSheetTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCostSheetVerifyCreatedSheetInformationRibbon() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
        costsheet.waitUntilPageIsLoaded();
 		costsheet.newButton.click();
 		Thread.sleep(3000);
@@ -71,6 +70,7 @@ public class CostSheetTests extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		costsheet.clickGoBtn();
 		Thread.sleep(4000);
+		 costsheet.verifyError();
 		costsheet.verifySearchedUser("Samuel Supervisor", "samuel-acm");
 		Thread.sleep(3000);
 		costsheet.clickSearchedUser();
@@ -94,8 +94,7 @@ public class CostSheetTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCostSheetVerifyDetails() throws InterruptedException{
 		
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
        costsheet.waitUntilPageIsLoaded();
 		costsheet.newButton.click();
 		Thread.sleep(3000);
@@ -138,6 +137,7 @@ public class CostSheetTests extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		costsheet.clickGoBtn();
 		Thread.sleep(4000);
+		 costsheet.verifyError();
 		costsheet.verifySearchedUser("Samuel Supervisor", "samuel-acm");
 		Thread.sleep(3000);
 		costsheet.clickSearchedUser();
@@ -161,8 +161,7 @@ public class CostSheetTests extends ArkCaseTestBase {
 	public void createNewCostsheetVerifyAddedPeople() throws InterruptedException,IOException{
 		
 		
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
        costsheet.waitUntilPageIsLoaded();
 		costsheet.newButton.click();
 		Thread.sleep(3000);
@@ -203,6 +202,7 @@ public class CostSheetTests extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		costsheet.clickGoBtn();
 		Thread.sleep(4000);
+		 costsheet.verifyError();
 		costsheet.verifySearchedUser("Samuel Supervisor", "samuel-acm");
 		Thread.sleep(3000);
 		costsheet.clickSearchedUser();
@@ -227,8 +227,7 @@ public class CostSheetTests extends ArkCaseTestBase {
 	public void createNewCostsheetVerifyCostSummaryTableData() throws InterruptedException{
 		
 		
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
        costsheet.waitUntilPageIsLoaded();
 		costsheet.newButton.click();
 		Thread.sleep(3000);
@@ -269,6 +268,7 @@ public class CostSheetTests extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		costsheet.clickGoBtn();
 		Thread.sleep(4000);
+		 costsheet.verifyError();
 		costsheet.verifySearchedUser("Samuel Supervisor", "samuel-acm");
 		Thread.sleep(3000);
 		costsheet.clickSearchedUser();
@@ -291,8 +291,7 @@ public class CostSheetTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCostSheetEditDetailsVerifyUpdatedTextArea()throws InterruptedException{
 		
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
        costsheet.waitUntilPageIsLoaded();
 		costsheet.newButton.click();
 		Thread.sleep(3000);
@@ -333,6 +332,7 @@ public class CostSheetTests extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		costsheet.clickGoBtn();
 		Thread.sleep(4000);
+        costsheet.verifyError();
 		costsheet.verifySearchedUser("Samuel Supervisor", "samuel-acm");
 		Thread.sleep(3000);
 		costsheet.clickSearchedUser();

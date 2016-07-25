@@ -2,14 +2,13 @@ package com.armedia.arkcase.uitests.base;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;
-
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
-
 import com.relevantcodes.extentreports.ExtentReports;
 
 public class ArkCaseTestBase {
@@ -40,9 +39,16 @@ public class ArkCaseTestBase {
 		fprofile.setPreference("pdfjs.disabled", true);
 		driver = new FirefoxDriver(fprofile);
 		driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
-		baseUrl = TestsPoperties.getBaseURL();
+		//baseUrl = TestsPoperties.getBaseUrlCore();
 		driver.manage().window().maximize();
 
+	}
+
+	@Before
+	public void logIn() {
+
+		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
+				TestsPoperties.getSupervisorUserPasswordCore(), driver, TestsPoperties.getBaseUrlCore());
 	}
 
 	@AfterClass

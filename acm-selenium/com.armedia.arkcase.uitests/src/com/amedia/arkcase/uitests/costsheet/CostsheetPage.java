@@ -18,7 +18,7 @@ public class CostsheetPage extends ArkCaseTestBase {
 	WebElement editButton;
 	@FindBy(how = How.XPATH, using = "/html/body/header/div/nav/ul/li/a")
 	WebElement newButton;
-	@FindBy(how = How.XPATH, using = "/html/body/header/div/nav/ul/li/div/div[4]/div/a")
+	@FindBy(how = How.XPATH, using = "/html/body/header/div/nav/ul/li/div/div[5]/div/a")
 	WebElement newCostSheet;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/iframe")
 	WebElement firstIframe;
@@ -54,7 +54,7 @@ public class CostsheetPage extends ArkCaseTestBase {
 	WebElement calendarIframe;
 	@FindBy(how = How.XPATH, using = "/html/body/div[5]/table/tbody/tr[6]/td[5]/input")
 	WebElement dateFromCalendar;
-	@FindBy(how = How.XPATH, using = "/html/body/div[5]/table/tbody/tr[6]/td[5]/div")
+	@FindBy(how = How.XPATH, using = "/html/body/div[5]/table/tbody/tr[6]/td[5]")
 	WebElement selectDate;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[9]/div[2]/table/tbody/tr/td[6]/div/div[1]/input[1]")
 	WebElement titleDropDown;
@@ -185,8 +185,15 @@ public class CostsheetPage extends ArkCaseTestBase {
 	public void selectDateFromCalendar() {
 
 		selectDate.click();
+		
 
 	}
+	public void verifyError()
+	{
+		int i=driver.findElements(By.xpath("/html/body/div[6]")).size();
+		Assert.assertTrue("When go button is clicked for searching user Error message comunicating with server is shown", i==0);
+	}
+
 
 	public void clickTitleDropDown() {
 		titleDropDown.click();
