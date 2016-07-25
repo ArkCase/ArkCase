@@ -220,8 +220,6 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
             String fileType = fileArgs[1];
             String lockType = fileArgs[2];
 
-            getSecurityManager().addAuthenticationForTicket(acmTicket);
-
             log.trace("fileId: {}, lock type: {}, fileType: {}", fileId, lockType, fileType);
 
             EcmFile ecmFile = getFileDao().find(fileId);

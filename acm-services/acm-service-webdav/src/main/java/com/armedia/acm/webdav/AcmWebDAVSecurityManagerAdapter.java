@@ -63,9 +63,11 @@ public class AcmWebDAVSecurityManagerAdapter implements AcmWebDAVSecurityManager
     }
 
     @Override
-    public void addAuthenticationForTicket(String acmTicket)
+    public Authentication addAuthenticationForTicket(String acmTicket)
     {
-        acmTicketToAuthentication.put(acmTicket, getAuthenticationTokenService().getAuthenticationForToken(acmTicket));
+        Authentication authentication = getAuthenticationTokenService().getAuthenticationForToken(acmTicket);
+        acmTicketToAuthentication.put(acmTicket, authentication);
+        return authentication;
     }
 
     @Override
