@@ -447,6 +447,7 @@
       "title": "People",
       "icon": "fa fa-user",
       "className": "com.armedia.acm.plugins.person.model.Person",
+      "personAssociationClassName": "com.armedia.acm.plugins.person.model.PersonAssociation",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,

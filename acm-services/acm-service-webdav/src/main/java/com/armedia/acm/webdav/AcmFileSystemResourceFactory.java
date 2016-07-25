@@ -5,16 +5,19 @@ import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
-import io.milton.http.LockManager;
-import io.milton.http.ResourceFactory;
-import io.milton.http.exceptions.BadRequestException;
-import io.milton.http.exceptions.NotAuthorizedException;
-import io.milton.resource.Resource;
+import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import io.milton.http.LockManager;
+import io.milton.http.ResourceFactory;
+import io.milton.http.exceptions.BadRequestException;
+import io.milton.http.exceptions.NotAuthorizedException;
+import io.milton.resource.Resource;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity
@@ -40,13 +43,15 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
 
     private Pattern wordFileExtensionPattern;
 
+    private AuthenticationTokenService authenticationTokenService;
+
     /**
-     * A pattern to distinguish between a file URL and the URL that Microsoft Office sends for an OPTIONS
-     * request.  An ArkCase WebDAV file URL is assumed to end in (someNumber.someExtension), e.g., "134.docx".
-     * If a WebDAV URL does not end with this pattern, assume Office is sending an OPTIONS request, and we can
-     * reply with an empty (that is,a dummy) resource.  We can't send the real file resource, since Office did not
-     * send us the whole URL.
+     * A pattern to distinguish between a file URL and the URL that Microsoft Office sends for an OPTIONS request. An
+     * ArkCase WebDAV file URL is assumed to end in (someNumber.someExtension), e.g., "134.docx". If a WebDAV URL does
+     * not end with this pattern, assume Office is sending an OPTIONS request, and we can reply with an empty (that is,a
+     * dummy) resource. We can't send the real file resource, since Office did not send us the whole URL.
      */
+
     private Pattern realDocumentUrl = Pattern.compile("^.*\\/\\d*\\.\\w*$");
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
@@ -184,6 +189,16 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
         this.muleContextManager = muleContextManager;
     }
 
+    public AuthenticationTokenService getAuthenticationTokenService()
+    {
+        return authenticationTokenService;
+    }
+
+    public void setAuthenticationTokenService(AuthenticationTokenService authenticationTokenService)
+    {
+        this.authenticationTokenService = authenticationTokenService;
+    }
+
     interface ResourceHandler
     {
 
@@ -201,18 +216,17 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
             String[] fileArgs = path.split("/");
             Long fileId = Long.valueOf(fileArgs[fileArgs.length - 1]);
 
-            String fileType = fileArgs[0];
-            String lockType = fileArgs[1];
+            String acmTicket = fileArgs[0];
+            String fileType = fileArgs[1];
+            String lockType = fileArgs[2];
 
             log.trace("fileId: {}, lock type: {}, fileType: {}", fileId, lockType, fileType);
-
 
             EcmFile ecmFile = getFileDao().find(fileId);
 
             log.trace("ecmFile exists? {}", ecmFile != null);
 
-            return new AcmFileResource(host, ecmFile, fileType, lockType, AcmFileSystemResourceFactory.this);
-
+            return new AcmFileResource(host, ecmFile, fileType, lockType, acmTicket, AcmFileSystemResourceFactory.this);
         }
     }
 }

@@ -62,7 +62,7 @@ public class PersonAssociation implements Serializable, AcmEntity
     @Column(name = "cm_person_assoc_parent_id")
     private Long parentId;
 
-    @Column(name = "cm_person_assoc_person_type")
+    @Column(name = "cm_person_assoc_person_type", nullable = false)
     private String personType;
 
     @Column(name = "cm_person_assoc_parent_type")
