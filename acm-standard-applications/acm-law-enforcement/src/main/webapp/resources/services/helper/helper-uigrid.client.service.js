@@ -11,8 +11,8 @@
  * Helper.UiGridService has functions for typical usage in ArCase of 'ui-grid' directive
  */
 angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '$translate'
-    , 'UtilService', 'LookupService', 'Object.LookupService', 'ObjectService', 'uiGridConstants'
-    , function ($resource, $q, $translate, Util, LookupService, ObjectLookupService, ObjectService, uiGridConstants) {
+    , 'UtilService', 'LookupService', 'ApplicationConfigService', 'Object.LookupService', 'ObjectService', 'uiGridConstants'
+    , function ($resource, $q, $translate, Util, LookupService, ApplicationConfigService, ObjectLookupService, ObjectService, uiGridConstants) {
         var Service = {
             Lookups: {
                 USER_FULL_NAMES: "userFullNames"
@@ -300,6 +300,31 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
                     for (var i = 0; i < that.scope.config.columnDefs.length; i++) {
                         if (Service.Lookups.USER_FULL_NAMES == that.scope.config.columnDefs[i].lookup || Service.Lookups.PARTICIPANT_NAMES == that.scope.config.columnDefs[i].lookup) {
                             that.scope.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: grid.appScope.userFullNames:'id':'name'";
+                        }
+                    }
+                });
+            }
+
+            /**
+             * @ngdoc method
+             * @name showUserFullNames
+             * @methodOf services:Helper.UiGridService
+             *
+             * @description
+             * Replace user id with user full name.
+             */
+            , showUserFullNames: function () {
+                var that = this;
+                $q.all([ApplicationConfigService.getProperty(ApplicationConfigService.PROPERTIES.DISPLAY_USERNAME)]).then(function (result)
+                {
+                    var userNamePop = result[0];
+
+                    if (userNamePop == "userName")
+                    {
+                        for (var i = 0; i < that.scope.config.columnDefs.length; i++) {
+                            if (that.scope.config.columnDefs[i].hasOwnProperty('fullNameField')) {
+                                that.scope.gridOptions.columnDefs[i].cellTemplate = "<div>{{ row.entity." + that.scope.config.columnDefs[i].fullNameField + "}}</div>";
+                            }
                         }
                     }
                 });
