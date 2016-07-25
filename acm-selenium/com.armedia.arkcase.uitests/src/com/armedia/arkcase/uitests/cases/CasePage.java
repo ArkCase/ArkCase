@@ -8,6 +8,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 
+
 import com.armedia.arkcase.uitests.base.ArkCaseTestUtils;
 
 public class CasePage {
@@ -290,7 +291,7 @@ public class CasePage {
 		Thread.sleep(2000);
 		Assert.assertEquals("Case name is wrong", "Case", newCaseButton.getText());
 		newCaseButton.click();
-		caseButton.click();
+		//caseButton.click();
 	}
 
 	public void vrifyGeneralInformationTabName() {

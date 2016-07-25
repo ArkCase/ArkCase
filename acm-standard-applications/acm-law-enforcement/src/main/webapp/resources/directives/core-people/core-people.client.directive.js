@@ -244,6 +244,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                     personAssociation.person.givenName = '';
                     personAssociation.person.familyName = '';
                     personAssociation.personType = '';
+                    personAssociation.className= Util.goodValue(scope.config.personAssociationClassName); //"com.armedia.acm.plugins.person.model.PersonAssociation"
 
                     //put personAssociation to scope, we will need it when we return from popup
                     scope.personAssociation = personAssociation;

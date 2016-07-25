@@ -85,11 +85,11 @@
 angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', '$filter', '$log', '$timeout'
     , 'Acm.StoreService', 'UtilService', 'Util.DateService', 'ConfigService', 'LookupService'
     , 'EcmService', 'Ecm.EmailService', 'Ecm.RecordService', 'Authentication', 'Helper.NoteService', 'Object.NoteService'
-    , '$browser', '$location', 'Object.LockingService', 'ObjectService', 'Object.CorrespondenceService'
+    , '$browser', '$location', 'Object.LockingService', 'ObjectService', 'Object.CorrespondenceService', 'TicketService'
     , function ($q, $translate, $modal, $filter, $log, $timeout
         , Store, Util, UtilDateService, ConfigService, LookupService
         , Ecm, EcmEmailService, EcmRecordService, Authentication, HelperNoteService, ObjectNoteService
-        , $browser, $location, LockingService, ObjectService, ObjectCorrespondenceService) {
+        , $browser, $location, LockingService, ObjectService, ObjectCorrespondenceService, TicketService) {
         var user = "";
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -1413,24 +1413,26 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             execute: function (nodes, args) {
                                 var node = nodes[0];
                                 var fileId = node.data.objectId;
-                                LockingService.lockObject(fileId, ObjectService.ObjectTypes.FILE,
-                                    ObjectService.LockTypes.WORD_EDIT_LOCK, false).then(
-                                    function (lockedFile) {
-                                        var absUrl = $location.absUrl();
-                                        var baseHref = $browser.baseHref();
-                                        var appUrl = absUrl.substring(0, absUrl.indexOf(baseHref) + baseHref.length);
-                                        var rs = Util.goodMapValue(DocTree.treeConfig, 'wordFileExtensionRegex', '\\.(doc|docx)$');
-                                        var re = new RegExp(rs, "i");
-                                        var hasExt = node.data.name.match(re);
-                                        var fileExt = '';
-                                        if (hasExt && hasExt[0])
-                                            fileExt = hasExt[0];
+                                var promiseTicket = TicketService.getArkCaseTicket();
+                                promiseTicket.then(function (ticketData) {
+                                    var acmTicket = ticketData.data;
+                                    LockingService.lockObject(fileId, ObjectService.ObjectTypes.FILE,
+                                        ObjectService.LockTypes.WORD_EDIT_LOCK, false).then(function (lockedFile) {
+                                            var absUrl = $location.absUrl();
+                                            var baseHref = $browser.baseHref();
+                                            var appUrl = absUrl.substring(0, absUrl.indexOf(baseHref) + baseHref.length);
+                                            var rs = Util.goodMapValue(DocTree.treeConfig, 'wordFileExtensionRegex', '\\.(doc|docx)$');
+                                            var re = new RegExp(rs, "i");
+                                            var hasExt = node.data.name.match(re);
+                                            var fileExt = '';
+                                            if (hasExt && hasExt[0])
+                                                fileExt = hasExt[0];
 
-                                        ITHit.WebDAV.Client.DocManager.EditDocument(appUrl + "webdav/" + ObjectService.ObjectTypes.FILE + "/" + ObjectService.LockTypes.WORD_EDIT_LOCK + "/" +
-                                            node.data.objectId + fileExt);
-                                        DocTree.refreshTree();
-                                    }
-                                );
+                                            ITHit.WebDAV.Client.DocManager.EditDocument(appUrl + "webdav/" + acmTicket + "/" + ObjectService.ObjectTypes.FILE + "/" + ObjectService.LockTypes.WORD_EDIT_LOCK + "/" +
+                                                node.data.objectId + fileExt);
+                                            DocTree.refreshTree();
+                                        })
+                                });
                             }
                         }
                         , {

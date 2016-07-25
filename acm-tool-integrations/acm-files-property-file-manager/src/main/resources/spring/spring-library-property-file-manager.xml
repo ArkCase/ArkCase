@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <import resource="file:${user.home}/.arkcase/acm/encryption/spring-properties-encryption.xml"/>
@@ -44,6 +44,7 @@
                 <value>file:${user.home}/.arkcase/acm/websockets.properties</value>
                 <value>file:${user.home}/.arkcase/acm/spring/spring-config-kerberos.properties</value>
                 <value>file:${user.home}/.arkcase/acm/spring/spring-config-saml.properties</value>
+                <value>file:${user.home}/.arkcase/acm/spring-security/sessionControl.properties</value>
             </list>
         </property>
     </bean>
