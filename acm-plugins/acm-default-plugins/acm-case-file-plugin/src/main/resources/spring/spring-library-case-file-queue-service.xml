@@ -24,6 +24,8 @@
     <bean id="queueCaseService" class="com.armedia.acm.plugins.casefile.service.QueueCaseServiceImpl">
         <property name="queuePipelineManager" ref="queueCaseFilePipelineManager"/>
         <property name="caseFileDao" ref="caseFileDao"/>
+        <property name="userTrackerService" ref="userTrackerService"/>
+        <property name="acmQueueDao" ref="acmQueueDao"/>
     </bean>
 
 </beans>

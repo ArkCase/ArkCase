@@ -1,17 +1,19 @@
 package com.armedia.acm.plugins.casefile.service;
 
+import com.armedia.acm.plugins.casefile.dao.AcmQueueDao;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
+import com.armedia.acm.plugins.casefile.model.AcmQueue;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.users.service.tracker.UserTrackerService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityNotFoundException;
 
 /**
  * Created by armdev on 8/26/15.
@@ -22,6 +24,7 @@ public class QueueCaseServiceImpl implements QueueCaseService
     private CaseFileDao caseFileDao;
 
     private UserTrackerService userTrackerService;
+    private AcmQueueDao acmQueueDao;
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -54,7 +57,8 @@ public class QueueCaseServiceImpl implements QueueCaseService
 
         getQueuePipelineManager().onPostSave(caseFile, ctx);
 
-        log.debug("Case file state: {}, queue: {}", caseFile.getStatus(), caseFile.getQueue() == null ? "null" : caseFile.getQueue().getName());
+        log.debug("Case file state: {}, queue: {}", caseFile.getStatus(),
+                caseFile.getQueue() == null ? "null" : caseFile.getQueue().getName());
 
         return caseFile;
     }
@@ -64,32 +68,30 @@ public class QueueCaseServiceImpl implements QueueCaseService
     {
         log.debug("Case file {} is enqueuing to {}", caseFileId, queueName);
 
-        // somehow the normal find and save DAO methods aren't working for me here. Changes to CaseFile itself
-        // don't get persisted. But if I skip detach and add persist and flush, all seems well.
-        CaseFile caseFile = getCaseFileDao().getEm().find(CaseFile.class, caseFileId);
-        getCaseFileDao().getEm().refresh(caseFile);
+        CaseFile caseFile;
 
-        CaseFilePipelineContext ctx = new CaseFilePipelineContext();
-        if (caseFile.getQueue() != null)
+        try
         {
-            ctx.setQueueName(caseFile.getQueue().getName());
+            caseFile = getCaseFileDao().getEm().find(CaseFile.class, caseFileId);
+        } catch (EntityNotFoundException e)
+        {
+            // try and flush our SQL in case we are trying to operate on a brand new object
+            getCaseFileDao().getEm().flush();
+            caseFile = getCaseFileDao().getEm().find(CaseFile.class, caseFileId);
         }
-        ctx.setEnqueueName(queueName);
-        String ipAddress = userTrackerService.getTrackedUser().getIpAddress();
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        ctx.setAuthentication(auth);
-        ctx.setIpAddress(ipAddress);
 
-        getQueuePipelineManager().onPreSave(caseFile, ctx);
+        // this version of enqueue is to be called from Activiti processes that do their own orchestration, so
+        // we will not execute a pipeline here.
+        AcmQueue queue = getAcmQueueDao().findByName(queueName);
+        caseFile.setQueue(queue);
 
-        caseFile = getCaseFileDao().getEm().merge(caseFile);
-        getCaseFileDao().getEm().persist(caseFile);
+        caseFile = getCaseFileDao().save(caseFile);
 
+        // flush in case another handler needs to see our changes
         getCaseFileDao().getEm().flush();
 
-        getQueuePipelineManager().onPostSave(caseFile, ctx);
-
-        log.debug("Case file state: {}, queue: {}", caseFile.getStatus(), caseFile.getQueue() == null ? "null" : caseFile.getQueue().getName());
+        log.debug("Case file state: {}, queue: {}", caseFile.getStatus(),
+                caseFile.getQueue() == null ? "null" : caseFile.getQueue().getName());
 
         return caseFile;
     }
@@ -124,4 +126,13 @@ public class QueueCaseServiceImpl implements QueueCaseService
         this.userTrackerService = userTrackerService;
     }
 
+    public AcmQueueDao getAcmQueueDao()
+    {
+        return acmQueueDao;
+    }
+
+    public void setAcmQueueDao(AcmQueueDao acmQueueDao)
+    {
+        this.acmQueueDao = acmQueueDao;
+    }
 }

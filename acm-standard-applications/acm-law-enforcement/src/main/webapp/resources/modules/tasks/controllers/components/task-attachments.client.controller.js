@@ -78,5 +78,6 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
             $scope.treeControl.refreshTree();
         };
 
+        $scope.correspondenceForms = {};
     }
 ]);
