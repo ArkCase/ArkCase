@@ -19,6 +19,11 @@
             <artifactId>acm-service-pipeline</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-drools-rule-monitor</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
         <!-- activiti -->
         <dependency>
             <groupId>org.activiti</groupId>

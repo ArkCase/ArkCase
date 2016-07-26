@@ -11,8 +11,7 @@ import org.openqa.selenium.support.PageFactory;
 import com.armedia.arkcase.uitests.base.ArkCaseAuthentication;
 import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
 import com.armedia.arkcase.uitests.base.ArkCaseTestUtils;
-import com.armedia.arkcase.uitests.base.CheckIfFileIsDownloaded;
-import com.armedia.arkcase.uitests.base.TestsPoperties;
+import com.armedia.arkcase.uitests.base.ArkCaseUtils;
 import com.armedia.arkcase.uitests.cases.documents.CaseDocumentsPage;
 import com.armedia.arkcase.uitests.user.UserProfilePage;
 
@@ -21,15 +20,14 @@ public class CaseTests extends ArkCaseTestBase {
 	CasePage casePom = PageFactory.initElements(driver, CasePage.class);
 	CasesPage casesPom = PageFactory.initElements(driver, CasesPage.class);
 	UserProfilePage user = PageFactory.initElements(driver, UserProfilePage.class);
-	CheckIfFileIsDownloaded checkDownload = new CheckIfFileIsDownloaded();
+	ArkCaseUtils checkDownload = new ArkCaseUtils();
 	CaseDocumentsPage documents = PageFactory.initElements(driver, CaseDocumentsPage.class);
 
 	@Test
 	public void createNewCaseLaborRacketeering() throws InterruptedException, IOException, AWTException {
 		// create new/delete labor recketeering case/ whole form
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -151,7 +149,7 @@ public class CaseTests extends ArkCaseTestBase {
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
 		casesPom.verifyCreatedCaseInfo("CaseMilanTest1", "Labor Racketeering");
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(2000);
 		Assert.assertTrue(casesPom.caseTitleDraft.getText().equals("CaseMilanTest1 (IN APPROVAL)"));
 		casesPom.verifyCreatedCaseInfo("CaseMilanTest1", "Labor Racketeering");
@@ -164,8 +162,7 @@ public class CaseTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseArson() throws InterruptedException, IOException {
 		// create new case/ case type arson/verify details/ delete
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -221,7 +218,7 @@ public class CaseTests extends ArkCaseTestBase {
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
 		casesPom.verifyCreatedCaseInfo("CaseMilanArson", "Arson");
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(2000);
 		Assert.assertTrue(casesPom.caseTitleDraft.getText().equals("CaseMilanArson (IN APPROVAL)"));
 		casesPom.verifyCreatedCaseInfo("CaseMilanArson", "Arson");
@@ -235,8 +232,7 @@ public class CaseTests extends ArkCaseTestBase {
 	public void createNewCaseDrugTrafficking() throws InterruptedException, IOException {
 		// create case type drug trafficking add/edit/delete details link
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -304,7 +300,7 @@ public class CaseTests extends ArkCaseTestBase {
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
 		casesPom.verifyCreatedCaseInfo("CaseMilanDrugTrafficking", "Drug Trafficking");
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(2000);
 		Assert.assertTrue(casesPom.caseTitleDraft.getText().equals("CaseMilanDrugTrafficking (IN APPROVAL)"));
 		casesPom.verifyCreatedCaseInfo("CaseMilanDrugTrafficking", "Drug Trafficking");
@@ -318,8 +314,7 @@ public class CaseTests extends ArkCaseTestBase {
 	public void createNewCaseCongressionalResponse() throws InterruptedException, IOException, AWTException {
 
 		// create case type congresional response add/remove details picture
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -362,8 +357,13 @@ public class CaseTests extends ArkCaseTestBase {
 		Assert.assertTrue(casesPom.caseTitleDraft.getText().equals("CaseTestMilanCongressionalResponse (DRAFT)"));
 		casesPom.verifyDetailsSection();
 		Thread.sleep(2000);
-		ArkCaseTestUtils.uploadPNGPicture();
+		casesPom.insertPicture.click();
 		Thread.sleep(3000);
+		casesPom.browsePictureButton.click();
+		Thread.sleep(3000);
+		ArkCaseTestUtils.uploadPNGPicture();
+		Thread.sleep(6000);
+		casesPom.detailsSaveButton.click();
 		casesPom.verifyInsertedImage();
 		Thread.sleep(2000);
 		casesPom.deleteInsertedImage();
@@ -377,7 +377,7 @@ public class CaseTests extends ArkCaseTestBase {
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
 		casesPom.verifyCreatedCaseInfo("CaseTestMilanCongressionalResponse", "Congressional Response");
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertTrue(casesPom.caseTitleDraft.getText().equals("CaseTestMilanCongressionalResponse (IN APPROVAL)"));
 		casesPom.verifyCreatedCaseInfo("CaseTestMilanCongressionalResponse", "Congressional Response");
@@ -391,8 +391,7 @@ public class CaseTests extends ArkCaseTestBase {
 	public void createNewCaseBenefitsAppeal() throws InterruptedException, IOException {
 		// create case type benefits appeal verify/edit* initiator people
 		// section
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -515,7 +514,7 @@ public class CaseTests extends ArkCaseTestBase {
 		casesPom.priorityTypePeople();
 		Thread.sleep(5000);
 		casesPom.verifyPeopleSectionInitiator("Milan", "Jovanovski");
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -524,7 +523,7 @@ public class CaseTests extends ArkCaseTestBase {
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
 		casesPom.verifyCreatedCaseInfo("CaseTestMilanBenefitsAppeal", "Benefits Appeal");
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertTrue(casesPom.caseTitleDraft.getText().equals("CaseTestMilanBenefitsAppeal (IN APPROVAL)"));
 		casesPom.verifyCreatedCaseInfo("CaseTestMilanBenefitsAppeal", "Benefits Appeal");
@@ -537,8 +536,7 @@ public class CaseTests extends ArkCaseTestBase {
 	public void createNewCaseEditNote() throws InterruptedException, IOException {
 		// create new case, add/edit/delete note
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -605,7 +603,7 @@ public class CaseTests extends ArkCaseTestBase {
 		driver.navigate().refresh();
 		Thread.sleep(10000);
 		casesPom.verifyIfNoteIsDeleted();
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -613,7 +611,7 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertTrue(casesPom.caseTitleDraft.getText().equals("CaseVerifyNotes (IN APPROVAL)"));
 		casesPom.changeCaseStatusAproved();
@@ -625,8 +623,7 @@ public class CaseTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseSubcribeCheckInProfilePageAndUnsuscribe() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -670,7 +667,7 @@ public class CaseTests extends ArkCaseTestBase {
 		casesPom.VerifycreatedDate();
 		Assert.assertEquals("Case title is wrong", "CaseSucribe (DRAFT)", casesPom.caseTitleDraft.getText());
 		casesPom.subscribeCaseButton.click();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(4000);
 		Assert.assertEquals("Unsubscribe button text is wrong", "Unsubscribe", casesPom.unsucribeCaseButton.getText());
 		user.arrowDownClick();
@@ -689,7 +686,7 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(5000);
 		casesPom.casesModuleClick();
 		Thread.sleep(5000);
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -697,7 +694,7 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertEquals("Case title is wrong", "CaseSucribe (IN APPROVAL)", casesPom.caseTitleDraft.getText());
 		casesPom.changeCaseStatusAproved();
@@ -707,9 +704,9 @@ public class CaseTests extends ArkCaseTestBase {
 	}
 
 	@Test
-	public void createNewCaseSubscibeDeleteSubscribeFromProfilePage() throws InterruptedException, IOException {
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+	public void createNewCaseSubscibeDeleteSubscribeFromProfilePageVerifySubscribeButtonInCasesPage()
+			throws InterruptedException, IOException {
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -753,7 +750,7 @@ public class CaseTests extends ArkCaseTestBase {
 		casesPom.VerifycreatedDate();
 		Assert.assertEquals("Case title is wrong", "CaseSubcribe (DRAFT)", casesPom.caseTitleDraft.getText());
 		casesPom.subscribeCaseButton.click();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(4000);
 		Assert.assertEquals("Unsubscribe button text is wrong", "Unsubscribe", casesPom.unsucribeCaseButton.getText());
 		user.arrowDownClick();
@@ -769,8 +766,10 @@ public class CaseTests extends ArkCaseTestBase {
 		Assert.assertEquals("Case title is wrong", "CaseSubcribe (DRAFT)", casesPom.caseTitleDraft.getText());
 		driver.navigate().refresh();
 		Thread.sleep(10000);
-		Assert.assertEquals("Sucribe button text is wrong", "Subscribe", casesPom.subscribeCaseButton.getText());
-		casesPom.peopleChangeCaseStatusButton.click();
+		Assert.assertEquals(
+				"After the deleting the subscribe from profile page, Subscibe button again should be enabled",
+				"Subscribe", casesPom.subscribeCaseButton.getText());
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -778,7 +777,7 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertEquals("Case title is wrong", "CaseSubcribe (IN APPROVAL)", casesPom.caseTitleDraft.getText());
 		casesPom.changeCaseStatusAproved();
@@ -789,9 +788,7 @@ public class CaseTests extends ArkCaseTestBase {
 
 	@Test
 	public void createNewCaseFromThatCaseCreateNewCase() throws InterruptedException, IOException {
-
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -871,12 +868,12 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(8000);
 		driver.switchTo().defaultContent();
 		Thread.sleep(4000);
-		casesPom.firtsCaseInCaseList.click();
+		casesPom.firstCaseInCaseList.click();
 		Thread.sleep(4000);
 		casesPom.verifyCreatedCaseInfo("NewCaseNewMilan", "Background Investigation");
 		casesPom.VerifycreatedDate();
 		Assert.assertEquals("Case title is wrong", "NewCaseNewMilan (DRAFT)", casesPom.caseTitleDraft.getText());
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -884,631 +881,9 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertEquals("Case title is wrong", "NewCaseNewMilan (IN APPROVAL)", casesPom.caseTitleDraft.getText());
-		casesPom.changeCaseStatusAproved();
-		Thread.sleep(3000);
-		ArkCaseAuthentication.logOut(driver);
-
-	}
-
-	@Test
-	public void createNewCaseVerifyTheCorrespondenceSection() throws InterruptedException, IOException {
-
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
-		casePom.newCase();
-		Thread.sleep(20000);
-		driver.switchTo().frame(casesPom.frameOne);
-		driver.switchTo().frame(casesPom.frameTwo);
-		casePom.vrifyGeneralInformationTabName();
-		casePom.caseTitleInput("Correspondence");
-		casePom.verifyCaseTypeTitle();
-		casePom.caseTypeInputClick();
-		Thread.sleep(2000);
-		casePom.caseTypeBackgroundInvestigation();
-		Thread.sleep(2000);
-		casePom.nextButton.click();
-		Thread.sleep(3000);
-		casePom.verifyInitiatorTab();
-		casePom.initiatorTitle.click();
-		Thread.sleep(2000);
-		casePom.clickInitiatorMr();
-		Thread.sleep(2000);
-		casePom.initiatorFirstName("Milan");
-		Thread.sleep(2000);
-		casePom.initiatorLastName("Jovanovski");
-		Thread.sleep(2000);
-		casePom.participantnsTab.click();
-		Thread.sleep(2000);
-		casePom.selectParticipantTypeClick();
-		Thread.sleep(2000);
-		casePom.selectparticipantOwner();
-		Thread.sleep(2000);
-		casePom.selectParticipantClick();
-		Thread.sleep(3000);
-		casePom.searchForUsers();
-		casePom.searchedName();
-		Thread.sleep(4000);
-		casePom.addSearchedNameClick();
-		Thread.sleep(2000);
-		casePom.submit.click();
-		Thread.sleep(8000);
-		driver.switchTo().defaultContent();
-		Thread.sleep(4000);
-		casesPom.verifyCreatedCaseInfo("Correspondence", "Background Investigation");
-		casesPom.VerifycreatedDate();
-		Assert.assertEquals("Case title is wrong", "Correspondence (DRAFT)", casesPom.caseTitleDraft.getText());
-		casesPom.caseCorrespondence.click();
-		Thread.sleep(4000);
-		casesPom.verifyCorrespondenceTable();
-		casesPom.correspondenceDropDown.click();
-		Thread.sleep(3000);
-		casesPom.verifyCoreespondenceDropDownList();
-		casesPom.peopleChangeCaseStatusButton.click();
-		Thread.sleep(10000);
-		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
-		Thread.sleep(2000);
-		driver.switchTo().frame(casesPom.chnageCaseStatusFrameTwo);
-		Thread.sleep(2000);
-		casesPom.deleteCase();
-		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
-		Thread.sleep(3000);
-		Assert.assertEquals("Case title is wrong", "Correspondence (IN APPROVAL)", casesPom.caseTitleDraft.getText());
-		casesPom.changeCaseStatusAproved();
-		Thread.sleep(3000);
-		ArkCaseAuthentication.logOut(driver);
-
-	}
-
-	@Test
-	public void createNewCaseAddCorrespodenceMedicalReleaseDownloadCorrespondence()
-			throws InterruptedException, IOException {
-
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
-		casePom.newCase();
-		Thread.sleep(20000);
-		driver.switchTo().frame(casesPom.frameOne);
-		driver.switchTo().frame(casesPom.frameTwo);
-		casePom.vrifyGeneralInformationTabName();
-		casePom.caseTitleInput("Correspondence");
-		casePom.verifyCaseTypeTitle();
-		casePom.caseTypeInputClick();
-		Thread.sleep(2000);
-		casePom.caseTypeBackgroundInvestigation();
-		Thread.sleep(2000);
-		casePom.nextButton.click();
-		Thread.sleep(3000);
-		casePom.verifyInitiatorTab();
-		casePom.initiatorTitle.click();
-		Thread.sleep(2000);
-		casePom.clickInitiatorMr();
-		Thread.sleep(2000);
-		casePom.initiatorFirstName("Milan");
-		Thread.sleep(2000);
-		casePom.initiatorLastName("Jovanovski");
-		Thread.sleep(2000);
-		casePom.participantnsTab.click();
-		Thread.sleep(2000);
-		casePom.selectParticipantTypeClick();
-		Thread.sleep(2000);
-		casePom.selectparticipantOwner();
-		Thread.sleep(2000);
-		casePom.selectParticipantClick();
-		Thread.sleep(3000);
-		casePom.searchForUsers();
-		casePom.searchedName();
-		Thread.sleep(4000);
-		casePom.addSearchedNameClick();
-		Thread.sleep(2000);
-		casePom.submit.click();
-		Thread.sleep(8000);
-		driver.switchTo().defaultContent();
-		Thread.sleep(4000);
-		casesPom.verifyCreatedCaseInfo("Correspondence", "Background Investigation");
-		casesPom.VerifycreatedDate();
-		Assert.assertEquals("Case title is wrong", "Correspondence (DRAFT)", casesPom.caseTitleDraft.getText());
-		casesPom.caseCorrespondence.click();
-		Thread.sleep(4000);
-		casesPom.addCorrespondenceMedicalRelease();
-		casesPom.addCorrespodenceButtonClick();
-		Thread.sleep(10000);
-		casesPom.verifyIfCorrespondenceIsAdded();
-		casesPom.verifyAddedCorrespodence("Medical Release.docx", "samuel-acm");
-		driver.navigate().refresh();
-		Thread.sleep(10000);
-		casesPom.verifyCorrespondenceIsAddedAfterRefresh();
-		casesPom.verifyAddedCorrespodence("Medical Release.docx", "Samuel Supervisor");
-		casesPom.correspondenceName.click();
-		casesPom.checkMedicalReleaseHttpResponse();
-		Thread.sleep(10000);
-		checkDownload.checkIfFileIsDownloaded("Medical Release");
-		casesPom.peopleChangeCaseStatusButton.click();
-		Thread.sleep(10000);
-		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
-		Thread.sleep(2000);
-		driver.switchTo().frame(casesPom.chnageCaseStatusFrameTwo);
-		Thread.sleep(2000);
-		casesPom.deleteCase();
-		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
-		Thread.sleep(3000);
-		Assert.assertEquals("Case title is wrong", "Correspondence (IN APPROVAL)", casesPom.caseTitleDraft.getText());
-		casesPom.changeCaseStatusAproved();
-		Thread.sleep(3000);
-		ArkCaseAuthentication.logOut(driver);
-
-	}
-
-	@Test
-	public void createNewCaseAddCorrespondenceInterviewRequestDownload() throws InterruptedException, IOException {
-
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
-		casePom.newCase();
-		Thread.sleep(20000);
-		driver.switchTo().frame(casesPom.frameOne);
-		driver.switchTo().frame(casesPom.frameTwo);
-		casePom.vrifyGeneralInformationTabName();
-		casePom.caseTitleInput("Correspondence");
-		casePom.verifyCaseTypeTitle();
-		casePom.caseTypeInputClick();
-		Thread.sleep(2000);
-		casePom.caseTypeBackgroundInvestigation();
-		Thread.sleep(2000);
-		casePom.nextButton.click();
-		Thread.sleep(3000);
-		casePom.verifyInitiatorTab();
-		casePom.initiatorTitle.click();
-		Thread.sleep(2000);
-		casePom.clickInitiatorMr();
-		Thread.sleep(2000);
-		casePom.initiatorFirstName("Milan");
-		Thread.sleep(2000);
-		casePom.initiatorLastName("Jovanovski");
-		Thread.sleep(2000);
-		casePom.participantnsTab.click();
-		Thread.sleep(2000);
-		casePom.selectParticipantTypeClick();
-		Thread.sleep(2000);
-		casePom.selectparticipantOwner();
-		Thread.sleep(2000);
-		casePom.selectParticipantClick();
-		Thread.sleep(3000);
-		casePom.searchForUsers();
-		casePom.searchedName();
-		Thread.sleep(4000);
-		casePom.addSearchedNameClick();
-		Thread.sleep(2000);
-		casePom.submit.click();
-		Thread.sleep(8000);
-		driver.switchTo().defaultContent();
-		Thread.sleep(4000);
-		casesPom.verifyCreatedCaseInfo("Correspondence", "Background Investigation");
-		casesPom.VerifycreatedDate();
-		Assert.assertEquals("Case title is wrong", "Correspondence (DRAFT)", casesPom.caseTitleDraft.getText());
-		casesPom.caseCorrespondence.click();
-		Thread.sleep(4000);
-		casesPom.addCorrespondenceInterviewrequest();
-		casesPom.addCorrespodenceButtonClick();
-		Thread.sleep(10000);
-		casesPom.verifyIfCorrespondenceIsAdded();
-		casesPom.verifyAddedCorrespodence("Witness Interview Request.docx", "samuel-acm");
-		driver.navigate().refresh();
-		Thread.sleep(10000);
-		casesPom.verifyCorrespondenceIsAddedAfterRefresh();
-		casesPom.verifyAddedCorrespodence("Witness Interview Request.docx", "Samuel Supervisor");
-		casesPom.correspondenceName.click();
-		casesPom.checkInterviewRequestHttpResponse();
-		Thread.sleep(10000);
-		checkDownload.checkIfFileIsDownloaded("Witness Interview Request");
-		casesPom.peopleChangeCaseStatusButton.click();
-		Thread.sleep(10000);
-		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
-		Thread.sleep(2000);
-		driver.switchTo().frame(casesPom.chnageCaseStatusFrameTwo);
-		Thread.sleep(2000);
-		casesPom.deleteCase();
-		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
-		Thread.sleep(3000);
-		Assert.assertEquals("Case title is wrong", "Correspondence (IN APPROVAL)", casesPom.caseTitleDraft.getText());
-		casesPom.changeCaseStatusAproved();
-		Thread.sleep(3000);
-		ArkCaseAuthentication.logOut(driver);
-	}
-
-	@Test
-	public void createNewCaseAddCorrespondenceNoticeOfInvestigationDownload() throws InterruptedException, IOException {
-
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
-		casePom.newCase();
-		Thread.sleep(20000);
-		driver.switchTo().frame(casesPom.frameOne);
-		driver.switchTo().frame(casesPom.frameTwo);
-		casePom.vrifyGeneralInformationTabName();
-		casePom.caseTitleInput("Correspondence");
-		casePom.verifyCaseTypeTitle();
-		casePom.caseTypeInputClick();
-		Thread.sleep(2000);
-		casePom.caseTypeBackgroundInvestigation();
-		Thread.sleep(2000);
-		casePom.nextButton.click();
-		Thread.sleep(3000);
-		casePom.verifyInitiatorTab();
-		casePom.initiatorTitle.click();
-		Thread.sleep(2000);
-		casePom.clickInitiatorMr();
-		Thread.sleep(2000);
-		casePom.initiatorFirstName("Milan");
-		Thread.sleep(2000);
-		casePom.initiatorLastName("Jovanovski");
-		Thread.sleep(2000);
-		casePom.participantnsTab.click();
-		Thread.sleep(2000);
-		casePom.selectParticipantTypeClick();
-		Thread.sleep(2000);
-		casePom.selectparticipantOwner();
-		Thread.sleep(2000);
-		casePom.selectParticipantClick();
-		Thread.sleep(3000);
-		casePom.searchForUsers();
-		casePom.searchedName();
-		Thread.sleep(4000);
-		casePom.addSearchedNameClick();
-		Thread.sleep(2000);
-		casePom.submit.click();
-		Thread.sleep(8000);
-		driver.switchTo().defaultContent();
-		Thread.sleep(4000);
-		casesPom.verifyCreatedCaseInfo("Correspondence", "Background Investigation");
-		casesPom.VerifycreatedDate();
-		Assert.assertEquals("Case title is wrong", "Correspondence (DRAFT)", casesPom.caseTitleDraft.getText());
-		casesPom.caseCorrespondence.click();
-		Thread.sleep(4000);
-		casesPom.addCorrespondenceNoticeOfInvestigation();
-		casesPom.addCorrespodenceButtonClick();
-		Thread.sleep(10000);
-		casesPom.verifyIfCorrespondenceIsAdded();
-		casesPom.verifyAddedCorrespodence("Notice of Investigation.docx", "samuel-acm");
-		driver.navigate().refresh();
-		Thread.sleep(10000);
-		casesPom.verifyCorrespondenceIsAddedAfterRefresh();
-		casesPom.verifyAddedCorrespodence("Notice of Investigation.docx", "Samuel Supervisor");
-		casesPom.correspondenceName.click();
-		casesPom.checkNoticeOfInvestigationHttpResponse();
-		Thread.sleep(10000);
-		checkDownload.checkIfFileIsDownloaded("Notice of Investigation");
-		casesPom.peopleChangeCaseStatusButton.click();
-		Thread.sleep(10000);
-		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
-		Thread.sleep(2000);
-		driver.switchTo().frame(casesPom.chnageCaseStatusFrameTwo);
-		Thread.sleep(2000);
-		casesPom.deleteCase();
-		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
-		Thread.sleep(3000);
-		Assert.assertEquals("Case title is wrong", "Correspondence (IN APPROVAL)", casesPom.caseTitleDraft.getText());
-		casesPom.changeCaseStatusAproved();
-		Thread.sleep(3000);
-		ArkCaseAuthentication.logOut(driver);
-
-	}
-
-	@Test
-	public void createNewCaseAddCorrespondenceClearanceDeniedDownload() throws InterruptedException, IOException {
-
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
-		casePom.newCase();
-		Thread.sleep(20000);
-		driver.switchTo().frame(casesPom.frameOne);
-		driver.switchTo().frame(casesPom.frameTwo);
-		casePom.vrifyGeneralInformationTabName();
-		casePom.caseTitleInput("Correspondence");
-		casePom.verifyCaseTypeTitle();
-		casePom.caseTypeInputClick();
-		Thread.sleep(2000);
-		casePom.caseTypeBackgroundInvestigation();
-		Thread.sleep(2000);
-		casePom.nextButton.click();
-		Thread.sleep(3000);
-		casePom.verifyInitiatorTab();
-		casePom.initiatorTitle.click();
-		Thread.sleep(2000);
-		casePom.clickInitiatorMr();
-		Thread.sleep(2000);
-		casePom.initiatorFirstName("Milan");
-		Thread.sleep(2000);
-		casePom.initiatorLastName("Jovanovski");
-		Thread.sleep(2000);
-		casePom.participantnsTab.click();
-		Thread.sleep(2000);
-		casePom.selectParticipantTypeClick();
-		Thread.sleep(2000);
-		casePom.selectparticipantOwner();
-		Thread.sleep(2000);
-		casePom.selectParticipantClick();
-		Thread.sleep(3000);
-		casePom.searchForUsers();
-		casePom.searchedName();
-		Thread.sleep(4000);
-		casePom.addSearchedNameClick();
-		Thread.sleep(2000);
-		casePom.submit.click();
-		Thread.sleep(8000);
-		driver.switchTo().defaultContent();
-		Thread.sleep(4000);
-		casesPom.verifyCreatedCaseInfo("Correspondence", "Background Investigation");
-		casesPom.VerifycreatedDate();
-		Assert.assertEquals("Case title is wrong", "Correspondence (DRAFT)", casesPom.caseTitleDraft.getText());
-		casesPom.caseCorrespondence.click();
-		Thread.sleep(4000);
-		casesPom.addCorrespondenceCleranceDenied();
-		casesPom.addCorrespodenceButtonClick();
-		Thread.sleep(10000);
-		casesPom.verifyIfCorrespondenceIsAdded();
-		casesPom.verifyAddedCorrespodence("Clearance Denied.docx", "samuel-acm");
-		driver.navigate().refresh();
-		Thread.sleep(10000);
-		casesPom.verifyCorrespondenceIsAddedAfterRefresh();
-		casesPom.verifyAddedCorrespodence("Clearance Denied.docx", "Samuel Supervisor");
-		casesPom.correspondenceName.click();
-		casesPom.checkClearanceDeniedHttpResponse();
-		Thread.sleep(10000);
-		checkDownload.checkIfFileIsDownloaded("Clearance Denied");
-		casesPom.peopleChangeCaseStatusButton.click();
-		Thread.sleep(10000);
-		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
-		Thread.sleep(2000);
-		driver.switchTo().frame(casesPom.chnageCaseStatusFrameTwo);
-		Thread.sleep(2000);
-		casesPom.deleteCase();
-		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
-		Thread.sleep(3000);
-		Assert.assertEquals("Case title is wrong", "Correspondence (IN APPROVAL)", casesPom.caseTitleDraft.getText());
-		casesPom.changeCaseStatusAproved();
-		Thread.sleep(3000);
-		ArkCaseAuthentication.logOut(driver);
-	}
-
-	@Test
-	public void createNewCaseAddCorrespondenceClearanceGrantedDownload() throws InterruptedException, IOException {
-
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
-		casePom.newCase();
-		Thread.sleep(20000);
-		driver.switchTo().frame(casesPom.frameOne);
-		driver.switchTo().frame(casesPom.frameTwo);
-		casePom.vrifyGeneralInformationTabName();
-		casePom.caseTitleInput("Correspondence");
-		casePom.verifyCaseTypeTitle();
-		casePom.caseTypeInputClick();
-		Thread.sleep(2000);
-		casePom.caseTypeBackgroundInvestigation();
-		Thread.sleep(2000);
-		casePom.nextButton.click();
-		Thread.sleep(3000);
-		casePom.verifyInitiatorTab();
-		casePom.initiatorTitle.click();
-		Thread.sleep(2000);
-		casePom.clickInitiatorMr();
-		Thread.sleep(2000);
-		casePom.initiatorFirstName("Milan");
-		Thread.sleep(2000);
-		casePom.initiatorLastName("Jovanovski");
-		Thread.sleep(2000);
-		casePom.participantnsTab.click();
-		Thread.sleep(2000);
-		casePom.selectParticipantTypeClick();
-		Thread.sleep(2000);
-		casePom.selectparticipantOwner();
-		Thread.sleep(2000);
-		casePom.selectParticipantClick();
-		Thread.sleep(3000);
-		casePom.searchForUsers();
-		casePom.searchedName();
-		Thread.sleep(4000);
-		casePom.addSearchedNameClick();
-		Thread.sleep(2000);
-		casePom.submit.click();
-		Thread.sleep(8000);
-		driver.switchTo().defaultContent();
-		Thread.sleep(4000);
-		casesPom.verifyCreatedCaseInfo("Correspondence", "Background Investigation");
-		casesPom.VerifycreatedDate();
-		Assert.assertEquals("Case title is wrong", "Correspondence (DRAFT)", casesPom.caseTitleDraft.getText());
-		casesPom.caseCorrespondence.click();
-		Thread.sleep(4000);
-		casesPom.addCorrespondenceClearanceGranted();
-		casesPom.addCorrespodenceButtonClick();
-		Thread.sleep(10000);
-		casesPom.verifyIfCorrespondenceIsAdded();
-		casesPom.verifyAddedCorrespodence("Clearance Granted.docx", "samuel-acm");
-		driver.navigate().refresh();
-		Thread.sleep(10000);
-		casesPom.verifyCorrespondenceIsAddedAfterRefresh();
-		casesPom.verifyAddedCorrespodence("Clearance Granted.docx", "Samuel Supervisor");
-		casesPom.correspondenceName.click();
-		casesPom.checkCleranceGrantedHttpResponse();
-		Thread.sleep(10000);
-		checkDownload.checkIfFileIsDownloaded("Clearance Granted");
-		casesPom.peopleChangeCaseStatusButton.click();
-		Thread.sleep(10000);
-		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
-		Thread.sleep(2000);
-		driver.switchTo().frame(casesPom.chnageCaseStatusFrameTwo);
-		Thread.sleep(2000);
-		casesPom.deleteCase();
-		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
-		Thread.sleep(3000);
-		Assert.assertEquals("Case title is wrong", "Correspondence (IN APPROVAL)", casesPom.caseTitleDraft.getText());
-		casesPom.changeCaseStatusAproved();
-		Thread.sleep(3000);
-		ArkCaseAuthentication.logOut(driver);
-
-	}
-
-	@Test
-	public void createNewCaseAddCorrespondenceGeneralReleaseDownload() throws InterruptedException, IOException {
-
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
-		casePom.newCase();
-		Thread.sleep(20000);
-		driver.switchTo().frame(casesPom.frameOne);
-		driver.switchTo().frame(casesPom.frameTwo);
-		casePom.vrifyGeneralInformationTabName();
-		casePom.caseTitleInput("Correspondence");
-		casePom.verifyCaseTypeTitle();
-		casePom.caseTypeInputClick();
-		Thread.sleep(2000);
-		casePom.caseTypeBackgroundInvestigation();
-		Thread.sleep(2000);
-		casePom.nextButton.click();
-		Thread.sleep(3000);
-		casePom.verifyInitiatorTab();
-		casePom.initiatorTitle.click();
-		Thread.sleep(2000);
-		casePom.clickInitiatorMr();
-		Thread.sleep(2000);
-		casePom.initiatorFirstName("Milan");
-		Thread.sleep(2000);
-		casePom.initiatorLastName("Jovanovski");
-		Thread.sleep(2000);
-		casePom.participantnsTab.click();
-		Thread.sleep(2000);
-		casePom.selectParticipantTypeClick();
-		Thread.sleep(2000);
-		casePom.selectparticipantOwner();
-		Thread.sleep(2000);
-		casePom.selectParticipantClick();
-		Thread.sleep(3000);
-		casePom.searchForUsers();
-		casePom.searchedName();
-		Thread.sleep(4000);
-		casePom.addSearchedNameClick();
-		Thread.sleep(2000);
-		casePom.submit.click();
-		Thread.sleep(8000);
-		driver.switchTo().defaultContent();
-		Thread.sleep(4000);
-		casesPom.verifyCreatedCaseInfo("Correspondence", "Background Investigation");
-		casesPom.VerifycreatedDate();
-		Assert.assertEquals("Case title is wrong", "Correspondence (DRAFT)", casesPom.caseTitleDraft.getText());
-		casesPom.caseCorrespondence.click();
-		Thread.sleep(4000);
-		casesPom.addCorrespondenceGeneralRelease();
-		casesPom.addCorrespodenceButtonClick();
-		Thread.sleep(10000);
-		casesPom.verifyIfCorrespondenceIsAdded();
-		casesPom.verifyAddedCorrespodence("General Release.docx", "samuel-acm");
-		driver.navigate().refresh();
-		Thread.sleep(10000);
-		casesPom.verifyCorrespondenceIsAddedAfterRefresh();
-		casesPom.verifyAddedCorrespodence("General Release.docx", "Samuel Supervisor");
-		casesPom.correspondenceName.click();
-		casesPom.checkGeneralReleaseHttpResponse();
-		Thread.sleep(10000);
-		checkDownload.checkIfFileIsDownloaded("General Release");
-		casesPom.peopleChangeCaseStatusButton.click();
-		Thread.sleep(10000);
-		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
-		Thread.sleep(2000);
-		driver.switchTo().frame(casesPom.chnageCaseStatusFrameTwo);
-		Thread.sleep(2000);
-		casesPom.deleteCase();
-		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
-		Thread.sleep(3000);
-		Assert.assertEquals("Case title is wrong", "Correspondence (IN APPROVAL)", casesPom.caseTitleDraft.getText());
-		casesPom.changeCaseStatusAproved();
-		Thread.sleep(3000);
-		ArkCaseAuthentication.logOut(driver);
-
-	}
-
-	@Test
-	public void createNewCaseAddCorrespondenceChairmanResponseDownload() throws InterruptedException, IOException {
-
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
-		casePom.newCase();
-		Thread.sleep(20000);
-		driver.switchTo().frame(casesPom.frameOne);
-		driver.switchTo().frame(casesPom.frameTwo);
-		casePom.vrifyGeneralInformationTabName();
-		casePom.caseTitleInput("Correspondence");
-		casePom.verifyCaseTypeTitle();
-		casePom.caseTypeInputClick();
-		Thread.sleep(2000);
-		casePom.caseTypeBackgroundInvestigation();
-		Thread.sleep(2000);
-		casePom.nextButton.click();
-		Thread.sleep(3000);
-		casePom.verifyInitiatorTab();
-		casePom.initiatorTitle.click();
-		Thread.sleep(2000);
-		casePom.clickInitiatorMr();
-		Thread.sleep(2000);
-		casePom.initiatorFirstName("Milan");
-		Thread.sleep(2000);
-		casePom.initiatorLastName("Jovanovski");
-		Thread.sleep(2000);
-		casePom.participantnsTab.click();
-		Thread.sleep(2000);
-		casePom.selectParticipantTypeClick();
-		Thread.sleep(2000);
-		casePom.selectparticipantOwner();
-		Thread.sleep(2000);
-		casePom.selectParticipantClick();
-		Thread.sleep(3000);
-		casePom.searchForUsers();
-		casePom.searchedName();
-		Thread.sleep(4000);
-		casePom.addSearchedNameClick();
-		Thread.sleep(2000);
-		casePom.submit.click();
-		Thread.sleep(8000);
-		driver.switchTo().defaultContent();
-		Thread.sleep(4000);
-		casesPom.verifyCreatedCaseInfo("Correspondence", "Background Investigation");
-		casesPom.VerifycreatedDate();
-		Assert.assertEquals("Case title is wrong", "Correspondence (DRAFT)", casesPom.caseTitleDraft.getText());
-		casesPom.caseCorrespondence.click();
-		Thread.sleep(4000);
-		casesPom.addCorrespondenceChairmanResponse();
-		casesPom.addCorrespodenceButtonClick();
-		Thread.sleep(10000);
-		casesPom.verifyIfCorrespondenceIsAdded();
-		casesPom.verifyAddedCorrespodence("Chairman Response.docx", "samuel-acm");
-		driver.navigate().refresh();
-		Thread.sleep(10000);
-		casesPom.verifyCorrespondenceIsAddedAfterRefresh();
-		casesPom.verifyAddedCorrespodence("Chairman Response.docx", "Samuel Supervisor");
-		casesPom.correspondenceName.click();
-		casesPom.checkChairmanResponseHttpResponse();
-		Thread.sleep(10000);
-		checkDownload.checkIfFileIsDownloaded("Chairman Response");
-		casesPom.peopleChangeCaseStatusButton.click();
-		Thread.sleep(10000);
-		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
-		Thread.sleep(2000);
-		driver.switchTo().frame(casesPom.chnageCaseStatusFrameTwo);
-		Thread.sleep(2000);
-		casesPom.deleteCase();
-		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
-		Thread.sleep(3000);
-		Assert.assertEquals("Case title is wrong", "Correspondence (IN APPROVAL)", casesPom.caseTitleDraft.getText());
 		casesPom.changeCaseStatusAproved();
 		Thread.sleep(3000);
 		ArkCaseAuthentication.logOut(driver);
@@ -1519,8 +894,7 @@ public class CaseTests extends ArkCaseTestBase {
 	public void createNewCaseVerifyReferenceTableAddReferenceToCaseTheSameCase()
 			throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1575,10 +949,11 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(4000);
 		casesPom.searchReferenceButton.click();
 		Thread.sleep(5000);
-		casesPom.verifySearchedReference("", "", "");
+		casesPom.verifySearchedReferenceNoResult();
+		Thread.sleep(2000);
 		casesPom.addreferenceCancelButton.click();
 		Thread.sleep(3000);
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -1586,7 +961,7 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertEquals("Case title is wrong", "VerifyReference (IN APPROVAL)", casesPom.caseTitleDraft.getText());
 		casesPom.changeCaseStatusAproved();
@@ -1597,9 +972,7 @@ public class CaseTests extends ArkCaseTestBase {
 
 	@Test
 	public void createTwoNewCaseAddOneAsReferenceToTheAnotherOne() throws InterruptedException, IOException {
-
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1680,7 +1053,9 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(8000);
 		driver.switchTo().defaultContent();
 		Thread.sleep(4000);
-		casesPom.firtsCaseInCaseList.click();
+		casesPom.casesListRefresh.click();
+		Thread.sleep(4000);
+		casesPom.firstCaseInCaseList.click();
 		Thread.sleep(4000);
 		casesPom.verifyCreatedCaseInfo("ReferenceTwo", "Background Investigation");
 		casesPom.VerifycreatedDate();
@@ -1705,7 +1080,7 @@ public class CaseTests extends ArkCaseTestBase {
 		driver.navigate().refresh();
 		Thread.sleep(10000);
 		casesPom.verifyAddedReference(caseId, "ReferenceOne", "CASE_FILE", "DRAFT");
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -1713,7 +1088,7 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertEquals("Case title is wrong", "ReferenceTwo (IN APPROVAL)", casesPom.caseTitleDraft.getText());
 		casesPom.changeCaseStatusAproved();
@@ -1724,7 +1099,7 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		casesPom.searchCasesButtonClick();
 		Thread.sleep(3000);
-		casesPom.firtsCaseInCaseList.click();
+		casesPom.firstCaseInCaseList.click();
 		Thread.sleep(4000);
 		casesPom.peopleChangeCaseStatusButton.click();
 		Thread.sleep(10000);
@@ -1734,172 +1109,9 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertEquals("Case title is wrong", "ReferenceOne (IN APPROVAL)", casesPom.caseTitleDraft.getText());
-		casesPom.changeCaseStatusAproved();
-		ArkCaseAuthentication.logOut(driver);
-
-	}
-
-	@Test
-	public void createTwoNewCaseAddOneCaseTwiceAsReferenceToTheAnotherOne() throws InterruptedException, IOException {
-
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
-		casePom.newCase();
-		Thread.sleep(20000);
-		driver.switchTo().frame(casesPom.frameOne);
-		driver.switchTo().frame(casesPom.frameTwo);
-		casePom.vrifyGeneralInformationTabName();
-		casePom.caseTitleInput("ReferenceMilan");
-		casePom.verifyCaseTypeTitle();
-		casePom.caseTypeInputClick();
-		Thread.sleep(2000);
-		casePom.caseTypeBackgroundInvestigation();
-		Thread.sleep(2000);
-		casePom.nextButton.click();
-		Thread.sleep(3000);
-		casePom.verifyInitiatorTab();
-		casePom.initiatorTitle.click();
-		Thread.sleep(2000);
-		casePom.clickInitiatorMr();
-		Thread.sleep(2000);
-		casePom.initiatorFirstName("Milan");
-		Thread.sleep(2000);
-		casePom.initiatorLastName("Jovanovski");
-		Thread.sleep(2000);
-		casePom.participantnsTab.click();
-		Thread.sleep(2000);
-		casePom.selectParticipantTypeClick();
-		Thread.sleep(2000);
-		casePom.selectparticipantOwner();
-		Thread.sleep(2000);
-		casePom.selectParticipantClick();
-		Thread.sleep(3000);
-		casePom.searchForUsers();
-		casePom.searchedName();
-		Thread.sleep(4000);
-		casePom.addSearchedNameClick();
-		Thread.sleep(2000);
-		casePom.submit.click();
-		Thread.sleep(8000);
-		driver.switchTo().defaultContent();
-		Thread.sleep(4000);
-		casesPom.verifyCreatedCaseInfo("ReferenceMilan", "Background Investigation");
-		casesPom.VerifycreatedDate();
-		String caseId = casesPom.caseId.getText().toString();
-		Assert.assertEquals("Case title is wrong", "ReferenceMilan (DRAFT)", casesPom.caseTitleDraft.getText());
-		casesPom.newCaseButton.click();
-		Thread.sleep(10000);
-		driver.switchTo().frame(casesPom.frameOne);
-		driver.switchTo().frame(casesPom.frameTwo);
-		casePom.vrifyGeneralInformationTabName();
-		casePom.caseTitleInput("ReferenceMilanTwo");
-		casePom.verifyCaseTypeTitle();
-		casePom.caseTypeInputClick();
-		Thread.sleep(2000);
-		casePom.caseTypeBackgroundInvestigation();
-		Thread.sleep(2000);
-		casePom.nextButton.click();
-		Thread.sleep(3000);
-		casePom.verifyInitiatorTab();
-		casePom.initiatorTitle.click();
-		Thread.sleep(2000);
-		casePom.clickInitiatorMr();
-		Thread.sleep(2000);
-		casePom.initiatorFirstName("Milan");
-		casePom.initiatorLastName("Jovanovski");
-		Thread.sleep(2000);
-		casePom.participantnsTab.click();
-		Thread.sleep(2000);
-		casePom.selectParticipantTypeClick();
-		Thread.sleep(2000);
-		casePom.selectparticipantOwner();
-		casePom.selectParticipantClick();
-		Thread.sleep(3000);
-		casePom.searchForUsers();
-		casePom.searchedName();
-		Thread.sleep(4000);
-		casePom.addSearchedNameClick();
-		Thread.sleep(2000);
-		casePom.submit.click();
-		Thread.sleep(8000);
-		driver.switchTo().defaultContent();
-		Thread.sleep(4000);
-		casesPom.firtsCaseInCaseList.click();
-		Thread.sleep(4000);
-		casesPom.verifyCreatedCaseInfo("ReferenceMilanTwo", "Background Investigation");
-		casesPom.VerifycreatedDate();
-		Assert.assertEquals("Case title is wrong", "ReferenceMilanTwo (DRAFT)", casesPom.caseTitleDraft.getText());
-		casesPom.caseReferences.click();
-		Thread.sleep(5000);
-		casesPom.verifyReferenceTable();
-		casesPom.addReferenceButton.click();
-		Thread.sleep(4000);
-		Assert.assertEquals("Add Refrence pop up title is wrong", "Add Reference",
-				casesPom.addReferencePopUpTitle.getText());
-		casesPom.AddReferenceInput(caseId);
-		Thread.sleep(4000);
-		casesPom.searchReferenceButton.click();
-		Thread.sleep(5000);
-		casesPom.verifySearchedReference(caseId, "CASE_FILE", "ReferenceMilan");
-		casesPom.searchedreferenceType.click();
-		Thread.sleep(3000);
-		casesPom.AddSearchedReferenceButton.click();
-		Thread.sleep(5000);
-		casesPom.verifyAddedReference(caseId, "ReferenceMilan", "CASE_FILE", "DRAFT");
-		Thread.sleep(4000);
-		casesPom.addReferenceButton.click();
-		Thread.sleep(4000);
-		Assert.assertEquals("Add Refrence pop up title is wrong", "Add Reference",
-				casesPom.addReferencePopUpTitle.getText());
-		casesPom.AddReferenceInput(caseId);
-		Thread.sleep(4000);
-		casesPom.searchReferenceButton.click();
-		Thread.sleep(5000);
-		casesPom.verifySearchedReference(caseId, "CASE_FILE", "ReferenceMilan");
-		casesPom.searchedreferenceType.click();
-		Thread.sleep(3000);
-		casesPom.AddSearchedReferenceButton.click();
-		Thread.sleep(5000);
-		casesPom.verifySecondAddedReference(caseId, "ReferenceMilan", "CASE_FILE", "DRAFT");
-		driver.navigate().refresh();
-		Thread.sleep(10000);
-		casesPom.verifyAddedReference(caseId, "ReferenceMilan", "CASE_FILE", "DRAFT");
-		casesPom.verifySecondAddedReference("", "", "", "");
-		casesPom.peopleChangeCaseStatusButton.click();
-		Thread.sleep(10000);
-		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
-		Thread.sleep(2000);
-		driver.switchTo().frame(casesPom.chnageCaseStatusFrameTwo);
-		Thread.sleep(2000);
-		casesPom.deleteCase();
-		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
-		Thread.sleep(3000);
-		Assert.assertEquals("Case title is wrong", "ReferenceTwo (IN APPROVAL)", casesPom.caseTitleDraft.getText());
-		casesPom.changeCaseStatusAproved();
-		Thread.sleep(3000);
-		casesPom.casesModuleClick();
-		Thread.sleep(5000);
-		casesPom.searchCasesInput("ReferenceMilan");
-		Thread.sleep(3000);
-		casesPom.searchCasesButtonClick();
-		Thread.sleep(3000);
-		casesPom.firtsCaseInCaseList.click();
-		Thread.sleep(4000);
-		casesPom.peopleChangeCaseStatusButton.click();
-		Thread.sleep(10000);
-		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
-		Thread.sleep(2000);
-		driver.switchTo().frame(casesPom.chnageCaseStatusFrameTwo);
-		Thread.sleep(2000);
-		casesPom.deleteCase();
-		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
-		Thread.sleep(3000);
-		Assert.assertEquals("Case title is wrong", "ReferenceMilan (IN APPROVAL)", casesPom.caseTitleDraft.getText());
 		casesPom.changeCaseStatusAproved();
 		ArkCaseAuthentication.logOut(driver);
 
@@ -1909,8 +1121,7 @@ public class CaseTests extends ArkCaseTestBase {
 	public void createTwoNewCasesAddOneAsReferenceToTheAnotherOneClickOnTheNumberLink()
 			throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1991,7 +1202,9 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(8000);
 		driver.switchTo().defaultContent();
 		Thread.sleep(4000);
-		casesPom.firtsCaseInCaseList.click();
+		casesPom.casesListRefresh.click();
+		Thread.sleep(3000);
+		casesPom.firstCaseInCaseList.click();
 		Thread.sleep(4000);
 		casesPom.verifyCreatedCaseInfo("ReferenceSecond", "Background Investigation");
 		casesPom.VerifycreatedDate();
@@ -2020,7 +1233,7 @@ public class CaseTests extends ArkCaseTestBase {
 		Assert.assertTrue("reference number link is not working", casesPom.createdCaseTitle.isDisplayed());
 		Assert.assertEquals("CAse titile is wrong", "ReferenceNumber", casesPom.createdCaseTitle.getText());
 		casesPom.VerifycreatedDate();
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -2028,7 +1241,7 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertEquals("Case title is wrong", "ReferenceNumber (IN APPROVAL)", casesPom.caseTitleDraft.getText());
 		casesPom.changeCaseStatusAproved();
@@ -2039,7 +1252,7 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		casesPom.searchCasesButtonClick();
 		Thread.sleep(3000);
-		casesPom.firtsCaseInCaseList.click();
+		casesPom.firstCaseInCaseList.click();
 		Thread.sleep(4000);
 		casesPom.peopleChangeCaseStatusButton.click();
 		Thread.sleep(10000);
@@ -2049,7 +1262,7 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertEquals("Case title is wrong", "ReferenceSecond (IN APPROVAL)", casesPom.caseTitleDraft.getText());
 		casesPom.changeCaseStatusAproved();
@@ -2061,8 +1274,7 @@ public class CaseTests extends ArkCaseTestBase {
 	public void createTwoNewCasesAddOneAsReferenceToTheAnotherOneClickOnTheTitleLink()
 			throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -2143,7 +1355,7 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(8000);
 		driver.switchTo().defaultContent();
 		Thread.sleep(4000);
-		casesPom.firtsCaseInCaseList.click();
+		casesPom.firstCaseInCaseList.click();
 		Thread.sleep(4000);
 		casesPom.verifyCreatedCaseInfo("ReferenceLink", "Background Investigation");
 		casesPom.VerifycreatedDate();
@@ -2172,7 +1384,7 @@ public class CaseTests extends ArkCaseTestBase {
 		Assert.assertTrue("Reference title link is not working", casesPom.createdCaseTitle.isDisplayed());
 		Assert.assertEquals("Case titile is wrong", "ReferenceTitle", casesPom.createdCaseTitle.getText());
 		casesPom.VerifycreatedDate();
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -2180,7 +1392,7 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertEquals("Case title is wrong", "ReferenceTitle (IN APPROVAL)", casesPom.caseTitleDraft.getText());
 		casesPom.changeCaseStatusAproved();
@@ -2191,7 +1403,7 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		casesPom.searchCasesButtonClick();
 		Thread.sleep(3000);
-		casesPom.firtsCaseInCaseList.click();
+		casesPom.firstCaseInCaseList.click();
 		Thread.sleep(4000);
 		casesPom.peopleChangeCaseStatusButton.click();
 		Thread.sleep(10000);
@@ -2201,7 +1413,7 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertEquals("Case title is wrong", "ReferenceLink (IN APPROVAL)", casesPom.caseTitleDraft.getText());
 		casesPom.changeCaseStatusAproved();
@@ -2211,8 +1423,7 @@ public class CaseTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseEditPriorityChangeToLow() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -2267,7 +1478,7 @@ public class CaseTests extends ArkCaseTestBase {
 		driver.navigate().refresh();
 		Thread.sleep(10000);
 		Assert.assertEquals("Case priority is wrong", "Low", casesPom.priority.getText());
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -2275,7 +1486,7 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertEquals("Case title is wrong", "PriorityLow (IN APPROVAL)", casesPom.caseTitleDraft.getText());
 		casesPom.changeCaseStatusAproved();
@@ -2286,8 +1497,7 @@ public class CaseTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseEditPriorityChangeToHigh() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -2342,7 +1552,7 @@ public class CaseTests extends ArkCaseTestBase {
 		driver.navigate().refresh();
 		Thread.sleep(10000);
 		Assert.assertEquals("Case priority is wrong", "High", casesPom.priority.getText());
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -2350,7 +1560,7 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertEquals("Case title is wrong", "PriorityHigh (IN APPROVAL)", casesPom.caseTitleDraft.getText());
 		casesPom.changeCaseStatusAproved();
@@ -2360,9 +1570,7 @@ public class CaseTests extends ArkCaseTestBase {
 
 	@Test
 	public void createNewCaseEditPriorityChangeToExpedite() throws InterruptedException, IOException {
-
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -2417,7 +1625,7 @@ public class CaseTests extends ArkCaseTestBase {
 		driver.navigate().refresh();
 		Thread.sleep(10000);
 		Assert.assertEquals("Case priority is wrong", "Expedite", casesPom.priority.getText());
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -2425,7 +1633,7 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertEquals("Case title is wrong", "PriorityExpedite (IN APPROVAL)", casesPom.caseTitleDraft.getText());
 		casesPom.changeCaseStatusAproved();
@@ -2436,8 +1644,7 @@ public class CaseTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseEditAssignedTo() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -2487,13 +1694,14 @@ public class CaseTests extends ArkCaseTestBase {
 		casesPom.assignedToSelectAnnAdministrator();
 		Thread.sleep(3000);
 		casesPom.assignedToConfirmButtonClick();
+		Thread.sleep(1000);
 		casesPom.assignedToConfirmButtonClick();
 		Thread.sleep(5000);
 		driver.navigate().refresh();
 		Thread.sleep(10000);
 		Assert.assertEquals("Case AssignedTo name is wrong", "Ann Administrator", casesPom.assignedTo.getText());
 		Thread.sleep(2000);
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -2501,7 +1709,7 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		casesPom.changeCaseStatusAproved();
 		ArkCaseAuthentication.logOut(driver);
@@ -2510,9 +1718,7 @@ public class CaseTests extends ArkCaseTestBase {
 
 	@Test
 	public void createNewCaseEditCaseTitle() throws InterruptedException, IOException {
-
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -2562,7 +1768,7 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(10000);
 		Assert.assertEquals("Case title is wrong", "Case Title", casesPom.createdCaseTitle.getText());
 		Assert.assertEquals("Case title in cases list is wrong", "Case Title", casesPom.createdCaseTitleList.getText());
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -2570,7 +1776,7 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		casesPom.changeCaseStatusAproved();
 		ArkCaseAuthentication.logOut(driver);
@@ -2580,8 +1786,7 @@ public class CaseTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseEditCaseType() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -2636,7 +1841,7 @@ public class CaseTests extends ArkCaseTestBase {
 		driver.navigate().refresh();
 		Thread.sleep(10000);
 		Assert.assertEquals("Edited case type is wrong", "Drug Trafficking", casesPom.createdCaseType.getText());
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -2644,7 +1849,7 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		casesPom.changeCaseStatusAproved();
 		ArkCaseAuthentication.logOut(driver);
@@ -2654,8 +1859,7 @@ public class CaseTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseEditCaseOwningGroup() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -2712,7 +1916,7 @@ public class CaseTests extends ArkCaseTestBase {
 		driver.navigate().refresh();
 		Thread.sleep(10000);
 		Assert.assertEquals("Edited owning group  is wrong", "ACM_SUPERVISOR_DEV", casesPom.owningGroup.getText());
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -2720,7 +1924,7 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		casesPom.changeCaseStatusAproved();
 		ArkCaseAuthentication.logOut(driver);
@@ -2731,8 +1935,7 @@ public class CaseTests extends ArkCaseTestBase {
 	public void createNewCaseAddNote() throws InterruptedException, IOException {
 		// create new case add/delete note
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -2788,7 +1991,7 @@ public class CaseTests extends ArkCaseTestBase {
 		driver.navigate().refresh();
 		Thread.sleep(10000);
 		casesPom.verifyIfNoteIsDeleted();
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -2796,7 +1999,7 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		casesPom.changeCaseStatusAproved();
 		Thread.sleep(3000);
@@ -2807,8 +2010,7 @@ public class CaseTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseClickEditButtonEditCaseTitleVerify() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -2879,7 +2081,7 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(4000);
 		Assert.assertEquals("Case titile is not updated", "edit button title", casesPom.createdCaseTitle.getText());
 		Thread.sleep(3000);
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -2887,7 +2089,7 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		casesPom.changeCaseStatusAproved();
 		Thread.sleep(3000);
@@ -2898,8 +2100,7 @@ public class CaseTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseClickEditButtonEditCaseTypeVerify() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -2967,7 +2168,7 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(4000);
 		Assert.assertEquals("Case type is not updated", "Arson", casesPom.createdCaseType.getText());
 		Thread.sleep(3000);
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -2975,7 +2176,7 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		casesPom.changeCaseStatusAproved();
 		Thread.sleep(3000);
@@ -2986,8 +2187,7 @@ public class CaseTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseClickEditButtonEditCaseDetailsVerify() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -3060,7 +2260,7 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(4000);
 		Assert.assertEquals("Case details is not updated", "desc", casesPom.detailsText.getText());
 		Thread.sleep(3000);
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -3068,7 +2268,7 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		casesPom.changeCaseStatusAproved();
 		Thread.sleep(3000);
@@ -3079,8 +2279,7 @@ public class CaseTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseClickEditButtonEditInitiatorVerify() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -3161,7 +2360,7 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(4000);
 		casesPom.verifyPeopleSectionInitiator("paul", "george");
 		Thread.sleep(3000);
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -3169,7 +2368,7 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		casesPom.changeCaseStatusAproved();
 		Thread.sleep(3000);
@@ -3181,8 +2380,7 @@ public class CaseTests extends ArkCaseTestBase {
 	public void createNewCaseClickEditButtonAddAttachmentVerify()
 			throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -3257,6 +2455,8 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(4000);
 		casesPom.caseDocuments.click();
 		Thread.sleep(4000);
+		casesPom.refreshPage.click();
+		Thread.sleep(4000);
 		documents.clickRootExpander();
 		Thread.sleep(3000);
 		documents.verifyIfSecondRowDocumentIsPresent();
@@ -3270,7 +2470,7 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		casesPom.changeCaseStatusAproved();
 		Thread.sleep(3000);
@@ -3280,8 +2480,7 @@ public class CaseTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseClickEditButtonEditPeopleVerify() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -3371,7 +2570,7 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		casesPom.verifyPeopleType("Witness", "milan", "jovanovski");
 		Thread.sleep(3000);
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -3379,19 +2578,19 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
-        casesPom.changeCaseStatusAproved();
+		casesPom.changeCaseStatusAproved();
 		Thread.sleep(3000);
 		ArkCaseAuthentication.logOut(driver);
 
 	}
+
 	@Ignore
 	@Test
 	public void createNewCaseClickReinvestigateEditTitle() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -3481,21 +2680,19 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		casesPom.changeCaseStatusAproved();
 		Thread.sleep(3000);
 		ArkCaseAuthentication.logOut(driver);
 
 	}
-	
+
 	@Ignore
 	@Test
-	public void createNewCaseClickReinvestigateEditCaseType()throws InterruptedException,IOException{
-		
+	public void createNewCaseClickReinvestigateEditCaseType() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -3543,7 +2740,8 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(8000);
 		driver.switchTo().defaultContent();
 		Thread.sleep(4000);
-		Assert.assertEquals("Reinvestigate  case button text is wrong", "Reinvestigate", casesPom.reinvestigateCaseButton.getText());
+		Assert.assertEquals("Reinvestigate  case button text is wrong", "Reinvestigate",
+				casesPom.reinvestigateCaseButton.getText());
 		casesPom.reinvestigateCaseButton.click();
 		Thread.sleep(7000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -3555,7 +2753,7 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casePom.participantnsTab.click();
 		Thread.sleep(3000);
-	    casePom.selectSecondTypeParticipant();
+		casePom.selectSecondTypeParticipant();
 		Thread.sleep(2000);
 		casePom.selectParticipantTypeFolower();
 		Thread.sleep(2000);
@@ -3581,21 +2779,19 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		casesPom.changeCaseStatusAproved();
 		Thread.sleep(3000);
 		ArkCaseAuthentication.logOut(driver);
-	
-	
-	
+
 	}
+
 	@Ignore
 	@Test
 	public void createNewCaseClickReinvestigatetButtonEditCaseDetailsVerify() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -3635,7 +2831,8 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(8000);
 		driver.switchTo().defaultContent();
 		Thread.sleep(4000);
-		Assert.assertEquals("Reinvestigate  case button text is wrong", "Reinvestigate", casesPom.reinvestigateCaseButton.getText());
+		Assert.assertEquals("Reinvestigate  case button text is wrong", "Reinvestigate",
+				casesPom.reinvestigateCaseButton.getText());
 		casesPom.reinvestigateCaseButton.click();
 		Thread.sleep(7000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -3676,7 +2873,7 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		casesPom.changeCaseStatusAproved();
 		Thread.sleep(3000);
@@ -3689,8 +2886,7 @@ public class CaseTests extends ArkCaseTestBase {
 	public void createNewCaseClickReinvestigateButtonAddAttachmentVerify()
 			throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -3729,7 +2925,8 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(8000);
 		driver.switchTo().defaultContent();
 		Thread.sleep(4000);
-		Assert.assertEquals("Reinvestigate  case button text is wrong", "Reinvestigate", casesPom.reinvestigateCaseButton.getText());
+		Assert.assertEquals("Reinvestigate  case button text is wrong", "Reinvestigate",
+				casesPom.reinvestigateCaseButton.getText());
 		casesPom.reinvestigateCaseButton.click();
 		Thread.sleep(7000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -3778,7 +2975,7 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		casesPom.changeCaseStatusAproved();
 		Thread.sleep(3000);
@@ -3789,8 +2986,7 @@ public class CaseTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseClickReinvestigateButtonEditInitiatorVerify() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -3829,7 +3025,8 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(8000);
 		driver.switchTo().defaultContent();
 		Thread.sleep(4000);
-		Assert.assertEquals("Reinvestigate  case button text is wrong", "Reinvestigate", casesPom.reinvestigateCaseButton.getText());
+		Assert.assertEquals("Reinvestigate  case button text is wrong", "Reinvestigate",
+				casesPom.reinvestigateCaseButton.getText());
 		casesPom.reinvestigateCaseButton.click();
 		Thread.sleep(7000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -3879,19 +3076,20 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		casesPom.changeCaseStatusAproved();
 		Thread.sleep(3000);
 		ArkCaseAuthentication.logOut(driver);
 
 	}
+
 	@Ignore
 	@Test
-	public void createNewCaseClickReinvestigateButtonEditPeopleVerify() throws InterruptedException, IOException, AWTException {
+	public void createNewCaseClickReinvestigateButtonEditPeopleVerify()
+			throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -3939,7 +3137,8 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(8000);
 		driver.switchTo().defaultContent();
 		Thread.sleep(4000);
-		Assert.assertEquals("Reinvestigate  case button text is wrong", "Reinvestigate", casesPom.reinvestigateCaseButton.getText());
+		Assert.assertEquals("Reinvestigate  case button text is wrong", "Reinvestigate",
+				casesPom.reinvestigateCaseButton.getText());
 		casesPom.reinvestigateCaseButton.click();
 		Thread.sleep(7000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -3989,15 +3188,610 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
-        casesPom.changeCaseStatusAproved();
+		casesPom.changeCaseStatusAproved();
 		Thread.sleep(3000);
 		ArkCaseAuthentication.logOut(driver);
 
 	}
-	
 
-	
-	
+	@Test
+	public void createNewCaseChangeCaseStatusToActive() throws InterruptedException, IOException {
+		super.logIn();
+		casePom.newCase();
+		Thread.sleep(20000);
+		driver.switchTo().frame(casesPom.frameOne);
+		driver.switchTo().frame(casesPom.frameTwo);
+		casePom.vrifyGeneralInformationTabName();
+		casePom.verifyCaseTypeTitle();
+		casePom.caseTitleInput("Case status active");
+		casePom.verifyCaseTypeTitle();
+		casePom.caseTypeInputClick();
+		Thread.sleep(2000);
+		casePom.caseTypeLaborRacketeering();
+		Thread.sleep(2000);
+		casePom.nextButton.click();
+		Thread.sleep(3000);
+		casePom.verifyInitiatorTab();
+		casePom.initiatorTitle.click();
+		Thread.sleep(2000);
+		casePom.clickInitiatorMr();
+		Thread.sleep(2000);
+		casePom.initiatorFirstName("Milan");
+		Thread.sleep(2000);
+		casePom.initiatorLastName("Jovanovski");
+		Thread.sleep(2000);
+		casePom.participantnsTab.click();
+		Thread.sleep(3000);
+		casePom.verifyParticipantTab();
+		casePom.selectParticipantTypeClick();
+		Thread.sleep(2000);
+		casePom.selectparticipantOwner();
+		Thread.sleep(2000);
+		casePom.selectParticipantClick();
+		Thread.sleep(2000);
+		casePom.searchForUsers();
+		casePom.searchedName();
+		casePom.addSearchedNameClick();
+		Thread.sleep(2000);
+		casePom.submit.click();
+		driver.switchTo().defaultContent();
+		Thread.sleep(20000);
+		casesPom.verifyCreatedCaseInfo("Case status active", "Labor Racketeering");
+		casesPom.changeCaseStatusButton.click();
+		Thread.sleep(10000);
+		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
+		Thread.sleep(2000);
+		driver.switchTo().frame(casesPom.chnageCaseStatusFrameTwo);
+		Thread.sleep(2000);
+		casesPom.changeCaseStatusActive();
+		casesPom.selectApproverForChangeCaseStatus("Samuel Supervisor");
+		driver.switchTo().defaultContent();
+		Thread.sleep(4000);
+		casesPom.refreshPage.click();
+		Thread.sleep(2000);
+		casesPom.changeCaseStatusAproved();
+		Thread.sleep(3000);
+		casesPom.caseTitleInTasks.click();
+		Thread.sleep(5000);
+		Assert.assertEquals("After task is approved, case title name is wrong", "Case status active (ACTIVE)",
+				casesPom.caseTitleDraft.getText());
+		ArkCaseAuthentication.logOut(driver);
+
+	}
+
+	@Test
+	public void createNewCaseChangeCaseStatusToInactive() throws InterruptedException, IOException {
+
+		super.logIn();
+		casePom.newCase();
+		Thread.sleep(20000);
+		driver.switchTo().frame(casesPom.frameOne);
+		driver.switchTo().frame(casesPom.frameTwo);
+		casePom.vrifyGeneralInformationTabName();
+		casePom.verifyCaseTypeTitle();
+		casePom.caseTitleInput("Case status inactive");
+		casePom.verifyCaseTypeTitle();
+		casePom.caseTypeInputClick();
+		Thread.sleep(2000);
+		casePom.caseTypeLaborRacketeering();
+		Thread.sleep(2000);
+		casePom.nextButton.click();
+		Thread.sleep(3000);
+		casePom.verifyInitiatorTab();
+		casePom.initiatorTitle.click();
+		Thread.sleep(2000);
+		casePom.clickInitiatorMr();
+		Thread.sleep(2000);
+		casePom.initiatorFirstName("Milan");
+		Thread.sleep(2000);
+		casePom.initiatorLastName("Jovanovski");
+		Thread.sleep(2000);
+		casePom.participantnsTab.click();
+		Thread.sleep(3000);
+		casePom.verifyParticipantTab();
+		casePom.selectParticipantTypeClick();
+		Thread.sleep(2000);
+		casePom.selectparticipantOwner();
+		Thread.sleep(2000);
+		casePom.selectParticipantClick();
+		Thread.sleep(2000);
+		casePom.searchForUsers();
+		casePom.searchedName();
+		casePom.addSearchedNameClick();
+		Thread.sleep(2000);
+		casePom.submit.click();
+		driver.switchTo().defaultContent();
+		Thread.sleep(20000);
+		casesPom.verifyCreatedCaseInfo("Case status inactive", "Labor Racketeering");
+		casesPom.changeCaseStatusButton.click();
+		Thread.sleep(10000);
+		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
+		Thread.sleep(2000);
+		driver.switchTo().frame(casesPom.chnageCaseStatusFrameTwo);
+		Thread.sleep(2000);
+		casesPom.changeCaseStatusInactive();
+		casesPom.selectApproverForChangeCaseStatus("Samuel Supervisor");
+		driver.switchTo().defaultContent();
+		Thread.sleep(4000);
+		casesPom.refreshPage.click();
+		Thread.sleep(2000);
+		casesPom.changeCaseStatusAproved();
+		Thread.sleep(3000);
+		casesPom.caseTitleInTasks.click();
+		Thread.sleep(5000);
+		Assert.assertEquals("After task is approved, case title name is wrong", "Case status inactive (INACTIVE)",
+				casesPom.caseTitleDraft.getText());
+		ArkCaseAuthentication.logOut(driver);
+
+	}
+
+	@Test
+	public void createNewCaseChangeCaseStatusToClosedDenied() throws InterruptedException, IOException {
+
+		super.logIn();
+		casePom.newCase();
+		Thread.sleep(20000);
+		driver.switchTo().frame(casesPom.frameOne);
+		driver.switchTo().frame(casesPom.frameTwo);
+		casePom.vrifyGeneralInformationTabName();
+		casePom.verifyCaseTypeTitle();
+		casePom.caseTitleInput("Case status closed");
+		casePom.verifyCaseTypeTitle();
+		casePom.caseTypeInputClick();
+		Thread.sleep(2000);
+		casePom.caseTypeLaborRacketeering();
+		Thread.sleep(2000);
+		casePom.nextButton.click();
+		Thread.sleep(3000);
+		casePom.verifyInitiatorTab();
+		casePom.initiatorTitle.click();
+		Thread.sleep(2000);
+		casePom.clickInitiatorMr();
+		Thread.sleep(2000);
+		casePom.initiatorFirstName("Milan");
+		Thread.sleep(2000);
+		casePom.initiatorLastName("Jovanovski");
+		Thread.sleep(2000);
+		casePom.participantnsTab.click();
+		Thread.sleep(3000);
+		casePom.verifyParticipantTab();
+		casePom.selectParticipantTypeClick();
+		Thread.sleep(2000);
+		casePom.selectparticipantOwner();
+		Thread.sleep(2000);
+		casePom.selectParticipantClick();
+		Thread.sleep(2000);
+		casePom.searchForUsers();
+		casePom.searchedName();
+		casePom.addSearchedNameClick();
+		Thread.sleep(2000);
+		casePom.submit.click();
+		driver.switchTo().defaultContent();
+		Thread.sleep(20000);
+		casesPom.verifyCreatedCaseInfo("Case status closed", "Labor Racketeering");
+		casesPom.changeCaseStatusButton.click();
+		Thread.sleep(10000);
+		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
+		Thread.sleep(2000);
+		driver.switchTo().frame(casesPom.chnageCaseStatusFrameTwo);
+		Thread.sleep(2000);
+		casesPom.changeCaseStatusClosed();
+		Thread.sleep(3000);
+		casesPom.closedStatusDenied.click();
+		Thread.sleep(3000);
+		casesPom.selectApproverForChangeCaseStatus("Samuel Supervisor");
+		driver.switchTo().defaultContent();
+		Thread.sleep(4000);
+		casesPom.refreshPage.click();
+		Thread.sleep(2000);
+		casesPom.changeCaseStatusAproved();
+		Thread.sleep(3000);
+		casesPom.caseTitleInTasks.click();
+		Thread.sleep(5000);
+		Assert.assertEquals("After task is approved, case title name is wrong", "Case status closed (CLOSED)",
+				casesPom.caseTitleDraft.getText());
+		ArkCaseAuthentication.logOut(driver);
+
+	}
+
+	@Test
+	public void createNewCaseChangeCaseStatusToClosedFull() throws InterruptedException, IOException {
+
+		super.logIn();
+		casePom.newCase();
+		Thread.sleep(20000);
+		driver.switchTo().frame(casesPom.frameOne);
+		driver.switchTo().frame(casesPom.frameTwo);
+		casePom.vrifyGeneralInformationTabName();
+		casePom.verifyCaseTypeTitle();
+		casePom.caseTitleInput("Case status closed full");
+		casePom.verifyCaseTypeTitle();
+		casePom.caseTypeInputClick();
+		Thread.sleep(2000);
+		casePom.caseTypeLaborRacketeering();
+		Thread.sleep(2000);
+		casePom.nextButton.click();
+		Thread.sleep(3000);
+		casePom.verifyInitiatorTab();
+		casePom.initiatorTitle.click();
+		Thread.sleep(2000);
+		casePom.clickInitiatorMr();
+		Thread.sleep(2000);
+		casePom.initiatorFirstName("Milan");
+		Thread.sleep(2000);
+		casePom.initiatorLastName("Jovanovski");
+		Thread.sleep(2000);
+		casePom.participantnsTab.click();
+		Thread.sleep(3000);
+		casePom.verifyParticipantTab();
+		casePom.selectParticipantTypeClick();
+		Thread.sleep(2000);
+		casePom.selectparticipantOwner();
+		Thread.sleep(2000);
+		casePom.selectParticipantClick();
+		Thread.sleep(2000);
+		casePom.searchForUsers();
+		casePom.searchedName();
+		casePom.addSearchedNameClick();
+		Thread.sleep(2000);
+		casePom.submit.click();
+		driver.switchTo().defaultContent();
+		Thread.sleep(20000);
+		casesPom.verifyCreatedCaseInfo("Case status closed full", "Labor Racketeering");
+		casesPom.changeCaseStatusButton.click();
+		Thread.sleep(10000);
+		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
+		Thread.sleep(2000);
+		driver.switchTo().frame(casesPom.chnageCaseStatusFrameTwo);
+		Thread.sleep(2000);
+		casesPom.changeCaseStatusClosed();
+		Thread.sleep(3000);
+		casesPom.closedStatusFull.click();
+		Thread.sleep(3000);
+		casesPom.selectApproverForChangeCaseStatus("Samuel Supervisor");
+		driver.switchTo().defaultContent();
+		Thread.sleep(4000);
+		casesPom.refreshPage.click();
+		Thread.sleep(2000);
+		casesPom.changeCaseStatusAproved();
+		ArkCaseAuthentication.logOut(driver);
+
+	}
+
+	@Test
+	public void createNewCaseChangeCaseStatusToClosedPartial() throws InterruptedException, IOException {
+
+		super.logIn();
+		casePom.newCase();
+		Thread.sleep(20000);
+		driver.switchTo().frame(casesPom.frameOne);
+		driver.switchTo().frame(casesPom.frameTwo);
+		casePom.vrifyGeneralInformationTabName();
+		casePom.verifyCaseTypeTitle();
+		casePom.caseTitleInput("Case status closed partial");
+		casePom.verifyCaseTypeTitle();
+		casePom.caseTypeInputClick();
+		Thread.sleep(2000);
+		casePom.caseTypeLaborRacketeering();
+		Thread.sleep(2000);
+		casePom.nextButton.click();
+		Thread.sleep(3000);
+		casePom.verifyInitiatorTab();
+		casePom.initiatorTitle.click();
+		Thread.sleep(2000);
+		casePom.clickInitiatorMr();
+		Thread.sleep(2000);
+		casePom.initiatorFirstName("Milan");
+		Thread.sleep(2000);
+		casePom.initiatorLastName("Jovanovski");
+		Thread.sleep(2000);
+		casePom.participantnsTab.click();
+		Thread.sleep(3000);
+		casePom.verifyParticipantTab();
+		casePom.selectParticipantTypeClick();
+		Thread.sleep(2000);
+		casePom.selectparticipantOwner();
+		Thread.sleep(2000);
+		casePom.selectParticipantClick();
+		Thread.sleep(2000);
+		casePom.searchForUsers();
+		casePom.searchedName();
+		casePom.addSearchedNameClick();
+		Thread.sleep(2000);
+		casePom.submit.click();
+		driver.switchTo().defaultContent();
+		Thread.sleep(20000);
+		casesPom.verifyCreatedCaseInfo("Case status closed partial", "Labor Racketeering");
+		casesPom.changeCaseStatusButton.click();
+		Thread.sleep(10000);
+		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
+		Thread.sleep(2000);
+		driver.switchTo().frame(casesPom.chnageCaseStatusFrameTwo);
+		Thread.sleep(2000);
+		casesPom.changeCaseStatusClosed();
+		Thread.sleep(3000);
+		casesPom.closedStatusPartial.click();
+		Thread.sleep(3000);
+		casesPom.selectApproverForChangeCaseStatus("Samuel Supervisor");
+		driver.switchTo().defaultContent();
+		Thread.sleep(4000);
+		casesPom.refreshPage.click();
+		Thread.sleep(2000);
+		casesPom.changeCaseStatusAproved();
+		Thread.sleep(3000);
+		casesPom.caseTitleInTasks.click();
+		Thread.sleep(5000);
+		Assert.assertEquals("After task is approved, case title name is wrong", "Case status closed partial (CLOSED)",
+				casesPom.caseTitleDraft.getText());
+		ArkCaseAuthentication.logOut(driver);
+
+	}
+
+	@Test
+	public void createNewCaseAddFilesFromChangeCaseStatusPage() throws InterruptedException, IOException, AWTException {
+
+		super.logIn();
+		casePom.newCase();
+		Thread.sleep(20000);
+		driver.switchTo().frame(casesPom.frameOne);
+		driver.switchTo().frame(casesPom.frameTwo);
+		casePom.vrifyGeneralInformationTabName();
+		casePom.verifyCaseTypeTitle();
+		casePom.caseTitleInput("Chnage case add files");
+		casePom.verifyCaseTypeTitle();
+		casePom.caseTypeInputClick();
+		Thread.sleep(2000);
+		casePom.caseTypeLaborRacketeering();
+		Thread.sleep(2000);
+		casePom.nextButton.click();
+		Thread.sleep(3000);
+		casePom.verifyInitiatorTab();
+		casePom.initiatorTitle.click();
+		Thread.sleep(2000);
+		casePom.clickInitiatorMr();
+		Thread.sleep(2000);
+		casePom.initiatorFirstName("Milan");
+		Thread.sleep(2000);
+		casePom.initiatorLastName("Jovanovski");
+		Thread.sleep(2000);
+		casePom.participantnsTab.click();
+		Thread.sleep(3000);
+		casePom.verifyParticipantTab();
+		casePom.selectParticipantTypeClick();
+		Thread.sleep(2000);
+		casePom.selectparticipantOwner();
+		Thread.sleep(2000);
+		casePom.selectParticipantClick();
+		Thread.sleep(2000);
+		casePom.searchForUsers();
+		casePom.searchedName();
+		casePom.addSearchedNameClick();
+		Thread.sleep(2000);
+		casePom.submit.click();
+		driver.switchTo().defaultContent();
+		Thread.sleep(20000);
+		casesPom.changeCaseStatusButton.click();
+		Thread.sleep(10000);
+		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
+		Thread.sleep(2000);
+		driver.switchTo().frame(casesPom.chnageCaseStatusFrameTwo);
+		Thread.sleep(2000);
+		casesPom.changeCaseStatusClosed();
+		Thread.sleep(3000);
+		casesPom.clickChnageCaseStatusAddFilesBtn();
+		Thread.sleep(3000);
+		casesPom.clickChangeCaseStatusBrowseBtn();
+		Thread.sleep(3000);
+		ArkCaseTestUtils.uploadDocx();
+		Thread.sleep(5000);
+		casesPom.clickChangeCaseStatusUploadBtn();
+		Thread.sleep(4000);
+		casesPom.selectApproverForChangeCaseStatus("Samuel Supervisor");
+		driver.switchTo().defaultContent();
+		Thread.sleep(4000);
+		casesPom.refreshPage.click();
+		Thread.sleep(2000);
+		casesPom.caseDocuments.click();
+		Thread.sleep(3000);
+		documents.clickRootExpander();
+		Thread.sleep(3000);
+		Assert.assertEquals("Attachment file is not added", "ArkCaseTesting.docx",
+				documents.firstDocumentTitle.getText());
+		documents.verifyFirstDocument("ArkCaseTesting.docx", "Attachment", "Samuel Supervisor", "1.0", "ACTIVE");
+		Thread.sleep(2000);
+		casesPom.changeCaseStatusAproved();
+		Thread.sleep(3000);
+		ArkCaseAuthentication.logOut(driver);
+
+	}
+
+	@Test
+	public void creteNewCaseTryToMergeToItself() throws InterruptedException, IOException, AWTException {
+
+		super.logIn();
+		casePom.newCase();
+		Thread.sleep(20000);
+		driver.switchTo().frame(casesPom.frameOne);
+		driver.switchTo().frame(casesPom.frameTwo);
+		casePom.vrifyGeneralInformationTabName();
+		casePom.verifyCaseTypeTitle();
+		casePom.caseTitleInput("mergre case");
+		casePom.verifyCaseTypeTitle();
+		casePom.caseTypeInputClick();
+		Thread.sleep(2000);
+		casePom.caseTypeLaborRacketeering();
+		Thread.sleep(2000);
+		casePom.nextButton.click();
+		Thread.sleep(3000);
+		casePom.verifyInitiatorTab();
+		casePom.initiatorTitle.click();
+		Thread.sleep(2000);
+		casePom.clickInitiatorMr();
+		Thread.sleep(2000);
+		casePom.initiatorFirstName("Milan");
+		Thread.sleep(2000);
+		casePom.initiatorLastName("Jovanovski");
+		Thread.sleep(2000);
+		casePom.participantnsTab.click();
+		Thread.sleep(3000);
+		casePom.verifyParticipantTab();
+		casePom.selectParticipantTypeClick();
+		Thread.sleep(2000);
+		casePom.selectparticipantOwner();
+		Thread.sleep(2000);
+		casePom.selectParticipantClick();
+		Thread.sleep(2000);
+		casePom.searchForUsers();
+		casePom.searchedName();
+		casePom.addSearchedNameClick();
+		Thread.sleep(2000);
+		casePom.submit.click();
+		driver.switchTo().defaultContent();
+		Thread.sleep(20000);
+		String caseid = casesPom.caseId.getText();
+		Assert.assertEquals("Merge case button name is wrong", "Merge", casesPom.mergeCaseButton.getText());
+		casesPom.mergeCaseButton.click();
+		Thread.sleep(4000);
+		casesPom.verifyMergePopUpTitle();
+		casesPom.searchForCase(caseid);
+		Thread.sleep(2000);
+		casesPom.clickSearchCaseBtn();
+		Thread.sleep(2000);
+		casesPom.searchedCaseTitle.click();
+		Thread.sleep(3000);
+		casesPom.clickMergeBtn();
+		Thread.sleep(2000);
+		casesPom.verifyAlertText();
+		Thread.sleep(4000);
+		Assert.assertEquals("Change case status button name is wrong", "Change Case Status",
+				casesPom.changeCaseStatusButton.getText());
+		casesPom.changeCaseStatusButton.click();
+		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
+		Thread.sleep(2000);
+		driver.switchTo().frame(casesPom.chnageCaseStatusFrameTwo);
+		Thread.sleep(2000);
+		casesPom.deleteCase();
+		driver.switchTo().defaultContent();
+		Thread.sleep(4000);
+		casesPom.changeCaseStatusAproved();
+		Thread.sleep(3000);
+		ArkCaseAuthentication.logOut(driver);
+	}
+
+	@Test
+	public void createTwoCasesMergeTheTwoCases() throws InterruptedException, IOException {
+
+		super.logIn();
+		casePom.newCase();
+		Thread.sleep(20000);
+		driver.switchTo().frame(casesPom.frameOne);
+		driver.switchTo().frame(casesPom.frameTwo);
+		casePom.vrifyGeneralInformationTabName();
+		casePom.caseTitleInput("MergeOne");
+		casePom.verifyCaseTypeTitle();
+		casePom.caseTypeInputClick();
+		Thread.sleep(2000);
+		casePom.caseTypeBackgroundInvestigation();
+		Thread.sleep(2000);
+		casePom.nextButton.click();
+		Thread.sleep(3000);
+		casePom.verifyInitiatorTab();
+		casePom.initiatorTitle.click();
+		Thread.sleep(2000);
+		casePom.clickInitiatorMr();
+		Thread.sleep(2000);
+		casePom.initiatorFirstName("Milan");
+		Thread.sleep(2000);
+		casePom.initiatorLastName("Jovanovski");
+		Thread.sleep(2000);
+		casePom.participantnsTab.click();
+		Thread.sleep(2000);
+		casePom.selectParticipantTypeClick();
+		Thread.sleep(2000);
+		casePom.selectparticipantOwner();
+		Thread.sleep(2000);
+		casePom.selectParticipantClick();
+		Thread.sleep(3000);
+		casePom.searchForUsers();
+		casePom.searchedName();
+		Thread.sleep(4000);
+		casePom.addSearchedNameClick();
+		Thread.sleep(2000);
+		casePom.submit.click();
+		Thread.sleep(8000);
+		driver.switchTo().defaultContent();
+		Thread.sleep(4000);
+		String caseId = casesPom.caseId.getText().toString();
+		casesPom.newCaseButton.click();
+		Thread.sleep(10000);
+		driver.switchTo().frame(casesPom.frameOne);
+		driver.switchTo().frame(casesPom.frameTwo);
+		casePom.vrifyGeneralInformationTabName();
+		casePom.caseTitleInput("MergeTwo");
+		casePom.verifyCaseTypeTitle();
+		casePom.caseTypeInputClick();
+		Thread.sleep(2000);
+		casePom.caseTypeBackgroundInvestigation();
+		Thread.sleep(2000);
+		casePom.nextButton.click();
+		Thread.sleep(3000);
+		casePom.verifyInitiatorTab();
+		casePom.initiatorTitle.click();
+		Thread.sleep(2000);
+		casePom.clickInitiatorMr();
+		Thread.sleep(2000);
+		casePom.initiatorFirstName("Milan");
+		casePom.initiatorLastName("Jovanovski");
+		Thread.sleep(2000);
+		casePom.participantnsTab.click();
+		Thread.sleep(2000);
+		casePom.selectParticipantTypeClick();
+		Thread.sleep(2000);
+		casePom.selectparticipantOwner();
+		casePom.selectParticipantClick();
+		Thread.sleep(3000);
+		casePom.searchForUsers();
+		casePom.searchedName();
+		Thread.sleep(4000);
+		casePom.addSearchedNameClick();
+		Thread.sleep(2000);
+		casePom.submit.click();
+		Thread.sleep(8000);
+		driver.switchTo().defaultContent();
+		Thread.sleep(4000);
+		casesPom.casesListRefresh.click();
+		Thread.sleep(4000);
+		Assert.assertEquals("First case in the cases list name is wrong", "MergeTwo",
+				casesPom.firstCaseInCaseList.getText());
+		casesPom.firstCaseInCaseList.click();
+		Thread.sleep(4000);
+		String secondCaseID = casesPom.caseId.getText();
+		casesPom.mergeCaseButton.click();
+		Thread.sleep(3000);
+		casesPom.searchForCase(caseId);
+		Thread.sleep(2000);
+		casesPom.clickSearchCaseBtn();
+		Thread.sleep(3000);
+		casesPom.verifySearchedCaseForMerge(caseId, "CASE_FILE", "MergeOne", "", "Samuel Supervisor");
+		Thread.sleep(2000);
+		casesPom.searchedCaseName.click();
+		Thread.sleep(3000);
+		casesPom.clickMergeBtn();
+		Thread.sleep(9000);
+		casesPom.caseDocuments.click();
+		Thread.sleep(4000);
+		documents.clickRootExpander();
+		Thread.sleep(3000);
+		casesPom.verifyIfCasesAreMerged();
+		Assert.assertEquals("Merged case name is wrong", "MergeTwo" + "(" + secondCaseID + ")",
+				documents.secondDocumentTitle.getText());
+		Thread.sleep(2000);
+		Assert.assertEquals("First case in the cases list name is wrong", "MergeOne",
+				casesPom.firstCaseInCaseList.getText());
+		ArkCaseAuthentication.logOut(driver);
+
+	}
+
 }

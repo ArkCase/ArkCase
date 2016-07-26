@@ -9,8 +9,7 @@ import org.openqa.selenium.support.PageFactory;
 import com.armedia.arkcase.uitests.base.ArkCaseAuthentication;
 import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
 import com.armedia.arkcase.uitests.base.ArkCaseTestUtils;
-import com.armedia.arkcase.uitests.base.CheckIfFileIsDownloaded;
-import com.armedia.arkcase.uitests.base.TestsPoperties;
+import com.armedia.arkcase.uitests.base.ArkCaseUtils;
 import com.armedia.arkcase.uitests.cases.CasePage;
 import com.armedia.arkcase.uitests.cases.CasesPage;
 
@@ -19,13 +18,13 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 	CasesPage cases = PageFactory.initElements(driver, CasesPage.class);
 	CasePage casePom = PageFactory.initElements(driver, CasePage.class);
 	CaseDocumentsPage documentsPage = PageFactory.initElements(driver, CaseDocumentsPage.class);
-	CheckIfFileIsDownloaded check = new CheckIfFileIsDownloaded();
+	ArkCaseUtils check = new ArkCaseUtils();
 
 	@Test
+
 	public void createNewCaseVerifyDocumentsSection() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(cases.frameOne);
@@ -94,8 +93,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 
 	public void createNewCaseAddDocumentFromFrevvoVerify() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(cases.frameOne);
@@ -149,9 +147,12 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 		driver.switchTo().defaultContent();
 		cases.caseDocuments.click();
 		Thread.sleep(4000);
+		cases.refreshbuttons.click();
+		Thread.sleep(4000);
 		documentsPage.verifyDocumentsTable();
 		documentsPage.clickRootExpander();
 		Thread.sleep(3000);
+		documentsPage.verifyIfSecondRowDocumentIsPresent();
 		documentsPage.verifySecondDocument("caseSummary.pdf", "Attachment", "1.0", "ACTIVE");
 		documentsPage.chnageCaseStatusButton.click();
 		Thread.sleep(10000);
@@ -169,8 +170,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseAddNewDocumentOther() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(cases.frameOne);
@@ -250,8 +250,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseAddNewdocumentWitnessInterview() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(cases.frameOne);
@@ -330,8 +329,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 	public void createNewCaseAddNewdocumentNoticeOfInvestigation()
 			throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(cases.frameOne);
@@ -410,8 +408,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 
 	public void createNewCaseAddDocumentSF86Signature() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(cases.frameOne);
@@ -490,8 +487,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseAddDocumentEDelivery() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(cases.frameOne);
@@ -569,9 +565,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 
 	@Test
 	public void createNewCaseAddDocumentGeneralRelease() throws InterruptedException, IOException, AWTException {
-
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(cases.frameOne);
@@ -650,8 +644,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseAddDocumentMedicalRelease() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(cases.frameOne);
@@ -730,8 +723,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseAddDocumentReportOfInvestigation() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(cases.frameOne);
@@ -827,7 +819,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		cases.deleteCase();
 		driver.switchTo().defaultContent();
-		cases.changeCaseStatusAproved();
+		cases.changeCaseStatusAprovedWithROI();
 		Thread.sleep(3000);
 		ArkCaseAuthentication.logOut(driver);
 
@@ -836,8 +828,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseAddDocumentDeleteDocument() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(cases.frameOne);
@@ -859,13 +850,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 		casePom.initiatorFirstName("Milan");
 		Thread.sleep(2000);
 		casePom.initiatorLastName("Jovanovski");
-		Thread.sleep(2000);
-		casePom.nextButtonClick();
-		Thread.sleep(3000);
-		casePom.nextButtonClick();
-		Thread.sleep(3000);
-		casePom.verifyAttachmentTab();
-		Thread.sleep(2000);
+		Thread.sleep(4000);
 		casePom.participantnsTab.click();
 		Thread.sleep(2000);
 		casePom.selectParticipantTypeClick();
@@ -882,8 +867,9 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 		casePom.submit.click();
 		Thread.sleep(10000);
 		driver.switchTo().defaultContent();
-		cases.caseDocuments.click();
 		Thread.sleep(5000);
+		cases.caseDocuments.click();
+		Thread.sleep(3000);
 		driver.navigate().refresh();
 		Thread.sleep(10000);
 		documentsPage.performRightClickOnRoot();
@@ -922,8 +908,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 	public void createNewCaseCheckChangeCaseStatusInDocumentsTable()
 			throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(cases.frameOne);
@@ -991,8 +976,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseAddDocumentDownloadDocument() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(cases.frameOne);
@@ -1077,8 +1061,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseCheckoutChekinUploadWordDocument() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(cases.frameOne);
@@ -1125,6 +1108,8 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 		driver.switchTo().defaultContent();
 		cases.caseDocuments.click();
 		Thread.sleep(5000);
+		cases.refreshbuttons.click();
+		Thread.sleep(4000);
 		documentsPage.clickRootExpander();
 		Thread.sleep(3000);
 		documentsPage.performRightClickOnFirstDocument();
@@ -1133,9 +1118,11 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 		Thread.sleep(8000);
 		check.checkIfFileIsDownloaded("Case_File");
 		Thread.sleep(5000);
-		documentsPage.verifyLockedDocument();
+		documentsPage.verifyLockedDocumentAfterCheckout();
 		Thread.sleep(3000);
-		documentsPage.refreshCase.click();
+		cases.refreshbuttons.click();
+		Thread.sleep(4000);
+		documentsPage.rootExpander.click();
 		Thread.sleep(4000);
 		documentsPage.performRightClickOnFirstDocument();
 		Thread.sleep(2000);
@@ -1149,7 +1136,11 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 		documentsPage.verifySelectedFiles("ArkCaseTesting.docx");
 		documentsPage.clickCheckinBtn();
 		Thread.sleep(5000);
-		documentsPage.verifyUnlockedDocument();
+		cases.refreshbuttons.click();
+		Thread.sleep(4000);
+		documentsPage.rootExpander.click();
+		Thread.sleep(4000);
+		documentsPage.verifyUnlockedDocumentAfterChekin();
 		Thread.sleep(3000);
 		documentsPage.verifyVersion2();
 		Thread.sleep(2000);
@@ -1170,8 +1161,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseCheckOutCancelEditing() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(cases.frameOne);
@@ -1218,6 +1208,8 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 		driver.switchTo().defaultContent();
 		cases.caseDocuments.click();
 		Thread.sleep(5000);
+		cases.refreshbuttons.click();
+		Thread.sleep(5000);
 		documentsPage.clickRootExpander();
 		Thread.sleep(3000);
 		documentsPage.performRightClickOnFirstDocument();
@@ -1226,15 +1218,17 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 		Thread.sleep(8000);
 		check.checkIfFileIsDownloaded("Case_File");
 		Thread.sleep(5000);
-		documentsPage.verifyLockedDocument();
+		documentsPage.verifyLockedDocumentAfterCheckout();
 		Thread.sleep(3000);
-		documentsPage.refreshCase.click();
+		cases.refreshbuttons.click();
+		Thread.sleep(4000);
+		documentsPage.rootExpander.click();
 		Thread.sleep(4000);
 		documentsPage.performRightClickOnFirstDocument();
 		Thread.sleep(2000);
 		documentsPage.clickCancelEditing();
 		Thread.sleep(5000);
-		documentsPage.verifyUnlockedDocument();
+		documentsPage.verifyUnlockedDocumentAfterCancelEditing();
 		Thread.sleep(3000);
 		documentsPage.chnageCaseStatusButton.click();
 		Thread.sleep(10000);
@@ -1253,8 +1247,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseRenameDocument() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(cases.frameOne);
@@ -1301,6 +1294,8 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 		driver.switchTo().defaultContent();
 		cases.caseDocuments.click();
 		Thread.sleep(5000);
+		cases.refreshbuttons.click();
+		Thread.sleep(5000);
 		documentsPage.clickRootExpander();
 		Thread.sleep(3000);
 		documentsPage.performRightClickOnFirstDocument();
@@ -1330,8 +1325,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseAddDocumentRenameTheDocument() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(cases.frameOne);
@@ -1418,8 +1412,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseReplaceDocument() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(cases.frameOne);
@@ -1466,6 +1459,8 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 		driver.switchTo().defaultContent();
 		cases.caseDocuments.click();
 		Thread.sleep(5000);
+		cases.refreshbuttons.click();
+		Thread.sleep(5000);
 		documentsPage.clickRootExpander();
 		Thread.sleep(3000);
 		documentsPage.performRightClickOnFirstDocument();
@@ -1474,6 +1469,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		ArkCaseTestUtils.uploadDocx();
 		Thread.sleep(6000);
+		documentsPage.verifyIfDocumentHasVersion2();
 		documentsPage.verifyVersion2();
 		Thread.sleep(2000);
 		documentsPage.chnageCaseStatusButton.click();
@@ -1492,8 +1488,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseCreateFolderDeleteFolder() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(cases.frameOne);
@@ -1540,6 +1535,10 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 		driver.switchTo().defaultContent();
 		cases.caseDocuments.click();
 		Thread.sleep(5000);
+		cases.refreshbuttons.click();
+		Thread.sleep(4000);
+		documentsPage.rootExpander.click();
+		Thread.sleep(4000);
 		documentsPage.performRightClickOnRoot();
 		Thread.sleep(4000);
 		documentsPage.checkIfRightClickOnRootIsWorking();
@@ -1575,8 +1574,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseAddFolderRenameFolder() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(cases.frameOne);
@@ -1661,8 +1659,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseCopyDocumentPasteInFolder() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(cases.frameOne);
@@ -1748,8 +1745,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseCutDocumentPasteInFolder() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(cases.frameOne);
@@ -1838,8 +1834,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 	public void createNewCaseAddWordDocumentEditWithWord() throws InterruptedException, IOException, AWTException {
 
 		// first turn of protected view in office
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPasswordCore(), driver, TestsPoperties.getBaseUrlCore());
+		super.logIn();
 		Thread.sleep(5000);
 		casePom.newCase();
 		Thread.sleep(20000);
@@ -1906,6 +1901,10 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 		ArkCaseTestUtils.presEnter();
 		Thread.sleep(3000);
 		ArkCaseTestUtils.shiftLeftAndPressEnter();
+		Thread.sleep(4000);
+		documentsPage.refreshTableButton.click();
+		Thread.sleep(4000);
+		documentsPage.verifyLockedDocumentAfterEditWithWordClick();
 		Thread.sleep(8000);
 		ArkCaseTestUtils.uploadDocx();
 		Thread.sleep(4000);
@@ -1913,17 +1912,10 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		ArkCaseTestUtils.closeWordDocument();
 		Thread.sleep(6000);
-		documentsPage.verifyLockedDocument();
-		Thread.sleep(4000);
 		documentsPage.refreshTableButton.click();
 		Thread.sleep(6000);
 		documentsPage.verifyModifiedDocument("ArkCaseTesting.docx", "Other", "Samuel Supervisor", "2.0", "ACTIVE");
-		documentsPage.performRightClickOnFirstDocument();
-		Thread.sleep(3000);
-		documentsPage.clickCancelEditing();
-		Thread.sleep(3000);
-		documentsPage.verifyUnlockedDocument();
-		Thread.sleep(4000);
+		documentsPage.verifyUnlockedDocumentAfterUplaodNewVersion();
 		documentsPage.chnageCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(cases.chnageCaseStausFrameOne);
@@ -1939,10 +1931,101 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 	}
 
 	@Test
-	public void createNewCaseAddDocumentDeclareAsRecord() throws InterruptedException, IOException, AWTException {
+	public void createNewCaseAddWordDocumentCancelEditWithWord()
+			throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		// first turn of protected view in office
+		super.logIn();
+		Thread.sleep(5000);
+		casePom.newCase();
+		Thread.sleep(20000);
+		driver.switchTo().frame(cases.frameOne);
+		driver.switchTo().frame(cases.frameTwo);
+		casePom.vrifyGeneralInformationTabName();
+		casePom.caseTitleInput("edit word document");
+		casePom.verifyCaseTypeTitle();
+		casePom.caseTypeInputClick();
+		Thread.sleep(2000);
+		casePom.caseTypeBackgroundInvestigation();
+		Thread.sleep(2000);
+		casePom.nextButton.click();
+		Thread.sleep(3000);
+		casePom.verifyInitiatorTab();
+		casePom.initiatorTitle.click();
+		Thread.sleep(2000);
+		casePom.clickInitiatorMr();
+		Thread.sleep(2000);
+		casePom.initiatorFirstName("Milan");
+		Thread.sleep(2000);
+		casePom.initiatorLastName("Jovanovski");
+		Thread.sleep(2000);
+		casePom.nextButtonClick();
+		Thread.sleep(3000);
+		casePom.nextButtonClick();
+		Thread.sleep(3000);
+		casePom.verifyAttachmentTab();
+		Thread.sleep(2000);
+		casePom.participantnsTab.click();
+		Thread.sleep(2000);
+		casePom.selectParticipantTypeClick();
+		Thread.sleep(2000);
+		casePom.selectparticipantOwner();
+		Thread.sleep(2000);
+		casePom.selectParticipantClick();
+		Thread.sleep(3000);
+		casePom.searchForUsers();
+		Thread.sleep(3000);
+		casePom.searchedName();
+		casePom.addSearchedNameClick();
+		Thread.sleep(2000);
+		casePom.submit.click();
+		Thread.sleep(10000);
+		driver.switchTo().defaultContent();
+		cases.caseDocuments.click();
+		Thread.sleep(5000);
+		driver.navigate().refresh();
+		Thread.sleep(10000);
+		cases.caseDocuments.click();
+		Thread.sleep(5000);
+		documentsPage.performRightClickOnRoot();
+		Thread.sleep(4000);
+		documentsPage.newDocumentClick();
+		Thread.sleep(3000);
+		documentsPage.clickDocumentOther();
+		Thread.sleep(3000);
+		ArkCaseTestUtils.uploadDocx();
+		Thread.sleep(3000);
+		documentsPage.performRighClickOnSecondDocument();
+		Thread.sleep(3000);
+		documentsPage.editWithWordClick();
+		Thread.sleep(5000);
+		ArkCaseTestUtils.presEnter();
+		Thread.sleep(3000);
+		ArkCaseTestUtils.presEnter();
+		Thread.sleep(4000);
+		documentsPage.refreshTableButton.click();
+		Thread.sleep(4000);
+		documentsPage.verifyUnlockedDocumentAfterCancelEditWithWord();
+		Thread.sleep(3000);
+		documentsPage.chnageCaseStatusButton.click();
+		Thread.sleep(10000);
+		driver.switchTo().frame(cases.chnageCaseStausFrameOne);
+		Thread.sleep(2000);
+		driver.switchTo().frame(cases.chnageCaseStatusFrameTwo);
+		Thread.sleep(2000);
+		cases.deleteCase();
+		driver.switchTo().defaultContent();
+		cases.changeCaseStatusAproved();
+		Thread.sleep(3000);
+		ArkCaseAuthentication.logOut(driver);
+
+	}
+
+	@Test
+	public void createNewCaseAddDocumentDeclareAsRecordVerifyIfRightClickOnRecordIsWorking()
+			throws InterruptedException, IOException, AWTException {
+
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(cases.frameOne);
@@ -2029,8 +2112,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 	public void createNewCaseAddDocumentDeclareAsRecordDownload()
 			throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(cases.frameOne);
@@ -2119,8 +2201,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 	@Test
 	public void createNewCaseAddDocumendSendEmail() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(cases.frameOne);
@@ -2211,8 +2292,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 	public void createNewCaseAddDocumentDeclareAsRecordSendEmail()
 			throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(cases.frameOne);
@@ -2301,8 +2381,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 	public void createNewCaseAddDocumentDeclareAsRecordCopyToFOlder()
 			throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(cases.frameOne);

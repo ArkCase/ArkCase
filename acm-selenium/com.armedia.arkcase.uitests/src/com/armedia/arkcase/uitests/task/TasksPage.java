@@ -7,8 +7,8 @@ import java.util.Date;
 
 import org.junit.Assert;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
@@ -119,10 +119,12 @@ public class TasksPage extends ArkCaseTestBase {
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/thead/tr/th[5]")
 	WebElement attachmentCreatedColumn;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/thead/tr/th[6]")
-	WebElement attachmentAuthorColumn;
+	WebElement attachmentModifiedColumn;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/thead/tr/th[7]")
-	WebElement attachmentVersionColumn;
+	WebElement attachmentAuthorColumn;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/thead/tr/th[8]")
+	WebElement attachmentVersionColumn;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/thead/tr/th[9]")
 	WebElement attachmentStatusColumn;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody")
 	WebElement attachmentUploadRow;
@@ -377,21 +379,21 @@ public class TasksPage extends ArkCaseTestBase {
 	WebElement versiondocument;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[8]")
 	WebElement statusDocument;
-	@FindBy(how = How.XPATH, using = "/html/body/ul/li[9]")
+	@FindBy(how = How.XPATH, using = "/html/body/ul/li[13]")
 	WebElement renameDocument;
 	@FindBy(how = How.XPATH, using = "  /html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[1]/td[3]/span/span[1]")
 	WebElement expander;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[2]/span/span[3]/input")
 	WebElement renameD;
-	@FindBy(how = How.XPATH, using = "/html/body/ul/li[13]")
+	@FindBy(how = How.XPATH, using = "/html/body/ul/li[17]")
 	WebElement replaceDocment;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[6]/span")
 	WebElement secondVersion;
-	@FindBy(how = How.XPATH, using = "/html/body/ul/li[14]")
+	@FindBy(how = How.XPATH, using = "/html/body/ul/li[18]")
 	WebElement declareAsRecord;
 	@FindBy(how = How.XPATH, using = "/html/body/ul/li[3]")
 	WebElement email;
-	@FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/div[1]/h2")
+	@FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/div[1]/h3")
 	WebElement emailTitle;
 	@FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/div[2]/search-modal/div/div/div[1]/div/span/button")
 	WebElement searchEmail;
@@ -399,11 +401,15 @@ public class TasksPage extends ArkCaseTestBase {
 	WebElement emailInput;
 	@FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/div[2]/search-modal/div/div/div[2]/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[1]/div")
 	WebElement selectRecipient;
+	@FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/div[2]/search-modal/div/div/div[2]/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[1]/div")
+	WebElement searchedEmailUser;
+	@FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/div[2]/search-modal/div/div/div[2]/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[2]/div")
+	WebElement searchedEmail;
 	@FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/div[3]/textarea")
 	WebElement emailRecipients;
 	@FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/div[3]/button[2]")
 	WebElement sendEmail;
-	@FindBy(how = How.XPATH, using = "/html/body/ul/li[10]")
+	@FindBy(how = How.XPATH, using = "/html/body/ul/li[14]")
 	WebElement deleteDocument;
 	@FindBy(how = How.XPATH, using = "/html/body/ul/li[1]")
 	WebElement newFolder;
@@ -417,7 +423,7 @@ public class TasksPage extends ArkCaseTestBase {
 	WebElement secondFolderCreated;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[3]/td[2]")
 	WebElement addedDocumentToFirstFolder;
-	@FindBy(how = How.XPATH, using = "/html/body/ul/li[5]")
+	@FindBy(how = How.XPATH, using = "/html/body/ul/li[10]")
 	WebElement copyDocument;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[2]/span/span[1]")
 	WebElement expanderFirstFolder;
@@ -427,9 +433,9 @@ public class TasksPage extends ArkCaseTestBase {
 	WebElement expanderSecondFolder;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[4]/td[2]/span")
 	WebElement secondFolderDocument;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[2]/span/span[3]")
+	@FindBy(how = How.XPATH, using = "/html/body/ul/li[13]")
 	WebElement renamedDocument;
-	@FindBy(how = How.XPATH, using = "/html/body/ul/li[4]")
+	@FindBy(how = How.XPATH, using = "/html/body/ul/li[9]")
 	WebElement cutDocument;
 	@FindBy(how = How.XPATH, using = "/html/body/ul/li[2]/ul/li[6]")
 	WebElement witnessInterview;
@@ -443,7 +449,7 @@ public class TasksPage extends ArkCaseTestBase {
 	WebElement generalRelease;
 	@FindBy(how = How.XPATH, using = "/html/body/ul/li[2]/ul/li[1]")
 	WebElement medicalRelease;
-	@FindBy(how = How.XPATH, using = "/html/body/ul/li[12]")
+	@FindBy(how = How.XPATH, using = "/html/body/ul/li[16]")
 	WebElement downloadDocument;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[4]")
 	WebElement deleteTask;
@@ -457,7 +463,7 @@ public class TasksPage extends ArkCaseTestBase {
 	WebElement workFlowEnd;
 	@FindBy(how = How.XPATH, using = "/html/body/ul/li[8]")
 	WebElement renameFolder;
-	@FindBy(how = How.XPATH, using = "/html/body/ul/li[9]/kbd")
+	@FindBy(how = How.XPATH, using = "/html/body/ul/li[9]")
 	WebElement deleteFolder;
 	@FindBy(how = How.XPATH, using = "/html/body/ul/li[10]")
 	WebElement deleteDocInFolder;
@@ -471,6 +477,84 @@ public class TasksPage extends ArkCaseTestBase {
 	WebElement associateWithCAase;
 	public @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/object-tree/section/header/div[2]/button") WebElement refreshButtonInTaskList;
 	public @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[1]/div[1]/div[2]") WebElement emptyTaskTable;
+
+	// new attachment
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[3]/span/span[3]")
+	WebElement firstRowDocumentTitle;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[4]")
+	WebElement firstRowType;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[5]")
+	WebElement firstRowCreated;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[6]")
+	WebElement firstRowModified;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[7]")
+	WebElement firstRowAuthor;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[8]")
+	WebElement firstRowVersion;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[9]")
+	WebElement firstRowStatus;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[3]/td[3]/span")
+	WebElement secondRowDocumentTitle;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[3]/td[4]")
+	WebElement secondRowType;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[3]/td[5]")
+	WebElement secondRowCreated;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[3]/td[6]")
+	WebElement secondRowModified;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[3]/td[7]")
+	WebElement secondRowAuthor;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[3]/td[8]")
+	WebElement secondRowVersion;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[3]/td[9]")
+	WebElement secondRowStatus;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[4]/td[3]/span/span[3]")
+	WebElement thirdRowDocumentTitle;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[4]/td[4]")
+	WebElement thirdRowType;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[4]/td[5]")
+	WebElement thirdRowCreated;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[4]/td[6]")
+	WebElement thirdRowModified;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[4]/td[7]")
+	WebElement thirdRowAuthor;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[4]/td[8]")
+	WebElement thirdRowVersion;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[4]/td[9]")
+	WebElement thirdRowStatus;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[5]/td[3]/span/span[3]")
+	WebElement forthRowDocumentTitle;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[5]/td[4]")
+	WebElement forthRowType;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[5]/td[5]")
+	WebElement forthRowCreated;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[5]/td[6]")
+	WebElement forthRowModified;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[5]/td[7]")
+	WebElement forthRowAuthor;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[5]/td[8]")
+	WebElement forthRowVersion;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[5]/td[9]")
+	WebElement forthRowStatus;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[3]/span/span[3]/input")
+	WebElement firtsRowInput;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[3]/td[3]/span/span[3]/input")
+	WebElement secondRowInput;
+	@FindBy(how = How.XPATH, using = "/html/body/ul/li[5]")
+	WebElement checkOutDocument;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[2]/span")
+	WebElement lockedIcon;
+	@FindBy(how = How.XPATH, using = "/html/body/ul/li[7]")
+	WebElement cancelEditing;
+	@FindBy(how = How.XPATH, using = "/html/body/ul/li[2]")
+	WebElement editWithWord;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[8]/span/select/option[2]")
+	WebElement firstRowVersion2;
+	@FindBy(how = How.XPATH, using = "/html/body/ul/li[6]")
+	WebElement checkInDocument;
+	@FindBy(how = How.XPATH, using = "/html/body/ul/li[6]")
+	WebElement recordDownload;
+	@FindBy(how = How.XPATH, using = "/html/body/ul/li[2]")
+	WebElement recordEmail;
 
 	public void taskSearchBox(String name) {
 
@@ -546,16 +630,18 @@ public class TasksPage extends ArkCaseTestBase {
 
 	}
 
-	public void verifyRejectCommnetsTable() {
-
-		Assert.assertTrue(rejectCommentTitle.getText().equals("Reject Comments"));
-		Assert.assertTrue(rejectTable.isEnabled());
-		Assert.assertTrue(rejectTable.isDisplayed());
-		Assert.assertTrue(commentColumn.getText().equals("Comment"));
-		Assert.assertTrue(rejectCreatedColumn.getText().equals("Created"));
-		Assert.assertTrue(rejectedAuthorColumn.getText().equals("Author"));
-
-	}
+	/*
+	 * public void verifyRejectCommnetsTable() {
+	 * 
+	 * Assert.assertTrue(rejectCommentTitle.getText().equals("Reject Comments"
+	 * )); Assert.assertTrue(rejectTable.isEnabled());
+	 * Assert.assertTrue(rejectTable.isDisplayed());
+	 * Assert.assertTrue(commentColumn.getText().equals("Comment"));
+	 * Assert.assertTrue(rejectCreatedColumn.getText().equals("Created"));
+	 * Assert.assertTrue(rejectedAuthorColumn.getText().equals("Author"));
+	 * 
+	 * }
+	 */
 
 	public void attachmentsList() {
 
@@ -576,6 +662,8 @@ public class TasksPage extends ArkCaseTestBase {
 		Assert.assertTrue(attachmentTitleColumn.getText().equals("Title"));
 		Assert.assertTrue(attachmentTypeColumn.getText().equals("Type"));
 		Assert.assertTrue(attachmentCreatedColumn.getText().equals("Created"));
+		Assert.assertEquals("Author column name is wrong", "Author", attachmentAuthorColumn.getText());
+		Assert.assertEquals("Modified column name is wrong", "Modified", attachmentModifiedColumn.getText());
 		Assert.assertTrue(attachmentAuthorColumn.getText().equals("Author"));
 		Assert.assertTrue(attachmentVersionColumn.getText().equals("Version"));
 		Assert.assertTrue(attachmentStatusColumn.getText().equals("Status"));
@@ -686,7 +774,7 @@ public class TasksPage extends ArkCaseTestBase {
 	public void verifyHistoryTableData(String eventName, String user) {
 
 		Date date = new Date(System.currentTimeMillis());
-		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
 		String createdDate = formatter.format(date);
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertEquals(historyEventNameValue.getText(), eventName, "History event name is wrong");
@@ -871,7 +959,6 @@ public class TasksPage extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		detailsPictureBrowse.click();
 		ArkCaseTestUtils.uploadPNGPicture();
-		detailsInsertImageButton.click();
 		Thread.sleep(2000);
 	}
 
@@ -1031,423 +1118,8 @@ public class TasksPage extends ArkCaseTestBase {
 		refreshButton.click();
 		Assert.assertEquals("Task State should be ACTIVE", "ACTIVE", stateTask.getText());
 		completeButton.click();
-		Thread.sleep(2000);
+		Thread.sleep(4000);
 		Assert.assertEquals("Task State should be CLOSED", "CLOSED", stateTask.getText());
-	}
-
-	public void addNewDcumentOther() throws InterruptedException, IOException, AWTException {
-
-		Actions act = new Actions(driver);
-		act.contextClick(root).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
-		Thread.sleep(2000);
-		Assert.assertEquals("New document name is wrong or right click is not working", "New Document",
-				newDocument.getText());
-		newDocument.click();
-		Thread.sleep(2000);
-		otherDocument.click();
-		ArkCaseTestUtils.uploadPNGPicture();
-		addedNewOther.click();
-
-	}
-
-	public void verifyDocumentAddedNew(String type, String status) {
-
-		Date date = new Date(System.currentTimeMillis());
-		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-		String createdDate = formatter.format(date);
-		Assert.assertTrue(typeDocument.getText().equals(type));
-		Assert.assertTrue(createdDocument.getText().equals(createdDate));
-		Assert.assertTrue(authorDocument.getText().equals(assignee.getText()));
-		Assert.assertTrue(versiondocument.getText().equals("1.0"));
-		Assert.assertTrue(statusDocument.getText().equals(status));
-	}
-
-	public void renameAddedNewDocument() throws InterruptedException {
-
-		Actions act = new Actions(driver);
-		act.contextClick(addedNewOther).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
-		Thread.sleep(2000);
-		Assert.assertEquals("Rename document name is wrong or right click is not working", "Rename Document",
-				renameDocument.getText());
-		renameDocument.click();
-		Thread.sleep(2000);
-		renameD.click();
-		renameD.clear();
-		renameD.sendKeys("image.jpg");
-		Thread.sleep(2000);
-		tasksTitle.click();
-		Assert.assertTrue(renamedDocument.getText().equals("image.jpg"));
-		tasksTitle.click();
-
-	}
-
-	public void replaceDocument() throws InterruptedException, IOException, AWTException {
-
-		Actions act = new Actions(driver);
-		act.contextClick(addedNewOther).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
-		Thread.sleep(2000);
-		Assert.assertEquals("Replace document name is wrong or right click is not working", "Replace Document",
-				replaceDocment.getText());
-		replaceDocment.click();
-		ArkCaseTestUtils.uploadPNGPicture();
-		addedNewOther.click();
-	}
-
-	public void verifyReplacedDocument(String type, String status) {
-
-		Date date = new Date(System.currentTimeMillis());
-		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-		String createdDate = formatter.format(date);
-		Assert.assertTrue(typeDocument.getText().equals(type));
-		Assert.assertTrue(createdDocument.getText().equals(createdDate));
-		Assert.assertTrue(authorDocument.getText().equals(assignee.getText()));
-		Assert.assertTrue(secondVersion.getText().contains("2.0"));
-		Assert.assertTrue(statusDocument.getText().equals(status));
-
-	}
-
-	public void verifyRecordDocument(String type) {
-
-		Date date = new Date(System.currentTimeMillis());
-		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-		String createdDate = formatter.format(date);
-		Assert.assertTrue(typeDocument.getText().equals(type));
-		Assert.assertTrue(createdDocument.getText().equals(createdDate));
-		Assert.assertTrue(authorDocument.getText().equals(assignee.getText()));
-		Assert.assertTrue(statusDocument.getText().equals("RECORD"));
-
-	}
-
-	public void declareAsRecord() throws InterruptedException, IOException {
-
-		Actions act = new Actions(driver);
-		act.contextClick(addedNewOther).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
-		Thread.sleep(2000);
-		Assert.assertEquals("Declare as Record name is wrong or right click is not working", "Declare as Record(s)",
-				declareAsRecord.getText());
-		declareAsRecord.click();
-	}
-
-	public void sendEmail() throws InterruptedException {
-
-		Actions act = new Actions(driver);
-		act.contextClick(addedNewOther).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
-		Thread.sleep(2000);
-		Assert.assertEquals("Email name is wrong or right click is not working", "Email", email.getText());
-		email.click();
-		Thread.sleep(3000);
-		Assert.assertTrue(emailTitle.getText().equals("Email"));
-		Assert.assertFalse(searchEmail.isEnabled());
-		emailInput.click();
-		emailInput.sendKeys("samuel supervisor");
-		Thread.sleep(3000);
-		searchEmail.click();
-		Thread.sleep(2000);
-		selectRecipient.click();
-		Thread.sleep(3000);
-		sendEmail.click();
-	}
-
-	public void deleteDocument() throws InterruptedException {
-
-		Actions act = new Actions(driver);
-		act.contextClick(addedNewOther).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
-		Thread.sleep(3000);
-		Assert.assertEquals("Delete document name is wrong or right click on document is not working", "Delete", deleteDocument.getText());
-		deleteDocument.click();
-
-	}
-
-	public void createNewFolder(String name) throws InterruptedException {
-
-		Actions act = new Actions(driver);
-		act.contextClick(root).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
-		Thread.sleep(2000);
-		Assert.assertEquals("New Folder name is wrong ", "New Folder Ctrl+N", newFolder.getText());
-		newFolder.click();
-		Thread.sleep(2000);
-		newFolderName.click();
-		newFolderName.clear();
-		newFolderName.sendKeys(name);
-		attachmentsTitle.click();
-		Thread.sleep(2000);
-		attachmentsRefreshButton.click();
-		expander.click();
-		Assert.assertTrue(newFolderCreated.getText().equals(name));
-	}
-
-	public void renameFolder(String name) throws InterruptedException {
-
-		attachmentsRefreshButton.click();
-		expander.click();
-		newFolderCreated.click();
-		Actions act = new Actions(driver);
-		act.contextClick(newFolderCreated).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
-		Thread.sleep(2000);
-		Assert.assertEquals("Rename folder name is wrong or right click is not working", "Rename Folder",
-				renameFolder.getText());
-		renameFolder.click();
-		newFolderName.sendKeys(name);
-		attachmentsTitle.click();
-		Thread.sleep(2000);
-		attachmentsRefreshButton.click();
-		expander.click();
-		Assert.assertTrue(newFolderCreated.getText().equals(name));
-	}
-
-	public void deleteFolder() throws InterruptedException {
-
-		attachmentsRefreshButton.click();
-		expander.click();
-		newFolderCreated.click();
-		Actions act = new Actions(driver);
-		act.contextClick(newFolderCreated).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
-		Thread.sleep(2000);
-		Assert.assertEquals("Delete folder name is wrong or right click is not working", "Delete Folder",
-				deleteFolder.getText());
-		deleteFolder.click();
-		Thread.sleep(2000);
-		attachmentsRefreshButton.click();
-		expander.click();
-	}
-
-	public void createSecondFolder(String name) throws InterruptedException {
-
-		attachmentsRefreshButton.click();
-		Thread.sleep(2000);
-		expander.click();
-		Thread.sleep(2000);
-		root.click();
-		Actions act = new Actions(driver);
-		act.contextClick(root).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
-		Thread.sleep(4000);
-		Assert.assertEquals("New Folder name is wrong ", "New Folder Ctrl+N", newFolder.getText());
-		newFolder.click();
-		Thread.sleep(2000);
-		secondNewFolder.click();
-		secondNewFolder.clear();
-		secondNewFolder.sendKeys(name);
-		attachmentsTitle.click();
-		Thread.sleep(2000);
-		attachmentsRefreshButton.click();
-		expander.click();
-		newFolderCreated.click();
-		secondFolderCreated.click();
-		Assert.assertTrue(secondFolderCreated.getText().equals(name));
-	}
-
-	public void addDocumentToFirstFolder() throws InterruptedException, IOException, AWTException {
-
-		newFolderCreated.click();
-		Thread.sleep(3000);
-		Actions act = new Actions(driver);
-		act.contextClick(root).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
-		Thread.sleep(3000);
-		Assert.assertEquals("New document name is wrong or right click is not working", "New Document",
-				newDocument.getText());
-		newDocument.click();
-		Thread.sleep(2000);
-		otherDocument.click();
-		Thread.sleep(2000);
-		ArkCaseTestUtils.uploadPNGPicture();
-		Thread.sleep(3000);
-
-	}
-
-	public void copyDocumentFromFirstFolder() throws InterruptedException {
-
-		Actions act = new Actions(driver);
-		addedDocumentToFirstFolder.click();
-		Thread.sleep(2000);
-		act.contextClick(newFolderCreated).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
-		Thread.sleep(2000);
-		Assert.assertEquals("Copy document name is wrong or right click is not working", "Copy Ctrl+C",
-				copyDocument.getText());
-		copyDocument.click();
-	}
-
-	public void pasteDocumentToSeconFolder() throws InterruptedException {
-
-		Thread.sleep(2000);
-		secondFolderCreated.click();
-		Actions act = new Actions(driver);
-		act.contextClick(secondFolderCreated).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
-		Thread.sleep(3000);
-		Assert.assertEquals("Paste document name is wrong or right click is not working", " Paste",
-				pasteDocument.getText());
-		pasteDocument.click();
-		Thread.sleep(4000);
-
-	}
-
-	public void deleteAddedFiles() throws InterruptedException {
-
-		attachmentsRefreshButton.click();
-		expander.click();
-		Thread.sleep(2000);
-		expanderSecondFolder.click();
-		Thread.sleep(2000);
-		secondFolderDocument.click();
-		Thread.sleep(2000);
-		Actions act = new Actions(driver);
-		act.contextClick(secondFolderDocument).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
-		Thread.sleep(2000);
-		deleteLastFile.click();
-		Thread.sleep(2000);
-		act.contextClick(secondFolderCreated).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
-		Thread.sleep(1000);
-		deleteDocInFirstFolder.click();
-		Thread.sleep(2000);
-		addedDocumentToFirstFolder.click();
-		act.contextClick(addedDocumentToFirstFolder).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
-		Thread.sleep(1000);
-		deleteDocInFirstFolder.click();
-		Thread.sleep(2000);
-		newFolderCreated.click();
-		act.contextClick(newFolderCreated).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
-		Thread.sleep(1000);
-		deleteFolder.click();
-	}
-
-	public void cutDocumentFromFirstFolder() throws InterruptedException {
-		Actions act = new Actions(driver);
-		addedDocumentToFirstFolder.click();
-		Thread.sleep(2000);
-		act.contextClick(newFolderCreated).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
-		Thread.sleep(2000);
-		cutDocument.click();
-	}
-
-	public void deleteCutedFiles() throws InterruptedException {
-
-		attachmentsRefreshButton.click();
-		expander.click();
-		Thread.sleep(2000);
-		expanderSecondFolder.click();
-		Thread.sleep(2000);
-		secondFolderCreated.click();
-		expanderSecondFolder.click();
-		Thread.sleep(2000);
-		Actions act = new Actions(driver);
-		act.contextClick(secondFolderDocument).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
-		Thread.sleep(2000);
-		deleteDocInFolder.click();
-		Thread.sleep(2000);
-		act.contextClick(secondFolderCreated).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
-		Thread.sleep(1000);
-		deleteLastFile.click();
-		Thread.sleep(2000);
-		Thread.sleep(2000);
-		newFolderCreated.click();
-		act.contextClick(newFolderCreated).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
-		Thread.sleep(1000);
-		deleteFolder.click();
-
-	}
-
-	public void pasteCuttedDocument() throws InterruptedException {
-
-		secondFolderCreated.click();
-		Actions act = new Actions(driver);
-		act.contextClick(secondFolderCreated).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
-		SoftAssert softAssert = new SoftAssert();
-		softAssert.assertEquals(pasteDocument.getText(), "Paste",
-				"Paste document text is wrong or right click is not working");
-		softAssert.assertAll();
-		Thread.sleep(3000);
-		pasteDocument.click();
-	}
-
-	public void addNewDocumentWitness() throws InterruptedException, IOException, AWTException {
-
-		Actions act = new Actions(driver);
-		act.contextClick(root).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
-		Thread.sleep(2000);
-		newDocument.click();
-		Thread.sleep(2000);
-		witnessInterview.click();
-		Thread.sleep(3000);
-		ArkCaseTestUtils.uploadPdf();
-		addedNewOther.click();
-
-	}
-
-	public void addNewDocumentNoticeOfInvestigation() throws InterruptedException, IOException, AWTException {
-
-		Actions act = new Actions(driver);
-		act.contextClick(root).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
-		Thread.sleep(2000);
-		newDocument.click();
-		Thread.sleep(2000);
-		noticeOfInvestigation.click();
-		Thread.sleep(3000);
-		ArkCaseTestUtils.uploadPdf();
-		addedNewOther.click();
-
-	}
-
-	public void addNewDocumentSfSignature() throws InterruptedException, IOException, AWTException {
-
-		Actions act = new Actions(driver);
-		act.contextClick(root).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
-		Thread.sleep(2000);
-		newDocument.click();
-		Thread.sleep(2000);
-		sfSignature.click();
-		Thread.sleep(3000);
-		ArkCaseTestUtils.uploadDocx();
-		addedNewOther.click();
-
-	}
-
-	public void addNewDocumentEDelevery() throws InterruptedException, IOException, AWTException {
-
-		Actions act = new Actions(driver);
-		act.contextClick(root).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
-		Thread.sleep(2000);
-		newDocument.click();
-		Thread.sleep(2000);
-		eDelivery.click();
-		Thread.sleep(3000);
-	    ArkCaseTestUtils.uploadDocx();
-		Thread.sleep(3000);
-		addedNewOther.click();
-	}
-
-	public void addNewDocumentgeneralRelease() throws InterruptedException, IOException, AWTException {
-
-		Actions act = new Actions(driver);
-		act.contextClick(root).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
-		Thread.sleep(2000);
-		newDocument.click();
-		Thread.sleep(2000);
-		generalRelease.click();
-		Thread.sleep(3000);
-		ArkCaseTestUtils.uploadXlsx();
-		Thread.sleep(3000);
-	}
-
-	public void addNewDocumentMedicalRelease() throws InterruptedException, IOException, AWTException {
-
-		Actions act = new Actions(driver);
-		act.contextClick(root).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
-		Thread.sleep(2000);
-		newDocument.click();
-		Thread.sleep(2000);
-		medicalRelease.click();
-		Thread.sleep(3000);
-	   ArkCaseTestUtils.uploadXlsx();
-
-	}
-
-	public void downloadDocument() throws InterruptedException {
-		createdDocument.click();
-		Actions act = new Actions(driver);
-		act.contextClick(createdDocument).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
-		Thread.sleep(3000);
-		Assert.assertTrue(downloadDocument.getText().equals("Download"));
-		downloadDocument.click();
-
 	}
 
 	public void workFlowData(String participant) {
@@ -1485,17 +1157,19 @@ public class TasksPage extends ArkCaseTestBase {
 				.findElements(By
 						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[3]/span/span[3]"))
 				.size();
-		Assert.assertTrue(i == 0);
+		Assert.assertTrue("Other user is sigh in, can not be added document", i == 0);
 
 	}
 
 	public void verifyAddingDocumentIfTaskIsClosed() throws InterruptedException {
 
-		Actions act = new Actions(driver);
-		act.contextClick(root).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
+		Actions actions = new Actions(driver);
+		Action action = actions.contextClick(root).build();
+		action.perform();
 		Thread.sleep(2000);
 		newDocument.click();
-		Assert.assertFalse("Adding new document is enabled", otherDocument.isDisplayed());
+		Assert.assertFalse("Adding new document should not be enabled, task state is CLOSED",
+				otherDocument.isDisplayed());
 
 	}
 
@@ -1531,6 +1205,466 @@ public class TasksPage extends ArkCaseTestBase {
 
 		Assert.assertTrue("Added note is not deleted", verifyDeletedNote.getText().isEmpty());
 
+	}
+
+	public void createFolder(String name) throws InterruptedException {
+
+		Thread.sleep(2000);
+	}
+
+	public void performRightClickOnRoot() {
+
+		Actions actions = new Actions(driver);
+		Action action = actions.contextClick(root).build();
+		action.perform();
+
+	}
+
+	public void verifyIfRightClickWorksOnRoot() {
+
+		int i = driver.findElements(By.xpath("/html/body/ul")).size();
+		Assert.assertTrue("Right click on root is not workin", i != 0);
+
+	}
+
+	public void performRightClickOnFirstRow() {
+
+		Actions actions = new Actions(driver);
+		Action action = actions.contextClick(firstRowDocumentTitle).build();
+		action.perform();
+
+	}
+
+	public void verifyIfRightClickWorksOnFirstRow() {
+
+		int i = driver.findElements(By.xpath("/html/body/ul")).size();
+		Assert.assertTrue("Right click on first row is not working", i != 0);
+
+	}
+
+	public void performRightClickOnSecondRow() {
+
+		Actions actions = new Actions(driver);
+		Action action = actions.contextClick(secondRowDocumentTitle).build();
+		action.perform();
+
+	}
+
+	public void verifyIfRightClickWorksOnSecondRow() {
+
+		int i = driver.findElements(By.xpath("/html/body/ul")).size();
+		Assert.assertTrue("Right click on second row is not working", i != 0);
+
+	}
+
+	public void performRightClickOnThirdRow() {
+
+		Actions actions = new Actions(driver);
+		Action action = actions.contextClick(thirdRowDocumentTitle).build();
+		action.perform();
+	}
+
+	public void verifyIfRightClickWorksOnThirdRow() {
+
+		int i = driver.findElements(By.xpath("/html/body/ul")).size();
+		Assert.assertTrue("Right click on third row is not working", i != 0);
+	}
+
+	public void performRightClickOnForthRow() {
+
+		Actions actions = new Actions(driver);
+		Action action = actions.contextClick(forthRowDocumentTitle).build();
+		action.perform();
+	}
+
+	public void verifyIfRightClickWorksOnForthRow() {
+
+		int i = driver.findElements(By.xpath("/html/body/ul")).size();
+		Assert.assertTrue("Right click on forth row is not working", i != 0);
+
+	}
+
+	public void newFolderClick() {
+
+		Assert.assertEquals("New folder label name is wrong", "New Folder", newFolder.getText());
+		newFolder.click();
+
+	}
+
+	public void nameTheFirstFolder(String name) {
+
+		firtsRowInput.sendKeys(name);
+
+	}
+
+	public void verifyFirstFolderName(String name) {
+
+		Assert.assertEquals("First folder name is wrong", name, firstRowDocumentTitle.getText());
+	}
+
+	public void nameTheSecondFolder(String name) {
+
+		secondRowInput.sendKeys(name);
+
+	}
+
+	public void verifySecondFolderName(String name) {
+
+		Assert.assertEquals("Second folder name is wrong", name, secondRowDocumentTitle.getText());
+	}
+
+	public void verifyNewDocumentMenu() {
+
+		int i = driver.findElements(By.xpath("/html/body/ul/li[2]/ul")).size();
+		Assert.assertTrue("New document menu option is not displayed", i != 0);
+
+	}
+
+	public void clickNewDocument() {
+
+		Assert.assertEquals("New Document label name is wrong", "New Document", newDocument.getText());
+		newDocument.click();
+
+	}
+
+	public void clickOtherDocument() {
+
+		Assert.assertEquals("Other document name is wrong", "Other", otherDocument.getText());
+		otherDocument.click();
+	}
+
+	public void verifySecondRowDocument(String title, String type, String author, String version, String status) {
+
+		SoftAssert softAssert = new SoftAssert();
+		Date date = new Date(System.currentTimeMillis());
+		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+		String createdDate = formatter.format(date);
+		softAssert.assertEquals(secondRowDocumentTitle.getText(), title, "Second row document title is wrong");
+		softAssert.assertEquals(secondRowType.getText(), type, "Second row type name is wrong");
+		softAssert.assertEquals(secondRowCreated.getText(), createdDate, "Second row created date is wrong");
+		softAssert.assertEquals(secondRowModified.getText(), createdDate, "Second row modified date is wrong");
+		softAssert.assertEquals(secondRowAuthor.getText(), author, "Second row author name is wrong");
+		softAssert.assertEquals(secondRowVersion.getText(), version, "Second row version is wrong");
+		softAssert.assertEquals(secondRowStatus.getText(), status, "Second row status is wrong");
+		softAssert.assertAll();
+
+	}
+
+	public void verifyForthRowDocument(String title, String type, String author, String version, String status) {
+
+		SoftAssert softAssert = new SoftAssert();
+		Date date = new Date(System.currentTimeMillis());
+		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+		String createdDate = formatter.format(date);
+		softAssert.assertEquals(forthRowDocumentTitle.getText(), title, "Forth row document title is wrong");
+		softAssert.assertEquals(forthRowType.getText(), type, "Forth row type name is wrong");
+		softAssert.assertEquals(forthRowCreated.getText(), createdDate, "Forth row created date is wrong");
+		softAssert.assertEquals(forthRowModified.getText(), createdDate, "Forth row modified date is wrong");
+		softAssert.assertEquals(forthRowAuthor.getText(), author, "Forth row author name is wrong");
+		softAssert.assertEquals(forthRowVersion.getText(), version, "Forth row version is wrong");
+		softAssert.assertEquals(forthRowStatus.getText(), status, "Forth row status is wrong");
+		softAssert.assertAll();
+
+	}
+
+	public void verifyFirstRowDocument(String title, String type, String author, String version, String status) {
+
+		SoftAssert softAssert = new SoftAssert();
+		Date date = new Date(System.currentTimeMillis());
+		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+		String createdDate = formatter.format(date);
+		softAssert.assertEquals(firstRowDocumentTitle.getText(), title, "First row document title is wrong");
+		softAssert.assertEquals(firstRowType.getText(), type, "First row type name is wrong");
+		softAssert.assertEquals(firstRowCreated.getText(), createdDate, "First row created date is wrong");
+		softAssert.assertEquals(firstRowModified.getText(), createdDate, "First row modified date is wrong");
+		softAssert.assertEquals(firstRowAuthor.getText(), author, "First row author name is wrong");
+		softAssert.assertEquals(firstRowVersion.getText(), version, "First row version is wrong");
+		softAssert.assertEquals(firstRowStatus.getText(), status, "First row status is wrong");
+		softAssert.assertAll();
+
+	}
+
+	public void cutDocument() {
+
+		Assert.assertEquals("Cut label name is wrong", "Cut", cutDocument.getText());
+		cutDocument.click();
+
+	}
+
+	public void pasteDocument() {
+
+		Assert.assertTrue("Paste is not enabled", pasteDocument.isEnabled());
+		Assert.assertEquals("Paste label name is wrong", "Paste", pasteDocument.getText());
+		pasteDocument.click();
+	}
+
+	public void verifyIfCutDocumentDisapierd() {
+
+		Assert.assertEquals("Cut document has not dissapierd", "document2", secondRowDocumentTitle.getText());
+
+	}
+
+	public void copyDocument() {
+		Assert.assertEquals("Copy label name is wrong", "Copy", copyDocument.getText());
+		copyDocument.click();
+	}
+
+	public void deleteDocument() {
+
+		Assert.assertEquals("Delete document label name is wrong", "Delete", deleteDocument.getText());
+		deleteDocument.click();
+	}
+
+	public void verifyIfDocumentIsDeletedStateDelete() {
+
+		int i = driver
+				.findElements(By
+						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[3]/span/span[3]"))
+				.size();
+		Assert.assertTrue("The document should not be deleted, state task is DELETE", i != 0);
+	}
+
+	public void verifyIfDocumentIfAddTaskStateIsClosed() {
+
+		int i = driver
+				.findElements(By
+						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[3]/span/span[3]"))
+				.size();
+		Assert.assertTrue("The document should not be added, state task is CLOSED", i == 0);
+	}
+
+	public void renameDocument() {
+
+		Assert.assertEquals("Rename document label name is wrong", "Rename", renameDocument.getText());
+		renameDocument.click();
+	}
+
+	public void renameFolder() {
+
+		Assert.assertEquals("Rename folder  label name is wrong", "Rename", renameFolder.getText());
+		renameFolder.click();
+	}
+
+	public void deleteFolder() {
+		Assert.assertEquals("Delete folder label name is wrong", "Delete", deleteFolder.getText());
+		deleteFolder.click();
+	}
+
+	public void verifyIfFolderIsDeleted() {
+
+		int i = driver
+				.findElements(By
+						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[3]/span/span[3]"))
+				.size();
+		Assert.assertTrue("The folder is not deleted", i == 0);
+
+	}
+
+	public void clickeDelivery() {
+
+		Assert.assertEquals("Edelivery label name is wrong", "eDelivery", eDelivery.getText());
+		eDelivery.click();
+	}
+
+	public void verifyAddedDocumentAfterRefresh() {
+
+		int i = driver
+				.findElements(By
+						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[3]/span/span[3]"))
+				.size();
+		Assert.assertTrue("After refresh document is not there", i != 0);
+
+	}
+
+	public void clickSfSignature() {
+
+		Assert.assertEquals("Sfsignature label name is wrong", "SF86 Signature", sfSignature.getText());
+		sfSignature.click();
+	}
+
+	public void clickNoticeOfInvestigation() {
+
+		Assert.assertEquals("Notice of Investigation label name is wrong", "Notice of Investigation",
+				noticeOfInvestigation.getText());
+		noticeOfInvestigation.click();
+	}
+
+	public void clickMedicalRelease() {
+
+		Assert.assertEquals("Medical Release label name is wrong", "Medical Release", medicalRelease.getText());
+		medicalRelease.click();
+	}
+
+	public void clickGeneralRelease() {
+
+		Assert.assertEquals("General Release label name is wrong", "General Release", generalRelease.getText());
+		generalRelease.click();
+	}
+
+	public void clickDeclareAsRecord() {
+
+		Assert.assertEquals("Declare as recoerd label name is wrong", "Declare as Record(s)",
+				declareAsRecord.getText());
+		declareAsRecord.click();
+	}
+
+	public void nameTheFirstDocument(String name) {
+
+		firtsRowInput.sendKeys(name);
+	}
+
+	public void verifyFirstRowDocumentAfterRefresh(String title, String type, String author, String version,
+			String status) {
+
+		SoftAssert softAssert = new SoftAssert();
+		Date date = new Date(System.currentTimeMillis());
+		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+		String createdDate = formatter.format(date);
+		softAssert.assertEquals(firstRowDocumentTitle.getText(), title,
+				" After refresh the page,First row document title is wrong");
+		softAssert.assertEquals(firstRowType.getText(), type, "After refresh the page,First row type name is wrong");
+		softAssert.assertEquals(firstRowCreated.getText(), createdDate,
+				"After refresh the page,First row created date is wrong");
+		softAssert.assertEquals(firstRowModified.getText(), createdDate,
+				"After refresh the page,First row modified date is wrong");
+		softAssert.assertEquals(firstRowAuthor.getText(), author,
+				"After refresh the page,First row author name is wrong");
+		softAssert.assertEquals(firstRowVersion.getText(), version,
+				"After refresh the page,First row version is wrong");
+		softAssert.assertEquals(firstRowStatus.getText(), status, "After refresh the page,First row status is wrong");
+		softAssert.assertAll();
+
+	}
+
+	public void replaceDocument() {
+
+		Assert.assertEquals("Replace document label name is wrong", "Replace", replaceDocment.getText());
+		replaceDocment.click();
+	}
+
+	public void emailDocument() {
+
+		Assert.assertEquals("Email label name is wrong", "Email", email.getText());
+		email.click();
+
+	}
+
+	public void verifyEmailPopUpTitle() {
+		Assert.assertEquals("Email popup title is wrong", "Email", emailTitle.getText());
+	}
+
+	public void searchUserEmailInput(String user) {
+
+		emailInput.click();
+		emailInput.sendKeys(user);
+	}
+
+	public void clickSearchEmailBtn() {
+		searchEmail.click();
+	}
+
+	public void verifySearchedUserEmail(String userName, String email) {
+
+		SoftAssert softAssert = new SoftAssert();
+		softAssert.assertEquals(searchedEmailUser.getText(), userName, "Searched user for email is wrong");
+		softAssert.assertEquals(searchedEmail.getText(), email, "Searched email is wrong");
+		softAssert.assertAll();
+
+	}
+
+	public void clickSendEmailBtn() {
+		sendEmail.click();
+	}
+
+	public void downlaodDocument() {
+
+		Assert.assertEquals("Download document label name is wrong ", "Download", downloadDocument.getText());
+		downloadDocument.click();
+
+	}
+
+	public void checkOutDocument() {
+
+		Assert.assertEquals("Checkout label name is wrong", "Checkout", checkOutDocument.getText());
+		checkOutDocument.click();
+	}
+
+	public void verifyLockedIcon() {
+
+		int i = driver
+				.findElements(By
+						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[2]/span"))
+				.size();
+		Assert.assertFalse("Locked icon is not displayed", i == 0);
+
+	}
+
+	public void cancelEditingDocument() {
+
+		Assert.assertEquals("Cancel Editing label name is wrong", "Cancel Editing", cancelEditing.getText());
+		cancelEditing.click();
+	}
+
+	public void verifyIfLockedIconIsDissapierd() {
+
+		int i = driver
+				.findElements(By
+						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[2]/span"))
+				.size();
+		Assert.assertTrue("Locked icon should not be  displayed", i == 0);
+	}
+
+	public void editWithWord() {
+
+		Assert.assertEquals("Edit with word label name is wrong", "Edit With Word", editWithWord.getText());
+		editWithWord.click();
+
+	}
+
+	public void verifyFirstRowDocumentModified(String title, String type, String author, String version,
+			String status) {
+
+		SoftAssert softAssert = new SoftAssert();
+		Date date = new Date(System.currentTimeMillis());
+		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+		String createdDate = formatter.format(date);
+		softAssert.assertEquals(firstRowDocumentTitle.getText(), title, "First row document title is wrong");
+		softAssert.assertEquals(firstRowType.getText(), type, "First row type name is wrong");
+		softAssert.assertEquals(firstRowCreated.getText(), createdDate, "First row created date is wrong");
+		softAssert.assertEquals(firstRowModified.getText(), createdDate, "First row modified date is wrong");
+		softAssert.assertEquals(firstRowAuthor.getText(), author, "First row author name is wrong");
+		softAssert.assertEquals(firstRowVersion2.getText(), version, "First row version is wrong");
+		softAssert.assertEquals(firstRowStatus.getText(), status, "First row status is wrong");
+		softAssert.assertAll();
+
+	}
+
+	public void verifyIfDocumentIsDeleted() {
+
+		int i = driver
+				.findElements(By
+						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[3]/span/span[3]"))
+				.size();
+		Assert.assertTrue("The document is not deleted, delete button is not working", i == 0);
+
+	}
+
+	public void downloadRecord() {
+
+		Assert.assertEquals("Record download label name is wrong", "Download", recordDownload.getText());
+		recordDownload.click();
+	}
+
+	public void verifyIfRecordRightClickMenuIsDisplayed() {
+
+		int i = driver.findElements(By.xpath("/html/body/ul")).size();
+		Assert.assertTrue("Record right clik menu is not displayed", i != 0);
+
+	}
+
+	public void emailRecord() {
+		Assert.assertEquals("Email record label name is wrong", "Email", recordEmail.getText());
+		recordEmail.click();
 	}
 
 }

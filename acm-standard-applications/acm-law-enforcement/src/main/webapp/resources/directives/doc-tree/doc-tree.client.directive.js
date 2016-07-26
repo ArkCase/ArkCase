@@ -85,11 +85,11 @@
 angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', '$filter', '$log', '$timeout'
     , 'Acm.StoreService', 'UtilService', 'Util.DateService', 'ConfigService', 'LookupService'
     , 'EcmService', 'Ecm.EmailService', 'Ecm.RecordService', 'Authentication', 'Helper.NoteService', 'Object.NoteService'
-    , '$browser', '$location', 'Object.LockingService', 'ObjectService', 'Object.CorrespondenceService'
+    , '$browser', '$location', 'Object.LockingService', 'ObjectService', 'Object.CorrespondenceService', 'TicketService'
     , function ($q, $translate, $modal, $filter, $log, $timeout
         , Store, Util, UtilDateService, ConfigService, LookupService
         , Ecm, EcmEmailService, EcmRecordService, Authentication, HelperNoteService, ObjectNoteService
-        , $browser, $location, LockingService, ObjectService, ObjectCorrespondenceService) {
+        , $browser, $location, LockingService, ObjectService, ObjectCorrespondenceService, TicketService) {
         var user = "";
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -163,7 +163,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                         if (DocTree.isFileNode(node)) {
                             var columnDefs = Util.goodArray(DocTree.treeConfig.columnDefs);
-                            for(var i = 0; i < columnDefs.length; i++) {
+                            for (var i = 0; i < columnDefs.length; i++) {
                                 var columnDef = columnDefs[i];
                                 var colIdx = Util.goodValue(columnDef.index, -1);
                                 if (0 <= colIdx) {
@@ -920,30 +920,30 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             , CustomData: {
                 _items: []
 
-                , getItems: function() {
+                , getItems: function () {
                     return this._items;
                 }
-                , setItems: function(items) {
+                , setItems: function (items) {
                     this._items = items;
                 }
-                , addItem: function(item) {
-                    var find = _.find(this._items, function(anItem){
+                , addItem: function (item) {
+                    var find = _.find(this._items, function (anItem) {
                         return anItem == item;
                     });
                     if (!find) {
                         this._items.push(item);
                     }
                 }
-                , addData: function(data) {
+                , addData: function (data) {
                     var arr = [];
                     if (Util.isArray(data)) {
                         arr = data;
                     } else if ("string" == typeof data) {
-                        arr = [ data ];
+                        arr = [data];
                     }
 
                     var that = this;
-                    _.each(arr, function(item) {
+                    _.each(arr, function (item) {
                         that.addItem(item);
                     });
                 }
@@ -953,14 +953,14 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             , Column: {
                 _renderers: []
 
-                , getRenderers: function() {
+                , getRenderers: function () {
                     return this._renderers;
                 }
-                , setRenderers: function(renderers) {
+                , setRenderers: function (renderers) {
                     this._renderers = renderers;
                 }
 
-                , addRenderer: function(name, renderer) {
+                , addRenderer: function (name, renderer) {
                     if (Util.isEmpty(renderer)) {
                         this.removeRenderer(name);
                         return;
@@ -974,16 +974,16 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     }
                 }
 
-                , removeRenderer: function(name) {
+                , removeRenderer: function (name) {
                     var i = this._findRendererIdx(name);
                     this._removeRendererByIdx(i);
                 }
-                , _removeRendererByIdx: function(i) {
+                , _removeRendererByIdx: function (i) {
                     if (0 <= i) {
                         this._renderers.splice(i, 1);
                     }
                 }
-                , _findRendererIdx: function(name) {
+                , _findRendererIdx: function (name) {
                     for (var i = 0; i < this._renderers.length; i++) {
                         var item = this._renderers[i];
                         if (item.name == name) {
@@ -992,7 +992,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     }
                     return -1;
                 }
-                , findRenderer: function(name) {
+                , findRenderer: function (name) {
                     var renderer = null;
                     var find = _.find(this._renderers, {name: name});
                     if (find) {
@@ -1001,85 +1001,103 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     return renderer;
                 }
 
-                , getDefaultRenders: function() {
+                , getDefaultRenders: function () {
                     return [
-                        {name: "checkbox", renderer: function(element, node, columnDef, isReadOnly) {
+                        {
+                            name: "checkbox", renderer: function (element, node, columnDef, isReadOnly) {
                             ;
-                        }}
-                        , {name: "lock", renderer: function(element, node, columnDef, isReadOnly) {
-                            if (node.data.lock) {
-                                if (DocTree.userFullNames) {
-                                    var found = _.find(DocTree.userFullNames, {id: node.data.lock.creator});
-                                    var userFullName = Util.goodMapValue(found, "name");
-                                    var lockedTitle = $translate.instant("common.directive.docTree.lockedTitle") + userFullName;
-                                    var $span = $("<span class='ui-icon ui-icon-locked' title='" + lockedTitle + "'/>").appendTo($(element));
-                                    $span.hover(function () {
-                                        $(this).tooltip('show');
-                                    }, function () {
-                                        $(this).tooltip('hide');
-                                    });
-                                }
-                            }
-                            $(element).addClass("");
-                        }}
-                        , {name: "title", renderer: function(element, node, columnDef, isReadOnly) {
-                            ;
-                        }}
-                        , {name: "type", renderer: function(element, node, columnDef, isReadOnly) {
-                            var filter = $filter('capitalizeFirst');
-                            var typeColumn = (DocTree.getDocumentTypeDisplayLabel(node.data.type));
-                            var filteredType = filter(typeColumn);
-
-                            $(element).text(filteredType); // document type is mapped (afdp-1249)
-                        }}
-                        , {name: "created", renderer: function(element, node, columnDef, isReadOnly) {
-                            var versionDate = UtilDateService.getDatePart(node.data.created);
-                            $(element).text(versionDate);
-                        }}
-                        , {name: "modified", renderer: function(element, node, columnDef, isReadOnly) {
-                            var versionDate = UtilDateService.getDatePart(node.data.modified);
-                            $(element).text(versionDate);
-                        }}
-                        , {name: "author", renderer: function(element, node, columnDef, isReadOnly) {
-                            if (DocTree.userFullNames) {
-                                var versionUser = Util.goodValue(node.data.creator);
-                                var found = _.find(DocTree.userFullNames, {id: versionUser});
-                                $(element).text(Util.goodMapValue(found, "name"));
-                            }
-                        }}
-                        , {name: "version", renderer: function(element, node, columnDef, isReadOnly) {
-                            if (isReadOnly) {
-                                $(element).text(node.data.version);
-
-                            } else {
-                                var $td = $("<td/>");
-                                var $span = $("<span/>").appendTo($td);
-                                var $select = $("<select/>")
-                                    .addClass('docversion inline')
-                                    .appendTo($span);
-
-                                if (Util.isArray(node.data.versionList)) {
-                                    for (var v = 0; v < node.data.versionList.length; v++) {
-                                        var versionTag = node.data.versionList[v].versionTag;
-                                        var $option = $("<option/>")
-                                            .val(versionTag)
-                                            .text(versionTag)
-                                            .appendTo($select);
-
-                                        if (Util.goodValue(node.data.version) == versionTag) {
-                                            $option.attr("selected", true);
-
-                                            //versionDate = UtilDateService.getDatePart(node.data.versionList[v].created);
-                                            //versionUser = Util.goodValue(node.data.versionList[v].creator);
-                                        }
+                        }
+                        }
+                        , {
+                            name: "lock", renderer: function (element, node, columnDef, isReadOnly) {
+                                if (node.data.lock) {
+                                    if (DocTree.userFullNames) {
+                                        var found = _.find(DocTree.userFullNames, {id: node.data.lock.creator});
+                                        var userFullName = Util.goodMapValue(found, "name");
+                                        var lockedTitle = $translate.instant("common.directive.docTree.lockedTitle") + userFullName;
+                                        var $span = $("<span class='ui-icon ui-icon-locked' title='" + lockedTitle + "'/>").appendTo($(element));
+                                        $span.hover(function () {
+                                            $(this).tooltip('show');
+                                        }, function () {
+                                            $(this).tooltip('hide');
+                                        });
                                     }
                                 }
-                                $(element).replaceWith($td);
+                                $(element).addClass("");
                             }
-                        }}
-                        , {name: "status", renderer: function(element, node, columnDef, isReadOnly) {
-                            $(element).text(node.data.status);
-                        }}
+                        }
+                        , {
+                            name: "title", renderer: function (element, node, columnDef, isReadOnly) {
+                                ;
+                            }
+                        }
+                        , {
+                            name: "type", renderer: function (element, node, columnDef, isReadOnly) {
+                                var filter = $filter('capitalizeFirst');
+                                var typeColumn = (DocTree.getDocumentTypeDisplayLabel(node.data.type));
+                                var filteredType = filter(typeColumn);
+
+                                $(element).text(filteredType); // document type is mapped (afdp-1249)
+                            }
+                        }
+                        , {
+                            name: "created", renderer: function (element, node, columnDef, isReadOnly) {
+                                var versionDate = UtilDateService.getDatePart(node.data.created);
+                                $(element).text(versionDate);
+                            }
+                        }
+                        , {
+                            name: "modified", renderer: function (element, node, columnDef, isReadOnly) {
+                                var versionDate = UtilDateService.getDatePart(node.data.modified);
+                                $(element).text(versionDate);
+                            }
+                        }
+                        , {
+                            name: "author", renderer: function (element, node, columnDef, isReadOnly) {
+                                if (DocTree.userFullNames) {
+                                    var versionUser = Util.goodValue(node.data.creator);
+                                    var found = _.find(DocTree.userFullNames, {id: versionUser});
+                                    $(element).text(Util.goodMapValue(found, "name"));
+                                }
+                            }
+                        }
+                        , {
+                            name: "version", renderer: function (element, node, columnDef, isReadOnly) {
+                                if (isReadOnly) {
+                                    $(element).text(node.data.version);
+
+                                } else {
+                                    var $td = $("<td/>");
+                                    var $span = $("<span/>").appendTo($td);
+                                    var $select = $("<select/>")
+                                        .addClass('docversion inline')
+                                        .appendTo($span);
+
+                                    if (Util.isArray(node.data.versionList)) {
+                                        for (var v = 0; v < node.data.versionList.length; v++) {
+                                            var versionTag = node.data.versionList[v].versionTag;
+                                            var $option = $("<option/>")
+                                                .val(versionTag)
+                                                .text(versionTag)
+                                                .appendTo($select);
+
+                                            if (Util.goodValue(node.data.version) == versionTag) {
+                                                $option.attr("selected", true);
+
+                                                //versionDate = UtilDateService.getDatePart(node.data.versionList[v].created);
+                                                //versionUser = Util.goodValue(node.data.versionList[v].creator);
+                                            }
+                                        }
+                                    }
+                                    $(element).replaceWith($td);
+                                }
+                            }
+                        }
+                        , {
+                            name: "status", renderer: function (element, node, columnDef, isReadOnly) {
+                                $(element).text(node.data.status);
+                            }
+                        }
                     ];
                 }
             }
@@ -1087,14 +1105,14 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             , Command: {
                 _handlers: []
 
-                , getHandlers: function() {
+                , getHandlers: function () {
                     return this._handlers;
                 }
-                , setHandlers: function(handlers) {
+                , setHandlers: function (handlers) {
                     this._handlers = handlers;
                 }
 
-                , addHandler: function(handler) {
+                , addHandler: function (handler) {
                     var name = handler.name;
                     if (null === handler.execute) {
                         this.removeHandler(name);
@@ -1104,7 +1122,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     var find = _.find(this._handlers, {name: name});
                     if (find) {
                         find.prevHandler = _.clone(find);
-                        _.each(handler, function(value, key){
+                        _.each(handler, function (value, key) {
                             if (!Util.isEmpty(handler[key])) {
                                 find[key] = handler[key];
                             }
@@ -1115,16 +1133,16 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     }
                 }
 
-                , removeHandler: function(name) {
+                , removeHandler: function (name) {
                     var i = this._findHandlerIdx(name);
                     this._removeHandlerByIdx(i);
                 }
-                , _removeHandlerByIdx: function(i) {
+                , _removeHandlerByIdx: function (i) {
                     if (0 <= i) {
                         this._handlers.splice(i, 1);
                     }
                 }
-                , _findHandlerIdx: function(name) {
+                , _findHandlerIdx: function (name) {
                     for (var i = 0; i < this._handlers.length; i++) {
                         var handler = this._handlers[i];
                         if (handler.name == name) {
@@ -1133,11 +1151,11 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     }
                     return -1;
                 }
-                , findHandler: function(name) {
+                , findHandler: function (name) {
                     return _.find(this._handlers, {name: name});
                 }
 
-                , getDefaultHandlers: function() {
+                , getDefaultHandlers: function () {
                     return [
                         {
                             name: "moveUp",
@@ -1212,10 +1230,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         , {
                             name: "addSibling",
                             handler: {
-                            execute: function (nodes, args) {
-                                var node = nodes[0];
-                                node.editCreateNode("after", "");
-                            }
+                                execute: function (nodes, args) {
+                                    var node = nodes[0];
+                                    node.editCreateNode("after", "");
+                                }
                             }
                         }
                         , {
@@ -1395,24 +1413,26 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             execute: function (nodes, args) {
                                 var node = nodes[0];
                                 var fileId = node.data.objectId;
-                                LockingService.lockObject(fileId, ObjectService.ObjectTypes.FILE,
-                                    ObjectService.LockTypes.WORD_EDIT_LOCK, false).then(
-                                    function (lockedFile) {
-                                        var absUrl = $location.absUrl();
-                                        var baseHref = $browser.baseHref();
-                                        var appUrl = absUrl.substring(0, absUrl.indexOf(baseHref) + baseHref.length);
-                                        var rs = Util.goodMapValue(DocTree.treeConfig, 'wordFileExtensionRegex', '\\.(doc|docx)$');
-                                        var re = new RegExp(rs, "i");
-                                        var hasExt = node.data.name.match(re);
-                                        var fileExt = '';
-                                        if (hasExt && hasExt[0])
-                                            fileExt = hasExt[0];
+                                var promiseTicket = TicketService.getArkCaseTicket();
+                                promiseTicket.then(function (ticketData) {
+                                    var acmTicket = ticketData.data;
+                                    LockingService.lockObject(fileId, ObjectService.ObjectTypes.FILE,
+                                        ObjectService.LockTypes.WORD_EDIT_LOCK, false).then(function (lockedFile) {
+                                            var absUrl = $location.absUrl();
+                                            var baseHref = $browser.baseHref();
+                                            var appUrl = absUrl.substring(0, absUrl.indexOf(baseHref) + baseHref.length);
+                                            var rs = Util.goodMapValue(DocTree.treeConfig, 'wordFileExtensionRegex', '\\.(doc|docx)$');
+                                            var re = new RegExp(rs, "i");
+                                            var hasExt = node.data.name.match(re);
+                                            var fileExt = '';
+                                            if (hasExt && hasExt[0])
+                                                fileExt = hasExt[0];
 
-                                        ITHit.WebDAV.Client.DocManager.EditDocument(appUrl + "webdav/" + ObjectService.ObjectTypes.FILE + "/" + ObjectService.LockTypes.WORD_EDIT_LOCK + "/" +
-                                                node.parent.data.objectId + "/" + node.data.objectId + fileExt);
-                                        DocTree.refreshTree();
-                                    }
-                                );
+                                            ITHit.WebDAV.Client.DocManager.EditDocument(appUrl + "webdav/" + acmTicket + "/" + ObjectService.ObjectTypes.FILE + "/" + ObjectService.LockTypes.WORD_EDIT_LOCK + "/" +
+                                                node.data.objectId + fileExt);
+                                            DocTree.refreshTree();
+                                        })
+                                });
                             }
                         }
                         , {
@@ -1475,8 +1495,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 var names = [args.label];
                                 var template = args.templateType;
 
+                                var selectedFolderId = nodes[0].data.objectId;
                                 var promiseCorrespondence = ObjectCorrespondenceService.createCorrespondence(template,
-                                    DocTree.getObjType(), DocTree.getObjId(), DocTree.objectInfo.container.folder.cmisFolderId);
+                                    DocTree.getObjType(), DocTree.getObjId(), selectedFolderId);
 
                                 var promiseAddNodes = DocTree._addingFileNodes(nodes[0], names, names[0]);
 
@@ -1585,7 +1606,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 // Prevent command process if onPreCmd returns "false";
                 // continue when onPreCmd returns "true", "undefined" or anything else
                 //
-                , handleCommand: function(handler, nodes, args) {
+                , handleCommand: function (handler, nodes, args) {
                     var rcPre = true;
                     var rcExe = true;
 
@@ -1796,7 +1817,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             menuFileTypes.children = this.makeSubMenu(DocTree.fileTypes);
                         }
                         var menuCorrespondenceForms = _.find(menu, {cmd: "subMenuCorrespondenceForms"});
-                        if (menuCorrespondenceForms) {
+                        if (_.isEmpty(DocTree.correspondenceForms) && menuCorrespondenceForms) {
+                            menuCorrespondenceForms.invisible = true;
+                        } else if (menuCorrespondenceForms) {
                             menuCorrespondenceForms.children = this.makeSubMenu(DocTree.correspondenceForms);
                         }
                         //} else {
@@ -3360,7 +3383,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         }
                     }
 
-                    _.each(DocTree.CustomData.getItems(), function(item){
+                    _.each(DocTree.CustomData.getItems(), function (item) {
                         nodeData.data[item] = Util.goodValue(fileData[item]);
                     });
                 }
@@ -3854,22 +3877,22 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 });
 
                 modalInstance.result.then(function (data) {
-                    DocTree.replaceFileWithSelectedFile(node, data.files, function(nodes){
+                    DocTree.replaceFileWithSelectedFile(node, data.files, function (nodes) {
 
-                            var result = nodes[0].data;
-                            if (data.note.note != null && data.note.note.length > 0) {
-                                //we have text in note so we will save the note
-                                data.note.tag = result.version;
-                                ObjectNoteService.saveNote(data.note);
-                            }
-                            var fileId = result.objectId;
-                            LockingService.unlockObject(fileId, ObjectService.ObjectTypes.FILE,
-                                ObjectService.LockTypes.CHECKIN_LOCK).then(function () {
-                                DocTree.markNodeOk(node.parent);
-                                node.parent.renderTitle();
-                                DocTree.refreshTree();
-                            });
+                        var result = nodes[0].data;
+                        if (data.note.note != null && data.note.note.length > 0) {
+                            //we have text in note so we will save the note
+                            data.note.tag = result.version;
+                            ObjectNoteService.saveNote(data.note);
+                        }
+                        var fileId = result.objectId;
+                        LockingService.unlockObject(fileId, ObjectService.ObjectTypes.FILE,
+                            ObjectService.LockTypes.CHECKIN_LOCK).then(function () {
+                            DocTree.markNodeOk(node.parent);
+                            node.parent.renderTitle();
+                            DocTree.refreshTree();
                         });
+                    });
                 });
 
             }
@@ -4460,17 +4483,18 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 DocTree.setObjId(scope.objectId);
                 DocTree.treeConfig = {};
                 DocTree.objectInfo = null;
-                DocTree.doUploadForm = ("undefined" != typeof attrs.uploadForm) ? scope.uploadForm() : (function () {}); //if not defined, do nothing
+                DocTree.doUploadForm = ("undefined" != typeof attrs.uploadForm) ? scope.uploadForm() : (function () {
+                }); //if not defined, do nothing
                 DocTree.readOnly = ("true" === attrs.readOnly);
 
                 scope.treeControl = {
                     refreshTree: DocTree.refreshTree
                     , refreshNode: DocTree.refreshNode
                     , getSelectedNodes: DocTree.getSelectedNodes
-                    , addCommandHandler: function(args) {
+                    , addCommandHandler: function (args) {
                         DocTree.Command.addHandler(args);
                     }
-                    , addColumnRenderer: function(args) {
+                    , addColumnRenderer: function (args) {
                         DocTree.CustomData.addData(args.model);
                         DocTree.Column.addRenderer(args.name, args.renderer);
                     }
@@ -4548,7 +4572,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             .appendTo(jqTbody);
 
                         var jqTh, jqTd;
-                        _.each(columnDefs, function(columnDef) {
+                        _.each(columnDefs, function (columnDef) {
                             var name = columnDef.name;
                             var field = Util.goodValue(columnDef.field, name);
                             var cellTemplate = columnDef.cellTemplate;

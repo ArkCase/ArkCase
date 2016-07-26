@@ -1,121 +1,138 @@
 package com.armedia.acm.services.users.dao.ldap;
 
-import com.armedia.acm.services.users.model.AcmLdapEntity;
-import com.armedia.acm.services.users.model.LdapGroup;
-import com.armedia.acm.services.users.model.ldap.AcmLdapEntityContextMapper;
+import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
-import org.easymock.Capture;
+import com.armedia.acm.services.users.model.ldap.AcmUserGroupsContextMapper;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.ldap.control.PagedResultsCookie;
+import org.springframework.ldap.control.PagedResultsDirContextProcessor;
 import org.springframework.ldap.core.LdapTemplate;
 
+import javax.naming.directory.SearchControls;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.easymock.EasyMock.*;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
-import static org.hamcrest.core.IsNull.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 public class SpringLdapDaoTest extends EasyMockSupport
 {
+    // TODO: will rework
 
-    AcmLdapEntity mockEntity;
-    AcmLdapEntityContextMapper mockMapper;
-    AcmLdapSyncConfig mockAcmLdapSyncConfig;
-    LdapTemplate mockLdapTemplate;
-    LdapGroup mockLdapGroup;
-    SpringLdapDao springLdapDao;
+    private LdapTemplate mockLdapTemplate;
+    private AcmUserGroupsContextMapper mockUserGroupsContextMapper;
+    private SpringLdapDao.PagedResultsDirContextProcessorBuilder mockBuilder;
+    private PagedResultsDirContextProcessor mockPagedResultsDirContextProcessor;
+    private PagedResultsCookie mockPagedResultsCookie;
+
+    private AcmLdapSyncConfig syncConfig;
+
+    private SpringLdapDao unit;
 
 
     @Before
     public void setUp()
     {
-        mockEntity = createMock(AcmLdapEntity.class);
-        mockMapper = createMock(AcmLdapEntityContextMapper.class);
-        mockAcmLdapSyncConfig = createMock(AcmLdapSyncConfig.class);
         mockLdapTemplate = createMock(LdapTemplate.class);
-        mockLdapGroup = createMock(LdapGroup.class);
+        mockUserGroupsContextMapper = createMock(AcmUserGroupsContextMapper.class);
+        mockBuilder = createMock(SpringLdapDao.PagedResultsDirContextProcessorBuilder.class);
+        mockPagedResultsDirContextProcessor = createMock(PagedResultsDirContextProcessor.class);
+        mockPagedResultsCookie = createMock(PagedResultsCookie.class);
 
-        springLdapDao = new SpringLdapDao();
-        springLdapDao.setMapper(mockMapper);
+        unit = new SpringLdapDao();
+        unit.setUserGroupsContextMapper(mockUserGroupsContextMapper);
+        unit.setBuilder(mockBuilder);
+
+        syncConfig = new AcmLdapSyncConfig();
+        syncConfig.setUserIdAttributeName("samAccountName");
+        syncConfig.setMailAttributeName("mail");
+        syncConfig.setBaseDC("dc=dead,dc=net");
+        syncConfig.setAllUsersSearchBase("CN=bandMembers");
+        syncConfig.setAllUsersFilter("allUsersFilter");
+        syncConfig.setSyncPageSize(100);
     }
 
     @Test
-    public void findExistingGroupMembers()
+    public void findUsersPaged_userDomainAppendedIfPresent() throws Exception
     {
-        String[] memberDns = new String[]{"VALID NAME"};
+        // since we set this property, all the user ids should end with it
+        syncConfig.setUserDomain("dead.net");
 
-        testGroupMemberExpectations(memberDns);
+        mockUserGroupsContextMapper.setMailAttributeName(syncConfig.getMailAttributeName());
+        mockUserGroupsContextMapper.setUserIdAttributeName(syncConfig.getUserIdAttributeName());
 
-        expect(mockLdapTemplate.lookup(memberDns[0], mockMapper)).andReturn(mockEntity);
-        mockEntity.setDistinguishedName(memberDns[0]);
-        expectLastCall();
+        expect(mockBuilder.build(syncConfig.getSyncPageSize(), null)).andReturn(mockPagedResultsDirContextProcessor);
+        expect(mockPagedResultsDirContextProcessor.getCookie()).andReturn(mockPagedResultsCookie);
+        expect(mockPagedResultsCookie.getCookie()).andReturn(null);
+
+        ArrayList<AcmUser> acmUsers = new ArrayList<>();
+
+        AcmUser jgarcia = new AcmUser();
+        jgarcia.setUserId("jgarcia");
+        acmUsers.add(jgarcia);
+
+        expect(mockLdapTemplate.search(
+                eq(syncConfig.getAllUsersSearchBase()),
+                eq(syncConfig.getAllUsersFilter()),
+                anyObject(SearchControls.class),
+                eq(mockUserGroupsContextMapper),
+                anyObject(PagedResultsDirContextProcessor.class))).andReturn(acmUsers);
 
         replayAll();
 
-        List<AcmLdapEntity> actual = springLdapDao.findGroupMembers(mockLdapTemplate, mockAcmLdapSyncConfig, mockLdapGroup);
+        List<AcmUser> found = unit.findUsersPaged(mockLdapTemplate, syncConfig);
 
         verifyAll();
-        assertThat("List should not be null", actual, is(notNullValue()));
-        assertThat("List should have 0 or more elements", actual.size(), is(equalTo(1)));
+
+        assertEquals(acmUsers.size(), found.size());
+
+        for (AcmUser user : found)
+        {
+            assertTrue(user.getUserId().endsWith("@" + syncConfig.getUserDomain()));
+        }
 
     }
 
     @Test
-    public void findNotExistingGroupMembers()
+    public void findUsersPaged_userDomainNotAppendedIfAbsent() throws Exception
     {
-        String[] memberDns = new String[]{"Not existing"};
+        syncConfig.setUserDomain(null);
 
-        testGroupMemberExpectations(memberDns);
+        mockUserGroupsContextMapper.setMailAttributeName(syncConfig.getMailAttributeName());
+        mockUserGroupsContextMapper.setUserIdAttributeName(syncConfig.getUserIdAttributeName());
 
-        expect(mockLdapTemplate.lookup(memberDns[0], mockMapper)).andReturn(null);
+        expect(mockBuilder.build(syncConfig.getSyncPageSize(), null)).andReturn(mockPagedResultsDirContextProcessor);
+        expect(mockPagedResultsDirContextProcessor.getCookie()).andReturn(mockPagedResultsCookie);
+        expect(mockPagedResultsCookie.getCookie()).andReturn(null);
+
+        ArrayList<AcmUser> acmUsers = new ArrayList<>();
+
+        AcmUser jgarcia = new AcmUser();
+        jgarcia.setUserId("jgarcia");
+        acmUsers.add(jgarcia);
+
+        expect(mockLdapTemplate.search(
+                eq(syncConfig.getAllUsersSearchBase()),
+                eq(syncConfig.getAllUsersFilter()),
+                anyObject(SearchControls.class),
+                eq(mockUserGroupsContextMapper),
+                anyObject(PagedResultsDirContextProcessor.class))).andReturn(acmUsers);
 
         replayAll();
-        List<AcmLdapEntity> actual = springLdapDao.findGroupMembers(mockLdapTemplate, mockAcmLdapSyncConfig, mockLdapGroup);
+
+        List<AcmUser> found = unit.findUsersPaged(mockLdapTemplate, syncConfig);
 
         verifyAll();
-        assertThat("List should not be null", actual, is(notNullValue()));
-        assertThat("List should have 0 or more elements", actual.size(), is(equalTo(0)));
+
+        assertEquals(acmUsers.size(), found.size());
+
+        for (AcmUser user : found)
+        {
+            assertFalse(user.getUserId().endsWith("@" + syncConfig.getUserDomain()));
+        }
 
     }
 
-    @Test
-    public void findGroupMembersWithInvalidName()
-    {
-        String[] memberDns = new String[]{"NAME WITH FORWARD SLASH /"};
-
-        testGroupMemberExpectations(memberDns);
-
-        String escapedDn = memberDns[0].toString().replaceAll("\\/", "\\\\/");
-
-        Capture<String> dnCapture = newCapture();
-
-        expect(mockLdapTemplate.lookup(capture(dnCapture), eq(mockMapper))).andReturn(mockEntity);
-        mockEntity.setDistinguishedName(capture(dnCapture));
-        expectLastCall();
-
-        replayAll();
-        List<AcmLdapEntity> actual = springLdapDao.findGroupMembers(mockLdapTemplate, mockAcmLdapSyncConfig, mockLdapGroup);
-
-        verifyAll();
-        assertThat("List should not be null", actual, is(notNullValue()));
-        assertThat("List should have 0 or more elements", actual.size(), is(greaterThanOrEqualTo(0)));
-        assertThat("DN with '/' character should be escaped", dnCapture.getValue(), is(equalTo(escapedDn)));
-    }
-
-    void testGroupMemberExpectations(String[] memberDns)
-    {
-        expect(mockLdapGroup.getMemberDistinguishedNames()).andReturn(memberDns);
-        expect(mockAcmLdapSyncConfig.getUserIdAttributeName()).andReturn("userIdAttributeName");
-        expect(mockAcmLdapSyncConfig.getMailAttributeName()).andReturn("mailAttributeName");
-
-        mockMapper.setUserIdAttributeName("userIdAttributeName");
-        expectLastCall();
-
-        mockMapper.setMailAttributeName("mailAttributeName");
-        expectLastCall();
-    }
 }

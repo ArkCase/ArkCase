@@ -8,7 +8,6 @@ import org.openqa.selenium.support.PageFactory;
 
 import com.armedia.arkcase.uitests.base.ArkCaseAuthentication;
 import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
-import com.armedia.arkcase.uitests.base.TestsPoperties;
 
 public class CasePeopleTests extends ArkCaseTestBase {
 
@@ -21,8 +20,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		// contact
 		// methods
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -154,7 +152,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casesPom.contactMethodIcon.click();
 		Thread.sleep(4000);
 		casesPom.verifyFirstContactMethodsDeleted();
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -163,7 +161,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
 		casesPom.verifyCreatedCaseInfo("CaseTestMilanExtortion", "Extortion");
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertTrue(casesPom.caseTitleDraft.getText().equals("CaseTestMilanExtortion (IN APPROVAL)"));
 		casesPom.verifyCreatedCaseInfo("CaseTestMilanExtortion", "Extortion");
@@ -179,8 +177,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		// create case fraud verif/edit/delete people initiator organization
 		// table
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -295,7 +292,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casesPom.editOrganization.click();
 		Thread.sleep(3000);
 		casesPom.editOrganizationsTypeGovernment("Arkcase");
-		Thread.sleep(3000);
+		Thread.sleep(6000);
 		casesPom.verifyOrganizations("Government", "Arkcase", "samuel-acm");
 		driver.navigate().refresh();
 		Thread.sleep(8000);
@@ -314,7 +311,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casesPom.organizationIcon.click();
 		Thread.sleep(4000);
 		casesPom.verifyFirstOrganizationDeleted();
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -323,7 +320,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
 		casesPom.verifyCreatedCaseInfo("CaseTestMilanFraud", "Fraud");
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertTrue(casesPom.caseTitleDraft.getText().equals("CaseTestMilanFraud (IN APPROVAL)"));
 		casesPom.verifyCreatedCaseInfo("CaseTestMilanFraud", "Fraud");
@@ -338,8 +335,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		// create case investor complaint verify/edit/delete people initiator
 		// address
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -475,7 +471,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casesPom.addressIcon.click();
 		Thread.sleep(4000);
 		casesPom.verifyAddressDeleted();
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -484,7 +480,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
 		casesPom.verifyCreatedCaseInfo("CaseTestMilanInvestorComplaint", "Investor Complaint");
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertTrue(casesPom.caseTitleDraft.getText().equals("CaseTestMilanInvestorComplaint (IN APPROVAL)"));
 		casesPom.verifyCreatedCaseInfo("CaseTestMilanInvestorComplaint", "Investor Complaint");
@@ -499,8 +495,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		// create case investor complaint add/edit/delete people initiator
 		// aliases table
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -637,7 +632,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casesPom.aliasesIcon.click();
 		Thread.sleep(3000);
 		casesPom.verifyFirstAliasDeleted();
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -646,7 +641,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
 		casesPom.verifyCreatedCaseInfo("CaseTestMilanLocal", "Local");
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertTrue(casesPom.caseTitleDraft.getText().equals("CaseTestMilanLocal (IN APPROVAL)"));
 		casesPom.verifyCreatedCaseInfo("CaseTestMilanLocal", "Local");
@@ -658,8 +653,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 	@Test
 	public void createNewCasePayOff() throws InterruptedException, IOException {
 		// create case type payoff and verify/edit Complaintant section table
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -780,7 +774,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casesPom.priorityTypePeople();
 		Thread.sleep(3000);
 		casesPom.verifyPeopleType("Forensic Scientist", "milann", "jovanovskii");
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -789,7 +783,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
 		casesPom.verifyCreatedCaseInfo("CaseTestMilanPayoff", "Payoff");
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertTrue(casesPom.caseTitleDraft.getText().equals("CaseTestMilanPayoff (IN APPROVAL)"));
 		casesPom.verifyCreatedCaseInfo("CaseTestMilanPayoff", "Payoff");
@@ -803,8 +797,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 
 		// create case type Pollution and verify/edit/delete complaintant
 		// organization
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -936,7 +929,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casesPom.secondOrganizationIcon.click();
 		Thread.sleep(3000);
 		casesPom.verifySecondOrganizationIsDeleted();
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -945,7 +938,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
 		casesPom.verifyCreatedCaseInfo("CaseTestMilanPollution", "Pollution");
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertTrue(casesPom.caseTitleDraft.getText().equals("CaseTestMilanPollution (IN APPROVAL)"));
 		casesPom.verifyCreatedCaseInfo("CaseTestMilanPollution", "Pollution");
@@ -959,8 +952,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 
 		// create case type Pollution and verify/edit/delete complaintant type
 		// address
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1097,7 +1089,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casesPom.secondAddresessIcon.click();
 		Thread.sleep(4000);
 		casesPom.verifySecondAddressIsDeleted();
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -1106,7 +1098,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
 		casesPom.verifyCreatedCaseInfo("CaseTestMilanGovernment", "Government");
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertTrue(casesPom.caseTitleDraft.getText().equals("CaseTestMilanGovernment (IN APPROVAL)"));
 		casesPom.verifyCreatedCaseInfo("CaseTestMilanGovernment", "Government");
@@ -1120,8 +1112,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 	public void createNewCaseDomesticDispute() throws InterruptedException, IOException {
 
 		// create case type Domestic Dispute and add alias in complaintant
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1260,7 +1251,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casesPom.secondAliasesIcon.click();
 		Thread.sleep(3000);
 		casesPom.verifySecondAliasDeleted();
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -1269,7 +1260,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
 		casesPom.verifyCreatedCaseInfo("CaseTestMilanDomesticDispute", "Domestic Dispute");
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertTrue(casesPom.caseTitleDraft.getText().equals("CaseTestMilanDomesticDispute (IN APPROVAL)"));
 		casesPom.verifyCreatedCaseInfo("CaseTestMilanDomesticDispute", "Domestic Dispute");
@@ -1285,8 +1276,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		// contact
 		// methods
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1419,7 +1409,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casesPom.secondContactMethodIcon.click();
 		Thread.sleep(4000);
 		casesPom.verifySecondContactMethodIsDeleted();
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -1428,7 +1418,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
 		casesPom.verifyCreatedCaseInfo("CaseTestBetterBusinessDispute", "Better Business Dispute");
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertTrue(casesPom.caseTitleDraft.getText().equals("CaseTestBetterBusinessDispute (IN APPROVAL)"));
 		casesPom.verifyCreatedCaseInfo("CaseTestBetterBusinessDispute", "Better Business Dispute");
@@ -1442,8 +1432,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 	public void createNewCaseBackgroundInvestigationAddDeletePerson() throws InterruptedException, IOException {
 		// create case type Background Investigation add/delete person
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1474,6 +1463,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casePom.clickTitlePeopleMr();
 		Thread.sleep(2000);
 		casePom.insertFirstNamePeople("Milan");
+		Thread.sleep(2000);
 		casePom.insertLastNamePeople("Jovanovski");
 		Thread.sleep(2000);
 		casePom.typePeopleInfo.click();
@@ -1497,7 +1487,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casePom.submit.click();
 		Thread.sleep(8000);
 		driver.switchTo().defaultContent();
-		Thread.sleep(4000);
+		Thread.sleep(6000);
 		casesPom.verifyCreatedCaseInfo("CaseTestBackgroundInvestigation", "Background Investigation");
 		casesPom.VerifycreatedDate();
 		Assert.assertTrue(casesPom.caseTitleDraft.getText().equals("CaseTestBackgroundInvestigation (DRAFT)"));
@@ -1510,6 +1500,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casesPom.verifyPersonTypes();
 		casesPom.addPersonType("Milan", "Jovanovski");
 		Thread.sleep(3000);
+		casesPom.verifyIfPersonIsAdded();
 		casesPom.verifyAddedPerson("Forensic Scientist", "Milan", "Jovanovski");
 		driver.navigate().refresh();
 		Thread.sleep(10000);
@@ -1522,7 +1513,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		Thread.sleep(10000);
 		casesPom.casePeople.click();
 		casesPom.verifyIfAddedPersonIsDeleted();
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -1531,7 +1522,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
 		casesPom.verifyCreatedCaseInfo("CaseTestBackgroundInvestigation", "Background Investigation");
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertTrue(casesPom.caseTitleDraft.getText().equals("CaseTestBackgroundInvestigation (IN APPROVAL)"));
 		casesPom.verifyCreatedCaseInfo("CaseTestBackgroundInvestigation", "Background Investigation");
@@ -1545,8 +1536,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 	public void createNewCaseBackgroundInvestigationAddEditPerson() throws InterruptedException, IOException {
 		// create case type Background Investigation add/edit person
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1577,6 +1567,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casePom.clickTitlePeopleMr();
 		Thread.sleep(2000);
 		casePom.insertFirstNamePeople("Milan");
+		Thread.sleep(2000);
 		casePom.insertLastNamePeople("Jovanovski");
 		Thread.sleep(2000);
 		casePom.typePeopleInfo.click();
@@ -1613,6 +1604,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casesPom.verifyPersonTypes();
 		casesPom.addPersonType("Milan", "Jovanovski");
 		Thread.sleep(3000);
+		casesPom.verifyIfPersonIsAdded();
 		casesPom.verifyAddedPerson("Forensic Scientist", "Milan", "Jovanovski");
 		driver.navigate().refresh();
 		Thread.sleep(10000);
@@ -1627,7 +1619,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		Thread.sleep(10000);
 		casesPom.casePeople.click();
 		casesPom.verifyAddedPerson("Forensic Scientist", "milann", "jovanovskii");
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -1636,7 +1628,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
 		casesPom.verifyCreatedCaseInfo("CaseTestBackgroundInvestigation", "Background Investigation");
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertTrue(casesPom.caseTitleDraft.getText().equals("CaseTestBackgroundInvestigation (IN APPROVAL)"));
 		casesPom.verifyCreatedCaseInfo("CaseTestBackgroundInvestigation", "Background Investigation");
@@ -1652,8 +1644,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		// create case type Background Investigation add person, add contact
 		// methods
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1684,6 +1675,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casePom.clickTitlePeopleMr();
 		Thread.sleep(2000);
 		casePom.insertFirstNamePeople("Milan");
+		Thread.sleep(2000);
 		casePom.insertLastNamePeople("Jovanovski");
 		Thread.sleep(2000);
 		casePom.typePeopleInfo.click();
@@ -1720,6 +1712,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casesPom.verifyPersonTypes();
 		casesPom.addPersonType("Milan", "Jovanovski");
 		Thread.sleep(3000);
+		casesPom.verifyIfPersonIsAdded();
 		casesPom.verifyAddedPerson("Forensic Scientist", "Milan", "Jovanovski");
 		casesPom.thirdContactMethodsIcon.click();
 		Thread.sleep(3000);
@@ -1738,7 +1731,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casesPom.thirdContactMethodsIcon.click();
 		Thread.sleep(4000);
 		casesPom.verifyThirdContactMethodIsDeleted();
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -1747,7 +1740,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
 		casesPom.verifyCreatedCaseInfo("CaseTestBackgroundInvestigation", "Background Investigation");
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertTrue(casesPom.caseTitleDraft.getText().equals("CaseTestBackgroundInvestigation (IN APPROVAL)"));
 		casesPom.verifyCreatedCaseInfo("CaseTestBackgroundInvestigation", "Background Investigation");
@@ -1763,8 +1756,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		// create case type Background Investigation add person, add/delete
 		// organization
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1795,6 +1787,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casePom.clickTitlePeopleMr();
 		Thread.sleep(2000);
 		casePom.insertFirstNamePeople("Milan");
+		Thread.sleep(2000);
 		casePom.insertLastNamePeople("Jovanovski");
 		Thread.sleep(2000);
 		casePom.typePeopleInfo.click();
@@ -1831,6 +1824,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casesPom.verifyPersonTypes();
 		casesPom.addPersonType("Milan", "Jovanovski");
 		Thread.sleep(3000);
+		casesPom.verifyIfPersonIsAdded();
 		casesPom.verifyAddedPerson("Forensic Scientist", "Milan", "Jovanovski");
 		casesPom.thirdOrganizationsIcon.click();
 		Thread.sleep(3000);
@@ -1849,7 +1843,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casesPom.thirdOrganizationsIcon.click();
 		Thread.sleep(4000);
 		casesPom.verifyThirdAddedOrganizationIsDeleted();
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -1858,7 +1852,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
 		casesPom.verifyCreatedCaseInfo("CaseTestBackgroundInvestigation", "Background Investigation");
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertTrue(casesPom.caseTitleDraft.getText().equals("CaseTestBackgroundInvestigation (IN APPROVAL)"));
 		casesPom.verifyCreatedCaseInfo("CaseTestBackgroundInvestigation", "Background Investigation");
@@ -1874,8 +1868,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		// create case type Background Investigation add person, add/delete
 		// address
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1906,6 +1899,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casePom.clickTitlePeopleMr();
 		Thread.sleep(2000);
 		casePom.insertFirstNamePeople("Milan");
+		Thread.sleep(2000);
 		casePom.insertLastNamePeople("Jovanovski");
 		Thread.sleep(2000);
 		casePom.typePeopleInfo.click();
@@ -1940,6 +1934,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		casesPom.verifyAddPersonTitle();
 		casesPom.verifyPersonTypes();
+		casesPom.verifyIfPersonIsAdded();
 		casesPom.addPersonType("Milan", "Jovanovski");
 		Thread.sleep(3000);
 		casesPom.verifyAddedPerson("Forensic Scientist", "Milan", "Jovanovski");
@@ -1960,7 +1955,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casesPom.thirdAddressIcon.click();
 		Thread.sleep(4000);
 		casesPom.verifyThirdAddedAddressIsDeleted();
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -1969,7 +1964,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
 		casesPom.verifyCreatedCaseInfo("CaseTestBackgroundInvestigation", "Background Investigation");
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertTrue(casesPom.caseTitleDraft.getText().equals("CaseTestBackgroundInvestigation (IN APPROVAL)"));
 		casesPom.verifyCreatedCaseInfo("CaseTestBackgroundInvestigation", "Background Investigation");
@@ -1984,8 +1979,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		// create case type Background Investigation add person, add/delete
 		// alias
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -2052,6 +2046,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casesPom.verifyPersonTypes();
 		casesPom.addPersonType("Milan", "Jovanovski");
 		Thread.sleep(3000);
+		casesPom.verifyIfPersonIsAdded();
 		casesPom.verifyAddedPerson("Forensic Scientist", "Milan", "Jovanovski");
 		casesPom.thirdAliasesIcon.click();
 		Thread.sleep(8000);
@@ -2072,7 +2067,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casesPom.thirdAliasesIcon.click();
 		Thread.sleep(3000);
 		casesPom.verifyThirdAddedAliasesIsDeleted();
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -2081,7 +2076,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
 		casesPom.verifyCreatedCaseInfo("CaseTestBackgroundInvestigation", "Background Investigation");
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertTrue(casesPom.caseTitleDraft.getText().equals("CaseTestBackgroundInvestigation (IN APPROVAL)"));
 		casesPom.verifyCreatedCaseInfo("CaseTestBackgroundInvestigation", "Background Investigation");
@@ -2097,8 +2092,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		// create case type Background Investigation add person, check the type/
 		// filters
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -2166,7 +2160,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		Thread.sleep(4000);
 		casesPom.verifyPeopleSectionInitiator("Milan", "Jovanovski");
 		casesPom.verifyPeopleType("Complaintant", "Milan", "Jovanovski");
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -2174,7 +2168,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertTrue(casesPom.caseTitleDraft.getText().equals("CaseTestBackgroundInvestigation (IN APPROVAL)"));
 		casesPom.changeCaseStatusAproved();
@@ -2189,8 +2183,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		// create case type Background Investigation add person, check the first
 		// name filter
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -2258,7 +2251,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		Thread.sleep(4000);
 		casesPom.verifyPeopleSectionInitiator("Milan", "Jovanovski");
 		casesPom.verifyPeopleType("Complaintant", "Milan", "Jovanovski");
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -2266,7 +2259,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertTrue(casesPom.caseTitleDraft.getText().equals("CaseTestBackgroundInvestigation (IN APPROVAL)"));
 		casesPom.changeCaseStatusAproved();
@@ -2281,8 +2274,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		// create case type Background Investigation add person, check the first
 		// name filter
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -2350,7 +2342,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		Thread.sleep(4000);
 		casesPom.verifyPeopleSectionInitiator("Milan", "Jovanovski");
 		casesPom.verifyPeopleType("Complaintant", "Milan", "Jovanovski");
-		casesPom.peopleChangeCaseStatusButton.click();
+		casesPom.changeCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(casesPom.chnageCaseStausFrameOne);
 		Thread.sleep(2000);
@@ -2358,7 +2350,7 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casesPom.deleteCase();
 		driver.switchTo().defaultContent();
-		casesPom.refreshButtons.click();
+		casesPom.refreshPage.click();
 		Thread.sleep(3000);
 		Assert.assertTrue(casesPom.caseTitleDraft.getText().equals("CaseTestBackgroundInvestigation (IN APPROVAL)"));
 		casesPom.changeCaseStatusAproved();
@@ -2366,30 +2358,5 @@ public class CasePeopleTests extends ArkCaseTestBase {
 		ArkCaseAuthentication.logOut(driver);
 
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
 }

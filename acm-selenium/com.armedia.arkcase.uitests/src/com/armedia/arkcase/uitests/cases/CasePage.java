@@ -8,6 +8,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 
+
 import com.armedia.arkcase.uitests.base.ArkCaseTestUtils;
 
 public class CasePage {
@@ -196,7 +197,7 @@ public class CasePage {
 	WebElement selectParticipantType;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[5]/div[3]/div[2]/table/tbody/tr/td[5]/div/div[1]/ul/li[2]/a")
 	WebElement selectParticipantOwner;
-	@FindBy(how=How.XPATH,using="/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[5]/div[3]/div[2]/table/tbody/tr/td[5]/div/div[1]/ul/li[3]/a")
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[5]/div[3]/div[2]/table/tbody/tr/td[5]/div/div[1]/ul/li[3]/a")
 	WebElement selectParticipantFollower;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[5]/div[3]/div[2]/table/tbody/tr/td[8]/div")
 	WebElement selectParticipant;
@@ -277,6 +278,10 @@ public class CasePage {
 	WebElement attachmentTab;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[1]/div[5]/span[4]/label")
 	public WebElement participantnsTab;
+    @FindBy(how = How.XPATH, using = "/html/body/header/div/nav/ul/li/div/div[1]/div")
+	WebElement caseButton;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[1]/nav/ul/li[2]/a")
+	WebElement caseModule;
 
 	public void newCase() throws InterruptedException {
 
@@ -286,7 +291,7 @@ public class CasePage {
 		Thread.sleep(2000);
 		Assert.assertEquals("Case name is wrong", "Case", newCaseButton.getText());
 		newCaseButton.click();
-
+		//caseButton.click();
 	}
 
 	public void vrifyGeneralInformationTabName() {
@@ -314,7 +319,8 @@ public class CasePage {
 	public void verifyCaseTypeTitle() {
 
 		Assert.assertTrue(caseTypeTitle.isDisplayed());
-		Assert.assertTrue(caseTypeTitle.getText().equals("Case Type"));
+		Assert.assertEquals("Case type title is wrong", "Case Type", caseTypeTitle.getText());
+
 	}
 
 	public void caseTypeInputClick() {
@@ -325,7 +331,7 @@ public class CasePage {
 	}
 
 	public void caseTypeEmbezzalmendClick() {
-		Assert.assertTrue(caseTypeEmbezzalmend.getText().equals("Embezzlement"));
+		Assert.assertEquals("Case type Embezzlement name is wrong", "Embezzlement", caseTypeEmbezzalmend.getText());
 		caseTypeEmbezzalmend.click();
 	}
 
@@ -345,6 +351,7 @@ public class CasePage {
 
 		Assert.assertTrue(caseTypeBackgroundInvestigation.getText().equals("Background Investigation"));
 		caseTypeBackgroundInvestigation.click();
+
 	}
 
 	public void caseTypeBetterBuisnessDispute() {
@@ -431,6 +438,7 @@ public class CasePage {
 
 		Assert.assertTrue(caseTypeLaborRacketeering.getText().equals("Labor Racketeering"));
 		caseTypeLaborRacketeering.click();
+
 	}
 
 	public void caseTypeLocal() {
@@ -946,8 +954,8 @@ public class CasePage {
 
 	}
 
-	public void selectParticipantFollower(){
+	public void selectParticipantFollower() {
 		selectParticipantFollower.click();
 	}
-	
+
 }

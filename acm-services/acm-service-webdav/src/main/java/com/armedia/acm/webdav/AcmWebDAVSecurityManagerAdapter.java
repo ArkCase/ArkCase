@@ -1,13 +1,18 @@
 package com.armedia.acm.webdav;
 
+import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
+
+import org.springframework.security.core.Authentication;
+
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
 import io.milton.http.Auth;
 import io.milton.http.Request;
 import io.milton.http.Request.Method;
 import io.milton.http.fs.NullSecurityManager;
 import io.milton.http.http11.auth.DigestResponse;
 import io.milton.resource.Resource;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity
@@ -16,6 +21,10 @@ public class AcmWebDAVSecurityManagerAdapter implements AcmWebDAVSecurityManager
 {
 
     private io.milton.http.SecurityManager wrapped = new NullSecurityManager();
+
+    private AuthenticationTokenService authenticationTokenService;
+
+    private ConcurrentMap<String, Authentication> acmTicketToAuthentication = new ConcurrentHashMap<String, Authentication>();
 
     @Override
     public Object authenticate(DigestResponse digestRequest)
@@ -48,12 +57,33 @@ public class AcmWebDAVSecurityManagerAdapter implements AcmWebDAVSecurityManager
     }
 
     @Override
-    public Authentication getSpringAuthentication()
+    public Authentication getAuthenticationForTicket(String acmTicket)
     {
-        // can't obtain authentication like this
-        // though, authentication is not used later, so is it necessary, or there is a security problem?
-        Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
-        return currentUser;
+        return acmTicketToAuthentication.get(acmTicket);
+    }
+
+    @Override
+    public Authentication addAuthenticationForTicket(String acmTicket)
+    {
+        Authentication authentication = getAuthenticationTokenService().getAuthenticationForToken(acmTicket);
+        acmTicketToAuthentication.put(acmTicket, authentication);
+        return authentication;
+    }
+
+    @Override
+    public void removeAuthenticationForTicket(String acmTicket)
+    {
+        acmTicketToAuthentication.remove(acmTicket);
+    }
+
+    public AuthenticationTokenService getAuthenticationTokenService()
+    {
+        return authenticationTokenService;
+    }
+
+    public void setAuthenticationTokenService(AuthenticationTokenService authenticationTokenService)
+    {
+        this.authenticationTokenService = authenticationTokenService;
     }
 
 }

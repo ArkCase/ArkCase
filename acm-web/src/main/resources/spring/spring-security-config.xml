@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans
-        xmlns="http://www.springframework.org/schema/security"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:beans="http://www.springframework.org/schema/beans"
-        xsi:schemaLocation="
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xmlns="http://www.springframework.org/schema/security"
+    xsi:schemaLocation="
+
            http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
            http://www.springframework.org/schema/security
@@ -58,5 +59,5 @@
                 security="none"
                 pattern="/samllogin"/>
     </beans:beans>
-    <!-- filter chains and other authentication related beans are loaded from acm/spring/spring-security-config-*.xml and acm/spring/spring-config-*-ldap-auth.xml configuration files -->
+        <!-- filter chains and other authentication related beans are loaded from acm/spring-security/spring-security-config-*.xml and acm/spring/spring-config-*-ldap-auth.xml configuration files -->
 </beans:beans>

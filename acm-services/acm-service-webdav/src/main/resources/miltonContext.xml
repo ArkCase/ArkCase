@@ -11,7 +11,9 @@
             <bean class="io.milton.cache.LocalCacheManager"/>
         </constructor-arg>
     </bean> -->
-    <bean id="security.manager" class="com.armedia.acm.webdav.AcmWebDAVSecurityManagerAdapter"/>
+    <bean id="security.manager" class="com.armedia.acm.webdav.AcmWebDAVSecurityManagerAdapter">
+        <property name="authenticationTokenService" ref="authenticationTokenService"/>
+    </bean>
 
     <bean id="wordExtensionPattern" class="java.util.regex.Pattern" factory-method="compile">
         <constructor-arg value="\.(doc|dot|docx|dotx|docm|dotm|docb)$"/>
@@ -19,7 +21,6 @@
 
     <bean id="resource.factory" class="com.armedia.acm.webdav.AcmFileSystemResourceFactory">
         <property name="fileDao" ref="ecmFileDao"/>
-        <property name="folderDao" ref="acmFolderDao"/>
         <property name="ecmFileTransaction" ref="ecmFileTransaction"/>
         <property name="muleContextManager" ref="muleContextManager"/>
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>

@@ -4,7 +4,7 @@ import java.io.File;
 
 import org.junit.Assert;
 
-public class CheckIfFileIsDownloaded {
+public class ArkCaseUtils {
 
 	public void checkIfFileIsDownloaded(String name) {
 		String downloadPath = System.getProperty("user.home") + "/.arkcase/seleniumTests/seleniumDownload";

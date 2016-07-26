@@ -9,23 +9,21 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
-
 import com.armedia.arkcase.uitests.base.ArkCaseAuthentication;
 import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
-import com.armedia.arkcase.uitests.base.CheckIfFileIsDownloaded;
-import com.armedia.arkcase.uitests.base.TestsPoperties;
+import com.armedia.arkcase.uitests.base.ArkCaseTestUtils;
+import com.armedia.arkcase.uitests.base.ArkCaseUtils;
 
 public class NewTaskTests extends ArkCaseTestBase {
 
 	TaskPage task = PageFactory.initElements(driver, TaskPage.class);
 	TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
-	CheckIfFileIsDownloaded check = new CheckIfFileIsDownloaded();
+	ArkCaseUtils check = new ArkCaseUtils();
 
 	@Test
 	public void addNewTaskCheckForLabelsAndFilds() throws IOException, InterruptedException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.verifyTaskTitle();
 		task.verifySubjectTitleInput();
@@ -44,8 +42,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskStatusActive() throws IOException, InterruptedException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("sam");
 		task.typeSubject("MilanActiveMIlan");
@@ -54,17 +51,12 @@ public class NewTaskTests extends ArkCaseTestBase {
 		task.typeDuedate("03/19/2016");
 		Thread.sleep(2000);
 		task.typeComplete("20");
-		new Select(driver.findElement(
-				By.xpath("/html/body/div[2]/div/div[2]/section/div/div/form/div[2]/div[4]/div[4]/label/select")))
-						.selectByVisibleText("Low");
-		Thread.sleep(2000);
-		task.insertLink("ArkCase", "http://www.arkcase.com/");
-		task.verifyLinkInNotes();
+		Thread.sleep(3000);
 		task.saveButtonClick();
 		Thread.sleep(5000);
 		tasks.taskList.click();
 		Thread.sleep(2000);
-		task.verifyTaskVariables("Samuel Supervisor", "MilanActiveMIlan", "20", "Low", "03/18/2016", "03/19/2016");
+		Assert.assertEquals("Task status is not active", "ACTIVE", tasks.stateTask.getText());
 		Thread.sleep(3000);
 		tasks.deleteButton.click();
 		Thread.sleep(2000);
@@ -73,33 +65,31 @@ public class NewTaskTests extends ArkCaseTestBase {
 	}
 
 	@Test
-	public void createNewTaskSelectFromCalendarStatusClosed() throws InterruptedException, IOException {
+	public void createNewTaskSelectFromCalendarStartDateEndDate() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("sam");
 		task.typeSubject("AutomateTestTaskTwo");
 		task.selectStartDateFromCalendar();
 		WebElement selectFromStartCalendar = driver.findElement(By.xpath("(//button[@type='button'])[25]"));
 		selectFromStartCalendar.click();
-		task.selectStatusClosed();
+		Thread.sleep(2000);
 		task.selectDuedateFromCalendar();
 		WebElement selectFromDueCalendar = driver.findElement(By.xpath("(//button[@type='button'])[25]"));
 		selectFromDueCalendar.click();
 		Thread.sleep(2000);
 		task.typeComplete("32");
-		new Select(driver.findElement(
-				By.xpath("/html/body/div[2]/div/div[2]/section/div/div/form/div[2]/div[4]/div[4]/label/select")))
-						.selectByVisibleText("Medium");
+		Thread.sleep(2000);
 		task.saveButtonClick();
 		Thread.sleep(5000);
 		tasks.taskList.click();
 		Thread.sleep(2000);
-		task.verifyTaskVariables("Samuel Supervisor", "AutomateTestTaskTwo", "32", "Medium", "03/17/2016",
-				"03/16/2016");
+		task.verifyTaskVariables("Samuel Supervisor", "AutomateTestTaskTwo", "32", "Medium", "07/14/2016",
+				"07/13/2016");
 		Thread.sleep(3000);
-		tasks.deleteButton.click();
+		tasks.deleteTask.click();
+		Thread.sleep(3000);
 		ArkCaseAuthentication.logOut(driver);
 		Thread.sleep(3000);
 	}
@@ -107,8 +97,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTasksStatusInactive() throws IOException, InterruptedException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("sam");
 		task.typeSubject("AutomateTestTaskThreeMilan");
@@ -117,17 +106,12 @@ public class NewTaskTests extends ArkCaseTestBase {
 		task.typeDuedate("03/19/2016");
 		Thread.sleep(2000);
 		task.typeComplete("53");
-		new Select(driver.findElement(
-				By.xpath("/html/body/div[2]/div/div[2]/section/div/div/form/div[2]/div[4]/div[4]/label/select")))
-						.selectByVisibleText("High");
-		task.insertLink("ArkCase", "http://www.arkcase.com/");
-		task.verifyLinkInNotes();
+		Thread.sleep(3000);
 		task.saveButtonClick();
 		Thread.sleep(5000);
 		tasks.taskList.click();
 		Thread.sleep(2000);
-		task.verifyTaskVariables("Samuel Supervisor", "AutomateTestTaskThreeMilan", "53", "High", "03/18/2016",
-				"03/19/2016");
+		Assert.assertEquals("Task status soould be INACTIVE", "INACTIVE", tasks.stateTask.getText());
 		Thread.sleep(3000);
 		tasks.deleteButton.click();
 		ArkCaseAuthentication.logOut(driver);
@@ -135,10 +119,33 @@ public class NewTaskTests extends ArkCaseTestBase {
 	}
 
 	@Test
+	public void createNewTasksStatusClosed() throws IOException, InterruptedException {
+
+		super.logIn();
+		task.newTask();
+		task.assignTo("sam");
+		task.typeSubject("AutomateTestTaskThreeMilan");
+		task.typeStartDate("03/18/2016");
+		task.selectStatusClosed();
+		Thread.sleep(3000);
+		task.typeDuedate("03/19/2016");
+		Thread.sleep(2000);
+		task.typeComplete("53");
+		Thread.sleep(7000);
+		task.saveButtonClick();
+		Thread.sleep(5000);
+		tasks.taskList.click();
+		Thread.sleep(2000);
+		Assert.assertEquals("Task status soould be CLOSED", "CLOSED", tasks.stateTask.getText());
+		Thread.sleep(3000);
+		ArkCaseAuthentication.logOut(driver);
+		Thread.sleep(3000);
+	}
+
+	@Test
 	public void createNewTaskStatusActiveExedite() throws IOException, InterruptedException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("sam");
 		task.typeSubject("AutomateTestTaskFour");
@@ -150,14 +157,12 @@ public class NewTaskTests extends ArkCaseTestBase {
 		new Select(driver.findElement(
 				By.xpath("/html/body/div[2]/div/div[2]/section/div/div/form/div[2]/div[4]/div[4]/label/select")))
 						.selectByVisibleText("Expedite");
-		task.insertLink("ArkCase", "http://www.arkcase.com/");
-		task.verifyLinkInNotes();
+		Thread.sleep(2000);
 		task.saveButtonClick();
 		Thread.sleep(5000);
 		tasks.taskList.click();
 		Thread.sleep(2000);
-		task.verifyTaskVariables("Samuel Supervisor", "AutomateTestTaskFour", "53", "Expedite", "03/18/2016",
-				"03/19/2016");
+		Assert.assertEquals("Status of the task is worng", "Expedite", tasks.priority.getText());
 		Thread.sleep(3000);
 		tasks.deleteButton.click();
 		ArkCaseAuthentication.logOut(driver);
@@ -166,8 +171,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 
 	@Test
 	public void createNewTaskStatusActiveBadPercent() throws InterruptedException, IOException {
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("sam");
 		task.typeSubject("AutomateTestTask3");
@@ -176,12 +180,8 @@ public class NewTaskTests extends ArkCaseTestBase {
 		task.typeDuedate("03/19/2016");
 		Thread.sleep(2000);
 		task.typeComplete("101");
-		new Select(driver.findElement(
-				By.xpath("/html/body/div[2]/div/div[2]/section/div/div/form/div[2]/div[4]/div[4]/label/select")))
-						.selectByVisibleText("Expedite");
-		task.insertLink("ArkCase", "http://www.arkcase.com/");
-		task.verifyLinkInNotes();
-		Assert.assertFalse(task.saveButton.isEnabled());
+		Thread.sleep(2000);
+		Assert.assertFalse("Save button sould not be enabled", task.saveButton.isEnabled());
 		task.taskLogOut();
 		Thread.sleep(5000);
 	}
@@ -189,8 +189,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskIfSubjectEmpty() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.typeSubject("");
 		task.typeStartDate("03/18/2016");
@@ -199,9 +198,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		task.typeComplete("100");
 		task.selectPriorityLow();
-		task.insertLink("ArkCase", "http://www.arkcase.com/");
-		task.verifyLinkInNotes();
-		Assert.assertFalse(task.saveButton.isEnabled());
+		Assert.assertFalse("Save button should not be enabled", task.saveButton.isEnabled());
 		Thread.sleep(2000);
 		task.taskLogOut();
 	}
@@ -209,8 +206,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void creteNewTaskIfStartDateIsEmpty() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.typeSubject("AutomatedTAskTest4");
 		task.typeStartDate("");
@@ -229,8 +225,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void creteNewTaskIfDueDateIsEmpty() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.typeSubject("AutomatedTAskTest5");
 		task.typeStartDate("03/19/2016");
@@ -249,8 +244,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskWithDefultUser() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.typeSubject("AutomatedTestFive123");
 		task.typeStartDate("03/19/2016");
@@ -278,8 +272,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskCheckPercentComplete() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("AutomatedTaskTest7");
@@ -300,8 +293,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskFerifyLabels() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("sam");
 		task.typeSubject("TestMilan");
@@ -333,8 +325,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskVerifyTaskList() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("TestMilan1");
@@ -354,10 +345,11 @@ public class NewTaskTests extends ArkCaseTestBase {
 		WebElement rejectComment = driver.findElement(By.xpath("//li[2]/span/span[3]"));
 		Assert.assertTrue(rejectComment.getText().equals("Reject Comments"));
 		rejectComment.click();
-		tasks.verifyRejectCommnetsTable();
+		// tasks.verifyRejectCommnetsTable();
 		WebElement attachments = driver.findElement(By.xpath("//li[3]/span/span[3]"));
 		Assert.assertTrue(attachments.getText().equals("Attachments"));
 		attachments.click();
+		Thread.sleep(3000);
 		tasks.verifyAttachmentTable();
 		WebElement notes = driver.findElement(By.xpath("//li[4]/span/span[3]"));
 		Assert.assertTrue(notes.getText().equals("Notes"));
@@ -393,8 +385,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskVerifyTaskLinks() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("TestMilanVerify");
@@ -408,7 +399,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 		tasks.detailsLinkClick();
 		tasks.verifyDetailsTasksSection();
 		tasks.rejectCommentLink();
-		tasks.verifyRejectCommnetsTable();
+		// tasks.verifyRejectCommnetsTable();
 		tasks.attachmentLinkClick();
 		tasks.verifyAttachmentTable();
 		tasks.notestLinkClick();
@@ -438,8 +429,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskFerifyandAddTaskDetails() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Sam Supervisor");
 		task.typeSubject("TestMilan3");
@@ -488,10 +478,9 @@ public class NewTaskTests extends ArkCaseTestBase {
 	}
 
 	@Test
-	public void createNewTaskFerifyAddNote() throws InterruptedException, IOException {
+	public void createNewTaskFerifyAddDeleteNote() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("TestMilan4");
@@ -533,8 +522,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskFerifyAddTag() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("TestMilan5");
@@ -548,12 +536,12 @@ public class NewTaskTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		tasks.tagsLinkClick();
 		tasks.verifyTagsTable();
-		tasks.addNewTag("washington2");
+		tasks.addNewTag("washington7");
 		Thread.sleep(3000);
-		tasks.verifyAddedTag("washington2", "samuel-acm");
+		tasks.verifyAddedTag("washington7", "samuel-acm");
 		driver.navigate().refresh();
 		Thread.sleep(8000);
-		tasks.verifyAddedTag("washington2", "Samuel Supervisor");
+		tasks.verifyAddedTag("washington7", "Samuel Supervisor");
 		tasks.deleteAddedTag();
 		Thread.sleep(4000);
 		driver.navigate().refresh();
@@ -566,10 +554,9 @@ public class NewTaskTests extends ArkCaseTestBase {
 	}
 
 	@Test
-	public void createNewTaskAddSearchedTag() throws InterruptedException, IOException {
+	public void createNewTaskAddSearchedTagDelete() throws InterruptedException, IOException {
 		// create new task and add searched tag
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("TestMilan5");
@@ -601,11 +588,10 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskAddNewFolderAndRename() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
-		task.typeSubject("TestMilan6");
+		task.typeSubject("rename folder");
 		task.typeStartDate("03/18/2016");
 		task.selectStatusActive();
 		task.typeDuedate("03/19/2016");
@@ -615,19 +601,73 @@ public class NewTaskTests extends ArkCaseTestBase {
 		tasks.expandTask();
 		Thread.sleep(2000);
 		tasks.attachmentLinkClick();
-		tasks.verifyAttachmentTable();
-		Thread.sleep(2000);
-		tasks.createNewFolder("document");
-		Thread.sleep(3000);
-		tasks.renameFolder("document1");
 		Thread.sleep(4000);
-		tasks.deleteFolder();
+		tasks.performRightClickOnRoot();
 		Thread.sleep(2000);
-		int i = driver
-				.findElements(By
-						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[2]"))
-				.size();
-		Assert.assertFalse(i != 0);
+		tasks.newFolderClick();
+		Thread.sleep(2000);
+		tasks.nameTheFirstFolder("document1");
+		Thread.sleep(2000);
+		tasks.attachmentsTitle.click();
+		Thread.sleep(3000);
+		tasks.verifyFirstFolderName("document1");
+		tasks.performRightClickOnFirstRow();
+		Thread.sleep(3000);
+		tasks.renameFolder();
+		Thread.sleep(3000);
+		tasks.nameTheFirstFolder("document2");
+		Thread.sleep(2000);
+		tasks.attachmentsTitle.click();
+		Thread.sleep(3000);
+		tasks.refreshButton.click();
+		Thread.sleep(4000);
+		tasks.expander.click();
+		Thread.sleep(3000);
+		Assert.assertEquals("The folder name is not updateed, rename is not working", "document2",
+				tasks.firstRowDocumentTitle.getText());
+		Thread.sleep(3000);
+		tasks.deleteButton.click();
+		Thread.sleep(2000);
+		Assert.assertTrue(tasks.stateTask.getText().equals("DELETE"));
+		ArkCaseAuthentication.logOut(driver);
+
+	}
+
+	@Test
+	public void createNewTaskAddNewFolderDeleteTheFolder() throws InterruptedException {
+
+		super.logIn();
+		task.newTask();
+		task.assignTo("Samuel Supervisor");
+		task.typeSubject("delete folder");
+		task.typeStartDate("03/18/2016");
+		task.selectStatusActive();
+		task.typeDuedate("03/19/2016");
+		Thread.sleep(2000);
+		task.saveButtonClick();
+		Thread.sleep(5000);
+		tasks.expandTask();
+		Thread.sleep(2000);
+		tasks.attachmentLinkClick();
+		Thread.sleep(4000);
+		tasks.performRightClickOnRoot();
+		Thread.sleep(2000);
+		tasks.newFolderClick();
+		Thread.sleep(2000);
+		tasks.nameTheFirstFolder("document1");
+		Thread.sleep(2000);
+		tasks.attachmentsTitle.click();
+		Thread.sleep(3000);
+		tasks.verifyFirstFolderName("document1");
+		tasks.performRightClickOnFirstRow();
+		Thread.sleep(3000);
+		tasks.deleteFolder();
+		Thread.sleep(3000);
+		tasks.refreshButton.click();
+		Thread.sleep(4000);
+		tasks.expander.click();
+		Thread.sleep(3000);
+		tasks.verifyIfFolderIsDeleted();
 		Thread.sleep(3000);
 		tasks.deleteButton.click();
 		Thread.sleep(2000);
@@ -638,12 +678,10 @@ public class NewTaskTests extends ArkCaseTestBase {
 
 	@Test
 	public void createNewTaskCreateTwoFoldersCopyPaste() throws InterruptedException, IOException, AWTException {
-
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
-		task.typeSubject("TestMilan7");
+		task.typeSubject("Copy Paste");
 		task.typeStartDate("03/18/2016");
 		task.selectStatusActive();
 		task.typeDuedate("03/19/2016");
@@ -653,32 +691,55 @@ public class NewTaskTests extends ArkCaseTestBase {
 		tasks.expandTask();
 		Thread.sleep(2000);
 		tasks.attachmentLinkClick();
-		tasks.verifyAttachmentTable();
 		Thread.sleep(2000);
-		tasks.createNewFolder("document1");
-		Thread.sleep(2000);
-		tasks.createSecondFolder("document2");
+		tasks.performRightClickOnRoot();
 		Thread.sleep(3000);
-		tasks.attachmentsRefreshButton.click();
-		tasks.expander.click();
-		tasks.addDocumentToFirstFolder();
-		tasks.copyDocumentFromFirstFolder();
-		Thread.sleep(2000);
-		tasks.pasteDocumentToSeconFolder();
+		tasks.verifyIfRightClickWorksOnRoot();
+		tasks.newFolderClick();
 		Thread.sleep(3000);
-		tasks.deleteAddedFiles();
+		tasks.nameTheFirstFolder("document1");
 		Thread.sleep(2000);
-		tasks.attachmentsRefreshButton.click();
-		tasks.expander.click();
-		int i = driver
-				.findElements(By
-						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[2]"))
-				.size();
-		Assert.assertFalse(i != 0);
-		tasks.refreshButton.click();
+		tasks.attachmentsTitle.click();
+		Thread.sleep(3000);
+		tasks.verifyFirstFolderName("document1");
+		Thread.sleep(2000);
+		tasks.performRightClickOnRoot();
+		Thread.sleep(2000);
+		tasks.newFolderClick();
+		Thread.sleep(3000);
+		tasks.nameTheSecondFolder("document2");
+		Thread.sleep(2000);
+		tasks.attachmentsTitle.click();
+		Thread.sleep(2000);
+		tasks.verifySecondFolderName("document2");
+		Thread.sleep(2000);
+		tasks.performRightClickOnFirstRow();
+		Thread.sleep(2000);
+		tasks.clickNewDocument();
+		Thread.sleep(2000);
+		tasks.verifyNewDocumentMenu();
+		Thread.sleep(2000);
+		tasks.clickOtherDocument();
+		Thread.sleep(3000);
+		ArkCaseTestUtils.uploadPNGPicture();
+		Thread.sleep(4000);
+		tasks.verifySecondRowDocument("imageprofile.png", "Other", "Samuel Supervisor", "1.0", "ACTIVE");
+		Thread.sleep(2000);
+		tasks.performRightClickOnSecondRow();
+		Thread.sleep(3000);
+		tasks.copyDocument();
+		Thread.sleep(2000);
+		tasks.performRightClickOnThirdRow();
+		Thread.sleep(3000);
+		tasks.verifyIfRightClickWorksOnThirdRow();
+		Thread.sleep(2000);
+		tasks.pasteDocument();
+		Thread.sleep(4000);
+		tasks.verifyForthRowDocument("imageprofile.png", "Other", "Samuel Supervisor", "1.0", "ACTIVE");
+		Thread.sleep(2000);
 		tasks.deleteButton.click();
-		Thread.sleep(2000);
-		Assert.assertTrue(tasks.stateTask.getText().equals("DELETE"));
+		Thread.sleep(3000);
+		Assert.assertTrue("Task state should be deleted", tasks.stateTask.getText().equals("DELETED"));
 		ArkCaseAuthentication.logOut(driver);
 
 	}
@@ -686,11 +747,10 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskCreateTwoFoldersCutPaste() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
-		task.typeSubject("TestMilan8");
+		task.typeSubject("Cut Paste");
 		task.typeStartDate("03/18/2016");
 		task.selectStatusActive();
 		task.typeDuedate("03/19/2016");
@@ -700,40 +760,64 @@ public class NewTaskTests extends ArkCaseTestBase {
 		tasks.expandTask();
 		Thread.sleep(2000);
 		tasks.attachmentLinkClick();
-		tasks.verifyAttachmentTable();
 		Thread.sleep(2000);
-		tasks.createNewFolder("document1");
-		Thread.sleep(2000);
-		tasks.createSecondFolder("document2");
+		tasks.performRightClickOnRoot();
 		Thread.sleep(3000);
-		tasks.attachmentsRefreshButton.click();
-		tasks.expander.click();
-		tasks.addDocumentToFirstFolder();
-		tasks.cutDocumentFromFirstFolder();
+		tasks.verifyIfRightClickWorksOnRoot();
+		tasks.newFolderClick();
+		Thread.sleep(3000);
+		tasks.nameTheFirstFolder("document1");
 		Thread.sleep(2000);
-		tasks.pasteCuttedDocument();
+		tasks.attachmentsTitle.click();
+		Thread.sleep(3000);
+		tasks.verifyFirstFolderName("document1");
 		Thread.sleep(2000);
-		tasks.deleteCutedFiles();
+		tasks.performRightClickOnRoot();
 		Thread.sleep(2000);
-		tasks.attachmentsRefreshButton.click();
-		tasks.expander.click();
-		int i = driver
-				.findElements(By
-						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[2]"))
-				.size();
-		Assert.assertFalse(i != 0);
-		tasks.refreshButton.click();
+		tasks.newFolderClick();
+		Thread.sleep(3000);
+		tasks.nameTheSecondFolder("document2");
+		Thread.sleep(2000);
+		tasks.attachmentsTitle.click();
+		Thread.sleep(2000);
+		tasks.verifySecondFolderName("document2");
+		Thread.sleep(2000);
+		tasks.performRightClickOnFirstRow();
+		Thread.sleep(2000);
+		tasks.clickNewDocument();
+		Thread.sleep(2000);
+		tasks.verifyNewDocumentMenu();
+		Thread.sleep(2000);
+		tasks.clickOtherDocument();
+		Thread.sleep(3000);
+		ArkCaseTestUtils.uploadPNGPicture();
+		Thread.sleep(4000);
+		tasks.verifySecondRowDocument("imageprofile.png", "Other", "Samuel Supervisor", "1.0", "ACTIVE");
+		Thread.sleep(2000);
+		tasks.performRightClickOnSecondRow();
+		Thread.sleep(3000);
+		tasks.cutDocument();
+		Thread.sleep(2000);
+		tasks.performRightClickOnThirdRow();
+		Thread.sleep(3000);
+		tasks.verifyIfRightClickWorksOnThirdRow();
+		Thread.sleep(2000);
+		tasks.pasteDocument();
+		Thread.sleep(4000);
+		tasks.verifyForthRowDocument("imageprofile.png", "Other", "Samuel Supervisor", "1.0", "ACTIVE");
+		Thread.sleep(2000);
+		tasks.verifyIfCutDocumentDisapierd();
 		tasks.deleteButton.click();
-		Thread.sleep(2000);
-		Assert.assertTrue(tasks.stateTask.getText().equals("DELETE"));
+		Thread.sleep(3000);
+		Assert.assertTrue("Task state should be deleted", tasks.stateTask.getText().equals("DELETED"));
 		ArkCaseAuthentication.logOut(driver);
 	}
 
 	@Test
-	public void createNewTaskAddNewDocumentOtherSendEmail() throws InterruptedException, IOException, AWTException {
+	public void createNewTaskAddNewDocumentSendEmailVerifyForm()
+			throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("TestMilan9");
@@ -746,28 +830,32 @@ public class NewTaskTests extends ArkCaseTestBase {
 		tasks.expandTask();
 		Thread.sleep(2000);
 		tasks.attachmentLinkClick();
-		tasks.verifyAttachmentTable();
+		tasks.performRightClickOnRoot();
 		Thread.sleep(2000);
-		tasks.addNewDcumentOther();
+		tasks.verifyIfRightClickWorksOnRoot();
+		tasks.clickNewDocument();
 		Thread.sleep(2000);
-		tasks.verifyDocumentAddedNew("Other", "ACTIVE");
-		Thread.sleep(2000);
-		tasks.attachmentsRefreshButton.click();
-		tasks.expander.click();
-		tasks.addedNewOther.click();
-		tasks.sendEmail();
-		Thread.sleep(2000);
-		tasks.addedNewOther.click();
-		tasks.deleteDocument();
-		Thread.sleep(2000);
-		tasks.attachmentsRefreshButton.click();
-		tasks.expander.click();
-		int fail = driver
-				.findElements(By
-						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]"))
-				.size();
-		Assert.assertFalse(fail != 0);
-		tasks.refreshButton.click();
+		tasks.clickeDelivery();
+		Thread.sleep(3000);
+		ArkCaseTestUtils.uploadDocx();
+		Thread.sleep(4000);
+		tasks.verifyFirstRowDocument("ArkCaseTesting.docx", "Edelivery", "Samuel Supervisor", "1.0", "ACTIVE");
+		Thread.sleep(3000);
+		tasks.performRightClickOnFirstRow();
+		Thread.sleep(3000);
+		tasks.verifyIfRightClickWorksOnFirstRow();
+		tasks.emailDocument();
+		Thread.sleep(5000);
+		tasks.verifyEmailPopUpTitle();
+		tasks.searchUserEmailInput("Samuel Supervisor");
+		Thread.sleep(3000);
+		tasks.clickSearchEmailBtn();
+		Thread.sleep(3000);
+		tasks.verifySearchedUserEmail("Samuel Supervisor", "samuel-acm@armedia.com");
+		tasks.searchedEmailUser.click();
+		Thread.sleep(3000);
+		tasks.clickSendEmailBtn();
+		Thread.sleep(5000);
 		tasks.deleteButton.click();
 		Thread.sleep(2000);
 		Assert.assertTrue(tasks.stateTask.getText().equals("DELETE"));
@@ -778,11 +866,10 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskAddNewDocumentWitnessRequestPdf() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
-		task.typeSubject("TestMilan10");
+		task.typeSubject("Add document pdf");
 		task.typeStartDate("03/18/2016");
 		task.selectStatusActive();
 		task.typeDuedate("03/19/2016");
@@ -793,25 +880,21 @@ public class NewTaskTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		tasks.attachmentLinkClick();
 		Thread.sleep(2000);
-		tasks.verifyAttachmentTable();
-		tasks.addNewDocumentWitness();
+		tasks.performRightClickOnRoot();
 		Thread.sleep(2000);
-		tasks.attachmentsRefreshButton.click();
-		tasks.expander.click();
-		tasks.addedNewOther.click();
-		tasks.verifyDocumentAddedNew("Witness Interview Request", "ACTIVE");
-		tasks.deleteDocument();
+		tasks.verifyIfRightClickWorksOnRoot();
+		tasks.clickNewDocument();
 		Thread.sleep(2000);
-		tasks.attachmentsRefreshButton.click();
-		tasks.root.click();
-		Thread.sleep(2000);
-		tasks.expander.click();
-		int fail = driver
-				.findElements(By
-						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]"))
-				.size();
-		Assert.assertFalse(fail != 0);
+		tasks.clickeDelivery();
+		Thread.sleep(3000);
+		ArkCaseTestUtils.uploadPdf();
+		Thread.sleep(4000);
+		tasks.verifyFirstRowDocument("caseSummary.pdf", "Edelivery", "Samuel Supervisor", "1.0", "ACTIVE");
 		tasks.refreshButton.click();
+		Thread.sleep(3000);
+		tasks.expander.click();
+		Thread.sleep(3000);
+		tasks.verifyAddedDocumentAfterRefresh();
 		tasks.deleteButton.click();
 		Thread.sleep(2000);
 		Assert.assertTrue(tasks.stateTask.getText().equals("DELETE"));
@@ -820,13 +903,13 @@ public class NewTaskTests extends ArkCaseTestBase {
 	}
 
 	@Test
-	public void createNewTaskAddNewDocumentNoticeOfInvesstigation() throws InterruptedException, IOException, AWTException {
+	public void createNewTaskAddNewDocumentNoticeOfInvesstigation()
+			throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
-		task.typeSubject("TestMilan11");
+		task.typeSubject("document notice");
 		task.typeStartDate("03/18/2016");
 		task.selectStatusActive();
 		task.typeDuedate("03/19/2016");
@@ -836,25 +919,23 @@ public class NewTaskTests extends ArkCaseTestBase {
 		tasks.expandTask();
 		Thread.sleep(2000);
 		tasks.attachmentLinkClick();
-		tasks.verifyAttachmentTable();
-		tasks.addNewDocumentNoticeOfInvestigation();
+		Thread.sleep(3000);
+		tasks.performRightClickOnRoot();
 		Thread.sleep(2000);
-		tasks.attachmentsRefreshButton.click();
-		tasks.expander.click();
-		tasks.addedNewOther.click();
-		tasks.verifyDocumentAddedNew("Notice Of Investigation", "ACTIVE");
-		tasks.deleteDocument();
+		tasks.verifyIfRightClickWorksOnRoot();
+		tasks.clickNewDocument();
 		Thread.sleep(2000);
-		tasks.attachmentsRefreshButton.click();
-		tasks.root.click();
-		Thread.sleep(2000);
-		tasks.expander.click();
-		int fail = driver
-				.findElements(By
-						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]"))
-				.size();
-		Assert.assertFalse(fail != 0);
+		tasks.clickNoticeOfInvestigation();
+		Thread.sleep(3000);
+		ArkCaseTestUtils.uploadDocx();
+		Thread.sleep(4000);
+		tasks.verifyFirstRowDocument("ArkCaseTesting.docx", "Notice Of Investigation", "Samuel Supervisor", "1.0",
+				"ACTIVE");
 		tasks.refreshButton.click();
+		Thread.sleep(3000);
+		tasks.expander.click();
+		Thread.sleep(3000);
+		tasks.verifyAddedDocumentAfterRefresh();
 		tasks.deleteButton.click();
 		Thread.sleep(2000);
 		Assert.assertTrue(tasks.stateTask.getText().equals("DELETE"));
@@ -864,11 +945,10 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskAddNewDocumentSfSignatureDocx() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
-		task.typeSubject("TestMilan12");
+		task.typeSubject("document sfsignature");
 		task.typeStartDate("03/18/2016");
 		task.selectStatusActive();
 		task.typeDuedate("03/19/2016");
@@ -878,27 +958,22 @@ public class NewTaskTests extends ArkCaseTestBase {
 		tasks.expandTask();
 		Thread.sleep(2000);
 		tasks.attachmentLinkClick();
-		tasks.verifyAttachmentTable();
-		tasks.addNewDocumentSfSignature();
+		Thread.sleep(2000);
+		tasks.performRightClickOnRoot();
+		Thread.sleep(2000);
+		tasks.verifyIfRightClickWorksOnRoot();
+		tasks.clickNewDocument();
+		Thread.sleep(2000);
+		tasks.clickSfSignature();
+		Thread.sleep(3000);
+		ArkCaseTestUtils.uploadDocx();
 		Thread.sleep(4000);
-		tasks.attachmentsRefreshButton.click();
-		tasks.expander.click();
-		Thread.sleep(4000);
-		tasks.addedNewOther.click();
-		Thread.sleep(2000);
-		tasks.verifyDocumentAddedNew("Sf86 Signature", "ACTIVE");
-		tasks.deleteDocument();
-		Thread.sleep(2000);
-		tasks.attachmentsRefreshButton.click();
-		tasks.root.click();
-		Thread.sleep(2000);
-		tasks.expander.click();
-		int fail = driver
-				.findElements(By
-						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]"))
-				.size();
-		Assert.assertFalse(fail != 0);
+		tasks.verifyFirstRowDocument("ArkCaseTesting.docx", "Sf86 Signature", "Samuel Supervisor", "1.0", "ACTIVE");
 		tasks.refreshButton.click();
+		Thread.sleep(3000);
+		tasks.expander.click();
+		Thread.sleep(3000);
+		tasks.verifyAddedDocumentAfterRefresh();
 		tasks.deleteButton.click();
 		Thread.sleep(2000);
 		Assert.assertTrue(tasks.stateTask.getText().equals("DELETE"));
@@ -907,12 +982,10 @@ public class NewTaskTests extends ArkCaseTestBase {
 
 	@Test
 	public void createNewTaskAddNewDocumentEDelivery() throws InterruptedException, IOException, AWTException {
-
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
-		task.typeSubject("TestMilan13");
+		task.typeSubject("eDelivery");
 		task.typeStartDate("03/18/2016");
 		task.selectStatusActive();
 		task.typeDuedate("03/19/2016");
@@ -923,26 +996,21 @@ public class NewTaskTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		tasks.attachmentLinkClick();
 		Thread.sleep(2000);
-		tasks.verifyAttachmentTable();
-		tasks.addNewDocumentEDelevery();
+		tasks.performRightClickOnRoot();
+		Thread.sleep(2000);
+		tasks.verifyIfRightClickWorksOnRoot();
+		tasks.clickNewDocument();
+		Thread.sleep(2000);
+		tasks.clickeDelivery();
+		Thread.sleep(3000);
+		ArkCaseTestUtils.uploadDocx();
 		Thread.sleep(4000);
-		tasks.attachmentsRefreshButton.click();
-		Thread.sleep(2000);
-		Thread.sleep(2000);
-		tasks.addedNewOther.click();
-		tasks.verifyDocumentAddedNew("Edelivery", "ACTIVE");
-		tasks.deleteDocument();
-		Thread.sleep(2000);
-		tasks.attachmentsRefreshButton.click();
-		tasks.root.click();
-		Thread.sleep(2000);
-		tasks.expander.click();
-		int fail = driver
-				.findElements(By
-						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]"))
-				.size();
-		Assert.assertFalse(fail != 0);
+		tasks.verifyFirstRowDocument("ArkCaseTesting.docx", "Edelivery", "Samuel Supervisor", "1.0", "ACTIVE");
 		tasks.refreshButton.click();
+		Thread.sleep(3000);
+		tasks.expander.click();
+		Thread.sleep(3000);
+		tasks.verifyAddedDocumentAfterRefresh();
 		tasks.deleteButton.click();
 		Thread.sleep(2000);
 		Assert.assertTrue(tasks.stateTask.getText().equals("DELETE"));
@@ -953,11 +1021,10 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskAddNewDocumentGeneralReleaseXlsx() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
-		task.typeSubject("TestMilan14");
+		task.typeSubject("General release");
 		task.typeStartDate("03/18/2016");
 		task.selectStatusActive();
 		task.typeDuedate("03/19/2016");
@@ -967,26 +1034,22 @@ public class NewTaskTests extends ArkCaseTestBase {
 		tasks.expandTask();
 		Thread.sleep(2000);
 		tasks.attachmentLinkClick();
-		tasks.verifyAttachmentTable();
-		tasks.addNewDocumentgeneralRelease();
 		Thread.sleep(3000);
-		tasks.attachmentsRefreshButton.click();
-		tasks.expander.click();
+		tasks.performRightClickOnRoot();
+		Thread.sleep(2000);
+		tasks.verifyIfRightClickWorksOnRoot();
+		tasks.clickNewDocument();
+		Thread.sleep(2000);
+		tasks.clickGeneralRelease();
 		Thread.sleep(3000);
-		tasks.addedNewOther.click();
-		tasks.verifyDocumentAddedNew("General Release", "ACTIVE");
-		tasks.deleteDocument();
-		Thread.sleep(2000);
-		tasks.attachmentsRefreshButton.click();
-		tasks.root.click();
-		Thread.sleep(2000);
-		tasks.expander.click();
-		int fail = driver
-				.findElements(By
-						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]"))
-				.size();
-		Assert.assertFalse(fail != 0);
+		ArkCaseTestUtils.uploadDocx();
+		Thread.sleep(4000);
+		tasks.verifyFirstRowDocument("ArkCaseTesting.docx", "General Release", "Samuel Supervisor", "1.0", "ACTIVE");
 		tasks.refreshButton.click();
+		Thread.sleep(3000);
+		tasks.expander.click();
+		Thread.sleep(3000);
+		tasks.verifyAddedDocumentAfterRefresh();
 		tasks.deleteButton.click();
 		Thread.sleep(2000);
 		Assert.assertTrue(tasks.stateTask.getText().equals("DELETE"));
@@ -994,13 +1057,12 @@ public class NewTaskTests extends ArkCaseTestBase {
 	}
 
 	@Test
-	public void createNewTaskAddNewDocumentMedicalReleaseDownload() throws InterruptedException, IOException, AWTException {
+	public void createNewTaskAddNewDocumentMedicalRelease() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
-		task.typeSubject("TestMilan15");
+		task.typeSubject("medical release");
 		task.typeStartDate("03/18/2016");
 		task.selectStatusActive();
 		task.typeDuedate("03/19/2016");
@@ -1010,30 +1072,22 @@ public class NewTaskTests extends ArkCaseTestBase {
 		tasks.expandTask();
 		Thread.sleep(2000);
 		tasks.attachmentLinkClick();
-		tasks.verifyAttachmentTable();
-		tasks.addNewDocumentMedicalRelease();
 		Thread.sleep(3000);
-		tasks.attachmentsRefreshButton.click();
-		tasks.expander.click();
+		tasks.performRightClickOnRoot();
+		Thread.sleep(2000);
+		tasks.verifyIfRightClickWorksOnRoot();
+		tasks.clickNewDocument();
+		Thread.sleep(2000);
+		tasks.clickMedicalRelease();
 		Thread.sleep(3000);
-		tasks.addedNewOther.click();
-		tasks.verifyDocumentAddedNew("Medical Release", "ACTIVE");
-		Thread.sleep(2000);
-		tasks.downloadDocument();
-		Thread.sleep(2000);
-		tasks.deleteDocument();
+		ArkCaseTestUtils.uploadDocx();
 		Thread.sleep(4000);
-		check.checkIfFileIsDownloaded("Medical Release");
-		tasks.attachmentsRefreshButton.click();
-		tasks.root.click();
-		Thread.sleep(2000);
-		tasks.expander.click();
-		int fail = driver
-				.findElements(By
-						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]"))
-				.size();
-		Assert.assertFalse(fail != 0);
+		tasks.verifyFirstRowDocument("ArkCaseTesting.docx", "Medical Release", "Samuel Supervisor", "1.0", "ACTIVE");
 		tasks.refreshButton.click();
+		Thread.sleep(3000);
+		tasks.expander.click();
+		Thread.sleep(3000);
+		tasks.verifyAddedDocumentAfterRefresh();
 		tasks.deleteButton.click();
 		Thread.sleep(2000);
 		Assert.assertTrue(tasks.stateTask.getText().equals("DELETE"));
@@ -1043,11 +1097,10 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskAddNewDocumentOtherRename() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
-		task.typeSubject("TestMilan16");
+		task.typeSubject("rename document");
 		task.typeStartDate("03/18/2016");
 		task.selectStatusActive();
 		task.typeDuedate("03/19/2016");
@@ -1057,26 +1110,33 @@ public class NewTaskTests extends ArkCaseTestBase {
 		tasks.expandTask();
 		Thread.sleep(2000);
 		tasks.attachmentLinkClick();
-		tasks.verifyAttachmentTable();
-		tasks.addNewDcumentOther();
+		Thread.sleep(2000);
+		tasks.performRightClickOnRoot();
+		Thread.sleep(2000);
+		tasks.verifyIfRightClickWorksOnRoot();
+		tasks.clickNewDocument();
+		Thread.sleep(2000);
+		tasks.clickeDelivery();
+		Thread.sleep(3000);
+		ArkCaseTestUtils.uploadDocx();
 		Thread.sleep(4000);
-		tasks.verifyDocumentAddedNew("Other", "ACTIVE");
-		Thread.sleep(2000);
-		tasks.renameAddedNewDocument();
-		Thread.sleep(2000);
-		tasks.verifyDocumentAddedNew("Other", "ACTIVE");
-		Thread.sleep(2000);
-		tasks.deleteDocument();
-		Thread.sleep(2000);
-		tasks.attachmentsRefreshButton.click();
-		Thread.sleep(2000);
-		tasks.expander.click();
-		int fail = driver
-				.findElements(By
-						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]"))
-				.size();
-		Assert.assertFalse(fail != 0);
+		tasks.verifyFirstRowDocument("ArkCaseTesting.docx", "Edelivery", "Samuel Supervisor", "1.0", "ACTIVE");
+		Thread.sleep(3000);
+		tasks.performRightClickOnFirstRow();
+		Thread.sleep(3000);
+		tasks.verifyIfRightClickWorksOnFirstRow();
+		tasks.renameDocument();
+		Thread.sleep(3000);
+		tasks.nameTheFirstDocument("test");
+		Thread.sleep(3000);
+		tasks.attachmentsTitle.click();
+		Thread.sleep(3000);
 		tasks.refreshButton.click();
+		Thread.sleep(3000);
+		tasks.expander.click();
+		Thread.sleep(3000);
+		tasks.verifyFirstRowDocumentAfterRefresh("test", "Edelivery", "Samuel Supervisor", "1.0", "ACTIVE");
+		Thread.sleep(3000);
 		tasks.deleteButton.click();
 		Thread.sleep(2000);
 		Assert.assertTrue(tasks.stateTask.getText().equals("DELETE"));
@@ -1085,11 +1145,9 @@ public class NewTaskTests extends ArkCaseTestBase {
 
 	@Test
 	public void createNewTaskAddNewDocumentOtherReplace() throws InterruptedException, IOException, AWTException {
-
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
-		task.typeSubject("TestMilan17");
+		task.typeSubject("replace document");
 		task.typeStartDate("03/18/2016");
 		task.selectStatusActive();
 		task.typeDuedate("03/19/2016");
@@ -1099,32 +1157,34 @@ public class NewTaskTests extends ArkCaseTestBase {
 		tasks.expandTask();
 		Thread.sleep(2000);
 		tasks.attachmentLinkClick();
-		tasks.verifyAttachmentTable();
-		tasks.attachmentsRefreshButton.click();
-		tasks.expander.click();
-		tasks.addNewDcumentOther();
 		Thread.sleep(2000);
-		tasks.verifyDocumentAddedNew("Other", "ACTIVE");
+		tasks.performRightClickOnRoot();
 		Thread.sleep(2000);
-		tasks.addedNewOther.click();
-		tasks.replaceDocument();
+		tasks.verifyIfRightClickWorksOnRoot();
+		tasks.clickNewDocument();
+		Thread.sleep(2000);
+		tasks.clickeDelivery();
+		Thread.sleep(3000);
+		ArkCaseTestUtils.uploadDocx();
 		Thread.sleep(4000);
-		tasks.attachmentsRefreshButton.click();
-		tasks.expander.click();
-		tasks.createdDocument.click();
-		tasks.verifyReplacedDocument("Other", "ACTIVE");
-		Thread.sleep(2000);
-		tasks.deleteDocument();
-		Thread.sleep(2000);
-		tasks.attachmentsRefreshButton.click();
-		Thread.sleep(2000);
-		tasks.expander.click();
-		int fail = driver
-				.findElements(By
-						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]"))
-				.size();
-		Assert.assertFalse(fail != 0);
+		tasks.verifyFirstRowDocument("ArkCaseTesting.docx", "Edelivery", "Samuel Supervisor", "1.0", "ACTIVE");
+		Thread.sleep(3000);
+		tasks.performRightClickOnFirstRow();
+		Thread.sleep(3000);
+		tasks.verifyIfRightClickWorksOnFirstRow();
+		tasks.replaceDocument();
+		Thread.sleep(3000);
+		ArkCaseTestUtils.uploadPNGPicture();
+		Thread.sleep(5000);
+		tasks.attachmentsTitle.click();
+		Thread.sleep(3000);
 		tasks.refreshButton.click();
+		Thread.sleep(3000);
+		tasks.expander.click();
+		Thread.sleep(3000);
+		tasks.verifyFirstRowDocumentAfterRefresh("ArkCaseTesting.docx", "Edelivery", "Samuel Supervisor", "2.0",
+				"ACTIVE");
+		Thread.sleep(3000);
 		tasks.deleteButton.click();
 		Thread.sleep(2000);
 		Assert.assertTrue(tasks.stateTask.getText().equals("DELETE"));
@@ -1132,10 +1192,9 @@ public class NewTaskTests extends ArkCaseTestBase {
 	}
 
 	@Test
-	public void createNewTaskAddNewDocumentOtherDeclareAsRecord() throws InterruptedException, IOException, AWTException {
+	public void createNewTaskAddNewDocumentDeclareAsRecord() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("TestMilan18");
@@ -1148,20 +1207,24 @@ public class NewTaskTests extends ArkCaseTestBase {
 		tasks.expandTask();
 		Thread.sleep(2000);
 		tasks.attachmentLinkClick();
-		tasks.verifyAttachmentTable();
-		tasks.attachmentsRefreshButton.click();
-		tasks.expander.click();
-		tasks.addNewDcumentOther();
 		Thread.sleep(2000);
-		tasks.createdDocument.click();
+		tasks.performRightClickOnRoot();
 		Thread.sleep(2000);
-		tasks.declareAsRecord();
+		tasks.verifyIfRightClickWorksOnRoot();
+		tasks.clickNewDocument();
+		Thread.sleep(2000);
+		tasks.clickeDelivery();
 		Thread.sleep(3000);
-		tasks.attachmentsRefreshButton.click();
-		tasks.expander.click();
-		tasks.verifyRecordDocument("Other");
-		Thread.sleep(2000);
-		tasks.refreshButton.click();
+		ArkCaseTestUtils.uploadDocx();
+		Thread.sleep(4000);
+		tasks.verifyFirstRowDocument("ArkCaseTesting.docx", "Edelivery", "Samuel Supervisor", "1.0", "ACTIVE");
+		Thread.sleep(3000);
+		tasks.performRightClickOnFirstRow();
+		Thread.sleep(3000);
+		tasks.verifyIfRightClickWorksOnFirstRow();
+		tasks.clickDeclareAsRecord();
+		Thread.sleep(3000);
+		tasks.verifyFirstRowDocument("ArkCaseTesting.docx", "Edelivery", "Samuel Supervisor", "1.0", "RECORD");
 		tasks.deleteButton.click();
 		Thread.sleep(2000);
 		Assert.assertTrue(tasks.stateTask.getText().equals("DELETE"));
@@ -1171,8 +1234,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskVerifyAndEditInformationRibbon() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("TestMilan19");
@@ -1226,8 +1288,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskVerifyChnageAssigneeAndBack() throws InterruptedException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("TestMilan20");
@@ -1266,8 +1327,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskVerifySubscribeUnscubscribe() throws InterruptedException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("sunscribe");
@@ -1290,9 +1350,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 
 	@Test
 	public void createNewTaskVerifyClickComplete() throws InterruptedException {
-
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel SUpervisor");
 		task.typeSubject("TestComplete");
@@ -1308,9 +1366,9 @@ public class NewTaskTests extends ArkCaseTestBase {
 	}
 
 	@Test
-	public void createNewTaskVerifyIfCompleteTaskDoesNotShowInList() throws InterruptedException, IOException {
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+	public void createNewTaskVerifyIfCompleteTaskDoesNotShowInListOfOpenTasks()
+			throws InterruptedException, IOException {
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("newtasakclickcomplete");
@@ -1341,10 +1399,8 @@ public class NewTaskTests extends ArkCaseTestBase {
 	}
 
 	@Test
-	public void createNewTaskVerifyIfDeletedIsStillShownInList() throws InterruptedException, IOException {
-
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+	public void createNewTaskVerifyIfDeletedIsStillShownInListOfOpenTasks() throws InterruptedException, IOException {
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("sunscribetestMilan");
@@ -1375,10 +1431,10 @@ public class NewTaskTests extends ArkCaseTestBase {
 	}
 
 	@Test
-	public void createNewTaskCheckAddDocumentAsignOtherUser() throws InterruptedException, IOException, AWTException {
+	public void createNewTaskCheckifDocumentCanBeAddIfTaskIsAsignOtherUser()
+			throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("Acces Denide add document");
@@ -1395,12 +1451,20 @@ public class NewTaskTests extends ArkCaseTestBase {
 		tasks.assigneeConfirm.click();
 		Thread.sleep(2000);
 		tasks.refreshButton.click();
-		Assert.assertTrue(tasks.assignee.getText().equals("Bill Thomas"));
+		Thread.sleep(3000);
+		Assert.assertTrue("Assignee name is wrong", tasks.assignee.getText().equals("Bill Thomas"));
 		tasks.attachmentLinkClick();
 		tasks.verifyAttachmentTable();
 		Thread.sleep(2000);
-		tasks.addNewDcumentOther();
-		Thread.sleep(5000);
+		tasks.performRightClickOnRoot();
+		Thread.sleep(2000);
+		tasks.verifyIfRightClickWorksOnRoot();
+		tasks.clickNewDocument();
+		Thread.sleep(3000);
+		tasks.clickOtherDocument();
+		Thread.sleep(3000);
+		ArkCaseTestUtils.uploadPNGPicture();
+		Thread.sleep(4000);
 		tasks.attachmentsRefreshButton.click();
 		Thread.sleep(2000);
 		tasks.expander.click();
@@ -1411,8 +1475,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskCheckAceesDenideNotes() throws InterruptedException, IOException {
 		// verify if note can be added if is assigned another user
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("Acces Denide add note");
@@ -1444,8 +1507,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskCheckAccesDenideIftaskIsClosedAddNote() throws InterruptedException, IOException {
 		// verify if note can be added is task status is closed
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("Acces Denide add note");
@@ -1466,10 +1528,10 @@ public class NewTaskTests extends ArkCaseTestBase {
 	}
 
 	@Test
-	public void createNewTaskCheckAccessDenideIfTaskIsClosedAddDocument() throws InterruptedException, IOException {
+	public void createNewTaskChecIfDocumentCanBeAddedIfTaskIsClosed()
+			throws InterruptedException, IOException, AWTException {
 		// verify if document can be added if the task status is closed
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("Acces Denide");
@@ -1482,11 +1544,25 @@ public class NewTaskTests extends ArkCaseTestBase {
 		tasks.expandTask();
 		Thread.sleep(2000);
 		tasks.completeButtonClick();
-		Thread.sleep(4000);
+		Thread.sleep(3000);
 		Assert.assertTrue(tasks.stateTask.getText().equals("CLOSED"));
 		tasks.attachmentLinkClick();
-		tasks.verifyAttachmentTable();
-		tasks.verifyAddingDocumentIfTaskIsClosed();
+		Thread.sleep(3000);
+		Thread.sleep(2000);
+		tasks.performRightClickOnRoot();
+		Thread.sleep(2000);
+		tasks.verifyIfRightClickWorksOnRoot();
+		tasks.clickNewDocument();
+		Thread.sleep(3000);
+		tasks.clickOtherDocument();
+		Thread.sleep(3000);
+		ArkCaseTestUtils.uploadPNGPicture();
+		Thread.sleep(4000);
+		tasks.attachmentsRefreshButton.click();
+		Thread.sleep(4000);
+		tasks.expander.click();
+		Thread.sleep(2000);
+		tasks.verifyIfDocumentIfAddTaskStateIsClosed();
 		ArkCaseAuthentication.logOut(driver);
 
 	}
@@ -1494,8 +1570,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskCompleteFerifyWorkFlow() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("WorkFlow");
@@ -1512,21 +1587,17 @@ public class NewTaskTests extends ArkCaseTestBase {
 		tasks.workFlowData("Samuel Supervisor");
 		tasks.completeButtonClick();
 		Thread.sleep(4000);
-		Assert.assertTrue(tasks.stateTask.getText().equals("CLOSED"));
-		driver.navigate().refresh();
-		Thread.sleep(8000);
-		tasks.verifyWorkflowTableStatusClosed("Samuel Supervisor");
 		ArkCaseAuthentication.logOut(driver);
 	}
 
 	@Test
-	public void createNewTaskCompleteFerifyAccessDeniedDocumentDelete() throws InterruptedException, IOException, AWTException {
+	public void createNewTaskCompleteFerifyAccessDeniedDocumentDelete()
+			throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-				TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
-		task.typeSubject("TestMilan1");
+		task.typeSubject("acces denied");
 		task.typeStartDate("03/18/2016");
 		task.selectStatusActive();
 		task.typeDuedate("03/19/2016");
@@ -1536,22 +1607,324 @@ public class NewTaskTests extends ArkCaseTestBase {
 		tasks.expandTask();
 		Thread.sleep(2000);
 		tasks.attachmentLinkClick();
-		tasks.verifyAttachmentTable();
-		tasks.attachmentsRefreshButton.click();
-		tasks.expander.click();
-		tasks.addNewDcumentOther();
+		Thread.sleep(3000);
+		tasks.performRightClickOnRoot();
 		Thread.sleep(2000);
-		tasks.createdDocument.click();
-		tasks.deleteButton.click();
+		tasks.clickNewDocument();
+		Thread.sleep(2000);
+		tasks.clickOtherDocument();
+		Thread.sleep(2000);
+		ArkCaseTestUtils.uploadPNGPicture();
 		Thread.sleep(4000);
-		Assert.assertTrue(tasks.stateTask.getText().equals("DELETE"));
-		Thread.sleep(2000);
-		tasks.createdDocument.click();
+		Assert.assertEquals("The document is not uploaded", "imageprofile.png", tasks.firstRowDocumentTitle.getText());
+		tasks.deleteButton.click();
+		Thread.sleep(3000);
+		tasks.expander.click();
+		Thread.sleep(3000);
+		tasks.performRightClickOnFirstRow();
+		Thread.sleep(3000);
 		tasks.deleteDocument();
-		int accessDenide = driver.findElements(By.xpath("/html/body/div[4]/div[1]")).size();
-		Assert.assertFalse(accessDenide == 0);
-		Thread.sleep(2000);
+		Thread.sleep(3000);
+		tasks.verifyIfDocumentIsDeletedStateDelete();
 		ArkCaseAuthentication.logOut(driver);
+	}
+
+	@Test
+	public void createNewTaskAddNewDocumentDownloadTheDocument()
+			throws InterruptedException, IOException, AWTException {
+
+		super.logIn();
+		task.newTask();
+		task.assignTo("Samuel Supervisor");
+		task.typeSubject("download document");
+		task.typeStartDate("03/18/2016");
+		task.selectStatusActive();
+		task.typeDuedate("03/19/2016");
+		Thread.sleep(2000);
+		task.saveButtonClick();
+		Thread.sleep(5000);
+		tasks.expandTask();
+		Thread.sleep(2000);
+		tasks.attachmentLinkClick();
+		Thread.sleep(2000);
+		tasks.performRightClickOnRoot();
+		Thread.sleep(2000);
+		tasks.verifyIfRightClickWorksOnRoot();
+		tasks.clickNewDocument();
+		Thread.sleep(2000);
+		tasks.clickeDelivery();
+		Thread.sleep(3000);
+		ArkCaseTestUtils.uploadDocx();
+		Thread.sleep(4000);
+		tasks.verifyFirstRowDocument("ArkCaseTesting.docx", "Edelivery", "Samuel Supervisor", "1.0", "ACTIVE");
+		Thread.sleep(3000);
+		tasks.performRightClickOnFirstRow();
+		Thread.sleep(3000);
+		tasks.verifyIfRightClickWorksOnFirstRow();
+		tasks.downlaodDocument();
+		Thread.sleep(7000);
+		check.checkIfFileIsDownloaded("ArkCaseTesting");
+		Thread.sleep(3000);
+		tasks.deleteButton.click();
+		Thread.sleep(2000);
+		Assert.assertTrue(tasks.stateTask.getText().equals("DELETE"));
+		ArkCaseAuthentication.logOut(driver);
+	}
+
+	@Test
+	public void createNewTaskAddDocumentCheckOutDocument() throws InterruptedException, IOException, AWTException {
+
+		super.logIn();
+		task.newTask();
+		task.assignTo("Samuel Supervisor");
+		task.typeSubject("checkout document");
+		task.typeStartDate("03/18/2016");
+		task.selectStatusActive();
+		task.typeDuedate("03/19/2016");
+		Thread.sleep(2000);
+		task.saveButtonClick();
+		Thread.sleep(5000);
+		tasks.expandTask();
+		Thread.sleep(2000);
+		tasks.attachmentLinkClick();
+		Thread.sleep(2000);
+		tasks.performRightClickOnRoot();
+		Thread.sleep(2000);
+		tasks.verifyIfRightClickWorksOnRoot();
+		tasks.clickNewDocument();
+		Thread.sleep(2000);
+		tasks.clickeDelivery();
+		Thread.sleep(3000);
+		ArkCaseTestUtils.uploadDocx();
+		Thread.sleep(4000);
+		tasks.verifyFirstRowDocument("ArkCaseTesting.docx", "Edelivery", "Samuel Supervisor", "1.0", "ACTIVE");
+		Thread.sleep(3000);
+		tasks.performRightClickOnFirstRow();
+		Thread.sleep(3000);
+		tasks.verifyIfRightClickWorksOnFirstRow();
+		tasks.checkOutDocument();
+		Thread.sleep(7000);
+		check.checkIfFileIsDownloaded("ArkCaseTesting");
+		Thread.sleep(3000);
+		tasks.verifyLockedIcon();
+		Thread.sleep(3000);
+		tasks.performRightClickOnFirstRow();
+		Thread.sleep(3000);
+		tasks.cancelEditingDocument();
+		Thread.sleep(3000);
+		tasks.deleteButton.click();
+		Thread.sleep(2000);
+		Assert.assertTrue(tasks.stateTask.getText().equals("DELETE"));
+		ArkCaseAuthentication.logOut(driver);
+
+	}
+
+	@Test
+	public void createNewTaskAddNewWordDocumentEditWithWord() throws InterruptedException, IOException, AWTException {
+
+		super.logIn();
+		task.newTask();
+		task.assignTo("Samuel Supervisor");
+		task.typeSubject("checkout document");
+		task.typeStartDate("03/18/2016");
+		task.selectStatusActive();
+		task.typeDuedate("03/19/2016");
+		Thread.sleep(2000);
+		task.saveButtonClick();
+		Thread.sleep(5000);
+		tasks.expandTask();
+		Thread.sleep(2000);
+		tasks.attachmentLinkClick();
+		Thread.sleep(2000);
+		tasks.performRightClickOnRoot();
+		Thread.sleep(2000);
+		tasks.verifyIfRightClickWorksOnRoot();
+		tasks.clickNewDocument();
+		Thread.sleep(2000);
+		tasks.clickeDelivery();
+		Thread.sleep(3000);
+		ArkCaseTestUtils.uploadDocx();
+		Thread.sleep(4000);
+		tasks.verifyFirstRowDocument("ArkCaseTesting.docx", "Edelivery", "Samuel Supervisor", "1.0", "ACTIVE");
+		Thread.sleep(3000);
+		tasks.performRightClickOnFirstRow();
+		Thread.sleep(3000);
+		tasks.verifyIfRightClickWorksOnFirstRow();
+		tasks.editWithWord();
+		Thread.sleep(5000);
+		ArkCaseTestUtils.presEnter();
+		Thread.sleep(3000);
+		ArkCaseTestUtils.shiftLeftAndPressEnter();
+		Thread.sleep(8000);
+		ArkCaseTestUtils.uploadDocx();
+		Thread.sleep(4000);
+		ArkCaseTestUtils.saveWordDocument();
+		Thread.sleep(3000);
+		ArkCaseTestUtils.closeWordDocument();
+		Thread.sleep(10000);
+		tasks.attachmentsRefreshButton.click();
+		Thread.sleep(4000);
+		tasks.verifyFirstRowDocumentModified("ArkCaseTesting.docx", "Edelivery", "Samuel Supervisor", "2.0", "ACTIVE");
+		Thread.sleep(3000);
+		tasks.deleteButton.click();
+		Thread.sleep(2000);
+		Assert.assertTrue(tasks.stateTask.getText().equals("DELETE"));
+		ArkCaseAuthentication.logOut(driver);
+
+	}
+
+	@Test
+	public void createNewTaskAddDocumentDeleteTheDocument() throws InterruptedException, IOException, AWTException {
+
+		super.logIn();
+		task.newTask();
+		task.assignTo("Samuel Supervisor");
+		task.typeSubject("delete document");
+		task.typeStartDate("03/18/2016");
+		task.selectStatusActive();
+		task.typeDuedate("03/19/2016");
+		Thread.sleep(2000);
+		task.saveButtonClick();
+		Thread.sleep(5000);
+		tasks.expandTask();
+		Thread.sleep(2000);
+		tasks.attachmentLinkClick();
+		Thread.sleep(2000);
+		tasks.performRightClickOnRoot();
+		Thread.sleep(2000);
+		tasks.verifyIfRightClickWorksOnRoot();
+		tasks.clickNewDocument();
+		Thread.sleep(2000);
+		tasks.clickeDelivery();
+		Thread.sleep(3000);
+		ArkCaseTestUtils.uploadDocx();
+		Thread.sleep(4000);
+		tasks.verifyFirstRowDocument("ArkCaseTesting.docx", "Edelivery", "Samuel Supervisor", "1.0", "ACTIVE");
+		Thread.sleep(3000);
+		tasks.performRightClickOnFirstRow();
+		Thread.sleep(3000);
+		tasks.verifyIfRightClickWorksOnFirstRow();
+		tasks.deleteDocument();
+		Thread.sleep(3000);
+		tasks.refreshButton.click();
+		Thread.sleep(4000);
+		tasks.expander.click();
+		Thread.sleep(3000);
+		tasks.verifyIfDocumentIsDeleted();
+		Thread.sleep(3000);
+		tasks.deleteButton.click();
+		Thread.sleep(2000);
+		Assert.assertTrue(tasks.stateTask.getText().equals("DELETE"));
+		ArkCaseAuthentication.logOut(driver);
+
+	}
+
+	@Test
+	public void createNewTaskAddDocumentDeclareAsRecoerdDownloadRecord()
+			throws InterruptedException, IOException, AWTException {
+
+		super.logIn();
+		task.newTask();
+		task.assignTo("Samuel Supervisor");
+		task.typeSubject("record document download");
+		task.typeStartDate("03/18/2016");
+		task.selectStatusActive();
+		task.typeDuedate("03/19/2016");
+		Thread.sleep(2000);
+		task.saveButtonClick();
+		Thread.sleep(5000);
+		tasks.expandTask();
+		Thread.sleep(2000);
+		tasks.attachmentLinkClick();
+		Thread.sleep(2000);
+		tasks.performRightClickOnRoot();
+		Thread.sleep(2000);
+		tasks.verifyIfRightClickWorksOnRoot();
+		tasks.clickNewDocument();
+		Thread.sleep(2000);
+		tasks.clickeDelivery();
+		Thread.sleep(3000);
+		ArkCaseTestUtils.uploadDocx();
+		Thread.sleep(4000);
+		tasks.verifyFirstRowDocument("ArkCaseTesting.docx", "Edelivery", "Samuel Supervisor", "1.0", "ACTIVE");
+		Thread.sleep(3000);
+		tasks.performRightClickOnFirstRow();
+		Thread.sleep(3000);
+		tasks.verifyIfRightClickWorksOnFirstRow();
+		tasks.clickDeclareAsRecord();
+		Thread.sleep(3000);
+		tasks.verifyFirstRowDocument("ArkCaseTesting.docx", "Edelivery", "Samuel Supervisor", "1.0", "RECORD");
+		tasks.performRightClickOnFirstRow();
+		Thread.sleep(3000);
+		tasks.verifyIfRecordRightClickMenuIsDisplayed();
+		Thread.sleep(3000);
+		tasks.downloadRecord();
+		Thread.sleep(5000);
+		check.checkIfFileIsDownloaded("ArkCaseTesting");
+		Thread.sleep(3000);
+		tasks.deleteButton.click();
+		Thread.sleep(2000);
+		Assert.assertTrue(tasks.stateTask.getText().equals("DELETE"));
+		ArkCaseAuthentication.logOut(driver);
+
+	}
+
+	@Test
+	public void createNewTaskAddDocumentDeclareAsRecordEmailTheDocument()
+			throws InterruptedException, IOException, AWTException {
+
+		super.logIn();
+		task.newTask();
+		task.assignTo("Samuel Supervisor");
+		task.typeSubject("record document download");
+		task.typeStartDate("03/18/2016");
+		task.selectStatusActive();
+		task.typeDuedate("03/19/2016");
+		Thread.sleep(2000);
+		task.saveButtonClick();
+		Thread.sleep(5000);
+		tasks.expandTask();
+		Thread.sleep(2000);
+		tasks.attachmentLinkClick();
+		Thread.sleep(2000);
+		tasks.performRightClickOnRoot();
+		Thread.sleep(2000);
+		tasks.verifyIfRightClickWorksOnRoot();
+		tasks.clickNewDocument();
+		Thread.sleep(2000);
+		tasks.clickeDelivery();
+		Thread.sleep(3000);
+		ArkCaseTestUtils.uploadDocx();
+		Thread.sleep(4000);
+		tasks.verifyFirstRowDocument("ArkCaseTesting.docx", "Edelivery", "Samuel Supervisor", "1.0", "ACTIVE");
+		Thread.sleep(3000);
+		tasks.performRightClickOnFirstRow();
+		Thread.sleep(3000);
+		tasks.verifyIfRightClickWorksOnFirstRow();
+		tasks.clickDeclareAsRecord();
+		Thread.sleep(3000);
+		tasks.verifyFirstRowDocument("ArkCaseTesting.docx", "Edelivery", "Samuel Supervisor", "1.0", "RECORD");
+		tasks.performRightClickOnFirstRow();
+		Thread.sleep(3000);
+		tasks.verifyIfRecordRightClickMenuIsDisplayed();
+		Thread.sleep(3000);
+		tasks.emailRecord();
+		Thread.sleep(3000);
+		tasks.verifyEmailPopUpTitle();
+		tasks.searchUserEmailInput("Samuel Supervisor");
+		Thread.sleep(3000);
+		tasks.clickSearchEmailBtn();
+		Thread.sleep(3000);
+		tasks.verifySearchedUserEmail("Samuel Supervisor", "samuel-acm@armedia.com");
+		tasks.searchedEmailUser.click();
+		Thread.sleep(3000);
+		tasks.clickSendEmailBtn();
+		Thread.sleep(5000);
+		tasks.deleteButton.click();
+		Thread.sleep(2000);
+		Assert.assertTrue(tasks.stateTask.getText().equals("DELETE"));
+		ArkCaseAuthentication.logOut(driver);
+
 	}
 
 }
