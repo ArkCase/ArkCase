@@ -319,14 +319,15 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
                 {
                     var userNamePop = result[0];
 
-                    if (userNamePop == "userName")
-                    {
-                        for (var i = 0; i < that.scope.config.columnDefs.length; i++) {
-                            if (that.scope.config.columnDefs[i].hasOwnProperty('fullNameField')) {
-                                that.scope.gridOptions.columnDefs[i].cellTemplate = "<div>{{ row.entity." + that.scope.config.columnDefs[i].fullNameField + "}}</div>";
-                            }
-                        }
-                    }
+				if (userNamePop == "userName") {
+					for (var i = 0; i < that.scope.config.columnDefs.length; i++) {
+							if (that.scope.config.columnDefs[i].hasOwnProperty('fullNameField')) {
+								var tempColumn = angular.copy(that.scope.config.columnDefs[i]);
+								tempColumn.field = tempColumn.fullNameField;
+								that.scope.config.columnDefs.splice(i,1, tempColumn);
+							}
+						}
+					}
                 });
             }
 
