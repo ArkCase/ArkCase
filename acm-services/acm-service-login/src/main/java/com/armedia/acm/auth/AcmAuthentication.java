@@ -9,7 +9,7 @@ public class AcmAuthentication implements Authentication
 {
     private final Collection<AcmGrantedAuthority> authorities;
     private final Object credentials;
-    private final Object details;
+    private Object details;
     private final Object principal;
     private boolean authenticated;
     private final String name;
@@ -44,6 +44,11 @@ public class AcmAuthentication implements Authentication
     public Object getDetails()
     {
         return details;
+    }
+
+    public void setDetails(Object details)
+    {
+        this.details = details;
     }
 
     @Override
