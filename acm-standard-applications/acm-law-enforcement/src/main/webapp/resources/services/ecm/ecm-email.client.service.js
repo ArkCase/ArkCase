@@ -26,7 +26,7 @@ angular.module('services').factory('Ecm.EmailService', ['$resource', 'Acm.StoreS
              */
             _sendEmail: {
                 method: 'POST',
-                url: 'api/latest/plugin/outlook/email/withembeddedlinks'
+                url: 'api/latest/service/notification/email/withembeddedlinks'
             }
 
             /**
@@ -41,7 +41,7 @@ angular.module('services').factory('Ecm.EmailService', ['$resource', 'Acm.StoreS
              */
             , _sendEmailWithAttachments: {
                 method: 'POST',
-                url: 'api/latest/plugin/outlook/email/withattachments'
+                url: 'api/latest/service/notification/email/withattachments'
             }
         });
 

@@ -21,9 +21,14 @@
         <property name="notificationEventPublisher" ref="notificationEventPublisher"/>
     </bean>
 
-    <bean id="sendEmailNotification" class="com.armedia.acm.services.notification.web.api.EmailNotificationAPIController">
-        <property name="emailNotificationSender" ref="emailNotificationSender"/>
-        <property name="authenticationTokenService" ref="authenticationTokenService" />
+    <bean id="sendEmailWithAttachmentsAPIController"
+          class="com.armedia.acm.services.notification.web.api.SendEmailWithAttachmentsAPIController">
+        <property name="notificationSender" ref="notificationSender"/>
+    </bean>
+    
+    <bean id="sendEmailWithEmbeddedLinksAPIController"
+          class="com.armedia.acm.services.notification.web.api.SendEmailWithEmbeddedLinksAPIController">
+        <property name="notificationSender" ref="notificationSender"/>
     </bean>
 
     <bean id="notificationUiController" class="com.armedia.acm.services.notification.web.NotificationUiController">

@@ -6,6 +6,7 @@
     <bean id="saveCaseFileAPIController" class="com.armedia.acm.plugins.casefile.web.api.SaveCaseFileAPIController">
         <property name="saveCaseService" ref="saveCaseService"/>
         <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
+        <property name="userTrackerService" ref="userTrackerService"/>
     </bean>
 
     <bean id="findCaseByIdAPIController" class="com.armedia.acm.plugins.casefile.web.api.FindCaseByIdAPIController">
@@ -49,4 +50,11 @@
           class="com.armedia.acm.plugins.casefile.web.api.GetNumberOfActiveCaseFilesByQueueAPIController">
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
+    
+    <bean id="caseFileNextPossibleQueuesAPIController" class="com.armedia.acm.plugins.casefile.web.api.CaseFileNextPossibleQueuesAPIController">
+        <property name="queueService" ref="queueService"/>
+        <property name="businessRule" ref="caseFileNextPossibleQueuesBusinessRule"/>
+        <property name="caseFileDao" ref="caseFileDao"/>
+    </bean>
+    
 </beans>

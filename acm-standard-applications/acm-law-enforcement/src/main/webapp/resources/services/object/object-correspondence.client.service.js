@@ -50,7 +50,7 @@ angular.module('services').factory('Object.CorrespondenceService', ['$resource',
              * @param {String} params.template  Correspondence template
              * @param {String} params.parentType  Object type
              * @param {Number} params.parentId  Object ID
-             * @param {String} params.folderId  Target CMIS folder ID
+             * @param {String} params.folderId  Folder ID
              * @param {Object} data Empty object {}
              * @param {Function} onSuccess (Optional)Callback function of success query
              * @param {Function} onError (Optional) Callback function when fail
@@ -59,7 +59,7 @@ angular.module('services').factory('Object.CorrespondenceService', ['$resource',
              */
             , _createCorrespondence: {
                 method: 'POST',
-                url: 'api/latest/service/correspondence?templateName=:template&parentObjectType=:parentType&parentObjectId=:parentId&targetCmisFolderId=:folderId',
+                url: 'api/latest/service/correspondence?templateName=:template&parentObjectType=:parentType&parentObjectId=:parentId&folderId=:folderId',
                 cache: false
             }
 
@@ -129,7 +129,7 @@ angular.module('services').factory('Object.CorrespondenceService', ['$resource',
          * @param {String} params.template  Correspondence template
          * @param {String} params.parentType  Object type
          * @param {Number} params.parentId  Object ID
-         * @param {String} params.folderId  Target CMIS folder ID
+         * @param {String} params.folderId  Selected folder ID
          *
          * @returns {Object} Promise
          */

@@ -1,7 +1,7 @@
 package com.armedia.acm.plugins.profile.dao;
 
-import com.armedia.acm.plugins.profile.model.OutlookDTO;
-import com.armedia.acm.plugins.profile.service.UserOrgService;
+import com.armedia.acm.service.outlook.dao.OutlookPasswordDao;
+import com.armedia.acm.service.outlook.model.OutlookDTO;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,12 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-
 import java.util.List;
 
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -29,13 +27,22 @@ import static org.junit.Assert.assertNotNull;
         "/spring/spring-library-data-source.xml",
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-acm-encryption.xml",
-        "/spring/spring-library-property-file-manager.xml"
+        "/spring/spring-library-property-file-manager.xml",
+        "/spring/spring-library-ms-outlook-integration.xml",
+        "/spring/spring-library-ecm-file.xml",
+        "/spring/spring-library-mule-context-manager.xml",
+        "/spring/spring-library-search.xml",
+        "/spring/spring-library-authentication-token.xml",
+        "/spring/spring-library-user-service.xml",
+        "/spring/spring-library-data-access-control.xml",
+        "/spring/spring-library-particpants.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
-public class UserOrgDaoIT extends EasyMockSupport {
+public class UserOrgDaoIT extends EasyMockSupport
+{
 
     @Autowired
-    UserOrgDao userOrgDao;
+    OutlookPasswordDao outlookPasswordDao;
     private Authentication authentication;
 
     @PersistenceContext
@@ -46,7 +53,8 @@ public class UserOrgDaoIT extends EasyMockSupport {
     private String findFirstUserJpql = "SELECT o.user.userId FROM UserOrg o";
 
     @Before
-    public void setUp() {
+    public void setUp()
+    {
         authentication = createMock(Authentication.class);
 
         Query findFirstUserQuery = em.createQuery(findFirstUserJpql);
@@ -54,7 +62,7 @@ public class UserOrgDaoIT extends EasyMockSupport {
         findFirstUserQuery.setMaxResults(1);
 
         List<String> users = findFirstUserQuery.getResultList();
-        if ( users != null && !users.isEmpty())
+        if (users != null && !users.isEmpty())
         {
             userid = users.get(0);
         }
@@ -67,7 +75,7 @@ public class UserOrgDaoIT extends EasyMockSupport {
     {
         // if no userid, then there are no user profiles in the system, and we can't test the encryption.
         // we won't actually create a new user profile in this test.
-        if ( userid == null )
+        if (userid == null)
         {
             return;
         }
@@ -77,9 +85,9 @@ public class UserOrgDaoIT extends EasyMockSupport {
 
         OutlookDTO in = new OutlookDTO();
         in.setOutlookPassword("Armedia123");
-        userOrgDao.saveOutlookPassword(authentication, in);
+        outlookPasswordDao.saveOutlookPassword(authentication, in);
 
-        OutlookDTO outlookDTO = userOrgDao.retrieveOutlookPassword(authentication);
+        OutlookDTO outlookDTO = outlookPasswordDao.retrieveOutlookPassword(authentication);
         assertNotNull(outlookDTO);
         assertEquals("Armedia123", outlookDTO.getOutlookPassword());
 

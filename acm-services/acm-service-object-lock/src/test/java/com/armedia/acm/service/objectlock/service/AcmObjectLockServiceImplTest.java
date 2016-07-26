@@ -1,5 +1,10 @@
 package com.armedia.acm.service.objectlock.service;
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import com.armedia.acm.service.objectlock.dao.AcmObjectLockDao;
 import com.armedia.acm.service.objectlock.exception.AcmObjectLockException;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
@@ -7,6 +12,7 @@ import com.armedia.acm.service.objectlock.model.AcmObjectLockEvent;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
+
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
@@ -25,17 +31,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.nio.file.Files;
 
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 /**
  * Created by nebojsha on 25.08.2015.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/spring/spring-library-object-lock-test.xml",
-})
+@ContextConfiguration(locations = { "/spring/spring-library-object-lock-test.xml", })
 public class AcmObjectLockServiceImplTest extends EasyMockSupport
 {
 
@@ -78,7 +78,7 @@ public class AcmObjectLockServiceImplTest extends EasyMockSupport
 
         replayAll();
 
-        acmObjectLockService.createLock(objectId, objectType, lockType, authMock);
+        acmObjectLockService.createLock(objectId, objectType, lockType, true, authMock);
 
         verifyAll();
     }
@@ -95,11 +95,10 @@ public class AcmObjectLockServiceImplTest extends EasyMockSupport
 
         replayAll();
 
-        acmObjectLockService.createLock(objectId, objectType, lockType, authMock);
+        acmObjectLockService.createLock(objectId, objectType, lockType, true, authMock);
 
         verifyAll();
     }
-
 
     @Test
     public void testCreateNotExistingLock() throws Exception
@@ -124,11 +123,10 @@ public class AcmObjectLockServiceImplTest extends EasyMockSupport
 
         replayAll();
 
-        acmObjectLockService.createLock(objectId, objectType, lockType, authMock);
+        acmObjectLockService.createLock(objectId, objectType, lockType, true, authMock);
 
         verifyAll();
     }
-
 
     @Test
     public void testRemoveLock() throws Exception
@@ -150,7 +148,6 @@ public class AcmObjectLockServiceImplTest extends EasyMockSupport
 
         acmObjectLockService.removeLock(objectId, objectType, lockType, authMock);
 
-
         verifyAll();
     }
 
@@ -160,7 +157,9 @@ public class AcmObjectLockServiceImplTest extends EasyMockSupport
         Resource resourceFile = new ClassPathResource("/solrResponseCaseFile.json");
         String jsonContent = new String(Files.readAllBytes(resourceFile.getFile().toPath()));
 
-        expect(executeSolrQueryMock.getResultsByPredefinedQuery(authMock, SolrCore.ADVANCED_SEARCH, "{!join from=parent_ref_s to=id}object_type_s:OBJECT_LOCK  AND parent_type_s:CASE_FILE AND creator_lcs:auditUser", 0, 1, "")).andReturn(jsonContent);
+        expect(executeSolrQueryMock.getResultsByPredefinedQuery(authMock, SolrCore.ADVANCED_SEARCH,
+                "{!join from=parent_ref_s to=id}object_type_s:OBJECT_LOCK  AND parent_type_s:CASE_FILE AND creator_lcs:auditUser", 0, 1,
+                "")).andReturn(jsonContent);
         replayAll();
         String result = acmObjectLockService.getDocumentsWithLock("CASE_FILE", authMock, authMock.getName(), 0, 1, "", null);
 
@@ -178,7 +177,9 @@ public class AcmObjectLockServiceImplTest extends EasyMockSupport
 
         String filter = "fq=status_s:OPEN";
 
-        expect(executeSolrQueryMock.getResultsByPredefinedQuery(authMock, SolrCore.ADVANCED_SEARCH, "{!join from=parent_ref_s to=id}object_type_s:OBJECT_LOCK  AND parent_type_s:CASE_FILE AND creator_lcs:auditUser", 0, 1, "", "fq=status_s:OPEN")).andReturn(jsonContent);
+        expect(executeSolrQueryMock.getResultsByPredefinedQuery(authMock, SolrCore.ADVANCED_SEARCH,
+                "{!join from=parent_ref_s to=id}object_type_s:OBJECT_LOCK  AND parent_type_s:CASE_FILE AND creator_lcs:auditUser", 0, 1, "",
+                "fq=status_s:OPEN")).andReturn(jsonContent);
         replayAll();
         String result = acmObjectLockService.getDocumentsWithLock("CASE_FILE", authMock, authMock.getName(), 0, 1, "", filter);
 
@@ -194,7 +195,9 @@ public class AcmObjectLockServiceImplTest extends EasyMockSupport
         Resource resourceFile = new ClassPathResource("/solrResponseCaseFile.json");
         String jsonContent = new String(Files.readAllBytes(resourceFile.getFile().toPath()));
 
-        expect(executeSolrQueryMock.getResultsByPredefinedQuery(authMock, SolrCore.ADVANCED_SEARCH, "-({!join from=parent_ref_s to=id}object_type_s:OBJECT_LOCK) AND object_type_s:CASE_FILE", 0, 1, "")).andReturn(jsonContent);
+        expect(executeSolrQueryMock.getResultsByPredefinedQuery(authMock, SolrCore.ADVANCED_SEARCH,
+                "-({!join from=parent_ref_s to=id}object_type_s:OBJECT_LOCK) AND object_type_s:CASE_FILE", 0, 1, ""))
+                        .andReturn(jsonContent);
         replayAll();
         String result = acmObjectLockService.getDocumentsWithoutLock("CASE_FILE", authMock, 0, 1, "", null);
 
@@ -212,7 +215,9 @@ public class AcmObjectLockServiceImplTest extends EasyMockSupport
 
         String filter = "fq=status_s:OPEN";
 
-        expect(executeSolrQueryMock.getResultsByPredefinedQuery(authMock, SolrCore.ADVANCED_SEARCH, "-({!join from=parent_ref_s to=id}object_type_s:OBJECT_LOCK) AND object_type_s:CASE_FILE", 0, 1, "", "fq=status_s:OPEN")).andReturn(jsonContent);
+        expect(executeSolrQueryMock.getResultsByPredefinedQuery(authMock, SolrCore.ADVANCED_SEARCH,
+                "-({!join from=parent_ref_s to=id}object_type_s:OBJECT_LOCK) AND object_type_s:CASE_FILE", 0, 1, "", "fq=status_s:OPEN"))
+                        .andReturn(jsonContent);
         replayAll();
         String result = acmObjectLockService.getDocumentsWithoutLock("CASE_FILE", authMock, 0, 1, "", filter);
 

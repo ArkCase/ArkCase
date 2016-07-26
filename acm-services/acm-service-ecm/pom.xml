@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-services</artifactId>
         <groupId>com.armedia.acm</groupId>
-        <version>3.0.55-SNAPSHOT</version>
+        <version>3.0.56-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -160,6 +160,13 @@
         <dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-cmis</artifactId>
+        </dependency>
+        <!-- The Mule CMIS module depends on an outdated version of some OSGi OGNL library. If the core ECM service
+             specifically depends on mule-module-ognl, then that forces Maven to use the right version of the library,
+             and extensions will build OK. Without a specific dependency, extensions may pull the older version. -->
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-ognl</artifactId>
         </dependency>
         <dependency>
             <groupId>org.mule.modules</groupId>

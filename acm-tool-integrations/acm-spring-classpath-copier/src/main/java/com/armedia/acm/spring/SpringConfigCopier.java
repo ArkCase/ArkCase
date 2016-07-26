@@ -70,12 +70,12 @@ public class SpringConfigCopier implements ApplicationContextAware
             // copy all the Spring configurations provided with the WAR into the built-in folder
             for (String resourcePattern : resourcePatterns)
             {
-                log.info("Scanning for resources matching '{}'", resourcePattern);
+                log.debug("Scanning for resources matching '{}'", resourcePattern);
                 Resource[] matchingResources = getResolver().getResources(resourcePattern);
                 for (Resource resource : matchingResources)
                 {
                     String resourceFilename = resource.getFilename();
-                    log.info("Found resource '{}'", resourceFilename);
+                    log.debug("Found resource '{}'", resourceFilename);
 
                     if (resource.getURL().getPath().contains(customRoot))
                     {
@@ -93,7 +93,8 @@ public class SpringConfigCopier implements ApplicationContextAware
                         // NOTE: FileCopyUtils will close both the input and the output streams.
                         FileCopyUtils.copy(resource.getInputStream(), new FileOutputStream(target));
                     }
-                    log.info("Done scanning for resources matching '{}'", resourcePattern);
+                    log.info("Copied resource '{}' to builtin folder.", resourceFilename);
+                    log.debug("Done scanning for resources matching '{}'", resourcePattern);
                 }
             }
         } catch (IOException e)

@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('admin').controller('Admin.ModulesController', ['$scope', 'Admin.ModulesService', 'Admin.SelectPrivilegesService', '$q',
-    function ($scope, modulesService, selectPrivilegesService, $q) {
+    function ($scope, modulesService, selectPrivilegesService, $q)
+    {
         var tempAppModulesPromise = modulesService.getAppModules();
         var tempAppRolesPromise = selectPrivilegesService.getAppRoles();
 
@@ -10,7 +11,8 @@ angular.module('admin').controller('Admin.ModulesController', ['$scope', 'Admin.
         $scope.currentAuthRoles = [];
 
         //wait all promises to resolve
-        $q.all([tempAppModulesPromise, tempAppRolesPromise]).then(function (payload) {
+        $q.all([tempAppModulesPromise, tempAppRolesPromise]).then(function (payload)
+        {
 
             //get all appRoles
             $scope.appModules = payload[0].data;
@@ -20,13 +22,16 @@ angular.module('admin').controller('Admin.ModulesController', ['$scope', 'Admin.
         });
 
         //callback function when app role is selected
-        $scope.onObjSelect = function (selectedObject, authorized, notAuthorized) {
+        $scope.onObjSelect = function (selectedObject, authorized, notAuthorized)
+        {
 
             var rolesForModulePromise = modulesService.getRolesForModulePrivilege(selectedObject['privilege']);
-            rolesForModulePromise.then(function (payload) {
+            rolesForModulePromise.then(function (payload)
+            {
                 //set authorized roles
                 $scope.currentAuthRoles = payload.data;
-                angular.forEach($scope.currentAuthRoles, function (element) {
+                angular.forEach($scope.currentAuthRoles, function (element)
+                {
                     //we need to create wrapper to provide a name property
                     var authObject = {};
                     authObject.key = element;
@@ -35,8 +40,10 @@ angular.module('admin').controller('Admin.ModulesController', ['$scope', 'Admin.
                 });
 
                 //set not authorized roles.
-                angular.forEach($scope.appRoles, function (role) {
-                    if ($scope.currentAuthRoles.indexOf(role) == -1) {
+                angular.forEach($scope.appRoles, function (role)
+                {
+                    if ($scope.currentAuthRoles.indexOf(role) == -1)
+                    {
                         //we need to create wrapper to provide a name property
                         var notAuthorizedRole = {};
                         notAuthorizedRole.key = role;
@@ -45,38 +52,44 @@ angular.module('admin').controller('Admin.ModulesController', ['$scope', 'Admin.
                     }
                 });
             });
-
-
         };
 
         //callback function when groups are moved
-        $scope.onAuthRoleSelected = function (selectedObject, authorized, notAuthorized) {
+        $scope.onAuthRoleSelected = function (selectedObject, authorized, notAuthorized)
+        {
             var toBeAdded = [];
             var toBeRemoved = [];
 
             //get roles which needs to be added
-            angular.forEach(authorized, function (role) {
-                if ($scope.currentAuthRoles.indexOf(role.key) == -1) {
+            angular.forEach(authorized, function (role)
+            {
+                if ($scope.currentAuthRoles.indexOf(role.key) == -1)
+                {
                     toBeAdded.push(role.key);
                 }
             });
             //perform adding on server
-            if (toBeAdded.length > 0) {
+            if (toBeAdded.length > 0)
+            {
                 modulesService.addRolesToModule(selectedObject['privilege'], toBeAdded);
                 $scope.currentAuthRoles = $scope.currentAuthRoles.concat(toBeAdded);
             }
 
             //get roles which needs to be removed
-            angular.forEach(notAuthorized, function (role) {
-                if ($scope.currentAuthRoles.indexOf(role.key) != -1) {
+            angular.forEach(notAuthorized, function (role)
+            {
+                if ($scope.currentAuthRoles.indexOf(role.key) != -1)
+                {
                     toBeRemoved.push(role.key);
                 }
             });
-            if (toBeRemoved.length > 0) {
+            if (toBeRemoved.length > 0)
+            {
                 //perform removing on server
                 modulesService.removeRolesFromModule(selectedObject['privilege'], toBeRemoved);
                 //remove from $scope.currentAuthRoles
-                angular.forEach(toBeRemoved, function (element) {
+                angular.forEach(toBeRemoved, function (element)
+                {
                     $scope.currentAuthRoles.splice($scope.currentAuthRoles.indexOf(element), 1);
                 });
             }

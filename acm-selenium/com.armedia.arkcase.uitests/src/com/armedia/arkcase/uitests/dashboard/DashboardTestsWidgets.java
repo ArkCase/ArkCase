@@ -7,10 +7,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.asserts.SoftAssert;
-
 import com.armedia.arkcase.uitests.base.ArkCaseAuthentication;
 import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
-import com.armedia.arkcase.uitests.base.TestsPoperties;
 
 public class DashboardTestsWidgets extends ArkCaseTestBase {
 
@@ -19,8 +17,7 @@ public class DashboardTestsWidgets extends ArkCaseTestBase {
 	@Test
 	public void addEditRemoveNewWidgetCassesByStatusAll() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-		TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertTrue(dash.editButton.isEnabled(), "Edit button is not enabled");
 		dash.editButtonClick();
@@ -63,8 +60,7 @@ public class DashboardTestsWidgets extends ArkCaseTestBase {
 	@Test
 	public void addEditRemoveNewWidgetCasesByStatusLastWeek() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-		TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertTrue(dash.editButton.isEnabled(), "Edit button is not enabled");
 		dash.editButtonClick();
@@ -114,8 +110,7 @@ public class DashboardTestsWidgets extends ArkCaseTestBase {
 	@Test
 	public void addEditRemoveNewWidgetCassesByStatusLastMonth() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-		TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertTrue(dash.editButton.isEnabled(), "Edit button is not enabled");
 		dash.editButtonClick();
@@ -165,8 +160,7 @@ public class DashboardTestsWidgets extends ArkCaseTestBase {
 	@Test
 	public void addEditRemoveNewWidgetCassesByStatusLastYear() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-		TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertTrue(dash.editButton.isEnabled(), "Edit button is not enabled");
 		dash.editButtonClick();
@@ -215,8 +209,7 @@ public class DashboardTestsWidgets extends ArkCaseTestBase {
 	@Test
 	public void addEditRemoveNewWidgetMyCases() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-		TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertTrue(dash.editButton.isEnabled(), "Edit button is not enabled");
 		dash.editButtonClick();
@@ -260,8 +253,7 @@ public class DashboardTestsWidgets extends ArkCaseTestBase {
 	@Test
 	public void addEditRemoveNewWidgetMyComplaints() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-		TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertTrue(dash.editButton.isEnabled(), "Edit button is not enabled");
 		dash.editButtonClick();
@@ -305,8 +297,7 @@ public class DashboardTestsWidgets extends ArkCaseTestBase {
 	@Test
 	public void addEditRemoveNewWidgetMyTasks() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-		TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertTrue(dash.editButton.isEnabled(), "Edit button is not enabled");
 		dash.editButtonClick();
@@ -350,8 +341,7 @@ public class DashboardTestsWidgets extends ArkCaseTestBase {
 	@Test
 	public void addEditRemoveNewWidgetNewComplaints() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-		TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertTrue(dash.editButton.isEnabled(), "Edit button is not enabled");
 		dash.editButtonClick();
@@ -395,8 +385,7 @@ public class DashboardTestsWidgets extends ArkCaseTestBase {
 	@Test
 	public void addEditRemoveNewWidgetTeamWorkLoadAll() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-		TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertTrue(dash.editButton.isEnabled(), "Edit button is not enabled");
 		dash.editButtonClick();
@@ -441,8 +430,7 @@ public class DashboardTestsWidgets extends ArkCaseTestBase {
 	@Test
 	public void addEditRemoveNewWidgetTeamWorkLoadPastDue() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-		TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertTrue(dash.editButton.isEnabled(), "Edit button is not enabled");
 		dash.editButtonClick();
@@ -489,8 +477,7 @@ public class DashboardTestsWidgets extends ArkCaseTestBase {
 	@Test
 	public void addEditRemoveNewWidgetTeamWorkLoadDueTomorrow() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-		TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertTrue(dash.editButton.isEnabled(), "Edit button is not enabled");
 		dash.editButtonClick();
@@ -537,8 +524,7 @@ public class DashboardTestsWidgets extends ArkCaseTestBase {
 	@Test
 	public void addEditRemoveNewWidgetTeamWorkLoadDueIn7Days() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-		TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertTrue(dash.editButton.isEnabled(), "Edit button is not enabled");
 		dash.editButtonClick();
@@ -584,8 +570,7 @@ public class DashboardTestsWidgets extends ArkCaseTestBase {
 	@Test
 	public void addEditRemoveNewWidgetTeamWorkLoadDueInMonth() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-		TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertTrue(dash.editButton.isEnabled(), "Edit button is not enabled");
 		dash.editButtonClick();
@@ -630,8 +615,7 @@ public class DashboardTestsWidgets extends ArkCaseTestBase {
 	@Test
 	public void addEditRemoveNewWidgetWeather() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-		TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertTrue(dash.editButton.isEnabled(), "Edit button is not enabled");
 		dash.editButtonClick();
@@ -676,8 +660,7 @@ public class DashboardTestsWidgets extends ArkCaseTestBase {
 	@Test
 	public void addEditRemoveNewWidgetNews() throws InterruptedException, IOException, AWTException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-		TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertTrue(dash.editButton.isEnabled(), "Edit button is not enabled");
 		dash.editButtonClick();
@@ -722,8 +705,7 @@ public class DashboardTestsWidgets extends ArkCaseTestBase {
 	@Test
 	public void changeDashboardLayoutTwelve() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-		TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertTrue(dash.editButton.isEnabled(), "Edit button is not enabled");
 		softAssert.assertAll();
@@ -754,8 +736,7 @@ public class DashboardTestsWidgets extends ArkCaseTestBase {
 	@Test
 	public void changeDashboardLayoutSixSix() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-		TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertTrue(dash.editButton.isEnabled(), "Edit button is not enabled");
 		softAssert.assertAll();
@@ -775,8 +756,7 @@ public class DashboardTestsWidgets extends ArkCaseTestBase {
 	@Test
 	public void changeDashboardLayoutFourFourFour() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-		TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertTrue(dash.editButton.isEnabled(), "Edit button is not enabled");
 		softAssert.assertAll();
@@ -797,8 +777,7 @@ public class DashboardTestsWidgets extends ArkCaseTestBase {
 	@Test
 	public void changeDashboardLayoutFourEight() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-		TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertTrue(dash.editButton.isEnabled(), "Edit button is not enabled");
 		softAssert.assertAll();
@@ -819,8 +798,7 @@ public class DashboardTestsWidgets extends ArkCaseTestBase {
 	@Test
 	public void changeDashboardLayoutEightFour() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-		TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertTrue(dash.editButton.isEnabled(), "Edit button is not enabled");
 		softAssert.assertAll();
@@ -841,8 +819,7 @@ public class DashboardTestsWidgets extends ArkCaseTestBase {
 	@Test
 	public void changeDashboardUndoButton() throws InterruptedException, IOException {
 
-		ArkCaseAuthentication.logIn(TestsPoperties.getSupervisorUserUsername(),
-		TestsPoperties.getSupervisorUserPassword(), driver, TestsPoperties.getBaseURL());
+		super.logIn();
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertTrue(dash.editButton.isEnabled(), "Edit button is not enabled");
 		softAssert.assertAll();

@@ -1,51 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans
-    xmlns="http://www.springframework.org/schema/security"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:beans="http://www.springframework.org/schema/beans"
+    xmlns="http://www.springframework.org/schema/security"
     xsi:schemaLocation="
+
            http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
            http://www.springframework.org/schema/security
            http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
-    <!-- Configure Spring Security. -->    
+    <!-- Configure Spring Security. -->
 
-    <!-- The login page itself, along with the JavaScript and images that appear on the login page, do not have to be protected. -->
-    <http
-        security="none"
-        pattern="/login" />
-    <http
-        security="none"
-        pattern="/login.html" />
-    <http
-        security="none"
-        pattern="/login.jsp" />
-    <http
-            security="none"
-            pattern="/warning" />
-    <http
-        security="none"
-        pattern="/assets/css/login.css" />
-    <http
-        security="none"
-        pattern="/sso/loggedout" />
-    <http
-        security="none"
-        pattern="/samllogin" />
-    <http
-        security="none"
-        pattern="/resources/**" />
-    <http
-        security="none"
-        pattern="/branding/**" />
-    <http
-        security="none"
-        pattern="/external/**" />
-    <!-- All lib are public, no security needed -->
-    <http
-        security="none"
-        pattern="/lib/**" />
+    <!-- common unprotected resources for all Spring profiles (authentication methods) -->
+    <beans:beans>
+        <http
+                security="none"
+                pattern="/warning"/>
+        <http
+                security="none"
+                pattern="/resources/**"/>
+        <http
+                security="none"
+                pattern="/branding/**"/>
+        <http
+                security="none"
+                pattern="/external/**"/>
+        <http
+                security="none"
+                pattern="/assets/css/login.css"/>
+        <!-- All lib are public, no security needed -->
+        <http
+                security="none"
+                pattern="/lib/**"/>
+    </beans:beans>
 
-    <!-- filter chains and other authentication related beans are loaded from acm/spring/spring-security-config-*.xml and acm/spring/spring-config-*-ldap-auth.xml configuration files -->
+    <!-- no need to protect the Login page in LDAP- and Kerberos-based authentication -->
+    <beans:beans profile="ldap,kerberos">
+
+        <http
+                security="none"
+                pattern="/login"/>
+        <http
+                security="none"
+                pattern="/login.html"/>
+        <http
+                security="none"
+                pattern="/login.jsp"/>
+    </beans:beans>
+
+
+    <!-- no need to protect the Login page in SSO SAML-based authentication -->
+    <beans:beans profile="ssoSaml">
+        <http
+                security="none"
+                pattern="/sso/loggedout"/>
+        <http
+                security="none"
+                pattern="/samllogin"/>
+    </beans:beans>
+        <!-- filter chains and other authentication related beans are loaded from acm/spring-security/spring-security-config-*.xml and acm/spring/spring-config-*-ldap-auth.xml configuration files -->
 </beans:beans>

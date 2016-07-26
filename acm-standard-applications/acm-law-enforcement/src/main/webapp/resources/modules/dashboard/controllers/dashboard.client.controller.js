@@ -19,7 +19,8 @@ angular.module('dashboard').controller('DashboardController', ['$scope', '$trans
             collapsible: false,
             maximizable: false,
             model: {
-                titleTemplateUrl: 'modules/dashboard/views/dashboard-title.client.view.html'
+                titleTemplateUrl: 'modules/dashboard/views/dashboard-title.client.view.html',
+                editTemplateUrl: 'modules/dashboard/views/dashboard-edit.client.view.html'
             }
         };
 
@@ -42,6 +43,9 @@ angular.module('dashboard').controller('DashboardController', ['$scope', '$trans
 
             // Set Dashboard custom title
             $scope.dashboard.model.titleTemplateUrl = 'modules/dashboard/views/dashboard-title.client.view.html';
+
+            // Set Dashboard custom editor
+            $scope.dashboard.model.editTemplateUrl = 'modules/dashboard/views/dashboard-edit.client.view.html';
         });
 
 

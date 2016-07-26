@@ -100,7 +100,8 @@
       "basic": {
         "root": [
           {
-            "title": "New Folder <kbd>Ctrl+N</kbd>",
+            "___title": "New Folder <kbd>Ctrl+N</kbd>",
+            "title": "New Folder",
             "cmd": "newFolder",
             "uiIcon": "ui-icon-plus"
           },
@@ -147,10 +148,15 @@
             ]
           },
           {
+            "title": "New Correspondence",
+            "cmd": "subMenuCorrespondenceForms"
+          },
+          {
             "title": "----"
           },
           {
-            "title": "Paste <kbd>Ctrl+V</kbd>",
+            "___title": "Paste <kbd>Ctrl+V</kbd>",
+            "title": "Paste",
             "cmd": "paste",
             "uiIcon": "ui-icon-clipboard",
             "disabled": true
@@ -158,7 +164,8 @@
         ],
         "folder": [
           {
-            "title": "New Folder <kbd>Ctrl+N</kbd>",
+            "___title": "New Folder <kbd>Ctrl+N</kbd>",
+            "title": "New Folder",
             "cmd": "newFolder",
             "uiIcon": "ui-icon-plus"
           },
@@ -167,20 +174,27 @@
             "cmd": "subMenuFileTypes"
           },
           {
+            "title": "New Correspondence",
+            "cmd": "subMenuCorrespondenceForms"
+          },
+          {
             "title": "----"
           },
           {
-            "title": "Cut <kbd>Ctrl+X</kbd>",
+            "___title": "Cut <kbd>Ctrl+X</kbd>",
+            "title": "Cut",
             "cmd": "cut",
             "uiIcon": "ui-icon-scissors"
           },
           {
-            "title": "Copy <kbd>Ctrl+C</kbd>",
+            "___title": "Copy <kbd>Ctrl+C</kbd>",
+            "title": "Copy",
             "cmd": "copy",
             "uiIcon": "ui-icon-copy"
           },
           {
-            "title": "Paste <kbd>Ctrl+V</kbd>",
+            "___title": "Paste <kbd>Ctrl+V</kbd>",
+            "title": "Paste",
             "cmd": "paste",
             "uiIcon": "ui-icon-clipboard",
             "disabled": true
@@ -189,12 +203,14 @@
             "title": "----"
           },
           {
-            "title": "Rename <kbd>[F2]</kbd>",
+            "___title": "Rename <kbd>[F2]</kbd>",
+            "title": "Rename",
             "cmd": "rename",
             "uiIcon": "ui-icon-pencil"
           },
           {
-            "title": "Delete <kbd>Ctrl+D</kbd>",
+            "___title": "Delete <kbd>Ctrl+D</kbd>",
+            "title": "Delete",
             "cmd": "remove",
             "uiIcon": "ui-icon-trash"
           },
@@ -253,17 +269,20 @@
             "title": "----"
           },
           {
-            "title": "Cut <kbd>Ctrl+X</kbd>",
+            "___title": "Cut <kbd>Ctrl+X</kbd>",
+            "title": "Cut",
             "cmd": "cut",
             "uiIcon": "ui-icon-scissors"
           },
           {
-            "title": "Copy <kbd>Ctrl+C</kbd>",
+            "___title": "Copy <kbd>Ctrl+C</kbd>",
+            "title": "Copy",
             "cmd": "copy",
             "uiIcon": "ui-icon-copy"
           },
           {
-            "title": "Paste <kbd>Ctrl+V</kbd>",
+            "___title": "Paste <kbd>Ctrl+V</kbd>",
+            "title": "Paste",
             "cmd": "paste",
             "uiIcon": "ui-icon-clipboard",
             "disabled": true
@@ -272,12 +291,14 @@
             "title": "----"
           },
           {
-            "title": "Rename <kbd>[F2]</kbd>",
+            "___title": "Rename <kbd>[F2]</kbd>",
+            "title": "Rename",
             "cmd": "rename",
             "uiIcon": "ui-icon-pencil"
           },
           {
-            "title": "Delete <kbd>Ctrl+D</kbd>",
+            "___title": "Delete <kbd>Ctrl+D</kbd>",
+            "title": "Delete",
             "cmd": "remove",
             "uiIcon": "ui-icon-trash"
           },
@@ -310,7 +331,8 @@
       "record": {
         "root": [
           {
-            "title": "New Folder <kbd>Ctrl+N</kbd>",
+            "___title": "New Folder <kbd>Ctrl+N</kbd>",
+            "title": "New Folder",
             "cmd": "newFolder",
             "uiIcon": "ui-icon-plus"
           },
@@ -319,10 +341,15 @@
             "cmd": "subMenuFileTypes"
           },
           {
+            "title": "New Correspondence",
+            "cmd": "subMenuCorrespondenceForms"
+          },
+          {
             "title": "----"
           },
           {
-            "title": "Paste <kbd>Ctrl+V</kbd>",
+            "___title": "Paste <kbd>Ctrl+V</kbd>",
+            "title": "Paste",
             "cmd": "paste",
             "uiIcon": "ui-icon-clipboard",
             "disabled": true
@@ -330,7 +357,8 @@
         ],
         "folder": [
           {
-            "title": "New Folder <kbd>Ctrl+N</kbd>",
+            "___title": "New Folder <kbd>Ctrl+N</kbd>",
+            "title": "New Folder",
             "cmd": "newFolder",
             "uiIcon": "ui-icon-plus"
           },
@@ -339,20 +367,27 @@
             "cmd": "subMenuFileTypes"
           },
           {
+            "title": "New Correspondence",
+            "cmd": "subMenuCorrespondenceForms"
+          },
+          {
             "title": "----"
           },
           {
-            "title": "Rename <kbd>[F2]</kbd>",
+            "___title": "Rename <kbd>[F2]</kbd>",
+            "title": "Rename",
             "cmd": "rename",
             "uiIcon": "ui-icon-pencil"
           },
           {
-            "title": "Copy <kbd>Ctrl+C</kbd>",
+            "___title": "Copy <kbd>Ctrl+C</kbd>",
+            "title": "Copy",
             "cmd": "copy",
             "uiIcon": "ui-icon-copy"
           },
           {
-            "title": "Paste <kbd>Ctrl+V</kbd>",
+            "___title": "Paste <kbd>Ctrl+V</kbd>",
+            "title": "Paste",
             "cmd": "paste",
             "uiIcon": "ui-icon-clipboard",
             "disabled": true
@@ -379,7 +414,8 @@
             "title": "----"
           },
           {
-            "title": "Copy <kbd>Ctrl+C</kbd>",
+            "___title": "Copy <kbd>Ctrl+C</kbd>",
+            "title": "Copy",
             "cmd": "copy",
             "uiIcon": "ui-icon-copy"
           },
@@ -432,17 +468,20 @@
         ],
         "folders": [
           {
-            "title": "Cut <kbd>Ctrl+X</kbd>",
+            "___title": "Cut <kbd>Ctrl+X</kbd>",
+            "title": "Cut",
             "cmd": "cut",
             "uiIcon": "ui-icon-scissors"
           },
           {
-            "title": "Copy <kbd>Ctrl+C</kbd>",
+            "___title": "Copy <kbd>Ctrl+C</kbd>",
+            "title": "Copy",
             "cmd": "copy",
             "uiIcon": "ui-icon-copy"
           },
           {
-            "title": "Delete <kbd>Ctrl+D</kbd>",
+            "___title": "Delete <kbd>Ctrl+D</kbd>",
+            "title": "Delete",
             "cmd": "remove",
             "uiIcon": "ui-icon-trash"
           },
@@ -454,17 +493,20 @@
         ],
         "filesAndFolders": [
           {
-            "title": "Cut <kbd>Ctrl+X</kbd>",
+            "___title": "Cut <kbd>Ctrl+X</kbd>",
+            "title": "Cut",
             "cmd": "cut",
             "uiIcon": "ui-icon-scissors"
           },
           {
-            "title": "Copy <kbd>Ctrl+C</kbd>",
+            "___title": "Copy <kbd>Ctrl+C</kbd>",
+            "title": "Copy",
             "cmd": "copy",
             "uiIcon": "ui-icon-copy"
           },
           {
-            "title": "Delete <kbd>Ctrl+D</kbd>",
+            "___title": "Delete <kbd>Ctrl+D</kbd>",
+            "title": "Delete",
             "cmd": "remove",
             "uiIcon": "ui-icon-trash"
           },
@@ -476,12 +518,14 @@
         ],
         "filesOrFoldersRecord": [
           {
-            "title": "Cut <kbd>Ctrl+X</kbd>",
+            "___title": "Cut <kbd>Ctrl+X</kbd>",
+            "title": "Cut",
             "cmd": "cut",
             "uiIcon": "ui-icon-scissors"
           },
           {
-            "title": "Copy <kbd>Ctrl+C</kbd>",
+            "___title": "Copy <kbd>Ctrl+C</kbd>",
+            "title": "Copy",
             "cmd": "copy",
             "uiIcon": "ui-icon-copy"
           },
@@ -498,7 +542,8 @@
         "uiIcon": ""
       },
       "___menu_item_to_be_implemented_print": {
-        "title": "Print <kbd>Ctrl+P</kbd>",
+        "___title": "Print <kbd>Ctrl+P</kbd>",
+        "title": "Print",
         "cmd": "print",
         "uiIcon": "ui-icon-print",
         "data": {

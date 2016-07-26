@@ -6,6 +6,7 @@
       "menuId": "leftnav",
       "menuItemURL": "admin",
       "menuItemTitle": "Admin",
+      "moduleId": "admin",
       "iconClass": "fa fa-wrench",
       "position": 150
     }

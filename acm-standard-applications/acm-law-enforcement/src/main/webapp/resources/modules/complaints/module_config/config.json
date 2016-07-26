@@ -8,6 +8,7 @@
       "menuId": "leftnav",
       "menuItemURL": "complaints.main",
       "menuItemTitle": "Complaints",
+      "moduleId": "complaint",
       "iconClass": "fa fa-exclamation-triangle",
       "position": 40
     },
@@ -15,6 +16,7 @@
       "menuId": "topbar",
       "menuItemURL": "frevvo.new-complaint",
       "menuItemTitle": "Complaint",
+      "moduleId": "complaint",
       "iconClass": "fa fa-exclamation-triangle",
       "position": 10
     }
@@ -119,7 +121,6 @@
           "tasks",
           "references",
           "history",
-          "correspondence",
           "time",
           "cost",
           "tags",
@@ -196,14 +197,6 @@
         "icon": "fa fa-bell-o",
         "components": [
           "history"
-        ]
-      },
-      {
-        "type": "p/COMPLAINT/tpl",
-        "label": "Correspondence",
-        "icon": "fa fa-envelope",
-        "components": [
-          "correspondence"
         ]
       },
       {
@@ -361,7 +354,7 @@
             {
               "name": "title",
               "field": "title_parseable",
-			  "sortField": "title_parseable_lcs",
+              "sortField": "title_parseable_lcs",
               "displayName": "complaints.comp.tasks.table.columns.title",
               "headerCellFilter": "translate",
               "cellTemplate": "<div ng-bind-html='row.entity.title_parseable' title='{{row.entity.title_parseable}}' class='ui-grid-cell-contents'></div>"
@@ -415,32 +408,6 @@
         {
           "id": "history",
           "type": "component"
-        },
-        {
-          "id": "correspondence",
-          "type": "component",
-          "columnDefs": [
-            {
-              "name": "name",
-              "displayName": "complaints.comp.correspondence.table.columns.name",
-              "headerCellFilter": "translate",
-              "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.name}}</a>"
-            },
-            {
-              "name": "created",
-              "displayName": "complaints.comp.correspondence.table.columns.created",
-              "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
-              "enableCellEdit": false
-            },
-            {
-              "name": "creator",
-              "displayName": "complaints.comp.correspondence.table.columns.creator",
-              "headerCellFilter": "translate",
-              "enableCellEdit": false,
-              "lookup": "userFullNames"
-            }
-          ]
         },
         {
           "id": "time",
@@ -548,6 +515,7 @@
       "title": "People",
       "icon": "fa fa-user",
       "className": "com.armedia.acm.plugins.person.model.Person",
+      "personAssociationClassName": "com.armedia.acm.plugins.person.model.PersonAssociation",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -960,7 +928,7 @@
         {
           "name": "title",
           "field": "title_parseable",
-		  "sortField": "title_parseable_lcs",
+          "sortField": "title_parseable_lcs",
           "displayName": "complaints.comp.tasks.table.columns.title",
           "headerCellFilter": "translate",
           "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.title_parseable}}</a>"
@@ -1086,43 +1054,6 @@
       ]
     },
     {
-      "id": "correspondence",
-      "title": "Correspondence",
-      "icon": "fa fa-envelope",
-      "enabled": true,
-      "type": "grid",
-      "enableFiltering": true,
-      "paginationPageSizes": [
-        5,
-        10,
-        20,
-        50
-      ],
-      "paginationPageSize": 5,
-      "columnDefs": [
-        {
-          "name": "name",
-          "displayName": "complaints.comp.correspondence.table.columns.name",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.name}}</a>"
-        },
-        {
-          "name": "created",
-          "displayName": "complaints.comp.correspondence.table.columns.created",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
-          "enableCellEdit": false
-        },
-        {
-          "name": "creator",
-          "displayName": "complaints.comp.correspondence.table.columns.creator",
-          "headerCellFilter": "translate",
-          "enableCellEdit": false,
-          "lookup": "userFullNames"
-        }
-      ]
-    },
-    {
       "id": "time",
       "title": "Time",
       "icon": "fa fa-clock-o",
@@ -1198,8 +1129,8 @@
           "name": "tally",
           "displayName": "complaints.comp.cost.table.columns.tally",
           "headerCellFilter": "translate",
-          "cellFilter" : "currency",
-          "cellClass" : "text-right"
+          "cellFilter": "currency",
+          "cellClass": "text-right"
         },
         {
           "name": "modified",
@@ -1290,7 +1221,7 @@
         },
         {
           "name": "title_parseable",
-		  "sortField": "title_parseable_lcs",
+          "sortField": "title_parseable_lcs",
           "displayName": "complaints.comp.addreference.grid.columns.title",
           "headerCellFilter": "translate"
         },

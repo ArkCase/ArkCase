@@ -5,12 +5,13 @@ import com.armedia.acm.core.exceptions.AcmOutlookItemNotFoundException;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.outlook.service.OutlookContainerCalendarService;
-import com.armedia.acm.plugins.profile.model.OutlookDTO;
 import com.armedia.acm.plugins.profile.service.UserOrgService;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
+import com.armedia.acm.service.outlook.model.OutlookDTO;
 import com.armedia.acm.service.outlook.model.OutlookFolder;
 import com.armedia.acm.service.outlook.model.OutlookFolderPermission;
 import com.armedia.acm.service.outlook.service.OutlookFolderService;
+import com.armedia.acm.service.outlook.service.OutlookService;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -42,7 +43,7 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
     private AcmContainerDao acmContainerDao;
     private UserDao userDao;
 
-    //properties
+    // properties
     private String systemUserEmail;
     private String systemUserEmailPassword;
     private String systemUserId;
@@ -54,6 +55,7 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
 
     private Boolean useSystemUser;
     private UserOrgService userOrgService;
+    private OutlookService outlookService;
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -88,8 +90,7 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
     }
 
     @Override
-    public void updateFolderParticipants(String folderId,
-                                         List<AcmParticipant> participants) throws AcmOutlookItemNotFoundException
+    public void updateFolderParticipants(String folderId, List<AcmParticipant> participants) throws AcmOutlookItemNotFoundException
     {
 
         outlookFolderService.updateFolderPermissions(getOutlookUser(), folderId, mapParticipantsToFolderPermission(participants));
@@ -101,7 +102,7 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
         List<OutlookFolderPermission> folderPermissionsToBeAdded = new LinkedList<>();
         if (participantsTypesForOutlookFolder == null || participantsTypesForOutlookFolder.isEmpty())
         {
-            //this will cause all permissions in folder to be removed
+            // this will cause all permissions in folder to be removed
             log.warn("There are not defined participants types to include");
         } else
         {
@@ -109,7 +110,7 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
             {
                 if (participantsTypesForOutlookFolder.contains(ap.getParticipantType()))
                 {
-                    //add participant to access calendar folder
+                    // add participant to access calendar folder
                     AcmUser user = userDao.findByUserId(ap.getParticipantLdapId());
                     if (user == null)
                     {
@@ -179,9 +180,8 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
 
     public void setParticipantsTypesForOutlookFolder(String participantsTypesForOutlookFolder)
     {
-        this.participantsTypesForOutlookFolder = !StringUtils.isEmpty(participantsTypesForOutlookFolder) ?
-                Arrays.asList(participantsTypesForOutlookFolder.trim().replaceAll(",[\\s]*", ",").split(",")) :
-                new ArrayList<>();
+        this.participantsTypesForOutlookFolder = !StringUtils.isEmpty(participantsTypesForOutlookFolder)
+                ? Arrays.asList(participantsTypesForOutlookFolder.trim().replaceAll(",[\\s]*", ",").split(",")) : new ArrayList<>();
     }
 
     public void setUserDao(UserDao userDao)
@@ -200,7 +200,7 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
             {
                 String userId = auth.getName();
                 AcmUser user = getUserDao().findByUserId(userId);
-                OutlookDTO outlookDTO = getUserOrgService().retrieveOutlookPassword(auth);
+                OutlookDTO outlookDTO = getOutlookService().retrieveOutlookPassword(auth);
                 outlookUser = new AcmOutlookUser(userId, user.getMail(), outlookDTO.getOutlookPassword());
             } catch (Exception e)
             {
@@ -294,5 +294,15 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
     public void setUserOrgService(UserOrgService userOrgService)
     {
         this.userOrgService = userOrgService;
+    }
+
+    public OutlookService getOutlookService()
+    {
+        return outlookService;
+    }
+
+    public void setOutlookService(OutlookService outlookService)
+    {
+        this.outlookService = outlookService;
     }
 }

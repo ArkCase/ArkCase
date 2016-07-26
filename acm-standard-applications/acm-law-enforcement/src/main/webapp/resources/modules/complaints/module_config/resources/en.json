@@ -170,14 +170,6 @@
       "userId": "User"
     }
   },
-  "complaints.comp.correspondence": {
-    "title": "Correspondence",
-    "table.columns": {
-      "name": "Title",
-      "created": "Created",
-      "creator": "Creator"
-    }
-  },
   "complaints.comp.time": {
     "title": "Time",
     "table.columns": {

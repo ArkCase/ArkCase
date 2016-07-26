@@ -9,6 +9,7 @@
       "menuId": "leftnav",
       "menuItemURL": "cases.main",
       "menuItemTitle": "Case Files",
+      "moduleId": "case",
       "iconClass": "fa fa-folder",
       "position": 50
     },
@@ -16,6 +17,7 @@
       "menuId": "topbar",
       "menuItemURL": "frevvo.new-case",
       "menuItemTitle": "Case",
+      "moduleId": "case",
       "iconClass": "fa fa-folder",
       "position": 20
     }
@@ -109,7 +111,6 @@
           "tasks",
           "references",
           "history",
-          "correspondence",
           "time",
           "cost",
           "tags",
@@ -178,14 +179,6 @@
         "icon": "fa fa-bell-o",
         "components": [
           "history"
-        ]
-      },
-      {
-        "type": "p/CASE_FILE/tpl",
-        "label": "Correspondence",
-        "icon": "fa fa-envelope",
-        "components": [
-          "correspondence"
         ]
       },
       {
@@ -398,32 +391,6 @@
           "type": "component"
         },
         {
-          "id": "correspondence",
-          "type": "component",
-          "columnDefs": [
-            {
-              "name": "name",
-              "displayName": "cases.comp.correspondence.table.columns.name",
-              "headerCellFilter": "translate",
-              "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.name}}</a>"
-            },
-            {
-              "name": "created",
-              "displayName": "cases.comp.correspondence.table.columns.created",
-              "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
-              "enableCellEdit": false
-            },
-            {
-              "name": "creator",
-              "displayName": "cases.comp.correspondence.table.columns.creator",
-              "headerCellFilter": "translate",
-              "enableCellEdit": false,
-              "lookup": "userFullNames"
-            }
-          ]
-        },
-        {
           "id": "time",
           "type": "component"
         },
@@ -484,6 +451,7 @@
       "title": "People",
       "icon": "fa fa-user",
       "className": "com.armedia.acm.plugins.person.model.Person",
+      "personAssociationClassName": "com.armedia.acm.plugins.person.model.PersonAssociation",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -824,6 +792,7 @@
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
+      "enableSorting": true,
       "paginationPageSizes": [
         5,
         10,
@@ -1004,43 +973,6 @@
       ]
     },
     {
-      "id": "correspondence",
-      "title": "Correspondence",
-      "icon": "fa fa-envelope",
-      "enabled": true,
-      "type": "grid",
-      "enableFiltering": true,
-      "paginationPageSizes": [
-        5,
-        10,
-        20,
-        50
-      ],
-      "paginationPageSize": 5,
-      "columnDefs": [
-        {
-          "name": "name",
-          "displayName": "cases.comp.correspondence.table.columns.name",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.name}}</a>"
-        },
-        {
-          "name": "created",
-          "displayName": "cases.comp.correspondence.table.columns.created",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
-          "enableCellEdit": false
-        },
-        {
-          "name": "creator",
-          "displayName": "cases.comp.correspondence.table.columns.creator",
-          "headerCellFilter": "translate",
-          "enableCellEdit": false,
-          "lookup": "userFullNames"
-        }
-      ]
-    },
-    {
       "id": "time",
       "title": "Time",
       "icon": "fa fa-clock-o",
@@ -1116,8 +1048,8 @@
           "name": "tally",
           "displayName": "cases.comp.cost.table.columns.tally",
           "headerCellFilter": "translate",
-          "cellFilter" : "currency",
-          "cellClass" : "text-right"
+          "cellFilter": "currency",
+          "cellClass": "text-right"
         },
         {
           "name": "modified",
@@ -1198,7 +1130,7 @@
         },
         {
           "name": "title_parseable",
-		  "sortField": "title_parseable_lcs",
+          "sortField": "title_parseable_lcs",
           "displayName": "cases.comp.merge.table.columns.title",
           "headerCellFilter": "translate",
           "width": 75
@@ -1260,7 +1192,7 @@
         },
         {
           "name": "title_parseable",
-		  "sortField": "title_parseable_lcs",
+          "sortField": "title_parseable_lcs",
           "displayName": "cases.comp.addreference.grid.columns.title",
           "headerCellFilter": "translate"
         },

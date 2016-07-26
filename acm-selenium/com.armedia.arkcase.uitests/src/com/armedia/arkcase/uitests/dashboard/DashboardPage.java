@@ -279,13 +279,13 @@ public class DashboardPage extends ArkCaseTestBase {
 
 	}
 
-	public void selectCasesLastWeek() {
+	public void selectCasesLastWeek() throws InterruptedException {
 
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertEquals(selectCasesLastWeek.getText(), "Last Week", "Last Week label name is wrong");
 		softAssert.assertAll();
 		new Select(driver.findElement(By.xpath("//form/div/select"))).selectByVisibleText("Last Week");
-		selectCasesLastWeek.click();
+		
 
 	}
 
@@ -295,7 +295,7 @@ public class DashboardPage extends ArkCaseTestBase {
 		softAssert.assertEquals(selectCasesLastMonth.getText(), "Last Month", "Last Month label name is wrong");
 		softAssert.assertAll();
 		new Select(driver.findElement(By.xpath("//form/div/select"))).selectByVisibleText("Last Month");
-		selectCasesLastMonth.click();
+		
 
 	}
 
@@ -304,7 +304,7 @@ public class DashboardPage extends ArkCaseTestBase {
 		softAssert.assertEquals(selectCasesLastYear.getText(), "Last Year", "Last Year label name is wrong");
 		softAssert.assertAll();
 		new Select(driver.findElement(By.xpath("//form/div/select"))).selectByVisibleText("Last Year");
-		selectCasesLastYear.click();
+		
 
 	}
 

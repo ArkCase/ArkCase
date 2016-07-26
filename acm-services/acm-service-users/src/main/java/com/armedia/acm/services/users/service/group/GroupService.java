@@ -23,7 +23,7 @@ public interface GroupService
      * @param members
      * @return
      */
-    public AcmGroup updateGroupWithMembers(AcmGroup group, Set<AcmUser> members);
+    AcmGroup updateGroupWithMembers(AcmGroup group, Set<AcmUser> members);
 
     /**
      * UI will send users and we need to take them from database (because users sent from UI don't have some of information)
@@ -31,7 +31,7 @@ public interface GroupService
      * @param members
      * @return
      */
-    public Set<AcmUser> updateMembersWithDatabaseInfo(Set<AcmUser> members);
+    Set<AcmUser> updateMembersWithDatabaseInfo(Set<AcmUser> members);
 
     /**
      * Retrieve all LDAP groups that a user belongs to
@@ -39,7 +39,7 @@ public interface GroupService
      * @param usernamePasswordAuthenticationToken
      * @return LDAP groups
      */
-    public String getLdapGroupsForUser(UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) throws MuleException;
+    String getLdapGroupsForUser(UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) throws MuleException;
 
     /**
      * Checks if group with same name exists in the DB on the same tree level

@@ -40,19 +40,5 @@
         <property name="outlookService" ref="outlookService"/>
         <property name="userOrgService" ref="acmUserOrgService"/>
     </bean>
-
-    <bean id="sendEmailWithAttachmentsAPIController"
-          class="com.armedia.acm.plugins.outlook.web.api.SendEmailWithAttachmentsAPIController">
-        <property name="outlookService" ref="outlookService"/>
-        <property name="userOrgService" ref="acmUserOrgService"/>
-        <property name="ecmFileService" ref="ecmFileService"/>
-        <property name="dao" ref="exchangeWebServicesOutlookDao" />
-    </bean>
-    
-    <bean id="sendEmailWithEmbeddedLinksAPIController"
-          class="com.armedia.acm.plugins.outlook.web.api.SendEmailWithEmbeddedLinksAPIController">
-        <property name="outlookService" ref="outlookService"/>
-        <property name="userOrgService" ref="acmUserOrgService"/>
-    </bean>
     
 </beans>

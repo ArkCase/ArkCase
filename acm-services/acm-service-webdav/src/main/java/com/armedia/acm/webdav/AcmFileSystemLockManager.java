@@ -1,5 +1,17 @@
 package com.armedia.acm.webdav;
 
+import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
+
+import org.springframework.security.core.Authentication;
+
+import java.util.Date;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
+
 import io.milton.http.LockInfo;
 import io.milton.http.LockInfo.LockDepth;
 import io.milton.http.LockInfo.LockScope;
@@ -10,14 +22,6 @@ import io.milton.http.LockTimeout;
 import io.milton.http.LockToken;
 import io.milton.http.exceptions.NotAuthorizedException;
 import io.milton.resource.LockableResource;
-
-import java.util.Date;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity
@@ -42,6 +46,8 @@ public class AcmFileSystemLockManager implements LockManager
     private final ConcurrentMap<String, CurrentLock> locks = new ConcurrentHashMap<>();
 
     private final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
+
+    private AcmObjectLockService objectLockService;
 
     @Override
     public LockResult lock(LockTimeout timeout, LockInfo lockInfo, LockableResource resource) throws NotAuthorizedException
@@ -88,6 +94,17 @@ public class AcmFileSystemLockManager implements LockManager
         if (locks.putIfAbsent(resourceUniqueId, lock) != null)
         {
             return LockResult.failed(LockResult.FailureReason.ALREADY_LOCKED);
+        }
+
+        if (resource instanceof AcmFileResource)
+        {
+            AcmFileResource fileResource = (AcmFileResource) resource;
+            // Add authentication to WebDav map
+            Authentication authentication = fileResource.getResourceFactory().getSecurityManager()
+                    .addAuthenticationForTicket(fileResource.getAcmTicket());
+            // Create lock in Arkcase DB
+            getObjectLockService().createLock(fileResource.getId(), fileResource.getFileType(), fileResource.getLockType(), true,
+                    authentication);
         }
 
         return LockResult.success(token);
@@ -144,7 +161,6 @@ public class AcmFileSystemLockManager implements LockManager
                 if (token.isExpired() || token.tokenId.equals(tokenId))
                 {
                     locks.remove(resourceUniqueId);
-                    return;
                 } else if (!token.tokenId.equals(tokenId))
                 {
                     throw new NotAuthorizedException(resource);
@@ -154,7 +170,16 @@ public class AcmFileSystemLockManager implements LockManager
                 writeLock.unlock();
             }
         }
-
+        if (resource instanceof AcmFileResource)
+        {
+            AcmFileResource fileResource = (AcmFileResource) resource;
+            Authentication authentication = fileResource.getResourceFactory().getSecurityManager()
+                    .getAuthenticationForTicket(fileResource.getAcmTicket());
+            // Remove lock from Arkcase DB
+            getObjectLockService().removeLock(fileResource.getId(), fileResource.getFileType(), fileResource.getLockType(), authentication);
+            // Remove authentication from WebDav map
+            fileResource.getResourceFactory().getSecurityManager().removeAuthenticationForTicket(fileResource.getAcmTicket());
+        }
     }
 
     @Override
@@ -183,6 +208,16 @@ public class AcmFileSystemLockManager implements LockManager
         token.tokenId = lock.token.tokenId;
 
         return token;
+    }
+
+    public AcmObjectLockService getObjectLockService()
+    {
+        return objectLockService;
+    }
+
+    public void setObjectLockService(AcmObjectLockService objectLockService)
+    {
+        this.objectLockService = objectLockService;
     }
 
 }

@@ -1,9 +1,9 @@
 'use strict';
 
-angular.module('cases').controller('Cases.TimeController', ['$scope', '$stateParams', '$translate'
+angular.module('cases').controller('Cases.TimeController', ['$scope', '$stateParams'
     , 'UtilService', 'ObjectService', 'ConfigService', 'Object.TimeService', 'Case.InfoService'
     , 'Helper.UiGridService', 'Helper.ObjectBrowserService'
-    , function ($scope, $stateParams, $translate
+    , function ($scope, $stateParams
         , Util, ObjectService, ConfigService, ObjectTimeService, CaseInfoService
         , HelperUiGridService, HelperObjectBrowserService) {
 
@@ -67,7 +67,7 @@ angular.module('cases').controller('Cases.TimeController', ['$scope', '$statePar
                 ObjectTimeService.queryTimesheets(ObjectService.ObjectTypes.CASE_FILE, currentObjectId).then(
                     function (timesheets) {
                         for (var i = 0; i < timesheets.length; i++) {
-                            timesheets[i].acm$_formName = $translate.instant("cases.comp.time.formNamePrefix") + " " + Util.goodValue(timesheets[i].startDate) + " - " + Util.goodValue(timesheets[i].endDate);
+                            timesheets[i].acm$_formName = timesheets[i].title;
                             timesheets[i].acm$_hours = _.reduce(Util.goodArray(timesheets[i].times), function (total, n) {
                                 return total + Util.goodValue(n.value, 0);
                             }, 0);

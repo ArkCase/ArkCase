@@ -1,8 +1,18 @@
 package com.armedia.acm.plugins.objectlockplugin.web.api;
 
+import static junit.framework.Assert.assertEquals;
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
@@ -22,19 +32,12 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
-import static junit.framework.Assert.assertEquals;
-import static org.easymock.EasyMock.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 /**
  * Created by nebojsha on 28.10.2015.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(locations = {
-        "classpath*:/spring/spring-web-object-lock-api-test.xml"})
+@ContextConfiguration(locations = { "classpath*:/spring/spring-web-object-lock-api-test.xml" })
 public class AcmObjectLockAPIControllerTest extends EasyMockSupport
 {
 
@@ -51,7 +54,6 @@ public class AcmObjectLockAPIControllerTest extends EasyMockSupport
 
     private MockMvc mockMvc;
     private AcmObjectLockService objectLockServiceMock;
-
 
     @Autowired
     private AcmObjectLockAPIController objectLockAPIController;
@@ -72,26 +74,22 @@ public class AcmObjectLockAPIControllerTest extends EasyMockSupport
         expect(mockAuthentication.getName()).andReturn(user).anyTimes();
 
         Capture<Authentication> authenticationCapture = EasyMock.newCapture();
-        expect(objectLockServiceMock.createLock(eq(1123l), eq("CASE_FILE"), eq("OBJECT_LOCK"), capture(authenticationCapture))).andAnswer(() -> {
-            AcmObjectLock lock = new AcmObjectLock();
-            lock.setCreator(user);
-            lock.setId(1l);
-            lock.setObjectId(1123l);
-            lock.setObjectType("CASE_FILE");
-            return lock;
-        });
-
+        expect(objectLockServiceMock.createLock(eq(1123l), eq("CASE_FILE"), eq("OBJECT_LOCK"), eq(true), capture(authenticationCapture)))
+                .andAnswer(() -> {
+                    AcmObjectLock lock = new AcmObjectLock();
+                    lock.setCreator(user);
+                    lock.setId(1l);
+                    lock.setObjectId(1123l);
+                    lock.setObjectType("CASE_FILE");
+                    return lock;
+                });
 
         session.setAttribute("acm_ip_address", "127.0.0.1");
 
         replayAll();
 
-
-        MvcResult result = mockMvc.perform(
-                put("/api/v1/plugin/CASE_FILE/1123/lock")
-                        .session(session)
-                        .principal(mockAuthentication)
-        ).andExpect(status().isOk()).andReturn();
+        MvcResult result = mockMvc.perform(put("/api/v1/plugin/CASE_FILE/1123/lock").session(session).principal(mockAuthentication))
+                .andExpect(status().isOk()).andReturn();
 
         assertEquals(user, authenticationCapture.getValue().getName());
 
@@ -117,12 +115,8 @@ public class AcmObjectLockAPIControllerTest extends EasyMockSupport
         session.setAttribute("acm_ip_address", "127.0.0.1");
         replayAll();
 
-
-        MvcResult result = mockMvc.perform(
-                delete("/api/v1/plugin/CASE_FILE/1123/lock")
-                        .session(session)
-                        .principal(mockAuthentication)
-        ).andExpect(status().isOk()).andReturn();
+        MvcResult result = mockMvc.perform(delete("/api/v1/plugin/CASE_FILE/1123/lock").session(session).principal(mockAuthentication))
+                .andExpect(status().isOk()).andReturn();
 
         verifyAll();
     }
