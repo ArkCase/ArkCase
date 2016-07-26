@@ -142,6 +142,13 @@
             </property>
         </bean>
 
+        <bean id="acmSamlWebSSOProcessingFilter" class="com.armedia.acm.auth.AcmSamlProcessingFilter">
+            <property name="authenticationManager" ref="acmAuthenticationManager"/>
+            <property name="authenticationSuccessHandler" ref="acmLoginSuccessHandler"/>
+            <property name="authenticationFailureHandler" ref="failureRedirectHandler"/>
+            <property name="authenticationDetailsSource" ref="acmAuthenticationDetailsFactory"/>
+        </bean>
+
         <bean id="acmSamlAuthenticationCheckFilter" class="com.armedia.acm.auth.AcmSamlAuthenticationCheckFilter">
             <property name="authenticationCheckIntervalInSeconds"
                       value="${sso.saml.authenticationCheckIntervalInSeconds}"/>
