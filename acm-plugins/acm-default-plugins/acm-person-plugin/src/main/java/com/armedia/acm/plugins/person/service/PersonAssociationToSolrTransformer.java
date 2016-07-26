@@ -94,7 +94,7 @@ public class PersonAssociationToSolrTransformer implements AcmObjectToSolrDocTra
         boolean classNames = theirClassName.equals(ourClassName);
         boolean isSupported = objectNotNull && classNames;
 
-        log.debug("Incoming: " + acmObjectType.getName() + "; do we handle it? " + isSupported);
+        log.trace("Incoming: " + acmObjectType.getName() + "; do we handle it? " + isSupported);
 
         return isSupported;
     }

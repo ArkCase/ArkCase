@@ -1,9 +1,9 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.TimeController', ['$scope', '$stateParams', '$translate'
+angular.module('complaints').controller('Complaints.TimeController', ['$scope', '$stateParams'
     , 'UtilService', 'ObjectService', 'ConfigService', 'Object.TimeService', 'Complaint.InfoService'
     , 'Helper.UiGridService', 'Helper.ObjectBrowserService'
-    , function ($scope, $stateParams, $translate
+    , function ($scope, $stateParams
         , Util, ObjectService, ConfigService, ObjectTimeService, ComplaintInfoService
         , HelperUiGridService, HelperObjectBrowserService) {
 
@@ -38,11 +38,11 @@ angular.module('complaints').controller('Complaints.TimeController', ['$scope', 
 
 
         if (Util.goodPositive(componentHelper.currentObjectId, false)) {
-            ObjectTimeService.queryTimesheets(ObjectService.ObjectTypes.CASE_FILE, componentHelper.currentObjectId).then(
+            ObjectTimeService.queryTimesheets(ObjectService.ObjectTypes.COMPLAINT, componentHelper.currentObjectId).then(
                 function (timesheets) {
                     componentHelper.promiseConfig.then(function (config) {
                         for (var i = 0; i < timesheets.length; i++) {
-                            timesheets[i].acm$_formName = $translate.instant("complaints.comp.time.formNamePrefix") + " " + Util.goodValue(timesheets[i].startDate) + " - " + Util.goodValue(timesheets[i].endDate);
+                            timesheets[i].acm$_formName = timesheets[i].title;
                             timesheets[i].acm$_hours = _.reduce(Util.goodArray(timesheets[i].times), function (total, n) {
                                 return total + Util.goodValue(n.value, 0);
                             }, 0);

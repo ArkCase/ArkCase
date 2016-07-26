@@ -154,14 +154,6 @@
       "userId": "User"
     }
   },
-  "cases.comp.correspondence": {
-    "title": "Correspondence",
-    "table.columns": {
-      "name": "Title",
-      "created": "Created",
-      "creator": "Creator"
-    }
-  },
   "cases.comp.time": {
     "title": "Time",
     "table.columns": {

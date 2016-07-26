@@ -1,13 +1,17 @@
 'use strict';
 
 //Menu service used for managing  menus
-angular.module('core').service('Menus', ['$q', 'PermissionsService',
-    function ($q, PermissionsService) {
+angular.module('core').service('Menus', ['$q', 'PermissionsService', 'Admin.ModulesService', 'Authentication',
+    function ($q, PermissionsService, ModuleService, Authentication) {
         // Define a set of default roles
         this.defaultRoles = ['*'];
 
         // Define the menus object
         this.menus = {};
+        this.allMenuObjects = [];
+
+        var appModulesPromise = ModuleService.getAppModules();
+        var userRolesPromise = Authentication.queryUserInfo();
 
         // A private function for rendering decision
         var shouldRender = function (user) {
@@ -105,33 +109,66 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService',
         // Add menu item object
         this.addMenuItems = function (menuObjects) {
             var context = this;
-            for (var i = 0; i < menuObjects.length; i++) {
-                var menuObj = menuObjects[i];
-                // Validate that the menu exists
-                this.validateMenuExistance(menuObj.menuId);
-                // Check if we have defined permission rule with name of menu
-                (function processMenuPermission(menuObj) {
-                    PermissionsService.getActionPermission(menuObj.menuItemURL, null).then(function(moduleAllowed){
-                        if (moduleAllowed) {
-                            // Push new menu item
-                            context.menus[menuObj.menuId].items.push({
-                                title: 'core.menus.' + menuObj.menuId + '.' + menuObj.menuItemURL,
-                                link: menuObj.menuItemURL,
-                                menuItemType: 'item',
-                                uiRoute: '/' + menuObj.menuItemURL,
-                                isPublic: true,
-                                position: menuObj.position || 0,
-                                iconClass: menuObj.iconClass,
-                                permissionAction: menuObj.permissionAction || 'noAction'
+            $q.all([appModulesPromise, userRolesPromise]).then(function (data) {
+                var appModules = data[0].data;
+                var userRoles = data[1].authorities;
+
+                for (var i = 0; i < menuObjects.length; i++) {
+                    var menuObj = menuObjects[i];
+                    context.allMenuObjects.push(menuObj);
+                    // Validate that the menu exists
+                    context.validateMenuExistance(menuObj.menuId);
+                    // Check if we have defined permission rule with name of menu
+                    (function processMenuPermission(menuObj) {
+                        PermissionsService.getActionPermission(menuObj.menuItemURL, null).then(function (moduleAllowedByActionPermission) {
+                            var moduleObject = null;
+                            var moduleAllowedByRoles = false;
+
+                            //iterate trough all application modules to isolate it and check later if module is allowed to be used
+                            //based on the user roles
+                            angular.forEach(appModules, function (module) {
+                                if (menuObj.moduleId != null && menuObj.moduleId != "none") {
+                                    if (menuObj.moduleId === module.id) {
+                                        moduleObject = module;
+                                    }
+                                }
                             });
-                        }
-                    });
-                })(menuObj);
-            }
+
+                            // No need to check for role base permissions for items that does not belongs to ArkCase module.
+                            // All menu items allowed by ActionPermissions based on the rules in
+                            // accessControlRules.json will be visible in this case.
+                            if (menuObj.moduleId != null && menuObj.moduleId === "none") {
+
+                                if (moduleAllowedByActionPermission) {
+                                    // Push new menu item
+                                    pushMenuItem(menuObj, context);
+                                }
+                            }
+                            if (moduleObject != null) {
+                                ModuleService.getRolesForModulePrivilege(moduleObject.privilege).then(function (rolesForModule) {
+                                    angular.forEach(rolesForModule.data, function (role) {
+                                        angular.forEach(userRoles, function (userRole) {
+                                            if (role === userRole) {
+                                                moduleAllowedByRoles = true;
+                                            }
+                                        })
+                                    });
+
+                                    if (moduleAllowedByActionPermission && moduleAllowedByRoles) {
+                                        // Push new menu item
+                                        pushMenuItem(menuObj, context);
+                                    }
+                                })
+                            }
+                        })
+                    })(menuObj);
+                }
+            });
+
         };
 
 
-        // Add submenu item object
+// Add submenu item object
         this.addSubMenuItem = function (menuId, rootMenuItemURL, menuItemTitle, menuItemURL, menuItemUIRoute, isPublic, roles, position) {
             // Validate that the menu exists
             this.validateMenuExistance(menuId);
@@ -156,7 +193,7 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService',
             return this.menus[menuId];
         };
 
-        // Remove existing menu object by menu id
+// Remove existing menu object by menu id
         this.removeMenuItem = function (menuId, menuItemURL) {
             // Validate that the menu exists
             this.validateMenuExistance(menuId);
@@ -172,7 +209,7 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService',
             return this.menus[menuId];
         };
 
-        // Remove existing menu object by menu id
+// Remove existing menu object by menu id
         this.removeSubMenuItem = function (menuId, submenuItemURL) {
             // Validate that the menu exists
             this.validateMenuExistance(menuId);
@@ -190,13 +227,28 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService',
             return this.menus[menuId];
         };
 
-        //Adding the topbar menu
+//Adding the topbar menu
         this.addMenu('topbar');
 
-        //Adding the leftnav menu
+//Adding the leftnav menu
         this.addMenu('leftnav');
 
-        //Adding the user menu
+//Adding the user menu
         this.addMenu('usermenu');
+
+        function pushMenuItem(menuObj, context) {
+            // Push new menu item
+            context.menus[menuObj.menuId].items.push({
+                title: 'core.menus.' + menuObj.menuId + '.' + menuObj.menuItemURL,
+                link: menuObj.menuItemURL,
+                menuItemType: 'item',
+                uiRoute: '/' + menuObj.menuItemURL,
+                isPublic: true,
+                position: menuObj.position || 0,
+                iconClass: menuObj.iconClass,
+                permissionAction: menuObj.permissionAction || 'noAction'
+            });
+        }
+
     }
 ]);

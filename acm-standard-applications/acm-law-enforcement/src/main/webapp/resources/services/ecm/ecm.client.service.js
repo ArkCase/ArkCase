@@ -77,7 +77,7 @@ angular.module('services').factory('EcmService', ['$resource', 'Acm.StoreService
             //}
             //, sendEmailWithAttachments: {
             //    method: 'POST',
-            //    url: 'api/latest/plugin/outlook/email/withattachments'
+            //    url: 'api/latest/service/notification/email/withattachments'
             //}
             , getFile: {
                 method: 'GET',

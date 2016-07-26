@@ -3,13 +3,17 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-    <bean id="lock.manager" class="com.armedia.acm.webdav.AcmFileSystemLockManager"/>
+    <bean id="lock.manager" class="com.armedia.acm.webdav.AcmFileSystemLockManager">
+        <property name="objectLockService" ref="objectLockService"/>
+    </bean>
     <!-- <bean id="lock.manager" class="io.milton.http.fs.SimpleLockManager">
         <constructor-arg>
             <bean class="io.milton.cache.LocalCacheManager"/>
         </constructor-arg>
     </bean> -->
-    <bean id="security.manager" class="com.armedia.acm.webdav.AcmWebDAVSecurityManagerAdapter"/>
+    <bean id="security.manager" class="com.armedia.acm.webdav.AcmWebDAVSecurityManagerAdapter">
+        <property name="authenticationTokenService" ref="authenticationTokenService"/>
+    </bean>
 
     <bean id="wordExtensionPattern" class="java.util.regex.Pattern" factory-method="compile">
         <constructor-arg value="\.(doc|dot|docx|dotx|docm|dotm|docb)$"/>
@@ -17,7 +21,6 @@
 
     <bean id="resource.factory" class="com.armedia.acm.webdav.AcmFileSystemResourceFactory">
         <property name="fileDao" ref="ecmFileDao"/>
-        <property name="folderDao" ref="acmFolderDao"/>
         <property name="ecmFileTransaction" ref="ecmFileTransaction"/>
         <property name="muleContextManager" ref="muleContextManager"/>
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>

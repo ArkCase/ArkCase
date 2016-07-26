@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('cases').controller('Cases.MainController', ['$scope', '$stateParams', '$translate', 'UtilService', 'ConfigService'
-    , 'Case.InfoService', 'ObjectService', 'Object.CorrespondenceService', 'Object.NoteService', 'Object.TaskService'
+    , 'Case.InfoService', 'ObjectService', 'Object.NoteService', 'Object.TaskService'
     , 'Object.AuditService', 'Object.CostService', 'Object.TimeService', 'dashboard', 'Dashboard.DashboardService', 'Acm.StoreService'
     , function ($scope, $stateParams, $translate, Util, ConfigService
-        , CaseInfoService, ObjectService, ObjectCorrespondenceService, ObjectNoteService, ObjectTaskService
+        , CaseInfoService, ObjectService, ObjectNoteService, ObjectTaskService
         , ObjectAuditService, ObjectCostService, ObjectTimeService, dashboard, DashboardService, Store) {
 
         var promiseConfig = ConfigService.getModuleConfig("cases").then(function (moduleConfig) {

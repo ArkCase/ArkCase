@@ -468,7 +468,6 @@ span.fancytree-title {
 }
 
 /* Right Sidebar */
-
 .module-content .right-sidebar.well-sm ul.nav.nav-tabs {
     background-color: #ebeceb;
 }
@@ -547,7 +546,6 @@ span.fancytree-title {
 }
 
 /* Tables */
-
 .ui-grid-viewport {
     height: auto !important;
     overflow: auto !important;
@@ -658,6 +656,7 @@ thead {
 }
 
 /* Hyperlinks Padding/Wrap Issues */
+
 .ui-grid a {
 	padding: 5px;
 	-moz-box-sizing: border-box;
@@ -702,13 +701,13 @@ thead {
 }
 
 /* Highlight error grid's cell */
+
 .ui-grid .ui-grid-cell.error-cell {
     background-color: #ff7373;
     color: #fff;
 }
 
 /* Modal Window Columns */
-
 
 .modal-search {
     width: 100%;
@@ -962,8 +961,6 @@ a.editable.editable-click.editable-hide {
 }
 
 /*Case Overview */
-
-
 
 /* Style of invalid fields */
 input.ng-invalid, textarea.ng-invalid, select.ng-invalid {

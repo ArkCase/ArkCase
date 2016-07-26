@@ -42,7 +42,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "acm_file")
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "className")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "className")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.plugins.ecm.model.EcmFile")
@@ -371,6 +371,11 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
         return OBJECT_TYPE;
     }
 
+    public void setObjectType(String objectType)
+    {
+        this.objectType = objectType;
+    }
+
     @JsonIgnore
     @Override
     public Long getId()
@@ -382,11 +387,6 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     public String toString()
     {
         return ToStringBuilder.reflectionToString(this);
-    }
-
-    public void setObjectType(String objectType)
-    {
-        this.objectType = objectType;
     }
 
     public AcmObjectLock getLock()

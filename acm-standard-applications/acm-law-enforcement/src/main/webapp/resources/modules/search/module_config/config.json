@@ -6,6 +6,7 @@
       "menuId": "leftnav",
       "menuItemURL": "search",
       "menuItemTitle": "Search",
+      "moduleId": "search",
       "iconClass": "fa fa-search",
       "position": 70
     }
@@ -39,7 +40,7 @@
         },
         {
           "name": "title_parseable",
-		  "sortField": "title_parseable_lcs",
+          "sortField": "title_parseable_lcs",
           "displayName": "search.comp.grid.columns.title",
           "headerCellFilter": "translate"
         },

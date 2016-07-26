@@ -23,7 +23,14 @@ import static org.junit.Assert.*;
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-notification-plugin-test.xml",
         "/spring/spring-library-acm-encryption.xml",
-        "/spring/spring-library-authentication-token.xml", "/spring/spring-library-user-service.xml"
+        "/spring/spring-library-authentication-token.xml",
+        "/spring/spring-library-user-service.xml",
+        "/spring/spring-library-service-data.xml",
+        "/spring/spring-library-ecm-file.xml",
+        "/spring/spring-library-search.xml",
+        "/spring/spring-library-ms-outlook-integration.xml",
+        "/spring/spring-library-data-access-control.xml",
+        "/spring/spring-library-particpants.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class NotificationIT

@@ -86,13 +86,13 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
             // check if action name matches
             if (permission == null || !permission.equals(accessControlRule.getActionName()))
             {
-                log.debug("Non matching permission [{} != {}], ignoring", accessControlRule.getActionName(), permission);
+                log.trace("Non matching permission [{} != {}], ignoring", accessControlRule.getActionName(), permission);
                 continue;
             }
             // check if target type matches
             if (targetType == null || !targetType.equals(accessControlRule.getObjectType()))
             {
-                log.debug("Non matching target type [{} != {}], ignoring", accessControlRule.getObjectType(), targetType);
+                log.trace("Non matching target type [{} != {}], ignoring", accessControlRule.getObjectType(), targetType);
                 continue;
             }
             // check if target sub type matches (NOTE: it is optional in JSON rules structure)
@@ -102,7 +102,7 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
                 String targetSubType = (String) targetObjectProperties.get("objectSubType");
                 if (targetSubType == null || !targetSubType.equals(accessControlRule.getObjectSubType()))
                 {
-                    log.debug("Non matching target sub type [{} != {}], ignoring", accessControlRule.getObjectSubType(), targetSubType);
+                    log.trace("Non matching target sub type [{} != {}], ignoring", accessControlRule.getObjectSubType(), targetSubType);
                     continue;
                 }
             }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+<mule xmlns:https="http://www.mulesoft.org/schema/mule/https"
       xmlns="http://www.mulesoft.org/schema/mule/core"
       xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
       xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
@@ -8,19 +8,19 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/https/current/mule-https.xsd
 http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd">
 
 
-    <http:endpoint name="submitAdvancedSearchDocuments"
-                   address="http://${solr.host}:${solr.port}/${solr.contextRoot}/${solr.advancedsearch.core}/${solr.updateHandler}?overwrite=true"
+    <https:endpoint name="submitAdvancedSearchDocumentsSolrEndpoint"
+                   address="https://${solr.host}:${solr.port}/${solr.contextRoot}/${solr.advancedsearch.core}/${solr.updateHandler}?overwrite=true"
                    contentType="application/json; charset=UTF-8"
                    mimeType="application/json"
                    encoding="UTF-8"
                    method="POST"
                    exchange-pattern="request-response"
                    doc:name="Send Advanced Search Docs to SOLR">
-    </http:endpoint>
+    </https:endpoint>
 
     <flow name="jmsSendToAdvancedSearchSolr"
           doc:name="Send to SOLR"
@@ -40,7 +40,7 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
 
 
 
-        <http:outbound-endpoint ref="submitAdvancedSearchDocuments"/>
+        <https:outbound-endpoint ref="submitAdvancedSearchDocumentsSolrEndpoint"/>
     </flow>
 
 </mule>

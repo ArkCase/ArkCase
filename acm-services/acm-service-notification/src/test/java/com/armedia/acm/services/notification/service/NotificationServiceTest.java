@@ -3,6 +3,12 @@
  */
 package com.armedia.acm.services.notification.service;
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.junit.Assert.assertEquals;
+
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
@@ -14,6 +20,7 @@ import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationRule;
 import com.armedia.acm.services.notification.model.QueryType;
 import com.armedia.acm.spring.SpringContextHolder;
+
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
@@ -26,9 +33,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
 
 /**
  * @author riste.tutureski
@@ -145,13 +149,18 @@ public class NotificationServiceTest extends EasyMockSupport
         rules.put("assignRule", assignRule);
         rules.put("unassignRule", unassignRule);
 
-        EmailNotificationSender emailNotificationSender = new EmailNotificationSender();
-        emailNotificationSender.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
-        emailNotificationSender.setMuleContextManager(mockMuleContextManager);
-        emailNotificationSender.setPropertyFileManager(mockPropertyFileManager);
+        NotificationSenderFactory notificationSenderFactory = new NotificationSenderFactory();
+        notificationSenderFactory.setPropertyFileManager(mockPropertyFileManager);
+        Map<String, NotificationSender> notificationSenderMap = new HashMap<String, NotificationSender>();
+        SmtpNotificationSender smtpNotificationServer = new SmtpNotificationSender();
+        smtpNotificationServer.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
+        smtpNotificationServer.setMuleContextManager(mockMuleContextManager);
+        smtpNotificationServer.setPropertyFileManager(mockPropertyFileManager);
+        notificationSenderMap.put("smtp", smtpNotificationServer);
+        notificationSenderFactory.setNotificationSenderMap(notificationSenderMap);
 
-        Map<String, NotificationSender> senders = new HashMap<>();
-        senders.put("emailNotificationSender", emailNotificationSender);
+        Map<String, NotificationSenderFactory> senders = new HashMap<>();
+        senders.put("notificationSender", notificationSenderFactory);
 
         // I am using the same captures below multiple times because we don't need to check these captures
         Capture<String> stringCapture = new Capture<>();
@@ -164,8 +173,9 @@ public class NotificationServiceTest extends EasyMockSupport
         mockPropertyFileManager.storeMultiple(capture(mapCapture), capture(stringCapture), eq(true));
         expectLastCall().anyTimes();
         expect(mockSpringContextHolder.getAllBeansOfType(NotificationRule.class)).andReturn(rules).anyTimes();
-        expect(mockSpringContextHolder.getAllBeansOfType(NotificationSender.class)).andReturn(senders).anyTimes();
-        expect(mockNotificationDao.executeQuery(capture(propertiesCapture), eq(0), eq(10), capture(ruleCapture))).andReturn(notifications).anyTimes();
+        expect(mockSpringContextHolder.getAllBeansOfType(NotificationSenderFactory.class)).andReturn(senders).anyTimes();
+        expect(mockNotificationDao.executeQuery(capture(propertiesCapture), eq(0), eq(10), capture(ruleCapture))).andReturn(notifications)
+                .anyTimes();
         mockAuditPropertyEntityAdapter.setUserId(eq("NOTIFICATION-BATCH-INSERT"));
         expectLastCall().anyTimes();
         expect(mockPropertyFileManager.load(capture(stringCapture), eq("notification.user.email.host"), capture(stringCapture)))
@@ -183,7 +193,7 @@ public class NotificationServiceTest extends EasyMockSupport
         try
         {
             Capture<Map<String, Object>> messagePropsCapture = EasyMock.newCapture();
-            expect(mockMuleContextManager.send(eq("vm://sendEmail.in"), eq("note"), capture(messagePropsCapture)))
+            expect(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), eq("note"), capture(messagePropsCapture)))
                     .andReturn(mockMuleMessage).anyTimes();
         } catch (MuleException e)
         {
@@ -199,7 +209,8 @@ public class NotificationServiceTest extends EasyMockSupport
         Capture<ApplicationNotificationEvent> capturedEvent = new Capture<>();
         mockNotificationEventPublisher.publishNotificationEvent(capture(capturedEvent));
         expectLastCall().anyTimes();
-        expect(mockNotificationDao.executeQuery(capture(propertiesCapture), eq(10), eq(10), capture(ruleCapture))).andReturn(new ArrayList<>()).anyTimes();
+        expect(mockNotificationDao.executeQuery(capture(propertiesCapture), eq(10), eq(10), capture(ruleCapture)))
+                .andReturn(new ArrayList<>()).anyTimes();
         expect(mockNotificationFormatter.replaceFormatPlaceholders(notification1)).andReturn(notification1).atLeastOnce();
         expect(mockNotificationFormatter.replaceFormatPlaceholders(notification2)).andReturn(notification2).atLeastOnce();
 
@@ -275,13 +286,18 @@ public class NotificationServiceTest extends EasyMockSupport
         rules.put("assignRule", assignRule);
         rules.put("unassignRule", unassignRule);
 
-        EmailNotificationSender emailNotificationSender = new EmailNotificationSender();
-        emailNotificationSender.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
-        emailNotificationSender.setMuleContextManager(mockMuleContextManager);
-        emailNotificationSender.setPropertyFileManager(mockPropertyFileManager);
+        NotificationSenderFactory notificationSenderFactory = new NotificationSenderFactory();
+        notificationSenderFactory.setPropertyFileManager(mockPropertyFileManager);
+        Map<String, NotificationSender> notificationSenderMap = new HashMap<String, NotificationSender>();
+        SmtpNotificationSender smtpNotificationServer = new SmtpNotificationSender();
+        smtpNotificationServer.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
+        smtpNotificationServer.setMuleContextManager(mockMuleContextManager);
+        smtpNotificationServer.setPropertyFileManager(mockPropertyFileManager);
+        notificationSenderMap.put("smtp", smtpNotificationServer);
+        notificationSenderFactory.setNotificationSenderMap(notificationSenderMap);
 
-        Map<String, NotificationSender> senders = new HashMap<>();
-        senders.put("emailNotificationSender", emailNotificationSender);
+        Map<String, NotificationSenderFactory> senders = new HashMap<>();
+        senders.put("notificationSender", notificationSenderFactory);
 
         // I am using the same captures below multiple times because we don't need to check these captures
         Capture<String> stringCapture = new Capture<>();
@@ -294,8 +310,9 @@ public class NotificationServiceTest extends EasyMockSupport
         mockPropertyFileManager.storeMultiple(capture(mapCapture), capture(stringCapture), eq(true));
         expectLastCall().anyTimes();
         expect(mockSpringContextHolder.getAllBeansOfType(NotificationRule.class)).andReturn(rules).anyTimes();
-        expect(mockSpringContextHolder.getAllBeansOfType(NotificationSender.class)).andReturn(senders).anyTimes();
-        expect(mockNotificationDao.executeQuery(capture(propertiesCapture), eq(0), eq(10), capture(ruleCapture))).andReturn(notifications).anyTimes();
+        expect(mockSpringContextHolder.getAllBeansOfType(NotificationSenderFactory.class)).andReturn(senders).anyTimes();
+        expect(mockNotificationDao.executeQuery(capture(propertiesCapture), eq(0), eq(10), capture(ruleCapture))).andReturn(notifications)
+                .anyTimes();
         mockAuditPropertyEntityAdapter.setUserId(eq("NOTIFICATION-BATCH-INSERT"));
         expectLastCall().anyTimes();
         expect(mockPropertyFileManager.load(capture(stringCapture), eq("notification.user.email.host"), capture(stringCapture)))
@@ -316,7 +333,7 @@ public class NotificationServiceTest extends EasyMockSupport
         try
         {
             Capture<Map<String, Object>> messagePropsCapture = EasyMock.newCapture();
-            expect(mockMuleContextManager.send(eq("vm://sendEmail.in"), eq("note"), capture(messagePropsCapture)))
+            expect(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), eq("note"), capture(messagePropsCapture)))
                     .andReturn(mockMuleMessage).anyTimes();
         } catch (MuleException e)
         {
@@ -332,7 +349,8 @@ public class NotificationServiceTest extends EasyMockSupport
         Capture<ApplicationNotificationEvent> capturedEvent = new Capture<>();
         mockNotificationEventPublisher.publishNotificationEvent(capture(capturedEvent));
         expectLastCall().anyTimes();
-        expect(mockNotificationDao.executeQuery(capture(propertiesCapture), eq(10), eq(10), capture(ruleCapture))).andReturn(new ArrayList<>()).anyTimes();
+        expect(mockNotificationDao.executeQuery(capture(propertiesCapture), eq(10), eq(10), capture(ruleCapture)))
+                .andReturn(new ArrayList<>()).anyTimes();
 
         replayAll();
 
@@ -400,7 +418,8 @@ public class NotificationServiceTest extends EasyMockSupport
         mockPropertyFileManager.storeMultiple(capture(mapCapture), capture(stringCapture), eq(true));
         expectLastCall().anyTimes();
         expect(mockSpringContextHolder.getAllBeansOfType(NotificationRule.class)).andReturn(rules).anyTimes();
-        expect(mockNotificationDao.executeQuery(capture(propertiesCapture), eq(0), eq(10), eq(singleQueryRule))).andReturn(notifications).anyTimes();
+        expect(mockNotificationDao.executeQuery(capture(propertiesCapture), eq(0), eq(10), eq(singleQueryRule))).andReturn(notifications)
+                .anyTimes();
         mockAuditPropertyEntityAdapter.setUserId(eq("NOTIFICATION-BATCH-INSERT"));
         expectLastCall().anyTimes();
 
@@ -410,7 +429,8 @@ public class NotificationServiceTest extends EasyMockSupport
         Capture<ApplicationNotificationEvent> capturedEvent = new Capture<>();
         mockNotificationEventPublisher.publishNotificationEvent(capture(capturedEvent));
         expectLastCall().anyTimes();
-        expect(mockNotificationDao.executeQuery(capture(propertiesCapture), eq(10), eq(10), eq(singleQueryRule))).andReturn(new ArrayList<>()).anyTimes();
+        expect(mockNotificationDao.executeQuery(capture(propertiesCapture), eq(10), eq(10), eq(singleQueryRule)))
+                .andReturn(new ArrayList<>()).anyTimes();
 
         expect(mockNotificationFormatter.replaceFormatPlaceholders(notification1)).andReturn(notification1).atLeastOnce();
 

@@ -6,7 +6,7 @@ angular.module('profile').service('Profile.ChangePasswordService', function ($ht
     function changePassword(newPassword) {
         var request = $http({
             method: "POST",
-            url: "api/v1/plugin/profile/outlook",
+            url: "api/v1/plugin/profile/savepassword",
             data: newPassword
         });
         return(request.then(handleSuccess, handleError));

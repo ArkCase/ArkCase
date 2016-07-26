@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>com.armedia.acm.acm-plugins</groupId>
+        <artifactId>acm-default-plugins</artifactId>
+        <version>3.0.56-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
+    <artifactId>acm-business-process-plugin</artifactId>
+    <name>ACM Default Plugin: Acm Business Process</name>
+    <description>This plugin defines common functionality for business processes.</description>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-pipeline</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-drools-rule-monitor</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <!-- activiti -->
+        <dependency>
+            <groupId>org.activiti</groupId>
+            <artifactId>activiti-engine</artifactId>
+        </dependency>
+
+    </dependencies>
+
+</project>

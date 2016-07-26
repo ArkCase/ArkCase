@@ -8,9 +8,6 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -37,7 +34,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -58,7 +54,6 @@ import java.util.List;
 public class Person implements Serializable, AcmEntity
 {
     private static final long serialVersionUID = 7413755227864370548L;
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Id
     @TableGenerator(name = "acm_person_gen", table = "acm_person_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_person", initialValue = 100, allocationSize = 1)
