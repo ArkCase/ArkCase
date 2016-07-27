@@ -383,7 +383,7 @@
               "displayName": "tasks.comp.notes.table.columns.creator",
               "headerCellFilter": "translate",
               "enableCellEdit": false,
-              "lookup": "userFullNames"
+              "fullNameField": "creator_full_name_lcs"
             }
           ]
         },
@@ -638,7 +638,7 @@
           "displayName": "tasks.comp.docsreview.table.columns.creator",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
-          "lookup": "userFullNames"
+          "fullNameField": "creator_full_name_lcs"
         },
         {
           "name": "status",
@@ -679,7 +679,7 @@
           "displayName": "tasks.comp.rejcomments.table.columns.creator",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
-          "lookup": "userFullNames"
+          "fullNameField": "creator_full_name_lcs"
         }
       ]
     },
@@ -885,7 +885,7 @@
           "name": "creator",
           "displayName": "tasks.comp.tags.table.columns.createdBy",
           "headerCellFilter": "translate",
-          "lookup": "userFullNames"
+          "fullNameField": "creator_full_name_lcs"
         }
       ],
       "filters": "\"Object Type\": TAG",

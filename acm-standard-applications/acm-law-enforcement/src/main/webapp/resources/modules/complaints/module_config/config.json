@@ -364,7 +364,7 @@
               "field": "assignee_s",
               "displayName": "complaints.comp.tasks.table.columns.assignee",
               "headerCellFilter": "translate",
-              "lookup": "userFullNames",
+              "fullNameField": "assignee_full_name_lcs",
               "width": 150
             },
             {
@@ -585,7 +585,7 @@
             "name": "creator",
             "displayName": "complaints.comp.people.contactMethods.table.columns.creator",
             "headerCellFilter": "translate",
-            "lookup": "userFullNames"
+            "fullNameField": "creator_full_name_lcs"
           }
         ]
       },
@@ -626,7 +626,7 @@
             "name": "creator",
             "displayName": "complaints.comp.people.organizations.table.columns.creator",
             "headerCellFilter": "translate",
-            "lookup": "userFullNames"
+            "fullNameField": "creator_full_name_lcs"
           }
         ]
       },
@@ -684,7 +684,7 @@
             "name": "creator",
             "displayName": "complaints.comp.people.addresses.table.columns.creator",
             "headerCellFilter": "translate",
-            "lookup": "userFullNames"
+            "fullNameField": "creator_full_name_lcs"
           }
         ]
       },
@@ -722,7 +722,7 @@
             "name": "creator",
             "displayName": "complaints.comp.people.aliases.table.columns.creator",
             "headerCellFilter": "translate",
-            "lookup": "userFullNames"
+            "fullNameField": "creator_full_name_lcs"
           }
         ]
       },
@@ -760,7 +760,7 @@
             "name": "creator",
             "displayName": "complaints.comp.people.securityTags.table.columns.creator",
             "headerCellFilter": "translate",
-            "lookup": "userFullNames"
+            "fullNameField": "creator_full_name_lcs"
           }
         ]
       }
@@ -938,7 +938,7 @@
           "field": "assignee_s",
           "displayName": "complaints.comp.tasks.table.columns.assignee",
           "headerCellFilter": "translate",
-          "lookup": "userFullNames"
+          "fullNameField": "assignee_full_name_lcs"
         },
         {
           "name": "created",
@@ -1178,7 +1178,7 @@
           "name": "creator",
           "displayName": "complaints.comp.tags.table.columns.createdBy",
           "headerCellFilter": "translate",
-          "lookup": "userFullNames"
+          "fullNameField": "creator_full_name_lcs"
         }
       ],
       "filters": "\"Object Type\": TAG",
