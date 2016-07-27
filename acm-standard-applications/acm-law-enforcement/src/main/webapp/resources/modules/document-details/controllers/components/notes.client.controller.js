@@ -1,30 +1,34 @@
 'use strict';
 
 angular.module('document-details').controller('Document.NotesController', ['$scope', '$stateParams', 'ConfigService', 'ObjectService'
-    , function ($scope, $stateParams, ConfigService, ObjectService) {
+    , function ($scope, $stateParams, ConfigService, ObjectService)
+    {
 
-        $scope.$on('document-data', updateVersionHistory);
-        $scope.versions = [];
+        $scope.$on('document-data', getActiveVersionTag);
+        $scope.activeVersion = "";
 
-        function updateVersionHistory(event,documentDetails){
-            if(documentDetails.versions && documentDetails.versions.length){
-                $scope.versions = documentDetails.versions;
+        function getActiveVersionTag(event, documentDetails)
+        {
+            if (documentDetails.activeVersionTag)
+            {
+                $scope.activeVersion = documentDetails.activeVersionTag;
             }
         }
 
-        $scope.$watchCollection('versions', function(newValue, oldValue){
-            if(newValue && newValue.length){
-				ConfigService.getComponentConfig("document-details", "notes").then(function (config) {
-            	   $scope.notesInit = {
-                        objectType: ObjectService.ObjectTypes.FILE,
-                        currentObjectId: $stateParams.id,
-                        tag: newValue.length
-                    };
-            	   $scope.config = config;
-            	   return config;
-        	    });
-            }
+        $scope.$watchCollection('activeVersion', function (newValue, oldValue)
+        {
+            ConfigService.getComponentConfig("document-details", "notes").then(function (config)
+            {
+                $scope.notesInit =
+                {
+                    objectType: ObjectService.ObjectTypes.FILE,
+                    currentObjectId: $stateParams.id,
+                    tag: $scope.activeVersion
+                };
+                $scope.config = config;
+                return config;
+            });
 
-        });
+        })
     }
 ]);
