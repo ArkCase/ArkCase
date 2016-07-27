@@ -14,13 +14,13 @@ SearchBase.Service = {
     ,onInitialized: function() {
     }
 
-    ,API_ADVANCED_SEARCH_       : "/api/v1/plugin/search/advancedSearch?q=name:"
+    ,API_FACETED_SEARCH_       : "/api/v1/plugin/search/facetedSearch?q="
 
     ,advancedSearchDeferred : function(searchInfo, postData, jtParams, sortMap, callbackSuccess, callbackError) {
         return AcmEx.Service.JTable.deferredPagingListAction(postData, jtParams, sortMap
             ,function() {
                 var url;
-                url =  App.getContextPath() + SearchBase.Service.API_ADVANCED_SEARCH_;
+                url =  App.getContextPath() + SearchBase.Service.API_FACETED_SEARCH_;
                 
                 var searchTerms = searchInfo.q.trim().replace(/(\*|\")/g, "").split(' ').filter(function (item) {
                     return item != "";
