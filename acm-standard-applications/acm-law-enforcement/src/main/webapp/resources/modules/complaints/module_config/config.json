@@ -1201,8 +1201,7 @@
         {
           "name": "name",
           "displayName": "complaints.comp.addreference.grid.columns.name",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<p ng-click='grid.appScope.onClickObjLink($event, row.entity.object_type_s, row.entity.object_id_s)' data-toggle='tooltip' data-placement='bottom' title={{row.entity.name}}>{{row.entity.name}}</p>"
+          "headerCellFilter": "translate"
         },
         {
           "name": "object_type_s",
