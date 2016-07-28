@@ -40,8 +40,6 @@ public class CostTrackingPage extends ArkCaseTestBase {
 	WebElement tagsLink;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[1]/a")
 	WebElement overviewLink;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/object-tree/section/div/div/div/ul/li[1]/span/span[3]")
-	WebElement firstCostsheet;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/object-tree/section/div/div/div/ul/li[1]/span/span[1]")
 	WebElement firstCostsheetExpander;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/object-tree/section/div/div/div/ul/li[1]/ul/li[1]/span/span[3]")
@@ -52,7 +50,12 @@ public class CostTrackingPage extends ArkCaseTestBase {
 	WebElement expensesList;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/object-tree/section/div/div/div/ul/li[1]/ul/li[4]/span/span[3]")
 	WebElement tagsList;
-
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/object-tree/section/header/div[3]/button")
+	WebElement sortButton;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/object-tree/section/header/div[3]/ul/li[2]/a")
+	WebElement sortDateDesc;
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/object-tree/section/div/div/div/ul/li[1]/span")
+	WebElement firstCostsheet;
 	// information ribbon
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div/div[6]/small/span")
 	WebElement stateLabel;
@@ -233,11 +236,10 @@ public class CostTrackingPage extends ArkCaseTestBase {
 
 	}
 
-	public void verifyCostsheetValuesInCostSummaryTable(String parentID, String parentType, String totalCost,
-			String title, String description) {
+	public void verifyCostsheetValuesInCostSummaryTable(String parentType, String totalCost, String title,
+			String description) {
 
 		SoftAssert softAssert = new SoftAssert();
-		softAssert.assertEquals(this.parentID.getText(), parentID, "Parent ID value is wrong");
 		softAssert.assertEquals(this.parentType.getText(), parentType, "Parent type value is wrong");
 		softAssert.assertEquals(this.totalCost.getText(), totalCost, "Total cost value is wrong");
 		softAssert.assertEquals(this.title.getText(), title, "Title value is wrong");
@@ -260,6 +262,19 @@ public class CostTrackingPage extends ArkCaseTestBase {
 
 	public void verifyUpdatedDetailsTextArea(String text) {
 		Assert.assertEquals("After refresh,Details text area is not updated ", text, detailsTextArea.getText());
+	}
+
+	public void clickSortButton() {
+		sortButton.click();
+	}
+
+	public void clickSortDateDesc() {
+		Assert.assertEquals("Sort date desc name is wrong", "Sort Date Decending", sortDateDesc.getText());
+		sortDateDesc.click();
+	}
+
+	public void clickFirstCostsheet() {
+		firstCostsheet.click();
 	}
 
 }

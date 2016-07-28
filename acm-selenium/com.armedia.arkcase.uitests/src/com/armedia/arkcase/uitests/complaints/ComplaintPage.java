@@ -16,8 +16,10 @@ WebElement complaintPage;
 @FindBy(how=How.XPATH,using="/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[1]/div[1]/span[4]/label")
 WebElement initiatorTab;
 @FindBy(how=How.XPATH,using="/html/body/iframe")
+public
 WebElement secondIframe;
 @FindBy(how=How.XPATH,using="/html/body/div[1]/div/div[2]/section/div/div/iframe")
+public
 WebElement firstIfarme;
 @FindBy(how=How.XPATH,using="/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[1]/div[3]/div[2]/div[4]/div[2]/div[1]/div[2]/div[3]/div[1]/input")
 WebElement firstNameInput;
@@ -176,7 +178,8 @@ public void verifyNoDataAviliable(){
 public void verifyError()
 {
 	int i=driver.findElements(By.xpath("/html/body/div[6]")).size();
-	Assert.assertTrue("When go button is clicked for searching user Error message comunicating with server is shown", i==0);
+	
+Assert.assertTrue("When go button is clicked for searching user Error message comunicating with server is shown", i!=0);
 }
 
 

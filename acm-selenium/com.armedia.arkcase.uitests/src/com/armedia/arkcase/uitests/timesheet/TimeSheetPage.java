@@ -12,9 +12,9 @@ import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
 public class TimeSheetPage extends ArkCaseTestBase {
 
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/iframe")
-	WebElement firstIframe;
+	public WebElement firstIframe;
 	@FindBy(how = How.XPATH, using = "/html/body/iframe")
-	WebElement secondIframe;
+	public WebElement secondIframe;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[9]/div[2]/table/tbody/tr/td[4]/div/div[1]/input[1]")
 	WebElement typeDropDown;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[9]/div[2]/table/tbody/tr/td[4]/div/div[1]/ul/li[2]/a")
@@ -52,12 +52,12 @@ public class TimeSheetPage extends ArkCaseTestBase {
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/div/div/div/div/header/div/div/div/input")
 	WebElement seachForUserInput;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/div/div/div/div/div[2]/div/div[2]/section/div/div/table/tbody/tr/td[2]/a")
-	WebElement searchedName;
+	public WebElement searchedName;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/div/div/div/div/div[2]/div/div[2]/section/div/div/table/tbody/tr/td[3]")
 	WebElement searchedType;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/div/div/div/div/div[2]/div/div[2]/section/div/div/table/tbody/tr/td[5]")
 	WebElement searchedUsername;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/div/div/div/div")
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/div/div/div/div/div[3]/button[2]")
 	WebElement addButton;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[1]/span/div/b")
 	WebElement timeTrackingTitle;
@@ -89,7 +89,7 @@ public class TimeSheetPage extends ArkCaseTestBase {
 				.findElements(By
 						.xpath("/html/body/div[1]/div[2]/div/div/div/div/div[2]/div/div[2]/section/div/div/table/tbody/tr/td"))
 				.size();
-		Assert.assertTrue("No user is displayed after Go button is clicked", i == 0);
+		Assert.assertTrue("No user is displayed after Go button is clicked", i != 0);
 
 	}
 
@@ -159,8 +159,8 @@ public class TimeSheetPage extends ArkCaseTestBase {
 	public void selectFirstChargeCode() {
 		firstChargeCode.click();
 	}
-	
-	public void clickChargeCode(){
+
+	public void clickChargeCode() {
 		chargeCodeDropDown.click();
 	}
 
@@ -168,7 +168,8 @@ public class TimeSheetPage extends ArkCaseTestBase {
 		detailsTextArea.click();
 		detailsTextArea.sendKeys(text);
 	}
-	public void clickSelectForApprover(){
+
+	public void clickSelectForApprover() {
 		selectApprover.click();
 	}
 
@@ -228,20 +229,16 @@ public class TimeSheetPage extends ArkCaseTestBase {
 
 	}
 
-	public void searchForUserInput(String name){
+	public void searchForUserInput(String name) {
 		seachForUserInput.sendKeys(name);
 	}
 
-	
-	public void clickGoButton(){
+	public void clickGoButton() {
 		goBtn.click();
 	}
-	
-	public void clickAddButton(){
+
+	public void clickAddButton() {
 		addButton.click();
 	}
-	
-	
-	
-	
+
 }

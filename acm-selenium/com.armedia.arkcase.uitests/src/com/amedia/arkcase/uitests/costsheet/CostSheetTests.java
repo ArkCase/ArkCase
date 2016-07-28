@@ -70,7 +70,6 @@ public class CostSheetTests extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		costsheet.clickGoBtn();
 		Thread.sleep(4000);
-		 costsheet.verifyError();
 		costsheet.verifySearchedUser("Samuel Supervisor", "samuel-acm");
 		Thread.sleep(3000);
 		costsheet.clickSearchedUser();
@@ -81,7 +80,11 @@ public class CostSheetTests extends ArkCaseTestBase {
 		Thread.sleep(10000);
 		driver.switchTo().defaultContent();
 		Thread.sleep(3000);
-		costTracking.clickFirsCostsheetInList();
+		costTracking.clickSortButton();
+		Thread.sleep(3000);
+		costTracking.clickSortDateDesc();
+		Thread.sleep(3000);
+		costTracking.clickFirstCostsheet();
 		Thread.sleep(4000);
 		costTracking.verifyCostTrackingTitle();
 		costTracking.verifyInformationRibbon("Major Issue","20160720_107","DRAFT", "Medium", "Samuel Supervisor", "Retaliation");
@@ -137,7 +140,6 @@ public class CostSheetTests extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		costsheet.clickGoBtn();
 		Thread.sleep(4000);
-		 costsheet.verifyError();
 		costsheet.verifySearchedUser("Samuel Supervisor", "samuel-acm");
 		Thread.sleep(3000);
 		costsheet.clickSearchedUser();
@@ -148,6 +150,12 @@ public class CostSheetTests extends ArkCaseTestBase {
 		Thread.sleep(10000);
 		driver.switchTo().defaultContent();
 		Thread.sleep(3000);
+		costTracking.clickSortButton();
+		Thread.sleep(3000);
+		costTracking.clickSortDateDesc();
+		Thread.sleep(3000);
+		costTracking.clickFirstCostsheet();
+		Thread.sleep(4000);
 		costTracking.clickDetailsLink();
 		Thread.sleep(4000);
 		costTracking.verifyDetailsSection();
@@ -202,7 +210,6 @@ public class CostSheetTests extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		costsheet.clickGoBtn();
 		Thread.sleep(4000);
-		 costsheet.verifyError();
 		costsheet.verifySearchedUser("Samuel Supervisor", "samuel-acm");
 		Thread.sleep(3000);
 		costsheet.clickSearchedUser();
@@ -212,6 +219,12 @@ public class CostSheetTests extends ArkCaseTestBase {
 		costsheet.clickSaveBtn();
 		Thread.sleep(10000);
 		driver.switchTo().defaultContent();
+		Thread.sleep(4000);
+		costTracking.clickSortButton();
+		Thread.sleep(3000);
+		costTracking.clickSortDateDesc();
+		Thread.sleep(3000);
+		costTracking.clickFirstCostsheet();
 		Thread.sleep(4000);
 		costTracking.clickPersonLink();
 		Thread.sleep(4000);
@@ -268,7 +281,6 @@ public class CostSheetTests extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		costsheet.clickGoBtn();
 		Thread.sleep(4000);
-		 costsheet.verifyError();
 		costsheet.verifySearchedUser("Samuel Supervisor", "samuel-acm");
 		Thread.sleep(3000);
 		costsheet.clickSearchedUser();
@@ -279,10 +291,16 @@ public class CostSheetTests extends ArkCaseTestBase {
 		Thread.sleep(10000);
 		driver.switchTo().defaultContent();
 		Thread.sleep(4000);
+		costTracking.clickSortButton();
+		Thread.sleep(3000);
+		costTracking.clickSortDateDesc();
+		Thread.sleep(3000);
+		costTracking.clickFirstCostsheet();
+		Thread.sleep(4000);
 		costTracking.clickCostSummaryLink();
 		Thread.sleep(4000);
 		costTracking.verifyCostSummaryTable();
-		costTracking.verifyCostsheetValuesInCostSummaryTable("20160720_107", "CASE_FILE", "10000", "Taxi", "taxi");
+		costTracking.verifyCostsheetValuesInCostSummaryTable("CASE_FILE", "10000", "Taxi", "taxi");
 		ArkCaseAuthentication.logOut(driver);
 			
 		
@@ -332,7 +350,6 @@ public class CostSheetTests extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		costsheet.clickGoBtn();
 		Thread.sleep(4000);
-        costsheet.verifyError();
 		costsheet.verifySearchedUser("Samuel Supervisor", "samuel-acm");
 		Thread.sleep(3000);
 		costsheet.clickSearchedUser();
@@ -342,6 +359,12 @@ public class CostSheetTests extends ArkCaseTestBase {
 		costsheet.clickSaveBtn();
 		Thread.sleep(10000);
 		driver.switchTo().defaultContent();
+		Thread.sleep(4000);
+		costTracking.clickSortButton();
+		Thread.sleep(3000);
+		costTracking.clickSortDateDesc();
+		Thread.sleep(3000);
+		costTracking.clickFirstCostsheet();
 		Thread.sleep(4000);
 		costTracking.clickDetailsLink();
 		Thread.sleep(4000);

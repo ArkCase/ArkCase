@@ -99,7 +99,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 
 		super.logIn();
 		task.newTask();
-		task.assignTo("sam");
+		task.assignTo("samuel");
 		task.typeSubject("AutomateTestTaskThreeMilan");
 		task.typeStartDate("03/18/2016");
 		task.selectStatusInActive();

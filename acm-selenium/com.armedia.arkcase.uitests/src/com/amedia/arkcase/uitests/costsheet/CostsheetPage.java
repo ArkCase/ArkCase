@@ -17,12 +17,15 @@ public class CostsheetPage extends ArkCaseTestBase {
 	@FindBy(how=How.XPATH,using="/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/div/div[1]/div/span/a/i")
 	WebElement editButton;
 	@FindBy(how = How.XPATH, using = "/html/body/header/div/nav/ul/li/a")
+	public
 	WebElement newButton;
 	@FindBy(how = How.XPATH, using = "/html/body/header/div/nav/ul/li/div/div[5]/div/a")
 	WebElement newCostSheet;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/iframe")
+	public
 	WebElement firstIframe;
 	@FindBy(how = How.XPATH, using = "/html/body/iframe")
+	public
 	WebElement secondIframe;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[1]/span/div")
 	WebElement expensesTitle;
