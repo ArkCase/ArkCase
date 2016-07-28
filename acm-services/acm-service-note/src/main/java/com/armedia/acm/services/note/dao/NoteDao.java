@@ -12,18 +12,21 @@ import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NoteDao extends AcmAbstractDao<Note> {
+public class NoteDao extends AcmAbstractDao<Note>
+{
 
     @PersistenceContext
     private EntityManager entityManager;
 
 
     @Override
-    protected Class<Note> getPersistenceClass() {
+    protected Class<Note> getPersistenceClass()
+    {
         return Note.class;
     }
 
-    public List<Note> listNotes(String type, Long parentId, String parentType) {
+    public List<Note> listNotes(String type, Long parentId, String parentType)
+    {
         Preconditions.checkNotNull(type, "Note type cannot be null");
         Preconditions.checkNotNull(parentId, "Parent Id cannot be null");
         Preconditions.checkNotNull(parentType, "Parent type cannot be null");
@@ -40,14 +43,16 @@ public class NoteDao extends AcmAbstractDao<Note> {
         note.setParameter("parentId", parentId);
 
         List<Note> notes = (List<Note>) note.getResultList();
-        if (null == notes) {
+        if (null == notes)
+        {
             notes = new ArrayList();
         }
         return notes;
     }
 
     @Transactional
-    public void deleteNoteById(Long id) {
+    public void deleteNoteById(Long id)
+    {
         Query queryToDelete = getEntityManager().createQuery(
                 "SELECT note " + "FROM Note note " +
                         "WHERE note.id = :noteId"
@@ -58,7 +63,8 @@ public class NoteDao extends AcmAbstractDao<Note> {
         entityManager.remove(noteToBeDeleted);
     }
 
-    public EntityManager getEntityManager() {
+    public EntityManager getEntityManager()
+    {
         return entityManager;
     }
 }
