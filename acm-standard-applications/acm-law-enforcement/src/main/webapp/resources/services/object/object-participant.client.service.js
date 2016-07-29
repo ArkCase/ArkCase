@@ -32,8 +32,8 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
              */
             get: {
                 method: 'GET',
-                url: 'api/v1/service/participant/:objectType/:objectId',
-                isArray: true
+                url: 'api/v1/plugin/search/children?parentType=:objectType&parentId=:objectId&childType=PARTICIPANT',
+                isArray: false
             },
 
             /**
