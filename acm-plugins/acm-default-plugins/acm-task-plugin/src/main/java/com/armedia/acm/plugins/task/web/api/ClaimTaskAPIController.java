@@ -41,7 +41,8 @@ public class ClaimTaskAPIController
         log.info("User [{}] is claiming workflow task with ID [{}]", authentication.getName(), taskId);
         try
         {
-            AcmTask claimedTask = getTaskDao().claimTask(taskId, authentication.getName());
+            getTaskDao().claimTask(taskId, authentication.getName());
+            AcmTask claimedTask = getTaskDao().findById(taskId);
             publishTaskClaimEvent(authentication, httpSession, claimedTask, "claim", true);
             return claimedTask;
         } catch (AcmTaskException e)
@@ -65,7 +66,8 @@ public class ClaimTaskAPIController
         log.info("User [{}] is unclaiming workflow task with ID [{}]", authentication.getName(), taskId);
         try
         {
-            AcmTask unclaimedTask = getTaskDao().unclaimTask(taskId);
+            getTaskDao().unclaimTask(taskId);
+            AcmTask unclaimedTask = getTaskDao().findById(taskId);
             publishTaskClaimEvent(authentication, httpSession, unclaimedTask, "unclaim", true);
             return unclaimedTask;
         } catch (AcmTaskException e)

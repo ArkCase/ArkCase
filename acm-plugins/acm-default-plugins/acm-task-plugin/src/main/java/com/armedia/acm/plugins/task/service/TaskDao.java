@@ -85,7 +85,7 @@ public interface TaskDao
      * @return
      * @throws AcmTaskException
      */
-    AcmTask claimTask(Long taskId, String userId) throws AcmTaskException;
+    void claimTask(Long taskId, String userId) throws AcmTaskException;
 
 
     /**
@@ -95,7 +95,7 @@ public interface TaskDao
      * @return
      * @throws AcmTaskException
      */
-    AcmTask unclaimTask(Long taskId) throws AcmTaskException;
+    void unclaimTask(Long taskId) throws AcmTaskException;
 
     /**
      * Delete current process instance
