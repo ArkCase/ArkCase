@@ -23,14 +23,13 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
         });
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
-        var promiseUsers = gridHelper.getUsers();
 
         var onConfigRetrieved = function (config) {
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
             gridHelper.setExternalPaging(config, retrieveGridData);
-            gridHelper.setUserNameFilter(promiseUsers);
+            gridHelper.showUserFullNames();
 
         };
 
