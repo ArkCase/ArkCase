@@ -100,8 +100,9 @@
     </bean>
 
     <bean id="concurrentSessionControlAuthenticationStrategy" class=
-            "org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy">
+            "com.armedia.acm.auth.AcmConcurrentSessionControlAuthenticationStrategy">
         <constructor-arg name="sessionRegistry" ref="sessionRegistry"/>
+        <constructor-arg name="authenticationTokenService" ref="authenticationTokenService"/>
         <property name="maximumSessions" value="${sessionControl.maximumSessions}"/>
         <property name="exceptionIfMaximumExceeded" value="${sessionControl.exceptionIfMaximumExceeded}"/>
     </bean>
