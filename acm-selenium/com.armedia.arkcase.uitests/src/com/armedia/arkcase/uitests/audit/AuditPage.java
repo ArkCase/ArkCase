@@ -1,17 +1,12 @@
 package com.armedia.arkcase.uitests.audit;
 
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.ui.Select;
-import org.testng.asserts.SoftAssert;
 
 import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
-import com.armedia.arkcase.uitests.reports.ReportsPage;
 
 public class AuditPage extends ArkCaseTestBase {
 
@@ -36,25 +31,25 @@ public class AuditPage extends ArkCaseTestBase {
 	WebElement reportContent;
 	@FindBy(how = How.XPATH, using = "//table")
 	WebElement reportTable;
-	
+
 	public AuditPage ReportsMenuClick() {
 
 		ReportsLink.click();
 		return this;
 	}
 
-	public AuditPage selectReportName(String reportname){
-	    new Select(driver.findElement(By.id("reportNameAudit"))).selectByVisibleText(reportname);
-	    return this;
+	public AuditPage selectReportName(String reportname) {
+		new Select(driver.findElement(By.id("reportNameAudit"))).selectByVisibleText(reportname);
+		return this;
 	}
-	
-	public AuditPage insertId(String idvalue){
+
+	public AuditPage insertId(String idvalue) {
 		id.click();
 		id.clear();
 		id.sendKeys(idvalue);
 		return this;
 	}
-	
+
 	public AuditPage insertDateFrom(String date) {
 
 		auditDateFrom.click();
@@ -72,13 +67,14 @@ public class AuditPage extends ArkCaseTestBase {
 		return this;
 
 	}
+
 	public AuditPage generateAuditReportButtonClick() {
 
 		generateAuditReportButton.click();
 		return this;
 	}
-	
-	public AuditPage generateAuditReport(String report, String idvalue, String datefrom, String dateto){
+
+	public AuditPage generateAuditReport(String report, String idvalue, String datefrom, String dateto) {
 		selectReportName(report);
 		insertId(idvalue);
 		insertDateFrom(datefrom);

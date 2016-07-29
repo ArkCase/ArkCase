@@ -1,14 +1,10 @@
 package com.armedia.arkcase.uitests.reports;
 
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.ui.Select;
-import org.testng.asserts.SoftAssert;
 
 import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
 
@@ -41,17 +37,17 @@ public class ReportsPage extends ArkCaseTestBase {
 		ReportsLink.click();
 		return this;
 	}
-	
-	public ReportsPage selectReport(String report){
-	    new Select(driver.findElement(By.id("selectionReports"))).selectByVisibleText(report);
-	    return this;
+
+	public ReportsPage selectReport(String report) {
+		new Select(driver.findElement(By.id("selectionReports"))).selectByVisibleText(report);
+		return this;
 	}
-	
-	public ReportsPage selectState(String state){
+
+	public ReportsPage selectState(String state) {
 		new Select(driver.findElement(By.id("selectStateReports"))).selectByVisibleText(state);
 		return this;
 	}
-	
+
 	public ReportsPage insertDateFrom(String date) {
 
 		reportDateFrom.click();
@@ -69,13 +65,14 @@ public class ReportsPage extends ArkCaseTestBase {
 		return this;
 
 	}
+
 	public ReportsPage generateReportButtonClick() {
 
 		generateReportButton.click();
 		return this;
 	}
-	
-	public ReportsPage generateReport(String report, String state, String datefrom, String dateto){
+
+	public ReportsPage generateReport(String report, String state, String datefrom, String dateto) {
 		selectReport(report);
 		selectState(state);
 		insertDateFrom(datefrom);
@@ -84,10 +81,3 @@ public class ReportsPage extends ArkCaseTestBase {
 		return this;
 	}
 }
-	
-
-	
-
-	
-	
-	
