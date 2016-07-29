@@ -3,10 +3,6 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
-    <bean id="listNotesAPIController" class="com.armedia.acm.services.note.web.api.ListAllNotesAPIController">
-        <property name="executeSolrQuery" ref="executeSolrQuery"/>
-    </bean>
-
     <bean id="deleteNotesByNotesId" class="com.armedia.acm.services.note.web.api.DeleteNoteByIdAPIController">
         <property name="noteDao" ref="noteDao"/>
         <property name="noteEventPublisher" ref="noteEventPublisher"/>
