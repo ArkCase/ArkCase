@@ -9,6 +9,7 @@ import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class LdapSyncDatabaseHelper
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Transactional
+    @CacheEvict(value="quiet-user-cache", allEntries=true)
     public void updateDatabase(String directoryName,
                                Set<String> allRoles,
                                List<AcmUser> users,
