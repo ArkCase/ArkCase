@@ -68,7 +68,7 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
 
                 var noteHelper = new HelperNoteService.Note();
                 var gridHelper = new HelperUiGridService.Grid({scope: scope});
-                var promiseUsers = gridHelper.getUsers();
+
 
                 scope.$watchCollection('config', function (config, oldValue) {
                     if (!scope.notesInit.noteTitle) {
