@@ -19,7 +19,6 @@ public class NoteDao extends AcmAbstractDao<Note>
     private EntityManager entityManager;
 
 
-
     @Override
     protected Class<Note> getPersistenceClass()
     {
@@ -28,7 +27,7 @@ public class NoteDao extends AcmAbstractDao<Note>
 
     public List<Note> listNotes(String type, Long parentId, String parentType)
     {
-    	Preconditions.checkNotNull(type, "Note type cannot be null");
+        Preconditions.checkNotNull(type, "Note type cannot be null");
         Preconditions.checkNotNull(parentId, "Parent Id cannot be null");
         Preconditions.checkNotNull(parentType, "Parent type cannot be null");
 
@@ -43,8 +42,9 @@ public class NoteDao extends AcmAbstractDao<Note>
         note.setParameter("parentType", parentType.toUpperCase());
         note.setParameter("parentId", parentId);
 
-        List<Note> notes = ( List<Note> ) note.getResultList();
-        if (null == notes) {
+        List<Note> notes = (List<Note>) note.getResultList();
+        if (null == notes)
+        {
             notes = new ArrayList();
         }
         return notes;
@@ -54,7 +54,7 @@ public class NoteDao extends AcmAbstractDao<Note>
     public void deleteNoteById(Long id)
     {
         Query queryToDelete = getEntityManager().createQuery(
-                "SELECT note " +"FROM Note note " +
+                "SELECT note " + "FROM Note note " +
                         "WHERE note.id = :noteId"
         );
         queryToDelete.setParameter("noteId", id);
