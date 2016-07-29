@@ -35,7 +35,7 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'Acm.Stor
             _queryNotes: {
                 method: 'GET',
                 //url: 'api/latest/plugin/note/:parentType/:parentId?start=:start&n=:count&s=:sort',
-                url: 'api/latest/plugin/note/:parentType/:parentId',
+                url: 'api/latest/plugin/search/children?parentType=:parentType&parentId=:parentId&childType=NOTE',
                 cache: false,
                 isArray: true
             }
@@ -101,7 +101,7 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'Acm.Stor
              */
             , _queryNotesByType: {
                 method: 'GET',
-                url: 'api/latest/plugin/note/:parentType/:parentId?type=:noteType',
+                url: 'api/latest/plugin/search/children?parentType=:parentType&parentId=:parentId&childType=NOTE&extra=type_s::noteType',
                 cache: false,
                 isArray: false
             }
