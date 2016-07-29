@@ -12,7 +12,7 @@ public class Constant {
     
     public static final String DateTo = "07/26/2016";
 
-    public static final String Path_TestData = "C:\\ACM3\\acm-selenium\\com.armedia.arkcase.uitests\\src\\com\\armedia\\arkcase\\uitests\\testdata\\";
+    public static final String Path_TestData = System.getProperty("user.home") + "/.arkcase/seleniumTests/reportsData/";
        		
     public static final String File_TestData = "TestData.xlsx";
 
