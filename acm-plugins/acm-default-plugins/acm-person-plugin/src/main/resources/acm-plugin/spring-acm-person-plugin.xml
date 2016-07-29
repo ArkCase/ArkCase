@@ -11,7 +11,6 @@
                 <ref bean="acmPersonFindPrivilege"/>
                 <ref bean="acmPersonDeletePrivilege"/>
                 <ref bean="acmPersonAssociationDeletePrivilege"/>
-                <ref bean="acmPersonListPrivilege"/>
                 <ref bean="acmPersonTypesPrivilege"/>
             </list>
         </property>
@@ -36,11 +35,6 @@
                     <property name="httpMethod" value="DELETE"/>
                     <property name="url" value="/api/{version}/plugin/personAssociation/delete/{personAssocId}"/>
                     <property name="requiredPrivilege" ref="acmPersonAssociationDeletePrivilege"/>
-                </bean>
-                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/plugin/person/list/{parentType}/{parentId}"/>
-                    <property name="requiredPrivilege" ref="acmPersonListPrivilege"/>
                 </bean>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
