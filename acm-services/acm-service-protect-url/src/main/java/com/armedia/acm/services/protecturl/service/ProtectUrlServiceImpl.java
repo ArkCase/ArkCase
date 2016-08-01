@@ -1,6 +1,6 @@
 package com.armedia.acm.services.protecturl.service;
 
-import com.armedia.acm.services.protecturl.dao.ProtectUrlDao;
+import com.armedia.acm.services.protecturl.dao.ProtectedUrlDao;
 import com.armedia.acm.services.protecturl.model.ProtectedUrl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,9 +25,9 @@ public class ProtectUrlServiceImpl implements ProtectUrlService
     private Logger log = LoggerFactory.getLogger(getClass());
 
     /**
-     * ProtectUrlDao instance.
+     * ProtectedUrlDao instance.
      */
-    private ProtectUrlDao protectUrlDao;
+    private ProtectedUrlDao protectedUrlDao;
 
     /**
      * generates protected url object for given url and save that object to database
@@ -64,7 +64,7 @@ public class ProtectUrlServiceImpl implements ProtectUrlService
         pUrl.setValidTo(validTo);
 
         //save to database and return created protected url object
-        return protectUrlDao.save(pUrl);
+        return protectedUrlDao.save(pUrl);
     }
 
     /**
@@ -79,7 +79,7 @@ public class ProtectUrlServiceImpl implements ProtectUrlService
         Objects.requireNonNull(obfuscatedUrl, "Url must not be null.");
         try
         {
-            return protectUrlDao.findByObfuscatedUrl(obfuscatedUrl);
+            return protectedUrlDao.findByObfuscatedUrl(obfuscatedUrl);
         } catch (NoResultException e)
         {
             return null;
@@ -92,12 +92,12 @@ public class ProtectUrlServiceImpl implements ProtectUrlService
     @Override
     public void removeExpired()
     {
-        int removedCount = protectUrlDao.removeBeforeDate(LocalDateTime.now());
+        int removedCount = protectedUrlDao.removeBeforeDate(LocalDateTime.now());
         log.debug("[{}] urls removed that has being expired.", removedCount);
     }
 
-    public void setProtectUrlDao(ProtectUrlDao protectUrlDao)
+    public void setProtectedUrlDao(ProtectedUrlDao protectedUrlDao)
     {
-        this.protectUrlDao = protectUrlDao;
+        this.protectedUrlDao = protectedUrlDao;
     }
 }

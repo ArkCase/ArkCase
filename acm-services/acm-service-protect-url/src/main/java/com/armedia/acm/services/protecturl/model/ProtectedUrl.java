@@ -14,6 +14,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -53,22 +55,18 @@ public class ProtectedUrl implements AcmObject, AcmEntity
     private String modifier;
 
     @Column(name = "cm_modified")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date modified;
 
     @Column(name = "cm_creator")
     private String creator;
 
     @Column(name = "cm_created")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
     @Column(name = "cm_object_type")
-    private String objectType;
-
-    //default constructor
-    public ProtectedUrl()
-    {
-        this.objectType = "PROTECTED_URL";
-    }
+    private String objectType= "PROTECTED_URL";
 
     public String getOriginalUrl()
     {

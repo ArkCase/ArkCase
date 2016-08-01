@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 /**
  * Created by nebojsha on 27.07.2016.
  */
-public class ProtectUrlDao extends AcmAbstractDao<ProtectedUrl>
+public class ProtectedUrlDao extends AcmAbstractDao<ProtectedUrl>
 {
     @Override
     protected Class<ProtectedUrl> getPersistenceClass()
