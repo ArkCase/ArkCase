@@ -51,7 +51,7 @@ public class FindPersonAPIController
 
         if ( personAssociationId != null )
         {
-                String query = "id:" + personAssociationId + "PERSON-ASSOCIATION";
+                String query = "id:" + personAssociationId + "-PERSON-ASSOCIATION";
                 String sort = "create_date_tdt DESC";
 
                 String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH,
