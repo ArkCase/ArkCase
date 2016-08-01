@@ -25,7 +25,7 @@
     "angular-ui-router": "~0.2.15",
     "angular-ui-utils": "~3.0.0",
     "angular-ui-ace": "~0.2.3",
-    "angular-xeditable": "~0.1.9",
+    "angular-xeditable": "0.1.8",
     "bootstrap": "~3.3.5",
     "components-font-awesome": "~4.4.0",
     "fancytree": "~2.10.2",
