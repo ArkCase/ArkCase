@@ -57,4 +57,8 @@
         <property name="caseFileDao" ref="caseFileDao"/>
     </bean>
     
+    <bean id="caseFileEnqueueAPIController" class="com.armedia.acm.plugins.casefile.web.api.CaseFileEnqueueAPIController">
+        <property name="enqueueCaseFileService" ref="enqueueCaseFileService"/>
+    </bean>
+    
 </beans>
