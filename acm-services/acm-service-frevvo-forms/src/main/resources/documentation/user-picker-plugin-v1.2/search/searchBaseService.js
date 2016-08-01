@@ -14,13 +14,13 @@ SearchBase.Service = {
     ,onInitialized: function() {
     }
 
-    ,API_FACETED_SEARCH_       : "/api/v1/plugin/search/facetedSearch?q="
+    ,API_ADVANCED_SEARCH_       : "/api/v1/plugin/search/advancedSearch?q=name:"
 
     ,advancedSearchDeferred : function(searchInfo, postData, jtParams, sortMap, callbackSuccess, callbackError) {
         return AcmEx.Service.JTable.deferredPagingListAction(postData, jtParams, sortMap
             ,function() {
                 var url;
-                url =  App.getContextPath() + SearchBase.Service.API_FACETED_SEARCH_;
+                url =  App.getContextPath() + SearchBase.Service.API_ADVANCED_SEARCH_;
                 
                 var searchTerms = searchInfo.q.trim().replace(/(\*|\")/g, "").split(' ').filter(function (item) {
                     return item != "";
@@ -34,7 +34,7 @@ SearchBase.Service = {
                 //for test
                 //url = App.getContextPath() + "/resources/facetSearch.json?q=xyz";
 
-                var filterParam = SearchBase.Model.makeFilterParam(searchInfo.filters);
+                var filterParam = " AND object_type_s:USER AND status_lcs:VALID";
                 url += filterParam;
 				
 				url += '&acm_ticket=' + document.getElementsByName('acmTicket')[0].value;
