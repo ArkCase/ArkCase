@@ -50,7 +50,7 @@ public class ProtectUrlController
         //verify that url has not being expired
         if (protectedUrl.getValidTo() != null && now.isAfter(protectedUrl.getValidTo()))
         {
-            log.debug("url has being expired. Today is [{}] but url has expired on: [{}]", now, protectedUrl.getValidTo());
+            log.debug("url has expired. Today is [{}] but url has expired on: [{}]", now, protectedUrl.getValidTo());
             throw new AcmExpiredException("url has being expired.");
         }
 

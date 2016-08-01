@@ -31,6 +31,9 @@
                 pattern="/external/**"/>
         <http
                 security="none"
+                pattern="/views/external/**"/>
+        <http
+                security="none"
                 pattern="/assets/css/login.css"/>
         <!-- All lib are public, no security needed -->
         <http
