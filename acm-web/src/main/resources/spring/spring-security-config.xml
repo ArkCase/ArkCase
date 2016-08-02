@@ -62,6 +62,9 @@
     <beans:beans profile="ssoSaml">
         <http
                 security="none"
+                pattern="/views/saml_login.jsp"/>
+        <http
+                security="none"
                 pattern="/sso/loggedout"/>
         <http
                 security="none"
