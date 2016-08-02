@@ -45,6 +45,12 @@
 
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-protect-url</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-timesheet</artifactId>
             <version>${acm.version}</version>
         </dependency>
