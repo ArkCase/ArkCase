@@ -42,9 +42,14 @@ public class EnterQueueModel<T, P extends AbstractPipelineContext>
 
     public void setCannotEnterReasons(List<String> cannotEnterReasons)
     {
-        List<String> queues = new ArrayList<>();
-        queues.addAll(cannotEnterReasons);
-        this.cannotEnterReasons = queues;
+        List<String> reasons = new ArrayList<>();
+        reasons.addAll(cannotEnterReasons);
+        this.cannotEnterReasons = reasons;
+    }
+
+    public void addCannotEnterReason(String reason)
+    {
+        cannotEnterReasons.add(reason);
     }
 
 }
