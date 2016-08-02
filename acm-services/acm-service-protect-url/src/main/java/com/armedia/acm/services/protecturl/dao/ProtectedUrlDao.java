@@ -17,6 +17,12 @@ public class ProtectedUrlDao extends AcmAbstractDao<ProtectedUrl>
         return ProtectedUrl.class;
     }
 
+    /**
+     * returns ProtectedUrl if found for given parameter of obfuscatedUrl, if not found throws NoResultException
+     *
+     * @param obfuscatedUrl String  obfuscatedUrl
+     * @return instance of ProtectedUrl
+     */
     public ProtectedUrl findByObfuscatedUrl(String obfuscatedUrl)
     {
         Query protectedUrlQuery = getEm().createQuery("SELECT pu FROM ProtectedUrl pu WHERE pu.obfuscatedUrl=:obfuscatedUrl");
@@ -24,10 +30,13 @@ public class ProtectedUrlDao extends AcmAbstractDao<ProtectedUrl>
         return (ProtectedUrl) protectedUrlQuery.getSingleResult();
     }
 
-    public int removeBeforeDate(LocalDateTime givenDate)
+    /**
+     * removes from database expired urls, i.e. ones that have value for validTo, and that value is before today(now)
+     */
+    public int removeExpired()
     {
         Query query = getEm().createQuery("DELETE FROM ProtectedUrl pu WHERE pu.validTo < :givenDate");
-        query.setParameter("givenDate", givenDate);
+        query.setParameter("givenDate", LocalDateTime.now());
         return query.executeUpdate();
     }
 }

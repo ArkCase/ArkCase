@@ -55,7 +55,7 @@ public class ProtectUrlServiceImpl implements ProtectUrlService
         Objects.requireNonNull(realUrl, "Url must not be null.");
         ProtectedUrl pUrl = new ProtectedUrl();
         UUID uuid = UUID.randomUUID();
-        Base64.Encoder base64Encoder = Base64.getEncoder();
+        Base64.Encoder base64Encoder = Base64.getUrlEncoder();
         String obfuscatedUrlEncoded = base64Encoder.encodeToString(uuid.toString().getBytes());
 
         pUrl.setObfuscatedUrl(obfuscatedUrlEncoded);
@@ -92,7 +92,7 @@ public class ProtectUrlServiceImpl implements ProtectUrlService
     @Override
     public void removeExpired()
     {
-        int removedCount = protectedUrlDao.removeBeforeDate(LocalDateTime.now());
+        int removedCount = protectedUrlDao.removeExpired();
         log.debug("[{}] urls removed that has being expired.", removedCount);
     }
 
