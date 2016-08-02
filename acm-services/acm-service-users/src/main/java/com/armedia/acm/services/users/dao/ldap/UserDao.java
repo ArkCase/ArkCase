@@ -9,6 +9,7 @@ import com.armedia.acm.services.users.model.AcmUserRolePrimaryKey;
 import com.armedia.acm.services.users.model.RoleType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.Cache;
 import org.springframework.cache.annotation.Cacheable;
 
 import javax.persistence.EntityManager;
@@ -26,6 +27,8 @@ public class UserDao extends AcmAbstractDao<AcmUser>
 {
     @PersistenceContext
     private EntityManager entityManager;
+
+    private Cache quietUserLookupCache;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -58,11 +61,22 @@ public class UserDao extends AcmAbstractDao<AcmUser>
 
         try
         {
-            AcmUser user = findByUserId(userId);
-            if (user != null)
+            Cache.ValueWrapper found = getQuietUserLookupCache().get(userId);
+
+            if (found != null && found.get() != null)
             {
-                return user;
+                return (AcmUser) found.get();
             }
+            else
+            {
+                AcmUser user = findByUserId(userId);
+                if (user != null)
+                {
+                    getQuietUserLookupCache().put(userId, user);
+                    return user;
+                }
+            }
+
         } catch (PersistenceException pe)
         {
             log.error("Could not find user record: " + pe.getMessage(), pe);
@@ -268,5 +282,15 @@ public class UserDao extends AcmAbstractDao<AcmUser>
     protected Class getPersistenceClass()
     {
         return AcmUser.class;
+    }
+
+    public Cache getQuietUserLookupCache()
+    {
+        return quietUserLookupCache;
+    }
+
+    public void setQuietUserLookupCache(Cache quietUserLookupCache)
+    {
+        this.quietUserLookupCache = quietUserLookupCache;
     }
 }
