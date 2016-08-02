@@ -126,59 +126,86 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         CaseFile caseFile = caseFileDao.find(caseId);
         context.setNewCase(false);
 
-        LeaveCurrentQueueModel<CaseFile, CaseFilePipelineContext> leaveModel = new LeaveCurrentQueueModel<>();
-        leaveModel.setBusinessObject(caseFile);
-        leaveModel.setPipelineContext(context);
-        leaveModel = leaveCurrentQueueBusinessRule.applyRules(leaveModel);
-
-        if (!leaveModel.getCannotLeaveReasons().isEmpty())
+        List<String> cannotLeaveReasons = verifyLeaveConditions(context, caseFile);
+        if (!cannotLeaveReasons.isEmpty())
         {
-            return new CaseFileEnqueueResponse(ErrorReason.LEAVE, leaveModel.getCannotLeaveReasons(), nextQueue, caseFile);
+            return new CaseFileEnqueueResponse(ErrorReason.LEAVE, cannotLeaveReasons, nextQueue, caseFile);
         }
 
-        NextPossibleQueuesModel<CaseFile, CaseFilePipelineContext> nextPossibleQueuesModel = queueService.nextPossibleQueues(caseFile,
-                context, caseFileNextPossibleQueuesBusinessRule);
-        List<String> nextPossibleQueues = nextPossibleQueuesModel.getNextPossibleQueues();
+        List<String> nextPossibleQueues = verifyNextPossibleQueues(context, caseFile);
         if (nextPossibleQueues.isEmpty() || !nextPossibleQueues.contains(nextQueue))
         {
             return new CaseFileEnqueueResponse(ErrorReason.NEXT_POSSIBLE, nextQueue, caseFile);
         }
 
-        OnLeaveQueueModel<CaseFile, CaseFilePipelineContext> onLeaveModel = new OnLeaveQueueModel<>();
-        onLeaveModel.setBusinessObject(caseFile);
-        onLeaveModel.setPipelineContext(context);
-        onLeaveModel = onLeaveQueueBusinessRule.applyRules(onLeaveModel);
-
-        String processName = onLeaveModel.getBusinessProcessName();
-        if (processName != null && !processName.isEmpty())
+        List<String> cannotEnterReasons = verifyNextConditions(context, caseFile);
+        if (!cannotEnterReasons.isEmpty())
         {
-            Map<String, Object> processVariables = new HashMap<>();
-            startBusinessProcessService.startBusinessProcess(processName, processVariables);
+            return new CaseFileEnqueueResponse(ErrorReason.ENTER, cannotEnterReasons, nextQueue, caseFile);
         }
 
+        startLeaveProcess(context, caseFile);
+        startEnterProcess(context, caseFile);
+        caseFileDao.save(caseFile);
+
+        return new CaseFileEnqueueResponse(ErrorReason.NO_ERROR, nextQueue, caseFile);
+    }
+
+    private List<String> verifyLeaveConditions(CaseFilePipelineContext context, CaseFile caseFile)
+    {
+        LeaveCurrentQueueModel<CaseFile, CaseFilePipelineContext> leaveModel = new LeaveCurrentQueueModel<>();
+        leaveModel.setBusinessObject(caseFile);
+        leaveModel.setPipelineContext(context);
+        leaveModel = leaveCurrentQueueBusinessRule.applyRules(leaveModel);
+
+        return leaveModel.getCannotLeaveReasons();
+    }
+
+    private List<String> verifyNextPossibleQueues(CaseFilePipelineContext context, CaseFile caseFile)
+    {
+        NextPossibleQueuesModel<CaseFile, CaseFilePipelineContext> nextPossibleQueuesModel = queueService.nextPossibleQueues(caseFile,
+                context, caseFileNextPossibleQueuesBusinessRule);
+        return nextPossibleQueuesModel.getNextPossibleQueues();
+    }
+
+    private List<String> verifyNextConditions(CaseFilePipelineContext context, CaseFile caseFile)
+    {
         EnterQueueModel<CaseFile, CaseFilePipelineContext> enterModel = new EnterQueueModel<>();
         enterModel.setBusinessObject(caseFile);
         enterModel.setPipelineContext(context);
         enterModel = enterQueueBusinessRule.applyRules(enterModel);
 
-        if (!enterModel.getCannotEnterReasons().isEmpty())
-        {
-            return new CaseFileEnqueueResponse(ErrorReason.ENTER, enterModel.getCannotEnterReasons(), nextQueue, caseFile);
-        }
+        return enterModel.getCannotEnterReasons();
+    }
 
+    private void startLeaveProcess(CaseFilePipelineContext context, CaseFile caseFile)
+    {
+        OnLeaveQueueModel<CaseFile, CaseFilePipelineContext> onLeaveModel = new OnLeaveQueueModel<>();
+        onLeaveModel.setBusinessObject(caseFile);
+        onLeaveModel.setPipelineContext(context);
+        onLeaveModel = onLeaveQueueBusinessRule.applyRules(onLeaveModel);
+
+        String leaveProcessName = onLeaveModel.getBusinessProcessName();
+        if (leaveProcessName != null && !leaveProcessName.isEmpty())
+        {
+            Map<String, Object> processVariables = new HashMap<>();
+            startBusinessProcessService.startBusinessProcess(leaveProcessName, processVariables);
+        }
+    }
+
+    private void startEnterProcess(CaseFilePipelineContext context, CaseFile caseFile)
+    {
         OnEnterQueueModel<CaseFile, CaseFilePipelineContext> onEnterModel = new OnEnterQueueModel<>();
         onEnterModel.setBusinessObject(caseFile);
         onEnterModel.setPipelineContext(context);
         onEnterModel = onEnterQueueBusinessRule.applyRules(onEnterModel);
 
-        processName = onEnterModel.getBusinessProcessName();
-        if (processName != null && !processName.isEmpty())
+        String enterProcessName = onEnterModel.getBusinessProcessName();
+        if (enterProcessName != null && !enterProcessName.isEmpty())
         {
             Map<String, Object> processVariables = new HashMap<>();
-            startBusinessProcessService.startBusinessProcess(processName, processVariables);
+            startBusinessProcessService.startBusinessProcess(enterProcessName, processVariables);
         }
-
-        return new CaseFileEnqueueResponse(ErrorReason.NO_ERROR, nextQueue, caseFile);
     }
 
 }

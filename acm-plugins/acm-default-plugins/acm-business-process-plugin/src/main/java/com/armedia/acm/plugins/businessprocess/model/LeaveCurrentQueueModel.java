@@ -42,9 +42,14 @@ public class LeaveCurrentQueueModel<T, P extends AbstractPipelineContext>
 
     public void setCannotLeaveReasons(List<String> cannotLeaveReasons)
     {
-        List<String> queues = new ArrayList<>();
-        queues.addAll(cannotLeaveReasons);
-        this.cannotLeaveReasons = queues;
+        List<String> reasons = new ArrayList<>();
+        reasons.addAll(cannotLeaveReasons);
+        this.cannotLeaveReasons = reasons;
+    }
+
+    public void addCannotLeaveReasons(String reason)
+    {
+        cannotLeaveReasons.add(reason);
     }
 
 }
