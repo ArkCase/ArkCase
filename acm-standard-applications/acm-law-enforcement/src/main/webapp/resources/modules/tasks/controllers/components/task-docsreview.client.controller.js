@@ -44,7 +44,7 @@ angular.module('tasks').controller('Tasks.DocsReviewController', ['$scope', '$q'
         //}
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
-            $q.all([promiseUsers]).then(function () {
+            $q.all().then(function () {
                 var urv = Util.goodMapValue($scope.objectInfo, "documentUnderReview", null);
                 $scope.gridOptions.data = (urv)? [urv] : [];
                 //gridHelper.hidePagingControlsIfAllDataShown(1);

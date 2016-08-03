@@ -39,7 +39,7 @@ angular.module('tasks').controller('Tasks.WorkflowOverviewController', ['$scope'
                     $scope.objectInfo = taskInfo;
 
                     var promiseQueryTaskHistory = TaskHistoryService.queryTaskHistory($scope.objectInfo);
-                    $q.all([promiseQueryTaskHistory, promiseUsers]).then(function (data) {
+                    $q.all([promiseQueryTaskHistory]).then(function (data) {
                         var taskHistory = data[0];
                         $scope.gridOptions.data = taskHistory;
                         $scope.gridOptions.totalItems = taskHistory.length;

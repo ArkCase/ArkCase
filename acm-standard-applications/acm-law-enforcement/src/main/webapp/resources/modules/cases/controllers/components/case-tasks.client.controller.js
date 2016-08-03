@@ -77,7 +77,7 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
                     , Util.goodValue($scope.sort.dir)
                 ).then(
                     function (data) {
-                        $q.all([promiseUsers, promiseMyTasks]).then(function () {
+                        $q.all([promiseMyTasks]).then(function () {
                             var tasks = data.response.docs;
                             $scope.gridOptions = $scope.gridOptions || {};
                             $scope.gridOptions.data = tasks;
