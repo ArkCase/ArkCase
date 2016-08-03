@@ -56,9 +56,7 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
         $scope.defaultDatePickerFormat = UtilDateService.defaultDatePickerFormat;
         $scope.picker = {opened: false};
         $scope.onPickerClick = function () {
-            $timeout(function () {
-                $scope.picker.opened = true;
-            });
+        	$scope.picker.opened = true;
         };
 
         var onObjectInfoRetrieved = function (objectInfo) {

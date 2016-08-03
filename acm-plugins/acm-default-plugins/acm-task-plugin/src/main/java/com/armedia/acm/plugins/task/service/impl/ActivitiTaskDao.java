@@ -449,44 +449,37 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
     }
 
     @Override
-    public AcmTask claimTask(Long taskId, String userId) throws AcmTaskException
+    @Transactional
+    public void claimTask(Long taskId, String userId) throws AcmTaskException
     {
         if (taskId != null && userId != null)
         {
             try
             {
                 getActivitiTaskService().claim(String.valueOf(taskId), userId);
-                Task existingTask = getActivitiTaskService().createTaskQuery().includeProcessVariables().includeTaskLocalVariables().taskId(String.valueOf(taskId)).singleResult();
-
-                AcmTask acmTask = acmTaskFromActivitiTask(existingTask);
-                return acmTask;
             } catch (ActivitiException e)
             {
                 log.info("Claiming task failed for task with ID: [{}]", taskId);
                 throw new AcmTaskException(e.getMessage(), e);
             }
         }
-        throw new AcmTaskException("Task with ID '" + taskId + "' does not exist. Verify the supplied arguments (taskId: " + taskId + " and userId: " + userId + ")");
     }
 
     @Override
-    public AcmTask unclaimTask(Long taskId) throws AcmTaskException
+    @Transactional
+    public void unclaimTask(Long taskId) throws AcmTaskException
     {
         if (taskId != null)
         {
             try
             {
                 getActivitiTaskService().unclaim(String.valueOf(taskId));
-                Task existingTask = getActivitiTaskService().createTaskQuery().includeProcessVariables().includeTaskLocalVariables().taskId(String.valueOf(taskId)).singleResult();
-                AcmTask acmTask = acmTaskFromActivitiTask(existingTask);
-                return acmTask;
             } catch (ActivitiException e)
             {
                 log.info("Unclaiming task failed for task with ID: [{}]", taskId);
                 throw new AcmTaskException(e.getMessage(), e);
             }
         }
-        throw new AcmTaskException("Task with ID '" + taskId + "' does not exist. Verify the supplied arguments (taskId: " + taskId + ")");
     }
 
     @Override

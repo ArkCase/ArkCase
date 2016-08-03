@@ -25,7 +25,13 @@
                 pattern="/branding/**"/>
         <http
                 security="none"
+                pattern="/protected/*"/>
+        <http
+                security="none"
                 pattern="/external/**"/>
+        <http
+                security="none"
+                pattern="/views/external/**"/>
         <http
                 security="none"
                 pattern="/assets/css/login.css"/>
@@ -37,10 +43,12 @@
 
     <!-- no need to protect the Login page in LDAP- and Kerberos-based authentication -->
     <beans:beans profile="ldap,kerberos">
-
         <http
                 security="none"
-                pattern="/login"/>
+                pattern="/views/login.jsp" />
+        <http
+                security="none"
+                pattern="/login" />
         <http
                 security="none"
                 pattern="/login.html"/>
@@ -52,6 +60,9 @@
 
     <!-- no need to protect the Login page in SSO SAML-based authentication -->
     <beans:beans profile="ssoSaml">
+        <http
+                security="none"
+                pattern="/views/saml_login.jsp"/>
         <http
                 security="none"
                 pattern="/sso/loggedout"/>
