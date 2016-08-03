@@ -45,6 +45,7 @@
         <module>acm-service-object-change-status</module>
         <module>acm-service-object-lock</module>
         <module>acm-service-webdav</module>
+        <module>acm-service-protect-url</module>
     </modules>
 
 
