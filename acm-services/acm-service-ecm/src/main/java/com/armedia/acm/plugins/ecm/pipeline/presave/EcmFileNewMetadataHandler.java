@@ -8,6 +8,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
+
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.slf4j.Logger;
@@ -53,6 +54,8 @@ public class EcmFileNewMetadataHandler implements PipelineHandler<EcmFile, EcmFi
             EcmFileVersion version = new EcmFileVersion();
             version.setCmisObjectId(cmisDocument.getId());
             version.setVersionTag(cmisDocument.getVersionLabel());
+            version.setVersionMimeType(entity.getFileActiveVersionMimeType());
+            version.setVersionFileNameExtension(entity.getFileActiveVersionNameExtension());
             entity.getVersions().add(version);
 
             // Determines the folder and container in which the file should be saved
@@ -61,7 +64,7 @@ public class EcmFileNewMetadataHandler implements PipelineHandler<EcmFile, EcmFi
             entity.setContainer(pipelineContext.getContainer());
 
             // set page count
-            if ("application/pdf".equals(entity.getFileMimeType()))
+            if ("application/pdf".equals(entity.getFileActiveVersionMimeType()))
             {
                 PDDocument pdDocument = null;
                 try

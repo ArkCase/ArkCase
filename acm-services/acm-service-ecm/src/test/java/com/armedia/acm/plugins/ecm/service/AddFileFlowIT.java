@@ -1,7 +1,12 @@
 package com.armedia.acm.plugins.ecm.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.junit.Before;
@@ -20,12 +25,11 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.*;
-
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/spring/spring-library-ecm-plugin-test-mule.xml", "/spring/spring-library-acm-encryption.xml", "/spring/spring-library-context-holder.xml",
-        "/spring/spring-library-data-source.xml", "/spring/spring-library-property-file-manager.xml", "/spring/spring-library-add-file-mule.xml", "/spring/spring-library-cmis-configuration.xml",
-        "/spring/spring-library-audit-service.xml"})
+@ContextConfiguration(locations = { "/spring/spring-library-ecm-plugin-test-mule.xml", "/spring/spring-library-acm-encryption.xml",
+        "/spring/spring-library-context-holder.xml", "/spring/spring-library-data-source.xml",
+        "/spring/spring-library-property-file-manager.xml", "/spring/spring-library-add-file-mule.xml",
+        "/spring/spring-library-cmis-configuration.xml", "/spring/spring-library-audit-service.xml" })
 public class AddFileFlowIT
 {
 
@@ -59,7 +63,7 @@ public class AddFileFlowIT
         EcmFile ecmFile = new EcmFile();
 
         ecmFile.setFileName("spring-library-ecm-plugin-test-mule.xml-" + System.currentTimeMillis());
-        ecmFile.setFileMimeType("text/plain");
+        ecmFile.setFileActiveVersionMimeType("text/plain");
 
         Map<String, Object> messageProperties = new HashMap<>();
         messageProperties.put("cmisFolderId", testFolderId);
