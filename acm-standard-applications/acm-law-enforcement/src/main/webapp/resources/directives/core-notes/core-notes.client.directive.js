@@ -119,7 +119,7 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                         var info = scope.notesInit;
                         var promiseQueryNotes = ObjectNoteService.queryNotes(info.objectType, info.currentObjectId, info.noteType);
                         $q.all([promiseQueryNotes]).then(function (data) {
-                            var notes = data[0];
+                            var notes = data[0].response;
                             scope.gridOptions.data = notes.docs;
                             scope.gridOptions.totalItems = notes.docs.length;
                         });
