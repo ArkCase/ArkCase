@@ -36,7 +36,7 @@ angular.module('tasks').controller('Tasks.SignaturesController', ['$scope', '$st
             if (Util.goodPositive(componentHelper.currentObjectId, false)) {
                 var promiseQueryAudit = ObjectSignatureService.findSignatures(ObjectService.ObjectTypes.TASK, componentHelper.currentObjectId);
 
-                $q.all([promiseQueryAudit, promiseUsers]).then(function (data) {
+                $q.all([promiseQueryAudit]).then(function (data) {
                     var signatures = data[0];
                     $scope.gridOptions.data = signatures;
                     $scope.gridOptions.totalItems = signatures.length;
