@@ -70,7 +70,8 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         pipelineContext.setContainer(container);
         pipelineContext.setAuthentication(authentication);
 
-        String[] detectedContentTypeAndExtension = new String[2];
+        String[] detectedContentTypeAndExtension = new String[] { mimeType,
+                getFolderAndFilesUtils().getFileNameExtension(originalFileName) };
 
         try
         {
@@ -86,6 +87,9 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         if (!mimeType.contains("frevvo"))
         {
             ecmFile.setFileActiveVersionMimeType(detectedContentTypeAndExtension[0]);
+        } else
+        {
+            ecmFile.setFileActiveVersionMimeType(mimeType);
         }
         ecmFile.setFileActiveVersionNameExtension(detectedContentTypeAndExtension[1]);
         ecmFile.setFileName(fileName);
@@ -122,7 +126,8 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         pipelineContext.setEcmFile(ecmFile);
         pipelineContext.setFileByteArray(IOUtils.toByteArray(fileInputStream));
 
-        String[] detectedContentTypeAndExtension = new String[2];
+        String[] detectedContentTypeAndExtension = new String[] { ecmFile.getFileActiveVersionMimeType(),
+                getFolderAndFilesUtils().getFileNameExtension(ecmFile.getFileName()) };
 
         try
         {

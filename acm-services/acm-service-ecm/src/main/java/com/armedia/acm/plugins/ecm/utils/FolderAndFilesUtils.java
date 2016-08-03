@@ -153,6 +153,17 @@ public class FolderAndFilesUtils
         }
     }
 
+    public String getFileNameExtension(String fileName)
+    {
+        if (fileName.lastIndexOf(".") > 0)
+        {
+            return fileName.substring(fileName.lastIndexOf("."));
+        } else
+        {
+            return "";
+        }
+    }
+
     public String detectFileContentType(InputStream inputStream, String fileName) throws IOException, MimeTypeException
     {
         TikaConfig tikaConfig = TikaConfig.getDefaultConfig();
