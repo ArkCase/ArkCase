@@ -560,5 +560,28 @@
         </sql>
     </changeSet>
 
+    <changeSet id="files-39-acm_file_version-add-mime-type" author="sasko.tanaskoski" dbms="postgresql">
+        <sql>
+            UPDATE  acm_file_version fv
+            SET     cm_file_version_mime_type =
+            (
+                    SELECT  f.cm_file_mime_type
+                    FROM    acm_file f
+                    WHERE   fv.cm_file_id = f.cm_file_id
+            )
+            WHERE   EXISTS
+            (
+                    SELECT  1
+                    FROM    acm_file f
+                    WHERE   fv.cm_file_id = f.cm_file_id
+            )
+            AND     fv.cm_file_version_mime_type = 'MIMETYPE'
+        </sql>
+        <renameColumn tableName="acm_file" oldColumnName="cm_file_mime_type" newColumnName="cm_file_active_version_mime_type" columnDataType="VARCHAR(1024)"/>
+        <addColumn tableName="acm_file">
+            <column name="cm_file_active_version_name_extension" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+ 
 </databaseChangeLog>
 

@@ -15,12 +15,11 @@ import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.Date;
 
 /**
- * Created by joseph.mcgrady on 9/28/2015.
+ * Created by sasko.tanaskoski
  */
-public class EcmFileMergedMetadataHandler implements PipelineHandler<EcmFile, EcmFileTransactionPipelineContext>
+public class EcmFileUpdateMetadataHandler implements PipelineHandler<EcmFile, EcmFileTransactionPipelineContext>
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -30,15 +29,14 @@ public class EcmFileMergedMetadataHandler implements PipelineHandler<EcmFile, Ec
     @Override
     public void execute(EcmFile entity, EcmFileTransactionPipelineContext pipelineContext) throws PipelineProcessException
     {
-        // This handler only executes when the file was merged with a pre-existing document
-        if (pipelineContext.getIsAppend())
-        {
+        log.debug("metadata pre save handler called");
 
-            // The new content is merged into an existing document, so the old document metadata is returned
-            EcmFile oldFile = pipelineContext.getEcmFile();
-            if (oldFile == null)
+        // Writes metadata for updated document into the database
+        if (!pipelineContext.getIsAppend())
+        {
+            if (entity == null)
             {
-                throw new PipelineProcessException("oldFile is null");
+                throw new PipelineProcessException("ecmFile is null");
             }
 
             Document cmisDocument = pipelineContext.getCmisDocument();
@@ -47,14 +45,16 @@ public class EcmFileMergedMetadataHandler implements PipelineHandler<EcmFile, Ec
                 throw new PipelineProcessException("cmisDocument is null");
             }
 
-            // Updates the versioning of the file
-            oldFile.setVersionSeriesId(cmisDocument.getVersionSeriesId());
-            oldFile.setActiveVersionTag(cmisDocument.getVersionLabel());
+            entity.setActiveVersionTag(cmisDocument.getVersionLabel());
+            entity.setVersionSeriesId(cmisDocument.getVersionSeriesId());
+
+            // Sets the versioning of the file
             EcmFileVersion version = new EcmFileVersion();
             version.setCmisObjectId(cmisDocument.getId());
             version.setVersionTag(cmisDocument.getVersionLabel());
-            oldFile.getVersions().add(version);
-            oldFile.setModified(new Date());
+            version.setVersionMimeType(entity.getFileActiveVersionMimeType());
+            version.setVersionFileNameExtension(entity.getFileActiveVersionNameExtension());
+            entity.getVersions().add(version);
 
             // set page count
             if ("application/pdf".equals(entity.getFileActiveVersionMimeType()))
@@ -62,8 +62,8 @@ public class EcmFileMergedMetadataHandler implements PipelineHandler<EcmFile, Ec
                 PDDocument pdDocument = null;
                 try
                 {
-                    pdDocument = PDDocument.load(new ByteArrayInputStream(pipelineContext.getMergedFileByteArray()));
-                    oldFile.setPageCount(pdDocument.getNumberOfPages());
+                    pdDocument = PDDocument.load(new ByteArrayInputStream(pipelineContext.getFileByteArray()));
+                    entity.setPageCount(pdDocument.getNumberOfPages());
                 } catch (IOException e)
                 {
                     throw new PipelineProcessException(e);
@@ -85,12 +85,11 @@ public class EcmFileMergedMetadataHandler implements PipelineHandler<EcmFile, Ec
                 log.warn("Still don't know how to retrieve the page count for [{}] mime type");
             }
 
-            // Updates the database with the version changes
-            EcmFile savedFile = ecmFileDao.save(oldFile);
-
-            // The pipeline will output the updated metadata for the merged file
-            pipelineContext.setEcmFile(savedFile);
+            // Saves updated file metadata into ArkCase database
+            EcmFile saved = getEcmFileDao().save(entity);
+            pipelineContext.setEcmFile(saved);
         }
+        log.debug("metadata pre save handler ended");
     }
 
     @Override

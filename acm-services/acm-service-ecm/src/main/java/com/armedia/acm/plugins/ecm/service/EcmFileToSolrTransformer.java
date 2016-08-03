@@ -8,6 +8,7 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -98,7 +99,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
 
         doc.setCmis_version_series_id_s(in.getVersionSeriesId());
 
-        doc.setMime_type_s(in.getFileMimeType());
+        doc.setMime_type_s(in.getFileActiveVersionMimeType());
 
         doc.setStatus_s(in.getStatus());
 
@@ -127,7 +128,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         solr.setModifier_lcs(in.getModifier());
 
         solr.setName(in.getFileName());
-        solr.setContent_type(in.getFileMimeType());
+        solr.setContent_type(in.getFileActiveVersionMimeType());
         solr.setStatus_lcs(in.getStatus());
         solr.setTitle_parseable(in.getFileName());
 
@@ -152,7 +153,8 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         {
             solr.setAdditionalProperty("creator_full_name_lcs", creator.getFullName());
             solr.setAssignee_full_name_lcs(creator.getFullName());
-        }else {
+        } else
+        {
             solr.setAssignee_full_name_lcs(in.getCreator());
         }
 
@@ -194,10 +196,12 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
     {
         if (file != null)
         {
-            String mimeType = file.getFileMimeType();
+            String mimeType = file.getFileActiveVersionMimeType();
 
-            if ((mimeType != null && mimeType.contains(EcmFileConstants.MIME_TYPE_XML) && mimeType.contains(EcmFileConstants.MIME_TYPE_FREVVO_URL)) ||
-                    (mimeType != null && mimeType.contains(EcmFileConstants.MIME_TYPE_PNG) && mimeType.contains(EcmFileConstants.MIME_TYPE_FREVVO_SIGNATURE_KEY)))
+            if ((mimeType != null && mimeType.contains(EcmFileConstants.MIME_TYPE_XML)
+                    && mimeType.contains(EcmFileConstants.MIME_TYPE_FREVVO_URL))
+                    || (mimeType != null && mimeType.contains(EcmFileConstants.MIME_TYPE_PNG)
+                            && mimeType.contains(EcmFileConstants.MIME_TYPE_FREVVO_SIGNATURE_KEY)))
             {
                 return true;
             }

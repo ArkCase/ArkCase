@@ -140,7 +140,7 @@ public class AcmFileResource extends AcmFileSystemResource implements PropFindab
     @Override
     public String getContentType(String accepts)
     {
-        String mime = acmFile.getFileMimeType();
+        String mime = acmFile.getFileActiveVersionMimeType();
         return ContentTypeUtils.findAcceptableContentType(mime, accepts);
     }
 
@@ -153,7 +153,7 @@ public class AcmFileResource extends AcmFileSystemResource implements PropFindab
         {
             getResourceFactory().getEcmFileTransaction().updateFileTransactionEventAware(
                     getResourceFactory().getSecurityManager().getAuthenticationForTicket(acmTicket), acmFile, in);
-        } catch (MuleException e)
+        } catch (MuleException | IOException e)
         {
             LOGGER.error("Error while uploading file via Mule.", e);
         }
