@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
+
 @Controller
 @RequestMapping( { "/api/v1/plugin/search", "/api/latest/plugin/search"} )
 public class SearchChildrenAPIController
@@ -30,6 +32,7 @@ public class SearchChildrenAPIController
             @RequestParam(value = "childType", required = false, defaultValue = "") String childType,
             @RequestParam(value = "activeOnly", required = false, defaultValue = "false") boolean activeOnly,
             @RequestParam(value = "exceptDeletedOnly", required = false, defaultValue = "true") boolean exceptDeletedOnly,
+            @RequestParam(value = "extra", required = false) List<String> extra,
             @RequestParam(value = "s", required = false, defaultValue = "") String sort,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
@@ -50,13 +53,20 @@ public class SearchChildrenAPIController
                 query += " AND -status_s:DELETED";
             }
         }
+        if (extra != null && extra.size() > 0)
+        {
+            for (String extraParam : extra)
+            {
+                query += " AND " + extraParam;
+            }
+        }
         
         if ( log.isDebugEnabled() )
         {
             log.debug("User '" + authentication.getName() + "' is searching for '" + query + "'");
         }
 
-        String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query,
+        String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query,
                 startRow, maxRows, sort);
      
         return results;
