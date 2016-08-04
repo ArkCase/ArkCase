@@ -8,10 +8,6 @@
         <property name="acmParticipantService" ref="acmParticipantService"/>
     </bean>
 
-    <bean id="listAllParticipantsByObjectTypeAndObjectId" class="com.armedia.acm.services.participants.web.api.ListAllParticipantsByObjectTypeAndObjectId">
-        <property name="acmParticipantService" ref="acmParticipantService"/>
-    </bean>
-
     <bean id="removeParticipantAPIController" class="com.armedia.acm.services.participants.web.api.RemoveParticipantAPIController">
         <property name="acmParticipantService" ref="acmParticipantService"/>
         <property name="acmParticipantEventPublisher" ref="acmParticipantEventPublisher"/>

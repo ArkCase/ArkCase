@@ -25,7 +25,7 @@ angular.module('complaints').controller('Complaints.TagsController', ['$scope', 
         });
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
-        var promiseUsers = gridHelper.getUsers();
+        
         
         $scope.addNew = function () {
             var modalInstance = $modal.open({
@@ -85,7 +85,7 @@ angular.module('complaints').controller('Complaints.TagsController', ['$scope', 
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
-            gridHelper.setUserNameFilter(promiseUsers);
+            gridHelper.showUserFullNames();
 
         };
 

@@ -67,7 +67,7 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
 
                 var noteHelper = new HelperNoteService.Note();
                 var gridHelper = new HelperUiGridService.Grid({scope: scope});
-                var promiseUsers = gridHelper.getUsers();
+
 
                 scope.$watchCollection('config', function (config, oldValue) {
                     if (!scope.notesInit.noteTitle) {
@@ -94,7 +94,7 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                             gridHelper.setColumnDefs(config);
                             gridHelper.setBasicOptions(config);
                             gridHelper.disableGridScrolling(config);
-                            gridHelper.setUserNameFilter(promiseUsers);
+                            gridHelper.showUserFullNames();
                             scope.retrieveGridData();
                         }
                     }
@@ -117,10 +117,10 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                     if (Util.goodPositive(scope.notesInit.currentObjectId, false)) {
                         var info = scope.notesInit;
                         var promiseQueryNotes = ObjectNoteService.queryNotes(info.objectType, info.currentObjectId, info.noteType);
-                        $q.all([promiseQueryNotes, promiseUsers]).then(function (data) {
-                            var notes = data[0];
-                            scope.gridOptions.data = notes;
-                            scope.gridOptions.totalItems = notes.length;
+                        $q.all([promiseQueryNotes]).then(function (data) {
+                            var notes = data[0].response;
+                            scope.gridOptions.data = notes.docs;
+                            scope.gridOptions.totalItems = notes.docs.length;
                         });
                     }
                 };

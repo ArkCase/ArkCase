@@ -70,6 +70,7 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
                 });
 
                 var gridHelper = new HelperUiGridService.Grid({scope: scope});
+                
                 var promiseTypes = ObjectLookupService.getParticipantTypes().then(
                     function (participantTypes) {
                         scope.participantTypes = participantTypes;
@@ -86,6 +87,7 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
                     gridHelper.setColumnDefs(config);
                     gridHelper.setBasicOptions(config);
                     gridHelper.disableGridScrolling(config);
+                    gridHelper.showUserFullNames();
                 };
 
 
