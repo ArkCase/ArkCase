@@ -41,9 +41,8 @@ import java.util.List;
 
 public class ComplaintFactory extends FrevvoFormFactory
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private static final String ANONYMOUS = "Anonymous";
-
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private PersonDao personDao;
     private EcmFileService fileService;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
@@ -102,7 +101,7 @@ public class ComplaintFactory extends FrevvoFormFactory
         {
             for (Contact person : formComplaint.getPeople())
             {
-                if (person.getMainInformation() != null && person.getMainInformation().getFirstName() != null && person.getMainInformation().getLastName() != null)
+                if (person.getMainInformation() != null)
                 {
                     PersonAssociation pa = new PersonAssociation();
                     Person p = new Person();
