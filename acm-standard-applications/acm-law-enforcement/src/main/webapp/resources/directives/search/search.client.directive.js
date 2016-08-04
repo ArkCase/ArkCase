@@ -171,7 +171,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                     if (typeaheadQuery) {
                         SearchService.queryFilteredSearchForUser({
                             query: typeaheadQuery,
-                            startRow: 0,
+                            start: 0,
                             maxRows: 10
                         }, function (res) {
                             var result = _.pluck(res.response.docs, 'name');
