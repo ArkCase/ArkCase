@@ -93,8 +93,11 @@ public class QueuePropertyFileChangeWatcher implements ApplicationListener<Abstr
                     if (nameQueue.containsKey(q.getName()))
                     {
                         AcmQueue queue = nameQueue.get(q.getName());
-                        queue.setDisplayOrder(q.getDisplayOrder());
-                        getAcmQueueDao().save(queue);
+                        if (!queue.getDisplayOrder().equals(q.getDisplayOrder()))
+                        {
+                            queue.setDisplayOrder(q.getDisplayOrder());
+                            getAcmQueueDao().save(queue);
+                        }
                     } else
                     {
                         getAcmQueueDao().save(q);
