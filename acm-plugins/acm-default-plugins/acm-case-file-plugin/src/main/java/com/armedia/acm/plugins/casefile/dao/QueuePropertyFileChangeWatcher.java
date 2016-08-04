@@ -5,6 +5,7 @@ import com.armedia.acm.files.AbstractConfigurationFileEvent;
 import com.armedia.acm.files.ConfigurationFileAddedEvent;
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.plugins.casefile.model.AcmQueue;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
@@ -17,8 +18,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -33,14 +36,11 @@ public class QueuePropertyFileChangeWatcher implements ApplicationListener<Abstr
     // What should be the value of the user?
     private static final String QUEUE_CREATOR = "SYSTEM_USER";
 
-
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
-
 
     private PlatformTransactionManager txManager;
 
     private Properties queueNamesProperties;
-
 
     @Override
     public void onApplicationEvent(AbstractConfigurationFileEvent abstractConfigurationFileEvent)
@@ -70,7 +70,6 @@ public class QueuePropertyFileChangeWatcher implements ApplicationListener<Abstr
         }
     }
 
-
     public void loadQueues(Properties queueProperties)
     {
         getAuditPropertyEntityAdapter().setUserId(QUEUE_CREATOR);
@@ -86,9 +85,23 @@ public class QueuePropertyFileChangeWatcher implements ApplicationListener<Abstr
             {
                 List<AcmQueue> storedQueues = getAcmQueueDao().findAll();
 
-                List<String> queueNames = storedQueues.stream().map(q -> q.getName()).collect(Collectors.toList());
+                Map<String, AcmQueue> nameQueue = storedQueues.stream().collect(Collectors.toMap(AcmQueue::getName, Function.identity()));
 
-                queues.stream().filter(q -> !queueNames.contains(q.getName())).forEach(q -> getAcmQueueDao().save(q));
+                queues.stream().forEach(q ->
+                {
+
+                    if (nameQueue.containsKey(q.getName()))
+                    {
+                        AcmQueue queue = nameQueue.get(q.getName());
+                        queue.setDisplayOrder(q.getDisplayOrder());
+                        getAcmQueueDao().save(queue);
+                    } else
+                    {
+                        getAcmQueueDao().save(q);
+                    }
+
+                });
+
             }
         });
 
@@ -117,11 +130,10 @@ public class QueuePropertyFileChangeWatcher implements ApplicationListener<Abstr
 
     private boolean isPropertyFileChange(AbstractConfigurationFileEvent abstractConfigurationFileEvent)
     {
-        return (abstractConfigurationFileEvent instanceof ConfigurationFileAddedEvent ||
-                abstractConfigurationFileEvent instanceof ConfigurationFileChangedEvent)
+        return (abstractConfigurationFileEvent instanceof ConfigurationFileAddedEvent
+                || abstractConfigurationFileEvent instanceof ConfigurationFileChangedEvent)
                 && abstractConfigurationFileEvent.getConfigFile().getName().equals("queueNames.properties");
     }
-
 
     public AcmQueueDao getAcmQueueDao()
     {
