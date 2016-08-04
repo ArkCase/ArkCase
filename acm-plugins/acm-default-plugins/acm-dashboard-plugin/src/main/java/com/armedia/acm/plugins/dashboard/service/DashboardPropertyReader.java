@@ -85,7 +85,7 @@ public class DashboardPropertyReader
         String[] modules;
         List<String> moduleList = new ArrayList<>();
 
-        if (!"".equals(modulesString) && modulesString.contains(","))
+        if (!"".equals(modulesString))
         {
             modules = modulesString.split(",");
             for (String m : modules)
@@ -93,9 +93,6 @@ public class DashboardPropertyReader
                 m.trim();
                 moduleList.add(m);
             }
-        } else if (!"".equals(modulesString) && !modulesString.contains(","))
-        {
-            moduleList.add(modulesString.trim());
         }
         return moduleList;
     }
