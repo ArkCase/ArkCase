@@ -146,7 +146,7 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
 
         startLeaveProcess(context, caseFile);
         startEnterProcess(context, caseFile);
-        caseFileDao.save(caseFile);
+        caseFile = caseFileDao.save(caseFile);
 
         return new CaseFileEnqueueResponse(ErrorReason.NO_ERROR, nextQueue, caseFile);
     }
@@ -188,7 +188,7 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         String leaveProcessName = onLeaveModel.getBusinessProcessName();
         if (leaveProcessName != null && !leaveProcessName.isEmpty())
         {
-            Map<String, Object> processVariables = new HashMap<>();
+            Map<String, Object> processVariables = createProcessVariables(caseFile);
             startBusinessProcessService.startBusinessProcess(leaveProcessName, processVariables);
         }
     }
@@ -203,9 +203,17 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         String enterProcessName = onEnterModel.getBusinessProcessName();
         if (enterProcessName != null && !enterProcessName.isEmpty())
         {
-            Map<String, Object> processVariables = new HashMap<>();
+            Map<String, Object> processVariables = createProcessVariables(caseFile);
             startBusinessProcessService.startBusinessProcess(enterProcessName, processVariables);
         }
+    }
+
+    private Map<String, Object> createProcessVariables(CaseFile caseFile)
+    {
+        Map<String, Object> processVariables = new HashMap<>();
+        processVariables.put("OBJECT_TYPE", "CASE_FILE");
+        processVariables.put("OBJECT_ID", caseFile.getId());
+        return processVariables;
     }
 
 }
