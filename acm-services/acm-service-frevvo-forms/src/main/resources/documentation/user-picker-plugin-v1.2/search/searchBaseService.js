@@ -34,7 +34,7 @@ SearchBase.Service = {
                 //for test
                 //url = App.getContextPath() + "/resources/facetSearch.json?q=xyz";
 
-                var filterParam = SearchBase.Model.makeFilterParam(searchInfo.filters);
+                var filterParam = " AND object_type_s:USER AND status_lcs:VALID";
                 url += filterParam;
 				
 				url += '&acm_ticket=' + document.getElementsByName('acmTicket')[0].value;

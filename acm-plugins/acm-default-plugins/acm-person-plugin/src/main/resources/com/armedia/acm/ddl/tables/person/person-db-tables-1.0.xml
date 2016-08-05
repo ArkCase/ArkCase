@@ -583,4 +583,10 @@
         </addColumn>
     </changeSet>
     
+    <changeSet id="37-acm-person-add-middle-name" author="lazo.lazarev">
+        <addColumn tableName="acm_person">
+            <column name="cm_middle_name" type="VARCHAR(1024)"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

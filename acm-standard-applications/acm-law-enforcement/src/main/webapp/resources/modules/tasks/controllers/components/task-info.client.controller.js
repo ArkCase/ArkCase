@@ -53,9 +53,7 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
         $scope.defaultDatePickerFormat = UtilDateService.defaultDatePickerFormat;
         $scope.picker = {opened: false};
         $scope.onPickerClick = function () {
-            $timeout(function () {
-                $scope.picker.opened = true;
-            });
+        	$scope.picker.opened = true;
         };
 
         $scope.validatePercentComplete = function (value) {
