@@ -296,39 +296,46 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
              */
             , setUserNameFilter: function (promiseUsers) {
                 var that = this;
-                $q.all([promiseUsers]).then(function (data) {
-                    for (var i = 0; i < that.scope.config.columnDefs.length; i++) {
-                        if (Service.Lookups.USER_FULL_NAMES == that.scope.config.columnDefs[i].lookup || Service.Lookups.PARTICIPANT_NAMES == that.scope.config.columnDefs[i].lookup) {
-                            that.scope.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: grid.appScope.userFullNames:'id':'name'";
+                $q.all([ApplicationConfigService.getProperty(ApplicationConfigService.PROPERTIES.DISPLAY_USERNAME), promiseUsers]).then(function (data) {
+                    var userNamePop = data[0];
+
+                    if (userNamePop == "userName")
+                    {
+                        for (var i = 0; i < that.scope.config.columnDefs.length; i++) {
+                            if (Service.Lookups.USER_FULL_NAMES == that.scope.config.columnDefs[i].lookup || Service.Lookups.PARTICIPANT_NAMES == that.scope.config.columnDefs[i].lookup) {
+                                var tempColumn = angular.copy(that.scope.config.columnDefs[i]);
+                                tempColumn.cellFilter = "mapKeyValue: grid.appScope.userFullNames:'id':'name'";
+                                that.scope.config.columnDefs.splice(i,1, tempColumn);
+                            }
                         }
                     }
                 });
             }
 
-            /**
-             * @ngdoc method
-             * @name showUserFullNames
-             * @methodOf services:Helper.UiGridService
-             *
-             * @description
-             * Replace user id with user full name.
-             */
-            , showUserFullNames: function () {
-                var that = this;
-                $q.all([ApplicationConfigService.getProperty(ApplicationConfigService.PROPERTIES.DISPLAY_USERNAME)]).then(function (result)
-                {
-                    var userNamePop = result[0];
+                    /**
+                     * @ngdoc method
+                     * @name showUserFullNames
+                     * @methodOf services:Helper.UiGridService
+                     *
+                     * @description
+                     * Replace user id with user full name.
+                     */
+                    , showUserFullNames: function () {
+                    var that = this;
+                    $q.all([ApplicationConfigService.getProperty(ApplicationConfigService.PROPERTIES.DISPLAY_USERNAME)]).then(function (result)
+                    {
+                        var userNamePop = result[0];
 
-				if (userNamePop == "userName") {
-					for (var i = 0; i < that.scope.config.columnDefs.length; i++) {
-							if (that.scope.config.columnDefs[i].hasOwnProperty('fullNameField')) {
-								var tempColumn = angular.copy(that.scope.config.columnDefs[i]);
-								tempColumn.field = tempColumn.fullNameField;
-								that.scope.config.columnDefs.splice(i,1, tempColumn);
-							}
-						}
-					}
-                });
+				        if (userNamePop == "userName") {
+					        for (var i = 0; i < that.scope.config.columnDefs.length; i++) {
+                                if (that.scope.config.columnDefs[i].hasOwnProperty('fullNameField')) {
+								    var tempColumn = angular.copy(that.scope.config.columnDefs[i]);
+								    tempColumn.field = tempColumn.fullNameField;
+								    that.scope.config.columnDefs.splice(i,1, tempColumn);
+							    }
+						    }
+					    }
+                    });
             }
 
             /**
