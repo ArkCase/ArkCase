@@ -15,6 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import java.util.List;
+import java.util.UUID;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -59,5 +62,22 @@ public class ProtectUrlServiceImplIT
         assertNotNull(pu.getId());
         assertNotNull(pu.getObfuscatedUrl());
         log.info("created protectedUrl object: {}", pu);
+    }
+
+    @Transactional
+    @Test
+    @Rollback
+    public void findByOriginalUrlTest()
+    {
+        auditAdapter.setUserId("some_user");
+        assertNotNull(protectUrlService);
+        String realUrl = "/" + UUID.randomUUID().toString();
+        ProtectedUrl pu = protectUrlService.protectUrl(realUrl);
+        entityManager.flush();
+        List<ProtectedUrl> saved = protectUrlService.getProtectedUrlByOriginalUrl(realUrl);
+        assertEquals(1, saved.size());
+        assertEquals(pu.getOriginalUrl(), saved.get(0).getOriginalUrl());
+        assertEquals(pu.getObfuscatedUrl(), saved.get(0).getObfuscatedUrl());
+        assertEquals(pu.getId(), saved.get(0).getId());
     }
 }

@@ -4,6 +4,7 @@ import com.armedia.acm.services.protecturl.model.ProtectedUrl;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Service for manipulating ProtectedUrl's
@@ -36,11 +37,18 @@ public interface ProtectUrlService
      * @param obfuscatedUrl String obfuscatedUrl
      * @return ProtectedUrl if found, otherwise null.
      */
-    ProtectedUrl getProtectUrl(String obfuscatedUrl);
+    ProtectedUrl getProtectedUrl(String obfuscatedUrl);
+
+    /**
+     * retrieves saved list of protected url for given originalUrl as attribute
+     *
+     * @param originalUrl String obfuscatedUrl
+     * @return List<ProtectedUrl>
+     */
+    List<ProtectedUrl> getProtectedUrlByOriginalUrl(String originalUrl);
 
     /**
      * removes from database expired urls, i.e. ones that have value for validTo, and that value is before today(now)
-     *
      */
     @Transactional
     void removeExpired();
