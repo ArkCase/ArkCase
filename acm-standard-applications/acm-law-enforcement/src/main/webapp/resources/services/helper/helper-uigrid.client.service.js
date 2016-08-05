@@ -317,7 +317,7 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
                 $q.all([ApplicationConfigService.getProperty(ApplicationConfigService.PROPERTIES.DISPLAY_USERNAME), promiseUsers]).then(function (data) {
                     var userNamePop = data[0];
 
-                    if (userNamePop == "userName")
+                    if (userNamePop == "userName" && _.get(config, 'columnDefs'))
                     {
                         for (var i = 0; i < config.columnDefs.length; i++) {
                             if (Service.Lookups.USER_FULL_NAMES == config.columnDefs[i].lookup || Service.Lookups.PARTICIPANT_NAMES == config.columnDefs[i].lookup) {
@@ -344,7 +344,7 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
                     {
                         var userNamePop = result[0];
 
-				        if (userNamePop == "userName") {
+				        if (userNamePop == "userName" && _.get(that, 'scope.config.columnDefs')) {
 					        for (var i = 0; i < that.scope.config.columnDefs.length; i++) {
                                 if (that.scope.config.columnDefs[i].hasOwnProperty('fullNameField')) {
 								    var tempColumn = angular.copy(that.scope.config.columnDefs[i]);
