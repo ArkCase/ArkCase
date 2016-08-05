@@ -323,7 +323,7 @@
               "displayName": "cases.comp.notes.table.columns.creator",
               "headerCellFilter": "translate",
               "enableCellEdit": false,
-              "fullNameField": "creator_full_name_lcs",
+              "lookup": "userFullNames",
               "width": 150
             }
           ]
@@ -824,7 +824,7 @@
           "displayName": "cases.comp.notes.table.columns.creator",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
-          "fullNameField": "creator_full_name_lcs",
+          "lookup": "userFullNames",
           "width": 150
         }
       ]
