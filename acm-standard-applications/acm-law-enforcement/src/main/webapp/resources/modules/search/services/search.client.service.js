@@ -25,7 +25,7 @@ angular.module('search').factory('SearchService', ['$resource', 'UtilService', '
              */
             queryFilteredSearchForUser: {
                 method: 'GET',
-                url: "api/v1/plugin/search/advancedSearch?q=:query&startRow=:start&n=:maxRows",
+                url: "api/v1/plugin/search/advancedSearch?q=:query&start=:start&n=:maxRows",
                 cache: false,
                 isArray: false,
                 transformResponse: function transformReponseForUser(data, headerGetter) {

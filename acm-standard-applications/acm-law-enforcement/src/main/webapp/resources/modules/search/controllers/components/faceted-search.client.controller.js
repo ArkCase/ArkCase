@@ -14,6 +14,13 @@ angular.module('search').controller('FacetedSearchController', ['$scope',
                     $scope.filter = config.filter;
                 }
             }
+
+            //label customization sample
+            //$scope.customLabels = [{"key": "Case File", "value": "Actions"}
+            //    , {"key": "Complaint", "value": "DSA"}
+            //    , {"key": "CASE_FILE", "value": "ACTIONS"}
+            //    , {"key": "COMPLAINT", "value": "DSA"}
+            //];
         }
     ]
 );

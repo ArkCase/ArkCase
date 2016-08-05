@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+
+    <bean id="protectedUrlDao" class="com.armedia.acm.services.protecturl.dao.ProtectedUrlDao"/>
+
+    <bean id="protectUrlService" class="com.armedia.acm.services.protecturl.service.ProtectUrlServiceImpl">
+        <property name="protectedUrlDao" ref="protectedUrlDao"/>
+    </bean>
+
+    <task:scheduled-tasks scheduler="deleteExpiredUrlsScheduler">
+        <!-- checks and removes expired url from database every day at 04:00 AM-->
+        <task:scheduled ref="protectUrlService" method="removeExpired" cron="0 0 4 * * ?"/>
+    </task:scheduled-tasks>
+
+    <task:scheduler id="deleteExpiredUrlsScheduler" pool-size="1"/>
+
+</beans>
