@@ -585,7 +585,7 @@
             "name": "creator",
             "displayName": "complaints.comp.people.contactMethods.table.columns.creator",
             "headerCellFilter": "translate",
-            "fullNameField": "creator_full_name_lcs"
+            "lookup": "userFullNames"
           }
         ]
       },
@@ -626,7 +626,7 @@
             "name": "creator",
             "displayName": "complaints.comp.people.organizations.table.columns.creator",
             "headerCellFilter": "translate",
-            "fullNameField": "creator_full_name_lcs"
+            "lookup": "userFullNames"
           }
         ]
       },
@@ -684,7 +684,7 @@
             "name": "creator",
             "displayName": "complaints.comp.people.addresses.table.columns.creator",
             "headerCellFilter": "translate",
-            "fullNameField": "creator_full_name_lcs"
+            "lookup": "userFullNames"
           }
         ]
       },
@@ -722,7 +722,7 @@
             "name": "creator",
             "displayName": "complaints.comp.people.aliases.table.columns.creator",
             "headerCellFilter": "translate",
-            "fullNameField": "creator_full_name_lcs"
+            "lookup": "userFullNames"
           }
         ]
       },
