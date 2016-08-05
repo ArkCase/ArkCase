@@ -277,11 +277,11 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
              * Get list of user full names
              */
             , getUsers: function () {
-                //var that = this;
-                //return LookupService.getUserFullNames().then(function (userFullNames) {
-                //    that.scope.userFullNames = userFullNames;
-                //    return userFullNames;
-                //});
+                var that = this;
+                return LookupService.getUserFullNames().then(function (userFullNames) {
+                    that.scope.userFullNames = userFullNames;
+                    return userFullNames;
+                });
             }
 
             /**
@@ -295,14 +295,14 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
              * Set 'mapKeyValue' filter of user full name column when user full names are ready
              */
             , setUserNameFilter: function (promiseUsers) {
-                //var that = this;
-                //$q.all([promiseUsers]).then(function (data) {
-                //    for (var i = 0; i < that.scope.config.columnDefs.length; i++) {
-                //        if (Service.Lookups.USER_FULL_NAMES == that.scope.config.columnDefs[i].lookup || Service.Lookups.PARTICIPANT_NAMES == that.scope.config.columnDefs[i].lookup) {
-                //            that.scope.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: grid.appScope.userFullNames:'id':'name'";
-                //        }
-                //    }
-                //});
+                var that = this;
+                $q.all([promiseUsers]).then(function (data) {
+                    for (var i = 0; i < that.scope.config.columnDefs.length; i++) {
+                        if (Service.Lookups.USER_FULL_NAMES == that.scope.config.columnDefs[i].lookup || Service.Lookups.PARTICIPANT_NAMES == that.scope.config.columnDefs[i].lookup) {
+                            that.scope.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: grid.appScope.userFullNames:'id':'name'";
+                        }
+                    }
+                });
             }
 
             /**
