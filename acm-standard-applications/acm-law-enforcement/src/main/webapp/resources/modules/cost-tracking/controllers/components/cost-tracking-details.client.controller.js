@@ -14,6 +14,11 @@ angular.module('cost-tracking').controller('CostTracking.DetailsController', ['$
             , validateObjectInfo: CostTrackingInfoService.validateCostsheet
         });
 
+        $scope.options = {
+            focus: true,
+            dialogsInBody:true
+            //,height: 120
+        };
 
         $scope.saveDetails = function() {
             var costsheetInfo = Util.omitNg($scope.objectInfo);
