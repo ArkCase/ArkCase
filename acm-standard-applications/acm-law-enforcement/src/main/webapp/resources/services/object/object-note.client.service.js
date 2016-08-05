@@ -103,7 +103,7 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'Acm.Stor
                 method: 'GET',
                 url: 'api/latest/plugin/note/:parentType/:parentId?type=:noteType',
                 cache: false,
-                isArray: false
+                isArray: true
             }
 
         });
