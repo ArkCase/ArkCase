@@ -292,20 +292,38 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
              * @param {Object} promiseUsers Promise of acquiring list of user full names
              *
              * @description
-             * Set 'mapKeyValue' filter of user full name column when user full names are ready
+             * Set 'mapKeyValue' filter of user full name column when user full names are ready for current grid configuration
              */
             , setUserNameFilter: function (promiseUsers) {
+
                 var that = this;
+
+                this.setUserNameFilterToConfig(promiseUsers, that.scope.config);
+
+            }
+
+            /**
+             * @ngdoc method
+             * @name setUserNameFilterToConfig
+             * @methodOf services:Helper.UiGridService
+             *
+             * @param {Object} promiseUsers Promise of acquiring list of user full names
+             * @param {Object} config Configuration holding column definitions
+             *
+             * @description
+             * Set 'mapKeyValue' filter of user full name column when user full names are ready for a specific grid configuration
+             */
+            , setUserNameFilterToConfig: function (promiseUsers, config) {
                 $q.all([ApplicationConfigService.getProperty(ApplicationConfigService.PROPERTIES.DISPLAY_USERNAME), promiseUsers]).then(function (data) {
                     var userNamePop = data[0];
 
                     if (userNamePop == "userName")
                     {
-                        for (var i = 0; i < that.scope.config.columnDefs.length; i++) {
-                            if (Service.Lookups.USER_FULL_NAMES == that.scope.config.columnDefs[i].lookup || Service.Lookups.PARTICIPANT_NAMES == that.scope.config.columnDefs[i].lookup) {
-                                var tempColumn = angular.copy(that.scope.config.columnDefs[i]);
+                        for (var i = 0; i < config.columnDefs.length; i++) {
+                            if (Service.Lookups.USER_FULL_NAMES == config.columnDefs[i].lookup || Service.Lookups.PARTICIPANT_NAMES == config.columnDefs[i].lookup) {
+                                var tempColumn = angular.copy(config.columnDefs[i]);
                                 tempColumn.cellFilter = "mapKeyValue: grid.appScope.userFullNames:'id':'name'";
-                                that.scope.config.columnDefs.splice(i,1, tempColumn);
+                                config.columnDefs.splice(i,1, tempColumn);
                             }
                         }
                     }
