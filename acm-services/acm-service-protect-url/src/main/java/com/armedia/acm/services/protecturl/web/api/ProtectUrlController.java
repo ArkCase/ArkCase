@@ -35,7 +35,7 @@ public class ProtectUrlController
     @RequestMapping({"/protected/{protectedUrl}"})
     public String forwardRequest(@PathVariable(value = "protectedUrl") String protectedUrlStr)
     {
-        ProtectedUrl protectedUrl = protectUrlService.getProtectUrl(protectedUrlStr);
+        ProtectedUrl protectedUrl = protectUrlService.getProtectedUrl(protectedUrlStr);
 
         if (protectedUrl == null)
         {
