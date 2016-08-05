@@ -99,7 +99,7 @@ public class ProtectUrlServiceImpl implements ProtectUrlService
     public List<ProtectedUrl> getProtectedUrlByOriginalUrl(String originalUrl)
     {
         Objects.requireNonNull(originalUrl, "Url must not be null.");
-        return protectedUrlDao.findByRealUrl(originalUrl);
+        return protectedUrlDao.findByOriginalUrl(originalUrl);
     }
 
     /**

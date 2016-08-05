@@ -37,7 +37,7 @@ public class ProtectedUrlDao extends AcmAbstractDao<ProtectedUrl>
      * @param originalUrl String  originalUrl
      * @return instance of List<ProtectedUrl>
      */
-    public List<ProtectedUrl> findByRealUrl(String originalUrl)
+    public List<ProtectedUrl> findByOriginalUrl(String originalUrl)
     {
         Query protectedUrlQuery = getEm().createQuery("SELECT pu FROM ProtectedUrl pu WHERE pu.originalUrl=:originalUrl");
         protectedUrlQuery.setParameter("originalUrl", originalUrl);
