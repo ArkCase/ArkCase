@@ -9,6 +9,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 import com.armedia.acm.plugins.ecm.service.FileEventPublisher;
+import com.armedia.acm.plugins.ecm.utils.EcmTikaUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.spring.SpringContextHolder;
@@ -36,6 +37,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     private EcmFileDao ecmFileDao;
     private AcmFolderDao folderDao;
     private FolderAndFilesUtils folderAndFilesUtils;
+    private EcmTikaUtils ecmTikaUtils;
     private FileEventPublisher fileEventPublisher;
     private SpringContextHolder springContextHolder;
 
@@ -58,40 +60,44 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             InputStream fileInputStream, String mimeType, String fileName, String cmisFolderId, AcmContainer container)
             throws MuleException, IOException
     {
-        // originalFileName = getFolderAndFilesUtils().getBaseFileName(originalFileName);
-        // fileName = getFolderAndFilesUtils().getBaseFileName(fileName);
 
         log.debug("Creating ecm file pipeline context");
         EcmFileTransactionPipelineContext pipelineContext = new EcmFileTransactionPipelineContext();
         pipelineContext.setCmisFolderId(cmisFolderId);
         // we are storing byte array so we can read this stream multiple times
         pipelineContext.setFileByteArray(IOUtils.toByteArray(fileInputStream));
-        pipelineContext.setOriginalFileName(originalFileName);
         pipelineContext.setContainer(container);
         pipelineContext.setAuthentication(authentication);
 
-        String[] detectedContentTypeAndExtension = new String[] { mimeType,
-                getFolderAndFilesUtils().getFileNameExtension(originalFileName) };
+        EcmTikaFile ecmTikaFile = new EcmTikaFile();
 
         try
         {
-            detectedContentTypeAndExtension = getFolderAndFilesUtils()
-                    .detectFileContentTypeAndExtension(new ByteArrayInputStream(pipelineContext.getFileByteArray()), originalFileName);
+            ecmTikaFile = getEcmTikaUtils().detectFileUsingTika(new ByteArrayInputStream(pipelineContext.getFileByteArray()),
+                    originalFileName);
         } catch (MimeTypeException | IOException e1)
         {
-            log.debug("Can not auto detect content type");
+            log.debug("Can not auto detect file using Tika");
+            ecmTikaFile.setContentType(mimeType);
+            ecmTikaFile.setNameExtension(getFolderAndFilesUtils().getFileNameExtension(originalFileName));
         }
 
         EcmFile ecmFile = new EcmFile();
         // do not change content type in case of freevo
         if (!mimeType.contains("frevvo"))
         {
-            ecmFile.setFileActiveVersionMimeType(detectedContentTypeAndExtension[0]);
+            ecmFile.setFileActiveVersionMimeType(ecmTikaFile.getContentType());
         } else
         {
             ecmFile.setFileActiveVersionMimeType(mimeType);
         }
-        ecmFile.setFileActiveVersionNameExtension(detectedContentTypeAndExtension[1]);
+        ecmFile.setFileActiveVersionNameExtension(ecmTikaFile.getNameExtension());
+
+        originalFileName = getFolderAndFilesUtils().getBaseFileName(originalFileName, ecmFile.getFileActiveVersionNameExtension());
+        fileName = getFolderAndFilesUtils().getBaseFileName(fileName, ecmFile.getFileActiveVersionNameExtension());
+
+        pipelineContext.setOriginalFileName(originalFileName);
+
         ecmFile.setFileName(fileName);
         ecmFile.setFileType(fileType);
         ecmFile.setCategory(fileCategory);
@@ -126,23 +132,24 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         pipelineContext.setEcmFile(ecmFile);
         pipelineContext.setFileByteArray(IOUtils.toByteArray(fileInputStream));
 
-        String[] detectedContentTypeAndExtension = new String[] { ecmFile.getFileActiveVersionMimeType(),
-                getFolderAndFilesUtils().getFileNameExtension(ecmFile.getFileName()) };
+        EcmTikaFile ecmTikaFile = new EcmTikaFile();
 
         try
         {
-            detectedContentTypeAndExtension = getFolderAndFilesUtils()
-                    .detectFileContentTypeAndExtension(new ByteArrayInputStream(pipelineContext.getFileByteArray()), ecmFile.getFileName());
+            ecmTikaFile = getEcmTikaUtils().detectFileUsingTika(new ByteArrayInputStream(pipelineContext.getFileByteArray()),
+                    ecmFile.getFileName());
         } catch (MimeTypeException | IOException e1)
         {
-            log.debug("Can not auto detect content type");
+            log.debug("Can not auto detect file using Tika");
+            ecmTikaFile.setContentType(ecmFile.getFileActiveVersionMimeType());
+            ecmTikaFile.setNameExtension(getFolderAndFilesUtils().getFileNameExtension(ecmFile.getFileName()));
         }
 
         if (!ecmFile.getFileActiveVersionMimeType().contains("frevvo"))
         {
-            ecmFile.setFileActiveVersionMimeType(detectedContentTypeAndExtension[0]);
+            ecmFile.setFileActiveVersionMimeType(ecmTikaFile.getContentType());
         }
-        ecmFile.setFileActiveVersionNameExtension(detectedContentTypeAndExtension[1]);
+        ecmFile.setFileActiveVersionNameExtension(ecmTikaFile.getNameExtension());
 
         try
         {
@@ -303,5 +310,15 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     public void setSpringContextHolder(SpringContextHolder springContextHolder)
     {
         this.springContextHolder = springContextHolder;
+    }
+
+    public EcmTikaUtils getEcmTikaUtils()
+    {
+        return ecmTikaUtils;
+    }
+
+    public void setEcmTikaUtils(EcmTikaUtils ecmTikaUtils)
+    {
+        this.ecmTikaUtils = ecmTikaUtils;
     }
 }

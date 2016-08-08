@@ -115,6 +115,7 @@
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="folderDao" ref="acmFolderDao"/>
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
+        <property name="ecmTikaUtils" ref="ecmTikaUtils"/>
         <property name="fileEventPublisher" ref="fileEventPublisher"/>
         <property name="springContextHolder" ref="acmContextHolder"/>
     </bean>
@@ -192,6 +193,8 @@
     </bean>
 
     <bean id="folderAndFilesUtils" class="com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils"/>
+
+    <bean id="ecmTikaUtils" class="com.armedia.acm.plugins.ecm.utils.EcmTikaUtils"/>
 
     <bean id="fileEventPublisher" class="com.armedia.acm.plugins.ecm.service.FileEventPublisher"/>
 

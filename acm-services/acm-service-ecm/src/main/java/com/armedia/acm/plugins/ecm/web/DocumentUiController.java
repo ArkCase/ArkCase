@@ -31,15 +31,8 @@ public class DocumentUiController
 
     private EcmFileService fileService;
 
-    // @RequestMapping(method = RequestMethod.GET)
-    // public ModelAndView openComplaints(Authentication auth) {
-    // ModelAndView mv = new ModelAndView();
-    // mv.setViewName("doclist");
-    // return mv;
-    // }
-
     @RequestMapping(value = "/{fileId}", method = RequestMethod.GET)
-    public ModelAndView openComplaint(HttpServletRequest req, Authentication auth, @PathVariable(value = "fileId") Long fileId)
+    public ModelAndView viewFile(HttpServletRequest req, Authentication auth, @PathVariable(value = "fileId") Long fileId)
     {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("document");
