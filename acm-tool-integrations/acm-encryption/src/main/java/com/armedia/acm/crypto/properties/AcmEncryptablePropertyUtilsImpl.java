@@ -163,19 +163,10 @@ public class AcmEncryptablePropertyUtilsImpl implements AcmEncryptablePropertyUt
     {
         log.debug("Initializing key store: {}", keystorePath);
         final KeyStore keystore = KeyStore.getInstance(keyStoreType);
-        InputStream is = null;
-        try
+        try (InputStream is = Files.newInputStream(Paths.get(keystorePath)))
         {
-            is = Files.newInputStream(Paths.get(keystorePath));
             keystore.load(is, null == keystorePassword ? null : keystorePassword.toCharArray());
             log.debug("Loaded key store");
-        }
-        finally
-        {
-            if (null != is)
-            {
-                is.close();
-            }
         }
         return (PrivateKey) keystore.getKey(keyAlias, keystorePassword.toCharArray());
     }
