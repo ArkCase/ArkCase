@@ -4,6 +4,10 @@ import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
 import com.armedia.acm.plugins.person.model.Person;
+import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.service.ExecuteSolrQuery;
+import org.json.JSONObject;
+import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -18,7 +22,7 @@ import javax.persistence.PersistenceException;
 @RequestMapping({ "/api/v1/plugin/person", "/api/latest/plugin/person" })
 public class FindPersonAPIController
 {
-    private PersonAssociationDao personAssociationDao;
+    private ExecuteSolrQuery executeSolrQuery;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -27,12 +31,14 @@ public class FindPersonAPIController
             MediaType.TEXT_XML_VALUE
     })
     @ResponseBody
-    public Person findPerson(
+    public String findPerson(
             // we intend to support other query fields in the future.  Hence we have "required = false"
             // even though assocId is the only supported query field right now.
             @RequestParam(value = "assocId", required = false) Long personAssociationId,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+            @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
             Authentication authentication
-    ) throws AcmObjectNotFoundException, AcmListObjectsFailedException
+    ) throws MuleException, AcmObjectNotFoundException, AcmListObjectsFailedException
     {
         if ( log.isInfoEnabled() )
         {
@@ -45,23 +51,23 @@ public class FindPersonAPIController
 
         if ( personAssociationId != null )
         {
-            try
-            {
-                return findPersonByPersonAssociationId(personAssociationId, authentication);
-            }
-            catch (PersistenceException pe)
-            {
-                throw new AcmObjectNotFoundException("person", personAssociationId, pe.getMessage(), pe);
-            }
+                String query = "id:" + personAssociationId + "-PERSON-ASSOCIATION";
+                String sort = "create_date_tdt DESC";
+
+                String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH,
+                        query, startRow, maxRows, sort);
+                JSONObject resultsObject = new JSONObject(results);
+
+                if (resultsObject.has("response"))
+                {
+                    return resultsObject.getJSONObject("response").toString();
+                }
+
+                return null;
         }
 
         throw new AcmListObjectsFailedException("person", "a query must be specified", null);
 
-    }
-
-    private Person findPersonByPersonAssociationId(Long personAssociationId, Authentication authentication)
-    {
-        return getPersonAssociationDao().findPersonByPersonAssociationId(personAssociationId);
     }
 
     private void checkQueryFields(Long personAssociationId) throws AcmListObjectsFailedException
@@ -72,13 +78,13 @@ public class FindPersonAPIController
         }
     }
 
-    public PersonAssociationDao getPersonAssociationDao()
+    public ExecuteSolrQuery getExecuteSolrQuery()
     {
-        return personAssociationDao;
+        return executeSolrQuery;
     }
 
-    public void setPersonAssociationDao(PersonAssociationDao personAssociationDao)
+    public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
     {
-        this.personAssociationDao = personAssociationDao;
+        this.executeSolrQuery = executeSolrQuery;
     }
 }

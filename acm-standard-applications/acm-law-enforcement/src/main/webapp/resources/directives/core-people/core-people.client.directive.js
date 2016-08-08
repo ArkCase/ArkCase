@@ -77,7 +77,6 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                 });
                 var gridHelper = new HelperUiGridService.Grid({scope: scope});
 
-                var promiseUsers = gridHelper.getUsers(scope);
                 var promisePersonTypes = ObjectLookupService.getPersonTypes().then(
                     function (personTypes) {
                         var options = [];
@@ -174,7 +173,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                     if (!scope.objectInfoLoaded) {
                         scope.objectInfoLoaded = true;
                         //$q.all([promiseUsers, promisePersonTypes, promiseContactMethodTypes, promiseOrganizationTypes, promiseAddressTypes, promiseAliasTypes, promiseSecurityTagTypes, componentHelper.promiseConfig]).then(function () {
-                        $q.all([promiseUsers, promisePersonTypes, promiseContactMethodTypes, promiseOrganizationTypes, promiseAddressTypes, promiseAliasTypes]).then(function () {
+                        $q.all([promisePersonTypes, promiseContactMethodTypes, promiseOrganizationTypes, promiseAddressTypes, promiseAliasTypes]).then(function () {
                             scope.retrieveGridData();
                         }); //end $q
                     }

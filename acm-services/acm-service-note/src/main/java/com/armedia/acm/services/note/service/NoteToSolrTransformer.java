@@ -57,6 +57,7 @@ public class NoteToSolrTransformer implements AcmObjectToSolrDocTransformer<Note
 
         solr.setAdditionalProperty("parent_object_type_s", in.getParentType());
         solr.setAdditionalProperty("parent_object_id_i", in.getParentId());
+        solr.setAdditionalProperty("type_s", in.getType());
         solr.setParent_ref_s(String.format("%d-%s", in.getParentId(), in.getParentType()));
 
         return solr;
