@@ -2,6 +2,7 @@ package com.armedia.acm.crypto;
 
 import com.armedia.acm.core.exceptions.AcmEncryptionBadKeyOrDataException;
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
+
 import org.bouncycastle.bcpg.ArmoredOutputStream;
 import org.bouncycastle.bcpg.CompressionAlgorithmTags;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -20,8 +21,6 @@ import org.bouncycastle.openpgp.operator.jcajce.JcePBEDataDecryptorFactoryBuilde
 import org.bouncycastle.openpgp.operator.jcajce.JcePBEKeyEncryptionMethodGenerator;
 import org.bouncycastle.openpgp.operator.jcajce.JcePGPDataEncryptorBuilder;
 import org.bouncycastle.util.io.Streams;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -29,6 +28,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,8 +48,6 @@ import java.util.UUID;
  */
 public class AcmCryptoUtilsImpl implements AcmCryptoUtils
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
-
     public AcmCryptoUtilsImpl()
     {
         Security.addProvider(new BouncyCastleProvider());
@@ -73,19 +71,24 @@ public class AcmCryptoUtilsImpl implements AcmCryptoUtils
             c.init(Cipher.ENCRYPT_MODE, k);
             encryptedData = c.doFinal(data);
 
-        } catch (NoSuchAlgorithmException e)
+        }
+        catch (NoSuchAlgorithmException e)
         {
             throw new AcmEncryptionException("No such algorithm ", e);
-        } catch (NoSuchPaddingException e)
+        }
+        catch (NoSuchPaddingException e)
         {
             throw new AcmEncryptionException("No such padding ", e);
-        } catch (InvalidKeyException e)
+        }
+        catch (InvalidKeyException e)
         {
             throw new AcmEncryptionException("Invalid key ", e);
-        } catch (IllegalBlockSizeException e)
+        }
+        catch (IllegalBlockSizeException e)
         {
             throw new AcmEncryptionException("illegal block size ", e);
-        } catch (BadPaddingException e)
+        }
+        catch (BadPaddingException e)
         {
             throw new AcmEncryptionException("Bad padding ", e);
         }
@@ -119,19 +122,24 @@ public class AcmCryptoUtilsImpl implements AcmCryptoUtils
             {
                 decryptedData = extractDataAndVerifyNounce(decryptedData);
             }
-        } catch (NoSuchAlgorithmException e)
+        }
+        catch (NoSuchAlgorithmException e)
         {
             throw new AcmEncryptionException("Internal error. No such algorithm " + CryptoConstants.ENCRYPTION_ALGORITHM, e);
-        } catch (NoSuchPaddingException e)
+        }
+        catch (NoSuchPaddingException e)
         {
             throw new AcmEncryptionException("No such padding ", e);
-        } catch (InvalidKeyException e)
+        }
+        catch (InvalidKeyException e)
         {
             throw new AcmEncryptionBadKeyOrDataException("Invalid key ", e);
-        } catch (IllegalBlockSizeException e)
+        }
+        catch (IllegalBlockSizeException e)
         {
             throw new AcmEncryptionBadKeyOrDataException("illegal block size ", e);
-        } catch (BadPaddingException e)
+        }
+        catch (BadPaddingException e)
         {
             throw new AcmEncryptionBadKeyOrDataException("Bad padding ", e);
         }
@@ -155,19 +163,24 @@ public class AcmCryptoUtilsImpl implements AcmCryptoUtils
             {
                 decryptedData = extractDataAndVerifyNounce(decryptedData);
             }
-        } catch (NoSuchAlgorithmException e)
+        }
+        catch (NoSuchAlgorithmException e)
         {
             throw new AcmEncryptionException("Internal error. No such algorithm " + encryptionAlgorithm, e);
-        } catch (NoSuchPaddingException e)
+        }
+        catch (NoSuchPaddingException e)
         {
             throw new AcmEncryptionException("No such padding ", e);
-        } catch (InvalidKeyException e)
+        }
+        catch (InvalidKeyException e)
         {
             throw new AcmEncryptionBadKeyOrDataException("Invalid key ", e);
-        } catch (IllegalBlockSizeException e)
+        }
+        catch (IllegalBlockSizeException e)
         {
             throw new AcmEncryptionBadKeyOrDataException("illegal block size ", e);
-        } catch (BadPaddingException e)
+        }
+        catch (BadPaddingException e)
         {
             throw new AcmEncryptionBadKeyOrDataException("Bad padding ", e);
         }
@@ -218,7 +231,8 @@ public class AcmCryptoUtilsImpl implements AcmCryptoUtils
             if (o instanceof PGPEncryptedDataList)
             {
                 enc = (PGPEncryptedDataList) o;
-            } else
+            }
+            else
             {
                 enc = (PGPEncryptedDataList) pgpF.nextObject();
             }
@@ -238,10 +252,12 @@ public class AcmCryptoUtilsImpl implements AcmCryptoUtils
             PGPLiteralData ld = (PGPLiteralData) pgpFact.nextObject();
 
             return Streams.readAll(ld.getInputStream());
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             throw new AcmEncryptionBadKeyOrDataException("Bad key or data", e);
-        } catch (PGPException e)
+        }
+        catch (PGPException e)
         {
             throw new AcmEncryptionBadKeyOrDataException("Bad key or data", e);
         }
@@ -286,10 +302,12 @@ public class AcmCryptoUtilsImpl implements AcmCryptoUtils
             }
 
             return bOut.toByteArray();
-        } catch (PGPException e)
+        }
+        catch (PGPException e)
         {
             throw new AcmEncryptionBadKeyOrDataException("Error encrypting data with PGP.", e);
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             throw new AcmEncryptionBadKeyOrDataException("Error encrypting data with PGP.", e);
         }
@@ -326,7 +344,7 @@ public class AcmCryptoUtilsImpl implements AcmCryptoUtils
      */
     @Override
     public byte[] decryptData(byte[] passPhrase, byte[] data, int keySize, int ivSize, int magicSize, int saltSize,
-                              int passPhraseIterations, String passPhraseHashAlgorithm, String encryptionAlgorithm, String blockCipherMode, String padding)
+            int passPhraseIterations, String passPhraseHashAlgorithm, String encryptionAlgorithm, String blockCipherMode, String padding)
             throws AcmEncryptionBadKeyOrDataException
     {
         byte[] decryptedData = null;
@@ -343,10 +361,8 @@ public class AcmCryptoUtilsImpl implements AcmCryptoUtils
             Cipher cipher = Cipher.getInstance(encryptionAlgorithm + "/" + blockCipherMode + "/" + padding);
             cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key, encryptionAlgorithm), new IvParameterSpec(iv));
             decryptedData = cipher.doFinal(ciphertextBytes);
-
-//            log.debug("Decrypted plain text: " + new String(decryptedData));
-
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new AcmEncryptionBadKeyOrDataException("Error decrypting data.", e);
         }
@@ -355,7 +371,7 @@ public class AcmCryptoUtilsImpl implements AcmCryptoUtils
     }
 
     private byte[] deriveKeyIV(byte[] passPhrase, int keySize, int ivSize, byte[] salt, int iterations, String hashAlgorithm,
-                               byte[] resultKey, byte[] resultIv) throws NoSuchAlgorithmException
+            byte[] resultKey, byte[] resultIv) throws NoSuchAlgorithmException
     {
         keySize = keySize / 32;
         ivSize = ivSize / 32;
@@ -398,7 +414,7 @@ public class AcmCryptoUtilsImpl implements AcmCryptoUtils
      */
     @Override
     public byte[] encryptData(byte[] passPhrase, byte[] data, int keySize, int ivSize, int magicSize, int saltSize,
-                              int passPhraseIterations, String passPhraseHashAlgorithm, String encryptionAlgorithm, String blockCipherMode, String padding)
+            int passPhraseIterations, String passPhraseHashAlgorithm, String encryptionAlgorithm, String blockCipherMode, String padding)
             throws AcmEncryptionException
     {
 
@@ -425,7 +441,8 @@ public class AcmCryptoUtilsImpl implements AcmCryptoUtils
             System.arraycopy(magic, 0, encryptedData, 0, magic.length);
             System.arraycopy(saltBytes, 0, encryptedData, magic.length, saltBytes.length);
             System.arraycopy(ciphertextBytes, 0, encryptedData, magic.length + saltBytes.length, ciphertextBytes.length);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new AcmEncryptionBadKeyOrDataException("Error decrypting data.", e);
         }
