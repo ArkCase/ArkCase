@@ -70,4 +70,8 @@
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
 
+    <bean id="getUserFullNameAPIController" class="com.armedia.acm.services.users.web.api.GetUserFullNameAPIController">
+        <property name="userDao" ref="userJpaDao"/>
+    </bean>
+
 </beans>
