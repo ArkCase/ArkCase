@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('goodbye').controller('GoodbyeController', ['$window'
-    , 'UtilService', 'Acm.LoginService', 'LookupService', 'Acm.AppService'
-    , function ($window, Util, AcmLoginService, LookupService, AcmAppService) {
+    , 'Acm.StoreService', 'UtilService', 'Acm.LoginService', 'LookupService', 'Acm.AppService'
+    , function ($window, Store, Util, AcmLoginService, LookupService, AcmAppService) {
         // Retrieves the app properties from app-config.xml file
         var appConfig = LookupService.getConfig('app').then(function (data) {
             // clear redirectURL and redirectState
@@ -12,8 +12,7 @@ angular.module('goodbye').controller('GoodbyeController', ['$window'
             //clear warning from localStorage
             sessionStorage.removeItem('warningAccepted');
 
-
-            AcmLoginService.resetCaches();
+            Store.Registry.clearSessionCache();
             AcmLoginService.setLogin(false);
 
             // redirect to logout page

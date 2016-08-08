@@ -10,10 +10,125 @@
  *
  * This service package contains objects and functions for data storage
  */
-angular.module('services').factory('Acm.StoreService', ['$rootScope', 'UtilService', '$window', 'Util.TimerService'
-    , function ($rootScope, Util, $window, UtilTimerService
+angular.module('services').factory('Acm.StoreService', ['$rootScope', '$window', 'UtilService', 'Util.TimerService'
+    , function ($rootScope, $window, Util, UtilTimerService
     ) {
         var Store = {
+            _owner: null
+            , getOwner: function() {
+                return this._owner;
+            }
+            , setOwner: function(owner) {
+                this._owner = owner;
+            }
+            , prefixOwner: function(name) {
+                var owner = this.getOwner();
+                var prefixed = (owner)? owner + ":" : "";
+                prefixed += name;
+                return prefixed;
+            }
+            , fixOwner: function (name) {
+                Store.setOwner(name);
+
+                UtilTimerService.useTimer("fixStoreOwner"
+                    , 500     //delay 500 milliseconds
+                    , function () {
+                        Store.Registry.removeLocalOrphan(name);
+                        Store.Registry.removeSessionOrphan(name);
+                        return false;
+                    }
+                );
+            }
+
+            , Registry: {
+                LocalCacheNames: {
+                    LOCAL_REGISTRY: "AcmLocalRegistry"
+                    , SESSION_REGISTRY: "AcmSessionRegistry"
+                }
+                , getLocalInstance: function(name) {
+                    var instance = new Store.LocalData({name: Store.Registry.LocalCacheNames.LOCAL_REGISTRY
+                        , noOwner: true
+                        , noRegistry: true
+                    });
+                    return instance;
+                }
+                , getSessionInstance: function() {
+                    var instance = new Store.LocalData({name: Store.Registry.LocalCacheNames.SESSION_REGISTRY
+                        , noOwner: true
+                        , noRegistry: true
+                    });
+                    return instance;
+                }
+                , _getOwnerFromKey: function(key) {
+                    var ar = key.split(":");
+                    if (2 <= ar.length) {
+                        return ar[0];
+                    }
+                    return null;
+                }
+                , removeSessionOrphan: function(loginId) {
+                    var registry = this.getSessionInstance();
+                    var data = registry.get();
+                    _.forEach(data, function(item, key) {
+                        var owner = Store.Registry._getOwnerFromKey(key);
+                        if (Util.isEmpty(owner)) {
+                            var orphanCopy = new Store.SessionData({name: key, noOwner: true, noRegistry: true});
+                            var ownerCopy = new Store.SessionData({name: key, noOwner: false, noRegistry: true});
+                            var orphanCopyData = orphanCopy.get();
+                            var ownerCopyData = ownerCopy.get();
+                            if (Util.isEmpty(ownerCopyData)) {
+                                ownerCopy.set(orphanCopyData);
+                            }
+                            orphanCopy.remove();
+                            delete data[key];
+                            data[ownerCopy.getName()] = 1;
+
+                        } else if (owner != loginId) {
+                            var cache = new Store.SessionData({name: key, noOwner: true, noRegistry: true});
+                            cache.remove();
+                            delete data[key];
+                        }
+                    });
+                    registry.set(data);
+                }
+                , removeLocalOrphan: function(loginId) {
+                    var registry = this.getLocalInstance();
+                    var data = registry.get();
+                    _.forEach(data, function(item, key) {
+                        var owner = Store.Registry._getOwnerFromKey(key);
+                        if (Util.isEmpty(owner)) {
+                            var orphanCopy = new Store.LocalData({name: key, noOwner: true, noRegistry: true});
+                            var ownerCopy = new Store.LocalData({name: key, noOwner: false, noRegistry: true});
+                            var orphanCopyData = orphanCopy.get();
+                            var ownerCopyData = ownerCopy.get();
+                            if (Util.isEmpty(ownerCopyData)) {
+                                ownerCopy.set(orphanCopyData);
+                            }
+                            orphanCopy.remove();
+                            delete data[key];
+                            data[ownerCopy.getName()] = 1;
+
+                        } else if (owner != loginId) {
+                            var cache = new Store.LocalData({name: key, noOwner: true, noRegistry: true});
+                            cache.remove();
+                            delete data[key];
+                        }
+                    });
+                    registry.set(data);
+                }
+                , clearSessionCache: function() {
+                    var registry = this.getSessionInstance();
+                    var data = registry.get();
+                    _.forEach(data, function(item, key) {
+                        var cache = new Store.SessionData({name: key, noOwner: true, noRegistry: true});
+                        cache.remove();
+                    });
+                    registry.remove();
+                }
+            }
+
+
+
             /**
              * @ngdoc service
              * @name Acm.StoreService.Variable
@@ -41,7 +156,7 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', 'UtilServi
              *
              * var v2 = new Variable("MyData", "first");    //initialize value to "first"
              */
-            Variable: function (name, initValue) {
+            , Variable: function (name, initValue) {
                 this.name = name;
                 $rootScope._storeVariableMap = $rootScope._storeVariableMap || {};
                 if (undefined != initValue) {
@@ -73,8 +188,24 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', 'UtilServi
              *
              * var sd = new SessionData("MyData");
              */
-            , SessionData: function (name) {
-                this.name = name;
+            , SessionData: function (arg) {
+                if ("string" == typeof arg) {
+                    arg = {name: arg};
+                    arg.noOwner = false;
+                    arg.noRegistry = false;
+                }
+                this.noOwner = Util.goodValue(arg.noOwner, false);
+
+                this.name = (this.noOwner)? arg.name : Store.prefixOwner(arg.name);
+
+
+                this.noRegistry = Util.goodValue(arg.noRegistry, false);
+                if (!this.noRegistry) {
+                    var registry = Store.Registry.getSessionInstance();
+                    var data = Util.goodValue(registry.get(), {});
+                    data[this.name] = 1;
+                    registry.set(data);
+                }
             }
 
 
@@ -102,8 +233,24 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', 'UtilServi
              *
              * var ld = new LocalData("MyData");
              */
-            , LocalData: function (name) {
-                this.name = name;
+            , LocalData: function (arg) {
+                if ("string" == typeof arg) {
+                    arg = {name: arg};
+                    arg.noOwner = false;
+                    arg.noRegistry = false;
+                }
+                this.noOwner = Util.goodValue(arg.noOwner, false);
+
+                this.name = (this.noOwner)? arg.name : Store.prefixOwner(arg.name);
+
+
+                this.noRegistry = Util.goodValue(arg.noRegistry, false);
+                if (!this.noRegistry) {
+                    var registry = Store.Registry.getLocalInstance();
+                    var data = Util.goodValue(registry.get(), {});
+                    data[this.name] = 1;
+                    registry.set(data);
+                }
             }
 
 
@@ -254,6 +401,18 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', 'UtilServi
                 var item = (Util.isEmpty(data)) ? null : JSON.stringify(data);
                 sessionStorage.setItem(this.name, item);
             }
+
+            /**
+             * @ngdoc method
+             * @name remove
+             * @methodOf Acm.StoreService.SessionData
+             *
+             * @description
+             * remove SessionData.
+             */
+            , remove: function () {
+                sessionStorage.removeItem(this.name);
+            }
         };
 
 
@@ -314,6 +473,18 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', 'UtilServi
             , set: function (data) {
                 var item = (Util.isEmpty(data)) ? null : JSON.stringify(data);
                 localStorage.setItem(this.name, item);
+            }
+
+            /**
+             * @ngdoc method
+             * @name remove
+             * @methodOf Acm.StoreService.LocalData
+             *
+             * @description
+             * remove LocalData.
+             */
+            , remove: function () {
+                localStorage.removeItem(this.name);
             }
         };
 
@@ -710,6 +881,9 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', 'UtilServi
                 // Dummy
             }, false);
         }
+
+
+        Store.Registry.clearSessionCache();
 
         return Store;
     }

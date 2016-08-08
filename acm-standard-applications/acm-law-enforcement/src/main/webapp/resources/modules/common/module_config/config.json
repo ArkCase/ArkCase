@@ -557,47 +557,5 @@
       }
     },
     "wordFileExtensionRegex": "\\.(doc|dot|docx|dotx|docm|dotm|docb)$"
-  },
-  "resetCacheNames": [
-    {
-      "service": "Authentication",
-      "names": "SessionCacheNames",
-      "type": "session"
-    },
-    {
-      "service": "Acm.AppService",
-      "names": "SessionCacheNames",
-      "type": "session"
-    },
-    {
-      "service": "ConfigService",
-      "names": "SessionCacheNames",
-      "type": "session"
-    },
-    {
-      "service": "LookupService",
-      "names": "SessionCacheNames",
-      "type": "session"
-    },
-    {
-      "service": "Object.LookupService",
-      "names": "SessionCacheNames",
-      "type": "session"
-    },
-    {
-      "service": "Case.LookupService",
-      "names": "SessionCacheNames",
-      "type": "session"
-    },
-    {
-      "service": "Complaint.LookupService",
-      "names": "SessionCacheNames",
-      "type": "session"
-    },
-    {
-      "service": "ApplicationConfigService",
-      "names": "SessionCacheNames",
-      "type": "session"
-    }
-  ]
+  }
 }
