@@ -153,15 +153,7 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
     @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
-        boolean objectNotNull = acmObjectType != null;
-        String ourClassName = Person.class.getName();
-        String theirClassName = acmObjectType.getName();
-        boolean classNames = theirClassName.equals(ourClassName);
-        boolean isSupported = objectNotNull && classNames;
-
-        log.trace("Incoming: " + acmObjectType.getName() + "; do we handle it? " + isSupported);
-
-        return isSupported;
+        return Person.class.equals(acmObjectType);
     }
 
     public PersonDao getPersonDao()
