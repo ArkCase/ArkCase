@@ -184,41 +184,41 @@ angular.module('services').factory('Acm.LoginService', ['$q', '$state', '$inject
             }
 
 
-            /**
-             * @ngdoc method
-             * @name resetCaches
-             * @methodOf services:Acm.LoginService
-             *
-             * @description
-             * Reset caches to get ready for new user or for next user
-             */
-            , resetCaches: function () {
-                ConfigService.getModuleConfig("common").then(function (moduleConfig) {
-                    var resetCacheNames = Util.goodMapValue(moduleConfig, "resetCacheNames", []);
-                    _.each(resetCacheNames, function(cacheList) {
-                        var type = Util.goodMapValue(cacheList, "type");
-                        var names = Util.goodMapValue(cacheList, "names");
-                        if ("session" == Util.goodMapValue(cacheList, "type")) {
-                            try {
-                                var service = $injector.get(Util.goodMapValue(cacheList, "service"));
-                                var SessionCacheNames = Util.goodMapValue(service, Util.goodMapValue(cacheList, "names"), {});
-                                _.each(SessionCacheNames, function (name) {
-                                    var cache = new Store.SessionData(name);
-                                    cache.set(null);
-                                });
-                            } catch(e) {
-                                $log.error("AcmLoginService: " + err.message);
-                            }
-                        }
-                    });
-
-                    return moduleConfig;
-                });
-
-                //Above ConfigService.getModuleConfig() just created a cache, reset it as well
-                var cache = new Store.SessionData(ConfigService.SessionCacheNames.MODULE_CONFIG_MAP);
-                cache.set(null);
-            }
+            ///**
+            // * @ngdoc method
+            // * @name resetCaches
+            // * @methodOf services:Acm.LoginService
+            // *
+            // * @description
+            // * Reset caches to get ready for new user or for next user
+            // */
+            //, resetCaches: function () {
+            //    ConfigService.getModuleConfig("common").then(function (moduleConfig) {
+            //        var resetCacheNames = Util.goodMapValue(moduleConfig, "resetCacheNames", []);
+            //        _.each(resetCacheNames, function(cacheList) {
+            //            var type = Util.goodMapValue(cacheList, "type");
+            //            var names = Util.goodMapValue(cacheList, "names");
+            //            if ("session" == Util.goodMapValue(cacheList, "type")) {
+            //                try {
+            //                    var service = $injector.get(Util.goodMapValue(cacheList, "service"));
+            //                    var SessionCacheNames = Util.goodMapValue(service, Util.goodMapValue(cacheList, "names"), {});
+            //                    _.each(SessionCacheNames, function (name) {
+            //                        var cache = new Store.SessionData(name);
+            //                        cache.set(null);
+            //                    });
+            //                } catch(e) {
+            //                    $log.error("AcmLoginService: " + err.message);
+            //                }
+            //            }
+            //        });
+            //
+            //        return moduleConfig;
+            //    });
+            //
+            //    //Above ConfigService.getModuleConfig() just created a cache, reset it as well
+            //    var cache = new Store.SessionData(ConfigService.SessionCacheNames.MODULE_CONFIG_MAP);
+            //    cache.set(null);
+            //}
 
 
             /**
