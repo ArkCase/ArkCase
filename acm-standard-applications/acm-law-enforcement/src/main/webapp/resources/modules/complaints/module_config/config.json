@@ -320,21 +320,24 @@
           "columnDefs": [
             {
               "name": "note",
+              "field": "description_parseable",
               "displayName": "complaints.comp.notes.table.columns.note",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div ng-bind-html='row.entity.note' title='{{row.entity.note}}' class='ui-grid-cell-contents'></div>",
+              "cellTemplate": "<div ng-bind-html='row.entity.description_parseable' title='{{row.entity.description_parseable}}' class='ui-grid-cell-contents'></div>",
               "enableCellEdit": false
             },
             {
               "name": "created",
+              "field": "create_date_tdt",
               "displayName": "complaints.comp.notes.table.columns.created",
+              "cellTemplate": "<div>{{ row.entity.create_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
               "enableCellEdit": false,
               "width": 150
             },
             {
               "name": "creator",
+              "field": "creator_lcs",
               "displayName": "complaints.comp.notes.table.columns.creator",
               "headerCellFilter": "translate",
               "enableCellEdit": false,
@@ -361,7 +364,7 @@
               "field": "assignee_s",
               "displayName": "complaints.comp.tasks.table.columns.assignee",
               "headerCellFilter": "translate",
-              "lookup": "userFullNames",
+              "fullNameField": "assignee_full_name_lcs",
               "width": 150
             },
             {
@@ -582,7 +585,7 @@
             "name": "creator",
             "displayName": "complaints.comp.people.contactMethods.table.columns.creator",
             "headerCellFilter": "translate",
-            "lookup": "userFullNames"
+            "fullNameField": "creator_full_name_lcs"
           }
         ]
       },
@@ -623,7 +626,7 @@
             "name": "creator",
             "displayName": "complaints.comp.people.organizations.table.columns.creator",
             "headerCellFilter": "translate",
-            "lookup": "userFullNames"
+            "fullNameField": "creator_full_name_lcs"
           }
         ]
       },
@@ -681,7 +684,7 @@
             "name": "creator",
             "displayName": "complaints.comp.people.addresses.table.columns.creator",
             "headerCellFilter": "translate",
-            "lookup": "userFullNames"
+            "fullNameField": "creator_full_name_lcs"
           }
         ]
       },
@@ -719,7 +722,7 @@
             "name": "creator",
             "displayName": "complaints.comp.people.aliases.table.columns.creator",
             "headerCellFilter": "translate",
-            "lookup": "userFullNames"
+            "fullNameField": "creator_full_name_lcs"
           }
         ]
       },
@@ -757,7 +760,7 @@
             "name": "creator",
             "displayName": "complaints.comp.people.securityTags.table.columns.creator",
             "headerCellFilter": "translate",
-            "lookup": "userFullNames"
+            "fullNameField": "creator_full_name_lcs"
           }
         ]
       }
@@ -881,22 +884,29 @@
       "columnDefs": [
         {
           "name": "note",
+          "field": "description_parseable",
           "displayName": "complaints.comp.notes.table.columns.note",
-          "headerCellFilter": "translate"
-        },
-        {
-          "name": "created",
-          "displayName": "complaints.comp.notes.table.columns.created",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div ng-bind-html='row.entity.description_parseable' title='{{row.entity.description_parseable}}' class='ui-grid-cell-contents'></div>",
           "enableCellEdit": false
         },
         {
+          "name": "created",
+          "field": "create_date_tdt",
+          "displayName": "complaints.comp.notes.table.columns.created",
+          "cellTemplate": "<div>{{ row.entity.create_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "headerCellFilter": "translate",
+          "enableCellEdit": false,
+          "width": 150
+        },
+        {
           "name": "creator",
+          "field": "creator_lcs",
           "displayName": "complaints.comp.notes.table.columns.creator",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
-          "lookup": "userFullNames"
+          "lookup": "userFullNames",
+          "width": 150
         }
       ]
     },
@@ -928,7 +938,7 @@
           "field": "assignee_s",
           "displayName": "complaints.comp.tasks.table.columns.assignee",
           "headerCellFilter": "translate",
-          "lookup": "userFullNames"
+          "fullNameField": "assignee_full_name_lcs"
         },
         {
           "name": "created",
@@ -1168,7 +1178,7 @@
           "name": "creator",
           "displayName": "complaints.comp.tags.table.columns.createdBy",
           "headerCellFilter": "translate",
-          "lookup": "userFullNames"
+          "fullNameField": "creator_full_name_lcs"
         }
       ],
       "filters": "\"Object Type\": TAG",

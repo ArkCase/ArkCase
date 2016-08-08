@@ -117,10 +117,10 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                     if (Util.goodPositive(scope.notesInit.currentObjectId, false)) {
                         var info = scope.notesInit;
                         var promiseQueryNotes = ObjectNoteService.queryNotes(info.objectType, info.currentObjectId, info.noteType);
-                        $q.all([promiseQueryNotes, promiseUsers]).then(function (data) {
+                        $q.all([promiseQueryNotes,promiseUsers]).then(function (data) {
                             var notes = data[0];
-                            scope.gridOptions.data = notes;
-                            scope.gridOptions.totalItems = notes.length;
+                            scope.gridOptions.data = notes.docs;
+                            scope.gridOptions.totalItems = notes.docs.length;
                         });
                     }
                 };

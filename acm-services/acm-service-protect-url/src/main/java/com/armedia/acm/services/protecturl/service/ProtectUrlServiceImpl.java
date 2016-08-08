@@ -9,6 +9,7 @@ import javax.persistence.NoResultException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Base64;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -64,7 +65,9 @@ public class ProtectUrlServiceImpl implements ProtectUrlService
         pUrl.setValidTo(validTo);
 
         //save to database and return created protected url object
-        return protectedUrlDao.save(pUrl);
+        ProtectedUrl protectedUrl = protectedUrlDao.save(pUrl);
+        log.debug("Created protected url: [{}]", protectedUrl);
+        return protectedUrl;
     }
 
     /**
@@ -74,7 +77,7 @@ public class ProtectUrlServiceImpl implements ProtectUrlService
      * @return ProtectedUrl if found, otherwise null.
      */
     @Override
-    public ProtectedUrl getProtectUrl(String obfuscatedUrl)
+    public ProtectedUrl getProtectedUrl(String obfuscatedUrl)
     {
         Objects.requireNonNull(obfuscatedUrl, "Url must not be null.");
         try
@@ -84,6 +87,19 @@ public class ProtectUrlServiceImpl implements ProtectUrlService
         {
             return null;
         }
+    }
+
+    /**
+     * retrieves saved list of protected url for given originalUrl as attribute
+     *
+     * @param originalUrl String obfuscatedUrl
+     * @return List<ProtectedUrl>
+     */
+    @Override
+    public List<ProtectedUrl> getProtectedUrlByOriginalUrl(String originalUrl)
+    {
+        Objects.requireNonNull(originalUrl, "Url must not be null.");
+        return protectedUrlDao.findByOriginalUrl(originalUrl);
     }
 
     /**

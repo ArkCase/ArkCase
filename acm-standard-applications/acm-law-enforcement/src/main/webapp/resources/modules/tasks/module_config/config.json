@@ -472,22 +472,29 @@
           "columnDefs": [
             {
               "name": "note",
+              "field": "description_parseable",
               "displayName": "tasks.comp.notes.table.columns.note",
-              "headerCellFilter": "translate"
-            },
-            {
-              "name": "created",
-              "displayName": "tasks.comp.notes.table.columns.created",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "cellTemplate": "<div ng-bind-html='row.entity.description_parseable' title='{{row.entity.description_parseable}}' class='ui-grid-cell-contents'></div>",
               "enableCellEdit": false
             },
             {
+              "name": "created",
+              "field": "create_date_tdt",
+              "displayName": "tasks.comp.notes.table.columns.created",
+              "cellTemplate": "<div>{{ row.entity.create_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "headerCellFilter": "translate",
+              "enableCellEdit": false,
+              "width": 150
+            },
+            {
               "name": "creator",
+              "field": "creator_lcs",
               "displayName": "tasks.comp.notes.table.columns.creator",
               "headerCellFilter": "translate",
               "enableCellEdit": false,
-              "lookup": "userFullNames"
+              "lookup": "userFullNames",
+              "width": 150
             }
           ]
         },
@@ -631,7 +638,7 @@
           "displayName": "tasks.comp.docsreview.table.columns.creator",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
-          "lookup": "userFullNames"
+          "fullNameField": "creator_full_name_lcs"
         },
         {
           "name": "status",
@@ -672,7 +679,7 @@
           "displayName": "tasks.comp.rejcomments.table.columns.creator",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
-          "lookup": "userFullNames"
+          "fullNameField": "creator_full_name_lcs"
         }
       ]
     },
@@ -708,22 +715,29 @@
       "columnDefs": [
         {
           "name": "note",
+          "field": "description_parseable",
           "displayName": "tasks.comp.notes.table.columns.note",
-          "headerCellFilter": "translate"
-        },
-        {
-          "name": "created",
-          "displayName": "tasks.comp.notes.table.columns.created",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div ng-bind-html='row.entity.description_parseable' title='{{row.entity.description_parseable}}' class='ui-grid-cell-contents'></div>",
           "enableCellEdit": false
         },
         {
+          "name": "created",
+          "field": "create_date_tdt",
+          "displayName": "tasks.comp.notes.table.columns.created",
+          "cellTemplate": "<div>{{ row.entity.create_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "headerCellFilter": "translate",
+          "enableCellEdit": false,
+          "width": 150
+        },
+        {
           "name": "creator",
+          "field": "creator_lcs",
           "displayName": "tasks.comp.notes.table.columns.creator",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
-          "lookup": "userFullNames"
+          "fullNameField": "creator_full_name_lcs",
+          "width": 150
         }
       ]
     },
@@ -871,7 +885,7 @@
           "name": "creator",
           "displayName": "tasks.comp.tags.table.columns.createdBy",
           "headerCellFilter": "translate",
-          "lookup": "userFullNames"
+          "fullNameField": "creator_full_name_lcs"
         }
       ],
       "filters": "\"Object Type\": TAG",
