@@ -22,6 +22,12 @@
                 <prop key="acm.websockets.enabled">true</prop>
                 <prop key="acm.websockets.stomp_endpoint">/stomp</prop>
                 <prop key="acm.websockets.application_destination_prefix">/app</prop>
+                <prop key="acm.websockets.stomp_broker_relay.relay_protocol">ssl</prop>
+                <prop key="acm.websockets.stomp_broker_relay.keystore">${user.home}/.arkcase/acm/private/keystore</prop>
+                <prop key="acm.websockets.stomp_broker_relay.keystore_pass">password</prop>
+                <prop key="acm.websockets.stomp_broker_relay.truststore">${user.home}/.arkcase/acm/private/truststore</prop>
+                <prop key="acm.websockets.stomp_broker_relay.truststore_pass">password</prop>
+                <prop key="acm.websockets.stomp_broker_relay.truststore_type">JKS</prop>
                 <prop key="acm.websockets.stomp_broker_relay.relay_host">acm-activemq</prop>
                 <prop key="acm.websockets.stomp_broker_relay.relay_port">61613</prop>
                 <prop key="acm.websockets.stomp_broker_relay.heartbeat_send_interval">20000</prop>
@@ -48,6 +54,17 @@
                                       heartbeat-receive-interval="${acm.websockets.stomp_broker_relay.heartbeat_receive_interval}"/>
     </websocket:message-broker>
 
+    <bean class="com.armedia.acm.websockets.configuration.StompBrokerRelayMessageHandlerBeanPostProcessor">
+        <property name="relayProtocol" value="${acm.websockets.stomp_broker_relay.relay_protocol}"/>
+        <property name="keyStore" value="${acm.websockets.stomp_broker_relay.keystore}"/>
+        <property name="keyStorePass" value="${acm.websockets.stomp_broker_relay.keystore_pass}"/>
+        <property name="trustStore" value="${acm.websockets.stomp_broker_relay.truststore}"/>
+        <property name="trustStorePass" value="${acm.websockets.stomp_broker_relay.truststore_pass}"/>
+        <property name="trustStoreType" value="${acm.websockets.stomp_broker_relay.truststore_type}"/>
+        <property name="host" value="${acm.websockets.stomp_broker_relay.relay_host}"/>
+        <property name="port" value="${acm.websockets.stomp_broker_relay.relay_port}"/>
+    </bean>
+    
     <bean id="objectChangeNotificationProperties"
           class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <!-- note: must leave "file:" at the start of the file name for spring
