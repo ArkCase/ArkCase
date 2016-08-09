@@ -3,17 +3,21 @@ package com.armedia.acm.crypto.properties;
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 
 import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.KeyFactory;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 
 /**
  * Utility class used when encrypting/decrypting values in properties files.
@@ -26,6 +30,8 @@ import java.security.spec.PKCS8EncodedKeySpec;
  */
 public class AcmEncryptablePropertyUtilsImpl implements AcmEncryptablePropertyUtils
 {
+
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     private static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
 
@@ -50,27 +56,34 @@ public class AcmEncryptablePropertyUtilsImpl implements AcmEncryptablePropertyUt
         }
 
         // read private key
-        PKCS8EncodedKeySpec keySpec;
         PrivateKey privateKey = null;
         try
         {
-            keySpec = new PKCS8EncodedKeySpec(readFileBytes(encryptionProperties.getPrivateKeyFilePath()));
-            KeyFactory keyFactory = KeyFactory.getInstance(encryptionProperties.getPrivateKeyEncryptionAlgorithm());
-            privateKey = keyFactory.generatePrivate(keySpec);
+            privateKey = getPrivateKey(encryptionProperties.getKeystorePath(), encryptionProperties.getKeystorePassword(),
+                    encryptionProperties.getKeystoreType(), encryptionProperties.getPrivateKeyAlias());
         }
         catch (IOException e)
         {
-            throw new AcmEncryptionException("Failed to decrypt symmetric key. Reading private key from file: "
-                    + encryptionProperties.getPrivateKeyFilePath() + " failed!", e);
+            throw new AcmEncryptionException("Failed to decrypt symmetric key. Reading private key from keystore file: "
+                    + encryptionProperties.getKeystorePath() + " failed!", e);
+        }
+        catch (UnrecoverableKeyException e)
+        {
+            throw new AcmEncryptionException("Failed to recover private key from keystore.", e);
+        }
+        catch (KeyStoreException e)
+        {
+            throw new AcmEncryptionException("Failed to open keystore from keystore file: " + encryptionProperties.getKeystorePath(), e);
         }
         catch (NoSuchAlgorithmException e)
         {
             throw new AcmEncryptionException(
-                    "Failed to decrypt symmetric key. No such algorithm: " + encryptionProperties.getPrivateKeyEncryptionAlgorithm(), e);
+                    "Failed to open keystore from keystore file: " + encryptionProperties.getKeystorePath() + ". Check keystore type!", e);
         }
-        catch (InvalidKeySpecException e)
+        catch (CertificateException e)
         {
-            throw new AcmEncryptionException("Failed to decrypt symmetric key. Cannot generate private key!", e);
+            throw new AcmEncryptionException("Failed to read certificates from keystore file: " + encryptionProperties.getKeystorePath(),
+                    e);
         }
 
         // return symmetricKey value. Keep it as byte array NOT as String
@@ -142,6 +155,20 @@ public class AcmEncryptablePropertyUtilsImpl implements AcmEncryptablePropertyUt
     {
         Path path = Paths.get(filename);
         return Files.readAllBytes(path);
+    }
+
+    private PrivateKey getPrivateKey(final String keystorePath, final String keystorePassword, final String keyStoreType,
+            final String keyAlias)
+            throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException, UnrecoverableKeyException
+    {
+        log.debug("Initializing key store: {}", keystorePath);
+        final KeyStore keystore = KeyStore.getInstance(keyStoreType);
+        try (InputStream is = Files.newInputStream(Paths.get(keystorePath)))
+        {
+            keystore.load(is, null == keystorePassword ? null : keystorePassword.toCharArray());
+            log.debug("Loaded key store");
+        }
+        return (PrivateKey) keystore.getKey(keyAlias, keystorePassword.toCharArray());
     }
 
     /**
