@@ -23,9 +23,11 @@
     <script type="text/javascript">
         function addUrlHashToLocalStorage() {
             if (window.location.hash != '#!/welcome' && window.location.hash != '#!/goodbye') {
-                localStorage.redirectURL = window.location.hash;
+                //localStorage.redirectURL = window.location.hash;
+                sessionStorage.redirectURL = window.location.hash;
             } else {
-                localStorage.removeItem('redirectURL');
+                //localStorage.removeItem('redirectURL');
+                sessionStorage.removeItem('redirectURL');
             }
         }
         window.onload = addUrlHashToLocalStorage;
