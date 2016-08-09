@@ -87,6 +87,11 @@ angular.module('tasks').config(['$stateProvider',
                 url: '/:type/:id/notes',
                 templateUrl: 'modules/tasks/views/components/task-notes.client.view.html'
             })
+            
+            .state('tasks.references', {
+                url: '/:type/:id/references',
+                templateUrl: 'modules/tasks/views/components/task-references.client.view.html'
+            })
 
             .state('tasks.workflow', {
                 url: '/:type/:id/workflow',
