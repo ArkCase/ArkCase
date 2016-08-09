@@ -103,7 +103,8 @@ public class SmtpNotificationSender implements NotificationSender
                 {
                     InputStream contents = getEcmFileService().downloadAsInputStream(attachmentId);
                     EcmFile ecmFile = getEcmFileService().findById(attachmentId);
-                    attachments.put(ecmFile.getFileName(), new DataHandler(new InputStreamDataSource(contents, ecmFile.getFileName())));
+                    attachments.put(ecmFile.getFileName() + ecmFile.getFileActiveVersionNameExtension(), new DataHandler(
+                            new InputStreamDataSource(contents, ecmFile.getFileName() + ecmFile.getFileActiveVersionNameExtension())));
                 }
                 MuleMessage received = getMuleContextManager().send(flow, makeNote(emailAddress, in, authentication), attachments,
                         messageProps);
