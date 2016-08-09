@@ -233,7 +233,7 @@
             "title": "Edit With Word",
             "cmd": "editWithWord",
             "uiIcon": "ui-icon-pencil",
-            "disabledExpression": "!(new RegExp(Util.goodMapValue(DocTree.treeConfig, 'wordFileExtensionRegex', '\\.(doc|docx)$'), 'i').test(nodes[0].data.name))"
+            "disabledExpression": "!(new RegExp(Util.goodMapValue(DocTree.treeConfig, 'wordFileExtensionRegex', '\\.(doc|docx|pdf|xlsx|xls|ppt)$'), 'i').test(nodes[0].data.name))"
           },
           {
             "title": "Email",
@@ -556,7 +556,7 @@
         "uiIcon": "ui-icon-pencil"
       }
     },
-    "wordFileExtensionRegex": "\\.(doc|dot|docx|dotx|docm|dotm|docb)$"
+    "wordFileExtensionRegex": "\\.(doc|dot|docx|dotx|docm|dotm|docb|pdf|xlsx|xls|ppt)$"
   },
   "resetCacheNames": [
     {

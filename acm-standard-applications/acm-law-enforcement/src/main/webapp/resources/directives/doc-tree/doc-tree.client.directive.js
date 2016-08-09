@@ -1421,16 +1421,27 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                             var absUrl = $location.absUrl();
                                             var baseHref = $browser.baseHref();
                                             var appUrl = absUrl.substring(0, absUrl.indexOf(baseHref) + baseHref.length);
-                                            var rs = Util.goodMapValue(DocTree.treeConfig, 'wordFileExtensionRegex', '\\.(doc|docx)$');
+                                            var rs = Util.goodMapValue(DocTree.treeConfig, 'wordFileExtensionRegex', '\\.(doc|docx|pdf|xls|xlsx|ppt)$');
                                             var re = new RegExp(rs, "i");
                                             var hasExt = node.data.name.match(re);
                                             var fileExt = '';
                                             if (hasExt && hasExt[0])
                                                 fileExt = hasExt[0];
 
-                                            ITHit.WebDAV.Client.DocManager.EditDocument(appUrl + "webdav/" + acmTicket + "/" + ObjectService.ObjectTypes.FILE + "/" + ObjectService.LockTypes.WORD_EDIT_LOCK + "/" +
-                                                node.data.objectId + fileExt);
-                                            DocTree.refreshTree();
+                                        var fileWebdavUrl = appUrl + "webdav/" + acmTicket + "/" + ObjectService.ObjectTypes.FILE + "/" + ObjectService.LockTypes.WORD_EDIT_LOCK + "/" +
+                                            node.data.objectId + fileExt;
+                                        console.log(fileWebdavUrl);
+
+                                        ITHit.WebDAV.Client.DocManager.EditDocument(fileWebdavUrl, appUrl + "webdav/", protocolInstallMessage);
+                                        function protocolInstallMessage(message) {
+                                            console.log(message);
+                                            var installerFilePath = appUrl + "assets/js/Plugins/" + ITHit.WebDAV.Client.DocManager.GetInstallFileName();
+
+                                            if (confirm("Opening this type of file requires a protocol installation. Select OK to download the protocol installer.")) {
+                                                window.open(installerFilePath);
+                                            }
+                                        }
+                                        DocTree.refreshTree();
                                         })
                                 });
                             }
