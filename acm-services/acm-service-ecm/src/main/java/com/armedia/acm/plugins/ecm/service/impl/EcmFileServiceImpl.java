@@ -980,7 +980,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     @Override
     public EcmFile renameFile(Long fileId, String newFileName) throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
-        // newFileName = getFolderAndFilesUtils().getBaseFileName(newFileName);
+        newFileName = getFolderAndFilesUtils().getBaseFileName(newFileName);
         EcmFile file = getEcmFileDao().find(fileId);
 
         if (file == null)
