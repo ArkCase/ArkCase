@@ -87,7 +87,7 @@ angular.module('tasks').controller('Tasks.ReferencesController', ['$scope', '$st
                     reference.referenceNumber = chosenReference.name;
                     reference.referenceStatus = chosenReference.status_lcs;
                     reference.parentId = $stateParams.id;
-                    reference.parentType = 'TASK';
+                    reference.parentType = ObjectService.ObjectTypes.TASK;
                     referenceService.addReference(reference).then(
                         function (objectSaved) {
                             $scope.refresh();
