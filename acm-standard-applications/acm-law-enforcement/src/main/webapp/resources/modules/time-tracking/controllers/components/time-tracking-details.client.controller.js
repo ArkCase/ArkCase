@@ -14,6 +14,11 @@ angular.module('time-tracking').controller('TimeTracking.DetailsController', ['$
             , validateObjectInfo: TimeTrackingInfoService.validateTimesheet
         });
 
+		$scope.options = {
+            focus: true,
+            dialogsInBody:true
+            //,height: 120
+        };
 
         $scope.saveDetails = function() {
             var timesheetInfo = Util.omitNg($scope.objectInfo);
