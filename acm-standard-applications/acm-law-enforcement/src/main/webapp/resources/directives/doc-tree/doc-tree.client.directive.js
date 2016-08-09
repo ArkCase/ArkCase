@@ -1307,7 +1307,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 if (batch) {
                                     DocTree.checkNodes(nodes, false);
                                 }
-                                DocTree.CLIPBOARD = {mode: data.cmd, batch: batch, data: nodes};
+                                DocTree.CLIPBOARD = {mode: "cut", batch: batch, data: nodes};
                             }
                         }
                         , {
@@ -1324,7 +1324,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     });
                                     clones.push(clone);
                                 }
-                                DocTree.CLIPBOARD = {mode: data.cmd, batch: batch, data: clones, src: nodes};
+                                DocTree.CLIPBOARD = {mode: "copy", batch: batch, data: clones, src: nodes};
                             }
                         }
                         , {
@@ -1336,8 +1336,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         , {
                             name: "paste",
                             execute: function (nodes, args) {
+                                var node = nodes[0];
                                 DocTree.expandNode(node).done(function () {
-                                    var node = nodes[0];
                                     var mode = DocTree.isFolderNode(node) ? "child" : "after";
                                     if (DocTree.CLIPBOARD.mode === "cut") {
                                         DocTree.Op.batchMove(DocTree.CLIPBOARD.data, node, mode);

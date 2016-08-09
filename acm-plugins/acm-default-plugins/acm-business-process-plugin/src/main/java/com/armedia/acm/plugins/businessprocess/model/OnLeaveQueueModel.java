@@ -2,17 +2,14 @@ package com.armedia.acm.plugins.businessprocess.model;
 
 import com.armedia.acm.services.pipeline.AbstractPipelineContext;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-public class NextPossibleQueuesModel<T, P extends AbstractPipelineContext>
+public class OnLeaveQueueModel<T, P extends AbstractPipelineContext>
 {
+
     private T businessObject;
 
     private P pipelineContext;
 
-    private List<String> nextPossibleQueues = new ArrayList<>();
+    private String businessProcessName;
 
     public T getBusinessObject()
     {
@@ -34,16 +31,14 @@ public class NextPossibleQueuesModel<T, P extends AbstractPipelineContext>
         this.pipelineContext = pipelineContext;
     }
 
-    public List<String> getNextPossibleQueues()
+    public String getBusinessProcessName()
     {
-        return Collections.unmodifiableList(nextPossibleQueues);
+        return businessProcessName;
     }
 
-    public void setNextPossibleQueues(List<String> nextPossibleQueues)
+    public void setBusinessProcessName(String businessProcessName)
     {
-        List<String> queues = new ArrayList<>();
-        queues.addAll(nextPossibleQueues);
-        this.nextPossibleQueues = queues;
+        this.businessProcessName = businessProcessName;
     }
 
 }
