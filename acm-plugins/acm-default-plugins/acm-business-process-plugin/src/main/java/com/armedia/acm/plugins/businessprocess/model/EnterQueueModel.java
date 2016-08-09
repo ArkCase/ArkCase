@@ -6,13 +6,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class NextPossibleQueuesModel<T, P extends AbstractPipelineContext>
+public class EnterQueueModel<T, P extends AbstractPipelineContext>
 {
+
     private T businessObject;
 
     private P pipelineContext;
 
-    private List<String> nextPossibleQueues = new ArrayList<>();
+    private List<String> cannotEnterReasons = new ArrayList<>();
 
     public T getBusinessObject()
     {
@@ -34,16 +35,21 @@ public class NextPossibleQueuesModel<T, P extends AbstractPipelineContext>
         this.pipelineContext = pipelineContext;
     }
 
-    public List<String> getNextPossibleQueues()
+    public List<String> getCannotEnterReasons()
     {
-        return Collections.unmodifiableList(nextPossibleQueues);
+        return Collections.unmodifiableList(cannotEnterReasons);
     }
 
-    public void setNextPossibleQueues(List<String> nextPossibleQueues)
+    public void setCannotEnterReasons(List<String> cannotEnterReasons)
     {
-        List<String> queues = new ArrayList<>();
-        queues.addAll(nextPossibleQueues);
-        this.nextPossibleQueues = queues;
+        List<String> reasons = new ArrayList<>();
+        reasons.addAll(cannotEnterReasons);
+        this.cannotEnterReasons = reasons;
+    }
+
+    public void addCannotEnterReason(String reason)
+    {
+        cannotEnterReasons.add(reason);
     }
 
 }
