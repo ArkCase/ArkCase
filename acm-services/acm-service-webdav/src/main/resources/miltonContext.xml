@@ -16,7 +16,7 @@
     </bean>
 
     <bean id="wordExtensionPattern" class="java.util.regex.Pattern" factory-method="compile">
-        <constructor-arg value="\.(doc|dot|docx|dotx|docm|dotm|docb)$"/>
+        <constructor-arg value="\.(doc|dot|docx|dotx|docm|dotm|docb|pdf|xlsx|xls)$"/>
     </bean>
 
     <bean id="resource.factory" class="com.armedia.acm.webdav.AcmFileSystemResourceFactory">
