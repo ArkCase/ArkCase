@@ -310,10 +310,10 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                 };
 
                 scope.clearAllFacets = function () {
-                    var allCheckboxes = document.getElementsByName("search-checkbox");
-                    for (var i = 0; i < allCheckboxes.length; i++)
+                    var selections = scope.currentFacetSelection;
+                    for (var selection in selections)
                     {
-                        allCheckboxes[i].checked = false;
+                        selections[selection] = false;
                     }
                 };
 
