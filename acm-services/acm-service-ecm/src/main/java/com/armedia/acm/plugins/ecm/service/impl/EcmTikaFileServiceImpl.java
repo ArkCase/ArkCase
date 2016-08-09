@@ -1,6 +1,6 @@
-package com.armedia.acm.plugins.ecm.utils;
+package com.armedia.acm.plugins.ecm.service.impl;
 
-import com.armedia.acm.plugins.ecm.service.impl.EcmTikaFile;
+import com.armedia.acm.plugins.ecm.service.EcmTikaFileService;
 
 import org.apache.tika.config.TikaConfig;
 import org.apache.tika.detect.Detector;
@@ -13,10 +13,11 @@ import org.apache.tika.mime.MimeTypeException;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class EcmTikaUtils
+public class EcmTikaFileServiceImpl implements EcmTikaFileService
 {
     private TikaConfig tikaConfig;
 
+    @Override
     public EcmTikaFile detectFileUsingTika(InputStream inputStream, String fileName) throws IOException, MimeTypeException
     {
         tikaConfig = TikaConfig.getDefaultConfig();

@@ -5,15 +5,14 @@ import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
+import com.armedia.acm.plugins.ecm.service.PageCountService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
 import org.apache.chemistry.opencmis.client.api.Document;
-import org.apache.pdfbox.pdmodel.PDDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Date;
 
@@ -26,6 +25,7 @@ public class EcmFileMergedMetadataHandler implements PipelineHandler<EcmFile, Ec
 
     private EcmFileDao ecmFileDao;
     private AcmFolderDao folderDao;
+    private PageCountService pageCountService;
 
     @Override
     public void execute(EcmFile entity, EcmFileTransactionPipelineContext pipelineContext) throws PipelineProcessException
@@ -55,34 +55,17 @@ public class EcmFileMergedMetadataHandler implements PipelineHandler<EcmFile, Ec
             version.setVersionTag(cmisDocument.getVersionLabel());
             oldFile.getVersions().add(version);
             oldFile.setModified(new Date());
-
-            // set page count
-            if ("application/pdf".equals(entity.getFileActiveVersionMimeType()))
+            try
             {
-                PDDocument pdDocument = null;
-                try
+                int pageCount = getPageCountService().getNumberOfPages(entity.getFileActiveVersionMimeType(),
+                        pipelineContext.getMergedFileByteArray());
+                if (pageCount > -1)
                 {
-                    pdDocument = PDDocument.load(new ByteArrayInputStream(pipelineContext.getMergedFileByteArray()));
-                    oldFile.setPageCount(pdDocument.getNumberOfPages());
-                } catch (IOException e)
-                {
-                    throw new PipelineProcessException(e);
-                } finally
-                {
-                    if (pdDocument != null)
-                    {
-                        try
-                        {
-                            pdDocument.close();
-                        } catch (Exception ex)
-                        {
-                            log.error("cannot close PDF: {}", ex.getMessage(), ex);
-                        }
-                    }
+                    oldFile.setPageCount(pageCount);
                 }
-            } else
+            } catch (IOException e)
             {
-                log.warn("Still don't know how to retrieve the page count for [{}] mime type");
+                throw new PipelineProcessException(e);
             }
 
             // Updates the database with the version changes
@@ -117,5 +100,15 @@ public class EcmFileMergedMetadataHandler implements PipelineHandler<EcmFile, Ec
     public void setFolderDao(AcmFolderDao folderDao)
     {
         this.folderDao = folderDao;
+    }
+
+    public PageCountService getPageCountService()
+    {
+        return pageCountService;
+    }
+
+    public void setPageCountService(PageCountService pageCountService)
+    {
+        this.pageCountService = pageCountService;
     }
 }

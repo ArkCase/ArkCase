@@ -9,7 +9,6 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 import com.armedia.acm.plugins.ecm.service.FileEventPublisher;
-import com.armedia.acm.plugins.ecm.utils.EcmTikaUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.spring.SpringContextHolder;
@@ -37,7 +36,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     private EcmFileDao ecmFileDao;
     private AcmFolderDao folderDao;
     private FolderAndFilesUtils folderAndFilesUtils;
-    private EcmTikaUtils ecmTikaUtils;
+    private EcmTikaFileServiceImpl ecmTikaFileService;
     private FileEventPublisher fileEventPublisher;
     private SpringContextHolder springContextHolder;
 
@@ -73,7 +72,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 
         try
         {
-            ecmTikaFile = getEcmTikaUtils().detectFileUsingTika(new ByteArrayInputStream(pipelineContext.getFileByteArray()),
+            ecmTikaFile = getEcmTikaFileService().detectFileUsingTika(new ByteArrayInputStream(pipelineContext.getFileByteArray()),
                     originalFileName);
         } catch (MimeTypeException | IOException e1)
         {
@@ -136,7 +135,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 
         try
         {
-            ecmTikaFile = getEcmTikaUtils().detectFileUsingTika(new ByteArrayInputStream(pipelineContext.getFileByteArray()),
+            ecmTikaFile = getEcmTikaFileService().detectFileUsingTika(new ByteArrayInputStream(pipelineContext.getFileByteArray()),
                     ecmFile.getFileName());
         } catch (MimeTypeException | IOException e1)
         {
@@ -312,13 +311,13 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         this.springContextHolder = springContextHolder;
     }
 
-    public EcmTikaUtils getEcmTikaUtils()
+    public EcmTikaFileServiceImpl getEcmTikaFileService()
     {
-        return ecmTikaUtils;
+        return ecmTikaFileService;
     }
 
-    public void setEcmTikaUtils(EcmTikaUtils ecmTikaUtils)
+    public void setEcmTikaFileService(EcmTikaFileServiceImpl ecmTikaFileService)
     {
-        this.ecmTikaUtils = ecmTikaUtils;
+        this.ecmTikaFileService = ecmTikaFileService;
     }
 }
