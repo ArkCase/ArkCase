@@ -118,6 +118,12 @@
                     <property name="url" value="/api/{version}/plugin/casefile/nextPossibleQueues/{caseFileId}"/>
                     <property name="requiredPrivilege" ref="caseFileListPrivilege"/>
                 </bean>
+                
+                <bean id="enqueueCaseFile" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/casefile/enqueue/{caseId}"/>
+                    <property name="requiredPrivilege" ref="caseFileListPrivilege"/>
+                </bean>
             </list>
         </property>
     </bean>
