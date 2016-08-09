@@ -15,26 +15,72 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', '$window',
     ) {
         var Store = {
             _owner: null
+            /**
+             * @ngdoc method
+             * @name getOwner
+             * @methodOf Acm.StoreService
+             *
+             * @description
+             * Get owner associated with Store
+             *
+             * @returns {String} owner user ID
+             */
             , getOwner: function() {
                 return this._owner;
             }
+            /**
+             * @ngdoc method
+             * @name setOwner
+             * @methodOf Acm.StoreService
+             *
+             * @param {String} owner Current login ID.
+             *
+             * @description
+             * Get owner associated with Store
+             */
             , setOwner: function(owner) {
                 this._owner = owner;
             }
+            /**
+             * @ngdoc method
+             * @name prefixOwner
+             * @methodOf Acm.StoreService
+             *
+             * @param {String} name Name of data store (cache)
+             *
+             * @description
+             * Prefix owner before the data store name, with ":" as separator
+             *
+             * @returns {String} name with owner prefix
+             */
             , prefixOwner: function(name) {
                 var owner = this.getOwner();
                 var prefixed = (owner)? owner + ":" : "";
                 prefixed += name;
                 return prefixed;
             }
-            , fixOwner: function (name) {
-                Store.setOwner(name);
+            /**
+             * @ngdoc method
+             * @name fixOwner
+             * @methodOf Acm.StoreService
+             *
+             * @param {String} owner Current login ID.
+             *
+             * @description
+             * This function is called after user ID is available. It associates Store with currnet user as owner.
+             * And it fixed previous cache names in registries which are created before user ID is available or
+             * left over from previous login.
+             *
+             * @returns {String} owner owner user ID
+             */
+            , fixOwner: function (owner) {
+                Store.setOwner(owner);
 
                 UtilTimerService.useTimer("fixStoreOwner"
                     , 500     //delay 500 milliseconds
                     , function () {
-                        Store.Registry.removeLocalOrphan(name);
-                        Store.Registry.removeSessionOrphan(name);
+                        Store.Registry.removeLocalOrphan(owner);
+                        Store.Registry.removeSessionOrphan(owner);
                         return false;
                     }
                 );
@@ -110,7 +156,7 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', '$window',
                  * This function performs two tasks:
                  * 1. Caches without owner are those created before login user info is available. They have current login user
                  * as owner after this call.
-                 * 2. If loginId is given, caches with owners other than loginId, - presume they are
+                 * 2. If loginId is given, caches with owners other than loginId, - presumably they are
                  * left over from previous login -, are removed.
                  */
                 , removeSessionOrphan: function(loginId) {
@@ -149,7 +195,7 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', '$window',
                  * This function performs two tasks:
                  * 1. Caches without owner are those created before login user info is available. They have current login user
                  * as owner after this call.
-                 * 2. If loginId is given, caches with owners other than loginId, - presume they are
+                 * 2. If loginId is given, caches with owners other than loginId, - presumably they are
                  * left over from previous login -, are removed.
                  */
                 , removeLocalOrphan: function(loginId) {
