@@ -234,6 +234,20 @@ angular.module('services').factory('Acm.LoginService', ['$q', '$state', '$inject
              */
             , logout: function () {
                 $state.go("goodbye");
+
+
+                // "goodbye" page does the same cleaning, but may not be reliable. If some exception thrown (we saw real
+                // practical example:
+                // GET https://localhost:8843/arkcase/api/latest/plugin/admin/labelmanagement/resource?ns=goodbye&lang=en
+                // returns 401 Unauthorized status),
+                // "goodbye" page is not called. Call the benign cleanup here to make sure
+
+                //localStorage.removeItem('redirectURL');
+                sessionStorage.removeItem('redirectURL');
+                sessionStorage.removeItem('redirectState');
+                //sessionStorage.removeItem('warningAccepted');
+                Store.Registry.clearSessionCache();
+                Store.Registry.clearLocalCache();
             }
         };
 
