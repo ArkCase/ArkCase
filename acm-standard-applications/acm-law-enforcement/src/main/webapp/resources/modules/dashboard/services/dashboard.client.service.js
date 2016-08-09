@@ -36,7 +36,7 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
             queryNewCases: {
                 method: 'GET',
                 url: 'api/v1/plugin/search/advancedSearch?q=object_type_s\\:CASE_FILE+' +
-                'AND+NOT+status_lcs\\:DRAFT&create_date_tdt\\:[NOW-1MONTH TO NOW]',
+                'AND create_date_tdt\\:[NOW-1MONTH TO NOW]',
                 isArray: false
             },
 

@@ -18,7 +18,7 @@ angular.module('dashboard.new-cases').controller('Dashboard.NewCasesController',
                     var data = {};
                     var chartData = [];
                     var labels = [];
-                    angular.forEach(solrData.response.caseDocs, function (caseDoc) {
+                    angular.forEach(solrData.response.docs, function (caseDoc) {
                         var day = caseDoc.create_date_tdt;
                         day = day.substring(0, day.indexOf("T"));
                         data[day] ? data[day]++ : data[day] = 1;
