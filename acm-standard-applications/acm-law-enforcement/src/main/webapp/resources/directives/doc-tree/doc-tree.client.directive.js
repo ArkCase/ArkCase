@@ -3020,7 +3020,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     fileNode.data.activeVertionTag = Util.goodValue(activeVersion);
                                     fileNode.data.ext = Util.goodValue(activeVersion.fileActiveVersionNameExtension);
                                     DocTree.markNodeOk(fileNode);
-                                    DocTree.refreshTree();
+                                    fileNode.renderTitle();
                                     dfd.resolve();
                                 }
                                 , function (errorData) {

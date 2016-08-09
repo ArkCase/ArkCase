@@ -133,6 +133,17 @@ public class FolderAndFilesUtils
         return matchFile;
     }
 
+    public String getBaseFileName(String fileName)
+    {
+        if (fileName.lastIndexOf(".") > 0)
+        {
+            return fileName.substring(0, fileName.lastIndexOf("."));
+        } else
+        {
+            return fileName;
+        }
+    }
+
     public String getBaseFileName(String fileName, String fileExtension)
     {
         if (fileName.lastIndexOf(".") > 0 && fileName.endsWith(fileExtension))

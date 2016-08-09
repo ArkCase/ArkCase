@@ -59,11 +59,14 @@
     <bean id="ecmFileNewMetadataHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileNewMetadataHandler">
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="folderDao" ref="acmFolderDao"/>
+        <property name="pageCountService" ref="pageCountService"/>
     </bean>
     <bean id="ecmFileMergedMetadataHandler"
           class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileMergedMetadataHandler">
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="folderDao" ref="acmFolderDao"/>
+        <property name="pageCountService" ref="pageCountService"/>
+        
     </bean>
     <bean id="ecmFileSendForPdfConversionHandler"
           class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileSendForPdfConversionHandler">
@@ -77,6 +80,7 @@
     <bean id="ecmFileUpdateMetadataHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileUpdateMetadataHandler">
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="folderDao" ref="acmFolderDao"/>
+        <property name="pageCountService" ref="pageCountService"/>
     </bean>
     <!-- This pipeline uploads document content to Alfresco and the metadata to the acm3 database -->
     <bean id="ecmFileUploadPipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
@@ -115,7 +119,7 @@
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="folderDao" ref="acmFolderDao"/>
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
-        <property name="ecmTikaUtils" ref="ecmTikaUtils"/>
+        <property name="ecmTikaFileService" ref="ecmTikaFileService"/>
         <property name="fileEventPublisher" ref="fileEventPublisher"/>
         <property name="springContextHolder" ref="acmContextHolder"/>
     </bean>
@@ -194,7 +198,7 @@
 
     <bean id="folderAndFilesUtils" class="com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils"/>
 
-    <bean id="ecmTikaUtils" class="com.armedia.acm.plugins.ecm.utils.EcmTikaUtils"/>
+    <bean id="ecmTikaFileService" class="com.armedia.acm.plugins.ecm.service.impl.EcmTikaFileServiceImpl"/>
 
     <bean id="fileEventPublisher" class="com.armedia.acm.plugins.ecm.service.FileEventPublisher"/>
 
@@ -218,4 +222,7 @@
             </list>
         </property>
     </bean>
+    
+    <bean id="pageCountService" class="com.armedia.acm.plugins.ecm.service.impl.PageCountServiceImpl"/>
+    
 </beans>
