@@ -2,6 +2,8 @@ package com.armedia.acm.plugins.person.web.api;
 
 import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
 import com.armedia.acm.plugins.person.model.Person;
+import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -43,6 +45,7 @@ public class FindPersonAPIControllerTest extends EasyMockSupport
     private FindPersonAPIController unit;
 
     private PersonAssociationDao mockDao;
+    private ExecuteSolrQuery mockExecuteSolrQuery;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -54,9 +57,10 @@ public class FindPersonAPIControllerTest extends EasyMockSupport
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
 
         mockDao = createMock(PersonAssociationDao.class);
+        mockExecuteSolrQuery = createMock(ExecuteSolrQuery.class);
         mockAuthentication = createMock(Authentication.class);
 
-        unit.setPersonAssociationDao(mockDao);
+        unit.setExecuteSolrQuery(mockExecuteSolrQuery);
     }
 
     @Test
@@ -68,10 +72,13 @@ public class FindPersonAPIControllerTest extends EasyMockSupport
         fromDao.setFamilyName("Stone");
         fromDao.setGivenName("Sly");
 
-        expect(mockDao.findPersonByPersonAssociationId(assocId)).andReturn(fromDao);
+        // expect(mockDao.findPersonByPersonAssociationId(assocId)).andReturn(fromDao);
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");
+
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.ADVANCED_SEARCH,
+                "id:500-PERSON-ASSOCIATION", 0, 10, "create_date_tdt DESC")).andReturn("{\"response\": {\"Example\": \"Data\"}}");
 
         replayAll();
 
@@ -89,37 +96,32 @@ public class FindPersonAPIControllerTest extends EasyMockSupport
         String returned = result.getResponse().getContentAsString();
 
         log.info("results: " + returned);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        Person found = objectMapper.readValue(returned, Person.class);
-
-        assertEquals(fromDao.getGivenName(), found.getGivenName());
-        assertEquals(fromDao.getFamilyName(), found.getFamilyName());
-
-
     }
 
     @Test
-    public void find_byPersonAssociationId_exception() throws Exception
+    public void find_byPersonAssociationId_empty() throws Exception
     {
         Long assocId = 500L;
-        expect(mockDao.findPersonByPersonAssociationId(assocId)).andThrow(new NoResultException());
+        // expect(mockDao.findPersonByPersonAssociationId(assocId)).andThrow(new NoResultException());
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");
 
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.ADVANCED_SEARCH,
+                "id:500-PERSON-ASSOCIATION", 0, 10, "create_date_tdt DESC")).andReturn("{\"response\": {}}");
+
         replayAll();
 
-        mockMvc.perform(
+        MvcResult result = mockMvc.perform(
                 get("/api/latest/plugin/person/find?assocId=" + assocId)
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .principal(mockAuthentication))
-                .andExpect(status().isInternalServerError())
-                .andExpect(content().contentType(MediaType.TEXT_PLAIN));
+                .andReturn();
 
         verifyAll();
-    }
 
+        assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
+        assertTrue(result.getResponse().getContentType().startsWith(MediaType.APPLICATION_JSON_VALUE));
+    }
 
 }

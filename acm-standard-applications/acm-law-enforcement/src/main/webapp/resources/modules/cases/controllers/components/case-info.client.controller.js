@@ -77,9 +77,7 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
 
         $scope.picker = {opened: false};
         $scope.onPickerClick = function () {
-            $timeout(function () {
-                $scope.picker.opened = true;
-            });
+        	$scope.picker.opened = true;
         };
         /**
          * Persists the updated casefile metadata to the ArkCase database

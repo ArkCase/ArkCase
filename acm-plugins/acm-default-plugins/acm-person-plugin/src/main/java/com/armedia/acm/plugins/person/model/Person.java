@@ -34,6 +34,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -72,6 +73,9 @@ public class Person implements Serializable, AcmEntity
 
     @Column(name = "cm_given_name")
     private String givenName;
+
+    @Column(name = "cm_middle_name")
+    private String middleName;
 
     @Column(name = "cm_family_name")
     private String familyName;
@@ -114,13 +118,15 @@ public class Person implements Serializable, AcmEntity
     private String modifier;
 
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "acm_person_postal_address", joinColumns = { @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id") }, inverseJoinColumns = {
-            @JoinColumn(name = "cm_address_id", referencedColumnName = "cm_address_id") })
+    @JoinTable(name = "acm_person_postal_address", joinColumns = {
+            @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id") }, inverseJoinColumns = {
+                    @JoinColumn(name = "cm_address_id", referencedColumnName = "cm_address_id") })
     private List<PostalAddress> addresses = new ArrayList<>();
 
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "acm_person_contact_method", joinColumns = { @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id") }, inverseJoinColumns = {
-            @JoinColumn(name = "cm_contact_method_id", referencedColumnName = "cm_contact_method_id") })
+    @JoinTable(name = "acm_person_contact_method", joinColumns = {
+            @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id") }, inverseJoinColumns = {
+                    @JoinColumn(name = "cm_contact_method_id", referencedColumnName = "cm_contact_method_id") })
     private List<ContactMethod> contactMethods = new ArrayList<>();
 
     @ElementCollection
@@ -135,13 +141,15 @@ public class Person implements Serializable, AcmEntity
     private List<PersonAssociation> personAssociations = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinTable(name = "acm_person_identification", joinColumns = { @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id") }, inverseJoinColumns = {
-            @JoinColumn(name = "cm_identification_id", referencedColumnName = "cm_identification_id", unique = true) })
+    @JoinTable(name = "acm_person_identification", joinColumns = {
+            @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id") }, inverseJoinColumns = {
+                    @JoinColumn(name = "cm_identification_id", referencedColumnName = "cm_identification_id", unique = true) })
     private List<Identification> identifications = new ArrayList<>();
 
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "acm_person_organization", joinColumns = { @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id") }, inverseJoinColumns = {
-            @JoinColumn(name = "cm_organization_id", referencedColumnName = "cm_organization_id") })
+    @JoinTable(name = "acm_person_organization", joinColumns = {
+            @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id") }, inverseJoinColumns = {
+                    @JoinColumn(name = "cm_organization_id", referencedColumnName = "cm_organization_id") })
     private List<Organization> organizations = new ArrayList<>();
 
     @Column(name = "cm_class_name")
@@ -190,6 +198,16 @@ public class Person implements Serializable, AcmEntity
     public void setGivenName(String givenName)
     {
         this.givenName = givenName;
+    }
+
+    public String getMiddleName()
+    {
+        return middleName;
+    }
+
+    public void setMiddleName(String middleName)
+    {
+        this.middleName = middleName;
     }
 
     @XmlTransient

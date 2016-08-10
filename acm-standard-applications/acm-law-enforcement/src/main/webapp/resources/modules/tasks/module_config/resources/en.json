@@ -82,6 +82,16 @@
       "creator": "Author"
     }
   },
+   "tasks.comp.references": {
+    "title": "References",
+    "table.columns": {
+      "targetName": "Number",
+      "targetTitle": "Title",
+      "modified": "Modified",
+      "targetType": "Reference Type",
+      "status": "Status"
+    }
+  },
   "tasks.comp.rejcomments": {
     "title": "Reject Comments",
     "table.columns": {
@@ -186,5 +196,25 @@
       "title": "Title",
       "username": "Username"
     }
-  }
+  },
+    "tasks.comp.addreference": {
+    "title": "Add Reference",
+    "cancelButton": "Cancel",
+    "confirmButton": "Add",
+    "search": {
+      "placeholder": "Search for case or complaint",
+      "btn": "Search"
+    },
+    "grid": {
+      "columns": {
+        "id": "Id",
+        "name": "Name",
+        "type": "Type",
+        "title": "Title",
+        "parent": "Parent",
+        "assignee": "Assignee",
+        "modified": "Modified"
+      }
+    }
+  }   
 }

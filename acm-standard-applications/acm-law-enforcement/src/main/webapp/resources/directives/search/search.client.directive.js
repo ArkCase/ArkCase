@@ -71,7 +71,8 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                 searchPlaceholder: '@',
                 filter: '@',
                 multiFilter: '@',
-                config: '='            //= : two way binding so that the data can be monitored for changes
+                config: '=',            //= : two way binding so that the data can be monitored for changes
+                customLabels: '=?'
             },
 
             link: function (scope) {    //dom operations
@@ -171,7 +172,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                     if (typeaheadQuery) {
                         SearchService.queryFilteredSearchForUser({
                             query: typeaheadQuery,
-                            startRow: 0,
+                            start: 0,
                             maxRows: 10
                         }, function (res) {
                             var result = _.pluck(res.response.docs, 'name');

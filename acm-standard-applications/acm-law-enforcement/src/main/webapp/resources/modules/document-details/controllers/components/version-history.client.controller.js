@@ -7,8 +7,8 @@ angular.module('document-details').controller('Document.VersionHistoryController
         $scope.$on('document-data', updateVersionHistory);
         $scope.versions = [];
 
-        function updateVersionHistory(event,documentDetails){
-            if(documentDetails.versions && documentDetails.versions.length){
+        function updateVersionHistory(event, documentDetails) {
+            if (documentDetails.versions && documentDetails.versions.length) {
                 $scope.versions = documentDetails.versions;
             }
         }
@@ -16,8 +16,8 @@ angular.module('document-details').controller('Document.VersionHistoryController
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
 
-        $scope.$watchCollection('versions', function(newValue, oldValue){
-            if(newValue && newValue.length){
+        $scope.$watchCollection('versions', function (newValue, oldValue) {
+            if (newValue && newValue.length) {
                 var promiseConfig = ConfigService.getComponentConfig("document-details", "versionHistory").then(function (config) {
                     gridHelper.setColumnDefs(config);
                     gridHelper.setBasicOptions(config);
@@ -35,7 +35,8 @@ angular.module('document-details').controller('Document.VersionHistoryController
 
         $scope.retrieveGridData = function () {
             if ($scope.versions && $scope.versions.length) {
-                $scope.gridOptions = $scope.gridOptions || {};
+                $scope.gridOptions = $scope.gridOptions ||
+                    {};
                 $scope.gridOptions.data = $scope.versions;
                 $scope.gridOptions.totalItems = $scope.versions.length;
             }
