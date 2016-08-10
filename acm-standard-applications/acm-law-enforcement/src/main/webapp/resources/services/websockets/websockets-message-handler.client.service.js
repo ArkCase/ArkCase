@@ -41,12 +41,12 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
             if (message.action == 'INSERT') {
                 var eventName = "object.inserted";
             } else {
-                var eventName = "object.changed/" + objectType + "/" + objectId;
+                var eventName = "object.changed/" + message.objectType + "/" + message.objectId;
             }
             $rootScope.$bus.publish(eventName, message);
             // publish event for this object's parent, if any
             if (message.parentObjectType != null && message.parentObjectId != null) {
-                var eventName = "object.changed/" + parentObjectType + "/" + parentObjectId;
+                var eventName = "object.changed/" + message.parentObjectType + "/" + message.parentObjectId;
                 $rootScope.$bus.publish(eventName, message);
             }
         }
