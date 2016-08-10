@@ -59,7 +59,7 @@ public class EcmFileUpdateMetadataHandler implements PipelineHandler<EcmFile, Ec
             try
             {
                 int pageCount = getPageCountService().getNumberOfPages(entity.getFileActiveVersionMimeType(),
-                        pipelineContext.getMergedFileByteArray());
+                        pipelineContext.getFileByteArray());
                 if (pageCount > -1)
                 {
                     entity.setPageCount(pageCount);
