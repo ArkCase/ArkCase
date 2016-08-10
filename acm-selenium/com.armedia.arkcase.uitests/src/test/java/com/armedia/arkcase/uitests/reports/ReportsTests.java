@@ -2,7 +2,10 @@ package com.armedia.arkcase.uitests.reports;
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.armedia.arkcase.uitests.base.ArkCaseAuthentication;
 import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
@@ -34,15 +37,15 @@ public class ReportsTests extends ArkCaseTestBase {
 		ArkCaseAuthentication.logOut(driver);
 		Utility.setCellData("Pass", 1, 5);
 		// test
-
+       
 	}
 
 	@Test
 	@Category({ SmokeTests.class })
 	public void generateCaseReportforInApproval() throws Exception {
 		// generate report
-		Utility.setExcelFile(Constant.Path_TestData + Constant.File_TestData, "Sheet1");
-		casePom.ReportsMenuClick();
+		Utility.setExcelFile(Constant.Path_TestData + Constant.File_TestData, "Sheet1");       
+		casePom.ReportsMenuClick();		
 		casePom.generateReport(Utility.getCellData(2, 1), Utility.getCellData(2, 2), Utility.getCellData(2, 3),
 				Utility.getCellData(2, 4));
 		driver.switchTo().frame("reports-iframe");

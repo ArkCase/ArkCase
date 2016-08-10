@@ -1,6 +1,7 @@
 package com.armedia.arkcase.uitests.base;
 
 import java.io.File;
+import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.AfterClass;
@@ -12,6 +13,8 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
 
 import com.relevantcodes.extentreports.ExtentReports;
@@ -30,7 +33,9 @@ public class ArkCaseTestBase {
 
 	@BeforeClass
 	public static void setUp() throws Exception {
-
+        String remote = TestsPoperties.getRemoteInfo();
+        if (remote == "no")
+        {
 		ArkCaseUtils folder = new ArkCaseUtils();
 		folder.createFolder();
 		browser = TestsPoperties.getBrowser();
@@ -77,10 +82,22 @@ public class ArkCaseTestBase {
 			driver.manage().window().maximize();
 			break;
 		}
+		}
+        }
+		else 
+		{
+			 DesiredCapabilities cap = new DesiredCapabilities();			 
+			 cap.setBrowserName(TestsPoperties.getBrowser());			 
+			 cap.setPlatform(org.openqa.selenium.Platform.WINDOWS);
+			 driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"),cap);
+			 driver.manage().window().maximize();
+			 
+		
+		}
 
 		}
 
-	}
+	
 
 	@Before
 	public void logIn() {
