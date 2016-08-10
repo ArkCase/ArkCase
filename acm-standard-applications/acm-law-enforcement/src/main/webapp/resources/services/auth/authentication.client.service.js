@@ -26,11 +26,6 @@ angular.module('services').factory('Authentication', ['$resource', 'Acm.StoreSer
                 method: 'GET',
                 url: 'api/v1/users/info'
             }
-            //, queryUserInfo_tmp: {
-            //    method: 'GET',
-            //    url: 'api/v1/users/info',
-            //    cache: true
-            //}
         });
 
 
@@ -57,6 +52,7 @@ angular.module('services').factory('Authentication', ['$resource', 'Acm.StoreSer
                 , onSuccess: function (data) {
                     if (Service.validateUserInfo(data)) {
                         userInfo = data;
+                        Store.fixOwner(userInfo.userId);
                         cacheUserInfo.set(userInfo);
                         return userInfo;
                     }
