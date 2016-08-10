@@ -29,6 +29,7 @@ public class AcmCmisObject implements Serializable
     private String status;
     private Integer pageCount;
     private AcmObjectLock lock;
+    private String ext;
 
     public Long getObjectId()
     {
@@ -188,5 +189,15 @@ public class AcmCmisObject implements Serializable
     public void setLock(AcmObjectLock lock)
     {
         this.lock = lock;
+    }
+
+    public String getExt()
+    {
+        return ext;
+    }
+
+    public void setExt(String ext)
+    {
+        this.ext = ext;
     }
 }

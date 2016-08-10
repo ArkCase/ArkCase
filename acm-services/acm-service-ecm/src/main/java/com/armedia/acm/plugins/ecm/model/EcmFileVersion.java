@@ -4,7 +4,18 @@ import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -16,13 +27,7 @@ public class EcmFileVersion implements AcmEntity, Serializable, AcmObject
     private static final long serialVersionUID = 1281659634956850724L;
 
     @Id
-    @TableGenerator(name = "acm_file_version_gen",
-            table = "acm_file_version_id",
-            pkColumnName = "cm_seq_name",
-            valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_file_version",
-            initialValue = 100,
-            allocationSize = 1)
+    @TableGenerator(name = "acm_file_version_gen", table = "acm_file_version_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_file_version", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_file_version_gen")
     @Column(name = "cm_file_version_id")
     private Long id;
@@ -46,6 +51,12 @@ public class EcmFileVersion implements AcmEntity, Serializable, AcmObject
 
     @Column(name = "cm_file_version_version_tag")
     private String versionTag;
+
+    @Column(name = "cm_file_version_mime_type")
+    private String versionMimeType;
+
+    @Column(name = "cm_file_version_name_extension")
+    private String versionFileNameExtension;
 
     @JsonIgnore
     @ManyToOne
@@ -131,6 +142,26 @@ public class EcmFileVersion implements AcmEntity, Serializable, AcmObject
         this.versionTag = versionTag;
     }
 
+    public String getVersionMimeType()
+    {
+        return versionMimeType;
+    }
+
+    public void setVersionMimeType(String versionMimeType)
+    {
+        this.versionMimeType = versionMimeType;
+    }
+
+    public String getVersionFileNameExtension()
+    {
+        return versionFileNameExtension;
+    }
+
+    public void setVersionFileNameExtension(String versionFileNameExtension)
+    {
+        this.versionFileNameExtension = versionFileNameExtension;
+    }
+
     public EcmFile getFile()
     {
         return file;
@@ -143,9 +174,9 @@ public class EcmFileVersion implements AcmEntity, Serializable, AcmObject
 
     @JsonIgnore
     @Override
-    public String getObjectType() {
+    public String getObjectType()
+    {
         return OBJECT_TYPE;
     }
-
 
 }
