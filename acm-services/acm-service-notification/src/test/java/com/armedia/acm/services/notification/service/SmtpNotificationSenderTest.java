@@ -217,6 +217,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         expect(mockInputStream.read(capture(read), eq(0), eq(16384))).andReturn(-1);
 
         expect(mockEcmFile.getFileName()).andReturn("fileName").anyTimes();
+        expect(mockEcmFile.getFileActiveVersionNameExtension()).andReturn(".extension").anyTimes();
 
         mockInputStream.close();
         EasyMock.expectLastCall();
@@ -232,7 +233,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
 
         assertNotNull(capturedAttachments.getValue());
         assertEquals(1, capturedAttachments.getValue().size());
-        assertNotNull(capturedAttachments.getValue().get("fileName"));
+        assertNotNull(capturedAttachments.getValue().get("fileName.extension"));
     }
 
     private void setSendExpectations() throws AcmEncryptionException
