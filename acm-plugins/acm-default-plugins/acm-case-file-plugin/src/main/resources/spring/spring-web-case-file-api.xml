@@ -50,15 +50,19 @@
           class="com.armedia.acm.plugins.casefile.web.api.GetNumberOfActiveCaseFilesByQueueAPIController">
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
-    
-    <bean id="caseFileNextPossibleQueuesAPIController" class="com.armedia.acm.plugins.casefile.web.api.CaseFileNextPossibleQueuesAPIController">
+
+    <bean id="caseFileNextPossibleQueuesAPIController"
+          class="com.armedia.acm.plugins.casefile.web.api.CaseFileNextPossibleQueuesAPIController">
         <property name="queueService" ref="queueService"/>
         <property name="businessRule" ref="caseFileNextPossibleQueuesBusinessRule"/>
         <property name="caseFileDao" ref="caseFileDao"/>
     </bean>
-    
-    <bean id="caseFileEnqueueAPIController" class="com.armedia.acm.plugins.casefile.web.api.CaseFileEnqueueAPIController">
+
+    <bean id="caseFileEnqueueAPIController"
+          class="com.armedia.acm.plugins.casefile.web.api.CaseFileEnqueueAPIController">
         <property name="enqueueCaseFileService" ref="enqueueCaseFileService"/>
+        <property name="userTrackerService" ref="userTrackerService"/>
+        <property name="caseFileDao" ref="caseFileDao"/>
     </bean>
-    
+
 </beans>
