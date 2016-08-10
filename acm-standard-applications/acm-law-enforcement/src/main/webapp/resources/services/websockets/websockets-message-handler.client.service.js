@@ -28,7 +28,7 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
             if (message.action == 'UPDATE') {
                 handleCacheObject(message.objectType, message.objectId);
             }
-            handleCacheLists(objectType, objectId);
+            handleCacheLists(message.objectType, message.objectId);
             // remove this object's parent from cache, if any
             if (message.parentObjectType != null && message.parentObjectId != null) {
                 handleCacheObject(message.parentObjectType, message.parentObjectId);
