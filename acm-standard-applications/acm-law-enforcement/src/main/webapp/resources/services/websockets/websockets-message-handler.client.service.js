@@ -14,7 +14,6 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
             //until we find out what to do with them
             if (message.className.indexOf('AcmObjectHistory') === -1
                 && message.className.indexOf('AcmAssignment') === -1
-                && message.className.indexOf('EcmFile') === -1
                 && message.className.indexOf('AcmSubscriptionEvent') === -1
             ) {
                 //we will remove object from cache
