@@ -62,15 +62,15 @@
             <comment>Get complaint folder ids</comment>
             INSERT INTO acm_container_folder
             SELECT seq_gen_identity.nextval AS cm_container_folder_id,
-                    cm_complaint_created AS cm_container_folder_created,
-                    cm_complaint_creator AS cm_container_folder_creator,
-                    cm_complaint_created AS cm_container_folder_modified,
-                    cm_complaint_creator AS cm_container_folder_modifier,
-                    'COMPLAINT' AS cm_object_type,
-                    cm_complaint_id AS cm_object_id,
-                    cm_complaint_ecm_folder_id AS cm_cmis_folder_id
-            FROM    acm_complaint
-            WHERE   cm_complaint_ecm_folder_id IS NOT NULL
+            cm_complaint_created AS cm_container_folder_created,
+            cm_complaint_creator AS cm_container_folder_creator,
+            cm_complaint_created AS cm_container_folder_modified,
+            cm_complaint_creator AS cm_container_folder_modifier,
+            'COMPLAINT' AS cm_object_type,
+            cm_complaint_id AS cm_object_id,
+            cm_complaint_ecm_folder_id AS cm_cmis_folder_id
+            FROM acm_complaint
+            WHERE cm_complaint_ecm_folder_id IS NOT NULL
         </sql>
     </changeSet>
 
@@ -86,15 +86,15 @@
             <comment>Get case file folder ids</comment>
             INSERT INTO acm_container_folder
             SELECT seq_gen_identity.nextval AS cm_container_folder_id,
-                    cm_case_created AS cm_container_folder_created,
-                    cm_case_creator AS cm_container_folder_creator,
-                    cm_case_created AS cm_container_folder_modified,
-                    cm_case_creator AS cm_container_folder_modifier,
-                    'CASE_FILE' AS cm_object_type,
-                    cm_case_id AS cm_object_id,
-                    cm_case_ecm_folder_id AS cm_cmis_folder_id
-            FROM    acm_case_file
-            WHERE   cm_case_ecm_folder_id IS NOT NULL
+            cm_case_created AS cm_container_folder_created,
+            cm_case_creator AS cm_container_folder_creator,
+            cm_case_created AS cm_container_folder_modified,
+            cm_case_creator AS cm_container_folder_modifier,
+            'CASE_FILE' AS cm_object_type,
+            cm_case_id AS cm_object_id,
+            cm_case_ecm_folder_id AS cm_cmis_folder_id
+            FROM acm_case_file
+            WHERE cm_case_ecm_folder_id IS NOT NULL
         </sql>
     </changeSet>
 
@@ -109,19 +109,19 @@
         <sql>
             INSERT INTO acm_container_folder
             SELECT seq_gen_identity.nextval AS cm_container_folder_id,
-                    systimestamp AS cm_container_folder_created,
-                    cm_user AS cm_container_folder_creator,
-                    systimestamp AS cm_container_folder_modified,
-                    cm_user AS cm_container_folder_modifier,
-                    'USER_ORG' AS cm_object_type,
-                    cm_user_org_id AS cm_object_id,
-                    cm_profile_ecm_folder_id AS cm_cmis_folder_id
-            FROM    acm_user_org
-            WHERE   cm_profile_ecm_folder_id IS NOT NULL
+            systimestamp AS cm_container_folder_created,
+            cm_user AS cm_container_folder_creator,
+            systimestamp AS cm_container_folder_modified,
+            cm_user AS cm_container_folder_modifier,
+            'USER_ORG' AS cm_object_type,
+            cm_user_org_id AS cm_object_id,
+            cm_profile_ecm_folder_id AS cm_cmis_folder_id
+            FROM acm_user_org
+            WHERE cm_profile_ecm_folder_id IS NOT NULL
         </sql>
     </changeSet>
-    
-    <changeSet id="files-09-rename-acm-container-folder" author="dmiller">
+
+    <changeSet id="files-09-rename-acm-container-folder" author="dmiller" failOnError="false">
         <renameTable oldTableName="acm_container_folder" newTableName="acm_container"/>
     </changeSet>
 
@@ -134,14 +134,14 @@
         <sql>
             INSERT INTO acm_folder
             SELECT seq_gen_identity.nextval AS cm_folder_id,
-                    ac.cm_container_folder_created AS cm_folder_created,
-                    ac.cm_container_folder_creator AS cm_folder_creator,
-                    ac.cm_container_folder_modified AS cm_folder_modified,
-                    ac.cm_container_folder_modifier AS cm_folder_modifier,
-                    ac.cm_cmis_folder_id AS cm_cmis_folder_id,
-                    'ROOT' AS cm_folder_name,
-                    NULL AS cm_parent_folder_id
-            FROM    acm_container ac
+            ac.cm_container_folder_created AS cm_folder_created,
+            ac.cm_container_folder_creator AS cm_folder_creator,
+            ac.cm_container_folder_modified AS cm_folder_modified,
+            ac.cm_container_folder_modifier AS cm_folder_modifier,
+            ac.cm_cmis_folder_id AS cm_cmis_folder_id,
+            'ROOT' AS cm_folder_name,
+            NULL AS cm_parent_folder_id
+            FROM acm_container ac
         </sql>
     </changeSet>
 
@@ -150,14 +150,14 @@
         <sql>
             UPDATE acm_container ac
             SET cm_folder_id =
-                (SELECT af.cm_folder_id
-                 FROM   acm_folder af
-                 WHERE  af.cm_cmis_folder_id = ac.cm_cmis_folder_id)
+            (SELECT af.cm_folder_id
+            FROM acm_folder af
+            WHERE af.cm_cmis_folder_id = ac.cm_cmis_folder_id)
             WHERE EXISTS
-                (SELECT 1
-                 FROM   acm_folder af
-                 WHERE  af.cm_cmis_folder_id = ac.cm_cmis_folder_id)
-            AND  ac.cm_folder_id IS NULL
+            (SELECT 1
+            FROM acm_folder af
+            WHERE af.cm_cmis_folder_id = ac.cm_cmis_folder_id)
+            AND ac.cm_folder_id IS NULL
         </sql>
     </changeSet>
 
@@ -170,15 +170,15 @@
         <sql>
             INSERT INTO acm_file_version
             SELECT seq_gen_identity.nextval AS cm_file_version_id,
-                    af.cm_file_id AS cm_file_id,
-                    af.cm_file_created AS cm_file_version_created,
-                    af.cm_file_creator AS cm_file_version_creator,
-                    af.cm_file_modified AS cm_file_version_modified,
-                    af.cm_file_modifier AS cm_file_version_modifier,
-                    '1.0' AS cm_file_version_version_flag,
-                    -- can only get away with the below since this is how Alfresco does things.
-                    af.cm_file_ecm_id || ';1.0' AS cm_cmis_object_id
-            FROM    acm_file af
+            af.cm_file_id AS cm_file_id,
+            af.cm_file_created AS cm_file_version_created,
+            af.cm_file_creator AS cm_file_version_creator,
+            af.cm_file_modified AS cm_file_version_modified,
+            af.cm_file_modifier AS cm_file_version_modifier,
+            '1.0' AS cm_file_version_version_flag,
+            -- can only get away with the below since this is how Alfresco does things.
+            af.cm_file_ecm_id || ';1.0' AS cm_cmis_object_id
+            FROM acm_file af
         </sql>
     </changeSet>
 
@@ -193,32 +193,32 @@
         <sql>
             UPDATE acm_file af
             SET cm_file_category =
-                (SELECT DISTINCT aoa.cm_target_category
-                 FROM   acm_object_association aoa
-                 WHERE  aoa.cm_target_type = 'FILE'
-                 AND    aoa.cm_target_category IS NOT NULL
-                 AND    aoa.cm_target_id = af.cm_file_id)
+            (SELECT DISTINCT aoa.cm_target_category
+            FROM acm_object_association aoa
+            WHERE aoa.cm_target_type = 'FILE'
+            AND aoa.cm_target_category IS NOT NULL
+            AND aoa.cm_target_id = af.cm_file_id)
             WHERE EXISTS
-                (SELECT 1
-                 FROM   acm_object_association aoa
-                 WHERE  aoa.cm_target_type = 'FILE'
-                 AND    aoa.cm_target_category IS NOT NULL
-                 AND    aoa.cm_target_id = af.cm_file_id)
-            AND  af.cm_file_category IS NULL
+            (SELECT 1
+            FROM acm_object_association aoa
+            WHERE aoa.cm_target_type = 'FILE'
+            AND aoa.cm_target_category IS NOT NULL
+            AND aoa.cm_target_id = af.cm_file_id)
+            AND af.cm_file_category IS NULL
         </sql>
     </changeSet>
 
     <changeSet id="files-19-fix-acm-file-category" author="dmiller">
         <sql>
             UPDATE acm_file
-            SET    cm_file_category = INITCAP(cm_file_category)
-            WHERE  cm_file_category IS NOT NULL
+            SET cm_file_category = INITCAP(cm_file_category)
+            WHERE cm_file_category IS NOT NULL
         </sql>
         <sql>
             UPDATE acm_file
-            SET    cm_file_category = 'Document'
-            WHERE  cm_file_category IS NULL
-            OR     cm_file_category NOT IN ('Document', 'Correspondence')
+            SET cm_file_category = 'Document'
+            WHERE cm_file_category IS NULL
+            OR cm_file_category NOT IN ('Document', 'Correspondence')
         </sql>
         <addNotNullConstraint tableName="acm_file" columnName="cm_file_category" columnDataType="VARCHAR(128)"/>
     </changeSet>
@@ -232,103 +232,103 @@
     <changeSet id="files-20-update-file-folder-id-for-task" author="dmiller">
         <sql>
             UPDATE acm_file af
-            SET    cm_folder_id =
-                   (SELECT ac.cm_folder_id
-                    FROM   acm_object_association aoa,
-                           acm_container ac
-                    WHERE  aoa.cm_target_type = 'FILE'
-                    AND    aoa.cm_parent_type = 'TASK'
-                    AND    aoa.cm_parent_type = ac.cm_object_type
-                    AND    aoa.cm_parent_id = ac.cm_object_id
-                    AND    aoa.cm_target_id = af.cm_file_id)
+            SET cm_folder_id =
+            (SELECT ac.cm_folder_id
+            FROM acm_object_association aoa,
+            acm_container ac
+            WHERE aoa.cm_target_type = 'FILE'
+            AND aoa.cm_parent_type = 'TASK'
+            AND aoa.cm_parent_type = ac.cm_object_type
+            AND aoa.cm_parent_id = ac.cm_object_id
+            AND aoa.cm_target_id = af.cm_file_id)
             WHERE EXISTS
-                    (SELECT 1
-                     FROM   acm_object_association aoa,
-                            acm_container ac
-                     WHERE  aoa.cm_target_type = 'FILE'
-                     AND    aoa.cm_parent_type = 'TASK'
-                     AND    aoa.cm_parent_type = ac.cm_object_type
-                     AND    aoa.cm_parent_id = ac.cm_object_id
-                     AND    aoa.cm_target_id = af.cm_file_id)
+            (SELECT 1
+            FROM acm_object_association aoa,
+            acm_container ac
+            WHERE aoa.cm_target_type = 'FILE'
+            AND aoa.cm_parent_type = 'TASK'
+            AND aoa.cm_parent_type = ac.cm_object_type
+            AND aoa.cm_parent_id = ac.cm_object_id
+            AND aoa.cm_target_id = af.cm_file_id)
             AND af.cm_folder_id IS NULL
         </sql>
     </changeSet>
     <changeSet id="files-20-update-file-folder-id-for-complaint" author="dmiller">
         <sql>
             UPDATE acm_file af
-            SET    cm_folder_id =
-                    (SELECT ac.cm_folder_id
-                     FROM   acm_object_association aoa,
-                            acm_container ac
-                     WHERE  aoa.cm_target_type = 'FILE'
-                     AND    aoa.cm_parent_type = 'COMPLAINT'
-                     AND    aoa.cm_parent_type = ac.cm_object_type
-                     AND    aoa.cm_parent_id = ac.cm_object_id
-                     AND    aoa.cm_target_id = af.cm_file_id)
+            SET cm_folder_id =
+            (SELECT ac.cm_folder_id
+            FROM acm_object_association aoa,
+            acm_container ac
+            WHERE aoa.cm_target_type = 'FILE'
+            AND aoa.cm_parent_type = 'COMPLAINT'
+            AND aoa.cm_parent_type = ac.cm_object_type
+            AND aoa.cm_parent_id = ac.cm_object_id
+            AND aoa.cm_target_id = af.cm_file_id)
             WHERE EXISTS
-                    (SELECT 1
-                     FROM   acm_object_association aoa,
-                            acm_container ac
-                     WHERE  aoa.cm_target_type = 'FILE'
-                     AND    aoa.cm_parent_type = 'COMPLAINT'
-                     AND    aoa.cm_parent_type = ac.cm_object_type
-                     AND    aoa.cm_parent_id = ac.cm_object_id
-                     AND    aoa.cm_target_id = af.cm_file_id)
+            (SELECT 1
+            FROM acm_object_association aoa,
+            acm_container ac
+            WHERE aoa.cm_target_type = 'FILE'
+            AND aoa.cm_parent_type = 'COMPLAINT'
+            AND aoa.cm_parent_type = ac.cm_object_type
+            AND aoa.cm_parent_id = ac.cm_object_id
+            AND aoa.cm_target_id = af.cm_file_id)
             AND af.cm_folder_id IS NULL
         </sql>
     </changeSet>
     <changeSet id="files-21-update-file-folder-id-for-case" author="dmiller">
         <sql>
             UPDATE acm_file af
-            SET    cm_folder_id =
-                    (SELECT ac.cm_folder_id
-                     FROM   acm_object_association aoa,
-                            acm_container ac
-                     WHERE  aoa.cm_target_type = 'FILE'
-                     AND    aoa.cm_parent_type IN ('CASE_FILE', 'CASE')
-                     AND    ac.cm_object_type = 'CASE_FILE'
-                     AND    aoa.cm_parent_id = ac.cm_object_id
-                     AND    aoa.cm_target_id = af.cm_file_id)
+            SET cm_folder_id =
+            (SELECT ac.cm_folder_id
+            FROM acm_object_association aoa,
+            acm_container ac
+            WHERE aoa.cm_target_type = 'FILE'
+            AND aoa.cm_parent_type IN ('CASE_FILE', 'CASE')
+            AND ac.cm_object_type = 'CASE_FILE'
+            AND aoa.cm_parent_id = ac.cm_object_id
+            AND aoa.cm_target_id = af.cm_file_id)
             WHERE EXISTS
-                    (SELECT 1
-                     FROM   acm_object_association aoa,
-                            acm_container ac
-                     WHERE  aoa.cm_target_type = 'FILE'
-                     AND    aoa.cm_parent_type IN ('CASE_FILE', 'CASE')
-                     AND    ac.cm_object_type = 'CASE_FILE'
-                     AND    aoa.cm_parent_id = ac.cm_object_id
-                     AND    aoa.cm_target_id = af.cm_file_id)
+            (SELECT 1
+            FROM acm_object_association aoa,
+            acm_container ac
+            WHERE aoa.cm_target_type = 'FILE'
+            AND aoa.cm_parent_type IN ('CASE_FILE', 'CASE')
+            AND ac.cm_object_type = 'CASE_FILE'
+            AND aoa.cm_parent_id = ac.cm_object_id
+            AND aoa.cm_target_id = af.cm_file_id)
             AND af.cm_folder_id IS NULL
         </sql>
     </changeSet>
     <changeSet id="files-22-update-file-folder-id-for-profile-images" author="dmiller">
         <sql>
             UPDATE acm_file af
-            SET    cm_folder_id =
-                    (SELECT ac.cm_folder_id
-                     FROM   acm_object_association aoa,
-                            acm_container ac
-                     WHERE  aoa.cm_target_type = 'FILE'
-                     AND    aoa.cm_parent_type = 'PROFILE_IMG'
-                     AND    ac.cm_object_type = 'USER_ORG'
-                     AND    aoa.cm_parent_id = ac.cm_object_id
-                     AND    aoa.cm_target_id = af.cm_file_id)
+            SET cm_folder_id =
+            (SELECT ac.cm_folder_id
+            FROM acm_object_association aoa,
+            acm_container ac
+            WHERE aoa.cm_target_type = 'FILE'
+            AND aoa.cm_parent_type = 'PROFILE_IMG'
+            AND ac.cm_object_type = 'USER_ORG'
+            AND aoa.cm_parent_id = ac.cm_object_id
+            AND aoa.cm_target_id = af.cm_file_id)
             WHERE EXISTS
-                    (SELECT 1
-                     FROM   acm_object_association aoa,
-                            acm_container ac
-                     WHERE  aoa.cm_target_type = 'FILE'
-                     AND    aoa.cm_parent_type = 'PROFILE_IMG'
-                     AND    ac.cm_object_type = 'USER_ORG'
-                     AND    aoa.cm_parent_id = ac.cm_object_id
-                     AND    aoa.cm_target_id = af.cm_file_id)
+            (SELECT 1
+            FROM acm_object_association aoa,
+            acm_container ac
+            WHERE aoa.cm_target_type = 'FILE'
+            AND aoa.cm_parent_type = 'PROFILE_IMG'
+            AND ac.cm_object_type = 'USER_ORG'
+            AND aoa.cm_parent_id = ac.cm_object_id
+            AND aoa.cm_target_id = af.cm_file_id)
             AND af.cm_folder_id IS NULL
         </sql>
     </changeSet>
 
     <!-- need to fix the unique key on acm_file before inserting the files from cases where those
          files are also in a complaint -->
-    <changeSet id="files-23-unique-key-on-file-and-folder" author="dmiller">
+    <changeSet id="files-23-unique-key-on-file-and-folder" author="dmiller" failOnError="false">
         <dropUniqueConstraint tableName="acm_file" constraintName="uk_version_series_id"/>
         <addUniqueConstraint tableName="acm_file"
                              columnNames="cm_version_series_id, cm_folder_id"
@@ -345,54 +345,54 @@
         <sql>
             INSERT INTO acm_file
             (
-                cm_file_id,
-                cm_file_status,
-                cm_file_created,
-                cm_file_creator,
-                cm_file_modified,
-                cm_file_modifier,
-                cm_file_mime_type,
-                cm_version_series_id,
-                cm_file_name,
-                cm_file_type,
-                cm_folder_id,
-                cm_file_active_version_tag,
-                cm_file_category
+            cm_file_id,
+            cm_file_status,
+            cm_file_created,
+            cm_file_creator,
+            cm_file_modified,
+            cm_file_modifier,
+            cm_file_mime_type,
+            cm_version_series_id,
+            cm_file_name,
+            cm_file_type,
+            cm_folder_id,
+            cm_file_active_version_tag,
+            cm_file_category
             )
             WITH dupes AS
             (
-                SELECT  aoa.cm_target_id,
-                        COUNT(*) as dupe_count
-                FROM    acm_container ac,
-                        acm_object_association aoa
-                WHERE   aoa.cm_target_type = 'FILE'
-                AND     aoa.cm_parent_type = ac.cm_object_type
-                AND     aoa.cm_parent_id = ac.cm_object_id
-                GROUP BY aoa.cm_target_id
-                having count(*) > 1
+            SELECT aoa.cm_target_id,
+            COUNT(*) as dupe_count
+            FROM acm_container ac,
+            acm_object_association aoa
+            WHERE aoa.cm_target_type = 'FILE'
+            AND aoa.cm_parent_type = ac.cm_object_type
+            AND aoa.cm_parent_id = ac.cm_object_id
+            GROUP BY aoa.cm_target_id
+            having count(*) > 1
             )
-            SELECT  seq_gen_identity.nextval as cm_file_id,
-                    af.cm_file_status,
-                    af.cm_file_created,
-                    af.cm_file_creator,
-                    af.cm_file_modified,
-                    af.cm_file_modifier,
-                    af.cm_file_mime_type,
-                    af.cm_version_series_id,
-                    af.cm_file_name,
-                    af.cm_file_type,
-                    ac.cm_folder_id,
-                    af.cm_file_active_version_tag,
-                    af.cm_file_category
-            FROM    acm_file af,
-                    acm_object_association aoa,
-                    acm_container ac
-            WHERE   aoa.cm_parent_type= 'CASE_FILE'
-            AND     aoa.cm_target_type = 'FILE'
-            AND     aoa.cm_parent_id = ac.cm_object_id
-            AND     aoa.cm_parent_type = ac.cm_object_type
-            AND     af.cm_file_id IN (SELECT d.cm_target_id FROM dupes d)
-            AND     aoa.cm_target_id = af.cm_file_id
+            SELECT seq_gen_identity.nextval as cm_file_id,
+            af.cm_file_status,
+            af.cm_file_created,
+            af.cm_file_creator,
+            af.cm_file_modified,
+            af.cm_file_modifier,
+            af.cm_file_mime_type,
+            af.cm_version_series_id,
+            af.cm_file_name,
+            af.cm_file_type,
+            ac.cm_folder_id,
+            af.cm_file_active_version_tag,
+            af.cm_file_category
+            FROM acm_file af,
+            acm_object_association aoa,
+            acm_container ac
+            WHERE aoa.cm_parent_type= 'CASE_FILE'
+            AND aoa.cm_target_type = 'FILE'
+            AND aoa.cm_parent_id = ac.cm_object_id
+            AND aoa.cm_parent_type = ac.cm_object_type
+            AND af.cm_file_id IN (SELECT d.cm_target_id FROM dupes d)
+            AND aoa.cm_target_id = af.cm_file_id
         </sql>
     </changeSet>
 
@@ -411,21 +411,21 @@
     <changeSet id="files-29-populate-file-container-id" author="dmiller" dbms="oracle">
         <sql>
             UPDATE acm_file af
-            SET    af.cm_container_id =
+            SET af.cm_container_id =
             (
-                    SELECT ac.cm_container_id
-                    FROM   acm_folder folder,
-                           acm_container ac
-                    WHERE  af.cm_folder_id = folder.cm_folder_id
-                    AND    folder.cm_folder_id = ac.cm_folder_id
+            SELECT ac.cm_container_id
+            FROM acm_folder folder,
+            acm_container ac
+            WHERE af.cm_folder_id = folder.cm_folder_id
+            AND folder.cm_folder_id = ac.cm_folder_id
             )
             WHERE EXISTS
             (
-                    SELECT ac.cm_container_id
-                    FROM   acm_folder folder,
-                           acm_container ac
-                    WHERE  af.cm_folder_id = folder.cm_folder_id
-                    AND    folder.cm_folder_id = ac.cm_folder_id
+            SELECT ac.cm_container_id
+            FROM acm_folder folder,
+            acm_container ac
+            WHERE af.cm_folder_id = folder.cm_folder_id
+            AND folder.cm_folder_id = ac.cm_folder_id
             )
         </sql>
     </changeSet>
@@ -439,22 +439,22 @@
             </and>
         </preConditions>
         <sql>
-            UPDATE  acm_container c
-            SET     cm_object_title =
+            UPDATE acm_container c
+            SET cm_object_title =
             (
-                    SELECT  acf.cm_case_number
-                    FROM    acm_case_file acf
-                    WHERE   c.cm_object_id = acf.cm_case_id
-                    AND     c.cm_object_type = 'CASE_FILE'
+            SELECT acf.cm_case_number
+            FROM acm_case_file acf
+            WHERE c.cm_object_id = acf.cm_case_id
+            AND c.cm_object_type = 'CASE_FILE'
             )
-            WHERE   EXISTS
+            WHERE EXISTS
             (
-                    SELECT  1
-                    FROM    acm_case_file acf
-                    WHERE   c.cm_object_id = acf.cm_case_id
-                    AND     c.cm_object_type = 'CASE_FILE'
+            SELECT 1
+            FROM acm_case_file acf
+            WHERE c.cm_object_id = acf.cm_case_id
+            AND c.cm_object_type = 'CASE_FILE'
             )
-            AND     c.cm_object_title IS NULL
+            AND c.cm_object_title IS NULL
         </sql>
     </changeSet>
 
@@ -467,22 +467,22 @@
             </and>
         </preConditions>
         <sql>
-            UPDATE  acm_container c
-            SET     cm_object_title =
+            UPDATE acm_container c
+            SET cm_object_title =
             (
-                    SELECT  ac.cm_complaint_number
-                    FROM    acm_complaint ac
-                    WHERE   c.cm_object_id = ac.cm_complaint_id
-                    AND     c.cm_object_type = 'COMPLAINT'
+            SELECT ac.cm_complaint_number
+            FROM acm_complaint ac
+            WHERE c.cm_object_id = ac.cm_complaint_id
+            AND c.cm_object_type = 'COMPLAINT'
             )
             WHERE EXISTS
             (
-                    SELECT  1
-                    FROM    acm_complaint ac
-                    WHERE   c.cm_object_id = ac.cm_complaint_id
-                    AND     c.cm_object_type = 'COMPLAINT'
+            SELECT 1
+            FROM acm_complaint ac
+            WHERE c.cm_object_id = ac.cm_complaint_id
+            AND c.cm_object_type = 'COMPLAINT'
             )
-            AND     c.cm_object_title IS NULL
+            AND c.cm_object_title IS NULL
         </sql>
     </changeSet>
 
@@ -495,22 +495,22 @@
             </and>
         </preConditions>
         <sql>
-            UPDATE  acm_container c
-            SET     cm_object_title =
+            UPDATE acm_container c
+            SET cm_object_title =
             (
-                    SELECT  auo.cm_user
-                    FROM    acm_user_org auo
-                    WHERE   c.cm_object_id = auo.cm_user_org_id
-                    AND     c.cm_object_type = 'USER_ORG'
+            SELECT auo.cm_user
+            FROM acm_user_org auo
+            WHERE c.cm_object_id = auo.cm_user_org_id
+            AND c.cm_object_type = 'USER_ORG'
             )
-            WHERE   EXISTS
+            WHERE EXISTS
             (
-                    SELECT  1
-                    FROM    acm_user_org auo
-                    WHERE   c.cm_object_id = auo.cm_user_org_id
-                    AND     c.cm_object_type = 'USER_ORG'
+            SELECT 1
+            FROM acm_user_org auo
+            WHERE c.cm_object_id = auo.cm_user_org_id
+            AND c.cm_object_type = 'USER_ORG'
             )
-            AND     c.cm_object_title IS NULL
+            AND c.cm_object_title IS NULL
         </sql>
     </changeSet>
 
@@ -526,25 +526,25 @@
             </and>
         </preConditions>
         <sql>
-            UPDATE  acm_container c
-            SET     cm_object_title =
+            UPDATE acm_container c
+            SET cm_object_title =
             (
-                    SELECT  aht.name_
-                    FROM    act_hi_taskinst aht
-                    WHERE   c.cm_object_type = 'TASK'
-                    AND     TO_CHAR(c.cm_object_id) = aht.id_
+            SELECT aht.name_
+            FROM act_hi_taskinst aht
+            WHERE c.cm_object_type = 'TASK'
+            AND TO_CHAR(c.cm_object_id) = aht.id_
             )
-            WHERE   EXISTS
+            WHERE EXISTS
             (
-                    SELECT  1
-                    FROM    act_hi_taskinst aht
-                    WHERE   c.cm_object_type = 'TASK'
-                    AND     TO_CHAR(c.cm_object_id) = aht.id_
+            SELECT 1
+            FROM act_hi_taskinst aht
+            WHERE c.cm_object_type = 'TASK'
+            AND TO_CHAR(c.cm_object_id) = aht.id_
             )
-            AND     c.cm_object_title IS NULL
+            AND c.cm_object_title IS NULL
         </sql>
     </changeSet>
-    
+
     <changeSet id="files-38-update-attachment-folder-id-in-container-table" author="riste.tutureski" dbms="oracle">
         <preConditions onFail="MARK_RAN">
             <and>
@@ -554,34 +554,35 @@
             </and>
         </preConditions>
         <sql>
-            UPDATE  acm_container c
-            SET     c.cm_attachment_folder_id = c.cm_folder_id
-            WHERE   c.cm_attachment_folder_id IS NULL
+            UPDATE acm_container c
+            SET c.cm_attachment_folder_id = c.cm_folder_id
+            WHERE c.cm_attachment_folder_id IS NULL
         </sql>
     </changeSet>
 
     <changeSet id="files-39-acm_file_version-add-mime-type" author="sasko.tanaskoski" dbms="postgresql">
         <sql>
-            UPDATE  acm_file_version fv
-            SET     cm_file_version_mime_type =
+            UPDATE acm_file_version fv
+            SET cm_file_version_mime_type =
             (
-                    SELECT  f.cm_file_mime_type
-                    FROM    acm_file f
-                    WHERE   fv.cm_file_id = f.cm_file_id
+            SELECT f.cm_file_mime_type
+            FROM acm_file f
+            WHERE fv.cm_file_id = f.cm_file_id
             )
-            WHERE   EXISTS
+            WHERE EXISTS
             (
-                    SELECT  1
-                    FROM    acm_file f
-                    WHERE   fv.cm_file_id = f.cm_file_id
+            SELECT 1
+            FROM acm_file f
+            WHERE fv.cm_file_id = f.cm_file_id
             )
-            AND     fv.cm_file_version_mime_type = 'MIMETYPE'
+            AND fv.cm_file_version_mime_type = 'MIMETYPE'
         </sql>
-        <renameColumn tableName="acm_file" oldColumnName="cm_file_mime_type" newColumnName="cm_file_active_version_mime_type" columnDataType="VARCHAR(1024)"/>
+        <renameColumn tableName="acm_file" oldColumnName="cm_file_mime_type"
+                      newColumnName="cm_file_active_version_mime_type" columnDataType="VARCHAR(1024)"/>
         <addColumn tableName="acm_file">
             <column name="cm_file_active_version_name_extension" type="VARCHAR(255)"/>
         </addColumn>
     </changeSet>
- 
+
 </databaseChangeLog>
 
