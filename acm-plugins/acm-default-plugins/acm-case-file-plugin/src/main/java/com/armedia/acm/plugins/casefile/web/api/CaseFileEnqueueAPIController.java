@@ -1,8 +1,10 @@
 package com.armedia.acm.plugins.casefile.web.api;
 
+import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
+import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.plugins.casefile.service.EnqueueCaseFileService;
-
+import com.armedia.acm.services.users.service.tracker.UserTrackerService;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -15,16 +17,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping({ "/api/v1/plugin/casefile", "/api/latest/plugin/casefile" })
+@RequestMapping({"/api/v1/plugin/casefile", "/api/latest/plugin/casefile"})
 public class CaseFileEnqueueAPIController
 {
 
     private EnqueueCaseFileService enqueueCaseFileService;
+    private UserTrackerService userTrackerService;
+    private CaseFileDao caseFileDao;
 
     @RequestMapping(value = "/enqueue/{caseId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public CaseFileEnqueueResponse enqueue(@PathVariable("caseId") Long caseId,
-            @RequestParam(value = "nextQueue", required = true) String nextQueue, HttpSession session, Authentication auth)
+                                           @RequestParam(value = "nextQueue", required = true) String nextQueue, HttpSession session, Authentication auth)
     {
 
         CaseFilePipelineContext context = new CaseFilePipelineContext();
@@ -33,7 +37,19 @@ public class CaseFileEnqueueAPIController
         context.setIpAddress(ipAddress);
         context.setEnqueueName(nextQueue);
 
-        return enqueueCaseFileService.enqueueCaseFile(caseId, nextQueue, context);
+        getUserTrackerService().trackUser(ipAddress);
+
+        CaseFileEnqueueResponse response = getEnqueueCaseFileService().enqueueCaseFile(caseId, nextQueue, context);
+
+        if (response.isSuccess())
+        {
+            // be sure to send back the updated case file - the service does not flush the SQL and might not know
+            // about any changes made in the Activiti layer
+            CaseFile updated = getCaseFileDao().find(caseId);
+            response.setCaseFile(updated);
+        }
+
+        return response;
     }
 
     public EnqueueCaseFileService getEnqueueCaseFileService()
@@ -46,4 +62,23 @@ public class CaseFileEnqueueAPIController
         this.enqueueCaseFileService = enqueueCaseFileService;
     }
 
+    public UserTrackerService getUserTrackerService()
+    {
+        return userTrackerService;
+    }
+
+    public void setUserTrackerService(UserTrackerService userTrackerService)
+    {
+        this.userTrackerService = userTrackerService;
+    }
+
+    public CaseFileDao getCaseFileDao()
+    {
+        return caseFileDao;
+    }
+
+    public void setCaseFileDao(CaseFileDao caseFileDao)
+    {
+        this.caseFileDao = caseFileDao;
+    }
 }
