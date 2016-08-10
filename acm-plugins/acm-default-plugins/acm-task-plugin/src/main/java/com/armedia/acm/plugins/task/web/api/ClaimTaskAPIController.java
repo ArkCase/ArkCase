@@ -11,7 +11,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 
@@ -21,7 +24,8 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping({"/api/v1/plugin/task", "/api/latest/plugin/task"})
-public class ClaimTaskAPIController {
+public class ClaimTaskAPIController
+{
     private Logger log = LoggerFactory.getLogger(getClass());
     private TaskDao taskDao;
     private TaskEventPublisher taskEventPublisher;
@@ -32,15 +36,17 @@ public class ClaimTaskAPIController {
             @PathVariable("taskId") Long taskId,
             Authentication authentication,
             HttpSession httpSession
-    ) throws AcmUserActionFailedException {
+    ) throws AcmUserActionFailedException
+    {
         log.info("User [{}] is claiming workflow task with ID [{}]", authentication.getName(), taskId);
-        try{
-            AcmTask claimedTask = getTaskDao().claimTask(taskId, authentication.getName());
-            claimedTask=getTaskDao().save(claimedTask);
+        try
+        {
+            getTaskDao().claimTask(taskId, authentication.getName());
+            AcmTask claimedTask = getTaskDao().findById(taskId);
             publishTaskClaimEvent(authentication, httpSession, claimedTask, "claim", true);
             return claimedTask;
-        }
-        catch(AcmTaskException e){
+        } catch (AcmTaskException e)
+        {
             // gen up a fake task so we can audit the failure
             AcmTask fakeTask = new AcmTask();
             fakeTask.setTaskId(taskId);
@@ -55,15 +61,17 @@ public class ClaimTaskAPIController {
             @PathVariable("taskId") Long taskId,
             Authentication authentication,
             HttpSession httpSession
-    ) throws AcmUserActionFailedException {
+    ) throws AcmUserActionFailedException
+    {
         log.info("User [{}] is unclaiming workflow task with ID [{}]", authentication.getName(), taskId);
-        try{
-            AcmTask unclaimedTask = getTaskDao().unclaimTask(taskId);
-            unclaimedTask=getTaskDao().save(unclaimedTask);
+        try
+        {
+            getTaskDao().unclaimTask(taskId);
+            AcmTask unclaimedTask = getTaskDao().findById(taskId);
             publishTaskClaimEvent(authentication, httpSession, unclaimedTask, "unclaim", true);
             return unclaimedTask;
-        }
-        catch(AcmTaskException e){
+        } catch (AcmTaskException e)
+        {
             // gen up a fake task so we can audit the failure
             AcmTask fakeTask = new AcmTask();
             fakeTask.setTaskId(taskId);
@@ -84,11 +92,13 @@ public class ClaimTaskAPIController {
         getTaskEventPublisher().publishTaskEvent(event);
     }
 
-    public TaskDao getTaskDao() {
+    public TaskDao getTaskDao()
+    {
         return taskDao;
     }
 
-    public void setTaskDao(TaskDao taskDao) {
+    public void setTaskDao(TaskDao taskDao)
+    {
         this.taskDao = taskDao;
     }
 

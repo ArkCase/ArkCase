@@ -188,4 +188,5 @@ public class Note implements Serializable, AcmEntity
     {
         this.modified = modified;
     }
+
 }

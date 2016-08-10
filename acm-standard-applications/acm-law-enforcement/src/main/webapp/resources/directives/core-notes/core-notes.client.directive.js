@@ -61,10 +61,9 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                     }
                 );
 
-                scope.isReadOnly = function(objectInfo) {
+                scope.isReadOnly = function (objectInfo) {
                     return scope.notesInit.isReadOnly;
                 }
-
 
                 var noteHelper = new HelperNoteService.Note();
                 var gridHelper = new HelperUiGridService.Grid({scope: scope});
@@ -102,7 +101,7 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                 });
 
                 // check if config file has an entry for any named button
-                var hasButton = function(config, name) {
+                var hasButton = function (config, name) {
                     var buttonPresent = false;
                     _.each(config.buttons, function (button) {
                         if (button.name == name) {
@@ -118,7 +117,7 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                     if (Util.goodPositive(scope.notesInit.currentObjectId, false)) {
                         var info = scope.notesInit;
                         var promiseQueryNotes = ObjectNoteService.queryNotes(info.objectType, info.currentObjectId, info.noteType);
-                        $q.all([promiseQueryNotes, promiseUsers]).then(function (data) {
+                        $q.all([promiseQueryNotes,promiseUsers]).then(function (data) {
                             var notes = data[0];
                             scope.gridOptions.data = notes;
                             scope.gridOptions.totalItems = notes.length;
@@ -128,7 +127,10 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
 
                 scope.addNew = function () {
                     var info = scope.notesInit;
-                    var note = noteHelper.createNote(info.currentObjectId, info.objectType, scope.userId, info.noteType);
+                    var note = noteHelper.createNote(info.currentObjectId, info.objectType, info.tag,
+                        scope.userId, info.noteType
+                        )
+                        ;
                     showModal(note, false);
                 };
                 scope.editRow = function (rowEntity) {

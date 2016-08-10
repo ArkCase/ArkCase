@@ -16,6 +16,7 @@ import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +62,7 @@ import java.util.Set;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "className")
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.plugins.complaint.model.Complaint")
+@JsonPropertyOrder(value = {"complaintId", "personAssociations", "originator"})
 public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, AcmContainerEntity, AcmChildObjectEntity,
         AcmLegacySystemEntity, AcmNotifiableEntity
 {

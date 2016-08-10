@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -28,8 +27,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -78,8 +78,8 @@ public class ClaimTaskAPIControllerTest extends EasyMockSupport
 
         Capture<AcmApplicationTaskEvent> capturedEvent = new Capture<>();
 
-        expect(mockTaskDao.claimTask(eq(taskId), eq(userId))).andReturn(testTask);
-        expect(mockTaskDao.save(testTask)).andReturn(testTask);
+        mockTaskDao.claimTask(eq(taskId), eq(userId));
+        expect(mockTaskDao.findById(taskId)).andReturn(testTask);
         mockTaskEventPublisher.publishTaskEvent(capture(capturedEvent));
 
         // MVC test classes must call getName() somehow
@@ -130,7 +130,8 @@ public class ClaimTaskAPIControllerTest extends EasyMockSupport
 
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
-        expect(mockTaskDao.claimTask(eq(taskId), eq(userId))).andThrow(new AcmTaskException("testException"));
+        mockTaskDao.claimTask(eq(taskId), eq(userId));
+        expectLastCall().andThrow(new AcmTaskException("testException"));
         mockTaskEventPublisher.publishTaskEvent(capture(capturedEvent));
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn(userId).atLeastOnce();
@@ -164,8 +165,8 @@ public class ClaimTaskAPIControllerTest extends EasyMockSupport
 
         Capture<AcmApplicationTaskEvent> capturedEvent = new Capture<>();
 
-        expect(mockTaskDao.unclaimTask(eq(taskId))).andReturn(testTask);
-        expect(mockTaskDao.save(testTask)).andReturn(testTask);
+        mockTaskDao.unclaimTask(eq(taskId));
+        expect(mockTaskDao.findById(taskId)).andReturn(testTask);
         mockTaskEventPublisher.publishTaskEvent(capture(capturedEvent));
 
         // MVC test classes must call getName() somehow

@@ -77,6 +77,8 @@
     <filter-mapping>
         <filter-name>springSecurityFilterChain</filter-name>
         <url-pattern>/*</url-pattern>
+        <dispatcher>FORWARD</dispatcher><!-- This is needed in order spring security to be applied, forward request to be working-->
+        <dispatcher>REQUEST</dispatcher>
     </filter-mapping>
 
     <!-- this may be necessary for Tomcat 7 deployments -->

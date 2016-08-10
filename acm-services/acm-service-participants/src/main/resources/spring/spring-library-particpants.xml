@@ -32,4 +32,9 @@
         <property name="pluginName" value="Participant Plugin"/>
         <property name="pluginProperties" ref="participantProperties"/>
     </bean>
+
+    <bean id="participantToSolrTransformer" class="com.armedia.acm.services.participants.service.ParticipantToSolrTransformer">
+        <property name="acmParticipantDao" ref="acmParticipantDao"/>
+        <property name="userDao" ref="userJpaDao"/>
+    </bean>
 </beans>
