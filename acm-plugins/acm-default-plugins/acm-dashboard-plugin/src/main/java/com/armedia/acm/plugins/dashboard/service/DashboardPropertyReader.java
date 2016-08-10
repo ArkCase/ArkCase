@@ -85,7 +85,7 @@ public class DashboardPropertyReader
         String[] modules;
         List<String> moduleList = new ArrayList<>();
 
-        if (!"".equals(modulesString) && modulesString.contains(","))
+        if (!"".equals(modulesString))
         {
             modules = modulesString.split(",");
             for (String m : modules)
@@ -143,7 +143,8 @@ public class DashboardPropertyReader
 
     private void updateModuleTable()
     {
-        moduleNameList.stream().forEach(module -> {
+        moduleNameList.stream().forEach(module ->
+        {
             try
             {
                 moduleDao.getModuleByName(module);
@@ -181,7 +182,8 @@ public class DashboardPropertyReader
             widgetNamesList.add(widgetName);
         }
 
-        widgetNamesList.stream().forEach(widget -> {
+        widgetNamesList.stream().forEach(widget ->
+        {
             try
             {
                 widgetList.add(widgetDao.getWidgetByWidgetName(widget));
