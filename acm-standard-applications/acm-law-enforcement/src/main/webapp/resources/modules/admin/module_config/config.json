@@ -416,6 +416,10 @@
         {
           "title": "admin.security.modules",
           "templateName": "security.modules"
+        },
+        {
+          "title": "admin.security.auditHistory",
+          "templateName": "security.audit-history"
         }
       ]
     },
