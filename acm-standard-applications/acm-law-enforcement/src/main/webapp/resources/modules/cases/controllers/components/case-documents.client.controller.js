@@ -113,7 +113,9 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
             }
             var eventName = "object.changed/" + $scope.objectType + "/" + $scope.objectId;
             $scope.subscription = $scope.$bus.subscribe(eventName, function (data) {
-                $scope.treeControl.refreshTree();
+                if (data.objectType == 'FILE') {
+                    $scope.treeControl.refreshTree();
+                }
             });
         };
 

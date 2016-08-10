@@ -93,7 +93,9 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
             }
             var eventName = "object.changed/" + $scope.objectType + "/" + $scope.objectId;
             $scope.subscription = $scope.$bus.subscribe(eventName, function (data) {
-                $scope.treeControl.refreshTree();
+                if (data.objectType == 'FILE') {
+                    $scope.treeControl.refreshTree();
+                }
             });
         };
 

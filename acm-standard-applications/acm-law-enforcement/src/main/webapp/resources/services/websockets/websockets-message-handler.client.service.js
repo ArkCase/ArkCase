@@ -17,38 +17,37 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
                 && message.className.indexOf('AcmSubscriptionEvent') === -1
             ) {
                 //we will remove object from cache
-                handleCache(message.objectType, message.objectId, message.action);
+                handleCache(message);
                 //we will publish message for objecttype with action
-                publishMessage(message.objectType, message.objectId, message.action);
-
-                if (message.parentObjectType != null && message.parentObjectId != null) {
-                    //we will remove parent object from cache
-                    //its update because it has child that is inserted/changed so parent is changed
-                    handleCache(message.parentObjectType, message.parentObjectId, 'UPDATE');
-                    //we will publish message for parent objecttype with action update
-                    publishMessage(message.parentObjectType, message.parentObjectId, 'UPDATE');
-                }
+                publishMessage(message);
             }
         }
 
-        function handleCache(objectType, objectId, action) {
-            if (action == 'UPDATE') {
-                handleCacheObject(objectType, objectId);
+        function handleCache(message) {
+            // remove this object from cache
+            if (message.action == 'UPDATE') {
+                handleCacheObject(message.objectType, message.objectId);
             }
             handleCacheLists(objectType, objectId);
+            // remove this object's parent from cache, if any
+            if (message.parentObjectType != null && message.parentObjectId != null) {
+                handleCacheObject(message.parentObjectType, message.parentObjectId);
+                handleCacheLists(message.parentObjectType, message.parentObjectId);
+            }
         }
 
-        function publishMessage(objectType, objectId, action) {
-            if (action == 'INSERT') {
+        function publishMessage(message) {
+            // publish event for this object
+            if (message.action == 'INSERT') {
                 var eventName = "object.inserted";
-                var data = {
-                    objectId: objectId,
-                    objectType: objectType
-                };
-                $rootScope.$bus.publish(eventName, data);
             } else {
                 var eventName = "object.changed/" + objectType + "/" + objectId;
-                $rootScope.$bus.publish(eventName, objectId);
+            }
+            $rootScope.$bus.publish(eventName, message);
+            // publish event for this object's parent, if any
+            if (message.parentObjectType != null && message.parentObjectId != null) {
+                var eventName = "object.changed/" + parentObjectType + "/" + parentObjectId;
+                $rootScope.$bus.publish(eventName, message);
             }
         }
 
