@@ -19,26 +19,9 @@ public class PageCountServiceImpl implements PageCountService
         int numberOfPages = -1;
         if ("application/pdf".equals(mimeType))
         {
-            PDDocument pdDocument = null;
-            try
+            try (PDDocument pdDocument = PDDocument.load(new ByteArrayInputStream(data)))
             {
-                pdDocument = PDDocument.load(new ByteArrayInputStream(data));
                 numberOfPages = pdDocument.getNumberOfPages();
-            } catch (IOException e)
-            {
-                throw new IOException(e);
-            } finally
-            {
-                if (pdDocument != null)
-                {
-                    try
-                    {
-                        pdDocument.close();
-                    } catch (Exception ex)
-                    {
-                        log.error("cannot close PDF: {}", ex.getMessage(), ex);
-                    }
-                }
             }
         } else
         {
