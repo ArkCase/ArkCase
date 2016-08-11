@@ -1371,6 +1371,14 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                                     DocTree.replaceFile();
                                 }
+                                
+                                $q.when(DocTree.uploadSetting.deferSelectFile.promise).then(function (files) {
+                                    var args = {
+										files : files
+									}
+                                    var submitFiles = DocTree.Command.findHandler("submitFiles/");
+                                    DocTree.Command.handleCommand(submitFiles, nodes, args);
+                                });
                             }
                         }
                         , {
