@@ -19,7 +19,12 @@ public class AcmOptionsResource implements PropFindableResource
     private String uniqueId = UUID.randomUUID().toString();
 
     private Date today = new Date();
+    private final AcmFileSystemResourceFactory resourceFactory;
 
+    public AcmOptionsResource(AcmFileSystemResourceFactory resourceFactory)
+    {
+        this.resourceFactory = resourceFactory;
+    }
 
     @Override
     public Date getCreateDate()
@@ -40,15 +45,15 @@ public class AcmOptionsResource implements PropFindableResource
     }
 
     @Override
-    public Object authenticate(String s, String s1)
+    public Object authenticate(String user, String password)
     {
-        return null;
+        return resourceFactory.getSecurityManager().authenticate(user, password);
     }
 
     @Override
     public boolean authorise(Request request, Request.Method method, Auth auth)
     {
-        return false;
+        return resourceFactory.getSecurityManager().authorise(request, method, auth, this);
     }
 
     @Override
