@@ -748,9 +748,17 @@
             WHERE cm_file_active_version_name_extension IS NULL;
         </sql>
     </changeSet>
+    <changeSet id="files-40-acm-file-pop-extension" author="dmiller" dbms="mssql">
+        <sql>
+            UPDATE acm_file
+            SET cm_file_active_version_name_extension =
+            SUBSTRING(cm_file_name, LEN(cm_file_name) - CHARINDEX('.', REVERSE(cm_file_name)) + 1, CHARINDEX('.', REVERSE(cm_file_name)) + 1)
+            WHERE cm_file_active_version_name_extension IS NULL;
+        </sql>
+    </changeSet>
 
     <!-- this SQL accounts for the common MIME types as found on the core dev site -->
-    <changeSet id="files-41-acm-file-version-pop-extension" author="dmiller" dbms="postgresql">
+    <changeSet id="files-41-acm-file-version-pop-extension" author="dmiller" dbms="postgresql,mssql">
         <sql>
             UPDATE acm_file_version
             SET cm_file_version_name_extension = CASE
