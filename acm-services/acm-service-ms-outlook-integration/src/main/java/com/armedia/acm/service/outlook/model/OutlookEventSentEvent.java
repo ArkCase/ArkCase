@@ -10,22 +10,22 @@ public class OutlookEventSentEvent extends AcmEvent
     private static final long serialVersionUID = 1L;
     private static final String EVENT_TYPE = "com.armedia.acm.outlook.email.event.sent";
 
-    public OutlookEventSentEvent(EmailWithAttachmentsDTO source, String userId, Long objectId, String objectType)
+    public OutlookEventSentEvent(EmailWithAttachmentsDTO source, String userId, Long objectId, String eventType)
     {
         super(source);
-        setEventDate(new Date());
         setObjectId(objectId);
-        setObjectType(objectType);
         setUserId(userId);
+        setEventDate(new Date());
+        setEventType(eventType);
     }
 
-    public OutlookEventSentEvent(EmailWithEmbeddedLinksDTO source, String userId, Long objectId, String objectType)
+    public OutlookEventSentEvent(EmailWithEmbeddedLinksDTO source, String userId, Long objectId, String eventType)
     {
         super(source);
-        setEventDate(new Date());
         setObjectId(objectId);
-        setObjectType(objectType);
         setUserId(userId);
+        setEventDate(new Date());
+        setEventType(eventType);
     }
 
     @Override
