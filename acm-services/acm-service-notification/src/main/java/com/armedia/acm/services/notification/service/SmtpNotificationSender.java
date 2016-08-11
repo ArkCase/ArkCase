@@ -124,7 +124,7 @@ public class SmtpNotificationSender implements NotificationSender, ApplicationEv
                 exception = e;
             }
 
-            OutlookEventSentEvent event = new OutlookEventSentEvent(in, user.getUserId(), 0L, "I don't know");
+            OutlookEventSentEvent event = new OutlookEventSentEvent(in, user.getUserId(), 0L, "SENT_EMAIL");
 
             if (exception == null)
             {
@@ -161,7 +161,7 @@ public class SmtpNotificationSender implements NotificationSender, ApplicationEv
                 exception = e;
             }
 
-            OutlookEventSentEvent event = new OutlookEventSentEvent(in, user.getUserId(), 0L, "I don't know");
+            OutlookEventSentEvent event = new OutlookEventSentEvent(in, user.getUserId(), 0L, "SENT_EMAIL");
 
             if (exception != null)
             {
