@@ -82,7 +82,7 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
         } else
         {
             log.debug("The path {} seems to be an OPTIONS request", path);
-            return new AcmOptionsResource();
+            return new AcmOptionsResource(this);
         }
     }
 
