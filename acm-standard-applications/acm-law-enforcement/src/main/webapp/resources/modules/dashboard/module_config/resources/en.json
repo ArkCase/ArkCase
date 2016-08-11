@@ -78,6 +78,11 @@
         },
         "noDataMessage": "Currently there are no complaints info"
       },
+      "newCases": {
+        "title": "New Cases",
+        "description": "Displays new cases",
+        "noDataMessage": "Currently there are no cases info"
+      },
       "teamWorkload": {
         "title": "Team Workload",
         "description": "Displays team workload",

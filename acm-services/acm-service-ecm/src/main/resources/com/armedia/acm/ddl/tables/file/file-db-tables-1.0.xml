@@ -412,5 +412,14 @@
                               defaultNullValue="com.armedia.acm.plugins.ecm.model.EcmFile"/>
     </changeSet>
 
+    <changeSet id="52-acm_file-update-structure" author="sasko.tanaskoski">
+        <addColumn tableName="acm_file_version">
+            <column name="cm_file_version_mime_type" type="VARCHAR(1024)" defaultValue="MIMETYPE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_file_version_name_extension" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
 
