@@ -33,6 +33,13 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
                 data: ''
             },
 
+            queryNewCases: {
+                method: 'GET',
+                url: 'api/v1/plugin/search/advancedSearch?q=object_type_s\\:CASE_FILE+' +
+                'AND create_date_tdt\\:[NOW-1MONTH TO NOW]',
+                isArray: false
+            },
+
             queryMyTasks: {
                 method: 'GET',
                 url: 'api/v1/plugin/task/forUser/:userId',
