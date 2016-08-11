@@ -1734,18 +1734,13 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             ui.result = dfd.promise();
                         }
                         , select: function (event, ui) {
-                            // delay the event, so the menu can close and the click event does
-                            // not interfere with the edit control
                             var uploadFile = Util.goodMapValue(ui.item.data(), "uploadFile", false);
                             var uploadFileLabel = Util.goodMapValue(ui.item.data(), "label", "");
-                            var that = this;
-                            setTimeout(function () {
-                                $(that).trigger("command", {
-                                    cmd: ui.cmd,
-                                    uploadFile: uploadFile,
-                                    label: uploadFileLabel
-                                });
-                            }, 100);
+                            $(this).trigger("command", {
+                                cmd: ui.cmd,
+                                uploadFile: uploadFile,
+                                label: uploadFileLabel
+                            });
                         }
                     });
                 }
