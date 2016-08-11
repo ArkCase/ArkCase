@@ -3,7 +3,6 @@ package com.armedia.acm.plugins.ecm.utils;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -113,11 +112,9 @@ public class FolderAndFilesUtils
     /**
      * Returns a PDF file which matches the supplied ArkCase model file type from the list and which is a PDF document
      * since only PDF files can be merged
-     * 
-     * @param fileList
-     *            - List of ecmFiles which will be searched for the desired type
-     * @param fileType
-     *            - type to search for in the ecm file list
+     *
+     * @param fileList - List of ecmFiles which will be searched for the desired type
+     * @param fileType - type to search for in the ecm file list
      * @return ecmFile which has the given ArkCase type and is a PDF, or null if not found
      */
     public EcmFile findMatchingPDFFileType(List<EcmFile> fileList, String fileType)
@@ -146,7 +143,8 @@ public class FolderAndFilesUtils
 
     public String getBaseFileName(String fileName, String fileExtension)
     {
-        if (fileName.lastIndexOf(".") > 0 && fileName.endsWith(fileExtension))
+        // endsWith throws NPE on null input
+        if (fileName.lastIndexOf(".") > 0 && fileExtension != null && fileName.endsWith(fileExtension))
         {
             return fileName.substring(0, fileName.lastIndexOf("."));
         } else
