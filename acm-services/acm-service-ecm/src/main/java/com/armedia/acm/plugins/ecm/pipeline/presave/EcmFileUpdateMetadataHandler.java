@@ -2,7 +2,6 @@ package com.armedia.acm.plugins.ecm.pipeline.presave;
 
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
-import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
@@ -17,9 +16,9 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 /**
- * Created by joseph.mcgrady on 9/14/2015.
+ * Created by sasko.tanaskoski
  */
-public class EcmFileNewMetadataHandler implements PipelineHandler<EcmFile, EcmFileTransactionPipelineContext>
+public class EcmFileUpdateMetadataHandler implements PipelineHandler<EcmFile, EcmFileTransactionPipelineContext>
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -32,7 +31,7 @@ public class EcmFileNewMetadataHandler implements PipelineHandler<EcmFile, EcmFi
     {
         log.debug("metadata pre save handler called");
 
-        // Writes metadata for new document uploads into the database
+        // Writes metadata for updated document into the database
         if (!pipelineContext.getIsAppend())
         {
             if (entity == null)
@@ -46,9 +45,8 @@ public class EcmFileNewMetadataHandler implements PipelineHandler<EcmFile, EcmFi
                 throw new PipelineProcessException("cmisDocument is null");
             }
 
-            entity.setVersionSeriesId(cmisDocument.getVersionSeriesId());
             entity.setActiveVersionTag(cmisDocument.getVersionLabel());
-            entity.setFileName(pipelineContext.getOriginalFileName());
+            entity.setVersionSeriesId(cmisDocument.getVersionSeriesId());
 
             // Sets the versioning of the file
             EcmFileVersion version = new EcmFileVersion();
@@ -57,11 +55,6 @@ public class EcmFileNewMetadataHandler implements PipelineHandler<EcmFile, EcmFi
             version.setVersionMimeType(entity.getFileActiveVersionMimeType());
             version.setVersionFileNameExtension(entity.getFileActiveVersionNameExtension());
             entity.getVersions().add(version);
-
-            // Determines the folder and container in which the file should be saved
-            AcmFolder folder = getFolderDao().findByCmisFolderId(pipelineContext.getCmisFolderId());
-            entity.setFolder(folder);
-            entity.setContainer(pipelineContext.getContainer());
 
             try
             {
@@ -76,7 +69,7 @@ public class EcmFileNewMetadataHandler implements PipelineHandler<EcmFile, EcmFi
                 throw new PipelineProcessException(e);
             }
 
-            // Saves new file metadata into ArkCase database
+            // Saves updated file metadata into ArkCase database
             EcmFile saved = getEcmFileDao().save(entity);
             pipelineContext.setEcmFile(saved);
         }

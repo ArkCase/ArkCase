@@ -1,23 +1,22 @@
 'use strict';
 
 angular.module('goodbye').controller('GoodbyeController', ['$window'
-    , 'UtilService', 'Acm.LoginService', 'LookupService', 'Acm.AppService'
-    , function ($window, Util, AcmLoginService, LookupService, AcmAppService) {
+    , 'Acm.StoreService', 'UtilService', 'Acm.LoginService', 'LookupService', 'Acm.AppService'
+    , function ($window, Store, Util, AcmLoginService, LookupService, AcmAppService) {
         // Retrieves the app properties from app-config.xml file
         var appConfig = LookupService.getConfig('app').then(function (data) {
-            // clear redirectURL and redirectState
-            localStorage.removeItem('redirectURL');
-            sessionStorage.removeItem('redirectState');
+             var logoutUrl = AcmAppService.getAppUrl(Util.goodMapValue(data, "logoutUrl", "/logout"));
 
-            //clear warning from localStorage
-            sessionStorage.removeItem('warningAccepted');
-
-
-            AcmLoginService.resetCaches();
             AcmLoginService.setLogin(false);
 
-            // redirect to logout page
-            $window.location.href = AcmAppService.getAppUrl(Util.goodMapValue(data, "logoutUrl", "/logout"));
+            //localStorage.removeItem('redirectURL');
+            sessionStorage.removeItem('redirectURL');
+            sessionStorage.removeItem('redirectState');
+            //sessionStorage.removeItem('warningAccepted');
+            Store.Registry.clearSessionCache();
+            Store.Registry.clearLocalCache();
+
+            $window.location.href = logoutUrl;
         });
 
     }

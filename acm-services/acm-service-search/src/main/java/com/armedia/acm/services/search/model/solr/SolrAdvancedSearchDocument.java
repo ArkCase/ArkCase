@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-
 /**
  * Property names must be identical to the desired SOLR field names.
  */
@@ -16,12 +15,13 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
 {
     private static final long serialVersionUID = 1L;
 
-    /////////////////////  fields for all documents ///////////////////////////
+    ///////////////////// fields for all documents ///////////////////////////
     private String id;
     private String object_id_s;
     private String object_type_s;
     private String object_sub_type_s;
     private String name;
+    private String ext_s;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = SearchConstants.SOLR_DATE_FORMAT, timezone = SearchConstants.TIME_ZONE_UTC)
     private Date create_date_tdt;
     private String creator_lcs;
@@ -39,12 +39,12 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
     /////////////////// for complaints, case files, other objects with a title or description ////////////
     private String title_parseable;
     private String description_parseable;
-    //for sorting//
+    // for sorting//
     private String title_parseable_lcs;
-    /////////////////// for complaints, case files, tasks we introduce description and for personAssociation we introduce notes ////////////
+    /////////////////// for complaints, case files, tasks we introduce description and for personAssociation we
+    /////////////////// introduce notes ////////////
     private String description_no_html_tags_parseable;
     private String notes_no_html_tags_parseable;
-
 
     /////////////////// for docs with an incident date ////////////
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = SearchConstants.SOLR_DATE_FORMAT, timezone = SearchConstants.TIME_ZONE_UTC)
@@ -63,7 +63,6 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
     private String assignee_last_name_lcs;
     private String assignee_full_name_lcs;
     private String incident_type_lcs;
-
 
     ////////////// associated tags ////////////////////
     private String tag_token_lcs;
@@ -90,14 +89,13 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
     private String location_state_lcs;
     private String location_postal_code_sdo;
 
-    /////////////////////  for objects in a parent-child relationship, or association objects /////////////
+    ///////////////////// for objects in a parent-child relationship, or association objects /////////////
     private String child_id_s;
     private String child_type_s;
     private String parent_id_s;
     private String parent_type_s;
     private String parent_name_t;
     private String parent_number_lcs;
-
 
     ////////////////// for objects that own organizations, e.g. persons /////////////////////
     private List<String> organization_id_ss;
@@ -133,7 +131,6 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
     private String data_lcs;
     private String action_lcs;
     private String notification_type_lcs;
-
 
     private String parent_ref_s;
     private boolean hidden_b;
@@ -219,6 +216,16 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
     public void setName(String name)
     {
         this.name = name;
+    }
+
+    public String getExt_s()
+    {
+        return ext_s;
+    }
+
+    public void setExt_s(String ext_s)
+    {
+        this.ext_s = ext_s;
     }
 
     public Date getIncident_date_tdt()
@@ -400,7 +407,6 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
     {
         return child_type_s;
     }
-
 
     public void setParent_id_s(String parent_id_s)
     {
@@ -809,72 +815,32 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
     @Override
     public String toString()
     {
-        return "SolrAdvancedSearchDocument{" +
-                "id='" + id + '\'' +
-                ", object_id_s='" + object_id_s + '\'' +
-                ", object_type_s='" + object_type_s + '\'' +
-                ", object_sub_type_s='" + object_sub_type_s + '\'' +
-                ", name='" + name + '\'' +
-                ", create_date_tdt=" + create_date_tdt +
-                ", creator_lcs='" + creator_lcs + '\'' +
-                ", modified_date_tdt=" + modified_date_tdt +
-                ", modifier_lcs='" + modifier_lcs + '\'' +
-                ", public_doc_b=" + public_doc_b +
-                ", protected_object_b=" + protected_object_b +
-                ", deny_acl_ss=" + deny_acl_ss +
-                ", allow_acl_ss=" + allow_acl_ss +
-                ", title_parseable='" + title_parseable + '\'' +
-                ", title_parseable_lcs='" + title_parseable_lcs + '\'' +
-                ", description_parseable='" + description_parseable + '\'' +
-                ", description_no_html_tags_parseable='" + description_no_html_tags_parseable + '\'' +
-                ", notes_no_html_tags_parseable='" + notes_no_html_tags_parseable + '\'' +
-                ", incident_date_tdt=" + incident_date_tdt +
-                ", dueDate_tdt=" + dueDate_tdt +
-                ", priority_lcs='" + priority_lcs + '\'' +
-                ", assignee_id_lcs='" + assignee_id_lcs + '\'' +
-                ", assignee_first_name_lcs='" + assignee_first_name_lcs + '\'' +
-                ", assignee_last_name_lcs='" + assignee_last_name_lcs + '\'' +
-                ", assignee_full_name_lcs='" + assignee_full_name_lcs + '\'' +
-                ", incident_type_lcs='" + incident_type_lcs + '\'' +
-                ", tag_token_lcs='" + tag_token_lcs + '\'' +
-                ", status_lcs='" + status_lcs + '\'' +
-                ", person_title_lcs='" + person_title_lcs + '\'' +
-                ", first_name_lcs='" + first_name_lcs + '\'' +
-                ", last_name_lcs='" + last_name_lcs + '\'' +
-                ", full_name_lcs='" + full_name_lcs + '\'' +
-                ", email_lcs='" + email_lcs + '\'' +
-                ", type_lcs='" + type_lcs + '\'' +
-                ", value_parseable='" + value_parseable + '\'' +
-                ", location_street_address_lcs='" + location_street_address_lcs + '\'' +
-                ", location_city_lcs='" + location_city_lcs + '\'' +
-                ", location_state_lcs='" + location_state_lcs + '\'' +
-                ", location_postal_code_sdo='" + location_postal_code_sdo + '\'' +
-                ", child_id_s='" + child_id_s + '\'' +
-                ", child_type_s='" + child_type_s + '\'' +
-                ", parent_id_s='" + parent_id_s + '\'' +
-                ", parent_type_s='" + parent_type_s + '\'' +
-                ", parent_name_t='" + parent_name_t + '\'' +
-                ", parent_number_lcs='" + parent_number_lcs + '\'' +
-                ", organization_id_ss=" + organization_id_ss +
-                ", postal_address_id_ss=" + postal_address_id_ss +
-                ", contact_method_ss=" + contact_method_ss +
-                ", supervisor_id_s='" + supervisor_id_s + '\'' +
-                ", child_id_ss=" + child_id_ss +
-                ", member_id_ss=" + member_id_ss +
-                ", groups_id_ss=" + groups_id_ss +
-                ", adhocTask_b=" + adhocTask_b +
-                ", owner_lcs='" + owner_lcs + '\'' +
-                ", business_process_name_lcs='" + business_process_name_lcs + '\'' +
-                ", business_process_id_i='" + business_process_id_i + '\'' +
-                ", content_type='" + content_type + '\'' +
-                ", ecmFileId='" + ecmFileId + '\'' +
-                ", tags_ss=" + tags_ss +
-                ", state_lcs='" + state_lcs + '\'' +
-                ", data_lcs='" + data_lcs + '\'' +
-                ", action_lcs='" + action_lcs + '\'' +
-                ", notification_type_lcs='" + notification_type_lcs + '\'' +
-                ", parent_ref_s='" + parent_ref_s + '\'' +
-                ", hidden_b=" + hidden_b +
-                '}';
+        return "SolrAdvancedSearchDocument{" + "id='" + id + '\'' + ", object_id_s='" + object_id_s + '\'' + ", object_type_s='"
+                + object_type_s + '\'' + ", object_sub_type_s='" + object_sub_type_s + '\'' + ", name='" + name + '\''
+                + ", create_date_tdt=" + create_date_tdt + ", creator_lcs='" + creator_lcs + '\'' + ", modified_date_tdt="
+                + modified_date_tdt + ", modifier_lcs='" + modifier_lcs + '\'' + ", public_doc_b=" + public_doc_b + ", protected_object_b="
+                + protected_object_b + ", deny_acl_ss=" + deny_acl_ss + ", allow_acl_ss=" + allow_acl_ss + ", title_parseable='"
+                + title_parseable + '\'' + ", title_parseable_lcs='" + title_parseable_lcs + '\'' + ", description_parseable='"
+                + description_parseable + '\'' + ", description_no_html_tags_parseable='" + description_no_html_tags_parseable + '\''
+                + ", notes_no_html_tags_parseable='" + notes_no_html_tags_parseable + '\'' + ", incident_date_tdt=" + incident_date_tdt
+                + ", dueDate_tdt=" + dueDate_tdt + ", priority_lcs='" + priority_lcs + '\'' + ", assignee_id_lcs='" + assignee_id_lcs + '\''
+                + ", assignee_first_name_lcs='" + assignee_first_name_lcs + '\'' + ", assignee_last_name_lcs='" + assignee_last_name_lcs
+                + '\'' + ", assignee_full_name_lcs='" + assignee_full_name_lcs + '\'' + ", incident_type_lcs='" + incident_type_lcs + '\''
+                + ", tag_token_lcs='" + tag_token_lcs + '\'' + ", status_lcs='" + status_lcs + '\'' + ", person_title_lcs='"
+                + person_title_lcs + '\'' + ", first_name_lcs='" + first_name_lcs + '\'' + ", last_name_lcs='" + last_name_lcs + '\''
+                + ", full_name_lcs='" + full_name_lcs + '\'' + ", email_lcs='" + email_lcs + '\'' + ", type_lcs='" + type_lcs + '\''
+                + ", value_parseable='" + value_parseable + '\'' + ", location_street_address_lcs='" + location_street_address_lcs + '\''
+                + ", location_city_lcs='" + location_city_lcs + '\'' + ", location_state_lcs='" + location_state_lcs + '\''
+                + ", location_postal_code_sdo='" + location_postal_code_sdo + '\'' + ", child_id_s='" + child_id_s + '\''
+                + ", child_type_s='" + child_type_s + '\'' + ", parent_id_s='" + parent_id_s + '\'' + ", parent_type_s='" + parent_type_s
+                + '\'' + ", parent_name_t='" + parent_name_t + '\'' + ", parent_number_lcs='" + parent_number_lcs + '\''
+                + ", organization_id_ss=" + organization_id_ss + ", postal_address_id_ss=" + postal_address_id_ss + ", contact_method_ss="
+                + contact_method_ss + ", supervisor_id_s='" + supervisor_id_s + '\'' + ", child_id_ss=" + child_id_ss + ", member_id_ss="
+                + member_id_ss + ", groups_id_ss=" + groups_id_ss + ", adhocTask_b=" + adhocTask_b + ", owner_lcs='" + owner_lcs + '\''
+                + ", business_process_name_lcs='" + business_process_name_lcs + '\'' + ", business_process_id_i='" + business_process_id_i
+                + '\'' + ", content_type='" + content_type + '\'' + ", ecmFileId='" + ecmFileId + '\'' + ", tags_ss=" + tags_ss
+                + ", state_lcs='" + state_lcs + '\'' + ", data_lcs='" + data_lcs + '\'' + ", action_lcs='" + action_lcs + '\''
+                + ", notification_type_lcs='" + notification_type_lcs + '\'' + ", parent_ref_s='" + parent_ref_s + '\'' + ", hidden_b="
+                + hidden_b + '}';
     }
 }
