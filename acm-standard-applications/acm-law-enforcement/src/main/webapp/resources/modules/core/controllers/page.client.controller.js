@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('core').controller('PageController', ['$scope', '$modal', 'Acm.LoginService', 'LoginWarningService',
-    function ($scope, $modal, AcmLoginService, LoginWarningService)
+angular.module('core').controller('PageController', ['$scope', '$modal', 'UtilService', 'Acm.LoginService', 'LoginWarningService',
+    function ($scope, $modal, Util, AcmLoginService, LoginWarningService)
     {
         $scope.isLeftMenuCollapsed = false;
 
@@ -13,10 +13,10 @@ angular.module('core').controller('PageController', ['$scope', '$modal', 'Acm.Lo
         LoginWarningService.queryLoginWarning().then(
             function (data)
             {
-                if (data.enabled)
+                if (Util.goodMapValue(data, "enabled", false))
                 {
-                    var warningAccepted = sessionStorage.getItem('warningAccepted');
-                    if (!warningAccepted)
+                    //if (! sessionStorage.getItem('warningAccepted'))
+                    if (!LoginWarningService.getWarningAccepted())
                     {
                         showModalWarning(data);
                     }
@@ -56,10 +56,11 @@ angular.module('core').controller('PageController', ['$scope', '$modal', 'Acm.Lo
             });
             modalInstance.result.then(function (data)
             {
-                if (data.accepted)
+                if (Util.goodMapValue(data, "accepted", false))
                 {
                     //put in local/session storage that user has accepted warning
-                    sessionStorage.setItem('warningAccepted', true);
+                    //sessionStorage.setItem('warningAccepted', true);
+                    LoginWarningService.setWarningAccepted(true);
                 }
                 else
                 {
