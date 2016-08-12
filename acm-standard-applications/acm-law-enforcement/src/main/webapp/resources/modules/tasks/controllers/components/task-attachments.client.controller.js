@@ -1,9 +1,11 @@
 'use strict';
 
 angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$stateParams', '$modal'
-    , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Task.InfoService', 'Helper.ObjectBrowserService', 'DocTreeService', 'PermissionsService'
+    , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Task.InfoService', 'Helper.ObjectBrowserService', 'DocTreeService', 
+    'PermissionsService', 'DocTreeExt.Core'
     , function ($scope, $stateParams, $modal
-        , Util, ConfigService, ObjectService, ObjectLookupService, TaskInfoService, HelperObjectBrowserService, DocTreeService, PermissionsService) {
+        , Util, ConfigService, ObjectService, ObjectLookupService, TaskInfoService, HelperObjectBrowserService, DocTreeService, 
+        PermissionsService, DocTreeExtCore) {
 
         ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.TASK).then(
             function (formTypes) {
@@ -57,7 +59,8 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
 
         $scope.onInitTree = function(treeControl) {
             $scope.treeControl = treeControl;
-
+            DocTreeExtCore.handleCheckout(treeControl, $scope);
+            
             treeControl.addCommandHandler({
                 name: "remove"
                 , onAllowCmd: function(nodes) {
