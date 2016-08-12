@@ -2,11 +2,18 @@
 
 angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$stateParams', '$modal'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Task.InfoService', 'Helper.ObjectBrowserService', 'DocTreeService', 
-    'PermissionsService', 'DocTreeExt.Core'
+    'PermissionsService', 'DocTreeExt.Core', 'Authentication'
     , function ($scope, $stateParams, $modal
         , Util, ConfigService, ObjectService, ObjectLookupService, TaskInfoService, HelperObjectBrowserService, DocTreeService, 
-        PermissionsService, DocTreeExtCore) {
+        PermissionsService, DocTreeExtCore, Authentication) {
 
+		Authentication.queryUserInfo().then(
+            function (userInfo) {
+                $scope.user = userInfo.userId;
+                return userInfo;
+            }
+        );
+	
         ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.TASK).then(
             function (formTypes) {
                 $scope.fileTypes = $scope.fileTypes || [];
