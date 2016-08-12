@@ -319,4 +319,8 @@
           class="com.armedia.acm.plugins.admin.web.api.GetPlainFormTargetsAPIController">
         <property name="plainConfigurationFormFactory" ref="plainConfigurationFormFactory"/>
     </bean>
+
+    <bean id="historyMaxAPIController"
+          class="com.armedia.acm.plugins.admin.web.api.HistoryMaxAPIController">
+            </bean>
 </beans>

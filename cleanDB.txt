@@ -1,0 +1,5 @@
+# Delete audit log entries older than X days
+DELETE FROM acm_audit_log WHERE cm_audit_datetime < CURRENT_TIMESTAMP - INTERVAL 'X days'
+
+# Delete notifications older than X days 
+DELETE FROM acm_notification WHERE cm_notification_created < CURRENT_TIMESTAMP - INTERVAL 'X days'
