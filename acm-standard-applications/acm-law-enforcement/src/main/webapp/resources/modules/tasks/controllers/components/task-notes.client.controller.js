@@ -9,12 +9,11 @@ angular.module('tasks').controller('Tasks.NotesController', ['$scope', '$statePa
                 currentObjectId: $stateParams.id,
                 isReadOnly: false
             };
-            config.enableSorting = true; //temp fix before find out why the flag is not set by the config service
             $scope.config = config;
             return config;
 
         });
-/*
+
         var componentHelper = new HelperObjectBrowserService.Component(
             {
                 scope : $scope,
@@ -48,8 +47,6 @@ angular.module('tasks').controller('Tasks.NotesController', ['$scope', '$statePa
             });
 
         };
-
-*/
     }
 
 ]);
