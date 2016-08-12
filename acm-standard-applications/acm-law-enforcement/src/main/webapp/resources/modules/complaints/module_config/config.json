@@ -317,7 +317,6 @@
           "id": "notes",
           "type": "component",
           "model": "noteCount",
-          "enableSorting": true,
           "columnDefs": [
             {
               "name": "note",

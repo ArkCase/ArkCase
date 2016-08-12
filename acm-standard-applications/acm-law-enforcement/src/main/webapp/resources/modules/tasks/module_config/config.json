@@ -776,6 +776,7 @@
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
+      "enableSorting": true,
       "paginationPageSizes": [
         5,
         10,

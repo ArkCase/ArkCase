@@ -8,7 +8,6 @@ angular.module('complaints').controller('Complaints.NotesController', ['$scope',
                 objectType: ObjectService.ObjectTypes.COMPLAINT,
                 currentObjectId: $stateParams.id
             };
-            config.enableSorting = true; //temp fix before find out why the flag is not set by the config service
             $scope.config = config;
             return config;
         });
