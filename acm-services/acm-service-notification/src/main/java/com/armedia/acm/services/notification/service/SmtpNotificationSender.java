@@ -9,7 +9,7 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.service.outlook.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksResultDTO;
-import com.armedia.acm.service.outlook.model.OutlookEventSentEvent;
+import com.armedia.acm.services.notification.model.SmtpEventSentEvent;
 import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
@@ -125,20 +125,15 @@ public class SmtpNotificationSender implements NotificationSender, ApplicationEv
                 exception = e;
             }
 
-            OutlookEventSentEvent event = new OutlookEventSentEvent(in, user.getUserId(), 0L, "SENT_EMAIL");
-
-            if (exception == null)
+            if (exception != null)
             {
-                event.setSucceeded(true);
-            }
-            else
-            {
-                event.setSucceeded(false);
                 LOG.error("Email message not sent ...", exception);
             }
-
-            eventPublisher.publishEvent(event);
         }
+
+        SmtpEventSentEvent event = new SmtpEventSentEvent(in, user.getUserId());
+        event.setSucceeded(true);
+        eventPublisher.publishEvent(event);
     }
 
     @Override
@@ -162,21 +157,21 @@ public class SmtpNotificationSender implements NotificationSender, ApplicationEv
                 exception = e;
             }
 
-            OutlookEventSentEvent event = new OutlookEventSentEvent(in, user.getUserId(), 0L, "SENT_EMAIL");
 
             if (exception != null)
             {
                 emailResultList.add(new EmailWithEmbeddedLinksResultDTO(emailAddress, false));
-                event.setSucceeded(false);
                 LOG.error("Email message not sent ...", exception);
             } else
             {
                 emailResultList.add(new EmailWithEmbeddedLinksResultDTO(emailAddress, true));
-                event.setSucceeded(true);
             }
 
-            eventPublisher.publishEvent(event);
         }
+
+        SmtpEventSentEvent event = new SmtpEventSentEvent(in, user.getUserId());
+        event.setSucceeded(true);
+        eventPublisher.publishEvent(event);
 
         return emailResultList;
     }
