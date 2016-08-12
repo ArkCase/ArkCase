@@ -148,10 +148,10 @@
     "security.selectPrivileges.name": "Name",
     "security.modules": "Modules",
     "security.modules.module": "Module",
-    "security.auditHistory": "Audit History",
+    "admin.security.auditHistory": "Audit History",
     "security.auditHistory.config": {
       "title": "Audit History",
-      "historyDays.label": "How long to keep audit events (in days)",
+      "historyDays.label": "Keep Audit and Notification events (in days)",
       "apply.label": "Apply"
     },
     "dashboard.title": "Dashboard",

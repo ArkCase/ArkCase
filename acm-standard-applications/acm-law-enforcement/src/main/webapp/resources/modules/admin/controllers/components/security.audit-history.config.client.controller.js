@@ -5,24 +5,22 @@ angular.module('admin').controller('Admin.AuditHistoryController', ['$scope', '$
     , function ($scope, $q, $modal, $translate
         , Util, ApplicationSettingsService, DialogService
     ) {
-        /*
         var saved = {};
+        // Replace with loading setting from backend.
         ApplicationSettingsService.getProperty(ApplicationSettingsService.PROPERTIES.IDLE_LIMIT).then(function (response) {
-            $scope.idleLimit = Util.goodValue(response.data[ApplicationSettingsService.PROPERTIES.IDLE_LIMIT], 600000);
-            saved.idleLimit = $scope.idleLimit;
+            $scope.historyDays = Util.goodValue(response.data[ApplicationSettingsService.PROPERTIES.IDLE_LIMIT], 30);
+            saved.historyDays = $scope.historyDays;
         });
 
         $scope.applyChanges = function () {
-            if (saved.idleLimit != $scope.idleLimit) {
-                ApplicationSettingsService.setProperty(
-                        ApplicationSettingsService.PROPERTIES.IDLE_LIMIT,
-                        $scope.idleLimit
-                );
-                saved.idleLimit = $scope.idleLimit;
+            if (saved.historyDays != $scope.historyDays) {
+                // Save setting on backend.
 
+                saved.historyDays = $scope.historyDays;
+
+                // Replace with "successfully saved" message.
                 DialogService.alert($translate.instant("admin.application.login.config.inform"));
             }
         }
-        */
     }
 ]);
