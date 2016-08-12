@@ -21,6 +21,37 @@ angular.module('services').factory('LoginWarningService', ['$resource', 'Acm.Sto
 
         Service.SessionCacheNames = {
             LoginWarning: "AcmLoginWarning"
+            , WarningAccepted: "warningAccepted"
+        };
+
+        /**
+         * @ngdoc method
+         * @name getWarningAccepted
+         * @methodOf services.service:LoginWarning
+         *
+         * @description
+         * Get warning accepted status
+         *
+         * @returns {boolean} Return warning accepted status
+         */
+        Service.getWarningAccepted = function () {
+            var cacheWarningAccepted = new Store.SessionData(Service.SessionCacheNames.WarningAccepted);
+            return cacheWarningAccepted.get();
+        };
+
+        /**
+         * @ngdoc method
+         * @name setWarningAccepted
+         * @methodOf services.service:LoginWarning
+         *
+         * @param {boolean} warningAccepted  Warning accepted status
+         *
+         * @description
+         * Set warning accepted status
+         */
+        Service.setWarningAccepted = function (warningAccepted) {
+            var cacheWarningAccepted = new Store.SessionData(Service.SessionCacheNames.WarningAccepted);
+            return cacheWarningAccepted.set(warningAccepted);
         };
 
         /**
@@ -34,15 +65,15 @@ angular.module('services').factory('LoginWarningService', ['$resource', 'Acm.Sto
          * @returns {Object} Promise
          */
         Service.queryLoginWarning = function () {
-            var cacheUserInfo = new Store.SessionData(Service.SessionCacheNames.LoginWarning);
-            var warningInfo = cacheUserInfo.get();
+            var cacheLoginWarning = new Store.SessionData(Service.SessionCacheNames.LoginWarning);
+            var warningInfo = cacheLoginWarning.get();
             return Util.serviceCall({
                 service: Service._queryLoginWarning
                 , result: warningInfo
                 , onSuccess: function (data) {
                     if (Service.validateWarningInfo(data)) {
                         warningInfo = data;
-                        cacheUserInfo.set(warningInfo);
+                        cacheLoginWarning.set(warningInfo);
                         return warningInfo;
                     }
                 }
@@ -70,6 +101,7 @@ angular.module('services').factory('LoginWarningService', ['$resource', 'Acm.Sto
             }
             return true;
         };
+
         return Service;
     }
 ]);

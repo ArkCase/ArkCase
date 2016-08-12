@@ -14,12 +14,13 @@ angular.module('dashboard.locations', ['adf.provider'])
             );
     })
     .controller('Dashboard.LocationsController', ['$scope', '$translate', '$stateParams', '$q', 'UtilService'
-        , 'Complaint.InfoService', 'Authentication', 'Dashboard.DashboardService', 'ConfigService', 'Helper.ObjectBrowserService',
+        , 'Complaint.InfoService', 'Authentication', 'Dashboard.DashboardService', 'ConfigService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
         function ($scope, $translate, $stateParams, $q, Util, ComplaintInfoService, Authentication, DashboardService, ConfigService
-        , HelperObjectBrowserService) {
+        , HelperObjectBrowserService, HelperUiGridService) {
 
             var promiseConfig;
             var promiseInfo;
+            var promiseUsers;
             var modules = [
                 {name: "COMPLAINT", configName: "complaints", getInfo: ComplaintInfoService.getComplaintInfo}
             ];
@@ -37,8 +38,9 @@ angular.module('dashboard.locations', ['adf.provider'])
             if (module && Util.goodPositive(currentObjectId, false)) {
                 promiseConfig = ConfigService.getModuleConfig(module.configName);
                 promiseInfo = module.getInfo(currentObjectId);
+                promiseUsers = HelperUiGridService.getUsers();
 
-                $q.all([promiseConfig, promiseInfo]).then(function (data) {
+                $q.all([promiseConfig, promiseInfo, promiseUsers]).then(function (data) {
                         var config = _.find(data[0].components, {id: "main"});
                         var info = data[1];
                         var widgetInfo = _.find(config.widgets, function (widget) {
@@ -56,6 +58,8 @@ angular.module('dashboard.locations', ['adf.provider'])
                             //No location data to show
                             $scope.gridOptions.totalItems = 0;
                         }
+
+                        HelperUiGridService.setUserNameFilter(promiseUsers);
                     },
                     function (err) {
 

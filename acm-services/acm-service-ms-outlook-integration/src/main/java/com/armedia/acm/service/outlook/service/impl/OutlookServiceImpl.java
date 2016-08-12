@@ -357,7 +357,8 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
             {
                 InputStream contents = getEcmFileService().downloadAsInputStream(attachmentId);
                 EcmFile ecmFile = getEcmFileService().findById(attachmentId);
-                emailMessage.getAttachments().addFileAttachment(ecmFile.getFileName(), contents);
+                emailMessage.getAttachments().addFileAttachment(ecmFile.getFileName() + ecmFile.getFileActiveVersionNameExtension(),
+                        contents);
                 attachedFiles.add(ecmFile);
             }
         }
