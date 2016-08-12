@@ -106,6 +106,9 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
     ////////////////// for objects that own contact methods, e.g. persons /////////////////////
     private List<String> contact_method_ss;
 
+    ////////////////// for objects that own aliases, e.g persons /////////////////////
+    private List<String> person_alias_ss;
+
     ///////////////// for objects that have multiple children, supervisor, members ... e.g. group ///////////////////
     private String supervisor_id_s;
     private List<String> child_id_ss;
@@ -493,6 +496,16 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
     public void setContact_method_ss(List<String> contact_method_ss)
     {
         this.contact_method_ss = contact_method_ss;
+    }
+
+    public List<String> getPerson_alias_ss()
+    {
+        return person_alias_ss;
+    }
+
+    public void setPerson_alias_ss(List<String> person_alias_ss)
+    {
+        this.person_alias_ss = person_alias_ss;
     }
 
     public Date getCreate_date_tdt()

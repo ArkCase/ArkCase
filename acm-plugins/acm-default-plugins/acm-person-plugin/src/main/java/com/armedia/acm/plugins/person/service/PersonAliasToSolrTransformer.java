@@ -1,7 +1,7 @@
 package com.armedia.acm.plugins.person.service;
 
-import com.armedia.acm.plugins.person.dao.OrganizationDao;
-import com.armedia.acm.plugins.person.model.Organization;
+import com.armedia.acm.plugins.person.dao.PersonAliasDao;
+import com.armedia.acm.plugins.person.model.PersonAlias;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
@@ -12,37 +12,44 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by armdev on 10/27/14.
+ * Created by will.phillips on 8/4/2016.
  */
-public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransformer<Organization>
+public class PersonAliasToSolrTransformer implements AcmObjectToSolrDocTransformer<PersonAlias>
 {
 
-    private OrganizationDao organizationDao;
+    private PersonAliasDao personAliasDao;
     private UserDao userDao;
 
     @Override
-    public List<Organization> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
+    public List<PersonAlias> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
     {
-        return getOrganizationDao().findModifiedSince(lastModified, start, pageSize);
+        return getPersonAliasDao().findModifiedSince(lastModified, start, pageSize);
     }
 
     @Override
-    public SolrAdvancedSearchDocument toSolrAdvancedSearch(Organization org)
+    public SolrAdvancedSearchDocument toSolrAdvancedSearch(PersonAlias org)
     {
         SolrAdvancedSearchDocument orgDoc = new SolrAdvancedSearchDocument();
-        orgDoc.setId(org.getOrganizationId() + "-ORGANIZATION");
-        orgDoc.setObject_type_s("ORGANIZATION");
-        orgDoc.setObject_id_s(org.getOrganizationId() + "");
+        orgDoc.setId(org.getId() + "-PERSON-ALIAS");
+        orgDoc.setObject_type_s("PERSON-ALIAS");
+        orgDoc.setObject_id_s(org.getId() + "");
+
+        if (org.getPerson() != null && org.getPerson().getId() != null)
+        {
+            orgDoc.setParent_type_s("PERSON");
+            orgDoc.setParent_id_s(Long.toString(org.getPerson().getId()));
+            orgDoc.setParent_ref_s(Long.toString(org.getPerson().getId()) + "-PERSON");
+        }
 
         orgDoc.setCreate_date_tdt(org.getCreated());
         orgDoc.setCreator_lcs(org.getCreator());
         orgDoc.setModified_date_tdt(org.getModified());
         orgDoc.setModifier_lcs(org.getModifier());
 
-        orgDoc.setType_lcs(org.getOrganizationType());
-        orgDoc.setValue_parseable(org.getOrganizationValue());
+        orgDoc.setType_lcs(org.getAliasType());
+        orgDoc.setValue_parseable(org.getAliasValue());
 
-        orgDoc.setName(org.getOrganizationValue());
+        orgDoc.setName(org.getAliasValue());
 
         /** Additional properties for full names instead of ID's */
         AcmUser creator = getUserDao().quietFindByUserId(org.getCreator());
@@ -60,15 +67,15 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
         return orgDoc;
     }
 
-    // No implementation needed because we don't want Organization indexed in the SolrQuickSearch
+    // No implementation needed because we don't want PersonAlias indexed in the SolrQuickSearch
     @Override
-    public SolrDocument toSolrQuickSearch(Organization in)
+    public SolrDocument toSolrQuickSearch(PersonAlias in)
     {
         return null;
     }
 
     @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(Organization in)
+    public SolrAdvancedSearchDocument toContentFileIndex(PersonAlias in)
     {
         // No implementation needed
         return null;
@@ -77,17 +84,17 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
     @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
-        return Organization.class.equals(acmObjectType);
+        return PersonAlias.class.equals(acmObjectType);
     }
 
-    public OrganizationDao getOrganizationDao()
+    public PersonAliasDao getPersonAliasDao()
     {
-        return organizationDao;
+        return personAliasDao;
     }
 
-    public void setOrganizationDao(OrganizationDao organizationDao)
+    public void setPersonAliasDao(PersonAliasDao personAliasDao)
     {
-        this.organizationDao = organizationDao;
+        this.personAliasDao = personAliasDao;
     }
 
     public UserDao getUserDao()

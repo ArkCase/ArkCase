@@ -15,12 +15,13 @@ angular.module('dashboard.participants', ['adf.provider'])
     })
     .controller('Dashboard.ParticipantsController', ['$scope', '$translate', '$stateParams', '$q', 'UtilService'
         , 'Case.InfoService', 'Complaint.InfoService','Authentication', 'Dashboard.DashboardService', 'ConfigService'
-        , 'Helper.ObjectBrowserService',
+        , 'Helper.ObjectBrowserService', 'Helper.UiGridService',
         function ($scope, $translate, $stateParams, $q, Util, CaseInfoService, ComplaintInfoService, Authentication
-            , DashboardService, ConfigService, HelperObjectBrowserService) {
+            , DashboardService, ConfigService, HelperObjectBrowserService, HelperUiGridService) {
 
             var promiseConfig;
             var promiseInfo;
+            var promiseUsers;
             var modules = [
                 {name: "CASE_FILE", configName: "cases", getInfo: CaseInfoService.getCaseInfo}
                 , {name: "COMPLAINT", configName: "complaints", getInfo: ComplaintInfoService.getComplaintInfo}
@@ -39,8 +40,9 @@ angular.module('dashboard.participants', ['adf.provider'])
             if (module && Util.goodPositive(currentObjectId, false)) {
                 promiseConfig = ConfigService.getModuleConfig(module.configName);
                 promiseInfo = module.getInfo(currentObjectId);
+                promiseUsers = HelperUiGridService.getUsers();
 
-                $q.all([promiseConfig, promiseInfo]).then(function (data) {
+                $q.all([promiseConfig, promiseInfo, promiseUsers]).then(function (data) {
                         var config = _.find(data[0].components, {id: "main"});
                         var info = data[1];
                         var widgetInfo = _.find(config.widgets, function (widget) {
@@ -51,6 +53,8 @@ angular.module('dashboard.participants', ['adf.provider'])
 
                         $scope.gridOptions.data = info.participants;
                         $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
+
+                        HelperUiGridService.setUserNameFilter(promiseUsers);
                     },
                     function (err) {
 

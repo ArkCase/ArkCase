@@ -5,6 +5,7 @@ import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.Person;
+import com.armedia.acm.plugins.person.model.PersonAlias;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
@@ -58,6 +59,8 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
         addOrganizations(person, solrDoc);
 
         addAddresses(person, solrDoc);
+
+        addAliases(person, solrDoc);
 
         /** Additional properties for full names instead of ID's */
         AcmUser creator = getUserDao().quietFindByUserId(person.getCreator());
@@ -122,6 +125,19 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
         solrDoc.setContact_method_ss(contactMethodIds);
     }
 
+    private void addAliases(Person person, SolrAdvancedSearchDocument solrDoc)
+    {
+        List<String> aliasIds = new ArrayList<>();
+        if (person.getPersonAliases() != null)
+        {
+            for (PersonAlias pa : person.getPersonAliases())
+            {
+                aliasIds.add(pa.getId() + "-PERSON-ALIAS");
+            }
+        }
+        solrDoc.setPerson_alias_ss(aliasIds);
+    }
+
     @Override
     public SolrDocument toSolrQuickSearch(Person in)
     {
@@ -137,15 +153,7 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
     @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
-        boolean objectNotNull = acmObjectType != null;
-        String ourClassName = Person.class.getName();
-        String theirClassName = acmObjectType.getName();
-        boolean classNames = theirClassName.equals(ourClassName);
-        boolean isSupported = objectNotNull && classNames;
-
-        log.trace("Incoming: " + acmObjectType.getName() + "; do we handle it? " + isSupported);
-
-        return isSupported;
+        return Person.class.equals(acmObjectType);
     }
 
     public PersonDao getPersonDao()

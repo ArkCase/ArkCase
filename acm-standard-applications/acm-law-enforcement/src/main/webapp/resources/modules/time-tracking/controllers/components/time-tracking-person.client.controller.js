@@ -21,12 +21,14 @@ angular.module('time-tracking').controller('TimeTracking.PersonController', ['$s
         });
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+        var promiseUsers = gridHelper.getUsers();
 
         var onConfigRetrieved = function (config) {
             $scope.config = config;
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
+            gridHelper.setUserNameFilter(promiseUsers);
         };
 
         var onObjectInfoRetrieved = function (objectInfo) {
