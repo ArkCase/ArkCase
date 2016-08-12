@@ -134,15 +134,7 @@ public class PersonContactToSolrTransformer implements AcmObjectToSolrDocTransfo
     @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
-        boolean objectNotNull = acmObjectType != null;
-        String ourClassName = PersonContact.class.getName();
-        String theirClassName = acmObjectType.getName();
-        boolean classNames = theirClassName.equals(ourClassName);
-        boolean isSupported = objectNotNull && classNames;
-
-        log.trace("Incoming: {}; do we handle it? {}", acmObjectType.getName(), isSupported);
-
-        return isSupported;
+        return PersonContact.class.equals(acmObjectType);
     }
 
     public PersonContactDao getPersonContactDao()
