@@ -182,7 +182,7 @@
         </sql>
     </changeSet>
 
-    <changeSet id="files-18-update-new-columns-in-acm-file" author="dmiller">
+    <changeSet id="files-18-update-new-columns-in-acm-file" author="dmiller" dbms="postgresql,oracle">
         <preConditions>
             <and>
                 <tableExists tableName="acm_object_association"/>
@@ -207,13 +207,47 @@
             AND af.cm_file_category IS NULL
         </sql>
     </changeSet>
+    <changeSet id="files-18-update-new-columns-in-acm-file-mssql" author="dmiller" dbms="mssql">
+        <preConditions>
+            <and>
+                <tableExists tableName="acm_object_association"/>
+                <columnExists tableName="acm_object_association" columnName="cm_target_category"/>
+            </and>
+        </preConditions>
+        <!-- ANSI standard SQL, should work on any database -->
+        <sql>
+            UPDATE acm_file
+            SET cm_file_category =
+            (SELECT DISTINCT aoa.cm_target_category
+            FROM acm_object_association aoa
+            WHERE aoa.cm_target_type = 'FILE'
+            AND aoa.cm_target_category IS NOT NULL
+            AND aoa.cm_target_id = acm_file.cm_file_id)
+            WHERE EXISTS
+            (SELECT 1
+            FROM acm_object_association aoa
+            WHERE aoa.cm_target_type = 'FILE'
+            AND aoa.cm_target_category IS NOT NULL
+            AND aoa.cm_target_id = acm_file.cm_file_id)
+            AND acm_file.cm_file_category IS NULL
+        </sql>
+    </changeSet>
 
-    <changeSet id="files-19-fix-acm-file-category" author="dmiller">
+    <changeSet id="files-19-fix-acm-file-category" author="dmiller" dbms="postgresql,oracle">
         <sql>
             UPDATE acm_file
             SET cm_file_category = INITCAP(cm_file_category)
             WHERE cm_file_category IS NOT NULL
         </sql>
+        <sql>
+            UPDATE acm_file
+            SET cm_file_category = 'Document'
+            WHERE cm_file_category IS NULL
+            OR cm_file_category NOT IN ('Document', 'Correspondence')
+        </sql>
+        <addNotNullConstraint tableName="acm_file" columnName="cm_file_category" columnDataType="VARCHAR(128)"/>
+    </changeSet>
+    <changeSet id="files-19-fix-acm-file-category-mssql" author="dmiller" dbms="mssql">
         <sql>
             UPDATE acm_file
             SET cm_file_category = 'Document'
@@ -229,7 +263,7 @@
          create new files for each case file that also has a file from a complaint... I hope
          that explanation is clear :-)  Basically, in the future, each ACM_FILE belongs to just the
          one folder.  -->
-    <changeSet id="files-20-update-file-folder-id-for-task" author="dmiller">
+    <changeSet id="files-20-update-file-folder-id-for-task" author="dmiller" dbms="postgresql,oracle">
         <sql>
             UPDATE acm_file af
             SET cm_folder_id =
@@ -253,7 +287,32 @@
             AND af.cm_folder_id IS NULL
         </sql>
     </changeSet>
-    <changeSet id="files-20-update-file-folder-id-for-complaint" author="dmiller">
+    <changeSet id="files-20-update-file-folder-id-for-task-mssql" author="dmiller" dbms="mssql">
+        <sql>
+            UPDATE acm_file
+            SET cm_folder_id =
+            (SELECT ac.cm_folder_id
+            FROM acm_object_association aoa,
+            acm_container ac
+            WHERE aoa.cm_target_type = 'FILE'
+            AND aoa.cm_parent_type = 'TASK'
+            AND aoa.cm_parent_type = ac.cm_object_type
+            AND aoa.cm_parent_id = ac.cm_object_id
+            AND aoa.cm_target_id = acm_file.cm_file_id)
+            WHERE EXISTS
+            (SELECT 1
+            FROM acm_object_association aoa,
+            acm_container ac
+            WHERE aoa.cm_target_type = 'FILE'
+            AND aoa.cm_parent_type = 'TASK'
+            AND aoa.cm_parent_type = ac.cm_object_type
+            AND aoa.cm_parent_id = ac.cm_object_id
+            AND aoa.cm_target_id = acm_file.cm_file_id)
+            AND acm_file.cm_folder_id IS NULL
+        </sql>
+    </changeSet>
+
+    <changeSet id="files-20-update-file-folder-id-for-complaint" author="dmiller" dbms="postgresql,oracle">
         <sql>
             UPDATE acm_file af
             SET cm_folder_id =
@@ -277,7 +336,32 @@
             AND af.cm_folder_id IS NULL
         </sql>
     </changeSet>
-    <changeSet id="files-21-update-file-folder-id-for-case" author="dmiller">
+    <changeSet id="files-20-update-file-folder-id-for-complaint-mssql" author="dmiller" dbms="mssql">
+        <sql>
+            UPDATE acm_file
+            SET cm_folder_id =
+            (SELECT ac.cm_folder_id
+            FROM acm_object_association aoa,
+            acm_container ac
+            WHERE aoa.cm_target_type = 'FILE'
+            AND aoa.cm_parent_type = 'COMPLAINT'
+            AND aoa.cm_parent_type = ac.cm_object_type
+            AND aoa.cm_parent_id = ac.cm_object_id
+            AND aoa.cm_target_id = acm_file.cm_file_id)
+            WHERE EXISTS
+            (SELECT 1
+            FROM acm_object_association aoa,
+            acm_container ac
+            WHERE aoa.cm_target_type = 'FILE'
+            AND aoa.cm_parent_type = 'COMPLAINT'
+            AND aoa.cm_parent_type = ac.cm_object_type
+            AND aoa.cm_parent_id = ac.cm_object_id
+            AND aoa.cm_target_id = acm_file.cm_file_id)
+            AND acm_file.cm_folder_id IS NULL
+        </sql>
+    </changeSet>
+
+    <changeSet id="files-21-update-file-folder-id-for-case" author="dmiller" dbms="postgresql,oracle">
         <sql>
             UPDATE acm_file af
             SET cm_folder_id =
@@ -301,7 +385,32 @@
             AND af.cm_folder_id IS NULL
         </sql>
     </changeSet>
-    <changeSet id="files-22-update-file-folder-id-for-profile-images" author="dmiller">
+    <changeSet id="files-21-update-file-folder-id-for-case-mssql" author="dmiller" dbms="mssql">
+        <sql>
+            UPDATE acm_file
+            SET cm_folder_id =
+            (SELECT ac.cm_folder_id
+            FROM acm_object_association aoa,
+            acm_container ac
+            WHERE aoa.cm_target_type = 'FILE'
+            AND aoa.cm_parent_type IN ('CASE_FILE', 'CASE')
+            AND ac.cm_object_type = 'CASE_FILE'
+            AND aoa.cm_parent_id = ac.cm_object_id
+            AND aoa.cm_target_id = acm_file.cm_file_id)
+            WHERE EXISTS
+            (SELECT 1
+            FROM acm_object_association aoa,
+            acm_container ac
+            WHERE aoa.cm_target_type = 'FILE'
+            AND aoa.cm_parent_type IN ('CASE_FILE', 'CASE')
+            AND ac.cm_object_type = 'CASE_FILE'
+            AND aoa.cm_parent_id = ac.cm_object_id
+            AND aoa.cm_target_id = acm_file.cm_file_id)
+            AND acm_file.cm_folder_id IS NULL
+        </sql>
+    </changeSet>
+
+    <changeSet id="files-22-update-file-folder-id-for-profile-images" author="dmiller" dbms="postgresql,oracle">
         <sql>
             UPDATE acm_file af
             SET cm_folder_id =
@@ -323,6 +432,30 @@
             AND aoa.cm_parent_id = ac.cm_object_id
             AND aoa.cm_target_id = af.cm_file_id)
             AND af.cm_folder_id IS NULL
+        </sql>
+    </changeSet>
+    <changeSet id="files-22-update-file-folder-id-for-profile-images" author="dmiller" dbms="mssql">
+        <sql>
+            UPDATE acm_file
+            SET cm_folder_id =
+            (SELECT ac.cm_folder_id
+            FROM acm_object_association aoa,
+            acm_container ac
+            WHERE aoa.cm_target_type = 'FILE'
+            AND aoa.cm_parent_type = 'PROFILE_IMG'
+            AND ac.cm_object_type = 'USER_ORG'
+            AND aoa.cm_parent_id = ac.cm_object_id
+            AND aoa.cm_target_id = acm_file.cm_file_id)
+            WHERE EXISTS
+            (SELECT 1
+            FROM acm_object_association aoa,
+            acm_container ac
+            WHERE aoa.cm_target_type = 'FILE'
+            AND aoa.cm_parent_type = 'PROFILE_IMG'
+            AND ac.cm_object_type = 'USER_ORG'
+            AND aoa.cm_parent_id = ac.cm_object_id
+            AND aoa.cm_target_id = acm_file.cm_file_id)
+            AND acm_file.cm_folder_id IS NULL
         </sql>
     </changeSet>
 
@@ -582,6 +715,70 @@
         <addColumn tableName="acm_file">
             <column name="cm_file_active_version_name_extension" type="VARCHAR(255)"/>
         </addColumn>
+    </changeSet>
+    <changeSet id="files-39-acm_file_version-add-mime-type" author="sasko.tanaskoski" dbms="mssql">
+        <sql>
+            UPDATE acm_file_version
+            SET cm_file_version_mime_type =
+            (
+            SELECT f.cm_file_mime_type
+            FROM acm_file f
+            WHERE acm_file_version.cm_file_id = f.cm_file_id
+            )
+            WHERE EXISTS
+            (
+            SELECT 1
+            FROM acm_file f
+            WHERE acm_file_version.cm_file_id = f.cm_file_id
+            )
+            AND acm_file_version.cm_file_version_mime_type = 'MIMETYPE'
+        </sql>
+        <renameColumn tableName="acm_file" oldColumnName="cm_file_mime_type"
+                      newColumnName="cm_file_active_version_mime_type" columnDataType="VARCHAR(1024)"/>
+        <addColumn tableName="acm_file">
+            <column name="cm_file_active_version_name_extension" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="files-40-acm-file-pop-extension" author="dmiller" dbms="postgresql">
+        <sql>
+            UPDATE acm_file
+            SET cm_file_active_version_name_extension =
+            SUBSTR(cm_file_name, LENGTH(cm_file_name) - STRPOS(REVERSE(cm_file_name), '.') + 1)
+            WHERE cm_file_active_version_name_extension IS NULL;
+        </sql>
+    </changeSet>
+    <changeSet id="files-40-acm-file-pop-extension" author="dmiller" dbms="mssql">
+        <sql>
+            UPDATE acm_file
+            SET cm_file_active_version_name_extension =
+            SUBSTRING(cm_file_name, LEN(cm_file_name) - CHARINDEX('.', REVERSE(cm_file_name)) + 1, CHARINDEX('.', REVERSE(cm_file_name)) + 1)
+            WHERE cm_file_active_version_name_extension IS NULL;
+        </sql>
+    </changeSet>
+
+    <!-- this SQL accounts for the common MIME types as found on the core dev site -->
+    <changeSet id="files-41-acm-file-version-pop-extension" author="dmiller" dbms="postgresql,mssql">
+        <sql>
+            UPDATE acm_file_version
+            SET cm_file_version_name_extension = CASE
+            WHEN (cm_file_version_mime_type like 'text/xml%') then '.xml'
+            WHEN (cm_file_version_mime_type like 'image/png%') then '.png'
+            WHEN (cm_file_version_mime_type like 'image/jpeg%') then '.jpg'
+            WHEN (cm_file_version_mime_type like 'application/pdf%') then '.pdf'
+            WHEN (cm_file_version_mime_type like 'text/plain%') then '.txt'
+            WHEN (cm_file_version_mime_type like
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document%') then '.docx'
+            WHEN (cm_file_version_mime_type like 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet%')
+            then '.xlsx'
+            WHEN (cm_file_version_mime_type like
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation%') then '.pptx'
+            WHEN (cm_file_version_mime_type like 'application/msword') then '.doc'
+            WHEN (cm_file_version_mime_type like 'text/x-java') then '.java'
+            ELSE NULL
+            END
+            WHERE cm_file_version_name_extension IS NULL;
+        </sql>
     </changeSet>
 
 </databaseChangeLog>

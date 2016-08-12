@@ -6,7 +6,6 @@ import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileDownloadedEvent;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
-
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
@@ -22,11 +21,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import java.io.IOException;
 import java.io.InputStream;
 
-@RequestMapping({ "/api/v1/plugin/ecm", "/api/latest/plugin/ecm" })
+@RequestMapping({"/api/v1/plugin/ecm", "/api/latest/plugin/ecm"})
 public class FileDownloadAPIController implements ApplicationEventPublisherAware
 {
     private MuleContextManager muleContextManager;
@@ -42,9 +40,9 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
     @RequestMapping(value = "/download", method = RequestMethod.GET)
     @ResponseBody
     public void downloadFileById(@RequestParam(value = "inline", required = false, defaultValue = "false") boolean inline,
-            @RequestParam(value = "ecmFileId", required = true, defaultValue = "0") Long fileId,
-            @RequestParam(value = "acm_email_ticket", required = false, defaultValue = "") String acm_email_ticket,
-            Authentication authentication, HttpSession httpSession, HttpServletResponse response)
+                                 @RequestParam(value = "ecmFileId", required = true, defaultValue = "0") Long fileId,
+                                 @RequestParam(value = "acm_email_ticket", required = false, defaultValue = "") String acm_email_ticket,
+                                 Authentication authentication, HttpSession httpSession, HttpServletResponse response)
             throws IOException, MuleException, AcmObjectNotFoundException
     {
         if (log.isInfoEnabled())
@@ -94,7 +92,10 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
         String mimeType = filePayload.getMimeType();
         String fileName = filePayload.getFileName();
 
-        if (!fileName.endsWith(ecmFile.getFileActiveVersionNameExtension()))
+        // endWith will throw a NullPointerException on a null argument.  But a file is not required to have an
+        // extension... so the extension can be null.  So we have to guard against it.
+        if (ecmFile != null && ecmFile.getFileActiveVersionNameExtension() != null
+                && !fileName.endsWith(ecmFile.getFileActiveVersionNameExtension()))
         {
             fileName = fileName + ecmFile.getFileActiveVersionNameExtension();
         }
