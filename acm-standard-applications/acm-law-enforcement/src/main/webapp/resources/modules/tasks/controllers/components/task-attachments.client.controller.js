@@ -60,6 +60,9 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
         $scope.onInitTree = function(treeControl) {
             $scope.treeControl = treeControl;
             DocTreeExtCore.handleCheckout(treeControl, $scope);
+            DocTreeExtCore.handleCheckin(treeControl, $scope);
+            DocTreeExtCore.handleEditWithWord(treeControl, $scope);
+            DocTreeExtCore.handleCancelEditing(treeControl, $scope);
             
             treeControl.addCommandHandler({
                 name: "remove"
