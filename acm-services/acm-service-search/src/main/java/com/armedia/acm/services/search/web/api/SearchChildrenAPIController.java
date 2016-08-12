@@ -26,7 +26,7 @@ public class SearchChildrenAPIController
 
     @RequestMapping(value = "/children", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String children(           
+    public String children(
             @RequestParam(value = "parentType", required = true) String parentType,
             @RequestParam(value = "parentId", required = true) Long parentId,
             @RequestParam(value = "childType", required = false, defaultValue = "") String childType,
@@ -40,7 +40,7 @@ public class SearchChildrenAPIController
     ) throws MuleException
     {
         String query = "parent_object_type_s:" + parentType + " AND parent_object_id_i:"+ parentId;
-        
+
          if (!"".equals(childType))
         {
          query = query + " AND object_type_s:" + childType;
@@ -60,7 +60,55 @@ public class SearchChildrenAPIController
                 query += " AND " + extraParam;
             }
         }
-        
+
+        if ( log.isDebugEnabled() )
+        {
+            log.debug("User '" + authentication.getName() + "' is searching for '" + query + "'");
+        }
+
+        String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query,
+                startRow, maxRows, sort);
+
+        return results;
+    }
+
+    @RequestMapping(value = "/children/advanced", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String advancedChildren(
+            @RequestParam(value = "parentType", required = true) String parentType,
+            @RequestParam(value = "parentId", required = true) Long parentId,
+            @RequestParam(value = "childType", required = false, defaultValue = "") String childType,
+            @RequestParam(value = "activeOnly", required = false, defaultValue = "false") boolean activeOnly,
+            @RequestParam(value = "exceptDeletedOnly", required = false, defaultValue = "true") boolean exceptDeletedOnly,
+            @RequestParam(value = "extra", required = false) List<String> extra,
+            @RequestParam(value = "s", required = false, defaultValue = "") String sort,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+            @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
+            Authentication authentication
+    ) throws MuleException
+    {
+        String query = "parent_object_type_s:" + parentType + " AND parent_object_id_i:"+ parentId;
+
+        if (!"".equals(childType))
+        {
+            query = query + " AND object_type_s:" + childType;
+        }
+        if (activeOnly) {
+            query += " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED AND -status_s:CLOSE";
+        }
+        if (exceptDeletedOnly) {
+            if(!activeOnly){
+                query += " AND -status_s:DELETED";
+            }
+        }
+        if (extra != null && extra.size() > 0)
+        {
+            for (String extraParam : extra)
+            {
+                query += " AND " + extraParam;
+            }
+        }
+
         if ( log.isDebugEnabled() )
         {
             log.debug("User '" + authentication.getName() + "' is searching for '" + query + "'");
@@ -68,7 +116,7 @@ public class SearchChildrenAPIController
 
         String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query,
                 startRow, maxRows, sort);
-     
+
         return results;
     }
 

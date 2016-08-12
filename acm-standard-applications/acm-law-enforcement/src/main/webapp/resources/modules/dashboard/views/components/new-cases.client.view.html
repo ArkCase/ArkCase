@@ -1,0 +1,19 @@
+<div>
+    <div ng-if="newCases.showChart">
+        <div class="panel-body">
+            </br>
+            <div class="chart-container">
+                <canvas id="line" class="chart chart-line" chart-data="newCases.data"
+                        chart-labels="newCases.labels"
+                        chart-series="newCases.series"
+                        chart-responsive="true"
+                        chart-legend="true"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="alert alert-info" ng-if="!newCases.showChart">
+        <p class="text-center">
+            <span translate>dashboard.widgets.newCases.noDataMessage</span>
+        </p>
+    </div>
+</div>
