@@ -12,6 +12,7 @@ public class TestsPoperties {
 	private static String SUPERVISOR_USER_PASSWORD;
 	private static String SUPERVISOR_USER_PASSWORD_CORE;
 	private static String BROWSER;
+	private static String REMOTE;
 
 	static {
 		FileInputStream fileInput;
@@ -27,6 +28,7 @@ public class TestsPoperties {
 			SUPERVISOR_USER_PASSWORD = properties.getProperty("user.supervisor.password");
 			SUPERVISOR_USER_PASSWORD_CORE=properties.getProperty("user.core.supervisor.password");
 			BROWSER=properties.getProperty("browser");
+			REMOTE=properties.getProperty("remote");
 			
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -55,6 +57,10 @@ public class TestsPoperties {
 	
 	public static String getBrowser() {
 		return BROWSER;
+	}
+	
+	public static String getRemoteInfo() {
+		return REMOTE;
 	}
 	
 }
