@@ -1,20 +1,20 @@
 <div ng-controller="Admin.SelectPrivilegesController">
-    <panel-view header="{{'admin.security.selectPrivileges' | translate}}" collapsible="false">
-        <div class="pull-right">
-            <div class="btn-group">
-                <button class="btn btn-sm btn-default" ng-click="editRole()" ng-disabled="editBtnDisabled"><i
-                        class="fa fa-edit"/>
-                    <span translate>admin.security.selectPrivileges.editRole</span>
-                </button>
-                <button class="btn btn-sm btn-default" ng-click="newRole()"><i
-                        class="fa fa-gears text"/>
-                    <span translate>admin.security.selectPrivileges.createRole</span>
-                </button>
-            </div>
-        </div>
-        <object-authorization-roles data="appRoles" object-display-name="name" on-object-selected="onObjSelect"
-                                    role-display-name="name"
-                                    on-auth-role-change="onAuthRoleSelected"
-                                    object-title="{{'admin.security.selectPrivileges.applicationRole' | translate}}"/>
-    </panel-view>
+	<div class="pull-right well">
+	    <div class="btn-group">
+	        <button class="btn btn-sm btn-default" ng-click="editRole()" ng-disabled="editBtnDisabled"><i
+	                class="fa fa-edit"/>
+	            <span translate>admin.security.selectPrivileges.editRole</span>
+	        </button>
+	        <button class="btn btn-sm btn-default" ng-click="newRole()"><i
+	                class="fa fa-gears text"/>
+	            <span translate>admin.security.selectPrivileges.createRole</span>
+	        </button>
+	    </div>
+	</div>
+	<panel-view header="{{'admin.security.selectPrivileges' | translate}}" collapsible="false">
+	    <object-authorization-roles data="appRoles" object-display-name="name" on-object-selected="onObjSelect"
+	                                role-display-name="name"
+	                                on-auth-role-change="onAuthRoleSelected"
+	                                object-title="{{'admin.security.selectPrivileges.applicationRole' | translate}}"/>
+	</panel-view>
 </div>
