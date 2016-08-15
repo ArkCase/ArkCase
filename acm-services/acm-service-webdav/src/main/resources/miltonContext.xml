@@ -36,8 +36,6 @@
         <property name="enableCompression" value="false"/>
         <property name="buffering" value="never"/>
         <property name="enabledJson" value="false"/>
-        <property name="enableFormAuth" value="false"/>
-        <property name="webdavEnabled" value="true"/>
+        <property name="contextPath" value="webdav"/>
     </bean>
-    <bean id="basicAuthHandler" class="com.armedia.acm.webdav.handler.AcmBasicAuthHandler"/>
 </beans>

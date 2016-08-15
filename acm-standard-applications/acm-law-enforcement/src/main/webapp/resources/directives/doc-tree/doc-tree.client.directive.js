@@ -1430,11 +1430,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                                         var fileWebdavUrl = appUrl + "webdav/" + acmTicket + "/" + ObjectService.ObjectTypes.FILE + "/" + ObjectService.LockTypes.WORD_EDIT_LOCK + "/" +
                                             node.data.objectId + fileExt;
-                                        console.log(fileWebdavUrl);
 
-                                        ITHit.WebDAV.Client.DocManager.EditDocument(fileWebdavUrl, fileWebdavUrl, protocolInstallMessage);
+                                        ITHit.WebDAV.Client.DocManager.EditDocument(fileWebdavUrl, appUrl + "webdav", protocolInstallMessage);
                                         function protocolInstallMessage(message) {
-                                            console.log(message);
                                             var installerFilePath = appUrl + "assets/js/Plugins/" + ITHit.WebDAV.Client.DocManager.GetInstallFileName();
 
                                             if (confirm("Opening this type of file requires a protocol installation. Select OK to download the protocol installer.")) {
