@@ -1,21 +1,15 @@
 <div ng-controller="Admin.FormWorkflowsLinkController">
+	<div class="pull-right well">
+		<button class="btn btn-sm btn-default" ng-click="undoChanges()"><i
+		        class="fa fa-undo"/>
+		    <span translate>admin.formWorkflows.link.undo</span>
+		</button>
+		<button class="btn btn-sm btn-default" ng-click="saveChanges()"><i
+		        class="fa fa-save"/>
+		    <span translate>admin.formWorkflows.link.saveChanges</span>
+		</button>
+	</div>	
     <panel-view header="{{'admin.formWorkflows.link' | translate}}" collapsible="false">
-        <div class="row">
-
-            <div class="pull-right">
-                <div class="btn-group">
-                    <button class="btn btn-sm btn-default" ng-click="undoChanges()"><i
-                            class="fa fa-undo"/>
-                        <span translate>admin.formWorkflows.link.undo</span>
-                    </button>
-                    <button class="btn btn-sm btn-default" ng-click="saveChanges()"><i
-                            class="fa fa-save"/>
-                        <span translate>admin.formWorkflows.link.saveChanges</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <div class="row">
             <hot-table
                     hot-id="formWorkflowsLink"
                     col-widths="columnsWidths"
@@ -29,6 +23,5 @@
                     height="750"
                     >
             </hot-table>
-        </div>
     </panel-view>
 </div>
