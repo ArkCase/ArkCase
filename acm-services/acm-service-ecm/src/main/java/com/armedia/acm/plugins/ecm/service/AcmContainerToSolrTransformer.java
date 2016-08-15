@@ -85,4 +85,10 @@ public class AcmContainerToSolrTransformer implements AcmObjectToSolrDocTransfor
     {
         this.dao = dao;
     }
+
+    @Override
+    public Class<?> getAcmObjectTypeSupported()
+    {
+        return AcmContainer.class;
+    }
 }
