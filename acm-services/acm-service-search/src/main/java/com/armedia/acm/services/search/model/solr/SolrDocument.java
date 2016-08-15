@@ -41,7 +41,8 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
     private String title_parseable;
     private String description_parseable;
 
-    /////////////////// for complaints, case files, tasks we introduce description and for personAssociation we introduce notes ////////////
+    /////////////////// for complaints, case files, tasks we introduce description and for personAssociation we
+    /////////////////// introduce notes ////////////
     private String description_no_html_tags_parseable;
     private String notes_no_html_tags_parseable;
 
@@ -49,7 +50,7 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
     private List<String> allow_acl_ss;
     private Long parent_object_id_i;
 
-    //////////////////disposition id and type //////////////////////////////////////
+    ////////////////// disposition id and type //////////////////////////////////////
     private String disposition_id_s;
     private String disposition_type_s;
 
@@ -70,23 +71,24 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
 
     private boolean hidden_b;
 
-    ///////////////for ASN /////////////////
+    /////////////// for ASN /////////////////
     private String notification_type_s;
 
     private String parent_ref_s;
 
     private String data_s;
 
-
-    ////for assigned tags/////////////////////
+    //// for assigned tags/////////////////////
     private String tag_token_lcs;
 
-    ////for tasks associated with business processes/////////////////////
+    //// for tasks associated with business processes/////////////////////
     private Long business_process_id_i;
     private String business_process_name_lcs;
 
-    ///for sorting related fieds///
+    /// for sorting related fieds///
     private String title_parseable_lcs;
+
+    private String ext_s;
 
     @Override
     public String getId()
@@ -594,60 +596,37 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
         this.title_parseable_lcs = title_parseable_lcs;
     }
 
+    public String getExt_s()
+    {
+        return ext_s;
+    }
+
+    public void setExt_s(String ext_s)
+    {
+        this.ext_s = ext_s;
+    }
+
     @Override
     public String toString()
     {
-        return "SolrDocument{" +
-                "id='" + id + '\'' +
-                ", status_s='" + status_s + '\'' +
-                ", author='" + author + '\'' +
-                ", author_s='" + author_s + '\'' +
-                ", modifier_s='" + modifier_s + '\'' +
-                ", last_modified_tdt=" + last_modified_tdt +
-                ", create_tdt=" + create_tdt +
-                ", due_tdt=" + due_tdt +
-                ", title_t='" + title_t + '\'' +
-                ", name='" + name + '\'' +
-                ", object_id_s='" + object_id_s + '\'' +
-                ", owner_s='" + owner_s + '\'' +
-                ", object_type_s='" + object_type_s + '\'' +
-                ", assignee_s='" + assignee_s + '\'' +
-                ", priority_i=" + priority_i +
-                ", priority_s='" + priority_s + '\'' +
-                ", parent_object_type_s='" + parent_object_type_s + '\'' +
-                ", parent_object_id_s='" + parent_object_id_s + '\'' +
-                ", adhocTask_b=" + adhocTask_b +
-                ", target_object_number_s='" + target_object_number_s + '\'' +
-                ", public_doc_b=" + public_doc_b +
-                ", protected_object_b=" + protected_object_b +
-                ", title_parseable='" + title_parseable + '\'' +
-                ", title_parseable_lcs='" + title_parseable_lcs + '\'' +
-                ", description_parseable='" + description_parseable + '\'' +
-                ", description_no_html_tags_parseable='" + description_no_html_tags_parseable + '\'' +
-                ", notes_no_html_tags_parseable='" + notes_no_html_tags_parseable + '\'' +
-                ", deny_acl_ss=" + deny_acl_ss +
-                ", allow_acl_ss=" + allow_acl_ss +
-                ", parent_object_id_i=" + parent_object_id_i +
-                ", disposition_id_s='" + disposition_id_s + '\'' +
-                ", disposition_type_s='" + disposition_type_s + '\'' +
-                ", startDate_s=" + startDate_s +
-                ", endDate_s=" + endDate_s +
-                ", folder_id_i=" + folder_id_i +
-                ", folder_name_s='" + folder_name_s + '\'' +
-                ", type_s='" + type_s + '\'' +
-                ", version_s='" + version_s + '\'' +
-                ", name_lcs='" + name_lcs + '\'' +
-                ", parent_folder_id_i=" + parent_folder_id_i +
-                ", category_s='" + category_s + '\'' +
-                ", cmis_version_series_id_s='" + cmis_version_series_id_s + '\'' +
-                ", mime_type_s='" + mime_type_s + '\'' +
-                ", hidden_b=" + hidden_b +
-                ", notification_type_s='" + notification_type_s + '\'' +
-                ", parent_ref_s='" + parent_ref_s + '\'' +
-                ", data_s='" + data_s + '\'' +
-                ", tag_token_lcs='" + tag_token_lcs + '\'' +
-                ", business_process_name_lcs='" + business_process_name_lcs + '\'' +
-                ", business_process_id_i='" + business_process_id_i + '\'' +
-                '}';
+        return "SolrDocument{" + "id='" + id + '\'' + ", status_s='" + status_s + '\'' + ", author='" + author + '\'' + ", author_s='"
+                + author_s + '\'' + ", modifier_s='" + modifier_s + '\'' + ", last_modified_tdt=" + last_modified_tdt + ", create_tdt="
+                + create_tdt + ", due_tdt=" + due_tdt + ", title_t='" + title_t + '\'' + ", name='" + name + '\'' + ", object_id_s='"
+                + object_id_s + '\'' + ", owner_s='" + owner_s + '\'' + ", object_type_s='" + object_type_s + '\'' + ", assignee_s='"
+                + assignee_s + '\'' + ", priority_i=" + priority_i + ", priority_s='" + priority_s + '\'' + ", parent_object_type_s='"
+                + parent_object_type_s + '\'' + ", parent_object_id_s='" + parent_object_id_s + '\'' + ", adhocTask_b=" + adhocTask_b
+                + ", target_object_number_s='" + target_object_number_s + '\'' + ", public_doc_b=" + public_doc_b + ", protected_object_b="
+                + protected_object_b + ", title_parseable='" + title_parseable + '\'' + ", title_parseable_lcs='" + title_parseable_lcs
+                + '\'' + ", description_parseable='" + description_parseable + '\'' + ", description_no_html_tags_parseable='"
+                + description_no_html_tags_parseable + '\'' + ", notes_no_html_tags_parseable='" + notes_no_html_tags_parseable + '\''
+                + ", deny_acl_ss=" + deny_acl_ss + ", allow_acl_ss=" + allow_acl_ss + ", parent_object_id_i=" + parent_object_id_i
+                + ", disposition_id_s='" + disposition_id_s + '\'' + ", disposition_type_s='" + disposition_type_s + '\'' + ", startDate_s="
+                + startDate_s + ", endDate_s=" + endDate_s + ", folder_id_i=" + folder_id_i + ", folder_name_s='" + folder_name_s + '\''
+                + ", type_s='" + type_s + '\'' + ", version_s='" + version_s + '\'' + ", name_lcs='" + name_lcs + '\''
+                + ", parent_folder_id_i=" + parent_folder_id_i + ", category_s='" + category_s + '\'' + ", cmis_version_series_id_s='"
+                + cmis_version_series_id_s + '\'' + ", mime_type_s='" + mime_type_s + '\'' + ", hidden_b=" + hidden_b
+                + ", notification_type_s='" + notification_type_s + '\'' + ", parent_ref_s='" + parent_ref_s + '\'' + ", data_s='" + data_s
+                + '\'' + ", tag_token_lcs='" + tag_token_lcs + '\'' + ", business_process_name_lcs='" + business_process_name_lcs + '\''
+                + ", business_process_id_i='" + business_process_id_i + '\'' + '}';
     }
 }

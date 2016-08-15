@@ -4,9 +4,12 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
+import com.thoughtworks.selenium.webdriven.commands.WaitForCondition;
 
 public class ReportsPage extends ArkCaseTestBase {
 
@@ -33,12 +36,14 @@ public class ReportsPage extends ArkCaseTestBase {
 	WebElement reportTable;
 
 	public ReportsPage ReportsMenuClick() {
-
-		ReportsLink.click();
-		return this;
+       WebDriverWait wait = new WebDriverWait(driver, 10); 
+       WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(".//*[@title='Reports']")));
+	   ReportsLink.click();
+	return this;
 	}
 
 	public ReportsPage selectReport(String report) {
+		selectReport.click();
 		new Select(driver.findElement(By.id("selectionReports"))).selectByVisibleText(report);
 		return this;
 	}
@@ -73,6 +78,8 @@ public class ReportsPage extends ArkCaseTestBase {
 	}
 
 	public ReportsPage generateReport(String report, String state, String datefrom, String dateto) {
+		WebDriverWait wait = new WebDriverWait(driver, 10); 
+	    WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.id("selectionReports")));	    
 		selectReport(report);
 		selectState(state);
 		insertDateFrom(datefrom);
