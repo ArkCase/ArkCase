@@ -132,7 +132,8 @@ public class SmtpNotificationSender implements NotificationSender, ApplicationEv
         }
 
         SmtpEventSentEvent event = new SmtpEventSentEvent(in, user.getUserId());
-        event.setSucceeded(true);
+        boolean success = (exception == null);
+        event.setSucceeded(success);
         eventPublisher.publishEvent(event);
     }
 
@@ -170,7 +171,8 @@ public class SmtpNotificationSender implements NotificationSender, ApplicationEv
         }
 
         SmtpEventSentEvent event = new SmtpEventSentEvent(in, user.getUserId());
-        event.setSucceeded(true);
+        boolean success = (exception == null);
+        event.setSucceeded(success);
         eventPublisher.publishEvent(event);
 
         return emailResultList;
