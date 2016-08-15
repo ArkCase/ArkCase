@@ -230,7 +230,7 @@
             }
           },
           {
-            "title": "Edit With Word",
+            "title": "Edit",
             "cmd": "editWithWord",
             "uiIcon": "ui-icon-pencil",
             "disabledExpression": "!(new RegExp(Util.goodMapValue(DocTree.treeConfig, 'wordFileExtensionRegex', '\\.(doc|docx|pdf|xlsx|xls|ppt)$'), 'i').test(nodes[0].data.name))"
