@@ -34,7 +34,7 @@
     "multi-download": "~2.0.0",
     "ng-file-upload": "~7.0.17",
     "ng-file-upload-shim": "~7.0.17",
-    "ui-contextmenu": "~1.11.0",
+    "ui-contextmenu": "~1.12.0",
     "ngBootbox": "~0.1.1",
     "ngHandsontable": "~0.7.0",
     "ng-tags-input": "~3.0.0",
@@ -46,6 +46,7 @@
   },
   "resolutions": {
     "angular": "~1.4.7",
-    "angular-ui-utils": "~3.0.0"
+    "angular-ui-utils": "~3.0.0",
+    "ui-contextmenu": "~1.12.0"
   }
 }
