@@ -15,7 +15,7 @@ public class SmtpEventSentEvent extends AcmEvent
         super(source);
         setUserId(userId);
         setEventDate(new Date());
-        setEventType("SMTP SEND");
+        setEventType("SMTP_SEND");
     }
 
     @Override
