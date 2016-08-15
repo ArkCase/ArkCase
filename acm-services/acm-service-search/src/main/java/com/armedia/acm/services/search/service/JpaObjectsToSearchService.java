@@ -124,31 +124,35 @@ public class JpaObjectsToSearchService implements ApplicationListener<AcmDatabas
         for (Class<?> clazz : objects.keySet())
         {
             List<AcmObjectToSolrDocTransformer> transformers = typeTransformerMap.get(clazz);
-            for (Object jpaObject : objects.get(clazz))
+            if (transformers != null)
             {
-                for (AcmObjectToSolrDocTransformer transformer : transformers)
+                for (Object jpaObject : objects.get(clazz))
                 {
-                    // transformers can return null if they don't want to add to the advanced or quick search repo...
-
-                    SolrAdvancedSearchDocument advancedSearchDocument = transformer.toSolrAdvancedSearch(jpaObject);
-                    if (advancedSearchDocument != null)
+                    for (AcmObjectToSolrDocTransformer transformer : transformers)
                     {
-                        solrAdvancedSearchDocs.add(advancedSearchDocument);
+                        // transformers can return null if they don't want to add to the advanced or quick search
+                        // repo...
+
+                        SolrAdvancedSearchDocument advancedSearchDocument = transformer.toSolrAdvancedSearch(jpaObject);
+                        if (advancedSearchDocument != null)
+                        {
+                            solrAdvancedSearchDocs.add(advancedSearchDocument);
+                        }
+
+                        SolrDocument quickSearchDocument = transformer.toSolrQuickSearch(jpaObject);
+                        if (quickSearchDocument != null)
+                        {
+                            solrQuickSearchDocs.add(quickSearchDocument);
+                        }
+
+                        SolrAdvancedSearchDocument contentFileDocument = transformer.toContentFileIndex(jpaObject);
+
+                        if (contentFileDocument != null)
+                        {
+                            solrContentFileDocs.add(contentFileDocument);
+                        }
+
                     }
-
-                    SolrDocument quickSearchDocument = transformer.toSolrQuickSearch(jpaObject);
-                    if (quickSearchDocument != null)
-                    {
-                        solrQuickSearchDocs.add(quickSearchDocument);
-                    }
-
-                    SolrAdvancedSearchDocument contentFileDocument = transformer.toContentFileIndex(jpaObject);
-
-                    if (contentFileDocument != null)
-                    {
-                        solrContentFileDocs.add(contentFileDocument);
-                    }
-
                 }
             }
         }
