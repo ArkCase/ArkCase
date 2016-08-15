@@ -3,17 +3,30 @@
  */
 
 angular.module('admin')
-    .controller('Admin.DashboardConfigController', ['$scope', 'Admin.DashboardConfigService', function ($scope, dashboardConfigService) {
+    .controller('Admin.DashboardConfigController', ['$scope', 'Admin.DashboardConfigService', 'ConfigService', function ($scope, dashboardConfigService, ConfigService) {
+
         var tempWidgetsPromise = dashboardConfigService.getRolesByWidgets();
         $scope.widgets = [];
         $scope.widgetsMap = [];
         tempWidgetsPromise.then(function (payload) {
             angular.forEach(payload.data, function (widget) {
-                var element = new Object;
-                element.name = widget.name;
-                element.key = widget.widgetName;
-                $scope.widgets.push(element);
-                $scope.widgetsMap[widget.widgetName] = widget;
+                ConfigService.getModuleConfig("dashboard").then(function (data) {
+                    var cfg = _.find(data.components, {id: widget.widgetName});
+                    // var widgetInfo = _.find(cfg, function (w) {
+                    //     return w.id === widget.widgetName;
+                    // });
+
+                    var element = new Object;
+                    if (cfg != null) {
+                        element.name = cfg.title;
+                    } else {
+                        element.name = widget.name;
+                    }
+                    element.key = widget.widgetName;
+                    $scope.widgets.push(element);
+                    $scope.widgetsMap[widget.widgetName] = widget;
+
+                });
             });
         });
 
