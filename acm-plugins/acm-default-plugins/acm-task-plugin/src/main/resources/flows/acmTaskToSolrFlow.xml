@@ -27,8 +27,6 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
         <timer-interceptor/>
 
         <echo-component doc:name="Echo"/>
-        <logger level="DEBUG" category="com.armedia.acm.plugins.task.service"
-                message="acmTaskToSolr: Running transformer"/>
         <scripting:transformer name="extractAcmTaskTransformer">
             <scripting:script engine="groovy">
                 <scripting:text><![CDATA[
