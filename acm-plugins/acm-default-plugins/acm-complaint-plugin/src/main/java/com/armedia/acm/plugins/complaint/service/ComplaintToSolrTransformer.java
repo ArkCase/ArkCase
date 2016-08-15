@@ -119,7 +119,6 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
         return solr;
     }
 
-
     private String setTitleProperty(Complaint complaint)
     {
         String title = complaint.getComplaintTitle();
@@ -152,13 +151,7 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
     @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
-        boolean objectNotNull = acmObjectType != null;
-        String ourClassName = Complaint.class.getName();
-        String theirClassName = acmObjectType.getName();
-        boolean classNames = theirClassName.equals(ourClassName);
-        boolean isSupported = objectNotNull && classNames;
-
-        return isSupported;
+        return Complaint.class.equals(acmObjectType);
     }
 
     public UserDao getUserDao()
@@ -189,5 +182,11 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
     public void setSearchAccessControlFields(SearchAccessControlFields searchAccessControlFields)
     {
         this.searchAccessControlFields = searchAccessControlFields;
+    }
+
+    @Override
+    public Class<?> getAcmObjectTypeSupported()
+    {
+        return Complaint.class;
     }
 }
