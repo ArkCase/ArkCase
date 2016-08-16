@@ -5,6 +5,7 @@ import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileEmailedEvent;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.service.outlook.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksDTO;
@@ -16,6 +17,7 @@ import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenCon
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
+import com.armedia.acm.services.tag.model.AcmAssociatedTag;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.mule.api.MuleException;
@@ -103,8 +105,10 @@ public class SmtpNotificationSender implements NotificationSender, ApplicationEv
         Map<String, Object> messageProps = loadSmtpAndOriginatingProperties();
         messageProps.put("subject", in.getSubject());
 
+        boolean firstIteration = true;
         for (String emailAddress : in.getEmailAddresses())
         {
+            List<SmtpEventSentEvent> sentEvents = new ArrayList<>();
             try
             {
                 messageProps.put("to", emailAddress);
@@ -115,6 +119,11 @@ public class SmtpNotificationSender implements NotificationSender, ApplicationEv
                     EcmFile ecmFile = getEcmFileService().findById(attachmentId);
                     attachments.put(ecmFile.getFileName() + ecmFile.getFileActiveVersionNameExtension(), new DataHandler(
                             new InputStreamDataSource(contents, ecmFile.getFileName() + ecmFile.getFileActiveVersionNameExtension())));
+
+                    if (firstIteration)
+                    {
+                        sentEvents.add(new SmtpEventSentEvent(ecmFile, user.getUserId(), ecmFile.getParentObjectId(), ecmFile.getParentObjectType()));
+                    }
                 }
                 MuleMessage received = getMuleContextManager().send(flow, makeNote(emailAddress, in, authentication), attachments,
                         messageProps);
@@ -129,12 +138,20 @@ public class SmtpNotificationSender implements NotificationSender, ApplicationEv
             {
                 LOG.error("Email message not sent ...", exception);
             }
+
+            if (firstIteration)
+            {
+                for (SmtpEventSentEvent event : sentEvents)
+                {
+                    boolean success = (exception == null);
+                    event.setSucceeded(success);
+                    eventPublisher.publishEvent(event);
+                }
+                firstIteration = false;
+            }
         }
 
-        SmtpEventSentEvent event = new SmtpEventSentEvent(in, user.getUserId());
-        boolean success = (exception == null);
-        event.setSucceeded(success);
-        eventPublisher.publishEvent(event);
+
     }
 
     @Override
