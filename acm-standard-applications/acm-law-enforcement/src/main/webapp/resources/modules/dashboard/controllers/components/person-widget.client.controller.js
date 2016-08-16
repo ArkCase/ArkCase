@@ -15,13 +15,12 @@ angular.module('dashboard.person', ['adf.provider'])
     })
     .controller('Dashboard.PersonController', ['$scope', '$translate', '$stateParams', '$q', 'UtilService'
         , 'Authentication', 'Dashboard.DashboardService', 'ConfigService', 'CostTracking.InfoService', 'TimeTracking.InfoService'
-        , 'Helper.ObjectBrowserService', 'Helper.UiGridService',
+        , 'Helper.ObjectBrowserService',
         function ($scope, $translate, $stateParams, $q, Util, Authentication, DashboardService, ConfigService, CostTrackingInfoService
-        , TimeTrackingInfoService, HelperObjectBrowserService, HelperUiGridService) {
+        , TimeTrackingInfoService, HelperObjectBrowserService) {
 
             var promiseConfig;
             var promiseInfo;
-            var promiseUsers;
             var modules = [
                 {name: "COSTSHEET", configName: "cost-tracking", getInfo: CostTrackingInfoService.getCostsheetInfo}
                 , {name: "TIMESHEET", configName: "time-tracking", getInfo: TimeTrackingInfoService.getTimesheetInfo}
@@ -41,7 +40,6 @@ angular.module('dashboard.person', ['adf.provider'])
             if (module && Util.goodPositive(currentObjectId, false)) {
                 promiseConfig = ConfigService.getModuleConfig(module.configName);
                 promiseInfo = module.getInfo(currentObjectId);
-                promiseUsers = HelperUiGridService.getUsers();
 
                 $q.all([promiseConfig, promiseInfo, promiseUsers]).then(function (data) {
                         var config = _.find(data[0].components, {id: "main"});
@@ -55,8 +53,6 @@ angular.module('dashboard.person', ['adf.provider'])
                         $scope.costsheetInfo = info;
                         $scope.gridOptions = $scope.gridOptions || {};
                         $scope.gridOptions.data = [$scope.costsheetInfo.user];
-
-                        HelperUiGridService.setUserNameFilter(promiseUsers);
                     },
                     function (err) {
 

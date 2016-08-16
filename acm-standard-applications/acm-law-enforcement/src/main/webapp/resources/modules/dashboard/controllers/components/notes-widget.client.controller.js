@@ -15,9 +15,9 @@ angular.module('dashboard.notes', ['adf.provider'])
     })
     .controller('Dashboard.NotesController', ['$scope', '$translate', '$stateParams', '$q', 'UtilService'
         , 'Case.InfoService', 'Complaint.InfoService','Authentication', 'Dashboard.DashboardService', 'ObjectService'
-        , 'Object.NoteService', 'ConfigService', 'Helper.ObjectBrowserService',
+        , 'Object.NoteService', 'ConfigService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
         function ($scope, $translate, $stateParams, $q, Util, CaseInfoService, ComplaintInfoService, Authentication
-            , DashboardService, ObjectService, ObjectNoteService, ConfigService, HelperObjectBrowserService) {
+            , DashboardService, ObjectService, ObjectNoteService, ConfigService, HelperObjectBrowserService, HelperUiGridService) {
 
             var promiseConfig;
             var promiseInfo;
@@ -41,6 +41,8 @@ angular.module('dashboard.notes', ['adf.provider'])
             if (module && Util.goodPositive(currentObjectId, false)) {
                 promiseConfig = ConfigService.getModuleConfig(module.configName);
                 promiseInfo = module.getInfo(module.objectType, currentObjectId);
+                var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+                var promiseUsers = gridHelper.getUsers();
 
                 $q.all([promiseConfig, promiseInfo]).then(function (data) {
                         var config = _.find(data[0].components, {id: "main"});
@@ -54,6 +56,8 @@ angular.module('dashboard.notes', ['adf.provider'])
                         var notes = info;
                         $scope.gridOptions.data = notes;
                         $scope.gridOptions.totalItems = notes ? notes.length : 0;
+
+                        gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
                     },
                     function (err) {
 
