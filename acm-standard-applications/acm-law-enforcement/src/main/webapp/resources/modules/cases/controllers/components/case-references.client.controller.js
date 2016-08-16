@@ -42,7 +42,14 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
 
             var targetType = Util.goodMapValue(rowEntity, "targetType");
             var targetId = Util.goodMapValue(rowEntity, "targetId");
-            gridHelper.showObject(targetType, targetId);
+           // gridHelper.showObject(targetType, targetId);
+            
+            $scope.$bus.publish('object-tree.select', {
+            	nodeId : targetId,
+            	nodeType : targetType,
+            	pageStart : 0,
+            	subKey : null
+            });
         };
 
         ConfigService.getModuleConfig("cases").then(function (moduleConfig) {
