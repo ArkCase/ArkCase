@@ -9,6 +9,7 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.service.outlook.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksResultDTO;
+import com.armedia.acm.services.notification.model.SmtpEventSentEvent;
 import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
@@ -21,6 +22,8 @@ import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
 
 import javax.activation.DataHandler;
@@ -31,7 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SmtpNotificationSender implements NotificationSender
+public class SmtpNotificationSender implements NotificationSender, ApplicationEventPublisherAware
 {
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
@@ -44,6 +47,13 @@ public class SmtpNotificationSender implements NotificationSender
     private AuthenticationTokenDao authenticationTokenDao;
     private EcmFileService ecmFileService;
     String flow = "vm://sendEmailViaSmtp.in";
+    private ApplicationEventPublisher eventPublisher;
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+    {
+        eventPublisher = applicationEventPublisher;
+    }
 
     @Override
     public Notification send(Notification notification)
@@ -118,11 +128,17 @@ public class SmtpNotificationSender implements NotificationSender
             {
                 exception = e;
             }
+
             if (exception != null)
             {
                 LOG.error("Email message not sent ...", exception);
             }
         }
+
+        SmtpEventSentEvent event = new SmtpEventSentEvent(in, user.getUserId());
+        boolean success = (exception == null);
+        event.setSucceeded(success);
+        eventPublisher.publishEvent(event);
     }
 
     @Override
@@ -145,6 +161,8 @@ public class SmtpNotificationSender implements NotificationSender
             {
                 exception = e;
             }
+
+
             if (exception != null)
             {
                 emailResultList.add(new EmailWithEmbeddedLinksResultDTO(emailAddress, false));
@@ -153,7 +171,13 @@ public class SmtpNotificationSender implements NotificationSender
             {
                 emailResultList.add(new EmailWithEmbeddedLinksResultDTO(emailAddress, true));
             }
+
         }
+
+        SmtpEventSentEvent event = new SmtpEventSentEvent(in, user.getUserId());
+        boolean success = (exception == null);
+        event.setSucceeded(success);
+        eventPublisher.publishEvent(event);
 
         return emailResultList;
     }

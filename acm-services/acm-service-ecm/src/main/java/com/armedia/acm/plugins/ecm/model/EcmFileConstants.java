@@ -50,19 +50,19 @@ public interface EcmFileConstants
     String CONTAINER_FOLDER_NAME = "ROOT";
 
     String CATEGORY_ALL = "all";
-    
+
     /**
-	 * Regex for characters that are not allowed while creating folder name
-	 */
-	String INVALID_CHARACTERS_IN_FOLDER_NAME_REGEX = "[/?<>\\\\:*|\"^]";
-	
-	String INVALID_CHARACTERS_IN_FOLDER_NAME_REPLACEMENT = "_";
-	
-	/**
-	 * These four properties we need for searching them in mimeType property for the file
-	 */
-	String MIME_TYPE_XML = "text/xml";
-	String MIME_TYPE_FREVVO_URL = "www.frevvo.com";
+     * Regex for characters that are not allowed while creating folder name
+     */
+    String INVALID_CHARACTERS_IN_FOLDER_NAME_REGEX = "[/?<>\\\\:*|\"^]";
+
+    String INVALID_CHARACTERS_IN_FOLDER_NAME_REPLACEMENT = "_";
+
+    /**
+     * These four properties we need for searching them in mimeType property for the file
+     */
+    String MIME_TYPE_XML = "text/xml";
+    String MIME_TYPE_FREVVO_URL = "www.frevvo.com";
     String MIME_TYPE_PNG = "image/png";
     String MIME_TYPE_FREVVO_SIGNATURE_KEY = "frevvo-signature-image=true";
 
@@ -92,4 +92,5 @@ public interface EcmFileConstants
     String ACTIVE = "ACTIVE";
 
     String FIND_CONTAINER_BY_CALENDAR_FOLDER_QUERY = "SELECT c FROM AcmContainer c WHERE c.calendarFolderId = :folderId";
+    String FILE_MIME_TYPE = "fileMimeType";
 }
