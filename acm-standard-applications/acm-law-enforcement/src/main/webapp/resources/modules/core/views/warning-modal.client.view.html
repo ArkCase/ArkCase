@@ -2,11 +2,10 @@
 </div>
 <div class="modal-body">
     <form name="warningForm">
-        <div>
-            {{message}}
-        </div>
+        <div ng-bind-html="message"></div>
         <div class="checkbox">
-            <label for="checkbox_warning"><input type="checkbox" id="checkbox_warning" required ng-model="temp" />{{'core.loginWarning.checkbox_warning.label' | translate }}</label>
+            <label for="checkbox_warning"><input type="checkbox" id="checkbox_warning" required ng-model="temp"/>{{'core.loginWarning.checkbox_warning.label'
+                | translate }}</label>
         </div>
     </form>
 </div>
@@ -15,6 +14,6 @@
         <span translate>core.loginWarning.btnCancel.text</span>
     </button>
     <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="warningForm.$invalid">
-        <span translate >core.loginWarning.btnOK.text</span>
+        <span translate>core.loginWarning.btnOK.text</span>
     </button>
 </div>
