@@ -1,10 +1,10 @@
 <div ng-controller="Admin.WorkflowsConfigController">
 	<div class="pull-right well">
-		<button class="btn btn-sm btn-default" ng-click="editRole()" ng-disabled="editBtnDisabled"><i
+		<button class="btn btn-sm btn-link" ng-click="editRole()" ng-disabled="editBtnDisabled"><i
 		        class="fa fa-sitemap"/>
 		    <span translate>admin.workflows.config.btn.createNew</span>
 		</button>
-		<button class="btn btn-sm btn-default" ngf-select="uploadDefinition($file)" ng-disabled="uploadingInProgress"
+		<button class="btn btn-sm btn-link" ngf-select="uploadDefinition($file)" ng-disabled="uploadingInProgress"
 		        data-ng-model="selectedBPMNFile" accept="application/xml"><i
 		        class="fa fa-cloud-upload text"/>
 		    <span translate>admin.workflows.config.btn.uploadNew</span>
