@@ -27,7 +27,6 @@ public class ArkCaseTestBase {
 	public static String screenshotLocatie = System.getProperty("user.home")
 			+ "/.arkcase/seleniumTests/seleniumReports";
 	public ExtentReports report;
-
 	@Rule
 	public ScreenshotTaker screenShootRule = new ScreenshotTaker(driver, screenshotLocatie, report);
 
@@ -39,39 +38,33 @@ public class ArkCaseTestBase {
 		String remote = TestsPoperties.getRemoteInfo();
 		String hubip =TestsPoperties.getHubIP();
 		String hubport =TestsPoperties.getHubPort();
-		switch (remote) {
+		DesiredCapabilities cap = new DesiredCapabilities();
+		switch (remote) 		
+		{		
 		case "yes":
-		{
+		{			
 			switch (browser){
 			case "firefox": {
-				DesiredCapabilities cap = DesiredCapabilities.firefox();
-				driver = new RemoteWebDriver(new URL("http://" + hubip + ":" + hubport + "/wd/hub"), cap);				
+				cap = DesiredCapabilities.firefox();
+						
 				break;
 			}
 			case "chrome": {
-				DesiredCapabilities cap = DesiredCapabilities.chrome();
-				driver = new RemoteWebDriver(new URL("http://" + hubip + ":" + hubport + "/wd/hub"), cap);				
+			    cap = DesiredCapabilities.chrome();							
 				break;
 			}
 			case "ie":{
-				DesiredCapabilities cap = DesiredCapabilities.internetExplorer();
-				driver = new RemoteWebDriver(new URL("http://" + hubip + ":" + hubport + "/wd/hub"), cap);					
+				cap = DesiredCapabilities.internetExplorer();								
 				break;
 			}
 			case "safari":{
-				DesiredCapabilities cap = DesiredCapabilities.safari();
-				driver = new RemoteWebDriver(new URL("http://" + hubip + ":" + hubport + "/wd/hub"), cap);			
+				cap = DesiredCapabilities.safari();						
 				break;
+			}	     	
 			}
-			
-	     	//change localhost:2222 with 10.21.10.50:4444
-			}				
-			driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
-			driver.manage().window().maximize();
-			break;
-			
-		}
-			
+			driver = new RemoteWebDriver(new URL("http://" + hubip + ":" + hubport + "/wd/hub"), cap);				
+			break;			
+		}			
 		case "no":
 		{			
 			switch (browser) {
@@ -86,59 +79,33 @@ public class ArkCaseTestBase {
 								+ "text/plain; " + "img/png" + "text/csv");
 				fprofile.setPreference("browser.download.manager.showWhenStarting", false);
 				fprofile.setPreference("pdfjs.disabled", true);
-				driver = new FirefoxDriver();
-				driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
-				// baseUrl = TestsPoperties.getBaseUrlCore();
-				driver.manage().window().maximize();
+				driver = new FirefoxDriver();				
 				break;
 			}
 			case "ie": {
 				String exe = (System.getProperty("user.home") + "/.arkcase/seleniumTests/drivers/IEDriverServer.exe");
 				System.setProperty("webdriver.ie.driver", exe);
-				driver = new InternetExplorerDriver();
-				driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
-				// baseUrl = TestsPoperties.getBaseUrlCore();
-				driver.manage().window().maximize();
+				driver = new InternetExplorerDriver();				
 				break;
 			}
 			case "chrome": {
 				String exePath = (System.getProperty("user.home") + "/.arkcase/seleniumTests/drivers/chromedriver.exe");
 				System.setProperty("webdriver.chrome.driver", exePath);
-				driver = new ChromeDriver();
-				driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
-				// baseUrl = TestsPoperties.getBaseUrlCore();
-				driver.manage().window().maximize();
+				driver = new ChromeDriver();				
 				break;
 			}
 			case "safari": {
-				driver = new SafariDriver();
-				driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
-				// baseUrl = TestsPoperties.getBaseUrlCore();
-				driver.manage().window().maximize();
+				driver = new SafariDriver();				
 				break;
 			}
-			}
+			}			
              break;
 		}
 		}
+		driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
+		// baseUrl = TestsPoperties.getBaseUrlCore();
+		driver.manage().window().maximize();
 		}
-		
-		
-			
-		
-		
-			
-		
-		
-		
-		
-     	
-		
-		//baseUrl = TestsPoperties.getBaseUrlCore();
-		
-
-	
-
 	@Before
 	public void logIn() {
 
