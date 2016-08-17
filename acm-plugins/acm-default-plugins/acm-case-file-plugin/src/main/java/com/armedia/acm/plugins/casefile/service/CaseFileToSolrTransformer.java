@@ -148,13 +148,7 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
     @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
-        boolean objectNotNull = acmObjectType != null;
-        String ourClassName = CaseFile.class.getName();
-        String theirClassName = acmObjectType.getName();
-        boolean classNames = theirClassName.equals(ourClassName);
-        boolean isSupported = objectNotNull && classNames;
-
-        return isSupported;
+        return CaseFile.class.equals(acmObjectType);
     }
 
     public UserDao getUserDao()
@@ -185,5 +179,11 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
     public void setSearchAccessControlFields(SearchAccessControlFields searchAccessControlFields)
     {
         this.searchAccessControlFields = searchAccessControlFields;
+    }
+
+    @Override
+    public Class<?> getAcmObjectTypeSupported()
+    {
+        return CaseFile.class;
     }
 }

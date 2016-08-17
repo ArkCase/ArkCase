@@ -236,10 +236,10 @@
             }
           },
           {
-            "title": "Edit With Word",
-            "cmd": "editWithWord",
+            "title": "Edit",
+            "cmd": "editWithWebDAV",
             "uiIcon": "ui-icon-pencil",
-            "disabledExpression": "!(new RegExp(Util.goodMapValue(DocTree.treeConfig, 'wordFileExtensionRegex', '\\.(doc|docx)$'), 'i').test(nodes[0].data.ext))"
+            "disabledExpression": "!(new RegExp(Util.goodMapValue(DocTree.treeConfig, 'fileExtensionRegex', '\\.(doc|docx|pdf|xlsx|xls|ppt)$'), 'i').test(nodes[0].data.ext))"
           },
           {
             "title": "Email",
@@ -562,6 +562,6 @@
         "uiIcon": "ui-icon-pencil"
       }
     },
-    "wordFileExtensionRegex": "\\.(doc|dot|docx|dotx|docm|dotm|docb)$"
+    "fileExtensionRegex": "\\.(doc|dot|docx|dotx|docm|dotm|docb|pdf|xlsx|xls|ppt)$"
   }
 }

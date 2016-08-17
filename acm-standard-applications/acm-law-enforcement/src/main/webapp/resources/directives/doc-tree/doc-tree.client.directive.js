@@ -1376,6 +1376,14 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                                     DocTree.replaceFile();
                                 }
+
+                                $q.when(DocTree.uploadSetting.deferSelectFile.promise).then(function (files) {
+                                    var args = {
+										files : files
+									}
+                                    var submitFiles = DocTree.Command.findHandler("submitFiles/");
+                                    DocTree.Command.handleCommand(submitFiles, nodes, args);
+                                });
                             }
                         }
                         , {
@@ -1414,7 +1422,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             }
                         }
                         , {
-                            name: "editWithWord",
+                            name: "editWithWebDAV",
                             execute: function (nodes, args) {
                                 var node = nodes[0];
                                 var fileId = node.data.objectId;
@@ -1428,8 +1436,15 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                             var appUrl = absUrl.substring(0, absUrl.indexOf(baseHref) + baseHref.length);
 
                                             ITHit.WebDAV.Client.DocManager.EditDocument(appUrl + "webdav/" + acmTicket + "/" + ObjectService.ObjectTypes.FILE + "/" + ObjectService.LockTypes.WORD_EDIT_LOCK + "/" +
-                                                node.data.objectId + node.data.ext);
-                                            DocTree.refreshTree();
+                                                node.data.objectId + node.data.ext, appUrl + "webdav", protocolInstallMessage);
+                                        function protocolInstallMessage(message) {
+                                            var installerFilePath = appUrl + "assets/js/Plugins/" + ITHit.WebDAV.Client.DocManager.GetInstallFileName();
+
+                                            if (confirm("Opening this type of file requires a protocol installation. Select OK to download the protocol installer.")) {
+                                                window.open(installerFilePath);
+                                            }
+                                        }
+                                        DocTree.refreshTree();
                                         })
                                 });
                             }
@@ -1733,18 +1748,13 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             ui.result = dfd.promise();
                         }
                         , select: function (event, ui) {
-                            // delay the event, so the menu can close and the click event does
-                            // not interfere with the edit control
                             var uploadFile = Util.goodMapValue(ui.item.data(), "uploadFile", false);
                             var uploadFileLabel = Util.goodMapValue(ui.item.data(), "label", "");
-                            var that = this;
-                            setTimeout(function () {
-                                $(that).trigger("command", {
-                                    cmd: ui.cmd,
-                                    uploadFile: uploadFile,
-                                    label: uploadFileLabel
-                                });
-                            }, 100);
+                            $(this).trigger("command", {
+                                cmd: ui.cmd,
+                                uploadFile: uploadFile,
+                                label: uploadFileLabel
+                            });
                         }
                     });
                 }
