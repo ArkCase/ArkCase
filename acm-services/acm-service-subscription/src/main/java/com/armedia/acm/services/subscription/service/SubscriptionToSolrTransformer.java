@@ -12,17 +12,20 @@ import java.util.List;
 /**
  * Created by marjan.stefanoski on 11.03.2015.
  */
-public class SubscriptionToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmSubscription> {
+public class SubscriptionToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmSubscription>
+{
 
     private SubscriptionDao subscriptionDao;
 
     @Override
-    public List<AcmSubscription> getObjectsModifiedSince(Date lastModified, int start, int pageSize) {
-        return getSubscriptionDao().findModifiedSince(lastModified,start,pageSize);
+    public List<AcmSubscription> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
+    {
+        return getSubscriptionDao().findModifiedSince(lastModified, start, pageSize);
     }
 
     @Override
-    public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmSubscription in) {
+    public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmSubscription in)
+    {
 
         SolrAdvancedSearchDocument doc = new SolrAdvancedSearchDocument();
         doc.setId(String.format("%s-%s", in.getId(), in.getObjectType()));
@@ -41,11 +44,12 @@ public class SubscriptionToSolrTransformer implements AcmObjectToSolrDocTransfor
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(AcmSubscription in) {
+    public SolrDocument toSolrQuickSearch(AcmSubscription in)
+    {
 
         SolrDocument solr = new SolrDocument();
 
-        solr.setId(in.getId() + "-"+in.getObjectType());
+        solr.setId(in.getId() + "-" + in.getObjectType());
         solr.setObject_id_s(in.getId() + "");
         solr.setObject_type_s(in.getObjectType());
 
@@ -53,7 +57,6 @@ public class SubscriptionToSolrTransformer implements AcmObjectToSolrDocTransfor
         solr.setAuthor(in.getCreator());
         solr.setLast_modified_tdt(in.getModified());
         solr.setModifier_s(in.getModifier());
-
 
         solr.setParent_object_id_s(Long.toString(in.getObjectId()));
 
@@ -65,28 +68,31 @@ public class SubscriptionToSolrTransformer implements AcmObjectToSolrDocTransfor
     }
 
     @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(AcmSubscription in) {
+    public SolrAdvancedSearchDocument toContentFileIndex(AcmSubscription in)
+    {
         // No implementation needed
         return null;
     }
 
     @Override
-    public boolean isAcmObjectTypeSupported(Class acmObjectType) {
-
-        boolean objectNotNull = acmObjectType != null;
-        String ourClassName = AcmSubscription.class.getName();
-        String theirClassName = acmObjectType.getName();
-        boolean classNames = theirClassName.equals(ourClassName);
-        boolean isSupported = objectNotNull && classNames;
-
-        return isSupported;
+    public boolean isAcmObjectTypeSupported(Class acmObjectType)
+    {
+        return AcmSubscription.class.equals(acmObjectType);
     }
 
-    public SubscriptionDao getSubscriptionDao() {
+    public SubscriptionDao getSubscriptionDao()
+    {
         return subscriptionDao;
     }
 
-    public void setSubscriptionDao(SubscriptionDao subscriptionDao) {
+    public void setSubscriptionDao(SubscriptionDao subscriptionDao)
+    {
         this.subscriptionDao = subscriptionDao;
+    }
+
+    @Override
+    public Class<?> getAcmObjectTypeSupported()
+    {
+        return AcmSubscription.class;
     }
 }
