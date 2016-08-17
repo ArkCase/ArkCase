@@ -1,19 +1,17 @@
 <div ng-controller="TimeTracking.ActionsController">
-    <div class="col-md-12">
-        <div class="pull-right">
-            <div class="btn-group">
-                <a class="btn btn-sm btn-default" ui-sref="frevvo.new-timesheet()">
-                    <i class="fa fa-edit"></i>
-                    <span translate>timeTracking.comp.actions.new.button</span>
-                </a>
-                <a class="btn btn-sm btn-default" ui-sref="frevvo.edit-timesheet(editTimesheetParams)">
-                    <i class="fa fa-edit"></i>
-                    <span translate>timeTracking.comp.actions.edit.button</span>
-                </a>
-                <button class="btn btn-sm btn-default" ng-click="refresh()">
-                    <i class="fa fa-refresh"></i>
-                </button>
-            </div>
+    <div class="pull-right">
+        <div class="btn-group">
+            <a class="btn btn-sm btn-default" ui-sref="frevvo.new-timesheet()">
+                <i class="fa fa-edit"></i>
+                <span translate>timeTracking.comp.actions.new.button</span>
+            </a>
+            <a class="btn btn-sm btn-default" ui-sref="frevvo.edit-timesheet(editTimesheetParams)">
+                <i class="fa fa-edit"></i>
+                <span translate>timeTracking.comp.actions.edit.button</span>
+            </a>
+            <button class="btn btn-sm btn-default" ng-click="refresh()">
+                <i class="fa fa-refresh"></i>
+            </button>
         </div>
     </div>
 </div>

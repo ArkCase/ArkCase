@@ -21,6 +21,7 @@ import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenCon
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
+import com.armedia.acm.services.notification.model.SmtpEventSentEvent;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.easymock.Capture;
@@ -30,6 +31,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.Authentication;
 
 import javax.activation.DataHandler;
@@ -55,6 +57,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
     private EcmFileService mockEcmFileService;
     private InputStream mockInputStream;
     private EcmFile mockEcmFile;
+    private ApplicationEventPublisher mockApplicationEventPublisher;
 
     @Before
     public void setUp()
@@ -72,6 +75,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         mockEcmFileService = createMock(EcmFileService.class);
         mockInputStream = createMock(InputStream.class);
         mockEcmFile = createMock(EcmFile.class);
+        mockApplicationEventPublisher = createMock(ApplicationEventPublisher.class);
 
         smtpNotificationSender.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
         smtpNotificationSender.setPropertyFileManager(mockPropertyFileManager);
@@ -80,6 +84,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         smtpNotificationSender.setAuthenticationTokenService(mockAuthenticationTokenService);
         smtpNotificationSender.setAuthenticationTokenDao(mockAuthenticationTokenDao);
         smtpNotificationSender.setEcmFileService(mockEcmFileService);
+        smtpNotificationSender.setApplicationEventPublisher(mockApplicationEventPublisher);
     }
 
     @Test
@@ -168,6 +173,11 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
 
         expect(mockAuthenticationTokenDao.save(EasyMock.anyObject(AuthenticationToken.class))).andReturn(authenticationToken);
 
+        expect(mockAcmUser.getUserId()).andReturn("ann-acm");
+
+        mockApplicationEventPublisher.publishEvent(EasyMock.anyObject(SmtpEventSentEvent.class));
+        EasyMock.expectLastCall();
+
         // when
         replayAll();
         List<EmailWithEmbeddedLinksResultDTO> results = smtpNotificationSender.sendEmailWithEmbeddedLinks(emailWithEmbeddedLinksDTO,
@@ -220,6 +230,11 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         expect(mockEcmFile.getFileActiveVersionNameExtension()).andReturn(".extension").anyTimes();
 
         mockInputStream.close();
+        EasyMock.expectLastCall();
+
+        expect(mockAcmUser.getUserId()).andReturn("ann-acm");
+
+        mockApplicationEventPublisher.publishEvent(EasyMock.anyObject(SmtpEventSentEvent.class));
         EasyMock.expectLastCall();
 
         // when

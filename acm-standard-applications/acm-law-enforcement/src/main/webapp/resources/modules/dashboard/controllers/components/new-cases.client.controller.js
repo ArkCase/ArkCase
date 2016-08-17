@@ -31,8 +31,8 @@ angular.module('dashboard.new-cases').controller('Dashboard.NewCasesController',
 
                     vm.showChart = labels.length > 0 && chartData.length > 0 ? true : false;
 
-                    vm.labels = labels.reverse();
-                    vm.data = [chartData.reverse()];
+                    vm.labels = labels;
+                    vm.data = [chartData];
                     vm.series = [config.title];
                 })
             }

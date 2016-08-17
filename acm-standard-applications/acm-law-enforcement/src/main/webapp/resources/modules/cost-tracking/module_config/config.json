@@ -127,7 +127,8 @@
             {
               "name": "modifier",
               "displayName": "costTracking.comp.details.table.columns.modifier",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
             }
           ]
         },

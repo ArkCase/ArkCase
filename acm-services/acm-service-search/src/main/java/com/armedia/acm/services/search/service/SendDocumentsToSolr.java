@@ -47,8 +47,10 @@ public class SendDocumentsToSolr
 
     public void sendSolrContentFileIndexDocuments(List<SolrAdvancedSearchDocument> solrDocuments)
     {
-        if (solrDocuments !=null ) {
-            for (SolrAdvancedSearchDocument doc: solrDocuments ){
+        if (solrDocuments != null)
+        {
+            for (SolrAdvancedSearchDocument doc : solrDocuments)
+            {
 
                 sendToJmsQueue(doc, "jms://solrContentFile.in");
             }
@@ -60,9 +62,9 @@ public class SendDocumentsToSolr
     {
         // send separate requests, in case any of them fail, e.g. maybe a doc with this id already is not in the
         // queue.
-        if ( deletes != null )
+        if (deletes != null)
         {
-            for ( SolrDeleteDocumentByIdRequest doc : deletes )
+            for (SolrDeleteDocumentByIdRequest doc : deletes)
             {
                 sendToJmsQueue(doc, "jms://solrContentFile.in");
             }
@@ -73,9 +75,9 @@ public class SendDocumentsToSolr
     {
         // send separate requests, in case any of them fail, e.g. maybe a doc with this id already is not in the
         // queue.
-        if ( deletes != null )
+        if (deletes != null)
         {
-            for ( SolrDeleteDocumentByIdRequest doc : deletes )
+            for (SolrDeleteDocumentByIdRequest doc : deletes)
             {
                 sendToJmsQueue(doc, "jms://solrQuickSearch.in");
             }
@@ -87,9 +89,9 @@ public class SendDocumentsToSolr
         log.debug("Received " + deletes.size() + " to be deleted.");
         // send separate requests, in case any of them fail, e.g. maybe a doc with this id already is not in the
         // queue.
-        if ( deletes != null )
+        if (deletes != null)
         {
-            for ( SolrDeleteDocumentByIdRequest doc : deletes )
+            for (SolrDeleteDocumentByIdRequest doc : deletes)
             {
                 sendToJmsQueue(doc, "jms://solrAdvancedSearch.in");
             }
@@ -101,30 +103,32 @@ public class SendDocumentsToSolr
         try
         {
             String json = mapper.writeValueAsString(solrDocument);
-            if ( log.isDebugEnabled() )
+            if (log.isDebugEnabled())
             {
                 log.debug("Sending JSON to SOLR: " + json);
             }
             getMuleContextManager().dispatch(queueName, json);
-            if ( log.isDebugEnabled() )
+            if (log.isDebugEnabled())
             {
                 log.debug("Returning JSON: " + json);
             }
-        }
-        catch (JsonProcessingException | MuleException e)
+        } catch (JsonProcessingException | MuleException e)
         {
             log.error("Could not send document to SOLR: " + e.getMessage(), e);
         }
     }
 
-    private void sendToJmsQueue( SolrAdvancedSearchDocument solrDocument, String queueName ) {
-        try {
-            if ( log.isDebugEnabled() ) {
+    private void sendToJmsQueue(SolrAdvancedSearchDocument solrDocument, String queueName)
+    {
+        try
+        {
+            if (log.isDebugEnabled())
+            {
                 log.debug("Sending POJO to SOLR: " + solrDocument);
             }
             getMuleContextManager().dispatch(queueName, solrDocument);
-        }
-        catch ( MuleException e ) {
+        } catch (MuleException e)
+        {
             log.error("Could not send document to SOLR: " + e.getMessage(), e);
         }
     }
@@ -136,12 +140,11 @@ public class SendDocumentsToSolr
             String json = mapper.writeValueAsString(solrDocuments);
 
             getMuleContextManager().dispatch(queueName, json);
-            if ( log.isDebugEnabled() )
+            if (log.isDebugEnabled())
             {
                 log.debug("Returning JSON: " + json);
             }
-        }
-        catch (JsonProcessingException | MuleException e)
+        } catch (JsonProcessingException | MuleException e)
         {
             log.error("Could not send document to SOLR: " + e.getMessage(), e);
         }

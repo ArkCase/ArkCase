@@ -101,4 +101,10 @@ public class AcmFolderToSolrTransformer implements AcmObjectToSolrDocTransformer
     {
         this.searchAccessControlFields = searchAccessControlFields;
     }
+
+    @Override
+    public Class<?> getAcmObjectTypeSupported()
+    {
+        return AcmFolder.class;
+    }
 }
