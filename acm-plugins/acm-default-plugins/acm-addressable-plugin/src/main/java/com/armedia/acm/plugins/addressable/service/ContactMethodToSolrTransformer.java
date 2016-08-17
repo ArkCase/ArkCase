@@ -74,13 +74,7 @@ public class ContactMethodToSolrTransformer implements AcmObjectToSolrDocTransfo
     @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
-        boolean objectNotNull = acmObjectType != null;
-        String ourClassName = ContactMethod.class.getName();
-        String theirClassName = acmObjectType.getName();
-        boolean classNames = theirClassName.equals(ourClassName);
-        boolean isSupported = objectNotNull && classNames;
-
-        return isSupported;
+        return ContactMethod.class.equals(acmObjectType);
     }
 
     public ContactMethodDao getContactMethodDao()
@@ -101,5 +95,11 @@ public class ContactMethodToSolrTransformer implements AcmObjectToSolrDocTransfo
     public void setUserDao(UserDao userDao)
     {
         this.userDao = userDao;
+    }
+
+    @Override
+    public Class<?> getAcmObjectTypeSupported()
+    {
+        return ContactMethod.class;
     }
 }
