@@ -99,4 +99,10 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
     {
         this.userDao = userDao;
     }
+
+    @Override
+    public Class<?> getAcmObjectTypeSupported()
+    {
+        return Organization.class;
+    }
 }

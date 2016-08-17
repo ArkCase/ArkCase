@@ -137,14 +137,7 @@ public class SubscriptionEventToSolrTransformer implements AcmObjectToSolrDocTra
     @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
-
-        boolean objectNotNull = acmObjectType != null;
-        String ourClassName = AcmSubscriptionEvent.class.getName();
-        String theirClassName = acmObjectType.getName();
-        boolean classNames = theirClassName.equals(ourClassName);
-        boolean isSupported = objectNotNull && classNames;
-
-        return isSupported;
+        return AcmSubscriptionEvent.class.equals(acmObjectType);
     }
 
     public SubscriptionEventDao getSubscriptionEventDao()
@@ -175,5 +168,11 @@ public class SubscriptionEventToSolrTransformer implements AcmObjectToSolrDocTra
     public void setUserDao(UserDao userDao)
     {
         this.userDao = userDao;
+    }
+
+    @Override
+    public Class<?> getAcmObjectTypeSupported()
+    {
+        return AcmSubscriptionEvent.class;
     }
 }
