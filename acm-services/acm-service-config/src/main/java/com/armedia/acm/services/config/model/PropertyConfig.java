@@ -85,20 +85,20 @@ public class PropertyConfig implements AcmConfig, Serializable, InitializingBean
         {
             for (Map.Entry<Object, Object> prop : properties.entrySet())
             {
-                if (prop.getKey() != null && prop.getKey() instanceof String)
+                if (prop.getValue() != null && prop.getValue() instanceof String)
                 {
                     String value = (String) prop.getValue();
                     try
                     {
                         String decryptedIfNecessary = getEncryptablePropertyUtils().decryptPropertyValue(value);
-                        if (value != decryptedIfNecessary)
+                        if (!value.equals(decryptedIfNecessary))
                         {
                             log.debug("Decrypted property {}", prop.getKey());
+                            prop.setValue(decryptedIfNecessary);
                         }
-                        prop.setValue(decryptedIfNecessary);
                     } catch (AcmEncryptionException aee)
                     {
-                        log.debug("Could not decrypt property value: {}", aee.getMessage(), aee);
+                        log.error("Could not decrypt value for property {}: {}", prop.getKey(), aee.getMessage(), aee);
                     }
                 }
             }
