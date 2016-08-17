@@ -48,13 +48,12 @@ angular.module('dashboard.participants', ['adf.provider'])
                         var widgetInfo = _.find(config.widgets, function (widget) {
                             return widget.id === "participants";
                         });
+                        gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
                         $scope.config = config;
                         $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
 
                         $scope.gridOptions.data = info.participants;
                         $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
-
-                        gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
                     },
                     function (err) {
 

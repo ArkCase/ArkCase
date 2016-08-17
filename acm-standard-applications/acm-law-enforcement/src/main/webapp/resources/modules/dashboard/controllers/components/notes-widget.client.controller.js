@@ -50,14 +50,13 @@ angular.module('dashboard.notes', ['adf.provider'])
                         var widgetInfo = _.find(config.widgets, function (widget) {
                             return widget.id === "notes";
                         });
+                        gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
                         $scope.config = config;
                         $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
 
                         var notes = info;
                         $scope.gridOptions.data = notes;
                         $scope.gridOptions.totalItems = notes ? notes.length : 0;
-
-                        gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
                     },
                     function (err) {
 
