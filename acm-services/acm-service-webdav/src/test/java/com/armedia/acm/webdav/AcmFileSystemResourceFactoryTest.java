@@ -43,7 +43,7 @@ public class AcmFileSystemResourceFactoryTest extends EasyMockSupport
 
         Resource resource = unit.getResource(host, path);
 
-        assertTrue(resource instanceof AcmOptionsResource);
+        assertTrue(resource instanceof AcmRootResource);
     }
 
     @Test
@@ -54,7 +54,7 @@ public class AcmFileSystemResourceFactoryTest extends EasyMockSupport
 
         Resource resource = unit.getResource(host, path);
 
-        assertTrue(resource instanceof AcmOptionsResource);
+        assertTrue(resource instanceof AcmRootResource);
     }
 
     @Test
