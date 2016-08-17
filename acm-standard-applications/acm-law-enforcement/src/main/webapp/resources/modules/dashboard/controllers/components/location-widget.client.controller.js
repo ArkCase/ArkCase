@@ -46,6 +46,7 @@ angular.module('dashboard.locations', ['adf.provider'])
                         var widgetInfo = _.find(config.widgets, function (widget) {
                             return widget.id === "locations";
                         });
+                        gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
                         $scope.config = config;
                         $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
 
@@ -58,8 +59,6 @@ angular.module('dashboard.locations', ['adf.provider'])
                             //No location data to show
                             $scope.gridOptions.totalItems = 0;
                         }
-
-                        gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
                     },
                     function (err) {
 

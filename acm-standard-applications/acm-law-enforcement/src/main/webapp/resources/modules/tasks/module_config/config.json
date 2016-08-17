@@ -318,7 +318,8 @@
               "width": 150,
               "name": "assignee",
               "displayName": "tasks.comp.details.table.columns.modifier",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
             }
           ]
         },
@@ -342,7 +343,8 @@
               "width": 150,
               "name": "assignee",
               "displayName": "tasks.comp.reworkdetails.table.columns.modifier",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
             }
           ]
         },

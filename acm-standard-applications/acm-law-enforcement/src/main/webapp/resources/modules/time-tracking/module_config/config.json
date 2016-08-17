@@ -126,8 +126,9 @@
             },
             {
               "name": "modifier",
-              "displayName": "timeTracking.comp.details.table.columns.modified",
-              "headerCellFilter": "translate"
+              "displayName": "timeTracking.comp.details.table.columns.modifier",
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
             }
           ]
         },

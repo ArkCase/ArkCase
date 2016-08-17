@@ -52,13 +52,12 @@ angular.module('dashboard.details', ['adf.provider'])
                         var widgetInfo = _.find(config.widgets, function (widget) {
                             return widget.id === "details";
                         });
+                        gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
                         $scope.config = config;
                         $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
 
                         $scope.gridOptions.data = [Util.omitNg(info)];
                         $scope.gridOptions.totalItems = 1;
-
-                        gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
                     },
                     function (err) {
 
