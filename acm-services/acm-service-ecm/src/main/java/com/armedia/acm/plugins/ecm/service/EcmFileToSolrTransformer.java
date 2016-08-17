@@ -184,14 +184,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
     @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
-
-        boolean objectNotNull = acmObjectType != null;
-        String ourClassName = EcmFile.class.getName();
-        String theirClassName = acmObjectType.getName();
-        boolean classNames = theirClassName.equals(ourClassName);
-        boolean isSupported = objectNotNull && classNames;
-
-        return isSupported;
+        return EcmFile.class.equals(acmObjectType);
     }
 
     private boolean isHidden(EcmFile file)
@@ -240,5 +233,11 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
     public void setUserDao(UserDao userDao)
     {
         this.userDao = userDao;
+    }
+
+    @Override
+    public Class<?> getAcmObjectTypeSupported()
+    {
+        return EcmFile.class;
     }
 }
