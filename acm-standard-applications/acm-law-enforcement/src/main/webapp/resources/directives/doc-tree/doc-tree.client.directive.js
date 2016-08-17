@@ -1422,7 +1422,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             }
                         }
                         , {
-                            name: "editWithWord",
+                            name: "editWithWebDAV",
                             execute: function (nodes, args) {
                                 var node = nodes[0];
                                 var fileId = node.data.objectId;

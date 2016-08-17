@@ -43,7 +43,7 @@
     },
     "menu": {
       "noop": "(Select Item)",
-      "editWithWord": "Edit in Word"
+      "editWithWebDAV": "Edit"
     },
     "table.columns": {
       "title": "Title",

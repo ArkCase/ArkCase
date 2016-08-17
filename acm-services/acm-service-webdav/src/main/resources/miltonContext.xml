@@ -15,7 +15,7 @@
         <property name="authenticationTokenService" ref="authenticationTokenService"/>
     </bean>
 
-    <bean id="wordExtensionPattern" class="java.util.regex.Pattern" factory-method="compile">
+    <bean id="extensionPattern" class="java.util.regex.Pattern" factory-method="compile">
         <constructor-arg value="\.(doc|dot|docx|dotx|docm|dotm|docb|pdf|xlsx|xls)$"/>
     </bean>
 
@@ -28,7 +28,7 @@
         <property name="securityManager" ref="security.manager"/>
         <property name="maxAgeSeconds" value="300"/>
         <property name="filterMapping" value="webdav"/>
-        <property name="wordFileExtensionPattern" ref="wordExtensionPattern"/>
+        <property name="fileExtensionPattern" ref="extensionPattern"/>
     </bean>
 
     <bean id="milton.http.manager" class="io.milton.ent.config.HttpManagerBuilderEnt">
