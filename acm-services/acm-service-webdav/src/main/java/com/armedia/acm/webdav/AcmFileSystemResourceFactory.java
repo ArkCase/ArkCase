@@ -41,7 +41,7 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
 
     private String filterMapping;
 
-    private Pattern wordFileExtensionPattern;
+    private Pattern fileExtensionPattern;
 
     private AuthenticationTokenService authenticationTokenService;
 
@@ -81,7 +81,7 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
             return handler.getResource(host, strippedPath);
         } else
         {
-            log.debug("The path {} seems to be an list folder structure request", path);
+            log.debug("The path {} seems to be an list folder structure request or OPTIONS request", path);
             //FIXME return always root folder, we should fix this to return correct folder, but since url consists of "/" it will be hard to implement
             if (acmRootResource == null)
             {
@@ -93,8 +93,8 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
 
     private String removeFileExtension(String path)
     {
-        // remove word file extensions
-        Matcher m = wordFileExtensionPattern.matcher(path);
+        // remove file extensions
+        Matcher m = fileExtensionPattern.matcher(path);
         if (m.find())
         {
             path = m.replaceFirst("");
@@ -139,9 +139,9 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
         }
     }
 
-    public void setWordFileExtensionPattern(Pattern wordFileExtensionPattern)
+    public void setFileExtensionPattern(Pattern fileExtensionPattern)
     {
-        this.wordFileExtensionPattern = wordFileExtensionPattern;
+        this.fileExtensionPattern = fileExtensionPattern;
     }
 
     public AcmWebDAVSecurityManager getSecurityManager()

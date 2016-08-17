@@ -63,7 +63,7 @@ public class AcmFileSystemResourceFactoryTest extends EasyMockSupport
         String host = "www.dead.net";
         String path = "/webdav/123-456-78-90/FILE/EDIT_WORD_LOCK/12345.docx";
 
-        unit.setWordFileExtensionPattern(Pattern.compile("\\.(doc|dot|docx|dotx|docm|dotm|docb)$"));
+        unit.setFileExtensionPattern(Pattern.compile("\\.(doc|dot|docx|dotx|docm|dotm|docb)$"));
         unit.setFilterMapping("webdav");
 
         expect(mockEcmFileDao.find(12345L)).andReturn(new EcmFile());

@@ -68,7 +68,7 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
             $scope.treeControl = treeControl;
             DocTreeExtCore.handleCheckout(treeControl, $scope);
             DocTreeExtCore.handleCheckin(treeControl, $scope);
-            DocTreeExtCore.handleEditWithWord(treeControl, $scope);
+            DocTreeExtCore.handleEditWithWebDAV(treeControl, $scope);
             DocTreeExtCore.handleCancelEditing(treeControl, $scope);
             
             treeControl.addCommandHandler({
