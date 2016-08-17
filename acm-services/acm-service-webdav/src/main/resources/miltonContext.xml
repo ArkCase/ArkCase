@@ -15,8 +15,8 @@
         <property name="authenticationTokenService" ref="authenticationTokenService"/>
     </bean>
 
-    <bean id="wordExtensionPattern" class="java.util.regex.Pattern" factory-method="compile">
-        <constructor-arg value="\.(doc|dot|docx|dotx|docm|dotm|docb)$"/>
+    <bean id="extensionPattern" class="java.util.regex.Pattern" factory-method="compile">
+        <constructor-arg value="\.(doc|dot|docx|dotx|docm|dotm|docb|pdf|xlsx|xls)$"/>
     </bean>
 
     <bean id="resource.factory" class="com.armedia.acm.webdav.AcmFileSystemResourceFactory">
@@ -28,7 +28,7 @@
         <property name="securityManager" ref="security.manager"/>
         <property name="maxAgeSeconds" value="300"/>
         <property name="filterMapping" value="webdav"/>
-        <property name="wordFileExtensionPattern" ref="wordExtensionPattern"/>
+        <property name="fileExtensionPattern" ref="extensionPattern"/>
     </bean>
 
     <bean id="milton.http.manager" class="io.milton.ent.config.HttpManagerBuilderEnt">
@@ -36,6 +36,6 @@
         <property name="enableCompression" value="false"/>
         <property name="buffering" value="never"/>
         <property name="enabledJson" value="false"/>
+        <property name="contextPath" value="webdav"/>
     </bean>
-
 </beans>
