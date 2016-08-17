@@ -245,7 +245,8 @@
               "width": 150,
               "name": "modifier",
               "displayName": "cases.comp.details.table.columns.modifier",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
             }
           ]
         },

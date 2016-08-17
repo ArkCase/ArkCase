@@ -263,7 +263,8 @@
               "width": 150,
               "name": "modifier",
               "displayName": "complaints.comp.details.table.columns.modifier",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
             }
           ]
         },
@@ -442,7 +443,8 @@
               "name": "location.modifier",
               "displayName": "complaints.comp.locations.table.columns.modifier",
               "headerCellFilter": "translate",
-              "width": 150
+              "width": 150,
+              "lookup": "userFullNames"
             }
           ]
         }
