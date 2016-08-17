@@ -1,9 +1,11 @@
 <div ng-controller="Admin.CMTemplatesController">
 	<div class="pull-right well">
-		<button ngf-select ngf-change="upload($files)" class="btn btn-sm btn-link" ngf-multiple="multiple">
-		    <i class="glyphicon glyphicon-plus-sign"></i>
-		    <span translate>admin.correspondenceManagement.templates.addNewTemplate</span>
-		</button>
+		<div class="btn-group">
+			<button ngf-select ngf-change="upload($files)" class="btn btn-xs btn-link" ngf-multiple="multiple">
+			    <i class="glyphicon glyphicon-plus-sign"></i>
+			    <span translate>admin.correspondenceManagement.templates.addNewTemplate</span>
+			</button>
+		</div>
 	</div>	
     <panel-view header="{{'admin.correspondenceManagement.templates' | translate}}" collapsible="false">
             <div ui-grid="gridOptions"
