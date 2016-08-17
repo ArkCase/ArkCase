@@ -3,7 +3,7 @@
         <div class="module-header">
             <div class="well-sm clearfix">
                 <div class="row">
-                    <div class="col-sm-6 col-md-3">
+                    <div class="col-sm-6 col-md-12">
                     	<div class="h4 font-bold">{{ecmFile.fileName || 'Unknown'}}</div>
                     	<small class="text-muted" translate>documentDetails.name</small>
                     </div>
@@ -15,8 +15,6 @@
                         <div class="h4 font-bold">{{::ecmFile.created | date : ('common.defaultDateUIFormat' | translate)  || 'Unknown'}}</div>
                         <small class="text-muted" translate>documentDetails.created</small>
                     </div>
-                </div>
-                <div class="row">
                     <!--<div class="col-sm-3">
                         <div class="h4 font-bold">{{::assignee | mapKeyValue: userList:'object_id_s':'name' || 'Unknown'}}</div>
                         <small class="text-muted" translate>documentDetails.assignee</small>
@@ -29,7 +27,9 @@
                         <div class="h4 font-bold">{{ecmFile.status || 'Unknown'}}</div>
                         <small class="text-muted" translate>documentDetails.status</small>
                     </div>
+                    
                 </div>
+
             </div>
         </div>
 

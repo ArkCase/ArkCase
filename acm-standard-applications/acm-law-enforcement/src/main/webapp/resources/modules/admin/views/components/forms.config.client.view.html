@@ -1,4 +1,3 @@
-<panel-view header="{{'admin.forms.config' | translate}}" collapsible="false">
 <div class="pull-right well">
 	<select ng-model="selectedTarget"
 	        ng-options="option.id as option.name for option in formsDropdownOptions"
@@ -13,6 +12,8 @@
         </a>
     </div>
 </div>
+
+<panel-view header="{{'admin.forms.config' | translate}}" collapsible="false">
     <div ng-controller="Admin.FormsConfigController">
             <div ui-grid="gridOptions"
                  ui-grid-resize-columns
