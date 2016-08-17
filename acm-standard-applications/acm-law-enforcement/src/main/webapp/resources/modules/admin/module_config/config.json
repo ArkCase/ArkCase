@@ -416,10 +416,6 @@
         {
           "title": "admin.security.modules",
           "templateName": "security.modules"
-        },
-        {
-          "title": "admin.security.auditHistory",
-          "templateName": "security.audit-history"
         }
       ]
     },
@@ -498,6 +494,10 @@
         {
           "title": "admin.application.login.config.title",
           "templateName": "application-login.config"
+        },
+        {
+          "title": "admin.application.auditHistory.config.title",
+          "templateName": "application-audit-history.config"
         }
       ]
     },
