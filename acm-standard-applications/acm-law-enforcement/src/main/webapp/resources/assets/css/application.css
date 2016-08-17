@@ -1153,3 +1153,9 @@ tags-input .tags {
 .hidden-button {
     display: none;
 }
+.pull-right.well .btn-group .btn-link {
+	color: white;
+}
+.pull-right.well .btn-group .btn-link:hover {
+	color: #ccc;
+}

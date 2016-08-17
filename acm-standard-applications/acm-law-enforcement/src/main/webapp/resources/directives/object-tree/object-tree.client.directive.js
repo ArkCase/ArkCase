@@ -872,6 +872,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
             }
 
             , link: function (scope, element, attrs) {
+
                 Filter.jqUlFilter = $(element).find(".treeFilter");
                 Sorter.jqUlSorter = $(element).find(".treeSorter");
                 Search.jqEdtQuery = $(element).find(".edtTreeQuery");
@@ -894,6 +895,13 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
 
                 Tree.create();
 
+        		scope.$bus.subscribe('object-tree.select', function(param){
+					Tree.refresh();
+					setTimeout(function() {
+						Tree.select(param, true);
+					},100)
+				});
+                
                 var treeInfo = Tree.Info.getTreeInfo();
 
                 scope.$watchGroup(['treeConfig', 'treeData'], function (newValues, oldValues, scope) {

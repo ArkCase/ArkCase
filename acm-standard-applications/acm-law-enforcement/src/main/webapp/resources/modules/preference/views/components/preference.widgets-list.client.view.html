@@ -1,8 +1,8 @@
 <div ng-controller="Preference.WidgetsListController">
     <form name="defaultViewToggle" ng-show="showDefaultForm">
-        Default View:
-        <input type="radio" ng-model="defaultViewExpand" value="false" ng-change="toggleDefaultView()"/>Expanded
-        <input type="radio" ng-model="defaultViewExpand" value="true" ng-change="toggleDefaultView()"/>Collapsed
+        <h4>Default View</h4>
+        <label><input type="radio" ng-model="defaultViewExpand" value="false" ng-change="toggleDefaultView()"/> Expanded</label>
+        <label><input type="radio" ng-model="defaultViewExpand" value="true" ng-change="toggleDefaultView()"/> Collapsed</label>
     </form>
     <div class="panel panel-default" ng-repeat="widget in widgets">
         <div class="panel-heading">
