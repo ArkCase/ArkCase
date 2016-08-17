@@ -21,7 +21,6 @@ angular.module('dashboard.person', ['adf.provider'])
 
             var promiseConfig;
             var promiseInfo;
-            var promiseUsers;
             var modules = [
                 {name: "COSTSHEET", configName: "cost-tracking", getInfo: CostTrackingInfoService.getCostsheetInfo}
                 , {name: "TIMESHEET", configName: "time-tracking", getInfo: TimeTrackingInfoService.getTimesheetInfo}
@@ -41,7 +40,8 @@ angular.module('dashboard.person', ['adf.provider'])
             if (module && Util.goodPositive(currentObjectId, false)) {
                 promiseConfig = ConfigService.getModuleConfig(module.configName);
                 promiseInfo = module.getInfo(currentObjectId);
-                promiseUsers = HelperUiGridService.getUsers();
+                var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+                var promiseUsers = gridHelper.getUsers();
 
                 $q.all([promiseConfig, promiseInfo, promiseUsers]).then(function (data) {
                         var config = _.find(data[0].components, {id: "main"});
@@ -49,14 +49,13 @@ angular.module('dashboard.person', ['adf.provider'])
                         var widgetInfo = _.find(config.widgets, function (widget) {
                             return widget.id === "person";
                         });
+                        gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
                         $scope.config = config;
                         $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
 
                         $scope.costsheetInfo = info;
                         $scope.gridOptions = $scope.gridOptions || {};
                         $scope.gridOptions.data = [$scope.costsheetInfo.user];
-
-                        HelperUiGridService.setUserNameFilter(promiseUsers);
                     },
                     function (err) {
 

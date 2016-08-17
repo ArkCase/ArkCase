@@ -41,7 +41,7 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
 
     private String filterMapping;
 
-    private Pattern wordFileExtensionPattern;
+    private Pattern fileExtensionPattern;
 
     private AuthenticationTokenService authenticationTokenService;
 
@@ -55,6 +55,7 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
     private Pattern realDocumentUrl = Pattern.compile("^.*\\/\\d*\\.\\w*$");
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private AcmRootResource acmRootResource;
 
     @Override
     public Resource getResource(String host, String path) throws NotAuthorizedException, BadRequestException
@@ -64,7 +65,6 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
         // if the path does not end in some-number.some-extension let's suppose it is an OPTIONS request.
 
         Matcher m = realDocumentUrl.matcher(path);
-
         if (m.matches())
         {
             log.debug("The path {} seems to be a real file request", path);
@@ -81,15 +81,20 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
             return handler.getResource(host, strippedPath);
         } else
         {
-            log.debug("The path {} seems to be an OPTIONS request", path);
-            return new AcmOptionsResource();
+            log.debug("The path {} seems to be an list folder structure request or OPTIONS request", path);
+            //FIXME return always root folder, we should fix this to return correct folder, but since url consists of "/" it will be hard to implement
+            if (acmRootResource == null)
+            {
+                acmRootResource = new AcmRootResource(this);
+            }
+            return acmRootResource;
         }
     }
 
     private String removeFileExtension(String path)
     {
-        // remove word file extensions
-        Matcher m = wordFileExtensionPattern.matcher(path);
+        // remove file extensions
+        Matcher m = fileExtensionPattern.matcher(path);
         if (m.find())
         {
             path = m.replaceFirst("");
@@ -134,9 +139,9 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
         }
     }
 
-    public void setWordFileExtensionPattern(Pattern wordFileExtensionPattern)
+    public void setFileExtensionPattern(Pattern fileExtensionPattern)
     {
-        this.wordFileExtensionPattern = wordFileExtensionPattern;
+        this.fileExtensionPattern = fileExtensionPattern;
     }
 
     public AcmWebDAVSecurityManager getSecurityManager()
