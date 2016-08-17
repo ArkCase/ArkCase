@@ -106,4 +106,10 @@ public class PersonAliasToSolrTransformer implements AcmObjectToSolrDocTransform
     {
         this.userDao = userDao;
     }
+
+    @Override
+    public Class<?> getAcmObjectTypeSupported()
+    {
+        return PersonAlias.class;
+    }
 }

@@ -1,8 +1,8 @@
 package com.armedia.acm.services.search.model;
 
-import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
+import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 
 import java.util.Date;
 import java.util.List;
@@ -37,7 +37,8 @@ public class AcmObjectTypeOneSolrConverter implements AcmObjectToSolrDocTransfor
     }
 
     @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(AcmObjectTypeOne in) {
+    public SolrAdvancedSearchDocument toContentFileIndex(AcmObjectTypeOne in)
+    {
         ++handledObjectsCount;
         return new SolrAdvancedSearchDocument();
     }
@@ -56,5 +57,11 @@ public class AcmObjectTypeOneSolrConverter implements AcmObjectToSolrDocTransfor
     public int getHandledQuickSearchCount()
     {
         return handledQuickSearchCount;
+    }
+
+    @Override
+    public Class<?> getAcmObjectTypeSupported()
+    {
+        return AcmObjectTypeOne.class;
     }
 }

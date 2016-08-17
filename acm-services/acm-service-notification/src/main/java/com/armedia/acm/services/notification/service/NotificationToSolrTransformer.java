@@ -11,6 +11,7 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -126,20 +127,14 @@ public class NotificationToSolrTransformer implements AcmObjectToSolrDocTransfor
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer#isAcmObjectTypeSupported(java.lang.Class)
      */
     @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
-        boolean objectNotNull = acmObjectType != null;
-        String ourClassName = Notification.class.getName();
-        String theirClassName = acmObjectType.getName();
-        boolean classNames = theirClassName.equals(ourClassName);
-        boolean isSupported = objectNotNull && classNames;
-
-        return isSupported;
+        return Notification.class.equals(acmObjectType);
     }
 
     private void mapAdditionalProperties(Notification in, Map<String, Object> additionalProperties)
@@ -168,5 +163,11 @@ public class NotificationToSolrTransformer implements AcmObjectToSolrDocTransfor
     public void setUserDao(UserDao userDao)
     {
         this.userDao = userDao;
+    }
+
+    @Override
+    public Class<?> getAcmObjectTypeSupported()
+    {
+        return Notification.class;
     }
 }

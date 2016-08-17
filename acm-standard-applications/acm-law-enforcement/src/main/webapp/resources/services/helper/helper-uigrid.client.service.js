@@ -466,10 +466,10 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
              * @param {String} objId ArkCase Object ID
              *
              * @description
-             * Go to a page that show the specified ArkCase Object (Case, Complaint, Document, etc.)
+             * Go to a page state that show the specified ArkCase Object (Case, Complaint, Document, etc.)
              */
             , showObject: function (objType, objId) {
-                return ObjectService.gotoUrl(objType, objId);
+                return ObjectService.gotoState(objType, objId);
             }
 
             /**

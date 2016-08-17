@@ -1,18 +1,15 @@
 <div ng-controller="Admin.BrandingCustomCssController">
+
+<div class="pull-right well">
+	<div class="btn-group">
+		<button class="btn btn-sm btn-link" ng-click="saveCssData()" ng-disabled="saveBtnDisabled"><i
+		        class="fa fa-edit"/>
+		    <span translate>admin.branding.customCss.save</span>
+		</button>
+	</div>
+</div>	
+
     <panel-view header="{{'admin.branding.customCss' | translate}}" collapsible="false">
-        <div class="row">
-            <div class="pull-right">
-                <div class="btn-group">
-                    <button class="btn btn-sm btn-default" ng-click="saveCssData()" ng-disabled="saveBtnDisabled"><i
-                            class="fa fa-edit"/>
-                        <span translate>admin.branding.customCss.save</span>
-                    </button>
-                    <br/>
-                    <br/>
-                </div>
-            </div>
-        </div>
-        <div class="row">
             <div ui-ace="{
               useWrapMode : true,
               showGutter: true,
@@ -21,6 +18,5 @@
               onLoad: aceLoaded,
               onChange: dataChanged}">
             </div>
-        </div>
     </panel-view>
 </div>

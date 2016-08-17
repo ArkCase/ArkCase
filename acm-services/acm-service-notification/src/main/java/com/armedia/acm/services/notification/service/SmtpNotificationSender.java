@@ -117,8 +117,12 @@ public class SmtpNotificationSender implements NotificationSender, ApplicationEv
                 {
                     InputStream contents = getEcmFileService().downloadAsInputStream(attachmentId);
                     EcmFile ecmFile = getEcmFileService().findById(attachmentId);
-                    attachments.put(ecmFile.getFileName() + ecmFile.getFileActiveVersionNameExtension(), new DataHandler(
-                            new InputStreamDataSource(contents, ecmFile.getFileName() + ecmFile.getFileActiveVersionNameExtension())));
+                    String fileName = ecmFile.getFileName();
+                    if (ecmFile.getFileActiveVersionNameExtension() != null)
+                    {
+                        fileName = fileName + ecmFile.getFileActiveVersionNameExtension();
+                    }
+                    attachments.put(fileName, new DataHandler(new InputStreamDataSource(contents, fileName)));
 
                     if (firstIteration)
                     {
