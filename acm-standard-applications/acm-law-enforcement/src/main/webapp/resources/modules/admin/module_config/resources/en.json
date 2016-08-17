@@ -148,12 +148,6 @@
     "security.selectPrivileges.name": "Name",
     "security.modules": "Modules",
     "security.modules.module": "Module",
-    "admin.security.auditHistory": "Audit History",
-    "security.auditHistory.config": {
-      "title": "Audit History",
-      "historyDays.label": "Keep Audit and Notification events (in days)",
-      "apply.label": "Apply"
-    },
     "dashboard.title": "Dashboard",
     "dashboard.config": "Dashboard Configuration",
     "dashboard.widgets": "Widgets",
@@ -238,6 +232,12 @@
         "title": "Login configuration",
         "idleLimit.label": "Login idle limit (in milliseconds)",
         "inform":"Settings will take effect for all new user sessions",
+        "apply.label": "Apply"
+      },
+      "auditHistory.config": {
+        "title": "Audit History",
+        "historyDays.label": "Keep Audit and Notification events (in days)",
+        "inform":"Setting successfully saved",
         "apply.label": "Apply"
       }
     },
