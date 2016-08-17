@@ -175,4 +175,10 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
     {
         this.userDao = userDao;
     }
+
+    @Override
+    public Class<?> getAcmObjectTypeSupported()
+    {
+        return Person.class;
+    }
 }

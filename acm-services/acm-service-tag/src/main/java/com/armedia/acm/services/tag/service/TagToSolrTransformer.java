@@ -117,5 +117,10 @@ public class TagToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmTa
         this.userDao = userDao;
     }
 
+    @Override
+    public Class<?> getAcmObjectTypeSupported()
+    {
+        return AcmTag.class;
+    }
 
 }

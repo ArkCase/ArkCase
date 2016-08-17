@@ -94,13 +94,7 @@ public class PostalAddressToSolrTransformer implements AcmObjectToSolrDocTransfo
     @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
-        boolean objectNotNull = acmObjectType != null;
-        String ourClassName = PostalAddress.class.getName();
-        String theirClassName = acmObjectType.getName();
-        boolean classNames = theirClassName.equals(ourClassName);
-        boolean isSupported = objectNotNull && classNames;
-
-        return isSupported;
+        return PostalAddress.class.equals(acmObjectType);
     }
 
     public PostalAddressDao getPostalAddressDao()
@@ -121,5 +115,11 @@ public class PostalAddressToSolrTransformer implements AcmObjectToSolrDocTransfo
     public void setUserDao(UserDao userDao)
     {
         this.userDao = userDao;
+    }
+
+    @Override
+    public Class<?> getAcmObjectTypeSupported()
+    {
+        return PostalAddress.class;
     }
 }
