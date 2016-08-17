@@ -444,7 +444,7 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
              * Go to a page that show the specified ArkCase Object (Case, Complaint, Document, etc.)
              */
             , showObject: function (objType, objId) {
-                return ObjectService.gotoUrl(objType, objId);
+                return ObjectService.gotoState(objType, objId);
             }
 
             /**
