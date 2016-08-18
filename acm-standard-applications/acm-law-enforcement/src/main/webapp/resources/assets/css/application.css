@@ -1,5 +1,6 @@
 /* @override http://jsapn.armedianet.com/arkcase/assets/css/application.css
-	http://10.21.4.149/arkcase/assets/css/application.css */
+	http://10.21.4.149/arkcase/assets/css/application.css
+	https://star.arkcase.dev.armedia.com/arkcase/assets/css/application.css */
 
 /* @override http://dev.jsapn.armedianet.com/arkcase/assets/css/application.css
 	http://localhost:8080/arkcase/assets/css/application.css
@@ -1153,9 +1154,72 @@ tags-input .tags {
 .hidden-button {
     display: none;
 }
+
+.pull-right.well select {
+	position: relative;
+	top: 4px !important;
+}
 .pull-right.well .btn-group .btn-link {
 	color: white;
 }
 .pull-right.well .btn-group .btn-link:hover {
 	color: #ccc;
+}
+
+
+/* fixing padding for rows inside of panels */
+
+.panel-body .row {
+	margin-right: 0px;
+	margin-left: 0px;
+}
+ 
+.panel-body .row:first-child {
+	margin-top: 10px;
+	margin-right: 0px;
+	margin-left: 0px;
+}
+.panel-body .row:last-child {
+	margin-bottom: 10px;
+	margin-right: 0px;
+	margin-left: 0px;
+}
+ 
+ 
+.module-header .col-xs-12.col-md-3 .h4.font-bold {
+    font-size: 15px;
+    margin: 0px;
+}
+.module-header .col-xs-12.col-md-2 .h4.font-bold {
+    font-size: 15px;
+    margin: 0px;
+}
+
+.module-header .col-sm-6.col-md-3 .h4.font-bold {
+    font-size: 15px;
+    margin: 0px;
+}
+.module-header .col-sm-6.col-md-3 .h4.font-bold {
+    font-size: 15px;
+    margin: 0px;
+}
+
+
+
+/* Right Sidebar Summernote Editor */
+.right-sidebar.well-sm .note-toolbar .btn{
+	padding: 2px 5px 2px 5px;
+}
+
+.right-sidebar.well-sm .note-toolbar .btn-group {
+	margin: 0px !important;
+	padding: 0px !important;
+}
+
+.right-sidebar.well-sm .note-toolbar .note-help.btn-group {
+	display: none;
+}
+
+.right-sidebar.well-sm .note-toolbar .note-view.btn-group {
+	display: none;
 }
