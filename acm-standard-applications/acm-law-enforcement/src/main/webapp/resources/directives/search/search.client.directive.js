@@ -243,6 +243,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                         }
                         else if (scope.filters.indexOf('fq="' + facet + '":' + field) > -1) {
                             scope.filters = '';
+                            scope.clearAllFacets();
                         }
                         scope.queryExistingItems();
                     }
@@ -305,6 +306,14 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                 scope.downloadCSV = function () {
                     if (scope.gridApi && scope.gridApi.exporter) {
                         scope.gridApi.exporter.csvExport(uiGridExporterConstants.VISIBLE);
+                    }
+                };
+
+                scope.clearAllFacets = function () {
+                    var selections = scope.currentFacetSelection;
+                    for (var selection in selections)
+                    {
+                        selections[selection] = false;
                     }
                 };
 

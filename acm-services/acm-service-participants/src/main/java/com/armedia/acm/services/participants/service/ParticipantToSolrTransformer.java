@@ -112,4 +112,10 @@ public class ParticipantToSolrTransformer implements AcmObjectToSolrDocTransform
     {
         this.acmParticipantDao = acmParticipantDao;
     }
+
+    @Override
+    public Class<?> getAcmObjectTypeSupported()
+    {
+        return AcmParticipant.class;
+    }
 }

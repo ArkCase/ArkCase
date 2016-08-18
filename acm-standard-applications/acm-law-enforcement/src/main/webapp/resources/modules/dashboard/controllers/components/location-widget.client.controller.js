@@ -20,7 +20,6 @@ angular.module('dashboard.locations', ['adf.provider'])
 
             var promiseConfig;
             var promiseInfo;
-            var promiseUsers;
             var modules = [
                 {name: "COMPLAINT", configName: "complaints", getInfo: ComplaintInfoService.getComplaintInfo}
             ];
@@ -38,7 +37,8 @@ angular.module('dashboard.locations', ['adf.provider'])
             if (module && Util.goodPositive(currentObjectId, false)) {
                 promiseConfig = ConfigService.getModuleConfig(module.configName);
                 promiseInfo = module.getInfo(currentObjectId);
-                promiseUsers = HelperUiGridService.getUsers();
+                var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+                var promiseUsers = gridHelper.getUsers();
 
                 $q.all([promiseConfig, promiseInfo, promiseUsers]).then(function (data) {
                         var config = _.find(data[0].components, {id: "main"});
@@ -46,6 +46,7 @@ angular.module('dashboard.locations', ['adf.provider'])
                         var widgetInfo = _.find(config.widgets, function (widget) {
                             return widget.id === "locations";
                         });
+                        gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
                         $scope.config = config;
                         $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
 
@@ -58,8 +59,6 @@ angular.module('dashboard.locations', ['adf.provider'])
                             //No location data to show
                             $scope.gridOptions.totalItems = 0;
                         }
-
-                        HelperUiGridService.setUserNameFilter(promiseUsers);
                     },
                     function (err) {
 

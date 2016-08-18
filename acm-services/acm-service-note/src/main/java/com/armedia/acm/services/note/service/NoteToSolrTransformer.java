@@ -1,6 +1,5 @@
 package com.armedia.acm.services.note.service;
 
-
 import com.armedia.acm.services.note.dao.NoteDao;
 import com.armedia.acm.services.note.model.Note;
 import com.armedia.acm.services.note.model.NoteConstants;
@@ -112,5 +111,11 @@ public class NoteToSolrTransformer implements AcmObjectToSolrDocTransformer<Note
     public void setNoteDao(NoteDao noteDao)
     {
         this.noteDao = noteDao;
+    }
+
+    @Override
+    public Class<?> getAcmObjectTypeSupported()
+    {
+        return Note.class;
     }
 }
