@@ -1,8 +1,10 @@
 <div ng-controller="Admin.FunctionalAccessController">
     <panel-view header="{{'admin.security.functionalAccessControl' | translate}}" collapsible="false">
+    <div class="row">
         <object-authorization-roles data="appRoles" object-display-name="name" on-object-selected="onObjSelect"
                                     role-display-name="name"
                                     on-auth-role-change="onAuthRoleSelected"
                                     object-title="{{'admin.security.functionalAccessControl.applicationRole' | translate}}"/>
+     </div>
     </panel-view>
 </div>
