@@ -12,9 +12,6 @@ angular.module('admin')
             angular.forEach(payload.data, function (widget) {
                 ConfigService.getModuleConfig("dashboard").then(function (data) {
                     var cfg = _.find(data.components, {id: widget.widgetName});
-                    // var widgetInfo = _.find(cfg, function (w) {
-                    //     return w.id === widget.widgetName;
-                    // });
 
                     var element = new Object;
                     if (cfg != null) {
