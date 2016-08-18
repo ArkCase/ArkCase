@@ -109,7 +109,7 @@ public class GetNumberOfActiveCaseFilesByQueueAPIController
      */
     private Map<String, Long> getNumberOfActiveCaseFilesByQueue(List<Object> queuesValues, List<Object> facetValues)
     {
-        Map<String, Long> retval = queuesValues.stream().collect(Collectors.toMap(queueName -> (String) queueName, queueName -> findValue((String) queueName, facetValues), (v1, v2) -> null, LinkedHashMap::new));
+        Map<String, Long> retval = queuesValues.stream().collect(Collectors.toMap(queueName -> (String) queueName, queueName -> findValue((String) queueName, facetValues), (v1, v2) -> v2, LinkedHashMap::new));
 
         return retval;
     }
