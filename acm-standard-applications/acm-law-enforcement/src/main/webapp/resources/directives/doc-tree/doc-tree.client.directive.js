@@ -83,11 +83,11 @@
  </example>
  */
 angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', '$filter', '$log', '$timeout'
-    , 'Acm.StoreService', 'UtilService', 'Util.DateService', 'Util.TimerService', 'ConfigService', 'LookupService'
+    , 'Acm.StoreService', 'UtilService', 'Util.DateService', ConfigService', 'LookupService'
     , 'EcmService', 'Ecm.EmailService', 'Ecm.RecordService', 'Authentication', 'Helper.NoteService', 'Object.NoteService'
     , '$browser', '$location', 'Object.LockingService', 'ObjectService', 'Object.CorrespondenceService', 'TicketService'
     , function ($q, $translate, $modal, $filter, $log, $timeout
-        , Store, Util, UtilDateService, UtilTimerService, ConfigService, LookupService
+        , Store, Util, UtilDateService, ConfigService, LookupService
         , Ecm, EcmEmailService, EcmRecordService, Authentication, HelperNoteService, ObjectNoteService
         , $browser, $location, LockingService, ObjectService, ObjectCorrespondenceService, TicketService) {
         var user = "";
@@ -2265,7 +2265,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                     } else {
                         var promiseAddNodes = DocTree._addingFileNodes(folderNode, names, fileType);
-//xxxx
                         var cacheKey = DocTree.getCacheKeyByNode(folderNode);
                         var promiseUploadFiles = Util.serviceCall({
                             service: Ecm.uploadFiles
