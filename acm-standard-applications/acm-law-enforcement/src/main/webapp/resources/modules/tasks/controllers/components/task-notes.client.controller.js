@@ -11,24 +11,25 @@ angular.module('tasks').controller('Tasks.NotesController', ['$scope', '$statePa
             };
             $scope.config = config;
             return config;
+
         });
 
         var componentHelper = new HelperObjectBrowserService.Component(
-                {
-                    scope : $scope,
-                    stateParams : $stateParams,
-                    moduleId : "tasks",
-                    componentId : "notes",
-                    retrieveObjectInfo : TaskInfoService.getTaskInfo,
-                    validateObjectInfo : TaskInfoService.validateTaskInfo,
-                    onConfigRetrieved : function(
-                            componentConfig) {
-                        return onConfigRetrieved(componentConfig);
-                    },
-                    onObjectInfoRetrieved : function(objectInfo) {
-                        onObjectInfoRetrieved(objectInfo);
-                    }
-                });
+            {
+                scope : $scope,
+                stateParams : $stateParams,
+                moduleId : "tasks",
+                componentId : "notes",
+                retrieveObjectInfo : TaskInfoService.getTaskInfo,
+                validateObjectInfo : TaskInfoService.validateTaskInfo,
+                onConfigRetrieved : function(
+                    componentConfig) {
+                    return onConfigRetrieved(componentConfig);
+                },
+                onObjectInfoRetrieved : function(objectInfo) {
+                    onObjectInfoRetrieved(objectInfo);
+                }
+            });
 
         var onConfigRetrieved = function(config) {
 
@@ -46,8 +47,6 @@ angular.module('tasks').controller('Tasks.NotesController', ['$scope', '$statePa
             });
 
         };
-
-
     }
 
 ]);

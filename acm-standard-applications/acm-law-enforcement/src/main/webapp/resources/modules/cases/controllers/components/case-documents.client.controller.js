@@ -81,7 +81,7 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
             $scope.treeControl = treeControl;
             DocTreeExtCore.handleCheckout(treeControl, $scope);
             DocTreeExtCore.handleCheckin(treeControl, $scope);
-            DocTreeExtCore.handleEditWithWord(treeControl, $scope);
+            DocTreeExtCore.handleEditWithWebDAV(treeControl, $scope);
             DocTreeExtCore.handleCancelEditing(treeControl, $scope);
 
             //$scope.treeControl.addCommandHandler({

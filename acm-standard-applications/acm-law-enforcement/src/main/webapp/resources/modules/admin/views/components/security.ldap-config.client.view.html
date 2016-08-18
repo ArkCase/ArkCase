@@ -1,25 +1,20 @@
 <div ng-controller="Admin.LdapConfigController">
+	<div class="pull-right well">
+	    <div class="btn-group">
+	        <button class="btn btn-sm btn-link" ng-click="showModal()">
+	            <i class="glyphicon glyphicon-plus-sign"></i>
+	            <span translate>admin.security.ldapConfig.addNewDirectory</span>
+	        </button>
+	    </div>
+	</div>
     <panel-view header="{{'admin.security.ldapConfig' | translate}}" collapsible="false">
-        <div class="row">
-            <div class="pull-right">
-                <div class="btn-group">
-                    <button class="btn btn-sm btn-default" ng-click="showModal()">
-                        <i class="glyphicon glyphicon-plus-sign"></i>
-                        <span translate>admin.security.ldapConfig.addNewDirectory</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div ui-grid="gridOptions"
+      		<div ui-grid="gridOptions"
                  ui-grid-resize-columns
                  ui-grid-selection
                  adjust-table-height="gridOptions.data.length"
                  ui-grid-auto-resize
                  class="grid">
             </div>
-        </div>
 
     </panel-view>
 </div>
