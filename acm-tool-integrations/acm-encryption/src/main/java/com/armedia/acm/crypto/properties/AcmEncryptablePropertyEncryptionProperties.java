@@ -2,10 +2,6 @@ package com.armedia.acm.crypto.properties;
 
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.AcmCryptoUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.nio.charset.Charset;
 
 /**
  * Class holding the properties used for encryption/decryption of application properties.
@@ -14,9 +10,6 @@ import java.nio.charset.Charset;
  */
 public class AcmEncryptablePropertyEncryptionProperties
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
-
-    private static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
     private AcmCryptoUtils cryptoUtils;
     private AcmEncryptablePropertyUtils encryptablePropertyUtils;
     private byte[] symmetricKey;
@@ -31,8 +24,10 @@ public class AcmEncryptablePropertyEncryptionProperties
     private String propertiesEncryptionPassPhraseHashAlgorithm;
     private String encryptedSymmetricKeyEncryptionAlgorithm;
     private String encryptedSymmetricKeyFilePath;
-    private String privateKeyEncryptionAlgorithm;
-    private String privateKeyFilePath;
+    private String keystoreType;
+    private String keystorePath;
+    private String keystorePassword;
+    private String privateKeyAlias;
 
     /**
      * @return the symmetricKey
@@ -43,14 +38,14 @@ public class AcmEncryptablePropertyEncryptionProperties
         if (this.symmetricKey == null)
         {
             this.symmetricKey = encryptablePropertyUtils.decryptSymmetricKey();
-//            log.debug("Decrypted symmetric key: {}", new String(this.symmetricKey, UTF8_CHARSET));
         }
 
         return symmetricKey;
     }
 
     /**
-     * @param symmetricKey the symmetricKey to set
+     * @param symmetricKey
+     *            the symmetricKey to set
      */
     public void setSymmetricKey(byte[] symmetricKey)
     {
@@ -66,7 +61,8 @@ public class AcmEncryptablePropertyEncryptionProperties
     }
 
     /**
-     * @param propertiesEncryptionAlgorithm the propertiesEncryptionAlgorithm to set
+     * @param propertiesEncryptionAlgorithm
+     *            the propertiesEncryptionAlgorithm to set
      */
     public void setPropertiesEncryptionAlgorithm(String propertiesEncryptionAlgorithm)
     {
@@ -82,7 +78,8 @@ public class AcmEncryptablePropertyEncryptionProperties
     }
 
     /**
-     * @param propertiesEncryptionBlockCipherMode the propertiesEncryptionBlockCipherMode to set
+     * @param propertiesEncryptionBlockCipherMode
+     *            the propertiesEncryptionBlockCipherMode to set
      */
     public void setPropertiesEncryptionBlockCipherMode(String propertiesEncryptionBlockCipherMode)
     {
@@ -98,7 +95,8 @@ public class AcmEncryptablePropertyEncryptionProperties
     }
 
     /**
-     * @param propertiesEncryptionPadding the propertiesEncryptionPadding to set
+     * @param propertiesEncryptionPadding
+     *            the propertiesEncryptionPadding to set
      */
     public void setPropertiesEncryptionPadding(String propertiesEncryptionPadding)
     {
@@ -114,7 +112,8 @@ public class AcmEncryptablePropertyEncryptionProperties
     }
 
     /**
-     * @param propertiesEncryptionKeySize the propertiesEncryptionKeySize to set
+     * @param propertiesEncryptionKeySize
+     *            the propertiesEncryptionKeySize to set
      */
     public void setPropertiesEncryptionKeySize(int propertiesEncryptionKeySize)
     {
@@ -130,7 +129,8 @@ public class AcmEncryptablePropertyEncryptionProperties
     }
 
     /**
-     * @param propertiesEncryptionIVSize the propertiesEncryptionIVSize to set
+     * @param propertiesEncryptionIVSize
+     *            the propertiesEncryptionIVSize to set
      */
     public void setPropertiesEncryptionIVSize(int propertiesEncryptionIVSize)
     {
@@ -146,7 +146,8 @@ public class AcmEncryptablePropertyEncryptionProperties
     }
 
     /**
-     * @param propertiesEncryptionMagicSize the propertiesEncryptionMagicSize to set
+     * @param propertiesEncryptionMagicSize
+     *            the propertiesEncryptionMagicSize to set
      */
     public void setPropertiesEncryptionMagicSize(int propertiesEncryptionMagicSize)
     {
@@ -162,7 +163,8 @@ public class AcmEncryptablePropertyEncryptionProperties
     }
 
     /**
-     * @param propertiesEncryptionSaltSize the propertiesEncryptionSaltSize to set
+     * @param propertiesEncryptionSaltSize
+     *            the propertiesEncryptionSaltSize to set
      */
     public void setPropertiesEncryptionSaltSize(int propertiesEncryptionSaltSize)
     {
@@ -178,7 +180,8 @@ public class AcmEncryptablePropertyEncryptionProperties
     }
 
     /**
-     * @param propertiesEncryptionPassPhraseIterations the propertiesEncryptionPassPhraseIterations to set
+     * @param propertiesEncryptionPassPhraseIterations
+     *            the propertiesEncryptionPassPhraseIterations to set
      */
     public void setPropertiesEncryptionPassPhraseIterations(int propertiesEncryptionPassPhraseIterations)
     {
@@ -194,7 +197,8 @@ public class AcmEncryptablePropertyEncryptionProperties
     }
 
     /**
-     * @param propertiesEncryptionPassPhraseHashAlgorithm the propertiesEncryptionPassPhraseHashAlgorithm to set
+     * @param propertiesEncryptionPassPhraseHashAlgorithm
+     *            the propertiesEncryptionPassPhraseHashAlgorithm to set
      */
     public void setPropertiesEncryptionPassPhraseHashAlgorithm(String propertiesEncryptionPassPhraseHashAlgorithm)
     {
@@ -210,7 +214,8 @@ public class AcmEncryptablePropertyEncryptionProperties
     }
 
     /**
-     * @param encryptedSymmetricKeyEncryptionAlgorithm the encryptedSymmetricKeyEncryptionAlgorithm to set
+     * @param encryptedSymmetricKeyEncryptionAlgorithm
+     *            the encryptedSymmetricKeyEncryptionAlgorithm to set
      */
     public void setEncryptedSymmetricKeyEncryptionAlgorithm(String encryptedSymmetricKeyEncryptionAlgorithm)
     {
@@ -218,49 +223,16 @@ public class AcmEncryptablePropertyEncryptionProperties
     }
 
     /**
-     * @return the privateKeyEncryptionAlgorithm
-     */
-    public String getPrivateKeyEncryptionAlgorithm()
-    {
-        return privateKeyEncryptionAlgorithm;
-    }
-
-    /**
-     * @param privateKeyEncryptionAlgorithm the privateKeyEncryptionAlgorithm to set
-     */
-    public void setPrivateKeyEncryptionAlgorithm(String privateKeyEncryptionAlgorithm)
-    {
-        this.privateKeyEncryptionAlgorithm = privateKeyEncryptionAlgorithm;
-    }
-
-    /**
-     * @return the privateKey
-     */
-    public String getPrivateKeyFilePath()
-    {
-        // the file path is relative to "user.home"
-        return System.getProperty("user.home") + "/" + privateKeyFilePath;
-    }
-
-    /**
-     * @param privateKeyFilePath the privateKeyFilePath to set
-     */
-    public void setPrivateKeyFilePath(String privateKeyFilePath)
-    {
-        this.privateKeyFilePath = privateKeyFilePath;
-    }
-
-    /**
      * @return the encryptedSymmetricKeyFilePath
      */
     public String getEncryptedSymmetricKeyFilePath()
     {
-        // the file path is relative to "user.home"
-        return System.getProperty("user.home") + "/" + encryptedSymmetricKeyFilePath;
+        return encryptedSymmetricKeyFilePath;
     }
 
     /**
-     * @param encryptedSymmetricKeyFilePath the encryptedSymmetricKeyFilePath to set
+     * @param encryptedSymmetricKeyFilePath
+     *            the encryptedSymmetricKeyFilePath to set
      */
     public void setEncryptedSymmetricKeyFilePath(String encryptedSymmetricKeyFilePath)
     {
@@ -276,7 +248,8 @@ public class AcmEncryptablePropertyEncryptionProperties
     }
 
     /**
-     * @param cryptoUtils the cryptoUtils to set
+     * @param cryptoUtils
+     *            the cryptoUtils to set
      */
     public void setCryptoUtils(AcmCryptoUtils cryptoUtils)
     {
@@ -292,10 +265,79 @@ public class AcmEncryptablePropertyEncryptionProperties
     }
 
     /**
-     * @param encryptablePropertyUtils the encryptablePropertyUtils to set
+     * @param encryptablePropertyUtils
+     *            the encryptablePropertyUtils to set
      */
     public void setEncryptablePropertyUtils(AcmEncryptablePropertyUtils encryptablePropertyUtils)
     {
         this.encryptablePropertyUtils = encryptablePropertyUtils;
+    }
+
+    /**
+     * @return the keystoreType
+     */
+    public String getKeystoreType()
+    {
+        return keystoreType;
+    }
+
+    /**
+     * @param keystoreType
+     *            the keystoreType to set
+     */
+    public void setKeystoreType(String keystoreType)
+    {
+        this.keystoreType = keystoreType;
+    }
+
+    /**
+     * @return the keystorePath
+     */
+    public String getKeystorePath()
+    {
+        return keystorePath;
+    }
+
+    /**
+     * @param keystorePath
+     *            the keystorePath to set
+     */
+    public void setKeystorePath(String keystorePath)
+    {
+        this.keystorePath = keystorePath;
+    }
+
+    /**
+     * @return the keystorePassword
+     */
+    public String getKeystorePassword()
+    {
+        return keystorePassword;
+    }
+
+    /**
+     * @param keystorePassword
+     *            the keystorePassword to set
+     */
+    public void setKeystorePassword(String keystorePassword)
+    {
+        this.keystorePassword = keystorePassword;
+    }
+
+    /**
+     * @return the privateKeyAlias
+     */
+    public String getPrivateKeyAlias()
+    {
+        return privateKeyAlias;
+    }
+
+    /**
+     * @param privateKeyAlias
+     *            the privateKeyAlias to set
+     */
+    public void setPrivateKeyAlias(String privateKeyAlias)
+    {
+        this.privateKeyAlias = privateKeyAlias;
     }
 }

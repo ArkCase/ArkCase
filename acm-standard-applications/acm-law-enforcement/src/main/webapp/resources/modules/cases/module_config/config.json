@@ -245,7 +245,8 @@
               "width": 150,
               "name": "modifier",
               "displayName": "cases.comp.details.table.columns.modifier",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
             }
           ]
         },
@@ -302,28 +303,25 @@
           "columnDefs": [
             {
               "name": "note",
-              "field": "description_parseable",
               "displayName": "cases.comp.notes.table.columns.note",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div ng-bind-html='row.entity.description_parseable' title='{{row.entity.description_parseable}}' class='ui-grid-cell-contents'></div>",
+              "cellTemplate": "<div ng-bind-html='row.entity.note' title='{{row.entity.note}}' class='ui-grid-cell-contents'></div>",
               "enableCellEdit": false
             },
             {
               "name": "created",
-              "field": "create_date_tdt",
               "displayName": "cases.comp.notes.table.columns.created",
-              "cellTemplate": "<div>{{ row.entity.create_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
               "headerCellFilter": "translate",
               "enableCellEdit": false,
               "width": 150
             },
             {
               "name": "creator",
-              "field": "creator_lcs",
               "displayName": "cases.comp.notes.table.columns.creator",
               "headerCellFilter": "translate",
               "enableCellEdit": false,
-              "fullNameField": "creator_full_name_lcs",
+              "lookup": "userFullNames",
               "width": 150
             }
           ]
@@ -346,7 +344,7 @@
               "field": "assignee_s",
               "displayName": "cases.comp.tasks.table.columns.assignee",
               "headerCellFilter": "translate",
-              "fullNameField": "assignee_full_name_lcs"
+              "lookup": "userFullNames"
             },
             {
               "width": 150,
@@ -521,7 +519,7 @@
             "name": "creator",
             "displayName": "cases.comp.people.contactMethods.table.columns.creator",
             "headerCellFilter": "translate",
-            "fullNameField": "creator_full_name_lcs"
+            "lookup": "userFullNames"
           }
         ]
       },
@@ -562,7 +560,7 @@
             "name": "creator",
             "displayName": "cases.comp.people.organizations.table.columns.creator",
             "headerCellFilter": "translate",
-            "fullNameField": "creator_full_name_lcs"
+            "lookup": "userFullNames"
           }
         ]
       },
@@ -620,7 +618,7 @@
             "name": "creator",
             "displayName": "cases.comp.people.addresses.table.columns.creator",
             "headerCellFilter": "translate",
-            "fullNameField": "creator_full_name_lcs"
+            "lookup": "userFullNames"
           }
         ]
       },
@@ -658,7 +656,7 @@
             "name": "creator",
             "displayName": "cases.comp.people.aliases.table.columns.creator",
             "headerCellFilter": "translate",
-            "fullNameField": "creator_full_name_lcs"
+            "lookup": "userFullNames"
           }
         ]
       },
@@ -803,28 +801,25 @@
       "columnDefs": [
         {
           "name": "note",
-          "field": "description_parseable",
           "displayName": "cases.comp.notes.table.columns.note",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div ng-bind-html='row.entity.description_parseable' title='{{row.entity.description_parseable}}' class='ui-grid-cell-contents'></div>",
+          "cellTemplate": "<div ng-bind-html='row.entity.note' title='{{row.entity.note}}' class='ui-grid-cell-contents'></div>",
           "enableCellEdit": false
         },
         {
           "name": "created",
-          "field": "create_date_tdt",
           "displayName": "cases.comp.notes.table.columns.created",
-          "cellTemplate": "<div>{{ row.entity.create_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
           "width": 150
         },
         {
           "name": "creator",
-          "field": "creator_lcs",
           "displayName": "cases.comp.notes.table.columns.creator",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
-          "fullNameField": "creator_full_name_lcs",
+          "lookup": "userFullNames",
           "width": 150
         }
       ]
@@ -857,7 +852,7 @@
           "field": "assignee_s",
           "displayName": "cases.comp.tasks.table.columns.assignee",
           "headerCellFilter": "translate",
-          "fullNameField": "assignee_full_name_lcs"
+          "lookup": "userFullNames"
         },
         {
           "name": "created",

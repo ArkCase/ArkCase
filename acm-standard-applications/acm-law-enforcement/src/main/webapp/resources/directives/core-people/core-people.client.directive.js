@@ -76,6 +76,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                     }
                 });
                 var gridHelper = new HelperUiGridService.Grid({scope: scope});
+                var promiseUsers = gridHelper.getUsers();
 
                 var promisePersonTypes = ObjectLookupService.getPersonTypes().then(
                     function (personTypes) {
@@ -172,8 +173,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                     scope.objectInfo = objectInfo;
                     if (!scope.objectInfoLoaded) {
                         scope.objectInfoLoaded = true;
-                        //$q.all([promiseUsers, promisePersonTypes, promiseContactMethodTypes, promiseOrganizationTypes, promiseAddressTypes, promiseAliasTypes, promiseSecurityTagTypes, componentHelper.promiseConfig]).then(function () {
-                        $q.all([promisePersonTypes, promiseContactMethodTypes, promiseOrganizationTypes, promiseAddressTypes, promiseAliasTypes]).then(function () {
+                        $q.all([promiseUsers, promisePersonTypes, promiseContactMethodTypes, promiseOrganizationTypes, promiseAddressTypes, promiseAliasTypes]).then(function () {
                             scope.retrieveGridData();
                         }); //end $q
                     }
@@ -201,6 +201,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                             _.each(pa.acm$_contactMethods.gridOptions.data, function (item) {
                                 item.acm$_paId = pa.id;
                             });
+                            gridHelper.setUserNameFilterToConfig(promiseUsers, pa.acm$_contactMethods.gridOptions);
 
                             pa.acm$_organizations = {
                                 gridOptions: getGridOptions(configGridOrganization)
@@ -209,6 +210,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                             _.each(pa.acm$_organizations.gridOptions.data, function (item) {
                                 item.acm$_paId = pa.id;
                             });
+                            gridHelper.setUserNameFilterToConfig(promiseUsers, pa.acm$_organizations.gridOptions);
 
                             pa.acm$_addresses = {
                                 gridOptions: getGridOptions(configGridAddress)
@@ -217,6 +219,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                             _.each(pa.acm$_addresses.gridOptions.data, function (item) {
                                 item.acm$_paId = pa.id;
                             });
+                            gridHelper.setUserNameFilterToConfig(promiseUsers, pa.acm$_addresses.gridOptions);
 
                             pa.acm$_aliases = {
                                 gridOptions: getGridOptions(configGridAlias)
@@ -225,6 +228,9 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                             _.each(pa.acm$_aliases.gridOptions.data, function (item) {
                                 item.acm$_paId = pa.id;
                             });
+                            gridHelper.setUserNameFilterToConfig(promiseUsers, pa.acm$_aliases.gridOptions);
+
+
                         }
                     }
                 };

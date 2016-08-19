@@ -46,6 +46,7 @@ public interface SearchConstants
     String PROPERTY_VERSION = "version_s";
     String PROPERTY_CMIS_VERSION_SERIES_ID = "cmis_version_series_id_s";
     String PROPERTY_MIME_TYPE = "mime_type_s";
+    String PROPERTY_EXT = "ext_s";
     String PROPERTY_STATUS = "status_s";
     String PROPERTY_GROUPS_ID_SS = "groups_id_ss";
     String PROPERTY_QUEUE_ID_S = "queue_id_s";

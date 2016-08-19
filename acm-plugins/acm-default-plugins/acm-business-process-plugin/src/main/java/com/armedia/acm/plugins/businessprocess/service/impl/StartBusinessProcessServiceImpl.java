@@ -1,7 +1,6 @@
 package com.armedia.acm.plugins.businessprocess.service.impl;
 
 import com.armedia.acm.plugins.businessprocess.service.StartBusinessProcessService;
-
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.slf4j.Logger;
@@ -19,6 +18,7 @@ public class StartBusinessProcessServiceImpl implements StartBusinessProcessServ
     @Override
     public void startBusinessProcess(String processName, Map<String, Object> processVariables)
     {
+        log.debug("Starting process named: {}.", processName);
         ProcessInstance pi = getActivitiRuntimeService().startProcessInstanceByKey(processName, processVariables);
         log.debug("Started process with ID: {}.", pi.getId());
     }

@@ -97,13 +97,7 @@ public class QueueToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
     @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
-        boolean objectNotNull = acmObjectType != null;
-        String ourClassName = AcmQueue.class.getName();
-        String theirClassName = acmObjectType.getName();
-        boolean classNames = theirClassName.equals(ourClassName);
-        boolean isSupported = objectNotNull && classNames;
-
-        return isSupported;
+        return AcmQueue.class.equals(acmObjectType);
     }
 
     public UserDao getUserDao()
@@ -124,5 +118,11 @@ public class QueueToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
     public void setUserDao(UserDao userDao)
     {
         this.userDao = userDao;
+    }
+
+    @Override
+    public Class<?> getAcmObjectTypeSupported()
+    {
+        return AcmQueue.class;
     }
 }
