@@ -20,15 +20,18 @@ import javax.persistence.PersistenceContext;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/spring/spring-library-data-source.xml",
+@ContextConfiguration(locations = {
+        "/spring/spring-library-data-source.xml",
         "/spring/spring-library-person.xml",
         "/spring/spring-library-person-plugin-test-mule.xml",
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-property-file-manager.xml",
-        "/spring/spring-library-acm-encryption.xml", "/spring/spring-library-user-service.xml"
+        "/spring/spring-library-acm-encryption.xml",
+        "/spring/spring-library-user-service.xml",
+        "/spring/spring-library-search.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class PersonAssociationIT

@@ -54,11 +54,12 @@ import static org.junit.Assert.assertNotNull;
                 "/spring/spring-library-authentication-token.xml",
                 "/spring/spring-library-plugin-manager.xml",
                 "/spring/spring-library-functional-access-control.xml",
-                "/spring/spring-library-user-login.xml"
+                "/spring/spring-library-user-login.xml",
+                "/spring/spring-library-business-process.xml"
         }
 )
 @TransactionConfiguration(defaultRollback = false, transactionManager = "transactionManager")
-public class ComplaintMuleIT
+public class ComplaintPipelineIT
 {
 
     @Autowired
