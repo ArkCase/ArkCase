@@ -14,9 +14,9 @@ angular.module('dashboard.locations', ['adf.provider'])
             );
     })
     .controller('Dashboard.LocationsController', ['$scope', '$translate', '$stateParams', '$q', 'UtilService'
-        , 'Complaint.InfoService', 'Authentication', 'Dashboard.DashboardService', 'ConfigService', 'Helper.ObjectBrowserService',
+        , 'Complaint.InfoService', 'Authentication', 'Dashboard.DashboardService', 'ConfigService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
         function ($scope, $translate, $stateParams, $q, Util, ComplaintInfoService, Authentication, DashboardService, ConfigService
-        , HelperObjectBrowserService) {
+        , HelperObjectBrowserService, HelperUiGridService) {
 
             var promiseConfig;
             var promiseInfo;
@@ -37,13 +37,16 @@ angular.module('dashboard.locations', ['adf.provider'])
             if (module && Util.goodPositive(currentObjectId, false)) {
                 promiseConfig = ConfigService.getModuleConfig(module.configName);
                 promiseInfo = module.getInfo(currentObjectId);
+                var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+                var promiseUsers = gridHelper.getUsers();
 
-                $q.all([promiseConfig, promiseInfo]).then(function (data) {
+                $q.all([promiseConfig, promiseInfo, promiseUsers]).then(function (data) {
                         var config = _.find(data[0].components, {id: "main"});
                         var info = data[1];
                         var widgetInfo = _.find(config.widgets, function (widget) {
                             return widget.id === "locations";
                         });
+                        gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
                         $scope.config = config;
                         $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
 

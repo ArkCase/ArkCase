@@ -41,8 +41,9 @@ public class NextPossibleQueuesModel<T, P extends AbstractPipelineContext>
 
     public void setNextPossibleQueues(List<String> nextPossibleQueues)
     {
-        this.nextPossibleQueues.clear();
-        this.nextPossibleQueues.addAll(nextPossibleQueues);
+        List<String> queues = new ArrayList<>();
+        queues.addAll(nextPossibleQueues);
+        this.nextPossibleQueues = queues;
     }
 
 }

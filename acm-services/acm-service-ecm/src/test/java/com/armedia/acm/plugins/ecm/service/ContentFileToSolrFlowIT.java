@@ -1,7 +1,11 @@
 package com.armedia.acm.plugins.ecm.service;
 
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,14 +22,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.*;
-
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {
-        "/spring/spring-library-search-service-test-content-file-mule.xml",
-        "/spring/spring-mule-activemq.xml",
-        "/spring/spring-library-cmis-configuration.xml"
-})
+@ContextConfiguration(locations = { "/spring/spring-library-search-service-test-content-file-mule.xml", "/spring/spring-mule-activemq.xml",
+        "/spring/spring-library-cmis-configuration.xml" })
 public class ContentFileToSolrFlowIT
 {
     @Autowired
@@ -34,8 +33,9 @@ public class ContentFileToSolrFlowIT
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     /**
-     * To run this test, just find a CMIS Object ID you want to test (by looking at your Alfresco installation),
-     * and plug that into the EcmFileId.
+     * To run this test, just find a CMIS Object ID you want to test (by looking at your Alfresco installation), and
+     * plug that into the EcmFileId.
+     * 
      * @throws Exception
      */
     @Test
@@ -50,7 +50,7 @@ public class ContentFileToSolrFlowIT
 
         testFile.setVersionSeriesId("workspace://SpacesStore/2b697afd-6e7a-474b-bf75-5fadcb29fa84");
         testFile.setFileName("Clearance Denied 2015130-230216-658.docx");
-        testFile.setFileMimeType("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+        testFile.setFileActiveVersionMimeType("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
         testFile.setFileId(4444444L);
         testFile.setCreated(date);
         testFile.setModified(date);
@@ -66,7 +66,6 @@ public class ContentFileToSolrFlowIT
         assertNull(response.getExceptionPayload());
 
         log.debug("response: " + response.getPayloadAsString());
-
 
     }
 }

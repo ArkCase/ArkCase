@@ -127,7 +127,8 @@
             {
               "name": "modifier",
               "displayName": "costTracking.comp.details.table.columns.modifier",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
             }
           ]
         },
@@ -143,7 +144,8 @@
             {
               "name": "userId",
               "displayName": "costTracking.comp.people.table.columns.userId",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
             }
           ]
         },
@@ -201,7 +203,8 @@
         {
           "name": "userId",
           "displayName": "costTracking.comp.people.table.columns.userId",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "lookup": "userFullNames"
         }
       ]
     },

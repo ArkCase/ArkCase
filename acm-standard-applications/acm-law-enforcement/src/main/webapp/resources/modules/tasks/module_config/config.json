@@ -112,6 +112,7 @@
           "docsreview",
           "attachments",
           "notes",
+          "references",
           "workflow",
           "history",
           "signatures",
@@ -159,6 +160,14 @@
         ]
       },
       {
+        "type": "p/TASK/ref",
+        "label": "References",
+        "icon": "fa fa-exchange",
+        "components": [
+          "references"
+        ]
+      },
+      {
         "type": "p/TASK/wkfl",
         "label": "Workflow Overview",
         "icon": "fa fa-code-fork",
@@ -198,6 +207,7 @@
           "rejcomments",
           "attachments",
           "notes",
+          "references",
           "workflow",
           "history",
           "signatures",
@@ -234,6 +244,14 @@
         "icon": "fa fa-comments",
         "components": [
           "notes"
+        ]
+      },
+       {
+        "type": "p/ADHOC/ref",
+        "label": "References",
+        "icon": "fa fa-exchange",
+        "components": [
+          "references"
         ]
       },
       {
@@ -300,7 +318,8 @@
               "width": 150,
               "name": "assignee",
               "displayName": "tasks.comp.details.table.columns.modifier",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
             }
           ]
         },
@@ -324,7 +343,8 @@
               "width": 150,
               "name": "assignee",
               "displayName": "tasks.comp.reworkdetails.table.columns.modifier",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
             }
           ]
         },
@@ -383,7 +403,35 @@
               "displayName": "tasks.comp.notes.table.columns.creator",
               "headerCellFilter": "translate",
               "enableCellEdit": false,
-              "fullNameField": "creator_full_name_lcs"
+              "lookup": "userFullNames"
+            }
+          ]
+        },
+        {
+          "id": "references",
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "targetName",
+              "displayName": "tasks.comp.references.table.columns.targetName",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.targetName}}</a>"
+            },
+            {
+              "name": "targetTitle",
+              "displayName": "tasks.comp.references.table.columns.targetTitle",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.targetTitle}}</a>"
+            },
+            {
+              "name": "targetType",
+              "displayName": "tasks.comp.references.table.columns.targetType",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "status",
+              "displayName": "tasks.comp.references.table.columns.status",
+              "headerCellFilter": "translate"
             }
           ]
         },
@@ -472,29 +520,54 @@
           "columnDefs": [
             {
               "name": "note",
-              "field": "description_parseable",
               "displayName": "tasks.comp.notes.table.columns.note",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div ng-bind-html='row.entity.description_parseable' title='{{row.entity.description_parseable}}' class='ui-grid-cell-contents'></div>",
+              "cellTemplate": "<div ng-bind-html='row.entity.note' title='{{row.entity.note}}' class='ui-grid-cell-contents'></div>",
               "enableCellEdit": false
             },
             {
               "name": "created",
-              "field": "create_date_tdt",
               "displayName": "tasks.comp.notes.table.columns.created",
-              "cellTemplate": "<div>{{ row.entity.create_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
               "headerCellFilter": "translate",
               "enableCellEdit": false,
               "width": 150
             },
             {
               "name": "creator",
-              "field": "creator_lcs",
               "displayName": "tasks.comp.notes.table.columns.creator",
               "headerCellFilter": "translate",
               "enableCellEdit": false,
-              "fullNameField": "creator_full_name_lcs",
+              "lookup": "userFullNames",
               "width": 150
+            }
+          ]
+        },
+         {
+          "id": "references",
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "targetName",
+              "displayName": "tasks.comp.references.table.columns.targetName",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.targetName}}</a>"
+            },
+            {
+              "name": "targetTitle",
+              "displayName": "tasks.comp.references.table.columns.targetTitle",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.targetTitle}}</a>"
+            },
+            {
+              "name": "targetType",
+              "displayName": "tasks.comp.references.table.columns.targetType",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "status",
+              "displayName": "tasks.comp.references.table.columns.status",
+              "headerCellFilter": "translate"
             }
           ]
         },
@@ -705,6 +778,7 @@
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
+      "enableSorting": true,
       "paginationPageSizes": [
         5,
         10,
@@ -715,29 +789,71 @@
       "columnDefs": [
         {
           "name": "note",
-          "field": "description_parseable",
           "displayName": "tasks.comp.notes.table.columns.note",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div ng-bind-html='row.entity.description_parseable' title='{{row.entity.description_parseable}}' class='ui-grid-cell-contents'></div>",
+          "cellTemplate": "<div ng-bind-html='row.entity.note' title='{{row.entity.note}}' class='ui-grid-cell-contents'></div>",
           "enableCellEdit": false
         },
         {
           "name": "created",
-          "field": "create_date_tdt",
           "displayName": "tasks.comp.notes.table.columns.created",
-          "cellTemplate": "<div>{{ row.entity.create_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
           "width": 150
         },
         {
           "name": "creator",
-          "field": "creator_lcs",
           "displayName": "tasks.comp.notes.table.columns.creator",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
-          "fullNameField": "creator_full_name_lcs",
+          "lookup": "userFullNames",
           "width": 150
+        }
+      ]
+    },
+      {
+      "id": "references",
+      "title": "References",
+      "icon": "fa fa-exchange",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 5,
+      "columnDefs": [
+        {
+          "name": "targetName",
+          "displayName": "tasks.comp.references.table.columns.targetName",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.targetName}}</a>"
+        },
+        {
+          "name": "targetTitle",
+          "displayName": "tasks.comp.references.table.columns.targetTitle",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.targetTitle}}</a>"
+        },
+        {
+          "name": "modified",
+          "displayName": "tasks.comp.references.table.columns.modified",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+        },
+        {
+          "name": "targetType",
+          "displayName": "tasks.comp.references.table.columns.targetType",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "status",
+          "displayName": "tasks.comp.references.table.columns.status",
+          "headerCellFilter": "translate"
         }
       ]
     },
@@ -929,6 +1045,70 @@
       "paginationPageSize": 10,
       "start": 0
     },
+    
+    {
+      "id": "referenceSearchGrid",
+      "title": "Reference Search",
+      "enabled": "true",
+      "type": "grid",
+      "enableFiltering": false,
+      "emptySearch": false,
+      "hideTypeahead": true,
+      "showFacets": false,
+      "searchFilter": "\"Object Type\": COMPLAINT|CASE_FILE",
+      "columnDefs": [
+        {
+          "name": "object_id_s",
+          "displayName": "tasks.comp.addreference.grid.columns.id",
+          "headerCellFilter": "translate",
+          "visible": false
+        },
+        {
+          "name": "name",
+          "displayName": "tasks.comp.addreference.grid.columns.name",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "object_type_s",
+          "displayName": "tasks.comp.addreference.grid.columns.type",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "title_parseable",
+          "sortField": "title_parseable_lcs",
+          "displayName": "tasks.comp.addreference.grid.columns.title",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "parent_number_lcs",
+          "displayName": "tasks.comp.addreference.grid.columns.parent",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "assignee_full_name_lcs",
+          "displayName": "tasks.comp.addreference.grid.columns.assignee",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "modified_date_tdt",
+          "displayName": "tasks.comp.addreference.grid.columns.modified",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+        }
+      ],
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 20,
+      "start": 0,
+      "filter": "",
+      "filterName": "",
+      "reportFileName": "search"
+    },
+    
     {
       "id": "newTask",
       "status": [

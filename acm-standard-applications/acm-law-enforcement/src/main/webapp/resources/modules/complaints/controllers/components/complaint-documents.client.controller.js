@@ -83,8 +83,20 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
             $scope.treeControl = treeControl;
             DocTreeExtCore.handleCheckout(treeControl, $scope);
             DocTreeExtCore.handleCheckin(treeControl, $scope);
-            DocTreeExtCore.handleEditWithWord(treeControl, $scope);
+            DocTreeExtCore.handleEditWithWebDAV(treeControl, $scope);
             DocTreeExtCore.handleCancelEditing(treeControl, $scope);
+
+            //if there is subscription from other object we want to unsubscribe
+            //we want to have only one subscription from the current object
+            if ($scope.subscription) {
+                $scope.$bus.unsubscribe($scope.subscription);
+            }
+            var eventName = "object.changed/" + $scope.objectType + "/" + $scope.objectId;
+            $scope.subscription = $scope.$bus.subscribe(eventName, function (data) {
+                if (data.objectType == 'FILE') {
+                    $scope.treeControl.refreshTree();
+                }
+            });
         };
 
 

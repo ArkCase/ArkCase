@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,7 +24,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.InputStream;
 
-@RequestMapping({ "/api/v1/plugin/ecm", "/api/latest/plugin/ecm" })
+@RequestMapping({"/api/v1/plugin/ecm", "/api/latest/plugin/ecm"})
 public class FileDownloadAPIController implements ApplicationEventPublisherAware
 {
     private MuleContextManager muleContextManager;
@@ -40,14 +39,11 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
 
     @RequestMapping(value = "/download", method = RequestMethod.GET)
     @ResponseBody
-    public void downloadFileById(
-            @RequestParam(value = "inline", required = false, defaultValue = "false") boolean inline,
-            @RequestParam(value= "ecmFileId", required = true, defaultValue = "0") Long fileId,
-            @RequestParam(value= "acm_email_ticket", required = false, defaultValue = "") String acm_email_ticket,
-            Authentication authentication,
-            HttpSession httpSession,
-            HttpServletResponse response
-    ) throws IOException, MuleException, AcmObjectNotFoundException
+    public void downloadFileById(@RequestParam(value = "inline", required = false, defaultValue = "false") boolean inline,
+                                 @RequestParam(value = "ecmFileId", required = true, defaultValue = "0") Long fileId,
+                                 @RequestParam(value = "acm_email_ticket", required = false, defaultValue = "") String acm_email_ticket,
+                                 Authentication authentication, HttpSession httpSession, HttpServletResponse response)
+            throws IOException, MuleException, AcmObjectNotFoundException
     {
         if (log.isInfoEnabled())
         {
@@ -56,7 +52,7 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
 
         EcmFile ecmFile = getFileDao().find(fileId);
 
-        if ( ecmFile != null )
+        if (ecmFile != null)
         {
             EcmFileDownloadedEvent event = new EcmFileDownloadedEvent(ecmFile);
             event.setIpAddress((String) httpSession.getAttribute("acm_ip_address"));
@@ -65,24 +61,23 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
 
             getApplicationEventPublisher().publishEvent(event);
             String cmisFileId = getFolderAndFilesUtils().getActiveVersionCmisId(ecmFile);
-            download(cmisFileId, response,inline);
-        }
-        else
+            download(cmisFileId, response, inline, ecmFile);
+        } else
         {
             fileNotFound();
         }
     }
 
-    protected void download(String fileId, HttpServletResponse response,boolean isInline) throws IOException, MuleException, AcmObjectNotFoundException
+    protected void download(String fileId, HttpServletResponse response, boolean isInline, EcmFile ecmFile)
+            throws IOException, MuleException, AcmObjectNotFoundException
     {
 
         MuleMessage downloadedFile = getMuleContextManager().send("vm://downloadFileFlow.in", fileId);
 
-        if ( downloadedFile.getPayload() instanceof ContentStream )
+        if (downloadedFile.getPayload() instanceof ContentStream)
         {
-            handleFilePayload((ContentStream) downloadedFile.getPayload(), response,isInline);
-        }
-        else
+            handleFilePayload((ContentStream) downloadedFile.getPayload(), response, isInline, ecmFile);
+        } else
         {
             fileNotFound();
         }
@@ -90,18 +85,28 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
     }
 
     // called for normal processing - file was found
-    private void handleFilePayload(ContentStream filePayload, HttpServletResponse response, boolean isInline) throws IOException
+    private void handleFilePayload(ContentStream filePayload, HttpServletResponse response, boolean isInline, EcmFile ecmFile)
+            throws IOException
     {
 
         String mimeType = filePayload.getMimeType();
         String fileName = filePayload.getFileName();
+
+        // endWith will throw a NullPointerException on a null argument.  But a file is not required to have an
+        // extension... so the extension can be null.  So we have to guard against it.
+        if (ecmFile != null && ecmFile.getFileActiveVersionNameExtension() != null
+                && !fileName.endsWith(ecmFile.getFileActiveVersionNameExtension()))
+        {
+            fileName = fileName + ecmFile.getFileActiveVersionNameExtension();
+        }
 
         InputStream fileIs = null;
 
         try
         {
             fileIs = filePayload.getStream();
-            if(!isInline) {
+            if (!isInline)
+            {
                 response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
             }
             response.setContentType(mimeType);
@@ -116,16 +121,14 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
                 }
             } while (read > 0);
             response.getOutputStream().flush();
-        }
-        finally
+        } finally
         {
-            if ( fileIs != null )
+            if (fileIs != null)
             {
                 try
                 {
                     fileIs.close();
-                }
-                catch (IOException e)
+                } catch (IOException e)
                 {
                     log.error("Could not close CMIS content stream: " + e.getMessage(), e);
                 }
@@ -170,11 +173,13 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
-    public FolderAndFilesUtils getFolderAndFilesUtils() {
+    public FolderAndFilesUtils getFolderAndFilesUtils()
+    {
         return folderAndFilesUtils;
     }
 
-    public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils) {
+    public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils)
+    {
         this.folderAndFilesUtils = folderAndFilesUtils;
     }
 }

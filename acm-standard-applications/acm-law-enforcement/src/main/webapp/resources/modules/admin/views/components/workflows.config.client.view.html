@@ -1,28 +1,23 @@
 <div ng-controller="Admin.WorkflowsConfigController">
+	<div class="pull-right well">
+		<div class="btn-group">
+			<button class="btn btn-xs btn-link" ng-click="editRole()" ng-disabled="editBtnDisabled"><i
+			        class="fa fa-sitemap"/>
+			    <span translate>admin.workflows.config.btn.createNew</span>
+			</button>
+			<button class="btn btn-xs btn-link" ngf-select="uploadDefinition($file)" ng-disabled="uploadingInProgress"
+			        data-ng-model="selectedBPMNFile" accept="application/xml"><i
+			        class="fa fa-cloud-upload text"/>
+			    <span translate>admin.workflows.config.btn.uploadNew</span>
+			</button>
+		</div>
+	</div>	
     <panel-view header="{{'admin.workflows.config' | translate}}" collapsible="false">
-        <div class="row">
-
-            <div class="pull-right">
-                <div class="btn-group">
-                    <button class="btn btn-sm btn-default" ng-click="editRole()" ng-disabled="editBtnDisabled"><i
-                            class="fa fa-sitemap"/>
-                        <span translate>admin.workflows.config.btn.createNew</span>
-                    </button>
-                    <button class="btn btn-sm btn-default" ngf-select="uploadDefinition($file)" ng-disabled="uploadingInProgress"
-                            data-ng-model="selectedBPMNFile" accept="application/xml"><i
-                            class="fa fa-cloud-upload text"/>
-                        <span translate>admin.workflows.config.btn.uploadNew</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <div class="row">
             <div ui-grid="gridOptions"
                  ui-grid-resize-columns
                  adjust-table-height="gridOptions.data.length"
                  ui-grid-auto-resize
                  class="grid">
             </div>
-        </div>
     </panel-view>
 </div>

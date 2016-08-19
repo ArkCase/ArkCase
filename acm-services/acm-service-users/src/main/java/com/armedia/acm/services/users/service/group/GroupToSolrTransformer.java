@@ -7,6 +7,7 @@ import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -132,13 +133,7 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
     @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
-        boolean objectNotNull = acmObjectType != null;
-        String ourClassName = AcmGroup.class.getName();
-        String theirClassName = acmObjectType.getName();
-        boolean classNames = theirClassName.equals(ourClassName);
-        boolean isSupported = objectNotNull && classNames;
-
-        return isSupported;
+        return AcmGroup.class.equals(acmObjectType);
     }
 
     private SolrAdvancedSearchDocument addSubGroupIds(AcmGroup in, SolrAdvancedSearchDocument solr)
@@ -176,8 +171,6 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
         return solr;
     }
 
-
-
     public AcmGroupDao getGroupDao()
     {
         return groupDao;
@@ -206,5 +199,11 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
     public void setGroupService(GroupService groupService)
     {
         this.groupService = groupService;
+    }
+
+    @Override
+    public Class<?> getAcmObjectTypeSupported()
+    {
+        return AcmGroup.class;
     }
 }

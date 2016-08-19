@@ -1,8 +1,10 @@
 <div ng-controller="Admin.ModulesController">
     <panel-view header="{{'admin.security.modules' | translate}}" collapsible="false">
+        <div class="row">
         <object-authorization-roles data="appModules" object-display-name="name" on-object-selected="onObjSelect"
                                     role-display-name="name"
                                     on-auth-role-change="onAuthRoleSelected"
                                     object-title="{{'admin.security.modules.module' | translate}}"/>
+        </div>
     </panel-view>
 </div>

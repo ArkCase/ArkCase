@@ -12,6 +12,9 @@ public class TestsPoperties {
 	private static String SUPERVISOR_USER_PASSWORD;
 	private static String SUPERVISOR_USER_PASSWORD_CORE;
 	private static String BROWSER;
+	private static String REMOTE;
+	private static String HUBIP;
+	private static String HUBPORT;
 
 	static {
 		FileInputStream fileInput;
@@ -27,6 +30,9 @@ public class TestsPoperties {
 			SUPERVISOR_USER_PASSWORD = properties.getProperty("user.supervisor.password");
 			SUPERVISOR_USER_PASSWORD_CORE=properties.getProperty("user.core.supervisor.password");
 			BROWSER=properties.getProperty("browser");
+			REMOTE=properties.getProperty("remote");
+			HUBIP=properties.getProperty("hubIP");
+			HUBPORT=properties.getProperty("hubPort");
 			
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -57,4 +63,15 @@ public class TestsPoperties {
 		return BROWSER;
 	}
 	
+	public static String getRemoteInfo() {
+		return REMOTE;
+	}
+	
+	public static String getHubIP(){
+		return HUBIP;
+	}
+	
+	public static String getHubPort(){
+		return HUBPORT;
+	}
 }
