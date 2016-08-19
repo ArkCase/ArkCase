@@ -556,6 +556,27 @@ span.fancytree-title {
     height: auto !important;
 }
 
+/* Fix ui-grids to resize based on content. (Source: alangumer on https://github.com/angular-ui/ui-grid/issues/3239) */
+[ui-grid-row] {
+    display: table-row;
+}
+
+.ui-grid-row, .ui-grid-cell {
+    height: auto!important;
+}
+
+.ui-grid-cell {
+    float: none;
+    display: table-cell;
+}
+
+.ui-grid-header-cell, .ui-grid-cell-contents {
+    white-space: normal;
+    padding: 2px;
+    word-break: break-word;
+}
+/* End of ui-grid fix. */
+
 .ui-grid-header-cell-row .ui-grid-cell-contents {
     color: #686d71;
     font-size: 13px;
