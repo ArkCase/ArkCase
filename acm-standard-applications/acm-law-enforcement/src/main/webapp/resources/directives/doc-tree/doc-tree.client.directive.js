@@ -628,7 +628,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     var cacheKey = DocTree.getCacheKeyByNode(folderNode);
                     var folderList = DocTree.cacheFolderList.get(cacheKey);
                     if (Validator.validateFolderList(folderList)) {
-                        var found = _.find(folderList.children, function(child) {
+                        var found = _.find(folderList.children, function (child) {
                             return (child.objectId == node.data.objectId);
                         });
                         if (found) {
@@ -1408,8 +1408,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                                 $q.when(DocTree.uploadSetting.deferSelectFile.promise).then(function (files) {
                                     var args = {
-										files : files
-									}
+                                        files: files
+                                    }
                                     var submitFiles = DocTree.Command.findHandler("submitFiles/");
                                     DocTree.Command.handleCommand(submitFiles, nodes, args);
                                 });
@@ -1460,21 +1460,26 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     var acmTicket = ticketData.data;
                                     LockingService.lockObject(fileId, ObjectService.ObjectTypes.FILE,
                                         ObjectService.LockTypes.WORD_EDIT_LOCK, false).then(function (lockedFile) {
-                                            var absUrl = $location.absUrl();
-                                            var baseHref = $browser.baseHref();
-                                            var appUrl = absUrl.substring(0, absUrl.indexOf(baseHref) + baseHref.length);
+                                        var absUrl = $location.absUrl();
+                                        var baseHref = $browser.baseHref();
+                                        var appUrl = absUrl.substring(0, absUrl.indexOf(baseHref) + baseHref.length);
 
-                                            ITHit.WebDAV.Client.DocManager.EditDocument(appUrl + "webdav/" + acmTicket + "/" + ObjectService.ObjectTypes.FILE + "/" + ObjectService.LockTypes.WORD_EDIT_LOCK + "/" +
-                                                node.data.objectId + node.data.ext, appUrl + "webdav", protocolInstallMessage);
+                                        ITHit.WebDAV.Client.DocManager.EditDocument(appUrl + "webdav/" + acmTicket + "/" + ObjectService.ObjectTypes.FILE + "/" + ObjectService.LockTypes.WORD_EDIT_LOCK + "/" +
+                                            node.data.objectId + node.data.ext, appUrl + "webdav", protocolInstallMessage);
                                         function protocolInstallMessage(message) {
                                             var installerFilePath = appUrl + "assets/js/Plugins/" + ITHit.WebDAV.Client.DocManager.GetInstallFileName();
 
-                                            if (confirm("Opening this type of file requires a protocol installation. Select OK to download the protocol installer.")) {
+                                            var protocolMessage = "You must install a helper program to edit this file.  " +
+                                                "Select 'OK' to download the helper program installer; and then install " +
+                                                "the helper program by running the downloaded installer.  After " +
+                                                "installing the helper program, edit this file again.";
+                                            if (confirm(protocolMessage)) {
                                                 window.open(installerFilePath);
                                             }
                                         }
+
                                         DocTree.refreshTree();
-                                        })
+                                    })
                                 });
                             }
                         }
