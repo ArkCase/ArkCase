@@ -13,12 +13,15 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/spring/spring-library-data-source.xml",
+@ContextConfiguration(locations = {
+        "/spring/spring-library-data-source.xml",
         "/spring/spring-library-person.xml",
         "/spring/spring-library-person-plugin-test-mule.xml",
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-property-file-manager.xml",
-        "/spring/spring-library-acm-encryption.xml", "/spring/spring-library-user-service.xml"
+        "/spring/spring-library-acm-encryption.xml",
+        "/spring/spring-library-user-service.xml",
+        "/spring/spring-library-search.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
 public class PersonServiceIT

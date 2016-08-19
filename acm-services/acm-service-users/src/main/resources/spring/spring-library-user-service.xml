@@ -41,7 +41,7 @@
     <bean id="groupService" class="com.armedia.acm.services.users.service.group.GroupServiceImpl">
         <property name="userDao" ref="userJpaDao"/>
         <property name="groupDao" ref="groupDao"/>
-        <property name="muleContextManager" ref="muleContextManager"/>
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
 
     <bean id="userActionExecutor" class="com.armedia.acm.services.users.service.ldap.AcmUserActionExecutor">

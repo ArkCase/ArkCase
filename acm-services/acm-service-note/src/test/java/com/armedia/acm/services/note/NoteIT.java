@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations =
@@ -27,7 +27,8 @@ import static org.junit.Assert.*;
                 "/spring/spring-library-property-file-manager.xml",
                 "/spring/spring-library-acm-encryption.xml",
                 "/spring/spring-library-user-service.xml",
-                "/spring/spring-library-mule-context-manager.xml"
+                "/spring/spring-library-mule-context-manager.xml",
+                "/spring/spring-library-search.xml"
         })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class NoteIT
