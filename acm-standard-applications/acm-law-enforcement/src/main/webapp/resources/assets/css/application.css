@@ -1204,6 +1204,10 @@ tags-input .tags {
     margin: 0px;
 }
 
+.right-sidebar.well-sm.documentDetails {
+	top: 172px;
+}
+
 
 
 /* Right Sidebar Summernote Editor */
