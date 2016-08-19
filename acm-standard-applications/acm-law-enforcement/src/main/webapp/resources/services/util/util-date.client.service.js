@@ -18,7 +18,7 @@ angular.module('services').factory('Util.DateService', ['$translate', 'UtilServi
             , defaultTimeFormat: $translate.instant("common.defaultTimeFormat")
             , defaultDateTimeFormat: $translate.instant("common.defaultDateTimeFormat")
             , defaultDatePickerFormat: $translate.instant("common.defaultDatePickerFormat")
-			, defaultDateUIFormat: $translate.instant("common.defaultDateUIFormat")
+            , defaultDateUIFormat: $translate.instant("common.defaultDateUIFormat")
 
 
             /**
@@ -39,6 +39,29 @@ angular.module('services').factory('Util.DateService', ['$translate', 'UtilServi
 
                 if (date && date instanceof Date) {
                     return moment(date).format("YYYY-MM-DDTHH:mm:ss.SSSZZ");
+                } else {
+                    return replacedWith;
+                }
+            }
+
+            /**
+             * @ngdoc method
+             * @name localDateToIso
+             * @methodOf services:Util.DateService
+             *
+             * @description
+             * Converts a date (java LocalDate) object into an ISO format string that holds only date without time
+             *
+             * @param {Date} Date object
+             * @param {Object} replacement (Optional)Object or value used if 'val' is empty. If not provided, it defaults to ""
+             *
+             * @Returns {String} ISO formatted date string YYYY-MM-DD
+             */
+            , localDateToIso: function (date, replacement) {
+                var replacedWith = (undefined === replacement) ? "" : replacement;
+
+                if (date && date instanceof Date) {
+                    return moment(date).format("YYYY-MM-DD");
                 } else {
                     return replacedWith;
                 }

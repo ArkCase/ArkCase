@@ -126,8 +126,9 @@
             },
             {
               "name": "modifier",
-              "displayName": "timeTracking.comp.details.table.columns.modified",
-              "headerCellFilter": "translate"
+              "displayName": "timeTracking.comp.details.table.columns.modifier",
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
             }
           ]
         },
@@ -143,7 +144,8 @@
             {
               "name": "userId",
               "displayName": "timeTracking.comp.people.table.columns.userId",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
             }
           ]
         },
@@ -202,7 +204,8 @@
         {
           "name": "userId",
           "displayName": "timeTracking.comp.people.table.columns.userId",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "lookup": "userFullNames"
         }
       ]
     },
