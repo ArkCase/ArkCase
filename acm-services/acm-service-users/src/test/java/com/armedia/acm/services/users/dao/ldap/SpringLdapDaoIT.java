@@ -27,7 +27,8 @@ import java.util.List;
                 "/spring/spring-library-property-file-manager.xml",
                 "/spring/spring-config-user-service-test-dummy-beans.xml",
                 "/spring/spring-library-context-holder.xml",
-                "/spring/spring-library-user-service-test-user-home-files.xml"}
+                "/spring/spring-library-user-service-test-user-home-files.xml",
+                "/spring/spring-library-search.xml"}
 )
 
 public class SpringLdapDaoIT

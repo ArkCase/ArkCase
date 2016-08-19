@@ -3,22 +3,20 @@
  */
 package com.armedia.acm.services.users.service.group;
 
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
+import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.GroupConstants;
 import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
 import org.mule.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -31,7 +29,7 @@ public class GroupServiceImpl implements GroupService
 
     private UserDao userDao;
     private AcmGroupDao groupDao;
-    private MuleContextManager muleContextManager;
+    private ExecuteSolrQuery executeSolrQuery;
 
     private Pattern pattern = Pattern.compile(GroupConstants.UUID_REGEX_STRING);
 
@@ -74,32 +72,15 @@ public class GroupServiceImpl implements GroupService
     public String getLdapGroupsForUser(UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) throws MuleException
     {
 
-        if (logger.isInfoEnabled())
-        {
-            logger.info("Taking all groups and subgroups from Solr. Authenticated user is " + usernamePasswordAuthenticationToken.getName());
-        }
+        logger.info("Taking all groups and subgroups from Solr. Authenticated user is {}", usernamePasswordAuthenticationToken.getName());
 
         String query = "object_type_s:GROUP AND object_sub_type_s:LDAP_GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
 
-        Map<String, Object> headers = new HashMap<>();
-        headers.put("query", query);
-        headers.put("maxRows", 1000);
-        headers.put("firstRow", 0);
-        headers.put("sort", "");
-        headers.put("acmUser", usernamePasswordAuthenticationToken);
+        String queryResults = getExecuteSolrQuery().getResultsByPredefinedQuery(usernamePasswordAuthenticationToken,
+                SolrCore.ADVANCED_SEARCH, query, 0, 1000, "name asc");
 
-        MuleMessage response = getMuleContextManager().send("vm://advancedSearchQuery.in", "", headers);
+        return queryResults;
 
-        logger.debug("Response type: " + response.getPayload().getClass());
-
-        if (response.getPayload() instanceof String)
-        {
-            String responsePayload = (String) response.getPayload();
-
-            return responsePayload;
-        }
-
-        throw new IllegalStateException("Unexpected payload type: " + response.getPayload().getClass().getName());
     }
 
 
@@ -150,13 +131,13 @@ public class GroupServiceImpl implements GroupService
         this.groupDao = groupDao;
     }
 
-    public MuleContextManager getMuleContextManager()
+    public ExecuteSolrQuery getExecuteSolrQuery()
     {
-        return muleContextManager;
+        return executeSolrQuery;
     }
 
-    public void setMuleContextManager(MuleContextManager muleContextManager)
+    public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
     {
-        this.muleContextManager = muleContextManager;
+        this.executeSolrQuery = executeSolrQuery;
     }
 }
