@@ -70,7 +70,8 @@ import static org.junit.Assert.*;
                 "/spring/spring-library-note.xml",
                 "/spring/spring-library-event.xml",
                 "/spring/test-case-file-context.xml",
-                "/spring/spring-library-authentication-token.xml"
+                "/spring/spring-library-authentication-token.xml",
+                "/spring/spring-library-business-process.xml"
         })
 @TransactionConfiguration(defaultRollback = true)
 public class MergeCaseFileServiceIT
