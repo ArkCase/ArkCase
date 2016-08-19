@@ -2,7 +2,7 @@
     <parent>
         <artifactId>acm-tool-integrations</artifactId>
         <groupId>com.armedia.acm</groupId>
-        <version>3.0.55</version>
+        <version>3.0.56</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -33,7 +33,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-messaging</artifactId>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

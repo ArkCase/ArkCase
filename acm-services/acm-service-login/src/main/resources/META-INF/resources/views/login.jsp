@@ -23,9 +23,11 @@
     <script type="text/javascript">
         function addUrlHashToLocalStorage() {
             if (window.location.hash != '#!/welcome' && window.location.hash != '#!/goodbye') {
-                localStorage.redirectURL = window.location.hash;
+                //localStorage.redirectURL = window.location.hash;
+                sessionStorage.redirectURL = window.location.hash;
             } else {
-                localStorage.removeItem('redirectURL');
+                //localStorage.removeItem('redirectURL');
+                sessionStorage.removeItem('redirectURL');
             }
         }
         window.onload = addUrlHashToLocalStorage;
@@ -51,6 +53,10 @@
 
     <c:if test="${'1'.equals(param.login_error)}">
         <div class="alert alert-danger">Your session has expired!</div>
+    </c:if>
+
+    <c:if test="${'2'.equals(param.login_error)}">
+        <div class="alert alert-danger">Your session has been invalidated due to concurrent session limit!</div>
     </c:if>
 
     <c:if test="${param.logout != null}">

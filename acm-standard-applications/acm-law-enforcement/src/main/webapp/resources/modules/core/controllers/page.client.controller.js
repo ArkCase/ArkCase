@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('core').controller('PageController', ['$scope', '$modal', 'Acm.LoginService', 'LoginWarningService',
-    function ($scope, $modal, AcmLoginService, LoginWarningService) {
+angular.module('core').controller('PageController', ['$scope', '$modal', '$sce', 'UtilService', 'Acm.LoginService', 'LoginWarningService',
+    function ($scope, $modal, $sce, Util, AcmLoginService, LoginWarningService) {
         $scope.isLeftMenuCollapsed = false;
 
         $scope.$on('isLeftMenuCollapsed', function (e, isLeftMenuCollapsed) {
@@ -10,9 +10,9 @@ angular.module('core').controller('PageController', ['$scope', '$modal', 'Acm.Lo
 
         LoginWarningService.queryLoginWarning().then(
             function (data) {
-                if (data.enabled) {
-                    var warningAccepted = sessionStorage.getItem('warningAccepted');
-                    if (!warningAccepted) {
+                if (Util.goodMapValue(data, "enabled", false)) {
+                    //if (! sessionStorage.getItem('warningAccepted'))
+                    if (!LoginWarningService.getWarningAccepted()) {
                         showModalWarning(data);
                     }
                 }
@@ -27,8 +27,8 @@ angular.module('core').controller('PageController', ['$scope', '$modal', 'Acm.Lo
             var modalInstance = $modal.open({
                 animation: true,
                 templateUrl: 'modules/core/views/warning-modal.client.view.html',
-                controller: ['$scope', '$modalInstance', 'params', function ($scope, $modalInstance, params) {
-                    $scope.message = params.message;
+                controller: ['$scope', '$modalInstance', 'params', '$sce', function ($scope, $modalInstance, params, $sce) {
+                    $scope.message = $sce.getTrustedHtml($sce.trustAsHtml(params.message));
                     $scope.onClickOk = function () {
                         $modalInstance.close({accepted: true});
                     };
@@ -45,9 +45,10 @@ angular.module('core').controller('PageController', ['$scope', '$modal', 'Acm.Lo
                 }
             });
             modalInstance.result.then(function (data) {
-                if (data.accepted) {
+                if (Util.goodMapValue(data, "accepted", false)) {
                     //put in local/session storage that user has accepted warning
-                    sessionStorage.setItem('warningAccepted', true);
+                    //sessionStorage.setItem('warningAccepted', true);
+                    LoginWarningService.setWarningAccepted(true);
                 }
                 else {
                     //redirect to logout

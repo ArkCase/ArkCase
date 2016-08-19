@@ -245,7 +245,8 @@
               "width": 150,
               "name": "modifier",
               "displayName": "cases.comp.details.table.columns.modifier",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
             }
           ]
         },
@@ -298,29 +299,30 @@
         {
           "id": "notes",
           "type": "component",
+          "model": "noteCount",
           "columnDefs": [
             {
               "name": "note",
               "displayName": "cases.comp.notes.table.columns.note",
               "headerCellFilter": "translate",
-              "enableCellEdit": false,
-              "cellTemplate": "<div ng-bind-html='row.entity.note' title='{{row.entity.note}}' class='ui-grid-cell-contents'></div>"
-            },
-            {
-              "width": 150,
-              "name": "created",
-              "displayName": "cases.comp.notes.table.columns.created",
-              "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "cellTemplate": "<div ng-bind-html='row.entity.note' title='{{row.entity.note}}' class='ui-grid-cell-contents'></div>",
               "enableCellEdit": false
             },
             {
-              "width": 150,
+              "name": "created",
+              "displayName": "cases.comp.notes.table.columns.created",
+              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "headerCellFilter": "translate",
+              "enableCellEdit": false,
+              "width": 150
+            },
+            {
               "name": "creator",
               "displayName": "cases.comp.notes.table.columns.creator",
               "headerCellFilter": "translate",
               "enableCellEdit": false,
-              "lookup": "userFullNames"
+              "lookup": "userFullNames",
+              "width": 150
             }
           ]
         },
@@ -447,6 +449,7 @@
       "title": "People",
       "icon": "fa fa-user",
       "className": "com.armedia.acm.plugins.person.model.Person",
+      "personAssociationClassName": "com.armedia.acm.plugins.person.model.PersonAssociation",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -690,7 +693,7 @@
             "name": "creator",
             "displayName": "cases.comp.people.securityTags.table.columns.creator",
             "headerCellFilter": "translate",
-            "lookup": "userFullNames"
+            "fullNameField": "creator_full_name_lcs"
           }
         ]
       }
@@ -799,21 +802,25 @@
         {
           "name": "note",
           "displayName": "cases.comp.notes.table.columns.note",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div ng-bind-html='row.entity.note' title='{{row.entity.note}}' class='ui-grid-cell-contents'></div>",
+          "enableCellEdit": false
         },
         {
           "name": "created",
           "displayName": "cases.comp.notes.table.columns.created",
-          "headerCellFilter": "translate",
           "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
-          "enableCellEdit": false
+          "headerCellFilter": "translate",
+          "enableCellEdit": false,
+          "width": 150
         },
         {
           "name": "creator",
           "displayName": "cases.comp.notes.table.columns.creator",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
-          "lookup": "userFullNames"
+          "lookup": "userFullNames",
+          "width": 150
         }
       ]
     },
@@ -1085,7 +1092,7 @@
           "name": "creator",
           "displayName": "cases.comp.tags.table.columns.createdBy",
           "headerCellFilter": "translate",
-          "lookup": "userFullNames"
+          "fullNameField": "creator_full_name_lcs"
         }
       ],
       "filters": "\"Object Type\": TAG",
@@ -1170,8 +1177,7 @@
         {
           "name": "name",
           "displayName": "cases.comp.addreference.grid.columns.name",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity.object_type_s, row.entity.object_id_s)' data-toggle='tooltip' data-placement='bottom' title={{row.entity.name}}>{{row.entity.name}}</a>"
+          "headerCellFilter": "translate"
         },
         {
           "name": "object_type_s",

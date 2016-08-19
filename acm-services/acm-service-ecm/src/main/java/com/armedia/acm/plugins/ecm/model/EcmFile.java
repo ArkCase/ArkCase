@@ -10,6 +10,7 @@ import com.armedia.acm.services.tag.model.AcmAssociatedTag;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 import javax.persistence.CascadeType;
@@ -35,6 +36,7 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,7 +44,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "acm_file")
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "className")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "className")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.plugins.ecm.model.EcmFile")
@@ -52,13 +54,7 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     private static final String OBJECT_TYPE = "FILE";
 
     @Id
-    @TableGenerator(name = "acm_file_gen",
-            table = "acm_file_id",
-            pkColumnName = "cm_seq_name",
-            valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_file",
-            initialValue = 100,
-            allocationSize = 1)
+    @TableGenerator(name = "acm_file_gen", table = "acm_file_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_file", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_file_gen")
     @Column(name = "cm_file_id")
     private Long fileId;
@@ -86,9 +82,11 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     @Column(name = "cm_file_name")
     private String fileName;
 
-    @Column(name = "cm_file_mime_type")
-    private String fileMimeType;
+    @Column(name = "cm_file_active_version_mime_type")
+    private String fileActiveVersionMimeType;
 
+    @Column(name = "cm_file_active_version_name_extension")
+    private String fileActiveVersionNameExtension;
 
     @ManyToOne
     @JoinColumn(name = "cm_folder_id")
@@ -128,8 +126,8 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     private String objectType = OBJECT_TYPE;
 
     @OneToOne(cascade = CascadeType.REMOVE)
-    @JoinColumns({@JoinColumn(name = "cm_file_id", referencedColumnName = "cm_object_id", updatable = false, insertable = false),
-            @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type", updatable = false, insertable = false)})
+    @JoinColumns({ @JoinColumn(name = "cm_file_id", referencedColumnName = "cm_object_id", updatable = false, insertable = false),
+            @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type", updatable = false, insertable = false) })
     private AcmObjectLock lock;
 
     @Column(name = "cm_legacy_system_id")
@@ -243,14 +241,24 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
         this.fileName = fileName;
     }
 
-    public String getFileMimeType()
+    public String getFileActiveVersionMimeType()
     {
-        return fileMimeType;
+        return fileActiveVersionMimeType;
     }
 
-    public void setFileMimeType(String fileMimeType)
+    public void setFileActiveVersionMimeType(String fileActiveVersionMimeType)
     {
-        this.fileMimeType = fileMimeType;
+        this.fileActiveVersionMimeType = fileActiveVersionMimeType;
+    }
+
+    public String getFileActiveVersionNameExtension()
+    {
+        return fileActiveVersionNameExtension;
+    }
+
+    public void setFileActiveVersionNameExtension(String fileActiveVersionNameExtension)
+    {
+        this.fileActiveVersionNameExtension = fileActiveVersionNameExtension;
     }
 
     public String getFileType()
@@ -302,7 +310,6 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     {
         this.category = category;
     }
-
 
     public List<EcmFileVersion> getVersions()
     {
@@ -371,6 +378,11 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
         return OBJECT_TYPE;
     }
 
+    public void setObjectType(String objectType)
+    {
+        this.objectType = objectType;
+    }
+
     @JsonIgnore
     @Override
     public Long getId()
@@ -382,11 +394,6 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     public String toString()
     {
         return ToStringBuilder.reflectionToString(this);
-    }
-
-    public void setObjectType(String objectType)
-    {
-        this.objectType = objectType;
     }
 
     public AcmObjectLock getLock()

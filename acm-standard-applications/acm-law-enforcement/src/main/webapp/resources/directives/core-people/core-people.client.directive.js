@@ -76,8 +76,8 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                     }
                 });
                 var gridHelper = new HelperUiGridService.Grid({scope: scope});
+                var promiseUsers = gridHelper.getUsers();
 
-                var promiseUsers = gridHelper.getUsers(scope);
                 var promisePersonTypes = ObjectLookupService.getPersonTypes().then(
                     function (personTypes) {
                         var options = [];
@@ -173,7 +173,6 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                     scope.objectInfo = objectInfo;
                     if (!scope.objectInfoLoaded) {
                         scope.objectInfoLoaded = true;
-                        //$q.all([promiseUsers, promisePersonTypes, promiseContactMethodTypes, promiseOrganizationTypes, promiseAddressTypes, promiseAliasTypes, promiseSecurityTagTypes, componentHelper.promiseConfig]).then(function () {
                         $q.all([promiseUsers, promisePersonTypes, promiseContactMethodTypes, promiseOrganizationTypes, promiseAddressTypes, promiseAliasTypes]).then(function () {
                             scope.retrieveGridData();
                         }); //end $q
@@ -202,6 +201,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                             _.each(pa.acm$_contactMethods.gridOptions.data, function (item) {
                                 item.acm$_paId = pa.id;
                             });
+                            gridHelper.setUserNameFilterToConfig(promiseUsers, pa.acm$_contactMethods.gridOptions);
 
                             pa.acm$_organizations = {
                                 gridOptions: getGridOptions(configGridOrganization)
@@ -210,6 +210,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                             _.each(pa.acm$_organizations.gridOptions.data, function (item) {
                                 item.acm$_paId = pa.id;
                             });
+                            gridHelper.setUserNameFilterToConfig(promiseUsers, pa.acm$_organizations.gridOptions);
 
                             pa.acm$_addresses = {
                                 gridOptions: getGridOptions(configGridAddress)
@@ -218,6 +219,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                             _.each(pa.acm$_addresses.gridOptions.data, function (item) {
                                 item.acm$_paId = pa.id;
                             });
+                            gridHelper.setUserNameFilterToConfig(promiseUsers, pa.acm$_addresses.gridOptions);
 
                             pa.acm$_aliases = {
                                 gridOptions: getGridOptions(configGridAlias)
@@ -226,6 +228,9 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                             _.each(pa.acm$_aliases.gridOptions.data, function (item) {
                                 item.acm$_paId = pa.id;
                             });
+                            gridHelper.setUserNameFilterToConfig(promiseUsers, pa.acm$_aliases.gridOptions);
+
+
                         }
                     }
                 };
@@ -244,6 +249,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                     personAssociation.person.givenName = '';
                     personAssociation.person.familyName = '';
                     personAssociation.personType = '';
+                    personAssociation.className= Util.goodValue(scope.config.personAssociationClassName); //"com.armedia.acm.plugins.person.model.PersonAssociation"
 
                     //put personAssociation to scope, we will need it when we return from popup
                     scope.personAssociation = personAssociation;

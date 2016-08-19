@@ -2,6 +2,7 @@ package com.armedia.acm.services.pipeline;
 
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,12 +10,12 @@ import java.util.List;
 import java.util.ListIterator;
 
 /**
- * Pipeline manager which holds a list of pre-save and post-save handlers which are to be
- * executed prior to and after the DAO save method, respectively.
+ * Pipeline manager which holds a list of pre-save and post-save handlers which are to be executed prior to and after
+ * the DAO save method, respectively.
  * <p/>
- * Note: pre-save handlers, save method and post-save handlers should all reside in a single
- * transaction (@Transactional annotated method) so even the changes on the entity applied
- * in the post-save handlers (after the save method) will be persisted at the end of the transaction.
+ * Note: pre-save handlers, save method and post-save handlers should all reside in a single transaction (@Transactional
+ * annotated method) so even the changes on the entity applied in the post-save handlers (after the save method) will be
+ * persisted at the end of the transaction.
  * <p/>
  * Created by Petar Ilin <petar.ilin@armedia.com> on 26.07.2015.
  */
@@ -36,12 +37,14 @@ public class PipelineManager<T, S extends AbstractPipelineContext>
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     /**
-     * Execute all registered pre-save handlers.
-     * Stop processing if any of the handlers throws exception
+     * Execute all registered pre-save handlers. Stop processing if any of the handlers throws exception
      *
-     * @param entity          entity to process
-     * @param pipelineContext context associated with this pipeline
-     * @throws PipelineProcessException on error
+     * @param entity
+     *            entity to process
+     * @param pipelineContext
+     *            context associated with this pipeline
+     * @throws PipelineProcessException
+     *             on error
      */
     public void onPreSave(T entity, S pipelineContext) throws PipelineProcessException
     {
@@ -72,12 +75,14 @@ public class PipelineManager<T, S extends AbstractPipelineContext>
     }
 
     /**
-     * Execute all post-save handlers.
-     * Stop processing if any of the handlers throws exception
+     * Execute all post-save handlers. Stop processing if any of the handlers throws exception
      *
-     * @param entity          entity to process
-     * @param pipelineContext context associated with this pipeline
-     * @throws PipelineProcessException on error
+     * @param entity
+     *            entity to process
+     * @param pipelineContext
+     *            context associated with this pipeline
+     * @throws PipelineProcessException
+     *             on error
      */
     public void onPostSave(T entity, S pipelineContext) throws PipelineProcessException
     {

@@ -112,6 +112,7 @@
     <bean id="activitiRuntimeService" factory-bean="activitiProcessEngine" factory-method="getRuntimeService"/>
     <bean id="activitiTaskService" factory-bean="activitiProcessEngine" factory-method="getTaskService"/>
     <bean id="activitiHistoryService" factory-bean="activitiProcessEngine" factory-method="getHistoryService"/>
+    <bean id="activitiManagementService" factory-bean="activitiProcessEngine" factory-method="getManagementService"/>
 
     <bean id="bpmnFileAddedMonitor" class="com.armedia.acm.activiti.BpmnFileAddedMonitor">
         <property name="acmBpmnService" ref="processDefinitionManagementService"/>

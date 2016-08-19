@@ -22,12 +22,11 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
                 queue="taskToSolr.in"
                 exchange-pattern="one-way"
                 connector-ref="ActiveMQ-ACM"
-                doc:name="JMS" />
+                doc:name="JMS"/>
 
         <timer-interceptor/>
 
         <echo-component doc:name="Echo"/>
-
         <scripting:transformer name="extractAcmTaskTransformer">
             <scripting:script engine="groovy">
                 <scripting:text><![CDATA[
@@ -49,13 +48,13 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 
         <logger level="DEBUG" category="com.armedia.acm.plugins.task.service" message="Got quick search json"/>
 
-        <set-payload value="#[advancedSearchJson]"/>
-        <http:outbound-endpoint ref="submitAdvancedSearchDocuments" />
+        <set-payload value="#[flowVars['advancedSearchJson']]"/>
+        <http:outbound-endpoint ref="submitAdvancedSearchDocumentsSolrEndpoint"/>
 
         <logger level="DEBUG" category="com.armedia.acm.plugins.task.service" message="Sent to SOLR advanced search"/>
 
-        <set-payload value="#[quickSearchJson]"/>
-        <http:outbound-endpoint ref="submitQuicksearchDocuments" />
+        <set-payload value="#[flowVars['quickSearchJson']]"/>
+        <http:outbound-endpoint ref="submitQuicksearchDocumentsSolrEndpoint"/>
 
         <logger level="DEBUG" category="com.armedia.acm.plugins.task.service" message="Sent to SOLR quick search"/>
     </flow>

@@ -15,9 +15,9 @@ angular.module('dashboard.participants', ['adf.provider'])
     })
     .controller('Dashboard.ParticipantsController', ['$scope', '$translate', '$stateParams', '$q', 'UtilService'
         , 'Case.InfoService', 'Complaint.InfoService','Authentication', 'Dashboard.DashboardService', 'ConfigService'
-        , 'Helper.ObjectBrowserService',
+        , 'Helper.ObjectBrowserService', 'Helper.UiGridService',
         function ($scope, $translate, $stateParams, $q, Util, CaseInfoService, ComplaintInfoService, Authentication
-            , DashboardService, ConfigService, HelperObjectBrowserService) {
+            , DashboardService, ConfigService, HelperObjectBrowserService, HelperUiGridService) {
 
             var promiseConfig;
             var promiseInfo;
@@ -39,13 +39,16 @@ angular.module('dashboard.participants', ['adf.provider'])
             if (module && Util.goodPositive(currentObjectId, false)) {
                 promiseConfig = ConfigService.getModuleConfig(module.configName);
                 promiseInfo = module.getInfo(currentObjectId);
+                var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+                var promiseUsers = gridHelper.getUsers();
 
-                $q.all([promiseConfig, promiseInfo]).then(function (data) {
+                $q.all([promiseConfig, promiseInfo, promiseUsers]).then(function (data) {
                         var config = _.find(data[0].components, {id: "main"});
                         var info = data[1];
                         var widgetInfo = _.find(config.widgets, function (widget) {
                             return widget.id === "participants";
                         });
+                        gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
                         $scope.config = config;
                         $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
 

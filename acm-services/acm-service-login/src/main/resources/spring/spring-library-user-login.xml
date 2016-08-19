@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--suppress SpringSecurityFiltersConfiguredInspection -->
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="applicationRoleToUserGroupProperties"
@@ -85,8 +85,30 @@
     <bean id="acmLoginSuccessHandler" class="com.armedia.acm.auth.AcmLoginSuccessHandler">
         <property name="loginSuccessOperations" ref="acmLoginSuccessOperations"/>
         <property name="defaultTargetUrl" value="/home.html#!/welcome"/>
-        <property name="alwaysUseDefaultTargetUrl" value="false"></property>
+        <property name="alwaysUseDefaultTargetUrl" value="false"/>
+        <property name="sessionRegistry" ref="sessionRegistry"/>
+        <property name="sessionAuthenticationStrategy" ref="concurrentSessionControlAuthenticationStrategy"/>
     </bean>
+
+    <bean id="acmRedirectStrategy" class="com.armedia.acm.auth.AcmRedirectStrategy"/>
+
+    <bean id="concurrencyFilter"
+          class="org.springframework.security.web.session.ConcurrentSessionFilter">
+        <constructor-arg name="sessionRegistry" ref="sessionRegistry"/>
+        <constructor-arg name="expiredUrl" ref="expiredUrl"/>
+        <property name="redirectStrategy" ref="acmRedirectStrategy"/>
+    </bean>
+
+    <bean id="concurrentSessionControlAuthenticationStrategy" class=
+            "com.armedia.acm.auth.AcmConcurrentSessionControlAuthenticationStrategy">
+        <constructor-arg name="sessionRegistry" ref="sessionRegistry"/>
+        <constructor-arg name="authenticationTokenService" ref="authenticationTokenService"/>
+        <property name="maximumSessions" value="${sessionControl.maximumSessions}"/>
+        <property name="exceptionIfMaximumExceeded" value="${sessionControl.exceptionIfMaximumExceeded}"/>
+    </bean>
+
+    <bean id="sessionRegistry"
+          class="org.springframework.security.core.session.SessionRegistryImpl"/>
 
 
     <!-- when Kerberos has been used, then the login success handler should not do any redirects, since Kerberos
@@ -119,6 +141,13 @@
                     <prop key="sso.saml.authenticationCheckIntervalInSeconds">3600</prop>
                 </props>
             </property>
+        </bean>
+
+        <bean id="acmSamlWebSSOProcessingFilter" class="com.armedia.acm.auth.AcmSamlProcessingFilter">
+            <property name="authenticationManager" ref="acmAuthenticationManager"/>
+            <property name="authenticationSuccessHandler" ref="acmLoginSuccessHandler"/>
+            <property name="authenticationFailureHandler" ref="failureRedirectHandler"/>
+            <property name="authenticationDetailsSource" ref="acmAuthenticationDetailsFactory"/>
         </bean>
 
         <bean id="acmSamlAuthenticationCheckFilter" class="com.armedia.acm.auth.AcmSamlAuthenticationCheckFilter">

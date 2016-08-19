@@ -110,14 +110,7 @@ public class AssociatedTagToSolrTransformer implements AcmObjectToSolrDocTransfo
     @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
-
-        boolean objectNotNull = acmObjectType != null;
-        String ourClassName = AcmAssociatedTag.class.getName();
-        String theirClassName = acmObjectType.getName();
-        boolean classNames = theirClassName.equals(ourClassName);
-        boolean isSupported = objectNotNull && classNames;
-
-        return isSupported;
+        return AcmAssociatedTag.class.equals(acmObjectType);
     }
 
     public AssociatedTagDao getAssociatedTagDao()
@@ -138,5 +131,11 @@ public class AssociatedTagToSolrTransformer implements AcmObjectToSolrDocTransfo
     public void setUserDao(UserDao userDao)
     {
         this.userDao = userDao;
+    }
+
+    @Override
+    public Class<?> getAcmObjectTypeSupported()
+    {
+        return AcmAssociatedTag.class;
     }
 }

@@ -61,7 +61,7 @@ public class AssociatedTagService {
         predefinedQuery = predefinedQuery.replace(TagConstants.SOLR_PLACEHOLDER_PARENT_ID, Long.toString(objectId));
         String solrResponseJsonString = null;
         try{
-            solrResponseJsonString = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.QUICK_SEARCH,
+            solrResponseJsonString = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH,
                     predefinedQuery, TagConstants.FIRST_ROW, TagConstants.MAX_ROWS, TagConstants.SORT);
         }catch ( MuleException e ) {
             if(log.isErrorEnabled()){

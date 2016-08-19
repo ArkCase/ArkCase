@@ -59,11 +59,14 @@
     <bean id="ecmFileNewMetadataHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileNewMetadataHandler">
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="folderDao" ref="acmFolderDao"/>
+        <property name="pageCountService" ref="pageCountService"/>
     </bean>
     <bean id="ecmFileMergedMetadataHandler"
           class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileMergedMetadataHandler">
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="folderDao" ref="acmFolderDao"/>
+        <property name="pageCountService" ref="pageCountService"/>
+        
     </bean>
     <bean id="ecmFileSendForPdfConversionHandler"
           class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileSendForPdfConversionHandler">
@@ -71,7 +74,14 @@
         <property name="fileTypesToBeConvertedToPDF" value="${capture.fileTypesToBeConvertedToPDF}"/>
         <property name="fileFormatsToBeConvertedToPDF" value="${capture.fileFormatsToBeConvertedToPDF}"/>
     </bean>
-
+    <bean id="ecmFileUpdateContentHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileUpdateContentHandler">
+        <property name="ecmFileMuleUtils" ref="ecmFileMuleUtils"/>
+    </bean>
+    <bean id="ecmFileUpdateMetadataHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileUpdateMetadataHandler">
+        <property name="ecmFileDao" ref="ecmFileDao"/>
+        <property name="folderDao" ref="acmFolderDao"/>
+        <property name="pageCountService" ref="pageCountService"/>
+    </bean>
     <!-- This pipeline uploads document content to Alfresco and the metadata to the acm3 database -->
     <bean id="ecmFileUploadPipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
         <property name="preSaveHandlers">
@@ -90,13 +100,28 @@
         </property>
     </bean>
 
+    <!-- This pipeline updates document content to Alfresco and the metadata to the acm3 database -->
+    <bean id="ecmFileUpdatePipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
+        <property name="preSaveHandlers">
+            <list>
+                <ref bean="ecmFileUpdateContentHandler"/>
+                <ref bean="ecmFileUpdateMetadataHandler"/>
+            </list>
+        </property>
+        <property name="postSaveHandlers">
+            <list>
+            </list>
+        </property>
+    </bean>
+
     <bean id="ecmFileTransaction" class="com.armedia.acm.plugins.ecm.service.impl.EcmFileTransactionImpl">
         <property name="muleContextManager" ref="muleContextManager"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="folderDao" ref="acmFolderDao"/>
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
-        <property name="pipelineManager" ref="ecmFileUploadPipelineManager"/>
+        <property name="ecmTikaFileService" ref="ecmTikaFileService"/>
         <property name="fileEventPublisher" ref="fileEventPublisher"/>
+        <property name="springContextHolder" ref="acmContextHolder"/>
     </bean>
 
     <bean id="ecmFileService" class="com.armedia.acm.plugins.ecm.service.impl.EcmFileServiceImpl">
@@ -173,6 +198,8 @@
 
     <bean id="folderAndFilesUtils" class="com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils"/>
 
+    <bean id="ecmTikaFileService" class="com.armedia.acm.plugins.ecm.service.impl.EcmTikaFileServiceImpl"/>
+
     <bean id="fileEventPublisher" class="com.armedia.acm.plugins.ecm.service.FileEventPublisher"/>
 
     <bean id="folderEventPublisher" class="com.armedia.acm.plugins.ecm.service.FolderEventPublisher"/>
@@ -195,4 +222,7 @@
             </list>
         </property>
     </bean>
+    
+    <bean id="pageCountService" class="com.armedia.acm.plugins.ecm.service.impl.PageCountServiceImpl"/>
+    
 </beans>
