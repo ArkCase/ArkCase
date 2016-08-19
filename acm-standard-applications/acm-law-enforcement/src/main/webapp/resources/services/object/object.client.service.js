@@ -78,9 +78,8 @@ angular.module('services').factory('ObjectService', ['$state', '$window', 'UtilS
                     function (objectTypes) {
                         var found = _.find(objectTypes, {type: objType});
                         if (found) {
-                            var state = Util.goodValue(found.url);
-                            var params = { id : objId, type : found.type };
-                            state = state.replace('#!/', '').replace('/:id/','.').replace(new RegExp('/', 'g'), '.');
+                            var state = Util.goodValue(found.state);
+                            var params = { id : objId, type : objType };
                             $state.go(state, params);
                         }
                         return objectTypes;
