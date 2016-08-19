@@ -2278,6 +2278,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                         var uploadedFiles = [];
                                         for (var i = 0; i < uploadInfo.length; i++) {
                                             var uploadedFile = DocTree.fileToSolrData(uploadInfo[i]);
+                                            uploadedFile.originalName = names[i];
                                             uploadedFiles.push(uploadedFile);
                                             folderList.children.push(uploadedFile);
                                             folderList.totalChildren++;
@@ -2298,8 +2299,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     for (var i = 0; i < uploadedFiles.length; i++) {
                                         var uploadedFile = uploadedFiles[i];
                                         var type = Util.goodValue(uploadedFile.type);
-                                        var name = Util.goodValue(uploadedFile.name);
-                                        var fileNode = DocTree._matchFileNode(type, name, fileNodes);
+                                        var originalName = Util.goodValue(uploadedFile.originalName);
+                                        var fileNode = DocTree._matchFileNode(type, originalName, fileNodes);
                                         if (fileNode) {
                                             DocTree._fileDataToNodeData(uploadedFile, fileNode);
                                             fileNode.renderTitle();
