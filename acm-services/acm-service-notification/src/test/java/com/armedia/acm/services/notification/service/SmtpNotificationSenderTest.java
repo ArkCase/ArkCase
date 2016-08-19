@@ -233,6 +233,8 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         EasyMock.expectLastCall();
 
         expect(mockAcmUser.getUserId()).andReturn("ann-acm");
+        expect(mockEcmFile.getParentObjectId()).andReturn(103L);
+        expect(mockEcmFile.getParentObjectType()).andReturn("COMPLAINT");
 
         mockApplicationEventPublisher.publishEvent(EasyMock.anyObject(SmtpEventSentEvent.class));
         EasyMock.expectLastCall();

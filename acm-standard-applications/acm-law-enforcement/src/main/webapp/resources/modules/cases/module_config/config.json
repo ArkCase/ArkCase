@@ -344,7 +344,7 @@
               "field": "assignee_s",
               "displayName": "cases.comp.tasks.table.columns.assignee",
               "headerCellFilter": "translate",
-              "fullNameField": "assignee_full_name_lcs"
+              "lookup": "userFullNames"
             },
             {
               "width": 150,
@@ -852,7 +852,7 @@
           "field": "assignee_s",
           "displayName": "cases.comp.tasks.table.columns.assignee",
           "headerCellFilter": "translate",
-          "fullNameField": "assignee_full_name_lcs"
+          "lookup": "userFullNames"
         },
         {
           "name": "created",

@@ -424,27 +424,27 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                 that.scope.$on('object-updated', function (e, objectInfo, objectId) {
                     that.currentObjectId = Service.getCurrentObjectId();
                     if (that.currentObjectId == objectId) {
-                        updateObjectInfo(objectId, objectInfo);
+                        onObjectInfoUpdated(objectInfo, objectId);
                     }
                 });
 
                 that.scope.$on('object-refreshed', function (e, objectInfo) {
                     that.previousId = null;
                     that.currentObjectId = Service.getCurrentObjectId();
-                    updateObjectInfo(that.currentObjectId, objectInfo);
+                    onObjectInfoUpdated(objectInfo, that.currentObjectId);
                 });
 
                 that.currentObjectId = Service.getCurrentObjectId();
                 if (Util.goodPositive(that.currentObjectId, false)) {
                     if (!Util.compare(that.previousId, that.currentObjectId)) {
                         that.retrieveObjectInfo(that.currentObjectId).then(function (objectInfo) {
-                            updateObjectInfo(that.currentObjectId, objectInfo);
+                            onObjectInfoUpdated(objectInfo, that.currentObjectId);
                             return objectInfo;
                         });
                     }
                 }
 
-                var updateObjectInfo = function (objectId, objectInfo) {
+                var onObjectInfoUpdated = function (objectInfo, objectId) {
                     if (!that.validateObjectInfo(objectInfo)) {
                         return;
                     }
