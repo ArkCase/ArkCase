@@ -36,7 +36,8 @@
         {
           "name": "object_type_s",
           "displayName": "search.comp.grid.columns.type",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellFilter": "mapKeyValue: grid.appScope.customLabels"
         },
         {
           "name": "title_parseable",

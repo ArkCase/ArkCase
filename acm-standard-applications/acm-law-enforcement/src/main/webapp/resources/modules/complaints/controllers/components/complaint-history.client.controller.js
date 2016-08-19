@@ -43,7 +43,7 @@ angular.module('complaints').controller('Complaints.HistoryController', ['$scope
                     , Util.goodMapValue($scope.sort, "dir")
                 );
 
-                $q.all([promiseQueryAudit, promiseUsers]).then(function (data) {
+                $q.all([promiseQueryAudit]).then(function (data) {
                     var auditData = data[0];
                     $scope.gridOptions = $scope.gridOptions || {};
                     $scope.gridOptions.data = auditData.resultPage;

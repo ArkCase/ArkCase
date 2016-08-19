@@ -7,8 +7,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mule.api.MuleMessage;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by armdev on 3/11/15.

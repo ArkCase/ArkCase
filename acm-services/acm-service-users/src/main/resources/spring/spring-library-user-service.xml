@@ -7,13 +7,32 @@
 
     <task:scheduler id="ldapSyncTaskScheduler" pool-size="1"/>
 
-    <bean id="acmLdapEntityContextMapper" class="com.armedia.acm.services.users.model.ldap.AcmLdapEntityContextMapper"/>
+    <bean id="acmUserGroupsContextMapper" class="com.armedia.acm.services.users.model.ldap.AcmUserGroupsContextMapper"/>
+    <bean id="acmGroupContextMapper" class="com.armedia.acm.services.users.model.ldap.AcmGroupContextMapper"/>
 
     <bean id="springLdapDao" class="com.armedia.acm.services.users.dao.ldap.SpringLdapDao">
-        <property name="mapper" ref="acmLdapEntityContextMapper"/>
+        <property name="acmGroupContextMapper" ref="acmGroupContextMapper"/>
+        <property name="userGroupsContextMapper" ref="acmUserGroupsContextMapper"/>
     </bean>
 
-    <bean id="userJpaDao" class="com.armedia.acm.services.users.dao.ldap.UserDao"/>
+    <!-- UserDao caching functionality -->
+    <bean id="quietUserLookupCacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+        <property name="cacheManager" ref="quietUserLookupConnectionEhCache"/>
+    </bean>
+
+    <bean id="quietUserLookupConnectionEhCache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation" value="classpath:/ehcache/quietUserLookupCacheConfig.xml"/>
+        <property name="cacheManagerName" value="acm-service-users"/>
+    </bean>
+
+    <bean id="quietUserLookupCache" factory-bean="quietUserLookupCacheManager" factory-method="getCache">
+        <constructor-arg value="quiet-user-cache"/>
+    </bean>
+
+    <bean id="userJpaDao" class="com.armedia.acm.services.users.dao.ldap.UserDao">
+        <property name="quietUserLookupCache" ref="quietUserLookupCache"/>
+    </bean>
+    <!-- End UserDao caching functionality -->
 
     <bean id="userActionDao" class="com.armedia.acm.services.users.dao.ldap.UserActionDao"/>
 
@@ -22,7 +41,7 @@
     <bean id="groupService" class="com.armedia.acm.services.users.service.group.GroupServiceImpl">
         <property name="userDao" ref="userJpaDao"/>
         <property name="groupDao" ref="groupDao"/>
-        <property name="muleContextManager" ref="muleContextManager"/>
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
 
     <bean id="userActionExecutor" class="com.armedia.acm.services.users.service.ldap.AcmUserActionExecutor">

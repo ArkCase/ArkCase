@@ -3,6 +3,7 @@ package com.armedia.acm.services.users.model.ldap;
 public class AcmLdapConfig
 {
     private String ldapUrl;
+    private String baseDC;
     private String authUserDn;
     private String authUserPassword;
     private String userIdAttributeName;
@@ -70,11 +71,23 @@ public class AcmLdapConfig
         this.referral = referral;
     }
 
-    public String getMailAttributeName() {
+    public String getMailAttributeName()
+    {
         return mailAttributeName;
     }
 
-    public void setMailAttributeName(String mailAttributeName) {
+    public void setMailAttributeName(String mailAttributeName)
+    {
         this.mailAttributeName = mailAttributeName;
+    }
+
+    public String getBaseDC()
+    {
+        return baseDC;
+    }
+
+    public void setBaseDC(String baseDC)
+    {
+        this.baseDC = baseDC;
     }
 }

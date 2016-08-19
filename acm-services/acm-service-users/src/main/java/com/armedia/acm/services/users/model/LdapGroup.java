@@ -2,6 +2,7 @@ package com.armedia.acm.services.users.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by armdev on 7/2/14.
@@ -10,7 +11,8 @@ public class LdapGroup
 {
     private String groupName;
     private String[] memberDistinguishedNames = {};
-    private List<AcmUser> users = new ArrayList<AcmUser>();
+    private List<AcmUser> users = new ArrayList<>();
+    private Set<String> memberOfGroups;
 
     public String getGroupName()
     {
@@ -40,5 +42,15 @@ public class LdapGroup
     public void setUsers(List<AcmUser> users)
     {
         this.users = users;
+    }
+
+    public Set<String> getMemberOfGroups()
+    {
+        return memberOfGroups;
+    }
+
+    public void setMemberOfGroups(Set<String> memberOfGroups)
+    {
+        this.memberOfGroups = memberOfGroups;
     }
 }

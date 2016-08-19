@@ -7,6 +7,7 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +34,7 @@ public class PersonAssociationToSolrTransformer implements AcmObjectToSolrDocTra
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
         solrDoc.setId(personAssociation.getId() + "-PERSON-ASSOCIATION");
+        solrDoc.setObject_id_s(personAssociation.getId() + "");
         solrDoc.setObject_type_s("PERSON-ASSOCIATION");
         solrDoc.setCreate_date_tdt(personAssociation.getCreated());
         solrDoc.setCreator_lcs(personAssociation.getCreator());
@@ -46,7 +48,8 @@ public class PersonAssociationToSolrTransformer implements AcmObjectToSolrDocTra
 
         solrDoc.setType_lcs(personAssociation.getPersonType());
 
-        solrDoc.setName(personAssociation.getPerson().getGivenName() + " " + personAssociation.getPerson().getFamilyName() + " (" + personAssociation.getPersonType() + ")");
+        solrDoc.setName(personAssociation.getPerson().getGivenName() + " " + personAssociation.getPerson().getFamilyName() + " ("
+                + personAssociation.getPersonType() + ")");
 
         solrDoc.setParent_ref_s(personAssociation.getParentId() + "-" + personAssociation.getParentType());
 
@@ -87,15 +90,7 @@ public class PersonAssociationToSolrTransformer implements AcmObjectToSolrDocTra
     @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
-        boolean objectNotNull = acmObjectType != null;
-        String ourClassName = PersonAssociation.class.getName();
-        String theirClassName = acmObjectType.getName();
-        boolean classNames = theirClassName.equals(ourClassName);
-        boolean isSupported = objectNotNull && classNames;
-
-        log.trace("Incoming: " + acmObjectType.getName() + "; do we handle it? " + isSupported);
-
-        return isSupported;
+        return PersonAssociation.class.equals(acmObjectType);
     }
 
     public PersonAssociationDao getPersonAssociationDao()
@@ -116,5 +111,11 @@ public class PersonAssociationToSolrTransformer implements AcmObjectToSolrDocTra
     public void setUserDao(UserDao userDao)
     {
         this.userDao = userDao;
+    }
+
+    @Override
+    public Class<?> getAcmObjectTypeSupported()
+    {
+        return PersonAssociation.class;
     }
 }

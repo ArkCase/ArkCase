@@ -48,29 +48,35 @@
       {
         "name": "title",
         "displayName": "common.directive.docTree.table.columns.title",
-        "width": "35%",
+        "width": "30%",
         "index": 2
+      },
+      {
+        "name": "ext",
+        "displayName": "",
+        "width": "5%",
+        "index": 3
       },
       {
         "name": "type",
         "displayName": "common.directive.docTree.table.columns.type",
         "__todo__cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
         "width": "12%",
-        "index": 3
+        "index": 4
       },
       {
         "name": "created",
         "displayName": "common.directive.docTree.table.columns.created",
         "__todo__cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
         "width": "10%",
-        "index": 4
+        "index": 5
       },
       {
         "name": "modified",
         "displayName": "common.directive.docTree.table.columns.modified",
         "__todo__cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
         "width": "10%",
-        "index": 5
+        "index": 6
       },
       {
         "name": "author",
@@ -79,21 +85,21 @@
         "__todo__cellTemplate": "<div>{{ row.entity.creator }}</div>",
         "__todo__lookup": "userFullNames",
         "width": "16%",
-        "index": 6
+        "index": 7
       },
       {
         "name": "version",
         "displayName": "common.directive.docTree.table.columns.version",
         "__todo__cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
         "width": "6%",
-        "index": 7
+        "index": 8
       },
       {
         "name": "status",
         "displayName": "common.directive.docTree.table.columns.status",
         "__todo__cellTemplate": "{{node.data.status}}",
         "width": "8%",
-        "index": 8
+        "index": 9
       }
     ],
     "menu": {
@@ -174,6 +180,10 @@
             "cmd": "subMenuFileTypes"
           },
           {
+            "title": "New Correspondence",
+            "cmd": "subMenuCorrespondenceForms"
+          },
+          {
             "title": "----"
           },
           {
@@ -226,10 +236,10 @@
             }
           },
           {
-            "title": "Edit With Word",
-            "cmd": "editWithWord",
+            "title": "Edit",
+            "cmd": "editWithWebDAV",
             "uiIcon": "ui-icon-pencil",
-            "disabledExpression": "!(new RegExp(Util.goodMapValue(DocTree.treeConfig, 'wordFileExtensionRegex', '\\.(doc|docx)$'), 'i').test(nodes[0].data.name))"
+            "disabledExpression": "!(new RegExp(Util.goodMapValue(DocTree.treeConfig, 'fileExtensionRegex', '\\.(doc|docx|pdf|xlsx|xls|ppt)$'), 'i').test(nodes[0].data.ext))"
           },
           {
             "title": "Email",
@@ -361,6 +371,10 @@
           {
             "title": "New Document",
             "cmd": "subMenuFileTypes"
+          },
+          {
+            "title": "New Correspondence",
+            "cmd": "subMenuCorrespondenceForms"
           },
           {
             "title": "----"
@@ -548,48 +562,6 @@
         "uiIcon": "ui-icon-pencil"
       }
     },
-    "wordFileExtensionRegex": "\\.(doc|dot|docx|dotx|docm|dotm|docb)$"
-  },
-  "resetCacheNames": [
-    {
-      "service": "Authentication",
-      "names": "SessionCacheNames",
-      "type": "session"
-    },
-    {
-      "service": "Acm.AppService",
-      "names": "SessionCacheNames",
-      "type": "session"
-    },
-    {
-      "service": "ConfigService",
-      "names": "SessionCacheNames",
-      "type": "session"
-    },
-    {
-      "service": "LookupService",
-      "names": "SessionCacheNames",
-      "type": "session"
-    },
-    {
-      "service": "Object.LookupService",
-      "names": "SessionCacheNames",
-      "type": "session"
-    },
-    {
-      "service": "Case.LookupService",
-      "names": "SessionCacheNames",
-      "type": "session"
-    },
-    {
-      "service": "Complaint.LookupService",
-      "names": "SessionCacheNames",
-      "type": "session"
-    },
-    {
-      "service": "ApplicationConfigService",
-      "names": "SessionCacheNames",
-      "type": "session"
-    }
-  ]
+    "fileExtensionRegex": "\\.(doc|dot|docx|dotx|docm|dotm|docb|pdf|xlsx|xls|ppt)$"
+  }
 }

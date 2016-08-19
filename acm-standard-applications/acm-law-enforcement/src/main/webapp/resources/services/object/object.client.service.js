@@ -67,7 +67,11 @@ angular.module('services').factory('ObjectService', ['$state', '$window', 'UtilS
              * @param {String} objId ArkCase Object ID
              *
              * @description
-             * Go to a page by Angular route that show the specified ArkCase Object (Case, Complaint, Document, etc.)
+             * Go to a state by Angular route that show the specified ArkCase Object (Case, Complaint, Document, etc.)
+             * 
+             * TODO : currently using url heuristic replace ("/", ".") and ("/:id/", "") to get state key,  
+             * for consistency sake "state" property should be included in ObjectLookupService.getObjectTypes() pulled from backend, 
+             * angular prefers states rather than urls
              */
             , gotoState: function (objType, objId) {
                 ObjectLookupService.getObjectTypes().then(
@@ -75,8 +79,8 @@ angular.module('services').factory('ObjectService', ['$state', '$window', 'UtilS
                         var found = _.find(objectTypes, {type: objType});
                         if (found) {
                             var state = Util.goodValue(found.state);
-                            state = state.replace(":id", objId);
-                            $state.go(state);
+                            var params = { id : objId, type : objType };
+                            $state.go(state, params);
                         }
                         return objectTypes;
                     }

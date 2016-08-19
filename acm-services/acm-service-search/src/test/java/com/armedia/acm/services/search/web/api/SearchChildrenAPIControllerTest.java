@@ -112,6 +112,59 @@ public class SearchChildrenAPIControllerTest extends EasyMockSupport
     }
 
     @Test
+    public void childrenAdvanced() throws Exception
+    {
+        String parentType = "COMPLAINT";
+        String parentId = "999";
+        String childType = "TASK";
+        Boolean activeOnly = false;
+        Boolean exceptDeletedOnly = true;
+
+
+        String query = "parent_object_type_s:" + parentType+ " AND parent_object_id_i:"+ parentId + " AND object_type_s:" + childType;
+
+        if (activeOnly) {
+            query += " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED";
+        }
+        if (exceptDeletedOnly) {
+            if(!activeOnly){
+                query += " AND -status_s:DELETED";
+            }
+        }
+
+
+        String solrResponse = "{ \"solrResponse\": \"this is a test response.\" }";
+
+        // MVC test classes must call getName() somehow
+        expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
+
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.ADVANCED_SEARCH, query, 0, 10, "")).
+                andReturn(solrResponse);
+
+        replayAll();
+
+        MvcResult result = mockMvc.perform(
+                get("/api/v1/plugin/search/children/advanced")
+                        .param("parentId", parentId)
+                        .param("parentType", parentType)
+                        .param("childType", childType)
+
+
+                        .principal(mockAuthentication))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        verifyAll();
+
+        String jsonString = result.getResponse().getContentAsString();
+
+        log.debug("Got JSON: " + jsonString);
+
+        assertEquals(solrResponse, jsonString);
+    }
+
+    @Test
     public void children_exception() throws Exception
     {
 

@@ -31,7 +31,8 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
          The best way I found to handle it is to have a rollback error handling that retries up to 15 times.  After
          15 times there must be something else going on.  But this seems to work well for most issues I've seen -->
     <rollback-exception-strategy name="taskToSolrRollbackStrategy" maxRedeliveryAttempts="15">
-        <logger level="INFO" category="com.armedia.acm.plugins.task.service" message="Retrying activiti task to SOLR (#[exception.getClass().getName()]"/>
+        <logger level="INFO" category="com.armedia.acm.plugins.task.service"
+                message="Retrying activiti task to SOLR (#[exception.getClass().getName()]"/>
         <on-redelivery-attempts-exceeded>
             <logger level="ERROR" category="com.armedia.acm.plugins.task.service" message="could not deliver"/>
         </on-redelivery-attempts-exceeded>
@@ -47,7 +48,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
                 queue="activitiTaskToSolr.in"
                 exchange-pattern="one-way"
                 connector-ref="ActiveMQ-ACM"
-                doc:name="JMS" />
+                doc:name="JMS"/>
 
         <timer-interceptor/>
 
@@ -86,13 +87,13 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 
         <logger level="DEBUG" category="com.armedia.acm.plugins.task.service" message="Got ACM task"/>
 
-        <set-payload value="#[advancedSearchJson]"/>
-        <http:outbound-endpoint ref="submitAdvancedSearchDocuments" />
+        <set-payload value="#[flowVars['advancedSearchJson']]"/>
+        <http:outbound-endpoint ref="submitAdvancedSearchDocumentsSolrEndpoint"/>
 
         <logger level="DEBUG" category="com.armedia.acm.plugins.task.service" message="Sent to SOLR advanced search"/>
 
-        <set-payload value="#[quickSearchJson]"/>
-        <http:outbound-endpoint ref="submitQuicksearchDocuments" />
+        <set-payload value="#[flowVars['quickSearchJson']]"/>
+        <http:outbound-endpoint ref="submitQuicksearchDocumentsSolrEndpoint"/>
 
         <logger level="DEBUG" category="com.armedia.acm.plugins.task.service" message="Sent to SOLR quick search"/>
     </flow>

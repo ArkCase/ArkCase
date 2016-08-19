@@ -120,19 +120,19 @@ angular.module('services').factory('DocTreeExt.Core', ['$q', 'UtilService', 'Obj
 
         /**
          * @ngdoc method
-         * @name handleEditWithWord
+         * @name handleEditWithWebDAV
          * @methodOf services:DocTreeExt.Core
          *
          * @description
-         * Add command handler for "editWithWord" to DocTree extension
+         * Add command handler for "editWithWebDAV" to DocTree extension
          *
          * @param {Object} treeControl  Interface of functions to DocTree
          * @param {Object} scope  Angular scope
          *
          */
-        Service.handleEditWithWord = function (treeControl, scope) {
+        Service.handleEditWithWebDAV = function (treeControl, scope) {
             treeControl.addCommandHandler({
-                name: "editWithWord"
+                name: "editWithWebDAV"
                 , onAllowCmd: function(nodes) {
                     var fileObject = nodes[0].data;
                     var lock = fileObject.lock;

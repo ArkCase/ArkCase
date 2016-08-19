@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.armedia.acm.acm-plugins</groupId>
         <artifactId>acm-default-plugins</artifactId>
-        <version>3.0.55</version>
+        <version>3.0.56</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -18,6 +18,16 @@
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-pipeline</artifactId>
             <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-drools-rule-monitor</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <!-- activiti -->
+        <dependency>
+            <groupId>org.activiti</groupId>
+            <artifactId>activiti-engine</artifactId>
         </dependency>
 
     </dependencies>

@@ -8,6 +8,7 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,6 +77,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         doc.setId(in.getId() + "-" + in.getObjectType());
         doc.setLast_modified_tdt(in.getModified());
         doc.setName(in.getFileName());
+        doc.setExt_s(in.getFileActiveVersionNameExtension());
         doc.setModifier_s(in.getModifier());
 
         doc.setParent_object_id_i(in.getContainer().getContainerObjectId());
@@ -98,7 +100,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
 
         doc.setCmis_version_series_id_s(in.getVersionSeriesId());
 
-        doc.setMime_type_s(in.getFileMimeType());
+        doc.setMime_type_s(in.getFileActiveVersionMimeType());
 
         doc.setStatus_s(in.getStatus());
 
@@ -127,7 +129,8 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         solr.setModifier_lcs(in.getModifier());
 
         solr.setName(in.getFileName());
-        solr.setContent_type(in.getFileMimeType());
+        solr.setExt_s(in.getFileActiveVersionNameExtension());
+        solr.setContent_type(in.getFileActiveVersionMimeType());
         solr.setStatus_lcs(in.getStatus());
         solr.setTitle_parseable(in.getFileName());
 
@@ -152,7 +155,8 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         {
             solr.setAdditionalProperty("creator_full_name_lcs", creator.getFullName());
             solr.setAssignee_full_name_lcs(creator.getFullName());
-        }else {
+        } else
+        {
             solr.setAssignee_full_name_lcs(in.getCreator());
         }
 
@@ -180,24 +184,19 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
     @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
-
-        boolean objectNotNull = acmObjectType != null;
-        String ourClassName = EcmFile.class.getName();
-        String theirClassName = acmObjectType.getName();
-        boolean classNames = theirClassName.equals(ourClassName);
-        boolean isSupported = objectNotNull && classNames;
-
-        return isSupported;
+        return EcmFile.class.equals(acmObjectType);
     }
 
     private boolean isHidden(EcmFile file)
     {
         if (file != null)
         {
-            String mimeType = file.getFileMimeType();
+            String mimeType = file.getFileActiveVersionMimeType();
 
-            if ((mimeType != null && mimeType.contains(EcmFileConstants.MIME_TYPE_XML) && mimeType.contains(EcmFileConstants.MIME_TYPE_FREVVO_URL)) ||
-                    (mimeType != null && mimeType.contains(EcmFileConstants.MIME_TYPE_PNG) && mimeType.contains(EcmFileConstants.MIME_TYPE_FREVVO_SIGNATURE_KEY)))
+            if ((mimeType != null && mimeType.contains(EcmFileConstants.MIME_TYPE_XML)
+                    && mimeType.contains(EcmFileConstants.MIME_TYPE_FREVVO_URL))
+                    || (mimeType != null && mimeType.contains(EcmFileConstants.MIME_TYPE_PNG)
+                            && mimeType.contains(EcmFileConstants.MIME_TYPE_FREVVO_SIGNATURE_KEY)))
             {
                 return true;
             }
@@ -234,5 +233,11 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
     public void setUserDao(UserDao userDao)
     {
         this.userDao = userDao;
+    }
+
+    @Override
+    public Class<?> getAcmObjectTypeSupported()
+    {
+        return EcmFile.class;
     }
 }

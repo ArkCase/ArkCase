@@ -8,7 +8,6 @@ import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,13 +37,16 @@ public class AcmFileResource extends AcmFileSystemResource implements PropFindab
     private EcmFile acmFile;
     private String fileType;
     private String lockType;
+    private String acmTicket;
 
-    public AcmFileResource(String host, EcmFile acmFile, String fileType, String lockType, AcmFileSystemResourceFactory resourceFactory)
+    public AcmFileResource(String host, EcmFile acmFile, String fileType, String lockType, String acmTicket,
+            AcmFileSystemResourceFactory resourceFactory)
     {
         super(host, resourceFactory);
         this.acmFile = acmFile;
         this.fileType = fileType;
         this.lockType = lockType;
+        this.acmTicket = acmTicket;
     }
 
     public Long getId()
@@ -65,6 +67,11 @@ public class AcmFileResource extends AcmFileSystemResource implements PropFindab
     public String getLockType()
     {
         return lockType;
+    }
+
+    public String getAcmTicket()
+    {
+        return acmTicket;
     }
 
     // Resource interface methods implementation
@@ -133,7 +140,7 @@ public class AcmFileResource extends AcmFileSystemResource implements PropFindab
     @Override
     public String getContentType(String accepts)
     {
-        String mime = acmFile.getFileMimeType();
+        String mime = acmFile.getFileActiveVersionMimeType();
         return ContentTypeUtils.findAcceptableContentType(mime, accepts);
     }
 
@@ -144,9 +151,9 @@ public class AcmFileResource extends AcmFileSystemResource implements PropFindab
     {
         try
         {
-            Authentication auth = getResourceFactory().getSecurityManager().getSpringAuthentication();
-            getResourceFactory().getEcmFileTransaction().updateFileTransactionEventAware(auth, acmFile, in);
-        } catch (MuleException e)
+            getResourceFactory().getEcmFileTransaction().updateFileTransactionEventAware(
+                    getResourceFactory().getSecurityManager().getAuthenticationForTicket(acmTicket), acmFile, in);
+        } catch (MuleException | IOException e)
         {
             LOGGER.error("Error while uploading file via Mule.", e);
         }

@@ -58,8 +58,6 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
             function (correspondenceForms) {
                 $timeout(function() {
                     $scope.correspondenceForms = Util.goodArray(correspondenceForms);
-                    //$scope.correspondenceForms = $scope.correspondenceForms || [];
-                    //$scope.correspondenceForms = $scope.correspondenceForms.concat(Util.goodArray(correspondenceForms));
                 }, 0);
                 return correspondenceForms;
             }
@@ -83,7 +81,7 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
             $scope.treeControl = treeControl;
             DocTreeExtCore.handleCheckout(treeControl, $scope);
             DocTreeExtCore.handleCheckin(treeControl, $scope);
-            DocTreeExtCore.handleEditWithWord(treeControl, $scope);
+            DocTreeExtCore.handleEditWithWebDAV(treeControl, $scope);
             DocTreeExtCore.handleCancelEditing(treeControl, $scope);
 
             //$scope.treeControl.addCommandHandler({
@@ -108,6 +106,17 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
             //    }
             //});
 
+            //if there is subscription from other object we want to unsubscribe
+            //we want to have only one subscription from the current object
+            if ($scope.subscription) {
+                $scope.$bus.unsubscribe($scope.subscription);
+            }
+            var eventName = "object.changed/" + $scope.objectType + "/" + $scope.objectId;
+            $scope.subscription = $scope.$bus.subscribe(eventName, function (data) {
+                if (data.objectType == 'FILE') {
+                    $scope.treeControl.refreshTree();
+                }
+            });
         };
 
         $scope.onClickRefresh = function () {

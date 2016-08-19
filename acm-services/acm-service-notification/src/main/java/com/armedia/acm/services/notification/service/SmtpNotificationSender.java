@@ -5,22 +5,27 @@ import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileEmailedEvent;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.service.outlook.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksResultDTO;
+import com.armedia.acm.services.notification.model.SmtpEventSentEvent;
 import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
+import com.armedia.acm.services.tag.model.AcmAssociatedTag;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
 
 import javax.activation.DataHandler;
@@ -31,7 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SmtpNotificationSender implements NotificationSender
+public class SmtpNotificationSender implements NotificationSender, ApplicationEventPublisherAware
 {
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
@@ -44,6 +49,13 @@ public class SmtpNotificationSender implements NotificationSender
     private AuthenticationTokenDao authenticationTokenDao;
     private EcmFileService ecmFileService;
     String flow = "vm://sendEmailViaSmtp.in";
+    private ApplicationEventPublisher eventPublisher;
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+    {
+        eventPublisher = applicationEventPublisher;
+    }
 
     @Override
     public Notification send(Notification notification)
@@ -93,8 +105,10 @@ public class SmtpNotificationSender implements NotificationSender
         Map<String, Object> messageProps = loadSmtpAndOriginatingProperties();
         messageProps.put("subject", in.getSubject());
 
+        boolean firstIteration = true;
         for (String emailAddress : in.getEmailAddresses())
         {
+            List<SmtpEventSentEvent> sentEvents = new ArrayList<>();
             try
             {
                 messageProps.put("to", emailAddress);
@@ -103,7 +117,17 @@ public class SmtpNotificationSender implements NotificationSender
                 {
                     InputStream contents = getEcmFileService().downloadAsInputStream(attachmentId);
                     EcmFile ecmFile = getEcmFileService().findById(attachmentId);
-                    attachments.put(ecmFile.getFileName(), new DataHandler(new InputStreamDataSource(contents, ecmFile.getFileName())));
+                    String fileName = ecmFile.getFileName();
+                    if (ecmFile.getFileActiveVersionNameExtension() != null)
+                    {
+                        fileName = fileName + ecmFile.getFileActiveVersionNameExtension();
+                    }
+                    attachments.put(fileName, new DataHandler(new InputStreamDataSource(contents, fileName)));
+
+                    if (firstIteration)
+                    {
+                        sentEvents.add(new SmtpEventSentEvent(ecmFile, user.getUserId(), ecmFile.getParentObjectId(), ecmFile.getParentObjectType()));
+                    }
                 }
                 MuleMessage received = getMuleContextManager().send(flow, makeNote(emailAddress, in, authentication), attachments,
                         messageProps);
@@ -113,11 +137,25 @@ public class SmtpNotificationSender implements NotificationSender
             {
                 exception = e;
             }
+
             if (exception != null)
             {
                 LOG.error("Email message not sent ...", exception);
             }
+
+            if (firstIteration)
+            {
+                for (SmtpEventSentEvent event : sentEvents)
+                {
+                    boolean success = (exception == null);
+                    event.setSucceeded(success);
+                    eventPublisher.publishEvent(event);
+                }
+                firstIteration = false;
+            }
         }
+
+
     }
 
     @Override
@@ -140,6 +178,8 @@ public class SmtpNotificationSender implements NotificationSender
             {
                 exception = e;
             }
+
+
             if (exception != null)
             {
                 emailResultList.add(new EmailWithEmbeddedLinksResultDTO(emailAddress, false));
@@ -148,7 +188,13 @@ public class SmtpNotificationSender implements NotificationSender
             {
                 emailResultList.add(new EmailWithEmbeddedLinksResultDTO(emailAddress, true));
             }
+
         }
+
+        SmtpEventSentEvent event = new SmtpEventSentEvent(in, user.getUserId());
+        boolean success = (exception == null);
+        event.setSucceeded(success);
+        eventPublisher.publishEvent(event);
 
         return emailResultList;
     }

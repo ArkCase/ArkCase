@@ -1,6 +1,5 @@
 package com.armedia.acm.services.note.service;
 
-
 import com.armedia.acm.services.note.dao.NoteDao;
 import com.armedia.acm.services.note.model.Note;
 import com.armedia.acm.services.note.model.NoteConstants;
@@ -57,6 +56,7 @@ public class NoteToSolrTransformer implements AcmObjectToSolrDocTransformer<Note
 
         solr.setAdditionalProperty("parent_object_type_s", in.getParentType());
         solr.setAdditionalProperty("parent_object_id_i", in.getParentId());
+        solr.setAdditionalProperty("type_s", in.getType());
         solr.setParent_ref_s(String.format("%d-%s", in.getParentId(), in.getParentType()));
 
         return solr;
@@ -111,5 +111,11 @@ public class NoteToSolrTransformer implements AcmObjectToSolrDocTransformer<Note
     public void setNoteDao(NoteDao noteDao)
     {
         this.noteDao = noteDao;
+    }
+
+    @Override
+    public Class<?> getAcmObjectTypeSupported()
+    {
+        return Note.class;
     }
 }

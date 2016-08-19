@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.casefile.model;
 
 import com.armedia.acm.core.AcmNotifiableEntity;
 import com.armedia.acm.core.AcmNotificationReceiver;
+import com.armedia.acm.core.AcmStatefulEntity;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.AcmLegacySystemEntity;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
@@ -16,6 +17,7 @@ import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -59,12 +61,13 @@ import java.util.Set;
 @Entity
 @Table(name = "acm_case_file")
 @XmlRootElement(name = "caseFile")
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "className")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "className")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.plugins.casefile.model.CaseFile")
+@JsonPropertyOrder(value = {"id", "personAssociations", "originator"})
 public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
-        AcmContainerEntity, AcmChildObjectEntity, AcmLegacySystemEntity, AcmNotifiableEntity
+        AcmContainerEntity, AcmChildObjectEntity, AcmLegacySystemEntity, AcmNotifiableEntity, AcmStatefulEntity
 {
     private static final long serialVersionUID = -6035628455385955008L;
 
@@ -128,9 +131,6 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumns({@JoinColumn(name = "cm_object_id"), @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type")})
     private List<AcmParticipant> participants = new ArrayList<>();
-
-    @Transient
-    private Set<AcmNotificationReceiver> receivers = new HashSet<>();
 
     @Column(name = "cm_due_date")
     @Temporal(TemporalType.TIMESTAMP)
@@ -685,6 +685,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     @JsonIgnore
     public Set<AcmNotificationReceiver> getReceivers()
     {
+        Set<AcmNotificationReceiver> receivers = new HashSet<>();
         receivers.addAll(participants);
         return receivers;
     }

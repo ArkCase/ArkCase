@@ -325,6 +325,8 @@
     <copyField source="name" dest="catch_all"/>
     <copyField source="id" dest="catch_all"/>
 
+    <copyField source="*_lcs" dest="catch_all"/>
+
     <!--End of ACM copy Fields-->
 
     <!-- Above, multiple source fields are copied to the [text] field.

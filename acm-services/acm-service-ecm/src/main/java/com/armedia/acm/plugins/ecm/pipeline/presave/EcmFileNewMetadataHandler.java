@@ -6,14 +6,14 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
+import com.armedia.acm.plugins.ecm.service.PageCountService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
+
 import org.apache.chemistry.opencmis.client.api.Document;
-import org.apache.pdfbox.pdmodel.PDDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 /**
@@ -25,6 +25,7 @@ public class EcmFileNewMetadataHandler implements PipelineHandler<EcmFile, EcmFi
 
     private EcmFileDao ecmFileDao;
     private AcmFolderDao folderDao;
+    private PageCountService pageCountService;
 
     @Override
     public void execute(EcmFile entity, EcmFileTransactionPipelineContext pipelineContext) throws PipelineProcessException
@@ -53,6 +54,8 @@ public class EcmFileNewMetadataHandler implements PipelineHandler<EcmFile, EcmFi
             EcmFileVersion version = new EcmFileVersion();
             version.setCmisObjectId(cmisDocument.getId());
             version.setVersionTag(cmisDocument.getVersionLabel());
+            version.setVersionMimeType(entity.getFileActiveVersionMimeType());
+            version.setVersionFileNameExtension(entity.getFileActiveVersionNameExtension());
             entity.getVersions().add(version);
 
             // Determines the folder and container in which the file should be saved
@@ -60,33 +63,17 @@ public class EcmFileNewMetadataHandler implements PipelineHandler<EcmFile, EcmFi
             entity.setFolder(folder);
             entity.setContainer(pipelineContext.getContainer());
 
-            // set page count
-            if ("application/pdf".equals(entity.getFileMimeType()))
+            try
             {
-                PDDocument pdDocument = null;
-                try
+                int pageCount = getPageCountService().getNumberOfPages(entity.getFileActiveVersionMimeType(),
+                        pipelineContext.getFileByteArray());
+                if (pageCount > -1)
                 {
-                    pdDocument = PDDocument.load(new ByteArrayInputStream(pipelineContext.getFileByteArray()));
-                    entity.setPageCount(pdDocument.getNumberOfPages());
-                } catch (IOException e)
-                {
-                    throw new PipelineProcessException(e);
-                } finally
-                {
-                    if (pdDocument != null)
-                    {
-                        try
-                        {
-                            pdDocument.close();
-                        } catch (Exception ex)
-                        {
-                            log.error("cannot close PDF: {}", ex.getMessage(), ex);
-                        }
-                    }
+                    entity.setPageCount(pageCount);
                 }
-            } else
+            } catch (IOException e)
             {
-                log.warn("Still don't know how to retrieve the page count for [{}] mime type");
+                throw new PipelineProcessException(e);
             }
 
             // Saves new file metadata into ArkCase database
@@ -120,5 +107,15 @@ public class EcmFileNewMetadataHandler implements PipelineHandler<EcmFile, EcmFi
     public void setFolderDao(AcmFolderDao folderDao)
     {
         this.folderDao = folderDao;
+    }
+
+    public PageCountService getPageCountService()
+    {
+        return pageCountService;
+    }
+
+    public void setPageCountService(PageCountService pageCountService)
+    {
+        this.pageCountService = pageCountService;
     }
 }
