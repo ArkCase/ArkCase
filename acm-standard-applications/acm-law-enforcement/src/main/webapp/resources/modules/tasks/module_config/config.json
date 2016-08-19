@@ -318,7 +318,8 @@
               "width": 150,
               "name": "assignee",
               "displayName": "tasks.comp.details.table.columns.modifier",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
             }
           ]
         },
@@ -342,7 +343,8 @@
               "width": 150,
               "name": "assignee",
               "displayName": "tasks.comp.reworkdetails.table.columns.modifier",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
             }
           ]
         },
@@ -776,6 +778,7 @@
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
+      "enableSorting": true,
       "paginationPageSizes": [
         5,
         10,
@@ -786,28 +789,25 @@
       "columnDefs": [
         {
           "name": "note",
-          "field": "description_parseable",
           "displayName": "tasks.comp.notes.table.columns.note",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div ng-bind-html='row.entity.description_parseable' title='{{row.entity.description_parseable}}' class='ui-grid-cell-contents'></div>",
+          "cellTemplate": "<div ng-bind-html='row.entity.note' title='{{row.entity.note}}' class='ui-grid-cell-contents'></div>",
           "enableCellEdit": false
         },
         {
           "name": "created",
-          "field": "create_date_tdt",
           "displayName": "tasks.comp.notes.table.columns.created",
-          "cellTemplate": "<div>{{ row.entity.create_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
           "width": 150
         },
         {
           "name": "creator",
-          "field": "creator_lcs",
           "displayName": "tasks.comp.notes.table.columns.creator",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
-          "fullNameField": "creator_full_name_lcs",
+          "lookup": "userFullNames",
           "width": 150
         }
       ]

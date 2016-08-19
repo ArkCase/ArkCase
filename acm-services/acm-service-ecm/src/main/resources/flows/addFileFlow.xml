@@ -33,7 +33,7 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
             content-ref="#[message.inboundProperties.inputStream]"
             filename="#[payload.fileName]"
             folderId="#[message.inboundProperties.cmisFolderId]"
-            mimeType="#[payload.fileMimeType]"
+            mimeType="#[payload.fileActiveVersionMimeType]"
             objectType="cmis:document"
             versioningState="MAJOR"/>
         <logger level="DEBUG" category="com.armedia.acm.plugins.ecm"/>

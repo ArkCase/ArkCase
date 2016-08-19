@@ -12,7 +12,8 @@ import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.plugins.casefile.web.api.CaseFileEnqueueResponse;
 import com.armedia.acm.plugins.casefile.web.api.CaseFileEnqueueResponse.ErrorReason;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
@@ -21,7 +22,7 @@ import java.util.Map;
 
 public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
 {
-    // private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     private CaseFileDao caseFileDao;
 
@@ -123,8 +124,12 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
     @Transactional
     public CaseFileEnqueueResponse enqueueCaseFile(Long caseId, String nextQueue, CaseFilePipelineContext context)
     {
-        CaseFile caseFile = caseFileDao.find(caseId);
+        // since we will make changes to this CaseFile, we should not detach it; the caseFileDao detaches
+        // the object, so we won't use the dao.find() method here.
+        CaseFile caseFile = caseFileDao.getEm().find(CaseFile.class, caseId);
+
         context.setNewCase(false);
+        context.setEnqueueName(nextQueue);
 
         List<String> cannotLeaveReasons = verifyLeaveConditions(context, caseFile);
         if (!cannotLeaveReasons.isEmpty())
@@ -146,7 +151,9 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
 
         startLeaveProcess(context, caseFile);
         startEnterProcess(context, caseFile);
-        caseFile = caseFileDao.save(caseFile);
+
+        // we don't need to explicitly save the case file.  Since the casefile is a managed entity (because we did
+        // not detach it) any changes we made are automatically applied at the end of the transaction.
 
         return new CaseFileEnqueueResponse(ErrorReason.NO_ERROR, nextQueue, caseFile);
     }
@@ -201,6 +208,8 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         onEnterModel = onEnterQueueBusinessRule.applyRules(onEnterModel);
 
         String enterProcessName = onEnterModel.getBusinessProcessName();
+
+        log.debug("enterProcessName: {}", enterProcessName);
         if (enterProcessName != null && !enterProcessName.isEmpty())
         {
             Map<String, Object> processVariables = createProcessVariables(caseFile);

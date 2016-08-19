@@ -263,7 +263,8 @@
               "width": 150,
               "name": "modifier",
               "displayName": "complaints.comp.details.table.columns.modifier",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
             }
           ]
         },
@@ -361,7 +362,7 @@
               "field": "assignee_s",
               "displayName": "complaints.comp.tasks.table.columns.assignee",
               "headerCellFilter": "translate",
-              "fullNameField": "assignee_full_name_lcs",
+              "lookup": "userFullNames",
               "width": 150
             },
             {
@@ -427,22 +428,23 @@
           "type": "component",
           "columnDefs": [
             {
-              "name": "location.fullAddress",
+              "name": "fullAddress",
               "displayName": "complaints.comp.locations.table.columns.address",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div ng-bind-html='row.entity.location.fullAddress' title='{{row.entity.location.fullAddress}}' class='ui-grid-cell-contents'></div>"
+              "cellTemplate": "<div ng-bind-html='row.entity.fullAddress' title='{{row.entity.fullAddress}}' class='ui-grid-cell-contents'></div>"
             },
             {
-              "name": "location.modified",
+              "name": "modified",
               "displayName": "complaints.comp.locations.table.columns.modified",
               "headerCellFilter": "translate",
               "width": 150
             },
             {
-              "name": "location.modifier",
+              "name": "modifier",
               "displayName": "complaints.comp.locations.table.columns.modifier",
               "headerCellFilter": "translate",
-              "width": 150
+              "width": 150,
+              "lookup": "userFullNames"
             }
           ]
         }
@@ -582,7 +584,7 @@
             "name": "creator",
             "displayName": "complaints.comp.people.contactMethods.table.columns.creator",
             "headerCellFilter": "translate",
-            "fullNameField": "creator_full_name_lcs"
+            "lookup": "userFullNames"
           }
         ]
       },
@@ -623,7 +625,7 @@
             "name": "creator",
             "displayName": "complaints.comp.people.organizations.table.columns.creator",
             "headerCellFilter": "translate",
-            "fullNameField": "creator_full_name_lcs"
+            "lookup": "userFullNames"
           }
         ]
       },
@@ -681,7 +683,7 @@
             "name": "creator",
             "displayName": "complaints.comp.people.addresses.table.columns.creator",
             "headerCellFilter": "translate",
-            "fullNameField": "creator_full_name_lcs"
+            "lookup": "userFullNames"
           }
         ]
       },
@@ -719,7 +721,7 @@
             "name": "creator",
             "displayName": "complaints.comp.people.aliases.table.columns.creator",
             "headerCellFilter": "translate",
-            "fullNameField": "creator_full_name_lcs"
+            "lookup": "userFullNames"
           }
         ]
       },
@@ -871,6 +873,7 @@
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
+      "enableSorting": true,
       "paginationPageSizes": [
         5,
         10,
@@ -932,7 +935,7 @@
           "field": "assignee_s",
           "displayName": "complaints.comp.tasks.table.columns.assignee",
           "headerCellFilter": "translate",
-          "fullNameField": "assignee_full_name_lcs"
+          "lookup": "userFullNames"
         },
         {
           "name": "created",

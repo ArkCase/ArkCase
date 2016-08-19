@@ -10,7 +10,7 @@ public class CaseFileEnqueueResponse
 
     public enum ErrorReason
     {
-        NO_ERROR, LEAVE, NEXT_POSSIBLE, ENTER, ON_LEAVE, ON_ENTER;
+        NO_ERROR, LEAVE, NEXT_POSSIBLE, ENTER, ON_LEAVE, ON_ENTER
     }
 
     private final boolean success;
@@ -24,7 +24,7 @@ public class CaseFileEnqueueResponse
 
     private final String requestedQueue;
 
-    private final CaseFile caseFile;
+    private CaseFile caseFile;
 
     public CaseFileEnqueueResponse(ErrorReason reason, String requestedQueue, CaseFile caseFile)
     {
@@ -74,4 +74,8 @@ public class CaseFileEnqueueResponse
         return caseFile;
     }
 
+    protected void setCaseFile(CaseFile caseFile)
+    {
+        this.caseFile = caseFile;
+    }
 }

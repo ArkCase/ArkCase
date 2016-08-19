@@ -62,6 +62,7 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
         <set-variable variableName="hidden" value="#[message.payload.hidden_b]"/>
         <set-variable variableName="titleParseable" value="#[message.payload.title_parseable]"/>
         <set-variable variableName="assigneeFullName" value="#[message.payload.assignee_full_name_lcs]"/>
+        <set-variable variableName="ext" value="#[message.payload.ext_s]"/>
 
         <logger category="com.armedia.acm.services.search.service" level="DEBUG"
                 message="Doc ID: #[flowVars['docId']]"/>

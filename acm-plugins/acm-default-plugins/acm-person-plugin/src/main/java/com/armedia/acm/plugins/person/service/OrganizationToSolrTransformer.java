@@ -77,13 +77,7 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
     @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
-        boolean objectNotNull = acmObjectType != null;
-        String ourClassName = Organization.class.getName();
-        String theirClassName = acmObjectType.getName();
-        boolean classNames = theirClassName.equals(ourClassName);
-        boolean isSupported = objectNotNull && classNames;
-
-        return isSupported;
+        return Organization.class.equals(acmObjectType);
     }
 
     public OrganizationDao getOrganizationDao()
@@ -104,5 +98,11 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
     public void setUserDao(UserDao userDao)
     {
         this.userDao = userDao;
+    }
+
+    @Override
+    public Class<?> getAcmObjectTypeSupported()
+    {
+        return Organization.class;
     }
 }

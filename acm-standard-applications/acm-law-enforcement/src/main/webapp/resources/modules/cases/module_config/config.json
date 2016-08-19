@@ -245,7 +245,8 @@
               "width": 150,
               "name": "modifier",
               "displayName": "cases.comp.details.table.columns.modifier",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
             }
           ]
         },
@@ -343,7 +344,7 @@
               "field": "assignee_s",
               "displayName": "cases.comp.tasks.table.columns.assignee",
               "headerCellFilter": "translate",
-              "fullNameField": "assignee_full_name_lcs"
+              "lookup": "userFullNames"
             },
             {
               "width": 150,
@@ -518,7 +519,7 @@
             "name": "creator",
             "displayName": "cases.comp.people.contactMethods.table.columns.creator",
             "headerCellFilter": "translate",
-            "fullNameField": "creator_full_name_lcs"
+            "lookup": "userFullNames"
           }
         ]
       },
@@ -559,7 +560,7 @@
             "name": "creator",
             "displayName": "cases.comp.people.organizations.table.columns.creator",
             "headerCellFilter": "translate",
-            "fullNameField": "creator_full_name_lcs"
+            "lookup": "userFullNames"
           }
         ]
       },
@@ -617,7 +618,7 @@
             "name": "creator",
             "displayName": "cases.comp.people.addresses.table.columns.creator",
             "headerCellFilter": "translate",
-            "fullNameField": "creator_full_name_lcs"
+            "lookup": "userFullNames"
           }
         ]
       },
@@ -655,7 +656,7 @@
             "name": "creator",
             "displayName": "cases.comp.people.aliases.table.columns.creator",
             "headerCellFilter": "translate",
-            "fullNameField": "creator_full_name_lcs"
+            "lookup": "userFullNames"
           }
         ]
       },
@@ -851,7 +852,7 @@
           "field": "assignee_s",
           "displayName": "cases.comp.tasks.table.columns.assignee",
           "headerCellFilter": "translate",
-          "fullNameField": "assignee_full_name_lcs"
+          "lookup": "userFullNames"
         },
         {
           "name": "created",
