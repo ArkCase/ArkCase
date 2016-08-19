@@ -146,7 +146,6 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                 scope.queryTypeahead = function (typeaheadQuery) {
                     typeaheadQuery = typeaheadQuery.replace('*', '');
                     typeaheadQuery = '/' + typeaheadQuery + '.*/';
-                    console.log(scope.filters);
                     if (!scope.hideTypeahead) {
                         if (scope.filters && scope.filters.indexOf("USER") >= 0) {
                             return scope.queryTypeaheadForUser(typeaheadQuery);

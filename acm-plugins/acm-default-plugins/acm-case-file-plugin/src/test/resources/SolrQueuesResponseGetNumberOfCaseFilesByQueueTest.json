@@ -34,6 +34,26 @@
         "_version_": 1513286516748583000
       },
       {
+        "note": "need a duplicate queue name to make sure the controller works right with duplicate queues",
+        "id": "15-QUEUE",
+        "author": "arkcase",
+        "author_s": "arkcase",
+        "modifier_s": "arkcase",
+        "last_modified_tdt": "2015-09-10T11:38:15Z",
+        "create_tdt": "2015-09-10T11:38:15Z",
+        "name": "Transcribe",
+        "object_id_s": "15",
+        "object_type_s": "QUEUE",
+        "adhocTask_b": false,
+        "public_doc_b": false,
+        "protected_object_b": false,
+        "hidden_b": false,
+        "queue_name_s": "Transcribe",
+        "queue_order_s": "1",
+        "queue_id_s": "1",
+        "_version_": 1513286516748583000
+      },
+      {
         "id": "2-QUEUE",
         "author": "arkcase",
         "author_s": "arkcase",

@@ -600,9 +600,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 });
             }
             /**
-             * @description Refresh a tree node
+             * @description Refresh a tree node.
              *
-             * @param node Tree node to refresh. If not specified, current active node is refreshed
+             * @param node (Optional)Tree node to refresh. If not specified, current active node is refreshed
              */
             , refreshNode: function (node) {
                 node = node || DocTree.tree.getActiveNode();
@@ -610,6 +610,35 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     node.render(true);
                 }
             }
+
+            /**
+             * @description Update a tree node
+             *
+             * @param node Tree node to update
+             * @param value New value
+             * @param field A field name
+             * //param fieldModel (Optional)A field name for model
+             */
+            //, updateNodeData: function (node, value, field, fieldModel) {
+            , updateNodeData: function (node, value, field) {
+                if (Validator.validateNode(node)) {
+                    node.data[field] = value;
+
+                    var folderNode = node.getParent();
+                    var cacheKey = DocTree.getCacheKeyByNode(folderNode);
+                    var folderList = DocTree.cacheFolderList.get(cacheKey);
+                    if (Validator.validateFolderList(folderList)) {
+                        var found = _.find(folderList.children, function(child) {
+                            return (child.objectId == node.data.objectId);
+                        });
+                        if (found) {
+                            found[field] = value;
+                        }
+                    }
+                    DocTree.cacheFolderList.put(cacheKey, folderList);
+                }
+            }
+
             , switchObject: function (activeObjType, activeObjId) {
                 if (!DocTree.tree) {
                     return;
@@ -2236,7 +2265,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                     } else {
                         var promiseAddNodes = DocTree._addingFileNodes(folderNode, names, fileType);
-
                         var cacheKey = DocTree.getCacheKeyByNode(folderNode);
                         var promiseUploadFiles = Util.serviceCall({
                             service: Ecm.uploadFiles
@@ -2250,6 +2278,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                         var uploadedFiles = [];
                                         for (var i = 0; i < uploadInfo.length; i++) {
                                             var uploadedFile = DocTree.fileToSolrData(uploadInfo[i]);
+                                            uploadedFile.originalName = names[i];
                                             uploadedFiles.push(uploadedFile);
                                             folderList.children.push(uploadedFile);
                                             folderList.totalChildren++;
@@ -2270,8 +2299,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     for (var i = 0; i < uploadedFiles.length; i++) {
                                         var uploadedFile = uploadedFiles[i];
                                         var type = Util.goodValue(uploadedFile.type);
-                                        var name = Util.goodValue(uploadedFile.name);
-                                        var fileNode = DocTree._matchFileNode(type, name, fileNodes);
+                                        var originalName = Util.goodValue(uploadedFile.originalName);
+                                        var fileNode = DocTree._matchFileNode(type, originalName, fileNodes);
                                         if (fileNode) {
                                             DocTree._fileDataToNodeData(uploadedFile, fileNode);
                                             fileNode.renderTitle();
@@ -4512,9 +4541,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 DocTree.readOnly = ("true" === attrs.readOnly);
 
                 scope.treeControl = {
-                    refreshTree: DocTree.refreshTree
+                    getSelectedNodes: DocTree.getSelectedNodes
+                    , refreshTree: DocTree.refreshTree
                     , refreshNode: DocTree.refreshNode
-                    , getSelectedNodes: DocTree.getSelectedNodes
+                    , updateNodeData: DocTree.updateNodeData
                     , addCommandHandler: function (args) {
                         DocTree.Command.addHandler(args);
                     }

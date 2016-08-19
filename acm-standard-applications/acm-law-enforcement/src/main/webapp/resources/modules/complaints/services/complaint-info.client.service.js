@@ -148,7 +148,7 @@ angular.module('services').factory('Complaint.InfoService', ['$resource', '$tran
                     if (Service.validateComplaintInfo(data)) {
                         var complaintInfo = data;
                         var cacheComplaintInfo = new Store.CacheFifo(Service.CacheNames.COMPLAINT_INFO);
-                        cacheComplaintInfo.put(complaintInfo.id, complaintInfo);
+                        cacheComplaintInfo.put(complaintInfo.complaintId, complaintInfo);
                         return complaintInfo;
                     }
                 }
