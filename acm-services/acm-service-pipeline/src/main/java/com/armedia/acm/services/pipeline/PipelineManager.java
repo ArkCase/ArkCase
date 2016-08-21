@@ -36,6 +36,19 @@ public class PipelineManager<T, S extends AbstractPipelineContext>
      */
     private final Logger log = LoggerFactory.getLogger(getClass());
 
+    public static interface PipelineManagerOperation<T>
+    {
+        T execute();
+    }
+
+    public T executeOperation(T entity, S pipelineContext, PipelineManagerOperation<T> operation) throws PipelineProcessException
+    {
+        onPreSave(entity, pipelineContext);
+        T result = operation.execute();
+        onPostSave(entity, pipelineContext);
+        return result;
+    }
+
     /**
      * Execute all registered pre-save handlers. Stop processing if any of the handlers throws exception
      *
@@ -46,7 +59,7 @@ public class PipelineManager<T, S extends AbstractPipelineContext>
      * @throws PipelineProcessException
      *             on error
      */
-    public void onPreSave(T entity, S pipelineContext) throws PipelineProcessException
+    protected void onPreSave(T entity, S pipelineContext) throws PipelineProcessException
     {
         log.debug("Pre-save handler of [{}] started", entity);
         ListIterator<PipelineHandler<T, S>> it = preSaveHandlers.listIterator();
@@ -66,7 +79,14 @@ public class PipelineManager<T, S extends AbstractPipelineContext>
             {
                 PipelineHandler<T, S> preSaveHandler = it.previous();
                 log.debug("Pre-save handler: [{}] rolling back", preSaveHandler.getClass().getName());
-                preSaveHandler.rollback(entity, pipelineContext);
+                try
+                {
+                    preSaveHandler.rollback(entity, pipelineContext);
+                } catch (PipelineProcessException rollbackException)
+                {
+                    log.warn("Pre-save handler [{}] rollback failed with {}.", preSaveHandler, rollbackException);
+                    e.addSuppressed(rollbackException);
+                }
             }
             // rethrow the exception
             throw e;
@@ -84,7 +104,7 @@ public class PipelineManager<T, S extends AbstractPipelineContext>
      * @throws PipelineProcessException
      *             on error
      */
-    public void onPostSave(T entity, S pipelineContext) throws PipelineProcessException
+    protected void onPostSave(T entity, S pipelineContext) throws PipelineProcessException
     {
         log.debug("Post-save handler of [{}] started", entity);
         ListIterator<PipelineHandler<T, S>> it = postSaveHandlers.listIterator();
@@ -104,7 +124,29 @@ public class PipelineManager<T, S extends AbstractPipelineContext>
             {
                 PipelineHandler<T, S> postSaveHandler = it.previous();
                 log.debug("Post-save handler: [{}] rolling back", postSaveHandler.getClass().getName());
-                postSaveHandler.rollback(entity, pipelineContext);
+                try
+                {
+                    postSaveHandler.rollback(entity, pipelineContext);
+                } catch (PipelineProcessException rollbackException)
+                {
+                    log.warn("Post-save handler [{}] rollback failed with {}.", postSaveHandler, rollbackException);
+                    e.addSuppressed(rollbackException);
+                }
+            }
+            // rollback pre-save handlers before rethrowing the exception;
+            it = preSaveHandlers.listIterator();
+            while (it.hasNext())
+            {
+                PipelineHandler<T, S> preSaveHandler = it.next();
+                log.debug("Pre-save handler: [{}] rolling back", preSaveHandler.getClass().getName());
+                try
+                {
+                    preSaveHandler.rollback(entity, pipelineContext);
+                } catch (PipelineProcessException rollbackException)
+                {
+                    log.warn("Pre-save handler [{}] rollback failed with {}.", preSaveHandler, rollbackException);
+                    e.addSuppressed(rollbackException);
+                }
             }
             // rethrow the exception
             throw e;
