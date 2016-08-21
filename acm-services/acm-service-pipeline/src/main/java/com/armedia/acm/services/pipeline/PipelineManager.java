@@ -38,13 +38,35 @@ public class PipelineManager<T, S extends AbstractPipelineContext>
 
     public static interface PipelineManagerOperation<T>
     {
-        T execute();
+        T execute() throws PipelineProcessException;
     }
 
     public T executeOperation(T entity, S pipelineContext, PipelineManagerOperation<T> operation) throws PipelineProcessException
     {
         onPreSave(entity, pipelineContext);
-        T result = operation.execute();
+        T result;
+        try
+        {
+            result = operation.execute();
+        } catch (PipelineProcessException e)
+        {
+            // rollback pre-save handlers before rethrowing the exception;
+            ListIterator<PipelineHandler<T, S>> it = preSaveHandlers.listIterator();
+            while (it.hasNext())
+            {
+                PipelineHandler<T, S> preSaveHandler = it.next();
+                log.debug("Pre-save handler: [{}] rolling back", preSaveHandler.getClass().getName());
+                try
+                {
+                    preSaveHandler.rollback(entity, pipelineContext);
+                } catch (PipelineProcessException rollbackException)
+                {
+                    log.warn("Pre-save handler [{}] rollback failed with {}.", preSaveHandler, rollbackException);
+                    e.addSuppressed(rollbackException);
+                }
+            }
+            throw e;
+        }
         onPostSave(entity, pipelineContext);
         return result;
     }
