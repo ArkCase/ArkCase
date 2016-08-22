@@ -13,20 +13,16 @@ import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
 
 public class CostsheetPage extends ArkCaseTestBase {
 
-	
-	@FindBy(how=How.XPATH,using="/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/div/div[1]/div/span/a/i")
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/div/div[1]/div/span/a/i")
 	WebElement editButton;
 	@FindBy(how = How.XPATH, using = "/html/body/header/div/nav/ul/li/a")
-	public
-	WebElement newButton;
+	public WebElement newButton;
 	@FindBy(how = How.XPATH, using = "/html/body/header/div/nav/ul/li/div/div[5]/div/a")
 	WebElement newCostSheet;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/iframe")
-	public
-	WebElement firstIframe;
+	public WebElement firstIframe;
 	@FindBy(how = How.XPATH, using = "/html/body/iframe")
-	public
-	WebElement secondIframe;
+	public WebElement secondIframe;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[1]/span/div")
 	WebElement expensesTitle;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[3]/div[1]/input[1]")
@@ -53,7 +49,7 @@ public class CostsheetPage extends ArkCaseTestBase {
 	WebElement amountColumnName;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[9]/div[2]/table/tbody/tr/td[5]/div/div[1]/span[2]")
 	WebElement dateCalendar;
-	@FindBy(how=How.XPATH,using="/html/body/iframe")
+	@FindBy(how = How.XPATH, using = "/html/body/iframe")
 	WebElement calendarIframe;
 	@FindBy(how = How.XPATH, using = "/html/body/div[5]/table/tbody/tr[6]/td[5]/input")
 	WebElement dateFromCalendar;
@@ -81,7 +77,7 @@ public class CostsheetPage extends ArkCaseTestBase {
 	WebElement addFilesBtn;
 	@FindBy(how = How.XPATH, using = "/html/body/div[4]/div[2]/div/div[1]/div/table/tbody/tr/td/form/input")
 	WebElement browseBtn;
-	@FindBy(how=How.XPATH,using="/html/body/div[4]/div[2]/div/div[2]/div")
+	@FindBy(how = How.XPATH, using = "/html/body/div[4]/div[2]/div/div[2]/div")
 	WebElement uploadBtn;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[12]/div[2]/div[2]/div[1]/div[1]/div[6]")
 	WebElement detailsInput;
@@ -119,49 +115,55 @@ public class CostsheetPage extends ArkCaseTestBase {
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[11]/div[1]/div/div[1]/a")
 	WebElement addedFileLabel;
 
-	
-	public void waitUntilPageIsLoaded(){
-	
+	public CostsheetPage waitUntilPageIsLoaded() {
+
 		WebDriverWait wait = new WebDriverWait(driver, 10);
 		wait.until(ExpectedConditions.elementToBeClickable(editButton));
-	
+		return this;
+
 	}
-	
-	
-	public void clickNewCostSheetBtn() {
+
+	public CostsheetPage clickNewCostSheetBtn() {
 
 		Assert.assertEquals("New cost sheet button name is wrong", "Costsheet", newCostSheet.getText());
 		newCostSheet.click();
+		return this;
 
 	}
 
-	public void verifyExpensesTitle() {
+	public CostsheetPage verifyExpensesTitle() {
 		Assert.assertEquals("Expenses title is wrong", "Expenses", expensesTitle.getText());
+		return this;
 	}
 
-	public void clickTypeDropDown() {
+	public CostsheetPage clickTypeDropDown() {
 		typeDropDown.click();
+		return this;
 	}
 
-	public void clickTypeCase() {
+	public CostsheetPage clickTypeCase() {
 		Assert.assertEquals("Type case label name is wrong", "Case", typeCase.getText());
 		typeCase.click();
+		return this;
 	}
 
-	public void clickTypeComplaint() {
+	public CostsheetPage clickTypeComplaint() {
 		Assert.assertEquals("Type complaint lable name is wrong", "Complaint", typeComplaint.getText());
 		typeComplaint.click();
+		return this;
 	}
 
-	public void clickCodeDropDown() {
+	public CostsheetPage clickCodeDropDown() {
 		codeDropDown.click();
+		return this;
 	}
 
-	public void clickFirstOptionInCodeDropDown() {
+	public CostsheetPage clickFirstOptionInCodeDropDown() {
 		firstCodeOption.click();
+		return this;
 	}
 
-	public void verifyCostTable() {
+	public CostsheetPage verifyCostTable() {
 
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertEquals(dateColumnName.getText(), "Date", "Date column name is wrong");
@@ -169,132 +171,154 @@ public class CostsheetPage extends ArkCaseTestBase {
 		softAssert.assertEquals(descriptionColumnName.getText(), "Description", "Description column name is wrong");
 		softAssert.assertEquals(amountColumnName.getText(), "Amount", "Amount column name is wrong");
 		softAssert.assertAll();
+		return this;
 
 	}
 
-	public void clickDateCalendar() throws InterruptedException {
+	public CostsheetPage clickDateCalendar() throws InterruptedException {
 
 		dateCalendar.click();
 		Thread.sleep(3000);
+		return this;
 
 	}
 
-	public void verifyCalnedarDate() {
+	public CostsheetPage verifyCalnedarDate() {
 
 		int i = driver.findElements(By.xpath("/html/body/div[5]")).size();
 		Assert.assertTrue("The calendar is not displayed", i != 0);
+		return this;
 	}
 
-	public void selectDateFromCalendar() {
+	public CostsheetPage selectDateFromCalendar() {
 
 		selectDate.click();
-		
+		return this;
 
 	}
-	public void verifyError()
-	{
-		int i=driver.findElements(By.xpath("/html/body/div[6]")).size();
-		Assert.assertTrue("When go button is clicked for searching user Error message comunicating with server is shown", i==0);
+
+	public CostsheetPage verifyError() {
+		int i = driver.findElements(By.xpath("/html/body/div[6]")).size();
+		Assert.assertTrue(
+				"When go button is clicked for searching user Error message comunicating with server is shown", i == 0);
+		return this;
 	}
 
-
-	public void clickTitleDropDown() {
+	public CostsheetPage clickTitleDropDown() {
 		titleDropDown.click();
+		return this;
 
 	}
 
-	public void selectTitleTaxi() {
+	public CostsheetPage selectTitleTaxi() {
 		Assert.assertEquals("Taxi lable name is wrong", "Taxi", titleTaxi.getText());
 		titleTaxi.click();
+		return this;
 
 	}
 
-	public void selectTitleHotel() {
+	public CostsheetPage selectTitleHotel() {
 
 		Assert.assertEquals("Hotel lable name is wrong", "Hotel", titleHotel.getText());
 		titleHotel.click();
+		return this;
 	}
 
-	public void selectTitleOverttime() {
+	public CostsheetPage selectTitleOverttime() {
 
 		Assert.assertEquals("Overtitme label name is wrong", "Overtime", titleOvertime.getText());
 		titleOvertime.click();
+		return this;
 	}
 
-	public void selectTitleFood() {
+	public CostsheetPage selectTitleFood() {
 
 		Assert.assertEquals("Food lable name is wrong", "Food", titleFood.getText());
 		titleFood.click();
+		return this;
 	}
 
-	public void detailsInput(String details) {
+	public CostsheetPage detailsInput(String details) {
 
 		detailsInput.click();
 		detailsInput.sendKeys(details);
+		return this;
 
 	}
-	
-	public void descriptionInput(String description){
-	descriptionInput.click();
-	descriptionInput.sendKeys(description);
-		
+
+	public CostsheetPage descriptionInput(String description) {
+		descriptionInput.click();
+		descriptionInput.sendKeys(description);
+		return this;
+
 	}
 
-	public void amountInput(String amount) {
+	public CostsheetPage amountInput(String amount) {
 		amountInput.click();
 		amountInput.sendKeys(amount);
+		return this;
 	}
 
-	public void clickAddFilesBtn() {
+	public CostsheetPage clickAddFilesBtn() {
 
 		addFilesBtn.click();
+		return this;
 
 	}
 
-	public void clickBrowseBtn() {
+	public CostsheetPage clickBrowseBtn() {
 
 		browseBtn.click();
+		return this;
 
 	}
 
-	public void clickSaveBtn() {
+	public CostsheetPage clickSaveBtn() {
 		saveBtn.click();
+		return this;
 	}
-	
-	public void clickUploadBtn(){
+
+	public CostsheetPage clickUploadBtn() {
 		uploadBtn.click();
+		return this;
 	}
 
-	public void clickSendForApproval() {
+	public CostsheetPage clickSendForApproval() {
 		sendForApprovalBtn.click();
+		return this;
 	}
 
-	public void clickCancel() {
+	public CostsheetPage clickCancel() {
 
 		cancelBtn.click();
+		return this;
 	}
 
-	public void clickSelectForApprovel() {
+	public CostsheetPage clickSelectForApprovel() {
 
 		selectApprover.click();
+		return this;
 	}
 
-	public void verifyAddUserTitle() {
+	public CostsheetPage verifyAddUserTitle() {
 		Assert.assertEquals("Add user title is wrong", "Add User", addUserTitle.getText());
+		return this;
 
 	}
 
-	public void searchForUserInput(String user) {
+	public CostsheetPage searchForUserInput(String user) {
 		searchForUserInput.click();
 		searchForUserInput.sendKeys(user);
+		return this;
 	}
 
-	public void clickGoBtn() {
+	public CostsheetPage clickGoBtn() {
 		goBtn.click();
+		return this;
 
 	}
 
-	public void verifySearchedUser(String user, String username) {
+	public CostsheetPage verifySearchedUser(String user, String username) {
 
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertEquals(searchedName.getText(), user, "Searched user name is wrong");
@@ -302,35 +326,42 @@ public class CostsheetPage extends ArkCaseTestBase {
 		softAssert.assertEquals(searchedUserTitle.getText(), "", "Searched user title is wtrong");
 		softAssert.assertEquals(searchedUserName.getText(), username, "Searched username is wrong");
 		softAssert.assertAll();
+		return this;
 
 	}
 
-	public void clickSearchedUser() {
+	public CostsheetPage clickSearchedUser() {
 		searchedName.click();
+		return this;
 	}
 
-	public void clickAddBtn() {
+	public CostsheetPage clickAddBtn() {
 		AddBtn.click();
+		return this;
 	}
 
-	public void verifyBalanceLable() {
+	public CostsheetPage verifyBalanceLable() {
 		Assert.assertEquals("Balance label name is wrong", "Balance", balanceLabelName.getText());
+		return this;
 	}
 
-	public void verifyBalanceNumber(String balance) {
+	public CostsheetPage verifyBalanceNumber(String balance) {
 		Assert.assertEquals("Balance number is not equal as ammount input", balance, balanceNumber.getText());
+		return this;
 	}
 
-	public void verifyUploadedFile(String file) {
+	public CostsheetPage verifyUploadedFile(String file) {
 
 		Assert.assertTrue("Uploaded file label name is wrong", addedFileLabel.getText().startsWith(file));
+		return this;
 
 	}
 
-	public void verifyAddUserPopUp() {
+	public CostsheetPage verifyAddUserPopUp() {
 
 		int i = driver.findElements(By.xpath("/html/body/div[1]/div[2]/div/div/div/div/div[1]/h4")).size();
 		Assert.assertTrue("After select for approver is clicked, add user popup is not displayed", i != 0);
+		return this;
 
 	}
 

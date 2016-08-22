@@ -8,6 +8,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.armedia.arkcase.uitests.audit.AuditPage;
 import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
 import com.thoughtworks.selenium.webdriven.commands.WaitForCondition;
 
@@ -34,6 +35,20 @@ public class ReportsPage extends ArkCaseTestBase {
 	WebElement reportContent;
 	@FindBy(how = How.XPATH, using = "//table")
 	WebElement reportTable;
+	@FindBy(how = How.XPATH, using = "//table/tbody/tr[2]/td[3]")
+	WebElement caseNumberColumnHeader;
+	@FindBy(how = How.XPATH, using = "//table/tbody/tr[2]/td[4]")
+	WebElement statusColumnHeader;
+	@FindBy(how = How.XPATH, using = "//table/tbody/tr[2]/td[5]")
+	WebElement titleColumnHeader;
+	@FindBy(how = How.XPATH, using = "//table/tbody/tr[2]/td[6]")
+	WebElement incidentDateColumnHeader;
+	@FindBy(how = How.XPATH, using = "//table/tbody/tr[2]/td[7]")
+	WebElement priorityColumnHeader;
+	@FindBy(how = How.XPATH, using ="//table/tbody/tr[2]/td[8]")
+	WebElement dueDateColumnHeader;
+	@FindBy(how = How.XPATH, using ="//table/tbody/tr[2]/td[9]")
+	WebElement typeColumnHeader;	
 
 	public ReportsPage ReportsMenuClick() {
        WebDriverWait wait = new WebDriverWait(driver, 10); 
@@ -87,5 +102,47 @@ public class ReportsPage extends ArkCaseTestBase {
 		generateReportButtonClick();
 		return this;
 	}
+	
+	public ReportsPage switchToReportFrame(){
+		driver.switchTo().frame("reports-iframe");
+		return this;
+	}
+	public ReportsPage switchToDefaultContent(){
+		driver.switchTo().defaultContent();
+		return this;
+	}
+	public ReportsPage switchToReportContentFrame(){
+		driver.switchTo().frame("reportContent");
+		return this;
+	}
+	public String readCaseNumberColumnHeader()
+	{
+		return caseNumberColumnHeader.getText();
+	}
+	public String readStatusColumnHeader()
+	{
+		return statusColumnHeader.getText();
+		
+	}
+	public String readTitleColumnHeader()
+	{
+		return titleColumnHeader.getText();
+	}
+	public String readIncidentDateColumnHeader()
+	{
+		return incidentDateColumnHeader.getText();
+	}
+	public String readPriorityColumnHeader()
+	{
+		return priorityColumnHeader.getText();
+	}
+	public String readDueDateColumnHeader()
+	{
+		return dueDateColumnHeader.getText();
+	}
+	public String readTypecolumnHeader()
+	{
+		return typeColumnHeader.getText();
+	}	
 
 }
