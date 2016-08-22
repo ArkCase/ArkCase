@@ -1,12 +1,12 @@
 'use strict';
 
 angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state', '$stateParams', '$q', '$modal'
-    , 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Object.LookupService', 'Case.LookupService'
-    , 'Object.SubscriptionService', 'Object.ModelService', 'Case.InfoService', 'Case.MergeSplitService'
+    , 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Case.LookupService'
+    , 'Object.SubscriptionService', 'Case.InfoService', 'Case.MergeSplitService'
     , 'Helper.ObjectBrowserService'
     , function ($scope, $state, $stateParams, $q, $modal
-        , Util, ConfigService, ObjectService, Authentication, ObjectLookupService, CaseLookupService
-        , ObjectSubscriptionService, ObjectModelService, CaseInfoService, MergeSplitService
+        , Util, ConfigService, ObjectService, Authentication, CaseLookupService
+        , ObjectSubscriptionService, CaseInfoService, MergeSplitService
         , HelperObjectBrowserService) {
 
         new HelperObjectBrowserService.Component({
@@ -26,21 +26,10 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
             $scope.caseFileSearchConfig = _.find(moduleConfig.components, {id: "merge"});
         });
 
-        var promiseQueryUser = Authentication.queryUserInfo();
-        var promiseGetGroups = ObjectLookupService.getGroups();
-
         var onObjectInfoRetrieved = function (objectInfo) {
-            var group = ObjectModelService.getGroup(objectInfo);
-            var assignee = ObjectModelService.getAssignee(objectInfo);
-            var promiseGetApprovers = CaseLookupService.getApprovers(group, assignee);
-            $q.all([promiseQueryUser, promiseGetGroups, promiseGetApprovers]).then(function (data) {
-                var userInfo = data[0];
-                var groups = data[1];
-                var assignees = data[2];
-                $scope.restricted = ObjectModelService.checkRestriction(userInfo.userId, assignee, group, assignees, groups);
-            });
+            $scope.restricted = objectInfo.restricted;
 
-            promiseQueryUser.then(function (userInfo) {
+            Authentication.queryUserInfo().then(function (userInfo) {
                 $scope.userId = userInfo.userId;
                 ObjectSubscriptionService.getSubscriptions(userInfo.userId, ObjectService.ObjectTypes.CASE_FILE, $scope.objectInfo.id).then(function (subscriptions) {
                     var found = _.find(subscriptions, {
@@ -74,7 +63,6 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
             };
         };
 
-        $scope.restricted = false;
         $scope.onClickRestrict = function ($event) {
             if ($scope.restricted != $scope.objectInfo.restricted) {
                 $scope.objectInfo.restricted = $scope.restricted;
