@@ -1225,6 +1225,10 @@ tags-input .tags {
     margin: 0px;
 }
 
+.right-sidebar.well-sm.documentDetails {
+	top: 172px;
+}
+
 
 
 /* Right Sidebar Summernote Editor */
@@ -1243,4 +1247,12 @@ tags-input .tags {
 
 .right-sidebar.well-sm .note-toolbar .note-view.btn-group {
 	display: none;
+}
+
+
+/* Fixing Full Screen Summernote Editor */
+.note-editor.panel.panel-default.fullscreen {
+	z-index: 1000 !important;
+	position: absolute !important;
+	margin-top: 60px;
 }
