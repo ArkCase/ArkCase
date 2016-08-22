@@ -221,6 +221,33 @@ public class Person implements Serializable, AcmEntity
         this.familyName = familyName;
     }
 
+    /**
+     * Get full person name
+     * 
+     * @return
+     */
+    public String getFullName()
+    {
+        StringBuilder sb = new StringBuilder();
+        if (getTitle() != null)
+        {
+            sb.append(getTitle()).append(" ");
+        }
+        if (getGivenName() != null)
+        {
+            sb.append(getGivenName()).append(" ");
+        }
+        if (getMiddleName() != null)
+        {
+            sb.append(getMiddleName()).append(" ");
+        }
+        if (getFamilyName() != null)
+        {
+            sb.append(getFamilyName());
+        }
+        return sb.toString();
+    }
+
     @XmlTransient
     @Override
     public Date getCreated()
