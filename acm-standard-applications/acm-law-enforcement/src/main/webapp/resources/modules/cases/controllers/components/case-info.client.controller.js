@@ -2,10 +2,10 @@
 
 angular.module('cases').controller('Cases.InfoController', ['$scope', '$stateParams', '$translate', '$timeout'
     , 'UtilService', 'Util.DateService', 'ConfigService', 'Object.LookupService', 'Case.LookupService', 'Case.InfoService'
-    , 'Object.ModelService', 'Helper.ObjectBrowserService'
+    , 'Object.ModelService', 'Helper.ObjectBrowserService', 'MessageService'
     , function ($scope, $stateParams, $translate, $timeout
         , Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService
-        , ObjectModelService, HelperObjectBrowserService) {
+        , ObjectModelService, HelperObjectBrowserService, MessageService) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -129,6 +129,10 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             $scope.objectInfo.dueDate = UtilDateService.dateToIso($scope.dateInfo.dueDate);
             saveCase();
         };
+
+        $scope.$on('accessDenied', function(event, message){
+            MessageService.info(message);
+        });
 
     }
 ]);
