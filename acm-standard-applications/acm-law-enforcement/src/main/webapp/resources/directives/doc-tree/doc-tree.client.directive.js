@@ -675,14 +675,20 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             , markNodePending: function (node) {
                 if (Validator.validateFancyTreeNode(node)) {
                     $(node.span).addClass("pending");
+                    if(!node.folder) {
+                      node.title = $translate.instant("common.directive.docTree.waitUploading") + node.data.name;
+                      node.renderTitle();
+                    }
                     node.setStatus("loading");
                 }
             }
             , markNodeOk: function (node) {
                 if (Validator.validateFancyTreeNode(node)) {
                     $(node.span).removeClass("pending");
-                    node.title = node.title.replace($translate.instant("common.directive.docTree.waitUploading"), '');
-                    node.renderTitle();
+                    if(!node.folder) {
+                      node.title = node.title.replace($translate.instant("common.directive.docTree.waitUploading"), '');
+                      node.renderTitle();
+                    }
                     node.setStatus("ok");
                 }
             }
@@ -3236,13 +3242,11 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             }
             , _addFileNode: function (folderNode, name, type) {
                 var fileNode = folderNode.addChildren({
-                    "title": $translate.instant("common.directive.docTree.waitUploading") + name,
+                    "title": name,
                     "name": name,
                     "ext": "",
                     "type": type,
-                    "loadStatus": "loading"
                 });
-                //fileNode.setStatus("loading");
                 DocTree.markNodePending(fileNode);
                 return fileNode;
             }
