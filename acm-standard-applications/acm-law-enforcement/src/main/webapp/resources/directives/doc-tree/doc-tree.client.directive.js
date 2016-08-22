@@ -681,6 +681,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             , markNodeOk: function (node) {
                 if (Validator.validateFancyTreeNode(node)) {
                     $(node.span).removeClass("pending");
+                    node.title = node.title.replace($translate.instant("common.directive.docTree.waitUploading"), '');
+                    node.renderTitle();
                     node.setStatus("ok");
                 }
             }
@@ -3482,6 +3484,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 if (DocTree.uploadSetting.uploadFileNew) {
                     DocTree.Op.uploadFiles(fd, folderNode, names, fileType)
                         .then(function (data) {
+                                _.each(data.nodes, function(node){
+                                  DocTree.markNodeOk(node)
+                                });
                                 dfd.resolve(data);
                             },
                             function (error) {
@@ -3492,6 +3497,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     var replaceNode = DocTree.uploadSetting.replaceFileNode;
                     DocTree.Op.replaceFile(fd, replaceNode, names[0], refresh)
                         .then(function (data) {
+                                _.each(data.nodes, function(node){
+                                  DocTree.markNodeOk(node)
+                                });
                                 dfd.resolve(data);
                             },
                             function (error) {
