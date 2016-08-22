@@ -57,10 +57,9 @@ public class PipelineManager<T, S extends AbstractPipelineContext>
     public T executeOperation(T entity, S pipelineContext, PipelineManagerOperation<T> operation) throws PipelineProcessException
     {
         onPreSave(entity, pipelineContext);
-        T result;
         try
         {
-            result = operation.execute();
+            T result = operation.execute();
             onPostSave(entity, pipelineContext);
             return result;
         } catch (PipelineProcessException e)
