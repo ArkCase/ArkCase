@@ -40,5 +40,7 @@ public class ArkCaseAuthentication {
 		WebElement logOutsuccesfull = driver.findElement(By.xpath("/html/body/div/div[2]"));
 		Assert.assertTrue(logOutsuccesfull.getText().equals("You have been logged out successfully."));
 	}
+	
+	
 
 }

@@ -69,176 +69,227 @@ public class TimeSheetPage extends ArkCaseTestBase {
 	WebElement newTimesheetBtn;
 	@FindBy(how = How.XPATH, using = "/html/body/header/div/nav/ul/li/a")
 	WebElement newButton;
+	@FindBy(how = How.XPATH, using = ".//*[@value='Next Week']")
+	WebElement nextWeekButton;
+	@FindBy(how = How.XPATH, using =".//*[@cname='timeTable']/div[2]/div/div/span")
+	WebElement typeGridEmptyAlert;
 
-	public void verifyTimeTrackinTitle() {
+	public TimeSheetPage verifyTimeTrackinTitle() {
 		Assert.assertEquals("Time tracking title is wrong", "Time Tracking", timeTrackingTitle.getText());
+		return this;
 	}
 
-	public void clickNewButton() {
+	public TimeSheetPage clickNewButton() {
 		newButton.click();
+		return this;
 	}
 
-	public void clickNewTimeSheetBtn() {
+	public TimeSheetPage clickNewTimeSheetBtn() {
 		Assert.assertEquals("New timesheet button name is wrong", "Timesheet", newTimesheetBtn.getText());
 		newTimesheetBtn.click();
+		return this;
 	}
 
-	public void noDataAvialible() {
+	public TimeSheetPage noDataAvialible() {
 
 		int i = driver
 				.findElements(By
 						.xpath("/html/body/div[1]/div[2]/div/div/div/div/div[2]/div/div[2]/section/div/div/table/tbody/tr/td"))
 				.size();
 		Assert.assertTrue("No user is displayed after Go button is clicked", i != 0);
+		return this;
 
 	}
 
-	public void verifyAddUserForm() {
+	public TimeSheetPage verifyAddUserForm() {
 		int i = driver.findElements(By.xpath("/html/body/div[1]/div[2]/div/div/div/div")).size();
 		Assert.assertTrue("After search approver is clicked , add user popup form is not displayed", i != 0);
+		return this;
 	}
 
-	public void verifySearchedUser(String name, String type, String username) {
+	public TimeSheetPage verifySearchedUser(String name, String type, String username) {
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertEquals(searchedName.getText(), name, "Searched name is wrong");
 		softAssert.assertEquals(searchedType.getText(), type, "Searched type is wrong");
 		softAssert.assertEquals(searchedUsername.getText(), username, "Searched username is wrong");
 		softAssert.assertAll();
+		return this;
 	}
 
-	public void verifyTypeDropDown() {
+	public TimeSheetPage verifyTypeDropDown() {
 		int i = driver
 				.findElements(By
 						.xpath("/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[9]/div[2]/table/tbody/tr/td[4]/div/div[1]/ul"))
 				.size();
 		Assert.assertTrue("Type drop down menu is not displayed", i != 0);
+		return this;
 
 	}
 
-	public void verifyError() {
+	public TimeSheetPage verifyError() {
 		int i = driver.findElements(By.xpath("/html/body/div[6]")).size();
 		Assert.assertTrue(
 				"When go button is clicked for searching user Error message comunicating with server is shown", i == 0);
+		return this;
 	}
 
-	public void verifyChargeCodeDropDown() {
+	public TimeSheetPage verifyChargeCodeDropDown() {
 		int i = driver
 				.findElements(By
 						.xpath("/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[9]/div[2]/table/tbody/tr/td[5]/div/div[1]/ul"))
 				.size();
 		Assert.assertTrue("Charge code drop down menu is not displayed", i != 0);
+		return this;
 	}
 
-	public void clickSaveButton() {
+	public TimeSheetPage clickSaveButton() {
 		saveButton.click();
+		return this;
 	}
 
-	public void clickSendForApprovalBtn() {
+	public TimeSheetPage clickSendForApprovalBtn() {
 		sendForApprovalBtn.click();
+		return this;
 	}
 
-	public void clickType() {
+	public TimeSheetPage clickType() {
 		typeDropDown.click();
+		return this;
 	}
 
-	public void selectTypeCase() {
+	public TimeSheetPage selectTypeCase() {
 		Assert.assertEquals("Case type name is wrong", "Case", typeCase.getText());
 		typeCase.click();
+		return this;
 	}
 
-	public void selectTypeComplaint() {
+	public TimeSheetPage selectTypeComplaint() {
 		Assert.assertEquals("Complaint type name is wrong", "Complaint", typeComplaint.getText());
 		typeComplaint.click();
+		return this;
 	}
 
-	public void selectTypeOther() {
+	public TimeSheetPage selectTypeOther() {
 		Assert.assertEquals("Other type name is wrong", "Other", typeOther.getText());
 		typeOther.click();
+		return this;
 	}
 
-	public void selectFirstChargeCode() {
+	public TimeSheetPage selectFirstChargeCode() {
 		firstChargeCode.click();
+		return this;
 	}
 
-	public void clickChargeCode() {
+	public TimeSheetPage clickChargeCode() {
 		chargeCodeDropDown.click();
+		return this;
 	}
 
-	public void setDetailsText(String text) {
+	public TimeSheetPage setDetailsText(String text) {
 		detailsTextArea.click();
 		detailsTextArea.sendKeys(text);
+		return this;
 	}
 
-	public void clickSelectForApprover() {
+	public TimeSheetPage clickSelectForApprover() {
 		selectApprover.click();
+		return this;
 	}
 
-	public void setFirstDay(String hours) throws InterruptedException {
+	public TimeSheetPage setFirstDay(String hours) throws InterruptedException {
 
 		firstDayInput.click();
 		Thread.sleep(2000);
 		firstDayInput.sendKeys(hours);
+		return this;
 
 	}
 
-	public void setSecondtDay(String hours) throws InterruptedException {
+	public TimeSheetPage setSecondtDay(String hours) throws InterruptedException {
 
 		secondDayInput.click();
 		Thread.sleep(2000);
 		secondDayInput.sendKeys(hours);
+		return this;
 
 	}
 
-	public void setThirdDay(String hours) throws InterruptedException {
+	public TimeSheetPage setThirdDay(String hours) throws InterruptedException {
 
 		thirdDatInput.click();
 		Thread.sleep(2000);
 		thirdDatInput.sendKeys(hours);
+		return this;
 
 	}
 
-	public void setForthDay(String hours) throws InterruptedException {
+	public TimeSheetPage setForthDay(String hours) throws InterruptedException {
 
 		forthDayInput.click();
 		Thread.sleep(2000);
 		forthDayInput.sendKeys(hours);
+		return this;
 
 	}
 
-	public void setFifthDay(String hours) throws InterruptedException {
+	public TimeSheetPage setFifthDay(String hours) throws InterruptedException {
 
 		fifthDayInput.click();
 		Thread.sleep(2000);
 		fifthDayInput.sendKeys(hours);
+		return this;
 
 	}
 
-	public void setSixthDay(String hours) throws InterruptedException {
+	public TimeSheetPage setSixthDay(String hours) throws InterruptedException {
 
 		sixDayInput.click();
 		Thread.sleep(2000);
 		sixDayInput.sendKeys(hours);
+		return this;
 
 	}
 
-	public void setSeventhDay(String hours) throws InterruptedException {
+	public TimeSheetPage setSeventhDay(String hours) throws InterruptedException {
 
 		sevenDayInput.click();
 		Thread.sleep(2000);
 		sevenDayInput.sendKeys(hours);
+		return this;
 
 	}
 
-	public void searchForUserInput(String name) {
+	public TimeSheetPage searchForUserInput(String name) {
 		seachForUserInput.sendKeys(name);
+		return this;
 	}
 
-	public void clickGoButton() {
+	public TimeSheetPage clickGoButton() {
 		goBtn.click();
+		return this;
 	}
 
-	public void clickAddButton() {
+	public TimeSheetPage clickAddButton() {
 		addButton.click();
+		return this;
+	}
+	public TimeSheetPage clickNextWeekButton() {
+		nextWeekButton.click();
+		return this;
+	}
+	public boolean typeGridIsEmpty(){
+	   if (typeGridEmptyAlert.isDisplayed())
+		   return true;
+	   else 
+		   return false;
+	}
+	public TimeSheetPage clickNextWeekUntilEmptySheetisAvailable()
+	{
+	while (!typeGridIsEmpty())
+	{
+		clickNextWeekButton();
+	}
+	return this;
 	}
 
 }
