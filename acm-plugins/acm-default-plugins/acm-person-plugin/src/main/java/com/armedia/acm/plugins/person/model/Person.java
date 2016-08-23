@@ -5,6 +5,7 @@ import com.armedia.acm.data.converter.LocalDateConverter;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -226,6 +227,8 @@ public class Person implements Serializable, AcmEntity
      * 
      * @return
      */
+    @XmlTransient
+    @JsonIgnore
     public String getFullName()
     {
         StringBuilder sb = new StringBuilder();
