@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
-
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+       http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd">
 
     <bean id="notificationProperties"
           class="com.armedia.acm.reloadproperties.beans.AcmReloadablePropertiesFactoryBean">
@@ -126,4 +127,7 @@
     
     <bean id="notificationSender" factory-bean="notificationSenderFactory" factory-method="getNotificationSender">
     </bean>
+
+    <task:scheduler id="historyCleanScheduler" pool-size="1"/>
+
 </beans>
