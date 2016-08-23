@@ -245,7 +245,7 @@ public class Person implements Serializable, AcmEntity
         {
             sb.append(getFamilyName());
         }
-        return sb.toString();
+        return sb.toString().trim();
     }
 
     @XmlTransient
