@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpSession;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 @RequestMapping({ "/api/v1/plugin/casefile", "/api/latest/plugin/casefile" })
@@ -33,14 +32,15 @@ public class CaseFileNextPossibleQueuesAPIController
 
     @RequestMapping(value = "/nextPossibleQueues/{caseFileId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<String> nextPossibleQueues(@PathVariable("caseFileId") Long caseFileId, HttpSession session, Authentication auth)
+    public CaseFileNextPossibleQueuesResponse nextPossibleQueues(@PathVariable("caseFileId") Long caseFileId, HttpSession session,
+            Authentication auth)
     {
 
         CaseFile caseFile = caseFileDao.find(caseFileId);
 
         if (caseFile == null)
         {
-            return new ArrayList<String>();
+            return new CaseFileNextPossibleQueuesResponse("", new ArrayList<String>());
         }
 
         CaseFilePipelineContext context = new CaseFilePipelineContext();
@@ -52,7 +52,7 @@ public class CaseFileNextPossibleQueuesAPIController
 
         NextPossibleQueuesModel<CaseFile, CaseFilePipelineContext> nextPossibleQueues = queueService.nextPossibleQueues(caseFile, context,
                 businessRule);
-        return nextPossibleQueues.getNextPossibleQueues();
+        return new CaseFileNextPossibleQueuesResponse(nextPossibleQueues.getDefaultNextQueue(), nextPossibleQueues.getNextPossibleQueues());
 
     }
 
