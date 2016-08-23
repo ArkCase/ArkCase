@@ -4,21 +4,24 @@ import java.util.List;
 
 public class CaseFileNextPossibleQueuesResponse
 {
-    private List<String> nextPossibleQueues;
+    private final String defaultNextQueue;
+
+    private final List<String> nextPossibleQueues;
 
     public CaseFileNextPossibleQueuesResponse(String defaultNextQueue, List<String> nextPossibleQueues)
     {
+        this.defaultNextQueue = defaultNextQueue;
         this.nextPossibleQueues = nextPossibleQueues;
+    }
+
+    public String getDefaultNextQueue()
+    {
+        return defaultNextQueue;
     }
 
     public List<String> getNextPossibleQueues()
     {
         return nextPossibleQueues;
-    }
-
-    public void setNextPossibleQueues(List<String> nextPossibleQueues)
-    {
-        this.nextPossibleQueues = nextPossibleQueues;
     }
 
 }
