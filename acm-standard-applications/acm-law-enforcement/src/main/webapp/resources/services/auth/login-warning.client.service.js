@@ -24,6 +24,25 @@ angular.module('services').factory('LoginWarningService', ['$resource', 'Acm.Sto
             , WarningAccepted: "warningAccepted"
         };
 
+
+        /**
+         * @ngdoc method
+         * @name getWarningAcceptedInstance
+         * @methodOf services.service:LoginWarning
+         *
+         * @description
+         * Get an instance to WarningAccepted cache.
+         *
+         * @returns {Object} LocalData instance
+         */
+        Service.getWarningAcceptedInstance = function() {
+            var instance = new Store.SessionData({name: Service.SessionCacheNames.WarningAccepted
+                , noOwner: true
+                , noRegistry: true
+            });
+            return instance;
+        };
+
         /**
          * @ngdoc method
          * @name getWarningAccepted
@@ -35,7 +54,7 @@ angular.module('services').factory('LoginWarningService', ['$resource', 'Acm.Sto
          * @returns {boolean} Return warning accepted status
          */
         Service.getWarningAccepted = function () {
-            var cacheWarningAccepted = new Store.SessionData(Service.SessionCacheNames.WarningAccepted);
+            var cacheWarningAccepted = Service.getWarningAcceptedInstance();
             return cacheWarningAccepted.get();
         };
 
@@ -50,7 +69,7 @@ angular.module('services').factory('LoginWarningService', ['$resource', 'Acm.Sto
          * Set warning accepted status
          */
         Service.setWarningAccepted = function (warningAccepted) {
-            var cacheWarningAccepted = new Store.SessionData(Service.SessionCacheNames.WarningAccepted);
+            var cacheWarningAccepted = Service.getWarningAcceptedInstance();
             return cacheWarningAccepted.set(warningAccepted);
         };
 
@@ -101,6 +120,9 @@ angular.module('services').factory('LoginWarningService', ['$resource', 'Acm.Sto
             }
             return true;
         };
+
+        // This will registered the WarningAccepted cache
+        Service.getWarningAcceptedInstance();
 
         return Service;
     }
