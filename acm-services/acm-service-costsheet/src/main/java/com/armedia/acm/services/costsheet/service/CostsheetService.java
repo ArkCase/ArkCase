@@ -21,7 +21,7 @@ public interface CostsheetService {
 	public AcmCostsheet save(AcmCostsheet costsheet, String submissionName);
 	public AcmCostsheet get(Long id);
 	public List<AcmCostsheet> getByObjectIdAndType(Long objectId, String objectType, int startRow, int maxRows, String sortParams);
-	public String getObjectsFromSolr(String objectType, Authentication authentication, int startRow, int maxRows, String sortParams, String userId);
+	public String getObjectsFromSolr(String objectType, Authentication authentication, int startRow, int maxRows, String sortParams,String searchQuery, String userId);
 	public boolean checkWorkflowStartup(String type);
 	public String createName(AcmCostsheet costsheet);
 }
