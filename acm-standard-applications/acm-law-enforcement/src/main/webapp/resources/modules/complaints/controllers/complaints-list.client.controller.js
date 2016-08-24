@@ -12,7 +12,7 @@ angular.module('complaints').controller('ComplaintsListController', ['$scope', '
         $scope.$bus.subscribe(eventName, function (data) {
             var frevvoRequest = ServCommService.popRequest("frevvo", "new-complaint");
             if (frevvoRequest) {
-              MessageService.info(data.objectType + " with ID " + data.objectId + " was created". Please refresh complaints list to load it.");
+              MessageService.info(data.objectType + " with ID " + data.objectId + " was created. Please refresh complaints list to load it.");
              //   ObjectService.gotoState(ObjectService.ObjectTypes.COMPLAINT, data.objectId);
             }
             else {
