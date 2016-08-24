@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('tasks').controller('Tasks.ReferencesController', ['$scope', '$stateParams'
-    , 'UtilService', 'ConfigService', 'Task.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', '$modal', 'Object.ReferenceService'
+    , 'UtilService', 'ConfigService', 'Task.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', '$modal', 'Object.ReferenceService', 'ObjectService'
     , function ($scope, $stateParams
-        , Util, ConfigService, TaskInfoService, HelperUiGridService, HelperObjectBrowserService, $modal, referenceService) {
+        , Util, ConfigService, TaskInfoService, HelperUiGridService, HelperObjectBrowserService, $modal, referenceService, ObjectService) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -90,11 +90,11 @@ angular.module('tasks').controller('Tasks.ReferencesController', ['$scope', '$st
                     reference.parentType = ObjectService.ObjectTypes.TASK;
                     referenceService.addReference(reference).then(
                         function (objectSaved) {
-                            $scope.refresh();
+                        	$scope.refresh();
                             return objectSaved;
                         },
                         function (error) {
-                            return error;
+                        	return error;
                         }
                     );
                     return;

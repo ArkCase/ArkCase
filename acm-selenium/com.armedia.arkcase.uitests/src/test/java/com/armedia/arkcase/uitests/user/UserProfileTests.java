@@ -101,7 +101,7 @@ public class UserProfileTests extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		user.profileLinkClick();
 		Thread.sleep(5000);
-		user.locationField.click();
+		user.locationFieldClick();
 		user.locationFiledInput("Virginia");
 		user.locationFieldAddButtonClick();
 		Thread.sleep(2000);

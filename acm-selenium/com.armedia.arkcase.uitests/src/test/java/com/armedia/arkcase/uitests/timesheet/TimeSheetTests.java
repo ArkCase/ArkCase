@@ -26,6 +26,7 @@ public class TimeSheetTests extends ArkCaseTestBase {
 		driver.switchTo().frame(timesheet.secondIframe);
 		Thread.sleep(3000);
 		timesheet.verifyTimeTrackinTitle();
+		timesheet.clickNextWeekUntilEmptySheetisAvailable();
 		timesheet.clickType();
 		Thread.sleep(3000);
 		timesheet.verifyTypeDropDown();

@@ -9,7 +9,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -35,7 +35,9 @@ import static org.junit.Assert.*;
         "/spring/spring-library-event.xml",
         "/spring/spring-library-object-lock.xml",
         "/spring/spring-library-note.xml",
-        "/spring/spring-library-authentication-token.xml"
+        "/spring/spring-library-authentication-token.xml",
+        "/spring/spring-library-search.xml",
+        "/spring/spring-library-business-process.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
 public class AcmQueueDaoIT

@@ -14,6 +14,8 @@ public class NextPossibleQueuesModel<T, P extends AbstractPipelineContext>
 
     private List<String> nextPossibleQueues = new ArrayList<>();
 
+    private String defaultNextQueue;
+
     public T getBusinessObject()
     {
         return businessObject;
@@ -44,6 +46,16 @@ public class NextPossibleQueuesModel<T, P extends AbstractPipelineContext>
         List<String> queues = new ArrayList<>();
         queues.addAll(nextPossibleQueues);
         this.nextPossibleQueues = queues;
+    }
+
+    public String getDefaultNextQueue()
+    {
+        return defaultNextQueue;
+    }
+
+    public void setDefaultNextQueue(String defaultNextQueue)
+    {
+        this.defaultNextQueue = defaultNextQueue;
     }
 
 }

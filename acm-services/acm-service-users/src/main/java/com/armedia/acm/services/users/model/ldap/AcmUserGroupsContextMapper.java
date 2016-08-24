@@ -72,8 +72,15 @@ public class AcmUserGroupsContextMapper implements ContextMapper
 
     protected boolean isUserDisabled(String uac)
     {
-        long userAccountControl = Long.valueOf(uac);
-        return (userAccountControl & ACTIVE_DIRECTORY_DISABLED_BIT) == ACTIVE_DIRECTORY_DISABLED_BIT;
+        try
+        {
+            long userAccountControl = Long.valueOf(uac);
+            return (userAccountControl & ACTIVE_DIRECTORY_DISABLED_BIT) == ACTIVE_DIRECTORY_DISABLED_BIT;
+        } catch (NumberFormatException nfe)
+        {
+            log.warn("user account control value [{}] is not a number!", uac);
+            return false;
+        }
     }
 
     public String getUserIdAttributeName()
