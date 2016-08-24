@@ -8,11 +8,19 @@ import com.armedia.acm.plugins.dashboard.exception.AcmDashboardException;
 import com.armedia.acm.plugins.dashboard.model.DashboardConstants;
 import com.armedia.acm.plugins.dashboard.model.module.Module;
 import com.armedia.acm.plugins.dashboard.model.widget.Widget;
+import com.armedia.acm.plugins.dashboard.model.widget.WidgetRole;
+import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.model.AcmRole;
+import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by marjan.stefanoski on 14.01.2016.
@@ -24,6 +32,7 @@ public class DashboardPropertyReader
     private AcmPlugin dashboardPlugin;
     private ModuleDao moduleDao;
     private WidgetDao widgetDao;
+    private UserDao userDao;
     private ModuleEventPublisher moduleEventPublisher;
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -65,9 +74,63 @@ public class DashboardPropertyReader
             addNewWidgets();
         }
 
+        initWidgetRolesTable();
         updateModuleTable();
     }
 
+    private void initWidgetRolesTable()
+    {
+        List<AcmRole> allRoles = getUserDao().findAllRoles();
+        Set<String> widgetSet = new HashSet<>();
+        String retVal = null;
+        boolean isRoleFound = false;
+
+        if (!dashboardPlugin.getPluginProperties().isEmpty())
+        {
+            Map<String, Object> dashboardPluginPluginProperties = dashboardPlugin.getPluginProperties();
+            String jsonRoleWidgetsString = (String) dashboardPluginPluginProperties.get(DashboardConstants.ROLE_WIDGET_LIST);
+            JSONArray jsonArray = new JSONArray(jsonRoleWidgetsString);
+            for (AcmRole role : allRoles)
+            {
+                for (int i = 0; i < jsonArray.length(); i++)
+                {
+                    if (role.getRoleName().equals(jsonArray.getJSONObject(i).getString(DashboardConstants.ROLE)))
+                    {
+                        retVal = jsonArray.getJSONObject(i).getString(DashboardConstants.WIDGET_LIST);
+                        isRoleFound = true;
+                        break;
+                    }
+                    isRoleFound = false;
+                }
+
+                if (!isRoleFound)
+                {
+                    continue;
+                }
+
+                widgetSet.addAll(Arrays.asList(retVal.split(DashboardConstants.COMMA_SPLITTER)));
+                widgetSet.stream().forEach(widgetName ->
+                {
+                    try
+                    {
+                        addWidgetRoleIntoDB(getWidgetDao().getWidgetByWidgetName(widgetName), role);
+                    } catch (AcmObjectNotFoundException e)
+                    {
+                        log.error("Fetching widget with widget name: [{}] failed! Error msg: [{}]", widgetName, e.getMessage(), e);
+                    }
+                });
+                widgetSet.clear();
+            }
+        }
+    }
+
+    private WidgetRole addWidgetRoleIntoDB(Widget widget, AcmRole role)
+    {
+        WidgetRole widgetRole = new WidgetRole();
+        widgetRole.setWidgetId(widget.getWidgetId());
+        widgetRole.setRoleName(role.getRoleName());
+        return getWidgetDao().saveWidgetRole(widgetRole);
+    }
 
     private List<String> getModuleNamesAndCreateList() throws AcmDashboardException
     {
@@ -265,4 +328,13 @@ public class DashboardPropertyReader
         this.moduleEventPublisher = moduleEventPublisher;
     }
 
+    public UserDao getUserDao()
+    {
+        return userDao;
+    }
+
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
+    }
 }
