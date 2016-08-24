@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,7 +28,10 @@ import static org.junit.Assert.*;
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-particpants.xml",
         "/spring/spring-library-property-file-manager.xml",
-        "/spring/spring-library-acm-encryption.xml"
+        "/spring/spring-library-acm-encryption.xml",
+        "/spring/spring-library-user-service.xml",
+        "/spring/spring-library-search.xml",
+        "/spring/spring-config-participant-service-test-beans.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
 public class ParticipantDaoIT
@@ -99,8 +101,6 @@ public class ParticipantDaoIT
     }
 
 
-
-
     @Test
     @Transactional
     public void participants()
@@ -121,7 +121,7 @@ public class ParticipantDaoIT
 
         List<Long> firstBatchOfParticipantIds = new ArrayList<>();
 
-        for ( AcmParticipant ap : found )
+        for (AcmParticipant ap : found)
         {
             assertNotNull(ap.getId());
             assertEquals(1, ap.getPrivileges().size());
@@ -134,9 +134,9 @@ public class ParticipantDaoIT
 
         found.add(third);
 
-        for ( AcmParticipant p : found )
+        for (AcmParticipant p : found)
         {
-            if ( p.getParticipantLdapId().equals("second") )
+            if (p.getParticipantLdapId().equals("second"))
             {
                 p.setParticipantType("approver");
             }
@@ -154,19 +154,19 @@ public class ParticipantDaoIT
         assertNotNull(secondRound);
         assertEquals(found.size(), secondRound.size());
 
-        for ( AcmParticipant ap : secondRound )
+        for (AcmParticipant ap : secondRound)
         {
             assertNotNull(ap.getId());
             assertEquals(1, ap.getPrivileges().size());
             assertNotNull(ap.getPrivileges().get(0).getId());
 
             // ensure IDs from first round did not change
-            if ( ! ap.getParticipantLdapId().equals("third") )
+            if (!ap.getParticipantLdapId().equals("third"))
             {
-                assertTrue(firstBatchOfParticipantIds.contains(ap.getId()) );
+                assertTrue(firstBatchOfParticipantIds.contains(ap.getId()));
             }
 
-            if ( ap.getParticipantLdapId().equals("second") )
+            if (ap.getParticipantLdapId().equals("second"))
             {
                 assertEquals("approver", ap.getParticipantType());
             }
@@ -180,7 +180,7 @@ public class ParticipantDaoIT
         secondRound.remove(0);
         log.debug("Should be removed: " + deletedId);
 
-        for ( AcmParticipant f : secondRound )
+        for (AcmParticipant f : secondRound)
         {
             log.debug("should be kept: " + f.getId());
         }

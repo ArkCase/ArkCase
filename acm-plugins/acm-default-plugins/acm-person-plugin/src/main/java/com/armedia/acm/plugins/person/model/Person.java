@@ -5,6 +5,7 @@ import com.armedia.acm.data.converter.LocalDateConverter;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -219,6 +220,35 @@ public class Person implements Serializable, AcmEntity
     public void setFamilyName(String familyName)
     {
         this.familyName = familyName;
+    }
+
+    /**
+     * Get full person name
+     * 
+     * @return
+     */
+    @XmlTransient
+    @JsonIgnore
+    public String getFullName()
+    {
+        StringBuilder sb = new StringBuilder();
+        if (getTitle() != null)
+        {
+            sb.append(getTitle()).append(" ");
+        }
+        if (getGivenName() != null)
+        {
+            sb.append(getGivenName()).append(" ");
+        }
+        if (getMiddleName() != null)
+        {
+            sb.append(getMiddleName()).append(" ");
+        }
+        if (getFamilyName() != null)
+        {
+            sb.append(getFamilyName());
+        }
+        return sb.toString().trim();
     }
 
     @XmlTransient

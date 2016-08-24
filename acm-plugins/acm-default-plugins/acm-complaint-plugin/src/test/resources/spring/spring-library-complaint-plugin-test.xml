@@ -12,4 +12,8 @@
     <bean id="acmActivitiEntityEventListener"
           class="com.armedia.acm.plugins.complaint.service.TestActivitiEntityEventListener"/>
 
+    <bean id="expiredUrl" class="java.lang.String">
+        <constructor-arg value="/expiredUrl"/>
+    </bean>
+
 </beans>
