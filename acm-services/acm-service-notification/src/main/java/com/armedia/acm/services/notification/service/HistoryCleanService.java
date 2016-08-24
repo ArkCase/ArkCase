@@ -1,6 +1,8 @@
 package com.armedia.acm.services.notification.service;
 
 import com.armedia.acm.audit.dao.AuditDao;
+import com.armedia.acm.plugins.admin.exception.AcmPropertiesManagementException;
+import com.armedia.acm.plugins.admin.service.JsonPropertiesManagementService;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +16,7 @@ import java.util.GregorianCalendar;
  */
 public class HistoryCleanService
 {
-    private int historyDays = 30;
+    private JsonPropertiesManagementService jsonPropertiesManagementService;
     private AuditDao auditDao;
     private NotificationDao notificationDao;
 
@@ -22,6 +24,13 @@ public class HistoryCleanService
 
     public void cleanHistory()
     {
+        int historyDays = 0;
+        try
+        {
+            historyDays = jsonPropertiesManagementService.getProperties().getInt("historyDays");
+        }
+        catch (AcmPropertiesManagementException e) {}
+
         if (historyDays <= 0)
         {
             log.debug("History clearing is disabled. Stopping now.");
@@ -41,8 +50,8 @@ public class HistoryCleanService
         notificationDao.purgeNotifications(threshold);
     }
 
-    public int getHistoryDays() { return historyDays; }
-    public void setHistoryDays(int historyDays) { this.historyDays = historyDays; }
+    public JsonPropertiesManagementService getJsonPropertiesManagementService() { return jsonPropertiesManagementService; }
+    public void setJsonPropertiesManagementService(JsonPropertiesManagementService jsonPropertiesManagementService) { this.jsonPropertiesManagementService = jsonPropertiesManagementService; }
     public AuditDao getAuditDao() { return auditDao; }
     public void setAuditDao(AuditDao auditDao) { this.auditDao = auditDao; }
     public NotificationDao getNotificationDao() { return notificationDao; }

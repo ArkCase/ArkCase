@@ -271,6 +271,11 @@
             <artifactId>mule-transport-email</artifactId>
             <version>${mule.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
+            <artifactId>acm-admin-plugin</artifactId>
+            <version>3.0.56-SNAPSHOT</version>
+        </dependency>
 
     </dependencies>
 
