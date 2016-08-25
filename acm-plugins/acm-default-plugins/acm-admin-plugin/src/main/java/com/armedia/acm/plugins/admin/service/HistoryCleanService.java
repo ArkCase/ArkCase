@@ -1,8 +1,7 @@
-package com.armedia.acm.services.notification.service;
+package com.armedia.acm.plugins.admin.service;
 
 import com.armedia.acm.audit.dao.AuditDao;
 import com.armedia.acm.plugins.admin.exception.AcmPropertiesManagementException;
-import com.armedia.acm.plugins.admin.service.JsonPropertiesManagementService;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

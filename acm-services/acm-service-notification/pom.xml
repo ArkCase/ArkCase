@@ -14,13 +14,6 @@
     <description>This plugin adds the ability to add and remove notifications for an object</description>
 
     <dependencies>
-	<!-- need to depend on admin plugin for HistoryCleanService to retrieve settings -->
-        <dependency>
-            <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
-            <artifactId>acm-admin-plugin</artifactId>
-            <version>3.0.57-SNAPSHOT</version>
-        </dependency>
-
         <!-- liquibase (database com.armedia.acm.ddl maintenance) -->
         <dependency>
             <groupId>org.liquibase</groupId>
@@ -278,7 +271,5 @@
             <artifactId>mule-transport-email</artifactId>
             <version>${mule.version}</version>
         </dependency>
-
     </dependencies>
-
 </project>
