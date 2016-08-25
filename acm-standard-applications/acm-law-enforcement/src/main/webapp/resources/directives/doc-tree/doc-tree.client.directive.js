@@ -4581,112 +4581,116 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     scope.onInitTree()(scope.treeControl);
                 }
 
-                ConfigService.getModuleConfig("common").then(function (moduleConfig) {
+                var promiseCommon = ConfigService.getModuleConfig("common").then(function (moduleConfig) {
                     var treeConfig = Util.goodMapValue(moduleConfig, "docTree", {});
                     DocTree.treeConfig = _.merge(treeConfig, DocTree.treeConfig);
                     return moduleConfig;
                 });
 
                 scope.$watchGroup(['treeConfig', 'objectInfo', 'fileTypes', 'correspondenceForms'], function (newValues, oldValues, scope) {
-                    var treeConfig = newValues[0];
-                    var objectInfo = newValues[1];
-                    var fileTypes = newValues[2];
-                    var correspondenceForms = newValues[3];
-                    _.merge(DocTree.treeConfig, treeConfig);
-
-                    DocTree.objectInfo = objectInfo;
-
-                    //
-                    // Build a table template:
-                    //
-                    // '<table id="treeDoc" class="table table-striped th-sortable table-hover">'
-                    //+ '<thead>'
-                    //+ '<tr>'
-                    //+ '<th id="selectDoc" width2="6%"><input type="checkbox"/></th>'
-                    //+ '<th id="docID" width2="4%" >ID</th>'
-                    //+ '<th id="docTitle" width="35%">Title</th>'
-                    //+ '<th id="docType" width="12%">Type</th>'
-                    //+ '<th id="docCreated" width="10%">Created</th>'
-                    //+ '<th id="docAuthor" width="16%">Author</th>'
-                    //+ '<th id="docVersion" width="6%">Version</th>'
-                    //+ '<th id="docStatus" width="8%">Status</th>'
-                    //+ '</tr>'
-                    //+ '</thead>'
-                    //+ '<tbody>'
-                    //+ '<tr>'
-                    //+ '<td headers="selectDoc"></td>'
-                    //+ '<td headers="docID"></td>'
-                    //+ '<td headers="docTitle"></td>'
-                    //+ '<td headers="docType"></td>'
-                    //+ '<td headers="docCreated"></td>'
-                    //+ '<td headers="docAuthor"></td>'
-                    //+ '<td headers="docVersion"></td>'
-                    //+ '<td headers="docStatus"></td>'
-                    //+ '</tr>'
-                    //+ '</tbody>'
-                    //+ '</table>'
-
-                    if (!Util.isEmpty(DocTree.jqTree)) {
-                        DocTree.jqTree.empty();
-                    }
-
-                    if (Util.goodMapValue(DocTree.treeConfig, "columnDefs")) {
-                        var columnDefs = DocTree.treeConfig.columnDefs;
-                        var jqTable = $("<table/>")
-                            .addClass("table table-striped th-sortable table-hover")
-                            .appendTo($(element));
-                        var jqThead = $("<thead/>").appendTo(jqTable);
-                        var jqTrHead = $("<tr/>")
-                            .appendTo(jqThead);
-                        var jqTbody = $("<tbody/>").appendTo(jqTable);
-                        var jqTrBody = $("<tr/>")
-                            .appendTo(jqTbody);
-
-                        var jqTh, jqTd;
-                        _.each(columnDefs, function (columnDef) {
-                            var name = columnDef.name;
-                            var field = Util.goodValue(columnDef.field, name);
-                            var cellTemplate = columnDef.cellTemplate;
-                            var displayName = $translate.instant(columnDef.displayName);
-                            var headTemplate = columnDef.headTemplate;
-                            if ("checkbox" == name) {
-                                headTemplate = "<input type='checkbox'/>";
-                            }
-                            var width = Util.goodValue(columnDef.width, "10%");
-                            jqTh = $("<th/>")
-                                .attr("width", width)
-                                //.text(displayName)
-                                .appendTo(jqTrHead);
-                            if (headTemplate) {
-                                $(headTemplate).appendTo(jqTh);
-                            } else {
-                                jqTh.text(displayName);
-                            }
-
-                            jqTd = $("<td/>")
-                                .appendTo(jqTrBody);
-                        });
-
-                        DocTree.jqTree = jqTable;
-
-                        DocTree.create();
-                        DocTree.makeDownloadDocForm(DocTree.jqTree);
-                        DocTree.makeUploadDocForm(DocTree.jqTree);
-
-                        if (Util.goodValue(fileTypes)) {
-                            DocTree.fileTypes = fileTypes;
-                            var jqTreeBody = DocTree.jqTree.find("tbody");
-                            DocTree.Menu.useContextMenu(jqTreeBody);
-                        }
-
-                        if (Util.goodValue(correspondenceForms)) {
-                            DocTree.correspondenceForms = correspondenceForms;
-                            var jqTreeBody = DocTree.jqTree.find("tbody");
-                            DocTree.Menu.useContextMenu(jqTreeBody);
-                        }
-                    }
-
-                });
+                	
+                	promiseCommon.then(function () {
+                	
+	                	var treeConfig = newValues[0];
+	                    var objectInfo = newValues[1];
+	                    var fileTypes = newValues[2];
+	                    var correspondenceForms = newValues[3];
+	                    _.merge(DocTree.treeConfig, treeConfig);
+	
+	                    DocTree.objectInfo = objectInfo;
+	
+	                    //
+	                    // Build a table template:
+	                    //
+	                    // '<table id="treeDoc" class="table table-striped th-sortable table-hover">'
+	                    //+ '<thead>'
+	                    //+ '<tr>'
+	                    //+ '<th id="selectDoc" width2="6%"><input type="checkbox"/></th>'
+	                    //+ '<th id="docID" width2="4%" >ID</th>'
+	                    //+ '<th id="docTitle" width="35%">Title</th>'
+	                    //+ '<th id="docType" width="12%">Type</th>'
+	                    //+ '<th id="docCreated" width="10%">Created</th>'
+	                    //+ '<th id="docAuthor" width="16%">Author</th>'
+	                    //+ '<th id="docVersion" width="6%">Version</th>'
+	                    //+ '<th id="docStatus" width="8%">Status</th>'
+	                    //+ '</tr>'
+	                    //+ '</thead>'
+	                    //+ '<tbody>'
+	                    //+ '<tr>'
+	                    //+ '<td headers="selectDoc"></td>'
+	                    //+ '<td headers="docID"></td>'
+	                    //+ '<td headers="docTitle"></td>'
+	                    //+ '<td headers="docType"></td>'
+	                    //+ '<td headers="docCreated"></td>'
+	                    //+ '<td headers="docAuthor"></td>'
+	                    //+ '<td headers="docVersion"></td>'
+	                    //+ '<td headers="docStatus"></td>'
+	                    //+ '</tr>'
+	                    //+ '</tbody>'
+	                    //+ '</table>'
+	
+	                    if (!Util.isEmpty(DocTree.jqTree)) {
+	                        DocTree.jqTree.empty();
+	                    }
+	
+	                    if (Util.goodMapValue(DocTree.treeConfig, "columnDefs")) {
+	                        var columnDefs = DocTree.treeConfig.columnDefs;
+	                        var jqTable = $("<table/>")
+	                            .addClass("table table-striped th-sortable table-hover")
+	                            .appendTo($(element));
+	                        var jqThead = $("<thead/>").appendTo(jqTable);
+	                        var jqTrHead = $("<tr/>")
+	                            .appendTo(jqThead);
+	                        var jqTbody = $("<tbody/>").appendTo(jqTable);
+	                        var jqTrBody = $("<tr/>")
+	                            .appendTo(jqTbody);
+	
+	                        var jqTh, jqTd;
+	                        _.each(columnDefs, function (columnDef) {
+	                            var name = columnDef.name;
+	                            var field = Util.goodValue(columnDef.field, name);
+	                            var cellTemplate = columnDef.cellTemplate;
+	                            var displayName = $translate.instant(columnDef.displayName);
+	                            var headTemplate = columnDef.headTemplate;
+	                            if ("checkbox" == name) {
+	                                headTemplate = "<input type='checkbox'/>";
+	                            }
+	                            var width = Util.goodValue(columnDef.width, "10%");
+	                            jqTh = $("<th/>")
+	                                .attr("width", width)
+	                                //.text(displayName)
+	                                .appendTo(jqTrHead);
+	                            if (headTemplate) {
+	                                $(headTemplate).appendTo(jqTh);
+	                            } else {
+	                                jqTh.text(displayName);
+	                            }
+	
+	                            jqTd = $("<td/>")
+	                                .appendTo(jqTrBody);
+	                        });
+	
+	                        DocTree.jqTree = jqTable;
+	
+	                        DocTree.create();
+	                        DocTree.makeDownloadDocForm(DocTree.jqTree);
+	                        DocTree.makeUploadDocForm(DocTree.jqTree);
+	
+	                        if (Util.goodValue(fileTypes)) {
+	                            DocTree.fileTypes = fileTypes;
+	                            var jqTreeBody = DocTree.jqTree.find("tbody");
+	                            DocTree.Menu.useContextMenu(jqTreeBody);
+	                        }
+	
+	                        if (Util.goodValue(correspondenceForms)) {
+	                            DocTree.correspondenceForms = correspondenceForms;
+	                            var jqTreeBody = DocTree.jqTree.find("tbody");
+	                            DocTree.Menu.useContextMenu(jqTreeBody);
+	                        }
+	                    }
+	
+	                });
+                });	
             }
         };
 
