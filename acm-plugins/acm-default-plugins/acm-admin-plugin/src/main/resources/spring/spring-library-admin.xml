@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+       http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd">
 
     <!-- keeping this bean for now even though we are not using any properties yet.  -->
     <bean id="adminPluginProperties"
@@ -68,5 +70,6 @@
         <property name="userDao" ref="acmUserDao"/>
     </bean>
 
+    <task:scheduler id="historyCleanScheduler" pool-size="1"/>
 
 </beans>

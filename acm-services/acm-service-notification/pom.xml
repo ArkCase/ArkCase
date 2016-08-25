@@ -271,7 +271,5 @@
             <artifactId>mule-transport-email</artifactId>
             <version>${mule.version}</version>
         </dependency>
-
     </dependencies>
-
 </project>
