@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Date;
 
 public class NotificationDao extends AcmAbstractDao<Notification>
 {
@@ -52,6 +53,29 @@ public class NotificationDao extends AcmAbstractDao<Notification>
 
         return notificationFound;
     }*/
+
+    @Transactional
+    public int purgeNotifications(Date threshold)
+    {
+        int retval = 0;
+
+        Query update = getEm().createQuery("DELETE FROM " +
+                "Notification notification " +
+                "WHERE " +
+                "notification.modified <= :threshold");
+
+        update.setParameter("threshold", threshold);
+
+        try
+        {
+            retval = update.executeUpdate();
+        } catch (Exception e)
+        {
+            LOG.error("Cannot purge notifications.", e);
+        }
+
+        return retval;
+    }
 
     public List<Notification> listNotifications(String user)
     {
