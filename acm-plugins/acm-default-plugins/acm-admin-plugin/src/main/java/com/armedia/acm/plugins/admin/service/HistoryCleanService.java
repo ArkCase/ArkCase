@@ -28,25 +28,36 @@ public class HistoryCleanService
         {
             historyDays = jsonPropertiesManagementService.getProperties().getInt("historyDays");
         }
-        catch (AcmPropertiesManagementException e) {}
-
-        if (historyDays <= 0)
+        catch (AcmPropertiesManagementException | NullPointerException | ClassCastException e)
         {
-            log.debug("History clearing is disabled. Stopping now.");
+            log.warn("History clean setting is not defined, disabling by default.");
             return;
         }
 
-        Date today = new Date();
-        Calendar calendar = new GregorianCalendar();
-        calendar.setTime(today);
-        calendar.add(Calendar.DAY_OF_MONTH, historyDays * -1);
-        Date threshold = calendar.getTime();
+        if (historyDays <= 0)
+        {
+            log.debug("History cleaning is disabled. Stopping now.");
+            return;
+        }
 
-        log.info("Cleaning out audit events older than " + historyDays + " days...");
+        Date threshold = getDateThreshold(historyDays);
+
+        log.info("Cleaning out audit events older than {} days...", historyDays);
         auditDao.purgeAudits(threshold);
 
-        log.info("Cleaning out notifications older than " + historyDays + " days...");
+        log.info("Cleaning out notifications older than {} days...", historyDays);
         notificationDao.purgeNotifications(threshold);
+    }
+
+    public Date getDateThreshold(int historyDays)
+    {
+        // Create Calendar object. (Is set with current datetime.)
+        Calendar calendar = Calendar.getInstance();
+
+        // Go back X days into the past.
+        calendar.add(Calendar.DAY_OF_MONTH, historyDays * -1);
+
+        return calendar.getTime();
     }
 
     public JsonPropertiesManagementService getJsonPropertiesManagementService() { return jsonPropertiesManagementService; }
