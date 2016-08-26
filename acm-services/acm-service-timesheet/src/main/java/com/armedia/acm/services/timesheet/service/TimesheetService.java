@@ -27,6 +27,8 @@ public interface TimesheetService
 
     public String getObjectsFromSolr(String objectType, Authentication authentication, int startRow, int maxRows, String sortParams, String searchQuery, String userId);
 
+    public String getObjectsFromSolr(String objectType, Authentication authentication, int startRow, int maxRows, String sortParams, String userId);
+
     public boolean checkWorkflowStartup(String type);
 
     public String createName(AcmTimesheet timesheet);

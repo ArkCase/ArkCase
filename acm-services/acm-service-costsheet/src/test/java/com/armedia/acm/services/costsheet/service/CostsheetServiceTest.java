@@ -215,7 +215,7 @@ public class CostsheetServiceTest extends EasyMockSupport
     }
 
     @Test
-    public void getObjectsFromSolrTest() throws Exception
+    public void getObjectsFromSolrWithQueryStringTest() throws Exception
     {
         String expected = IOUtils.toString(getClass().getClassLoader().getResourceAsStream("txt/expectedSolrResponse.txt"));
 
@@ -228,6 +228,32 @@ public class CostsheetServiceTest extends EasyMockSupport
         replayAll();
 
         String response = costsheetService.getObjectsFromSolr(objectType, mockAuthentication, 0, 10, "", "*", null);
+
+        verifyAll();
+
+        LOG.info("Results: " + response);
+
+        int numFound = searchResults.getNumFound(response);
+        JSONArray docs = searchResults.getDocuments(response);
+        JSONObject doc = docs.getJSONObject(0);
+
+        assertEquals(1, numFound);
+        assertEquals("0001-COSTSHEET", doc.getString("id"));
+    }
+
+    @Test
+    public void getObjectsFromSolrTest() throws Exception
+    {
+        String expected = IOUtils.toString(getClass().getClassLoader().getResourceAsStream("txt/expectedSolrResponse.txt"));
+
+        String objectType = "COSTSHEET";
+        String solrQuery = "object_type_s:" + objectType + " AND -status_s:DELETE";
+
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, solrQuery, 0, 10, "")).andReturn(expected);
+
+        replayAll();
+
+        String response = costsheetService.getObjectsFromSolr(objectType, mockAuthentication, 0, 10, "", null);
 
         verifyAll();
 
