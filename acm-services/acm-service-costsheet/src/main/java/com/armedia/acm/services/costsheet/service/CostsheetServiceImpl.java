@@ -119,6 +119,38 @@ public class CostsheetServiceImpl implements CostsheetService
     }
 
     @Override
+    public String getObjectsFromSolr(String objectType,
+                                     Authentication authentication,
+                                     int startRow,
+                                     int maxRows,
+                                     String sortParams,
+                                     String userId)
+    {
+        String retval = null;
+
+        LOG.debug("Taking objects from Solr for object type = " + objectType);
+
+        String authorQuery = "";
+        if (userId != null)
+        {
+            authorQuery = " AND author_s:" + userId;
+        }
+        String query = "object_type_s:" + objectType + authorQuery + " AND -status_s:DELETE";
+
+        try
+        {
+            retval = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, startRow, maxRows, sortParams);
+
+            LOG.debug("Objects was retrieved.");
+        } catch (MuleException e)
+        {
+            LOG.error("Cannot retrieve objects from Solr.", e);
+        }
+
+        return retval;
+    }
+
+    @Override
     public boolean checkWorkflowStartup(String type)
     {
         if (getStartWorkflowEvents() != null && getStartWorkflowEvents().contains(type))
