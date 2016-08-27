@@ -1,8 +1,5 @@
 package com.armedia.acm.plugins.profile.model;
 
-/**
- * Created by marjan.stefanoski on 31.10.2014.
- */
 public class UserOrgCreatedEvent extends UserOrgPersistentEvent
 {
 
