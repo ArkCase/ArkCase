@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="acmPersonDao" class="com.armedia.acm.plugins.person.dao.PersonDao"/>
@@ -9,6 +9,10 @@
     <bean id="acmPersonAssociationDao" class="com.armedia.acm.plugins.person.dao.PersonAssociationDao"/>
     <bean id="acmIdentificationDao" class="com.armedia.acm.plugins.person.dao.IdentificationDao"/>
     <bean id="acmOrganizationDao" class="com.armedia.acm.plugins.person.dao.OrganizationDao"/>
+
+    <bean id="organizationService" class="com.armedia.acm.plugins.person.service.OrganizationServiceImpl">
+        <property name="organizationDao" ref="acmOrganizationDao"/>
+    </bean>
 
     <bean id="personService" class="com.armedia.acm.plugins.person.service.PersonServiceImpl">
         <property name="personDao" ref="acmPersonDao"/>
@@ -59,7 +63,6 @@
     <bean id="personPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Person Plugin"/>
     </bean>
-
 
     <bean id="personAssociationPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="PersonAssocaition Plugin"/>
