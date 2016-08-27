@@ -20,8 +20,8 @@ import org.springframework.security.core.Authentication;
 public class ProfileEventPublisher implements ApplicationEventPublisherAware
 {
 
-    private ApplicationEventPublisher eventPublisher;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private ApplicationEventPublisher eventPublisher;
 
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
@@ -31,10 +31,7 @@ public class ProfileEventPublisher implements ApplicationEventPublisherAware
 
     public void publishProfileEvent(UserOrg source, Authentication authentication, boolean newUserOrg, boolean succeeded)
     {
-        if (log.isDebugEnabled())
-        {
-            log.debug("Publishing a widget event.");
-        }
+        log.debug("Publishing a widget event.");
         UserOrgPersistentEvent userOrgPersistenceEvent = newUserOrg ? new UserOrgCreatedEvent(source) : new UserOrgUpdateEvent(source);
         userOrgPersistenceEvent.setSucceeded(succeeded);
         if (authentication.getDetails() != null && authentication.getDetails() instanceof AcmAuthenticationDetails)
@@ -48,6 +45,5 @@ public class ProfileEventPublisher implements ApplicationEventPublisherAware
     {
         OutlookPasswordChangedEvent event = new OutlookPasswordChangedEvent(source, auth.getName(), ipAddress, succeeded);
         eventPublisher.publishEvent(event);
-
     }
 }

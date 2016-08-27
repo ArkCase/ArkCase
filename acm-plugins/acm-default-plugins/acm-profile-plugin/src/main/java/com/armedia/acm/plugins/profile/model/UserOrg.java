@@ -17,7 +17,6 @@ import java.io.Serializable;
 public class UserOrg implements Serializable{
 
     private static final long serialVersionUID = 4488531757561621833L;
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Id
     @TableGenerator(name = "acm_user_org_gen",
