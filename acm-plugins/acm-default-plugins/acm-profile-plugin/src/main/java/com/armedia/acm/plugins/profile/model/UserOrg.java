@@ -3,19 +3,27 @@ package com.armedia.acm.plugins.profile.model;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.services.users.model.AcmUser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Transient;
 import java.io.Serializable;
 
-/**
- * Created by marjan.stefanoski on 20.10.2014.
- */
 @Entity
-@Table(name="acm_user_org")
-public class UserOrg implements Serializable{
-
+@Table(name = "acm_user_org")
+public class UserOrg implements Serializable
+{
     private static final long serialVersionUID = 4488531757561621833L;
 
     @Id
@@ -27,7 +35,7 @@ public class UserOrg implements Serializable{
             initialValue = 100,
             allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_user_org_gen")
-    @Column(name="cm_user_org_id")
+    @Column(name = "cm_user_org_id")
     private Long userOrgId;
 
     @Column(name = "cm_first_address")
@@ -54,23 +62,23 @@ public class UserOrg implements Serializable{
     @Column(name = "cm_website")
     private String website;
 
-    @Column(name="cm_location")
+    @Column(name = "cm_location")
     private String location;
 
-    @Column(name="cm_im_account")
+    @Column(name = "cm_im_account")
     private String imAccount;
 
-    @Column(name="cm_im_system")
+    @Column(name = "cm_im_system")
     private String imSystem;
 
-    @Column(name="cm_office_phone")
+    @Column(name = "cm_office_phone")
     private String officePhoneNumber;
 
-    @Column(name="cm_mobile_phone")
+    @Column(name = "cm_mobile_phone")
     private String mobilePhoneNumber;
 
-    @Column(name="cm_object_type")
-    private String objectType  = UserOrgConstants.OBJECT_TYPE;
+    @Column(name = "cm_object_type")
+    private String objectType = UserOrgConstants.OBJECT_TYPE;
 
     /**
      * This field is only used when the profile is created. Usually it will be null.  Use the container folder
@@ -114,7 +122,7 @@ public class UserOrg implements Serializable{
 
     private void setupChildPointers()
     {
-        if ( getContainer() != null )
+        if (getContainer() != null)
         {
             getContainer().setContainerObjectId(getUserOrgId());
             getContainer().setContainerObjectType(UserOrgConstants.OBJECT_TYPE);
@@ -122,155 +130,193 @@ public class UserOrg implements Serializable{
         }
     }
 
-    public String getEcmFolderPath() {
+    public String getEcmFolderPath()
+    {
         return ecmFolderPath;
     }
 
-    public void setEcmFolderPath(String ecmFolderPath) {
+    public void setEcmFolderPath(String ecmFolderPath)
+    {
         this.ecmFolderPath = ecmFolderPath;
     }
 
-    public Organization getOrganization() {
+    public Organization getOrganization()
+    {
         return organization;
     }
 
-    public void setOrganization(Organization organization) {
+    public void setOrganization(Organization organization)
+    {
         this.organization = organization;
     }
 
-    public Long getUserOrgId() {
+    public Long getUserOrgId()
+    {
         return userOrgId;
     }
 
-    public void setUserOrgId(Long userOrgId) {
+    public void setUserOrgId(Long userOrgId)
+    {
         this.userOrgId = userOrgId;
     }
 
-    public String getLocation() {
+    public String getLocation()
+    {
         return location;
     }
 
-    public void setLocation(String location) {
+    public void setLocation(String location)
+    {
         this.location = location;
     }
 
-    public String getImAccount() {
+    public String getImAccount()
+    {
         return imAccount;
     }
 
-    public void setImAccount(String imAccount) {
+    public void setImAccount(String imAccount)
+    {
         this.imAccount = imAccount;
     }
 
-    public String getImSystem() {
+    public String getImSystem()
+    {
         return imSystem;
     }
 
-    public void setImSystem(String imSystem) {
+    public void setImSystem(String imSystem)
+    {
         this.imSystem = imSystem;
     }
 
-    public String getOfficePhoneNumber() {
+    public String getOfficePhoneNumber()
+    {
         return officePhoneNumber;
     }
 
-    public void setOfficePhoneNumber(String officePhoneNumber) {
+    public void setOfficePhoneNumber(String officePhoneNumber)
+    {
         this.officePhoneNumber = officePhoneNumber;
     }
 
-    public String getMobilePhoneNumber() {
+    public String getMobilePhoneNumber()
+    {
         return mobilePhoneNumber;
     }
 
-    public void setMobilePhoneNumber(String mobilePhoneNumber) {
+    public void setMobilePhoneNumber(String mobilePhoneNumber)
+    {
         this.mobilePhoneNumber = mobilePhoneNumber;
     }
 
-    public AcmUser getUser() {
+    public AcmUser getUser()
+    {
         return user;
     }
 
-    public void setUser(AcmUser user) {
+    public void setUser(AcmUser user)
+    {
         this.user = user;
     }
 
-    public String getFirstAddress() {
+    public String getFirstAddress()
+    {
         return firstAddress;
     }
 
-    public void setFirstAddress(String firstAddress) {
+    public void setFirstAddress(String firstAddress)
+    {
         this.firstAddress = firstAddress;
     }
 
-    public String getSecondAddress() {
+    public String getSecondAddress()
+    {
         return secondAddress;
     }
 
-    public void setSecondAddress(String secondAddress) {
+    public void setSecondAddress(String secondAddress)
+    {
         this.secondAddress = secondAddress;
     }
 
-    public String getMainOfficePhone() {
+    public String getMainOfficePhone()
+    {
         return mainOfficePhone;
     }
 
-    public void setMainOfficePhone(String mainOfficePhone) {
+    public void setMainOfficePhone(String mainOfficePhone)
+    {
         this.mainOfficePhone = mainOfficePhone;
     }
 
-    public String getFax() {
+    public String getFax()
+    {
         return fax;
     }
 
-    public void setFax(String fax) {
+    public void setFax(String fax)
+    {
         this.fax = fax;
     }
 
-    public String getCity() {
+    public String getCity()
+    {
         return city;
     }
 
-    public void setCity(String city) {
+    public void setCity(String city)
+    {
         this.city = city;
     }
 
-    public String getState() {
+    public String getState()
+    {
         return state;
     }
 
-    public void setState(String state) {
+    public void setState(String state)
+    {
         this.state = state;
     }
 
-    public String getZip() {
+    public String getZip()
+    {
         return zip;
     }
 
-    public void setZip(String zip) {
+    public void setZip(String zip)
+    {
         this.zip = zip;
     }
 
-    public String getWebsite() {
+    public String getWebsite()
+    {
         return website;
     }
 
-    public void setWebsite(String website) {
+    public void setWebsite(String website)
+    {
         this.website = website;
     }
 
-    public Long getEcmFileId() {
+    public Long getEcmFileId()
+    {
         return ecmFileId;
     }
 
-    public void setEcmFileId(Long ecmFileId) {
+    public void setEcmFileId(Long ecmFileId)
+    {
         this.ecmFileId = ecmFileId;
     }
 
-    public String getTitle() {
+    public String getTitle()
+    {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(String title)
+    {
         this.title = title;
     }
 
@@ -284,7 +330,8 @@ public class UserOrg implements Serializable{
         this.container = container;
     }
 
-    public String getObjectType() {
+    public String getObjectType()
+    {
         return objectType;
     }
 }

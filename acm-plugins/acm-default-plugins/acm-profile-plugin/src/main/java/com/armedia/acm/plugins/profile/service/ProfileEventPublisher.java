@@ -14,9 +14,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
 
-/**
- * Created by marjan.stefanoski on 16.10.2014.
- */
 public class ProfileEventPublisher implements ApplicationEventPublisherAware
 {
 
