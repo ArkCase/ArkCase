@@ -1,8 +1,5 @@
 package com.armedia.acm.plugins.profile.model;
 
-import com.armedia.acm.services.users.model.AcmRole;
-
-import javax.persistence.Column;
 import java.util.List;
 
 /**
@@ -29,10 +26,8 @@ public class ProfileDTO {
     private String lastName;
     private String fullName;
     private String email;
-//    private String pictureUrl;
     private Long ecmFileId;
     private String title;
-
     private List<String> groups;
     private Long userOrgId;
 
@@ -188,14 +183,6 @@ public class ProfileDTO {
         this.email = email;
     }
 
-//    public String getPictureUrl() {
-//        return pictureUrl;
-//    }
-//
-//    public void setPictureUrl(String pictureUrl) {
-//        this.pictureUrl = pictureUrl;
-//    }
-
     public Long getEcmFileId() {
         return ecmFileId;
     }
@@ -220,13 +207,13 @@ public class ProfileDTO {
         this.title = title;
     }
 
-    public void setUserOrgId(Long userOrgId)
-    {
-        this.userOrgId = userOrgId;
-    }
-
     public Long getUserOrgId()
     {
         return userOrgId;
+    }
+
+    public void setUserOrgId(Long userOrgId)
+    {
+        this.userOrgId = userOrgId;
     }
 }
