@@ -122,7 +122,11 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             throws MuleException, IOException
     {
 
-        // ecmFile.setFileName(getFolderAndFilesUtils().getBaseFileName(ecmFile.getFileName()));
+        if (ecmFile.getFileActiveVersionNameExtension() != null
+                && ecmFile.getFileName().endsWith(ecmFile.getFileActiveVersionNameExtension()))
+        {
+            ecmFile.setFileName(getFolderAndFilesUtils().getBaseFileName(ecmFile.getFileName()));
+        }
 
         log.debug("Creating ecm file pipeline context");
         EcmFileTransactionPipelineContext pipelineContext = new EcmFileTransactionPipelineContext();
