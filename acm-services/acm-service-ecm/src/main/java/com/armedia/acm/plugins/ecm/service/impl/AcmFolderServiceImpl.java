@@ -876,18 +876,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
                 .filter(obj -> obj.getObjectType() != null)
                 .collect(Collectors.toList());
 
-        for (AcmObject obj : folderChildren)
-        {
-            if ("FILE".equals(obj.getObjectType().toUpperCase()))
-            {
-                fileService.copyFile(obj.getId(), rootFolderOfCopy, containerOfCopy);
-            } else if ("FOLDER".equals(obj.getObjectType().toUpperCase()))
-            {
-                _copyFolderStructure(obj.getId(), containerOfCopy, rootFolderOfCopy);
-            }
-        }
-        ;
-
+        _copyFolderChildrenStructure(folderChildren, containerOfCopy, rootFolderOfCopy);
     }
 
     private void _copyFolderStructure(Long folderId, AcmContainer containerOfCopy, AcmFolder destinationFolder)
@@ -905,15 +894,21 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
                 .collect(Collectors.toList());
         AcmFolder copiedFolder = addNewFolder(destinationFolder, folderForCopying.getName());
 
+        _copyFolderChildrenStructure(folderChildren, containerOfCopy, copiedFolder);
+    }
+    
+    private void _copyFolderChildrenStructure(List<AcmObject> folderChildren, AcmContainer containerOfCopy, AcmFolder destinationFolder)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmFolderException
+    {
         for (AcmObject obj : folderChildren)
         {
             if ("FILE".equals(obj.getObjectType().toUpperCase()))
             {
-                fileService.copyFile(obj.getId(), copiedFolder, containerOfCopy);
-                
+                fileService.copyFile(obj.getId(), destinationFolder, containerOfCopy);
+
             } else if ("FOLDER".equals(obj.getObjectType().toUpperCase()))
             {
-                _copyFolderStructure(obj.getId(), containerOfCopy, copiedFolder);
+                _copyFolderStructure(obj.getId(), containerOfCopy, destinationFolder);
             }
         }
     }
