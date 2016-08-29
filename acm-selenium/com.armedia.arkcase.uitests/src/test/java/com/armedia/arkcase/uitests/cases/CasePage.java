@@ -2,23 +2,22 @@ package com.armedia.arkcase.uitests.cases;
 
 import java.awt.AWTException;
 import java.io.IOException;
-
 import org.junit.Assert;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
-
-import com.armedia.arkcase.uitests.audit.AuditPage;
+import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
 import com.armedia.arkcase.uitests.base.ArkCaseTestUtils;
+import com.armedia.arkcase.uitests.base.WaitHelper;
 
-public class CasePage {
+public class CasePage extends ArkCaseTestBase{
 
 	// General Information
 	@FindBy(how = How.XPATH, using = "/html/body/header/div/nav/ul/li/div/div[2]/div/a")
 	public WebElement newCaseButton;
-	@FindBy(how = How.XPATH, using = "/html/body/header/div/nav/ul/li/a")
+	@FindBy(how = How.XPATH, using = ".//a[@class='dropdown-toggle']/i")
 	public WebElement newButton;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/div/div[1]/div/span/a/i")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-click='toggleEditMode()']/i")
 	public WebElement editButton;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[1]/div[1]/span[4]")
 	public WebElement generalInformationTab;
@@ -28,7 +27,7 @@ public class CasePage {
 	public WebElement caseTitleInput;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[1]/div[3]/span[3]/label")
 	public WebElement caseTypeTitle;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[1]/div[3]/div[1]/input[1]")
+	@FindBy(how = How.XPATH, using = ".//*[@role='combobox']")
 	public WebElement caseTypeInput;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[1]/div[3]/div[1]/ul/li[14]/a")
 	public WebElement caseTypeEmbezzalmend;
@@ -285,19 +284,42 @@ public class CasePage {
 	@FindBy(how = How.XPATH, using = ".//*[@title='Case Files']")
 	public WebElement caseFilesMenu;
 	@FindBy(how = How.XPATH, using = ".//*[@class='row']/div[2]/h4")
-	public WebElement caseId;
+	public WebElement caseId;	
 
-	public CasePage newCase() throws InterruptedException {
-
-		Assert.assertTrue("The edit button in dashboard is not displayed", editButton.isDisplayed());
-		Assert.assertTrue("The new button is not displayed", newButton.isDisplayed());
+	public CasePage newCase() throws InterruptedException {		
+		Assert.assertTrue("The new button is not displayed", newButtonIsDisplayed());
+		Assert.assertTrue("The edit button in dashboard is not displayed", editButtonIsDisplayed());		
 		newButton.click();
 		Thread.sleep(2000);
 		Assert.assertEquals("Case name is wrong", "Case", newCaseButton.getText());
 		newCaseButton.click();
 		return this;
 	}
-
+    
+	public boolean editButtonIsDisplayed(){
+		boolean editButtonIsDisplayed = editButton.isDisplayed();
+		if (editButtonIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean newButtonIsDisplayed(){
+		WebElement el = WaitHelper.getWhenElementIsVisible(newButton, 30, driver);	
+		boolean newButtonIsDisplayed = el.isDisplayed();
+		if (newButtonIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
 	public CasePage vrifyGeneralInformationTabName() {
 
 		Assert.assertTrue(generalInformationTab.isDisplayed());
@@ -317,7 +339,8 @@ public class CasePage {
 
 	public CasePage caseTitleInput(String caseName) {
 
-		Assert.assertTrue(caseTitleInput.isDisplayed());
+		WebElement el = WaitHelper.getWhenElementIsVisible(caseTitleInput, 30, driver);	
+		Assert.assertTrue(el.isDisplayed());		
 		caseTitleInput.click();
 		caseTitleInput.sendKeys(caseName);
 		return this;
@@ -332,7 +355,7 @@ public class CasePage {
 	}
 
 	public CasePage caseTypeInputClick() {
-
+        
 		Assert.assertTrue(caseTypeInput.isDisplayed());
 		caseTypeInput.click();
 		return this;
@@ -382,7 +405,8 @@ public class CasePage {
 
 	public CasePage caseTypeCongressionalResponse() {
 
-		Assert.assertTrue(caseTypeCongressionalResponse.getText().equals("Congressional Response"));
+		
+		Assert.assertTrue(caseTypeCongressionalResponse.getText().equals("Congressional Response"));			
 		caseTypeCongressionalResponse.click();
 		return this;
 	}
@@ -991,9 +1015,9 @@ public class CasePage {
 		return this;
 	}
 
-	public CasePage searchForUsers() throws InterruptedException {
-
-		searchForUsers.click();
+	public CasePage searchForUsers() throws InterruptedException {	
+		WebElement el = WaitHelper.getWhenElementIsVisible(searchForUsers, 30, driver);	
+		el.click();
 		Thread.sleep(2000);
 		searchForUsers.sendKeys("Samuel Supervisor");
 		searchUserButton.click();
@@ -1069,5 +1093,21 @@ public class CasePage {
 		String subcaseId = caseId.getText().substring(9, 12);
 		return subcaseId;
 	}
+	
+	public CasePage initiatorTitleClick(){
+		initiatorTitle.click();
+		return this;
+	}
+	
+	public CasePage participantTabClick(){
+		participantnsTab.click();
+		return this;
+	}
+	
+	public CasePage submitClick(){
+		submit.click();
+		return this;
+	}
 
+	
 }

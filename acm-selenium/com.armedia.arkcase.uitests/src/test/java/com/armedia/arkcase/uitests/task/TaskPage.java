@@ -7,7 +7,9 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.testng.asserts.SoftAssert;
 
-public class TaskPage {
+import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
+
+public class TaskPage extends ArkCaseTestBase {
 	
 	public @FindBy(how = How.ID, using = "saveButton")
     WebElement saveButton;
