@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author riste.tutureski
@@ -59,12 +60,13 @@ public class CaseFileFactory extends FrevvoFormFactory
 
         if (form.getInitiator() != null)
         {
-            PersonAssociation personAssociation = caseFile.getPersonAssociations().stream()
+            Optional<PersonAssociation> optPersonAssociation = caseFile.getPersonAssociations().stream()
                     .filter(initiatorPersonAssociation -> "Initiator".equalsIgnoreCase(initiatorPersonAssociation.getPersonType()))
-                    .findFirst().get();
-            if (personAssociation == null)
+                    .findFirst();
+            PersonAssociation personAssociation = new PersonAssociation();
+            if (optPersonAssociation != null && optPersonAssociation.isPresent())
             {
-                personAssociation = new PersonAssociation();
+                personAssociation = optPersonAssociation.get();
             }
             Person person = form.getInitiator();
             if (person.getId() != null)
