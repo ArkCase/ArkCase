@@ -41,7 +41,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 /**
- * A generic configurable scheduler capable of executing beans defined in spring context that are implementing the
+ * A generic configurable scheduler capable of executing beans defined in spring context that implement the
  * <code>AcmSchedulableBean</code> interface. The scheduler listens for changes in the <code>scheduledTasks.json</code>
  * file that contains the scheduler and scheduled tasks configuration. A sample JSON configuration file: <code>
    {
@@ -168,7 +168,7 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
                 {
 
                     FileTime lastModified = getConfigLastModifiedTime(configFile);
-
+                    // configuration change that originated by update from this scheduler should not be processed.
                     if (lastModifiedTime == lastModified.toMillis())
                     {
                         return;
@@ -184,6 +184,13 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
 
     }
 
+    /**
+     * Checks if the event was triggered by a change of the scheduler configuration file.
+     *
+     * @param abstractConfigurationFileEvent
+     *            the event encapsulating a reference to the modified file.
+     * @return <code>true</code> if the event was triggered by the scheduler configuration <code>false</code> otherwise.
+     */
     private boolean isConfigurationFileChange(AbstractConfigurationFileEvent abstractConfigurationFileEvent)
     {
         return (abstractConfigurationFileEvent instanceof ConfigurationFileAddedEvent
@@ -191,6 +198,16 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
                 && abstractConfigurationFileEvent.getConfigFile().getName().equals(SCHEDULED_TASKS_CONFIGUTATION_FILENAME);
     }
 
+    /**
+     * Extracts the file last modified time.
+     *
+     * @param configFile
+     *            a reference to the configuration file.
+     * @return a reference to an instance of <code>FileTime</code> associated with the scheduler configuration time
+     *         referring to its last modification time.
+     * @throws IOException
+     *             if there is a problem while reading configuration file attributes.
+     */
     private FileTime getConfigLastModifiedTime(File configFile) throws IOException
     {
         Path configFilePath = configFile.toPath();
@@ -199,6 +216,17 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
         return lastModified;
     }
 
+    /**
+     * Processes the scheduler configuration file. It stores a reference to the path to the configuration path, so it
+     * can be updated upon tasks completion. Checks if the scheduler is enabled or not. If it is not, and the scheduler
+     * was setup before, it attempts to stop it. If it is, it processes the individual tasks configuration, and sets up
+     * the scheduler if one is not running already, or its configuration changed.
+     *
+     * @param configFile
+     *            a reference to the scheduler configuration file.
+     * @throws IOException
+     *             if there was an error while reading the configuration file.
+     */
     private void processSchedulerConfiguration(File configFile) throws IOException
     {
         String resource = FileUtils.readFileToString(configFile);
@@ -221,6 +249,21 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
         setupScheduler(configuration);
     }
 
+    /**
+     * Processes the tasks configurations. The tasks configuration are stored in the configuration file under the
+     * <code>tasks</code> key. If the configuration contains a task configuration not already configured and stored in
+     * the <code>tasks</code> map, a new instance of <code>AcmSchedulerTask</code> is created and stored in the
+     * <code>tasks</code> map with key value retrieved from the <code>name</code> element in the task configuration. If
+     * it was already configured, than it is updated. Tasks that were previously configured, but are no longer in the
+     * configuration are removed from the <code>tasks</code> map.
+     *
+     * @param configuration
+     *            JSON object that was created by parsing the contents of the configuration file.
+     *
+     * @see AcmSchedulerConstants#TASKS_KEY
+     * @see #tasks
+     * @see AcmSchedulerConstants#NAME_KEY
+     */
     private void processTasksConfigurations(JSONObject configuration)
     {
         JSONArray tasksConfigurations = configuration.getJSONArray(TASKS_KEY);
@@ -231,7 +274,8 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
         {
             JSONObject taskConfiguration = tasksConfigurations.getJSONObject(i);
             String taskName = taskConfiguration.getString(NAME_KEY);
-            long howOften = taskConfiguration.getLong(HOW_OFTEN_KEY);
+            // how often in the configuration is given in minutes, needs to be converted in milliseconds.
+            long howOften = taskConfiguration.getLong(HOW_OFTEN_KEY) * 60 * 1000;
             if (tasks.containsKey(taskName))
             {
                 AcmSchedulerTask task = tasks.get(taskName);
@@ -248,18 +292,27 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
                     tasks.put(taskName, task);
                 } catch (NoSuchBeanDefinitionException | BeanNotOfRequiredTypeException e)
                 {
-                    log.error(
-                            "Either bean with name {} does not exist or is not of type com.armedia.acm.scheduler.SchedulableBean. Exception {}.",
-                            beanName, e);
+                    log.error("Either bean with name {} does not exist or is not of type {}SchedulableBean. Exception {}.", beanName,
+                            AcmSchedulableBean.class.getName(), e);
                 }
             }
         }
 
+        // remove all tasks that are no longer in the configuration.
         tasks.keySet().retainAll(keys);
     }
 
+    /**
+     * Sets up the scheduler. The scheduler has a single thread that runs periodically and submits tasks to the
+     * executor. In case a scheduler was already setup, and the value in the configuration specifying how often is
+     * should be run has changed, it is canceled and rescheduled.
+     *
+     * @param configuration
+     *            JSON object that was created by parsing the contents of the configuration file.
+     */
     private void setupScheduler(JSONObject configuration)
     {
+        // the interval in the configuration is given in minutes, needs to be converted in milliseconds.
         long scheduleInterval = configuration.getLong(SCHEDULE_INTERVAL_KEY) * 60 * 1000;
 
         if (scheduleInterval != this.scheduleInterval)
@@ -277,6 +330,13 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
         }
     }
 
+    /**
+     * Creates a runnable to be submitted to the scheduler.
+     *
+     * @param scheduleInterval
+     *            the interval at which the scheduler runs periodically.
+     * @return the runnable to be submitted to the scheduler.
+     */
     private Runnable schedulerRunnable(long scheduleInterval)
     {
         return () ->
@@ -307,7 +367,11 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
     }
 
     /**
+     * Updates the scheduler configuration upon completion of all tasks. What is updated are the values of the
+     * <code>taskLastRun</code> field of the individual tasks. After the configuration file has been written to the file
+     * system, the modification time is recorded.
      *
+     * @see AcmSchedulerConstants#TASK_LAST_RUN_KEY
      */
     private synchronized void updateCоnfiguration()
     {
