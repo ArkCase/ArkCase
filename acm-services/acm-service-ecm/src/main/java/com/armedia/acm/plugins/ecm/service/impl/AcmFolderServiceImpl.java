@@ -877,10 +877,10 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
                 .filter(obj -> obj.getObjectType() != null)
                 .collect(Collectors.toList());
 
-        _copyFolderChildrenStructure(folderChildren, containerOfCopy, rootFolderOfCopy);
+        copyFolderChildrenStructure(folderChildren, containerOfCopy, rootFolderOfCopy);
     }
 
-    private void _copyFolderStructure(Long folderId, AcmContainer containerOfCopy, AcmFolder destinationFolder)
+    private void copyFolderInnerStructure(Long folderId, AcmContainer containerOfCopy, AcmFolder destinationFolder)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmFolderException
     {
 
@@ -895,10 +895,10 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
                 .collect(Collectors.toList());
         AcmFolder copiedFolder = addNewFolder(destinationFolder, folderForCopying.getName());
 
-        _copyFolderChildrenStructure(folderChildren, containerOfCopy, copiedFolder);
+        copyFolderChildrenStructure(folderChildren, containerOfCopy, copiedFolder);
     }
     
-    private void _copyFolderChildrenStructure(List<AcmObject> folderChildren, AcmContainer containerOfCopy, AcmFolder destinationFolder)
+    private void copyFolderChildrenStructure(List<AcmObject> folderChildren, AcmContainer containerOfCopy, AcmFolder destinationFolder)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmFolderException
     {
         for (AcmObject obj : folderChildren)
@@ -909,7 +909,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
             } else if (EcmFileConstants.OBJECT_FOLDER_TYPE.equals(obj.getObjectType().toUpperCase()))
             {
-                _copyFolderStructure(obj.getId(), containerOfCopy, destinationFolder);
+                copyFolderInnerStructure(obj.getId(), containerOfCopy, destinationFolder);
             }
         }
     }
