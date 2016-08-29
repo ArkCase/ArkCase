@@ -1256,3 +1256,8 @@ tags-input .tags {
 	position: absolute !important;
 	margin-top: 60px;
 }
+
+/* Fixing Note Editor Padding for File Upload in Firefox */
+.note-image-input.form-control {
+    padding: 0px 0px 0px 10px;
+}
