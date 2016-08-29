@@ -13,6 +13,7 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
@@ -902,11 +903,11 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     {
         for (AcmObject obj : folderChildren)
         {
-            if ("FILE".equals(obj.getObjectType().toUpperCase()))
+            if (EcmFileConstants.OBJECT_FILE_TYPE.equals(obj.getObjectType().toUpperCase()))
             {
                 fileService.copyFile(obj.getId(), destinationFolder, containerOfCopy);
 
-            } else if ("FOLDER".equals(obj.getObjectType().toUpperCase()))
+            } else if (EcmFileConstants.OBJECT_FOLDER_TYPE.equals(obj.getObjectType().toUpperCase()))
             {
                 _copyFolderStructure(obj.getId(), containerOfCopy, destinationFolder);
             }
