@@ -421,7 +421,9 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         for (EcmFile frevvoFile : frevvoFiles)
         {
             if (frevvoFile.getFileType().equals("case_file_xml") && frevvoFile.getFileName().equals("form_case_file")
-                    || frevvoFile.getFileType().equals("complaint_file_xml") && frevvoFile.getFileName().equals("form_complaint_file"))
+                    || frevvoFile.getFileType().equals("complaint_file_xml") && frevvoFile.getFileName().equals("form_complaint_file")
+                    || frevvoFile.getFileType().equals("timesheet_xml") && frevvoFile.getFileName().equals("form_timesheet")
+                    || frevvoFile.getFileType().equals("costsheet_xml") && frevvoFile.getFileName().equals("form_costsheet"))
             {
                 for (EcmFileVersion frevvoFileVersion : frevvoFile.getVersions())
                 {
