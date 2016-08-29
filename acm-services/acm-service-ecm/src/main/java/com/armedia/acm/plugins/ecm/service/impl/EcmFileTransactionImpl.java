@@ -157,7 +157,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             log.debug("Calling pipeline manager handlers");
             PipelineManager pipelineManager = (PipelineManager) getSpringContextHolder().getBeanByName("ecmFileUpdatePipelineManager",
                     PipelineManager.class);
-            pipelineManager.executeOperation(ecmFile, null, () ->
+            pipelineManager.executeOperation(ecmFile, pipelineContext, () ->
             {
                 return null;
             });
