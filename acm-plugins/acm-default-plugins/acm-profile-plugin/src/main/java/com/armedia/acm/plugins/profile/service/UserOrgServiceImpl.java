@@ -56,6 +56,7 @@ public class UserOrgServiceImpl implements UserOrgService
         this.profileLocation = profileLocation;
     }
 
+    @Override
     @Transactional
     public UserOrg saveUserOrgTransaction(UserOrg userOrgInfo, Authentication authentication) throws MuleException
     {
@@ -154,7 +155,7 @@ public class UserOrgServiceImpl implements UserOrgService
         boolean userOrgTransactionSuccess = true;
         try
         {
-            saveUserOrgTransaction(userOrg, authentication);
+           userOrg = saveUserOrgTransaction(userOrg, authentication);
         } catch (MuleException e)
         {
             log.error("UserOrg for user [{}] was not saved. {}", userId, e);
