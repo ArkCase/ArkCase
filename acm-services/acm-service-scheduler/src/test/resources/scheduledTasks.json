@@ -1,8 +1,8 @@
 {
 	"scheduleEnabled": "true",
-	"scheduleInterval": "1",
+	"scheduleIntervalInMinutes": "1",
 	"tasks": [{
-		"howOften": "5",
+		"howOftenInMinutes": "5",
 		"name": "test",
 		"beanName": "scheduledBillingQueuePurger",
 		"taskLastRun": 1472389999546
