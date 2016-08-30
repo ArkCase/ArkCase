@@ -233,6 +233,12 @@
         "idleLimit.label": "Login idle limit (in milliseconds)",
         "inform":"Settings will take effect for all new user sessions",
         "apply.label": "Apply"
+      },
+      "auditHistory.config": {
+        "title": "Audit History",
+        "historyDays.label": "Keep Audit and Notification events (in days)",
+        "inform":"Setting successfully saved",
+        "apply.label": "Apply"
       }
     },
     "branding.title": "Branding",
