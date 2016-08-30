@@ -40,12 +40,21 @@ public class DashboardPropertyReader
     private List<Widget> widgetList;
     private boolean isNewWidgetForAdding = false;
     private List<Widget> dashboardWidgetsOnly;
+    private boolean isWidgetTableEmpty = false;
+    private List<Widget> allWidgetsInDB;
 
     private void init()
     {
         isNewWidgetForAdding = Boolean.valueOf((String) dashboardPlugin.getPluginProperties().
                 get(DashboardConstants.IS_NEW_DASHBOARD_WIDGETS_FOR_ADDING));
 
+        try
+        {
+            allWidgetsInDB = getWidgetDao().getAllWidgets();
+        } catch (AcmObjectNotFoundException e)
+        {
+            isWidgetTableEmpty = true;
+        }
         log.info("Initializing - setting moduleNameList and widgetList in the  DashboardPropertyReader bean");
         try
         {
@@ -74,12 +83,24 @@ public class DashboardPropertyReader
             addNewWidgets();
         }
 
-        initWidgetRolesTable();
+
+        if (isWidgetTableEmpty)
+        {
+            initWidgetTable();
+            initWidgetRolesTable();
+        }
+
         updateModuleTable();
+    }
+
+    private void initWidgetTable()
+    {
+        addNewWidgets();
     }
 
     private void initWidgetRolesTable()
     {
+
         List<AcmRole> allRoles = getUserDao().findAllRoles();
         Set<String> widgetSet = new HashSet<>();
         String retVal = null;
@@ -113,8 +134,9 @@ public class DashboardPropertyReader
                 {
                     try
                     {
-                        addWidgetRoleIntoDB(getWidgetDao().getWidgetByWidgetName(widgetName), role);
-                    } catch (AcmObjectNotFoundException e)
+                        Widget widget = getWidgetDao().getWidgetByWidgetName(widgetName.trim());
+                        addWidgetRoleIntoDB(widget, role);
+                    } catch (Exception e)
                     {
                         log.error("Fetching widget with widget name: [{}] failed! Error msg: [{}]", widgetName, e.getMessage(), e);
                     }
@@ -153,8 +175,7 @@ public class DashboardPropertyReader
             modules = modulesString.split(",");
             for (String m : modules)
             {
-                m.trim();
-                moduleList.add(m);
+                moduleList.add(m.trim());
             }
         }
         return moduleList;
@@ -231,8 +252,43 @@ public class DashboardPropertyReader
 
     private void addNewWidgets()
     {
-        List<Widget> widgetList = getWidgetList();
-        widgetList.stream().forEach(widget -> widgetDao.saveWidget(widget));
+        //get all widgets added in the dashboardPlugin.properties config file;
+        Set<Widget> setOfAllWidgetsFromPropertyFile = new HashSet<>(getWidgetList());
+
+        Set<Widget> widgetsThatNeedToBeInserted = new HashSet<>();
+        Set<Widget> widgetsThatNeedToBeDeleted = new HashSet<>();
+
+        //check if there are already widgets in the DB and if widgets found compare with the list from property file and
+        //made appropriate changes in the DB if needed, if widgets are not found insert all of them from the property file
+        if (allWidgetsInDB != null)
+        {
+
+            Set<Widget> setOfAllWidgetsInDb = new HashSet<>(allWidgetsInDB);
+
+            // A difference between set of widgets from the DB and set of widgets from the
+            // property file is calculated. the result will be all widgets that are in DB but
+            // not in the property file, all widgets that need to be removed from the DB!
+            widgetsThatNeedToBeDeleted.addAll(setOfAllWidgetsInDb);
+            widgetsThatNeedToBeDeleted.removeAll(setOfAllWidgetsFromPropertyFile);
+
+            // A difference between the set of widgets from the property file and set of widgets from the
+            // DB is calculated. the result will be all widgets that are in the property file but
+            // not in the DB, all widgets that need to be inserted into the DB!
+            // The intersection between these two sets will remain intact in the DB.
+            widgetsThatNeedToBeInserted.addAll(setOfAllWidgetsFromPropertyFile);
+            widgetsThatNeedToBeInserted.removeAll(setOfAllWidgetsInDb);
+
+            widgetsThatNeedToBeDeleted.stream().forEach(widget ->
+            {
+                widgetDao.deleteAllWidgetRolesByWidgetName(widget.getWidgetName());
+                widgetDao.deleteWidget(widget);
+            });
+
+            widgetsThatNeedToBeInserted.stream().forEach(widget -> widgetDao.saveWidget(widget));
+        } else
+        {
+            setOfAllWidgetsFromPropertyFile.stream().forEach(widget -> widgetDao.saveWidget(widget));
+        }
     }
 
     private List<Widget> getDashboardWidgetsFromDB(String dashboardWidgets)

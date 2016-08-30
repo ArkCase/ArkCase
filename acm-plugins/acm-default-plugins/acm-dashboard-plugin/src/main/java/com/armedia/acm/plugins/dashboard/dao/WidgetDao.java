@@ -88,11 +88,15 @@ public class WidgetDao extends AcmAbstractDao<Widget>
         return retval.get(0);
     }
 
-    public List<Widget> getAllWidgets()
+    public List<Widget> getAllWidgets() throws AcmObjectNotFoundException
     {
         String queryText = "SELECT widget FROM Widget widget";
         Query allWidgets = getEntityManager().createQuery(queryText);
         List<Widget> result = allWidgets.getResultList();
+        if (result.isEmpty())
+        {
+            throw new AcmObjectNotFoundException("dashboard", null, "Roles not found for all widgets", null);
+        }
         return result;
     }
 
@@ -190,6 +194,16 @@ public class WidgetDao extends AcmAbstractDao<Widget>
     public void deleteWidgetRole(WidgetRole widgetRole)
     {
         getEntityManager().remove(widgetRole);
+    }
+
+    @Transactional
+    public void deleteWidget(Widget widget)
+    {
+        Query deleteWidget = getEntityManager().createQuery(
+                "DELETE FROM Widget widget WHERE widget.widgetName=:widgetName");
+
+        deleteWidget.setParameter("widgetName", widget.getWidgetName());
+        deleteWidget.executeUpdate();
     }
 
     @Transactional
