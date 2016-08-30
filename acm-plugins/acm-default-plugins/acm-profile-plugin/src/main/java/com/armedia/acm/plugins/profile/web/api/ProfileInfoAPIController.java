@@ -29,7 +29,7 @@ public class ProfileInfoAPIController
         return userOrgService.getProfileInfo(userId, authentication);
     }
 
-    @RequestMapping(value = "userOrgInfo/set", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/userOrgInfo/set", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ProfileDTO saveUserOrgInfo(@RequestBody ProfileDTO profile, Authentication auth)
     {
