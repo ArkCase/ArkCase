@@ -19,6 +19,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.reflect.Whitebox;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.TaskScheduler;
 
@@ -61,12 +62,12 @@ public class AcmSchedulerTest extends EasyMockSupport
     private AcmSchedulableBean mockedSchedulableBean;
 
     @Before
-    public void setUp()
+    public void setUp() throws IOException
     {
         acmScheduler = new AcmScheduler(mockedTaskScheduler, mockedTaskExecutor, mockedSpringContextHolder);
-        ClassLoader classLoader = getClass().getClassLoader();
-        schedulerConfiguration = new File(classLoader.getResource("scheduledTasks.json").getFile());
-        noSchedulerConfiguration = new File(classLoader.getResource("someConfiguration.json").getFile());
+        getClass().getClassLoader();
+        schedulerConfiguration = new ClassPathResource("scheduledTasks.json").getFile();
+        noSchedulerConfiguration = new ClassPathResource("someConfiguration.json").getFile();
         assertNotNull(schedulerConfiguration);
     }
 

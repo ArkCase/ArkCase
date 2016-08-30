@@ -15,7 +15,7 @@ public interface AcmSchedulableBean
     /**
      * A task that is invoked by the thread that <code>AcmSchedulerTask</code> submits to the tasks executor.
      *
-     * @see AcmSchedulerTask#startTask(org.springframework.core.task.TaskExecutor, java.util.concurrent.CountDownLatch)
+     * @see AcmSchedulerTask#startTask(String, org.springframework.core.task.TaskExecutor, java.util.concurrent.CountDownLatch)
      */
     void executeTask();
 }

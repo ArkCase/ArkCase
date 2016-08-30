@@ -23,7 +23,7 @@ public interface AcmSchedulerConstants
     /**
      * Key in the scheduler configuration that specifies the interval at which the scheduler thread should be invoked.
      */
-    String SCHEDULE_INTERVAL_KEY = "scheduleInterval";
+    String SCHEDULE_INTERVAL_KEY = "scheduleIntervalInMinutes";
 
     /**
      * Key in the scheduler configuration that specifies the tasks configuration.
@@ -38,7 +38,7 @@ public interface AcmSchedulerConstants
     /**
      * Key in the task configuration that specifies how often a task should be run.
      */
-    String HOW_OFTEN_KEY = "howOften";
+    String HOW_OFTEN_KEY = "howOftenInMinutes";
 
     /**
      * Key in the task configuration that specifies when was the last time a task was run.

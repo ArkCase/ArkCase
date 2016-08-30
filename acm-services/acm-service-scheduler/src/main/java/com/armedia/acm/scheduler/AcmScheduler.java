@@ -46,13 +46,13 @@ import java.util.concurrent.TimeUnit;
  * file that contains the scheduler and scheduled tasks configuration. A sample JSON configuration file: <code>
    {
     "scheduleEnabled": "true",
-    "scheduleInterval": "1",
+    "scheduleIntervalInMinutes": "1",
     "tasks": [{
-        "howOften": "5",
+        "howOftenInMinutes": "5",
         "name": "billingQueuePurger",
         "beanName": "scheduledBillingQueuePurger"
     },{
-        "howOften": "10",
+        "howOftenInMinutes": "10",
         "name": "queueLogger",
         "beanName": "scheduledQueueLogger"
     }]
@@ -77,7 +77,7 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
     /**
      * Runs threads that are started by <code>AcmSchedulerTask</code>'s <code>startTask</code> method.
      *
-     * @see AcmSchedulerTask#startTask(TaskExecutor, CountDownLatch)
+     * @see AcmSchedulerTask#startTask(String, TaskExecutor, CountDownLatch)
      */
     private TaskExecutor taskExecutor;
 
@@ -173,6 +173,9 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
                     {
                         return;
                     }
+
+                    log.debug("{} confgiration file {} has changed, updating state.", AcmScheduler.class.getName(),
+                            SCHEDULED_TASKS_CONFIGUTATION_FILENAME);
 
                     processSchedulerConfiguration(configFile);
                 }
@@ -290,9 +293,11 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
                             taskConfiguration.has(TASK_LAST_RUN_KEY) ? taskConfiguration.getLong(TASK_LAST_RUN_KEY) : 0, schedulableBean);
                     keys.add(taskName);
                     tasks.put(taskName, task);
+                    log.debug("Added task {} for bean named {} to run every {} minutes.", taskName, beanName,
+                            taskConfiguration.getString(HOW_OFTEN_KEY));
                 } catch (NoSuchBeanDefinitionException | BeanNotOfRequiredTypeException e)
                 {
-                    log.error("Either bean with name {} does not exist or is not of type {}SchedulableBean. Exception {}.", beanName,
+                    log.error("Either bean with name {} does not exist or does not implement {}.", beanName,
                             AcmSchedulableBean.class.getName(), e);
                 }
             }
@@ -343,15 +348,16 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
         {
 
             CountDownLatch taskCompletedSignal = new CountDownLatch(tasks.size());
-            for (AcmSchedulerTask task : tasks.values())
+            tasks.forEach((taskName, task) ->
             {
-                task.startTask(taskExecutor, taskCompletedSignal);
-            }
+                task.startTask(taskName, taskExecutor, taskCompletedSignal);
+            });
 
             Runnable configurationUpdater = () ->
             {
                 try
                 {
+                    log.debug("Waiting for {} tasks to complete.", taskCompletedSignal.getCount());
                     taskCompletedSignal.await(scheduleInterval, TimeUnit.MILLISECONDS);
                 } catch (InterruptedException e)
                 {
