@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.person.dao;
 
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.person.model.Organization;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +10,16 @@ import java.util.List;
 
 public class OrganizationDao extends AcmAbstractDao<Organization>
 {
+    public Organization getOrganizationByOrganizationName(String companyName) throws AcmObjectNotFoundException
+    {
+        Organization organization = findByOrganizationName(companyName);
+        if (organization == null)
+        {
+            throw new AcmObjectNotFoundException("organization", null, "Object not found", null);
+        }
+        return organization;
+    }
+
     public Organization findByOrganizationName(String organizationName)
     {
         String query = "SELECT o FROM Organization o where o.organizationValue = :organizationName";
