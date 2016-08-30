@@ -241,7 +241,7 @@ public class UserOrgServiceImplTest extends EasyMockSupport
         List<AcmRole> roles = new ArrayList<>();
         roles.add(role);
 
-        expect(mockUserOrgDao.getUserOrgForUserId(USER_ID)).andReturn(expectedUserOrg);
+        expect(mockUserOrgDao.findByUserId(USER_ID)).andReturn(expectedUserOrg);
         expect(mockUserDao.findAllRolesByUserAndRoleType(USER_ID, RoleType.LDAP_GROUP)).andReturn(roles);
 
         replayAll();
@@ -269,7 +269,7 @@ public class UserOrgServiceImplTest extends EasyMockSupport
         List<AcmRole> roles = new ArrayList<>();
         roles.add(role);
 
-        expect(mockUserOrgDao.getUserOrgForUserId(USER_ID)).andReturn(null);
+        expect(mockUserOrgDao.findByUserId(USER_ID)).andReturn(null);
         expect(mockUserDao.findByUserId(USER_ID)).andReturn(user);
         expect(mockUserDao.findAllRolesByUserAndRoleType(USER_ID, RoleType.LDAP_GROUP)).andReturn(roles);
 
