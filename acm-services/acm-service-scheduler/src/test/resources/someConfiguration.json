@@ -1,0 +1,10 @@
+{
+	"scheduleEnabled": "true",
+	"scheduleInterval": "1",
+	"tasks": [{
+		"howOften": "5",
+		"name": "test",
+		"beanName": "scheduledBillingQueuePurger",
+		"taskLastRun": 1472389999546
+	}]
+}
