@@ -14,7 +14,7 @@ public class UserOrgDao extends AcmAbstractDao<UserOrg>
 
     public UserOrg getUserOrgForUser(AcmUser user) throws AcmObjectNotFoundException
     {
-        UserOrg userOrg = getUserOrgForUserId(user.getUserId());
+        UserOrg userOrg = findByUserId(user.getUserId());
         if (userOrg == null)
         {
             throw new AcmObjectNotFoundException(UserOrgConstants.OBJECT_TYPE, null, "Object not found", null);
@@ -22,7 +22,7 @@ public class UserOrgDao extends AcmAbstractDao<UserOrg>
         return userOrg;
     }
 
-    public UserOrg getUserOrgForUserId(String userId)
+    public UserOrg findByUserId(String userId)
     {
         String jpql = "SELECT uo FROM UserOrg uo where uo.user.userId = :userId";
         TypedQuery<UserOrg> query = getEm().createQuery(jpql, UserOrg.class);
@@ -35,6 +35,17 @@ public class UserOrgDao extends AcmAbstractDao<UserOrg>
             return null;
         }
     }
+
+    public UserOrg getUserOrgForUserId(String userId) throws AcmObjectNotFoundException
+    {
+        UserOrg userOrg = findByUserId(userId);
+        if (userOrg == null)
+        {
+            throw new AcmObjectNotFoundException(UserOrgConstants.OBJECT_TYPE, null, "Object not found", null);
+        }
+        return userOrg;
+    }
+
 
     @Override
     protected Class<UserOrg> getPersistenceClass()

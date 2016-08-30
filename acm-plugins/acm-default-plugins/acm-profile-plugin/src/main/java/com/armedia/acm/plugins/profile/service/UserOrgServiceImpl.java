@@ -42,7 +42,7 @@ public class UserOrgServiceImpl implements UserOrgService
     @Override
     public UserOrg getUserOrgForUserId(String userId)
     {
-        return userOrgDao.getUserOrgForUserId(userId);
+        return userOrgDao.findByUserId(userId);
     }
 
     @Override
