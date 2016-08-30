@@ -13,6 +13,7 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
@@ -42,6 +43,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 /**
  * Created by marjan.stefanoski on 03.04.2015.
@@ -871,38 +873,44 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     {
 
         AcmFolder folderForCopying = findById(folderId);
-        String folderPath = getFolderPath(folderForCopying);
+        List<AcmObject> folderChildren = getFolderChildren(folderForCopying.getId()).stream()
+                .filter(obj -> obj.getObjectType() != null)
+                .collect(Collectors.toList());
 
-        // check if folder path exists in the copy
-        if (folderForCopying.getParentFolderId() == null || folderPathExists(folderPath, containerOfCopy))
+        copyFolderChildrenStructure(folderChildren, containerOfCopy, rootFolderOfCopy);
+    }
+
+    private void copyFolderInnerStructure(Long folderId, AcmContainer containerOfCopy, AcmFolder destinationFolder)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmFolderException
+    {
+
+        AcmFolder folderForCopying = findById(folderId);
+
+        if (folderForCopying.getParentFolderId() == null)
         {
-            // copy the folder children (folders documents) into existing folder of the copy case file
-            // this should create or return existing path, but path already exists so it should return existing folder
+            return; // cannot copy ROOT folder
+        }
 
-            List<AcmObject> folderChildren = getFolderChildren(folderForCopying.getId());
-            for (AcmObject obj : folderChildren)
+        List<AcmObject> folderChildren = getFolderChildren(folderForCopying.getId()).stream().filter(obj -> obj.getObjectType() != null)
+                .collect(Collectors.toList());
+        AcmFolder copiedFolder = addNewFolder(destinationFolder, folderForCopying.getName());
+
+        copyFolderChildrenStructure(folderChildren, containerOfCopy, copiedFolder);
+    }
+    
+    private void copyFolderChildrenStructure(List<AcmObject> folderChildren, AcmContainer containerOfCopy, AcmFolder destinationFolder)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmFolderException
+    {
+        for (AcmObject obj : folderChildren)
+        {
+            if (EcmFileConstants.OBJECT_FILE_TYPE.equals(obj.getObjectType().toUpperCase()))
             {
-                if (obj.getObjectType() == null)
-                {
-                    continue;
-                }
-                if ("FILE".equals(obj.getObjectType().toUpperCase()))
-                {
-                    copyDocumentStructure(obj.getId(), containerOfCopy, rootFolderOfCopy);
-                } else if ("FOLDER".equals(obj.getObjectType().toUpperCase()))
-                {
-                    copyFolderStructure(obj.getId(), containerOfCopy, rootFolderOfCopy);
-                }
-            }
-        } else
-        {
-            // just copy the folder to new parent
-            AcmFolder parentInSource = findById(folderForCopying.getParentFolderId());
-            String folderPathParentInSource = getFolderPath(parentInSource);
+                fileService.copyFile(obj.getId(), destinationFolder, containerOfCopy);
 
-            // this folder will be created if doesn't exits
-            AcmFolder createdParentFolderInCopy = addNewFolderByPath(containerOfCopy.getContainerObjectType(), containerOfCopy.getContainerObjectId(), folderPathParentInSource);
-            copyFolder(folderForCopying, createdParentFolderInCopy, containerOfCopy.getContainerObjectId(), containerOfCopy.getContainerObjectType());
+            } else if (EcmFileConstants.OBJECT_FOLDER_TYPE.equals(obj.getObjectType().toUpperCase()))
+            {
+                copyFolderInnerStructure(obj.getId(), containerOfCopy, destinationFolder);
+            }
         }
     }
 
