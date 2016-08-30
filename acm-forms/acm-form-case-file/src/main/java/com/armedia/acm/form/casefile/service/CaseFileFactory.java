@@ -18,13 +18,13 @@ import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.plugins.person.model.xml.InitiatorPerson;
 import com.armedia.acm.plugins.person.model.xml.PeoplePerson;
 import com.armedia.acm.service.history.dao.AcmHistoryDao;
+import com.armedia.acm.services.participants.model.AcmParticipant;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author riste.tutureski
@@ -52,31 +52,36 @@ public class CaseFileFactory extends FrevvoFormFactory
             caseFile = new CaseFile();
         }
 
+        buildGeneralInformation(form, caseFile);
+        buildInitiator(form, caseFile);
+        buildPeople(form, caseFile);
+        buildParticipants(form, caseFile);
+
+        return caseFile;
+    }
+
+    private void buildGeneralInformation(CaseFileForm form, CaseFile caseFile)
+    {
         caseFile.setTitle(form.getCaseTitle());
         caseFile.setCaseType(form.getCaseType());
         caseFile.setDetails(form.getCaseDescription());
-        caseFile.setParticipants(
-                getParticipants(caseFile.getParticipants(), form.getParticipants(), form.getOwningGroup(), caseFile.getObjectType()));
+    }
 
+    private void buildInitiator(CaseFileForm form, CaseFile caseFile)
+    {
         if (form.getInitiator() != null)
         {
-            Optional<PersonAssociation> optPersonAssociation = caseFile.getPersonAssociations().stream()
-                    .filter(initiatorPersonAssociation -> "Initiator".equalsIgnoreCase(initiatorPersonAssociation.getPersonType()))
-                    .findFirst();
-            PersonAssociation personAssociation = new PersonAssociation();
-            if (optPersonAssociation != null && optPersonAssociation.isPresent())
+            PersonAssociation personAssociation = caseFile.getOriginator();
+            if (personAssociation == null)
             {
-                personAssociation = optPersonAssociation.get();
+                personAssociation = new PersonAssociation();
             }
             Person person = form.getInitiator();
             if (person.getId() != null)
             {
                 // Update Person Association
-                personAssociation.getPerson().setTitle(person.getTitle());
-                personAssociation.getPerson().setGivenName(person.getGivenName());
-                personAssociation.getPerson().setFamilyName(person.getFamilyName());
+                saveInformation(personAssociation, person);
                 personAssociation.setPersonType(((InitiatorPerson) person).getType());
-
                 saveCommunicationDevice(personAssociation, person);
                 saveOrganizationInformation(personAssociation, person);
                 saveLocationInformation(personAssociation, person);
@@ -91,7 +96,10 @@ public class CaseFileFactory extends FrevvoFormFactory
 
             caseFile.setOriginator(personAssociation);
         }
+    }
 
+    private void buildPeople(CaseFileForm form, CaseFile caseFile)
+    {
         if (form.getPeople() != null)
         {
             List<PersonAssociation> paArray = caseFile.getPersonAssociations();
@@ -99,6 +107,8 @@ public class CaseFileFactory extends FrevvoFormFactory
             {
                 paArray = new ArrayList<>();
             }
+
+            ArrayList<Person> personsToAdd = new ArrayList<Person>();
 
             for (Person person : form.getPeople())
             {
@@ -111,34 +121,47 @@ public class CaseFileFactory extends FrevvoFormFactory
                                 && person.getId().equals(personAssociation.getPerson().getId()))
                         {
                             // Update Person Association
-                            personAssociation.getPerson().setTitle(person.getTitle());
-                            personAssociation.getPerson().setGivenName(person.getGivenName());
-                            personAssociation.getPerson().setFamilyName(person.getFamilyName());
+                            saveInformation(personAssociation, person);
                             personAssociation.setPersonType(((PeoplePerson) person).getType());
-
                             saveCommunicationDevice(personAssociation, person);
                             saveOrganizationInformation(personAssociation, person);
                             saveLocationInformation(personAssociation, person);
-
                             personFound = true;
                             break;
                         }
                     }
                 }
-                // Add Person Association
                 if (!personFound)
                 {
-                    PersonAssociation pa = new PersonAssociation();
-                    pa.setPerson(person.returnBase());
-                    pa.setPersonType(((PeoplePerson) person).getType());
-                    paArray.add(pa);
+                    personsToAdd.add(person);
                 }
+            }
+
+            // Add Person Association
+            for (Person personToAdd : personsToAdd)
+            {
+                PersonAssociation pa = new PersonAssociation();
+                pa.setPerson(personToAdd.returnBase());
+                pa.setPersonType(((PeoplePerson) personToAdd).getType());
+                paArray.add(pa);
             }
 
             caseFile.setPersonAssociations(paArray);
         }
+    }
 
-        return caseFile;
+    private void buildParticipants(CaseFileForm form, CaseFile caseFile)
+    {
+        List<AcmParticipant> participants = getParticipants(caseFile.getParticipants(), form.getParticipants(), form.getOwningGroup(),
+                caseFile.getObjectType());
+        caseFile.setParticipants(participants);
+    }
+
+    private void saveInformation(PersonAssociation personAssociation, Person formPerson)
+    {
+        personAssociation.getPerson().setTitle(formPerson.getTitle());
+        personAssociation.getPerson().setGivenName(formPerson.getGivenName());
+        personAssociation.getPerson().setFamilyName(formPerson.getFamilyName());
     }
 
     private void saveLocationInformation(PersonAssociation personAssociation, Person formPerson)
@@ -148,6 +171,7 @@ public class CaseFileFactory extends FrevvoFormFactory
         {
             addresses = personAssociation.getPerson().getAddresses();
         }
+        List<PostalAddress> addressesToAdd = new ArrayList<PostalAddress>();
         for (PostalAddress formAddress : formPerson.getAddresses())
         {
             boolean found = false;
@@ -155,31 +179,36 @@ public class CaseFileFactory extends FrevvoFormFactory
             {
                 if (existingAddress.getId().equals(formAddress.getId()))
                 {
-                    existingAddress.setType(formAddress.getType());
-                    existingAddress.setStreetAddress(formAddress.getStreetAddress());
-                    existingAddress.setCity(formAddress.getCity());
-                    existingAddress.setState(formAddress.getState());
-                    existingAddress.setZip(formAddress.getZip());
-                    existingAddress.setCreated(formAddress.getCreated());
-                    existingAddress.setCreator(formAddress.getCreator());
+                    setAddressFields(existingAddress, formAddress);
                     found = true;
                     break;
                 }
             }
             if (!found)
             {
-                PostalAddress postalAddress = new PostalAddress();
-                postalAddress.setType(formAddress.getType());
-                postalAddress.setStreetAddress(formAddress.getStreetAddress());
-                postalAddress.setCity(formAddress.getCity());
-                postalAddress.setState(formAddress.getState());
-                postalAddress.setZip(formAddress.getZip());
-                postalAddress.setCreated(formAddress.getCreated());
-                postalAddress.setCreator(formAddress.getCreator());
-                addresses.add(postalAddress);
+                addressesToAdd.add(formAddress);
             }
         }
+
+        for (PostalAddress addressToAdd : addressesToAdd)
+        {
+            PostalAddress postalAddress = new PostalAddress();
+            setAddressFields(postalAddress, addressToAdd);
+            addresses.add(postalAddress);
+        }
+
         personAssociation.getPerson().setAddresses(addresses);
+    }
+
+    private void setAddressFields(PostalAddress address, PostalAddress formAddress)
+    {
+        address.setType(formAddress.getType());
+        address.setStreetAddress(formAddress.getStreetAddress());
+        address.setCity(formAddress.getCity());
+        address.setState(formAddress.getState());
+        address.setZip(formAddress.getZip());
+        address.setCreated(formAddress.getCreated());
+        address.setCreator(formAddress.getCreator());
     }
 
     private void saveCommunicationDevice(PersonAssociation personAssociation, Person formPerson)
@@ -189,32 +218,41 @@ public class CaseFileFactory extends FrevvoFormFactory
         {
             contactMethods = personAssociation.getPerson().getContactMethods();
         }
-        for (ContactMethod formContacts : formPerson.getContactMethods())
+        ArrayList<ContactMethod> contactMethodsToAdd = new ArrayList<ContactMethod>();
+        for (ContactMethod formContact : formPerson.getContactMethods())
         {
             boolean found = false;
             for (ContactMethod existingContact : contactMethods)
             {
-                if (existingContact.getId().equals(formContacts.getId()))
+                if (existingContact.getId().equals(formContact.getId()))
                 {
-                    existingContact.setType(formContacts.getType());
-                    existingContact.setValue(formContacts.getValue());
-                    existingContact.setCreated(formContacts.getCreated());
-                    existingContact.setCreator(formContacts.getCreator());
+                    setContactFields(existingContact, formContact);
                     found = true;
                     break;
                 }
             }
             if (!found)
             {
-                ContactMethod contactMethod = new ContactMethod();
-                contactMethod.setType(formContacts.getType());
-                contactMethod.setValue(formContacts.getValue());
-                contactMethod.setCreated(formContacts.getCreated());
-                contactMethod.setCreator(formContacts.getCreator());
-                contactMethods.add(contactMethod);
+                contactMethodsToAdd.add(formContact);
             }
         }
+
+        for (ContactMethod contactMethodToAdd : contactMethodsToAdd)
+        {
+            ContactMethod contactMethod = new ContactMethod();
+            setContactFields(contactMethod, contactMethodToAdd);
+            contactMethods.add(contactMethod);
+        }
+
         personAssociation.getPerson().setContactMethods(contactMethods);
+    }
+
+    private void setContactFields(ContactMethod contact, ContactMethod formContact)
+    {
+        contact.setType(formContact.getType());
+        contact.setValue(formContact.getValue());
+        contact.setCreated(formContact.getCreated());
+        contact.setCreator(formContact.getCreator());
     }
 
     private void saveOrganizationInformation(PersonAssociation personAssociation, Person formPerson)
@@ -224,32 +262,41 @@ public class CaseFileFactory extends FrevvoFormFactory
         {
             organizations = personAssociation.getPerson().getOrganizations();
         }
-        for (Organization formOrganizations : formPerson.getOrganizations())
+        List<Organization> organizationsToAdd = new ArrayList<Organization>();
+        for (Organization formOrganization : formPerson.getOrganizations())
         {
             boolean found = false;
             for (Organization existingOrganization : organizations)
             {
-                if (existingOrganization.getOrganizationId().equals(formOrganizations.getOrganizationId()))
+                if (existingOrganization.getOrganizationId().equals(formOrganization.getOrganizationId()))
                 {
-                    existingOrganization.setOrganizationType(formOrganizations.getOrganizationType());
-                    existingOrganization.setOrganizationValue(formOrganizations.getOrganizationValue());
-                    existingOrganization.setCreated(formOrganizations.getCreated());
-                    existingOrganization.setCreator(formOrganizations.getCreator());
+                    setOrganizationFields(existingOrganization, formOrganization);
                     found = true;
                     break;
                 }
             }
             if (!found)
             {
-                Organization organization = new Organization();
-                organization.setOrganizationType(formOrganizations.getOrganizationType());
-                organization.setOrganizationValue(formOrganizations.getOrganizationValue());
-                organization.setCreated(formOrganizations.getCreated());
-                organization.setCreator(formOrganizations.getCreator());
-                organizations.add(organization);
+                organizationsToAdd.add(formOrganization);
             }
         }
+
+        for (Organization organizationToAdd : organizationsToAdd)
+        {
+            Organization organization = new Organization();
+            setOrganizationFields(organization, organizationToAdd);
+            organizations.add(organization);
+        }
+
         personAssociation.getPerson().setOrganizations(organizations);
+    }
+
+    private void setOrganizationFields(Organization organization, Organization formOrganization)
+    {
+        organization.setOrganizationType(formOrganization.getOrganizationType());
+        organization.setOrganizationValue(formOrganization.getOrganizationValue());
+        organization.setCreated(formOrganization.getCreated());
+        organization.setCreator(formOrganization.getCreator());
     }
 
     public CaseFileForm asFrevvoCaseFile(CaseFile caseFile, CaseFileForm form, FrevvoFormAbstractService formService)
