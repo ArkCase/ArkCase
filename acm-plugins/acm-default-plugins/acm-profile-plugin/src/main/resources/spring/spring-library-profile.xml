@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
 
@@ -26,12 +26,11 @@
 
     <bean id="acmUserOrgService" class="com.armedia.acm.plugins.profile.service.UserOrgServiceImpl">
         <property name="userOrgDao" ref="acmUserOrgDao"/>
-        <property name="acmCryptoUtils" ref="acmCryptoUtils"/>
         <property name="profileLocation" value="${user.profile.root.folder}"/>
-    </bean>
-
-    <bean id="saveUserOrgTransaction" class="com.armedia.acm.plugins.profile.service.SaveUserOrgTransaction">
         <property name="muleContextManager" ref="muleContextManager"/>
+        <property name="userDao" ref="acmUserDao"/>
+        <property name="organizationService" ref="organizationService"/>
+        <property name="eventPublisher" ref="profileEventPublisher"/>
     </bean>
 
     <bean id="profilePlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
@@ -40,6 +39,5 @@
     </bean>
 
     <bean id="profileEventPublisher" class="com.armedia.acm.plugins.profile.service.ProfileEventPublisher"/>
-
 
 </beans>

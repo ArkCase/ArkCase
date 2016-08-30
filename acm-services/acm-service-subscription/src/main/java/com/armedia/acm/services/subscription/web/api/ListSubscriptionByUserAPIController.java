@@ -41,14 +41,14 @@ public class ListSubscriptionByUserAPIController
             @RequestParam(value = "n", required = false, defaultValue = "-1") int maxRows, Authentication authentication,
             HttpSession httpSession) throws AcmSubscriptionException
     {
-        log.info("Listing subscriptions for user:" + userId);
+        log.info("Listing subscriptions for user [{}]", userId);
         List<AcmSubscription> subscriptionList = null;
         try
         {
             subscriptionList = getSubscriptionService().getSubscriptionsByUser(userId, startRow, maxRows);
         } catch (AcmObjectNotFoundException e)
         {
-            log.debug("No Subscriptions Found for user: " + userId, e);
+            log.debug("No Subscriptions Found for user [{}], {}", userId, e.getMessage());
             return new ArrayList<>();
         }
         return subscriptionList;

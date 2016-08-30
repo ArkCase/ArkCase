@@ -1,8 +1,5 @@
 package com.armedia.acm.plugins.profile.model;
 
-/**
- * Created by nebojsha on 09.04.2015.
- */
 public interface UserOrgConstants
 {
     String OBJECT_TYPE = "USER_ORG";
