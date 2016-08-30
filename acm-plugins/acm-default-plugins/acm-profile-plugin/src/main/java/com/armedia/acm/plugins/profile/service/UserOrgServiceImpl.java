@@ -129,9 +129,11 @@ public class UserOrgServiceImpl implements UserOrgService
             try
             {
                 userOrg = saveUserOrgTransaction(userOrg, authentication);
+                getEventPublisher().publishProfileEvent(userOrg, authentication, true, true);
             } catch (MuleException e)
             {
                 log.error("UserOrg for user [{}] was not saved. {}", userId, e);
+                getEventPublisher().publishProfileEvent(userOrg, authentication, true, false);
             }
         }
         List<AcmRole> groups = userDao.findAllRolesByUserAndRoleType(userId, RoleType.LDAP_GROUP);
