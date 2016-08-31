@@ -105,8 +105,10 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             log.debug("Calling pipeline manager handlers");
             PipelineManager pipelineManager = (PipelineManager) getSpringContextHolder().getBeanByName("ecmFileUploadPipelineManager",
                     PipelineManager.class);
-            pipelineManager.onPreSave(ecmFile, pipelineContext);
-            pipelineManager.onPostSave(ecmFile, pipelineContext);
+            pipelineManager.executeOperation(ecmFile, null, () ->
+            {
+                return null;
+            });
             ecmFile = pipelineContext.getEcmFile();
         } catch (Exception e)
         {
@@ -159,8 +161,10 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             log.debug("Calling pipeline manager handlers");
             PipelineManager pipelineManager = (PipelineManager) getSpringContextHolder().getBeanByName("ecmFileUpdatePipelineManager",
                     PipelineManager.class);
-            pipelineManager.onPreSave(ecmFile, pipelineContext);
-            pipelineManager.onPostSave(ecmFile, pipelineContext);
+            pipelineManager.executeOperation(ecmFile, pipelineContext, () ->
+            {
+                return null;
+            });
             ecmFile = pipelineContext.getEcmFile();
         } catch (Exception e)
         {
