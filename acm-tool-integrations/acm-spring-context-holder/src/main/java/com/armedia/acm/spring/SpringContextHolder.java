@@ -1,6 +1,5 @@
 package com.armedia.acm.spring;
 
-
 import com.armedia.acm.files.AbstractConfigurationFileEvent;
 import com.armedia.acm.files.ConfigurationFileAddedEvent;
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
@@ -8,6 +7,7 @@ import com.armedia.acm.files.ConfigurationFileDeletedEvent;
 import com.armedia.acm.spring.events.ContextAddedEvent;
 import com.armedia.acm.spring.events.ContextRemovedEvent;
 import com.armedia.acm.spring.exceptions.AcmContextHolderException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -32,11 +32,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SpringContextHolder implements ApplicationContextAware, ApplicationListener<AbstractConfigurationFileEvent>, ApplicationEventPublisherAware
+public class SpringContextHolder
+        implements ApplicationContextAware, ApplicationListener<AbstractConfigurationFileEvent>, ApplicationEventPublisherAware
 {
     private ApplicationContext toplevelContext;
-    private Map<String, AbstractApplicationContext> childContextMap =
-            new ConcurrentHashMap<>();
+    private Map<String, AbstractApplicationContext> childContextMap = new ConcurrentHashMap<>();
 
     private Logger log = LoggerFactory.getLogger(getClass());
     private ApplicationEventPublisher applicationEventPublisher;
@@ -102,9 +102,12 @@ public class SpringContextHolder implements ApplicationContextAware, Application
             try
             {
                 if (eventFile.isDirectory())
+                {
                     addContextFromFolder(eventFile);
-                else
+                } else
+                {
                     addContextFromFile(eventFile);
+                }
             } catch (IOException e)
             {
                 log.error("Could not add context from file: " + e.getMessage(), e);
@@ -165,25 +168,24 @@ public class SpringContextHolder implements ApplicationContextAware, Application
     {
         log.info("Adding context from folder " + configFile.getCanonicalPath());
 
-        List<String> configFiles = Files
-                .walk(configFile.toPath(), 1)
-                .filter(p -> p.toFile().isFile()
-                        && p.toFile().getName().startsWith("spring-")
-                        && p.toFile().getName().endsWith("xml"))
-                .map(p -> {
+        List<String> configFiles = Files.walk(configFile.toPath(), 1)
+                .filter(p -> p.toFile().isFile() && p.toFile().getName().startsWith("spring-") && p.toFile().getName().endsWith("xml"))
+                .map(p ->
+                {
                     try
                     {
-                        // the canonical path will be an absolute path.  But it will start with a / on Linux,
-                        // which Spring will treat as a relative path.  Must start with file: to force an absolute path.
+                        // the canonical path will be an absolute path. But it will start with a / on Linux,
+                        // which Spring will treat as a relative path. Must start with file: to force an absolute path.
                         return "file:" + p.toFile().getCanonicalPath();
                     } catch (IOException e)
                     {
                         throw new UncheckedIOException(e);
                     }
-                })
-                .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+                }).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
         if (configFiles.size() < 1)
+        {
             return;
+        }
         addContextFromFiles(configFile.getName(), configFiles.toArray(new String[configFiles.size()]));
     }
 
@@ -191,28 +193,29 @@ public class SpringContextHolder implements ApplicationContextAware, Application
     {
         log.info("Adding context from file " + configFile.getCanonicalPath());
 
-        // the canonical path will be an absolute path.  But it will start with a / on Linux,
-        // which Spring will treat as a relative path.  Must start with file: to force an absolute path.
+        // the canonical path will be an absolute path. But it will start with a / on Linux,
+        // which Spring will treat as a relative path. Must start with file: to force an absolute path.
         addContextFromFiles(configFile.getName(), "file:" + configFile.getCanonicalPath());
     }
 
     public void addContextFromFiles(String name, String... filesPaths)
     {
         if (filesPaths == null || filesPaths.length < 1)
+        {
             throw new AcmContextHolderException("files must not be null or empty. Reason[" + (filesPaths == null ? "null" : "empty") + "]");
+        }
         log.info("Adding context with name" + name + " and files.length = " + filesPaths.length);
 
         try
         {
-            AbstractApplicationContext child = new FileSystemXmlApplicationContext(
-                    filesPaths, true, toplevelContext);
+            AbstractApplicationContext child = new FileSystemXmlApplicationContext(filesPaths, true, toplevelContext);
             childContextMap.put(name, child);
             applicationEventPublisher.publishEvent(new ContextAddedEvent(this, name));
         } catch (BeansException be)
         {
-            log.error("Could not load Spring context from files '" + Arrays.toString(filesPaths) + "' due to " +
-                    "error '" + be.getMessage() + "'", be);
-            //throw be;
+            log.error("Could not load Spring context from files '" + Arrays.toString(filesPaths) + "' due to " + "error '" + be.getMessage()
+                    + "'", be);
+            // throw be;
         }
     }
 
@@ -235,7 +238,7 @@ public class SpringContextHolder implements ApplicationContextAware, Application
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
-    public Object getBeanByName(String name, Class type)
+    public <T> T getBeanByName(String name, Class<T> type)
     {
         return toplevelContext.getBean(name, type);
     }
