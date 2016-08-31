@@ -2,10 +2,10 @@
 
 angular.module('cases').controller('Cases.HistoryController', ['$scope', '$stateParams', '$q'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Object.AuditService', 'Case.InfoService'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Acm.StoreService'
     , function ($scope, $stateParams, $q
-        , Util, ConfigService, ObjectService, ObjectAuditService, CaseInfoService
-        , HelperUiGridService, HelperObjectBrowserService) {
+        , Util, ConfigService, ObjectService, ObjectAuditService, CaseInfoService, HelperUiGridService
+        , HelperObjectBrowserServic, Store) {
 
         var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
@@ -34,11 +34,11 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
 
         };
 
-        var onObjectInfoRetrieved = function(objectInfo) {
+        var onObjectInfoRetrieved = function (objectInfo) {
             retrieveGridData();
         };
 
-        var subscribeForUpdate = function() {
+        var subscribeForUpdate = function () {
           if ($scope.subscription) {
               $scope.$bus.unsubscribe($scope.subscription);
           }
