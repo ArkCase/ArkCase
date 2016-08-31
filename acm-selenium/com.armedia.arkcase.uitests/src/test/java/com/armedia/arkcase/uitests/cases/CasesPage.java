@@ -1163,8 +1163,8 @@ public class CasesPage extends ArkCaseTestBase {
 		softAssert.assertEquals(personTypesWASOfficer.getText(), "WAS Officer",
 				"WAS Officer person type name is wrong");
 		softAssert.assertEquals(personTypesVictim.getText(), "Victim", "Victim person type name is wrong");
-		softAssert.assertEquals(personTypesDefenceCounsel.getText(), "Defence Counsel",
-				"Defence Counsel perosn type name is wrong");
+		softAssert.assertEquals(personTypesDefenceCounsel.getText(), "Defense Counsel",
+				"Defense Counsel person type name is wrong");
 		softAssert.assertEquals(personTypesForensicScientist.getText(), "Forensic Scientist",
 				"Forensic Scientist person type name is wrong");
 		softAssert.assertAll();
