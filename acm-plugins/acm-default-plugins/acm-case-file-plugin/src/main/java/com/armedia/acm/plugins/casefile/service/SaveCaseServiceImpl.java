@@ -32,14 +32,13 @@ public class SaveCaseServiceImpl implements SaveCaseService
         pipelineContext.setAuthentication(auth);
         pipelineContext.setIpAddress(ipAddress);
 
-        pipelineManager.onPreSave(in, pipelineContext);
+        return pipelineManager.executeOperation(in, pipelineContext, () ->
+        {
+            CaseFile saved = caseFileDao.save(in);
+            log.info("Case saved '{}'", saved);
+            return saved;
 
-        CaseFile saved = caseFileDao.save(in);
-        log.info("Case saved '{}'", saved);
-
-        pipelineManager.onPostSave(saved, pipelineContext);
-
-        return saved;
+        });
     }
 
     public CaseFileDao getCaseFileDao()
