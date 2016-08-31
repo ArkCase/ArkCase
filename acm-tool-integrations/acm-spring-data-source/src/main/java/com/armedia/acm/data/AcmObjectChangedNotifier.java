@@ -21,7 +21,6 @@ public class AcmObjectChangedNotifier implements ApplicationListener<AcmDatabase
     private transient Logger log = LoggerFactory.getLogger(getClass());
     private MessageChannel objectEventChannel;
 
-
     @Override
     public void onApplicationEvent(AcmDatabaseChangesEvent acmDatabaseChangesEvent)
     {
@@ -34,6 +33,12 @@ public class AcmObjectChangedNotifier implements ApplicationListener<AcmDatabase
 
     public void notifyChange(String action, Object object)
     {
+        if (!(object instanceof AcmObject))
+        {
+            //not an instance of AcmObject, nothing to do
+            return;
+        }
+        
         AcmObjectEvent objectChangedEvent = new AcmObjectEvent(action);
         updateAcmObjectInfo(objectChangedEvent, object);
         updateAcmEntityInfo(objectChangedEvent, object);
@@ -61,11 +66,7 @@ public class AcmObjectChangedNotifier implements ApplicationListener<AcmDatabase
      */
     private void updateAcmObjectInfo(AcmObjectEvent objectChangedEvent, Object object)
     {
-        if (!(object instanceof AcmObject))
-        {
-            //not an instance of AcmObject, nothing to do
-            return;
-        }
+
         AcmObject acmObject = (AcmObject) object;
         objectChangedEvent.setObjectId(acmObject.getId());
         objectChangedEvent.setObjectType(acmObject.getObjectType());
