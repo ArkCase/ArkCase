@@ -5,7 +5,7 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
     , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Acm.StoreService'
     , function ($scope, $stateParams, $q
         , Util, ConfigService, ObjectService, ObjectAuditService, CaseInfoService, HelperUiGridService
-        , HelperObjectBrowserServic, Store) {
+        , HelperObjectBrowserService, Store) {
 
         var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
