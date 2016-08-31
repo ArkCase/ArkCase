@@ -2,10 +2,10 @@
 
 angular.module('complaints').controller('Complaints.HistoryController', ['$scope', '$stateParams', '$q'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Object.AuditService', 'Complaint.InfoService'
-    , 'Helper.ObjectBrowserService', 'Helper.UiGridService'
+    , 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Acm.StoreService'
     , function ($scope, $stateParams, $q
-        , Util, ConfigService, ObjectService, ObjectAuditService, ComplaintInfoService
-        , HelperObjectBrowserService, HelperUiGridService) {
+        , Util, ConfigService, ObjectService, ObjectAuditService, ComplaintInfoService, HelperObjectBrowserService
+        , HelperUiGridService, Store) {
 
         var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
@@ -32,6 +32,21 @@ angular.module('complaints').controller('Complaints.HistoryController', ['$scope
 
             $scope.retrieveGridData();
         };
+        
+        var subscribeForUpdate = function() {
+            if ($scope.subscription) {
+              $scope.$bus.unsubscribe($scope.subscription);
+            }
+            var eventName = "object.changed/" + ObjectService.ObjectTypes.COMPLAINT + "/" + $stateParams.id;
+            $scope.subscription = $scope.$bus.subscribe(eventName, function(data) {
+                // invalidate cache here
+                var cacheKey = ObjectService.ObjectTypes.COMPLAINT + '.' + $stateParams.id + '.0.10..asc';
+                new Store.CacheFifo(ObjectAuditService.CacheNames.AUDIT_DATA).remove(cacheKey);
+                $scope.retrieveGridData();
+            });
+        };
+      
+        subscribeForUpdate();
 
         $scope.retrieveGridData = function () {
             if (Util.goodPositive(componentHelper.currentObjectId, false)) {
