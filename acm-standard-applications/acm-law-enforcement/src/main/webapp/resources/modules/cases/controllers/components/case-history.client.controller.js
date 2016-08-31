@@ -34,9 +34,24 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
 
         };
 
-        var onObjectInfoRetrieved = function (objectInfo) {
+        var onObjectInfoRetrieved = function(objectInfo) {
             retrieveGridData();
         };
+
+        var subscribeForUpdate = function() {
+          if ($scope.subscription) {
+              $scope.$bus.unsubscribe($scope.subscription);
+          }
+          var eventName = "object.changed/" + ObjectService.ObjectTypes.CASE_FILE + "/" + $stateParams.id;
+          $scope.subscription = $scope.$bus.subscribe(eventName, function(data) {
+              // invalidate audit cache
+              var cacheKey = ObjectService.ObjectTypes.CASE_FILE + '.' + $stateParams.id + '.0.10..asc';
+              new Store.CacheFifo(ObjectAuditService.CacheNames.AUDIT_DATA).remove(cacheKey);
+              retrieveGridData();
+          });
+        };
+  
+        subscribeForUpdate();
 
         var retrieveGridData = function () {
             var currentObjectId = Util.goodMapValue($scope.objectInfo, "id");
