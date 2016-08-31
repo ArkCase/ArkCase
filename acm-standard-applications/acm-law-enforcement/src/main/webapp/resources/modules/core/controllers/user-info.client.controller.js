@@ -1,8 +1,13 @@
 'use strict';
 
 angular.module('core').controller('UserInfoController', ['$scope'
-    , 'Profile.UserInfoService', 'Menus', 'Acm.LoginService'
-    , function ($scope, UserInfoService, Menus, AcmLoginService) {
+    , 'Profile.UserInfoService', 'Menus', 'Acm.LoginService', 'LookupService'
+    , function ($scope, UserInfoService, Menus, AcmLoginService, LookupService) {
+
+        var appConfig = LookupService.getConfig('app').then(function (data) {
+            $scope.helpUrl = data.helpUrl;
+        });
+
         $scope.menu = Menus.getMenu('usermenu');
 
         UserInfoService.getUserInfo().then(function (data) {

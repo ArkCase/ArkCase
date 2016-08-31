@@ -14,6 +14,7 @@ public class AcmApplication implements Serializable
 
     private String applicationName;
     private String logoutUrl;
+    private String helpUrl;
     private List<AcmUserAction> topbarActions;
     private List<AcmUserAction> navigatorTabs;
     private List<AcmObjectType> objectTypes;
@@ -114,5 +115,15 @@ public class AcmApplication implements Serializable
     public void setSettings(Map<Object, Object> settings)
     {
         this.settings = settings;
+    }
+
+    public String getHelpUrl()
+    {
+        return helpUrl;
+    }
+
+    public void setHelpUrl(String helpUrl)
+    {
+        this.helpUrl = helpUrl;
     }
 }
