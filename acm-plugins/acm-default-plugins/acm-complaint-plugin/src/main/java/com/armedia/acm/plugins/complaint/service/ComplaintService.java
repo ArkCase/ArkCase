@@ -49,9 +49,21 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 
     private ComplaintFactory complaintFactory;
 
+    private Complaint complaint;
+
     public ComplaintService()
     {
 
+    }
+
+    public Complaint getComplaint()
+    {
+        return complaint;
+    }
+
+    public void setComplaint(Complaint complaint)
+    {
+        this.complaint = complaint;
     }
 
     @Override
@@ -150,6 +162,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 
         complaint = getComplaintFactory().asFrevvoComplaint(acmComplaint, complaint);
 
+        setComplaint(acmComplaint);
         return complaint;
     }
 
