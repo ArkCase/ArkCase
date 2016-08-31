@@ -1,7 +1,6 @@
 package com.armedia.acm.plugins.ecm.service.impl;
 
 import com.armedia.acm.plugins.ecm.service.PageCountService;
-
 import org.apache.activemq.util.ByteArrayInputStream;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.slf4j.Logger;
@@ -25,7 +24,7 @@ public class PageCountServiceImpl implements PageCountService
             }
         } else
         {
-            log.warn("Still don't know how to retrieve the page count for [{}] mime type");
+            log.warn("Still don't know how to retrieve the page count for [{}] mime type", mimeType);
         }
         return numberOfPages;
     }
