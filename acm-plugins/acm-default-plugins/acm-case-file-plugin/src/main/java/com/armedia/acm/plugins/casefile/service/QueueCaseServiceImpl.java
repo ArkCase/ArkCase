@@ -8,6 +8,7 @@ import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.users.service.tracker.UserTrackerService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -48,19 +49,17 @@ public class QueueCaseServiceImpl implements QueueCaseService
         ctx.setAuthentication(auth);
         ctx.setIpAddress(ipAddress);
 
-        getQueuePipelineManager().onPreSave(caseFile, ctx);
+        return getQueuePipelineManager().executeOperation(caseFile, ctx, () ->
+        {
+            CaseFile merged = getCaseFileDao().getEm().merge(caseFile);
+            getCaseFileDao().getEm().persist(merged);
 
-        caseFile = getCaseFileDao().getEm().merge(caseFile);
-        getCaseFileDao().getEm().persist(caseFile);
+            getCaseFileDao().getEm().flush();
+            log.debug("Case file state: {}, queue: {}", merged.getStatus(),
+                    merged.getQueue() == null ? "null" : merged.getQueue().getName());
+            return merged;
+        });
 
-        getCaseFileDao().getEm().flush();
-
-        getQueuePipelineManager().onPostSave(caseFile, ctx);
-
-        log.debug("Case file state: {}, queue: {}", caseFile.getStatus(),
-                caseFile.getQueue() == null ? "null" : caseFile.getQueue().getName());
-
-        return caseFile;
     }
 
     @Override

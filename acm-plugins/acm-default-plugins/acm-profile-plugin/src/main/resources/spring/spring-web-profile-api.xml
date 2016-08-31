@@ -1,24 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
-    <bean id="setUserOrgInfo"  class="com.armedia.acm.plugins.profile.web.api.SetUserOrgInfoAPIController">
-        <property name="userOrgDao" ref="acmUserOrgDao"/>
-        <property name="userDao" ref="acmUserDao"/>
-        <property name="organizationDao" ref="acmOrganizationDao"/>
-        <property name="eventPublisher" ref="profileEventPublisher"/>
-        <property name="saveUserOrgTransaction" ref="saveUserOrgTransaction"/>
+    <bean id="profileInfoAPIController" class="com.armedia.acm.plugins.profile.web.api.ProfileInfoAPIController">
+        <property name="userOrgService" ref="acmUserOrgService"/>
     </bean>
 
-    <bean id="getProfileInfo"  class="com.armedia.acm.plugins.profile.web.api.GetProfileInfoAPIController">
-        <property name="userOrgDao" ref="acmUserOrgDao"/>
-        <property name="userDao" ref="acmUserDao"/>
-        <property name="eventPublisher" ref="profileEventPublisher"/>
-        <property name="saveUserOrgTransaction" ref="saveUserOrgTransaction"/>
-    </bean>
-
-    <bean id="saveOutlookPasswordAPIController" class="com.armedia.acm.plugins.profile.web.api.SaveOutlookPasswordAPIController">
+    <bean id="saveOutlookPasswordAPIController"
+          class="com.armedia.acm.plugins.profile.web.api.SaveOutlookPasswordAPIController">
         <property name="eventPublisher" ref="profileEventPublisher"/>
         <property name="outlookService" ref="outlookService"/>
     </bean>
