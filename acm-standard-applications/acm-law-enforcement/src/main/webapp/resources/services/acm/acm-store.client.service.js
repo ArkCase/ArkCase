@@ -67,23 +67,24 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', '$window',
              * @param {String} owner Current login ID.
              *
              * @description
-             * This function is called after user ID is available. It associates Store with currnet user as owner.
+             * This function is called after user ID is available. It associates Store with current user as owner.
              * And it fixed previous cache names in registries which are created before user ID is available or
              * left over from previous login.
              *
              * @returns {String} owner owner user ID
              */
             , fixOwner: function (owner) {
-                Store.setOwner(owner);
-
-                UtilTimerService.useTimer("fixStoreOwner"
-                    , 500     //delay 500 milliseconds
-                    , function () {
-                        Store.Registry.removeLocalOrphan(owner);
-                        Store.Registry.removeSessionOrphan(owner);
-                        return false;
-                    }
-                );
+                if (owner != Store.getOwner()) {
+                    Store.setOwner(owner);
+                    UtilTimerService.useTimer("fixStoreOwner"
+                        , 500     //delay 500 milliseconds
+                        , function () {
+                            Store.Registry.removeLocalOrphan(owner);
+                            Store.Registry.removeSessionOrphan(owner);
+                            return false;
+                        }
+                    );
+                }
             }
 
             /**
@@ -334,11 +335,9 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', '$window',
                     arg.noOwner = false;
                     arg.noRegistry = false;
                 }
+
                 this.noOwner = Util.goodValue(arg.noOwner, false);
-
                 this.name = (this.noOwner)? arg.name : Store.prefixOwner(arg.name);
-
-
                 this.noRegistry = Util.goodValue(arg.noRegistry, false);
                 if (!this.noRegistry) {
                     var registry = Store.Registry.getSessionInstance();
@@ -388,10 +387,7 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', '$window',
                     arg.noRegistry = false;
                 }
                 this.noOwner = Util.goodValue(arg.noOwner, false);
-
                 this.name = (this.noOwner)? arg.name : Store.prefixOwner(arg.name);
-
-
                 this.noRegistry = Util.goodValue(arg.noRegistry, false);
                 if (!this.noRegistry) {
                     var registry = Store.Registry.getLocalInstance();
