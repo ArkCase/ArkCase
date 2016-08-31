@@ -56,11 +56,11 @@ public class PipelineManager<T, S extends AbstractPipelineContext>
 
     public T executeOperation(T entity, S pipelineContext, PipelineManagerOperation<T> operation) throws PipelineProcessException
     {
-        onPreSave(entity, pipelineContext);
+        executeOnPreSaveHandlers(entity, pipelineContext);
         try
         {
             T result = operation.execute();
-            onPostSave(entity, pipelineContext);
+            executeOnPostSaveHandlers(entity, pipelineContext);
             return result;
         } catch (PipelineProcessException e)
         {
@@ -72,7 +72,33 @@ public class PipelineManager<T, S extends AbstractPipelineContext>
     }
 
     /**
-     * Execute all registered pre-save handlers. Stop processing if any of the handlers throws exception
+     * Execute all registered pre-save handlers. Stop processing if any of the handlers throws exception and try to
+     * rollback the ones that already executed.
+     *
+     * @param entity
+     *            entity to process
+     * @param pipelineContext
+     *            context associated with this pipeline
+     * @throws PipelineProcessException
+     *             on error
+     *
+     * @deprecated This method has been deprecated, the new <code>executeOperation</code> method that was introduced
+     *             should be used instead. <code>executeOperation</code> method will call the <code>pre</code> and
+     *             <code>post</code> handlers on the client code behalf in order to make sure that <code>pre</code> and
+     *             <code>post</code> handlers are always called in proper order, and to to try to rollback all the
+     *             handlers regardless if a handler failed in <code>pre</code> or <code>post</code> operation phase.
+     *
+     * @see #executeOperation(Object, AbstractPipelineContext, PipelineManagerOperation)
+     */
+    @Deprecated
+    public void onPreSave(T entity, S pipelineContext) throws PipelineProcessException
+    {
+        executeOnPreSaveHandlers(entity, pipelineContext);
+    }
+
+    /**
+     * Execute all registered pre-save handlers. Stop processing if any of the handlers throws exception and try to
+     * rollback the ones that already executed.
      *
      * @param entity
      *            entity to process
@@ -81,7 +107,7 @@ public class PipelineManager<T, S extends AbstractPipelineContext>
      * @throws PipelineProcessException
      *             on error
      */
-    protected void onPreSave(T entity, S pipelineContext) throws PipelineProcessException
+    protected void executeOnPreSaveHandlers(T entity, S pipelineContext) throws PipelineProcessException
     {
         log.debug("Pre-save handler of [{}] started", entity);
         ListIterator<PipelineHandler<T, S>> it = preSaveHandlers.listIterator();
@@ -100,7 +126,34 @@ public class PipelineManager<T, S extends AbstractPipelineContext>
     }
 
     /**
-     * Execute all post-save handlers. Stop processing if any of the handlers throws exception
+     * Execute all post-save handlers. Stop processing if any of the handlers throws exception and try to rollback the
+     * ones that already executed.
+     *
+     * @param entity
+     *            entity to process
+     * @param pipelineContext
+     *            context associated with this pipeline
+     * @throws PipelineProcessException
+     *             on error
+     *
+     * @deprecated This method has been deprecated, the new <code>executeOperation</code> method that was introduced
+     *             should be used instead. <code>executeOperation</code> method will call the <code>pre</code> and
+     *             <code>post</code> handlers on the client code behalf in order to make sure that <code>pre</code> and
+     *             <code>post</code> handlers are always called in proper order, and to to try to rollback all the
+     *             handlers regardless if a handler failed in <code>pre</code> or <code>post</code> operation phase.
+     *
+     * @see #executeOperation(Object, AbstractPipelineContext, PipelineManagerOperation)
+     */
+    @Deprecated
+    public void onPostSave(T entity, S pipelineContext) throws PipelineProcessException
+    {
+        executeOnPostSaveHandlers(entity, pipelineContext);
+    }
+
+    /**
+     * Execute all post-save handlers. Stop processing if any of the handlers throws exception and try to rollback the
+     * ones that already executed. The excpetion is propagated, in order to attempt rolling back any pre-handlers that
+     * might have been executed.
      *
      * @param entity
      *            entity to process
@@ -109,7 +162,7 @@ public class PipelineManager<T, S extends AbstractPipelineContext>
      * @throws PipelineProcessException
      *             on error
      */
-    protected void onPostSave(T entity, S pipelineContext) throws PipelineProcessException
+    protected void executeOnPostSaveHandlers(T entity, S pipelineContext) throws PipelineProcessException
     {
         log.debug("Post-save handler of [{}] started", entity);
         ListIterator<PipelineHandler<T, S>> it = postSaveHandlers.listIterator();
