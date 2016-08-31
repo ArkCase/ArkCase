@@ -269,6 +269,12 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
      */
     private void processTasksConfigurations(JSONObject configuration)
     {
+        if (!configuration.has(TASKS_KEY) || configuration.isNull(TASKS_KEY))
+        {
+            tasks.clear();
+            return;
+        }
+
         JSONArray tasksConfigurations = configuration.getJSONArray(TASKS_KEY);
 
         Set<String> keys = new HashSet<>();
