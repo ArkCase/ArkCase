@@ -33,20 +33,10 @@ angular.module('complaints').controller('Complaints.HistoryController', ['$scope
             $scope.retrieveGridData();
         };
         
-        var subscribeForUpdate = function() {
-            if ($scope.subscription) {
-              $scope.$bus.unsubscribe($scope.subscription);
-            }
-            var eventName = "object.changed/" + ObjectService.ObjectTypes.COMPLAINT + "/" + $stateParams.id;
-            $scope.subscription = $scope.$bus.subscribe(eventName, function(data) {
-                // invalidate cache here
-                var cacheKey = ObjectService.ObjectTypes.COMPLAINT + '.' + $stateParams.id + '.0.10..asc';
-                new Store.CacheFifo(ObjectAuditService.CacheNames.AUDIT_DATA).remove(cacheKey);
-                $scope.retrieveGridData();
-            });
-        };
-      
-        subscribeForUpdate();
+        var eventName = "object.changed/" + ObjectService.ObjectTypes.COMPLAINT + "/" + $stateParams.id;
+        var cacheKey = ObjectService.ObjectTypes.COMPLAINT + '.' + $stateParams.id;
+        gridHelper.subscribeForUpdate(eventName, cacheKey, 
+                new Store.CacheFifo(ObjectAuditService.CacheNames.AUDIT_DATA), $scope.retrieveGridData);
 
         $scope.retrieveGridData = function () {
             if (Util.goodPositive(componentHelper.currentObjectId, false)) {

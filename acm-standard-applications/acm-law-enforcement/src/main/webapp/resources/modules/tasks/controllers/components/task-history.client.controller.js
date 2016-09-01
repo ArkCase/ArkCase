@@ -32,21 +32,11 @@ angular.module('tasks').controller('Tasks.HistoryController', ['$scope', '$state
 
             $scope.retrieveGridData();
         };
-        
-        var subscribeForUpdate = function() {
-            if ($scope.subscription) {
-              $scope.$bus.unsubscribe($scope.subscription);
-            }
-            var eventName = "object.changed/" + ObjectService.ObjectTypes.TASK + "/" + $stateParams.id;
-            $scope.subscription = $scope.$bus.subscribe(eventName, function(data) {
-                // invalidate cache here
-                var cacheKey = ObjectService.ObjectTypes.TASK + '.' + $stateParams.id + '.0.10..asc';
-                new Store.CacheFifo(ObjectAuditService.CacheNames.AUDIT_DATA).remove(cacheKey);
-                $scope.retrieveGridData();
-            });
-        };
       
-        subscribeForUpdate();
+        var eventName = "object.changed/" + ObjectService.ObjectTypes.TASK + "/" + $stateParams.id;
+        var cacheKey = ObjectService.ObjectTypes.TASK + '.' + $stateParams.id;
+        gridHelper.subscribeForUpdate(eventName, cacheKey,
+                new Store.CacheFifo(ObjectAuditService.CacheNames.AUDIT_DATA), $scope.retrieveGridData);
 
         $scope.retrieveGridData = function () {
             if (Util.goodPositive(componentHelper.currentObjectId, false)) {

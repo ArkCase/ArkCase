@@ -38,22 +38,12 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
             retrieveGridData();
         };
 
-        var subscribeForUpdate = function () {
-          if ($scope.subscription) {
-              $scope.$bus.unsubscribe($scope.subscription);
-          }
-          var eventName = "object.changed/" + ObjectService.ObjectTypes.CASE_FILE + "/" + $stateParams.id;
-          $scope.subscription = $scope.$bus.subscribe(eventName, function(data) {
-              // invalidate audit cache
-              var cacheKey = ObjectService.ObjectTypes.CASE_FILE + '.' + $stateParams.id + '.0.10..asc';
-              new Store.CacheFifo(ObjectAuditService.CacheNames.AUDIT_DATA).remove(cacheKey);
-              retrieveGridData();
-          });
-        };
-  
-        subscribeForUpdate();
+        var eventName = "object.changed/" + ObjectService.ObjectTypes.CASE_FILE + "/" + $stateParams.id;
+        var cacheKey = ObjectService.ObjectTypes.CASE_FILE + '.' + $stateParams.id;
+        gridHelper.subscribeForUpdate(eventName, cacheKey,
+                new Store.CacheFifo(ObjectAuditService.CacheNames.AUDIT_DATA), retrieveGridData);
 
-        var retrieveGridData = function () {
+        function retrieveGridData () {
             var currentObjectId = Util.goodMapValue($scope.objectInfo, "id");
             if (Util.goodPositive(currentObjectId, false)) {
                 var promiseQueryAudit = ObjectAuditService.queryAudit(ObjectService.ObjectTypes.CASE_FILE
