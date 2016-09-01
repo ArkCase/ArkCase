@@ -118,7 +118,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     }
 
     @Override
-    public EcmFile updateFileTransaction(Authentication authentication, EcmFile ecmFile, InputStream fileInputStream)
+    public EcmFile updateFileTransaction(Authentication authentication, final EcmFile ecmFile, InputStream fileInputStream)
             throws MuleException, IOException
     {
 
@@ -161,9 +161,8 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                     PipelineManager.class);
             pipelineManager.executeOperation(ecmFile, pipelineContext, () ->
             {
-                return null;
+                return ecmFile;
             });
-            ecmFile = pipelineContext.getEcmFile();
         } catch (Exception e)
         {
             log.error("pipeline handler call failed: {}", e.getMessage(), e);
