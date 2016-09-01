@@ -135,7 +135,7 @@ public class TimesheetServiceImpl implements TimesheetService
     {
         String retval = null;
 
-        LOG.debug("Taking objects from Solr for object type = " + objectType);
+        LOG.debug("Taking objects from Solr for object type {}", objectType);
 
         String authorQuery = "";
         if (userId != null)
@@ -168,7 +168,7 @@ public class TimesheetServiceImpl implements TimesheetService
     {
         String retval = null;
 
-        LOG.debug("Taking objects from Solr for object type = " + objectType);
+        LOG.debug("Taking objects from Solr for object type {}", objectType);
 
         String authorQuery = "";
         if (userId != null)
