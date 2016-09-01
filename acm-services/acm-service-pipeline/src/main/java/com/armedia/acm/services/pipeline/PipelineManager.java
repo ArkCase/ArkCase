@@ -68,7 +68,7 @@ public class PipelineManager<T, S extends AbstractPipelineContext>
             // rollback pre-save handlers before rethrowing the exception;
             ListIterator<PipelineHandler<T, S>> it = preSaveHandlers.listIterator(preSaveHandlers.size());
             rollbackHandlers(result != null ? result : entity, pipelineContext, e, it, PRE_SAVE_HANDLER_ROLLING_BACK,
-                                    PRE_SAVE_HANDLER_ROLLBACK_FAILED);
+                    PRE_SAVE_HANDLER_ROLLBACK_FAILED);
             throw e;
         }
     }
@@ -167,7 +167,7 @@ public class PipelineManager<T, S extends AbstractPipelineContext>
     }
 
     private void executeHandlers(T entity, S pipelineContext, ListIterator<PipelineHandler<T, S>> it, String debugMessage)
-                            throws PipelineProcessException
+            throws PipelineProcessException
     {
         while (it.hasNext())
         {
@@ -178,7 +178,7 @@ public class PipelineManager<T, S extends AbstractPipelineContext>
     }
 
     private void rollbackHandlers(T entity, S pipelineContext, PipelineProcessException e, ListIterator<PipelineHandler<T, S>> it,
-                            String debugMessage, String warnMessage)
+            String debugMessage, String warnMessage)
     {
         while (it.hasPrevious())
         {
