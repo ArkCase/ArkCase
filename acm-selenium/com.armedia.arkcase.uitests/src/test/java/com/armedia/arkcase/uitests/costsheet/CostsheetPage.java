@@ -5,11 +5,10 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.asserts.SoftAssert;
 
 import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
+import com.armedia.arkcase.uitests.base.WaitHelper;
 
 public class CostsheetPage extends ArkCaseTestBase {
 
@@ -116,9 +115,7 @@ public class CostsheetPage extends ArkCaseTestBase {
 	WebElement addedFileLabel;
 
 	public CostsheetPage waitUntilPageIsLoaded() {
-
-		WebDriverWait wait = new WebDriverWait(driver, 10);
-		wait.until(ExpectedConditions.elementToBeClickable(editButton));
+		WaitHelper.clickWhenElelementIsClickable(editButton, 30, driver);		
 		return this;
 
 	}

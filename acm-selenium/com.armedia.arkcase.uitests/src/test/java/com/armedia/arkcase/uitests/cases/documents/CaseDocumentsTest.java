@@ -215,7 +215,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 		casePom.submit.click();
 		Thread.sleep(10000);
 		driver.switchTo().defaultContent();
-		cases.caseDocuments.click();
+		cases.caseDocumentsclick();
 		Thread.sleep(6000);
 		driver.navigate().refresh();
 		Thread.sleep(10000);

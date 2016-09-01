@@ -4,12 +4,16 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.junit.Assert;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.testng.asserts.SoftAssert;
 
-public class UserProfilePage {
+import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
+import com.armedia.arkcase.uitests.base.WaitHelper;
+
+public class UserProfilePage extends ArkCaseTestBase{
 
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/div/div[1]/div/span/a/i")
 	WebElement editDashoboard;
@@ -195,8 +199,8 @@ public class UserProfilePage {
 	WebElement subscriptionEmptyTable;
 
 	public UserProfilePage verifyIfEditDashboardButtonIsEnabled() {
-
-		Assert.assertTrue("Edit Dashboard button is not enabled", editDashoboard.isEnabled());
+		WebElement el = WaitHelper.getWhenElementIsVisible(editDashoboard, 30, driver);	
+		Assert.assertTrue("Edit Dashboard button is not enabled", el.isEnabled());
 		return this;
 
 	}

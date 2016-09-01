@@ -19,7 +19,7 @@ public class UserProfileTests extends ArkCaseTestBase {
 	@Test
 	@Category({ SmokeTests.class })
 	public void verifyUserProfilePageLabels() throws InterruptedException {
-
+    		
 		user.verifyIfEditDashboardButtonIsEnabled();
 		user.arrowDownClick();
 		Thread.sleep(3000);
@@ -58,7 +58,7 @@ public class UserProfileTests extends ArkCaseTestBase {
 	@Test
 	@Category({ SmokeTests.class })
 	public void uploadPicture() throws InterruptedException, IOException, AWTException {
-
+	
 		user.verifyIfEditDashboardButtonIsEnabled();
 		user.arrowDownClick();
 		Thread.sleep(3000);
@@ -137,7 +137,7 @@ public class UserProfileTests extends ArkCaseTestBase {
 
 	@Test
 	@Category({ SmokeTests.class })
-	public void editCompanyDetail() throws InterruptedException, IOException {
+	public void editCompanyDetail() throws InterruptedException, IOException { 
 
 		user.verifyIfEditDashboardButtonIsEnabled();
 		user.arrowDownClick();
