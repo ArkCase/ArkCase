@@ -20,12 +20,18 @@
       "authUserPassword": "Auth User Password",
       "userSearchBase": "User Search Base",
       "userSearchFilter": "User Search Filter",
+      "allUsersFilter": "All Users Filter",
+      "allUsersPageFilter": "All Users Page Filter",
+      "allUsersSearchBaseOU": "All Users Search Base OU",
       "groupSearchBase": "Group Search Base",
       "groupSeachBaseOU": "Group Search Base OU",
       "groupSearchFilterForUser": "Group Search Filter For User",
       "userIdAttributeName": "User Id Attribute Name",
       "userDomain": "User domain",
       "userDomainNote": "(Note: Fill in the user domain for SSO scenario. For LDAP authentication leave it blank)",
+      "syncPageSize": "Sync Page Size",
+      "groupSearchFilter": "Group Search Filter",
+      "groupSearchPageFilter": "Group Search Page Filter",
       "cancel": "Cancel",
       "ok": "OK"
     },
@@ -224,20 +230,20 @@
         "userId.label": "Use user identifier",
         "userName.label": "Use full user name",
         "apply": "Apply",
-        "modal.title":"Information",
-        "modal.info":"Settings will take effect after refresh",
-        "modal.ok":"OK"
+        "modal.title": "Information",
+        "modal.info": "Settings will take effect after refresh",
+        "modal.ok": "OK"
       },
       "login.config": {
         "title": "Login configuration",
         "idleLimit.label": "Login idle limit (in milliseconds)",
-        "inform":"Settings will take effect for all new user sessions",
+        "inform": "Settings will take effect for all new user sessions",
         "apply.label": "Apply"
       },
       "auditHistory.config": {
         "title": "Audit History",
         "historyDays.label": "Keep Audit and Notification events (in days)",
-        "inform":"Setting successfully saved",
+        "inform": "Setting successfully saved",
         "apply.label": "Apply"
       }
     },
