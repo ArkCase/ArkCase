@@ -27,34 +27,13 @@ angular.module('tasks').controller('Tasks.HistoryController', ['$scope', '$state
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
-            gridHelper.setExternalPaging(config, $scope.gretrieveGridData);
+            gridHelper.setExternalPaging(config, retrieveGridData);
             gridHelper.setUserNameFilter(promiseUsers);
-
-            $scope.retrieveGridData();
+            retrieveGridData();
         };
 
-        $scope.retrieveGridData = function () {
-            if (Util.goodPositive(componentHelper.currentObjectId, false)) {
-                var promiseQueryAudit = ObjectAuditService.queryAudit(ObjectService.ObjectTypes.TASK
-                    , componentHelper.currentObjectId
-                    , Util.goodValue($scope.start, 0)
-                    , Util.goodValue($scope.pageSize, 10)
-                    , Util.goodMapValue($scope.sort, "by")
-                    , Util.goodMapValue($scope.sort, "dir")
-                );
-
-                $q.all([promiseQueryAudit]).then(function (data) {
-                    var auditData = data[0];
-                    $scope.gridOptions.data = auditData.resultPage;
-                    $scope.gridOptions.totalItems = auditData.totalCount;
-                    //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
-                });
-            }
-        };
-        
-        var eventName = "object.changed/" + ObjectService.ObjectTypes.TASK + "/" + $stateParams.id;
-        var cacheKey = ObjectService.ObjectTypes.TASK + '.' + $stateParams.id;
-        gridHelper.subscribeForUpdate(eventName, cacheKey,
-                new Store.CacheFifo(ObjectAuditService.CacheNames.AUDIT_DATA), $scope.retrieveGridData);
+        function retrieveGridData () {
+          gridHelper.retrieveAuditData(ObjectService.ObjectTypes.TASK, $stateParams.id);
+        }
     }
 ]);

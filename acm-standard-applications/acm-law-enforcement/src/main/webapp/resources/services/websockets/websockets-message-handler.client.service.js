@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootScope', 'Acm.StoreService'
-    , function ($q, $rootScope, Store) {
+angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootScope', 'Acm.StoreService', 'Object.AuditService'
+    , function ($q, $rootScope, Store, ObjectAuditService) {
         var Service = {};
 
         Service.handleMessage = handleMessage;
@@ -33,6 +33,7 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
             if (message.parentObjectType != null && message.parentObjectId != null) {
                 handleCacheObject(message.parentObjectType, message.parentObjectId);
                 handleCacheLists(message.parentObjectType, message.parentObjectId);
+                handleSubCacheLists(message.parentObjectType, message.parentObjectId);
             }
         }
 
@@ -60,6 +61,21 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
                     cacheList.reset();
                 }
             }
+        }
+        
+        function handleSubCacheLists(objectType, objectId) {
+            // invalidate audit cache
+            var cacheKey = objectType + '_' + objectId;
+            var cacheStore = new Store.CacheFifo(ObjectAuditService.CacheNames.AUDIT_DATA)
+            var cacheKeys = cacheStore.keys();
+            _.each(cacheKeys, function (key){
+                if(key == null) {
+                    return;
+                }
+                if(key.indexOf(cacheKey) == 0) {
+                    cacheStore.remove(key);
+                }
+            });
         }
 
         function handleCacheObject(objectType, objectId) {
