@@ -10,14 +10,17 @@ angular.module('complaints').controller('ComplaintsListController', ['$scope', '
         // maybe optional listener for "close-complaint"?
         var eventName = "object.inserted";
         $scope.$bus.subscribe(eventName, function (data) {
-            var frevvoRequest = ServCommService.popRequest("frevvo", "new-complaint");
-            if (frevvoRequest) {
-              MessageService.info(data.objectType + " with ID " + data.objectId + " was created. Please refresh complaints list to load it.");
-             //   ObjectService.gotoState(ObjectService.ObjectTypes.COMPLAINT, data.objectId);
+            if (data.objectType === ObjectService.ObjectTypes.COMPLAINT) {
+                var frevvoRequest = ServCommService.popRequest("frevvo", "new-complaint");
+                if (frevvoRequest) {
+                    MessageService.info(data.objectType + " with ID " + data.objectId + " was created. Please refresh complaints list to load it.");
+                    //   ObjectService.gotoState(ObjectService.ObjectTypes.COMPLAINT, data.objectId);
+                }
+                else {
+                    MessageService.info(data.objectType + " with ID " + data.objectId + " was created");
+                }
             }
-            else {
-                MessageService.info(data.objectType + " with ID " + data.objectId + " was created");
-            }
+
         });
 
         //"treeConfig", "treeData", "onLoad", and "onSelect" will be set by Tree Helper

@@ -4,7 +4,18 @@ import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -54,7 +65,7 @@ public class AcmContainer implements AcmEntity, Serializable, AcmObject
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cm_folder_id")
     private AcmFolder folder;
-    
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cm_attachment_folder_id")
     private AcmFolder attachmentFolder;
@@ -112,7 +123,8 @@ public class AcmContainer implements AcmEntity, Serializable, AcmObject
 
     @JsonIgnore
     @Override
-    public String getObjectType() {
+    public String getObjectType()
+    {
         return OBJECT_TYPE;
     }
 
@@ -157,15 +169,17 @@ public class AcmContainer implements AcmEntity, Serializable, AcmObject
         this.folder = folder;
     }
 
-    public AcmFolder getAttachmentFolder() {
-		return attachmentFolder;
-	}
+    public AcmFolder getAttachmentFolder()
+    {
+        return attachmentFolder;
+    }
 
-	public void setAttachmentFolder(AcmFolder attachmentFolder) {
-		this.attachmentFolder = attachmentFolder;
-	}
+    public void setAttachmentFolder(AcmFolder attachmentFolder)
+    {
+        this.attachmentFolder = attachmentFolder;
+    }
 
-	public String getContainerObjectTitle()
+    public String getContainerObjectTitle()
     {
         return containerObjectTitle;
     }
@@ -175,11 +189,31 @@ public class AcmContainer implements AcmEntity, Serializable, AcmObject
         this.containerObjectTitle = containerObjectTitle;
     }
 
-    public String getCalendarFolderId() {
+    public String getCalendarFolderId()
+    {
         return calendarFolderId;
     }
 
-    public void setCalendarFolderId(String calendarFolderId) {
+    public void setCalendarFolderId(String calendarFolderId)
+    {
         this.calendarFolderId = calendarFolderId;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "AcmContainer{" +
+                "id=" + id +
+                ", created=" + created +
+                ", creator='" + creator + '\'' +
+                ", modified=" + modified +
+                ", modifier='" + modifier + '\'' +
+                ", containerObjectType='" + containerObjectType + '\'' +
+                ", containerObjectId=" + containerObjectId +
+                ", containerObjectTitle='" + containerObjectTitle + '\'' +
+                ", folder=" + folder +
+                ", attachmentFolder=" + attachmentFolder +
+                ", calendarFolderId='" + calendarFolderId + '\'' +
+                '}';
     }
 }
