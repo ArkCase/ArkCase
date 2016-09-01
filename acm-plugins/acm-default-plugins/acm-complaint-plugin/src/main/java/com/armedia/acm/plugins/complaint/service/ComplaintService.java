@@ -51,7 +51,6 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 
     public ComplaintService()
     {
-
     }
 
     @Override
@@ -115,11 +114,20 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
     @Override
     public boolean save(String xml, MultiValueMap<String, MultipartFile> attachments) throws Exception
     {
+        Complaint saved = saveComplaintFromXml(xml, attachments);
+        return saved != null;
+    }
+
+    public Complaint saveComplaintFromXml(String xml, MultiValueMap<String, MultipartFile> attachments) throws Exception
+    {
         ComplaintForm complaint = (ComplaintForm) convertFromXMLToObject(cleanXML(xml), getFormClass());
+        Complaint retval;
 
-        complaint = saveComplaint(complaint);
+        retval = saveComplaintObject(complaint);
 
-        // Update Frevvo XML (with object ids) after saving the object 
+        complaint = getComplaintFactory().asFrevvoComplaint(retval, complaint);
+
+        // Update Frevvo XML (with object ids) after saving the object
         updateXMLAttachment(attachments, getFormName(), complaint);
 
         saveAttachments(
@@ -133,7 +141,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
             getUserActionExecutor().execute(complaint.getComplaintId(), AcmUserActionName.LAST_COMPLAINT_CREATED, getAuthentication().getName());
         }
 
-        return true;
+        return retval;
     }
 
     protected ComplaintForm saveComplaint(ComplaintForm complaint) throws PipelineProcessException
@@ -151,6 +159,21 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
         complaint = getComplaintFactory().asFrevvoComplaint(acmComplaint, complaint);
 
         return complaint;
+    }
+
+    protected Complaint saveComplaintObject(ComplaintForm complaint) throws PipelineProcessException
+    {
+        getComplaintFactory().setPersonDao(getPersonDao());
+        getComplaintFactory().setFileService(getEcmFileService());
+        Complaint acmComplaint = getComplaintFactory().asAcmComplaint(complaint);
+
+        boolean isNew = acmComplaint.getComplaintId() == null;
+
+        acmComplaint = getSaveComplaintTransaction().saveComplaint(acmComplaint, getAuthentication());
+
+        getComplaintEventPublisher().publishComplaintEvent(acmComplaint, getAuthentication(), isNew, true);
+
+        return acmComplaint;
     }
 
     @Override
