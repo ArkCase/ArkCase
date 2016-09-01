@@ -6,6 +6,7 @@ import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.pipeline.ComplaintPipelineContext;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -14,10 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Implement transactional responsibilities for the SaveComplaintController.
  * <p>
- * JPA does all database writes at commit time.  Therefore, if the transaction demarcation was in the controller,
- * exceptions would not be raised until after the controller method returns; i.e. the exception message goes write
- * to the browser.  Also, separating transaction management (in this class) and exception handling (in the
- * controller) is a good idea in general.
+ * JPA does all database writes at commit time. Therefore, if the transaction demarcation was in the controller,
+ * exceptions would not be raised until after the controller method returns; i.e. the exception message goes write to
+ * the browser. Also, separating transaction management (in this class) and exception handling (in the controller) is a
+ * good idea in general.
  */
 public class SaveComplaintTransaction
 {
@@ -26,10 +27,7 @@ public class SaveComplaintTransaction
     private PipelineManager<Complaint, ComplaintPipelineContext> pipelineManager;
 
     @Transactional
-    public Complaint saveComplaint(
-            Complaint complaint,
-            Authentication authentication)
-            throws PipelineProcessException
+    public Complaint saveComplaint(Complaint complaint, Authentication authentication) throws PipelineProcessException
     {
         ComplaintPipelineContext pipelineContext = new ComplaintPipelineContext();
         // populate the context
@@ -42,14 +40,13 @@ public class SaveComplaintTransaction
         }
         pipelineContext.setIpAddress(ipAddress);
 
-        pipelineManager.onPreSave(complaint, pipelineContext);
+        return pipelineManager.executeOperation(complaint, pipelineContext, () ->
+        {
+            Complaint saved = complaintDao.save(complaint);
+            log.info("Complaint saved '{}'", saved);
+            return saved;
 
-        Complaint saved = complaintDao.save(complaint);
-        log.info("Complaint saved '{}'", saved);
-
-        pipelineManager.onPostSave(saved, pipelineContext);
-
-        return saved;
+        });
     }
 
     public ComplaintDao getComplaintDao()
