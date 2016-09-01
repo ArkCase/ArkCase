@@ -3,6 +3,7 @@ package com.armedia.acm.services.note.model;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.AcmParentObjectInfo;
 import com.armedia.acm.data.AcmEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,7 +16,6 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
 import java.io.Serializable;
 import java.util.Date;
 
@@ -189,18 +189,21 @@ public class Note implements Serializable, AcmObject, AcmEntity, AcmParentObject
     }
 
     @Override
+    @JsonIgnore
     public String getObjectType()
     {
         return NoteConstants.OBJECT_TYPE;
     }
 
     @Override
+    @JsonIgnore
     public Long getParentObjectId()
     {
         return parentId;
     }
 
     @Override
+    @JsonIgnore
     public String getParentObjectType()
     {
         return parentType;
