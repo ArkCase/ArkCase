@@ -6,7 +6,6 @@ package com.armedia.acm.services.timesheet.web;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.services.timesheet.model.TimesheetConstants;
 import com.armedia.acm.services.timesheet.service.TimesheetService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -22,7 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @author riste.tutureski
  */
 @Controller
-@RequestMapping({ "/api/v1/service/timesheet", "/api/latest/service/timesheet" })
+@RequestMapping({"/api/v1/service/timesheet", "/api/latest/service/timesheet"})
 public class GetTimesheetsForUserAPIController
 {
 
@@ -32,18 +31,20 @@ public class GetTimesheetsForUserAPIController
     @RequestMapping(value = "/user/{userId:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getTimesheetsForUser(@PathVariable("userId") String userId,
-            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-            @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
-            @RequestParam(value = "s", required = false, defaultValue = "") String sort, Authentication auth)
+                                       @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+                                       @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
+                                       @RequestParam(value = "s", required = false, defaultValue = "") String sort,
+                                       @RequestParam(value = "searchQuery", required = false, defaultValue = "*") String searchQuery,
+                                       Authentication auth)
             throws AcmListObjectsFailedException
     {
         if (LOG.isInfoEnabled())
         {
-            LOG.info("Taking all timesheets for user=" + userId);
+            LOG.info("Querying all timesheets for user=" + userId);
         }
 
         String jsonResponse = getTimesheetService().getObjectsFromSolr(TimesheetConstants.OBJECT_TYPE, auth, startRow, maxRows, sort,
-                userId);
+                searchQuery, userId);
 
         if (jsonResponse == null)
         {
