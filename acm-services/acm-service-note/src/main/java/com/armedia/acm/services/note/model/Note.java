@@ -1,8 +1,9 @@
 package com.armedia.acm.services.note.model;
 
+import com.armedia.acm.core.AcmObject;
+import com.armedia.acm.core.AcmParentObjectInfo;
 import com.armedia.acm.data.AcmEntity;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,14 +19,11 @@ import javax.persistence.TemporalType;
 import java.io.Serializable;
 import java.util.Date;
 
-
 @Entity
 @Table(name = "acm_note")
-public class Note implements Serializable, AcmEntity
-
+public class Note implements Serializable, AcmObject, AcmEntity, AcmParentObjectInfo
 {
     private static final long serialVersionUID = -1154137631399833851L;
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Id
     @TableGenerator(name = "acm_note_gen",
@@ -81,6 +79,7 @@ public class Note implements Serializable, AcmEntity
         }
     }
 
+    @Override
     public Long getId()
     {
         return id;
@@ -187,6 +186,27 @@ public class Note implements Serializable, AcmEntity
     public void setModified(Date modified)
     {
         this.modified = modified;
+    }
+
+    @Override
+    @JsonIgnore
+    public String getObjectType()
+    {
+        return NoteConstants.OBJECT_TYPE;
+    }
+
+    @Override
+    @JsonIgnore
+    public Long getParentObjectId()
+    {
+        return parentId;
+    }
+
+    @Override
+    @JsonIgnore
+    public String getParentObjectType()
+    {
+        return parentType;
     }
 
 }

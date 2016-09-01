@@ -4,15 +4,12 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.plugins.dashboard.dao.WidgetDao;
 import com.armedia.acm.plugins.dashboard.exception.AcmWidgetException;
-import com.armedia.acm.plugins.dashboard.model.DashboardConstants;
 import com.armedia.acm.plugins.dashboard.model.widget.Widget;
-import com.armedia.acm.plugins.dashboard.model.widget.WidgetRole;
 import com.armedia.acm.plugins.dashboard.service.DashboardPropertyReader;
 import com.armedia.acm.plugins.dashboard.service.DashboardService;
 import com.armedia.acm.plugins.dashboard.service.WidgetEventPublisher;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmRole;
-import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -24,10 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -72,97 +66,14 @@ public class GetWidgetsByUserRolesAPIController
             return result;
         } catch (AcmObjectNotFoundException e)
         {
-            // If there are no records for widgets into the DB ( when user logs in for the first time) we will read all widgets by user
-            // roles from
-            // config file .acm/dashboardPlugin.properties and that we will store them into the DB.
-            if (retval == null)
-            {
-                retval = addAvailableWidgets(userId, authentication);
-            }
-            log.info("Roles added for user: [{}] in DASHBOARD context to restrict available widgets.", userId);
-
+            log.error("Widgets by roles associated to user: [{}] not found! ", userId, e, e.getMessage());
             raiseGetEvent(authentication, session, retval, true);
-            return retval;
+            return new ArrayList<>();
         } catch (Exception e1)
         {
             log.error("Exception occurred while raising an event or while reading widgets values");
             throw new AcmWidgetException("Get widgets by user roles exception", e1);
         }
-    }
-
-
-    private List<Widget> addAvailableWidgets(String userId, Authentication authentication)
-    {
-        List<Widget> retval = new ArrayList<>();
-        Set<Widget> retvalSet = new HashSet<>();
-        List<AcmRole> userRoles = userDao.findAllRolesByUser(userId);
-        Set<String> widgetSet = new HashSet<>();
-        String retVal = null;
-        String[] widgetArray;
-
-        if (!dashboardPlugin.getPluginProperties().isEmpty())
-        {
-
-            // get all widgets by roles from the property file and put them as strings in a Set Collection to avoid widget duplicates
-            for (AcmRole role : userRoles)
-            {
-                Map<String, Object> dashboardPluginPluginProperties = dashboardPlugin.getPluginProperties();
-                String jsonRoleWidgetsString = (String) dashboardPluginPluginProperties.get(DashboardConstants.ROLE_WIDGET_LIST);
-                JSONArray jsonArray = new JSONArray(jsonRoleWidgetsString);
-                for (int i = 0; i < jsonArray.length(); i++)
-                {
-                    if (role.getRoleName().equals(jsonArray.getJSONObject(i).getString(DashboardConstants.ROLE)))
-                    {
-                        retVal = jsonArray.getJSONObject(i).getString(DashboardConstants.WIDGET_LIST);
-                        break;
-                    }
-                }
-
-                if (retVal == null)
-                {
-                    continue;
-                }
-
-                widgetArray = retVal.split(DashboardConstants.COMMA_SPLITTER);
-
-                for (String widget : widgetArray)
-                {
-                    widgetSet.add(widget.trim());
-                }
-
-                for (String widgetName : widgetSet)
-                {
-
-                    Widget widget = new Widget();
-                    widget.setWidgetName(widgetName.trim());
-                    widget = getWidgetDao().saveWidget(widget);
-                    retvalSet.add(widget);
-                    if (widget.getWidgetId() != null)
-                    {
-                        getEventPublisher().publishWidgetEvent(widget, authentication, true, true);
-                        WidgetRole widgetRole;
-                        widgetRole = addWidgetRoleIntoDB(widget, role);
-                        getEventPublisher().publishWidgetRoleEvent(widgetRole, authentication, true, true);
-                    } else
-                    {
-                        WidgetRole widgetRole;
-                        widgetRole = addWidgetRoleIntoDB(widget, role);
-                        getEventPublisher().publishWidgetRoleEvent(widgetRole, authentication, true, true);
-                    }
-                }
-                widgetSet.clear();
-            }
-        }
-        retval.addAll(retvalSet);
-        return retval;
-    }
-
-    private WidgetRole addWidgetRoleIntoDB(Widget widget, AcmRole role)
-    {
-        WidgetRole widgetRole = new WidgetRole();
-        widgetRole.setWidgetId(widget.getWidgetId());
-        widgetRole.setRoleName(role.getRoleName());
-        return getWidgetDao().saveWidgetRole(widgetRole);
     }
 
     protected void raiseGetEvent(Authentication authentication, HttpSession session, List<Widget> foundWidgets, boolean succeeded)

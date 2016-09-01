@@ -49,6 +49,7 @@
         <property name="dashboardPlugin" ref="dashboardPlugin"/>
         <property name="moduleDao" ref="moduleDao"/>
         <property name="widgetDao" ref="acmWidgetDao"/>
+        <property name="userDao" ref="acmUserDao"/>
         <property name="moduleEventPublisher" ref="moduleEventPublisher"/>
     </bean>
 
