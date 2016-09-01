@@ -38,11 +38,6 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
             retrieveGridData();
         };
 
-        var eventName = "object.changed/" + ObjectService.ObjectTypes.CASE_FILE + "/" + $stateParams.id;
-        var cacheKey = ObjectService.ObjectTypes.CASE_FILE + '.' + $stateParams.id;
-        gridHelper.subscribeForUpdate(eventName, cacheKey,
-                new Store.CacheFifo(ObjectAuditService.CacheNames.AUDIT_DATA), retrieveGridData);
-
         function retrieveGridData () {
             var currentObjectId = Util.goodMapValue($scope.objectInfo, "id");
             if (Util.goodPositive(currentObjectId, false)) {
@@ -63,6 +58,11 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
                 });
             }
         };
+
+        var eventName = "object.changed/" + ObjectService.ObjectTypes.CASE_FILE + "/" + $stateParams.id;
+        var cacheKey = ObjectService.ObjectTypes.CASE_FILE + '.' + $stateParams.id;
+        gridHelper.subscribeForUpdate(eventName, cacheKey,
+                new Store.CacheFifo(ObjectAuditService.CacheNames.AUDIT_DATA), retrieveGridData);
 
     }
 ]);
