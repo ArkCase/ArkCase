@@ -32,11 +32,6 @@ angular.module('tasks').controller('Tasks.HistoryController', ['$scope', '$state
 
             $scope.retrieveGridData();
         };
-      
-        var eventName = "object.changed/" + ObjectService.ObjectTypes.TASK + "/" + $stateParams.id;
-        var cacheKey = ObjectService.ObjectTypes.TASK + '.' + $stateParams.id;
-        gridHelper.subscribeForUpdate(eventName, cacheKey,
-                new Store.CacheFifo(ObjectAuditService.CacheNames.AUDIT_DATA), $scope.retrieveGridData);
 
         $scope.retrieveGridData = function () {
             if (Util.goodPositive(componentHelper.currentObjectId, false)) {
@@ -56,5 +51,10 @@ angular.module('tasks').controller('Tasks.HistoryController', ['$scope', '$state
                 });
             }
         };
+        
+        var eventName = "object.changed/" + ObjectService.ObjectTypes.TASK + "/" + $stateParams.id;
+        var cacheKey = ObjectService.ObjectTypes.TASK + '.' + $stateParams.id;
+        gridHelper.subscribeForUpdate(eventName, cacheKey,
+                new Store.CacheFifo(ObjectAuditService.CacheNames.AUDIT_DATA), $scope.retrieveGridData);
     }
 ]);
