@@ -2,10 +2,10 @@
 
 angular.module('cases').controller('Cases.HistoryController', ['$scope', '$stateParams', '$q'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Object.AuditService', 'Case.InfoService'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Acm.StoreService'
     , function ($scope, $stateParams, $q
-        , Util, ConfigService, ObjectService, ObjectAuditService, CaseInfoService
-        , HelperUiGridService, HelperObjectBrowserService) {
+        , Util, ConfigService, ObjectService, ObjectAuditService, CaseInfoService, HelperUiGridService
+        , HelperObjectBrowserService, Store) {
 
         var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
@@ -38,7 +38,7 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
             retrieveGridData();
         };
 
-        var retrieveGridData = function () {
+        function retrieveGridData () {
             var currentObjectId = Util.goodMapValue($scope.objectInfo, "id");
             if (Util.goodPositive(currentObjectId, false)) {
                 var promiseQueryAudit = ObjectAuditService.queryAudit(ObjectService.ObjectTypes.CASE_FILE
@@ -58,6 +58,11 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
                 });
             }
         };
+
+        var eventName = "object.changed/" + ObjectService.ObjectTypes.CASE_FILE + "/" + $stateParams.id;
+        var cacheKey = ObjectService.ObjectTypes.CASE_FILE + '.' + $stateParams.id;
+        gridHelper.subscribeForUpdate(eventName, cacheKey,
+                new Store.CacheFifo(ObjectAuditService.CacheNames.AUDIT_DATA), retrieveGridData);
 
     }
 ]);

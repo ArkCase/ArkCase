@@ -2,10 +2,10 @@
 
 angular.module('complaints').controller('Complaints.HistoryController', ['$scope', '$stateParams', '$q'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Object.AuditService', 'Complaint.InfoService'
-    , 'Helper.ObjectBrowserService', 'Helper.UiGridService'
+    , 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Acm.StoreService'
     , function ($scope, $stateParams, $q
-        , Util, ConfigService, ObjectService, ObjectAuditService, ComplaintInfoService
-        , HelperObjectBrowserService, HelperUiGridService) {
+        , Util, ConfigService, ObjectService, ObjectAuditService, ComplaintInfoService, HelperObjectBrowserService
+        , HelperUiGridService, Store) {
 
         var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
@@ -52,5 +52,10 @@ angular.module('complaints').controller('Complaints.HistoryController', ['$scope
                 });
             }
         };
+        
+        var eventName = "object.changed/" + ObjectService.ObjectTypes.COMPLAINT + "/" + $stateParams.id;
+        var cacheKey = ObjectService.ObjectTypes.COMPLAINT + '.' + $stateParams.id;
+        gridHelper.subscribeForUpdate(eventName, cacheKey, 
+                new Store.CacheFifo(ObjectAuditService.CacheNames.AUDIT_DATA), $scope.retrieveGridData);
     }
 ]);

@@ -2,6 +2,7 @@ package com.armedia.acm.services.note.web.api;
 
 import com.armedia.acm.services.note.dao.NoteDao;
 import com.armedia.acm.services.note.model.Note;
+import com.armedia.acm.services.note.model.NoteConstants;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -65,9 +66,9 @@ public class ListAllNotesAPIControllerTest extends EasyMockSupport
     }
 
     @Test
-    public void ListNote() throws Exception
+    public void listNote() throws Exception
     {
-    	String type = "GENERAL";
+        String type = "GENERAL";
         Long parentId = 1329L;
         String parentType = "COMPLAINT";
 
@@ -112,10 +113,11 @@ public class ListAllNotesAPIControllerTest extends EasyMockSupport
                 mapper.getTypeFactory().constructParametricType(List.class, Note.class));
 
         assertNotNull(fromReturnedNoteList);
-        assertEquals(fromReturnedNoteList.size(),1);
+        assertEquals(fromReturnedNoteList.size(), 1);
         assertEquals(fromReturnedNoteList.get(0).getType(), type);
         assertEquals(fromReturnedNoteList.get(0).getParentId(), parentId);
         assertEquals(fromReturnedNoteList.get(0).getParentType(), parentType);
+        assertEquals(fromReturnedNoteList.get(0).getObjectType(), NoteConstants.OBJECT_TYPE);
 
         log.info("note size : ", fromReturnedNoteList.size());
         log.info("note : ", fromReturnedNoteList.get(0).getNote());
@@ -124,7 +126,7 @@ public class ListAllNotesAPIControllerTest extends EasyMockSupport
     @Test
     public void listNote_exception() throws Exception
     {
-    	String type = "GENERAL";
+        String type = "GENERAL";
         Long parentId = 1329L;
         String parentType = "COMPLAINT";
 
@@ -144,7 +146,7 @@ public class ListAllNotesAPIControllerTest extends EasyMockSupport
 
         mockHttpSession.setAttribute("acm_ip_address", "ipAddress");
 
-        expect(mockNoteDao.listNotes(type, parentId,parentType)).andThrow(new QueryTimeoutException("test exception"));
+        expect(mockNoteDao.listNotes(type, parentId, parentType)).andThrow(new QueryTimeoutException("test exception"));
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("userName").atLeastOnce();
 

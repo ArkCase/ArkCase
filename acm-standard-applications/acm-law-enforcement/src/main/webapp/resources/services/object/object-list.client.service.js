@@ -62,7 +62,7 @@ angular.module('services').factory('Object.ListService', ['$resource', 'Acm.Stor
              */
             , _queryUserObjects: {
                 method: 'GET',
-                url: 'api/v1/service/:dataType/user/:userId?start=:start&n=:n&s=:sort&searchQuery=:query',
+                url: 'api/v1/service/:objectType/user/:userId?start=:start&n=:n&s=:sort&searchQuery=:query',
                 cache: false,
                 isArray: false
             }

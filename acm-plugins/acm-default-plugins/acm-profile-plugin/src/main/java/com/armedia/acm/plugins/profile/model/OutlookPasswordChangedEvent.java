@@ -6,9 +6,6 @@ import com.armedia.acm.service.outlook.model.OutlookPassword;
 
 import java.util.Date;
 
-/**
- * Created by armdev on 4/16/15.
- */
 public class OutlookPasswordChangedEvent extends AcmEvent
 {
     private static final long serialVersionUID = -1864933375071122405L;
