@@ -13,37 +13,7 @@
 angular.module('services').factory('CostTracking.ListService', ['$resource', '$translate'
     , 'Acm.StoreService', 'UtilService', 'ObjectService', 'Object.ListService'
     , function ($resource, $translate, Store, Util, ObjectService, ObjectListService) {
-        var Service = $resource('api/v1/service/costsheet', {}, {
-
-            /**
-             * @ngdoc method
-             * @name listObjects
-             * @methodOf service:CostTracking.ListService
-             *
-             * @description
-             * Get list of all costsheets from SOLR.
-             *
-             * @param {Object} params Map of input parameter.
-             * @param {String} params.userId  String that contains userId for logged user. List of costsheets are generated depending on this userId
-             * @param {Number} params.start  Zero based index of result starts from
-             * @param {Number} params.n max Number of list to return
-             * @param {String} params.sort  Sort value. Allowed choice is based on backend specification
-             * @param {String} params.query  Search term for tree entry to match
-             * @param {Function} onSuccess (Optional)Callback function of success query
-             * @param {Function} onError (Optional) Callback function when fail
-             *
-             * @returns {Object} Object returned by $resource
-             */
-            listObjects: {
-                method: 'GET',
-                url: 'api/v1/service/costsheet/user/:userId?start=:start&n=:n&s=:sort&searchQuery=:query',
-                cache: false,
-                isArray: false
-            }
-
-            //jwu: searchQuery seems not supported by API. Put it here as placeholder for future enhancement
-
-        });
+        var Service = $resource('api/v1/service', {}, {});
 
         Service.CacheNames = {
             COSTSHEET_LIST: "CostsheetList"
@@ -104,10 +74,10 @@ angular.module('services').factory('CostTracking.ListService', ['$resource', '$t
          *
          * @returns {Object} Promise
          */
-        Service.queryCostTrackingTreeData = function (userId, start, n, sort, query, nodeMaker) {
+        Service.queryCostTrackingTreeData = function (userId, start, n, sort, filters, query, nodeMaker) {
             var param = {};
             param.userId = Util.goodValue(userId);
-            //param.dataType = "costsheet";
+            param.objectType = "costsheet";
             param.start = Util.goodValue(start, 0);
             param.n = Util.goodValue(n, 32);
             param.sort = Util.goodValue(sort);
@@ -119,7 +89,7 @@ angular.module('services').factory('CostTracking.ListService', ['$resource', '$t
             var treeData = cacheCostTrackingList.get(cacheKey);
 
             return Util.serviceCall({
-                service: Service.listObjects
+                service: ObjectListService._queryUserObjects
                 , param: param
                 , result: treeData
                 , onSuccess: function (data) {

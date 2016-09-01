@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module('tasks').controller('Tasks.HistoryController', ['$scope', '$stateParams', '$q'
-    , 'UtilService', 'ConfigService', 'Helper.UiGridService', 'ObjectService', 'Object.AuditService', 'Task.InfoService'
-    , 'Helper.ObjectBrowserService'
+    , 'UtilService', 'ConfigService', 'Helper.UiGridService', 'ObjectService', 'Object.AuditService'
+    , 'Task.InfoService', 'Helper.ObjectBrowserService', 'Acm.StoreService'
     , function ($scope, $stateParams, $q
         , Util, ConfigService, HelperUiGridService, ObjectService, ObjectAuditService, TaskInfoService
-        , HelperObjectBrowserService) {
+        , HelperObjectBrowserService, Store) {
 
         var componentHelper = new HelperObjectBrowserService.Component({
             moduleId: "tasks"
@@ -51,5 +51,10 @@ angular.module('tasks').controller('Tasks.HistoryController', ['$scope', '$state
                 });
             }
         };
+        
+        var eventName = "object.changed/" + ObjectService.ObjectTypes.TASK + "/" + $stateParams.id;
+        var cacheKey = ObjectService.ObjectTypes.TASK + '.' + $stateParams.id;
+        gridHelper.subscribeForUpdate(eventName, cacheKey,
+                new Store.CacheFifo(ObjectAuditService.CacheNames.AUDIT_DATA), $scope.retrieveGridData);
     }
 ]);

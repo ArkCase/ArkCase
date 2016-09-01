@@ -1,6 +1,7 @@
 package com.armedia.acm.websockets;
 
 import com.armedia.acm.data.AcmObjectEvent;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,13 +56,13 @@ public class ObjectUpdateNotifier
         {
             log.debug("Sending a message. {}", message);
             template.convertAndSend("/topic/objects/changed", event);
-            template.convertAndSend("/topic/objects/" + event.getObjectType() + "/" + event.getObjectId(), event);
-            template.convertAndSend("/topic/objects/changed/" + event.getUser(), event);
+            // following topics are not used/listened on client side
+            // template.convertAndSend("/topic/objects/" + event.getObjectType() + "/" + event.getObjectId(), event);
+            // template.convertAndSend("/topic/objects/changed/" + event.getUser(), event);
         } else
         {
             log.debug("Object is not eligible for notifying, didn't pass the filters. {}", message);
         }
-
 
     }
 
@@ -104,6 +105,5 @@ public class ObjectUpdateNotifier
     {
         return objectChangeNotificationProperties;
     }
-
 
 }

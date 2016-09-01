@@ -12,7 +12,6 @@ import com.armedia.acm.plugins.ecm.service.FileEventPublisher;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.spring.SpringContextHolder;
-
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.tika.mime.MimeTypeException;
@@ -44,7 +43,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 
     @Override
     public EcmFile addFileTransaction(String originalFileName, Authentication authentication, String fileType, InputStream fileInputStream,
-            String mimeType, String fileName, String cmisFolderId, AcmContainer container) throws MuleException, IOException
+                                      String mimeType, String fileName, String cmisFolderId, AcmContainer container) throws MuleException, IOException
     {
         // by default, files are documents
         String category = "Document";
@@ -56,7 +55,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 
     @Override
     public EcmFile addFileTransaction(String originalFileName, Authentication authentication, String fileType, String fileCategory,
-            InputStream fileInputStream, String mimeType, String fileName, String cmisFolderId, AcmContainer container)
+                                      InputStream fileInputStream, String mimeType, String fileName, String cmisFolderId, AcmContainer container)
             throws MuleException, IOException
     {
 
@@ -81,7 +80,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             ecmTikaFile.setNameExtension(getFolderAndFilesUtils().getFileNameExtension(originalFileName));
         }
 
-        EcmFile ecmFile = new EcmFile();
+        final EcmFile ecmFile = new EcmFile();
         // do not change content type in case of freevo
         if (!mimeType.contains("frevvo"))
         {
@@ -105,22 +104,21 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             log.debug("Calling pipeline manager handlers");
             PipelineManager pipelineManager = (PipelineManager) getSpringContextHolder().getBeanByName("ecmFileUploadPipelineManager",
                     PipelineManager.class);
-            pipelineManager.executeOperation(ecmFile, null, () ->
+            pipelineManager.executeOperation(ecmFile, pipelineContext, () ->
             {
-                return null;
+                return ecmFile;
             });
-            ecmFile = pipelineContext.getEcmFile();
         } catch (Exception e)
         {
             log.error("pipeline handler call failed: {}", e.getMessage(), e);
         }
 
         log.debug("Returning from addFileTransaction method");
-        return ecmFile;
+        return pipelineContext.getEcmFile();
     }
 
     @Override
-    public EcmFile updateFileTransaction(Authentication authentication, EcmFile ecmFile, InputStream fileInputStream)
+    public EcmFile updateFileTransaction(Authentication authentication, final EcmFile ecmFile, InputStream fileInputStream)
             throws MuleException, IOException
     {
 
@@ -163,9 +161,8 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                     PipelineManager.class);
             pipelineManager.executeOperation(ecmFile, pipelineContext, () ->
             {
-                return null;
+                return ecmFile;
             });
-            ecmFile = pipelineContext.getEcmFile();
         } catch (Exception e)
         {
             log.error("pipeline handler call failed: {}", e.getMessage(), e);

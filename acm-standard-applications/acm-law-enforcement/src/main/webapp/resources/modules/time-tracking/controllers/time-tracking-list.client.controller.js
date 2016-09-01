@@ -24,13 +24,16 @@ angular.module('time-tracking').controller('TimeTrackingListController', ['$scop
         //subscribe to the bus for the object
         var eventName = "object.inserted";
         $scope.$bus.subscribe(eventName, function (data) {
-            var frevvoRequest = ServCommService.popRequest("frevvo", "new-timesheet");
-            if (frevvoRequest) {
-                ObjectService.gotoUrl(ObjectService.ObjectTypes.TIMESHEET, data.objectId);
+            if (data.objectType === ObjectService.ObjectTypes.TIMESHEET) {
+                var frevvoRequest = ServCommService.popRequest("frevvo", "new-timesheet");
+                if (frevvoRequest) {
+                    ObjectService.gotoUrl(ObjectService.ObjectTypes.TIMESHEET, data.objectId);
+                }
+                else {
+                    MessageService.info(data.objectType + " with ID " + data.objectId + " was created.");
+                }
             }
-            else {
-                MessageService.info(data.objectType + " with ID " + data.objectId + " was created.");
-            }
+
         });
 
 
