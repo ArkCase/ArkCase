@@ -88,15 +88,11 @@ public class WidgetDao extends AcmAbstractDao<Widget>
         return retval.get(0);
     }
 
-    public List<Widget> getAllWidgets() throws AcmObjectNotFoundException
+    public List<Widget> getAllWidgets()
     {
         String queryText = "SELECT widget FROM Widget widget";
         Query allWidgets = getEntityManager().createQuery(queryText);
         List<Widget> result = allWidgets.getResultList();
-        if (result.isEmpty())
-        {
-            throw new AcmObjectNotFoundException("dashboard", null, "Roles not found for all widgets", null);
-        }
         return result;
     }
 

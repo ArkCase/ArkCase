@@ -48,13 +48,11 @@ public class DashboardPropertyReader
         isNewWidgetForAdding = Boolean.valueOf((String) dashboardPlugin.getPluginProperties().
                 get(DashboardConstants.IS_NEW_DASHBOARD_WIDGETS_FOR_ADDING));
 
-        try
-        {
-            allWidgetsInDB = getWidgetDao().getAllWidgets();
-        } catch (AcmObjectNotFoundException e)
-        {
+        allWidgetsInDB = getWidgetDao().getAllWidgets();
+
+        if (allWidgetsInDB.isEmpty())
             isWidgetTableEmpty = true;
-        }
+
         log.info("Initializing - setting moduleNameList and widgetList in the  DashboardPropertyReader bean");
         try
         {
