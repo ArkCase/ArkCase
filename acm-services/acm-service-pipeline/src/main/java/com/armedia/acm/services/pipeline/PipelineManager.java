@@ -68,7 +68,7 @@ public class PipelineManager<T, S extends AbstractPipelineContext>
             // rollback pre-save handlers before rethrowing the exception;
             ListIterator<PipelineHandler<T, S>> it = preSaveHandlers.listIterator(preSaveHandlers.size());
             rollbackHandlers(result != null ? result : entity, pipelineContext, e, it, PRE_SAVE_HANDLER_ROLLING_BACK,
-                    PRE_SAVE_HANDLER_ROLLBACK_FAILED);
+                                    PRE_SAVE_HANDLER_ROLLBACK_FAILED);
             throw e;
         }
     }
@@ -77,12 +77,9 @@ public class PipelineManager<T, S extends AbstractPipelineContext>
      * Execute all registered pre-save handlers. Stop processing if any of the handlers throws exception and try to
      * rollback the ones that already executed.
      *
-     * @param entity
-     *            entity to process
-     * @param pipelineContext
-     *            context associated with this pipeline
-     * @throws PipelineProcessException
-     *             on error
+     * @param entity entity to process
+     * @param pipelineContext context associated with this pipeline
+     * @throws PipelineProcessException on error
      * @see #executeOperation(Object, AbstractPipelineContext, PipelineManagerOperation)
      * @deprecated This method has been deprecated, the new <code>executeOperation</code> method that was introduced
      *             should be used instead. <code>executeOperation</code> method will call the <code>pre</code> and
@@ -100,12 +97,9 @@ public class PipelineManager<T, S extends AbstractPipelineContext>
      * Execute all registered pre-save handlers. Stop processing if any of the handlers throws exception and try to
      * rollback the ones that already executed.
      *
-     * @param entity
-     *            entity to process
-     * @param pipelineContext
-     *            context associated with this pipeline
-     * @throws PipelineProcessException
-     *             on error
+     * @param entity entity to process
+     * @param pipelineContext context associated with this pipeline
+     * @throws PipelineProcessException on error
      */
     protected void executeOnPreSaveHandlers(T entity, S pipelineContext) throws PipelineProcessException
     {
@@ -129,12 +123,9 @@ public class PipelineManager<T, S extends AbstractPipelineContext>
      * Execute all post-save handlers. Stop processing if any of the handlers throws exception and try to rollback the
      * ones that already executed.
      *
-     * @param entity
-     *            entity to process
-     * @param pipelineContext
-     *            context associated with this pipeline
-     * @throws PipelineProcessException
-     *             on error
+     * @param entity entity to process
+     * @param pipelineContext context associated with this pipeline
+     * @throws PipelineProcessException on error
      * @see #executeOperation(Object, AbstractPipelineContext, PipelineManagerOperation)
      * @deprecated This method has been deprecated, the new <code>executeOperation</code> method that was introduced
      *             should be used instead. <code>executeOperation</code> method will call the <code>pre</code> and
@@ -153,12 +144,9 @@ public class PipelineManager<T, S extends AbstractPipelineContext>
      * ones that already executed. The excpetion is propagated, in order to attempt rolling back any pre-handlers that
      * might have been executed.
      *
-     * @param entity
-     *            entity to process
-     * @param pipelineContext
-     *            context associated with this pipeline
-     * @throws PipelineProcessException
-     *             on error
+     * @param entity entity to process
+     * @param pipelineContext context associated with this pipeline
+     * @throws PipelineProcessException on error
      */
     protected void executeOnPostSaveHandlers(T entity, S pipelineContext) throws PipelineProcessException
     {
@@ -179,7 +167,7 @@ public class PipelineManager<T, S extends AbstractPipelineContext>
     }
 
     private void executeHandlers(T entity, S pipelineContext, ListIterator<PipelineHandler<T, S>> it, String debugMessage)
-            throws PipelineProcessException
+                            throws PipelineProcessException
     {
         while (it.hasNext())
         {
@@ -190,7 +178,7 @@ public class PipelineManager<T, S extends AbstractPipelineContext>
     }
 
     private void rollbackHandlers(T entity, S pipelineContext, PipelineProcessException e, ListIterator<PipelineHandler<T, S>> it,
-            String debugMessage, String warnMessage)
+                            String debugMessage, String warnMessage)
     {
         while (it.hasPrevious())
         {
