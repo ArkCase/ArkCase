@@ -1,15 +1,19 @@
 package com.armedia.acm.plugins.profile.service;
 
-import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.plugins.profile.model.ProfileDTO;
 import com.armedia.acm.plugins.profile.model.UserOrg;
+import org.mule.api.MuleException;
+import org.springframework.security.core.Authentication;
 
-/**
- * Created by nebojsha on 07.05.2015.
- */
 public interface UserOrgService
 {
-
-    UserOrg getUserOrgForUserId(String userId) throws AcmObjectNotFoundException;
-
     String getProfileLocation();
+
+    UserOrg getUserOrgForUserId(String userId);
+
+    ProfileDTO saveUserOrgInfo(ProfileDTO profileDTO, Authentication authentication);
+
+    ProfileDTO getProfileInfo(String userId, Authentication authentication);
+
+    UserOrg saveUserOrgTransaction(UserOrg userOrgInfo, Authentication authentication) throws MuleException;
 }
