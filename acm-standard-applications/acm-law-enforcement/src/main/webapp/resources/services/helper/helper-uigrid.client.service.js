@@ -11,8 +11,10 @@
  * Helper.UiGridService has functions for typical usage in ArCase of 'ui-grid' directive
  */
 angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '$translate'
-    , 'UtilService', 'LookupService', 'ApplicationConfigService', 'Object.LookupService', 'ObjectService', 'uiGridConstants'
-    , function ($resource, $q, $translate, Util, LookupService, ApplicationConfigService, ObjectLookupService, ObjectService, uiGridConstants) {
+    , 'UtilService', 'LookupService', 'ApplicationConfigService', 'Object.LookupService', 'ObjectService', 'uiGridConstants', 'Object.AuditService'
+    , function ($resource, $q, $translate, Util, LookupService, ApplicationConfigService, ObjectLookupService, ObjectService, uiGridConstants
+        , ObjectAuditService) {
+  
         var Service = {
             Lookups: {
                 USER_FULL_NAMES: "userFullNames"
@@ -684,61 +686,44 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
 
             /**
              * @ngdoc method
-             * @name hidePagingControlsIfAllDataShown
+             * @name retrieveAuditData
              * @methodOf services:Helper.UiGridService
              *
-             * @param {Number} totalCount Total number of grid rows
-             *
+             * @param {String} objectType query audit for given object type
+             *            
              * @description
-             * Hide paging controls of Angular ui-grid if all data has already shown
+             * Retrieves audit data for current grid context (objectType, objectId)
              */
-            , hidePagingControlsIfAllDataShown: function (totalCount) {
-                var that = this;
-                if (that.scope && that.scope.gridOptions && that.scope.gridOptions.paginationPageSize) {
-                    if (totalCount <= that.scope.gridOptions.paginationPageSize) {
-                        // Hides pagination controls since there is only 1 page of data
-                        that.scope.gridOptions.enablePaginationControls = false;
-                    } else {
-                        // need to re-enable pagination if a record is added to the next page
-                        that.scope.gridOptions.enablePaginationControls = true;
-                    }
-                }
-            }
-            
-            /**
-             * @ngdoc method
-             * @name subscribeForUpdate
-             * @methodOf services:Helper.UiGridService
-             *
-             * @param {String} eventName the event name to subscribe to
-             * @param {String} cacheKey cache key to invalidate
-             * @param (Object) cacheStore cache store object
-             * @param (Function) reloadCallback reload callback method to invoke
-             *
-             * @description
-             * Subscribe for update on given event, reset grid cache and invoke reload data callback
-             * TODO : check the possibility to get total pages parameter and invalidate cache for all pages 
-             */
-           , subscribeForUpdate: function (eventName, cacheKey, cacheStore, reloadCallback) {
-                if (this.scope.subscription) {
-                    this.scope.$bus.unsubscribe(this.scope.subscription);
-                }
-                this.scope.subscription = this.scope.$bus.subscribe(eventName, function(data) {
-                    // invalidate cache
-                    var cacheKeys = cacheStore.keys();
-                    _.each(cacheKeys, function (key){
-                      if(key == null) {
-                          return;
-                      }
-                      if(key.indexOf(cacheKey) == 0) {
-                          cacheStore.remove(key);
-                      }
-                    });
-                    // invoke reload callback
-                    reloadCallback();
+            , retrieveAuditData: function (objectType, objectId) {
+                  var that = this;
+                  if (Util.goodPositive(objectId, false)) {
+                      var promiseQueryAudit = ObjectAuditService.queryAudit(
+                            objectType, objectId
+                          , Util.goodValue(this.scope.start, 0)
+                          , Util.goodValue(this.scope.pageSize, 10)
+                          , Util.goodMapValue(this.scope.sort, "by")
+                          , Util.goodMapValue(this.scope.sort, "dir")
+                      );
+     
+                      $q.all([promiseQueryAudit]).then(function (data) {
+                          var auditData = data[0];
+                          that.scope.gridOptions = that.scope.gridOptions || {};
+                          that.scope.gridOptions.data = auditData.resultPage;
+                          that.scope.gridOptions.totalItems = auditData.totalCount;
+                       //   that.hidePagingControlsIfAllDataShown(that.scope.gridOptions.totalItems);
+                      });
+                  }
+                  // subscribe for update, reload data
+                  var eventName = "object.changed/" + objectType + "/" + objectId;
+                  var subscription = this.scope['subscription_' + eventName];
+                  if (subscription) {
+                      this.scope.$bus.unsubscribe(subscription);
+                  }
+                  subscription = this.scope.$bus.subscribe(eventName, function(data) {
+                      that.retrieveAuditData(objectType, objectId);
                 });
-           }
-
+            }
+           
         };
 
         return Service;
