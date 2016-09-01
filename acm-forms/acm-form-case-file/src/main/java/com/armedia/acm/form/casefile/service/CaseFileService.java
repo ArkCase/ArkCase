@@ -92,18 +92,23 @@ public class CaseFileService extends FrevvoFormAbstractService
     public boolean save(String xml,
                         MultiValueMap<String, MultipartFile> attachments) throws Exception
     {
+        CaseFile saved = saveCaseFileFromXml(xml, attachments);
+        return saved != null;
+    }
+
+    public CaseFile saveCaseFileFromXml(String xml, MultiValueMap<String, MultipartFile> attachments) throws Exception
+    {
         // Convert XML to Object
         CaseFileForm form = (CaseFileForm) convertFromXMLToObject(cleanXML(xml), getFormClass());
-
+        CaseFile retval;
         if (form == null)
         {
             LOG.warn("Cannot unmarshall Case Form.");
-            return false;
+            return null;
         }
 
         // Save Case File to the database
-
-        form = saveCaseFile(form);
+        retval = saveCaseFileObject(form);
 
         // Save Reference (Reinvestigation)
         form = saveReference(form);
@@ -141,7 +146,7 @@ public class CaseFileService extends FrevvoFormAbstractService
 
         raiseCaseEvent();
 
-        return true;
+        return retval;
     }
 
     private CaseFileForm saveCaseFile(CaseFileForm form) throws AcmCreateObjectFailedException
@@ -175,6 +180,37 @@ public class CaseFileService extends FrevvoFormAbstractService
         setCaseFile(caseFile);
 
         return form;
+    }
+
+    private CaseFile saveCaseFileObject(CaseFileForm form) throws AcmCreateObjectFailedException
+    {
+        LOG.info("Saving case file ...");
+
+        CaseFile caseFile = null;
+
+        // Edit mode
+        String mode = getRequest().getParameter("mode");
+        if (mode != null && "edit".equals(mode) && form.getId() != null)
+        {
+            caseFile = getCaseFileDao().find(form.getId());
+        }
+
+        caseFile = getCaseFileFactory().asAcmCaseFile(form, caseFile);
+
+        // Save Case file
+        try
+        {
+            caseFile = getSaveCaseService().saveCase(caseFile, getAuthentication(), getUserIpAddress());
+        } catch (PipelineProcessException | PersistenceException e)
+        {
+            throw new AcmCreateObjectFailedException("Case File", e.getMessage(), e);
+        }
+
+        // Add id's and other information to the Frevvo form
+        form.setId(caseFile.getId());
+        form.setCaseNumber(caseFile.getCaseNumber());
+
+        return caseFile;
     }
 
     @Override
