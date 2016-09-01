@@ -2,6 +2,7 @@ package com.armedia.arkcase.uitests.cases;
 
 import java.awt.AWTException;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -16,6 +17,7 @@ import org.testng.asserts.SoftAssert;
 import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
 import com.armedia.arkcase.uitests.base.ArkCaseTestUtils;
 import com.armedia.arkcase.uitests.base.HttpResponseCode;
+import com.armedia.arkcase.uitests.base.WaitHelper;
 
 public class CasesPage extends ArkCaseTestBase {
 
@@ -33,25 +35,25 @@ public class CasesPage extends ArkCaseTestBase {
 	// Information ribbon
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[1]/h3/span")
 	public WebElement casesListTitle;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[1]/div[1]/h4/a")
+	@FindBy(how = How.XPATH, using = ".//*[@class='col-xs-6']/h4/a")
 	public WebElement createdCaseTitle;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/object-tree/section/div/div/div/ul/li[1]/span/span[3]")
+	@FindBy(how = How.XPATH, using = ".//*[@class='tree']/ul/li[1]/span/span[3]")
 	public WebElement createdCaseTitleList;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[2]/div[1]/div/a")
+	@FindBy(how = How.XPATH, using = ".//*[@editable-select='objectInfo.caseType']")
 	public WebElement createdCaseType;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[1]/nav/div[1]/div/div/div[2]/a/strong/span[1]")
 	public WebElement userLogedIn;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[3]/div[1]/div/a")
 	public WebElement assignedTo;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[2]/div[2]/div")
+	@FindBy(how = How.XPATH, using = ".//*[@class='h4 font-bold ng-binding']")
 	public WebElement createdDateCase;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[3]/div[2]/div/a")
+	@FindBy(how = How.XPATH, using = ".//*[@editable-select='owningGroup']")
 	public WebElement owningGroup;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[2]/div[3]/div/a")
+	@FindBy(how = How.XPATH, using = ".//*[@editable-select='objectInfo.priority']")
 	public WebElement priority;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[1]/div[2]/h4")
+	@FindBy(how = How.XPATH, using = ".//*[@class='row']/div[2]/h4")
 	public WebElement caseId;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[3]/div[3]/div/a")
+	@FindBy(how = How.XPATH, using = ".//*[@editable-bsdate='dateInfo.dueDate']")
 	public WebElement dueDate;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[2]/div[3]/div/form/div/select")
 	public WebElement priorityDropDown;
@@ -87,53 +89,54 @@ public class CasesPage extends ArkCaseTestBase {
 	public WebElement owningGroupConfirmBtn;
 
 	// case buttons
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/a[1]")
+	@FindBy(how = How.XPATH, using = ".//*[@ui-sref='frevvo.new-case()']")
 	public WebElement newCaseButton;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/a[2]")
+	@FindBy(how = How.XPATH, using = ".//*[@ui-sref='frevvo.edit-case(editParams)']")
 	public WebElement editCaseButton;
-	public @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/a[3]") WebElement changeCaseStatusButton;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/a[4]")
+	@FindBy(how = How.XPATH, using = ".//*[@ui-sref='frevvo.change-case-status(changeCaseStatusParams)']") 
+	public WebElement changeCaseStatusButton;
+	@FindBy(how = How.XPATH, using = ".//*[@ui-sref='frevvo.reinvestigate(reinvestigateParams)']")
 	public WebElement reinvestigateCaseButton;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[2]")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-click='subscribe(objectInfo)']")
 	public WebElement subscribeCaseButton;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[1]")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-click='unsubscribe(objectInfo)']")
 	public WebElement unsucribeCaseButton;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[3]")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-click='merge(objectInfo)']")
 	public WebElement mergeCaseButton;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[4]")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-click='split()']")
 	public WebElement splitCaseButton;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[1]/div/label/span")
+	@FindBy(how = How.XPATH, using = ".//*[@class='checkbox']/label/span")
 	public WebElement restrictCaseButton;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[5]")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-click='refresh()']")
 	public WebElement refreshPage;
 	// case links
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[1]/a")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-if='linksShown']/li[1]/a")
 	public WebElement caseOverview;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[2]/a")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-if='linksShown']/li[2]/a")
 	public WebElement caseDetails;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[3]/a")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-if='linksShown']/li[3]/a")
 	public WebElement casePeople;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[4]/a")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-if='linksShown']/li[4]/a")
 	public WebElement caseDocuments;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[5]/a")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-if='linksShown']/li[5]/a")
 	public WebElement caseParticipants;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[6]/a")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-if='linksShown']/li[6]/a")
 	public WebElement caseNotes;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[7]/a")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-if='linksShown']/li[7]/a")
 	public WebElement caseTasks;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[8]/a")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-if='linksShown']/li[8]/a")
 	public WebElement caseReferences;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[9]/a")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-if='linksShown']/li[9]/a")
 	public WebElement caseHistory;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[10]/a")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-if='linksShown']/li[10]/a")
 	public WebElement caseCorrespondence;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[10]/a")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-if='linksShown']/li[10]/a")
 	public WebElement caseTime;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[11]/a/i")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-if='linksShown']/li[11]/a/i")
 	public WebElement caseCost;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[12]/a")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-if='linksShown']/li[12]/a")
 	public WebElement caseTags;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[13]/a")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-if='linksShown']/li[13]/a")
 	public WebElement caseCalendar;
 	// change case status
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[2]/div[2]/div[4]/div[1]/input[1]")
@@ -154,7 +157,7 @@ public class CasesPage extends ArkCaseTestBase {
 	public WebElement closedStatusPartial;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[8]/div/input")
 	public WebElement changeCaseStatusSubmit;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[1]/div[1]/h4")
+	@FindBy(how = How.XPATH, using = ".//*[@class='col-xs-6']/h4")
 	public WebElement caseTitleDraft;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/iframe")
 	public WebElement chnageCaseStausFrameOne;
@@ -183,13 +186,13 @@ public class CasesPage extends ArkCaseTestBase {
 	public WebElement approveDocumenButton;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[5]")
 	public WebElement refreshbuttons;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[6]/div")
+	@FindBy(how = How.XPATH, using = ".//*[@class='col-xs-12 col-md-4'][6]/div")
 	public WebElement reviewRequestState;
 	// case details
 	@FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[2]/div[3]/div[4]")
 
 	public WebElement detailsText;
-	@FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[1]/div/span")
+	@FindBy(how = How.XPATH, using = ".//*[@class='panel-title']/span")
 	public WebElement detailsTitle;
 	@FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[1]/div/div/button")
 
@@ -803,7 +806,7 @@ public class CasesPage extends ArkCaseTestBase {
 	public WebElement refreshButtonInTaskPage;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div[1]/div[3]/div[1]/div")
 	public WebElement assignToInTheTaskPage;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div[1]/div[2]/div[2]/div")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-controller='Tasks.ParentInfoController']/div[1]/div[2]/div[2]/div")
 	public WebElement incidentDate;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div[1]/div[3]/div[2]/div")
 	public WebElement owningGroupInTaskPage;
@@ -913,6 +916,21 @@ public class CasesPage extends ArkCaseTestBase {
 	public WebElement mergeCancelBtn;
 	@FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/search-modal/div[3]/button[2]")
 	public WebElement mergeBtn;
+	
+	@FindBy(how = How.XPATH, using =".//*[@class='tree']/ul/li[1]/span/span[1]")
+	public WebElement firstCaseExpander;
+	@FindBy(how = How.XPATH, using =".//*[@class='']/ul/li[1]/span/span[3]")
+	public WebElement firstCaseDetailsLink;
+	
+	public CasesPage clickFirstCaseExpander(){
+		firstCaseExpander.click();
+		return this;
+	}
+	public CasesPage clickFirstCaseDetailsLink(){
+		firstCaseDetailsLink.click();
+		return this;
+	}
+	
 
 	public CasesPage casesModuleClick() {
 		casesModule.click();
@@ -925,7 +943,8 @@ public class CasesPage extends ArkCaseTestBase {
 	}
 
 	public CasesPage createdCaseInListClick() {
-		createdCaseTitleList.click();
+		firstCaseExpander.click();
+		firstCaseDetailsLink.click();
 		return this;
 	}
 
@@ -938,71 +957,586 @@ public class CasesPage extends ArkCaseTestBase {
 		return this;
 
 	}
-
+	
+	public String readCreatedCaseTitleText(){
+		WebElement el = WaitHelper.getWhenElementIsVisible(createdCaseTitle, 30, driver);	
+		String createdCaseTitleText = el.getText();
+		return createdCaseTitleText;
+	}
+	
+	public String readCreatedCaseTitleListText(){
+		String createdCaseTitleListText = createdCaseTitleList.getText();
+		return createdCaseTitleListText;
+	}
+	
+	public String readCreatedCaseTypeText(){
+		String createdCaseTypeText = createdCaseType.getText();
+		return createdCaseTypeText;
+	}
+	
+	public String readOwningGroupText(){
+		String owningGroupText = owningGroup.getText();
+		return owningGroupText;
+	}
+	
+	public String readPriorityText(){
+		String priorityText = priority.getText();
+		return priorityText;
+	}
+	
+	public boolean caseIdIsEmpty(){
+		String caseIdText = caseId.getText();
+		if (caseIdText.isEmpty() == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean dueDateIsEmpty(){
+		String dueDateText = dueDate.getText();
+		if (dueDateText.isEmpty() == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean restrictCaseButtonIsDisplayed(){
+		boolean restrictCaseButtonIsDisplayed = restrictCaseButton.isDisplayed();
+		if (restrictCaseButtonIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean restrictCaseButtonIsEnabled(){
+		boolean restrictCaseButtonIsEnabled = restrictCaseButton.isEnabled();
+		if (restrictCaseButtonIsEnabled == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	public String readRestrictCaseButtonText(){
+		String restrictCaseButtonText = restrictCaseButton.getText();
+		return restrictCaseButtonText;
+	}
+	public boolean newCaseButtonIsDisplayed(){
+		boolean newCaseButtonIsDisplayed = newCaseButton.isDisplayed();
+		if (newCaseButtonIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	
+	
+	public boolean newCaseButtonIsEnabled(){
+		boolean newCaseButtonIsEnabled = newCaseButton.isEnabled();
+		if (newCaseButtonIsEnabled == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean newCaseButtonEqualsNew(){
+		boolean newCaseButtonEqualsNew = newCaseButton.getText().equals("New");
+		if (newCaseButtonEqualsNew == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	
+	public boolean editCaseButtonIsDisplayed(){
+		boolean editCaseButtonIsDisplayed = editCaseButton.isDisplayed();
+		if (editCaseButtonIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean editCaseButtonIsEnabled(){
+		boolean editCaseButtonIsEnabled = editCaseButton.isEnabled();
+		if (editCaseButtonIsEnabled == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean editCaseButtonEqualsEdit(){
+		boolean editCaseButtonEqualsEdit = editCaseButton.getText().equals("Edit");
+		if (editCaseButtonEqualsEdit == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean changeCaseStatusButtonIsDisplayed(){
+		boolean changeCaseStatusButtonIsDisplayed = changeCaseStatusButton.isDisplayed();
+		if (changeCaseStatusButtonIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean changeCaseStatusButtonIsEnabled(){
+		boolean changeCaseStatusButtonIsEnabled = changeCaseStatusButton.isEnabled();
+		if (changeCaseStatusButtonIsEnabled == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public String readChangeCaseStatusButtonText(){
+		String changeCaseStatusButtonText = changeCaseStatusButton.getText();
+		return changeCaseStatusButtonText;
+	}
+	public boolean reincestigateCaseButtonIsDisplayed(){
+		boolean reinvestigateCaseButtonIsDisplayed = reinvestigateCaseButton.isDisplayed();
+		if (reinvestigateCaseButtonIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean reinvestigateCaseButtonIsEnabled(){
+		boolean reinvestigateCaseButtonIsEnabled = reinvestigateCaseButton.isEnabled();
+		if (reinvestigateCaseButtonIsEnabled == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean reinvestigateCaseButtonEqualsReinvestigate(){
+		boolean reinvestigateCaseButtonEqualsReinvestigate = reinvestigateCaseButton.getText().equals("Reinvestigate");
+		if (reinvestigateCaseButtonEqualsReinvestigate == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean subscribeCaseButtonIsDisplayed(){
+		WebElement el = WaitHelper.getWhenElementIsVisible(subscribeCaseButton, 30, driver);	
+		boolean subscribeCaseButtonIsDisplayed = el.isDisplayed();
+		if (subscribeCaseButtonIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean subscribeCaseButtonIsEnabled(){
+		boolean subscribeCaseButtonIsEnabled = subscribeCaseButton.isEnabled();
+		if (subscribeCaseButtonIsEnabled == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean subscribeCaseButtonEqualsSubscribe(){
+		boolean subscribeCaseButtonEqualsSubscribe = subscribeCaseButton.getText().equals("Subscribe");
+		if (subscribeCaseButtonEqualsSubscribe == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean mergeCaseButtonIsDisplayed(){
+		boolean mergeCaseButtonIsDisplayed = mergeCaseButton.isDisplayed();
+		if (mergeCaseButtonIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean mergeCaseButtonIsEnabled(){
+		boolean mergeCaseButtonIsEnabled = mergeCaseButton.isEnabled();
+		if (mergeCaseButtonIsEnabled == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean mergeCaseButtonEqualsMerge(){
+		boolean mergeCaseButtonEqualsMerge = mergeCaseButton.getText().equals("Merge");
+		if (mergeCaseButtonEqualsMerge == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}	
+	
+	public boolean splitCaseButtonIsDisplayed(){
+		boolean splitCaseButtonIsDisplayed = splitCaseButton.isDisplayed();
+		if (splitCaseButtonIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean splitCaseButtonIsEnabled(){
+		boolean splitCaseButtonIsEnabled = splitCaseButton.isEnabled();
+		if (splitCaseButtonIsEnabled == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean splitCaseButtonEqualsSplit(){
+		boolean splitCaseButtonEqualsSplit = splitCaseButton.getText().equals("Split");
+		if (splitCaseButtonEqualsSplit == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}	
+	
+	public boolean refreshButtonIsDisplayed(){
+		boolean refreshButtonIsDisplayed = refreshPage.isDisplayed();
+		if (refreshButtonIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean refreshButtonIsEnabled(){
+		boolean refreshButtonIsEnabled = refreshPage.isEnabled();
+		if (refreshButtonIsEnabled == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean caseOverviewIsDisplayed(){
+		boolean caseOverviewIsDisplayed = caseOverview.isDisplayed();
+		if (caseOverviewIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean caseDetailsIsDisplayed(){
+		boolean caseDetailsIsDisplayed = caseDetails.isDisplayed();
+		if (caseDetailsIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean casePeopleIsDisplayed(){
+		boolean casePeopleIsDisplayed = casePeople.isDisplayed();
+		if (casePeopleIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean caseDocumentsIsDisplayed(){
+		boolean caseDocumentsIsDisplayed = caseDocuments.isDisplayed();
+		if (caseDocumentsIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean caseParticipantsIsDisplayed(){
+		boolean caseParticipantsIsDisplayed = caseParticipants.isDisplayed();
+		if (caseParticipantsIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	public boolean caseNotesIsDisplayed(){
+		boolean caseNotesIsDisplayed = caseNotes.isDisplayed();
+		if (caseNotesIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean caseTasksIsDisplayed(){
+		boolean caseTasksIsDisplayed = caseTasks.isDisplayed();
+		if (caseTasksIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean caseReferencesIsDisplayed(){
+		boolean caseReferencesIsDisplayed = caseReferences.isDisplayed();
+		if (caseReferencesIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean caseHistoryIsDisplayed(){
+		boolean caseHistoryIsDisplayed = caseHistory.isDisplayed();
+		if (caseHistoryIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean caseCorespondenceIsDisplayed(){
+		boolean caseCorespondenceIsDisplayed = caseCorrespondence.isDisplayed();
+		if (caseCorespondenceIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean caseTimeIsDisplayed(){
+		boolean caseTimeIsDisplayed = caseTime.isDisplayed();
+		if (caseTimeIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean caseCostIsDisplayed(){
+		boolean caseCostIsDisplayed = caseCost.isDisplayed();
+		if (caseCostIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean caseTagsIsDisplayed(){
+		boolean caseTagsIsDisplayed = caseTags.isDisplayed();
+		if (caseTagsIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean caseCalendarIsDisplayed(){
+		boolean caseCalendarIsDisplayed = caseTags.isDisplayed();
+		if (caseCalendarIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
 	public CasesPage verifyCreatedCaseInfo(String caseName, String caseType) {
-
-		SoftAssert softAssert = new SoftAssert();
-		softAssert.assertEquals(createdCaseTitle.getText(), caseName, "Case title is wrong");
-		createdCaseInListClick();
-		softAssert.assertEquals(createdCaseTitleList.getText(), caseName, "Case title in the cases list is wrong");
-		softAssert.assertEquals(createdCaseType.getText(), caseType, "Case type name is wrong");
+		
+		SoftAssert softAssert = new SoftAssert();		
+		softAssert.assertEquals(readCreatedCaseTitleText(), caseName, "Case title is wrong");
+		//createdCaseInListClick();
+		softAssert.assertEquals(readCreatedCaseTitleListText(), caseName, "Case title in the cases list is wrong");
+		softAssert.assertEquals(readCreatedCaseTypeText(), caseType, "Case type name is wrong");
 		// softAssert.assertEquals(userLogedIn.getText(), assignedTo.getText(),
 		// "User name is wrong");
-		softAssert.assertEquals(owningGroup.getText(), "ACM_INVESTIGATOR_DEV", "Owning group is wrong");
-		softAssert.assertEquals(priority.getText(), "Medium", "Priority type is wrong");
-		softAssert.assertFalse(caseId.getText().isEmpty(), "case id is empty");
-		softAssert.assertFalse(dueDate.getText().isEmpty(), "due date is empty");
-		softAssert.assertFalse(dueDate.getText().isEmpty(), "due date is empty");
-		softAssert.assertTrue(restrictCaseButton.isDisplayed(), "restrict button is not diplayed");
-		softAssert.assertTrue(restrictCaseButton.isEnabled(), "restrict button is not enabled");
-		softAssert.assertEquals(restrictCaseButton.getText(), "Restrict?", "Restrict text is wrong");
-		softAssert.assertTrue(newCaseButton.isDisplayed(), "New case button is not displayed");
-		softAssert.assertTrue(newCaseButton.isEnabled(), "New case button is not enabled");
-		softAssert.assertTrue(newCaseButton.getText().equals("New"), "New case button text is not New");
-		softAssert.assertTrue(editCaseButton.isDisplayed(), "Edit case button is not displayed");
-		softAssert.assertTrue(editCaseButton.isEnabled(), "Edit case button is not enabled");
-		softAssert.assertTrue(editCaseButton.getText().equals("Edit"), "Edit case button text is not new");
-		softAssert.assertTrue(changeCaseStatusButton.isDisplayed(), "Change Case Status case button is not displayed");
-		softAssert.assertTrue(changeCaseStatusButton.isEnabled(), "Change Case Status button is not enabled");
-		softAssert.assertEquals(changeCaseStatusButton.getText(), "Change Case Status",
+		softAssert.assertEquals(readOwningGroupText(), "ACM_INVESTIGATOR_DEV", "Owning group is wrong");
+		softAssert.assertEquals(readPriorityText(), "Medium", "Priority type is wrong");
+		softAssert.assertFalse(caseIdIsEmpty(), "case id is empty");
+		softAssert.assertFalse(dueDateIsEmpty(), "due date is empty");		
+		softAssert.assertTrue(restrictCaseButtonIsDisplayed(), "restrict button is not diplayed");
+		softAssert.assertTrue(restrictCaseButtonIsEnabled(), "restrict button is not enabled");
+		softAssert.assertEquals(readRestrictCaseButtonText(), "Restrict?", "Restrict text is wrong");
+		softAssert.assertTrue(newCaseButtonIsDisplayed(), "New case button is not displayed");
+		softAssert.assertTrue(newCaseButtonIsEnabled(), "New case button is not enabled");
+		softAssert.assertTrue(newCaseButtonEqualsNew(), "New case button text is not New");
+		softAssert.assertTrue(editCaseButtonIsDisplayed(), "Edit case button is not displayed");
+		softAssert.assertTrue(editCaseButtonIsEnabled(), "Edit case button is not enabled");
+		softAssert.assertTrue(editCaseButtonEqualsEdit(), "Edit case button text is not new");
+		softAssert.assertTrue(changeCaseStatusButtonIsDisplayed(), "Change Case Status case button is not displayed");
+		softAssert.assertTrue(changeCaseStatusButtonIsEnabled(), "Change Case Status button is not enabled");
+		softAssert.assertEquals(readChangeCaseStatusButtonText(), "Change Case Status",
 				"Change Case status button text is not change case status");
 
-		softAssert.assertTrue(reinvestigateCaseButton.isDisplayed(),
+		softAssert.assertTrue(reincestigateCaseButtonIsDisplayed(),
 				"Reinvestigate Case Status case button is not displayed");
-		softAssert.assertTrue(reinvestigateCaseButton.isEnabled(), "Reinvestigate Case Status button is not enabled");
-		softAssert.assertTrue(reinvestigateCaseButton.getText().equals("Reinvestigate"),
-				"Reinvestigate Case   button text is not Reinvestigate");
-		softAssert.assertTrue(subscribeCaseButton.isDisplayed(), "SubscribeCase  case button is not displayed");
-		softAssert.assertTrue(subscribeCaseButton.isEnabled(), "Subscribe Case  button is not enabled");
-		softAssert.assertTrue(subscribeCaseButton.getText().equals("Subscribe"),
-				"Subscribe Case   button text is not Subscribe");
-		softAssert.assertTrue(mergeCaseButton.isDisplayed(), "MergeCaseButton case button is not displayed");
-		softAssert.assertTrue(mergeCaseButton.isEnabled(), "MergeCaseButton  button is not enabled");
-		softAssert.assertTrue(mergeCaseButton.getText().equals("Merge"), "Merge button text is not Merge");
-		softAssert.assertTrue(splitCaseButton.isDisplayed(), "splitCaseButton case button is not displayed");
-		softAssert.assertTrue(splitCaseButton.isEnabled(), "SplitCaseButton  button is not enabled");
-		softAssert.assertTrue(splitCaseButton.getText().equals("Split"), "Split button text is not Merge");
-		softAssert.assertTrue(refreshPage.isDisplayed(), "Refresh button is not diplayed");
-		softAssert.assertTrue(refreshPage.isEnabled(), "Refresh button is not enabled");
-		softAssert.assertTrue(caseOverview.isDisplayed(), "Overview link is not displayed");
-		softAssert.assertTrue(caseDetails.isDisplayed(), "Details link is not displayed");
-		softAssert.assertTrue(casePeople.isDisplayed(), "People link is not displayed");
-		softAssert.assertTrue(caseDocuments.isDisplayed(), "Documents link is not displayed");
-		softAssert.assertTrue(caseParticipants.isDisplayed(), "PArticipants link is not displayed");
-		softAssert.assertTrue(caseNotes.isDisplayed(), "Notes link is not displayed");
-		softAssert.assertTrue(caseTasks.isDisplayed(), "Tasks link is not displayed");
-		softAssert.assertTrue(caseReferences.isDisplayed(), "References link is not displayed");
-		softAssert.assertTrue(caseHistory.isDisplayed(), "History link is not displayed");
-		softAssert.assertTrue(caseCorrespondence.isDisplayed(), "Correspondence  link is not displayed");
-		softAssert.assertTrue(caseTime.isDisplayed(), "Time link is not displayed");
-		softAssert.assertTrue(caseCost.isDisplayed(), "Cost link is not displayed");
-		softAssert.assertTrue(caseTags.isDisplayed(), "Tags link is not displayed");
-		softAssert.assertTrue(caseCalendar.isDisplayed(), "Calendar link is not displayed");
+		softAssert.assertTrue(reinvestigateCaseButtonIsEnabled(), "Reinvestigate Case Status button is not enabled");
+		softAssert.assertTrue(reinvestigateCaseButtonEqualsReinvestigate(),
+				"Reinvestigate Case   button text is not Reinvestigate");		
+		softAssert.assertTrue(subscribeCaseButtonIsDisplayed(), "Subscribe Case button is not displayed");
+		softAssert.assertTrue(subscribeCaseButtonIsEnabled(), "Subscribe Case button is not enabled");
+		softAssert.assertTrue(subscribeCaseButtonEqualsSubscribe(),
+				"Subscribe Case button text is not Subscribe");
+		softAssert.assertTrue(mergeCaseButtonIsDisplayed(), "MergeCaseButton case button is not displayed");
+		softAssert.assertTrue(mergeCaseButtonIsEnabled(), "MergeCaseButton  button is not enabled");
+		softAssert.assertTrue(mergeCaseButtonEqualsMerge(), "Merge button text is not Merge");
+		softAssert.assertTrue(splitCaseButtonIsDisplayed(), "splitCaseButton case button is not displayed");
+		softAssert.assertTrue(splitCaseButtonIsEnabled(), "SplitCaseButton  button is not enabled");
+		softAssert.assertTrue(splitCaseButtonEqualsSplit(), "Split button text is not Split");
+		softAssert.assertTrue(refreshButtonIsDisplayed(), "Refresh button is not diplayed");
+		softAssert.assertTrue(refreshButtonIsEnabled(), "Refresh button is not enabled");
+		softAssert.assertTrue(caseOverviewIsDisplayed(), "Overview link is not displayed");
+		softAssert.assertTrue(caseDetailsIsDisplayed(), "Details link is not displayed");
+		softAssert.assertTrue(casePeopleIsDisplayed(), "People link is not displayed");
+		softAssert.assertTrue(caseDocumentsIsDisplayed(), "Documents link is not displayed");
+		softAssert.assertTrue(caseParticipantsIsDisplayed(), "PArticipants link is not displayed");
+		softAssert.assertTrue(caseNotesIsDisplayed(), "Notes link is not displayed");
+		softAssert.assertTrue(caseTasksIsDisplayed(), "Tasks link is not displayed");
+		softAssert.assertTrue(caseReferencesIsDisplayed(), "References link is not displayed");
+		softAssert.assertTrue(caseHistoryIsDisplayed(), "History link is not displayed");
+		softAssert.assertTrue(caseCorespondenceIsDisplayed(), "Correspondence  link is not displayed");
+		softAssert.assertTrue(caseTimeIsDisplayed(), "Time link is not displayed");
+		softAssert.assertTrue(caseCostIsDisplayed(), "Cost link is not displayed");
+		softAssert.assertTrue(caseTagsIsDisplayed(), "Tags link is not displayed");
+		softAssert.assertTrue(caseCalendarIsDisplayed(), "Calendar link is not displayed");	
 		softAssert.assertAll();
 		return this;
 	}
 
 	public CasesPage deleteCase() throws InterruptedException {
+		WaitHelper.continueWhenElementIsNotVisible(30, driver);
 		changeCaseStatus.click();
 		Thread.sleep(4000);
 		caseStatusDelete.click();
@@ -1094,17 +1628,44 @@ public class CasesPage extends ArkCaseTestBase {
 		responseCode.checkHttpResponse(
 				"/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[1]");
 		Thread.sleep(10000);
-		approveDocumenButton.click();
-		Thread.sleep(2000);
-		Assert.assertTrue(reviewRequestState.getText().equals("CLOSED"));
+		WebElement el = WaitHelper.getWhenElementIsVisible(approveDocumenButton, 30, driver);	
+		el.click();		
+		//Assert.assertTrue(reviewRequestStateEqualsClosed());
 		return this;
 	}
-
+	public boolean reviewRequestStateEqualsClosed(){
+		WebElement el = WaitHelper.getWhenElementIsVisible(reviewRequestState, 30, driver);	
+		boolean reviewRequestStateEqualsClosed = el.getText().equals("CLOSED");
+		if (reviewRequestStateEqualsClosed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+    public String readDetailsTitle(){
+    	WebElement el = WaitHelper.getWhenElementIsVisible(detailsTitle, 30, driver);	
+    	String readDetailsTitle = el.getText();
+    	return readDetailsTitle;
+    }
+    public boolean detailsSaveButtonIsDisplayed(){
+		boolean detailsSaveButtonIsDisplayed = detailsSaveButton.isDisplayed();
+		if (detailsSaveButtonIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
 	public CasesPage verifyDetailsSection() throws InterruptedException {		
 		Thread.sleep(3000);
-		SoftAssert softAssert = new SoftAssert();
-		softAssert.assertEquals(detailsTitle.getText(), "Details", "Details title is wrong");
-		softAssert.assertTrue(detailsSaveButton.isDisplayed(), "Details save button is not shown");
+		SoftAssert softAssert = new SoftAssert();		
+		softAssert.assertEquals(readDetailsTitle(), "Details", "Details title is wrong");
+		softAssert.assertTrue(detailsSaveButtonIsDisplayed(), "Details save button is not shown");		
 		softAssert.assertAll();
 		return this;
 	}
@@ -2138,8 +2699,8 @@ public class CasesPage extends ArkCaseTestBase {
 		softAssert.assertTrue(deleteButtonInTaskPage.isDisplayed(), "Delete button is not displayed ");
 		softAssert.assertTrue(completeButtonInTaskPage.isDisplayed(), "Complete button is not displayed");
 		softAssert.assertEquals(assignToInTheTaskPage.getText(), asignTo, "Asign to user is wrong ");
-		softAssert.assertEquals(caseTypeInTaskPage.getText(), type, "Case type is wrong");
-		softAssert.assertEquals(incidentDate.getText(), createdDateCase.getText(),
+		softAssert.assertEquals(caseTypeInTaskPage.getText(), type, "Case type is wrong");		
+		softAssert.assertEquals(incidentDate.getText(), returnTodaysDateString(),
 				"Incident date is not same as the one in created case");
 		softAssert.assertEquals(owningGroupInTaskPage.getText(), group,
 				"Owning group is not same as the one in the created case");
@@ -2148,6 +2709,19 @@ public class CasesPage extends ArkCaseTestBase {
 		softAssert.assertAll();
 		return this;
 
+	}
+	
+	public String returnTodaysDateString(){
+		DateFormat dateformat = new SimpleDateFormat("MM/dd/yyyy");
+		Date date = new Date();
+		return dateformat.format(date);
+	}
+	
+	public String returncaseCreatedDate()
+	{
+		WebElement el = WaitHelper.getWhenElementIsVisible(createdDateCase, 60, driver);		
+		String createdDate = el.getText();
+		return createdDate;
 	}
 
 	public CasesPage verifyAddedTaskInCase(String title, String percent, String asignee, String dueDate, String priority,
@@ -2564,4 +3138,71 @@ public class CasesPage extends ArkCaseTestBase {
 		Assert.assertEquals("Searched result name is wrong", "No Results", searchedRefNoResult.getText());
 		return this;
 	}
+	
+	public CasesPage caseDocumentsclick(){
+		caseDocuments.click();
+		return this;
+	}
+	
+	public CasesPage detailsSaveButtonClick(){
+		WaitHelper.clickWhenElelementIsClickable(detailsSaveButton, 30, driver);		
+		return this;
+	}
+	
+	public CasesPage caseDetailsClick(){
+		caseDetails.click();
+		return this;
+	}
+	
+	public CasesPage insertedLinkClick(){
+		insertedLink.click();
+		return this;
+	}
+	
+	public CasesPage unlinkClick(){
+		unlink.click();
+		return this;
+	}
+	
+	public CasesPage detailsTextClear(){
+		detailsText.clear();
+		return this;
+	}
+	
+	public CasesPage insertPictureClick(){
+		insertPicture.click();
+		return this;
+	}
+	
+	public CasesPage browsePictureButtonClick(){
+		browsePictureButton.click();
+		return this;
+	}
+	
+	public CasesPage detailsChangeStatusButtonClick(){
+		detailChangeStatusButton.click();
+		return this;
+	}
+	
+	public CasesPage refreshButtonClick(){
+		refreshPage.click();
+		return this;
+	}
+	
+	public boolean caseTitleChangedInApproval(){
+		WebElement el = WaitHelper.getWhenElementIsVisible(caseTitleDraft, 30, driver);
+		boolean caseTitleChangedInApproval = el.getText().contains("IN APPROVAL");
+		if (caseTitleChangedInApproval == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	
+	
+	
 }

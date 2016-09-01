@@ -330,30 +330,30 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
                 });
             }
 
-                    /**
-                     * @ngdoc method
-                     * @name showUserFullNames
-                     * @methodOf services:Helper.UiGridService
-                     *
-                     * @description
-                     * Replace user id with user full name.
-                     */
-                    , showUserFullNames: function () {
-                    var that = this;
-                    $q.all([ApplicationConfigService.getProperty(ApplicationConfigService.PROPERTIES.DISPLAY_USERNAME)]).then(function (result)
+            /**
+             * @ngdoc method
+             * @name showUserFullNames
+             * @methodOf services:Helper.UiGridService
+             *
+             * @description
+             * Replace user id with user full name.
+             */
+            , showUserFullNames: function () {
+                var that = this;
+                $q.all([ApplicationConfigService.getProperty(ApplicationConfigService.PROPERTIES.DISPLAY_USERNAME)]).then(function (result)
                     {
-                        var userNamePop = result[0];
-
-				        if (userNamePop == "userName" && _.get(that, 'scope.config.columnDefs')) {
-					        for (var i = 0; i < that.scope.config.columnDefs.length; i++) {
-                                if (that.scope.config.columnDefs[i].hasOwnProperty('fullNameField')) {
-								    var tempColumn = angular.copy(that.scope.config.columnDefs[i]);
-								    tempColumn.field = tempColumn.fullNameField;
-								    that.scope.config.columnDefs.splice(i,1, tempColumn);
-							    }
-						    }
-					    }
-                    });
+                      var userNamePop = result[0];
+      
+      				        if (userNamePop == "userName" && _.get(that, 'scope.config.columnDefs')) {
+      					        for (var i = 0; i < that.scope.config.columnDefs.length; i++) {
+                                      if (that.scope.config.columnDefs[i].hasOwnProperty('fullNameField')) {
+      								    var tempColumn = angular.copy(that.scope.config.columnDefs[i]);
+      								    tempColumn.field = tempColumn.fullNameField;
+      								    that.scope.config.columnDefs.splice(i,1, tempColumn);
+      							    }
+      						    }
+      					    }
+                });
             }
 
             /**
@@ -704,6 +704,40 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
                     }
                 }
             }
+            
+            /**
+             * @ngdoc method
+             * @name subscribeForUpdate
+             * @methodOf services:Helper.UiGridService
+             *
+             * @param {String} eventName the event name to subscribe to
+             * @param {String} cacheKey cache key to invalidate
+             * @param (Object) cacheStore cache store object
+             * @param (Function) reloadCallback reload callback method to invoke
+             *
+             * @description
+             * Subscribe for update on given event, reset grid cache and invoke reload data callback
+             * TODO : check the possibility to get total pages parameter and invalidate cache for all pages 
+             */
+           , subscribeForUpdate: function (eventName, cacheKey, cacheStore, reloadCallback) {
+                if (this.scope.subscription) {
+                    this.scope.$bus.unsubscribe(this.scope.subscription);
+                }
+                this.scope.subscription = this.scope.$bus.subscribe(eventName, function(data) {
+                    // invalidate cache
+                    var cacheKeys = cacheStore.keys();
+                    _.each(cacheKeys, function (key){
+                      if(key == null) {
+                          return;
+                      }
+                      if(key.indexOf(cacheKey) == 0) {
+                          cacheStore.remove(key);
+                      }
+                    });
+                    // invoke reload callback
+                    reloadCallback();
+                });
+           }
 
         };
 
