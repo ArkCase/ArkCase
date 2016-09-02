@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -54,6 +55,13 @@ public class AcmSpringMvcErrorManager
     public void handleNotAuthorized(HttpServletResponse response, AcmNotAuthorizedException e)
     {
         log.error("Not Authorized: " + e.getMessage(), e);
+        sendResponse(HttpStatus.FORBIDDEN, response, e.getMessage());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public void accessDeniedHandler(HttpServletResponse response, AccessDeniedException e)
+    {
+        log.error("Access is not granted: " + e.getMessage(), e);
         sendResponse(HttpStatus.FORBIDDEN, response, e.getMessage());
     }
 

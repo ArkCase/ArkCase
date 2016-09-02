@@ -27,6 +27,7 @@ import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
+
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.json.JSONArray;
@@ -42,6 +43,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.PersistenceException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
@@ -88,7 +90,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     @Override
     public EcmFile upload(String originalFileName, String fileType, String fileCategory, InputStream fileContents, String fileContentType,
-                          String fileName, Authentication authentication, String targetCmisFolderId, String parentObjectType, Long parentObjectId)
+            String fileName, Authentication authentication, String targetCmisFolderId, String parentObjectType, Long parentObjectId)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         if (log.isInfoEnabled())
@@ -125,7 +127,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     @Override
     public EcmFile upload(String originalFileName, String fileType, MultipartFile file, Authentication authentication,
-                          String targetCmisFolderId, String parentObjectType, Long parentObjectId)
+            String targetCmisFolderId, String parentObjectType, Long parentObjectId)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         if (log.isInfoEnabled())
@@ -415,13 +417,31 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 break;
             }
         }
+        List<EcmFile> frevvoFiles = getEcmFileDao().findForContainer(file.getContainer().getId());
+        for (EcmFile frevvoFile : frevvoFiles)
+        {
+            if (frevvoFile.getFileType().equals("case_file_xml") && frevvoFile.getFileName().equals("form_case_file")
+                    || frevvoFile.getFileType().equals("complaint_file_xml") && frevvoFile.getFileName().equals("form_complaint_file")
+                    || frevvoFile.getFileType().equals("timesheet_xml") && frevvoFile.getFileName().equals("form_timesheet")
+                    || frevvoFile.getFileType().equals("costsheet_xml") && frevvoFile.getFileName().equals("form_costsheet"))
+            {
+                for (EcmFileVersion frevvoFileVersion : frevvoFile.getVersions())
+                {
+                    frevvoFile.setActiveVersionTag(versionTag);
+                    frevvoFile.setFileActiveVersionMimeType(frevvoFileVersion.getVersionMimeType());
+                    frevvoFile.setFileActiveVersionNameExtension(frevvoFileVersion.getVersionFileNameExtension());
+                    getEcmFileDao().save(frevvoFile);
+                    break;
+                }
+            }
+        }
 
         return getEcmFileDao().save(file);
     }
 
     @Override
     public AcmCmisObjectList listAllSubFolderChildren(String category, Authentication auth, AcmContainer container, Long folderId,
-                                                      int startRow, int maxRows, String sortBy, String sortDirection) throws AcmListObjectsFailedException, AcmObjectNotFoundException
+            int startRow, int maxRows, String sortBy, String sortDirection) throws AcmListObjectsFailedException, AcmObjectNotFoundException
     {
 
         log.debug("All children objects from folder " + folderId);
@@ -448,7 +468,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     @Override
     public AcmCmisObjectList listFolderContents(Authentication auth, AcmContainer container, String category, String sortBy,
-                                                String sortDirection, int startRow, int maxRows) throws AcmListObjectsFailedException
+            String sortDirection, int startRow, int maxRows) throws AcmListObjectsFailedException
     {
 
         // This method is to search for objects in the root of a container. So we restrict the return list
@@ -474,7 +494,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     @Override
     public AcmCmisObjectList listFileFolderByCategory(Authentication auth, AcmContainer container, String sortBy, String sortDirection,
-                                                      int startRow, int maxRows, String category) throws AcmListObjectsFailedException
+            int startRow, int maxRows, String category) throws AcmListObjectsFailedException
     {
         String query = "parent_object_id_i:" + container.getContainerObjectId() + " AND parent_object_type_s:"
                 + container.getContainerObjectType();
@@ -546,7 +566,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     private AcmCmisObjectList findObjects(Authentication auth, AcmContainer container, Long folderId, String category, String query,
-                                          String filterQuery, int startRow, int maxRows, String sortBy, String sortDirection) throws AcmListObjectsFailedException
+            String filterQuery, int startRow, int maxRows, String sortBy, String sortDirection) throws AcmListObjectsFailedException
     {
         try
         {
@@ -588,7 +608,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     private AcmCmisObjectList buildAcmCmisObjectList(AcmContainer container, Long folderId, String category, int numFound, String sortBy,
-                                                     String sortDirection, int startRow, int maxRows)
+            String sortDirection, int startRow, int maxRows)
     {
         AcmCmisObjectList retval = new AcmCmisObjectList();
         retval.setContainerObjectId(container.getContainerObjectId());
@@ -791,7 +811,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     @Override
     public int getTotalPageCount(String parentObjectType, Long parentObjectId, List<String> totalPageCountFileTypes,
-                                 List<String> totalPageCountMimeTypes, Authentication auth)
+            List<String> totalPageCountMimeTypes, Authentication auth)
     {
         int totalCount = 0;
         try

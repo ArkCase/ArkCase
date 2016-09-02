@@ -56,7 +56,7 @@ angular
                 // $translateProvider.useSanitizeValueStrategy('sanitize');
 
                 // Add HTTP error interceptor
-                function httpInterceptor($q, $window,
+                function httpInterceptor($q, $window, $rootScope,
                                          MessageService) {
                     return {
                         responseError: responseError
@@ -83,6 +83,12 @@ angular
                                 .toJson($window.location);
                             $window.location.reload();
                             return ($q.reject(null));
+                        }
+
+                        if (response.status === 403) {
+                            // user is authenticated but tries to modify some entity
+                            // with no granted permission
+                            $rootScope.$broadcast('accessDenied', 'User has no granted permission for this action');
                         }
 
                         // Send error message to MessageService if

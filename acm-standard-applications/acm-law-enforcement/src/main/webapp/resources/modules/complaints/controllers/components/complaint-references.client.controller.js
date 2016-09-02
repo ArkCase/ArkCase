@@ -38,7 +38,6 @@ angular.module('complaints').controller('Complaints.ReferencesController', ['$sc
                 }
             });
             $scope.gridOptions.data = references;
-            //gridHelper.hidePagingControlsIfAllDataShown(references.length);
         };
 
         $scope.onClickObjLink = function (event, rowEntity) {

@@ -5,6 +5,7 @@ import com.armedia.acm.data.converter.LocalDateConverter;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -34,7 +35,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ import java.util.List;
 @XmlRootElement
 @Entity
 @Table(name = "acm_person")
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "className")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "className", defaultImpl = Person.class)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.plugins.person.model.Person")
@@ -119,14 +119,14 @@ public class Person implements Serializable, AcmEntity
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "acm_person_postal_address", joinColumns = {
-            @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id") }, inverseJoinColumns = {
-                    @JoinColumn(name = "cm_address_id", referencedColumnName = "cm_address_id") })
+            @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id")}, inverseJoinColumns = {
+            @JoinColumn(name = "cm_address_id", referencedColumnName = "cm_address_id")})
     private List<PostalAddress> addresses = new ArrayList<>();
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "acm_person_contact_method", joinColumns = {
-            @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id") }, inverseJoinColumns = {
-                    @JoinColumn(name = "cm_contact_method_id", referencedColumnName = "cm_contact_method_id") })
+            @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id")}, inverseJoinColumns = {
+            @JoinColumn(name = "cm_contact_method_id", referencedColumnName = "cm_contact_method_id")})
     private List<ContactMethod> contactMethods = new ArrayList<>();
 
     @ElementCollection
@@ -142,14 +142,14 @@ public class Person implements Serializable, AcmEntity
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(name = "acm_person_identification", joinColumns = {
-            @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id") }, inverseJoinColumns = {
-                    @JoinColumn(name = "cm_identification_id", referencedColumnName = "cm_identification_id", unique = true) })
+            @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id")}, inverseJoinColumns = {
+            @JoinColumn(name = "cm_identification_id", referencedColumnName = "cm_identification_id", unique = true)})
     private List<Identification> identifications = new ArrayList<>();
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "acm_person_organization", joinColumns = {
-            @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id") }, inverseJoinColumns = {
-                    @JoinColumn(name = "cm_organization_id", referencedColumnName = "cm_organization_id") })
+            @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id")}, inverseJoinColumns = {
+            @JoinColumn(name = "cm_organization_id", referencedColumnName = "cm_organization_id")})
     private List<Organization> organizations = new ArrayList<>();
 
     @Column(name = "cm_class_name")
@@ -219,6 +219,35 @@ public class Person implements Serializable, AcmEntity
     public void setFamilyName(String familyName)
     {
         this.familyName = familyName;
+    }
+
+    /**
+     * Get full person name
+     *
+     * @return
+     */
+    @XmlTransient
+    @JsonIgnore
+    public String getFullName()
+    {
+        StringBuilder sb = new StringBuilder();
+        if (getTitle() != null)
+        {
+            sb.append(getTitle()).append(" ");
+        }
+        if (getGivenName() != null)
+        {
+            sb.append(getGivenName()).append(" ");
+        }
+        if (getMiddleName() != null)
+        {
+            sb.append(getMiddleName()).append(" ");
+        }
+        if (getFamilyName() != null)
+        {
+            sb.append(getFamilyName());
+        }
+        return sb.toString().trim();
     }
 
     @XmlTransient

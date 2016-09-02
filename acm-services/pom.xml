@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm</artifactId>
         <groupId>com.armedia</groupId>
-        <version>3.0.56</version>
+        <version>3.0.57</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -46,6 +46,7 @@
         <module>acm-service-object-lock</module>
         <module>acm-service-webdav</module>
         <module>acm-service-protect-url</module>
+        <module>acm-service-scheduler</module>
     </modules>
 
 

@@ -1,6 +1,5 @@
 package com.armedia.acm.services.config.model;
 
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -81,27 +80,6 @@ public class PropertyConfig implements AcmConfig, Serializable, InitializingBean
     public void afterPropertiesSet() throws Exception
     {
         log.debug("config name: {}", getConfigName());
-        if (properties != null)
-        {
-            for (Map.Entry<Object, Object> prop : properties.entrySet())
-            {
-                if (prop.getValue() != null && prop.getValue() instanceof String)
-                {
-                    String value = (String) prop.getValue();
-                    try
-                    {
-                        String decryptedIfNecessary = getEncryptablePropertyUtils().decryptPropertyValue(value);
-                        if (!value.equals(decryptedIfNecessary))
-                        {
-                            log.debug("Decrypted property {}", prop.getKey());
-                            prop.setValue(decryptedIfNecessary);
-                        }
-                    } catch (AcmEncryptionException aee)
-                    {
-                        log.error("Could not decrypt value for property {}: {}", prop.getKey(), aee.getMessage(), aee);
-                    }
-                }
-            }
-        }
+        getEncryptablePropertyUtils().decryptProperties(properties);
     }
 }

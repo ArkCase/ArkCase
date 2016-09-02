@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.alfrescorma.service;
 
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.alfrescorma.model.AcmRecord;
 import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
@@ -15,6 +16,7 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.core.Authentication;
 
 import java.util.Date;
@@ -25,7 +27,7 @@ import java.util.Properties;
 /**
  * Created by armdev on 3/27/15.
  */
-public class AlfrescoRecordsService
+public class AlfrescoRecordsService implements InitializingBean
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -34,6 +36,15 @@ public class AlfrescoRecordsService
     private Map<String, Object> alfrescoRmaPropertiesMap;
     private MuleContextManager muleContextManager;
     private EcmFileDao ecmFileDao;
+    private AcmEncryptablePropertyUtils encryptablePropertyUtils;
+
+    @Override
+    public void afterPropertiesSet() throws Exception
+    {
+        getEncryptablePropertyUtils().decryptProperties(alfrescoRmaProperties);
+
+        getEncryptablePropertyUtils().decryptProperties(alfrescoRmaPropertiesMap);
+    }
 
     public void declareAllContainerFilesAsRecords(Authentication auth, AcmContainer container, Date receiveDate,
                                                   String recordFolderName)
@@ -41,27 +52,28 @@ public class AlfrescoRecordsService
         try
         {
             AcmCmisObjectList files = getEcmFileService().allFilesForContainer(auth, container);
-            declareAsRecords(files,container,receiveDate,recordFolderName);
-        }
-        catch (AcmListObjectsFailedException e)
+            declareAsRecords(files, container, receiveDate, recordFolderName);
+        } catch (AcmListObjectsFailedException e)
         {
             log.error("Cannot finish Record Management Strategy for container " + container.getContainerObjectType() +
                     " " + container.getContainerObjectId(), e);
         }
     }
 
-    public void declareAllFilesInFolderAsRecords(AcmCmisObjectList folder,AcmContainer container, Date receiveDate,
-                                                  String recordFolderName)
+    public void declareAllFilesInFolderAsRecords(AcmCmisObjectList folder, AcmContainer container, Date receiveDate,
+                                                 String recordFolderName)
     {
         declareAsRecords(folder, container, receiveDate, recordFolderName);
     }
 
-    public void declareAsRecords(AcmCmisObjectList files,AcmContainer container, Date receiveDate,
-                                 String recordFolderName){
+    public void declareAsRecords(AcmCmisObjectList files, AcmContainer container, Date receiveDate,
+                                 String recordFolderName)
+    {
 
-        for ( AcmCmisObject file : files.getChildren() )
+        for (AcmCmisObject file : files.getChildren())
         {
-            if (!((EcmFileConstants.RECORD).equals(file.getStatus()))) {
+            if (!((EcmFileConstants.RECORD).equals(file.getStatus())))
+            {
                 AcmRecord record = new AcmRecord();
 
                 String objectType = container.getContainerObjectType();
@@ -72,14 +84,14 @@ public class AlfrescoRecordsService
                 String categoryFolder = getAlfrescoRmaProperties().getProperty(propertyKey);
                 log.info("Found category folder is : " + categoryFolder);
 
-                if ( categoryFolder == null || categoryFolder.trim().isEmpty() )
+                if (categoryFolder == null || categoryFolder.trim().isEmpty())
                 {
                     log.error("Unknown category folder for object type: " + objectType + "; will not declare any records");
                     return;
                 }
 
                 String originatorOrg = getAlfrescoRmaProperties().getProperty(AlfrescoRmaPluginConstants.PROPERTY_ORIGINATOR_ORG);
-                if ( originatorOrg == null || originatorOrg.trim().isEmpty() )
+                if (originatorOrg == null || originatorOrg.trim().isEmpty())
                 {
                     originatorOrg = AlfrescoRmaPluginConstants.DEFAULT_ORIGINATOR_ORG;
                 }
@@ -94,7 +106,7 @@ public class AlfrescoRecordsService
 
                 try
                 {
-                    if ( log.isTraceEnabled() )
+                    if (log.isTraceEnabled())
                     {
                         log.trace("Sending JMS message.");
                     }
@@ -102,13 +114,12 @@ public class AlfrescoRecordsService
                     getMuleContextManager().send(
                             AlfrescoRmaPluginConstants.RECORD_MULE_ENDPOINT, record, getAlfrescoRmaPropertiesMap());
                     setFileStatusAsRecord(file.getObjectId());
-                    if ( log.isTraceEnabled() )
+                    if (log.isTraceEnabled())
                     {
                         log.trace("Done");
                     }
 
-                }
-                catch (MuleException e)
+                } catch (MuleException e)
                 {
                     log.error("Could not create RMA folder: " + e.getMessage(), e);
                 }
@@ -116,22 +127,27 @@ public class AlfrescoRecordsService
         }
     }
 
-    public void setFileStatusAsRecord(Long fileId){
-        try{
+    public void setFileStatusAsRecord(Long fileId)
+    {
+        try
+        {
             EcmFile ecmFile = getEcmFileService().findById(fileId);
-            if(null == ecmFile){
+            if (null == ecmFile)
+            {
                 throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, fileId, "File not found", null);
-            }
-            else{
+            } else
+            {
                 ecmFile.setStatus(EcmFileConstants.RECORD);
                 getEcmFileDao().save(ecmFile);
-                if ( log.isDebugEnabled() ) {
-                    log.debug("File with ID : " + ecmFile.getFileId() + " Status is changed to "+ EcmFileConstants.RECORD);
+                if (log.isDebugEnabled())
+                {
+                    log.debug("File with ID : " + ecmFile.getFileId() + " Status is changed to " + EcmFileConstants.RECORD);
                 }
             }
-        }
-        catch(AcmObjectNotFoundException e){
-            if (log.isErrorEnabled()) {
+        } catch (AcmObjectNotFoundException e)
+        {
+            if (log.isErrorEnabled())
+            {
                 log.error("File with id: " + fileId + " does not exists - " + e.getMessage());
             }
         }
@@ -171,7 +187,7 @@ public class AlfrescoRecordsService
     {
         this.alfrescoRmaProperties = alfrescoRmaProperties;
 
-        if ( alfrescoRmaProperties != null )
+        if (alfrescoRmaProperties != null)
         {
             Map<String, Object> stringObjectMap = new HashMap<>();
             alfrescoRmaProperties.
@@ -189,11 +205,13 @@ public class AlfrescoRecordsService
     }
 
 
-    public EcmFileDao getEcmFileDao() {
+    public EcmFileDao getEcmFileDao()
+    {
         return ecmFileDao;
     }
 
-    public void setEcmFileDao(EcmFileDao ecmFileDao) {
+    public void setEcmFileDao(EcmFileDao ecmFileDao)
+    {
         this.ecmFileDao = ecmFileDao;
     }
 
@@ -205,5 +223,16 @@ public class AlfrescoRecordsService
     protected void setAlfrescoRmaPropertiesMap(Map<String, Object> alfrescoRmaPropertiesMap)
     {
         this.alfrescoRmaPropertiesMap = alfrescoRmaPropertiesMap;
+    }
+
+
+    public AcmEncryptablePropertyUtils getEncryptablePropertyUtils()
+    {
+        return encryptablePropertyUtils;
+    }
+
+    public void setEncryptablePropertyUtils(AcmEncryptablePropertyUtils encryptablePropertyUtils)
+    {
+        this.encryptablePropertyUtils = encryptablePropertyUtils;
     }
 }

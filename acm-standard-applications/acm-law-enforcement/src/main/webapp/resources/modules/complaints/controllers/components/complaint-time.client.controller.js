@@ -51,7 +51,6 @@ angular.module('complaints').controller('Complaints.TimeController', ['$scope', 
                         $scope.gridOptions = $scope.gridOptions || {};
                         $scope.gridOptions.data = timesheets;
                         $scope.gridOptions.totalItems = Util.goodValue(timesheets.length, 0);
-                        //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
                         return config;
                     });
                     return timesheets;

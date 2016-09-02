@@ -1,14 +1,14 @@
 <div class="user-info" ng-controller="UserInfoController">
     <div>
         <div class="user-pic pull-left">
-            <img ng-src="{{imgSrc}}" fallback-err-src="modules/profile/img/nopic.png" >
+            <img ng-src="{{imgSrc}}" fallback-err-src="modules/profile/img/nopic.png">
         </div>
 
         <div dropdown class="user-menu">
             <a href="#" dropdown-toggle>
                 <strong>
                     <span class="fullname">
-                        <user-name user="user" />
+                        <user-name user="user"/>
                     </span>
                     <span class="glyphicon glyphicon-triangle-bottom"></span>
                 </strong>
@@ -21,7 +21,7 @@
                     </a>
                 </li>
 
-                <li><a href="http://www.arkcase.com/docs/" target="_blank" translate>core.userInfo.addedMenu.help</a></li>
+                <li><a href="{{helpUrl}}" target="_blank" translate>core.userInfo.addedMenu.help</a></li>
                 <li><a href="" ng-click="onClickLogout()" translate>core.userInfo.addedMenu.logout</a></li>
             </ul>
         </div>

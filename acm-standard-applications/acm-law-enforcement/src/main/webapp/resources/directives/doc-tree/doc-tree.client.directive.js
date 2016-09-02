@@ -102,7 +102,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
         var promiseGetUserFullName = LookupService.getUserFullNames();
         promiseGetUserFullName.then(function (userFullNames) {
             DocTree.userFullNames = userFullNames;
-            //refresh table?
         });
         var promiseGetEmailParams = LookupService.getConfig("notification").then(function (data) {
             Email.arkcaseUrl = Util.goodValue(data["arkcase.url"]);
@@ -675,12 +674,20 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             , markNodePending: function (node) {
                 if (Validator.validateFancyTreeNode(node)) {
                     $(node.span).addClass("pending");
+                    if(!node.folder) {
+                      node.title = $translate.instant("common.directive.docTree.waitUploading") + node.data.name;
+                      node.renderTitle();
+                    }
                     node.setStatus("loading");
                 }
             }
             , markNodeOk: function (node) {
                 if (Validator.validateFancyTreeNode(node)) {
                     $(node.span).removeClass("pending");
+                    if(!node.folder) {
+                      node.title = node.title.replace($translate.instant("common.directive.docTree.waitUploading"), '');
+                      node.renderTitle();
+                    }
                     node.setStatus("ok");
                 }
             }
@@ -1391,25 +1398,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         , {
                             name: "replace",
                             execute: function (nodes, args) {
-                                var node = nodes[0];
-                                var fileType = Util.goodValue(node.data.type);
-                                if (!Util.isEmpty(fileType)) {
-                                    DocTree.uploadSetting = {
-                                        replaceFileNode: node
-                                        , uploadToFolderNode: node.parent
-                                        , uploadFileType: fileType
-                                        , uploadFileNew: false
-                                        , deferUploadFile: $q.defer()
-                                        , deferSelectFile: $q.defer()
-                                    };
-
-                                    DocTree.replaceFile();
-                                }
+                                var selectFiles = DocTree.Command.findHandler("selectReplacement/");
+                                selectFiles.execute(nodes, args);
 
                                 $q.when(DocTree.uploadSetting.deferSelectFile.promise).then(function (files) {
-                                    var args = {
-                                        files: files
-                                    }
+                                    args = args || {};
+                                    args.files = files;
                                     var submitFiles = DocTree.Command.findHandler("submitFiles/");
                                     DocTree.Command.handleCommand(submitFiles, nodes, args);
                                 });
@@ -1584,8 +1578,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 }
 
                                 var files = args.files;
-                                var refresh = Util.goodValue(args.refresh, true);
-                                var promiseUploadFile = DocTree.doSubmitFormUploadFile(files, refresh);
+                                //var refresh = Util.goodValue(args.refresh, true);
+                                //var promiseUploadFile = DocTree.doSubmitFormUploadFile(files, refresh);
+                                var promiseUploadFile = DocTree.doSubmitFormUploadFile(files);
                                 $q.when(promiseUploadFile).then(function (data) {
                                     args.data = data;
                                     DocTree.uploadSetting = null;
@@ -1610,6 +1605,29 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                                 DocTree.uploadFile();
 
+                                return DocTree.uploadSetting.deferSelectFile.promise;
+                            }
+                        }
+                        , {
+                            name: "selectReplacement/",
+                            execute: function (nodes, args) {
+                                if (DocTree.uploadSetting) {
+                                    $log.warn("Warning: Trying to upload file before previous upload");
+                                }
+                                var node = nodes[0];
+                                var fileType = Util.goodValue(node.data.type);
+                                if (!Util.isEmpty(fileType)) {
+                                    DocTree.uploadSetting = {
+                                        replaceFileNode: node
+                                        , uploadToFolderNode: node.parent
+                                        , uploadFileType: fileType
+                                        , uploadFileNew: false
+                                        , deferUploadFile: $q.defer()
+                                        , deferSelectFile: $q.defer()
+                                    };
+
+                                    DocTree.replaceFile();
+                                }
                                 return DocTree.uploadSetting.deferSelectFile.promise;
                             }
                         }
@@ -2322,10 +2340,11 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     }
                     return dfd.promise();
                 }
-                , replaceFile: function (formData, fileNode, name, doRefresh) {
-                    var refresh = true;
-                    if (doRefresh == false)
-                        refresh = false;
+                //, replaceFile: function (formData, fileNode, name, doRefresh) {
+                , replaceFile: function (formData, fileNode, name) {
+                    //var refresh = true;
+                    //if (doRefresh == false)
+                    //    refresh = false;
                     var dfd = $.Deferred();
                     if (!DocTree.isFileNode(fileNode)) {
                         dfd.reject();
@@ -2375,12 +2394,14 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         }).then(
                             function (replacedFile) {
                                 if (replacedFile && fileNode) {
+                                    fileNode.data.version = replacedFile.version;
+                                    fileNode.data.versionList = replacedFile.versionList;
                                     fileNode.renderTitle();
                                     fileNode.setStatus("ok");
                                 }
-                                if (refresh) {
-                                    DocTree.refreshTree();
-                                }
+                                //if (refresh) {
+                                //    DocTree.refreshTree();
+                                //}
                                 dfd.resolve({files: [replacedFile], nodes: [fileNode]});
                             }
                             , function (errorData) {
@@ -3232,7 +3253,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         , uploadFileNew: false
                         , deferUploadFile: $q.defer()
                     };
-                    var args = {files: files, refresh: false};
+                    //var args = {files: files, refresh: false};
+                    var args = {files: files};
                     var submitFiles = DocTree.Command.findHandler("submitFiles/");
                     submitFiles.onPostCmd = callback;
                     DocTree.Command.handleCommand(submitFiles, [node], args);
@@ -3240,13 +3262,11 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             }
             , _addFileNode: function (folderNode, name, type) {
                 var fileNode = folderNode.addChildren({
-                    "title": $translate.instant("common.directive.docTree.waitUploading") + name,
+                    "title": name,
                     "name": name,
                     "ext": "",
-                    "type": type,
-                    "loadStatus": "loading"
+                    "type": type
                 });
-                //fileNode.setStatus("loading");
                 DocTree.markNodePending(fileNode);
                 return fileNode;
             }
@@ -3338,7 +3358,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     } //end if validateFolderList
                                 } //end if (!Util.isArrayEmpty(newChildren))
                             }
-                            DocTree.refreshTree();
+                            //DocTree.refreshTree();
                             return uploadedFiles;
                         }
                     );
@@ -3457,12 +3477,13 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     DocTree.uploadSetting.deferSelectFile.resolve(files);
                 }
             }
-            , doSubmitFormUploadFile: function (files, doRefresh) {
+            //, doSubmitFormUploadFile: function (files, doRefresh) {
+            , doSubmitFormUploadFile: function (files) {
                 if (!DocTree.uploadSetting) {
                     return Util.errorPromise("upload file error");
                 }
 
-                var refresh = Util.goodValue(doRefresh, true);
+                //var refresh = Util.goodValue(doRefresh, true);
 
                 var dfd = $.Deferred();
                 var folderNode = DocTree.uploadSetting.uploadToFolderNode;
@@ -3488,6 +3509,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 if (DocTree.uploadSetting.uploadFileNew) {
                     DocTree.Op.uploadFiles(fd, folderNode, names, fileType)
                         .then(function (data) {
+                                _.each(data.nodes, function(node){
+                                  DocTree.markNodeOk(node)
+                                });
                                 dfd.resolve(data);
                             },
                             function (error) {
@@ -3496,8 +3520,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         );
                 } else {
                     var replaceNode = DocTree.uploadSetting.replaceFileNode;
-                    DocTree.Op.replaceFile(fd, replaceNode, names[0], refresh)
+                    //DocTree.Op.replaceFile(fd, replaceNode, names[0], refresh)
+                    DocTree.Op.replaceFile(fd, replaceNode, names[0])
                         .then(function (data) {
+                                _.each(data.nodes, function(node){
+                                  DocTree.markNodeOk(node)
+                                });
                                 dfd.resolve(data);
                             },
                             function (error) {
@@ -4569,112 +4597,116 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     scope.onInitTree()(scope.treeControl);
                 }
 
-                ConfigService.getModuleConfig("common").then(function (moduleConfig) {
+                var promiseCommon = ConfigService.getModuleConfig("common").then(function (moduleConfig) {
                     var treeConfig = Util.goodMapValue(moduleConfig, "docTree", {});
                     DocTree.treeConfig = _.merge(treeConfig, DocTree.treeConfig);
                     return moduleConfig;
                 });
 
                 scope.$watchGroup(['treeConfig', 'objectInfo', 'fileTypes', 'correspondenceForms'], function (newValues, oldValues, scope) {
-                    var treeConfig = newValues[0];
-                    var objectInfo = newValues[1];
-                    var fileTypes = newValues[2];
-                    var correspondenceForms = newValues[3];
-                    _.merge(DocTree.treeConfig, treeConfig);
-
-                    DocTree.objectInfo = objectInfo;
-
-                    //
-                    // Build a table template:
-                    //
-                    // '<table id="treeDoc" class="table table-striped th-sortable table-hover">'
-                    //+ '<thead>'
-                    //+ '<tr>'
-                    //+ '<th id="selectDoc" width2="6%"><input type="checkbox"/></th>'
-                    //+ '<th id="docID" width2="4%" >ID</th>'
-                    //+ '<th id="docTitle" width="35%">Title</th>'
-                    //+ '<th id="docType" width="12%">Type</th>'
-                    //+ '<th id="docCreated" width="10%">Created</th>'
-                    //+ '<th id="docAuthor" width="16%">Author</th>'
-                    //+ '<th id="docVersion" width="6%">Version</th>'
-                    //+ '<th id="docStatus" width="8%">Status</th>'
-                    //+ '</tr>'
-                    //+ '</thead>'
-                    //+ '<tbody>'
-                    //+ '<tr>'
-                    //+ '<td headers="selectDoc"></td>'
-                    //+ '<td headers="docID"></td>'
-                    //+ '<td headers="docTitle"></td>'
-                    //+ '<td headers="docType"></td>'
-                    //+ '<td headers="docCreated"></td>'
-                    //+ '<td headers="docAuthor"></td>'
-                    //+ '<td headers="docVersion"></td>'
-                    //+ '<td headers="docStatus"></td>'
-                    //+ '</tr>'
-                    //+ '</tbody>'
-                    //+ '</table>'
-
-                    if (!Util.isEmpty(DocTree.jqTree)) {
-                        DocTree.jqTree.empty();
-                    }
-
-                    if (Util.goodMapValue(DocTree.treeConfig, "columnDefs")) {
-                        var columnDefs = DocTree.treeConfig.columnDefs;
-                        var jqTable = $("<table/>")
-                            .addClass("table table-striped th-sortable table-hover")
-                            .appendTo($(element));
-                        var jqThead = $("<thead/>").appendTo(jqTable);
-                        var jqTrHead = $("<tr/>")
-                            .appendTo(jqThead);
-                        var jqTbody = $("<tbody/>").appendTo(jqTable);
-                        var jqTrBody = $("<tr/>")
-                            .appendTo(jqTbody);
-
-                        var jqTh, jqTd;
-                        _.each(columnDefs, function (columnDef) {
-                            var name = columnDef.name;
-                            var field = Util.goodValue(columnDef.field, name);
-                            var cellTemplate = columnDef.cellTemplate;
-                            var displayName = $translate.instant(columnDef.displayName);
-                            var headTemplate = columnDef.headTemplate;
-                            if ("checkbox" == name) {
-                                headTemplate = "<input type='checkbox'/>";
-                            }
-                            var width = Util.goodValue(columnDef.width, "10%");
-                            jqTh = $("<th/>")
-                                .attr("width", width)
-                                //.text(displayName)
-                                .appendTo(jqTrHead);
-                            if (headTemplate) {
-                                $(headTemplate).appendTo(jqTh);
-                            } else {
-                                jqTh.text(displayName);
-                            }
-
-                            jqTd = $("<td/>")
-                                .appendTo(jqTrBody);
-                        });
-
-                        DocTree.jqTree = jqTable;
-
-                        DocTree.create();
-                        DocTree.makeDownloadDocForm(DocTree.jqTree);
-                        DocTree.makeUploadDocForm(DocTree.jqTree);
-
-                        if (Util.goodValue(fileTypes)) {
-                            DocTree.fileTypes = fileTypes;
-                            var jqTreeBody = DocTree.jqTree.find("tbody");
-                            DocTree.Menu.useContextMenu(jqTreeBody);
-                        }
-
-                        if (Util.goodValue(correspondenceForms)) {
-                            DocTree.correspondenceForms = correspondenceForms;
-                            var jqTreeBody = DocTree.jqTree.find("tbody");
-                            DocTree.Menu.useContextMenu(jqTreeBody);
-                        }
-                    }
-
-                });
+                	
+                	promiseCommon.then(function () {
+                	
+	                	var treeConfig = newValues[0];
+	                    var objectInfo = newValues[1];
+	                    var fileTypes = newValues[2];
+	                    var correspondenceForms = newValues[3];
+	                    _.merge(DocTree.treeConfig, treeConfig);
+	
+	                    DocTree.objectInfo = objectInfo;
+	
+	                    //
+	                    // Build a table template:
+	                    //
+	                    // '<table id="treeDoc" class="table table-striped th-sortable table-hover">'
+	                    //+ '<thead>'
+	                    //+ '<tr>'
+	                    //+ '<th id="selectDoc" width2="6%"><input type="checkbox"/></th>'
+	                    //+ '<th id="docID" width2="4%" >ID</th>'
+	                    //+ '<th id="docTitle" width="35%">Title</th>'
+	                    //+ '<th id="docType" width="12%">Type</th>'
+	                    //+ '<th id="docCreated" width="10%">Created</th>'
+	                    //+ '<th id="docAuthor" width="16%">Author</th>'
+	                    //+ '<th id="docVersion" width="6%">Version</th>'
+	                    //+ '<th id="docStatus" width="8%">Status</th>'
+	                    //+ '</tr>'
+	                    //+ '</thead>'
+	                    //+ '<tbody>'
+	                    //+ '<tr>'
+	                    //+ '<td headers="selectDoc"></td>'
+	                    //+ '<td headers="docID"></td>'
+	                    //+ '<td headers="docTitle"></td>'
+	                    //+ '<td headers="docType"></td>'
+	                    //+ '<td headers="docCreated"></td>'
+	                    //+ '<td headers="docAuthor"></td>'
+	                    //+ '<td headers="docVersion"></td>'
+	                    //+ '<td headers="docStatus"></td>'
+	                    //+ '</tr>'
+	                    //+ '</tbody>'
+	                    //+ '</table>'
+	
+	                    if (!Util.isEmpty(DocTree.jqTree)) {
+	                        DocTree.jqTree.empty();
+	                    }
+	
+	                    if (Util.goodMapValue(DocTree.treeConfig, "columnDefs")) {
+	                        var columnDefs = DocTree.treeConfig.columnDefs;
+	                        var jqTable = $("<table/>")
+	                            .addClass("table table-striped th-sortable table-hover")
+	                            .appendTo($(element));
+	                        var jqThead = $("<thead/>").appendTo(jqTable);
+	                        var jqTrHead = $("<tr/>")
+	                            .appendTo(jqThead);
+	                        var jqTbody = $("<tbody/>").appendTo(jqTable);
+	                        var jqTrBody = $("<tr/>")
+	                            .appendTo(jqTbody);
+	
+	                        var jqTh, jqTd;
+	                        _.each(columnDefs, function (columnDef) {
+	                            var name = columnDef.name;
+	                            var field = Util.goodValue(columnDef.field, name);
+	                            var cellTemplate = columnDef.cellTemplate;
+	                            var displayName = $translate.instant(columnDef.displayName);
+	                            var headTemplate = columnDef.headTemplate;
+	                            if ("checkbox" == name) {
+	                                headTemplate = "<input type='checkbox'/>";
+	                            }
+	                            var width = Util.goodValue(columnDef.width, "10%");
+	                            jqTh = $("<th/>")
+	                                .attr("width", width)
+	                                //.text(displayName)
+	                                .appendTo(jqTrHead);
+	                            if (headTemplate) {
+	                                $(headTemplate).appendTo(jqTh);
+	                            } else {
+	                                jqTh.text(displayName);
+	                            }
+	
+	                            jqTd = $("<td/>")
+	                                .appendTo(jqTrBody);
+	                        });
+	
+	                        DocTree.jqTree = jqTable;
+	
+	                        DocTree.create();
+	                        DocTree.makeDownloadDocForm(DocTree.jqTree);
+	                        DocTree.makeUploadDocForm(DocTree.jqTree);
+	
+	                        if (Util.goodValue(fileTypes)) {
+	                            DocTree.fileTypes = fileTypes;
+	                            var jqTreeBody = DocTree.jqTree.find("tbody");
+	                            DocTree.Menu.useContextMenu(jqTreeBody);
+	                        }
+	
+	                        if (Util.goodValue(correspondenceForms)) {
+	                            DocTree.correspondenceForms = correspondenceForms;
+	                            var jqTreeBody = DocTree.jqTree.find("tbody");
+	                            DocTree.Menu.useContextMenu(jqTreeBody);
+	                        }
+	                    }
+	
+	                });
+                });	
             }
         };
 
