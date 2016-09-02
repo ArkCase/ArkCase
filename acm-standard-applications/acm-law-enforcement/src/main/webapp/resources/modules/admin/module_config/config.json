@@ -494,6 +494,10 @@
         {
           "title": "admin.application.login.config.title",
           "templateName": "application-login.config"
+        },
+        {
+          "title": "admin.application.auditHistory.config.title",
+          "templateName": "application-audit-history.config"
         }
       ]
     },

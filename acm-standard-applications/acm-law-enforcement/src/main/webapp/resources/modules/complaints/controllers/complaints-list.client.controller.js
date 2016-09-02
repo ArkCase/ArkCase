@@ -7,28 +7,20 @@ angular.module('complaints').controller('ComplaintsListController', ['$scope', '
         , Util, ObjectService, ComplaintListService, ComplaintInfoService, HelperObjectBrowserService
         , ServCommService, MessageService) {
 
-        /*//
-         // Check to see if complaint page is shown as a result returned by Frevvo
-         // Reset the tree cache so that new entry created by Frevvo can be shown.
-         // This is a temporary solution until UI and backend communication is implemented
-         //
-         var topics = ["new-complaint", "close-complaint"];
-         _.each(topics, function (topic) {
-         var data = ServCommService.popRequest("frevvo", topic);
-         if (data) {
-         ComplaintListService.resetComplaintsTreeData();
-         }
-         });*/
-
+        // maybe optional listener for "close-complaint"?
         var eventName = "object.inserted";
         $scope.$bus.subscribe(eventName, function (data) {
-            var frevvoRequest = ServCommService.popRequest("frevvo", "new-complaint");
-            if (frevvoRequest) {
-                ObjectService.gotoUrl(ObjectService.ObjectTypes.COMPLAINT, data.objectId);
+            if (data.objectType === ObjectService.ObjectTypes.COMPLAINT) {
+                var frevvoRequest = ServCommService.popRequest("frevvo", "new-complaint");
+                if (frevvoRequest) {
+                    MessageService.info(data.objectType + " with ID " + data.objectId + " was created. Please refresh complaints list to load it.");
+                    //   ObjectService.gotoState(ObjectService.ObjectTypes.COMPLAINT, data.objectId);
+                }
+                else {
+                    MessageService.info(data.objectType + " with ID " + data.objectId + " was created");
+                }
             }
-            else {
-                MessageService.info(data.objectType + " with ID " + data.objectId + " was created");
-            }
+
         });
 
         //"treeConfig", "treeData", "onLoad", and "onSelect" will be set by Tree Helper

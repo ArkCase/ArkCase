@@ -11,8 +11,10 @@
  * Helper.UiGridService has functions for typical usage in ArCase of 'ui-grid' directive
  */
 angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '$translate'
-    , 'UtilService', 'LookupService', 'ApplicationConfigService', 'Object.LookupService', 'ObjectService', 'uiGridConstants'
-    , function ($resource, $q, $translate, Util, LookupService, ApplicationConfigService, ObjectLookupService, ObjectService, uiGridConstants) {
+    , 'UtilService', 'LookupService', 'ApplicationConfigService', 'Object.LookupService', 'ObjectService', 'uiGridConstants', 'Object.AuditService'
+    , function ($resource, $q, $translate, Util, LookupService, ApplicationConfigService, ObjectLookupService, ObjectService, uiGridConstants
+        , ObjectAuditService) {
+  
         var Service = {
             Lookups: {
                 USER_FULL_NAMES: "userFullNames"
@@ -330,30 +332,30 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
                 });
             }
 
-                    /**
-                     * @ngdoc method
-                     * @name showUserFullNames
-                     * @methodOf services:Helper.UiGridService
-                     *
-                     * @description
-                     * Replace user id with user full name.
-                     */
-                    , showUserFullNames: function () {
-                    var that = this;
-                    $q.all([ApplicationConfigService.getProperty(ApplicationConfigService.PROPERTIES.DISPLAY_USERNAME)]).then(function (result)
+            /**
+             * @ngdoc method
+             * @name showUserFullNames
+             * @methodOf services:Helper.UiGridService
+             *
+             * @description
+             * Replace user id with user full name.
+             */
+            , showUserFullNames: function () {
+                var that = this;
+                $q.all([ApplicationConfigService.getProperty(ApplicationConfigService.PROPERTIES.DISPLAY_USERNAME)]).then(function (result)
                     {
-                        var userNamePop = result[0];
-
-				        if (userNamePop == "userName" && _.get(that, 'scope.config.columnDefs')) {
-					        for (var i = 0; i < that.scope.config.columnDefs.length; i++) {
-                                if (that.scope.config.columnDefs[i].hasOwnProperty('fullNameField')) {
-								    var tempColumn = angular.copy(that.scope.config.columnDefs[i]);
-								    tempColumn.field = tempColumn.fullNameField;
-								    that.scope.config.columnDefs.splice(i,1, tempColumn);
-							    }
-						    }
-					    }
-                    });
+                      var userNamePop = result[0];
+      
+      				        if (userNamePop == "userName" && _.get(that, 'scope.config.columnDefs')) {
+      					        for (var i = 0; i < that.scope.config.columnDefs.length; i++) {
+                                      if (that.scope.config.columnDefs[i].hasOwnProperty('fullNameField')) {
+      								    var tempColumn = angular.copy(that.scope.config.columnDefs[i]);
+      								    tempColumn.field = tempColumn.fullNameField;
+      								    that.scope.config.columnDefs.splice(i,1, tempColumn);
+      							    }
+      						    }
+      					    }
+                });
             }
 
             /**
@@ -681,30 +683,46 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
                     that.scope.gridOptions.data.splice(idx, 1);
                 }
             }
-
+            
             /**
              * @ngdoc method
-             * @name hidePagingControlsIfAllDataShown
+             * @name retrieveAuditData
              * @methodOf services:Helper.UiGridService
              *
-             * @param {Number} totalCount Total number of grid rows
-             *
+             * @param {String} objectType query audit for given object type
+             *            
              * @description
-             * Hide paging controls of Angular ui-grid if all data has already shown
+             * Retrieves audit data for current grid context (objectType, objectId)
              */
-            , hidePagingControlsIfAllDataShown: function (totalCount) {
-                var that = this;
-                if (that.scope && that.scope.gridOptions && that.scope.gridOptions.paginationPageSize) {
-                    if (totalCount <= that.scope.gridOptions.paginationPageSize) {
-                        // Hides pagination controls since there is only 1 page of data
-                        that.scope.gridOptions.enablePaginationControls = false;
-                    } else {
-                        // need to re-enable pagination if a record is added to the next page
-                        that.scope.gridOptions.enablePaginationControls = true;
-                    }
-                }
+            , retrieveAuditData: function (objectType, objectId) {
+                  var that = this;
+                  if (Util.goodPositive(objectId, false)) {
+                      var promiseQueryAudit = ObjectAuditService.queryAudit(
+                            objectType, objectId
+                          , Util.goodValue(this.scope.start, 0)
+                          , Util.goodValue(this.scope.pageSize, 10)
+                          , Util.goodMapValue(this.scope.sort, "by")
+                          , Util.goodMapValue(this.scope.sort, "dir")
+                      );
+     
+                      $q.all([promiseQueryAudit]).then(function (data) {
+                          var auditData = data[0];
+                          that.scope.gridOptions = that.scope.gridOptions || {};
+                          that.scope.gridOptions.data = auditData.resultPage;
+                          that.scope.gridOptions.totalItems = auditData.totalCount;
+                      });
+                  }
+                  // subscribe for update, reload data
+                  var eventName = "object.changed/" + objectType + "/" + objectId;
+                  var subscription = this.scope.subscription;
+                  if (subscription) {
+                      this.scope.$bus.unsubscribe(subscription);
+                  }
+                  subscription = this.scope.$bus.subscribe(eventName, function(data) {
+                      that.retrieveAuditData(objectType, objectId);
+                });
             }
-
+           
         };
 
         return Service;

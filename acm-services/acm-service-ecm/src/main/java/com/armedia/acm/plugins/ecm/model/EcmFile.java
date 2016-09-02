@@ -10,7 +10,6 @@ import com.armedia.acm.services.tag.model.AcmAssociatedTag;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 import javax.persistence.CascadeType;
@@ -36,7 +35,6 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -44,7 +42,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "acm_file")
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "className")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "className", defaultImpl = EcmFile.class)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.plugins.ecm.model.EcmFile")
@@ -126,8 +124,8 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     private String objectType = OBJECT_TYPE;
 
     @OneToOne(cascade = CascadeType.REMOVE)
-    @JoinColumns({ @JoinColumn(name = "cm_file_id", referencedColumnName = "cm_object_id", updatable = false, insertable = false),
-            @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type", updatable = false, insertable = false) })
+    @JoinColumns({@JoinColumn(name = "cm_file_id", referencedColumnName = "cm_object_id", updatable = false, insertable = false),
+            @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type", updatable = false, insertable = false)})
     private AcmObjectLock lock;
 
     @Column(name = "cm_legacy_system_id")

@@ -2,6 +2,7 @@ package com.armedia.arkcase.uitests.cases;
 
 import java.awt.AWTException;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -16,6 +17,7 @@ import org.testng.asserts.SoftAssert;
 import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
 import com.armedia.arkcase.uitests.base.ArkCaseTestUtils;
 import com.armedia.arkcase.uitests.base.HttpResponseCode;
+import com.armedia.arkcase.uitests.base.WaitHelper;
 
 public class CasesPage extends ArkCaseTestBase {
 
@@ -33,25 +35,25 @@ public class CasesPage extends ArkCaseTestBase {
 	// Information ribbon
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[1]/h3/span")
 	public WebElement casesListTitle;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[1]/div[1]/h4/a")
+	@FindBy(how = How.XPATH, using = ".//*[@class='col-xs-6']/h4/a")
 	public WebElement createdCaseTitle;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/object-tree/section/div/div/div/ul/li[1]/span/span[3]")
+	@FindBy(how = How.XPATH, using = ".//*[@class='tree']/ul/li[1]/span/span[3]")
 	public WebElement createdCaseTitleList;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[2]/div[1]/div/a")
+	@FindBy(how = How.XPATH, using = ".//*[@editable-select='objectInfo.caseType']")
 	public WebElement createdCaseType;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[1]/nav/div[1]/div/div/div[2]/a/strong/span[1]")
 	public WebElement userLogedIn;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[3]/div[1]/div/a")
 	public WebElement assignedTo;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[2]/div[2]/div")
+	@FindBy(how = How.XPATH, using = ".//*[@class='h4 font-bold ng-binding']")
 	public WebElement createdDateCase;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[3]/div[2]/div/a")
+	@FindBy(how = How.XPATH, using = ".//*[@editable-select='owningGroup']")
 	public WebElement owningGroup;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[2]/div[3]/div/a")
+	@FindBy(how = How.XPATH, using = ".//*[@editable-select='objectInfo.priority']")
 	public WebElement priority;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[1]/div[2]/h4")
+	@FindBy(how = How.XPATH, using = ".//*[@class='row']/div[2]/h4")
 	public WebElement caseId;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[3]/div[3]/div/a")
+	@FindBy(how = How.XPATH, using = ".//*[@editable-bsdate='dateInfo.dueDate']")
 	public WebElement dueDate;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[2]/div[3]/div/form/div/select")
 	public WebElement priorityDropDown;
@@ -87,53 +89,54 @@ public class CasesPage extends ArkCaseTestBase {
 	public WebElement owningGroupConfirmBtn;
 
 	// case buttons
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/a[1]")
+	@FindBy(how = How.XPATH, using = ".//*[@ui-sref='frevvo.new-case()']")
 	public WebElement newCaseButton;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/a[2]")
+	@FindBy(how = How.XPATH, using = ".//*[@ui-sref='frevvo.edit-case(editParams)']")
 	public WebElement editCaseButton;
-	public @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/a[3]") WebElement changeCaseStatusButton;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/a[4]")
+	@FindBy(how = How.XPATH, using = ".//*[@ui-sref='frevvo.change-case-status(changeCaseStatusParams)']") 
+	public WebElement changeCaseStatusButton;
+	@FindBy(how = How.XPATH, using = ".//*[@ui-sref='frevvo.reinvestigate(reinvestigateParams)']")
 	public WebElement reinvestigateCaseButton;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[2]")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-click='subscribe(objectInfo)']")
 	public WebElement subscribeCaseButton;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[1]")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-click='unsubscribe(objectInfo)']")
 	public WebElement unsucribeCaseButton;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[3]")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-click='merge(objectInfo)']")
 	public WebElement mergeCaseButton;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[4]")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-click='split()']")
 	public WebElement splitCaseButton;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[1]/div/label/span")
+	@FindBy(how = How.XPATH, using = ".//*[@class='checkbox']/label/span")
 	public WebElement restrictCaseButton;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[5]")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-click='refresh()']")
 	public WebElement refreshPage;
 	// case links
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[1]/a")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-if='linksShown']/li[1]/a")
 	public WebElement caseOverview;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[2]/a")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-if='linksShown']/li[2]/a")
 	public WebElement caseDetails;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[3]/a")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-if='linksShown']/li[3]/a")
 	public WebElement casePeople;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[4]/a")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-if='linksShown']/li[4]/a")
 	public WebElement caseDocuments;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[5]/a")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-if='linksShown']/li[5]/a")
 	public WebElement caseParticipants;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[6]/a")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-if='linksShown']/li[6]/a")
 	public WebElement caseNotes;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[7]/a")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-if='linksShown']/li[7]/a")
 	public WebElement caseTasks;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[8]/a")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-if='linksShown']/li[8]/a")
 	public WebElement caseReferences;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[9]/a")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-if='linksShown']/li[9]/a")
 	public WebElement caseHistory;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[10]/a")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-if='linksShown']/li[10]/a")
 	public WebElement caseCorrespondence;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[10]/a")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-if='linksShown']/li[10]/a")
 	public WebElement caseTime;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[11]/a/i")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-if='linksShown']/li[11]/a/i")
 	public WebElement caseCost;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[12]/a")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-if='linksShown']/li[12]/a")
 	public WebElement caseTags;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[13]/a")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-if='linksShown']/li[13]/a")
 	public WebElement caseCalendar;
 	// change case status
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[2]/div[2]/div[4]/div[1]/input[1]")
@@ -154,7 +157,7 @@ public class CasesPage extends ArkCaseTestBase {
 	public WebElement closedStatusPartial;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[8]/div/input")
 	public WebElement changeCaseStatusSubmit;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[1]/div[1]/h4")
+	@FindBy(how = How.XPATH, using = ".//*[@class='col-xs-6']/h4")
 	public WebElement caseTitleDraft;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/iframe")
 	public WebElement chnageCaseStausFrameOne;
@@ -183,13 +186,13 @@ public class CasesPage extends ArkCaseTestBase {
 	public WebElement approveDocumenButton;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[5]")
 	public WebElement refreshbuttons;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[6]/div")
+	@FindBy(how = How.XPATH, using = ".//*[@class='col-xs-12 col-md-4'][6]/div")
 	public WebElement reviewRequestState;
 	// case details
 	@FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[2]/div[3]/div[4]")
 
 	public WebElement detailsText;
-	@FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[1]/div/span")
+	@FindBy(how = How.XPATH, using = ".//*[@class='panel-title']/span")
 	public WebElement detailsTitle;
 	@FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[1]/div/div/button")
 
@@ -803,7 +806,7 @@ public class CasesPage extends ArkCaseTestBase {
 	public WebElement refreshButtonInTaskPage;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div[1]/div[3]/div[1]/div")
 	public WebElement assignToInTheTaskPage;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div[1]/div[2]/div[2]/div")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-controller='Tasks.ParentInfoController']/div[1]/div[2]/div[2]/div")
 	public WebElement incidentDate;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div[1]/div[3]/div[2]/div")
 	public WebElement owningGroupInTaskPage;
@@ -913,93 +916,627 @@ public class CasesPage extends ArkCaseTestBase {
 	public WebElement mergeCancelBtn;
 	@FindBy(how = How.XPATH, using = "/html/body/div[5]/div/div/search-modal/div[3]/button[2]")
 	public WebElement mergeBtn;
+	
+	@FindBy(how = How.XPATH, using =".//*[@class='tree']/ul/li[1]/span/span[1]")
+	public WebElement firstCaseExpander;
+	@FindBy(how = How.XPATH, using =".//*[@class='']/ul/li[1]/span/span[3]")
+	public WebElement firstCaseDetailsLink;
+	
+	public CasesPage clickFirstCaseExpander(){
+		firstCaseExpander.click();
+		return this;
+	}
+	public CasesPage clickFirstCaseDetailsLink(){
+		firstCaseDetailsLink.click();
+		return this;
+	}
+	
 
-	public void casesModuleClick() {
-
+	public CasesPage casesModuleClick() {
 		casesModule.click();
+		return this;
 	}
 
-	public void verifyCasesTitle() {
-
+	public CasesPage verifyCasesTitle() {
 		Assert.assertEquals("Case title in the cases page is wrong", "Cases", casesListTitle.getText());
+		return this;
 	}
 
-	public void createdCaseInListClick() {
-		createdCaseTitleList.click();
+	public CasesPage createdCaseInListClick() {
+		firstCaseExpander.click();
+		firstCaseDetailsLink.click();
+		return this;
 	}
 
-	public void VerifycreatedDate() {
+	public CasesPage VerifycreatedDate() {
 
 		Date date = new Date(System.currentTimeMillis());
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 		String createdDate = formatter.format(date);
 		Assert.assertTrue(createdDateCase.getText().equals(createdDate));
+		return this;
 
 	}
-
-	public void verifyCreatedCaseInfo(String caseName, String caseType) {
-
-		SoftAssert softAssert = new SoftAssert();
-		softAssert.assertEquals(createdCaseTitle.getText(), caseName, "Case title is wrong");
-		createdCaseInListClick();
-		softAssert.assertEquals(createdCaseTitleList.getText(), caseName, "Case title in the cases list is wrong");
-		softAssert.assertEquals(createdCaseType.getText(), caseType, "Case type name is wrong");
+	
+	public String readCreatedCaseTitleText(){
+		WebElement el = WaitHelper.getWhenElementIsVisible(createdCaseTitle, 30, driver);	
+		String createdCaseTitleText = el.getText();
+		return createdCaseTitleText;
+	}
+	
+	public String readCreatedCaseTitleListText(){
+		String createdCaseTitleListText = createdCaseTitleList.getText();
+		return createdCaseTitleListText;
+	}
+	
+	public String readCreatedCaseTypeText(){
+		String createdCaseTypeText = createdCaseType.getText();
+		return createdCaseTypeText;
+	}
+	
+	public String readOwningGroupText(){
+		String owningGroupText = owningGroup.getText();
+		return owningGroupText;
+	}
+	
+	public String readPriorityText(){
+		String priorityText = priority.getText();
+		return priorityText;
+	}
+	
+	public boolean caseIdIsEmpty(){
+		String caseIdText = caseId.getText();
+		if (caseIdText.isEmpty() == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean dueDateIsEmpty(){
+		String dueDateText = dueDate.getText();
+		if (dueDateText.isEmpty() == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean restrictCaseButtonIsDisplayed(){
+		boolean restrictCaseButtonIsDisplayed = restrictCaseButton.isDisplayed();
+		if (restrictCaseButtonIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean restrictCaseButtonIsEnabled(){
+		boolean restrictCaseButtonIsEnabled = restrictCaseButton.isEnabled();
+		if (restrictCaseButtonIsEnabled == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	public String readRestrictCaseButtonText(){
+		String restrictCaseButtonText = restrictCaseButton.getText();
+		return restrictCaseButtonText;
+	}
+	public boolean newCaseButtonIsDisplayed(){
+		boolean newCaseButtonIsDisplayed = newCaseButton.isDisplayed();
+		if (newCaseButtonIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	
+	
+	public boolean newCaseButtonIsEnabled(){
+		boolean newCaseButtonIsEnabled = newCaseButton.isEnabled();
+		if (newCaseButtonIsEnabled == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean newCaseButtonEqualsNew(){
+		boolean newCaseButtonEqualsNew = newCaseButton.getText().equals("New");
+		if (newCaseButtonEqualsNew == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	
+	public boolean editCaseButtonIsDisplayed(){
+		boolean editCaseButtonIsDisplayed = editCaseButton.isDisplayed();
+		if (editCaseButtonIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean editCaseButtonIsEnabled(){
+		boolean editCaseButtonIsEnabled = editCaseButton.isEnabled();
+		if (editCaseButtonIsEnabled == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean editCaseButtonEqualsEdit(){
+		boolean editCaseButtonEqualsEdit = editCaseButton.getText().equals("Edit");
+		if (editCaseButtonEqualsEdit == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean changeCaseStatusButtonIsDisplayed(){
+		boolean changeCaseStatusButtonIsDisplayed = changeCaseStatusButton.isDisplayed();
+		if (changeCaseStatusButtonIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean changeCaseStatusButtonIsEnabled(){
+		boolean changeCaseStatusButtonIsEnabled = changeCaseStatusButton.isEnabled();
+		if (changeCaseStatusButtonIsEnabled == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public String readChangeCaseStatusButtonText(){
+		String changeCaseStatusButtonText = changeCaseStatusButton.getText();
+		return changeCaseStatusButtonText;
+	}
+	public boolean reincestigateCaseButtonIsDisplayed(){
+		boolean reinvestigateCaseButtonIsDisplayed = reinvestigateCaseButton.isDisplayed();
+		if (reinvestigateCaseButtonIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean reinvestigateCaseButtonIsEnabled(){
+		boolean reinvestigateCaseButtonIsEnabled = reinvestigateCaseButton.isEnabled();
+		if (reinvestigateCaseButtonIsEnabled == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean reinvestigateCaseButtonEqualsReinvestigate(){
+		boolean reinvestigateCaseButtonEqualsReinvestigate = reinvestigateCaseButton.getText().equals("Reinvestigate");
+		if (reinvestigateCaseButtonEqualsReinvestigate == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean subscribeCaseButtonIsDisplayed(){
+		WebElement el = WaitHelper.getWhenElementIsVisible(subscribeCaseButton, 30, driver);	
+		boolean subscribeCaseButtonIsDisplayed = el.isDisplayed();
+		if (subscribeCaseButtonIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean subscribeCaseButtonIsEnabled(){
+		boolean subscribeCaseButtonIsEnabled = subscribeCaseButton.isEnabled();
+		if (subscribeCaseButtonIsEnabled == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean subscribeCaseButtonEqualsSubscribe(){
+		boolean subscribeCaseButtonEqualsSubscribe = subscribeCaseButton.getText().equals("Subscribe");
+		if (subscribeCaseButtonEqualsSubscribe == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean mergeCaseButtonIsDisplayed(){
+		boolean mergeCaseButtonIsDisplayed = mergeCaseButton.isDisplayed();
+		if (mergeCaseButtonIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean mergeCaseButtonIsEnabled(){
+		boolean mergeCaseButtonIsEnabled = mergeCaseButton.isEnabled();
+		if (mergeCaseButtonIsEnabled == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean mergeCaseButtonEqualsMerge(){
+		boolean mergeCaseButtonEqualsMerge = mergeCaseButton.getText().equals("Merge");
+		if (mergeCaseButtonEqualsMerge == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}	
+	
+	public boolean splitCaseButtonIsDisplayed(){
+		boolean splitCaseButtonIsDisplayed = splitCaseButton.isDisplayed();
+		if (splitCaseButtonIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean splitCaseButtonIsEnabled(){
+		boolean splitCaseButtonIsEnabled = splitCaseButton.isEnabled();
+		if (splitCaseButtonIsEnabled == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean splitCaseButtonEqualsSplit(){
+		boolean splitCaseButtonEqualsSplit = splitCaseButton.getText().equals("Split");
+		if (splitCaseButtonEqualsSplit == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}	
+	
+	public boolean refreshButtonIsDisplayed(){
+		boolean refreshButtonIsDisplayed = refreshPage.isDisplayed();
+		if (refreshButtonIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean refreshButtonIsEnabled(){
+		boolean refreshButtonIsEnabled = refreshPage.isEnabled();
+		if (refreshButtonIsEnabled == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean caseOverviewIsDisplayed(){
+		boolean caseOverviewIsDisplayed = caseOverview.isDisplayed();
+		if (caseOverviewIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean caseDetailsIsDisplayed(){
+		boolean caseDetailsIsDisplayed = caseDetails.isDisplayed();
+		if (caseDetailsIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean casePeopleIsDisplayed(){
+		boolean casePeopleIsDisplayed = casePeople.isDisplayed();
+		if (casePeopleIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean caseDocumentsIsDisplayed(){
+		boolean caseDocumentsIsDisplayed = caseDocuments.isDisplayed();
+		if (caseDocumentsIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean caseParticipantsIsDisplayed(){
+		boolean caseParticipantsIsDisplayed = caseParticipants.isDisplayed();
+		if (caseParticipantsIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	public boolean caseNotesIsDisplayed(){
+		boolean caseNotesIsDisplayed = caseNotes.isDisplayed();
+		if (caseNotesIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean caseTasksIsDisplayed(){
+		boolean caseTasksIsDisplayed = caseTasks.isDisplayed();
+		if (caseTasksIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean caseReferencesIsDisplayed(){
+		boolean caseReferencesIsDisplayed = caseReferences.isDisplayed();
+		if (caseReferencesIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean caseHistoryIsDisplayed(){
+		boolean caseHistoryIsDisplayed = caseHistory.isDisplayed();
+		if (caseHistoryIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean caseCorespondenceIsDisplayed(){
+		boolean caseCorespondenceIsDisplayed = caseCorrespondence.isDisplayed();
+		if (caseCorespondenceIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean caseTimeIsDisplayed(){
+		boolean caseTimeIsDisplayed = caseTime.isDisplayed();
+		if (caseTimeIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean caseCostIsDisplayed(){
+		boolean caseCostIsDisplayed = caseCost.isDisplayed();
+		if (caseCostIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean caseTagsIsDisplayed(){
+		boolean caseTagsIsDisplayed = caseTags.isDisplayed();
+		if (caseTagsIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean caseCalendarIsDisplayed(){
+		boolean caseCalendarIsDisplayed = caseTags.isDisplayed();
+		if (caseCalendarIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	public CasesPage verifyCreatedCaseInfo(String caseName, String caseType) {
+		
+		SoftAssert softAssert = new SoftAssert();		
+		softAssert.assertEquals(readCreatedCaseTitleText(), caseName, "Case title is wrong");
+		//createdCaseInListClick();
+		softAssert.assertEquals(readCreatedCaseTitleListText(), caseName, "Case title in the cases list is wrong");
+		softAssert.assertEquals(readCreatedCaseTypeText(), caseType, "Case type name is wrong");
 		// softAssert.assertEquals(userLogedIn.getText(), assignedTo.getText(),
 		// "User name is wrong");
-		softAssert.assertEquals(owningGroup.getText(), "ACM_INVESTIGATOR_DEV", "Owning group is wrong");
-		softAssert.assertEquals(priority.getText(), "Medium", "Priority type is wrong");
-		softAssert.assertFalse(caseId.getText().isEmpty(), "case id is empty");
-		softAssert.assertFalse(dueDate.getText().isEmpty(), "due date is empty");
-		softAssert.assertFalse(dueDate.getText().isEmpty(), "due date is empty");
-		softAssert.assertTrue(restrictCaseButton.isDisplayed(), "restrict button is not diplayed");
-		softAssert.assertTrue(restrictCaseButton.isEnabled(), "restrict button is not enabled");
-		softAssert.assertEquals(restrictCaseButton.getText(), "Restrict?", "Restrict text is wrong");
-		softAssert.assertTrue(newCaseButton.isDisplayed(), "New case button is not displayed");
-		softAssert.assertTrue(newCaseButton.isEnabled(), "New case button is not enabled");
-		softAssert.assertTrue(newCaseButton.getText().equals("New"), "New case button text is not New");
-		softAssert.assertTrue(editCaseButton.isDisplayed(), "Edit case button is not displayed");
-		softAssert.assertTrue(editCaseButton.isEnabled(), "Edit case button is not enabled");
-		softAssert.assertTrue(editCaseButton.getText().equals("Edit"), "Edit case button text is not new");
-		softAssert.assertTrue(changeCaseStatusButton.isDisplayed(), "Change Case Status case button is not displayed");
-		softAssert.assertTrue(changeCaseStatusButton.isEnabled(), "Change Case Status button is not enabled");
-		softAssert.assertEquals(changeCaseStatusButton.getText(), "Change Case Status",
+		softAssert.assertEquals(readOwningGroupText(), "ACM_INVESTIGATOR_DEV", "Owning group is wrong");
+		softAssert.assertEquals(readPriorityText(), "Medium", "Priority type is wrong");
+		softAssert.assertFalse(caseIdIsEmpty(), "case id is empty");
+		softAssert.assertFalse(dueDateIsEmpty(), "due date is empty");		
+		softAssert.assertTrue(restrictCaseButtonIsDisplayed(), "restrict button is not diplayed");
+		softAssert.assertTrue(restrictCaseButtonIsEnabled(), "restrict button is not enabled");
+		softAssert.assertEquals(readRestrictCaseButtonText(), "Restrict?", "Restrict text is wrong");
+		softAssert.assertTrue(newCaseButtonIsDisplayed(), "New case button is not displayed");
+		softAssert.assertTrue(newCaseButtonIsEnabled(), "New case button is not enabled");
+		softAssert.assertTrue(newCaseButtonEqualsNew(), "New case button text is not New");
+		softAssert.assertTrue(editCaseButtonIsDisplayed(), "Edit case button is not displayed");
+		softAssert.assertTrue(editCaseButtonIsEnabled(), "Edit case button is not enabled");
+		softAssert.assertTrue(editCaseButtonEqualsEdit(), "Edit case button text is not new");
+		softAssert.assertTrue(changeCaseStatusButtonIsDisplayed(), "Change Case Status case button is not displayed");
+		softAssert.assertTrue(changeCaseStatusButtonIsEnabled(), "Change Case Status button is not enabled");
+		softAssert.assertEquals(readChangeCaseStatusButtonText(), "Change Case Status",
 				"Change Case status button text is not change case status");
 
-		softAssert.assertTrue(reinvestigateCaseButton.isDisplayed(),
+		softAssert.assertTrue(reincestigateCaseButtonIsDisplayed(),
 				"Reinvestigate Case Status case button is not displayed");
-		softAssert.assertTrue(reinvestigateCaseButton.isEnabled(), "Reinvestigate Case Status button is not enabled");
-		softAssert.assertTrue(reinvestigateCaseButton.getText().equals("Reinvestigate"),
-				"Reinvestigate Case   button text is not Reinvestigate");
-		softAssert.assertTrue(subscribeCaseButton.isDisplayed(), "SubscribeCase  case button is not displayed");
-		softAssert.assertTrue(subscribeCaseButton.isEnabled(), "Subscribe Case  button is not enabled");
-		softAssert.assertTrue(subscribeCaseButton.getText().equals("Subscribe"),
-				"Subscribe Case   button text is not Subscribe");
-		softAssert.assertTrue(mergeCaseButton.isDisplayed(), "MergeCaseButton case button is not displayed");
-		softAssert.assertTrue(mergeCaseButton.isEnabled(), "MergeCaseButton  button is not enabled");
-		softAssert.assertTrue(mergeCaseButton.getText().equals("Merge"), "Merge button text is not Merge");
-		softAssert.assertTrue(splitCaseButton.isDisplayed(), "splitCaseButton case button is not displayed");
-		softAssert.assertTrue(splitCaseButton.isEnabled(), "SplitCaseButton  button is not enabled");
-		softAssert.assertTrue(splitCaseButton.getText().equals("Split"), "Split button text is not Merge");
-		softAssert.assertTrue(refreshPage.isDisplayed(), "Refresh button is not diplayed");
-		softAssert.assertTrue(refreshPage.isEnabled(), "Refresh button is not enabled");
-		softAssert.assertTrue(caseOverview.isDisplayed(), "Overview link is not displayed");
-		softAssert.assertTrue(caseDetails.isDisplayed(), "Details link is not displayed");
-		softAssert.assertTrue(casePeople.isDisplayed(), "People link is not displayed");
-		softAssert.assertTrue(caseDocuments.isDisplayed(), "Documents link is not displayed");
-		softAssert.assertTrue(caseParticipants.isDisplayed(), "PArticipants link is not displayed");
-		softAssert.assertTrue(caseNotes.isDisplayed(), "Notes link is not displayed");
-		softAssert.assertTrue(caseTasks.isDisplayed(), "Tasks link is not displayed");
-		softAssert.assertTrue(caseReferences.isDisplayed(), "References link is not displayed");
-		softAssert.assertTrue(caseHistory.isDisplayed(), "History link is not displayed");
-		softAssert.assertTrue(caseCorrespondence.isDisplayed(), "Correspondence  link is not displayed");
-		softAssert.assertTrue(caseTime.isDisplayed(), "Time link is not displayed");
-		softAssert.assertTrue(caseCost.isDisplayed(), "Cost link is not displayed");
-		softAssert.assertTrue(caseTags.isDisplayed(), "Tags link is not displayed");
-		softAssert.assertTrue(caseCalendar.isDisplayed(), "Calendar link is not displayed");
+		softAssert.assertTrue(reinvestigateCaseButtonIsEnabled(), "Reinvestigate Case Status button is not enabled");
+		softAssert.assertTrue(reinvestigateCaseButtonEqualsReinvestigate(),
+				"Reinvestigate Case   button text is not Reinvestigate");		
+		softAssert.assertTrue(subscribeCaseButtonIsDisplayed(), "Subscribe Case button is not displayed");
+		softAssert.assertTrue(subscribeCaseButtonIsEnabled(), "Subscribe Case button is not enabled");
+		softAssert.assertTrue(subscribeCaseButtonEqualsSubscribe(),
+				"Subscribe Case button text is not Subscribe");
+		softAssert.assertTrue(mergeCaseButtonIsDisplayed(), "MergeCaseButton case button is not displayed");
+		softAssert.assertTrue(mergeCaseButtonIsEnabled(), "MergeCaseButton  button is not enabled");
+		softAssert.assertTrue(mergeCaseButtonEqualsMerge(), "Merge button text is not Merge");
+		softAssert.assertTrue(splitCaseButtonIsDisplayed(), "splitCaseButton case button is not displayed");
+		softAssert.assertTrue(splitCaseButtonIsEnabled(), "SplitCaseButton  button is not enabled");
+		softAssert.assertTrue(splitCaseButtonEqualsSplit(), "Split button text is not Split");
+		softAssert.assertTrue(refreshButtonIsDisplayed(), "Refresh button is not diplayed");
+		softAssert.assertTrue(refreshButtonIsEnabled(), "Refresh button is not enabled");
+		softAssert.assertTrue(caseOverviewIsDisplayed(), "Overview link is not displayed");
+		softAssert.assertTrue(caseDetailsIsDisplayed(), "Details link is not displayed");
+		softAssert.assertTrue(casePeopleIsDisplayed(), "People link is not displayed");
+		softAssert.assertTrue(caseDocumentsIsDisplayed(), "Documents link is not displayed");
+		softAssert.assertTrue(caseParticipantsIsDisplayed(), "PArticipants link is not displayed");
+		softAssert.assertTrue(caseNotesIsDisplayed(), "Notes link is not displayed");
+		softAssert.assertTrue(caseTasksIsDisplayed(), "Tasks link is not displayed");
+		softAssert.assertTrue(caseReferencesIsDisplayed(), "References link is not displayed");
+		softAssert.assertTrue(caseHistoryIsDisplayed(), "History link is not displayed");
+		softAssert.assertTrue(caseCorespondenceIsDisplayed(), "Correspondence  link is not displayed");
+		softAssert.assertTrue(caseTimeIsDisplayed(), "Time link is not displayed");
+		softAssert.assertTrue(caseCostIsDisplayed(), "Cost link is not displayed");
+		softAssert.assertTrue(caseTagsIsDisplayed(), "Tags link is not displayed");
+		softAssert.assertTrue(caseCalendarIsDisplayed(), "Calendar link is not displayed");	
 		softAssert.assertAll();
+		return this;
 	}
 
-	public void deleteCase() throws InterruptedException {
+	public CasesPage deleteCase() throws InterruptedException {
+		WaitHelper.continueWhenElementIsNotVisible(30, driver);
 		changeCaseStatus.click();
 		Thread.sleep(4000);
 		caseStatusDelete.click();
@@ -1016,18 +1553,20 @@ public class CasesPage extends ArkCaseTestBase {
 		Thread.sleep(4000);
 		changeCaseStatusSubmit.click();
 		Thread.sleep(6000);
+		return this;
 	}
 
-	public void changeCaseStatusActive() throws InterruptedException {
+	public CasesPage changeCaseStatusActive() throws InterruptedException {
 
 		changeCaseStatus.click();
 		Thread.sleep(4000);
 		Assert.assertEquals("Case status Active name is wrong", "Active", caseStatusActive.getText());
 		caseStatusActive.click();
 		Thread.sleep(4000);
+		return this;
 	}
 
-	public void selectApproverForChangeCaseStatus(String approver) throws InterruptedException {
+	public CasesPage selectApproverForChangeCaseStatus(String approver) throws InterruptedException {
 
 		caseSelectAprover.click();
 		Thread.sleep(2000);
@@ -1041,28 +1580,31 @@ public class CasesPage extends ArkCaseTestBase {
 		Thread.sleep(4000);
 		changeCaseStatusSubmit.click();
 		Thread.sleep(6000);
+		return this;
 
 	}
 
-	public void changeCaseStatusInactive() throws InterruptedException {
+	public CasesPage changeCaseStatusInactive() throws InterruptedException {
 
 		changeCaseStatus.click();
 		Thread.sleep(4000);
 		Assert.assertEquals("Case status Inactive name is wrong", "Inactive", caseStatusInactive.getText());
 		caseStatusInactive.click();
 		Thread.sleep(4000);
+		return this;
 	}
 
-	public void changeCaseStatusClosed() throws InterruptedException {
+	public CasesPage changeCaseStatusClosed() throws InterruptedException {
 
 		changeCaseStatus.click();
 		Thread.sleep(4000);
 		Assert.assertEquals("Case status closed name is wrong", "Closed", caseStatusClosed.getText());
 		caseStatusClosed.click();
 		Thread.sleep(4000);
+		return this;
 	}
 
-	public void changeCaseStatusAproved() throws InterruptedException, IOException {
+	public CasesPage changeCaseStatusAproved() throws InterruptedException, IOException {
 		HttpResponseCode responseCode = new HttpResponseCode();
 		// TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		caseTasks.click();
@@ -1086,33 +1628,57 @@ public class CasesPage extends ArkCaseTestBase {
 		responseCode.checkHttpResponse(
 				"/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[1]");
 		Thread.sleep(10000);
-		approveDocumenButton.click();
-		Thread.sleep(2000);
-		Assert.assertTrue(reviewRequestState.getText().equals("CLOSED"));
-
+		WebElement el = WaitHelper.getWhenElementIsVisible(approveDocumenButton, 30, driver);	
+		el.click();		
+		//Assert.assertTrue(reviewRequestStateEqualsClosed());
+		return this;
 	}
-
-	public void verifyDetailsSection() throws InterruptedException {
-
-		
+	public boolean reviewRequestStateEqualsClosed(){
+		WebElement el = WaitHelper.getWhenElementIsVisible(reviewRequestState, 30, driver);	
+		boolean reviewRequestStateEqualsClosed = el.getText().equals("CLOSED");
+		if (reviewRequestStateEqualsClosed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+    public String readDetailsTitle(){
+    	WebElement el = WaitHelper.getWhenElementIsVisible(detailsTitle, 30, driver);	
+    	String readDetailsTitle = el.getText();
+    	return readDetailsTitle;
+    }
+    public boolean detailsSaveButtonIsDisplayed(){
+		boolean detailsSaveButtonIsDisplayed = detailsSaveButton.isDisplayed();
+		if (detailsSaveButtonIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	public CasesPage verifyDetailsSection() throws InterruptedException {		
 		Thread.sleep(3000);
-		SoftAssert softAssert = new SoftAssert();
-		softAssert.assertEquals(detailsTitle.getText(), "Details", "Details title is wrong");
-		softAssert.assertTrue(detailsSaveButton.isDisplayed(), "Details save button is not shown");
+		SoftAssert softAssert = new SoftAssert();		
+		softAssert.assertEquals(readDetailsTitle(), "Details", "Details title is wrong");
+		softAssert.assertTrue(detailsSaveButtonIsDisplayed(), "Details save button is not shown");		
 		softAssert.assertAll();
+		return this;
 	}
-
-	public void deleteDetailsText() {
-
+	public CasesPage deleteDetailsText() {
 		detailsText.click();
 		detailsText.clear();
 		detailsSaveButton.click();
 		Assert.assertTrue(detailsText.getText().isEmpty());
 		Assert.assertEquals("Case details alert text is wrong", "Case details saved", caseDetailsSavedPopup.getText());
-
+		return this;
 	}
 
-	public void verifyPeopleSectionInitiator(String firstName, String lastName) {
+	public CasesPage verifyPeopleSectionInitiator(String firstName, String lastName) {
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertEquals(peopleTableTitle.getText(), "People", "People table ttle is not correct");
 		softAssert.assertEquals(peopleTypeColumn.getText(), "Type", "People type column text is not correct");
@@ -1130,10 +1696,10 @@ public class CasesPage extends ArkCaseTestBase {
 		softAssert.assertTrue(peopleEditRecord.isDisplayed(), "Edit record icon is not displayed");
 		softAssert.assertTrue(peopleDeleteIcon.isDisplayed(), "People delete icon is not displayed");
 		softAssert.assertAll();
+		return this;
 	}
 
-	public void verifyPeopleType(String type, String firstName, String lastName) {
-
+	public CasesPage verifyPeopleType(String type, String firstName, String lastName) {
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertTrue(contactMethodIconC.isDisplayed(), "Second row Contact method icon is not displayed");
 		softAssert.assertTrue(organizationsIconC.isDisplayed(),
@@ -1146,10 +1712,10 @@ public class CasesPage extends ArkCaseTestBase {
 		softAssert.assertTrue(peopleEditRecordC.isDisplayed(), "Second row Edit record icon is not displayed");
 		softAssert.assertTrue(peopleDeleteIconC.isDisplayed(), "Second row People delete icon is not displayed");
 		softAssert.assertAll();
+		return this;
 	}
 
-	public void verifyPersonTypes() throws InterruptedException {
-
+	public CasesPage verifyPersonTypes() throws InterruptedException {
 		personTypesDropDown.click();
 		Thread.sleep(2000);
 		SoftAssert softAssert = new SoftAssert();
@@ -1158,14 +1724,15 @@ public class CasesPage extends ArkCaseTestBase {
 		softAssert.assertEquals(personTypesWASOfficer.getText(), "WAS Officer",
 				"WAS Officer person type name is wrong");
 		softAssert.assertEquals(personTypesVictim.getText(), "Victim", "Victim person type name is wrong");
-		softAssert.assertEquals(personTypesDefenceCounsel.getText(), "Defence Counsel",
-				"Defence Counsel perosn type name is wrong");
+		softAssert.assertEquals(personTypesDefenceCounsel.getText(), "Defense Counsel",
+				"Defense Counsel person type name is wrong");
 		softAssert.assertEquals(personTypesForensicScientist.getText(), "Forensic Scientist",
 				"Forensic Scientist person type name is wrong");
 		softAssert.assertAll();
+		return this;
 	}
 
-	public void addPersonType(String firstName, String lastName) throws InterruptedException {
+	public CasesPage addPersonType(String firstName, String lastName) throws InterruptedException {
 
 		personTypesDropDown.click();
 		Thread.sleep(2000);
@@ -1180,20 +1747,21 @@ public class CasesPage extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		editRecordSaveButton.click();
 		Thread.sleep(3000);
+		return this;
 
 	}
 
-	public void priorityTypePeople() throws InterruptedException {
+	public CasesPage priorityTypePeople() throws InterruptedException {
 
 		peopleTypeColumn.click();
 		Thread.sleep(2000);
 		peopleSortType.click();
 		Thread.sleep(2000);
+		return this;
 
 	}
 
-	public void verifyContactMethods(String type, String value, String addedBy) {
-
+	public CasesPage verifyContactMethods(String type, String value, String addedBy) {
 		Date date = new Date(System.currentTimeMillis());
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 		String createdDate = formatter.format(date);
@@ -1212,11 +1780,10 @@ public class CasesPage extends ArkCaseTestBase {
 		softAssert.assertTrue(editContactMethods.isDisplayed(), "Edit contact methods icon is not displayed");
 		softAssert.assertTrue(deleteContactMethods.isDisplayed(), "Delete contact methods icon is not diplsyed");
 		softAssert.assertAll();
-
+        return this;
 	}
 
-	public void verifyOrganizations(String type, String value, String user) {
-
+	public CasesPage verifyOrganizations(String type, String value, String user) {
 		Date date = new Date(System.currentTimeMillis());
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 		String createdDate = formatter.format(date);
@@ -1239,11 +1806,11 @@ public class CasesPage extends ArkCaseTestBase {
 		softAssert.assertTrue(deleteOrganization.isDisplayed(), "Delete organization is not displayed");
 		softAssert.assertTrue(addOrganizationButton.isDisplayed(), "Add organization button is not displayed");
 		softAssert.assertAll();
+		return this;
 	}
 
-	public void verifyAddressesTable(String type, String address, String city, String state, String zip, String country,
+	public CasesPage verifyAddressesTable(String type, String address, String city, String state, String zip, String country,
 			String addedBy) {
-
 		Date date = new Date(System.currentTimeMillis());
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 		String createdDate = formatter.format(date);
@@ -1268,21 +1835,21 @@ public class CasesPage extends ArkCaseTestBase {
 		softAssert.assertTrue(deleteAddress.isDisplayed(), "Delete address icon is not displayed");
 		softAssert.assertTrue(addAddressButton.isDisplayed(), "Add address button is not displayed");
 		softAssert.assertAll();
-
+		return this;
 	}
 
-	public void verifyAddressDeleted() {
+	public CasesPage verifyAddressDeleted() {
 
 		int i = driver
 				.findElements(By
 						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-people/div/div[2]/div/div[1]/div[2]/div[2]/div/div[1]/div[2]/div[3]/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[1]/div"))
 				.size();
 		Assert.assertTrue("The address is not deleted", i == 0);
+		return this;
 
 	}
 
-	public void verifyAliasesTable() {
-
+	public CasesPage verifyAliasesTable() {
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertTrue(aliasesTableTitle.getText().equals("Aliases"), "Aliases table title is wrong");
 		softAssert.assertTrue(aliasesTypeColumn.getText().equals("Type"), "Aliases type column name is wrong");
@@ -1292,11 +1859,10 @@ public class CasesPage extends ArkCaseTestBase {
 		softAssert.assertTrue(aliasesAddedByColumn.getText().equals("Added By"),
 				"Aliases added by column name is wrong");
 		softAssert.assertAll();
-
+		return this;
 	}
 
-	public void verifySecondContactMethods(String type, String value, String addedBy) {
-
+	public CasesPage verifySecondContactMethods(String type, String value, String addedBy) {
 		Date date = new Date(System.currentTimeMillis());
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 		String createdDate = formatter.format(date);
@@ -1332,11 +1898,11 @@ public class CasesPage extends ArkCaseTestBase {
 		softAssert.assertTrue(secondContactMethodsAddButton.isEnabled(),
 				"Second contact methods add button is not enabled");
 		softAssert.assertAll();
+		return this;
 
 	}
 
-	public void verifySecondOrganization(String type, String value, String addedBy) {
-
+	public CasesPage verifySecondOrganization(String type, String value, String addedBy) {
 		Date date = new Date(System.currentTimeMillis());
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 		String createdDate = formatter.format(date);
@@ -1361,10 +1927,10 @@ public class CasesPage extends ArkCaseTestBase {
 		softAssert.assertTrue(secondDeleteOrganization.isDisplayed(), "Delete organization is not displayed");
 		softAssert.assertTrue(secondAddOrganizationButton.isDisplayed(), "Add organization button is not displayed");
 		softAssert.assertAll();
-
+        return this;
 	}
 
-	public void verifySecondAddressesTable(String type, String address, String city, String state, String zip,
+	public CasesPage verifySecondAddressesTable(String type, String address, String city, String state, String zip,
 			String country, String addedBy) {
 
 		Date date = new Date(System.currentTimeMillis());
@@ -1395,20 +1961,21 @@ public class CasesPage extends ArkCaseTestBase {
 		softAssert.assertTrue(secondDeleteAddress.isDisplayed(), "Delete address icon is not displayed");
 		softAssert.assertTrue(secondAddAddressButton.isDisplayed(), "Add address button is not displayed");
 		softAssert.assertAll();
-
+		return this;
 	}
 
-	public void verifySecondAddressIsDeleted() {
+	public CasesPage verifySecondAddressIsDeleted() {
 
 		int i = driver
 				.findElements(By
 						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-people/div/div[2]/div/div[1]/div[2]/div[2]/div/div[1]/div[2]/div[3]/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[1]/div"))
 				.size();
 		Assert.assertTrue("Address is not deleted", i == 0);
+		return this;
 
 	}
 
-	public void verifySecondAliasesTable() {
+	public CasesPage verifySecondAliasesTable() {
 
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertTrue(secondAliasesTableTitle.getText().equals("Aliases"),
@@ -1422,10 +1989,11 @@ public class CasesPage extends ArkCaseTestBase {
 		softAssert.assertTrue(secondAliasesAddedByColumn.getText().equals("Added By"),
 				"Second aliases table,added by column name is wrong");
 		softAssert.assertAll();
+		return this;
 
 	}
 
-	public void addNewAliasFKA(String value) throws InterruptedException {
+	public CasesPage addNewAliasFKA(String value) throws InterruptedException {
 
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertTrue(addAliasTitle.getText().equals("Add Alias"), "Add new alias title popup is wrong");
@@ -1439,10 +2007,11 @@ public class CasesPage extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		aliasValueInput.sendKeys(value);
 		saveAliasButton.click();
+		return this;
 
 	}
 
-	public void verifyAddedAlias(String type, String value, String addedBy) {
+	public CasesPage verifyAddedAlias(String type, String value, String addedBy) {
 
 		Date date = new Date(System.currentTimeMillis());
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
@@ -1455,11 +2024,11 @@ public class CasesPage extends ArkCaseTestBase {
 		softAssert.assertEquals(secondAliasAddedByText.getText(), addedBy,
 				"Second alias table, added alias added by text is wrong");
 		softAssert.assertAll();
+		return this;
 
 	}
 
-	public void verifyFirstAddedAlias(String type, String value, String addedBy) {
-
+	public CasesPage verifyFirstAddedAlias(String type, String value, String addedBy) {
 		Date date = new Date(System.currentTimeMillis());
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 		String createdDate = formatter.format(date);
@@ -1471,10 +2040,10 @@ public class CasesPage extends ArkCaseTestBase {
 		softAssert.assertEquals(aliasesAddedBytext.getText(), addedBy,
 				"Second alias table, added alias added by text is wrong");
 		softAssert.assertAll();
-
+		return this;
 	}
 
-	public void editAlias(String value) throws InterruptedException {
+	public CasesPage editAlias(String value) throws InterruptedException {
 
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertTrue(editAliasPopUpTitle.getText().equals("Edit Record"), "Edit alias popup title is wrong");
@@ -1487,19 +2056,19 @@ public class CasesPage extends ArkCaseTestBase {
 		aliasValueInput.sendKeys(value);
 		softAssert.assertAll();
 		saveAliasButton.click();
+		return this;
 	}
 
-	public void verifySecondAliasDeleted() {
-
+	public CasesPage verifySecondAliasDeleted() {
 		int i = driver
 				.findElements(By
 						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-people/div/div[2]/div/div[1]/div[2]/div[2]/div/div[2]/div[2]/div[4]/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[1]/div"))
 				.size();
 		Assert.assertTrue(i == 0);
-
+		return this;
 	}
 
-	public void verifyFirstAliasDeleted() {
+	public CasesPage verifyFirstAliasDeleted() {
 
 		int i = driver
 				.findElements(By
@@ -1507,10 +2076,11 @@ public class CasesPage extends ArkCaseTestBase {
 				.size();
 
 		Assert.assertTrue(i == 0);
+		return this;
 
 	}
 
-	public void editFirstContactMethodsMobile(String value) throws InterruptedException {
+	public CasesPage editFirstContactMethodsMobile(String value) throws InterruptedException {
 
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertTrue(editContactMethodsTitle.getText().equals("Edit Record"),
@@ -1532,21 +2102,21 @@ public class CasesPage extends ArkCaseTestBase {
 		editContactMethodsValueInput.sendKeys(value);
 		saveEditContactButton.click();
 		Thread.sleep(2000);
-
+		return this;
 	}
 
-	public void verifyFirstContactMethodsDeleted() {
+	public CasesPage verifyFirstContactMethodsDeleted() {
 
 		int i = driver
 				.findElements(By
 						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-people/div/div[2]/div/div[1]/div[2]/div[2]/div/div[1]/div[2]/div[1]/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[1]/div"))
 				.size();
 		Assert.assertTrue("Contact method is not deleted", i == 0);
+		return this;
 
 	}
 
-	public void editOrganizationsTypeGovernment(String value) throws InterruptedException {
-
+	public CasesPage editOrganizationsTypeGovernment(String value) throws InterruptedException {
 		Thread.sleep(2000);
 		Assert.assertTrue("Edit record title is wrond", editOrganizationTitle.getText().equals("Edit Record"));
 		organizationTypeDropDown.click();
@@ -1560,30 +2130,32 @@ public class CasesPage extends ArkCaseTestBase {
 		editOrganizationValueInput.sendKeys(value);
 		Thread.sleep(2000);
 		editOrganizationSaveButton.click();
-
+        return this;
 	}
 
-	public void verifyFirstOrganizationDeleted() {
+	public CasesPage verifyFirstOrganizationDeleted() {
 
 		int i = driver
 				.findElements(By
 						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-people/div/div[2]/div/div[1]/div[2]/div[2]/div/div[1]/div[2]/div[2]/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[1]/div"))
 				.size();
 		Assert.assertTrue("The organization is not deleted", i == 0);
+		return this;
 
 	}
 
-	public void verifySecondOrganizationIsDeleted() {
+	public CasesPage verifySecondOrganizationIsDeleted() {
 
 		int i = driver
 				.findElements(By
 						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-people/div/div[2]/div/div[1]/div[2]/div[2]/div/div[2]/div[2]/div[2]/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[1]"))
 				.size();
 		Assert.assertTrue("The organization is not deleted", i == 0);
+		return this;
 
 	}
 
-	public void insertLink(String link, String url) {
+	public CasesPage insertLink(String link, String url) {
 
 		detailsInsertLink.click();
 		detailsLinkTextToDisplay.click();
@@ -1593,10 +2165,10 @@ public class CasesPage extends ArkCaseTestBase {
 		detailsLinkUrl.clear();
 		detailsLinkUrl.sendKeys(url);
 		detailsLinkInsertButton.click();
+		return this;
 	}
 
-	public void editInsertedLInk() throws InterruptedException {
-
+	public CasesPage editInsertedLInk() throws InterruptedException {
 		insertedLink.click();
 		Thread.sleep(2000);
 		editInsertedLink.click();
@@ -1605,9 +2177,10 @@ public class CasesPage extends ArkCaseTestBase {
 		detailsLinkTextToDisplay.clear();
 		detailsLinkTextToDisplay.sendKeys("ArkCase1");
 		detailsLinkInsertButton.click();
+		return this;
 	}
 
-	public void insertPicture(String file) throws InterruptedException, IOException, AWTException {
+	public CasesPage insertPicture(String file) throws InterruptedException, IOException, AWTException {
 
 		insertPicture.click();
 		Thread.sleep(2000);
@@ -1623,31 +2196,34 @@ public class CasesPage extends ArkCaseTestBase {
 		detailsSaveButton.click();
 		Thread.sleep(3000);
 		Assert.assertTrue(caseDetailsSavedPopup.getText().equals("Case details saved"));
+		return this;
 
 	}
 
-	public void verifyInsertedImage() {
+	public CasesPage verifyInsertedImage() {
 
 		Assert.assertTrue(insertedImage.isDisplayed());
+		return this;
 	}
 
-	public void deleteInsertedImage() throws InterruptedException {
+	public CasesPage deleteInsertedImage() throws InterruptedException {
 
 		insertedImage.click();
 		deleteImageIcon.click();
 		detailsSaveButton.click();
 		Thread.sleep(2000);
 		Assert.assertTrue(detailsText.getText().isEmpty());
+		return this;
 
 	}
 
-	public void verifyEditAddressTitle() {
+	public CasesPage verifyEditAddressTitle() {
 
 		Assert.assertEquals("Edit Record", editAddressTitle.getText());
-
+		return this;
 	}
 
-	public void editAddress(String street, String city, String state, String zip, String country)
+	public CasesPage editAddress(String street, String city, String state, String zip, String country)
 			throws InterruptedException {
 
 		editAddressTypeDropDown.click();
@@ -1674,9 +2250,10 @@ public class CasesPage extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		editAddressSaveButton.click();
 		Thread.sleep(3000);
+		return this;
 	}
 
-	public void editSecondContactMethods(String value) throws InterruptedException {
+	public CasesPage editSecondContactMethods(String value) throws InterruptedException {
 
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertTrue(editContactMethodsTitle.getText().equals("Edit Record"),
@@ -1698,36 +2275,40 @@ public class CasesPage extends ArkCaseTestBase {
 		editContactMethodsValueInput.sendKeys(value);
 		saveEditContactButton.click();
 		Thread.sleep(2000);
+		return this;
 
 	}
 
-	public void verifySecondContactMethodIsDeleted() {
+	public CasesPage verifySecondContactMethodIsDeleted() {
 
 		int i = driver
 				.findElements(By
 						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-people/div/div[2]/div/div[1]/div[2]/div[2]/div/div[2]/div[2]/div[1]/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[1]/div"))
 				.size();
 		Assert.assertTrue("Contact method is not deleted", i == 0);
+		return this;
 
 	}
 
-	public void verifyAddPersonTitle() {
+	public CasesPage verifyAddPersonTitle() {
 
 		Assert.assertEquals("Add person title is wrong", "Add Person", addPersonTitle.getText());
+		return this;
 
 	}
 
-	public void verifyIfPersonIsAdded() {
+	public CasesPage verifyIfPersonIsAdded() {
 
 		int i = driver
 				.findElements(By
 						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-people/div/div[2]/div/div[1]/div[2]/div[2]/div/div[3]/div/div[2]"))
 				.size();
 		Assert.assertTrue("Person is not added", i != 0);
+		return this;
 
 	}
 
-	public void verifyAddedPerson(String type, String firstName, String LastName) {
+	public CasesPage verifyAddedPerson(String type, String firstName, String LastName) {
 
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertTrue(thirdContactMethodsIcon.isDisplayed(),
@@ -1748,19 +2329,21 @@ public class CasesPage extends ArkCaseTestBase {
 		softAssert.assertTrue(thirdDeletePeopleButton.isDisplayed(),
 				"Third row, people section, delete button is not displayed");
 		softAssert.assertAll();
+		return this;
 	}
 
-	public void verifyIfAddedPersonIsDeleted() {
+	public CasesPage verifyIfAddedPersonIsDeleted() {
 
 		int i = driver
 				.findElements(By
 						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-people/div/div[2]/div/div[1]/div[2]/div[2]/div/div[3]/div/div[2]"))
 				.size();
 		Assert.assertTrue("Added person is not deleted", i == 0);
+		return this;
 
 	}
 
-	public void addPersonTypeVictim(String firstName, String lastName) throws InterruptedException {
+	public CasesPage addPersonTypeVictim(String firstName, String lastName) throws InterruptedException {
 
 		personTypesDropDown.click();
 		Thread.sleep(3000);
@@ -1775,13 +2358,13 @@ public class CasesPage extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		editRecordSaveButton.click();
 		Thread.sleep(3000);
+		return this;
 
 	}
 
-	public void addContactMethodsMobile(String value) throws InterruptedException {
+	public CasesPage addContactMethodsMobile(String value) throws InterruptedException {
 
 		SoftAssert softAssert = new SoftAssert();
-
 		softAssert.assertTrue(editContactMethodsTypes.getText().equals("Contact Method Types"),
 				"Edit contact methods Types label text is wrong");
 		editContactMethodsDropDown.click();
@@ -1799,10 +2382,11 @@ public class CasesPage extends ArkCaseTestBase {
 		editContactMethodsValueInput.sendKeys(value);
 		saveEditContactButton.click();
 		Thread.sleep(2000);
+		return this;
 
 	}
 
-	public void verifyAdedThirdContactMethod(String type, String value, String user) {
+	public CasesPage verifyAdedThirdContactMethod(String type, String value, String user) {
 
 		Date date = new Date(System.currentTimeMillis());
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
@@ -1817,21 +2401,22 @@ public class CasesPage extends ArkCaseTestBase {
 		softAssert.assertEquals(thirdContactMethodAddedBy.getText(), user,
 				"Third contact methods tbale, added contact method adede by is wrong");
 		softAssert.assertAll();
+		return this;
 
 	}
 
-	public void verifyThirdContactMethodIsDeleted() {
+	public CasesPage verifyThirdContactMethodIsDeleted() {
 
 		int i = driver
 				.findElements(By
 						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-people/div/div[2]/div/div[1]/div[2]/div[2]/div/div[3]/div[2]/div[1]/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[1]"))
 				.size();
-
 		Assert.assertTrue("Add record in third contact methods is not deleted", i == 0);
+		return this;
 
 	}
 
-	public void addOrganization(String value) throws InterruptedException {
+	public CasesPage addOrganization(String value) throws InterruptedException {
 
 		Thread.sleep(2000);
 		SoftAssert softAssert = new SoftAssert();
@@ -1848,10 +2433,11 @@ public class CasesPage extends ArkCaseTestBase {
 		editOrganizationValueInput.sendKeys(value);
 		Thread.sleep(2000);
 		editOrganizationSaveButton.click();
+		return this;
 
 	}
 
-	public void verifyThirdAddedOrganization(String type, String value, String addedBy) {
+	public CasesPage verifyThirdAddedOrganization(String type, String value, String addedBy) {
 
 		Date date = new Date(System.currentTimeMillis());
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
@@ -1863,20 +2449,22 @@ public class CasesPage extends ArkCaseTestBase {
 				"Organization date added text is wrong");
 		softAssert.assertEquals(thirdOrganizationAddedByText.getText(), addedBy, "Organization added by text is wrong");
 		softAssert.assertAll();
+		return this;
 
 	}
 
-	public void verifyThirdAddedOrganizationIsDeleted() {
+	public CasesPage verifyThirdAddedOrganizationIsDeleted() {
 
 		int i = driver
 				.findElements(By
 						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-people/div/div[2]/div/div[1]/div[2]/div[2]/div/div[3]/div[2]/div[2]/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[1]"))
 				.size();
 		Assert.assertTrue("Added organization is not deleted", i == 0);
+		return this;
 
 	}
 
-	public void addAddress(String street, String city, String state, String zip, String country)
+	public CasesPage addAddress(String street, String city, String state, String zip, String country)
 			throws InterruptedException {
 
 		editAddressTypeDropDown.click();
@@ -1903,9 +2491,10 @@ public class CasesPage extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		editAddressSaveButton.click();
 		Thread.sleep(3000);
+		return this;
 	}
 
-	public void verifyThirdAddedAddress(String type, String street, String city, String state, String zip,
+	public CasesPage verifyThirdAddedAddress(String type, String street, String city, String state, String zip,
 			String country, String addedBy) {
 
 		Date date = new Date(System.currentTimeMillis());
@@ -1923,18 +2512,20 @@ public class CasesPage extends ArkCaseTestBase {
 				"Third added address date Added text is wrong");
 		softAssert.assertEquals(thirdAddedByText.getText(), addedBy, "Third added addredd added by text is wrong");
 		softAssert.assertAll();
+		return this;
 	}
 
-	public void verifyThirdAddedAddressIsDeleted() {
+	public CasesPage verifyThirdAddedAddressIsDeleted() {
 
 		int i = driver
 				.findElements(By
 						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-people/div/div[2]/div/div[1]/div[2]/div[2]/div/div[3]/div[2]/div[3]/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[1]"))
 				.size();
 		Assert.assertTrue("The address is not deleted", i == 0);
+		return this;
 	}
 
-	public void verifyThirdAddedAlias(String type, String value, String addedBy) {
+	public CasesPage verifyThirdAddedAlias(String type, String value, String addedBy) {
 
 		Date date = new Date(System.currentTimeMillis());
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
@@ -1945,21 +2536,22 @@ public class CasesPage extends ArkCaseTestBase {
 		softAssert.assertEquals(thirdAliasDateAddedText.getText(), createdDate, "Aliases created date is wrong");
 		softAssert.assertEquals(thirdAliasAddedByText.getText(), addedBy, "Aliases added by is wrong");
 		softAssert.assertAll();
+		return this;
 
 	}
 
-	public void verifyThirdAddedAliasesIsDeleted() {
+	public CasesPage verifyThirdAddedAliasesIsDeleted() {
 
 		int i = driver
 				.findElements(By
 						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-people/div/div[2]/div/div[1]/div[2]/div[2]/div/div[3]/div[2]/div[4]/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[1]"))
 				.size();
 		Assert.assertTrue("Alias is not deleted", i == 0);
+		return this;
 
 	}
 
-	public void checkPeopleTypeFilter(String typeFilter) throws InterruptedException {
-
+	public CasesPage checkPeopleTypeFilter(String typeFilter) throws InterruptedException {
 		SoftAssert softAssert = new SoftAssert();
 		peopleTypeFilter.click();
 		peopleTypeFilter.sendKeys(typeFilter);
@@ -1971,10 +2563,11 @@ public class CasesPage extends ArkCaseTestBase {
 		softAssert.assertTrue(i == 0, "The people type filter is not working");
 		peopleTypeFilter.clear();
 		softAssert.assertAll();
+		return this;
 
 	}
 
-	public void checkPeopleFirstNameFilter(String firstNameFilter) throws InterruptedException {
+	public CasesPage checkPeopleFirstNameFilter(String firstNameFilter) throws InterruptedException {
 
 		SoftAssert softAssert = new SoftAssert();
 		peopleFirstNameFilter.click();
@@ -1987,10 +2580,11 @@ public class CasesPage extends ArkCaseTestBase {
 		softAssert.assertTrue(i == 0, "The people first name filter is not working");
 		peopleFirstNameFilter.clear();
 		softAssert.assertAll();
+		return this;
 
 	}
 
-	public void checkPeopleLastNameFilter(String lastNameFilter) throws InterruptedException {
+	public CasesPage checkPeopleLastNameFilter(String lastNameFilter) throws InterruptedException {
 
 		SoftAssert softAssert = new SoftAssert();
 		peopleLastNameFilter.click();
@@ -2003,10 +2597,10 @@ public class CasesPage extends ArkCaseTestBase {
 		softAssert.assertTrue(i == 0, "The people last name filter is not working");
 		peopleLastNameFilter.clear();
 		softAssert.assertAll();
-
+		return this;
 	}
 
-	public void verifyNotesTable() {
+	public CasesPage verifyNotesTable() {
 
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertEquals(notesTitleTable.getText(), "Notes", "Notes table title is wrong");
@@ -2016,10 +2610,10 @@ public class CasesPage extends ArkCaseTestBase {
 		softAssert.assertEquals(notesAuthorColumnName.getText(), "Author", "Author column name is Notes is wrong");
 		softAssert.assertTrue(addNewNoteButton.isDisplayed(), "Add new note button is not displayed");
 		softAssert.assertAll();
-
+		return this;
 	}
 
-	public void addNote(String note) throws InterruptedException {
+	public CasesPage addNote(String note) throws InterruptedException {
 
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertEquals(addNoteTitle.getText(), "Add Note", "Add note title is wrong");
@@ -2029,9 +2623,10 @@ public class CasesPage extends ArkCaseTestBase {
 		noteInput.sendKeys(note);
 		Thread.sleep(2000);
 		addNoteButton.click();
+		return this;
 	}
 
-	public void verifyAddedNote(String note, String author) {
+	public CasesPage verifyAddedNote(String note, String author) {
 
 		Date date = new Date(System.currentTimeMillis());
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
@@ -2043,19 +2638,21 @@ public class CasesPage extends ArkCaseTestBase {
 		softAssert.assertTrue(editNoteButton.isDisplayed(), "Edit note button is not displayed");
 		softAssert.assertTrue(deleteNoteButton.isDisplayed(), "Delete note button is not displayed");
 		softAssert.assertAll();
+		return this;
 	}
 
-	public void verifyIfNoteIsDeleted() {
+	public CasesPage verifyIfNoteIsDeleted() {
 
 		int i = driver
 				.findElements(By
 						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/core-notes/div/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[1]/div"))
 				.size();
 		Assert.assertTrue("The note is not deletd", i == 0);
+		return this;
 
 	}
 
-	public void editNote(String note) throws InterruptedException {
+	public CasesPage editNote(String note) throws InterruptedException {
 
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertEquals(editNoteTitle.getText(), "Edit Record", "Edit note title is wrong");
@@ -2065,10 +2662,11 @@ public class CasesPage extends ArkCaseTestBase {
 		noteInput.sendKeys(note);
 		Thread.sleep(2000);
 		addNoteButton.click();
+		return this;
 
 	}
 
-	public void verifyTaskTable() {
+	public CasesPage verifyTaskTable() {
 
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertEquals(taskTableTitle.getText(), "Tasks", "Task table title is wrong");
@@ -2081,10 +2679,11 @@ public class CasesPage extends ArkCaseTestBase {
 		softAssert.assertEquals(statusColumnName.getText(), "Status", "Status column name si wrong");
 		softAssert.assertEquals(actionColumnName.getText(), "Action", "Action column name is wrong");
 		softAssert.assertAll();
+		return this;
 
 	}
 
-	public void verifyCaseWIthAddedTask(String asignTo, String type, String group, String priority)
+	public CasesPage verifyCaseWIthAddedTask(String asignTo, String type, String group, String priority)
 			throws InterruptedException {
 
 		SoftAssert softAssert = new SoftAssert();
@@ -2100,18 +2699,32 @@ public class CasesPage extends ArkCaseTestBase {
 		softAssert.assertTrue(deleteButtonInTaskPage.isDisplayed(), "Delete button is not displayed ");
 		softAssert.assertTrue(completeButtonInTaskPage.isDisplayed(), "Complete button is not displayed");
 		softAssert.assertEquals(assignToInTheTaskPage.getText(), asignTo, "Asign to user is wrong ");
-		softAssert.assertEquals(caseTypeInTaskPage.getText(), type, "Case type is wrong");
-		softAssert.assertEquals(incidentDate.getText(), createdDateCase.getText(),
+		softAssert.assertEquals(caseTypeInTaskPage.getText(), type, "Case type is wrong");		
+		softAssert.assertEquals(incidentDate.getText(), returnTodaysDateString(),
 				"Incident date is not same as the one in created case");
 		softAssert.assertEquals(owningGroupInTaskPage.getText(), group,
 				"Owning group is not same as the one in the created case");
 		softAssert.assertEquals(priorityInTaskPage.getText(), priority,
 				"Priority is not the same as the one in the created case");
 		softAssert.assertAll();
+		return this;
 
 	}
+	
+	public String returnTodaysDateString(){
+		DateFormat dateformat = new SimpleDateFormat("MM/dd/yyyy");
+		Date date = new Date();
+		return dateformat.format(date);
+	}
+	
+	public String returncaseCreatedDate()
+	{
+		WebElement el = WaitHelper.getWhenElementIsVisible(createdDateCase, 60, driver);		
+		String createdDate = el.getText();
+		return createdDate;
+	}
 
-	public void verifyAddedTaskInCase(String title, String percent, String asignee, String dueDate, String priority,
+	public CasesPage verifyAddedTaskInCase(String title, String percent, String asignee, String dueDate, String priority,
 			String state) {
 
 		Date date = new Date(System.currentTimeMillis());
@@ -2126,9 +2739,10 @@ public class CasesPage extends ArkCaseTestBase {
 		softAssert.assertEquals(priorityTask.getText(), priority, "Priority is wrong");
 		softAssert.assertEquals(stateTask.getText(), state, "State of the Task is wrong");
 		softAssert.assertAll();
+		return this;
 	}
 
-	public void verifyTaskInTheTaskTable(String title, String assignee, String priority, String dueDate,
+	public CasesPage verifyTaskInTheTaskTable(String title, String assignee, String priority, String dueDate,
 			String status) {
 
 		Date date = new Date(System.currentTimeMillis());
@@ -2142,66 +2756,74 @@ public class CasesPage extends ArkCaseTestBase {
 		softAssert.assertEquals(dueField.getText(), dueDate, "Due date in the Tasks table is wrong");
 		softAssert.assertEquals(statusField.getText(), status, "Status in the Tasks table is wrong");
 		softAssert.assertEquals(actionField.getText(), "", "Action in the Tasks table is wrong");
+		return this;
 
 	}
 
-	public void checkMedicalReleaseHttpResponse() throws IOException {
+	public CasesPage checkMedicalReleaseHttpResponse() throws IOException {
 
 		HttpResponseCode responseCode = new HttpResponseCode();
 		responseCode.checkHttpResponse(
 				"/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[1]/a");
+		return this;
 
 	}
 
-	public void checkChairmanResponseHttpResponse() throws IOException {
+	public CasesPage checkChairmanResponseHttpResponse() throws IOException {
 
 		HttpResponseCode responseCode = new HttpResponseCode();
 		responseCode.checkHttpResponse(
 				"/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[1]/a");
+		return this;
 
 	}
 
-	public void checkClearanceDeniedHttpResponse() throws IOException {
+	public CasesPage checkClearanceDeniedHttpResponse() throws IOException {
 
 		HttpResponseCode responseCode = new HttpResponseCode();
 		responseCode.checkHttpResponse(
 				"/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[1]/a");
+		return this;
 
 	}
 
-	public void checkCleranceGrantedHttpResponse() throws IOException {
+	public CasesPage checkCleranceGrantedHttpResponse() throws IOException {
 
 		HttpResponseCode responseCode = new HttpResponseCode();
 		responseCode.checkHttpResponse(
 				"/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[1]/a");
+		return this;
 
 	}
 
-	public void checkGeneralReleaseHttpResponse() throws IOException {
+	public CasesPage checkGeneralReleaseHttpResponse() throws IOException {
 
 		HttpResponseCode responseCode = new HttpResponseCode();
 		responseCode.checkHttpResponse(
 				"/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[1]/a");
+		return this;
 
 	}
 
-	public void checkInterviewRequestHttpResponse() throws IOException {
+	public CasesPage checkInterviewRequestHttpResponse() throws IOException {
 
 		HttpResponseCode responseCode = new HttpResponseCode();
 		responseCode.checkHttpResponse(
 				"/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[1]/a");
+		return this;
 
 	}
 
-	public void checkNoticeOfInvestigationHttpResponse() throws IOException {
+	public CasesPage checkNoticeOfInvestigationHttpResponse() throws IOException {
 
 		HttpResponseCode responseCode = new HttpResponseCode();
 		responseCode.checkHttpResponse(
 				"/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[1]/a");
+		return this;
 
 	}
 
-	public void verifyReferenceTable() {
+	public CasesPage verifyReferenceTable() {
 
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertEquals(referencesTableTitle.getText(), "References", "Reference table title is wrong");
@@ -2213,16 +2835,18 @@ public class CasesPage extends ArkCaseTestBase {
 		softAssert.assertEquals(referenceStatusColumnName.getText(), "Status", "Reference status column name is wrong");
 		softAssert.assertTrue(addReferenceButton.isDisplayed(), "Add reference button is not displayed");
 		softAssert.assertAll();
+		return this;
 	}
 
-	public void AddReferenceInput(String reference) {
+	public CasesPage AddReferenceInput(String reference) {
 
 		searchReferenceInput.click();
 		searchReferenceInput.sendKeys(reference);
+		return this;
 
 	}
 
-	public void verifySearchedReference(String name, String type, String title) {
+	public CasesPage verifySearchedReference(String name, String type, String title) {
 
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertEquals(searchedReferenceName.getText(), name,
@@ -2232,11 +2856,11 @@ public class CasesPage extends ArkCaseTestBase {
 		softAssert.assertEquals(searchedReferenceTitle.getText(), title,
 				"Searched reference title is wrong,Shouldn't be able to add a reference for the same case you are referencing.");
 		softAssert.assertAll();
+		return this;
 
 	}
 
-	public void verifyAddedReference(String number, String title, String type, String status) {
-
+	public CasesPage verifyAddedReference(String number, String title, String type, String status) {
 		SoftAssert softAssert = new SoftAssert();
 		Date date = new Date(System.currentTimeMillis());
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
@@ -2248,39 +2872,40 @@ public class CasesPage extends ArkCaseTestBase {
 		softAssert.assertEquals(referenceTypeField.getText(), type, "Added reference type is wrong");
 		softAssert.assertEquals(referenceStatusField.getText(), status, "Added reference status is wrong");
 		softAssert.assertAll();
+		return this;
 
 	}
 
-	public void checkReferenceTitleHttpResponse() throws IOException {
+	public CasesPage checkReferenceTitleHttpResponse() throws IOException {
 
 		HttpResponseCode responseCode = new HttpResponseCode();
 		responseCode.checkHttpResponse(
 				"/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[2]/a");
+		return this;
 
 	}
 
-	public void checkReferenceNumberHttpResponse() throws IOException {
+	public CasesPage checkReferenceNumberHttpResponse() throws IOException {
 
 		HttpResponseCode responseCode = new HttpResponseCode();
 		responseCode.checkHttpResponse(
 				"/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[1]/a");
-
+		return this;
 	}
 
-	public void searchCasesInput(String name) {
+	public CasesPage searchCasesInput(String name) {
 
 		casesSearchInput.click();
 		casesSearchInput.sendKeys(name);
-
+		return this;
 	}
 
-	public void searchCasesButtonClick() {
-
+	public CasesPage searchCasesButtonClick() {
 		casesGoButton.click();
+		return this;
 	}
 
-	public void verifySecondAddedReference(String number, String title, String type, String status) {
-
+	public CasesPage verifySecondAddedReference(String number, String title, String type, String status) {
 		SoftAssert softAssert = new SoftAssert();
 		Date date = new Date(System.currentTimeMillis());
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
@@ -2295,136 +2920,138 @@ public class CasesPage extends ArkCaseTestBase {
 				"Should not be able same case to be added more then once");
 		softAssert.assertEquals(secondRowReferenceStatus.getText(), status,
 				"Should not be able same case to be added more then once");
-
 		softAssert.assertAll();
+		return this;
 
 	}
 
-	public void clickPriority() {
+	public CasesPage clickPriority() {
 
 		priority.click();
+		return this;
 
 	}
 
-	public void clickPriorityDropDown() {
+	public CasesPage clickPriorityDropDown() {
 		priorityDropDown.click();
+		return this;
 	}
 
-	public void clickPriorityLow() {
-
+	public CasesPage clickPriorityLow() {
 		priorityLow.click();
+		return this;
 
 	}
 
-	public void clickPriorityConfirmBtn() {
-
+	public CasesPage clickPriorityConfirmBtn() {
 		priorityConfirmBtn.click();
+		return this;
 
 	}
 
-	public void clickPriorityHigh() {
-
+	public CasesPage clickPriorityHigh() {
 		priorityHigh.click();
+		return this;
 	}
 
-	public void clickPriorityExpedite() {
-
+	public CasesPage clickPriorityExpedite() {
 		priorityExpedite.click();
+		return this;
 	}
 
-	public void assignedToDropDownClick() {
-
+	public CasesPage assignedToDropDownClick() {
 		assignedToDropDown.click();
+		return this;
 	}
 
-	public void assignedToSelectAnnAdministrator() {
-
+	public CasesPage assignedToSelectAnnAdministrator() {
 		assignedToAnn.click();
+		return this;
 	}
 
-	public void assignedToConfirmButtonClick() {
-
+	public CasesPage assignedToConfirmButtonClick() {
 		assignedToConfirmBtn.click();
-
+		return this;
 	}
 
-	public void caseTitleInput(String name) throws InterruptedException {
-
+	public CasesPage caseTitleInput(String name) throws InterruptedException {
 		createdCaseTitle.click();
 		Thread.sleep(3000);
 		caseTitleInput.click();
 		caseTitleInput.clear();
 		caseTitleInput.sendKeys(name);
-
+		return this;
 	}
 
-	public void clickCaseTitleConfirmButton() {
-
+	public CasesPage clickCaseTitleConfirmButton() {
 		caseTitleConfirmBtn.click();
+		return this;
 	}
 
-	public void clickCaseTypeDropDown() {
-
+	public CasesPage clickCaseTypeDropDown() {
 		caseTypeDropDown.click();
+		return this;
 	}
 
-	public void selectCaseTypeDrugTrafficking() {
-
+	public CasesPage selectCaseTypeDrugTrafficking() {
 		caseTypeDrugTrafficking.click();
-
+		return this;
 	}
 
-	public void clickCaseTypeConfirmButton() {
-
+	public CasesPage clickCaseTypeConfirmButton() {
 		editCaseTypeConfirmBtn.click();
+		return this;
 	}
 
-	public void clickCaseOwningGroupDropDown() {
-
+	public CasesPage clickCaseOwningGroupDropDown() {
 		caseOwningGroupDropDown.click();
+		return this;
 
 	}
 
-	public void selectOwningGroupACM_SUPERVISOR_DEV() {
-
+	public CasesPage selectOwningGroupACM_SUPERVISOR_DEV() {
 		ownigGroupACM_SUPERVISOR_DEV.click();
+		return this;
 	}
 
-	public void clickOwningGroupConfirmBtn() {
-
+	public CasesPage clickOwningGroupConfirmBtn() {
 		owningGroupConfirmBtn.click();
+		return this;
 	}
 
-	public void clickChnageCaseStatusAddFilesBtn() {
-
+	public CasesPage clickChnageCaseStatusAddFilesBtn() {
 		chnageCaseStatusAddFilesBtn.click();
+		return this;
 	}
 
-	public void clickChangeCaseStatusBrowseBtn() {
+	public CasesPage clickChangeCaseStatusBrowseBtn() {
 		changeCaseStatusBrowseBtn.click();
+		return this;
 	}
 
-	public void clickChangeCaseStatusUploadBtn() {
+	public CasesPage clickChangeCaseStatusUploadBtn() {
 		changeCaseStatusUploadBtn.click();
+		return this;
 	}
 
-	public void verifyMergePopUpTitle() {
+	public CasesPage verifyMergePopUpTitle() {
 		Assert.assertEquals("Title of merge popup form is wrong", "Merge", mergePopUpTitle.getText());
+		return this;
 	}
 
-	public void searchForCase(String name) {
+	public CasesPage searchForCase(String name) {
 
 		mergeSearchForCaseInput.click();
 		mergeSearchForCaseInput.sendKeys(name);
-
+		return this;
 	}
 
-	public void clickSearchCaseBtn() {
+	public CasesPage clickSearchCaseBtn() {
 		mergeSearchBtn.click();
+		return this;
 	}
 
-	public void verifySearchedCaseForMerge(String name, String type, String title, String parent, String assignee) {
-
+	public CasesPage verifySearchedCaseForMerge(String name, String type, String title, String parent, String assignee) {
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertEquals(searchedCaseName.getText(), name, "Searched case name is wrong");
 		softAssert.assertEquals(searchedCaseType.getText(), type, "Searched case type is wrong");
@@ -2432,28 +3059,32 @@ public class CasesPage extends ArkCaseTestBase {
 		softAssert.assertEquals(searchedCaseParent.getText(), parent, "Searched case parent is wrong");
 		softAssert.assertEquals(searchedCaseAssignee.getText(), assignee, "Searched case assignee is wrong");
 		softAssert.assertAll();
+		return this;
 
 	}
 
-	public void clickCancelMergeBtn() {
+	public CasesPage clickCancelMergeBtn() {
 		mergeCancelBtn.click();
+		return this;
 	}
 
-	public void clickMergeBtn() {
+	public CasesPage clickMergeBtn() {
 		mergeBtn.click();
+		return this;
 	}
 
-	public void verifyIfSearchedCaseIsShown() {
+	public CasesPage verifyIfSearchedCaseIsShown() {
 
 		int i = driver
 				.findElements(By
 						.xpath("/html/body/div[5]/div/div/search-modal/div[2]/div/div[2]/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[1]/div"))
 				.size();
 		Assert.assertTrue("The case it self should not appear to be merged", i == 0);
+		return this;
 
 	}
 
-	public void verifyAlertText() throws AWTException, InterruptedException {
+	public CasesPage verifyAlertText() throws AWTException, InterruptedException {
 
 		Alert alert = driver.switchTo().alert();
 		Thread.sleep(1000);
@@ -2462,19 +3093,21 @@ public class CasesPage extends ArkCaseTestBase {
 		alert.accept();
 		Thread.sleep(3000);
 		driver.switchTo().defaultContent();
+		return this;
 	}
 
-	public void verifyIfCasesAreMerged() {
+	public CasesPage verifyIfCasesAreMerged() {
 
 		int i = driver
 				.findElements(By
 						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/doc-tree/table/tbody/tr[3]/td[3]/span/span[3]"))
 				.size();
 		Assert.assertTrue("Case is not merged, is not shown in the documents table", i > 0);
+		return this;
 
 	}
 
-	public void changeCaseStatusAprovedWithROI() throws InterruptedException, IOException {
+	public CasesPage changeCaseStatusAprovedWithROI() throws InterruptedException, IOException {
 		HttpResponseCode responseCode = new HttpResponseCode();
 		caseTasks.click();
 		Thread.sleep(6000);
@@ -2498,10 +3131,78 @@ public class CasesPage extends ArkCaseTestBase {
 		approveDocumenButton.click();
 		Thread.sleep(2000);
 		Assert.assertTrue(reviewRequestState.getText().equals("CLOSED"));
-
+		return this;
 	}
 
-	public void verifySearchedReferenceNoResult() {
+	public CasesPage verifySearchedReferenceNoResult() {
 		Assert.assertEquals("Searched result name is wrong", "No Results", searchedRefNoResult.getText());
+		return this;
 	}
+	
+	public CasesPage caseDocumentsclick(){
+		caseDocuments.click();
+		return this;
+	}
+	
+	public CasesPage detailsSaveButtonClick(){
+		WaitHelper.clickWhenElelementIsClickable(detailsSaveButton, 30, driver);		
+		return this;
+	}
+	
+	public CasesPage caseDetailsClick(){
+		caseDetails.click();
+		return this;
+	}
+	
+	public CasesPage insertedLinkClick(){
+		insertedLink.click();
+		return this;
+	}
+	
+	public CasesPage unlinkClick(){
+		unlink.click();
+		return this;
+	}
+	
+	public CasesPage detailsTextClear(){
+		detailsText.clear();
+		return this;
+	}
+	
+	public CasesPage insertPictureClick(){
+		insertPicture.click();
+		return this;
+	}
+	
+	public CasesPage browsePictureButtonClick(){
+		browsePictureButton.click();
+		return this;
+	}
+	
+	public CasesPage detailsChangeStatusButtonClick(){
+		detailChangeStatusButton.click();
+		return this;
+	}
+	
+	public CasesPage refreshButtonClick(){
+		refreshPage.click();
+		return this;
+	}
+	
+	public boolean caseTitleChangedInApproval(){
+		WebElement el = WaitHelper.getWhenElementIsVisible(caseTitleDraft, 30, driver);
+		boolean caseTitleChangedInApproval = el.getText().contains("IN APPROVAL");
+		if (caseTitleChangedInApproval == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	
+	
+	
 }

@@ -5,7 +5,7 @@
 
 
     <bean id="alfrescoRmaPluginPropertiesForSpring"
-                 class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
@@ -14,7 +14,8 @@
         <property name="localOverride" value="false"/>
     </bean>
 
-    <bean id="acmComplaintFolderListener" class="com.armedia.acm.plugins.alfrescorma.service.AcmComplaintFolderListener">
+    <bean id="acmComplaintFolderListener"
+          class="com.armedia.acm.plugins.alfrescorma.service.AcmComplaintFolderListener">
         <property name="muleContextManager" ref="muleContextManager"/>
         <property name="alfrescoRecordsService" ref="alfrescoRecordsService"/>
     </bean>
@@ -29,23 +30,27 @@
         <property name="alfrescoRmaProperties" ref="alfrescoRmaPluginPropertiesForSpring"/>
         <property name="muleContextManager" ref="muleContextManager"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
+        <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
     </bean>
-    
+
     <bean id="acmComplaintCloseListener" class="com.armedia.acm.plugins.alfrescorma.service.AcmComplaintClosedListener">
         <property name="alfrescoRecordsService" ref="alfrescoRecordsService"/>
     </bean>
-    
-    <bean id="acmCaseFileStatusChangedListener" class="com.armedia.acm.plugins.alfrescorma.service.AcmCaseFileStatusChangedListener">
+
+    <bean id="acmCaseFileStatusChangedListener"
+          class="com.armedia.acm.plugins.alfrescorma.service.AcmCaseFileStatusChangedListener">
         <property name="alfrescoRecordsService" ref="alfrescoRecordsService"/>
     </bean>
 
-    <bean id="acmFileDeclarationListener" class="com.armedia.acm.plugins.alfrescorma.service.AcmFileDeclareRequestListener">
+    <bean id="acmFileDeclarationListener"
+          class="com.armedia.acm.plugins.alfrescorma.service.AcmFileDeclareRequestListener">
         <property name="muleContextManager" ref="muleContextManager"/>
         <property name="alfrescoRecordsService" ref="alfrescoRecordsService"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
     </bean>
 
-    <bean id="acmFolderDeclarationListener" class="com.armedia.acm.plugins.alfrescorma.service.AcmFolderDeclareRequestListener">
+    <bean id="acmFolderDeclarationListener"
+          class="com.armedia.acm.plugins.alfrescorma.service.AcmFolderDeclareRequestListener">
         <property name="alfrescoRecordsService" ref="alfrescoRecordsService"/>
         <property name="acmFolderDao" ref="acmFolderDao"/>
         <property name="acmFolderService" ref="acmFolderService"/>

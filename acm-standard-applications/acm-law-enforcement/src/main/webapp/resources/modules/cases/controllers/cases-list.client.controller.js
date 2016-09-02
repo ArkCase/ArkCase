@@ -27,12 +27,14 @@ angular.module('cases').controller('CasesListController', ['$scope', '$state', '
         //subscribe to the bus for the object
         var eventName = "object.inserted";
         $scope.$bus.subscribe(eventName, function (data) {
-            var frevvoRequest = ServCommService.popRequest("frevvo", "new-case");
-            if (frevvoRequest) {
-                ObjectService.gotoUrl(ObjectService.ObjectTypes.CASE_FILE, data.objectId);
-            }
-            else {
-                MessageService.info(data.objectType + " with ID " + data.objectId + " was created.");
+            if (data.objectType === ObjectService.ObjectTypes.CASE_FILE) {
+                var frevvoRequest = ServCommService.popRequest("frevvo", "new-case");
+                if (frevvoRequest) {
+                    ObjectService.gotoUrl(ObjectService.ObjectTypes.CASE_FILE, data.objectId);
+                }
+                else {
+                    MessageService.info(data.objectType + " with ID " + data.objectId + " was created.");
+                }
             }
         });
 

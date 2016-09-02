@@ -1,0 +1,23 @@
+<panel-view header="{{'admin.application.auditHistory.config.title' | translate}}" collapsible="false">
+    <div ng-controller="Admin.AuditHistoryController">
+        <form>
+            <div class="text">
+                <label class="control-label" for="historyDays">
+                    <span translate>admin.application.auditHistory.config.historyDays.label</span>
+                </label>
+                <input ng-model="historyDays"
+                       class="form-control input-sm"
+                       type="number"
+                       id="historyDays"
+                />
+            </div>
+            <br/>
+
+            <div class="form-group">
+                <button ng-click="applyChanges()" class="btn btn-sm btn-primary" translate>
+                    admin.application.auditHistory.config.apply.label
+                </button>
+            </div>
+        </form>
+    </div>
+</panel-view>

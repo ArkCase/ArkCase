@@ -56,14 +56,24 @@
         <input type="text" ng-model="dir.userSearchFilter">
 
         <div>
+            <span translate>admin.security.ldapConfig.data.allUsersFilter</span>
+        </div>
+        <input type="text" ng-model="dir.allUsersFilter">
+
+        <div>
+            <span translate>admin.security.ldapConfig.data.allUsersPageFilter</span>
+        </div>
+        <input type="text" ng-model="dir.allUsersPageFilter">
+
+        <div>
+            <span translate>admin.security.ldapConfig.data.allUsersSearchBase</span>
+        </div>
+        <input type="text" ng-model="dir.allUsersSearchBase">
+
+        <div>
             <span translate>admin.security.ldapConfig.data.groupSearchBase</span>
         </div>
         <input type="text" ng-model="dir.groupSearchBase">
-
-        <div>
-            <span translate>admin.security.ldapConfig.data.groupSeachBaseOU</span>
-        </div>
-        <input type="text" ng-model="dir.groupSearchBaseOU">
 
         <div>
             <span translate>admin.security.ldapConfig.data.groupSearchFilterForUser</span>
@@ -74,12 +84,30 @@
             <span translate>admin.security.ldapConfig.data.userIdAttributeName</span>
         </div>
         <input type="text" ng-model="dir.userIdAttributeName">
-        
+
         <div>
             <span translate>admin.security.ldapConfig.data.userDomain</span>
-            <i><small><span translate>admin.security.ldapConfig.data.userDomainNote</span></small></i>
+            <i>
+                <small><span translate>admin.security.ldapConfig.data.userDomainNote</span></small>
+            </i>
         </div>
         <input type="text" ng-model="dir.userDomain">
+
+        <div>
+            <span translate>admin.security.ldapConfig.data.syncPageSize</span>
+        </div>
+        <input type="text" ng-model="dir.syncPageSize">
+
+        <div>
+            <span translate>admin.security.ldapConfig.data.groupSearchFilter</span>
+        </div>
+        <input type="text" ng-model="dir.groupSearchFilter">
+
+        <div>
+            <span translate>admin.security.ldapConfig.data.groupSearchPageFilter</span>
+        </div>
+        <input type="text" ng-model="dir.groupSearchPageFilter">
+
     </div>
     <div class="modal-footer">
         <button class="btn btn-secondary" ng-click="cancel()">

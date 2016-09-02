@@ -39,7 +39,8 @@ public class CreateAdHocTaskAPIController
 
     @RequestMapping(value = "/adHocTask", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmTask createAdHocTask(@RequestBody AcmTask in, Authentication authentication, HttpSession httpSession) throws AcmCreateObjectFailedException
+    public AcmTask createAdHocTask(@RequestBody AcmTask in, Authentication authentication, HttpSession httpSession)
+            throws AcmCreateObjectFailedException
     {
         if (log.isInfoEnabled())
         {
@@ -49,6 +50,8 @@ public class CreateAdHocTaskAPIController
         try
         {
             in.setOwner(authentication.getName());
+            // On creation task is always ACTIVE
+            in.setStatus(TaskConstants.STATE_ACTIVE);
             // find the complaint id by name
             String parentObjectType = null;
             String obj;
@@ -106,7 +109,8 @@ public class CreateAdHocTaskAPIController
         }
     }
 
-    public String getObjectsFromSolr(String objectType, String objectName, Authentication authentication, int startRow, int maxRows, String sortParams, String userId)
+    public String getObjectsFromSolr(String objectType, String objectName, Authentication authentication, int startRow, int maxRows,
+            String sortParams, String userId)
     {
         String retval = null;
 
@@ -122,7 +126,8 @@ public class CreateAdHocTaskAPIController
 
         try
         {
-            retval = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, startRow, maxRows, sortParams);
+            retval = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, startRow, maxRows,
+                    sortParams);
 
             log.debug("Objects was retrieved.");
         } catch (MuleException e)

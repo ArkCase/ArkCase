@@ -2,23 +2,22 @@ package com.armedia.arkcase.uitests.cases;
 
 import java.awt.AWTException;
 import java.io.IOException;
-
 import org.junit.Assert;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
-
-
+import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
 import com.armedia.arkcase.uitests.base.ArkCaseTestUtils;
+import com.armedia.arkcase.uitests.base.WaitHelper;
 
-public class CasePage {
+public class CasePage extends ArkCaseTestBase{
 
 	// General Information
 	@FindBy(how = How.XPATH, using = "/html/body/header/div/nav/ul/li/div/div[2]/div/a")
 	public WebElement newCaseButton;
-	@FindBy(how = How.XPATH, using = "/html/body/header/div/nav/ul/li/a")
+	@FindBy(how = How.XPATH, using = ".//a[@class='dropdown-toggle']/i")
 	public WebElement newButton;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/div/div[1]/div/span/a/i")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-click='toggleEditMode()']/i")
 	public WebElement editButton;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[1]/div[1]/span[4]")
 	public WebElement generalInformationTab;
@@ -28,7 +27,7 @@ public class CasePage {
 	public WebElement caseTitleInput;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[1]/div[3]/span[3]/label")
 	public WebElement caseTypeTitle;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[1]/div[3]/div[1]/input[1]")
+	@FindBy(how = How.XPATH, using = ".//*[@role='combobox']")
 	public WebElement caseTypeInput;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[1]/div[3]/div[1]/ul/li[14]/a")
 	public WebElement caseTypeEmbezzalmend;
@@ -211,8 +210,8 @@ public class CasePage {
 	public WebElement selectSecondParticipant;
 
 	// add user
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/div/div/div/div/header/div/div/div/input")
-	public WebElement serachForUsers;
+	@FindBy(how = How.ID, using = "edtPoSearch")
+	public WebElement searchForUsers;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/div/div/div/div/header/div/div/div/span/button")
 	public WebElement searchUserButton;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/div/div/div/div/div[2]/div/div[2]/section/div/div/table/tbody/tr/td[2]/a")
@@ -278,684 +277,837 @@ public class CasePage {
 	public WebElement attachmentTab;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[1]/div[5]/span[4]/label")
 	public WebElement participantnsTab;
-    @FindBy(how = How.XPATH, using = "/html/body/header/div/nav/ul/li/div/div[1]/div")
+	@FindBy(how = How.XPATH, using = "/html/body/header/div/nav/ul/li/div/div[1]/div")
 	public WebElement caseButton;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[1]/nav/ul/li[2]/a")
 	public WebElement caseModule;
+	@FindBy(how = How.XPATH, using = ".//*[@title='Case Files']")
+	public WebElement caseFilesMenu;
+	@FindBy(how = How.XPATH, using = ".//*[@class='row']/div[2]/h4")
+	public WebElement caseId;	
 
-	public void newCase() throws InterruptedException {
-
-		Assert.assertTrue("The edit button in dashboard is not displayed", editButton.isDisplayed());
-		Assert.assertTrue("The new button is not displayed", newButton.isDisplayed());
+	public CasePage newCase() throws InterruptedException {		
+		Assert.assertTrue("The new button is not displayed", newButtonIsDisplayed());
+		Assert.assertTrue("The edit button in dashboard is not displayed", editButtonIsDisplayed());		
 		newButton.click();
 		Thread.sleep(2000);
 		Assert.assertEquals("Case name is wrong", "Case", newCaseButton.getText());
 		newCaseButton.click();
-		//caseButton.click();
+		return this;
 	}
-
-	public void vrifyGeneralInformationTabName() {
+    
+	public boolean editButtonIsDisplayed(){
+		boolean editButtonIsDisplayed = editButton.isDisplayed();
+		if (editButtonIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
+	public boolean newButtonIsDisplayed(){
+		WebElement el = WaitHelper.getWhenElementIsVisible(newButton, 30, driver);	
+		boolean newButtonIsDisplayed = el.isDisplayed();
+		if (newButtonIsDisplayed == true )
+		{
+		return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	public CasePage vrifyGeneralInformationTabName() {
 
 		Assert.assertTrue(generalInformationTab.isDisplayed());
 		Assert.assertEquals("General Information tab title is wrong", "General Information",
 				generalInformationTab.getText());
+		return this;
 
 	}
 
-	public void veifyCaseTitle() {
+	public CasePage veifyCaseTitle() {
 
 		Assert.assertTrue(caseTitle.isDisplayed());
 		Assert.assertEquals("Case title is wrong", "Case Title", caseTitle.getText());
+		return this;
 
 	}
 
-	public void caseTitleInput(String caseName) {
+	public CasePage caseTitleInput(String caseName) {
 
-		Assert.assertTrue(caseTitleInput.isDisplayed());
+		WebElement el = WaitHelper.getWhenElementIsVisible(caseTitleInput, 30, driver);	
+		Assert.assertTrue(el.isDisplayed());		
 		caseTitleInput.click();
 		caseTitleInput.sendKeys(caseName);
+		return this;
 	}
 
-	public void verifyCaseTypeTitle() {
+	public CasePage verifyCaseTypeTitle() {
 
 		Assert.assertTrue(caseTypeTitle.isDisplayed());
 		Assert.assertEquals("Case type title is wrong", "Case Type", caseTypeTitle.getText());
+		return this;
 
 	}
 
-	public void caseTypeInputClick() {
-
+	public CasePage caseTypeInputClick() {
+        
 		Assert.assertTrue(caseTypeInput.isDisplayed());
 		caseTypeInput.click();
+		return this;
 
 	}
 
-	public void caseTypeEmbezzalmendClick() {
+	public CasePage caseTypeEmbezzalmendClick() {
 		Assert.assertEquals("Case type Embezzlement name is wrong", "Embezzlement", caseTypeEmbezzalmend.getText());
 		caseTypeEmbezzalmend.click();
+		return this;
 	}
 
-	public void caseTypeAgricultural() {
+	public CasePage caseTypeAgricultural() {
 		Assert.assertTrue(caseTypeAgricultural.getText().equals("Agricultural"));
-
 		caseTypeAgricultural.click();
+		return this;
 	}
 
-	public void caseTypeArson() {
+	public CasePage caseTypeArson() {
 
 		Assert.assertTrue(caseTypeArson.getText().equals("Arson"));
 		caseTypeArson.click();
+		return this;
 	}
 
-	public void caseTypeBackgroundInvestigation() {
+	public CasePage caseTypeBackgroundInvestigation() {
 
 		Assert.assertTrue(caseTypeBackgroundInvestigation.getText().equals("Background Investigation"));
 		caseTypeBackgroundInvestigation.click();
+		return this;
 
 	}
 
-	public void caseTypeBetterBuisnessDispute() {
+	public CasePage caseTypeBetterBuisnessDispute() {
 
 		Assert.assertTrue(caseTypeBetterBuisnessDispute.getText().equals("Better Business Dispute"));
 		caseTypeBetterBuisnessDispute.click();
+		return this;
 	}
 
-	public void caseTypeClinicalInvestigatorFraud() {
+	public CasePage caseTypeClinicalInvestigatorFraud() {
 
 		Assert.assertTrue(caseTypeClinicalInvestigatorFraud.getText().equals("Clinical Investigator Fraud"));
 		caseTypeClinicalInvestigatorFraud.click();
+		return this;
 	}
 
-	public void caseTypeCongressionalResponse() {
+	public CasePage caseTypeCongressionalResponse() {
 
-		Assert.assertTrue(caseTypeCongressionalResponse.getText().equals("Congressional Response"));
+		
+		Assert.assertTrue(caseTypeCongressionalResponse.getText().equals("Congressional Response"));			
 		caseTypeCongressionalResponse.click();
+		return this;
 	}
 
-	public void caseTypeDisabilityWaiverRequest() {
+	public CasePage caseTypeDisabilityWaiverRequest() {
 
 		Assert.assertTrue(caseTypeDisabilityWaiverRequest.getText().equals("Disability Waiver Request"));
 		caseTypeDisabilityWaiverRequest.click();
+		return this;
 	}
 
-	public void caseTypeDomesticDispute() {
+	public CasePage caseTypeDomesticDispute() {
 
 		Assert.assertTrue(caseTypeDomesticDispute.getText().equals("Domestic Dispute"));
 		caseTypeDomesticDispute.click();
+		return this;
 	}
 
-	public void caseTypeDrugTrafficking() {
+	public CasePage caseTypeDrugTrafficking() {
 
 		Assert.assertTrue(caseTypeDrugTrafficking.getText().equals("Drug Trafficking"));
 		caseTypeDrugTrafficking.click();
+		return this;
 	}
 
-	public void caseTypeEducationWaiverRequest() {
+	public CasePage caseTypeEducationWaiverRequest() {
 
 		Assert.assertTrue(caseTypeEducationWaiverRequest.getText().equals("Education Waiver Request"));
 		caseTypeEducationWaiverRequest.click();
+		return this;
 	}
 
-	public void caseTypeEEOHarassment() {
+	public CasePage caseTypeEEOHarassment() {
 
 		Assert.assertTrue(caseTypeEEOHarassment.getText().equals("EEO/Harassment"));
 		caseTypeEEOHarassment.click();
+		return this;
 	}
 
-	public void caseTypeExtortion() {
+	public CasePage caseTypeExtortion() {
 
 		Assert.assertTrue(caseTypeExtortion.getText().equals("Extortion"));
 		caseTypeExtortion.click();
+		return this;
 	}
 
-	public void caseTypeFraud() {
+	public CasePage caseTypeFraud() {
 
 		Assert.assertTrue(caseTypeFraud.getText().equals("Fraud"));
 		caseTypeFraud.click();
+		return this;
 	}
 
-	public void caseTypeGovernment() {
+	public CasePage caseTypeGovernment() {
 
 		Assert.assertTrue(caseTypeGovernment.getText().equals("Government"));
 		caseTypeGovernment.click();
+		return this;
 	}
 
-	public void caseTypeInvestorComplaint() {
+	public CasePage caseTypeInvestorComplaint() {
 
 		Assert.assertTrue(caseTypeInvestorComplaint.getText().equals("Investor Complaint"));
 		caseTypeInvestorComplaint.click();
+		return this;
 
 	}
 
-	public void caseTypeBenefitsAppeal() {
+	public CasePage caseTypeBenefitsAppeal() {
 
 		Assert.assertTrue(caseTypeBenefitsAppeal.getText().equals("Benefits Appeal"));
 		caseTypeBenefitsAppeal.click();
+		return this;
 
 	}
 
-	public void caseTypeLaborRacketeering() {
+	public CasePage caseTypeLaborRacketeering() {
 
 		Assert.assertTrue(caseTypeLaborRacketeering.getText().equals("Labor Racketeering"));
 		caseTypeLaborRacketeering.click();
+		return this;
 
 	}
 
-	public void caseTypeLocal() {
+	public CasePage caseTypeLocal() {
 
 		Assert.assertTrue(caseTypeLocal.getText().equals("Local"));
 		caseTypeLocal.click();
+		return this;
 	}
 
-	public void caseTypeMudred() {
+	public CasePage caseTypeMudred() {
 
 		Assert.assertTrue(caseTypeMurder.getText().equals("Murder"));
 		caseTypeMurder.click();
+		return this;
 	}
 
-	public void caseTypeNewDrugApplicationFraud() {
+	public CasePage caseTypeNewDrugApplicationFraud() {
 
 		Assert.assertTrue(casetypeNewDrugApplicationFraud.getText().equals("New Drug Application Fraud"));
 		casetypeNewDrugApplicationFraud.click();
+		return this;
 	}
 
-	public void caseTypePayoff() {
+	public CasePage caseTypePayoff() {
 
 		Assert.assertTrue(casseTypePayoff.getText().equals("Payoff"));
 		casseTypePayoff.click();
+		return this;
 	}
 
-	public void caseTypePensionWaiverRequest() {
+	public CasePage caseTypePensionWaiverRequest() {
 
 		Assert.assertTrue(caseTypePensionWaiverRequest.getText().equals("Pension Waiver Request"));
 		caseTypePensionWaiverRequest.click();
+		return this;
 	}
 
-	public void caseTypePollution() {
+	public CasePage caseTypePollution() {
 
 		Assert.assertTrue(caseTypePollution.getText().equals("Pollution"));
 		caseTypePollution.click();
+		return this;
 	}
 
-	public void caseTypeProductTampering() {
+	public CasePage caseTypeProductTampering() {
 
 		Assert.assertTrue(caseTypeProductTampering.getText().equals("Product Tampering"));
 		caseTypeProductTampering.click();
+		return this;
 	}
 
-	public void caseTypeTheftTheftormisuseofasset() {
+	public CasePage caseTypeTheftTheftormisuseofasset() {
 		caseTypeTheftormisuseofasset.click();
+		return this;
 	}
 
-	public void descriptionInput(String description) {
+	public CasePage descriptionInput(String description) {
 
 		descriptionInput.click();
 		descriptionInput.sendKeys(description);
+		return this;
 	}
 
-	public void nextButtonClick() {
+	public CasePage nextButtonClick() {
 		nextButton.click();
+		return this;
 	}
 
-	public void clickInitiatorMr() {
+	public CasePage clickInitiatorMr() {
 
 		Assert.assertTrue(initiatorMr.getText().equals("Mr"));
 		initiatorMr.click();
+		return this;
 
 	}
 
-	public void clickInitiatorMrs() {
+	public CasePage clickInitiatorMrs() {
 		Assert.assertTrue(initiatorMrs.getText().equals("Mrs"));
 		initiatorMrs.click();
+		return this;
 	}
 
-	public void clickInitiatorMs() {
+	public CasePage clickInitiatorMs() {
 
 		Assert.assertTrue(initiatorMs.getText().equals("Ms"));
 		initiatorMs.click();
+		return this;
 
 	}
 
-	public void ClickInitiatorMiss() {
+	public CasePage ClickInitiatorMiss() {
 
 		Assert.assertTrue(initiatorMiss.getText().equals("Miss"));
 		initiatorMiss.click();
+		return this;
 
 	}
 
-	public void initiatorFirstName(String firstName) {
+	public CasePage initiatorFirstName(String firstName) {
 
 		initiatorFirstName.click();
 		initiatorFirstName.sendKeys(firstName);
+		return this;
 
 	}
 
-	public void initiatorLastName(String lastName) {
+	public CasePage initiatorLastName(String lastName) {
 
 		initiatorLastName.click();
 		initiatorLastName.sendKeys(lastName);
+		return this;
 	}
 
-	public void ClickHomePhoneCd() {
+	public CasePage ClickHomePhoneCd() {
 
 		Assert.assertTrue(homePhoneCD.getText().equals("Home phone"));
 		homePhoneCD.click();
+		return this;
 	}
 
-	public void ClickWorkPhoneCd() {
+	public CasePage ClickWorkPhoneCd() {
 
 		Assert.assertTrue(WorkPhoneCD.getText().equals("Work phone"));
 		WorkPhoneCD.click();
+		return this;
 	}
 
-	public void ClickMobileCd() {
+	public CasePage ClickMobileCd() {
 
 		Assert.assertTrue(mobileCD.getText().equals("Mobile"));
 		mobileCD.click();
+		return this;
 	}
 
-	public void ClickEmailCd() {
+	public CasePage ClickEmailCd() {
 
 		Assert.assertTrue(emailCD.getText().equals("Email"));
 		emailCD.click();
+		return this;
 
 	}
 
-	public void ClickFacebookCd() {
+	public CasePage ClickFacebookCd() {
 		Assert.assertTrue(facebookCD.getText().equals("Facebook"));
 		facebookCD.click();
+		return this;
 	}
 
-	public void insertValueCd(String value) {
+	public CasePage insertValueCd(String value) {
 
 		valueCD.click();
 		valueCD.sendKeys(value);
+		return this;
 	}
 
-	public void insertDateCD(String date) {
+	public CasePage insertDateCD(String date) {
 
 		dateCD.click();
 		dateCD.clear();
 		dateCD.sendKeys(date);
+		return this;
 	}
 
-	public void verifyAddedByCd(String user) {
+	public CasePage verifyAddedByCd(String user) {
 
 		Assert.assertTrue(addedByCD.getText().equals(user));
+		return this;
 	}
 
-	public void ClickNonProfitOi() {
+	public CasePage ClickNonProfitOi() {
 
 		Assert.assertTrue(nonProfitOI.getText().equals("Non-profit"));
 		nonProfitOI.click();
+		return this;
 	}
 
-	public void ClickGovernmentOi() {
+	public CasePage ClickGovernmentOi() {
 
 		Assert.assertTrue(governmentOI.getText().equals("Government"));
 		governmentOI.click();
+		return this;
 	}
 
-	public void ClickCorporationOi() {
+	public CasePage ClickCorporationOi() {
 
 		Assert.assertTrue(corporationOI.getText().equals("Corporation"));
 		corporationOI.click();
+		return this;
 	}
 
-	public void insertNameOi(String name) {
+	public CasePage insertNameOi(String name) {
 
 		nameOI.click();
 		nameOI.sendKeys(name);
+		return this;
 	}
 
-	public void insertDateOi(String date) {
+	public CasePage insertDateOi(String date) {
 
 		dateOI.click();
 		dateOI.clear();
 		dateOI.sendKeys(date);
+		return this;
 	}
 
-	public void verifyAddedByOi(String user) {
+	public CasePage verifyAddedByOi(String user) {
 
 		Assert.assertTrue(addedbyOI.getText().equals(user));
+		return this;
 	}
 
-	public void insertAddressLi(String address) {
+	public CasePage insertAddressLi(String address) {
 
 		addressLI.click();
 		addressLI.sendKeys(address);
+		return this;
 
 	}
 
-	public void ClickbuisnessLi() {
+	public CasePage ClickbuisnessLi() {
 
 		Assert.assertTrue(buisnessLI.getText().equals("Business"));
 		buisnessLI.click();
+		return this;
 	}
 
-	public void CLickHomeLi() {
+	public CasePage CLickHomeLi() {
 
 		Assert.assertTrue(homeLI.getText().equals("Home"));
 		homeLI.click();
+		return this;
 	}
 
-	public void insertCityLi(String city) {
+	public CasePage insertCityLi(String city) {
 
 		cityLI.click();
 		cityLI.sendKeys(city);
+		return this;
 	}
 
-	public void insertStateLi(String state) {
+	public CasePage insertStateLi(String state) {
 
 		stateLI.click();
 		stateLI.sendKeys(state);
+		return this;
 	}
 
-	public void insertZipCodeLi(String zip) {
+	public CasePage insertZipCodeLi(String zip) {
 
 		zipCodeLI.click();
 		zipCodeLI.sendKeys(zip);
+		return this;
 	}
 
-	public void insertStartDateLi(String date) throws InterruptedException {
+	public CasePage insertStartDateLi(String date) throws InterruptedException {
 
 		dateLI.click();
 		Thread.sleep(2000);
 		dateLI.clear();
 		dateLI.sendKeys(date);
+		return this;
 
 	}
 
-	public void verifyAddedByLi(String user) {
+	public CasePage verifyAddedByLi(String user) {
 
 		Assert.assertTrue(addedByLI.getText().equals(user));
+		return this;
 	}
 
-	public void clickTitlePeopleMr() {
+	public CasePage clickTitlePeopleMr() {
 
 		Assert.assertTrue(titlePeopleMr.getText().equals("Mr"));
 		titlePeopleMr.click();
+		return this;
 
 	}
 
-	public void clickTitlePeopleMrs() {
+	public CasePage clickTitlePeopleMrs() {
 
 		Assert.assertTrue(titlePeopleMrs.getText().equals("Mrs"));
 		titlePeopleMrs.click();
+		return this;
 
 	}
 
-	public void clickTitlePeopleMs() {
+	public CasePage clickTitlePeopleMs() {
 
 		Assert.assertTrue(titlePeopleMs.getText().equals("Ms"));
 		titlePeopleMs.click();
+		return this;
 
 	}
 
-	public void clickTitlePeopleMiss() {
+	public CasePage clickTitlePeopleMiss() {
 
 		Assert.assertTrue(titlePeopleMiss.getText().equals("Miss"));
 		titlePeopleMiss.click();
+		return this;
 
 	}
 
-	public void insertFirstNamePeople(String firstName) {
+	public CasePage insertFirstNamePeople(String firstName) {
 
 		firstNamePeople.click();
 		firstNamePeople.sendKeys(firstName);
+		return this;
 
 	}
 
-	public void insertLastNamePeople(String lastName) {
+	public CasePage insertLastNamePeople(String lastName) {
 
 		lastNamePeople.click();
 		lastNamePeople.sendKeys(lastName);
+		return this;
 	}
 
-	public void typePeopleComplaintant() {
+	public CasePage typePeopleComplaintant() {
 
 		Assert.assertTrue(typePComplaintant.getText().equals("Complaintant"));
 		typePComplaintant.click();
+		return this;
 
 	}
 
-	public void typePeopleWitness() {
+	public CasePage typePeopleWitness() {
 
 		Assert.assertTrue(typePWitness.getText().equals("Witness"));
 		typePWitness.click();
+		return this;
 
 	}
 
-	public void typePeopleComHomePhone() {
+	public CasePage typePeopleComHomePhone() {
 
 		Assert.assertTrue(peopleComunicationHome.getText().equals("Home phone"));
 		peopleComunicationHome.click();
+		return this;
 
 	}
 
-	public void typePeopleComWorkPhone() {
+	public CasePage typePeopleComWorkPhone() {
 
 		Assert.assertTrue(peopleComunicationWork.getText().equals("Work phone"));
 		peopleComunicationWork.click();
+		return this;
 
 	}
 
-	public void typePeopleComMobilePhone() {
+	public CasePage typePeopleComMobilePhone() {
 
 		Assert.assertTrue(peopleComunicationMobile.getText().equals("Mobile"));
 		peopleComunicationMobile.click();
+		return this;
 
 	}
 
-	public void typePeopleComEmail() {
+	public CasePage typePeopleComEmail() {
 
 		Assert.assertTrue(peopleComunicationEmail.getText().equals("Email"));
 		peopleComunicationEmail.click();
+		return this;
 
 	}
 
-	public void typePeopleComFacebook() {
+	public CasePage typePeopleComFacebook() {
 
 		Assert.assertTrue(peopleCominicationFacebook.getText().equals("Facebook"));
 		peopleCominicationFacebook.click();
+		return this;
 
 	}
 
-	public void insertPeoplComValue(String value) {
+	public CasePage insertPeoplComValue(String value) {
 
 		valuePcomDevice.click();
 		valuePcomDevice.sendKeys(value);
+		return this;
 	}
 
-	public void insertPeopleComDate(String date) throws InterruptedException {
+	public CasePage insertPeopleComDate(String date) throws InterruptedException {
 
 		datePcomDevice.click();
 		Thread.sleep(2000);
 		datePcomDevice.clear();
 		datePcomDevice.sendKeys(date);
+		return this;
 
 	}
 
-	public void typePeopleOrganizationNonProfit() {
+	public CasePage typePeopleOrganizationNonProfit() {
 
 		Assert.assertTrue(peopleOrganizationNonProfit.getText().equals("Non-profit"));
 		peopleOrganizationNonProfit.click();
+		return this;
 	}
 
-	public void typePeopleOrganizationGovernment() {
+	public CasePage typePeopleOrganizationGovernment() {
 
 		Assert.assertTrue(peopleOrganizationGovernment.getText().equals("Goverment"));
 		peopleOrganizationGovernment.click();
+		return this;
 	}
 
-	public void typePeopleOrganizationCorpoation() {
+	public CasePage typePeopleOrganizationCorpoation() {
 
 		Assert.assertTrue(peopleOrganizationNonProfit.getText().equals("Corporation"));
 		peopleOrganizationCorporation.click();
+		return this;
 	}
 
-	public void insertPeopleNameOrganizationInformation() {
+	public CasePage insertPeopleNameOrganizationInformation() {
 
 		nameOrganization.click();
 		nameOrganization.sendKeys("Organization Information");
+		return this;
 
 	}
 
-	public void insertPeopleORganizationDate(String date) throws InterruptedException {
+	public CasePage insertPeopleORganizationDate(String date) throws InterruptedException {
 
 		datePOrganization.click();
 		Thread.sleep(2000);
 		datePOrganization.clear();
 		datePOrganization.sendKeys(date);
+		return this;
 
 	}
 
-	public void typePeopleLocationBusiness() {
+	public CasePage typePeopleLocationBusiness() {
 
 		Assert.assertTrue(peopleLocationBusiness.getText().equals("Business"));
 		peopleLocationBusiness.click();
+		return this;
 	}
 
-	public void typePeopleLocationHome() {
+	public CasePage typePeopleLocationHome() {
 
 		Assert.assertTrue(peopleLocationHome.getText().equals("Home"));
 		peopleLocationHome.click();
+		return this;
 	}
 
-	public void insertPeopleLocationInfoAddress(String address) {
+	public CasePage insertPeopleLocationInfoAddress(String address) {
 
 		adderessPeopleLocation.click();
 		adderessPeopleLocation.sendKeys(address);
+		return this;
 	}
 
-	public void insertPeopleLocationInfoCity(String city) {
+	public CasePage insertPeopleLocationInfoCity(String city) {
 
 		cityPeopleLocationInfo.click();
 		cityPeopleLocationInfo.sendKeys(city);
+		return this;
 
 	}
 
-	public void insertPeopleLocationInfoState(String state) {
+	public CasePage insertPeopleLocationInfoState(String state) {
 
 		statePeopleLocatonInfo.click();
 		statePeopleLocatonInfo.sendKeys(state);
+		return this;
 
 	}
 
-	public void inssertPeopleLocationInfoZip(String zip) {
+	public CasePage inssertPeopleLocationInfoZip(String zip) {
 
 		zipPeopleLocationInfo.click();
 		zipPeopleLocationInfo.sendKeys(zip);
+		return this;
 
 	}
 
-	public void insertPeopleLocationInfoDate(String date) throws InterruptedException {
+	public CasePage insertPeopleLocationInfoDate(String date) throws InterruptedException {
 
 		datePeopleLocationInfo.click();
 		Thread.sleep(2000);
 		datePeopleLocationInfo.clear();
 		datePeopleLocationInfo.sendKeys(date);
+		return this;
 
 	}
 
-	public void attachmentsAddFilesClickButton() {
+	public CasePage attachmentsAddFilesClickButton() {
 		addFiles.click();
+		return this;
 	}
 
-	public void browseButtonClick() {
+	public CasePage browseButtonClick() {
 
 		BrowseButton.click();
+		return this;
 	}
 
-	public void addFile() throws IOException, AWTException {
+	public CasePage addFile() throws IOException, AWTException {
 
 		ArkCaseTestUtils.uploadPdf();
+		return this;
 
 	}
 
-	public void uploadButtonClick() {
+	public CasePage uploadButtonClick() {
 		uploadButton.click();
+		return this;
 	}
 
-	public void selectParticipantTypeClick() {
+	public CasePage selectParticipantTypeClick() {
 		selectParticipantType.click();
+		return this;
 	}
 
-	public void selectparticipantOwner() throws InterruptedException {
+	public CasePage selectparticipantOwner() throws InterruptedException {
 
 		Assert.assertEquals("Owner name is wrong", "Owner", selectParticipantOwner.getText());
 		selectParticipantOwner.click();
 		Thread.sleep(4000);
+		return this;
 
 	}
 
-	public void selectParticipantClick() {
+	public CasePage selectParticipantClick() {
 		selectParticipant.click();
+		return this;
 	}
 
-	public void searchForUsers() throws InterruptedException {
-
-		serachForUsers.click();
+	public CasePage searchForUsers() throws InterruptedException {	
+		WebElement el = WaitHelper.getWhenElementIsVisible(searchForUsers, 30, driver);	
+		el.click();
 		Thread.sleep(2000);
-		serachForUsers.sendKeys("Samuel Supervisor");
+		searchForUsers.sendKeys("Samuel Supervisor");
 		searchUserButton.click();
+		return this;
 
 	}
 
-	public void searchedName() {
-
+	public CasePage searchedName() {
 		Assert.assertEquals("User name is wrong", "Samuel Supervisor", searchedName.getText().toString());
-
 		searchedName.click();
+		return this;
 
 	}
 
-	public void addSearchedNameClick() {
+	public CasePage addSearchedNameClick() {
 		addSearchedName.click();
+		return this;
 	}
 
-	public void verifyInitiatorTab() {
-
+	public CasePage verifyInitiatorTab() {
 		Assert.assertEquals("Initiator tab name is wrong", "Initiator", initiatorTab.getText());
+		return this;
 	}
 
-	public void verifyPeopleTab() {
-
+	public CasePage verifyPeopleTab() {
 		Assert.assertTrue(peopleTab.getText().equals("People"));
+		return this;
 	}
 
-	public void verifyAttachmentTab() {
-
+	public CasePage verifyAttachmentTab() {
 		Assert.assertTrue(attachmentTab.getText().equals("Attachments"));
+		return this;
 	}
 
-	public void verifyParticipantTab() {
-
+	public CasePage verifyParticipantTab() {
 		Assert.assertTrue(participantnsTab.getText().equals("Participants"));
+		return this;
 	}
 
-	public void clickParticipantTypePlusBtn() {
+	public CasePage clickParticipantTypePlusBtn() {
 		participantTypePlusBtn.click();
+		return this;
 	}
 
-	public void selectSecondTypeParticipant() {
-
+	public CasePage selectSecondTypeParticipant() {
 		secondRowSelectParticipantType.click();
+		return this;
 	}
 
-	public void selectParticipantTypeFolower() {
-
+	public CasePage selectParticipantTypeFolower() {
 		Assert.assertEquals("Folower label name is wrong", "Follower", selectParticipantFolower.getText());
 		selectParticipantFolower.click();
+		return this;
 	}
 
-	public void clickSecondParticipant() {
+	public CasePage clickSecondParticipant() {
 		selectSecondParticipant.click();
+		return this;
 
 	}
 
-	public void selectParticipantFollower() {
+	public CasePage selectParticipantFollower() {
 		selectParticipantFollower.click();
+		return this;
 	}
 
+	public CasePage CaseFilesMenuClick() {
+		caseFilesMenu.click();
+		return this;
+	}
+
+	public String parseCaseId() {
+		String subcaseId = caseId.getText().substring(9, 12);
+		return subcaseId;
+	}
+	
+	public CasePage initiatorTitleClick(){
+		initiatorTitle.click();
+		return this;
+	}
+	
+	public CasePage participantTabClick(){
+		participantnsTab.click();
+		return this;
+	}
+	
+	public CasePage submitClick(){
+		submit.click();
+		return this;
+	}
+
+	
 }

@@ -31,7 +31,20 @@ public class AuditPage extends ArkCaseTestBase {
 	WebElement reportContent;
 	@FindBy(how = How.XPATH, using = "//table")
 	WebElement reportTable;
-
+	@FindBy(how = How.XPATH, using ="//table/tbody/tr[2]/td[2]")
+    WebElement dateColumnHeader;
+	@FindBy(how = How.XPATH, using ="//table/tbody/tr[2]/td[3]")
+    WebElement userColumnHeader;
+	@FindBy(how = How.XPATH, using ="//table/tbody/tr[2]/td[4]")
+    WebElement nameColumnHeader;
+	@FindBy(how = How.XPATH, using ="//table/tbody/tr[2]/td[5]")
+    WebElement resultColumnHeader;
+	@FindBy(how = How.XPATH, using ="//table/tbody/tr[2]/td[6]")
+    WebElement ipaddressColumnHeader;
+	@FindBy(how = How.XPATH, using ="//table/tbody/tr[2]/td[7]")
+    WebElement objectIdColumnHeader;
+	@FindBy(how = How.XPATH, using ="//table/tbody/tr[2]/td[8]")
+    WebElement objectTypeColumnHeader;	
 	public AuditPage ReportsMenuClick() {
 
 		ReportsLink.click();
@@ -82,4 +95,52 @@ public class AuditPage extends ArkCaseTestBase {
 		generateAuditReportButtonClick();
 		return this;
 	}
+	
+	public AuditPage switchToAuditFrame(){
+		driver.switchTo().frame("audit-iframe");
+		return this;
+	}
+	public AuditPage switchToDefaultContent(){
+		driver.switchTo().defaultContent();
+		return this;
+	}
+	
+	public AuditPage switchToReportContentFrame(){
+		driver.switchTo().frame("reportContent");
+		return this;
+	}
+	
+	public String readDateColumnHeader()
+	{
+		return dateColumnHeader.getText();
+	}
+	
+	public String readUserColumnHeader()
+	{
+		return userColumnHeader.getText();
+	}
+	public String readNameColumnHeader()
+	{
+		return nameColumnHeader.getText();
+	}
+	
+	public String readResultColumnHeader()
+	{
+		return resultColumnHeader.getText();
+	}
+	
+	public String readIpAddressColumnHeader()
+	{
+		return ipaddressColumnHeader.getText();
+	}
+	public String readObjectIdColumnHeader()
+	{
+	   return objectIdColumnHeader.getText();
+	}
+	
+	public String readObjectTypeColumnHeader()
+	{
+		return objectTypeColumnHeader.getText();
+	}
+	
 }

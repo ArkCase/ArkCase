@@ -11,7 +11,6 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.testng.asserts.SoftAssert;
-
 import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
 
 public class CaseDocumentsPage extends ArkCaseTestBase {
@@ -32,7 +31,7 @@ public class CaseDocumentsPage extends ArkCaseTestBase {
 	WebElement statusColumnName;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/doc-tree/table/thead/tr/th[6]")
 	WebElement modifiedColumnName;
-    @FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[1]/div/div/button")
+	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[1]/div/div/button")
 	WebElement refreshTableButton;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/doc-tree/table/tbody/tr[1]/td[3]/span/span[1]")
 	WebElement rootExpander;
@@ -53,19 +52,19 @@ public class CaseDocumentsPage extends ArkCaseTestBase {
 	WebElement firstDocumentStatus;
 	// second row
 
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/doc-tree/table/tbody/tr[3]/td[3]/span/span[3]")
+	@FindBy(how = How.XPATH, using = "//*[@title='imageprofile.png']")
 	public WebElement secondDocumentTitle;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/doc-tree/table/tbody/tr[3]/td[4]")
+	@FindBy(how = How.XPATH, using = "//*[@class='fancytree-lastsib fancytree-exp-nl fancytree-ico-c']/td[4]")
 	WebElement secondDocumentType;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/doc-tree/table/tbody/tr[3]/td[5]")
+	@FindBy(how = How.XPATH, using = "//*[@class='fancytree-lastsib fancytree-exp-nl fancytree-ico-c']/td[5]")
 	WebElement secondDocumentCreated;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/doc-tree/table/tbody/tr[3]/td[6]")
+	@FindBy(how = How.XPATH, using = "//*[@class='fancytree-lastsib fancytree-exp-nl fancytree-ico-c']/td[6]")
 	WebElement secondDocumentModified;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/doc-tree/table/tbody/tr[3]/td[7]")
+	@FindBy(how = How.XPATH, using = "//*[@class='fancytree-lastsib fancytree-exp-nl fancytree-ico-c']/td[7]")
 	WebElement secondDocumentAuthor;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/doc-tree/table/tbody/tr[3]/td[8]")
+	@FindBy(how = How.XPATH, using = "//*[@class='fancytree-lastsib fancytree-exp-nl fancytree-ico-c']/td[8]")
 	WebElement secondDocumentVersion;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/doc-tree/table/tbody/tr[3]/td[9]")
+	@FindBy(how = How.XPATH, using = "//*[@class='fancytree-lastsib fancytree-exp-nl fancytree-ico-c']/td[9]")
 	WebElement secondDocumentStatus;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[9]")
 	WebElement clearCachButton;
@@ -75,7 +74,7 @@ public class CaseDocumentsPage extends ArkCaseTestBase {
 	WebElement root;
 	@FindBy(how = How.XPATH, using = "/html/body/ul/li[2]")
 	WebElement newDocument;
-	@FindBy(how = How.XPATH, using = "/html/body/ul/li[2]/ul/li[8]")
+	@FindBy(how = How.XPATH, using = "//li[@data-command='file/Other']")
 	WebElement documentOther;
 	@FindBy(how = How.XPATH, using = "/html/body/ul/li[2]/ul/li[7]")
 	WebElement documentWitnessInterview;
@@ -243,7 +242,7 @@ public class CaseDocumentsPage extends ArkCaseTestBase {
 	@FindBy(how = How.XPATH, using = "/html/body/ul/li[3]/ul/li[1]")
 	WebElement correspondenceGeneralRelease;
 
-	public void verifyDocumentsTable() {
+	public CaseDocumentsPage verifyDocumentsTable() {
 
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertEquals(documentsTableTitle.getText(), "Documents", "Documents table title is wrong");
@@ -256,14 +255,17 @@ public class CaseDocumentsPage extends ArkCaseTestBase {
 		softAssert.assertEquals(modifiedColumnName.getText(), "Modified", "Documents modified column name is wrong");
 		softAssert.assertTrue(refreshTableButton.isDisplayed(), "Documents refresh button is not displayed");
 		softAssert.assertAll();
+		return this;
 
 	}
 
-	public void clickRootExpander() {
+	public CaseDocumentsPage clickRootExpander() {
 		rootExpander.click();
+		return this;
 	}
 
-	public void verifyFirstDocument(String title, String type, String author, String version, String status) {
+	public CaseDocumentsPage verifyFirstDocument(String title, String type, String author, String version,
+			String status) {
 
 		Date date = new Date(System.currentTimeMillis());
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
@@ -277,14 +279,15 @@ public class CaseDocumentsPage extends ArkCaseTestBase {
 		softAssert.assertEquals(firstDocumentVersion.getText(), version, "First Document version is wrong");
 		softAssert.assertEquals(firstDocumentStatus.getText(), status, "FIrst Document status is wrong");
 		softAssert.assertAll();
+		return this;
 	}
 
-	public void verifySecondDocument(String title, String type, String version, String status) {
+	public CaseDocumentsPage verifySecondDocument(String title, String type, String version, String status) {
 
 		Date date = new Date(System.currentTimeMillis());
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 		String createdDate = formatter.format(date);
-		SoftAssert softAssert = new SoftAssert();
+		SoftAssert softAssert = new SoftAssert();		
 		softAssert.assertEquals(secondDocumentTitle.getText(), title, "Second Document title is wrong");
 		softAssert.assertEquals(secondDocumentType.getText(), type, "Second Document type is wrong");
 		softAssert.assertEquals(secondDocumentCreated.getText(), createdDate, "Second Document created date is wrong");
@@ -294,230 +297,270 @@ public class CaseDocumentsPage extends ArkCaseTestBase {
 		softAssert.assertEquals(secondDocumentVersion.getText(), version, "Second Document version is worng");
 		softAssert.assertEquals(secondDocumentStatus.getText(), status, "Second Document status is wrong");
 		softAssert.assertAll();
+		return this;
 
 	}
 
-	public void performRightClickOnRoot() {
+	public CaseDocumentsPage performRightClickOnRoot() {
 
 		Actions actions = new Actions(driver);
 		Action action = actions.contextClick(root).build();
 		action.perform();
+		return this;
 	}
 
-	public void newDocumentClick() {
-
+	public CaseDocumentsPage newDocumentClick() {
 		newDocument.click();
+		return this;
 	}
 
-	public void checkIfRightClickOnRootIsWorking() {
+	public CaseDocumentsPage checkIfRightClickOnRootIsWorking() {
 
 		int i = driver.findElements(By.xpath("/html/body/ul/li[2]")).size();
 		Assert.assertTrue("Right Click on root is not working", i > 0);
+		return this;
 
 	}
 
-	public void verifyNewDocmentName() {
+	public CaseDocumentsPage verifyNewDocmentName() {
 		Assert.assertEquals("New Document name is wrong", "New Document", newDocument.getText());
+		return this;
 	}
 
-	public void clickDocumentOther() {
+	public CaseDocumentsPage clickDocumentOther() {
 
 		documentOther.click();
+		return this;
 
 	}
 
-	public void verifyDocumentOtherName() {
+	public CaseDocumentsPage verifyDocumentOtherName() {
 		Assert.assertEquals("Document Other name is wrong", "Other", documentOther.getText());
+		return this;
 	}
 
-	public void verifydocumentWitnessInterviewName() {
+	public CaseDocumentsPage verifydocumentWitnessInterviewName() {
 
 		Assert.assertEquals("Document Witness Interview Request name is wrong", "Witness Interview Request",
 				documentWitnessInterview.getText());
+		return this;
 	}
 
-	public void clickDocumentWitnessInterview() {
+	public CaseDocumentsPage clickDocumentWitnessInterview() {
 		documentWitnessInterview.click();
+		return this;
 	}
 
-	public void verifyDocumentNoticeOfInvestigationName() {
+	public CaseDocumentsPage verifyDocumentNoticeOfInvestigationName() {
 		Assert.assertEquals("Document Notice of Investigation name is wrong", "Notice of Investigation",
 				documentNoticeOfInvestigation.getText());
+		return this;
 	}
 
-	public void clickDocumentNoticeOfInvestigation() {
+	public CaseDocumentsPage clickDocumentNoticeOfInvestigation() {
 		documentNoticeOfInvestigation.click();
+		return this;
 	}
 
-	public void verifyDocumentSF86Signature() {
+	public CaseDocumentsPage verifyDocumentSF86Signature() {
 
 		Assert.assertEquals("Document SF86 Signature name is wrong", "SF86 Signature", documentSF86Signature.getText());
+		return this;
 
 	}
 
-	public void clickDocumentSF86Signature() {
+	public CaseDocumentsPage clickDocumentSF86Signature() {
 
 		documentSF86Signature.click();
+		return this;
 	}
 
-	public void verifyDocumentEDelivery() {
+	public CaseDocumentsPage verifyDocumentEDelivery() {
 		Assert.assertEquals("Document eDelivery name is wrong", "eDelivery", documentEDelivery.getText());
+		return this;
 	}
 
-	public void clickDocumentEDelivery() {
+	public CaseDocumentsPage clickDocumentEDelivery() {
 		documentEDelivery.click();
+		return this;
 	}
 
-	public void verifyDocumentGeneralRelease() {
+	public CaseDocumentsPage verifyDocumentGeneralRelease() {
 
 		Assert.assertEquals("Document General Release name is wrong", "General Release",
 				documentGeneralRelease.getText());
+		return this;
 
 	}
 
-	public void clickDocumentGeneralRelease() {
+	public CaseDocumentsPage clickDocumentGeneralRelease() {
 
 		documentGeneralRelease.click();
+		return this;
 
 	}
 
-	public void verifyDocumentMedicalRelease() {
+	public CaseDocumentsPage verifyDocumentMedicalRelease() {
 
 		Assert.assertEquals("Document Medical Release name is wrong", "Medical Release",
 				documentMedicalRelease.getText());
+		return this;
 	}
 
-	public void clickDocumentMedicalRelease() {
+	public CaseDocumentsPage clickDocumentMedicalRelease() {
 
 		documentMedicalRelease.click();
+		return this;
 	}
 
-	public void clickDocumentROI() {
+	public CaseDocumentsPage clickDocumentROI() {
 
 		Assert.assertEquals("Document Report of Investigation name is wrong", "Report of Investigation",
 				documentReportOfInvestigation.getText());
 		documentReportOfInvestigation.click();
+		return this;
 
 	}
 
-	public void clickReportTitle() {
+	public CaseDocumentsPage clickReportTitle() {
 
 		reportTitle.click();
+		return this;
 	}
 
-	public void reportTitleInput(String title) {
+	public CaseDocumentsPage reportTitleInput(String title) {
 
 		reportTitle.sendKeys(title);
+		return this;
 	}
 
-	public void clickReportFirstName() {
+	public CaseDocumentsPage clickReportFirstName() {
 
 		firstName.click();
+		return this;
 	}
 
-	public void reportFirstNameInput(String name) {
+	public CaseDocumentsPage reportFirstNameInput(String name) {
 
 		firstName.sendKeys(name);
+		return this;
 	}
 
-	public void clickReportLastName() {
+	public CaseDocumentsPage clickReportLastName() {
 
 		lastName.click();
+		return this;
+		
 	}
 
-	public void reportLastNameInput(String lName) {
+	public CaseDocumentsPage reportLastNameInput(String lName) {
 		lastName.sendKeys(lName);
+		return this;
 	}
 
-	public void clickSelectApprover() {
+	public CaseDocumentsPage clickSelectApprover() {
 
 		selectApprover.click();
+		return this;
 	}
 
-	public void clickSearchForUserInput() {
+	public CaseDocumentsPage clickSearchForUserInput() {
 
 		addUserInput.click();
+		return this;
 	}
 
-	public void searchForUserInput(String user) {
+	public CaseDocumentsPage searchForUserInput(String user) {
 
 		addUserInput.sendKeys(user);
+		return this;
 	}
 
-	public void clickGoButton() {
+	public CaseDocumentsPage clickGoButton() {
 		goButton.click();
+		return this;
 	}
 
-	public void clickSearchedUser() {
+	public CaseDocumentsPage clickSearchedUser() {
 
 		Assert.assertEquals("Searched User name is wrong or it not shown", "Samuel Supervisor", searchedName.getText());
 		searchedName.click();
+		return this;
 
 	}
 
-	public void clickAddButton() {
+	public CaseDocumentsPage clickAddButton() {
 
 		addButton.click();
+		return this;
 	}
 
-	public void clickSubmitButton() {
+	public CaseDocumentsPage clickSubmitButton() {
 
 		submitButton.click();
+		return this;
 	}
 
-	public void swithWindow() {
+	public CaseDocumentsPage swithWindow() {
 
 		for (String winHandle : driver.getWindowHandles()) {
 			driver.switchTo().window(winHandle);
 		}
+		return this;
 
 	}
 
-	public void performRighClickOnSecondDocument() {
+	public CaseDocumentsPage performRighClickOnSecondDocument() {
 
 		Actions actions = new Actions(driver);
 		Action action = actions.contextClick(secondDocumentTitle).build();
 		action.perform();
+		return this;
 	}
 
-	public void checkIfRightClickOnSecondDocumentIsWorking() {
+	public CaseDocumentsPage checkIfRightClickOnSecondDocumentIsWorking() {
 
 		int i = driver.findElements(By.xpath("/html/body/ul/li[14]")).size();
 		Assert.assertTrue("Right Click on root is not working", i > 0);
+		return this;
 
 	}
 
-	public void deleteDocument() {
+	public CaseDocumentsPage deleteDocument() {
 
 		Assert.assertEquals("Delete document name is wrong ", "Delete", deleteDocument.getText());
 		deleteDocument.click();
+		return this;
 
 	}
 
-	public void verifySecondDocumentIsDeleted() {
+	public CaseDocumentsPage verifySecondDocumentIsDeleted() {
 
 		int i = driver
 				.findElements(By
 						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/doc-tree/table/tbody/tr[3]/td[3]/span/span[3]"))
 				.size();
 		Assert.assertTrue("Document is not deleted", i == 0);
+		return this;
 	}
 
-	public void downloadDocument() {
+	public CaseDocumentsPage downloadDocument() {
 
 		Assert.assertEquals("Download document name is wrong ", "Download", downloadDocument.getText());
 		downloadDocument.click();
+		return this;
 
 	}
 
-	public void checkoutDocument() {
+	public CaseDocumentsPage checkoutDocument() {
 
 		Assert.assertEquals("Checkout document name is wrong", "Checkout", checkoutDocument.getText());
 		checkoutDocument.click();
+		return this;
 
 	}
 
-	public void verifyLockedDocument() {
+	public CaseDocumentsPage verifyLockedDocument() {
 
 		int i = driver
 				.findElements(By
@@ -525,67 +568,73 @@ public class CaseDocumentsPage extends ArkCaseTestBase {
 				.size();
 
 		Assert.assertTrue("After the upload, The document is not locked", i > 0);
+		return this;
 	}
-	
-	public void verifyLockedDocumentAfterCheckout(){
-		
+
+	public CaseDocumentsPage verifyLockedDocumentAfterCheckout() {
+
 		int i = driver
 				.findElements(By
 						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[2]/span"))
 				.size();
 
-		Assert.assertTrue("After checkout is clicked, The document is not locked", i > 0);	
-		
+		Assert.assertTrue("After checkout is clicked, The document is not locked", i > 0);
+		return this;
+
 	}
-	
-	public void verifyLockedDocumentAfterEditWithWordClick(){
-		
+
+	public CaseDocumentsPage verifyLockedDocumentAfterEditWithWordClick() {
+
 		int i = driver
 				.findElements(By
 						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[2]/span"))
 				.size();
 
 		Assert.assertTrue("After the edit with word is click, The document is not locked", i > 0);
-		
-	}
-	
-	
-	
+		return this;
 
-	public void checkinDocument() {
+	}
+
+	public CaseDocumentsPage checkinDocument() {
 
 		Assert.assertEquals("Checkin Document name is wrong", "Checkin", checkInDocument.getText());
 		checkInDocument.click();
+		return this;
 	}
 
-	public void verifyChekinDocumentTitle() {
+	public CaseDocumentsPage verifyChekinDocumentTitle() {
 
 		Assert.assertEquals("Checkin Document title is wrong", "Checkin New Document", chekInDocumentTitle.getText());
+		return this;
 
 	}
 
-	public void clickChooseFilesBtn() {
+	public CaseDocumentsPage clickChooseFilesBtn() {
 		chooseFiles.click();
+		return this;
 	}
 
-	public void verifySelectedFiles(String name) {
+	public CaseDocumentsPage verifySelectedFiles(String name) {
 		Assert.assertEquals("Selected file name is wrong", name, selectedFiles.getText());
+		return this;
 
 	}
 
-	public void clickCheckinBtn() {
+	public CaseDocumentsPage clickCheckinBtn() {
 
 		checkinBtn.click();
+		return this;
 	}
 
-	public void performRightClickOnFirstDocument() {
+	public CaseDocumentsPage performRightClickOnFirstDocument() {
 
 		Actions actions = new Actions(driver);
 		Action action = actions.contextClick(firstDocumentTitle).build();
 		action.perform();
+		return this;
 	}
 
-	public void verifyUnlockedDocumentAfterUplaodNewVersion() {
+	public CaseDocumentsPage verifyUnlockedDocumentAfterUplaodNewVersion() {
 
 		int i = driver
 				.findElements(By
@@ -593,105 +642,116 @@ public class CaseDocumentsPage extends ArkCaseTestBase {
 				.size();
 
 		Assert.assertTrue("The document is still locked", i == 0);
+		return this;
 
 	}
-	
-	public void verifyUnlockedDocumentAfterCancelEditWithWord(){
-		
+
+	public CaseDocumentsPage verifyUnlockedDocumentAfterCancelEditWithWord() {
+
 		int i = driver
 				.findElements(By
 						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[2]/span"))
 				.size();
 
-		Assert.assertTrue("After cancel edit with word is cliked, The document is  locked", i == 0);	
-		
+		Assert.assertTrue("After cancel edit with word is cliked, The document is  locked", i == 0);
+		return this;
+
 	}
-	public void verifyUnlockedDocumentAfterCancelEditing(){
-		
+
+	public CaseDocumentsPage verifyUnlockedDocumentAfterCancelEditing() {
+
 		int i = driver
 				.findElements(By
 						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[2]/span"))
 				.size();
 
-		Assert.assertTrue("After cancel editing is clicked, The document is  locked", i == 0);		
-		
-	}
-	
-	public void verifyUnlockedDocumentAfterChekin(){
-	
-			
-			int i = driver
-					.findElements(By
-							.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[2]/span"))
-					.size();
+		Assert.assertTrue("After cancel editing is clicked, The document is  locked", i == 0);
+		return this;
 
-			Assert.assertTrue("After check in is clicked, The document is  locked", i == 0);		
-		
 	}
-	
-	
-	
 
-	public void verifyVersion2() {
+	public CaseDocumentsPage verifyUnlockedDocumentAfterChekin() {
+
+		int i = driver
+				.findElements(By
+						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[2]/span"))
+				.size();
+
+		Assert.assertTrue("After check in is clicked, The document is  locked", i == 0);
+		return this;
+
+	}
+
+	public CaseDocumentsPage verifyVersion2() {
 
 		Assert.assertEquals("Version 2 of the document is not there", "2.0", version2.getText());
+		return this;
 
 	}
 
-	public void clickCancelEditing() {
+	public CaseDocumentsPage clickCancelEditing() {
 
 		Assert.assertEquals("Cancel Editing is wrong", "Cancel Editing", cancelEditing.getText());
 		cancelEditing.click();
+		return this;
 
 	}
 
-	public void clicRenameDocument() {
+	public CaseDocumentsPage clicRenameDocument() {
 
 		Assert.assertEquals("Rename name is wrong", "Rename", renameDocument.getText());
 		renameDocument.click();
+		return this;
 
 	}
 
-	public void renameFirstDocument(String name) {
+	public CaseDocumentsPage renameFirstDocument(String name) {
 
 		firstDocumentRenameInput.sendKeys(name);
+		return this;
 	}
 
-	public void verifyRenamedDocument(String name) {
+	public CaseDocumentsPage verifyRenamedDocument(String name) {
 
 		Assert.assertEquals("Renamed document name is wrong", name, firstDocumentTitle.getText());
+		return this;
 	}
 
-	public void renameSecondDocument(String name) {
+	public CaseDocumentsPage renameSecondDocument(String name) {
 
 		secondDocumentRenameInput.sendKeys(name);
+		return this;
 	}
 
-	public void verifySecondRenamedDocument(String name) {
+	public CaseDocumentsPage verifySecondRenamedDocument(String name) {
 
 		Assert.assertEquals("Second renamed document  name is wrong", name, secondDocumentTitle.getText());
+		return this;
 	}
 
-	public void replaceDocument() {
+	public CaseDocumentsPage replaceDocument() {
 
 		Assert.assertEquals("Replace document label  name is wrong", "Replace", replaceDocument.getText());
 		replaceDocument.click();
+		return this;
 
 	}
 
-	public void clickNewFolder() {
+	public CaseDocumentsPage clickNewFolder() {
 
 		Assert.assertEquals("New folder label  name is wrong", "New Folder", newFolder.getText());
 		newFolder.click();
+		return this;
 
 	}
 
-	public void nameTheNewFolder(String name) {
+	public CaseDocumentsPage nameTheNewFolder(String name) {
 
 		newFolderInput.sendKeys(name);
+		return this;
 	}
 
-	public void verifyCreatedFolder(String title) {
+	public CaseDocumentsPage verifyCreatedFolder(String title) {
 
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertEquals(secondDocumentTitle.getText(), title, "Created folder title is wrong");
@@ -701,60 +761,68 @@ public class CaseDocumentsPage extends ArkCaseTestBase {
 		softAssert.assertEquals(secondDocumentVersion.getText(), "", "Created folder version is worng");
 		softAssert.assertEquals(secondDocumentStatus.getText(), "", "Created folder status is wrong");
 		softAssert.assertAll();
+		return this;
 
 	}
 
-	public void deleteFolder() {
+	public CaseDocumentsPage deleteFolder() {
 
 		Assert.assertEquals("Delete folder label  name is wrong", "Delete", deleteFolder.getText());
 		deleteFolder.click();
+		return this;
 	}
 
-	public void verifyFolderIsDeleted() {
+	public CaseDocumentsPage verifyFolderIsDeleted() {
 
 		int i = driver
 				.findElements(By
 						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/doc-tree/table/tbody/tr[3]/td[3]/span/span[3]"))
 				.size();
 		Assert.assertTrue("Folder is not deleted", i == 0);
+		return this;
 
 	}
 
-	public void performRightClickOnFolder() {
+	public CaseDocumentsPage performRightClickOnFolder() {
 
 		Actions actions = new Actions(driver);
 		Action action = actions.contextClick(newFolderTitle).build();
 		action.perform();
+		return this;
 	}
 
-	public void clickRenameFolder() {
+	public CaseDocumentsPage clickRenameFolder() {
 
 		Assert.assertEquals("Rename folder label  name is wrong", "Rename", renameFolder.getText());
 		renameFolder.click();
+		return this;
 
 	}
 
-	public void renameTheFolder(String name) {
+	public CaseDocumentsPage renameTheFolder(String name) {
 
 		newFolderInput.sendKeys(name);
+		return this;
 
 	}
 
-	public void copyDocument() {
+	public CaseDocumentsPage copyDocument() {
 
 		Assert.assertEquals("Copy document label name is wrong", "Copy", copyDocument.getText());
 		copyDocument.click();
+		return this;
 
 	}
 
-	public void pasteInFolder() {
+	public CaseDocumentsPage pasteInFolder() {
 
 		Assert.assertEquals("Paste in folder label  name is wrong", "Paste", pasteInFolder.getText());
 		pasteInFolder.click();
+		return this;
 
 	}
 
-	public void verifyCopyPastedDocumentInFolder(String status) {
+	public CaseDocumentsPage verifyCopyPastedDocumentInFolder(String status) {
 
 		Date date = new Date(System.currentTimeMillis());
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
@@ -768,17 +836,19 @@ public class CaseDocumentsPage extends ArkCaseTestBase {
 		softAssert.assertEquals(firstDocumentAuthor.getText(), "1.0", "Pasted Document version is wrong");
 		softAssert.assertEquals(firstDocumentVersion.getText(), status, "Pasted Document status is wrong");
 		softAssert.assertAll();
+		return this;
 
 	}
 
-	public void cutDocument() {
+	public CaseDocumentsPage cutDocument() {
 
 		Assert.assertEquals("Cut document label name is wrong", "Cut Ctrl+X", cutDocument.getText());
 		cutDocument.click();
+		return this;
 
 	}
 
-	public void verifyCutPastedDocumentInFolder(String title, String type, String version, String status) {
+	public CaseDocumentsPage verifyCutPastedDocumentInFolder(String title, String type, String version, String status) {
 
 		Date date = new Date(System.currentTimeMillis());
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
@@ -793,10 +863,11 @@ public class CaseDocumentsPage extends ArkCaseTestBase {
 		softAssert.assertEquals(secondDocumentVersion.getText(), version, "Cut/Pasted Document version is worng");
 		softAssert.assertEquals(secondDocumentStatus.getText(), status, "Cut/Pasted Document status is wrong");
 		softAssert.assertAll();
+		return this;
 
 	}
 
-	public void verifyIfCutDocumentIsStillPresent(String title) {
+	public CaseDocumentsPage verifyIfCutDocumentIsStillPresent(String title) {
 
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertEquals(firstDocumentTitle.getText(), title, " Title is wrong");
@@ -806,17 +877,19 @@ public class CaseDocumentsPage extends ArkCaseTestBase {
 		softAssert.assertEquals(firstDocumentAuthor.getText(), "", " Version is worng");
 		softAssert.assertEquals(firstDocumentVersion.getText(), "", "Status is wrong");
 		softAssert.assertAll();
+		return this;
 
 	}
 
-	public void editWithWordClick() {
+	public CaseDocumentsPage editWithWordClick() {
 
 		Assert.assertEquals("Edit with word label name is wrong", "Edit With Word", editWithWord.getText());
 		editWithWord.click();
+		return this;
 
 	}
 
-	public void verifyModifiedDocument(String title, String type, String user, String version, String status) {
+	public CaseDocumentsPage verifyModifiedDocument(String title, String type, String user, String version, String status) {
 
 		Date date = new Date(System.currentTimeMillis());
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
@@ -831,22 +904,25 @@ public class CaseDocumentsPage extends ArkCaseTestBase {
 		softAssert.assertEquals(modifiedRowVersion.getText(), version, "Modified version is worng");
 		softAssert.assertEquals(modifiedRowStatus.getText(), status, "Modified Document status is wrong");
 		softAssert.assertAll();
+		return this;
 
 	}
 
-	public void clickDeclareAsRecordDocument() {
+	public CaseDocumentsPage clickDeclareAsRecordDocument() {
 
 		Assert.assertEquals("Declase as record label name is wrong", "Declare as Record(s)",
 				declareAsRecordDocument.getText());
 		declareAsRecordDocument.click();
+		return this;
 	}
 
-	public void checkIfRightClickWorksInRecordDocument() {
+	public CaseDocumentsPage checkIfRightClickWorksInRecordDocument() {
 		int i = driver.findElements(By.xpath("/html/body/ul")).size();
 		Assert.assertTrue("Right click on record document is not working", i > 0);
+		return this;
 	}
 
-	public void verifyOptionOnRightClickOnRecordDocument() {
+	public CaseDocumentsPage verifyOptionOnRightClickOnRecordDocument() {
 
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertEquals(recordOpen.getText(), "Open", "Open label name  in record document is wrong");
@@ -855,51 +931,58 @@ public class CaseDocumentsPage extends ArkCaseTestBase {
 		softAssert.assertEquals(recordDownload.getText(), "Download",
 				"Download option name in record document is wrong");
 		softAssert.assertAll();
+		return this;
 
 	}
 
-	public void clickEmailDocument() {
+	public CaseDocumentsPage clickEmailDocument() {
 
 		Assert.assertEquals("Email label name is wrong", "Email", emailDocument.getText());
 		emailDocument.click();
+		return this;
 	}
 
-	public void verifyEmailPopUpTitle() {
+	public CaseDocumentsPage verifyEmailPopUpTitle() {
 		Assert.assertEquals("Email popup title is wrong", "Email", emailPopupTitle.getText());
+		return this;
 	}
 
-	public void searchEmailUserInput(String name) {
+	public CaseDocumentsPage searchEmailUserInput(String name) {
 		emailSearchInput.click();
 		emailSearchInput.sendKeys(name);
+		return this;
 	}
 
-	public void clickEmailSearchBtn() {
+	public CaseDocumentsPage clickEmailSearchBtn() {
 		emailSearchBtn.click();
-		;
+		return this;
 	}
 
-	public void verifySearchedUser(String name, String email) {
+	public CaseDocumentsPage verifySearchedUser(String name, String email) {
 
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertEquals(searchedUserName.getText(), name, "Searched username is wrong");
 		softAssert.assertEquals(searchedUserEmail.getText(), email, "Searched user email is wrong");
 		softAssert.assertAll();
+		return this;
 	}
 
-	public void clickSendEmailBtn() {
+	public CaseDocumentsPage clickSendEmailBtn() {
 		sendEmailBtn.click();
+		return this;
 	}
 
-	public void verifyIfSecondRowDocumentIsPresent() {
+	public CaseDocumentsPage verifyIfSecondRowDocumentIsPresent() {
 
 		int i = driver
 				.findElements(By
 						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/doc-tree/table/tbody/tr[3]/td[3]/span/span[3]"))
 				.size();
 		Assert.assertTrue("Document si not added", i > 0);
+		return this;
 	}
 
-	public void verifyIfDocumentHasVersion2() {
+	public CaseDocumentsPage verifyIfDocumentHasVersion2() {
 
 		int i = driver
 				.findElements(By
@@ -909,54 +992,64 @@ public class CaseDocumentsPage extends ArkCaseTestBase {
 			Assert.assertTrue("The document is not uploaded , the version 2 is not displayed ", i != 0);
 
 		}
+		return this;
 
 	}
 
-	public void verifyNewCorrespondeneName() {
+	public CaseDocumentsPage verifyNewCorrespondeneName() {
 
 		Assert.assertEquals("New Correspondence label name is wrong", "New Correspondence",
 				NewCorrespondence.getText());
+		return this;
 	}
 
-	public void clickNewCorrespondence() {
+	public CaseDocumentsPage clickNewCorrespondence() {
 		NewCorrespondence.click();
+		return this;
 	}
 
-	public void verifyCorrespondenceMenu() {
+	public CaseDocumentsPage verifyCorrespondenceMenu() {
 
 		int i = driver.findElements(By.xpath("/html/body/ul/li[3]/ul")).size();
 		Assert.assertTrue("New corresponce menu is not displayed", i != 0);
+		return this;
 
 	}
 
-	public void verifyWitnessInterviewRequest() {
+	public CaseDocumentsPage verifyWitnessInterviewRequest() {
 		Assert.assertEquals("Correspondence Witness Interview Request label name is wrong", "Witness Interview Request",
 				corresponceWitnessInterview.getText());
+		return this;
 	}
 
-	public void verifyNoticeofInvestigation() {
+	public CaseDocumentsPage verifyNoticeofInvestigation() {
 		Assert.assertEquals("Correspondence Notice of Investigation label name is wrong", "Notice of Investigation",
 				correspondenceNoticeOfInvestigation.getText());
+		return this;
 	}
 
-	public void verifyClearanceDenied() {
+	public CaseDocumentsPage verifyClearanceDenied() {
 		Assert.assertEquals("Correspondence Clearance Denied label name is wrong", "Clearance Denied",
 				correspondenceClearanceDenide.getText());
+		return this;
 	}
 
-	public void verifyClearanceGranted() {
+	public CaseDocumentsPage verifyClearanceGranted() {
 		Assert.assertEquals("Correspondence Clearance Granted label name is wrong", "Clearance Granted",
 				correspondenceClearanceGranted.getText());
+		return this;
 	}
 
-	public void verifyMedicalRelease() {
+	public CaseDocumentsPage verifyMedicalRelease() {
 		Assert.assertEquals("Correspondence Medical Release label name  is wrong", "Medical Release",
 				correspondenceMedicalRelease.getText());
+		return this;
 	}
 
-	public void verifyGeneralRelease() {
+	public CaseDocumentsPage verifyGeneralRelease() {
 		Assert.assertEquals("Correspondence General Release label name is wrong", "General Release",
 				correspondenceGeneralRelease.getText());
+		return this;
 	}
 
 }

@@ -4,18 +4,22 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.junit.Assert;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.testng.asserts.SoftAssert;
 
-public class UserProfilePage {
+import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
+import com.armedia.arkcase.uitests.base.WaitHelper;
+
+public class UserProfilePage extends ArkCaseTestBase{
 
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/div/div[1]/div/span/a/i")
 	WebElement editDashoboard;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[1]/nav/div[1]/div/div/div[2]/a/strong/span[1]")
 	WebElement arrowDown;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[1]/nav/div[1]/div/div/div[2]/ul/li[1]/a")
+	@FindBy(how = How.XPATH, using = ".//a[@title='Profile']")
 	WebElement profileLink;
 	@FindBy(how = How.ID, using = "lnkChangePicture")
 	public
@@ -194,323 +198,370 @@ public class UserProfilePage {
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/section/div/div[1]/div[2]/div[3]/section/div/div[2]/div[1]/div[2]/div[2]")
 	WebElement subscriptionEmptyTable;
 
-	public void verifyIfEditDashboardButtonIsEnabled() {
-
-		Assert.assertTrue("Edit Dashboard button is not enabled", editDashoboard.isEnabled());
+	public UserProfilePage verifyIfEditDashboardButtonIsEnabled() {
+		WebElement el = WaitHelper.getWhenElementIsVisible(editDashoboard, 30, driver);	
+		Assert.assertTrue("Edit Dashboard button is not enabled", el.isEnabled());
+		return this;
 
 	}
 
-	public void arrowDownClick() {
+	public UserProfilePage arrowDownClick() {
 
 		arrowDown.click();
+		return this;
 	}
 
-	public void profileLinkClick() {
+	public UserProfilePage profileLinkClick() {
 
-		Assert.assertTrue(profileLink.getText().equals("Profile"));
+		//Assert.assertTrue(profileLink.getText().equals("Profile"));
 		profileLink.click();
+		return this;
 
 	}
 
-	public void changePictureClick() {
+	public UserProfilePage changePictureClick() {
 
 		Assert.assertTrue(changePicture.getText().equals("Change Picture"));
 		changePicture.click();
+		return this;
 
 	}
 
-	public void profileTitleClick() {
+	public UserProfilePage profileTitleClick() {
 
 		userTitle.click();
+		return this;
 
 	}
 
-	public void userTitleInput(String title) throws InterruptedException {
+	public UserProfilePage userTitleInput(String title) throws InterruptedException {
 
 		userTitleInput.click();
 		userTitleInput.clear();
 		userTitleInput.sendKeys(title);
+		return this;
 
 	}
 
-	public void usertTitleAddButtonClick() {
+	public UserProfilePage usertTitleAddButtonClick() {
 
 		userTitleAddButton.click();
+		return this;
 
 	}
 
-	public void locationFieldClick() {
+	public UserProfilePage locationFieldClick() {
 
 		locationField.click();
+		return this;
 
 	}
 
-	public void locationFiledInput(String location) {
+	public UserProfilePage locationFiledInput(String location) {
 
 		locationFiledInput.click();
 		locationFiledInput.clear();
 		locationFiledInput.sendKeys(location);
+		return this;
 
 	}
 
-	public void locationFieldAddButtonClick() {
+	public UserProfilePage locationFieldAddButtonClick() {
 
 		locationFiledAddButton.click();
+		return this;
 	}
 
-	public void officePhoneFiledClick() {
+	public UserProfilePage officePhoneFiledClick() {
 
 		officePhoneField.click();
+		return this;
 
 	}
 
-	public void officePhoneFiledInput(String officePhone) {
+	public UserProfilePage officePhoneFiledInput(String officePhone) {
 
 		officePhoneFiledInput.click();
 		officePhoneFiledInput.clear();
 		officePhoneFiledInput.sendKeys(officePhone);
+		return this;
 
 	}
 
-	public void officePhoneFieldAddButtonClick() {
+	public UserProfilePage officePhoneFieldAddButtonClick() {
 
 		officePhoneFiledAddButton.click();
+		return this;
 
 	}
 
-	public void mobilePhoneFiledClick() {
+	public UserProfilePage mobilePhoneFiledClick() {
 
 		mobilePhoneField.click();
+		return this;
 
 	}
 
-	public void mobilePhoneFiledInput(String mobilePhone) {
+	public UserProfilePage mobilePhoneFiledInput(String mobilePhone) {
 
 		mobilePhoneFieldInput.click();
 		mobilePhoneFieldInput.clear();
 		mobilePhoneFieldInput.sendKeys(mobilePhone);
+		return this;
 
 	}
 
-	public void mobilePhoneFiledAddButtonClick() {
+	public UserProfilePage mobilePhoneFiledAddButtonClick() {
 
 		mobilePhoneFiledAddButton.click();
+		return this;
 	}
 
-	public void firstImAccountClick() {
+	public UserProfilePage firstImAccountClick() {
 
 		firstImAccounField.click();
+		return this;
 
 	}
 
-	public void firstImAccountFiledInput(String ImAccount) {
+	public UserProfilePage firstImAccountFiledInput(String ImAccount) {
 
 		firstImAccountInput.click();
 		firstImAccountInput.clear();
 		firstImAccountInput.sendKeys(ImAccount);
+		return this;
 
 	}
 
-	public void firstImAccountAddButtonClick() {
+	public UserProfilePage firstImAccountAddButtonClick() {
 
 		firstImAccountFieldAddButton.click();
+		return this;
 
 	}
 
-	public void secondImaccountFieldClick() {
+	public UserProfilePage secondImaccountFieldClick() {
 
 		secondImAccountField.click();
+		return this;
 
 	}
 
-	public void secondImAccountFieldInput(String IM) {
+	public UserProfilePage secondImAccountFieldInput(String IM) {
 
 		secondImAccountInput.click();
 		secondImAccountInput.clear();
 		secondImAccountInput.sendKeys(IM);
+		return this;
 
 	}
 
-	public void secondImAccountAddButtonClick() {
+	public UserProfilePage secondImAccountAddButtonClick() {
 
 		secondImAccountFiledAddButton.click();
-
+		return this;
 	}
 
-	public void compnyNameFieldClick() {
+	public UserProfilePage compnyNameFieldClick() {
 
 		companyNameFiled.click();
+		return this;
 	}
 
-	public void companyNameFieldInput(String companyName) {
+	public UserProfilePage companyNameFieldInput(String companyName) {
 
 		companyNameFieldInput.click();
 		companyNameFieldInput.clear();
 		companyNameFieldInput.sendKeys(companyName);
+		return this;
 
 	}
 
-	public void companyNameFieldAddButtonClick() {
+	public UserProfilePage companyNameFieldAddButtonClick() {
 
 		companyNameFieldAddButton.click();
-
+		return this;
 	}
 
-	public void addresOneFieldClick() {
+	public UserProfilePage addresOneFieldClick() {
 
 		addressOneField.click();
+		return this;
 
 	}
 
-	public void addressOneInput(String addressOne) {
+	public UserProfilePage addressOneInput(String addressOne) {
 
 		addressOneInput.click();
 		addressOneInput.clear();
 		addressOneInput.sendKeys(addressOne);
+		return this;
 
 	}
 
-	public void addressOneAddButtonClik() {
+	public UserProfilePage addressOneAddButtonClik() {
 
 		addressOneAddButton.click();
+		return this;
 
 	}
 
-	public void addresTwoFieldClick() {
+	public UserProfilePage addresTwoFieldClick() {
 
 		addressTwoField.click();
+		return this;
 
 	}
 
-	public void addressTwoInput(String addressTwo) {
+	public UserProfilePage addressTwoInput(String addressTwo) {
 
 		addressTwoInput.click();
 		addressTwoInput.clear();
 		addressTwoInput.sendKeys(addressTwo);
+		return this;
 
 	}
 
-	public void addressTwoAddButtonClik() {
+	public UserProfilePage addressTwoAddButtonClik() {
 
 		addressTwoAddButton.click();
+		return this;
 
 	}
 
-	public void cityFieldClick() {
+	public UserProfilePage cityFieldClick() {
 
 		cityField.click();
+		return this;
 	}
 
-	public void cityFieldInput(String city) {
+	public UserProfilePage cityFieldInput(String city) {
 
 		cityFieldInput.click();
 		cityFieldInput.clear();
 		cityFieldInput.sendKeys(city);
+		return this;
 
 	}
 
-	public void cityFieldAddButtonClick() {
+	public UserProfilePage cityFieldAddButtonClick() {
 
 		cityFieldAddButton.click();
+		return this;
 
 	}
 
-	public void stateFieldClick() {
+	public UserProfilePage stateFieldClick() {
 
 		stateField.click();
+		return this;
 	}
 
-	public void stateFieldInput(String state) {
+	public UserProfilePage stateFieldInput(String state) {
 
 		stateFieldInput.click();
 		stateFieldInput.clear();
 		stateFieldInput.sendKeys(state);
+		return this;
 
 	}
 
-	public void stateFieldAddButtonClick() {
+	public UserProfilePage stateFieldAddButtonClick() {
 
 		stateFieldAddButton.click();
+		return this;
 
 	}
 
-	public void zipFieldClick() {
+	public UserProfilePage zipFieldClick() {
 
 		zipField.click();
+		return this;
 	}
 
-	public void zipFieldInput(String zip) {
+	public UserProfilePage zipFieldInput(String zip) {
 
 		zipFieldInput.click();
 		zipFieldInput.clear();
 		zipFieldInput.sendKeys(zip);
+		return this;
 
 	}
 
-	public void zipFieldAddButtonClick() {
+	public UserProfilePage zipFieldAddButtonClick() {
 
 		zipFieldAddButton.click();
+		return this;
 
 	}
 
-	public void mainPhoneFieldClick() {
+	public UserProfilePage mainPhoneFieldClick() {
 
 		mainPhoneField.click();
+		return this;
 	}
 
-	public void mainPhoneFieldInput(String mainPhone) {
+	public UserProfilePage mainPhoneFieldInput(String mainPhone) {
 
 		mainPhoneFieldInput.click();
 		mainPhoneFieldInput.clear();
 		mainPhoneFieldInput.sendKeys(mainPhone);
+		return this;
 
 	}
 
-	public void mainPhoneFieldAddButtonClick() {
+	public UserProfilePage mainPhoneFieldAddButtonClick() {
 
 		mainPhoneFieldAddButton.click();
+		return this;
 
 	}
 
-	public void faxFieldClick() {
+	public UserProfilePage faxFieldClick() {
 
 		faxField.click();
+		return this;
 	}
 
-	public void faxFieldInput(String fax) {
+	public UserProfilePage faxFieldInput(String fax) {
 
 		faxFieldInput.click();
 		faxFieldInput.clear();
 		faxFieldInput.sendKeys(fax);
+		return this;
 
 	}
 
-	public void faxFieldAddButtonClick() {
+	public UserProfilePage faxFieldAddButtonClick() {
 
 		faxFieldAddButton.click();
+		return this;
 
 	}
 
-	public void websiteFieldClick() {
+	public UserProfilePage websiteFieldClick() {
 
 		websiteField.click();
+		return this;
 	}
 
-	public void websiteFieldInput(String website) {
+	public UserProfilePage websiteFieldInput(String website) {
 
 		websiteFieldInput.click();
 		websiteFieldInput.clear();
 		websiteFieldInput.sendKeys(website);
+		return this;
 
 	}
 
-	public void websiteFieldAddButtonClick() {
+	public UserProfilePage websiteFieldAddButtonClick() {
 
 		websiteFieldAddButton.click();
+		return this;
 
 	}
 
-	public void verifySubscriptionsTable(String name) {
+	public UserProfilePage verifySubscriptionsTable(String name) {
 
 		Date date = new Date(System.currentTimeMillis());
 		SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
@@ -521,12 +572,14 @@ public class UserProfilePage {
 		softAssert.assertEquals(subscriptionDateFiled.getText(), createdDate, "Subscriptions credated date is wrong");
 		softAssert.assertTrue(deleteSubscription.isDisplayed(), "Delete subscription button is not displayed");
 		softAssert.assertAll();
+		return this;
 
 	}
 
-	public void verifyEmptySubscriptionTable() {
+	public UserProfilePage verifyEmptySubscriptionTable() {
 
 		Assert.assertTrue("Subscription should not be there", subscriptionEmptyTable.isDisplayed());
+		return this;
 
 	}
 
