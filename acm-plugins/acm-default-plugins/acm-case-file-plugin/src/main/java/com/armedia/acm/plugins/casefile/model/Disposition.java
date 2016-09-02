@@ -28,8 +28,8 @@ import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
-@Table(name="acm_disposition")
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "className")
+@Table(name = "acm_disposition")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "className", defaultImpl = Disposition.class)
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.plugins.casefile.model.Disposition")
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -87,7 +87,8 @@ public class Disposition implements Serializable, AcmObject, AcmEntity
     private String className = this.getClass().getName();
 
     @Override
-    public String getObjectType() {
+    public String getObjectType()
+    {
         return CaseFileConstants.OBJECT_TYPE_DISPOSITION;
     }
 

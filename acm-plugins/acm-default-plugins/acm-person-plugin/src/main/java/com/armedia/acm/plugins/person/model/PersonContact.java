@@ -37,7 +37,7 @@ import java.util.List;
 @XmlRootElement
 @Entity
 @Table(name = "acm_person_contact")
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "className")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "className", defaultImpl = PersonContact.class)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.plugins.person.model.PersonContact")
@@ -79,8 +79,8 @@ public class PersonContact implements Serializable, AcmEntity
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(
             name = "acm_person_cntct_ident",
-            joinColumns = { @JoinColumn(name="cm_person_contact_id", referencedColumnName = "cm_person_contact_id") },
-            inverseJoinColumns = { @JoinColumn(name = "cm_identification_id", referencedColumnName = "cm_identification_id", unique = true)
+            joinColumns = {@JoinColumn(name = "cm_person_contact_id", referencedColumnName = "cm_person_contact_id")},
+            inverseJoinColumns = {@JoinColumn(name = "cm_identification_id", referencedColumnName = "cm_identification_id", unique = true)
             }
     )
     private List<Identification> identifications = new ArrayList<>();
@@ -89,8 +89,8 @@ public class PersonContact implements Serializable, AcmEntity
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "acm_person_cntct_postal_address",
-            joinColumns = { @JoinColumn(name="cm_person_contact_id", referencedColumnName = "cm_person_contact_id") },
-            inverseJoinColumns = { @JoinColumn(name = "cm_address_id", referencedColumnName = "cm_address_id") }
+            joinColumns = {@JoinColumn(name = "cm_person_contact_id", referencedColumnName = "cm_person_contact_id")},
+            inverseJoinColumns = {@JoinColumn(name = "cm_address_id", referencedColumnName = "cm_address_id")}
     )
     private List<PostalAddress> addresses = new ArrayList<>();
 
@@ -98,8 +98,8 @@ public class PersonContact implements Serializable, AcmEntity
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "acm_person_cntct_cntct_method",
-            joinColumns = { @JoinColumn(name="cm_person_contact_id", referencedColumnName = "cm_person_contact_id") },
-            inverseJoinColumns = { @JoinColumn(name = "cm_contact_method_id", referencedColumnName = "cm_contact_method_id") }
+            joinColumns = {@JoinColumn(name = "cm_person_contact_id", referencedColumnName = "cm_person_contact_id")},
+            inverseJoinColumns = {@JoinColumn(name = "cm_contact_method_id", referencedColumnName = "cm_contact_method_id")}
     )
     private List<ContactMethod> contactMethods = new ArrayList<>();
 
@@ -173,67 +173,83 @@ public class PersonContact implements Serializable, AcmEntity
         this.modifier = modifier;
     }
 
-    public Long getId() {
+    public Long getId()
+    {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Long id)
+    {
         this.id = id;
     }
 
-    public String getAttention() {
+    public String getAttention()
+    {
         return attention;
     }
 
-    public void setAttention(String attention) {
+    public void setAttention(String attention)
+    {
         this.attention = attention;
     }
 
-    public String getCompanyName() {
+    public String getCompanyName()
+    {
         return companyName;
     }
 
-    public void setCompanyName(String companyName) {
+    public void setCompanyName(String companyName)
+    {
         this.companyName = companyName;
     }
 
-    public String getPersonName() {
+    public String getPersonName()
+    {
         return personName;
     }
 
-    public void setPersonName(String personName) {
+    public void setPersonName(String personName)
+    {
         this.personName = personName;
     }
 
-    public List<Identification> getIdentifications() {
+    public List<Identification> getIdentifications()
+    {
         return identifications;
     }
 
-    public void setIdentifications(List<Identification> identifications) {
+    public void setIdentifications(List<Identification> identifications)
+    {
         this.identifications = identifications;
     }
 
-    public List<PostalAddress> getAddresses() {
+    public List<PostalAddress> getAddresses()
+    {
         return addresses;
     }
 
-    public void setAddresses(List<PostalAddress> addresses) {
+    public void setAddresses(List<PostalAddress> addresses)
+    {
         this.addresses = addresses;
     }
 
-    public List<ContactMethod> getContactMethods() {
+    public List<ContactMethod> getContactMethods()
+    {
         return contactMethods;
     }
 
-    public void setContactMethods(List<ContactMethod> contactMethods) {
+    public void setContactMethods(List<ContactMethod> contactMethods)
+    {
         this.contactMethods = contactMethods;
     }
 
-    public String getClassName() {
+    public String getClassName()
+    {
         return className;
     }
 
-    public void setClassName(String className) {
+    public void setClassName(String className)
+    {
         this.className = className;
     }
 

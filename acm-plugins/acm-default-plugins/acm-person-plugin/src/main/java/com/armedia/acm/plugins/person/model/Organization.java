@@ -37,11 +37,12 @@ import java.util.List;
  */
 @Entity
 @Table(name = "acm_organization")
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "className")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "className", defaultImpl = Organization.class)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.plugins.person.model.Organization")
-public class Organization implements Serializable, AcmEntity {
+public class Organization implements Serializable, AcmEntity
+{
     private static final long serialVersionUID = 7413755227864370548L;
 
     @Id
@@ -110,118 +111,143 @@ public class Organization implements Serializable, AcmEntity {
     private String className = this.getClass().getName();
 
     @XmlTransient
-    public Long getOrganizationId() {
+    public Long getOrganizationId()
+    {
         return organizationId;
     }
 
-    public void setOrganizationId(Long organizationId) {
+    public void setOrganizationId(Long organizationId)
+    {
         this.organizationId = organizationId;
     }
 
     @XmlTransient
-    public String getOrganizationType() {
+    public String getOrganizationType()
+    {
         return organizationType;
     }
 
-    public void setOrganizationType(String organizationType) {
+    public void setOrganizationType(String organizationType)
+    {
         this.organizationType = organizationType;
     }
 
     @XmlTransient
-    public List<String> getOrganizationTypes() {
+    public List<String> getOrganizationTypes()
+    {
         return organizationTypes;
     }
 
-    public void setOrganizationTypes(List<String> organizationTypes) {
+    public void setOrganizationTypes(List<String> organizationTypes)
+    {
         this.organizationTypes = organizationTypes;
     }
 
     @XmlTransient
-    public String getOrganizationValue() {
+    public String getOrganizationValue()
+    {
         return organizationValue;
     }
 
-    public void setOrganizationValue(String organizationValue) {
+    public void setOrganizationValue(String organizationValue)
+    {
         this.organizationValue = organizationValue;
     }
 
     @XmlTransient
     @Override
-    public Date getCreated() {
+    public Date getCreated()
+    {
         return created;
     }
 
     @Override
-    public void setCreated(Date created) {
+    public void setCreated(Date created)
+    {
         this.created = created;
     }
 
     @XmlTransient
     @Override
-    public String getCreator() {
+    public String getCreator()
+    {
         return creator;
     }
 
     @Override
-    public void setCreator(String creator) {
+    public void setCreator(String creator)
+    {
         this.creator = creator;
     }
 
     @XmlTransient
     @Override
-    public Date getModified() {
+    public Date getModified()
+    {
         return modified;
     }
 
     @Override
-    public void setModified(Date modified) {
+    public void setModified(Date modified)
+    {
         this.modified = modified;
     }
 
     @XmlTransient
     @Override
-    public String getModifier() {
+    public String getModifier()
+    {
         return modifier;
     }
 
     @Override
-    public void setModifier(String modifier) {
+    public void setModifier(String modifier)
+    {
         this.modifier = modifier;
     }
 
-    public Organization returnBase() {
+    public Organization returnBase()
+    {
         return this;
     }
 
-    public List<Identification> getIdentifications() {
+    public List<Identification> getIdentifications()
+    {
         return identifications;
     }
 
-    public void setIdentifications(List<Identification> identifications) {
+    public void setIdentifications(List<Identification> identifications)
+    {
         this.identifications = identifications;
     }
 
-    public List<PostalAddress> getAddresses() {
+    public List<PostalAddress> getAddresses()
+    {
         return addresses;
     }
 
-    public void setAddresses(List<PostalAddress> addresses) {
+    public void setAddresses(List<PostalAddress> addresses)
+    {
         this.addresses = addresses;
     }
 
-    public List<ContactMethod> getContactMethods() {
+    public List<ContactMethod> getContactMethods()
+    {
         return contactMethods;
     }
 
-    public void setContactMethods(List<ContactMethod> contactMethods) {
+    public void setContactMethods(List<ContactMethod> contactMethods)
+    {
         this.contactMethods = contactMethods;
     }
 
-    public String getClassName() {
+    public String getClassName()
+    {
         return className;
     }
 
-    public void setClassName(String className) {
+    public void setClassName(String className)
+    {
         this.className = className;
     }
 }
