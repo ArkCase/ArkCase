@@ -40,7 +40,6 @@ angular.module('tasks').controller('Tasks.SignaturesController', ['$scope', '$st
                     var signatures = data[0];
                     $scope.gridOptions.data = signatures;
                     $scope.gridOptions.totalItems = signatures.length;
-                    //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
                 });
             }
         };

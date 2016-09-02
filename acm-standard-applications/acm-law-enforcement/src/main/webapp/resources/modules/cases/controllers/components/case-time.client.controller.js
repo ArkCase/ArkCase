@@ -52,7 +52,6 @@ angular.module('cases').controller('Cases.TimeController', ['$scope', '$statePar
         //                $scope.gridOptions = $scope.gridOptions || {};
         //                $scope.gridOptions.data = timesheets;
         //                $scope.gridOptions.totalItems = Util.goodValue(timesheets.length, 0);
-        //                //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
         //                return config;
         //            });
         //            return timesheets;
@@ -76,8 +75,6 @@ angular.module('cases').controller('Cases.TimeController', ['$scope', '$statePar
                         $scope.gridOptions = $scope.gridOptions || {};
                         $scope.gridOptions.data = timesheets;
                         $scope.gridOptions.totalItems = Util.goodValue(timesheets.length, 0);
-                        //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
-
                         return timesheets;
                     }
                 );
