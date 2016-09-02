@@ -53,6 +53,7 @@ angular.module('services').factory('Authentication', ['$resource', 'Acm.StoreSer
                     if (Service.validateUserInfo(data)) {
                         userInfo = data;
                         Store.fixOwner(userInfo.userId);
+                        cacheUserInfo = new Store.SessionData(Service.SessionCacheNames.USER_INFO);
                         cacheUserInfo.set(userInfo);
                         return userInfo;
                     }
