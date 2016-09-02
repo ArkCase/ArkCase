@@ -43,9 +43,9 @@ describe('Create new task ', function() {
         authentication.logout();
     });
 
+
     it('should create new task status active', function() {
         taskPage.newBtn.click();
-        expect(taskPage.taskBtnName.getText()).toEqual('Task');
         taskPage.taskBtn.click();
         expect(taskPage.taskTitle.getText()).toEqual('New Task');
         taskPage.Subject.click();
@@ -64,7 +64,6 @@ describe('Create new task ', function() {
 
     it('should create new task with status closed', function() {
         taskPage.newBtn.click();
-        expect(taskPage.taskBtnName.getText()).toEqual('Task');
         taskPage.taskBtn.click();
         expect(taskPage.taskTitle.getText()).toEqual('New Task');
         taskPage.Subject.click();
@@ -85,7 +84,6 @@ describe('Create new task ', function() {
 
     it('should create new task with priority low', function() {
         taskPage.newBtn.click();
-        expect(taskPage.taskBtnName.getText()).toEqual('Task');
         taskPage.taskBtn.click();
         expect(taskPage.taskTitle.getText()).toEqual('New Task');
         taskPage.Subject.click();
@@ -103,7 +101,6 @@ describe('Create new task ', function() {
     it('should create new task with priority high', function() {
 
         taskPage.newBtn.click();
-        expect(taskPage.taskBtnName.getText()).toEqual('Task');
         taskPage.taskBtn.click();
         expect(taskPage.taskTitle.getText()).toEqual('New Task');
         taskPage.Subject.click();
@@ -121,7 +118,6 @@ describe('Create new task ', function() {
     it('should create new task with priority Expedite', function() {
 
         taskPage.newBtn.click();
-        expect(taskPage.taskBtnName.getText()).toEqual('Task');
         taskPage.taskBtn.click();
         expect(taskPage.taskTitle.getText()).toEqual('New Task');
         taskPage.Subject.click();
@@ -139,7 +135,6 @@ describe('Create new task ', function() {
     it('should verify save button is disabled when subject is empty and due date', function() {
 
         taskPage.newBtn.click();
-        expect(taskPage.taskBtnName.getText()).toEqual('Task');
         taskPage.taskBtn.click();
         expect(taskPage.taskTitle.getText()).toEqual('New Task');
         expect(taskPage.saveButton.isEnabled()).toBe(false);
@@ -148,7 +143,6 @@ describe('Create new task ', function() {
     it('should verify save button disabled when perecent is empty', function() {
 
         taskPage.newBtn.click();
-        expect(taskPage.taskBtnName.getText()).toEqual('Task');
         taskPage.taskBtn.click();
         taskPage.percentCompleteInput.click();
         taskPage.percentCompleteInput.clear();
@@ -159,7 +153,6 @@ describe('Create new task ', function() {
     it('should create new task with status Inactive', function() {
 
         taskPage.newBtn.click();
-        expect(taskPage.taskBtnName.getText()).toEqual('Task');
         taskPage.taskBtn.click();
         expect(taskPage.taskTitle.getText()).toEqual('New Task');
         taskPage.Subject.click();
@@ -178,7 +171,6 @@ describe('Create new task ', function() {
     it('should create new task with notes verify in details section', function() {
 
         taskPage.newBtn.click();
-        expect(taskPage.taskBtnName.getText()).toEqual('Task');
         taskPage.taskBtn.click();
         expect(taskPage.taskTitle.getText()).toEqual('New Task');
         taskPage.Subject.click();
@@ -197,7 +189,6 @@ describe('Create new task ', function() {
     it('should create new task verify task subject in Tasks page', function() {
 
         taskPage.newBtn.click();
-        expect(taskPage.taskBtnName.getText()).toEqual('Task');
         taskPage.taskBtn.click();
         expect(taskPage.taskTitle.getText()).toEqual('New Task');
         taskPage.Subject.click();
@@ -213,7 +204,6 @@ describe('Create new task ', function() {
     it('shoudl create new task verify assignee in Tasks page', function() {
 
         taskPage.newBtn.click();
-        expect(taskPage.taskBtnName.getText()).toEqual('Task');
         taskPage.taskBtn.click();
         expect(taskPage.taskTitle.getText()).toEqual('New Task');
         taskPage.Subject.click();
@@ -229,7 +219,6 @@ describe('Create new task ', function() {
     it('should create new task verify cretaed date', function() {
 
         taskPage.newBtn.click();
-        expect(taskPage.taskBtnName.getText()).toEqual('Task');
         taskPage.taskBtn.click();
         expect(taskPage.taskTitle.getText()).toEqual('New Task');
         taskPage.Subject.click();
@@ -245,7 +234,6 @@ describe('Create new task ', function() {
     it('should create new task verify due date', function() {
 
         taskPage.newBtn.click();
-        expect(taskPage.taskBtnName.getText()).toEqual('Task');
         taskPage.taskBtn.click();
         expect(taskPage.taskTitle.getText()).toEqual('New Task');
         taskPage.Subject.click();
@@ -261,7 +249,6 @@ describe('Create new task ', function() {
     it('should create new task verify perecent', function() {
 
         taskPage.newBtn.click();
-        expect(taskPage.taskBtnName.getText()).toEqual('Task');
         taskPage.taskBtn.click();
         taskPage.Subject.click();
         taskPage.Subject.sendKeys('verify due date');
@@ -278,7 +265,6 @@ describe('Create new task ', function() {
     it('should create new task click complete button and verify task state', function() {
 
         taskPage.newBtn.click();
-        expect(taskPage.taskBtnName.getText()).toEqual('Task');
         taskPage.taskBtn.click();
         taskPage.Subject.click();
         taskPage.Subject.sendKeys('verify complete state');
@@ -293,7 +279,6 @@ describe('Create new task ', function() {
     it('should create new task click delete button and verify task state', function() {
 
         taskPage.newBtn.click();
-        expect(taskPage.taskBtnName.getText()).toEqual('Task');
         taskPage.taskBtn.click();
         taskPage.Subject.click();
         taskPage.Subject.sendKeys('verify complete state');
@@ -309,7 +294,6 @@ describe('Create new task ', function() {
     it('should create new task with diffrent user', function() {
 
         taskPage.newBtn.click();
-        expect(taskPage.taskBtnName.getText()).toEqual('Task');
         taskPage.taskBtn.click();
         taskPage.assigneeInput.click();
         taskPage.searchUserInput.click();
@@ -329,7 +313,6 @@ describe('Create new task ', function() {
     it('should create new task add link verify', function() {
 
         taskPage.newBtn.click();
-        expect(taskPage.taskBtnName.getText()).toEqual('Task');
         taskPage.taskBtn.click();
         taskPage.Subject.click();
         taskPage.Subject.sendKeys('link');
@@ -350,7 +333,6 @@ describe('Create new task ', function() {
     it('should create new task click subscribe button verify if it si changed to unsubscribe', function() {
 
         taskPage.newBtn.click();
-        expect(taskPage.taskBtnName.getText()).toEqual('Task');
         taskPage.taskBtn.click();
         taskPage.Subject.click();
         taskPage.Subject.sendKeys('subscribe button');
@@ -365,7 +347,6 @@ describe('Create new task ', function() {
     it('should create new task click unsubscribe button verify if it is changed to subscribe', function() {
 
         taskPage.newBtn.click();
-        expect(taskPage.taskBtnName.getText()).toEqual('Task');
         taskPage.taskBtn.click();
         taskPage.Subject.click();
         taskPage.Subject.sendKeys('unsubscribe button');
@@ -378,5 +359,6 @@ describe('Create new task ', function() {
         expect(tasksPage.subscribeBtn.getText()).toEqual('Subscribe');
 
     });
+
 
 });

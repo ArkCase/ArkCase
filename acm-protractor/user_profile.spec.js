@@ -1,7 +1,9 @@
 var userPage = require('./Pages/user_profile_page.js');
 var authentication = require('./authentication.js');
-// Code under test
+var robot = require(process.env['USERPROFILE'] + '/node_modules/robotjs');
 var flag = false;
+var home = process.env['USERPROFILE'];
+var uplaodPath = home + '\\.arkcase\\seleniumTests\\filesForUpload\\imageprofile.png';
 
 function testAsync(done) {
     // Wait two seconds, then set the flag to true
@@ -10,7 +12,7 @@ function testAsync(done) {
 
         // Invoke the special done callback
         done();
-    }, 2000);
+    }, 20000);
 }
 
 // Specs
@@ -30,6 +32,7 @@ describe("Testing async calls with beforeEach and passing the special done callb
 describe('edit user profile page', function() {
 
     authentication.loginAsSupervisor();
+
 
     it('should navigate to user profile page', function() {
 
@@ -186,6 +189,19 @@ describe('edit user profile page', function() {
         userPage.websiteConfirmBtn.click();
         expect(userPage.website.getText()).toEqual('www.arkcase.com');
 
+    });
+
+
+    it('should change profile picture', function() {
+
+        userPage.changeProfilePic.click().then(function() {
+            robot.setKeyboardDelay(14000);
+            robot.typeStringDelayed("/", 500);
+            robot.typeStringDelayed(uplaodPath, 14000);
+            robot.keyTap("enter");
+            browser.driver.sleep(2000);
+
+        });
     });
 
     it('should logout', function() {

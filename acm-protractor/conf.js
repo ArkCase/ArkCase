@@ -5,7 +5,7 @@ exports.config = {
         'browserName': 'chrome'
     },
 
-    specs: ['./tasks_page.spec.js'],
+    specs: ['./user_profile.spec.js'],
 
     jasmineNodeOpts: {
         showColors: true

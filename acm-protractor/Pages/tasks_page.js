@@ -1,31 +1,31 @@
 var TasksPage = function() {
 
-    this.priority = element(by.xpath('/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[3]/div/a'));
-    this.taskState = element(by.xpath('/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[6]/div'));
-    this.assignee = element(by.xpath('/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[2]/div/a'));
-    this.assigneeDropDown = element(by.xpath('/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[2]/div/form/div/select'));
+    this.priority = element(by.xpath('.//*[@class="clearfix"]/div[2]/div[3]/div/a'));
+    this.taskState = element(by.xpath('.//*[@class="clearfix"]/div[2]/div[6]/div'));
+    this.assignee = element(by.xpath('.//*[@class="clearfix"]/div[2]/div[2]/div/a'));
+    this.assigneeDropDown = element(by.xpath('.//*[@class="clearfix"]/div[2]/div[2]/div/form/div/select'));
     this.selectAssignee = element(by.xpath('.//*[.="Ann Administrator"]'));
-    this.assigneeBtn = element(by.xpath('/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[2]/div/form/div/span/button[1]'));
-    this.taskSubject = element(by.xpath('/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[1]/div/h4/a'));
-    this.taskSubjectInput = element(by.xpath('/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[1]/div/h4/form/div/input'));
-    this.taskSubjectBtn = element(by.xpath('/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[1]/div/h4/form/div/span/button[1]'));
-    this.startDate = element(by.xpath('/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[4]/div/a'));
-    this.dueDate = element(by.xpath('/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[5]/div/a'));
-    this.percent = element(by.xpath('/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[1]/div/a'));
-    this.priorityDropDown = element(by.xpath('/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[3]/div/form/div/select'));
+    this.assigneeBtn = element(by.xpath('.//*[@class="clearfix"]/div[2]/div[2]/div/form/div/span/button[1]'));
+    this.taskSubject = element(by.xpath('.//*[@class="clearfix"]/div[1]/div/h4/a'));
+    this.taskSubjectInput = element(by.xpath('.//*[@class="clearfix"]/div[1]/div/h4/form/div/input'));
+    this.taskSubjectBtn = element(by.xpath('.//*[@class="clearfix"]/div[1]/div/h4/form/div/span/button[1]'));
+    this.startDate = element(by.xpath('.//*[@class="clearfix"]/div[2]/div[4]/div/a'));
+    this.dueDate = element(by.xpath('.//*[@class="clearfix"]/div[2]/div[5]/div/a'));
+    this.percent = element(by.xpath('.//*[@class="clearfix"]/div[2]/div[1]/div/a'));
+    this.priorityDropDown = element(by.xpath('.//*[@class="clearfix"]/div[2]/div[3]/div/form/div/select'));
     this.priorityLow = element(by.xpath('.//*[.="Low"]'));
     this.priorityHigh = element(by.xpath('.//*[.="High"]'));
     this.priorityExpedite = element(by.xpath('.//*[.="Expedite"]'));
-    this.priorityBtn = element(by.xpath('/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[3]/div/form/div/span/button[1]'));
-    this.percentCompletition = element(by.xpath('/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[1]/div/a'));
-    this.percentCompletitionInput = element(by.xpath('/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[1]/div/form/div/input'));
-    this.percentCompletitionBtn = element(by.xpath('/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[1]/div/form/div/span/button[1]'));
+    this.priorityBtn = element(by.xpath('.//*[@class="clearfix"]//div/span/button[1]'));
+    this.percentCompletition = element(by.xpath('.//*[@class="clearfix"]/div[2]/div[1]/div/a'));
+    this.percentCompletitionInput = element(by.xpath('.//*[@class="clearfix"]/div[2]/div[1]/div/form/div/input'));
+    this.percentCompletitionBtn = element(by.xpath('.//*[@class="clearfix"]/div[2]/div[1]/div/form/div/span/button[1]'));
     this.completeBtn = element(by.buttonText('Complete'));
     this.deleteBtn = element(by.buttonText('Delete'));
     this.refreshBtn = element(by.css('[ng-click="refresh()"]'));
     this.detailsLink = element.all(by.repeater('link in componentLinks')).get(1);
     this.detailsTextArea = element(by.xpath('.//*[@class="note-editable panel-body"]'));
-    this.detailsSaveBtn = element(by.xpath('/html/body/div[2]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[1]/div/div/button'));
+    this.detailsSaveBtn = element(by.xpath('.//*[@class="panel-title"]/div/button/i'));
     this.subscribeBtn = element(by.buttonText('Subscribe'));
     this.unsubscribeBtn = element(by.buttonText('Unsubscribe'));
     this.notesLink = element.all(by.repeater('link in componentLinks')).get(4);
@@ -67,10 +67,10 @@ var TasksPage = function() {
     this.insertLinkBtn = element(by.buttonText('Insert Link'));
     this.headerImageLink = element(by.css('.navbar-header'));
     this.dashboardTitle = element(by.css('.module-header'));
-    this.attachmentsLink=element.all(by.repeater('link in componentLinks')).get(3);
-    this.attachmentsTableTitle=element(by.css('.panel-title'));
-    this.root=element(by.xpath('/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr/td[3]/span/span[3]'));
-    
+    this.attachmentsLink = element.all(by.repeater('link in componentLinks')).get(3);
+    this.attachmentsTableTitle = element(by.css('.panel-title'));
+    this.root = element(by.xpath('/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr/td[3]/span/span[3]'));
+
 
 };
 
