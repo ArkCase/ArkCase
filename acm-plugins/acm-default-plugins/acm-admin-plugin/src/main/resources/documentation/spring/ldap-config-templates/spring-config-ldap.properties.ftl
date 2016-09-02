@@ -11,7 +11,6 @@ ldapConfig.allUsersPageFilter=${allUsersPageFilter}
 ldapConfig.allUsersSearchBase=${allUsersSearchBase}
 
 ldapConfig.groupSearchBase=${groupSearchBase}
-ldapConfig.groupSearchBaseOU=${groupSearchBaseOU}
 ldapConfig.groupSearchFilterForUser=${groupSearchFilterForUser}
 ldapConfig.ldapUrl=${ldapUrl}
 ldapConfig.userIdAttributeName=${userIdAttributeName}
