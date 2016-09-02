@@ -70,7 +70,6 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
                             $scope.gridOptions = $scope.gridOptions || {};
                             $scope.gridOptions.data = tasks;
                             $scope.gridOptions.totalItems = data.response.numFound;
-                            //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
 
                             for (var i = 0; i < tasks.length; i++) {
                                 var task = tasks[i];

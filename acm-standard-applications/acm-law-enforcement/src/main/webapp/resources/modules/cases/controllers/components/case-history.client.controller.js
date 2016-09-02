@@ -17,9 +17,6 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
             , onConfigRetrieved: function (componentConfig) {
                 return onConfigRetrieved(componentConfig);
             }
-            , onObjectInfoRetrieved: function (objectInfo) {
-                onObjectInfoRetrieved(objectInfo);
-            }
         });
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
@@ -31,38 +28,12 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
             gridHelper.disableGridScrolling(config);
             gridHelper.setExternalPaging(config, retrieveGridData);
             gridHelper.setUserNameFilter(promiseUsers);
-
-        };
-
-        var onObjectInfoRetrieved = function (objectInfo) {
             retrieveGridData();
         };
 
         function retrieveGridData () {
-            var currentObjectId = Util.goodMapValue($scope.objectInfo, "id");
-            if (Util.goodPositive(currentObjectId, false)) {
-                var promiseQueryAudit = ObjectAuditService.queryAudit(ObjectService.ObjectTypes.CASE_FILE
-                    , currentObjectId
-                    , Util.goodValue($scope.start, 0)
-                    , Util.goodValue($scope.pageSize, 10)
-                    , Util.goodMapValue($scope.sort, "by")
-                    , Util.goodMapValue($scope.sort, "dir")
-                );
-
-                $q.all([promiseQueryAudit]).then(function (data) {
-                    var auditData = data[0];
-                    $scope.gridOptions = $scope.gridOptions || {};
-                    $scope.gridOptions.data = auditData.resultPage;
-                    $scope.gridOptions.totalItems = auditData.totalCount;
-                    //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
-                });
-            }
-        };
-
-        var eventName = "object.changed/" + ObjectService.ObjectTypes.CASE_FILE + "/" + $stateParams.id;
-        var cacheKey = ObjectService.ObjectTypes.CASE_FILE + '.' + $stateParams.id;
-        gridHelper.subscribeForUpdate(eventName, cacheKey,
-                new Store.CacheFifo(ObjectAuditService.CacheNames.AUDIT_DATA), retrieveGridData);
+          gridHelper.retrieveAuditData(ObjectService.ObjectTypes.CASE_FILE, $stateParams.id);
+        }
 
     }
 ]);

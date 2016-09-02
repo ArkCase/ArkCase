@@ -50,7 +50,6 @@ angular.module('complaints').controller('Complaints.CostController', ['$scope', 
                         $scope.gridOptions = $scope.gridOptions || {};
                         $scope.gridOptions.data = costsheets;
                         $scope.gridOptions.totalItems = Util.goodValue(costsheets.length, 0);
-                        //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
                         return config;
                     });
                     return costsheets;

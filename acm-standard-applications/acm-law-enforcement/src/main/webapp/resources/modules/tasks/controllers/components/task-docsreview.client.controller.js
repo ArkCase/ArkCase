@@ -37,7 +37,6 @@ angular.module('tasks').controller('Tasks.DocsReviewController', ['$scope', '$q'
         //        $q.all([promiseUsers]).then(function () {
         //            var arr = (taskInfo.documentUnderReview) ? [taskInfo.documentUnderReview] : [];
         //            $scope.gridOptions.data = arr;
-        //            //gridHelper.hidePagingControlsIfAllDataShown(1);
         //        });
         //        return taskInfo;
         //    });
@@ -47,7 +46,6 @@ angular.module('tasks').controller('Tasks.DocsReviewController', ['$scope', '$q'
             $q.all().then(function () {
                 var urv = Util.goodMapValue($scope.objectInfo, "documentUnderReview", null);
                 $scope.gridOptions.data = (urv)? [urv] : [];
-                //gridHelper.hidePagingControlsIfAllDataShown(1);
             });
         };
 
