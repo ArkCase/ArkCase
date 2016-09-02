@@ -43,7 +43,6 @@ angular.module('tasks').controller('Tasks.WorkflowOverviewController', ['$scope'
                         var taskHistory = data[0];
                         $scope.gridOptions.data = taskHistory;
                         $scope.gridOptions.totalItems = taskHistory.length;
-                        //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
                     });
                     return taskInfo;
                 });

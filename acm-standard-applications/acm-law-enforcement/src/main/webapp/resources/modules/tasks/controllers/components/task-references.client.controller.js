@@ -34,7 +34,6 @@ angular.module('tasks').controller('Tasks.ReferencesController', ['$scope', '$st
             $scope.objectInfo = objectInfo;
             $scope.gridOptions = $scope.gridOptions || {};
             $scope.gridOptions.data = Util.goodArray($scope.objectInfo.references);
-            //gridHelper.hidePagingControlsIfAllDataShown($scope.objectInfo.references.length);
         };
 
         $scope.onClickObjLink = function (event, rowEntity) {
