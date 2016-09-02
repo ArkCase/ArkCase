@@ -18,8 +18,9 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.List;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -30,7 +31,6 @@ import static org.junit.Assert.*;
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-ms-outlook-integration.xml",
         "/spring/spring-library-ecm-file.xml",
-        "/spring/spring-library-mule-context-manager.xml",
         "/spring/spring-library-search.xml",
         "/spring/spring-library-authentication-token.xml",
         "/spring/spring-library-user-service.xml",
@@ -80,7 +80,7 @@ public class UserOrgDaoIT extends EasyMockSupport
             return;
         }
 
-        expect(authentication.getName()).andReturn(userid).times(2);
+        expect(authentication.getName()).andReturn(userid).atLeastOnce();
         replayAll();
 
         OutlookDTO in = new OutlookDTO();
