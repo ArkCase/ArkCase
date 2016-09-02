@@ -23,7 +23,7 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
         });
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
-        
+        var promiseUsers = gridHelper.getUsers();
         var promiseMyTasks = ObjectTaskService.queryCurrentUserTasks();
 
         var onConfigRetrieved = function (config) {
@@ -31,7 +31,7 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
             gridHelper.setExternalPaging(config, retrieveGridData);
-            gridHelper.showUserFullNames();
+            gridHelper.setUserNameFilter(promiseUsers);
 
             $q.all([promiseMyTasks]).then(function (data) {
                 for (var i = 0; i < $scope.config.columnDefs.length; i++) {
