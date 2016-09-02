@@ -686,29 +686,6 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
             
             /**
              * @ngdoc method
-             * @name hidePagingControlsIfAllDataShown
-             * @methodOf services:Helper.UiGridService
-             *
-             * @param {Number} totalCount Total number of grid rows
-             *
-             * @description
-             * Hide paging controls of Angular ui-grid if all data has already shown
-             */
-            , hidePagingControlsIfAllDataShown: function (totalCount) {
-                var that = this;
-                if (that.scope && that.scope.gridOptions && that.scope.gridOptions.paginationPageSize) {
-                    if (totalCount <= that.scope.gridOptions.paginationPageSize) {
-                        // Hides pagination controls since there is only 1 page of data
-                        that.scope.gridOptions.enablePaginationControls = false;
-                    } else {
-                        // need to re-enable pagination if a record is added to the next page
-                        that.scope.gridOptions.enablePaginationControls = true;
-                    }
-                }
-            }
-            
-            /**
-             * @ngdoc method
              * @name retrieveAuditData
              * @methodOf services:Helper.UiGridService
              *
@@ -733,7 +710,6 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
                           that.scope.gridOptions = that.scope.gridOptions || {};
                           that.scope.gridOptions.data = auditData.resultPage;
                           that.scope.gridOptions.totalItems = auditData.totalCount;
-                       //   that.hidePagingControlsIfAllDataShown(that.scope.gridOptions.totalItems);
                       });
                   }
                   // subscribe for update, reload data
