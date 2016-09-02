@@ -209,4 +209,14 @@ public class Disposition implements Serializable, AcmObject, AcmEntity
     {
         this.modifier = modifier;
     }
+
+    public String getClassName()
+    {
+        return className;
+    }
+
+    public void setClassName(String className)
+    {
+        this.className = className;
+    }
 }
