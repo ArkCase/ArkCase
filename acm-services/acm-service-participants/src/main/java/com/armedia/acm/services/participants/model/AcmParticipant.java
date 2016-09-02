@@ -32,7 +32,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "acm_participant")
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "className")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "className", defaultImpl = AcmParticipant.class)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.services.participants.model.AcmParticipant")
@@ -81,7 +81,7 @@ public class AcmParticipant implements Serializable, AcmEntity, AcmNotificationR
     @Column(name = "cm_participant_modifier")
     private String modifier;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "participant", fetch = FetchType.EAGER, orphanRemoval=true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "participant", fetch = FetchType.EAGER, orphanRemoval = true)
     private List<AcmParticipantPrivilege> privileges = new ArrayList<>();
 
     @PrePersist
@@ -98,9 +98,9 @@ public class AcmParticipant implements Serializable, AcmEntity, AcmNotificationR
 
     private void updatePrivileges()
     {
-        for ( AcmParticipantPrivilege privilege : getPrivileges() )
+        for (AcmParticipantPrivilege privilege : getPrivileges())
         {
-            if ( privilege.getParticipant() == null )
+            if (privilege.getParticipant() == null)
             {
                 privilege.setParticipant(this);
             }
@@ -138,11 +138,13 @@ public class AcmParticipant implements Serializable, AcmEntity, AcmNotificationR
         this.objectId = objectId;
     }
 
-    public String getClassName() {
+    public String getClassName()
+    {
         return className;
     }
 
-    public void setClassName(String className) {
+    public void setClassName(String className)
+    {
         this.className = className;
     }
 
@@ -242,7 +244,8 @@ public class AcmParticipant implements Serializable, AcmEntity, AcmNotificationR
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object obj)
+    {
         Objects.requireNonNull(obj, "Comparable object must not be null");
         if (!(obj instanceof AcmParticipant))
             return false;
@@ -253,7 +256,8 @@ public class AcmParticipant implements Serializable, AcmEntity, AcmNotificationR
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         if (getId() == null)
             return super.hashCode();
         else
