@@ -17,7 +17,7 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
         });
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
-
+        var promiseUsers = gridHelper.getUsers();
         var promiseMyTasks = ObjectTaskService.queryCurrentUserTasks();
 
         $q.all([componentHelper.promiseConfig, promiseMyTasks]).then(function (data) {
@@ -27,7 +27,7 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
             gridHelper.setExternalPaging(config, $scope.retrieveGridData);
-            gridHelper.showUserFullNames();
+            gridHelper.setUserNameFilter(promiseUsers);
 
             for (var i = 0; i < $scope.gridOptions.columnDefs.length; i++) {
                 //if ("taskId" == $scope.gridOptions.columnDefs[i].name) {
@@ -70,7 +70,6 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
                             $scope.gridOptions = $scope.gridOptions || {};
                             $scope.gridOptions.data = tasks;
                             $scope.gridOptions.totalItems = data.response.numFound;
-                            //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
 
                             for (var i = 0; i < tasks.length; i++) {
                                 var task = tasks[i];

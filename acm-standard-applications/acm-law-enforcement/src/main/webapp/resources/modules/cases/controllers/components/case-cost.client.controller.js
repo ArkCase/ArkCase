@@ -53,8 +53,7 @@ angular.module('cases').controller('Cases.CostController', ['$scope', '$statePar
                         $scope.gridOptions = $scope.gridOptions || {};
                         $scope.gridOptions.data = costsheets;
                         $scope.gridOptions.totalItems = Util.goodValue(costsheets.length, 0);
-                        //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
-
+                        
                         return costsheets;
                     }
                 );

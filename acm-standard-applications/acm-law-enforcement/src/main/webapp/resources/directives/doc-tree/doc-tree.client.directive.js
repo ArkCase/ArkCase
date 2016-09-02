@@ -102,7 +102,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
         var promiseGetUserFullName = LookupService.getUserFullNames();
         promiseGetUserFullName.then(function (userFullNames) {
             DocTree.userFullNames = userFullNames;
-            //refresh table?
         });
         var promiseGetEmailParams = LookupService.getConfig("notification").then(function (data) {
             Email.arkcaseUrl = Util.goodValue(data["arkcase.url"]);
@@ -1399,25 +1398,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         , {
                             name: "replace",
                             execute: function (nodes, args) {
-                                var node = nodes[0];
-                                var fileType = Util.goodValue(node.data.type);
-                                if (!Util.isEmpty(fileType)) {
-                                    DocTree.uploadSetting = {
-                                        replaceFileNode: node
-                                        , uploadToFolderNode: node.parent
-                                        , uploadFileType: fileType
-                                        , uploadFileNew: false
-                                        , deferUploadFile: $q.defer()
-                                        , deferSelectFile: $q.defer()
-                                    };
-
-                                    DocTree.replaceFile();
-                                }
+                                var selectFiles = DocTree.Command.findHandler("selectReplacement/");
+                                selectFiles.execute(nodes, args);
 
                                 $q.when(DocTree.uploadSetting.deferSelectFile.promise).then(function (files) {
-                                    var args = {
-                                        files: files
-                                    }
+                                    args = args || {};
+                                    args.files = files;
                                     var submitFiles = DocTree.Command.findHandler("submitFiles/");
                                     DocTree.Command.handleCommand(submitFiles, nodes, args);
                                 });
@@ -1592,8 +1578,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 }
 
                                 var files = args.files;
-                                var refresh = Util.goodValue(args.refresh, true);
-                                var promiseUploadFile = DocTree.doSubmitFormUploadFile(files, refresh);
+                                //var refresh = Util.goodValue(args.refresh, true);
+                                //var promiseUploadFile = DocTree.doSubmitFormUploadFile(files, refresh);
+                                var promiseUploadFile = DocTree.doSubmitFormUploadFile(files);
                                 $q.when(promiseUploadFile).then(function (data) {
                                     args.data = data;
                                     DocTree.uploadSetting = null;
@@ -1618,6 +1605,29 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                                 DocTree.uploadFile();
 
+                                return DocTree.uploadSetting.deferSelectFile.promise;
+                            }
+                        }
+                        , {
+                            name: "selectReplacement/",
+                            execute: function (nodes, args) {
+                                if (DocTree.uploadSetting) {
+                                    $log.warn("Warning: Trying to upload file before previous upload");
+                                }
+                                var node = nodes[0];
+                                var fileType = Util.goodValue(node.data.type);
+                                if (!Util.isEmpty(fileType)) {
+                                    DocTree.uploadSetting = {
+                                        replaceFileNode: node
+                                        , uploadToFolderNode: node.parent
+                                        , uploadFileType: fileType
+                                        , uploadFileNew: false
+                                        , deferUploadFile: $q.defer()
+                                        , deferSelectFile: $q.defer()
+                                    };
+
+                                    DocTree.replaceFile();
+                                }
                                 return DocTree.uploadSetting.deferSelectFile.promise;
                             }
                         }
@@ -2330,10 +2340,11 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     }
                     return dfd.promise();
                 }
-                , replaceFile: function (formData, fileNode, name, doRefresh) {
-                    var refresh = true;
-                    if (doRefresh == false)
-                        refresh = false;
+                //, replaceFile: function (formData, fileNode, name, doRefresh) {
+                , replaceFile: function (formData, fileNode, name) {
+                    //var refresh = true;
+                    //if (doRefresh == false)
+                    //    refresh = false;
                     var dfd = $.Deferred();
                     if (!DocTree.isFileNode(fileNode)) {
                         dfd.reject();
@@ -2383,12 +2394,14 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         }).then(
                             function (replacedFile) {
                                 if (replacedFile && fileNode) {
+                                    fileNode.data.version = replacedFile.version;
+                                    fileNode.data.versionList = replacedFile.versionList;
                                     fileNode.renderTitle();
                                     fileNode.setStatus("ok");
                                 }
-                                if (refresh) {
-                                    DocTree.refreshTree();
-                                }
+                                //if (refresh) {
+                                //    DocTree.refreshTree();
+                                //}
                                 dfd.resolve({files: [replacedFile], nodes: [fileNode]});
                             }
                             , function (errorData) {
@@ -3240,7 +3253,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         , uploadFileNew: false
                         , deferUploadFile: $q.defer()
                     };
-                    var args = {files: files, refresh: false};
+                    //var args = {files: files, refresh: false};
+                    var args = {files: files};
                     var submitFiles = DocTree.Command.findHandler("submitFiles/");
                     submitFiles.onPostCmd = callback;
                     DocTree.Command.handleCommand(submitFiles, [node], args);
@@ -3251,7 +3265,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     "title": name,
                     "name": name,
                     "ext": "",
-                    "type": type,
+                    "type": type
                 });
                 DocTree.markNodePending(fileNode);
                 return fileNode;
@@ -3344,7 +3358,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     } //end if validateFolderList
                                 } //end if (!Util.isArrayEmpty(newChildren))
                             }
-                            DocTree.refreshTree();
+                            //DocTree.refreshTree();
                             return uploadedFiles;
                         }
                     );
@@ -3463,12 +3477,13 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     DocTree.uploadSetting.deferSelectFile.resolve(files);
                 }
             }
-            , doSubmitFormUploadFile: function (files, doRefresh) {
+            //, doSubmitFormUploadFile: function (files, doRefresh) {
+            , doSubmitFormUploadFile: function (files) {
                 if (!DocTree.uploadSetting) {
                     return Util.errorPromise("upload file error");
                 }
 
-                var refresh = Util.goodValue(doRefresh, true);
+                //var refresh = Util.goodValue(doRefresh, true);
 
                 var dfd = $.Deferred();
                 var folderNode = DocTree.uploadSetting.uploadToFolderNode;
@@ -3505,7 +3520,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         );
                 } else {
                     var replaceNode = DocTree.uploadSetting.replaceFileNode;
-                    DocTree.Op.replaceFile(fd, replaceNode, names[0], refresh)
+                    //DocTree.Op.replaceFile(fd, replaceNode, names[0], refresh)
+                    DocTree.Op.replaceFile(fd, replaceNode, names[0])
                         .then(function (data) {
                                 _.each(data.nodes, function(node){
                                   DocTree.markNodeOk(node)
