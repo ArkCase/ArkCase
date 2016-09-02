@@ -37,7 +37,8 @@ import static org.junit.Assert.assertNotNull;
         "/spring/spring-library-note.xml",
         "/spring/spring-library-authentication-token.xml",
         "/spring/spring-library-search.xml",
-        "/spring/spring-library-business-process.xml"
+        "/spring/spring-library-business-process.xml",
+        "/spring/spring-library-person.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
 public class AcmQueueDaoIT
