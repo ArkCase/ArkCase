@@ -44,16 +44,18 @@ angular.module("services").factory("WebSocketsListener", ['$q', '$timeout', 'Web
             if(!socket.stomp.connected) {
                 initialize(); // reconnect on error
             }
-        }
+        };
         
         var connect = function () {
             console.log("WS init");
             socket.client = new SockJS(service.SOCKET_URL);
             socket.stomp = Stomp.over(socket.client);
+            //socket.stomp.debug = null; //frequently need to disable stomp msg for debugging, please do not delete this line
             socket.stomp.connect({}, connectCallback, errorCallback);
             socket.stomp.ws.onclose = connect;
         };
-        
+
+
         if (service.shouldStart) {
             setTimeout(connect, 2000); // give it time to load UI
         }
