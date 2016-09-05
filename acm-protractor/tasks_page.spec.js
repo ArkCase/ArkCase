@@ -257,10 +257,11 @@ describe('tasks page test', function() {
         tasksPage.assignee.click();
         tasksPage.assigneeDropDown.click();
         tasksPage.selectAssignee.click();
-        tasksPage.assigneeBtn.click();
-        expect(tasksPage.completeBtn.isPresent()).toBe(false, 'Comeplete button should not be displyed');
-        expect(tasksPage.deleteBtn.isPresent()).toBe(false, 'Delete  button should not be displyed');
+        tasksPage.assigneeBtn.click().then(function() {
+            expect(tasksPage.completeBtn.isPresent()).toBe(false, 'Comeplete button should not be displyed');
+            expect(tasksPage.deleteBtn.isPresent()).toBe(false, 'Delete  button should not be displyed');
 
+        });
     });
 
     it('should create new task add tag and verify added tag', function() {
@@ -278,12 +279,12 @@ describe('tasks page test', function() {
         expect(tasksPage.tagsTableTitle.getText()).toEqual('Tags');
         tasksPage.addTagBtn.click();
         expect(tasksPage.addTagPopUpTitle.getText()).toEqual('Tag');
-        browser.driver.actions().mouseDown(tasksPage.tagTextArea).click().sendKeys("white").perform();
+        browser.driver.actions().mouseDown(tasksPage.tagTextArea).click().sendKeys("south").perform();
         tasksPage.addTagPopUpTitle.click();
         tasksPage.saveTagBtn.click();
-        expect(tasksPage.tagname.getText()).toEqual('white');
-        expect(tasksPage.tagCreatedDate.getText()).toEqual(today);
-        expect(tasksPage.tagCreatedBy.getText()).toEqual('samuel-acm');
+        expect(tasksPage.tagname.getText()).toEqual('south', 'Created tag name is wrong');
+        expect(tasksPage.tagCreatedDate.getText()).toEqual(today, 'Created tag date is wrong');
+        expect(tasksPage.tagCreatedBy.getText()).toEqual('samuel-acm', 'Created tag by is wrong');
 
     });
 
@@ -302,7 +303,7 @@ describe('tasks page test', function() {
         expect(tasksPage.tagsTableTitle.getText()).toEqual('Tags');
         tasksPage.addTagBtn.click();
         expect(tasksPage.addTagPopUpTitle.getText()).toEqual('Tag');
-        browser.driver.actions().mouseDown(tasksPage.tagTextArea).click().sendKeys("pink").perform();
+        browser.driver.actions().mouseDown(tasksPage.tagTextArea).click().sendKeys("north").perform();
         tasksPage.addTagPopUpTitle.click();
         tasksPage.saveTagBtn.click();
         tasksPage.tagDeleteBtn.click();
@@ -365,7 +366,7 @@ describe('tasks page test', function() {
         tasksPage.historyLink.click();
         expect(tasksPage.historyTableTitle.getText()).toEqual('History');
         expect(tasksPage.historyEventName.getText()).toEqual('Task Created');
-        expect(tasksPage.historyUser.getText()).toEqual('samuel-acm');
+        expect(tasksPage.historyUser.getText()).toEqual('Samuel Supervisor');
         expect(tasksPage.historyDate.getText()).toContain(today);
 
     });

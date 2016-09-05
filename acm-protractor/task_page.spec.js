@@ -62,25 +62,6 @@ describe('Create new task ', function() {
         expect(tasksPage.taskState.getText()).toEqual('ACTIVE');
     });
 
-    it('should create new task with status closed', function() {
-        taskPage.newBtn.click();
-        taskPage.taskBtn.click();
-        expect(taskPage.taskTitle.getText()).toEqual('New Task');
-        taskPage.Subject.click();
-        taskPage.Subject.sendKeys('status closed');
-        taskPage.statusDropDown.click();
-        taskPage.statusClosed.click();
-        expect(taskPage.StartDate.getText()).not.toBeTruthy();
-        taskPage.DueDateBtn.click();
-        taskPage.todayDateFromCalendar.click();
-        expect(taskPage.DueDateInput.getText()).not.toBeTruthy();
-        taskPage.percentCompleteInput.click();
-        taskPage.percentCompleteInput.clear();
-        taskPage.percentCompleteInput.sendKeys('45');
-        taskPage.saveButton.click();
-        expect(taskPage.tasksTitle.getText()).toEqual('Tasks');
-        expect(tasksPage.taskState.getText()).toEqual('CLOSED');
-    });
 
     it('should create new task with priority low', function() {
         taskPage.newBtn.click();
@@ -150,23 +131,6 @@ describe('Create new task ', function() {
 
     });
 
-    it('should create new task with status Inactive', function() {
-
-        taskPage.newBtn.click();
-        taskPage.taskBtn.click();
-        expect(taskPage.taskTitle.getText()).toEqual('New Task');
-        taskPage.Subject.click();
-        taskPage.Subject.sendKeys('status inactive');
-        taskPage.statusDropDown.click();
-        taskPage.statusInactive.click();
-        taskPage.DueDateBtn.click();
-        taskPage.todayDateFromCalendar.click();
-        expect(taskPage.DueDateInput.getText()).not.toBeTruthy();
-        taskPage.saveButton.click();
-        expect(taskPage.tasksTitle.getText()).toEqual('Tasks');
-        expect(tasksPage.taskState.getText()).toEqual('INACTIVE');
-
-    });
 
     it('should create new task with notes verify in details section', function() {
 
