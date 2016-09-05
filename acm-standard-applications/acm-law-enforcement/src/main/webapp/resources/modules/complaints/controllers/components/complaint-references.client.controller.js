@@ -1,9 +1,12 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.ReferencesController', ['$scope', '$stateParams'
-    , 'UtilService', 'ConfigService', 'Complaint.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', '$modal', 'Object.ReferenceService'
-    , function ($scope, $stateParams
-        , Util, ConfigService, ComplaintInfoService, HelperUiGridService, HelperObjectBrowserService, $modal, referenceService) {
+angular.module('complaints').controller('Complaints.ReferencesController', ['$scope', '$stateParams', '$modal'
+    , 'UtilService', 'ConfigService', 'Complaint.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService'
+    , 'Object.ReferenceService', 'ObjectService'
+    , function ($scope, $stateParams, $modal
+        , Util, ConfigService, ComplaintInfoService, HelperUiGridService, HelperObjectBrowserService
+        , referenceService, ObjectService
+    ) {
 
         var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
@@ -46,6 +49,10 @@ angular.module('complaints').controller('Complaints.ReferencesController', ['$sc
             var targetType = Util.goodMapValue(rowEntity, "targetType");
             var targetId = Util.goodMapValue(rowEntity, "targetId");
             gridHelper.showObject(targetType, targetId);
+
+            if (ObjectService.ObjectTypes.COMPLAINT == targetType) {
+                $scope.$emit('request-show-object', targetId, targetType);
+            }
         };
 
 

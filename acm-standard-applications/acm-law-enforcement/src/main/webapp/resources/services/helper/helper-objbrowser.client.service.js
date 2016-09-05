@@ -143,6 +143,17 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                         that.scope.treeControl.refresh();
                     }
                 });
+
+                that.scope.$on('req-switch-object', function (e, args) {
+                    if (that.scope.treeControl) {
+                        var nodeId = args.objectId;
+                        var nodeType = (args.objectSubtype)? args.objectSubtype : args.objectType;
+                        that.scope.treeControl.select({
+                            nodeId: nodeId
+                            , nodeType: nodeType
+                        }, true);
+                    }
+                });
             }
 
 
@@ -269,6 +280,14 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
 
                 that.scope.$on('report-object-update-failed', function (e, objectInfo) {
                     that.scope.$broadcast('object-update-failed', objectInfo);
+                });
+
+                that.scope.$on('request-show-object', function (e, objectId, objectType, objectSubtype) {
+                    that.scope.$broadcast('req-switch-object', {
+                        objectId: objectId
+                        , objectType: objectType
+                        , objectSubtype: objectSubtype
+                    });
                 });
 
                 that.scope.$on('req-select-object', function (e, selectedObject) {
