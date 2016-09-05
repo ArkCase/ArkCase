@@ -195,6 +195,7 @@ describe('edit user profile page', function() {
     it('should change profile picture', function() {
 
         userPage.changeProfilePic.click().then(function() {
+            browser.driver.sleep(3000);
             robot.setKeyboardDelay(14000);
             robot.typeStringDelayed("/", 500);
             robot.typeStringDelayed(uplaodPath, 14000);

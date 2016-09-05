@@ -10,8 +10,9 @@ var helpers = function helpers() {
             element(by.css('.fullname')).click();
             var logout = element(by.linkText('Logout'));
             logout.click();
-            expect(element(by.xpath('/html/body/div/div[2]')).getText()).toEqual('You have been logged out successfully.');
+            expect(element(by.xpath('.//*[@class="alert alert-success"]')).getText()).toEqual('You have been logged out successfully.');
         }
+
 };
 
 module.exports = new helpers();

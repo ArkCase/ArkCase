@@ -11,9 +11,6 @@ var TaskPage = function() {
     this.percentCompleteInput = element(by.id('percentComplete'));
     this.saveButton = element(by.id('saveButton'));
     this.tasksTitle = element(by.xpath('.//*[@class="module-header"]/h3/span'));
-    this.statusDropDown = element(by.model('config.data.status'));
-    this.statusClosed = element(by.xpath('.//*[.="Closed"]'));
-    this.statusInactive = element(by.xpath('.//*[.="Inactive"]'));
     this.priorityDropDown = element(by.model('config.data.priority'));
     this.priorityLow = element(by.xpath('.//*[.="Low"]'));
     this.priorityMedium = element(by.xpath('.//*[.="Medium"]'));
