@@ -12,5 +12,7 @@ public interface DateFormats {
 	public final String TASK_NAME_DATE_FORMAT = "yyyyMMdd";
 	public final String TIMESHEET_DATE_FORMAT = "M/dd/yyyy";
     public final String WORKFLOW_DATE_FORMAT = "M/dd/yyyy";
+
+	public final String SOLR_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 	
 }
