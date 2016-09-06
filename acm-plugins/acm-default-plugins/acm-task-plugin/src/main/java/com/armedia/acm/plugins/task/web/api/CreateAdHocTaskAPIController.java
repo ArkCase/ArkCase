@@ -12,7 +12,6 @@ import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
@@ -41,7 +40,7 @@ public class CreateAdHocTaskAPIController
     @RequestMapping(value = "/adHocTask", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmTask createAdHocTask(@RequestBody AcmTask in, Authentication authentication, HttpSession httpSession)
-   throws AcmCreateObjectFailedException, AcmAppErrorJsonMsg
+            throws AcmCreateObjectFailedException, AcmAppErrorJsonMsg
     {
 
         String attachedToObjectType = in.getAttachedToObjectType();
@@ -83,7 +82,7 @@ public class CreateAdHocTaskAPIController
                 throw new AcmAppErrorJsonMsg(String.format("Task failed to create, associated object" +
                         " {%s} : {%s} not found", attachedToObjectType, attachedToObjectName)
                         , TaskConstants.OBJECT_TYPE, "associated-object", null);
-        }
+            }
 
             AcmTask adHocTask = getTaskDao().createAdHocTask(in);
             publishAdHocTaskCreatedEvent(authentication, httpSession, adHocTask, true);
@@ -112,7 +111,7 @@ public class CreateAdHocTaskAPIController
     }
 
     public String getObjectsFromSolr(String objectType, String objectName, Authentication authentication, int startRow, int maxRows,
-            String sortParams, String userId)
+                                     String sortParams, String userId)
     {
         String retval = null;
 
