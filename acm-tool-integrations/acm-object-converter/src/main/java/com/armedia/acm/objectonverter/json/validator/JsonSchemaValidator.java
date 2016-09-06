@@ -37,9 +37,9 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * Most of this class is cobbled together from the com.github.fge Json Schema Validator.  The validator code is
- * meant to validate actual JSON documents against a schema; but this test is to verify the actual schema
- * complies with the schema specification.
+ * Most of this class is cobbled together from the com.github.fge Json Schema Validator. The validator code is meant to
+ * validate actual JSON documents against a schema; but this test is to verify the actual schema complies with the
+ * schema specification.
  */
 public class JsonSchemaValidator
 
@@ -47,8 +47,7 @@ public class JsonSchemaValidator
     public ProcessingReport validate(File schema) throws IOException, ProcessingException
     {
         JsonFactory jsonFactory = new JsonFactory();
-        JsonParser jsonParser = jsonFactory.createParser(schema
-        );
+        JsonParser jsonParser = jsonFactory.createParser(schema);
         jsonParser.enable(JsonParser.Feature.ALLOW_COMMENTS);
 
         ObjectMapper om = new ObjectMapper();
@@ -78,8 +77,7 @@ public class JsonSchemaValidator
         return report;
     }
 
-    private static final Function<SchemaContext, JsonRef> FUNCTION
-            = new Function<SchemaContext, JsonRef>()
+    private static final Function<SchemaContext, JsonRef> FUNCTION = new Function<SchemaContext, JsonRef>()
     {
         @Override
         public JsonRef apply(final SchemaContext input)
@@ -94,23 +92,13 @@ public class JsonSchemaValidator
 
         final Map<JsonRef, Library> libraries = validationCfg.getLibraries();
         final Library defaultLibrary = validationCfg.getDefaultLibrary();
-        final ValidationChain defaultChain
-                = new ValidationChain(resolver, defaultLibrary, validationCfg);
+        final ValidationChain defaultChain = new ValidationChain(resolver, defaultLibrary, validationCfg);
         final ProcessorMap<JsonRef, SchemaContext, ValidatorList> map = new ProcessorMap<>(FUNCTION);
         map.setDefaultProcessor(defaultChain);
 
-        JsonRef ref;
-        ValidationChain chain;
+        libraries.forEach((ref, value) -> map.addEntry(ref, new ValidationChain(resolver, value, validationCfg)));
 
-        for (final Map.Entry<JsonRef, Library> entry: libraries.entrySet()) {
-            ref = entry.getKey();
-            chain = new ValidationChain(resolver, entry.getValue(),
-                    validationCfg);
-            map.addEntry(ref, chain);
-        }
-
-        final Processor<SchemaContext, ValidatorList> processor
-                = map.getProcessor();
+        final Processor<SchemaContext, ValidatorList> processor = map.getProcessor();
         return new CachingProcessor<>(processor, SchemaContextEquivalence.getInstance());
     }
 
@@ -119,10 +107,13 @@ public class JsonSchemaValidator
         final String msg = validationConfiguration.getSyntaxMessages().getMessage("core.invalidSchema");
         final ArrayNode arrayNode = JacksonUtils.nodeFactory().arrayNode();
         JsonNode node;
-        for (final ProcessingMessage message: report) {
+        for (final ProcessingMessage message : report)
+        {
             node = message.asJson();
             if ("syntax".equals(node.path("domain").asText()))
+            {
                 arrayNode.add(node);
+            }
         }
         return new ProcessingMessage().setMessage(msg + "\nSyntax errors:\n" + JacksonUtils.prettyPrint(arrayNode));
     }
