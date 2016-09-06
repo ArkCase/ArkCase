@@ -8,7 +8,6 @@ import com.armedia.acm.core.exceptions.AcmNotAuthorizedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmOutlookItemNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import org.apache.commons.collections.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -21,7 +20,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 @ControllerAdvice
@@ -98,7 +97,7 @@ public class AcmSpringMvcErrorManager
     public Map<String, Object> handleJsonMessageError(HttpServletResponse response, AcmAppErrorJsonMsg e)
     {
         log.error("AcmAppErrorJsonMsg", e);
-        Map<String, Object> result = new HashedMap();
+        Map<String, Object> result = new HashMap();
         result.put("message", e.getMessage());
         result.put("field", e.getField());
         result.put("objectType", e.getObjectType());
