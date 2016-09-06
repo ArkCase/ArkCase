@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.task.web.api;
 
+import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
@@ -26,7 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 
-@RequestMapping({ "/api/v1/plugin/task", "/api/latest/plugin/task" })
+@RequestMapping({"/api/v1/plugin/task", "/api/latest/plugin/task"})
 public class CreateAdHocTaskAPIController
 {
     private TaskDao taskDao;
@@ -40,13 +41,12 @@ public class CreateAdHocTaskAPIController
     @RequestMapping(value = "/adHocTask", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmTask createAdHocTask(@RequestBody AcmTask in, Authentication authentication, HttpSession httpSession)
-            throws AcmCreateObjectFailedException
+   throws AcmCreateObjectFailedException, AcmAppErrorJsonMsg
     {
-        if (log.isInfoEnabled())
-        {
-            log.info("Creating ad-hoc task.");
-        }
 
+        String attachedToObjectType = in.getAttachedToObjectType();
+        String attachedToObjectName = in.getAttachedToObjectName();
+        log.info("Creating ad-hoc task.");
         try
         {
             in.setOwner(authentication.getName());
@@ -58,7 +58,7 @@ public class CreateAdHocTaskAPIController
             Long objectId = null;
             if (in.getAttachedToObjectName() != "")
             {
-                obj = getObjectsFromSolr(in.getAttachedToObjectType(), in.getAttachedToObjectName(), authentication, 0, 10, "", null);
+                obj = getObjectsFromSolr(attachedToObjectType, attachedToObjectName, authentication, 0, 10, "", null);
                 if (obj != null && getSearchResults().getNumFound(obj) > 0)
                 {
                     JSONArray results = getSearchResults().getDocuments(obj);
@@ -80,8 +80,10 @@ public class CreateAdHocTaskAPIController
                 in.setParentObjectType(parentObjectType);
             } else
             {
-                in.setAttachedToObjectId(null);
-            }
+                throw new AcmAppErrorJsonMsg(String.format("Task failed to create, associated object" +
+                        " {%s} : {%s} not found", attachedToObjectType, attachedToObjectName)
+                        , TaskConstants.OBJECT_TYPE, "associated-object", null);
+        }
 
             AcmTask adHocTask = getTaskDao().createAdHocTask(in);
             publishAdHocTaskCreatedEvent(authentication, httpSession, adHocTask, true);
@@ -114,7 +116,7 @@ public class CreateAdHocTaskAPIController
     {
         String retval = null;
 
-        log.debug("Taking objects from Solr for object type = " + objectType);
+        log.debug("Taking objects from Solr for objectType:{}", objectType);
 
         String authorQuery = "";
         if (userId != null)

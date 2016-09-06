@@ -55,6 +55,11 @@ angular.module('tasks').factory('Task.NewTaskService', ['$resource', '$state', '
                         return data;
                     }
                 }
+                , onError: function (errorData) {
+                    console.log("ON ERROR");
+                    console.log(errorData);
+                    return errorData;
+                }
             })
         };
 
