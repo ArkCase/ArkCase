@@ -79,8 +79,8 @@ public class CreateAdHocTaskAPIController
                 in.setParentObjectType(parentObjectType);
             } else
             {
-                throw new AcmAppErrorJsonMsg(String.format("Task failed to create, associated object" +
-                        " {%s} : {%s} not found", attachedToObjectType, attachedToObjectName)
+                throw new AcmAppErrorJsonMsg(String.format("Task failed to create. Associated object" +
+                        " with name [%s] not found.", attachedToObjectName)
                         , TaskConstants.OBJECT_TYPE, "associated-object", null);
             }
 
