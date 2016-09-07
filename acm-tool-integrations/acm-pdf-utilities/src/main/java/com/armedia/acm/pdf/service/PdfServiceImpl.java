@@ -3,6 +3,7 @@ package com.armedia.acm.pdf.service;
 import com.armedia.acm.pdf.PdfServiceException;
 import com.github.jaiimageio.impl.plugins.tiff.TIFFImageWriterSpi;
 import com.github.jaiimageio.plugins.tiff.TIFFImageWriteParam;
+
 import org.apache.fop.apps.FOPException;
 import org.apache.fop.apps.FOUserAgent;
 import org.apache.fop.apps.Fop;
@@ -30,6 +31,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamSource;
+
 import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -45,8 +47,8 @@ import java.util.Map;
 import java.util.Random;
 
 /**
- * PDF document generator built upon XSL-FO library (Apache FOP).
- * Created by Petar Ilin <petar.ilin@armedia.com> on 02.10.2015.
+ * PDF document generator built upon XSL-FO library (Apache FOP). Created by Petar Ilin <petar.ilin@armedia.com> on
+ * 02.10.2015.
  */
 public class PdfServiceImpl implements PdfService
 {
@@ -71,11 +73,11 @@ public class PdfServiceImpl implements PdfService
     public static final int MAX_MAIN_MEMORY_BYTES = 1024 * 1024 * 32;
 
     /**
-     * Generate PDF file based on XSL-FO stylesheet, XML data source and replacement parameters.
-     * NOTE: the caller is responsible for deleting the file afterwards (not to leave mess behind)
+     * Generate PDF file based on XSL-FO stylesheet, XML data source and replacement parameters. NOTE: the caller is
+     * responsible for deleting the file afterwards (not to leave mess behind)
      *
-     * @param xslFile    XSL-FO stylesheet
-     * @param source     XML data source required for XML transformation
+     * @param xslFile XSL-FO stylesheet
+     * @param source XML data source required for XML transformation
      * @param parameters a key-value map of parameters to be replaced in the stylesheet
      * @return path to the newly generated PDF file (random filename stored in temp folder)
      * @throws PdfServiceException on PDF creation error
@@ -97,28 +99,15 @@ public class PdfServiceImpl implements PdfService
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer(new StreamSource(xslFile));
 
-            for (Map.Entry<String, String> parameter : parameters.entrySet())
-            {
-                String name = parameter.getKey();
-                // transformation fails on null values
-                String value = (parameter.getValue() != null) ? parameter.getValue() : "N/A";
-                transformer.setParameter(name, value);
-            }
+            parameters.forEach((name, value) -> transformer.setParameter(name, value != null ? value : "N/A"));
 
-            OutputStream os = null;
-            try
+            try (OutputStream os = new BufferedOutputStream(new FileOutputStream(filename)))
             {
-                os = new BufferedOutputStream(new FileOutputStream(filename));
                 Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, foUserAgent, os);
                 Result result = new SAXResult(fop.getDefaultHandler());
                 transformer.transform(source, result);
-            } finally
-            {
-                if (os != null)
-                {
-                    os.close();
-                }
             }
+
         } catch (FOPException | TransformerException | IOException e)
         {
             log.error("Unable to generate PDF document", e);
@@ -128,12 +117,12 @@ public class PdfServiceImpl implements PdfService
     }
 
     /**
-     * Generate PDF file based on XSL-FO stylesheet, XML data source and replacement parameters.
-     * NOTE: the caller is responsible for deleting the file afterwards (not to leave mess behind)
+     * Generate PDF file based on XSL-FO stylesheet, XML data source and replacement parameters. NOTE: the caller is
+     * responsible for deleting the file afterwards (not to leave mess behind)
      *
      * @param xslFilename path to XSL-FO stylesheet
-     * @param source      XML data source required for XML transformation
-     * @param parameters  a key-value map of parameters to be replaced in the stylesheet
+     * @param source XML data source required for XML transformation
+     * @param parameters a key-value map of parameters to be replaced in the stylesheet
      * @return path to the newly generated PDF file (random filename stored in temp folder)
      * @throws PdfServiceException on PDF creation error
      */
@@ -145,10 +134,10 @@ public class PdfServiceImpl implements PdfService
     }
 
     /**
-     * Generate PDF file based on XSL-FO stylesheet and replacement parameters (no XML data source).
-     * NOTE: the caller is responsible for deleting the file afterwards (not to leave mess behind)
+     * Generate PDF file based on XSL-FO stylesheet and replacement parameters (no XML data source). NOTE: the caller is
+     * responsible for deleting the file afterwards (not to leave mess behind)
      *
-     * @param xslFile    XSL-FO stylesheet
+     * @param xslFile XSL-FO stylesheet
      * @param parameters a key-value map of parameters to be replaced in the stylesheet
      * @return path to the newly generated PDF file (random filename stored in temp folder)
      * @throws PdfServiceException on PDF creation error
@@ -161,11 +150,11 @@ public class PdfServiceImpl implements PdfService
     }
 
     /**
-     * Generate PDF file based on XSL-FO stylesheet and replacement parameters (no XML data source).
-     * NOTE: the caller is responsible for deleting the file afterwards (not to leave mess behind)
+     * Generate PDF file based on XSL-FO stylesheet and replacement parameters (no XML data source). NOTE: the caller is
+     * responsible for deleting the file afterwards (not to leave mess behind)
      *
      * @param xslFilename path to XSL-FO stylesheet
-     * @param parameters  a key-value map of parameters to be replaced in the stylesheet
+     * @param parameters a key-value map of parameters to be replaced in the stylesheet
      * @return path to the newly generated PDF file (random filename stored in temp folder)
      * @throws PdfServiceException on PDF creation error
      */
@@ -179,12 +168,13 @@ public class PdfServiceImpl implements PdfService
     /**
      * Append one PDF file to another (incremental merge).
      *
-     * @param pdDocument       source PDF, the document we are appending to
-     * @param is               input stream of the document we are appending
+     * @param pdDocument source PDF, the document we are appending to
+     * @param is input stream of the document we are appending
      * @param pdfMergerUtility PDF merger utility
      * @return merged document
      * @throws PdfServiceException on error while merging
-     * @deprecated use {@link #addSource(PDFMergerUtility, InputStream)} and {@link #mergeSources(PDFMergerUtility, String)}
+     * @deprecated use {@link #addSource(PDFMergerUtility, InputStream)} and
+     *             {@link #mergeSources(PDFMergerUtility, String)}
      */
     @Deprecated
     @Override
@@ -212,8 +202,8 @@ public class PdfServiceImpl implements PdfService
     /**
      * Append one PDF file to another (incremental merge).
      *
-     * @param pdDocument       source PDF, the document we are appending to
-     * @param filename         path to the document we are appending
+     * @param pdDocument source PDF, the document we are appending to
+     * @param filename path to the document we are appending
      * @param pdfMergerUtility PDF merger utility
      * @return merged document
      * @throws PdfServiceException on error while merging
@@ -237,7 +227,7 @@ public class PdfServiceImpl implements PdfService
     /**
      * Generates multipage TIFF from PDF file.
      *
-     * @param inputPdf   pdf file to be processed
+     * @param inputPdf pdf file to be processed
      * @param outputTiff location where generated TIFF to be saved
      * @throws PdfServiceException on error generating TIFF
      */
@@ -263,12 +253,11 @@ public class PdfServiceImpl implements PdfService
             log.debug("Pdf contains {} pages.", document.getNumberOfPages());
             int page = 0;
 
-
             TIFFImageWriteParam writeParam = new TIFFImageWriteParam(Locale.getDefault());
             writeParam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
             writeParam.setCompressionType("CCITT T.6"); // Sharecare requires CCITT Group 4 Fax Encoding
 
-            //full quality! could be: from 0.1f to 1.0f
+            // full quality! could be: from 0.1f to 1.0f
             writeParam.setCompressionQuality(0.75f);
 
             for (PDPage pdPage : document.getPages())
@@ -293,16 +282,18 @@ public class PdfServiceImpl implements PdfService
         {
             throw new PdfServiceException(e);
         }
-        log.debug("Successfully written tiff sequence into file {}. With length: {} MBytes", outputTiff.getPath(), outputTiff.length() / MEGABYTE);
+        log.debug("Successfully written tiff sequence into file {}. With length: {} MBytes", outputTiff.getPath(),
+                outputTiff.length() / MEGABYTE);
     }
 
     /**
      * Add source for merging into single PDF document.
      *
      * @param pdfMergerUtility PDF merger utility
-     * @param is               input stream of the document we are appending
+     * @param is input stream of the document we are appending
      * @throws PdfServiceException on error adding source stream
      */
+    @Override
     public void addSource(PDFMergerUtility pdfMergerUtility, InputStream is) throws PdfServiceException
     {
         pdfMergerUtility.addSource(is);
@@ -312,9 +303,10 @@ public class PdfServiceImpl implements PdfService
      * Add source for merging into single PDF document.
      *
      * @param pdfMergerUtility PDF merger utility
-     * @param filename         path to the document we are appending
+     * @param filename path to the document we are appending
      * @throws PdfServiceException on error adding source file
      */
+    @Override
     public void addSource(PDFMergerUtility pdfMergerUtility, String filename) throws PdfServiceException
     {
         InputStream is = null;
@@ -335,9 +327,10 @@ public class PdfServiceImpl implements PdfService
      * Merge multiple sources into single PDF document.
      *
      * @param pdfMergerUtility PDF merger utility
-     * @param filename         path to the merged document
+     * @param filename path to the merged document
      * @throws PdfServiceException on error creating merged document
      */
+    @Override
     public void mergeSources(PDFMergerUtility pdfMergerUtility, String filename) throws PdfServiceException
     {
         // using at most 32MB memory, the rest goes to disk

@@ -13,6 +13,7 @@ import com.armedia.acm.plugins.complaint.model.ComplaintConstants;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
+
 import org.eclipse.persistence.dynamic.DynamicEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +37,7 @@ public class ComplaintCaptureFileEventListener extends AbstractBatchXMLFileListe
     @Override
     public Long getLoadingDocumentsSeconds()
     {
-        return this.loadingDocumentsSeconds;
+        return loadingDocumentsSeconds;
     }
 
     @Override
@@ -45,13 +46,7 @@ public class ComplaintCaptureFileEventListener extends AbstractBatchXMLFileListe
         if (documents != null)
         {
             // For each DocumentObject, create complaint with attachments
-            for (Map.Entry<String, DocumentObject> entry : documents.entrySet())
-            {
-                if (entry.getValue() != null)
-                {
-                    createComplaint(entry.getValue());
-                }
-            }
+            documents.entrySet().stream().filter(entry -> entry.getValue() != null).forEach(entry -> createComplaint(entry.getValue()));
         }
     }
 
@@ -60,7 +55,7 @@ public class ComplaintCaptureFileEventListener extends AbstractBatchXMLFileListe
     {
         if (entity != null)
         {
-            String type = entity.<String>get(CaptureConstants.XML_BATCH_TYPE_KEY);
+            String type = entity.<String> get(CaptureConstants.XML_BATCH_TYPE_KEY);
 
             if (type != null)
             {
@@ -78,7 +73,8 @@ public class ComplaintCaptureFileEventListener extends AbstractBatchXMLFileListe
 
         if (docObject != null && docObject.getId() != null && attachments != null)
         {
-            filteredAttachments = attachments.stream().filter(attachment -> checkFilter(docObject, attachment)).collect(Collectors.toList());
+            filteredAttachments = attachments.stream().filter(attachment -> checkFilter(docObject, attachment))
+                    .collect(Collectors.toList());
         }
 
         return filteredAttachments;
@@ -97,7 +93,7 @@ public class ComplaintCaptureFileEventListener extends AbstractBatchXMLFileListe
 
                     if (entity != null)
                     {
-                        String batchName = entity.<String>get(CaptureConstants.XML_BATCH_CLASS_NAME_KEY);
+                        String batchName = entity.<String> get(CaptureConstants.XML_BATCH_CLASS_NAME_KEY);
 
                         if (ComplaintConstants.XML_BATCH_CLASS_NAME_VALUE.equalsIgnoreCase(batchName))
                         {
@@ -125,7 +121,8 @@ public class ComplaintCaptureFileEventListener extends AbstractBatchXMLFileListe
     {
         if (attachment.getEntity() != null)
         {
-            List<DynamicEntity> documentLevelFields = attachment.getEntity().<List<DynamicEntity>>get(FileConstants.XML_BATCH_DOCUMENT_LEVEL_FIELDS_KEY);
+            List<DynamicEntity> documentLevelFields = attachment.getEntity()
+                    .<List<DynamicEntity>> get(FileConstants.XML_BATCH_DOCUMENT_LEVEL_FIELDS_KEY);
             String value = getDocumentLevelFieldValue(ComplaintConstants.XML_BATCH_COMPLAINT_DOC_ID, documentLevelFields);
             if (value != null && value.equalsIgnoreCase(docObject.getId()))
             {
@@ -146,8 +143,9 @@ public class ComplaintCaptureFileEventListener extends AbstractBatchXMLFileListe
         {
             DynamicEntity entity = docObject.getEntity();
 
-            String title = entity.<String>get(CaptureConstants.XML_BATCH_DESCRIPTION_KEY);
-            List<DynamicEntity> documentLevelFields = entity.<List<DynamicEntity>>get(CaptureConstants.XML_BATCH_DOCUMENT_LEVEL_FIELDS_KEY);
+            String title = entity.<String> get(CaptureConstants.XML_BATCH_DESCRIPTION_KEY);
+            List<DynamicEntity> documentLevelFields = entity
+                    .<List<DynamicEntity>> get(CaptureConstants.XML_BATCH_DOCUMENT_LEVEL_FIELDS_KEY);
 
             // Create Complaint object
             Complaint complaint = new Complaint();
@@ -164,7 +162,8 @@ public class ComplaintCaptureFileEventListener extends AbstractBatchXMLFileListe
                 // Save complaint
                 Complaint saved = getSaveComplaintTransaction().saveComplaint(complaint, null);
 
-                String cmisFolderId = saved != null && saved.getContainer() != null && saved.getContainer().getAttachmentFolder() != null ? saved.getContainer().getAttachmentFolder().getCmisFolderId() : null;
+                String cmisFolderId = saved != null && saved.getContainer() != null && saved.getContainer().getAttachmentFolder() != null
+                        ? saved.getContainer().getAttachmentFolder().getCmisFolderId() : null;
                 String objectFileType = saved != null && saved.getObjectType() != null ? saved.getObjectType().toLowerCase() : null;
 
                 if (cmisFolderId != null && objectFileType != null)
@@ -250,7 +249,8 @@ public class ComplaintCaptureFileEventListener extends AbstractBatchXMLFileListe
             postalAddress = new PostalAddress();
 
             postalAddress.setType("Home");
-            postalAddress.setStreetAddress(getDocumentLevelFieldValue(ComplaintConstants.XML_BATCH_COMPLAINANT_STREET_ADDRESS_KEY, documentLevelFields));
+            postalAddress.setStreetAddress(
+                    getDocumentLevelFieldValue(ComplaintConstants.XML_BATCH_COMPLAINANT_STREET_ADDRESS_KEY, documentLevelFields));
             postalAddress.setCity(getDocumentLevelFieldValue(ComplaintConstants.XML_BATCH_COMPLAINANT_CITY_KEY, documentLevelFields));
             postalAddress.setState(getDocumentLevelFieldValue(ComplaintConstants.XML_BATCH_COMPLAINANT_STATE_KEY, documentLevelFields));
             postalAddress.setZip(getDocumentLevelFieldValue(ComplaintConstants.XML_BATCH_COMPLAINANT_ZIP_CODE_KEY, documentLevelFields));
@@ -295,7 +295,8 @@ public class ComplaintCaptureFileEventListener extends AbstractBatchXMLFileListe
             organization = new Organization();
 
             organization.setOrganizationType("Corporation");
-            organization.setOrganizationValue(getDocumentLevelFieldValue(ComplaintConstants.XML_BATCH_EMPLOYER_NAME_KEY, documentLevelFields));
+            organization
+                    .setOrganizationValue(getDocumentLevelFieldValue(ComplaintConstants.XML_BATCH_EMPLOYER_NAME_KEY, documentLevelFields));
         }
 
         return organization;
@@ -316,7 +317,8 @@ public class ComplaintCaptureFileEventListener extends AbstractBatchXMLFileListe
             postalAddress = new PostalAddress();
 
             postalAddress.setType("Business");
-            postalAddress.setStreetAddress(getDocumentLevelFieldValue(ComplaintConstants.XML_BATCH_EMPLOYER_STREET_ADDRESS_KEY, documentLevelFields));
+            postalAddress.setStreetAddress(
+                    getDocumentLevelFieldValue(ComplaintConstants.XML_BATCH_EMPLOYER_STREET_ADDRESS_KEY, documentLevelFields));
             postalAddress.setCity(getDocumentLevelFieldValue(ComplaintConstants.XML_BATCH_EMPLOYER_CITY_KEY, documentLevelFields));
             postalAddress.setState(getDocumentLevelFieldValue(ComplaintConstants.XML_BATCH_EMPLOYER_STATE_KEY, documentLevelFields));
             postalAddress.setZip(getDocumentLevelFieldValue(ComplaintConstants.XML_BATCH_EMPLOYER_ZIP_CODE_KEY, documentLevelFields));
@@ -350,7 +352,6 @@ public class ComplaintCaptureFileEventListener extends AbstractBatchXMLFileListe
     {
         this.loadingDocumentsSeconds = loadingDocumentsSeconds;
     }
-
 
     public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
     {

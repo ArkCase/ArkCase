@@ -1,0 +1,77 @@
+var TasksPage = function() {
+
+    this.priority = element(by.xpath('.//*[@class="clearfix"]/div[2]/div[3]/div/a'));
+    this.taskState = element(by.xpath('.//*[@class="clearfix"]/div[2]/div[6]/div'));
+    this.assignee = element(by.xpath('.//*[@class="clearfix"]/div[2]/div[2]/div/a'));
+    this.assigneeDropDown = element(by.xpath('.//*[@class="clearfix"]/div[2]/div[2]/div/form/div/select'));
+    this.selectAssignee = element(by.xpath('.//*[.="Ann Administrator"]'));
+    this.assigneeBtn = element(by.xpath('.//*[@class="clearfix"]/div[2]/div[2]/div/form/div/span/button[1]'));
+    this.taskSubject = element(by.xpath('.//*[@class="clearfix"]/div[1]/div/h4/a'));
+    this.taskSubjectInput = element(by.xpath('.//*[@class="clearfix"]/div[1]/div/h4/form/div/input'));
+    this.taskSubjectBtn = element(by.xpath('.//*[@class="clearfix"]/div[1]/div/h4/form/div/span/button[1]'));
+    this.startDate = element(by.xpath('.//*[@class="clearfix"]/div[2]/div[4]/div/a'));
+    this.dueDate = element(by.xpath('.//*[@class="clearfix"]/div[2]/div[5]/div/a'));
+    this.percent = element(by.xpath('.//*[@class="clearfix"]/div[2]/div[1]/div/a'));
+    this.priorityDropDown = element(by.xpath('.//*[@class="clearfix"]/div[2]/div[3]/div/form/div/select'));
+    this.priorityLow = element(by.xpath('.//*[.="Low"]'));
+    this.priorityHigh = element(by.xpath('.//*[.="High"]'));
+    this.priorityExpedite = element(by.xpath('.//*[.="Expedite"]'));
+    this.priorityBtn = element(by.xpath('.//*[@class="clearfix"]//div/span/button[1]'));
+    this.percentCompletition = element(by.xpath('.//*[@class="clearfix"]/div[2]/div[1]/div/a'));
+    this.percentCompletitionInput = element(by.xpath('.//*[@class="clearfix"]/div[2]/div[1]/div/form/div/input'));
+    this.percentCompletitionBtn = element(by.xpath('.//*[@class="clearfix"]/div[2]/div[1]/div/form/div/span/button[1]'));
+    this.completeBtn = element(by.buttonText('Complete'));
+    this.deleteBtn = element(by.buttonText('Delete'));
+    this.refreshBtn = element(by.css('[ng-click="refresh()"]'));
+    this.detailsLink = element.all(by.repeater('link in componentLinks')).get(1);
+    this.detailsTextArea = element(by.xpath('.//*[@class="note-editable panel-body"]'));
+    this.detailsSaveBtn = element(by.xpath('.//*[@class="panel-title"]/div/button/i'));
+    this.subscribeBtn = element(by.buttonText('Subscribe'));
+    this.unsubscribeBtn = element(by.buttonText('Unsubscribe'));
+    this.notesLink = element.all(by.repeater('link in componentLinks')).get(4);
+    this.notesTableTitle = element(by.css('.panel-title'));
+    this.addNoteBtn = element(by.xpath('.//*[@class="btn btn-default btn-xs"]'))
+    this.notePopUpTitle = element(by.xpath('.//*[@class="modal-header ng-scope"]'));
+    this.noteTextArea = element(by.model('note.note'));
+    this.noteSaveBtn = element(by.buttonText('Save'));
+    this.noteName = element.all(by.repeater('(colRenderIndex, col) in colContainer.renderedColumns track by col.uid')).get(0);
+    this.noteCreatedDate = element.all(by.repeater('(colRenderIndex, col) in colContainer.renderedColumns track by col.uid')).get(1);
+    this.noteAuthor = element.all(by.repeater('(colRenderIndex, col) in colContainer.renderedColumns track by col.uid')).get(2);
+    this.deleteNoteBtn = element.all(by.repeater('(colRenderIndex, col) in colContainer.renderedColumns track by col.uid')).get(3).all(by.tagName('a')).get(1);
+    this.editNoteBtn = element.all(by.repeater('(colRenderIndex, col) in colContainer.renderedColumns track by col.uid')).get(3).all(by.tagName('a')).get(0);
+    this.tagsLink = element.all(by.repeater('link in componentLinks')).get(9);
+    this.tagsTableTitle = element(by.css('.panel-title'));
+    this.addTagBtn = element(by.xpath('.//*[@class="btn btn-default btn-xs"]'));
+    this.addTagPopUpTitle = element(by.xpath('/html/body/div[5]/div/div/div[1]'));
+    this.tagTextArea = element(by.xpath('/html/body/div[5]/div/div/div[2]/tags-input/div/div'));
+    this.saveTagBtn = element(by.buttonText('Add Tag'));
+    this.tagname = element.all(by.repeater('(colRenderIndex, col) in colContainer.renderedColumns track by col.uid')).get(0);
+    this.tagCreatedDate = element.all(by.repeater('(colRenderIndex, col) in colContainer.renderedColumns track by col.uid')).get(1);
+    this.tagCreatedBy = element.all(by.repeater('(colRenderIndex, col) in colContainer.renderedColumns track by col.uid')).get(2);
+    this.tagDeleteBtn = element.all(by.repeater('(colRenderIndex, col) in colContainer.renderedColumns track by col.uid')).get(3).all(by.tagName('a')).get(0);
+    this.workflowLink = element.all(by.repeater('link in componentLinks')).get(6);;
+    this.workflowTitle = element(by.css('.panel-title'));
+    this.workflowParticipant = element.all(by.repeater('(colRenderIndex, col) in colContainer.renderedColumns track by col.uid')).get(0);
+    this.workflowStatus = element.all(by.repeater('(colRenderIndex, col) in colContainer.renderedColumns track by col.uid')).get(2);
+    this.workflowStartDate = element.all(by.repeater('(colRenderIndex, col) in colContainer.renderedColumns track by col.uid')).get(3);
+    this.workflowEndDate = element.all(by.repeater('(colRenderIndex, col) in colContainer.renderedColumns track by col.uid')).get(4);
+    this.historyLink = element.all(by.repeater('link in componentLinks')).get(7);
+    this.historyTableTitle = element(by.css('.panel-title'));
+    this.historyEventName = element.all(by.repeater('(colRenderIndex, col) in colContainer.renderedColumns track by col.uid')).get(0);
+    this.historyDate = element.all(by.repeater('(colRenderIndex, col) in colContainer.renderedColumns track by col.uid')).get(1);
+    this.historyUser = element.all(by.repeater('(colRenderIndex, col) in colContainer.renderedColumns track by col.uid')).get(2);
+    this.detailsLinkBtn = element(by.xpath('//*[@class="note-insert btn-group"]/button[1]'));
+    this.insertLinkTitle = element(by.xpath('html/body/div[1]/div[2]/div/div/div[1]/h4'));
+    this.insertLinkText = element(by.xpath('html/body/div[1]/div[2]/div/div/div[2]/div[1]/input'));
+    this.insertLinkUrl = element(by.xpath('html/body/div[1]/div[2]/div/div/div[2]/div[2]/input'));
+    this.insertLinkBtn = element(by.buttonText('Insert Link'));
+    this.headerImageLink = element(by.css('.navbar-header'));
+    this.dashboardTitle = element(by.css('.module-header'));
+    this.attachmentsLink = element.all(by.repeater('link in componentLinks')).get(3);
+    this.attachmentsTableTitle = element(by.css('.panel-title'));
+    this.root = element(by.xpath('/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr/td[3]/span/span[3]'));
+
+
+};
+
+module.exports = new TasksPage();
