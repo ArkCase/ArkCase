@@ -18,10 +18,7 @@ public class ComplaintUpdateStatusPredicate implements Predicate
     @Override
     public boolean evaluate(Object object)
     {
-        if (log.isDebugEnabled())
-        {
-            log.debug("type of event: " + object.getClass().toString());
-        }
+        log.debug("type of event: {}", object.getClass().toString());
 
         if (!(object instanceof AcmBusinessProcessEvent))
         {
@@ -37,9 +34,9 @@ public class ComplaintUpdateStatusPredicate implements Predicate
     {
         Map<String, Object> processVariables = event.getProcessVariables();
 
+        log.debug("# of process variables: {}", event.getProcessVariables().size());
         if (log.isDebugEnabled())
         {
-            log.debug("# of process variables: " + event.getProcessVariables().size());
             processVariables.forEach((key, value) -> log.debug("pvar - {} = {}", key, value));
         }
         return "COMPLAINT".equals(processVariables.get("OBJECT_TYPE"))
