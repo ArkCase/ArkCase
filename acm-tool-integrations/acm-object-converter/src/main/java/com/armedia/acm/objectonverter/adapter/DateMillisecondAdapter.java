@@ -1,9 +1,6 @@
 package com.armedia.acm.objectonverter.adapter;
 
-import com.armedia.acm.objectonverter.DateFormats;
-
 import javax.xml.bind.annotation.adapters.XmlAdapter;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
