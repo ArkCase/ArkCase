@@ -65,7 +65,7 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
         
         function handleSubCacheLists(objectType, objectId) {
             // invalidate audit cache
-            var cacheKey = objectType + '_' + objectId;
+            var cacheKey = objectType + '.' + objectId;
             var cacheStore = new Store.CacheFifo(ObjectAuditService.CacheNames.AUDIT_DATA)
             var cacheKeys = cacheStore.keys();
             _.each(cacheKeys, function (key){
