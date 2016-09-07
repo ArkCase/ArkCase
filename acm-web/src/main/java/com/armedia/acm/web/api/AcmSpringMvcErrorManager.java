@@ -1,5 +1,6 @@
 package com.armedia.acm.web.api;
 
+import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmEncryptionBadKeyOrDataException;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
@@ -14,9 +15,13 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @ControllerAdvice
 public class AcmSpringMvcErrorManager
@@ -84,6 +89,19 @@ public class AcmSpringMvcErrorManager
     {
         log.error("Requested item not found: " + e.getMessage(), e);
         sendResponse(HttpStatus.NOT_FOUND, response, e.getMessage());
+    }
+
+    @ExceptionHandler(AcmAppErrorJsonMsg.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, Object> handleJsonMessageError(HttpServletResponse response, AcmAppErrorJsonMsg e)
+    {
+        log.error("AcmAppErrorJsonMsg", e);
+        Map<String, Object> result = new HashMap();
+        result.put("message", e.getMessage());
+        result.put("field", e.getField());
+        result.put("objectType", e.getObjectType());
+        return result;
     }
 
     protected void sendResponse(HttpStatus status, HttpServletResponse response, String message)

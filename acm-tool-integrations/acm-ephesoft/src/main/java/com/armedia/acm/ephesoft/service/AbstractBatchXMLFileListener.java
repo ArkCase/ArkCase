@@ -8,6 +8,7 @@ import com.armedia.acm.files.capture.CaptureConstants;
 import com.armedia.acm.files.capture.DocumentObject;
 import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs2.FileObject;
@@ -22,6 +23,7 @@ import org.springframework.security.core.Authentication;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.xml.bind.Unmarshaller;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -129,7 +131,7 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
     /**
      * Process batch file - create objects and save them to database
      *
-     * @param documents   - documents with their attachments
+     * @param documents - documents with their attachments
      * @param batchEntity - parent batch dynamic entity
      */
     public abstract void processBatch(Map<String, DocumentObject> documents, DynamicEntity batchEntity);
@@ -146,7 +148,7 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
      * Return attachments only these who will pass the filer. For different integrations, the way how we are taking
      * attachments is different. If no filter needed, just return provided list of attachments
      *
-     * @param docObject   - document object where attachments should be attached
+     * @param docObject - document object where attachments should be attached
      * @param attachments - attachments that should be attached to the object
      * @return - list of document objects
      */
@@ -155,14 +157,15 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
     /**
      * Save all documents as attachments related to given object
      *
-     * @param cmisFolderId       - cmis folder id
-     * @param objectId           - object id
-     * @param objectType         - type of the object
-     * @param docObject          - document object where the file is
-     * @param objectFileType     - the type of the file that representing the object itself
+     * @param cmisFolderId - cmis folder id
+     * @param objectId - object id
+     * @param objectType - type of the object
+     * @param docObject - document object where the file is
+     * @param objectFileType - the type of the file that representing the object itself
      * @param attachmentFileType - the type of the file that representing attachment for given object
      */
-    public void saveAttachments(String cmisFolderId, Long objectId, String objectType, DocumentObject docObject, String objectFileType, String attachmentFileType)
+    public void saveAttachments(String cmisFolderId, Long objectId, String objectType, DocumentObject docObject, String objectFileType,
+            String attachmentFileType)
     {
         if (docObject != null)
         {
@@ -175,7 +178,8 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
             // Save other documents as attachments
             if (docObject.getAttachments() != null)
             {
-                docObject.getAttachments().stream().forEach(doc -> saveAttachment(cmisFolderId, objectId, objectType, doc, attachmentFileType));
+                docObject.getAttachments().stream()
+                        .forEach(doc -> saveAttachment(cmisFolderId, objectId, objectType, doc, attachmentFileType));
             }
         }
     }
@@ -184,10 +188,10 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
      * Save document as attachment for given order
      *
      * @param cmisFolderId - cmis folder id
-     * @param objectId     - object id
-     * @param objectType   - type of the object
-     * @param docObject    - document object where the file is
-     * @param fileType     - type of the file
+     * @param objectId - object id
+     * @param objectType - type of the object
+     * @param docObject - document object where the file is
+     * @param fileType - type of the file
      */
     public void saveAttachment(String cmisFolderId, Long objectId, String objectType, DocumentObject docObject, String fileType)
     {
@@ -212,15 +216,8 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
 
             // Create multipart file object - used "upload" service require it and using this service method is the best
             // way to upload file for given object - it creates AcmContainer object that we need for uploading
-            AcmMultipartFile file = new AcmMultipartFile(
-                    docObject.getDocument().getName(),
-                    docObject.getDocument().getName(),
-                    contentType,
-                    false,
-                    docObject.getDocument().length(),
-                    bytes,
-                    cloneIS,
-                    true);
+            AcmMultipartFile file = new AcmMultipartFile(docObject.getDocument().getName(), docObject.getDocument().getName(), contentType,
+                    false, docObject.getDocument().length(), bytes, cloneIS, true);
 
             // Upload file
             getEcmFileService().upload(file.getOriginalFilename(), fileType, file, auth, cmisFolderId, objectType, objectId);
@@ -243,10 +240,11 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
         try
         {
             DynamicEntity entity = getEntity(xmlBatch);
-            List<DynamicEntity> documentsList = entity.<List<DynamicEntity>>get(FileConstants.XML_BATCH_DOCUMENTS_KEY);
+            List<DynamicEntity> documentsList = entity.<List<DynamicEntity>> get(FileConstants.XML_BATCH_DOCUMENTS_KEY);
 
             List<DocumentObject> attachments = getAllAttachments(documentsList);
-            documentsList.stream().forEach(element -> {
+            documentsList.stream().forEach(element ->
+            {
                 DocumentObject doc = getDocumentObject(element);
                 if (doc != null && doc.getId() != null && !isAttachment(doc.getEntity()))
                 {
@@ -265,7 +263,7 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
     /**
      * Add attachments to the object
      *
-     * @param docObject   - the object where attachments should be attached
+     * @param docObject - the object where attachments should be attached
      * @param attachments - attachments that should be attached to the object
      */
     public void addAttachments(DocumentObject docObject, List<DocumentObject> attachments)
@@ -289,7 +287,7 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
     /**
      * Move file to given folder
      *
-     * @param file   - the file that should be moved
+     * @param file - the file that should be moved
      * @param folder - the folder where file should be moved
      * @return - moved file
      */
@@ -311,9 +309,8 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
     }
 
     /**
-     * This method should return File object that is prepared for moving.
-     * In some implementations that we have now, the file can be already moved by other object so, we should
-     * try to give him ability to find already moved file.
+     * This method should return File object that is prepared for moving. In some implementations that we have now, the
+     * file can be already moved by other object so, we should try to give him ability to find already moved file.
      *
      * @param file
      * @param folder
@@ -348,11 +345,8 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
         if (documents != null)
         {
             // Move each document to working folder
-            for (Map.Entry<String, DocumentObject> entry : documents.entrySet())
+            documents.forEach((key, value) ->
             {
-                String key = entry.getKey();
-                DocumentObject value = entry.getValue();
-
                 // Moving document
                 File workingDocument = moveFileToFolder(value.getDocument(), folder);
 
@@ -364,7 +358,7 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
 
                 value.setDocument(workingDocument);
                 workingDocuments.put(key, new DocumentObject(key, workingDocument, value.getAttachments(), value.getEntity()));
-            }
+            });
         }
 
         return workingDocuments;
@@ -380,7 +374,8 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
         if (docObject != null && docObject.getAttachments() != null)
         {
             List<DocumentObject> workingAttachments = new ArrayList<DocumentObject>();
-            docObject.getAttachments().stream().forEach(element -> {
+            docObject.getAttachments().stream().forEach(element ->
+            {
                 File workingAttachment = moveFileToFolder(element.getDocument(), folder);
                 if (workingAttachment == null)
                 {
@@ -395,12 +390,13 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
     }
 
     /**
-     * This method will return map of the documents and attachments described in the XML batch file.<br><br>
-     * To be sure that all documents will be present when XML batch file is loaded, retry mechanism is
-     * executed if required documents described in the XML batch file are not on the file system.
-     * This retry mechanism will check every second if all documents are loaded. The repeat is made "X" seconds,
-     * where "X" is defined in the properties files (default value is 10 seconds). If all documents are loaded
-     * before finishing "X" seconds, the retry process will be stopped.
+     * This method will return map of the documents and attachments described in the XML batch file.<br>
+     * <br>
+     * To be sure that all documents will be present when XML batch file is loaded, retry mechanism is executed if
+     * required documents described in the XML batch file are not on the file system. This retry mechanism will check
+     * every second if all documents are loaded. The repeat is made "X" seconds, where "X" is defined in the properties
+     * files (default value is 10 seconds). If all documents are loaded before finishing "X" seconds, the retry process
+     * will be stopped.
      *
      * @param xmlBatch
      * @return
@@ -453,9 +449,9 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
         DocumentObject doc = null;
         try
         {
-            String id = element.<String>get(FileConstants.XML_BATCH_IDENTIFIER_KEY);
+            String id = element.<String> get(FileConstants.XML_BATCH_IDENTIFIER_KEY);
             File watchFolder = new File(new URI(getWatchFolder().toString().replace(" ", "%20")));
-            String ephesoftFileName = element.<String>get(FileConstants.XML_BATCH_MULTI_PAGE_PDF_FILE_KEY);
+            String ephesoftFileName = element.<String> get(FileConstants.XML_BATCH_MULTI_PAGE_PDF_FILE_KEY);
             LOG.debug("File name from Ephesoft (may contain Ephesoft server path info): {}", ephesoftFileName);
             String winSeparator = "\\";
             if (ephesoftFileName.contains(winSeparator))
@@ -503,7 +499,8 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
 
         if (documentsList != null)
         {
-            documentsList.stream().forEach(element -> {
+            documentsList.stream().forEach(element ->
+            {
                 DocumentObject doc = getDocumentObject(element);
                 if (doc != null && doc.getId() != null && isAttachment(element))
                 {
@@ -531,7 +528,7 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
             if (entity != null)
             {
                 // Take documents in the list
-                List<DynamicEntity> documents = entity.<List<DynamicEntity>>get(CaptureConstants.XML_BATCH_DOCUMENTS_KEY);
+                List<DynamicEntity> documents = entity.<List<DynamicEntity>> get(CaptureConstants.XML_BATCH_DOCUMENTS_KEY);
 
                 if (documents != null)
                 {
@@ -575,7 +572,8 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
                 // Increase "loaded" if provided document (object) has attachments related to it
                 if (docObject != null && docObject.getAttachments() != null)
                 {
-                    long count = docObject.getAttachments().stream().filter(element -> {
+                    long count = docObject.getAttachments().stream().filter(element ->
+                    {
                         if (element.getDocument() != null && !documentIdentifiers.contains(element.getId()))
                         {
                             documentIdentifiers.add(element.getId());
@@ -605,10 +603,11 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
         if (name != null && documentLevelFields != null)
         {
             // Try to find DynamicEntity object for given name
-            Optional<DynamicEntity> found = documentLevelFields.stream().filter(element -> name.equals(element.<String>get(CaptureConstants.XML_BATCH_NAME_KEY))).findFirst();
+            Optional<DynamicEntity> found = documentLevelFields.stream()
+                    .filter(element -> name.equals(element.<String> get(CaptureConstants.XML_BATCH_NAME_KEY))).findFirst();
             if (found != null && found.isPresent())
             {
-                retval = found.get().<String>get(CaptureConstants.XML_BATCH_VALUE_KEY);
+                retval = found.get().<String> get(CaptureConstants.XML_BATCH_VALUE_KEY);
             }
         }
 

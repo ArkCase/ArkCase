@@ -1,24 +1,13 @@
 package com.armedia.acm.plugins.task.web.api;
 
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import com.armedia.acm.plugins.task.exception.AcmTaskException;
+import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
-
+import org.codehaus.jackson.map.ObjectMapper;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -40,6 +29,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
 import java.util.Date;
+
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:/spring/spring-web-acm-web.xml", "classpath:/spring/spring-library-task-plugin-test.xml" })
@@ -106,10 +102,10 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
         found.setTaskId(taskId);
         found.setStatus("ASSIGNED");
 
-        Capture<AcmTask> taskSentToDao = new Capture<>();
-        Capture<AcmApplicationTaskEvent> capturedEvent = new Capture<>();
+        Capture<AcmTask> taskSentToDao = Capture.newInstance();
+        Capture<AcmApplicationTaskEvent> capturedEvent = Capture.newInstance();
 
-        org.codehaus.jackson.map.ObjectMapper objectMapper = new org.codehaus.jackson.map.ObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper();
         String inJson = objectMapper.writeValueAsString(adHoc);
 
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
@@ -166,36 +162,35 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
         adHoc.setAttachedToObjectName(name);
         adHoc.setAttachedToObjectType(type);
 
-        Capture<AcmTask> taskSentToDao = new Capture<>();
-        Capture<AcmApplicationTaskEvent> capturedEvent = new Capture<>();
-
-        org.codehaus.jackson.map.ObjectMapper objectMapper = new org.codehaus.jackson.map.ObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper();
         String inJson = objectMapper.writeValueAsString(adHoc);
 
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
-        expect(mockTaskDao.createAdHocTask(capture(taskSentToDao))).andThrow(new AcmTaskException("testException"));
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, query, 0, 10, "")).andThrow(new DefaultMuleException("test Exception"));
-        mockTaskEventPublisher.publishTaskEvent(capture(capturedEvent));
+        expect(mockExecuteSolrQuery
+                .getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, query, 0, 10, ""))
+                .andThrow(new DefaultMuleException("test Exception"));
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
 
         replayAll();
 
-        mockMvc.perform(post("/api/v1/plugin/task/adHocTask").accept(MediaType.parseMediaType("application/json;charset=UTF-8")).session(mockHttpSession).principal(mockAuthentication)
-                .contentType(MediaType.APPLICATION_JSON).content(inJson)).andExpect(status().isBadRequest()).andExpect(content().contentType(MediaType.TEXT_PLAIN));
+        Exception exception = null;
+
+        try
+        {
+            mockMvc.perform(post("/api/v1/plugin/task/adHocTask").accept(MediaType.parseMediaType("application/json;charset=UTF-8")).session(mockHttpSession).principal(mockAuthentication)
+                    .contentType(MediaType.APPLICATION_JSON).content(inJson)).andExpect(status().isBadRequest()).andExpect(content().contentType(MediaType.TEXT_PLAIN));
+        }catch(Exception e)
+        {
+            exception = e;
+        }
 
         verifyAll();
 
-        AcmTask sentToDao = taskSentToDao.getValue();
-        assertNull(sentToDao.getTaskId());
-        assertEquals(adHoc.getAssignee(), sentToDao.getAssignee());
-
-        AcmApplicationTaskEvent event = capturedEvent.getValue();
-        assertNull(event.getObjectId());
-        assertEquals("TASK", event.getObjectType());
-        assertFalse(event.isSucceeded());
+        assertNotNull(exception);
+        assertTrue(exception.getCause() instanceof AcmAppErrorJsonMsg);
     }
 
 }
