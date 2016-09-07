@@ -73,9 +73,10 @@ angular.module('services').factory('ObjectService', ['$state', '$window', '$log'
                                 $window.open(url, found.target);
                             } else {
                                 $window.location.href = url;
-                            } {
-                                $log.warn("No state or url specified in object type lookup");
                             }
+                            
+                        } else {
+                            $log.warn("No state or url specified in object type lookup");
                         }
                         return objectTypes;
                     }
