@@ -43,21 +43,22 @@ public class CreateAdHocTaskAPIController
             throws AcmCreateObjectFailedException, AcmAppErrorJsonMsg
     {
 
+        log.info("Creating ad-hoc task.");
+
         String attachedToObjectType = in.getAttachedToObjectType();
         String attachedToObjectName = in.getAttachedToObjectName();
-        log.info("Creating ad-hoc task.");
         try
         {
             in.setOwner(authentication.getName());
             // On creation task is always ACTIVE
             in.setStatus(TaskConstants.STATE_ACTIVE);
-            // find the complaint id by name
+
             String parentObjectType = null;
-            String obj;
             Long objectId = null;
-            if (in.getAttachedToObjectName() != "")
+            if (attachedToObjectName != "")
             {
-                obj = getObjectsFromSolr(attachedToObjectType, attachedToObjectName, authentication, 0, 10, "", null);
+                // find the associated object (CASE/COMPLAINT) id by it's name
+                String obj = getObjectsFromSolr(attachedToObjectType, attachedToObjectName, authentication, 0, 10, "", null);
                 if (obj != null && getSearchResults().getNumFound(obj) > 0)
                 {
                     JSONArray results = getSearchResults().getDocuments(obj);
@@ -66,8 +67,9 @@ public class CreateAdHocTaskAPIController
                     parentObjectType = getSearchResults().extractString(result, SearchConstants.PROPERTY_OBJECT_TYPE_S);
                 } else
                 {
-                    in.setAttachedToObjectName(null);
-
+                    throw new AcmAppErrorJsonMsg(String.format("Task failed to create. Associated object" +
+                            " with name [%s] not found.", attachedToObjectName)
+                            , TaskConstants.OBJECT_TYPE, "associated-object", null);
                 }
             }
 
@@ -79,9 +81,8 @@ public class CreateAdHocTaskAPIController
                 in.setParentObjectType(parentObjectType);
             } else
             {
-                throw new AcmAppErrorJsonMsg(String.format("Task failed to create. Associated object" +
-                        " with name [%s] not found.", attachedToObjectName)
-                        , TaskConstants.OBJECT_TYPE, "associated-object", null);
+                in.setAttachedToObjectId(null);
+                in.setAttachedToObjectName(null);
             }
 
             AcmTask adHocTask = getTaskDao().createAdHocTask(in);
