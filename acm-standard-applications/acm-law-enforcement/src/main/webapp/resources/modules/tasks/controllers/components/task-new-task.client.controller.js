@@ -53,9 +53,9 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
         $scope.saved = false;
 
         $scope.saveNewTask = function () {
-            $scope.config.data.dueDate = UtilDateService.dateToIso($scope.config.data.dueDate);
             TaskNewTaskService.saveAdHocTask($scope.config.data).then(function(data){
-            	 $scope.saved = true;
+            	$scope.config.data.dueDate = UtilDateService.dateToIso($scope.config.data.dueDate);
+            	$scope.saved = true;
             }, function(err) {
             	if(!Util.isEmpty(err)){
     				var statusCode = Util.goodMapValue(err, "status");
