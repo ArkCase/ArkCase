@@ -1,12 +1,13 @@
 'use strict';
 
 angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$stateParams', '$sce', '$q', '$modal', 'ConfigService'
-    , 'UtilService', 'TicketService', 'LookupService', 'Frevvo.FormService', 'Task.NewTaskService', 'Authentication', 'Util.DateService'
+    , 'UtilService', 'TicketService', 'LookupService', 'Frevvo.FormService', 'Task.NewTaskService', 'Authentication', 'Util.DateService', 'Dialog.BootboxService'
     , function ($scope, $stateParams, $sce, $q, $modal, ConfigService, Util, TicketService
-        , LookupService, FrevvoFormService, TaskNewTaskService, Authentication, UtilDateService) {
+        , LookupService, FrevvoFormService, TaskNewTaskService, Authentication, UtilDateService, DialogService) {
 
         $scope.config = null;
         $scope.userSearchConfig = null;
+        $scope.isAssocType = false;
 
         $scope.options = {
             focus: true,
@@ -16,6 +17,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
 
         Authentication.queryUserInfo().then(
             function (userInfo) {
+            	
                 $scope.userFullName = userInfo.fullName;
                 $scope.userId = userInfo.userId;
                 return userInfo;
@@ -51,13 +53,31 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
         $scope.saved = false;
 
         $scope.saveNewTask = function () {
-            $scope.saved = true;
-            $scope.config.data.dueDate = UtilDateService.dateToIso($scope.config.data.dueDate);
-            TaskNewTaskService.saveAdHocTask($scope.config.data);
+            TaskNewTaskService.saveAdHocTask($scope.config.data).then(function(data){
+            	$scope.config.data.dueDate = UtilDateService.dateToIso($scope.config.data.dueDate);
+            	$scope.saved = true;
+            }, function(err) {
+            	if(!Util.isEmpty(err)){
+    				var statusCode = Util.goodMapValue(err, "status");
+    				var message = Util.goodMapValue(err, "data.message"); 			
+    				
+    				if(statusCode == 400){
+    					DialogService.alert(message);
+    				}
+    			}
+            });
         };
+        
+        $scope.updateAssocParentType = function() {
+    	   if ($scope.config.data.attachedToObjectType !== 'null') {
+    		   $scope.isAssocType = true;
+    	   }
+    	   else {
+    		   $scope.isAssocType = false;
+    	   }
+    	}
 
         $scope.userSearch = function () {
-
             var modalInstance = $modal.open({
                 animation: $scope.animationsEnabled,
                 templateUrl: 'modules/tasks/views/components/task-user-search.client.view.html',
