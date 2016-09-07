@@ -3,14 +3,19 @@ package com.armedia.arkcase.uitests.cases.documents;
 import java.awt.AWTException;
 import java.io.IOException;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
+
 
 import com.armedia.arkcase.uitests.base.ArkCaseAuthentication;
 import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
 import com.armedia.arkcase.uitests.base.ArkCaseTestUtils;
 import com.armedia.arkcase.uitests.base.ArkCaseUtils;
+import com.armedia.arkcase.uitests.base.WaitHelper;
 import com.armedia.arkcase.uitests.cases.CasePage;
 import com.armedia.arkcase.uitests.cases.CasesPage;
 import com.armedia.arkcase.uitests.group.SmokeTests;
@@ -153,7 +158,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 		documentsPage.clickRootExpander();
 		Thread.sleep(3000);
 		documentsPage.verifyIfSecondRowDocumentIsPresent();
-		documentsPage.verifySecondDocument("caseSummary.pdf", "Attachment", "1.0", "ACTIVE");
+		documentsPage.verifySecondDocument("caseSummary", ".pdf", "Attachment", "1.0", "ACTIVE");
 		documentsPage.chnageCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(cases.chnageCaseStausFrameOne);
@@ -207,11 +212,14 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		casePom.selectParticipantClick();
 		Thread.sleep(3000);
+		Assert.assertTrue("Not all data are succesfully entered", casePom.verifyAllIsEntered());
 		casePom.searchForUsers();
+		Assert.assertTrue("Searched participant is not found", casePom.ParticipantFound());
 		Thread.sleep(3000);
 		casePom.searchedName();
 		casePom.addSearchedNameClick();
 		Thread.sleep(2000);
+		Assert.assertTrue("Participant is not sucessfully selected", casePom.ParticipantEntered());
 		casePom.submit.click();
 		Thread.sleep(10000);
 		driver.switchTo().defaultContent();
@@ -219,6 +227,8 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 		Thread.sleep(6000);
 		driver.navigate().refresh();
 		Thread.sleep(10000);
+		cases.caseDocumentsclick();
+		WaitHelper.waitPageToLoad(60, driver);
 		documentsPage.performRightClickOnRoot();
 		Thread.sleep(3000);
 		documentsPage.checkIfRightClickOnRootIsWorking();
@@ -231,8 +241,8 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 		documentsPage.clickDocumentOther();
 		Thread.sleep(3000);
 		ArkCaseTestUtils.uploadPNGPicture();
-		Thread.sleep(5000);
-		documentsPage.verifySecondDocument("imageprofile.png", "Other", "1.0", "ACTIVE");
+		Thread.sleep(5000);		
+		documentsPage.verifySecondDocument("imageprofile", ".png", "Other", "1.0", "ACTIVE");
 		documentsPage.chnageCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(cases.chnageCaseStausFrameOne);
@@ -310,7 +320,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		ArkCaseTestUtils.uploadPdf();
 		Thread.sleep(5000);
-		documentsPage.verifySecondDocument("caseSummary.pdf", "Witness Interview Request", "1.0", "ACTIVE");
+		documentsPage.verifySecondDocument("caseSummary", ".pdf", "Witness Interview Request", "1.0", "ACTIVE");
 		documentsPage.chnageCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(cases.chnageCaseStausFrameOne);
@@ -388,7 +398,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		ArkCaseTestUtils.uploadDocx();
 		Thread.sleep(8000);
-		documentsPage.verifySecondDocument("ArkCaseTesting.docx", "Notice Of Investigation", "1.0", "ACTIVE");
+		documentsPage.verifySecondDocument("ArkCaseTesting", ".docx", "Notice Of Investigation", "1.0", "ACTIVE");
 		documentsPage.chnageCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(cases.chnageCaseStausFrameOne);
@@ -466,7 +476,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		ArkCaseTestUtils.uploadXlsx();
 		Thread.sleep(8000);
-		documentsPage.verifySecondDocument("caseSummary.xlsx", "Sf86 Signature", "1.0", "ACTIVE");
+		documentsPage.verifySecondDocument("caseSummary", ".xlsx", "Sf86 Signature", "1.0", "ACTIVE");
 		documentsPage.chnageCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(cases.chnageCaseStausFrameOne);
@@ -544,7 +554,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		ArkCaseTestUtils.uploadPNGPicture();
 		Thread.sleep(8000);
-		documentsPage.verifySecondDocument("imageprofile.png", "Edelivery", "1.0", "ACTIVE");
+		documentsPage.verifySecondDocument("imageprofile", ".png", "Edelivery", "1.0", "ACTIVE");
 		documentsPage.chnageCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(cases.chnageCaseStausFrameOne);
@@ -622,7 +632,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		ArkCaseTestUtils.uploadDocx();
 		Thread.sleep(10000);
-		documentsPage.verifySecondDocument("ArkCaseTesting.docx", "General Release", "1.0", "ACTIVE");
+		documentsPage.verifySecondDocument("ArkCaseTesting", ".docx", "General Release", "1.0", "ACTIVE");
 		documentsPage.chnageCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(cases.chnageCaseStausFrameOne);
@@ -700,7 +710,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		ArkCaseTestUtils.uploadXlsx();
 		Thread.sleep(10000);
-		documentsPage.verifySecondDocument("caseSummary.xlsx", "Medical Release", "1.0", "ACTIVE");
+		documentsPage.verifySecondDocument("caseSummary", ".xlsx", "Medical Release", "1.0", "ACTIVE");
 		documentsPage.chnageCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(cases.chnageCaseStausFrameOne);
@@ -804,7 +814,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 		documentsPage.clickSubmitButton();
 		Thread.sleep(10000);
 		documentsPage.swithWindow();
-		documentsPage.verifySecondDocument("Report of Investigation.pdf", "Report Of Investigation", "1.0", "ACTIVE");
+		documentsPage.verifySecondDocument("Report of Investigation", ".pdf", "Report Of Investigation", "1.0", "ACTIVE");
 		documentsPage.chnageCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(cases.chnageCaseStausFrameOne);
@@ -876,7 +886,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		ArkCaseTestUtils.uploadPNGPicture();
 		Thread.sleep(6000);
-		documentsPage.verifySecondDocument("imageprofile.png", "Other", "1.0", "ACTIVE");
+		documentsPage.verifySecondDocument("imageprofile", ".png", "Other", "1.0", "ACTIVE");
 		documentsPage.performRighClickOnSecondDocument();
 		Thread.sleep(3000);
 		documentsPage.deleteDocument();
@@ -958,7 +968,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 		Thread.sleep(5000);
 		documentsPage.clickRootExpander();
 		Thread.sleep(3000);
-		documentsPage.verifySecondDocument("Change Case Status.pdf", "Change Case Status", "1.0", "ACTIVE");
+		documentsPage.verifySecondDocument("Change Case Status", ".pdf", "Change Case Status", "1.0", "ACTIVE");
 		cases.changeCaseStatusAproved();
 		Thread.sleep(3000);
 		ArkCaseAuthentication.logOut(driver);
@@ -1027,7 +1037,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		ArkCaseTestUtils.uploadXlsx();
 		Thread.sleep(10000);
-		documentsPage.verifySecondDocument("caseSummary.xlsx", "Other", "1.0", "ACTIVE");
+		documentsPage.verifySecondDocument("caseSummary", ".xlsx", "Other", "1.0", "ACTIVE");
 		Thread.sleep(3000);
 		documentsPage.performRighClickOnSecondDocument();
 		Thread.sleep(3000);

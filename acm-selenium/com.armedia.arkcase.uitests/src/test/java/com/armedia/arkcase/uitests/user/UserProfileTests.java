@@ -65,6 +65,7 @@ public class UserProfileTests extends ArkCaseTestBase {
 		user.profileLinkClick();
 		Thread.sleep(5000);
 		user.changePictureClick();
+		//user.changePicture.sendKeys("C:\\Users\\sanja.paskova\\.arkcase\\seleniumTests\\filesForUpload");
 		ArkCaseTestUtils.uploadPNGPicture();
 		Thread.sleep(5000);
 		ArkCaseAuthentication.logOut(driver);

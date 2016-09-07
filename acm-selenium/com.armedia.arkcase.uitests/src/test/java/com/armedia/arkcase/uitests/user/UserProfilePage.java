@@ -199,7 +199,7 @@ public class UserProfilePage extends ArkCaseTestBase{
 	WebElement subscriptionEmptyTable;
 
 	public UserProfilePage verifyIfEditDashboardButtonIsEnabled() {
-		WebElement el = WaitHelper.getWhenElementIsVisible(editDashoboard, 30, driver);	
+		WebElement el = WaitHelper.getWhenElementIsVisible(editDashoboard, 60, driver);	
 		Assert.assertTrue("Edit Dashboard button is not enabled", el.isEnabled());
 		return this;
 

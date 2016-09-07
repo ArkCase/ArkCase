@@ -93,7 +93,7 @@ public class ComplaintsTests extends ArkCaseTestBase {
 		Thread.sleep(4000);
 		complaints.verifyAddNotePopUpDisapierd();
 		complaints.verifyIfNoteIsCreated();
-		complaints.verifyCreatedNote("note", "samuel-acm");
+		complaints.verifyCreatedNote("note", "Samuel Supervisor");
 		ArkCaseAuthentication.logOut(driver);
 
 	}

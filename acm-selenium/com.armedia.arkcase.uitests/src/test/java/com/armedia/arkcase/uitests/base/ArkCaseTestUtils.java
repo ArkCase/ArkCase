@@ -16,6 +16,8 @@ public class ArkCaseTestUtils extends ArkCaseTestBase{
 
 		String home = System.getProperty("user.home");
 		File file = new File(home + "/.arkcase/seleniumTests/filesForUpload/imageprofile.png");
+		try 
+		{
 		setClipboardData(file.toString());
 		Robot robot = new Robot();
 		robot.keyPress(KeyEvent.VK_CONTROL);
@@ -25,6 +27,10 @@ public class ArkCaseTestUtils extends ArkCaseTestBase{
 		robot.delay(1000);
 		robot.keyPress(KeyEvent.VK_ENTER);
 		robot.keyRelease(KeyEvent.VK_ENTER);
+		}
+		catch (Exception exp) {
+        	exp.printStackTrace();
+		}
 
 	}
 

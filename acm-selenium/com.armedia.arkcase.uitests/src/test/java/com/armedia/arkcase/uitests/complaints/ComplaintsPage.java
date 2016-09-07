@@ -13,6 +13,7 @@ import org.openqa.selenium.support.How;
 import org.testng.asserts.SoftAssert;
 
 import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
+import com.armedia.arkcase.uitests.base.WaitHelper;
 
 public class ComplaintsPage extends ArkCaseTestBase {
 
@@ -71,7 +72,7 @@ public class ComplaintsPage extends ArkCaseTestBase {
 	WebElement root;
 	@FindBy(how = How.XPATH, using = "/html/body/ul/li[2]")
 	WebElement newDocument;
-	@FindBy(how = How.XPATH, using = "/html/body/ul/li[2]/ul/li[8]")
+	@FindBy(how = How.XPATH, using = ".//li[@data-command='file/Other']")
 	WebElement newDocumentOther;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/doc-tree/table/tbody/tr[3]/td[3]/span")
 	WebElement secondRowTitle;
@@ -141,7 +142,7 @@ public class ComplaintsPage extends ArkCaseTestBase {
 	}
 
 	public ComplaintsPage clickBrowseButton() {
-		browseImageBtn.click();
+		WaitHelper.ClickElementAtPoint(browseImageBtn, driver);	
 		return this;
 	}
 
@@ -342,10 +343,6 @@ public class ComplaintsPage extends ArkCaseTestBase {
 
 	public void clickComplaintTitleInTasksPage() {
 		complaintsTitleInTasks.click();
-	}
-
-	public void verifyCreatedTask() {
-
 	}
 
 }
