@@ -21,7 +21,7 @@ angular.module("services").factory("WebSocketsListener", ['$q', '$timeout', 'Web
                 console.log("WS init");
                 this.socket.client = new SockJS(this.SOCKET_URL);
                 this.socket.stomp = Stomp.over(this.socket.client);
-                this.socket.stomp.connect({}, connectCallback, errorCallback);
+                this.socket.stomp.connect({}, connectCallback.apply(this), errorCallback.apply(this));
                 this.socket.stomp.ws.onclose = this.connect;
             },
             
@@ -47,20 +47,24 @@ angular.module("services").factory("WebSocketsListener", ['$q', '$timeout', 'Web
             }
         };
 
-        var connectCallback = function (frame) {
-            service.socket.stomp.subscribe(service.LISTEN_TOPIC_OBJECTS, function (data) {
-                var message = JSON.parse(data.body);
-                $timeout(function () {
-                    messageHandler.handleMessage(message);
-                    //4 seconds delay so solr can index the object
-                }, 4000);
-            });
-        };
+        var connectCallback = function(target) {
+            return function (frame) {
+                target.socket.stomp.subscribe(target.LISTEN_TOPIC_OBJECTS, function (data) {
+                    var message = JSON.parse(data.body);
+                    $timeout(function () {
+                        messageHandler.handleMessage(message);
+                        //4 seconds delay so solr can index the object
+                    }, 4000);
+                });
+            }
+        }
         
-        var errorCallback = function (error) {
-            console.log("WS error",error);
-            if(!service.socket.stomp.connected) {
-                service.connect(); // reconnect on error
+        var errorCallback = function(target) {
+            return function (error) {
+                console.log("WS error",error);
+                if(!target.socket.stomp.connected) {
+                    target.connect();
+                }
             }
         }
 
