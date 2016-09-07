@@ -3,7 +3,7 @@
  */
 package com.armedia.acm.plugins.report.model;
 
-import com.armedia.acm.objectonverter.adapter.DateSolrAdapter;
+import com.armedia.acm.objectonverter.adapter.DateMillisecondAdapter;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -30,11 +30,11 @@ public class Report implements Serializable{
 	private Long fileSize;
 	
 	@XmlElement(name="createdDate")
-	@XmlJavaTypeAdapter(value=DateSolrAdapter.class)
+	@XmlJavaTypeAdapter(value=DateMillisecondAdapter.class)
 	private Date created;
 	
 	@XmlElement(name="lastModifiedDate")
-	@XmlJavaTypeAdapter(value=DateSolrAdapter.class)
+	@XmlJavaTypeAdapter(value=DateMillisecondAdapter.class)
 	private Date modified;
 	
 	private boolean folder;
