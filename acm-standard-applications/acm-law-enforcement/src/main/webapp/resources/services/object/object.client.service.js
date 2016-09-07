@@ -11,8 +11,8 @@
  * Basic object service
  */
 
-angular.module('services').factory('ObjectService', ['$state', '$window', 'UtilService', 'Object.LookupService'
-    , function ($state, $window, Util, ObjectLookupService) {
+angular.module('services').factory('ObjectService', ['$state', '$window', '$log', 'UtilService', 'Object.LookupService'
+    , function ($state, $window, $log, Util, ObjectLookupService) {
         return {
             ObjectTypes: {
                 CASE_FILE: "CASE_FILE"
@@ -53,7 +53,7 @@ angular.module('services').factory('ObjectService', ['$state', '$window', 'UtilS
              *
              * @description
              * Go to a page to show an object. If the view page is angular page, use state configuration (Case, Complaint, etc.);
-             * else if the view page is non Angular page, use URL in configuration (Document, etc.)
+             * else if the view page is non Angular page, use URL in configuration (Document, File, etc.)
              */
             , showObject: function (objTypeKey, objId) {
                 ObjectLookupService.getObjectTypes().then(
@@ -73,6 +73,8 @@ angular.module('services').factory('ObjectService', ['$state', '$window', 'UtilS
                                 $window.open(url, found.target);
                             } else {
                                 $window.location.href = url;
+                            } {
+                                $log.warn("No state or url specified in object type lookup");
                             }
                         }
                         return objectTypes;

@@ -51,7 +51,7 @@ angular.module('complaints').controller('Complaints.ReferencesController', ['$sc
             gridHelper.showObject(targetType, targetId);
 
             if (ObjectService.ObjectTypes.COMPLAINT == targetType) {
-                $scope.$emit('request-show-object', targetId, targetType);
+                $scope.$emit('request-show-object', {objectId: targetId, objectType: targetType});
             }
         };
 
