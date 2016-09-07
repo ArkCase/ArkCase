@@ -690,7 +690,6 @@ thead {
 	text-overflow: ellipsis;
 	overflow: hidden;
 	position: relative;
-	top: 5px;
 }
 
 /* Dates Padding Issues */
