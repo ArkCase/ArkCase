@@ -2,6 +2,7 @@ package com.armedia.acm.files.propertymanager;
 
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +15,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
 
 /**
@@ -62,8 +62,7 @@ public class PropertyFileManager
         if (propertiesMap != null && propertiesMap.size() > 0)
         {
 
-            try (FileInputStream in = new FileInputStream(fileName);
-                 FileOutputStream out = new FileOutputStream(fileName))
+            try (FileInputStream in = new FileInputStream(fileName); FileOutputStream out = new FileOutputStream(fileName))
             {
                 Properties p = new Properties();
 
@@ -72,10 +71,7 @@ public class PropertyFileManager
                     p.load(in);
                 }
 
-                for (Entry<String, String> entry : propertiesMap.entrySet())
-                {
-                    p.setProperty(entry.getKey(), entry.getValue());
-                }
+                propertiesMap.forEach((key, value) -> p.setProperty(key, value));
 
                 p.store(out, null);
             } catch (IOException e)
@@ -90,8 +86,7 @@ public class PropertyFileManager
         if (properties != null && properties.size() > 0)
         {
 
-            try (FileInputStream in = new FileInputStream(fileName);
-                 FileOutputStream out = new FileOutputStream(fileName))
+            try (FileInputStream in = new FileInputStream(fileName); FileOutputStream out = new FileOutputStream(fileName))
             {
 
                 Properties p = new Properties();
@@ -112,7 +107,6 @@ public class PropertyFileManager
 
     public String load(String filename, String key, String defaultValue) throws AcmEncryptionException
     {
-
 
         Properties p = new Properties();
         String retval = defaultValue;
