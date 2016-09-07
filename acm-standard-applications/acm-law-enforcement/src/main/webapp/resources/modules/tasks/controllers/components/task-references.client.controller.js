@@ -44,7 +44,7 @@ angular.module('tasks').controller('Tasks.ReferencesController', ['$scope', '$st
             gridHelper.showObject(targetType, targetId);
 
             if (ObjectService.ObjectTypes.TASK == targetType || ObjectService.ObjectTypes.ADHOC_TASK == targetType) {
-                $scope.$emit('request-show-object', targetId, targetType);
+                $scope.$emit('request-show-object', {objectId: targetId, objectType: targetType});
             }
         };
 

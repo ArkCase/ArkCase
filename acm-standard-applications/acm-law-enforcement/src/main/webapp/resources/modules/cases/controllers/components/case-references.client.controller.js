@@ -47,7 +47,7 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
             gridHelper.showObject(targetType, targetId);
 
             if (ObjectService.ObjectTypes.CASE_FILE == targetType) {
-                $scope.$emit('request-show-object', targetId, targetType);
+                $scope.$emit('request-show-object', {objectId: targetId, objectType: targetType});
             }
 
             //$scope.$bus.publish('object-tree.select', {
