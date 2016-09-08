@@ -245,8 +245,10 @@ public class ReportServiceImpl implements ReportService
         boolean success;
         try
         {
-            getPropertyFileManager().storeMultiple(prepareReportToGroupsMapForSaving(reportsToGroupsMap),
+            Map<String, String> prepared = prepareReportToGroupsMapForSaving(reportsToGroupsMap);
+            getPropertyFileManager().storeMultiple(prepared,
                     getReportToGroupsMapPropertiesFileLocation(), true);
+            setReportToGroupsMapProperties(prepared);
             success = true;
         } catch (Exception e)
         {
