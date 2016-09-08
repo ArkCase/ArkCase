@@ -1175,7 +1175,7 @@
           "name": "creator",
           "displayName": "complaints.comp.tags.table.columns.createdBy",
           "headerCellFilter": "translate",
-          "fullNameField": "creator_full_name_lcs"
+          "lookup": "userFullNames"
         }
       ],
       "filters": "\"Object Type\": TAG",
