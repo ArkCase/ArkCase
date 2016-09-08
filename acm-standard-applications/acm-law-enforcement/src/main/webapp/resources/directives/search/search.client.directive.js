@@ -59,8 +59,11 @@
  </file>
  </example>
  */
-angular.module('directives').directive('search', ['SearchService', 'Search.QueryBuilderService', '$q', 'UtilService', 'Object.LookupService', '$window', 'uiGridExporterConstants', '$translate', 'Tags.TagsService',
-    function (SearchService, SearchQueryBuilder, $q, Util, ObjectLookupService, $window, uiGridExporterConstants, $translate, TagsService) {
+angular.module('directives').directive('search', ['SearchService', 'Search.QueryBuilderService', '$q', 'UtilService'
+    , 'Object.LookupService', '$window', 'uiGridExporterConstants', '$translate', 'Tags.TagsService', 'ObjectService'
+    , function (SearchService, SearchQueryBuilder, $q, Util
+        , ObjectLookupService, $window, uiGridExporterConstants, $translate, TagsService, ObjectService
+    ) {
         return {
             restrict: 'E',              //match only element name
             scope: {
@@ -72,7 +75,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                 filter: '@',
                 multiFilter: '@',
                 config: '=',            //= : two way binding so that the data can be monitored for changes
-                customLabels: '=?'
+                customization: '=?'
             },
 
             link: function (scope) {    //dom operations
@@ -248,51 +251,31 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                     }
                 };
 
-                var promiseObjectTypes = ObjectLookupService.getObjectTypes().then(
-                    function (objectTypes) {
-                        scope.objectTypes = objectTypes;
-                        return objectTypes;
-                    }
-                );
-
-                scope.onClickObjLink = function (event, objectType, objectId) {
+                scope.onClickObjLink = function (event, objectData) {
                     event.preventDefault();
-                    promiseObjectTypes.then(function (data) {
-                        var found = _.find(scope.objectTypes, {type: objectType});
-                        if (found && found.url) {
-                            var url = Util.goodValue(found.url);
-                            var id = objectId;
-                            url = url.replace(":id", id);
 
-                            // Target property is used to control open mode: _parent, _blank
-                            if (found.target) {
-                                $window.open(url, found.target);
-                            } else {
-                                $window.location.href = url;
-                            }
-                        }
-                    });
+                    if (Util.goodMapValue(scope, "customization.showObject", false)) {
+                        scope.customization.showObject(objectData);
+
+                    } else {
+                        var objectTypeKey = Util.goodMapValue(objectData, "object_type_s");
+                        var objectId = Util.goodMapValue(objectData, "object_id_s");
+                        ObjectService.showObject(objectTypeKey, objectId);
+                    }
                 };
 
-                scope.onClickParentObjLink = function (event, parentReference) {
-                    var objectId = parentReference.substring(0, parentReference.indexOf('-'));
-                    var objectType = parentReference.substring(parentReference.indexOf('-') + 1);
+                scope.onClickParentObjLink = function (event, objectData) {
                     event.preventDefault();
-                    promiseObjectTypes.then(function (data) {
-                        var found = _.find(scope.objectTypes, {type: objectType});
-                        if (found && found.url) {
-                            var url = Util.goodValue(found.url);
-                            var id = objectId;
-                            url = url.replace(":id", id);
 
-                            // Target property is used to control open mode: _parent, _blank
-                            if (found.target) {
-                                $window.open(url, found.target);
-                            } else {
-                                $window.location.href = url;
-                            }
-                        }
-                    });
+                    if (Util.goodMapValue(scope, "customization.showParentObject", false)) {
+                        scope.customization.showParentObject(objectData);
+
+                    } else {
+                        var parentReference = Util.goodMapValue(objectData, "objectData.parent_ref_s", "-");
+                        var objectId = parentReference.substring(0, parentReference.indexOf('-'));
+                        var objectTypeKey = parentReference.substring(parentReference.indexOf('-') + 1);
+                        ObjectService.showObject(objectTypeKey, objectId);
+                    }
                 };
 
                 scope.keyUp = function (event) {

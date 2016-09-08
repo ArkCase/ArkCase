@@ -21,6 +21,7 @@ angular.module("services").factory("WebSocketsListener", ['$q', '$timeout', 'Web
                 console.log("WS init");
                 this.socket.client = new SockJS(this.SOCKET_URL);
                 this.socket.stomp = Stomp.over(this.socket.client);
+                //socket.stomp.debug = null; //frequently need to disable stomp msg for debugging, please do not delete this line
                 this.socket.stomp.connect({}, connectCallback.apply(this), errorCallback.apply(this));
                 this.socket.stomp.ws.onclose = this.connect;
             },

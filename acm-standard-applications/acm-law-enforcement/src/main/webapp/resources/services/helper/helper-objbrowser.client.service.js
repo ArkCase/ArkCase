@@ -143,6 +143,31 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                         that.scope.treeControl.refresh();
                     }
                 });
+
+
+                /**
+                 * @ngdoc event
+                 * @name req-switch-object
+                 * @methodOf services:Helper.ObjectBrowserService.Tree
+                 *
+                 * @param {Object} eventData Event data
+                 * @param {String} eventData.objectId Object ID
+                 * @param {String} eventData.objectType Object type
+                 * @param {String} (Optional)eventData.objectSubtype Object subType
+                 *
+                 * @description
+                 * Send this event to select a tree node for the specified object
+                 */
+                that.scope.$on('req-switch-object', function (e, eventData) {
+                    if (that.scope.treeControl) {
+                        var nodeId = eventData.objectId;
+                        var nodeType = (eventData.objectSubtype)? eventData.objectSubtype : eventData.objectType;
+                        that.scope.treeControl.select({
+                            nodeId: nodeId
+                            , nodeType: nodeType
+                        }, true);
+                    }
+                });
             }
 
 
@@ -269,6 +294,23 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
 
                 that.scope.$on('report-object-update-failed', function (e, objectInfo) {
                     that.scope.$broadcast('object-update-failed', objectInfo);
+                });
+
+                /**
+                 * @ngdoc event
+                 * @name request-show-object
+                 * @methodOf services:Helper.ObjectBrowserService.Content
+                 *
+                 * @param {Object} eventData Event data
+                 * @param {String} eventData.objectId Object ID
+                 * @param {String} eventData.objectType Object type
+                 * @param {String} (Optional)eventData.objectSubtype Object subType
+                 *
+                 * @description
+                 * Send this event to open up an object
+                 */
+                that.scope.$on('request-show-object', function (e, eventData) {
+                    that.scope.$broadcast('req-switch-object', eventData);
                 });
 
                 that.scope.$on('req-select-object', function (e, selectedObject) {

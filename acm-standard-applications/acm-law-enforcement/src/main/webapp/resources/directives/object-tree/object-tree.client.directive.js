@@ -148,12 +148,12 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                 Tree.jqDivTree.fancytree(treeArgsToUse);
                 Tree.tree = Tree.jqDivTree.fancytree('getTree');
             }
-            , select: function (arg, activate) {
+            , select: function (args, activate) {
                 var treeInfo = Tree.Info.getTreeInfo();
-                var pageStart = Util.goodValue(arg.pageStart, treeInfo.start);
-                var nodeType = arg.nodeType;
-                var nodeId = arg.nodeId;
-                var subKey = arg.subKey;
+                var pageStart = Util.goodValue(args.pageStart, treeInfo.start);
+                var nodeType = args.nodeType;
+                var nodeId = args.nodeId;
+                var subKey = args.subKey;
 
                 var key = Tree.Key.getKeyByObjWithPage(treeInfo.start, nodeType, nodeId);
                 if (!Util.isEmpty(subKey)) {
@@ -895,13 +895,17 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
 
                 Tree.create();
 
-        		scope.$bus.subscribe('object-tree.select', function(param){
-					Tree.refresh();
-					setTimeout(function() {
-						Tree.select(param, true);
-					},100)
-				});
-                
+                //jwu: public-subscription bypasses the angular $emit/$broadcast mechanism. It potentially leads to
+                //     tight coupling between arbitrary components. Better approach is to let host controller to call
+                //     treeControl.select()
+                //
+                //scope.$bus.subscribe('object-tree.select', function(param){
+				//	Tree.refresh();
+				//	setTimeout(function() {
+				//		Tree.select(param, true);
+				//	},100)
+				//});
+
                 var treeInfo = Tree.Info.getTreeInfo();
 
                 scope.$watchGroup(['treeConfig', 'treeData'], function (newValues, oldValues, scope) {
