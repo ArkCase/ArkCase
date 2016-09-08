@@ -15,12 +15,21 @@ angular.module('search').controller('FacetedSearchController', ['$scope',
                 }
             }
 
-            //label customization sample
-            //$scope.customLabels = [{"key": "Case File", "value": "Actions"}
-            //    , {"key": "Complaint", "value": "DSA"}
-            //    , {"key": "CASE_FILE", "value": "ACTIONS"}
-            //    , {"key": "COMPLAINT", "value": "DSA"}
-            //];
+            // Customization sample
+            //$scope.customization = {
+            //    labels: [{"key": "Case File", "value": "Actions"}
+            //        , {"key": "Complaint", "value": "DSA"}
+            //        , {"key": "CASE_FILE", "value": "ACTIONS"}
+            //        , {"key": "COMPLAINT", "value": "DSA"}
+            //        , {"key": "Closed", "value": "Archive"}
+            //    ]
+            //    , showObject: function(objectData) {
+            //        console.log("Customize code to show object goes here");
+            //    }
+            //    , showParentObject: function(objectData) {
+            //        console.log("Customize code to show parent object goes here");
+            //    }
+            //};
         }
     ]
 );
