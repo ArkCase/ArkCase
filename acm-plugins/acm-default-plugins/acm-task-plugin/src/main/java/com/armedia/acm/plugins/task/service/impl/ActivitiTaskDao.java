@@ -353,6 +353,10 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
 
         AcmTask retval = acmTaskFromActivitiTask(existingTask);
         retval = deleteTask(retval, user, null);
+
+        // Task participant privileges updated immediately, not to wait for DAC batch update
+        getDataAccessPrivilegeListener().applyAssignmentAndAccessRules(retval);
+
         return retval;
     }
 
