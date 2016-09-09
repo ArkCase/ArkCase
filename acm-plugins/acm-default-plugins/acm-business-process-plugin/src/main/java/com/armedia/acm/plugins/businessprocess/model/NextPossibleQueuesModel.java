@@ -16,6 +16,8 @@ public class NextPossibleQueuesModel<T, P extends AbstractPipelineContext>
 
     private String defaultNextQueue;
 
+    private String defaultReturnQueue;
+
     public T getBusinessObject()
     {
         return businessObject;
@@ -56,6 +58,16 @@ public class NextPossibleQueuesModel<T, P extends AbstractPipelineContext>
     public void setDefaultNextQueue(String defaultNextQueue)
     {
         this.defaultNextQueue = defaultNextQueue;
+    }
+
+    public String getDefaultReturnQueue()
+    {
+        return defaultReturnQueue;
+    }
+
+    public void setDefaultReturnQueue(String defaultReturnQueue)
+    {
+        this.defaultReturnQueue = defaultReturnQueue;
     }
 
 }
