@@ -12,7 +12,7 @@
         <property name="acmParticipantDao" ref="acmParticipantDao"/>
     </bean>
 
-    <bean id="caseFileService" class="com.armedia.acm.form.casefile.service.CaseFileService">
+    <bean id="caseFileService" class="com.armedia.acm.form.casefile.service.CaseFileService" scope="prototype">
         <property name="caseFileFactory" ref="caseFileFactory"/>
         <property name="objectAssociationDao" ref="objectAssociationDao"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
@@ -45,7 +45,7 @@
         <property name="personService" ref="personService"/>
     </bean>
 
-    <bean id="caseFilePSService" class="com.armedia.acm.form.casefile.service.CaseFilePSService">
+    <bean id="caseFilePSService" class="com.armedia.acm.form.casefile.service.CaseFilePSService" scope="prototype">
         <property name="caseFilePSFactory" ref="caseFilePSFactory"/>
         <property name="objectAssociationDao" ref="objectAssociationDao"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
