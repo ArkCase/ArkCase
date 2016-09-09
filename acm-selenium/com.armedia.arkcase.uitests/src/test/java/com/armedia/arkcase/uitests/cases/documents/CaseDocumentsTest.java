@@ -240,7 +240,7 @@ public class CaseDocumentsTest extends ArkCaseTestBase {
 		Thread.sleep(5000);
 		documentsPage.clickDocumentOther();
 		Thread.sleep(3000);
-		ArkCaseTestUtils.uploadPNGPicture();
+		ArkCaseTestUtils.uploadFile("png");
 		Thread.sleep(5000);		
 		documentsPage.verifySecondDocument("imageprofile", ".png", "Other", "1.0", "ACTIVE");
 		documentsPage.chnageCaseStatusButton.click();

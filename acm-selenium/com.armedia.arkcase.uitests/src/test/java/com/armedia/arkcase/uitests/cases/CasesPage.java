@@ -1628,8 +1628,7 @@ public class CasesPage extends ArkCaseTestBase {
 		responseCode.checkHttpResponse(
 				"/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[1]");
 		Thread.sleep(10000);
-		WaitHelper.waitForElement(approveDocumenButton, driver);
-		WaitHelper.waitUntilElementisPresent(approveDocumenButton, 60, driver);
+		WaitHelper.waitForElement(approveDocumenButton, driver);	
 		approveDocumenButton.click();		
 		WaitHelper.waitUntilTextIsChanged(reviewRequestState, driver);
 		Assert.assertTrue("Automatic task status is not change into closed", reviewRequestStateEqualsClosed());

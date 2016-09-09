@@ -9,6 +9,7 @@ import org.openqa.selenium.support.PageFactory;
 import com.armedia.arkcase.uitests.base.ArkCaseAuthentication;
 import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
 import com.armedia.arkcase.uitests.base.ArkCaseTestUtils;
+import com.armedia.arkcase.uitests.base.WaitHelper;
 import com.armedia.arkcase.uitests.group.SmokeTests;
 import com.armedia.arkcase.uitests.task.TaskPage;
 
@@ -258,7 +259,8 @@ public class ComplaintsTests extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		complaints.clickBrowseButton();
 		Thread.sleep(3000);
-		ArkCaseTestUtils.uploadPNGPicture();
+		ArkCaseTestUtils.uploadFile("png");
+		//ArkCaseTestUtils.uploadPNGPicture();
 		Thread.sleep(5000);
 		complaints.verifyUploadedImage();
 		complaints.detailsSaveBtn.click();
@@ -350,8 +352,8 @@ public class ComplaintsTests extends ArkCaseTestBase {
 		complaints.clickComplaintTitleInTasksPage();
 		Thread.sleep(7000);
 		complaints.clickTaskLink();
-		Thread.sleep(5000);
-		complaints.verifyIfTaskIsCredated();
+		complaints.refreshPageBtn.click();
+		complaints.verifyIfTaskIsCreated();
 		ArkCaseAuthentication.logOut(driver);
 
 	}

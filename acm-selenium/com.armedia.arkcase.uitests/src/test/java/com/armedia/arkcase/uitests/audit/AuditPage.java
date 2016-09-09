@@ -114,6 +114,7 @@ public class AuditPage extends ArkCaseTestBase {
 	
 	public String readDateColumnHeader()
 	{
+		WaitHelper.waitForElement(dateColumnHeader, driver);
 		return dateColumnHeader.getText();
 	}
 	

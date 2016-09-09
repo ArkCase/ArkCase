@@ -374,7 +374,7 @@ public class CaseTests extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		casesPom.browsePictureButtonClick();
 		Thread.sleep(3000);
-		ArkCaseTestUtils.uploadPNGPicture();
+		ArkCaseTestUtils.uploadFile("png");
 		casesPom.detailsSaveButtonClick();
 		casesPom.verifyInsertedImage();
 		Thread.sleep(2000);

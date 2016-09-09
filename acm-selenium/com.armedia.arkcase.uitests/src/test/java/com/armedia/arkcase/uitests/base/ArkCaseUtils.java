@@ -1,6 +1,7 @@
 package com.armedia.arkcase.uitests.base;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.junit.Assert;
 
@@ -54,6 +55,6 @@ public class ArkCaseUtils {
 		}
 		return dir.delete();
 
-	}
+	}	
 
 }

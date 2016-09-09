@@ -113,6 +113,7 @@ public class ReportsPage extends ArkCaseTestBase {
 	}
 	public String readCaseNumberColumnHeader()
 	{
+		WaitHelper.waitForElement(caseNumberColumnHeader, driver);
 		return caseNumberColumnHeader.getText();
 	}
 	public String readStatusColumnHeader()
