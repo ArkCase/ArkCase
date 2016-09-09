@@ -32,7 +32,6 @@ import static org.junit.Assert.assertNotNull;
                 "/spring/spring-library-activiti-actions.xml",
                 "/spring/spring-library-activiti-configuration.xml",
                 "/spring/spring-library-folder-watcher.xml",
-                "/spring/spring-library-drools-monitor.xml",
                 "/spring/spring-library-user-service.xml",
                 "/spring/spring-library-context-holder.xml",
                 "/spring/spring-library-data-access-control.xml",
