@@ -2,10 +2,10 @@
 
 angular.module('complaints').controller('Complaints.InfoController', ['$scope', '$stateParams', '$translate', '$timeout'
     , 'UtilService', 'Util.DateService', 'ConfigService', 'Object.LookupService', 'Complaint.LookupService', 'Complaint.InfoService'
-    , 'Object.ModelService', 'Helper.ObjectBrowserService'
+    , 'Object.ModelService', 'Helper.ObjectBrowserService', 'MessageService'
     , function ($scope, $stateParams, $translate, $timeout
         , Util, UtilDateService, ConfigService, ObjectLookupService, ComplaintLookupService, ComplaintInfoService
-        , ObjectModelService, HelperObjectBrowserService) {
+        , ObjectModelService, HelperObjectBrowserService, MessageService) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -115,6 +115,9 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             $scope.objectInfo.dueDate = UtilDateService.dateToIso($scope.dateInfo.dueDate);
             saveComplaint();
         };
+        $scope.$on('accessDenied', function(event, message){
+            MessageService.info(message);
+        });
 
     }
 ]);
