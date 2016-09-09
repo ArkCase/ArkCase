@@ -4,8 +4,7 @@ angular.module("services").factory("WebSocketsListener", ['$q', '$timeout', 'Web
     function ($q, $timeout, messageHandler) {
   
         var service = {
-
-            RECONNECT_TIMEOUT : 500,
+            RECONNECT_TIMEOUT : 100,
             SOCKET_URL : "/arkcase/stomp",
             LISTEN_TOPIC_OBJECTS : "/topic/objects/changed",
             MESSAGE_BROKER : "/app/print-message",
@@ -18,16 +17,18 @@ angular.module("services").factory("WebSocketsListener", ['$q', '$timeout', 'Web
             },
             
             connect : function () {
+                if(this.isConnected()) {
+                  return;
+                }
                 console.log("WS init");
                 this.socket.client = new SockJS(this.SOCKET_URL);
                 this.socket.stomp = Stomp.over(this.socket.client);
                 //socket.stomp.debug = null; //frequently need to disable stomp msg for debugging, please do not delete this line
                 this.socket.stomp.connect({}, connectCallback(this), errorCallback(this));
-                this.socket.stomp.ws.onclose = this.connect;
             },
             
             send : function (message, destination) {
-                if(!this.socket.stomp.connected) {
+                if(!this.isConnected()) {
                     return;
                 }
                 var id = Math.floor(Math.random() * 1000000);
@@ -37,14 +38,21 @@ angular.module("services").factory("WebSocketsListener", ['$q', '$timeout', 'Web
             },
             
             receive : function () {
+                if(!this.isConnected()) {
+                  return;
+                }
                 return this.listener.promise;
             },
             
             disconnect : function() {
-                if(service.socket.stomp && service.socket.stomp.connected) {
+                if(this.isConnected()) {
                     console.log("WS close");
                     this.socket.stomp.disconnect();
                 }
+            },
+            
+            isConnected : function() {
+                return this.socket.stomp && this.socket.stomp.connected;
             }
         };
 
@@ -63,9 +71,7 @@ angular.module("services").factory("WebSocketsListener", ['$q', '$timeout', 'Web
         var errorCallback = function(target) {
             return function (error) {
                 console.log("WS error",error);
-                if(!target.socket.stomp.connected) {
-                    target.connect();
-                }
+                target.connect();
             }
         }
 
