@@ -8,6 +8,7 @@ import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+
 import org.apache.commons.lang.StringUtils;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -23,7 +24,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 
@@ -79,7 +79,6 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
 
         }
 
-
     }
 
     @Override
@@ -111,7 +110,8 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
         boolean success = false;
         try
         {
-            getPropertyFileManager().storeMultiple(prepareRoleToGroupsForSaving(rolesToGroups), getRolesToGroupsPropertyFileLocation(), true);
+            getPropertyFileManager().storeMultiple(prepareRoleToGroupsForSaving(rolesToGroups), getRolesToGroupsPropertyFileLocation(),
+                    true);
             success = true;
         } catch (Exception e)
         {
@@ -128,7 +128,8 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
     }
 
     @Override
-    public Set<AcmUser> getUsersByRolesAndGroups(List<String> roles, Map<String, List<String>> rolesToGroups, String group, String currentAssignee)
+    public Set<AcmUser> getUsersByRolesAndGroups(List<String> roles, Map<String, List<String>> rolesToGroups, String group,
+            String currentAssignee)
     {
         // Creating set to avoid duplicates. AcmUser has overrided "equals" and "hasCode" methods
         Set<AcmUser> users = new HashSet<>();
@@ -185,10 +186,7 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
 
         if (rolesToGroups != null && rolesToGroups.size() > 0)
         {
-            for (Entry<String, List<String>> entry : rolesToGroups.entrySet())
-            {
-                retval.put(entry.getKey(), StringUtils.join(entry.getValue(), ","));
-            }
+            rolesToGroups.forEach((key, value) -> retval.put(key, StringUtils.join(value, ",")));
         }
 
         return retval;
@@ -214,7 +212,8 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
     }
 
     @Override
-    public String getGroupsByPrivilege(List<String> roles, Map<String, List<String>> rolesToGroups, int startRow, int maxRows, String sort, Authentication auth) throws MuleException
+    public String getGroupsByPrivilege(List<String> roles, Map<String, List<String>> rolesToGroups, int startRow, int maxRows, String sort,
+            Authentication auth) throws MuleException
     {
         Set<String> groups = getAllGroupsForAllRoles(roles, rolesToGroups);
         String retval = getGroupsFromSolr(new ArrayList<>(groups), startRow, maxRows, sort, auth);
@@ -243,12 +242,10 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
         return groups;
     }
 
-    private String getGroupsFromSolr(List<String> groupNames, int startRow, int maxRows, String sort, Authentication auth) throws MuleException
+    private String getGroupsFromSolr(List<String> groupNames, int startRow, int maxRows, String sort, Authentication auth)
+            throws MuleException
     {
-        if (LOG.isInfoEnabled())
-        {
-            LOG.info("Taking groups from Solr with IDs = " + groupNames);
-        }
+        LOG.info("Taking groups from Solr with IDs = {}", groupNames);
 
         String queryGroupNames = "";
         if (groupNames != null)
@@ -265,11 +262,12 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
             }
         }
 
-        String query = "object_id_s:(" + queryGroupNames + ") AND object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
+        String query = "object_id_s:(" + queryGroupNames
+                + ") AND object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
 
         String response = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows, sort);
 
-        LOG.debug("Response: " + response);
+        LOG.debug("Response: {}", response);
 
         return response;
     }
@@ -309,8 +307,7 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
         return rolesToGroupsPropertyFileLocation;
     }
 
-    public void setRolesToGroupsPropertyFileLocation(
-            String rolesToGroupsPropertyFileLocation)
+    public void setRolesToGroupsPropertyFileLocation(String rolesToGroupsPropertyFileLocation)
     {
         this.rolesToGroupsPropertyFileLocation = rolesToGroupsPropertyFileLocation;
     }
@@ -354,6 +351,5 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
     {
         this.executeSolrQuery = executeSolrQuery;
     }
-
 
 }
