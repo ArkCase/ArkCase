@@ -24,7 +24,6 @@ import static org.junit.Assert.assertNotNull;
         "/spring/spring-library-folder-watcher.xml",
         "/spring/spring-library-activiti-configuration.xml",
         "/spring/spring-library-particpants.xml",
-        "/spring/spring-library-drools-monitor.xml",
         "/spring/spring-library-ms-outlook-integration.xml",
         "/spring/spring-library-ms-outlook-plugin.xml",
         "/spring/spring-library-ecm-file.xml",

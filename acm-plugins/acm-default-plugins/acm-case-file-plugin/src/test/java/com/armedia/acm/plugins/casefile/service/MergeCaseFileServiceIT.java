@@ -56,7 +56,6 @@ import static org.junit.Assert.*;
                 "/spring/spring-library-search.xml",
                 "/spring/spring-library-data-access-control.xml",
                 "/spring/spring-library-folder-watcher.xml",
-                "/spring/spring-library-drools-monitor.xml",
                 "/spring/spring-library-merge-case-test-IT.xml",
                 "/spring/spring-library-ms-outlook-integration.xml",
                 "/spring/spring-library-ms-outlook-plugin.xml",
