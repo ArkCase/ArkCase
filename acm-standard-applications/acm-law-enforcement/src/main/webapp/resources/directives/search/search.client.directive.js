@@ -87,7 +87,8 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                 if (typeof scope.config.emptySearch !== 'undefined') {
                     scope.emptySearch = scope.config.emptySearch;
                 }
-                scope.queryExistingItems = function () {
+                scope.queryExistingItems = function (start) {
+                    scope.start = Util.goodNumber(start, 0);
                     if (!scope.searchQuery || scope.searchQuery.length === 0) {
                         if (!scope.emptySearch) {
                             scope.searchQuery = "";
@@ -238,7 +239,6 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                             scope.filters = "";
                             scope.filters += 'fq="' + facet + '":' + field;
                         }
-                        scope.queryExistingItems();
                     } else {
                         if (scope.filters.indexOf('&fq="' + facet + '":' + field) > -1) {
                             scope.filters = scope.filters.split('&fq="' + facet + '":' + field).join('');
@@ -247,8 +247,8 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                             scope.filters = '';
                             scope.clearAllFacets();
                         }
-                        scope.queryExistingItems();
                     }
+                    scope.queryExistingItems();
                 };
 
                 scope.onClickObjLink = function (event, objectData) {
@@ -293,8 +293,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
 
                 scope.clearAllFacets = function () {
                     var selections = scope.currentFacetSelection;
-                    for (var selection in selections)
-                    {
+                    for (var selection in selections) {
                         selections[selection] = false;
                     }
                 };
@@ -333,7 +332,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                                 gridApi.pagination.on.paginationChanged(scope, function (newPage, pageSize) {
                                     scope.start = (newPage - 1) * pageSize;   //newPage is 1-based index
                                     scope.pageSize = pageSize;
-                                    scope.queryExistingItems();
+                                    scope.queryExistingItems(scope.start);
                                 });
                             }
                         };
@@ -355,7 +354,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                             if (scope.filter) {
                                 scope.filters = 'fq=' + scope.filter;
                             }
-                            scope.queryExistingItems();
+                            scope.queryExistingItems(scope.start);
                         }
                     }, true);
                 });

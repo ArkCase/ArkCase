@@ -431,7 +431,7 @@
               "name": "fullAddress",
               "displayName": "complaints.comp.locations.table.columns.address",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div ng-bind-html='row.entity.fullAddress' title='{{row.entity.fullAddress}}' class='ui-grid-cell-contents'></div>"
+              "cellTemplate": "<div ng-bind-html='row.entity.location.fullAddress' title='{{row.entity.location.fullAddress}}' class='ui-grid-cell-contents'></div>"
             },
             {
               "name": "modified",
