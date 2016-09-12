@@ -77,11 +77,13 @@ public class CreateAdHocTaskAPIController
             {
                 in.setAttachedToObjectId(objectId);
                 in.setAttachedToObjectType(parentObjectType);
+                in.setAttachedToObjectName(attachedToObjectName);
                 in.setParentObjectId(objectId);
                 in.setParentObjectType(parentObjectType);
             } else
             {
                 in.setAttachedToObjectId(null);
+                in.setAttachedToObjectType(null);
                 in.setAttachedToObjectName(null);
             }
 

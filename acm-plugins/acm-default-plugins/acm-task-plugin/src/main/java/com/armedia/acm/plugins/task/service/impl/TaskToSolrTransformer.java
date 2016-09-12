@@ -52,16 +52,17 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
         doc.setObject_type_s("TASK");
         doc.setObject_sub_type_s(in.getBusinessProcessName());
         doc.setPriority_lcs(in.getPriority());
-        if (in.getParentObjectId() != null)
+        if (in.getAttachedToObjectId() != null)
+        {
+            doc.setParent_type_s(in.getAttachedToObjectType());
+            doc.setParent_id_s(Long.toString(in.getAttachedToObjectId()));
+            doc.setParent_name_t(in.getAttachedToObjectName());
+            doc.setParent_ref_s(Long.toString(in.getAttachedToObjectId()) + "-" + in.getAttachedToObjectType());
+        } else if (in.getParentObjectId() != null)
         {
             doc.setParent_type_s(in.getParentObjectType());
             doc.setParent_id_s(Long.toString(in.getParentObjectId()));
             doc.setParent_ref_s(Long.toString(in.getParentObjectId()) + "-" + in.getParentObjectType());
-        } else if (in.getAttachedToObjectId() != null)
-        {
-            doc.setParent_type_s(in.getAttachedToObjectType());
-            doc.setParent_id_s(Long.toString(in.getAttachedToObjectId()));
-            doc.setParent_ref_s(Long.toString(in.getAttachedToObjectId()) + "-" + in.getAttachedToObjectType());
         }
         doc.setName(in.getTitle());
         doc.setStatus_lcs(in.getStatus());
@@ -121,16 +122,16 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
         doc.setId(in.getId() + "-TASK");
         doc.setPriority_s(in.getPriority());
 
-        if (in.getParentObjectId() != null)
-        {
-            doc.setParent_object_type_s(in.getParentObjectType());
-            doc.setParent_object_id_i(in.getParentObjectId());
-            doc.setParent_ref_s(Long.toString(in.getParentObjectId()) + "-" + in.getParentObjectType());
-        } else if (in.getAttachedToObjectId() != null)
+        if (in.getAttachedToObjectId() != null)
         {
             doc.setParent_object_type_s(in.getAttachedToObjectType());
             doc.setParent_object_id_i(in.getAttachedToObjectId());
             doc.setParent_ref_s(Long.toString(in.getAttachedToObjectId()) + "-" + in.getAttachedToObjectType());
+        } else if (in.getParentObjectId() != null)
+        {
+            doc.setParent_object_type_s(in.getParentObjectType());
+            doc.setParent_object_id_i(in.getParentObjectId());
+            doc.setParent_ref_s(Long.toString(in.getParentObjectId()) + "-" + in.getParentObjectType());
         }
         doc.setBusiness_process_name_lcs(in.getBusinessProcessName());
         doc.setBusiness_process_id_i(in.getBusinessProcessId());

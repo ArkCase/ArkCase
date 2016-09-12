@@ -205,6 +205,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         mockTaskService.setVariableLocal(taskId.toString(), "outcome", in.getTaskOutcome().getName());
         mockTaskService.setVariableLocal(taskId.toString(), "PARENT_OBJECT_ID", 2500L);
         mockTaskService.setVariableLocal(taskId.toString(), "PARENT_OBJECT_TYPE", "parent object type");
+        mockTaskService.setVariableLocal(taskId.toString(), "PARENT_OBJECT_NAME", "objectName");
         mockTaskService.setVariable(taskId.toString(), TaskConstants.VARIABLE_NAME_NEXT_ASSIGNEE, in.getNextAssignee());
         mockTaskService.setVariableLocal(taskId.toString(), TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TITLE, null);
         mockTaskService.setVariableLocal(taskId.toString(), TaskConstants.VARIABLE_NAME_LEGACY_SYSTEM_ID, null);
