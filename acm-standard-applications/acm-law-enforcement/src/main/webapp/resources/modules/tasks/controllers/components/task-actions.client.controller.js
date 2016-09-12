@@ -130,7 +130,6 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
                 TaskWorkflowService.completeTask($scope.objectInfo.taskId).then(
                     function (taskInfo) {
                         $scope.$emit("report-object-updated", taskInfo);
-                        $scope.$emit("report-tree-updated", taskInfo);
                         return taskInfo;
                     }
                 );
