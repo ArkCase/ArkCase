@@ -3,6 +3,7 @@ package com.armedia.acm.event;
 import com.armedia.acm.core.model.AcmEvent;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.spring.SpringContextHolder;
+
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,17 +30,16 @@ public class AcmEventResponseLauncher implements ApplicationListener<AcmEvent>
 
         Map<String, EventResponse> eventResponses = getContextHolder().getAllBeansOfType(EventResponse.class);
 
-        for ( EventResponse response : eventResponses.values() )
+        for (EventResponse response : eventResponses.values())
         {
-            if ( response.getEventName().equals(eventName) && response.isEnabled() )
+            if (response.getEventName().equals(eventName) && response.isEnabled())
             {
-                if ( response.getRespondPredicate() != null &&
-                        !response.getRespondPredicate().evaluate(acmEvent) )
+                if (response.getRespondPredicate() != null && !response.getRespondPredicate().evaluate(acmEvent))
                 {
                     log.info("Event response predicate returned false - we will not launch the event response.");
                     continue;
                 }
-                log.info("Launching event response '" + response.getAction().getActionName() + "'...");
+                log.info("Launching event response '{}'...", response.getAction().getActionName());
 
                 Map<String, Object> messageProperties = new HashMap<>();
                 messageProperties.put("ACM_USER", acmEvent.getUserId());
@@ -48,7 +48,7 @@ public class AcmEventResponseLauncher implements ApplicationListener<AcmEvent>
                 messageProperties.put("OBJECT_ID", acmEvent.getObjectId());
                 messageProperties.put("EVENT_TYPE", acmEvent.getEventType());
                 messageProperties.put("EVENT_DATE", acmEvent.getEventDate());
-                if ( acmEvent.getIpAddress() != null )
+                if (acmEvent.getIpAddress() != null)
                 {
                     messageProperties.put("IP_ADDRESS", acmEvent.getIpAddress());
                 }
@@ -61,9 +61,8 @@ public class AcmEventResponseLauncher implements ApplicationListener<AcmEvent>
                     getMuleContextManager().dispatch(response.getAction().getTargetMuleEndpoint(), acmEvent, messageProperties);
                 } catch (MuleException e)
                 {
-                    log.error("Could not dispatch Mule event: " + e.getMessage(), e);
+                    log.error("Could not dispatch Mule event: {}", e.getMessage(), e);
                 }
-
 
             }
         }
@@ -71,15 +70,9 @@ public class AcmEventResponseLauncher implements ApplicationListener<AcmEvent>
 
     protected void addExtraMessageProperties(AcmEvent acmEvent, Map<String, Object> messageProperties)
     {
-        if ( acmEvent.getEventProperties() != null && ! acmEvent.getEventProperties().isEmpty() )
+        if (acmEvent.getEventProperties() != null && !acmEvent.getEventProperties().isEmpty())
         {
-            for ( Map.Entry<String, Object> eventProp : acmEvent.getEventProperties().entrySet() )
-            {
-                if ( ! messageProperties.containsKey(eventProp.getKey()) )
-                {
-                    messageProperties.put(eventProp.getKey(), eventProp.getValue());
-                }
-            }
+            acmEvent.getEventProperties().forEach((key, value) -> messageProperties.computeIfAbsent(key, mappingKey -> value));
         }
     }
 
