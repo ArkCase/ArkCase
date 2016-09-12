@@ -8,6 +8,7 @@ import com.armedia.acm.spring.SpringContextHolder;
 import com.armedia.acm.spring.events.AbstractContextHolderEvent;
 import com.armedia.acm.spring.events.ContextAddedEvent;
 import com.armedia.acm.spring.events.ContextRemovedEvent;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -48,7 +49,6 @@ public class AcmPluginManager implements ApplicationContextAware, ApplicationLis
 
         addPluginUrlPrivileges(plugin);
     }
-
 
     private void addPluginUrlPrivileges(AcmPlugin plugin)
     {
@@ -122,20 +122,13 @@ public class AcmPluginManager implements ApplicationContextAware, ApplicationLis
     {
         Map<String, AcmPlugin> plugins = applicationContext.getBeansOfType(AcmPlugin.class);
 
-        if (log.isInfoEnabled())
-        {
-            log.info(plugins.size() + " plugin(s) found.");
-        }
+        log.info("{} plugin(s) found.", plugins.size());
 
-        for (Map.Entry<String, AcmPlugin> plugin : plugins.entrySet())
+        plugins.forEach((key, value) ->
         {
-            if (log.isDebugEnabled())
-            {
-                log.debug("Registering plugin '" + plugin.getKey() + "' of type '" +
-                        plugin.getValue().getClass().getName() + "'.");
-            }
-            registerPlugin(plugin.getValue());
-        }
+            log.debug("Registering plugin '{}' of type '{}'.", key, value.getClass().getName());
+            registerPlugin(value);
+        });
 
     }
 
@@ -163,8 +156,7 @@ public class AcmPluginManager implements ApplicationContextAware, ApplicationLis
 
         for (Map.Entry<String, List<String>> roleToPrivileges : configurablePrivilegesByRole.entrySet())
         {
-            if (roleToPrivileges.getValue() != null
-                    && roleToPrivileges.getValue().contains(privilege)
+            if (roleToPrivileges.getValue() != null && roleToPrivileges.getValue().contains(privilege)
                     && !retval.contains(roleToPrivileges.getKey()))
             {
                 retval.add(roleToPrivileges.getKey());
@@ -216,31 +208,25 @@ public class AcmPluginManager implements ApplicationContextAware, ApplicationLis
         String eventFile = event.getContextName();
         if ((event instanceof ContextRemovedEvent) && eventFile.equals(PLUGINS_PRIVILEGES_FOLDER_NAME))
         {
-            //clear all privileges
+            // clear all privileges
             configurablePrivilegesByRole.clear();
             configurableUrlPrivileges.clear();
-            //add non configurable privileges
+            // add non configurable privileges
             configurablePrivilegesByRole.putAll(privilegesByRole);
             configurableUrlPrivileges.addAll(urlPrivileges);
         } else if ((event instanceof ContextAddedEvent) && eventFile.equals(PLUGINS_PRIVILEGES_FOLDER_NAME))
         {
-            //read all privileges
+            // read all privileges
             Map<String, AcmPluginPrivileges> pluginsPrivileges = springContextHolder.getAllBeansOfType(AcmPluginPrivileges.class);
 
-            if (log.isInfoEnabled())
-            {
-                log.info(pluginsPrivileges.size() + " plugins privileges(s) found.");
-            }
+            log.info("{} plugins privileges(s) found.", pluginsPrivileges.size());
 
-            //get privileges from configuration files located in ${user.home}/.arkcase/acm
-            for (Map.Entry<String, AcmPluginPrivileges> privilegesForPlugin : pluginsPrivileges.entrySet())
+            // get privileges from configuration files located in ${user.home}/.arkcase/acm
+            pluginsPrivileges.forEach((key, value) ->
             {
-                if (log.isDebugEnabled())
-                {
-                    log.debug("Registering plugins privileges '" + privilegesForPlugin.getKey() + "'.");
-                }
-                registerPluginPrivileges(privilegesForPlugin.getValue());
-            }
+                log.debug("Registering plugins privileges '{}'.", key);
+                registerPluginPrivileges(value);
+            });
         }
 
     }
