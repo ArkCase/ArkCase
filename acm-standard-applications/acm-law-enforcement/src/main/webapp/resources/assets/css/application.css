@@ -721,6 +721,11 @@ thead {
 	position: relative;
 }
 
+.ui-grid .ui-grid-cell div:hover {
+	white-space: normal;
+	overflow: normal;
+}
+
 /* Highlight error grid's cell */
 
 .ui-grid .ui-grid-cell.error-cell {
