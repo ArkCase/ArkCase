@@ -437,6 +437,7 @@
               "name": "modified",
               "displayName": "complaints.comp.locations.table.columns.modified",
               "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
               "width": 150
             },
             {
