@@ -95,7 +95,7 @@ angular.module('tasks').controller('Tasks.TagsController', ['$scope', '$q', '$st
             var currentObjectId = Util.goodMapValue(objectInfo, "taskId");
             if (Util.goodPositive(currentObjectId, false)) {
                 var promiseQueryTags = ObjectTagsService.getAssociateTags(currentObjectId, ObjectService.ObjectTypes.TASK);
-                $q.all([promiseQueryTags, promiseUsers]).then(function (data) {
+                $q.all([promiseQueryTags]).then(function (data) {
                     $scope.tags = data[0];
                     $scope.gridOptions = $scope.gridOptions || {};
                     $scope.gridOptions.data = $scope.tags;

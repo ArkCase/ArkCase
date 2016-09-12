@@ -95,7 +95,7 @@ angular.module('complaints').controller('Complaints.TagsController', ['$scope', 
             var currentObjectId = Util.goodMapValue(objectInfo, "complaintId");
             if (Util.goodPositive(currentObjectId, false)) {
                 var promiseQueryTags = ObjectTagsService.getAssociateTags(currentObjectId, ObjectService.ObjectTypes.COMPLAINT);
-                $q.all([promiseQueryTags, promiseUsers]).then(function (data) {
+                $q.all([promiseQueryTags]).then(function (data) {
                     $scope.tags = data[0];
                     $scope.gridOptions = $scope.gridOptions || {};
                     $scope.gridOptions.data = $scope.tags;
