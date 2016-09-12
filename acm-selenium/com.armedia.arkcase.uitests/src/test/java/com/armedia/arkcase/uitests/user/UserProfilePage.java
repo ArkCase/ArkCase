@@ -15,7 +15,7 @@ import com.armedia.arkcase.uitests.base.WaitHelper;
 
 public class UserProfilePage extends ArkCaseTestBase{
 
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/div/div[1]/div/span/a/i")
+	@FindBy(how = How.XPATH, using = ".//*[@ng-click='toggleEditMode()']/i")
 	WebElement editDashoboard;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[1]/nav/div[1]/div/div/div[2]/a/strong/span[1]")
 	WebElement arrowDown;
@@ -199,10 +199,11 @@ public class UserProfilePage extends ArkCaseTestBase{
 	WebElement subscriptionEmptyTable;
 
 	public UserProfilePage verifyIfEditDashboardButtonIsEnabled() {
-		WebElement el = WaitHelper.getWhenElementIsVisible(editDashoboard, 60, driver);	
-		Assert.assertTrue("Edit Dashboard button is not enabled", el.isEnabled());
+		WaitHelper.waitPageToLoad(60, driver);
+		WaitHelper.waitForElement(editDashoboard, driver);
+		Assert.assertTrue("The edit button in dashboard is not displayed", editDashoboard.isDisplayed());	
+		Assert.assertTrue("Edit Dashboard button is not enabled", editDashoboard.isEnabled());
 		return this;
-
 	}
 
 	public UserProfilePage arrowDownClick() {

@@ -145,9 +145,11 @@ public class ArkCaseTestUtils extends ArkCaseTestBase {
 			filepath = System.getProperty("user.home") + "/.arkcase/seleniumTests/Tools/uploadPicture.exe";
             break;
 		default:
-			break;		
-		}			
-		Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + filepath);	
+			filepath = System.getProperty("user.home") + "/.arkcase/seleniumTests/Tools/uploadPicture.exe";
+			break;					
+		}	
+		Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + filepath);
+		
 		
 	}
 

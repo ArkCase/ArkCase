@@ -3147,8 +3147,8 @@ public class CasesPage extends ArkCaseTestBase {
 	}
 	
 	public CasesPage detailsSaveButtonClick(){
-		WebElement el = WaitHelper.getWhenElementIsVisible(detailsSaveButton, 60, driver);
-		WaitHelper.clickWhenElelementIsClickable(el, 60, driver);		
+		WaitHelper.waitForElement(detailsSaveButton, driver);		
+		WaitHelper.ClickElementAtPoint(detailsSaveButton, driver);
 		return this;
 	}
 	

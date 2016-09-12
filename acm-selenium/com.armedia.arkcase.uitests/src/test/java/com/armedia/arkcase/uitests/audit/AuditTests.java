@@ -33,7 +33,8 @@ public class AuditTests extends ArkCaseTestBase {
 		auditPage.generateAuditReport(Utility.getCellData(1, 1), Utility.getCellData(1, 2), Utility.getCellData(1, 3),
 				Utility.getCellData(1, 4));
 		auditPage.switchToAuditFrame();
-		WaitHelper.waitForFrameAndSwitchToIt(60, driver, "reportContent");
+		WaitHelper.waitForElement(auditPage.reportContent, driver);
+		WaitHelper.waitForFrameAndSwitchToIt(60, driver, "reportContent");		
 		Assert.assertEquals("Date column header is not correct", "Date" , auditPage.readDateColumnHeader());
 		Assert.assertEquals("User column header is not correct", "User", auditPage.readUserColumnHeader());
 		Assert.assertEquals("Name column header is not correct", "Name", auditPage.readNameColumnHeader());
@@ -55,6 +56,7 @@ public class AuditTests extends ArkCaseTestBase {
 		auditPage.generateAuditReport(Utility.getCellData(2, 1), Utility.getCellData(2, 2), Utility.getCellData(2, 3),
 				Utility.getCellData(2, 4));
 		auditPage.switchToAuditFrame();
+		WaitHelper.waitForElement(auditPage.reportContent, driver);
 		WaitHelper.waitForFrameAndSwitchToIt(60, driver, "reportContent");
 		Assert.assertEquals("Date column header is not correct", "Date" , auditPage.readDateColumnHeader());
 		Assert.assertEquals("User column header is not correct", "User", auditPage.readUserColumnHeader());
@@ -69,7 +71,6 @@ public class AuditTests extends ArkCaseTestBase {
 
 	}
 
-	@SuppressWarnings("deprecation")
 	@Test
 	@Category({ SmokeTests.class })
 	public void generateAuditReportforComplaints() throws Exception {
@@ -79,6 +80,7 @@ public class AuditTests extends ArkCaseTestBase {
 		auditPage.generateAuditReport(Utility.getCellData(3, 1), Utility.getCellData(3, 2), Utility.getCellData(3, 3),
 				Utility.getCellData(3, 4));
 		auditPage.switchToAuditFrame();
+		WaitHelper.waitForElement(auditPage.reportContent, driver);
 		WaitHelper.waitForFrameAndSwitchToIt(60, driver, "reportContent");
 		Assert.assertEquals("Date column header is not correct", "Date" , auditPage.readDateColumnHeader());
 		Assert.assertEquals("User column header is not correct", "User", auditPage.readUserColumnHeader());
@@ -102,6 +104,7 @@ public class AuditTests extends ArkCaseTestBase {
 		auditPage.generateAuditReport(Utility.getCellData(4, 1), Utility.getCellData(4, 2), Utility.getCellData(4, 3),
 				Utility.getCellData(4, 4));
 		auditPage.switchToAuditFrame();
+		WaitHelper.waitForElement(auditPage.reportContent, driver);
 		WaitHelper.waitForFrameAndSwitchToIt(60, driver, "reportContent");
 		Assert.assertEquals("Date column header is not correct", "Date" , auditPage.readDateColumnHeader());
 		Assert.assertEquals("User column header is not correct", "User", auditPage.readUserColumnHeader());
@@ -127,6 +130,7 @@ public class AuditTests extends ArkCaseTestBase {
 				Utility.getCellData(5, 4));
 		WaitHelper.waitPageToLoad(60, driver);
 		auditPage.switchToAuditFrame();
+		WaitHelper.waitForElement(auditPage.reportContent, driver);
 		WaitHelper.waitForFrameAndSwitchToIt(60, driver, "reportContent");
 		Assert.assertEquals("Date column header is not correct", "Date" , auditPage.readDateColumnHeader());
 		Assert.assertEquals("User column header is not correct", "User", auditPage.readUserColumnHeader());

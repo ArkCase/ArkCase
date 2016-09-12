@@ -31,6 +31,7 @@ public class ArkCaseAuthentication {
 		WebElement loginbutton = driver.findElement(By.id("submit"));
 		loginbutton.click();
 		WaitHelper.waitPageToLoad(60, driver);
+		Assert.assertEquals("User didn't login succesfully", "ArkCase Application", driver.getTitle());
 	}
 
 	public static void logOut(WebDriver driver) throws InterruptedException {
@@ -46,8 +47,11 @@ public class ArkCaseAuthentication {
 		el1.click();
 		WaitHelper.waitPageToLoad(60, driver);
 		WaitHelper.waitUntilElementisPresent(driver.findElement(By.xpath(".//div[@class='alert alert-success']")), 60, driver);
+		WaitHelper.waitPageToLoad(60, driver);
 		WebElement logOutsuccesfull = driver.findElement(By.xpath(".//div[@class='alert alert-success']"));
+		Assert.assertEquals("User didn't logout succesfully", "ACM | ArkCase | User Interface", driver.getTitle());
 		Assert.assertTrue(logOutsuccesfull.getText().equals("You have been logged out successfully."));
+		
 	}
 	
 	

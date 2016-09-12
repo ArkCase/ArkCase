@@ -127,7 +127,7 @@ public class WaitHelper {
 		wait.ignoring(ElementNotVisibleException.class); //make sure that this exception is ignored
 		Function<WebDriver, WebElement> function = new Function<WebDriver, WebElement>()
 				{
-					public WebElement apply(WebDriver arg0) {
+					public WebElement apply(WebDriver driver) {
 						System.out.println("Checking for the element!!");						
 						if(element.isDisplayed() != true)
 						{
