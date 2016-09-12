@@ -8,23 +8,25 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 
-
-
-public class ArkCaseTestUtils extends ArkCaseTestBase{
+public class ArkCaseTestUtils extends ArkCaseTestBase {
 
 	public static void uploadPNGPicture() throws IOException, AWTException, InterruptedException {
 
 		String home = System.getProperty("user.home");
 		File file = new File(home + "/.arkcase/seleniumTests/filesForUpload/imageprofile.png");
-		setClipboardData(file.toString());
-		Robot robot = new Robot();
-		robot.keyPress(KeyEvent.VK_CONTROL);
-		robot.keyPress(KeyEvent.VK_V);
-		robot.keyRelease(KeyEvent.VK_V);
-		robot.keyRelease(KeyEvent.VK_CONTROL);
-		robot.delay(1000);
-		robot.keyPress(KeyEvent.VK_ENTER);
-		robot.keyRelease(KeyEvent.VK_ENTER);
+		try {
+			setClipboardData(file.toString());
+			Robot robot = new Robot();
+			robot.keyPress(KeyEvent.VK_CONTROL);
+			robot.keyPress(KeyEvent.VK_V);
+			robot.keyRelease(KeyEvent.VK_V);
+			robot.keyRelease(KeyEvent.VK_CONTROL);
+			robot.delay(1000);
+			robot.keyPress(KeyEvent.VK_ENTER);
+			robot.keyRelease(KeyEvent.VK_ENTER);
+		} catch (Exception exp) {
+			exp.printStackTrace();
+		}
 
 	}
 
@@ -47,7 +49,7 @@ public class ArkCaseTestUtils extends ArkCaseTestBase{
 	public static void uploadDocx() throws IOException, AWTException {
 
 		String home = System.getProperty("user.home");
-		File file = new File(home +  "/.arkcase/seleniumTests/filesForUpload/ArkCaseTesting.docx");
+		File file = new File(home + "/.arkcase/seleniumTests/filesForUpload/ArkCaseTesting.docx");
 		setClipboardData(file.toString());
 		Robot robot = new Robot();
 		robot.keyPress(KeyEvent.VK_CONTROL);
@@ -96,43 +98,57 @@ public class ArkCaseTestUtils extends ArkCaseTestBase{
 		}
 
 	}
-	
-	public static void presEnter() throws AWTException{
-	
-	Robot robot=new Robot();
-	robot.keyPress(KeyEvent.VK_ENTER);
-	robot.keyRelease(KeyEvent.VK_ENTER);
-		
+
+	public static void presEnter() throws AWTException {
+
+		Robot robot = new Robot();
+		robot.keyPress(KeyEvent.VK_ENTER);
+		robot.keyRelease(KeyEvent.VK_ENTER);
+
 	}
-	
-	public static void shiftLeftAndPressEnter() throws AWTException{
-		
-	Robot robot=new Robot();
-	robot.keyPress(KeyEvent.VK_LEFT);
-	robot.keyRelease(KeyEvent.VK_LEFT);
-	robot.delay(2000);
-	robot.keyPress(KeyEvent.VK_ENTER);
-	robot.keyRelease(KeyEvent.VK_ENTER);
-		
+
+	public static void shiftLeftAndPressEnter() throws AWTException {
+
+		Robot robot = new Robot();
+		robot.keyPress(KeyEvent.VK_LEFT);
+		robot.keyRelease(KeyEvent.VK_LEFT);
+		robot.delay(2000);
+		robot.keyPress(KeyEvent.VK_ENTER);
+		robot.keyRelease(KeyEvent.VK_ENTER);
+
 	}
-	
-	public static void saveWordDocument()throws AWTException{
-		
-		Robot robot=new Robot();
+
+	public static void saveWordDocument() throws AWTException {
+
+		Robot robot = new Robot();
 		robot.keyPress(KeyEvent.VK_CONTROL);
 		robot.keyPress(KeyEvent.VK_S);
 		robot.delay(2000);
 		robot.keyRelease(KeyEvent.VK_CONTROL);
 		robot.keyRelease(KeyEvent.VK_S);
-		
+
+	}
+
+	public static void uploadFile(String extension) throws IOException {
+		String filepath  = "";
+		switch (extension) {
+		case "docx":
+			filepath = System.getProperty("user.home") + "/.arkcase/seleniumTests/Tools/uploadWordDoc.exe";
+			break;
+		case "pdf":
+			filepath = System.getProperty("user.home") + "/.arkcase/seleniumTests/Tools/uploadPdfDoc.exe";
+            break;
+		case "xlsx":
+			filepath = System.getProperty("user.home") + "/.arkcase/seleniumTests/Tools/uploadXlsxDoc.exe";
+            break; 
+		case "png":
+			filepath = System.getProperty("user.home") + "/.arkcase/seleniumTests/Tools/uploadPicture.exe";
+            break;
+		default:
+			break;		
+		}			
+		Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + filepath);	
 		
 	}
-	
-
-	
-	
-	
-	
-	
 
 }

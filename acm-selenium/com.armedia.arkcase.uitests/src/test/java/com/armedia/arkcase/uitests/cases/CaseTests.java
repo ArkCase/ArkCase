@@ -327,14 +327,10 @@ public class CaseTests extends ArkCaseTestBase {
 		driver.switchTo().frame(casesPom.frameOne);
 		driver.switchTo().frame(casesPom.frameTwo);
 		casePom.vrifyGeneralInformationTabName();
-//		WebDriverWait wait = new WebDriverWait(driver, 30);
-//		wait.until(ExpectedConditions.elementToBeClickable(By.name("caseTitle")));
 		casePom.caseTitleInput("CaseTestMilanCongressionalResponse");
 		casePom.verifyCaseTypeTitle();	
 		WaitHelper.continueWhenElementIsNotVisible(30, driver);			
 		casePom.caseTypeInputClick();
-//		WebDriverWait wait1 = new WebDriverWait(driver, 30);
-//		wait1.until(ExpectedConditions.elementToBeClickable(By.xpath(".//*[@role='combobox']")));	
 		WebDriverWait waitValue= new WebDriverWait(driver, 30);
 		waitValue.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(".//*[@ovalue='Congressional Response']")));			
 		casePom.caseTypeCongressionalResponse();
@@ -342,9 +338,7 @@ public class CaseTests extends ArkCaseTestBase {
 		waitNext.until(ExpectedConditions.elementToBeClickable(By.xpath(".//*[@value='Next']")));	
 		casePom.nextButtonClick();
 		Thread.sleep(3000);
-		casePom.verifyInitiatorTab();
-		WebDriverWait waitInitiatorTitle= new WebDriverWait(driver, 30);
-		waitInitiatorTitle.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(".//*[@cname='initiatorTitle']/div/input[1]")));	
+		casePom.verifyInitiatorTab();			
 		casePom.initiatorTitleClick();
 		Thread.sleep(2000);
 		casePom.clickInitiatorMr();
@@ -376,10 +370,11 @@ public class CaseTests extends ArkCaseTestBase {
 		casesPom.verifyDetailsSection();
 		Thread.sleep(2000);
 		casesPom.insertPictureClick();
+		//casesPom.UploadPicture("imageprofile.png");		
 		Thread.sleep(3000);
 		casesPom.browsePictureButtonClick();
 		Thread.sleep(3000);
-		ArkCaseTestUtils.uploadPNGPicture();
+		ArkCaseTestUtils.uploadFile("png");
 		casesPom.detailsSaveButtonClick();
 		casesPom.verifyInsertedImage();
 		Thread.sleep(2000);
@@ -398,8 +393,6 @@ public class CaseTests extends ArkCaseTestBase {
 		//casesPom.refreshButtonClick();		
 		casesPom.refreshPage.click();
 		Thread.sleep(3000);
-//		WebDriverWait waittitle = new WebDriverWait(driver, 30);
-//		waittitle.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(".//*[@editable-text='objectInfo.title']")));		
 		Assert.assertTrue("The title is not changed into in approval", casesPom.caseTitleChangedInApproval());		
 		casesPom.verifyCreatedCaseInfo("CaseTestMilanCongressionalResponse", "Congressional Response");
 		casesPom.changeCaseStatusAproved();		
@@ -2465,7 +2458,7 @@ public class CaseTests extends ArkCaseTestBase {
 		documents.clickRootExpander();
 		Thread.sleep(3000);
 		documents.verifyIfSecondRowDocumentIsPresent();
-		documents.verifySecondDocument("imageprofile.png", "attachment", "1.0", "ACTIVE");
+		documents.verifySecondDocument("imageprofile", ".png", "attachment", "1.0", "ACTIVE");
 		Thread.sleep(3000);
 		casesPom.peopleChangeCaseStatusButton.click();
 		Thread.sleep(10000);
@@ -2965,7 +2958,7 @@ public class CaseTests extends ArkCaseTestBase {
 		documents.clickRootExpander();
 		Thread.sleep(2000);
 		documents.verifyIfSecondRowDocumentIsPresent();
-		documents.verifySecondDocument("imageprofile.png", "attachment", "1.0", "ACTIVE");
+		documents.verifySecondDocument("imageprofile", ".png", "attachment", "1.0", "ACTIVE");
 		Thread.sleep(3000);
 		casesPom.peopleChangeCaseStatusButton.click();
 		Thread.sleep(10000);
