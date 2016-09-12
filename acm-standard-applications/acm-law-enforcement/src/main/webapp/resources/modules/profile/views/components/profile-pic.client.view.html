@@ -6,10 +6,12 @@
                     <img id="picLoading" class="img-circle img-responsive"  ng-src="{{imgSrc}}" fallback-err-src="modules/profile/img/nopic.png">
                     <div>
                         <a id="lnkChangePicture" data-ui-sref="profile" ng-click="changePic()"><u>
-                            <span translate>profile.pciture.title</span>
+                            <span translate>profile.picture.title</span>
                         </u></a>
                     </div>
-                    <button ngf-select ng-model="userPicture"  id="file"  class="btn btn-sm btn-default hidden" ngf-change="submit()" ></button>
+                    <button ngf-select ng-model="userPicture"  id="file" 
+                    		ngf-pattern="'image/*'" ngf-accept="'image/*'" 
+                    		class="btn btn-sm btn-default hidden" ngf-change="submit()" ></button>
                 </div>
             </div>
             <div class="col-xs-8">
@@ -17,7 +19,7 @@
                 <h4>  <a href="#"  editable-text="profilePicTitle" onaftersave="update()">{{ profilePicTitle || 'profile.unknown' | translate}}</a></h4>
                 <h4 id="email">{{ profilePicEmail || 'Unknown'}}</h4>
                 <small>
-                    <span translate>profile.pciture.email</span>
+                    <span translate>profile.picture.email</span>
                 </small>
             </div>
         </div>
