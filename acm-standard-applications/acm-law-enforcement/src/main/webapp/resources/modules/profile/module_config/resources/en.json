@@ -41,9 +41,10 @@
        "confirmation":"Enter your new password again.",
        "cancel":"Cancel"
    },
-   "profile.pciture":{
+   "profile.picture":{
        "title":"Change Picture",
-       "email":"Email Address"
+       "email":"Email Address",
+       "uploadImgError": "You have uploaded an invalid image file type"
    },
    "profile.modal":{
        "title":"Info",
