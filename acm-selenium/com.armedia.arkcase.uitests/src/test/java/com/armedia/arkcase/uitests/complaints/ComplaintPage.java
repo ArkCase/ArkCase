@@ -7,6 +7,9 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 
 import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
+import com.armedia.arkcase.uitests.base.WaitHelper;
+
+import repackage.EditBuildScript;
 
 public class ComplaintPage extends ArkCaseTestBase {
 
@@ -18,7 +21,7 @@ public class ComplaintPage extends ArkCaseTestBase {
 	WebElement initiatorTab;
 	@FindBy(how = How.XPATH, using = "/html/body/iframe")
 	public WebElement secondIframe;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/iframe")
+	@FindBy(how = How.XPATH, using = "//iframe")
 	public WebElement firstIfarme;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[1]/div[3]/div[2]/div[4]/div[2]/div[1]/div[2]/div[3]/div[1]/input")
 	WebElement firstNameInput;
@@ -58,13 +61,17 @@ public class ComplaintPage extends ArkCaseTestBase {
 	WebElement addBtn;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[9]/div/input")
 	WebElement submitBtn;
-	@FindBy(how = How.XPATH, using = "/html/body/header/div/nav/ul/li/a")
+	@FindBy(how = How.XPATH, using = ".//a[@class='dropdown-toggle']/i")
 	WebElement newButton;
+	@FindBy(how = How.XPATH, using = ".//*[@ng-click='toggleEditMode()']/i")
+	public WebElement editButton;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/div/div/div/div/div[2]/div/div[2]/section/div/div/table/tbody/tr/td")
 	WebElement noDataAviable;
 
 	public ComplaintPage clickNewButton() {
-
+		WaitHelper.waitPageToLoad(60, driver);
+		Assert.assertTrue("The new button is not displayed", newButton.isDisplayed());
+		Assert.assertTrue("The edit button in dashboard is not displayed", editButton.isDisplayed());		
 		newButton.click();
 		return this;
 	}
@@ -163,7 +170,8 @@ public class ComplaintPage extends ArkCaseTestBase {
 	}
 
 	public ComplaintPage setUserSearch(String name) {
-		searchForUserInput.sendKeys(name);
+		WebElement el = WaitHelper.getWhenElementIsVisible(searchForUserInput, 60, driver);
+		el.sendKeys(name);
 		return this;
 	}
 

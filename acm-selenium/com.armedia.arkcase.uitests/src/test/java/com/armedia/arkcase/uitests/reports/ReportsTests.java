@@ -24,7 +24,7 @@ public class ReportsTests extends ArkCaseTestBase {
 	@Category({ SmokeTests.class })
 	public void generateCaseReportforDrafts() throws Exception {
 		// generate report
-		Utility.setExcelFile(Constant.Path_TestData + Constant.File_TestData, "Sheet1");
+		Utility.setExcelFile(Constant.Path_TestData + Constant.File_TestData, "Report");
 		reportPage.ReportsMenuClick();
 		reportPage.generateReport(Utility.getCellData(1, 1), Utility.getCellData(1, 2), Utility.getCellData(1, 3),
 				Utility.getCellData(1, 4));
@@ -49,7 +49,7 @@ public class ReportsTests extends ArkCaseTestBase {
 	@Category({ SmokeTests.class })
 	public void generateCaseReportforInApproval() throws Exception {
 		// generate report
-		Utility.setExcelFile(Constant.Path_TestData + Constant.File_TestData, "Sheet1");       
+		Utility.setExcelFile(Constant.Path_TestData + Constant.File_TestData, "Report");       
 		reportPage.ReportsMenuClick();		
 		reportPage.generateReport(Utility.getCellData(2, 1), Utility.getCellData(2, 2), Utility.getCellData(2, 3),
 				Utility.getCellData(2, 4));
@@ -73,7 +73,7 @@ public class ReportsTests extends ArkCaseTestBase {
 	@Category({ SmokeTests.class })
 	public void generateCaseReportforActive() throws Exception {
 		// generate report
-		Utility.setExcelFile(Constant.Path_TestData + Constant.File_TestData, "Sheet1");
+		Utility.setExcelFile(Constant.Path_TestData + Constant.File_TestData, "Report");
 		reportPage.ReportsMenuClick();
 		reportPage.generateReport(Utility.getCellData(3, 1), Utility.getCellData(3, 2), Utility.getCellData(3, 3),
 				Utility.getCellData(3, 4));
@@ -97,7 +97,7 @@ public class ReportsTests extends ArkCaseTestBase {
 	@Category({ SmokeTests.class })
 	public void generateCaseReportforInactive() throws Exception {
 		// generate report
-		Utility.setExcelFile(Constant.Path_TestData + Constant.File_TestData, "Sheet1");
+		Utility.setExcelFile(Constant.Path_TestData + Constant.File_TestData, "Report");
 		reportPage.ReportsMenuClick();
 		reportPage.generateReport(Utility.getCellData(4, 1), Utility.getCellData(4, 2), Utility.getCellData(4, 3),
 				Utility.getCellData(4, 4));
@@ -121,7 +121,7 @@ public class ReportsTests extends ArkCaseTestBase {
 	@Category({ SmokeTests.class })
 	public void generateCaseReportforClosed() throws Exception {
 		// generate report
-		Utility.setExcelFile(Constant.Path_TestData + Constant.File_TestData, "Sheet1");
+		Utility.setExcelFile(Constant.Path_TestData + Constant.File_TestData, "Report");
 		reportPage.ReportsMenuClick();
 		reportPage.generateReport(Utility.getCellData(5, 1), Utility.getCellData(5, 2), Utility.getCellData(5, 3),
 				Utility.getCellData(5, 4));

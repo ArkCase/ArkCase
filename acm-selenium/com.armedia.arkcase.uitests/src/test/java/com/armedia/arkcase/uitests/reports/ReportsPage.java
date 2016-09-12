@@ -52,7 +52,7 @@ public class ReportsPage extends ArkCaseTestBase {
 	WebElement typeColumnHeader;	
 
 	public ReportsPage ReportsMenuClick() {
-       WaitHelper.clickWhenElelementIsClickable(ReportsLink, 30, driver);	   
+       WaitHelper.clickWhenElelementIsClickable(ReportsLink, 60, driver);	   
 	return this;
 	}
 
@@ -91,7 +91,6 @@ public class ReportsPage extends ArkCaseTestBase {
 	}
 
 	public ReportsPage generateReport(String report, String state, String datefrom, String dateto) {
-		WaitHelper.clickWhenElelementIsClickable(selectReport, 30, driver);
 		selectReport(report);
 		selectState(state);
 		insertDateFrom(datefrom);
@@ -114,6 +113,7 @@ public class ReportsPage extends ArkCaseTestBase {
 	}
 	public String readCaseNumberColumnHeader()
 	{
+		WaitHelper.waitForElement(caseNumberColumnHeader, driver);
 		return caseNumberColumnHeader.getText();
 	}
 	public String readStatusColumnHeader()

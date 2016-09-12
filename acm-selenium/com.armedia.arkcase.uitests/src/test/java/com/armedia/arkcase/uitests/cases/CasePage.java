@@ -2,30 +2,35 @@ package com.armedia.arkcase.uitests.cases;
 
 import java.awt.AWTException;
 import java.io.IOException;
+import java.util.List;
+import java.util.NoSuchElementException;
+
 import org.junit.Assert;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
 import com.armedia.arkcase.uitests.base.ArkCaseTestUtils;
 import com.armedia.arkcase.uitests.base.WaitHelper;
+import com.thoughtworks.selenium.webdriven.commands.WaitForPageToLoad;
 
 public class CasePage extends ArkCaseTestBase{
 
 	// General Information
-	@FindBy(how = How.XPATH, using = "/html/body/header/div/nav/ul/li/div/div[2]/div/a")
+	@FindBy(how = How.XPATH, using = ".//a[@title='Case']")
 	public WebElement newCaseButton;
 	@FindBy(how = How.XPATH, using = ".//a[@class='dropdown-toggle']/i")
 	public WebElement newButton;
 	@FindBy(how = How.XPATH, using = ".//*[@ng-click='toggleEditMode()']/i")
 	public WebElement editButton;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[1]/div[1]/span[4]")
+	@FindBy(how = How.XPATH, using = ".//div[@extid='generalInformationTab']/span[4]")
 	public WebElement generalInformationTab;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[1]/div[2]/span[3]/label")
 	public WebElement caseTitle;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[1]/div[2]/div[1]/input")
+	@FindBy(how = How.NAME, using = "caseTitle")
 	public WebElement caseTitleInput;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[1]/div[3]/span[3]/label")
+	@FindBy(how = How.XPATH, using = ".//*[@cname='caseType']/span[3]/label")
 	public WebElement caseTypeTitle;
 	@FindBy(how = How.XPATH, using = ".//*[@role='combobox']")
 	public WebElement caseTypeInput;
@@ -37,11 +42,11 @@ public class CasePage extends ArkCaseTestBase{
 	public WebElement descriptionInput;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[4]/div[1]/input")
 	public WebElement nextButton;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[4]")
+	@FindBy(how = How.XPATH, using = ".//*[@value='Next']")
 	public WebElement nextButtonArea;
 	// Initiator
 	// Initiaotr Information
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[2]/div/div[2]/div[2]/div[1]/input[1]")
+	@FindBy(how = How.XPATH, using = "html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[2]/div/div[2]/div[2]/div[1]/input[1]")
 	public WebElement initiatorTitle;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[2]/div/div[2]/div[2]/div[1]/ul/li[2]/a")
 	public WebElement initiatorMr;
@@ -51,9 +56,9 @@ public class CasePage extends ArkCaseTestBase{
 	public WebElement initiatorMs;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[2]/div/div[2]/div[2]/div[1]/ul/li[5]/a")
 	public WebElement initiatorMiss;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[2]/div/div[2]/div[3]/div[1]/input")
+	@FindBy(how = How.NAME, using = "initiatorFirstName")
 	public WebElement initiatorFirstName;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[2]/div/div[2]/div[4]/div[1]/input")
+	@FindBy(how = How.NAME, using = "initiatorLastName")
 	public WebElement initiatorLastName;
 	// Initiator Comunication Device
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[2]/div/div[2]/div[6]/div[2]/div/div[2]/div[2]/div[1]/input[1]")
@@ -192,13 +197,13 @@ public class CasePage extends ArkCaseTestBase{
 	@FindBy(how = How.XPATH, using = "/html/body/div[4]/div[2]/div/div[2]/div/div/a")
 	public WebElement uploadButton;
 	// Participants
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[5]/div[3]/div[2]/table/tbody/tr/td[5]/div/div[1]/input[1]")
+	@FindBy(how = How.XPATH, using = ".//div[@cname='participantType']/div[1]/input[1]")
 	public WebElement selectParticipantType;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[5]/div[3]/div[2]/table/tbody/tr/td[5]/div/div[1]/ul/li[2]/a")
+	@FindBy(how = How.XPATH, using = ".//a[@ovalue='assignee']")
 	public WebElement selectParticipantOwner;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[5]/div[3]/div[2]/table/tbody/tr/td[5]/div/div[1]/ul/li[3]/a")
 	public WebElement selectParticipantFollower;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[5]/div[3]/div[2]/table/tbody/tr/td[8]/div")
+	@FindBy(how = How.XPATH, using = ".//div[@cname='participantName']")
 	public WebElement selectParticipant;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[5]/div[3]/div[2]/table/tbody/tr/td[2]")
 	public WebElement participantTypePlusBtn;
@@ -212,13 +217,13 @@ public class CasePage extends ArkCaseTestBase{
 	// add user
 	@FindBy(how = How.ID, using = "edtPoSearch")
 	public WebElement searchForUsers;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/div/div/div/div/header/div/div/div/span/button")
+	@FindBy(how = How.XPATH, using = ".//button[@class='btn btn-md']")
 	public WebElement searchUserButton;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/div/div/div/div/div[2]/div/div[2]/section/div/div/table/tbody/tr/td[2]/a")
+	@FindBy(how = How.XPATH, using = ".//tr[@data-record-key='samuel-acm']/td[2]/a")
 	public WebElement searchedName;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/div/div/div/div/div[3]/button[2]")
+	@FindBy(how = How.XPATH, using = "//button[contains(text(),'Add')]")
 	public WebElement addSearchedName;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[7]/div/input")
+	@FindBy(how = How.XPATH, using = ".//input[@value='Submit']")
 	public WebElement submit;
 	// Case Types
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[1]/div[3]/div[1]/ul/li[2]/a")
@@ -233,7 +238,7 @@ public class CasePage extends ArkCaseTestBase{
 	public WebElement caseTypeBetterBuisnessDispute;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[1]/div[3]/div[1]/ul/li[7]/a")
 	public WebElement caseTypeClinicalInvestigatorFraud;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[1]/div[3]/div[1]/ul/li[8]/a")
+	@FindBy(how = How.XPATH, using = ".//a[@ovalue='Congressional Response']")
 	public WebElement caseTypeCongressionalResponse;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[1]/div[3]/div[1]/ul/li[9]/a")
 	public WebElement caseTypeDisabilityWaiverRequest;
@@ -269,13 +274,13 @@ public class CasePage extends ArkCaseTestBase{
 	public WebElement caseTypePollution;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[2]/div[1]/div[3]/div[1]/ul/li[26]/a")
 	public WebElement caseTypeProductTampering;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[1]/div[2]/span[4]/label")
+	@FindBy(how = How.XPATH, using = ".//div[@extid='initiatorTab']/span[4]/label")
 	public WebElement initiatorTab;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[1]/div[3]/span[4]/label")
 	public WebElement peopleTab;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[1]/div[4]/span[4]/label")
 	public WebElement attachmentTab;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[1]/div[1]/div[5]/span[4]/label")
+	@FindBy(how = How.XPATH, using = ".//div[@extid='participantsTab']/span[4]/label")
 	public WebElement participantnsTab;
 	@FindBy(how = How.XPATH, using = "/html/body/header/div/nav/ul/li/div/div[1]/div")
 	public WebElement caseButton;
@@ -285,12 +290,17 @@ public class CasePage extends ArkCaseTestBase{
 	public WebElement caseFilesMenu;
 	@FindBy(how = How.XPATH, using = ".//*[@class='row']/div[2]/h4")
 	public WebElement caseId;	
-
-	public CasePage newCase() throws InterruptedException {		
+	@FindBy(how = How.XPATH, using = "//*[@role='tablist']/div/span")
+    public List<WebElement> TabsList;
+	@FindBy(how = How.XPATH, using = "//div[@class='f-status f-table-status s-alert']/span")
+	public WebElement ParticipanNotEnteredAlert;
+	
+	public CasePage newCase() throws InterruptedException {
+		WaitHelper.waitPageToLoad(60, driver);
 		Assert.assertTrue("The new button is not displayed", newButtonIsDisplayed());
 		Assert.assertTrue("The edit button in dashboard is not displayed", editButtonIsDisplayed());		
 		newButton.click();
-		Thread.sleep(2000);
+		WaitHelper.waitPageToLoad(60, driver);
 		Assert.assertEquals("Case name is wrong", "Case", newCaseButton.getText());
 		newCaseButton.click();
 		return this;
@@ -309,7 +319,7 @@ public class CasePage extends ArkCaseTestBase{
 	}
 	
 	public boolean newButtonIsDisplayed(){
-		WebElement el = WaitHelper.getWhenElementIsVisible(newButton, 30, driver);	
+		WebElement el = WaitHelper.getWhenElementIsVisible(newButton, 60, driver);	
 		boolean newButtonIsDisplayed = el.isDisplayed();
 		if (newButtonIsDisplayed == true )
 		{
@@ -341,8 +351,8 @@ public class CasePage extends ArkCaseTestBase{
 
 		WebElement el = WaitHelper.getWhenElementIsVisible(caseTitleInput, 30, driver);	
 		Assert.assertTrue(el.isDisplayed());		
-		caseTitleInput.click();
-		caseTitleInput.sendKeys(caseName);
+		el.click();
+		el.sendKeys(caseName);
 		return this;
 	}
 
@@ -354,9 +364,8 @@ public class CasePage extends ArkCaseTestBase{
 
 	}
 
-	public CasePage caseTypeInputClick() {
-        
-		Assert.assertTrue(caseTypeInput.isDisplayed());
+	public CasePage caseTypeInputClick() {       
+		Assert.assertTrue(caseTypeInput.isDisplayed());		
 		caseTypeInput.click();
 		return this;
 
@@ -382,9 +391,10 @@ public class CasePage extends ArkCaseTestBase{
 	}
 
 	public CasePage caseTypeBackgroundInvestigation() {
-
+        
 		Assert.assertTrue(caseTypeBackgroundInvestigation.getText().equals("Background Investigation"));
-		caseTypeBackgroundInvestigation.click();
+		WebElement el = WaitHelper.getWhenElementIsVisible(caseTypeBackgroundInvestigation, 30, driver);
+		el.click();
 		return this;
 
 	}
@@ -404,10 +414,9 @@ public class CasePage extends ArkCaseTestBase{
 	}
 
 	public CasePage caseTypeCongressionalResponse() {
-
-		
-		Assert.assertTrue(caseTypeCongressionalResponse.getText().equals("Congressional Response"));			
-		caseTypeCongressionalResponse.click();
+        WebElement el =  WaitHelper.getWhenElementIsVisible(caseTypeCongressionalResponse, 60, driver);
+		Assert.assertTrue(el.getText().equals("Congressional Response"));			
+		el.click();
 		return this;
 	}
 
@@ -426,8 +435,8 @@ public class CasePage extends ArkCaseTestBase{
 	}
 
 	public CasePage caseTypeDrugTrafficking() {
-
-		Assert.assertTrue(caseTypeDrugTrafficking.getText().equals("Drug Trafficking"));
+        WebElement el = WaitHelper.getWhenElementIsPresent(caseTypeDrugTrafficking, 60, driver);
+		Assert.assertTrue(el.getText().equals("Drug Trafficking"));
 		caseTypeDrugTrafficking.click();
 		return this;
 	}
@@ -553,14 +562,14 @@ public class CasePage extends ArkCaseTestBase{
 	}
 
 	public CasePage nextButtonClick() {
-		nextButton.click();
+		WebElement el = WaitHelper.getWhenElementIsPresent(nextButton, 60, driver);
+		el.click();
 		return this;
 	}
 
 	public CasePage clickInitiatorMr() {
-
-		Assert.assertTrue(initiatorMr.getText().equals("Mr"));
-		initiatorMr.click();
+		       
+        Assert.assertEquals(initiatorMr.getText(), "Mr");
 		return this;
 
 	}
@@ -588,7 +597,7 @@ public class CasePage extends ArkCaseTestBase{
 	}
 
 	public CasePage initiatorFirstName(String firstName) {
-
+		WaitHelper.waitForElement(initiatorFirstName, driver);        
 		initiatorFirstName.click();
 		initiatorFirstName.sendKeys(firstName);
 		return this;
@@ -596,7 +605,7 @@ public class CasePage extends ArkCaseTestBase{
 	}
 
 	public CasePage initiatorLastName(String lastName) {
-
+		WaitHelper.waitForElement(initiatorLastName, driver); 
 		initiatorLastName.click();
 		initiatorLastName.sendKeys(lastName);
 		return this;
@@ -1011,13 +1020,15 @@ public class CasePage extends ArkCaseTestBase{
 	}
 
 	public CasePage selectParticipantClick() {
+		WaitHelper.waitForElement(selectParticipant, driver);
 		selectParticipant.click();
 		return this;
 	}
 
 	public CasePage searchForUsers() throws InterruptedException {	
-		WebElement el = WaitHelper.getWhenElementIsVisible(searchForUsers, 30, driver);	
-		el.click();
+		WaitHelper.waitUntilElementIsVisible(searchForUsers, driver);
+		WaitHelper.waitUntilElementisPresent(searchForUsers, 60, driver);
+		searchForUsers.click();
 		Thread.sleep(2000);
 		searchForUsers.sendKeys("Samuel Supervisor");
 		searchUserButton.click();
@@ -1039,6 +1050,7 @@ public class CasePage extends ArkCaseTestBase{
 
 	public CasePage verifyInitiatorTab() {
 		Assert.assertEquals("Initiator tab name is wrong", "Initiator", initiatorTab.getText());
+		initiatorTab.click();
 		return this;
 	}
 
@@ -1095,11 +1107,12 @@ public class CasePage extends ArkCaseTestBase{
 	}
 	
 	public CasePage initiatorTitleClick(){
+		WaitHelper.waitUntilElementIsVisible(initiatorTitle, driver);
 		initiatorTitle.click();
 		return this;
 	}
 	
-	public CasePage participantTabClick(){
+	public CasePage participantTabClick(){		
 		participantnsTab.click();
 		return this;
 	}
@@ -1107,6 +1120,51 @@ public class CasePage extends ArkCaseTestBase{
 	public CasePage submitClick(){
 		submit.click();
 		return this;
+	}
+	
+	public Boolean verifyAllIsEntered() {	
+		Boolean allentered = false;
+		for (WebElement webElement : TabsList) {
+			
+			if (webElement.getAttribute("class").toString() == "f-remove fontawesome icon-minus-sign")
+              allentered = false;
+            else
+            {
+              allentered = true;
+            }			
+		}
+		return allentered;
+		
+	}
+	
+	public Boolean ParticipantEntered(){	
+		
+		Boolean participantEntered = false;
+		if (driver.findElements(By.xpath("//div[@class='f-status f-table-status s-alert']/span")).size() != 0)
+		{
+			participantEntered = false;
+		}
+		else 
+		{
+			participantEntered = true;
+		}
+		
+		return participantEntered;
+	}
+	
+public Boolean ParticipantFound(){	
+		
+		Boolean participantFound = false;
+		if (driver.findElements(By.xpath("//tr[@class='jtable-no-data-row']/td")).size() == 0)
+		{
+			participantFound = false;
+		}
+		else 
+		{
+			participantFound = true;
+		}
+		
+		return participantFound;
 	}
 
 	

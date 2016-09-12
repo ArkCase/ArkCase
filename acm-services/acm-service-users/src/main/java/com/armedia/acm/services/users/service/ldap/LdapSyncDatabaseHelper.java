@@ -7,6 +7,7 @@ import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserRole;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
@@ -30,14 +31,9 @@ public class LdapSyncDatabaseHelper
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Transactional
-    @CacheEvict(value="quiet-user-cache", allEntries=true)
-    public void updateDatabase(String directoryName,
-                               Set<String> allRoles,
-                               List<AcmUser> users,
-                               Map<String, Set<AcmUser>> usersByRole,
-                               Map<String, Set<AcmUser>> usersByLdapGroup,
-                               Map<String, String> childParentPair,
-                               boolean singleUser)
+    @CacheEvict(value = "quiet-user-cache", allEntries = true)
+    public void updateDatabase(String directoryName, Set<String> allRoles, List<AcmUser> users, Map<String, Set<AcmUser>> usersByRole,
+            Map<String, Set<AcmUser>> usersByLdapGroup, Map<String, String> childParentPair, boolean singleUser)
     {
         if (!singleUser)
         {
@@ -58,10 +54,7 @@ public class LdapSyncDatabaseHelper
 
     private void storeRoles(Map<String, Set<AcmUser>> userMap)
     {
-        for (Map.Entry<String, Set<AcmUser>> userMapEntry : userMap.entrySet())
-        {
-            persistUserRoles(userMapEntry.getValue(), userMapEntry.getKey());
-        }
+        userMap.forEach((key, value) -> persistUserRoles(value, key));
     }
 
     private List<AcmUserRole> persistUserRoles(Set<AcmUser> savedUsers, String roleName)
