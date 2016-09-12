@@ -2334,6 +2334,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 }
                             }
                             , function (errorData) {
+                                DocTree.refreshTree();
                                 dfd.reject();
                             }
                         );
