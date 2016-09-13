@@ -64,8 +64,8 @@ public class AcmAuthenticationManager implements AuthenticationManager
         }
         if (lastException != null)
         {
-            AuthenticationException ae = new AuthenticationServiceException(ExceptionUtils.getRootCauseMessage(lastException),
-                    lastException);
+            AuthenticationException ae = (lastException instanceof ProviderNotFoundException) ? (AuthenticationException) lastException
+                    : new AuthenticationServiceException(ExceptionUtils.getRootCauseMessage(lastException), lastException);
             getAuthenticationEventPublisher().publishAuthenticationFailure(ae, authentication);
             throw ae;
         }
