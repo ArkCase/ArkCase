@@ -9,7 +9,6 @@ import org.openqa.selenium.support.PageFactory;
 import com.armedia.arkcase.uitests.base.ArkCaseAuthentication;
 import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
 import com.armedia.arkcase.uitests.base.ArkCaseTestUtils;
-import com.armedia.arkcase.uitests.base.WaitHelper;
 import com.armedia.arkcase.uitests.group.SmokeTests;
 import com.armedia.arkcase.uitests.task.TaskPage;
 
