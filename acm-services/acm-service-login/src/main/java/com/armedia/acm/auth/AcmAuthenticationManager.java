@@ -8,6 +8,8 @@ import com.armedia.acm.services.users.service.group.GroupService;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -33,6 +35,7 @@ public class AcmAuthenticationManager implements AuthenticationManager
     private UserDao userDao;
     private AcmGroupDao groupDao;
     private GroupService groupService;
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException
@@ -64,9 +67,19 @@ public class AcmAuthenticationManager implements AuthenticationManager
         }
         if (lastException != null)
         {
-            AuthenticationException ae = (lastException instanceof ProviderNotFoundException) ? (AuthenticationException) lastException
-                    : new AuthenticationServiceException(ExceptionUtils.getRootCauseMessage(lastException), lastException);
+            AuthenticationException ae = null;
+            if (lastException instanceof ProviderNotFoundException)
+            {
+                ae = (AuthenticationException) lastException;
+            } else
+            {
+                ae = ExceptionUtils.getRootCauseMessage(lastException).contains("UnknownHostException")
+                        ? new AuthenticationServiceException("There was an error in connecting with the authentication services!",
+                                lastException)
+                        : new AuthenticationServiceException("Unknown error occurred!", lastException);
+            }
             getAuthenticationEventPublisher().publishAuthenticationFailure(ae, authentication);
+            log.debug(lastException.getMessage());
             throw ae;
         }
 
