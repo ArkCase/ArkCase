@@ -79,7 +79,7 @@ public class AcmAuthenticationManager implements AuthenticationManager
                         : new AuthenticationServiceException("Unknown error occurred!", lastException);
             }
             getAuthenticationEventPublisher().publishAuthenticationFailure(ae, authentication);
-            log.debug(lastException.getMessage());
+            log.debug("Detailed exception: ", lastException);
             throw ae;
         }
 
