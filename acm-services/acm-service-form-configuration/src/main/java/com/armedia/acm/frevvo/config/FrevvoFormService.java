@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONObject;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,6 +27,8 @@ public interface FrevvoFormService {
 
 	public Object init();
 	public Object get(String action);
+
+	@Transactional
 	public boolean save(String xml, MultiValueMap<String, MultipartFile> attachments) throws Exception;
 	
 	public Map<String, Object> getProperties();

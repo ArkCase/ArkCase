@@ -17,7 +17,7 @@
 
        <bean id="closeComplaintRequestFactory" class="com.armedia.acm.form.closecomplaint.service.CloseComplaintRequestFactory"/>
 
-       <bean id="closeComplaintService" class="com.armedia.acm.form.closecomplaint.service.CloseComplaintService">
+       <bean id="closeComplaintService" class="com.armedia.acm.form.closecomplaint.service.CloseComplaintService" scope="prototype">
               <property name="closeComplaintRequestFactory" ref="closeComplaintRequestFactory"/>
               <property name="ecmFileService" ref="ecmFileService"/>
               <property name="properties" ref="acm-form-properties" />
