@@ -41,8 +41,8 @@
         <property name="objectAssociationDao" ref="objectAssociationDao"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="ecmFileService" ref="ecmFileService"/>
-        <property name="formService" ref="caseFilePSService"/>
         <property name="personService" ref="personService"/>
+        <lookup-method name="getFormService" bean="caseFilePSService"/>
     </bean>
 
     <bean id="caseFilePSService" class="com.armedia.acm.form.casefile.service.CaseFilePSService" scope="prototype">
@@ -55,8 +55,8 @@
 
     <bean id="caseFileUpdatedListener" class="com.armedia.acm.form.casefile.service.CaseFileUpdatedListener">
         <property name="properties" ref="acm-forms-properties"/>
-        <property name="caseFileService" ref="caseFileService"/>
-        <property name="caseFilePSService" ref="caseFilePSService"/>
+        <lookup-method name="getCaseFileService" bean="caseFileService"/>
+        <lookup-method name="getCaseFilePSService" bean="caseFilePSService"/>
     </bean>
 
 </beans>
