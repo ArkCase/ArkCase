@@ -210,6 +210,8 @@ public class CaseFileService extends FrevvoFormAbstractService
         form.setId(caseFile.getId());
         form.setCaseNumber(caseFile.getCaseNumber());
 
+        setCaseFile(caseFile);
+
         return caseFile;
     }
 
