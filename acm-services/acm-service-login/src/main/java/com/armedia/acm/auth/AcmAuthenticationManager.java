@@ -6,6 +6,10 @@ import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.service.group.GroupService;
 import com.armedia.acm.spring.SpringContextHolder;
+
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -21,8 +25,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * Cycle through the configured authentication provider.  If one of them works,
- * map the provider's groups to ACM groups.
+ * Cycle through the configured authentication provider. If one of them works, map the provider's groups to ACM groups.
  */
 public class AcmAuthenticationManager implements AuthenticationManager
 {
@@ -32,12 +35,12 @@ public class AcmAuthenticationManager implements AuthenticationManager
     private UserDao userDao;
     private AcmGroupDao groupDao;
     private GroupService groupService;
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException
     {
-        Map<String, AuthenticationProvider> providerMap =
-                getSpringContextHolder().getAllBeansOfType(AuthenticationProvider.class);
+        Map<String, AuthenticationProvider> providerMap = getSpringContextHolder().getAllBeansOfType(AuthenticationProvider.class);
         Authentication providerAuthentication = null;
         Exception lastException = null;
         for (Map.Entry<String, AuthenticationProvider> providerEntry : providerMap.entrySet())
@@ -64,10 +67,19 @@ public class AcmAuthenticationManager implements AuthenticationManager
         }
         if (lastException != null)
         {
-            AuthenticationException ae = (lastException instanceof AuthenticationException)
-                    ? (AuthenticationException) lastException
-                    : new AuthenticationServiceException(lastException.getMessage(), lastException);
+            AuthenticationException ae = null;
+            if (lastException instanceof ProviderNotFoundException)
+            {
+                ae = (AuthenticationException) lastException;
+            } else
+            {
+                ae = ExceptionUtils.getRootCauseMessage(lastException).contains("UnknownHostException")
+                        ? new AuthenticationServiceException("There was an error in connecting with the authentication services!",
+                                lastException)
+                        : new AuthenticationServiceException("Unknown error occurred!", lastException);
+            }
             getAuthenticationEventPublisher().publishAuthenticationFailure(ae, authentication);
+            log.debug("Detailed exception: ", lastException);
             throw ae;
         }
 
@@ -85,8 +97,7 @@ public class AcmAuthenticationManager implements AuthenticationManager
 
         AcmUser user = getUserDao().findByUserIdAnyCase(providerAuthentication.getName());
 
-        Collection<AcmGrantedAuthority> acmAuths =
-                getAuthoritiesMapper().mapAuthorities(providerAuthentication.getAuthorities());
+        Collection<AcmGrantedAuthority> acmAuths = getAuthoritiesMapper().mapAuthorities(providerAuthentication.getAuthorities());
 
         // Collection with LDAP and ADHOC authority groups that the user belongs to
         Collection<AcmGrantedAuthority> acmAuthsGroups = getAuthorityGroups(user);
@@ -98,8 +109,7 @@ public class AcmAuthenticationManager implements AuthenticationManager
         acmAuths.addAll(acmAuthsGroups);
         acmAuths.addAll(acmAuthsRoles);
 
-        return new AcmAuthentication(
-                acmAuths, providerAuthentication.getCredentials(), providerAuthentication.getDetails(),
+        return new AcmAuthentication(acmAuths, providerAuthentication.getCredentials(), providerAuthentication.getDetails(),
                 providerAuthentication.isAuthenticated(), user.getUserId());
     }
 
@@ -113,7 +123,10 @@ public class AcmAuthenticationManager implements AuthenticationManager
 
         if (groups != null)
         {
-            authGroups = groups.stream().map(group -> new AcmGrantedAuthority(groupService.isUUIDPresentInTheGroupName(group.getName()) ? group.getName().substring(0, group.getName().lastIndexOf("-UUID-")) : group.getName())).collect(Collectors.toSet());
+            authGroups = groups.stream()
+                    .map(group -> new AcmGrantedAuthority(groupService.isUUIDPresentInTheGroupName(group.getName())
+                            ? group.getName().substring(0, group.getName().lastIndexOf("-UUID-")) : group.getName()))
+                    .collect(Collectors.toSet());
         }
 
         return authGroups;
