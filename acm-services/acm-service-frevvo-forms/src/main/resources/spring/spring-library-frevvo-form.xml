@@ -9,7 +9,7 @@
           factory-method="getApplicationEventPublisher"/>
 
     <!-- TODO: So far, only CaseFileService is re-written on this way. On time, we should do for all other services -->
-    <bean id="frevvoFormServices" class="java.util.HashMap">
+    <bean id="frevvoFormServices" class="java.util.HashMap" scope="prototype">
         <constructor-arg>
             <map key-type="java.lang.String" value-type="com.armedia.acm.frevvo.config.FrevvoFormService">
                 <entry key="case_file" value-ref="caseFileService"/>
@@ -22,7 +22,7 @@
     </bean>
 
     <bean id="frevvoFormServiceFactory" class="com.armedia.acm.service.frevvo.forms.factory.FrevvoFormServiceFactory">
-        <property name="services" ref="frevvoFormServices"/>
+        <lookup-method name="getServices" bean="frevvoFormServices"/>
     </bean>
 
 </beans>
