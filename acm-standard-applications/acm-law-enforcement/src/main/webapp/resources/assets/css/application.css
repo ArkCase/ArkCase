@@ -726,6 +726,16 @@ thead {
 	overflow: normal;
 }
 
+.widget .ui-grid-cell:hover {
+	white-space: normal;
+	overflow: normal;
+}
+
+.widget .ui-grid-cell a:hover {
+	white-space: normal;
+	overflow: normal;
+}
+
 /* Highlight error grid's cell */
 
 .ui-grid .ui-grid-cell.error-cell {
