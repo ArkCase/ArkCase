@@ -169,6 +169,8 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
                     in.getParentObjectId());
             getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TYPE,
                     in.getParentObjectType());
+            getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_PARENT_OBJECT_NAME,
+                    in.getAttachedToObjectName());
             getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TITLE,
                     in.getParentObjectTitle());
 
@@ -891,6 +893,10 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
             parentObjectType = parentObjectType == null ? retval.getAttachedToObjectType() : parentObjectType;
             retval.setParentObjectType(parentObjectType);
 
+            String parentObjectName = (String) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_NAME);
+            parentObjectName = parentObjectName == null ? retval.getAttachedToObjectName() : parentObjectName;
+            retval.setAttachedToObjectName(parentObjectName);
+
             retval.setParentObjectTitle((String) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TITLE));
 
             retval.setLegacySystemId((String) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_LEGACY_SYSTEM_ID));
@@ -1098,6 +1104,11 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
             String parentObjectType = (String) taskLocal.get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TYPE);
             acmTask.setParentObjectType(parentObjectType);
         }
+        if (acmTask.getAttachedToObjectName() == null)
+        {
+            String parentObjectName = (String) taskLocal.get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_NAME);
+            acmTask.setAttachedToObjectName(parentObjectName);
+        }
         if (acmTask.getParentObjectTitle() == null)
         {
             String parentObjectTitle = (String) taskLocal.get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TITLE);
@@ -1274,6 +1285,10 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
             String parentObjectType = (String) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TYPE);
             parentObjectType = parentObjectType == null ? acmTask.getAttachedToObjectType() : parentObjectType;
             acmTask.setParentObjectType(parentObjectType);
+
+            String parentObjectName = (String) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_NAME);
+            parentObjectName = parentObjectName == null ? acmTask.getAttachedToObjectName() : parentObjectName;
+            acmTask.setAttachedToObjectName(parentObjectName);
 
             acmTask.setParentObjectTitle((String) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TITLE));
 
