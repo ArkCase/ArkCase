@@ -246,7 +246,7 @@
           "notes"
         ]
       },
-       {
+      {
         "type": "p/ADHOC/ref",
         "label": "References",
         "icon": "fa fa-exchange",
@@ -543,7 +543,7 @@
             }
           ]
         },
-         {
+        {
           "id": "references",
           "type": "component",
           "columnDefs": [
@@ -812,7 +812,7 @@
         }
       ]
     },
-      {
+    {
       "id": "references",
       "title": "References",
       "icon": "fa fa-exchange",
@@ -1001,7 +1001,7 @@
           "name": "creator",
           "displayName": "tasks.comp.tags.table.columns.createdBy",
           "headerCellFilter": "translate",
-          "fullNameField": "creator_full_name_lcs"
+          "lookup": "userFullNames"
         }
       ],
       "filters": "\"Object Type\": TAG",
@@ -1045,7 +1045,6 @@
       "paginationPageSize": 10,
       "start": 0
     },
-    
     {
       "id": "referenceSearchGrid",
       "title": "Reference Search",
@@ -1108,7 +1107,6 @@
       "filterName": "",
       "reportFileName": "search"
     },
-    
     {
       "id": "newTask",
       "status": [

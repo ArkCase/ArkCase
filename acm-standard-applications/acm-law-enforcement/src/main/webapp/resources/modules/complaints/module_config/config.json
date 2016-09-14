@@ -437,6 +437,7 @@
               "name": "modified",
               "displayName": "complaints.comp.locations.table.columns.modified",
               "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
               "width": 150
             },
             {
@@ -1175,7 +1176,7 @@
           "name": "creator",
           "displayName": "complaints.comp.tags.table.columns.createdBy",
           "headerCellFilter": "translate",
-          "fullNameField": "creator_full_name_lcs"
+          "lookup": "userFullNames"
         }
       ],
       "filters": "\"Object Type\": TAG",
