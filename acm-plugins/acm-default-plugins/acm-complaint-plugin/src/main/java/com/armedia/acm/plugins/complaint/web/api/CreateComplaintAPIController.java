@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.complaint.web.api;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.frevvo.config.FrevvoFormService;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.complaint.ComplaintForm;
 import com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher;
@@ -27,7 +28,7 @@ public class CreateComplaintAPIController
 
     private SaveComplaintTransaction complaintTransaction;
     private ComplaintEventPublisher eventPublisher;
-    private ComplaintService complaintService;
+    private FrevvoFormService complaintService;
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -36,11 +37,8 @@ public class CreateComplaintAPIController
             Authentication auth
     ) throws AcmCreateObjectFailedException
     {
-        if (log.isTraceEnabled())
-        {
-            log.trace("Got a complaint: " + in + "; complaint ID: '" + in.getComplaintId() + "'");
-            log.trace("complaint type: " + in.getComplaintType());
-        }
+        log.trace("Got a complaint: {}; complaint ID: '{}'", in, in.getComplaintId());
+        log.trace("complaint type: {}", in.getComplaintType());
 
         boolean isInsert = in.getComplaintId() == null;
 
@@ -62,7 +60,7 @@ public class CreateComplaintAPIController
 
         } catch (PipelineProcessException | TransactionException e)
         {
-            log.error("Could not save complaint: " + e.getMessage(), e);
+            log.error("Could not save complaint: {}", e.getMessage(), e);
             getEventPublisher().publishComplaintEvent(in, auth, isInsert, false);
 
             throw new AcmCreateObjectFailedException("complaint", e.getMessage(), e);
@@ -90,7 +88,7 @@ public class CreateComplaintAPIController
         this.eventPublisher = eventPublisher;
     }
 
-    public ComplaintService getComplaintService()
+    public FrevvoFormService getComplaintService()
     {
         return complaintService;
     }
