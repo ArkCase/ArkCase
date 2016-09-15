@@ -11,6 +11,7 @@ import java.util.Map;
 
 import com.armedia.acm.frevvo.config.FrevvoFormFactory;
 
+import com.armedia.acm.frevvo.config.FrevvoFormService;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,19 +46,17 @@ import com.armedia.acm.service.history.model.AcmHistory;
  */
 public class CaseFilePSFactory extends FrevvoFormFactory
 {
-	private final Logger LOG = LoggerFactory.getLogger(getClass());
-	
 	public static final String PERSON_TYPE = "Subject";
 	public static final String PERSON_IDENTIFICATION_EMPLOYEE_ID = "EMPLOYEE_ID";
 	public static final String PERSON_IDENTIFICATION_SSN = "SSN";
 	public static final String OBJECT_TYPE_POSTAL_ADDRESS = "POSTAL_ADDRESS";
 	public static final String OBJECT_TYPE_ORGANIZATION = "ORGANIZATION";
-	
+	private final Logger LOG = LoggerFactory.getLogger(getClass());
 	private ObjectAssociationDao objectAssociationDao;
 	private EcmFileDao ecmFileDao;
 	private AcmHistoryDao acmHistoryDao;
 	private EcmFileService ecmFileService;
-    private CaseFilePSService formService;
+    private FrevvoFormService formService;
     private PersonService personService;
 
 	
@@ -166,7 +165,7 @@ public class CaseFilePSFactory extends FrevvoFormFactory
 				retval.setNumber(caseFile.getCaseNumber());
 				retval.setTitle(caseFile.getTitle());
 				retval.setType(caseFile.getCaseType());
-	            String cmisFolderId = getFormService().findFolderIdForAttachments(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
+	            String cmisFolderId = getFormService().findCmisFolderId(null, caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
 				retval.setCmisFolderId(cmisFolderId);
 				
 				if (caseFile.getOriginator() != null && caseFile.getOriginator().getPerson() != null)
@@ -413,7 +412,7 @@ public class CaseFilePSFactory extends FrevvoFormFactory
 		this.ecmFileService = ecmFileService;
 	}
 
-    public CaseFilePSService getFormService()
+    public FrevvoFormService getFormService()
     {
         return formService;
     }

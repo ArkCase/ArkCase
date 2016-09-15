@@ -1,10 +1,9 @@
-/**
- * 
- */
 package com.armedia.acm.form.project.service;
 
 import java.util.Properties;
 
+import com.armedia.acm.frevvo.config.FrevvoFormService;
+import com.armedia.acm.frevvo.model.FrevvoForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
@@ -14,16 +13,13 @@ import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.plugins.casefile.model.CaseEvent;
 import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 
-/**
- * @author riste.tutureski
- *
- */
+
 public class ProjectUpdatedListener implements ApplicationListener<CaseEvent> {
 
 	private final Logger LOG = LoggerFactory.getLogger(getClass());
 	
 	private Properties properties;
-	private ProjectService projectService;
+	private FrevvoFormService projectService;
 	
 	@Override
 	public void onApplicationEvent(CaseEvent event) {
@@ -56,7 +52,7 @@ public class ProjectUpdatedListener implements ApplicationListener<CaseEvent> {
 	}
 
 
-	public ProjectService getProjectService() {
+	public FrevvoFormService getProjectService() {
 		return projectService;
 	}
 
