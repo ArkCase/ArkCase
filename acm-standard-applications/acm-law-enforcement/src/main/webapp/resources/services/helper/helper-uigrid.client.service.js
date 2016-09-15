@@ -11,8 +11,8 @@
  * Helper.UiGridService has functions for typical usage in ArCase of 'ui-grid' directive
  */
 angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '$translate'
-    , 'UtilService', 'LookupService', 'ApplicationConfigService', 'Object.LookupService', 'ObjectService', 'uiGridConstants'
-    , function ($resource, $q, $translate, Util, LookupService, ApplicationConfigService, ObjectLookupService, ObjectService, uiGridConstants) {
+    , 'UtilService', 'LookupService', 'ApplicationConfigService', 'Object.LookupService', 'ObjectService', 'uiGridConstants', 'Object.AuditService'
+    , function ($resource, $q, $translate, Util, LookupService, ApplicationConfigService, ObjectLookupService, ObjectService, uiGridConstants, ObjectAuditService) {
         var Service = {
             Lookups: {
                 USER_FULL_NAMES: "userFullNames"
