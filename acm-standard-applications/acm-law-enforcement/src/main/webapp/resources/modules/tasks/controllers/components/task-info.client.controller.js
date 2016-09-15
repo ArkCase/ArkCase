@@ -2,10 +2,10 @@
 
 angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$stateParams', '$translate', '$timeout'
     , 'UtilService', 'Util.DateService', 'ConfigService', 'LookupService', 'Object.LookupService', 'Task.InfoService', 'Object.ModelService'
-    , 'Helper.ObjectBrowserService'
+    , 'Helper.ObjectBrowserService', 'MessageService'
     , function ($scope, $stateParams, $translate, $timeout
         , Util, UtilDateService, ConfigService, LookupService, ObjectLookupService, TaskInfoService, ObjectModelService
-        , HelperObjectBrowserService) {
+        , HelperObjectBrowserService, MessageService) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -79,6 +79,9 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             $scope.objectInfo.dueDate = UtilDateService.dateToIso($scope.dateInfo.dueDate);
             saveTask();
         };
+        $scope.$on('accessDenied', function(event, message){
+            MessageService.info(message);
+        });
 
         function saveTask() {
             var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));

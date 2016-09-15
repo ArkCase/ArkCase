@@ -123,6 +123,8 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
                 throw new AcmTaskException("No such task with id '" + in.getTaskId() + "'");
             } else
             {
+                // Update participants and privileges
+                getParticipantDao().saveParticipants(in.getParticipants());
                 throw new AcmTaskException(
                         "Task with id '" + in.getTaskId() + "' has already been completed and so " + "it cannot be updated.");
             }
@@ -320,6 +322,9 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
         AcmTask retval = acmTaskFromActivitiTask(existingTask);
         retval = completeTask(retval, user, outcomePropertyName, outcomeId);
 
+        // Task participant privileges updated immediately, not to wait for DAC batch update
+        getDataAccessPrivilegeListener().applyAssignmentAndAccessRules(retval);
+
         return retval;
     }
 
@@ -344,6 +349,10 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
 
         AcmTask retval = acmTaskFromActivitiTask(existingTask);
         retval = deleteTask(retval, user, null);
+
+        // Task participant privileges updated immediately, not to wait for DAC batch update
+        getDataAccessPrivilegeListener().applyAssignmentAndAccessRules(retval);
+
         return retval;
     }
 
