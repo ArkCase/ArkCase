@@ -6,6 +6,7 @@ package com.armedia.acm.form.casefile.service;
 import com.armedia.acm.form.casefile.model.CaseFileForm;
 import com.armedia.acm.form.casefile.model.CaseFilePSForm;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
+import com.armedia.acm.frevvo.config.FrevvoFormService;
 import com.armedia.acm.plugins.casefile.model.CaseEvent;
 import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 import org.slf4j.Logger;
@@ -23,8 +24,8 @@ public class CaseFileUpdatedListener implements ApplicationListener<CaseEvent>
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     private Properties properties;
-    private CaseFileService caseFileService;
-    private CaseFilePSService caseFilePSService;
+    private FrevvoFormService caseFileService;
+    private FrevvoFormService caseFilePSService;
 
     @Override
     public void onApplicationEvent(CaseEvent event)
@@ -69,7 +70,7 @@ public class CaseFileUpdatedListener implements ApplicationListener<CaseEvent>
         this.properties = properties;
     }
 
-    public CaseFileService getCaseFileService()
+    public FrevvoFormService getCaseFileService()
     {
         return caseFileService;
     }
@@ -79,7 +80,7 @@ public class CaseFileUpdatedListener implements ApplicationListener<CaseEvent>
         this.caseFileService = caseFileService;
     }
 
-    public CaseFilePSService getCaseFilePSService()
+    public FrevvoFormService getCaseFilePSService()
     {
         return caseFilePSService;
     }
