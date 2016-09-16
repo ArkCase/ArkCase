@@ -461,7 +461,6 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     return componentConfig;
                 });
 
-
                 that.previousId = null;
                 that.scope.$on('object-updated', function (e, objectInfo, objectId) {
                     that.currentObjectId = Service.getCurrentObjectId();
@@ -506,11 +505,13 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     that.previousId = objectId;
 
                     that.deferConfigDone.promise.then(function (data) {
-                        that.onObjectInfoRetrieved(objectInfo);
+                        if(that.loaded) { // skip on first load
+                            that.onObjectInfoRetrieved(objectInfo);
+                        } 
+                        that.loaded = true;
                     });
                 };
-
-            }
+          }
         };
 
         Service.Tree.prototype = {
