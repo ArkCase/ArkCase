@@ -1,7 +1,10 @@
 var taskPage = require('./Pages/task_page.js');
 var tasksPage = require('./Pages/tasks_page.js');
 var authentication = require('./authentication.js');
-
+var now = new Date();
+var day = ("0" + now.getDate()).slice(-2);
+var month = ("0" + (now.getMonth() + 1)).slice(-2);
+var today = (month) + "/" + (day) + "/" + now.getFullYear();
 var flag = false;
 
 function testAsync(done) {
@@ -14,33 +17,20 @@ function testAsync(done) {
     }, 8000);
 }
 
-// Specs
-describe("Testing async calls with beforeEach and passing the special done callback around", function() {
-
-    beforeEach(function(done) {
-        // Make an async call, passing the special done callback        
-        testAsync(done);
-    });
-
-    it("Should be true if the async call has completed", function() {
-        expect(flag).toEqual(true);
-    });
-
-});
 
 describe('Create new task ', function() {
 
-    var now = new Date();
-    var day = ("0" + now.getDate()).slice(-2);
-    var month = ("0" + (now.getMonth() + 1)).slice(-2);
-    var today = (month) + "/" + (day) + "/" + now.getFullYear();
+    beforeEach(function(done) {
 
-    beforeEach(function() {
         authentication.loginAsSupervisor();
+        testAsync(done);
+
     });
 
     afterEach(function() {
+
         authentication.logout();
+        browser.ignoresynchronization = true;
     });
 
 

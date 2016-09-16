@@ -1,6 +1,7 @@
 var taskPage = require('./Pages/task_page.js');
 var tasksPage = require('./Pages/tasks_page.js');
 var authentication = require('./authentication.js');
+var utils = require('./utils.js');
 var robot = require(process.env['USERPROFILE'] + '/node_modules/robotjs');
 var bot = require(process.env['USERPROFILE'] + '/node_modules/robot-js');
 var flag = false;
@@ -10,34 +11,20 @@ var month = ("0" + (now.getMonth() + 1)).slice(-2);
 var today = (month) + "/" + (day) + "/" + now.getFullYear();
 
 function testAsync(done) {
-    // Wait two seconds, then set the flag to true
+
     setTimeout(function() {
         flag = true;
-
-        // Invoke the special done callback
         done();
-    }, 10000);
+    }, 20000);
 }
 
-// Specs
-describe("Testing async calls with beforeEach and passing the special done callback around", function() {
-
-    beforeEach(function(done) {
-        // Make an async call, passing the special done callback        
-        testAsync(done);
-    });
-
-    it("Should be true if the async call has completed", function() {
-        expect(flag).toEqual(true);
-    });
-
-});
 
 describe('tasks page test', function() {
 
-    beforeEach(function() {
+    beforeEach(function(done) {
 
         authentication.loginAsSupervisor();
+        testAsync(done);
 
     });
 
@@ -46,7 +33,6 @@ describe('tasks page test', function() {
         authentication.logout();
 
     });
-
 
     it('should create new task and add note', function() {
 
@@ -404,24 +390,208 @@ describe('tasks page test', function() {
         tasksPage.headerImageLink.click();
         expect(tasksPage.dashboardTitle.getText()).toEqual('Dashboard', 'Header image does not redirects to home page');
 
-
     });
 
-
-    it('should create new task navigate to attachments section', function() {
+    it('should create new task navigate to attachments section add png document', function() {
 
         taskPage.newBtn.click();
         taskPage.taskBtn.click();
         expect(taskPage.taskTitle.getText()).toEqual('New Task');
         taskPage.Subject.click();
-        taskPage.Subject.sendKeys('add link');
+        taskPage.Subject.sendKeys('add document png');
         expect(taskPage.StartDate.getText()).not.toBeTruthy();
         taskPage.DueDateBtn.click();
         taskPage.todayDateFromCalendar.click();
-        taskPage.saveButton.click();
-        tasksPage.attachmentsLink.click();
+        taskPage.saveButton.click().then(function() {
+            tasksPage.attachmentsLink.click();
+        });
         expect(tasksPage.attachmentsTableTitle.getText()).toEqual('Attachments', 'Attachments table title is wrong');
+        tasksPage.root.click().then(function() {
+            utils.mouseMoveToRoot();
+        });
+        tasksPage.newDocument.click().then(function() {
+            tasksPage.otherDocument.click().then(function() {
+                utils.uploadPng();
+                expect(tasksPage.documentTitle.getText()).toEqual('imageprofile', 'Added document name is wrong, or document is not added');
 
+            });
+        });
+
+    });
+
+
+    it('should create new task navigate to attachments section add docx document', function() {
+
+        taskPage.newBtn.click();
+        taskPage.taskBtn.click();
+        expect(taskPage.taskTitle.getText()).toEqual('New Task');
+        taskPage.Subject.click();
+        taskPage.Subject.sendKeys('add document docx');
+        expect(taskPage.StartDate.getText()).not.toBeTruthy();
+        taskPage.DueDateBtn.click();
+        taskPage.todayDateFromCalendar.click();
+        taskPage.saveButton.click().then(function() {
+            tasksPage.attachmentsLink.click();
+        });
+        tasksPage.root.click().then(function() {
+            utils.mouseMoveToRoot();
+        });
+        tasksPage.newDocument.click().then(function() {
+            tasksPage.otherDocument.click().then(function() {
+                utils.uploadDocx();
+                expect(tasksPage.documentTitle.getText()).toEqual('ArkCaseTesting', 'Added document name is wrong');
+
+            });
+
+        });
+    });
+
+
+    it('should create new task navigate to attachemnts section add xlsx document', function() {
+
+        taskPage.newBtn.click();
+        taskPage.taskBtn.click();
+        expect(taskPage.taskTitle.getText()).toEqual('New Task');
+        taskPage.Subject.click();
+        taskPage.Subject.sendKeys('add document xlsx');
+        expect(taskPage.StartDate.getText()).not.toBeTruthy();
+        taskPage.DueDateBtn.click();
+        taskPage.todayDateFromCalendar.click();
+        taskPage.saveButton.click().then(function() {
+            tasksPage.attachmentsLink.click();
+        });
+        tasksPage.root.click().then(function() {
+            utils.mouseMoveToRoot();
+        });
+        tasksPage.newDocument.click().then(function() {
+            tasksPage.otherDocument.click().then(function() {
+                utils.uploadXlsx();
+                expect(tasksPage.documentTitle.getText()).toEqual('caseSummary', 'Added document name is wrong');
+
+            });
+
+        });
+    });
+
+    it('should create new task navigate to attachemnts section add pdf document', function() {
+
+        taskPage.newBtn.click();
+        taskPage.taskBtn.click();
+        expect(taskPage.taskTitle.getText()).toEqual('New Task');
+        taskPage.Subject.click();
+        taskPage.Subject.sendKeys('add document pdf');
+        expect(taskPage.StartDate.getText()).not.toBeTruthy();
+        taskPage.DueDateBtn.click();
+        taskPage.todayDateFromCalendar.click();
+        taskPage.saveButton.click().then(function() {
+            tasksPage.attachmentsLink.click();
+        });
+        tasksPage.root.click().then(function() {
+            utils.mouseMoveToRoot();
+        });
+        tasksPage.newDocument.click().then(function() {
+            tasksPage.otherDocument.click().then(function() {
+                browser.driver.sleep(2000);
+                utils.uploadPdf();
+                expect(tasksPage.documentTitle.getText()).toEqual('caseSummary', 'Added document name is wrong');
+
+            });
+
+        });
+    });
+
+
+    it('should create new task and add new folder in documents section', function() {
+
+
+        taskPage.newBtn.click();
+        taskPage.taskBtn.click();
+        expect(taskPage.taskTitle.getText()).toEqual('New Task');
+        taskPage.Subject.click();
+        taskPage.Subject.sendKeys('add new folder');
+        expect(taskPage.StartDate.getText()).not.toBeTruthy();
+        taskPage.DueDateBtn.click();
+        taskPage.todayDateFromCalendar.click();
+        taskPage.saveButton.click().then(function() {
+            tasksPage.attachmentsLink.click();
+        });
+        tasksPage.root.click().then(function() {
+            utils.mouseMoveToRoot();
+        });
+        tasksPage.newFolder.click().then(function() {
+            tasksPage.documentTitleInput.clear();
+            tasksPage.documentTitleInput.sendKeys('folder');
+            tasksPage.attachmentsTableTitle.click();
+            expect(tasksPage.documentTitle.getText()).toEqual('folder');
+
+        });
+    });
+
+    it('should create new task and edit the start date', function() {
+
+        taskPage.newBtn.click();
+        taskPage.taskBtn.click();
+        expect(taskPage.taskTitle.getText()).toEqual('New Task');
+        taskPage.Subject.click();
+        taskPage.Subject.sendKeys('edit start date');
+        taskPage.StartDate.click();
+        taskPage.StartDate.clear();
+        taskPage.StartDate.sendKeys('08/15/2016');
+        taskPage.DueDateBtn.click();
+        taskPage.todayDateFromCalendar.click();
+        taskPage.saveButton.click();
+        tasksPage.startDate.click().then(function() {
+            tasksPage.startDateInput.click();
+            tasksPage.startDateToday.click();
+            tasksPage.startDateConfrimBtn.click();
+            expect(tasksPage.startDate.getText()).toEqual(today);
+        });
+    });
+
+
+    it('should create new task and edit due date', function() {
+
+        taskPage.newBtn.click();
+        taskPage.taskBtn.click();
+        expect(taskPage.taskTitle.getText()).toEqual('New Task');
+        taskPage.Subject.click();
+        taskPage.Subject.sendKeys('edit due date');
+        taskPage.DueDateInput.click();
+        taskPage.DueDateInput.sendKeys('10/15/2016');
+        taskPage.saveButton.click().then(function() {
+            tasksPage.dueDate.click().then(function() {
+                tasksPage.dueDateInput.click();
+                tasksPage.dueDateToday.click();
+                tasksPage.dueDateConfirmBtn.click();
+            });
+
+            expect(tasksPage.dueDate.getText()).toEqual(today);
+        });
+    });
+
+
+
+    it('should create new task,add picture and verify in details', function() {
+
+        taskPage.newBtn.click();
+        taskPage.taskBtn.click();
+        expect(taskPage.taskTitle.getText()).toEqual('New Task');
+        taskPage.Subject.click();
+        taskPage.Subject.sendKeys('add picture');
+        expect(taskPage.StartDate.getText()).not.toBeTruthy();
+        taskPage.DueDateBtn.click();
+        taskPage.todayDateFromCalendar.click();
+        taskPage.pictureButton.click();
+        taskPage.chooseFilesBtn.click().then(function() {
+            utils.uploadPng();
+            expect(taskPage.notesTextArea.getText()).not.toBeTruthy();
+        });
+        taskPage.saveButton.click().then(function() {
+            tasksPage.detailsLink.click().then(function() {
+                expect(tasksPage.detailsTextArea.getText()).not.toBeTruthy();
+
+            });
+        });
     });
 
 });

@@ -10,7 +10,13 @@ var TasksPage = function() {
     this.taskSubjectInput = element(by.xpath('.//*[@class="clearfix"]/div[1]/div/h4/form/div/input'));
     this.taskSubjectBtn = element(by.xpath('.//*[@class="clearfix"]/div[1]/div/h4/form/div/span/button[1]'));
     this.startDate = element(by.xpath('.//*[@class="clearfix"]/div[2]/div[4]/div/a'));
+    this.startDateInput=element(by.xpath('.//*[@class="clearfix"]/div[2]/div[4]/div/form/div/input'));
+    this.startDateToday=element(by.buttonText('Today'));
+    this.startDateConfrimBtn=element(by.xpath('.//*[@class="clearfix"]/div[2]/div[4]/div/form/div/span/button[1]'));
     this.dueDate = element(by.xpath('.//*[@class="clearfix"]/div[2]/div[5]/div/a'));
+    this.dueDateInput=element(by.xpath('.//*[@class="clearfix"]/div[2]/div[5]/div/form/div/input'));
+    this.dueDateToday=element(by.buttonText('Today'));
+    this.dueDateConfirmBtn=element(by.xpath('.//*[@class="clearfix"]/div[2]/div[5]/div/form/div/span/button[1]'));
     this.percent = element(by.xpath('.//*[@class="clearfix"]/div[2]/div[1]/div/a'));
     this.priorityDropDown = element(by.xpath('.//*[@class="clearfix"]/div[2]/div[3]/div/form/div/select'));
     this.priorityLow = element(by.xpath('.//*[.="Low"]'));
@@ -49,7 +55,7 @@ var TasksPage = function() {
     this.tagCreatedDate = element.all(by.repeater('(colRenderIndex, col) in colContainer.renderedColumns track by col.uid')).get(1);
     this.tagCreatedBy = element.all(by.repeater('(colRenderIndex, col) in colContainer.renderedColumns track by col.uid')).get(2);
     this.tagDeleteBtn = element.all(by.repeater('(colRenderIndex, col) in colContainer.renderedColumns track by col.uid')).get(3).all(by.tagName('a')).get(0);
-    this.workflowLink = element.all(by.repeater('link in componentLinks')).get(6);;
+    this.workflowLink = element.all(by.repeater('link in componentLinks')).get(6);
     this.workflowTitle = element(by.css('.panel-title'));
     this.workflowParticipant = element.all(by.repeater('(colRenderIndex, col) in colContainer.renderedColumns track by col.uid')).get(0);
     this.workflowStatus = element.all(by.repeater('(colRenderIndex, col) in colContainer.renderedColumns track by col.uid')).get(2);
@@ -69,8 +75,12 @@ var TasksPage = function() {
     this.dashboardTitle = element(by.css('.module-header'));
     this.attachmentsLink = element.all(by.repeater('link in componentLinks')).get(3);
     this.attachmentsTableTitle = element(by.css('.panel-title'));
-    this.root = element(by.xpath('/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr/td[3]/span/span[3]'));
-
+    this.root = element(by.xpath('.//*[@class="panel-body"]/doc-tree/table[2]/tbody/tr[1]/td[3]/span/span[3]'));
+    this.newDocument=element.all(by.css(".ui-menu-item")).get(1);
+    this.otherDocument=element(by.xpath('//*[@id="ui-id-14"]'));
+    this.documentTitle=element(by.xpath('.//*[@class="panel-body"]/doc-tree/table[2]/tbody/tr[2]/td[3]/span/span[3]'));
+    this.newFolder=element.all(by.css(".ui-menu-item")).get(0);
+    this.documentTitleInput=element(by.xpath('.//*[@class="panel-body"]/doc-tree/table[2]/tbody/tr[2]/td[3]/span/span[3]/input'));
 
 };
 
