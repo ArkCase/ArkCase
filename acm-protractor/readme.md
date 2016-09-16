@@ -27,5 +27,26 @@ Configuration of the Protractor tests is done in the ```config.js``` file.
 ```
 > protractor conf.js
 ```
+### Using Object.json file for data and objects
+at the beggining of test add this row:
+var Objects = require('./Objects.json'); 
 
+In Objects.json insert all locators in this example format:
+{ 
+  "page": {
+    "locators": {
+      "username": "j_username",
+      "password": "j_password",
+      "loginbutton": "submit"
+    },
+    "data": {
+      "supervisoruser": {
+        "username": "samuel-acm",
+        "password": "Armedia#1"
+      }
+    }
+  }
+}
+
+then use in the test Object.page.locators.username will return j-username
 

@@ -1,0 +1,20 @@
+{
+  "siteurl": "http://cloud.arkcase.com",
+  "loginpage": {
+    "locators": {
+      "username": "j_username",
+      "password": "j_password",
+      "loginbutton": "submit"
+    },
+    "data": {
+      "supervisoruser": {
+        "username": "samuel-acm",
+        "password": "Armedia#1"
+      },
+      "adminuser": {
+        "username": "ann-acm",
+        "password": "Armedia#1"
+      }
+    }
+  }
+}
