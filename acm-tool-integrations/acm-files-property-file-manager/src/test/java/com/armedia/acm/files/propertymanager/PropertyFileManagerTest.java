@@ -36,34 +36,23 @@ public class PropertyFileManagerTest
         boolean clean = true;
         boolean fileCreated = createFile(fullPath);
 
+        Assert.assertTrue("true", fileCreated);
+
         propertyFileManager.storeMultiple(propertiesMap, tmpFolder + FILE_NAME, clean);
 
         File mockPropertiesFile = FileUtils.getFile(tmpFolder + FILE_NAME);
 
         Assert.assertTrue(mockPropertiesFile.exists());
 
-        InputStream is = null;
-        try
+        try (InputStream is = FileUtils.openInputStream(mockPropertiesFile))
         {
-            is = FileUtils.openInputStream(mockPropertiesFile);
             properties.load(is);
         } catch (Exception e)
         {
-            if (is != null)
-            {
-                is.close();
-            }
         }
 
         Set<String> keys = properties.stringPropertyNames();
         Assert.assertTrue(keys.containsAll(propertiesMap.keySet()));
-
-        if (is != null)
-        {
-            is.close();
-        }
-
-        fileCreated = true;
 
         if (fileCreated)
         {
@@ -79,6 +68,7 @@ public class PropertyFileManagerTest
         String fullPath = tmpFolder + FILE_NAME;
         boolean clean = false;
         boolean fileCreated = createFile(fullPath);
+        propertiesMap.put("new", "row");
 
         propertyFileManager.storeMultiple(propertiesMap, tmpFolder + FILE_NAME, clean);
 
@@ -86,34 +76,20 @@ public class PropertyFileManagerTest
 
         Assert.assertTrue(mockPropertiesFile.exists());
 
-        InputStream is = null;
-        try
+        try (InputStream is = FileUtils.openInputStream(mockPropertiesFile))
         {
-            is = FileUtils.openInputStream(mockPropertiesFile);
             properties.load(is);
         } catch (Exception e)
         {
-            if (is != null)
-            {
-                is.close();
-            }
         }
 
         Set<String> keys = properties.stringPropertyNames();
         Assert.assertTrue(keys.containsAll(propertiesMap.keySet()));
 
-        if (is != null)
-        {
-            is.close();
-        }
-
-        fileCreated = true;
-
         if (fileCreated)
         {
             deleteFile(fullPath);
         }
-
     }
 
     private boolean createFile(String name) throws IOException
@@ -125,7 +101,6 @@ public class PropertyFileManagerTest
     private void deleteFile(String name)
     {
         File tmpFile = new File(name);
-        System.gc();
         tmpFile.delete();
     }
 

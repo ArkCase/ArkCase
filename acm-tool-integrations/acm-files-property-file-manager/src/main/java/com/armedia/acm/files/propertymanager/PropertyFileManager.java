@@ -70,8 +70,11 @@ public class PropertyFileManager
                 }
 
                 propertiesMap.forEach((key, value) -> p.setProperty(key, value));
-                OutputStream out = new FileOutputStream(fileName);
-                p.store(out, null);
+
+                try (OutputStream out = new FileOutputStream(fileName))
+                {
+                    p.store(out, null);
+                }
             } catch (IOException e)
             {
                 log.debug("Could not update properties file: " + e.getMessage(), e);
