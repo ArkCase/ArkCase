@@ -28,11 +28,15 @@ Configuration of the Protractor tests is done in the ```config.js``` file.
 > protractor conf.js
 ```
 ### Using Object.json file for data and objects
-at the beggining of test add this row:
-var Objects = require('./Objects.json'); 
+At the beggining of test add this row:
+```
+> var Objects = require('./Objects.json'); 
 
-In Objects.json insert all locators in this example format:
-{ 
+```
+In Objects.json insert all locators and data in this format: 
+
+```
+> { 
   "page": {
     "locators": {
       "username": "j_username",
@@ -48,5 +52,8 @@ In Objects.json insert all locators in this example format:
   }
 }
 
-then use in the test Object.page.locators.username will return j-username
+```
+then use them in the test, next row will return j_username
+
+> Object.page.locators.username 
 
