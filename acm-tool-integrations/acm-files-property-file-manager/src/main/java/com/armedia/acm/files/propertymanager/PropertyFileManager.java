@@ -2,7 +2,6 @@ package com.armedia.acm.files.propertymanager;
 
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,17 +61,16 @@ public class PropertyFileManager
         if (propertiesMap != null && propertiesMap.size() > 0)
         {
 
-            try (FileInputStream in = new FileInputStream(fileName); FileOutputStream out = new FileOutputStream(fileName))
+            try (InputStream in = new FileInputStream(fileName))
             {
                 Properties p = new Properties();
-
                 if (!clean)
                 {
                     p.load(in);
                 }
 
                 propertiesMap.forEach((key, value) -> p.setProperty(key, value));
-
+                OutputStream out = new FileOutputStream(fileName);
                 p.store(out, null);
             } catch (IOException e)
             {
@@ -86,10 +84,11 @@ public class PropertyFileManager
         if (properties != null && properties.size() > 0)
         {
 
-            try (FileInputStream in = new FileInputStream(fileName); FileOutputStream out = new FileOutputStream(fileName))
+            try (OutputStream out = new FileOutputStream(fileName))
             {
 
                 Properties p = new Properties();
+                InputStream in = new FileInputStream(fileName);
                 p.load(in);
 
                 for (String key : properties)
