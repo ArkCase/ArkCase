@@ -7,7 +7,7 @@ Use npm to install Protractor globally with:
 ```
 > npm install -g protractor
 ```
-Install RobotJS for Node.js Desktop Automation. Control the mouse, keyboard, and read the screen using npm:
+Install ```RobotJS``` for Node.js Desktop Automation. Control the mouse, keyboard, and read the screen using npm:
 ```
 > npm install robotjs
 ```
@@ -15,6 +15,10 @@ The ```webdriver-manager``` is a helper tool to easily get an instance of a Sele
 ```
 > webdriver-manager update
 ```
+Install ```system-sleep``` to delay script execution
+````
+> npm install system-sleep
+````
 ### Configuration
 Start a server with:
 ```

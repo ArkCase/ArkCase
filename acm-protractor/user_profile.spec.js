@@ -2,8 +2,7 @@ var userPage = require('./Pages/user_profile_page.js');
 var authentication = require('./authentication.js');
 var robot = require(process.env['USERPROFILE'] + '/node_modules/robotjs');
 var flag = false;
-var home = process.env['USERPROFILE'];
-var uplaodPath = home + '\\.arkcase\\seleniumTests\\filesForUpload\\imageprofile.png';
+var utils = require('./utils.js');
 
 function testAsync(done) {
     // Wait two seconds, then set the flag to true
@@ -195,12 +194,7 @@ describe('edit user profile page', function() {
     it('should change profile picture', function() {
 
         userPage.changeProfilePic.click().then(function() {
-            browser.driver.sleep(3000);
-            robot.setKeyboardDelay(14000);
-            robot.typeStringDelayed("/", 500);
-            robot.typeStringDelayed(uplaodPath, 14000);
-            robot.keyTap("enter");
-            browser.driver.sleep(2000);
+            utils.uploadPng();
 
         });
     });

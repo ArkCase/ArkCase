@@ -27,6 +27,10 @@ var TaskPage = function() {
     this.linkInputText = element(by.xpath('/html/body/div[1]/div[2]/div/div/div[2]/div[1]/input'));
     this.linkInputUrl = element(by.xpath('/html/body/div[1]/div[2]/div/div/div[2]/div[2]/input'));
     this.insertLinkBtn = element(by.buttonText("Insert Link"));
+    this.pictureButton=element.all(by.xpath('.//*[@class="note-insert btn-group"]/button[2]')).get(0);
+    this.chooseFilesBtn=element(by.xpath('/html/body/div[1]/div[1]/div/div/div[2]/div[1]/input'));
+
+
 
 };
 
