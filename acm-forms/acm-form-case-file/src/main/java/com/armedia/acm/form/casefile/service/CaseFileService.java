@@ -416,7 +416,12 @@ public class CaseFileService extends FrevvoFormAbstractService
         {
             getCaseFileEventUtility().raiseEvent(getCaseFile(), getCaseFile().getStatus(), new Date(), ipAddress, userId,
                     getAuthentication());
-            getCaseFileEventUtility().raiseEvent(getCaseFile(), "updated", new Date(), ipAddress, userId, getAuthentication());
+
+            String mode = getRequest().getParameter("mode");
+            if (!"edit".equals(mode))
+            {
+                getCaseFileEventUtility().raiseEvent(getCaseFile(), "updated", new Date(), ipAddress, userId, getAuthentication());
+            }
         }
     }
 
