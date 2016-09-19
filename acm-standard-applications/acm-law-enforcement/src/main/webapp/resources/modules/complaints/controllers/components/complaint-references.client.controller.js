@@ -74,7 +74,7 @@ angular.module('complaints').controller('Complaints.ReferencesController', ['$sc
                 size: 'lg',
                 resolve: {
                     $filter: function () {
-                    	var filter = $scope.modalConfig.searchFilter + "&-id:" + $scope.currentObjectId + "-COMPLAINT";
+                    	var filter = $scope.modalConfig.searchFilter + "&-id:" + $scope.objectInfo.complaintId + "-COMPLAINT";
                         if ($scope.gridOptions.data.length > 0) {
                             for (var i = 0; i < $scope.gridOptions.data.length; i++) {
                                 var data = $scope.gridOptions.data[i];
