@@ -438,10 +438,10 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                 that.validateObjectInfo = (arg.validateObjectInfo) ? arg.validateObjectInfo : function (data) {
                     return (!Util.isEmpty(data));
                 };
-                that.onObjectInfoRetrieved = function (objectInfo) {
+                that.onObjectInfoRetrieved = function (objectInfo, e) {
                     that.scope.objectInfo = objectInfo;
                     if (arg.onObjectInfoRetrieved) {
-                        arg.onObjectInfoRetrieved(objectInfo);
+                        arg.onObjectInfoRetrieved(objectInfo, e);
                     }
                 };
                 that.onConfigRetrieved = function (componentConfig) {
@@ -465,14 +465,14 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                 that.scope.$on('object-updated', function (e, objectInfo, objectId) {
                     that.currentObjectId = Service.getCurrentObjectId();
                     if (that.currentObjectId == objectId) {
-                        onObjectInfoUpdated(objectInfo, objectId);
+                        onObjectInfoUpdated(objectInfo, objectId, e);
                     }
                 });
 
                 that.scope.$on('object-refreshed', function (e, objectInfo) {
                     that.previousId = null;
                     that.currentObjectId = Service.getCurrentObjectId();
-                    onObjectInfoUpdated(objectInfo, that.currentObjectId);
+                    onObjectInfoUpdated(objectInfo, that.currentObjectId, e);
                 });
 
                 that.currentObjectId = Service.getCurrentObjectId();
@@ -485,7 +485,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     }
                 }
 
-                var onObjectInfoUpdated = function (objectInfo, objectId) {
+                var onObjectInfoUpdated = function (objectInfo, objectId, e) {
                     if (!that.validateObjectInfo(objectInfo)) {
                         return;
                     }
@@ -505,10 +505,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     that.previousId = objectId;
 
                     that.deferConfigDone.promise.then(function (data) {
-                        if(that.loaded) { // skip on first load
-                            that.onObjectInfoRetrieved(objectInfo);
-                        } 
-                        that.loaded = true;
+                        that.onObjectInfoRetrieved(objectInfo, e);
                     });
                 };
           }
