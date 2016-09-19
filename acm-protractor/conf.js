@@ -3,8 +3,8 @@ exports.config = {
 		  //next 3 lines are for run on selenium GRID, the path should be changed to take drivers from ACM configuraion project
 		  //not working for safari browser, should be investigated why? 
 		  //seleniumAddress: 'http://localhost:4444/wd/hub',		  
-		  //seleniumArgs: '-Dwebdriver.ie.driver=C:/Users/sanja.paskova/AppData/Roaming/npm/node_modules/protractor/selenium/IEDriverServer_x64_2.52.0.exe',
-		  //seleniumArgs: '-Dwebdriver.safari.driver=C:/Users/sanja.paskova/AppData/Roaming/npm/node_modules/protractor/selenium/SafariDriver.safariextz',
+		  //seleniumArgs: '-Dwebdriver.ie.driver='+process.env['USERPROFILE']+'/AppData/Roaming/npm/node_modules/protractor/selenium/IEDriverServer_x64_2.52.0.exe',
+		  //seleniumArgs: '-Dwebdriver.safari.driver='+process.env['USERPROFILE']+'/AppData/Roaming/npm/node_modules/protractor/selenium/SafariDriver.safariextz',
 		  // Capabilities to be passed to the webdriver instance.
 		  multiCapabilities: [{
 		    'browserName': 'chrome',
@@ -24,7 +24,7 @@ exports.config = {
 //			'maxInstances': 5
 //		  }],
 
-    specs: ['./tasks_page.spec.js'],
+    specs: ['./login_test.spec.js'],
 
     jasmineNodeOpts: {
         showColors: true
