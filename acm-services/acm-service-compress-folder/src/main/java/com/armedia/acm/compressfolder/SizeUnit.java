@@ -9,5 +9,12 @@ package com.armedia.acm.compressfolder;
  */
 public enum SizeUnit
 {
-    KILO, MEGA, GIGA, UNLIMITED;
+    /** Size in kilobytes. */
+    KILO,
+    /** Size in megabytes. */
+    MEGA,
+    /** Size in gigabytes. */
+    GIGA,
+    /** Size is unlimited. */
+    UNLIMITED;
 }

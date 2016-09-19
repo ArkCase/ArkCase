@@ -6,8 +6,6 @@ package com.armedia.acm.compressfolder.web.api;
 import com.armedia.acm.compressfolder.FolderCompressor;
 import com.armedia.acm.compressfolder.FolderCompressorException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
+ * A REST endpoint for invoking the <code>FolderCompressor</code> service.
+ *
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Sep 15, 2016
  *
  */
@@ -23,11 +23,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping(value = {"/api/v1/service/compressor", "/api/latest/service/compressor"})
 public class FolderCompressorAPIController
 {
-
-    /**
-     * Logger instance.
-     */
-    private Logger log = LoggerFactory.getLogger(getClass());
 
     private FolderCompressor folderCompressor;
 
