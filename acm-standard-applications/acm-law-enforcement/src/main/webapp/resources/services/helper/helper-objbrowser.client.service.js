@@ -479,7 +479,8 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                 if (Util.goodPositive(that.currentObjectId, false)) {
                     if (!Util.compare(that.previousId, that.currentObjectId)) {
                         that.retrieveObjectInfo(that.currentObjectId).then(function (objectInfo) {
-                            onObjectInfoUpdated(objectInfo, that.currentObjectId);
+                            that.onObjectInfoRetrieved(objectInfo);
+                            that.previousId = that.currentObjectId;
                             return objectInfo;
                         });
                     }
