@@ -6,8 +6,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -20,6 +23,8 @@ public class PropertyFileManagerTest
     Map<String, String> propertiesMap = new HashMap<>();
     Properties properties = new Properties();
     PropertyFileManager propertyFileManager = new PropertyFileManager();
+    String tmpFolder = System.getProperty("java.io.tmpdir");
+    String fullPath = tmpFolder + FILE_NAME;
 
     @Before
     public void setUp() throws Exception
@@ -29,18 +34,22 @@ public class PropertyFileManagerTest
     }
 
     @Test
-    public void testStoreMultipleCleanTrue() throws Exception
+    public void testStoreMultipleDoesFileExists()
     {
-        String tmpFolder = System.getProperty("java.io.tmpdir");
-        String fullPath = tmpFolder + FILE_NAME;
+        propertyFileManager.storeMultiple(propertiesMap, fullPath, true);
+        File mockFile = FileUtils.getFile(fullPath);
+
+        Assert.assertTrue(mockFile.exists());
+    }
+
+    @Test
+    public void testStoreMultipleCleanTrueWhenFileDoesnotExist() throws Exception
+    {
         boolean clean = true;
-        boolean fileCreated = createFile(fullPath);
 
-        Assert.assertTrue("true", fileCreated);
+        propertyFileManager.storeMultiple(propertiesMap, fullPath, clean);
 
-        propertyFileManager.storeMultiple(propertiesMap, tmpFolder + FILE_NAME, clean);
-
-        File mockPropertiesFile = FileUtils.getFile(tmpFolder + FILE_NAME);
+        File mockPropertiesFile = FileUtils.getFile(fullPath);
 
         Assert.assertTrue(mockPropertiesFile.exists());
 
@@ -49,38 +58,38 @@ public class PropertyFileManagerTest
             properties.load(is);
         } catch (Exception e)
         {
+            e.printStackTrace();
         }
 
         Set<String> keys = properties.stringPropertyNames();
         Assert.assertTrue(keys.containsAll(propertiesMap.keySet()));
 
-        if (fileCreated)
-        {
-            deleteFile(fullPath);
-        }
+        deleteFile(fullPath);
 
     }
 
     @Test
-    public void testStoreMultipleCleanFalse() throws Exception
+    public void testStoreMultipleCleanFalseWithUpdatedMap() throws Exception
     {
-        String tmpFolder = System.getProperty("java.io.tmpdir");
-        String fullPath = tmpFolder + FILE_NAME;
         boolean clean = false;
         boolean fileCreated = createFile(fullPath);
-        propertiesMap.put("new", "row");
 
-        propertyFileManager.storeMultiple(propertiesMap, tmpFolder + FILE_NAME, clean);
+        writeToFile(fullPath, propertiesMap);
+        Map<String, String> updatedMapOfStrings = Collections.singletonMap("another", "row");
 
-        File mockPropertiesFile = FileUtils.getFile(tmpFolder + FILE_NAME);
+        propertyFileManager.storeMultiple(updatedMapOfStrings, fullPath, clean);
+
+        File mockPropertiesFile = FileUtils.getFile(fullPath);
 
         Assert.assertTrue(mockPropertiesFile.exists());
+
 
         try (InputStream is = FileUtils.openInputStream(mockPropertiesFile))
         {
             properties.load(is);
         } catch (Exception e)
         {
+            e.printStackTrace();
         }
 
         Set<String> keys = properties.stringPropertyNames();
@@ -104,5 +113,20 @@ public class PropertyFileManagerTest
         tmpFile.delete();
     }
 
+    private void writeToFile(String fileName, Map<String, String> propertiesMap)
+    {
+        Properties p = new Properties();
+
+        propertiesMap.forEach((key, value) -> p.setProperty(key, value));
+
+        try (OutputStream out = new FileOutputStream(fileName))
+        {
+            p.store(out, null);
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+    }
 }
 

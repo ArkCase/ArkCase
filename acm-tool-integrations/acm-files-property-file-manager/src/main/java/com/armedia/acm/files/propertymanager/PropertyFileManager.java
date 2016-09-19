@@ -60,8 +60,18 @@ public class PropertyFileManager
     {
         if (propertiesMap != null && propertiesMap.size() > 0)
         {
-
-            try (InputStream in = new FileInputStream(fileName))
+            File propertyFile = new File(fileName);
+            if (!propertyFile.exists())
+            {
+                try
+                {
+                    propertyFile.createNewFile();
+                } catch (IOException e)
+                {
+                    log.warn("File could not be created: {}", e.getMessage(), e);
+                }
+            }
+            try (InputStream in = new FileInputStream(propertyFile))
             {
                 Properties p = new Properties();
                 if (!clean)
@@ -71,7 +81,7 @@ public class PropertyFileManager
 
                 propertiesMap.forEach((key, value) -> p.setProperty(key, value));
 
-                try (OutputStream out = new FileOutputStream(fileName))
+                try (OutputStream out = new FileOutputStream(propertyFile))
                 {
                     p.store(out, null);
                 }
@@ -80,6 +90,7 @@ public class PropertyFileManager
                 log.debug("Could not update properties file: " + e.getMessage(), e);
             }
         }
+
     }
 
     public void removeMultiple(List<String> properties, String fileName)
