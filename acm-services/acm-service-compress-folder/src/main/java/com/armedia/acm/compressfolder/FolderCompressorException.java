@@ -13,6 +13,14 @@ public class FolderCompressorException extends Exception
     private static final long serialVersionUID = -8701330465345902744L;
 
     /**
+     * @param message
+     */
+    public FolderCompressorException(String message)
+    {
+        super(message);
+    }
+
+    /**
      * @param e
      */
     public FolderCompressorException(Exception e)
