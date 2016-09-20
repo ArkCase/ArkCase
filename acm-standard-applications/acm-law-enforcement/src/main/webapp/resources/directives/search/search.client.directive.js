@@ -84,9 +84,11 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                 scope.selectedItem = null;
                 scope.emptySearch = true;
                 scope.exportUrl = "";
+                
                 if (typeof scope.config.emptySearch !== 'undefined') {
                     scope.emptySearch = scope.config.emptySearch;
                 }
+               
                 scope.queryExistingItems = function (start) {
                     scope.start = Util.goodNumber(start, 0);
                     if (!scope.searchQuery || scope.searchQuery.length === 0) {
@@ -250,7 +252,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                     }
                     scope.queryExistingItems();
                 };
-
+                
                 scope.onClickObjLink = function (event, objectData) {
                     event.preventDefault();
 
@@ -258,12 +260,12 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                         scope.customization.showObject(objectData);
 
                     } else {
-                        var objectTypeKey = Util.goodMapValue(objectData, "object_type_s");
+                    	var objectTypeKey = Util.goodMapValue(objectData, "object_type_s");
                         var objectId = Util.goodMapValue(objectData, "object_id_s");
                         ObjectService.showObject(objectTypeKey, objectId);
                     }
                 };
-
+                
                 scope.onClickParentObjLink = function (event, objectData) {
                     event.preventDefault();
 
@@ -271,13 +273,13 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                         scope.customization.showParentObject(objectData);
 
                     } else {
-                        var parentReference = Util.goodMapValue(objectData, "objectData.parent_ref_s", "-");
+                        var parentReference = Util.goodMapValue(objectData, "parent_ref_s", "-");
                         var objectId = parentReference.substring(0, parentReference.indexOf('-'));
                         var objectTypeKey = parentReference.substring(parentReference.indexOf('-') + 1);
                         ObjectService.showObject(objectTypeKey, objectId);
                     }
                 };
-
+                
                 scope.keyUp = function (event) {
                     scope.searchQuery = scope.searchQuery.replace('*', '');
                     if (event.keyCode == 13 && scope.searchQuery) {
