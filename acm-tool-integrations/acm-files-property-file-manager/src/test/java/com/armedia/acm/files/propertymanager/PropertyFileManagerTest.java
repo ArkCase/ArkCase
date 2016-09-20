@@ -93,6 +93,7 @@ public class PropertyFileManagerTest
         }
 
         Set<String> keys = properties.stringPropertyNames();
+
         Assert.assertTrue(keys.containsAll(propertiesMap.keySet()));
 
         if (fileCreated)
