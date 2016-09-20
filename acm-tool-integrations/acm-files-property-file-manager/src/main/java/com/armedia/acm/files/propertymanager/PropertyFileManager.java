@@ -62,16 +62,6 @@ public class PropertyFileManager
         {
             File propertyFile = new File(fileName);
             Properties p = new Properties();
-            if (!propertyFile.exists())
-            {
-                try
-                {
-                    propertyFile.createNewFile();
-                } catch (IOException e)
-                {
-                    log.warn("File could not be created: {}", e.getMessage(), e);
-                }
-            }
 
             try (InputStream in = new FileInputStream(propertyFile))
             {
