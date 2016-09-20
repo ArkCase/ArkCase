@@ -234,7 +234,7 @@
         "modal.ok": "OK"
       },
       "login.config": {
-        "title": "Login configuration",
+        "title": "Login Configuration",
         "idleLimit.label": "Login idle limit (in milliseconds)",
         "inform": "Settings will take effect for all new user sessions",
         "apply.label": "Apply"
