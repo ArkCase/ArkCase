@@ -11,7 +11,7 @@
     <groupId>com.armedia.acm.acm-services</groupId>
     <artifactId>acm-service-compress-folder</artifactId>
     <name>ACM Service: Folder Compressing Service</name>
-    <description>Service for compressing folder with its' internal structure.</description>
+    <description>Service for compressing folder with its internal structure.</description>
     <packaging>jar</packaging>
 
     <dependencies>

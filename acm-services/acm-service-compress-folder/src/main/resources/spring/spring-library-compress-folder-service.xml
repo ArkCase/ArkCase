@@ -5,7 +5,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd">
 
-    <bean id="folderCompressor" class="com.armedia.acm.compressfolder.FolderCompressor">
+    <bean id="folderCompressor" class="com.armedia.acm.compressfolder.DefaultFolderCompressor">
         <property name="folderService" ref="acmFolderService"/>
         <property name="fileService" ref="ecmFileService"/>
         <property name="compressedFileNameFormat" value="${compressor.fileNameFormat}"/>

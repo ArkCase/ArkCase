@@ -18,7 +18,7 @@ import java.io.IOException;
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Sep 15, 2016
  *
  */
-public class MaxTroughputAwareFileOutputStream extends FileOutputStream
+public class MaxThroughputAwareFileOutputStream extends FileOutputStream
 {
 
     /**
@@ -45,7 +45,7 @@ public class MaxTroughputAwareFileOutputStream extends FileOutputStream
      * @param sizeUnit the size unit in which the maximum file size is represented.
      * @throws FileNotFoundException if the file does not exist.
      */
-    public MaxTroughputAwareFileOutputStream(File file, long size, SizeUnit sizeUnit) throws FileNotFoundException
+    public MaxThroughputAwareFileOutputStream(File file, long size, SizeUnit sizeUnit) throws FileNotFoundException
     {
         super(file);
         maxBytes = calculateSizeInBytes(size, sizeUnit);
