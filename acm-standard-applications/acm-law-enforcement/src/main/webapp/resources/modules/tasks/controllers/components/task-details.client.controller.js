@@ -12,12 +12,18 @@ angular.module('tasks').controller('Tasks.DetailsController', ['$scope', '$state
             , stateParams: $stateParams
             , retrieveObjectInfo: TaskInfoService.getTaskInfo
             , validateObjectInfo: TaskInfoService.validateTaskInfo
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
+            }
         });
 
+        var onObjectInfoRetrieved = function (objectInfo) {
+            $scope.objectInfo = objectInfo;
+        };
 
         $scope.options = {
             focus: true,
-            dialogsInBody:true
+            dialogsInBody: true
             //,height: 120
         };
 
