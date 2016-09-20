@@ -95,6 +95,7 @@ public class PropertyFileManagerIT
         Set<String> keys = properties.stringPropertyNames();
 
         Assert.assertTrue(keys.containsAll(propertiesMap.keySet()));
+        Assert.assertTrue(keys.containsAll(updatedMapOfStrings.keySet()));
 
         if (fileCreated)
         {
