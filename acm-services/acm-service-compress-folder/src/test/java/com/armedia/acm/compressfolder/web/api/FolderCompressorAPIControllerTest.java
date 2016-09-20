@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
+import com.armedia.acm.compressfolder.DefaultFolderCompressor;
 import com.armedia.acm.compressfolder.FolderCompressor;
 import com.armedia.acm.compressfolder.FolderCompressorException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -49,7 +50,7 @@ public class FolderCompressorAPIControllerTest extends EasyMockSupport
     @Before
     public void setUp() throws Exception
     {
-        mockedFolderCompressor = createMock(FolderCompressor.class);
+        mockedFolderCompressor = createMock(DefaultFolderCompressor.class);
 
         controller = new FolderCompressorAPIController();
         controller.setFolderCompressor(mockedFolderCompressor);

@@ -55,7 +55,7 @@ public class FolderCompressorTest extends EasyMockSupport
      */
     private static final String COMPRESSED_FILENAME_FORMAT = "%1$sacm-%2$d-%3$s.zip";
 
-    private FolderCompressor compressor;
+    private DefaultFolderCompressor compressor;
 
     private File responseFolder;
 
@@ -94,7 +94,7 @@ public class FolderCompressorTest extends EasyMockSupport
         responseFolder = new ClassPathResource("response_folder").getFile();
         bigFile = new ClassPathResource("big_file.txt").getFile();
         assertNotNull(responseFolder);
-        compressor = new FolderCompressor();
+        compressor = new DefaultFolderCompressor();
         compressor.setFolderService(mockedFolderService);
         compressor.setFileService(mockedFileService);
         compressor.setCompressedFileNameFormat(COMPRESSED_FILENAME_FORMAT);
@@ -113,7 +113,7 @@ public class FolderCompressorTest extends EasyMockSupport
     }
 
     /**
-     * Test method for {@link com.armedia.acm.compressfolder.FolderCompressor#compressFolder(java.lang.Long)}.
+     * Test method for {@link com.armedia.acm.compressfolder.DefaultFolderCompressor#compressFolder(java.lang.Long)}.
      *
      * @throws AcmObjectNotFoundException
      * @throws AcmUserActionFailedException
