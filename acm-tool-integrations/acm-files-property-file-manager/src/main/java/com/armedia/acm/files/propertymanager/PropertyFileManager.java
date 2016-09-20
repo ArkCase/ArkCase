@@ -60,10 +60,9 @@ public class PropertyFileManager
     {
         if (propertiesMap != null && propertiesMap.size() > 0)
         {
-            File propertyFile = new File(fileName);
             Properties p = new Properties();
 
-            try (InputStream in = new FileInputStream(propertyFile))
+            try (InputStream in = new FileInputStream(fileName))
             {
                 if (!clean)
                 {
@@ -74,7 +73,7 @@ public class PropertyFileManager
                 log.warn("Could not open properties file: {}", e.getMessage(), e);
             }
 
-            try (OutputStream out = new FileOutputStream(propertyFile))
+            try (OutputStream out = new FileOutputStream(fileName))
             {
                 propertiesMap.forEach((key, value) -> p.setProperty(key, value));
                 p.store(out, null);
@@ -91,11 +90,10 @@ public class PropertyFileManager
         if (properties != null && properties.size() > 0)
         {
 
-            try (OutputStream out = new FileOutputStream(fileName))
+            try (FileInputStream in = new FileInputStream(fileName); FileOutputStream out = new FileOutputStream(fileName))
             {
 
                 Properties p = new Properties();
-                InputStream in = new FileInputStream(fileName);
                 p.load(in);
 
                 for (String key : properties)
