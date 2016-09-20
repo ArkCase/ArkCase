@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-public class PropertyFileManagerTest
+public class PropertyFileManagerIT
 {
 
     private static final String FILE_NAME = "test.properties";

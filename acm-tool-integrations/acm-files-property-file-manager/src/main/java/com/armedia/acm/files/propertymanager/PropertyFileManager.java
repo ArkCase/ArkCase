@@ -61,6 +61,7 @@ public class PropertyFileManager
         if (propertiesMap != null && propertiesMap.size() > 0)
         {
             File propertyFile = new File(fileName);
+            Properties p = new Properties();
             if (!propertyFile.exists())
             {
                 try
@@ -71,23 +72,25 @@ public class PropertyFileManager
                     log.warn("File could not be created: {}", e.getMessage(), e);
                 }
             }
+
             try (InputStream in = new FileInputStream(propertyFile))
             {
-                Properties p = new Properties();
                 if (!clean)
                 {
                     p.load(in);
                 }
-
-                propertiesMap.forEach((key, value) -> p.setProperty(key, value));
-
-                try (OutputStream out = new FileOutputStream(propertyFile))
-                {
-                    p.store(out, null);
-                }
             } catch (IOException e)
             {
-                log.debug("Could not update properties file: " + e.getMessage(), e);
+                log.warn("Could not open properties file: {}", e.getMessage(), e);
+            }
+
+            try (OutputStream out = new FileOutputStream(propertyFile))
+            {
+                propertiesMap.forEach((key, value) -> p.setProperty(key, value));
+                p.store(out, null);
+            } catch (IOException e)
+            {
+                log.warn("Could not update properties file: " + e.getMessage(), e);
             }
         }
 
