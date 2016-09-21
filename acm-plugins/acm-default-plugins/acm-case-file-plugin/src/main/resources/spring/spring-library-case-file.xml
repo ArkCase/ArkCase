@@ -87,6 +87,11 @@
     <bean id="caseFileSetCreatorHandler"
           class="com.armedia.acm.plugins.casefile.pipeline.presave.CaseFileSetCreatorHandler"/>
 
+    <!-- post-save handlers -->
+    <bean id="caseFileEventHandler"
+          class="com.armedia.acm.plugins.casefile.pipeline.postsave.CaseFileEventHandler">
+        <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
+    </bean>
     <bean id="caseFileRulesHandler"
           class="com.armedia.acm.plugins.casefile.pipeline.postsave.CaseFileRulesHandler">
         <property name="saveRule" ref="saveCaseFileBusinessRule"/>
