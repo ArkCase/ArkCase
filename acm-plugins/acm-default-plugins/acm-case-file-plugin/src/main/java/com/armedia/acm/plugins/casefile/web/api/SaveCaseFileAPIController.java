@@ -64,6 +64,7 @@ public class SaveCaseFileAPIController
 
             if (isNew)
             {
+                caseFileEventUtility.raiseEvent(saved, "created", new Date(), ipAddress, auth.getName(), auth);
                 caseFileEventUtility.raiseEvent(saved, saved.getStatus(), new Date(), ipAddress, auth.getName(), auth);
             } else
             {

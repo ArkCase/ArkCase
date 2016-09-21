@@ -9,6 +9,7 @@ import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
 import com.armedia.acm.plugins.casefile.model.CaseEvent;
 import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
@@ -30,7 +31,8 @@ public class CaseFileUpdatedListener implements ApplicationListener<CaseEvent>
     @Override
     public void onApplicationEvent(CaseEvent event)
     {
-        if ("com.armedia.acm.casefile.event.updated".equals(event.getEventType().toLowerCase()))
+        if ("com.armedia.acm.casefile.event.created".equals(event.getEventType().toLowerCase())
+                || "com.armedia.acm.casefile.event.updated".equals(event.getEventType().toLowerCase()))
         {
             LOG.debug("Updating Frevvo XML file ...");
 
@@ -58,7 +60,6 @@ public class CaseFileUpdatedListener implements ApplicationListener<CaseEvent>
             }
         }
     }
-
 
     public Properties getProperties()
     {
