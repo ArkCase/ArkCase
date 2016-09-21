@@ -475,7 +475,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     onObjectInfoUpdated(objectInfo, that.currentObjectId, e);
                 });
 
-                that.currentObjectId = Service.getCurrentObjectId();
+                that.currentObjectId = that.scope.currentObjectId = Service.getCurrentObjectId();
                 if (Util.goodPositive(that.currentObjectId, false)) {
                     if (!Util.compare(that.previousId, that.currentObjectId)) {
                         that.retrieveObjectInfo(that.currentObjectId).then(function (objectInfo) {
