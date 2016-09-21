@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+        xmlns:beans="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:task="http://www.springframework.org/schema/task"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+                            http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd
+                            http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd">
+							
+	<!-- How often to purge older history events. -->
+    <task:scheduled-tasks scheduler="historyCleanScheduler">
+        <task:scheduled ref="historyCleanJob" method="cleanHistory" cron="0 0 0/6 * * *"/>
+    </task:scheduled-tasks>
+	
+	<!-- Definition of class. -->
+    <beans:bean id="historyCleanJob" class="com.armedia.acm.plugins.admin.service.HistoryCleanService" init-method="cleanHistory">
+	    <beans:property name="jsonPropertiesManagementService" ref="angularPropertiesManagementService"/>
+        <beans:property name="auditDao" ref="auditDao"/>
+		<beans:property name="notificationDao" ref="notificationDao"/>
+    </beans:bean>
+</beans:beans>
