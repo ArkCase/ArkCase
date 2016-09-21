@@ -130,7 +130,6 @@
                 <ref bean="caseFileEcmFolderHandler"/>
                 <ref bean="caseFileOutlookHandler"/>
                 <ref bean="caseFileFolderStructureHandler"/>
-                <ref bean="caseFileEventHandler"/>
                 <ref bean="caseFileStartBusinessProcessIfNeededHandler"/>
             </list>
         </property>
