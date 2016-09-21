@@ -121,7 +121,6 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                     //gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
 
 
-
                     gridHelper.addButton(config, "edit");
                     gridHelper.addButton(config, "delete");
 
@@ -249,7 +248,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                     personAssociation.person.givenName = '';
                     personAssociation.person.familyName = '';
                     personAssociation.personType = '';
-                    personAssociation.className= Util.goodValue(scope.config.personAssociationClassName); //"com.armedia.acm.plugins.person.model.PersonAssociation"
+                    personAssociation.className = Util.goodValue(scope.config.personAssociationClassName); //"com.armedia.acm.plugins.person.model.PersonAssociation"
 
                     //put personAssociation to scope, we will need it when we return from popup
                     scope.personAssociation = personAssociation;
@@ -508,6 +507,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                         scope.personAssociation.person.givenName = data.person.givenName;
                         scope.personAssociation.person.familyName = data.person.familyName;
                         scope.personAssociation.personType = data.person.personType;
+                        scope.objectInfo.modifier = scope.userId;
                         if (data.isEdit) {
                             var index = _.indexOf(_.pluck(scope.objectInfo.personAssociations, 'id'), scope.personAssociation.id);
                             scope.objectInfo.personAssociations[index] = scope.personAssociation;
