@@ -65,10 +65,10 @@ public class AcmSchedulerTest extends EasyMockSupport
     public void setUp() throws IOException
     {
         acmScheduler = new AcmScheduler(mockedTaskScheduler, mockedTaskExecutor, mockedSpringContextHolder);
-        getClass().getClassLoader();
         schedulerConfiguration = new ClassPathResource("scheduledTasks.json").getFile();
         noSchedulerConfiguration = new ClassPathResource("someConfiguration.json").getFile();
         assertNotNull(schedulerConfiguration);
+        assertNotNull(noSchedulerConfiguration);
     }
 
     @Test
