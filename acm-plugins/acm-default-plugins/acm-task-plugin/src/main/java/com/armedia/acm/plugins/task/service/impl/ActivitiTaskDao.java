@@ -172,7 +172,7 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
             getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TYPE,
                     in.getParentObjectType());
             getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_PARENT_OBJECT_NAME,
-                    in.getAttachedToObjectName());
+                    in.getParentObjectName());
             getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TITLE,
                     in.getParentObjectTitle());
 
@@ -904,7 +904,7 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
 
             String parentObjectName = (String) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_NAME);
             parentObjectName = parentObjectName == null ? retval.getAttachedToObjectName() : parentObjectName;
-            retval.setAttachedToObjectName(parentObjectName);
+            retval.setParentObjectName(parentObjectName);
 
             retval.setParentObjectTitle((String) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TITLE));
 
@@ -1113,10 +1113,10 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
             String parentObjectType = (String) taskLocal.get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TYPE);
             acmTask.setParentObjectType(parentObjectType);
         }
-        if (acmTask.getAttachedToObjectName() == null)
+        if (acmTask.getParentObjectName() == null)
         {
             String parentObjectName = (String) taskLocal.get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_NAME);
-            acmTask.setAttachedToObjectName(parentObjectName);
+            acmTask.setParentObjectName(parentObjectName);
         }
         if (acmTask.getParentObjectTitle() == null)
         {
@@ -1297,7 +1297,7 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
 
             String parentObjectName = (String) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_NAME);
             parentObjectName = parentObjectName == null ? acmTask.getAttachedToObjectName() : parentObjectName;
-            acmTask.setAttachedToObjectName(parentObjectName);
+            acmTask.setParentObjectName(parentObjectName);
 
             acmTask.setParentObjectTitle((String) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TITLE));
 
