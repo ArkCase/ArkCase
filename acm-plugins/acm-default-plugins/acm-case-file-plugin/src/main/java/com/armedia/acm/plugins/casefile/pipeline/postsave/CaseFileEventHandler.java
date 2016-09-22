@@ -5,12 +5,14 @@ import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Publish new case file is created
  */
+@Deprecated
 public class CaseFileEventHandler implements PipelineHandler<CaseFile, CaseFilePipelineContext>
 {
 
@@ -29,8 +31,8 @@ public class CaseFileEventHandler implements PipelineHandler<CaseFile, CaseFileP
         if (pipelineContext.isNewCase())
         {
             log.info("CaseFile is new : [{}]", entity);
-            //Not sure why we would need to raise an event here since the transaction is not complete
-            //getCaseFileEventUtility().raiseCaseFileCreated(entity, pipelineContext.getAuthentication());
+            // Not sure why we would need to raise an event here since the transaction is not complete
+            // getCaseFileEventUtility().raiseCaseFileCreated(entity, pipelineContext.getAuthentication());
         }
         log.trace("CaseFile exiting CaseFileEventHandler : [{}]", entity);
 

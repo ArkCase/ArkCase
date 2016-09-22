@@ -66,7 +66,7 @@ angular.module('tasks').controller('Tasks.ReferencesController', ['$scope', '$st
                 size: 'lg',
                 resolve: {
                     $filter: function () {
-                    	var filter = $scope.modalConfig.searchFilter + "&-id:" + $scope.currentObjectId + "-TASK";
+                    	var filter = $scope.modalConfig.searchFilter + "&-id:" + $scope.objectInfo.taskId + "-TASK";
                         if ($scope.gridOptions.data.length > 0) {
                             for (var i = 0; i < $scope.gridOptions.data.length; i++) {
                                 var data = $scope.gridOptions.data[i];
