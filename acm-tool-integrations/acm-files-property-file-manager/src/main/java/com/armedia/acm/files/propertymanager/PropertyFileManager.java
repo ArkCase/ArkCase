@@ -2,7 +2,6 @@ package com.armedia.acm.files.propertymanager;
 
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,24 +60,29 @@ public class PropertyFileManager
     {
         if (propertiesMap != null && propertiesMap.size() > 0)
         {
+            Properties p = new Properties();
 
-            try (FileInputStream in = new FileInputStream(fileName); FileOutputStream out = new FileOutputStream(fileName))
+            try (InputStream in = new FileInputStream(fileName))
             {
-                Properties p = new Properties();
-
                 if (!clean)
                 {
                     p.load(in);
                 }
+            } catch (IOException e)
+            {
+                log.warn("Could not open properties file: {}", e.getMessage(), e);
+            }
 
+            try (OutputStream out = new FileOutputStream(fileName))
+            {
                 propertiesMap.forEach((key, value) -> p.setProperty(key, value));
-
                 p.store(out, null);
             } catch (IOException e)
             {
-                log.debug("Could not update properties file: " + e.getMessage(), e);
+                log.warn("Could not update properties file: " + e.getMessage(), e);
             }
         }
+
     }
 
     public void removeMultiple(List<String> properties, String fileName)
