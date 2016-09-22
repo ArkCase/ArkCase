@@ -31,7 +31,7 @@
           "name": "name",
           "displayName": "search.comp.grid.columns.name",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity, true)' data-toggle='tooltip' data-placement='bottom' title={{row.entity.name}}>{{row.entity.name}}</a>"
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)' data-toggle='tooltip' data-placement='bottom' title={{row.entity.name}}>{{row.entity.name}}</a>"
         },
         {
           "name": "object_type_s",
