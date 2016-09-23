@@ -173,6 +173,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         in.setReworkInstructions("rework instructions");
         in.setParentObjectId(2500L);
         in.setParentObjectType("parent object type");
+        in.setParentObjectName("parent object name");
         in.setNextAssignee(nextAssignee);
 
         // candidate group should not be saved... it is read-only, we read it from Activiti, but don't save it.
@@ -214,7 +215,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         mockTaskService.setVariableLocal(taskId.toString(), "outcome", in.getTaskOutcome().getName());
         mockTaskService.setVariableLocal(taskId.toString(), "PARENT_OBJECT_ID", 2500L);
         mockTaskService.setVariableLocal(taskId.toString(), "PARENT_OBJECT_TYPE", "parent object type");
-        mockTaskService.setVariableLocal(taskId.toString(), "PARENT_OBJECT_NAME", "objectName");
+        mockTaskService.setVariableLocal(taskId.toString(), "PARENT_OBJECT_NAME", "parent object name");
         mockTaskService.setVariable(taskId.toString(), TaskConstants.VARIABLE_NAME_NEXT_ASSIGNEE, in.getNextAssignee());
         mockTaskService.setVariableLocal(taskId.toString(), TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TITLE, null);
         mockTaskService.setVariableLocal(taskId.toString(), TaskConstants.VARIABLE_NAME_LEGACY_SYSTEM_ID, null);
