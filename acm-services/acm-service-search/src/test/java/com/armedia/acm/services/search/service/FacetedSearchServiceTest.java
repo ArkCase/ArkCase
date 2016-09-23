@@ -51,6 +51,11 @@ public class FacetedSearchServiceTest
         String updatedQuery = unit.updateQueryWithExcludedObjects(query, URLEncoder.encode("{!field f=object_type_facet}BAND", SearchConstants.FACETED_SEARCH_ENCODING));
 
         assertEquals("ann.* AND -object_type_s:AUTHOR", updatedQuery);
+        
+        query = "ann.*";
+        updatedQuery = unit.updateQueryWithExcludedObjects(query, URLEncoder.encode("{!field f=object_type_s}BAND", SearchConstants.FACETED_SEARCH_ENCODING));
+
+        assertEquals("ann.* AND -object_type_s:AUTHOR", updatedQuery);
     }
 
     @Test
