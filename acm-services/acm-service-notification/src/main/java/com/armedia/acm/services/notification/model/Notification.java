@@ -20,9 +20,7 @@ import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * Created by armdev on 10/08/14.
- */
+
 @Entity
 @Table(name = "acm_notification")
 public class Notification implements Serializable, AcmObject, AcmEntity
@@ -103,6 +101,9 @@ public class Notification implements Serializable, AcmObject, AcmEntity
 
     @Transient
     private String userEmail;
+
+    @Column(name = "cm_notification_link")
+    private String link;
 
     @Override
     public Long getId()
@@ -320,6 +321,16 @@ public class Notification implements Serializable, AcmObject, AcmEntity
     public String getObjectType()
     {
         return NotificationConstants.OBJECT_TYPE;
+    }
+
+    public String getLink()
+    {
+        return link;
+    }
+
+    public void setLink(String link)
+    {
+        this.link = link;
     }
 }
 

@@ -141,8 +141,10 @@ public class NotificationToSolrTransformer implements AcmObjectToSolrDocTransfor
     {
         Long relatedObjectId = in.getRelatedObjectId();
         String relatedObjectType = in.getRelatedObjectType();
+        String notificationLink = in.getLink();
         additionalProperties.put("related_object_id_l", relatedObjectId);
         additionalProperties.put("related_object_type_s", relatedObjectType);
+        additionalProperties.put("notification_link_s", notificationLink);
     }
 
     public NotificationDao getNotificationDao()

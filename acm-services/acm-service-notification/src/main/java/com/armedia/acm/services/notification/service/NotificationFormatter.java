@@ -9,9 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Map;
 import java.util.Properties;
 
-/**
- * Created by armdev on 6/26/15.
- */
+
 public class NotificationFormatter
 {
 
@@ -21,7 +19,6 @@ public class NotificationFormatter
 
     public Notification replaceFormatPlaceholders(Notification notification)
     {
-
         String objectTypeLabelPlaceholder = NotificationConstants.OBJECT_TYPE_LABEL_PLACEHOLDER;
         String parentTypeLabelPlaceholder = NotificationConstants.PARENT_TYPE_LABEL_PLACEHOLDER;
         String anchorPlaceholder = NotificationConstants.ANCHOR_PLACEHOLDER;
@@ -61,8 +58,10 @@ public class NotificationFormatter
 
         if (notificationNote != null && notificationNote.contains(anchorPlaceholder))
         {
-            String updatedNote = replaceAnchor(notificationNote, anchorPlaceholder, notification.getParentType(),
-                    notification.getParentId(), notification.getRelatedObjectType(), notification.getRelatedObjectId());
+            String notificationLink = buildNotificationLink(notification.getParentType(), notification.getParentId(),
+                    notification.getRelatedObjectType(), notification.getRelatedObjectId());
+            String updatedNote = replaceAnchor(notificationNote, anchorPlaceholder, notificationLink);
+            notification.setLink(notificationLink);
             notification.setNote(updatedNote);
         }
 
@@ -70,10 +69,8 @@ public class NotificationFormatter
 
     }
 
-    private String replaceAnchor(String withPlaceholder, String anchorPlaceholder, String parentType,
-                                 Long parentId, String relatedObjectType, Long relatedObjectId)
+    private String buildNotificationLink(String parentType, Long parentId, String relatedObjectType, Long relatedObjectId)
     {
-
         String baseUrl = getNotificationProperties().getProperty(NotificationConstants.BASE_URL_KEY);
 
         String url = null;
@@ -98,13 +95,16 @@ public class NotificationFormatter
             }
         }
 
-        if (StringUtils.isNotEmpty(url))
+        return url;
+    }
+
+    private String replaceAnchor(String withPlaceholder, String anchorPlaceholder, String notificationLink)
+    {
+        if (StringUtils.isNotEmpty(notificationLink))
         {
-            return withPlaceholder.replace(anchorPlaceholder, url);
+            return withPlaceholder.replace(anchorPlaceholder, notificationLink);
         }
-
         return withPlaceholder;
-
     }
 
     private String replaceObjectTypeLabel(String withPlaceholder, String placeholder, String parentType)
@@ -114,7 +114,8 @@ public class NotificationFormatter
         return withPlaceholder.replace(placeholder, objectTypeLabel);
     }
 
-    private String replaceParentTypeLabel(String withPlaceholder, String placeholder, String relatedType){
+    private String replaceParentTypeLabel(String withPlaceholder, String placeholder, String relatedType)
+    {
         String keyLabel = relatedType + ".label";
         String parentTypeLabel = getNotificationProperties().getProperty(keyLabel);
         return withPlaceholder.replace(placeholder, parentTypeLabel);
