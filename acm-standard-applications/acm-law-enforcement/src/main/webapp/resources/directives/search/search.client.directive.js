@@ -270,7 +270,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                     event.preventDefault();
 
                     if (Util.goodMapValue(scope, "customization.showParentObject", false)) {
-                        scope.customization.showParentObject(objectData);
+                    	scope.customization.showParentObject(objectData);
 
                     } else {
                     	if(typeof (objectData.related_object_type_s && objectData.related_object_id_l) !== 'undefined'){
