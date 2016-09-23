@@ -107,7 +107,7 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
             //});
 
             //
-            // Unnecessary object changed event handling
+            // object changed event handling has side effect of making local update of title, classification not working properly.
             //
             //
             ////if there is subscription from other object we want to unsubscribe
