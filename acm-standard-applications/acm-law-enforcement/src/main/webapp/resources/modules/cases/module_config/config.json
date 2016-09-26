@@ -512,7 +512,7 @@
             "name": "modified",
             "displayName": "cases.comp.people.contactMethods.table.columns.modified",
             "headerCellFilter": "translate",
-            "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+            "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
             "enableCellEdit": false
           },
           {
@@ -553,7 +553,7 @@
             "name": "modified",
             "displayName": "cases.comp.people.organizations.table.columns.modified",
             "headerCellFilter": "translate",
-            "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+            "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
             "enableCellEdit": false
           },
           {
@@ -611,7 +611,7 @@
             "name": "modified",
             "displayName": "cases.comp.people.addresses.table.columns.modified",
             "headerCellFilter": "translate",
-            "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+            "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
             "enableCellEdit": false
           },
           {
@@ -649,7 +649,7 @@
             "name": "modified",
             "displayName": "cases.comp.people.aliases.table.columns.modified",
             "headerCellFilter": "translate",
-            "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+            "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
             "enableCellEdit": false
           },
           {
@@ -687,7 +687,7 @@
             "name": "modified",
             "displayName": "cases.comp.people.securityTags.table.columns.modified",
             "headerCellFilter": "translate",
-            "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+            "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
           },
           {
             "name": "modifier",
