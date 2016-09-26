@@ -1,24 +1,25 @@
+var Objects=require('../Objects.json');
 var DashboardPage = function() {
 
-    this.editBtn = element(by.xpath('.//*[@class="well-sm clearfix ng-scope"]/span/a/i'));
-    this.addNewWidgetBtn = element(by.xpath('.//*[@class="well-sm clearfix ng-scope"]/span/a[1]/i'));
-    this.editDashboardBtn = element(by.xpath('.//*[@class="well-sm clearfix ng-scope"]/span/a[2]/i'));
-    this.saveChangesBtn = element(by.xpath('.//*[@class="well-sm clearfix ng-scope"]/span/a[3]/i'));
-    this.undoChangesBtn = element(by.xpath('.//*[@class="well-sm clearfix ng-scope"]/span/a[4]/i'));
-    this.addNewWidgetTitle = element(by.css('.modal-header ng-scope'));
-    this.casesByStatus = element(by.xpath('.//*[@class="dl-horizontal"]/dt[1]/a'));
-    this.myCases = element(by.xpath('.//*[@class="dl-horizontal"]/dt[2]/a'));
-    this.myComplaints = element(by.xpath('.//*[@class="dl-horizontal"]/dt[3]/a'));
-    this.newComplaints = element(by.xpath('.//*[@class="dl-horizontal"]/dt[4]/a'));
-    this.teamWorkload = element(by.xpath('.//*[@class="dl-horizontal"]/dt[5]/a'));
-    this.weather = element(by.xpath('.//*[@class="dl-horizontal"]/dt[6]/a'));
-    this.news = element(by.xpath('.//*[@class="dl-horizontal"]/dt[7]/a'));
-    this.closeBtn = element(by.buttonText('Close'));
-    this.widgetTitle = element.all(by.xpath('.//*[@class="panel-heading clearfix"]/div/h3')).get(0);
-    this.reloadWidgetContentBtn = element(by.xpath('.//*[@class="panel-title ng-binding ng-scope"]/span/a[1]/i'));
-    this.chnageWidgetLocationBtn = element(by.xpath('.//*[@class="panel-title ng-binding ng-scope"]/span/a[2]/i'));
-    this.editWidgetConfigurationBtn = element(by.xpath('.//*[@class="panel-title ng-binding ng-scope"]/span/a[5]/i'));
-    this.removeWidgetBtn = element.all(by.xpath('.//*[@class="panel-title ng-binding ng-scope"]/span/a[7]')).get(0);
+    this.editBtn = element(by.xpath(Objects.dashboardpage.locators.editBtn));
+    this.addNewWidgetBtn = element(by.xpath(Objects.dashboardpage.locators.addNewWidgetBtn));
+    this.editDashboardBtn = element(by.xpath(Objects.dashboardpage.locators.editDashboardBtn));
+    this.saveChangesBtn = element(by.xpath(Objects.dashboardpage.locators.saveChangesBtn));
+    this.undoChangesBtn = element(by.xpath(Objects.dashboardpage.locators.undoChangesBtn));
+    this.addNewWidgetTitle = element(by.css(Objects.dashboardpage.locators.addNewWidgetTitle));
+    this.casesByStatus = element(by.xpath(Objects.dashboardpage.locators.casesByStatus));
+    this.myCases = element(by.xpath(Objects.dashboardpage.locators.myCases));
+    this.myComplaints = element(by.xpath(Objects.dashboardpage.locators.myComplaints));
+    this.newComplaints = element(by.xpath(Objects.dashboardpage.locators.newComplaints));
+    this.teamWorkload = element(by.xpath(Objects.dashboardpage.locators.teamWorkload));
+    this.weather = element(by.xpath(Objects.dashboardpage.locators.weather));
+    this.news = element(by.xpath(Objects.dashboardpage.locators.news));
+    this.closeBtn = element(by.buttonText(Objects.dashboardpage.locators.closeBtn));
+    this.widgetTitle = element.all(by.xpath(Objects.dashboardpage.locators.widgetTitle)).get(0);
+    this.reloadWidgetContentBtn = element(by.xpath(Objects.dashboardpage.locators.reloadWidgetContentBtn));
+    this.chnageWidgetLocationBtn = element(by.xpath(Objects.dashboardpage.locators.chnageWidgetLocationBtn));
+    this.editWidgetConfigurationBtn = element(by.xpath(Objects.dashboardpage.locators.editWidgetConfigurationBtn));
+    this.removeWidgetBtn = element.all(by.xpath(Objects.dashboardpage.locators.removeWidgetBtn)).get(0);
 
 };
 

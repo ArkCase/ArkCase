@@ -1,5 +1,6 @@
 var dashPage = require('./Pages/dashboard_page.js');
 var authentication = require('./authentication.js');
+var Objects = require('./Objects.json');
 var flag = false;
 
 
@@ -32,7 +33,7 @@ describe('dashboard page test', function() {
         dashPage.addNewWidgetBtn.click().then(function() {
             dashPage.casesByStatus.click();
             dashPage.saveChangesBtn.click();
-            expect(dashPage.widgetTitle.getText()).toEqual('Cases By Status');
+            expect(dashPage.widgetTitle.getText()).toEqual(Objects.dashboardpage.data.widgetTitleCasesByStatus);
         });
         dashPage.editBtn.click().then(function() {
             dashPage.removeWidgetBtn.click().then(function() {
@@ -40,6 +41,7 @@ describe('dashboard page test', function() {
             });
         });
     });
+
 
     it('should add/delete widget my cases', function() {
 
@@ -47,7 +49,7 @@ describe('dashboard page test', function() {
         dashPage.addNewWidgetBtn.click().then(function() {
             dashPage.myCases.click();
             dashPage.saveChangesBtn.click();
-            expect(dashPage.widgetTitle.getText()).toEqual('My Cases');
+            expect(dashPage.widgetTitle.getText()).toEqual(Objects.dashboardpage.data.widgetTitleMyCases);
         });
         dashPage.editBtn.click().then(function() {
             dashPage.removeWidgetBtn.click().then(function() {
@@ -57,13 +59,14 @@ describe('dashboard page test', function() {
 
     });
 
+
     it('should add/delete widget my complaints', function() {
 
         dashPage.editBtn.click();
         dashPage.addNewWidgetBtn.click().then(function() {
             dashPage.myComplaints.click();
             dashPage.saveChangesBtn.click();
-            expect(dashPage.widgetTitle.getText()).toEqual('My Complaints');
+            expect(dashPage.widgetTitle.getText()).toEqual(Objects.dashboardpage.data.widgetTitleMyComplaints);
         });
         dashPage.editBtn.click().then(function() {
             dashPage.removeWidgetBtn.click().then(function() {
@@ -79,7 +82,7 @@ describe('dashboard page test', function() {
         dashPage.addNewWidgetBtn.click().then(function() {
             dashPage.newComplaints.click();
             dashPage.saveChangesBtn.click();
-            expect(dashPage.widgetTitle.getText()).toEqual('New Complaints');
+            expect(dashPage.widgetTitle.getText()).toEqual(Objects.dashboardpage.data.widgetTitleNewComplaints);
         });
         dashPage.editBtn.click().then(function() {
             dashPage.removeWidgetBtn.click().then(function() {
@@ -96,7 +99,7 @@ describe('dashboard page test', function() {
         dashPage.addNewWidgetBtn.click().then(function() {
             dashPage.teamWorkload.click();
             dashPage.saveChangesBtn.click();
-            expect(dashPage.widgetTitle.getText()).toEqual('Team Workload');
+            expect(dashPage.widgetTitle.getText()).toEqual(Objects.dashboardpage.data.widgetTitleTeamWorkload);
         });
         dashPage.editBtn.click().then(function() {
             dashPage.removeWidgetBtn.click().then(function() {
@@ -111,7 +114,7 @@ describe('dashboard page test', function() {
         dashPage.addNewWidgetBtn.click().then(function() {
             dashPage.weather.click();
             dashPage.saveChangesBtn.click();
-            expect(dashPage.widgetTitle.getText()).toEqual('Weather');
+            expect(dashPage.widgetTitle.getText()).toEqual(Objects.dashboardpage.data.widgetTitleWeather);
         });
         dashPage.editBtn.click().then(function() {
             dashPage.removeWidgetBtn.click().then(function() {
@@ -126,7 +129,7 @@ describe('dashboard page test', function() {
         dashPage.addNewWidgetBtn.click().then(function() {
             dashPage.news.click();
             dashPage.saveChangesBtn.click();
-            expect(dashPage.widgetTitle.getText()).toEqual('News');
+            expect(dashPage.widgetTitle.getText()).toEqual(Objects.dashboardpage.data.widgetTitleNews);
         });
         dashPage.editBtn.click().then(function() {
             dashPage.removeWidgetBtn.click().then(function() {
