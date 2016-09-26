@@ -49,8 +49,8 @@
       "table.columns": {
         "type": "Type",
         "value": "Value",
-        "created": "Last Modified",
-        "creator": "Modified By"
+        "modified": "Last Modified",
+        "modifier": "Modified By"
       }
     },
     "organizations": {
@@ -58,8 +58,8 @@
       "table.columns": {
         "type": "Type",
         "value": "Value",
-        "created": "Last Modified",
-        "creator": "Modified By"
+        "modified": "Last Modified",
+        "modifier": "Modified By"
       }
     },
     "addresses": {
@@ -71,8 +71,8 @@
         "state": "State",
         "zip": "Zip",
         "country": "Country",
-        "created": "Last Modified",
-        "creator": "Modified By"
+        "modified": "Last Modified",
+        "modifier": "Modified By"
       }
     },
     "aliases": {
@@ -80,8 +80,8 @@
       "table.columns": {
         "type": "Type",
         "value": "Value",
-        "created": "Last Modified",
-        "creator": "Modified By"
+        "modified": "Last Modified",
+        "modifier": "Modified By"
       }
     },
     "securityTags": {
@@ -89,8 +89,8 @@
       "table.columns": {
         "type": "Type",
         "value": "Value",
-        "created": "Last Modified",
-        "creator": "Modified By"
+        "modified": "Last Modified",
+        "modifier": "Modified By"
       }
     }
   },
