@@ -1,4 +1,5 @@
 var Objects = require('./Objects.json');
+
 var helpers = function helpers() {
 
     this.loginAsSupervisor = function() {
