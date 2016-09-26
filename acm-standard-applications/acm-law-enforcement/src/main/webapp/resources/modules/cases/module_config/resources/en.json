@@ -49,8 +49,8 @@
       "table.columns": {
         "type": "Type",
         "value": "Value",
-        "created":"Last Modified",
-        "creator":"Modified by",
+        "created":"Date Added",
+        "creator":"Added By",
         "modified": "Last Modified",
         "modifier": "Modified By"
       }
