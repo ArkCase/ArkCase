@@ -11,7 +11,6 @@ import com.armedia.acm.plugins.complaint.dao.CloseComplaintRequestDao;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.CloseComplaintRequest;
 import com.armedia.acm.plugins.complaint.model.Complaint;
-import com.armedia.acm.plugins.complaint.model.ComplaintConstants;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
@@ -22,6 +21,7 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
+
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -32,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
 import java.util.Date;
 import java.util.List;
 
@@ -57,11 +58,8 @@ public class CloseComplaintRequestService
     private EntityManager entityManager;
 
     @Transactional
-    public void handleCloseComplaintRequestApproved(
-            Long complaintId,
-            Long closeComplaintRequestId,
-            String user,
-            Date approvalDate) throws PipelineProcessException
+    public void handleCloseComplaintRequestApproved(Long complaintId, Long closeComplaintRequestId, String user, Date approvalDate)
+            throws PipelineProcessException
     {
         CloseComplaintRequest updatedRequest = updateCloseComplaintRequestStatus(closeComplaintRequestId);
 
@@ -103,7 +101,7 @@ public class CloseComplaintRequestService
         // only raise the completed event if we get here, e.g. everything has happened and no exception has been
         // raised.
         getComplaintEventPublisher().publishComplaintClosedEvent(updatedComplaint, user, true, approvalDate);
-        
+
         getComplaintEventPublisher().publishComplaintUpdated(updatedComplaint, user);
     }
 
@@ -121,18 +119,17 @@ public class CloseComplaintRequestService
         CaseFile existingCaseFile = getCaseFileDao().findByCaseNumber(caseNumber);
         if (existingCaseFile == null)
         {
-            log.error("Can not add complaint to existing case file since there is no case file with number '" +
-                    caseNumber + "'!");
+            log.error("Can not add complaint to existing case file since there is no case file with number '" + caseNumber + "'!");
             return null;
         }
 
         // since we are adding the complaint to an existing case, which already has its own details, we do
-        // not update the case file's details.  User can read the complaint details via the link to the
+        // not update the case file's details. User can read the complaint details via the link to the
         // complaint from the references table.
 
-        ObjectAssociation originalComplaint = makeObjectAssociation(updatedComplaint.getComplaintId(), updatedComplaint.getComplaintNumber(), "COMPLAINT", updatedComplaint.getComplaintTitle());
+        ObjectAssociation originalComplaint = makeObjectAssociation(updatedComplaint.getComplaintId(),
+                updatedComplaint.getComplaintNumber(), "COMPLAINT", updatedComplaint.getComplaintTitle());
         existingCaseFile.addChildObject(originalComplaint);
-
 
         addPersonsToCaseFile(updatedComplaint.getPersonAssociations(), existingCaseFile);
 
@@ -158,9 +155,11 @@ public class CloseComplaintRequestService
             AcmContainer container = getEcmFileService().getOrCreateContainer(updatedComplaint.getObjectType(), updatedComplaint.getId());
             AcmCmisObjectList files = getEcmFileService().allFilesForContainer(auth, container);
 
-            AcmContainer containerCaseFile = getEcmFileService().getOrCreateContainer(existingCaseFile.getObjectType(), existingCaseFile.getId());
+            AcmContainer containerCaseFile = getEcmFileService().getOrCreateContainer(existingCaseFile.getObjectType(),
+                    existingCaseFile.getId());
 
-            String complaintFolderName = complaintFolderName = String.format(getComplaintFolderNameFormat(), updatedComplaint.getComplaintNumber());
+            String complaintFolderName = complaintFolderName = String.format(getComplaintFolderNameFormat(),
+                    updatedComplaint.getComplaintNumber());
 
             container.getFolder().setParentFolderId(containerCaseFile.getFolder().getId());
             container.getFolder().setName(complaintFolderName);
@@ -212,10 +211,11 @@ public class CloseComplaintRequestService
             return false;
         }
 
-        return "add_exising_case".equals(updatedRequest.getDisposition().getDispositionType());
+        return "add_existing_case".equals(updatedRequest.getDisposition().getDispositionType());
     }
 
-    public CaseFile openFullInvestigation(Complaint updatedComplaint, String userId, CaseFile caseFile, String objectType) throws PipelineProcessException
+    public CaseFile openFullInvestigation(Complaint updatedComplaint, String userId, CaseFile caseFile, String objectType)
+            throws PipelineProcessException
     {
         if (caseFile == null)
         {
@@ -231,7 +231,8 @@ public class CloseComplaintRequestService
         caseFile.setPriority(updatedComplaint.getPriority());
         caseFile.setTitle(updatedComplaint.getComplaintTitle());
 
-        ObjectAssociation originalComplaint = makeObjectAssociation(updatedComplaint.getComplaintId(), updatedComplaint.getComplaintNumber(), objectType, updatedComplaint.getComplaintTitle());
+        ObjectAssociation originalComplaint = makeObjectAssociation(updatedComplaint.getComplaintId(),
+                updatedComplaint.getComplaintNumber(), objectType, updatedComplaint.getComplaintTitle());
         log.debug("reference object title: " + originalComplaint.getTargetTitle());
         caseFile.addChildObject(originalComplaint);
 
@@ -253,7 +254,8 @@ public class CloseComplaintRequestService
         String complaintDetails = "";
         if (StringUtils.isNotEmpty(updatedComplaint.getDetails()))
         {
-            complaintDetails = String.format(getComplaintDetailsFormat(), updatedComplaint.getComplaintNumber(), updatedComplaint.getDetails());
+            complaintDetails = String.format(getComplaintDetailsFormat(), updatedComplaint.getComplaintNumber(),
+                    updatedComplaint.getDetails());
         }
 
         String details = String.format(getCaseFileDetailsFormat(), updatedComplaint.getComplaintNumber(), complaintDetails);
@@ -306,7 +308,8 @@ public class CloseComplaintRequestService
     {
         if (complaint != null && caseFile != null)
         {
-            ObjectAssociation caseFileObjectAssociation = makeObjectAssociation(caseFile.getId(), caseFile.getCaseNumber(), objectType, caseFile.getTitle());
+            ObjectAssociation caseFileObjectAssociation = makeObjectAssociation(caseFile.getId(), caseFile.getCaseNumber(), objectType,
+                    caseFile.getTitle());
             complaint.addChildObject(caseFileObjectAssociation);
             getComplaintDao().save(complaint);
         }
