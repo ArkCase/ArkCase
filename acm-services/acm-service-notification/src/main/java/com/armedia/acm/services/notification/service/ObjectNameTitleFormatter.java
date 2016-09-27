@@ -1,17 +1,12 @@
 package com.armedia.acm.services.notification.service;
 
-import com.armedia.acm.core.AcmNotifiableEntity;
-import com.armedia.acm.data.AcmNotificationDao;
-import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 
-/**
- * Created by ncuculova
- */
+
 public class ObjectNameTitleFormatter implements CustomTitleFormatter
 {
-    private AcmDataService acmDataService;
+    private NotificationUtils notificationUtils;
 
     @Override
     public String format(Notification notification)
@@ -24,15 +19,11 @@ public class ObjectNameTitleFormatter implements CustomTitleFormatter
 
         if (title != null)
         {
-            AcmNotificationDao dao = getAcmDataService().getNotificationDaoByObjectType(parentObjectType);
-            if (dao != null)
-            {
-                AcmNotifiableEntity entity = dao.findEntity(parentObjectId);
-                if (entity != null)
-                {
-                    title = replacePlaceholder(entity.getNotifiableEntityTitle(), title, NotificationConstants.NAME_LABEL);
-                }
-            }
+            String objectTitle = getNotificationUtils().getNotificationParentOrRelatedObjectNumber(parentObjectType,
+                    parentObjectId);
+
+            title = replacePlaceholder(objectTitle, title, NotificationConstants.NAME_LABEL);
+
         }
         return title;
     }
@@ -42,13 +33,13 @@ public class ObjectNameTitleFormatter implements CustomTitleFormatter
         return titlePlaceholder.replace(placeholder, objectName);
     }
 
-    public AcmDataService getAcmDataService()
+    public NotificationUtils getNotificationUtils()
     {
-        return acmDataService;
+        return notificationUtils;
     }
 
-    public void setAcmDataService(AcmDataService acmDataService)
+    public void setNotificationUtils(NotificationUtils notificationUtils)
     {
-        this.acmDataService = acmDataService;
+        this.notificationUtils = notificationUtils;
     }
 }

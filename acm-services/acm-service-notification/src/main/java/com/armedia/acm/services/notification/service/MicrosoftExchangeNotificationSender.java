@@ -16,7 +16,6 @@ import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenS
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.model.AcmUser;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -39,6 +38,7 @@ public class MicrosoftExchangeNotificationSender implements NotificationSender
     private OutlookService outlookService;
     private ExchangeWebServicesOutlookDao dao;
     private EcmFileService ecmFileService;
+    private NotificationUtils notificationUtils;
 
     @Override
     public Notification send(Notification notification)
@@ -57,7 +57,12 @@ public class MicrosoftExchangeNotificationSender implements NotificationSender
             EmailWithAttachmentsDTO in = new EmailWithAttachmentsDTO();
             in.setHeader("");
             in.setFooter("");
-            in.setBody(notification.getNote());
+
+            String messageBody = String.format("%s Link: %s", notification.getNote(),
+                    getNotificationUtils().buildNotificationLink(notification.getParentType(), notification.getParentId(),
+                            notification.getRelatedObjectType(), notification.getRelatedObjectId()));
+
+            in.setBody(messageBody);
             in.setSubject(notification.getTitle());
             in.setEmailAddresses(Arrays.asList(notification.getUserEmail()));
 
@@ -100,7 +105,7 @@ public class MicrosoftExchangeNotificationSender implements NotificationSender
 
     @Override
     public List<EmailWithEmbeddedLinksResultDTO> sendEmailWithEmbeddedLinks(EmailWithEmbeddedLinksDTO in, Authentication authentication,
-            AcmUser user) throws Exception
+                                                                            AcmUser user) throws Exception
     {
         OutlookDTO outlookDTO = getOutlookService().retrieveOutlookPassword(authentication);
         AcmOutlookUser outlookUser = new AcmOutlookUser(authentication.getName(), user.getMail(), outlookDTO.getOutlookPassword());
@@ -197,4 +202,13 @@ public class MicrosoftExchangeNotificationSender implements NotificationSender
         this.ecmFileService = ecmFileService;
     }
 
+    public NotificationUtils getNotificationUtils()
+    {
+        return notificationUtils;
+    }
+
+    public void setNotificationUtils(NotificationUtils notificationUtils)
+    {
+        this.notificationUtils = notificationUtils;
+    }
 }
