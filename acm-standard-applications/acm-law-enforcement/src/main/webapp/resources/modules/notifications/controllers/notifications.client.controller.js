@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('notifications').controller('NotificationsController', ['$scope', 'ConfigService', 'Authentication','UtilService'
-    , 'ObjectService'
-	, function($scope, ConfigService, Authentication, Util, ObjectService) {
+angular.module('notifications').controller('NotificationsController', ['$scope', '$window', 'ConfigService'
+	, 'UtilService', 'Authentication'
+	, function($scope, $window, ConfigService, Util, Authentication) {
 		$scope.config = ConfigService.getModule({moduleId: 'notifications'});
 		$scope.$on('req-component-config', onConfigRequest);
 
@@ -22,9 +22,8 @@ angular.module('notifications').controller('NotificationsController', ['$scope',
 		
         $scope.customization = {
             showParentObject: function(objectData) {
-                var objectTypeKey = Util.goodMapValue(objectData, "parent_type_s");
-                var objectId = Util.goodMapValue(objectData, "parent_id_s");
-                ObjectService.showObject(objectTypeKey, objectId);
+				var url = Util.goodMapValue(objectData, "notification_link_s", "#");
+				$window.location.href = url;
             }
         };
         
