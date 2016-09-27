@@ -156,9 +156,9 @@
         </addColumn>
     </changeSet>
 
-    <changeSet id="14-add-column-notification-link" author="nadica.cuculova">
+    <changeSet id="14-add-column-related_object_number" author="nadica.cuculova">
         <addColumn tableName="acm_notification">
-            <column name="cm_notification_link" type="VARCHAR(1024)"/>
+            <column name="cm_related_object_number" type="VARCHAR(1024)"/>
         </addColumn>
     </changeSet>
 

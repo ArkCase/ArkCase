@@ -24,7 +24,6 @@ import java.util.Date;
 @Entity
 @Table(name = "acm_notification")
 public class Notification implements Serializable, AcmObject, AcmEntity
-
 {
     private static final long serialVersionUID = -1154137631399833851L;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
@@ -99,11 +98,11 @@ public class Notification implements Serializable, AcmObject, AcmEntity
     @Column(name = "cm_related_object_type")
     private String relatedObjectType;
 
+    @Column(name = "cm_related_object_number")
+    private String relatedObjectNumber;
+
     @Transient
     private String userEmail;
-
-    @Column(name = "cm_notification_link")
-    private String link;
 
     @Override
     public Long getId()
@@ -306,6 +305,16 @@ public class Notification implements Serializable, AcmObject, AcmEntity
         this.relatedObjectType = relatedObjectType;
     }
 
+    public String getRelatedObjectNumber()
+    {
+        return relatedObjectNumber;
+    }
+
+    public void setRelatedObjectNumber(String relatedObjectNumber)
+    {
+        this.relatedObjectNumber = relatedObjectNumber;
+    }
+
     public String getUserEmail()
     {
         return userEmail;
@@ -323,15 +332,6 @@ public class Notification implements Serializable, AcmObject, AcmEntity
         return NotificationConstants.OBJECT_TYPE;
     }
 
-    public String getLink()
-    {
-        return link;
-    }
-
-    public void setLink(String link)
-    {
-        this.link = link;
-    }
 }
 
 
