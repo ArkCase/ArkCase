@@ -1,4 +1,4 @@
-var Objects = require('../Objects.json');
+var Objects = require('../json/Objects.json');
 var UserPage = function() {
 
     this.userName = element(by.xpath(Objects.userpage.locators.userName));
