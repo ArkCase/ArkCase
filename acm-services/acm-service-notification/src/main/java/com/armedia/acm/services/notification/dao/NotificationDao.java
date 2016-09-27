@@ -135,6 +135,7 @@ public class NotificationDao extends AcmAbstractDao<Notification>
      * @param parameters
      * @param firstResult
      * @param maxResult
+     * @param rule
      * @return
      */
     private List<Notification> createNotifications(Map<String, Object> parameters, int firstResult, int maxResult,
