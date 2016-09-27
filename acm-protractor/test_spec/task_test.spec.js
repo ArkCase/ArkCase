@@ -1,7 +1,8 @@
-var taskPage = require('./Pages/task_page.js');
-var tasksPage = require('./Pages/tasks_page.js');
-var authentication = require('./authentication.js');
-var Objects = require('./Objects.json');
+var logger = require('../log');
+var taskPage = require('../Pages/task_page.js');
+var tasksPage = require('../Pages/tasks_page.js');
+var authentication = require('../authentication.js');
+var Objects = require('../json/Objects.json');
 var now = new Date();
 var day = ("0" + now.getDate()).slice(-2);
 var month = ("0" + (now.getMonth() + 1)).slice(-2);

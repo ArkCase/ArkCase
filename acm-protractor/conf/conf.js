@@ -1,6 +1,6 @@
 exports.config = {
-    seleniumAddress: 'http://localhost:4444/wd/hub',
-    // directConnect: true,
+    //seleniumAddress: 'http://localhost:4444/wd/hub',
+    directConnect: true,
     defaultTimeoutInterval: 20000,
 
     cababilities: {
@@ -34,7 +34,7 @@ exports.config = {
     //          'maxInstances': 5
     //        }],
 
-    specs: ['./tasks_page.spec.js'],
+    specs: ['..\\test_spec\\task_test.spec.js'],
 
     jasmineNodeOpts: {
         showColors: true,
