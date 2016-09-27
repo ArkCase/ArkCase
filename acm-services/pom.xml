@@ -47,6 +47,7 @@
         <module>acm-service-webdav</module>
         <module>acm-service-protect-url</module>
         <module>acm-service-scheduler</module>
+        <module>acm-service-message-broker</module>
     </modules>
 
 
