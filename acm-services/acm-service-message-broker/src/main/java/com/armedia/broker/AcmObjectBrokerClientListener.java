@@ -17,14 +17,14 @@ import java.io.Serializable;
  * @author dame.gjorgjievski
  *
  */
-public class AcmObjectBrokerListener<E extends Serializable> implements MessageListener
+public class AcmObjectBrokerClientListener<E extends Serializable> implements MessageListener
 {
 
-    private static final Logger LOG = LogManager.getLogger(AcmObjectBrokerListener.class);
+    private static final Logger LOG = LogManager.getLogger(AcmObjectBrokerClientListener.class);
 
-    private final AcmObjectBroker<E> broker;
+    private final AcmObjectBrokerClient<E> broker;
 
-    public AcmObjectBrokerListener(AcmObjectBroker<E> broker)
+    public AcmObjectBrokerClientListener(AcmObjectBrokerClient<E> broker)
     {
         this.broker = broker;
     }

@@ -27,21 +27,21 @@ import java.io.Serializable;
  *
  * @param <E>
  */
-public abstract class AcmObjectBroker<E extends Serializable> extends DefaultMessageListenerContainer
+public abstract class AcmObjectBrokerClient<E extends Serializable> extends DefaultMessageListenerContainer
 {
-    private static final Logger LOG = LogManager.getLogger(AcmObjectBroker.class);
+    private static final Logger LOG = LogManager.getLogger(AcmObjectBrokerClient.class);
 
     protected final Class<E> entityClass;
     protected final Queue outboundQueue;
     protected final Queue inboundQueue;
 
-    protected AcmObjectBrokerHandler<E> handler;
+    protected AcmObjectBrokerClientHandler<E> handler;
 
     protected JmsTemplate producerTemplate;
 
     protected final ObjectMapper mapper = new ObjectMapper();
 
-    public AcmObjectBroker(ConnectionFactory connectionFactory, String outboundQueue, String inboundQueue, Class<E> entityClass)
+    public AcmObjectBrokerClient(ConnectionFactory connectionFactory, String outboundQueue, String inboundQueue, Class<E> entityClass)
     {
 
         this.outboundQueue = outboundQueue != null ? getQueue(outboundQueue) : null;
@@ -49,7 +49,7 @@ public abstract class AcmObjectBroker<E extends Serializable> extends DefaultMes
         this.entityClass = entityClass;
 
         setConnectionFactory(connectionFactory);
-        setMessageListener(new AcmObjectBrokerListener<E>(this));
+        setMessageListener(new AcmObjectBrokerClientListener<E>(this));
 
         init();
     }
@@ -111,7 +111,7 @@ public abstract class AcmObjectBroker<E extends Serializable> extends DefaultMes
      * 
      * @param handler
      */
-    public void setHandler(AcmObjectBrokerHandler<E> handler)
+    public void setHandler(AcmObjectBrokerClientHandler<E> handler)
     {
         this.handler = handler;
     }
@@ -121,7 +121,7 @@ public abstract class AcmObjectBroker<E extends Serializable> extends DefaultMes
      * 
      * @param handler
      */
-    protected AcmObjectBrokerHandler<E> getHandler()
+    protected AcmObjectBrokerClientHandler<E> getHandler()
     {
         return handler;
     }
