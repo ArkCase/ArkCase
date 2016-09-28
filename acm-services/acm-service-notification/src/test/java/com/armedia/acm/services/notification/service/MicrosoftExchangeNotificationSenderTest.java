@@ -1,8 +1,6 @@
 package com.armedia.acm.services.notification.service;
 
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.eq;
-import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -44,6 +42,7 @@ public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
     private AcmUser mockAcmUser;
     private EcmFileService mockEcmFileService;
     private OutlookService mockOutlookService;
+    private NotificationUtils mockNotificationUtils;
 
     @Before
     public void setUp()
@@ -57,12 +56,14 @@ public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
         mockOutlookService = createMock(OutlookService.class);
         mockEmailWithAttachmentsDTO = createMock(EmailWithAttachmentsDTO.class);
         mockEmailWithEmbeddedLinksDTO = createMock(EmailWithEmbeddedLinksDTO.class);
+        mockNotificationUtils = createMock(NotificationUtils.class);
 
         microsoftExchangeNotificationSender.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
         microsoftExchangeNotificationSender.setPropertyFileManager(mockPropertyFileManager);
         microsoftExchangeNotificationSender.setNotificationPropertyFileLocation("");
         microsoftExchangeNotificationSender.setEcmFileService(mockEcmFileService);
         microsoftExchangeNotificationSender.setOutlookService(mockOutlookService);
+        microsoftExchangeNotificationSender.setNotificationUtils(mockNotificationUtils);
     }
 
     @Test
@@ -74,6 +75,9 @@ public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
         notification.setUserEmail("user_email");
         notification.setTitle("title");
         notification.setNote("the_note");
+
+        expect(mockNotificationUtils.buildNotificationLink(notification.getParentType(), notification.getParentId(),
+                notification.getRelatedObjectType(), notification.getRelatedObjectId())).andReturn(null);
 
         setSendExpectations();
 
@@ -103,12 +107,15 @@ public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
         notification.setTitle("title");
         notification.setNote("the_note");
 
+        expect(mockNotificationUtils.buildNotificationLink(notification.getParentType(), notification.getParentId(),
+                notification.getRelatedObjectType(), notification.getRelatedObjectId())).andReturn(null);
+
         setSendExpectations();
 
         Capture<EmailWithAttachmentsDTO> emailWithAttachmentsDTOCapture = EasyMock.newCapture();
         Capture<AcmOutlookUser> outlookUserCapture = EasyMock.newCapture();
-        Authentication authentication = SecurityContextHolder.getContext() != null ? SecurityContextHolder.getContext().getAuthentication()
-                : null;
+        Authentication authentication = SecurityContextHolder.getContext() != null ?
+                SecurityContextHolder.getContext().getAuthentication() : null;
         mockOutlookService.sendEmail(capture(emailWithAttachmentsDTOCapture), capture(outlookUserCapture), eq(authentication));
         // when
         replayAll();

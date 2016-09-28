@@ -71,9 +71,12 @@ public class SmtpNotificationSender implements NotificationSender, ApplicationEv
             messageProps.put("to", notification.getUserEmail());
             messageProps.put("subject", notification.getTitle());
 
-            String messageBody = String.format("%s Link: %s", notification.getNote(),
-                    getNotificationUtils().buildNotificationLink(notification.getParentType(), notification.getParentId(),
-                            notification.getRelatedObjectType(), notification.getRelatedObjectId()));
+            String notificationLink = getNotificationUtils().buildNotificationLink(notification.getParentType(), notification.getParentId(),
+                    notification.getRelatedObjectType(), notification.getRelatedObjectId());
+
+            String messageBody = notificationLink != null ? String.format("%s Link: %s", notification.getNote(),
+                    notificationLink) : notification.getNote();
+
             MuleMessage received = getMuleContextManager().send(flow, messageBody, messageProps);
 
             exception = received.getInboundProperty("sendEmailException");

@@ -58,9 +58,11 @@ public class MicrosoftExchangeNotificationSender implements NotificationSender
             in.setHeader("");
             in.setFooter("");
 
-            String messageBody = String.format("%s Link: %s", notification.getNote(),
-                    getNotificationUtils().buildNotificationLink(notification.getParentType(), notification.getParentId(),
-                            notification.getRelatedObjectType(), notification.getRelatedObjectId()));
+            String notificationLink = getNotificationUtils().buildNotificationLink(notification.getParentType(), notification.getParentId(),
+                    notification.getRelatedObjectType(), notification.getRelatedObjectId());
+
+            String messageBody = notificationLink != null ? String.format("%s Link: %s", notification.getNote(),
+                    notificationLink) : notification.getNote();
 
             in.setBody(messageBody);
             in.setSubject(notification.getTitle());
