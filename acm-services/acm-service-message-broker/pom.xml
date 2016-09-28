@@ -10,37 +10,40 @@
 
 	<groupId>com.armedia.acm.acm-services</groupId>
 	<artifactId>acm-service-message-broker</artifactId>
-	<name>ACM Service: ActiveMQ Message Broker</name>
-	<description>Generic producers and consumers for ActiveMQ messaging</description>
+	<name>ACM Service: JMS Message Broker</name>
+	<description>Generic JMS messaging broker</description>
 
 	<dependencies>
 		<dependency>
-			<groupId>com.armedia.acm.acm-tool-integrations</groupId>
-			<artifactId>acm-spring-context-holder</artifactId>
-			<version>${acm.version}</version>
+			<groupId>javax.jms</groupId>
+			<artifactId>jms</artifactId>
+			<version>1.1</version>
 		</dependency>
 		<dependency>
-			<groupId>com.armedia.acm.acm-tool-integrations</groupId>
-			<artifactId>acm-spring-data-source</artifactId>
-			<version>${acm.version}</version>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jms</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>com.armedia.acm.acm-tool-integrations</groupId>
-			<artifactId>acm-activemq-configuration</artifactId>
-			<version>${acm.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.armedia.acm</groupId>
-			<artifactId>acm-core-api</artifactId>
-			<version>${acm.version}</version>
-		</dependency>
-
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 			<scope>compile</scope>
 		</dependency>
 
+		<!-- logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
+		<!-- testing -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+		</dependency>
 	</dependencies>
 
 </project>

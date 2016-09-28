@@ -3,17 +3,18 @@ package com.armedia.broker;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.apache.activemq.ActiveMQConnectionFactory;
-import org.apache.activemq.command.ActiveMQQueue;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.jms.JmsException;
 import org.springframework.jms.connection.CachingConnectionFactory;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 
+import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
 import javax.jms.Message;
+import javax.jms.Queue;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 
@@ -28,25 +29,30 @@ import java.io.Serializable;
  */
 public abstract class AcmObjectBroker<E extends Serializable> extends DefaultMessageListenerContainer
 {
-    private static final Logger LOG = Logger.getLogger(AcmObjectBroker.class);
+    private static final Logger LOG = LogManager.getLogger(AcmObjectBroker.class);
 
     protected final Class<E> entityClass;
-    protected final ActiveMQQueue outboundQueue;
-    protected final ActiveMQQueue inboundQueue;
+    protected final Queue outboundQueue;
+    protected final Queue inboundQueue;
 
     protected final AcmObjectBrokerListener<E> listener;
     protected AcmObjectBrokerHandler<E> handler;
 
-    protected final ActiveMQConnectionFactory connectionFactory;
+    protected final ConnectionFactory connectionFactory;
     protected JmsTemplate producerTemplate;
 
-    public AcmObjectBroker(ActiveMQConnectionFactory connectionFactory, String outboundQueue, String inboundQueue, Class<E> entityClass)
+    protected final ObjectMapper mapper = new ObjectMapper();
+
+    public AcmObjectBroker(ConnectionFactory connectionFactory, String outboundQueue, String inboundQueue, Class<E> entityClass)
     {
         this.connectionFactory = connectionFactory;
-        this.outboundQueue = outboundQueue != null ? new ActiveMQQueue(outboundQueue) : null;
-        this.inboundQueue = inboundQueue != null ? new ActiveMQQueue(inboundQueue) : null;
+        this.outboundQueue = outboundQueue != null ? getQueue(outboundQueue) : null;
+        this.inboundQueue = inboundQueue != null ? getQueue(inboundQueue) : null;
         this.entityClass = entityClass;
         this.listener = new AcmObjectBrokerListener<E>(this);
+
+        setConnectionFactory(connectionFactory);
+        setMessageListener(listener);
 
         init();
     }
@@ -56,9 +62,6 @@ public abstract class AcmObjectBroker<E extends Serializable> extends DefaultMes
      */
     private final void init()
     {
-        setConnectionFactory(connectionFactory);
-        setMessageListener(listener);
-
         if (inboundQueue != null)
         {
             setDestination(inboundQueue);
@@ -77,13 +80,13 @@ public abstract class AcmObjectBroker<E extends Serializable> extends DefaultMes
      * @param entity
      * @throws JsonProcessingException
      */
-    public void sendObject(Object entity) throws JsonProcessingException, JmsException
+    public void sendObject(E entity) throws JsonProcessingException, JmsException
     {
         if (producerTemplate == null)
         {
-            throw new RuntimeException("No outbound queue is specified for sending messages");
+            throw new IllegalStateException("No outbound queue is specified for sending messages");
         }
-        String message = new ObjectMapper().writeValueAsString(entity);
+        String message = getMapper().writeValueAsString(entity);
         producerTemplate.send(new MessageCreator()
         {
             @Override
@@ -107,16 +110,6 @@ public abstract class AcmObjectBroker<E extends Serializable> extends DefaultMes
     }
 
     /**
-     * Get current broker URL
-     * 
-     * @return
-     */
-    public String getBrokerURL()
-    {
-        return connectionFactory.getBrokerURL();
-    }
-
-    /**
      * Set object handler
      * 
      * @param handler
@@ -134,6 +127,34 @@ public abstract class AcmObjectBroker<E extends Serializable> extends DefaultMes
     protected AcmObjectBrokerHandler<E> getHandler()
     {
         return handler;
+    }
+
+    /**
+     * Get object mapper
+     * 
+     * @return
+     */
+    protected ObjectMapper getMapper()
+    {
+        return mapper;
+    }
+
+    /**
+     * Get queue for given name
+     * 
+     * @param queueName
+     * @return
+     */
+    private Queue getQueue(String queueName)
+    {
+        return new Queue()
+        {
+            @Override
+            public String getQueueName() throws JMSException
+            {
+                return queueName;
+            }
+        };
     }
 
 }
