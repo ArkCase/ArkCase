@@ -1,8 +1,7 @@
 package com.armedia.broker;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -21,7 +20,7 @@ import java.io.Serializable;
 public class AcmObjectBrokerListener<E extends Serializable> implements MessageListener
 {
 
-    private static final Logger LOG = Logger.getLogger(AcmObjectBrokerListener.class);
+    private static final Logger LOG = LogManager.getLogger(AcmObjectBrokerListener.class);
 
     private final AcmObjectBroker<E> broker;
 
@@ -37,8 +36,8 @@ public class AcmObjectBrokerListener<E extends Serializable> implements MessageL
         {
             TextMessage msg = (TextMessage) message;
             LOG.info("Consumed entity object: " + msg.getText());
+            E entity = broker.getMapper().readValue(msg.getText(), broker.getEntityClass());
 
-            E entity = new ObjectMapper().readValue(msg.getText(), broker.getEntityClass());
             if (broker.getHandler().handleObject(entity))
             {
                 message.acknowledge();
