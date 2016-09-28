@@ -138,11 +138,16 @@ public class TimesheetServiceImpl implements TimesheetService
         LOG.debug("Taking objects from Solr for object type {}", objectType);
 
         String authorQuery = "";
+        if (!searchQuery.equals("*"))
+        {
+            searchQuery = "\"" + searchQuery.replace("\"", "\\\"").replace("\\", "\\\\") + "\"";
+        }
+
         if (userId != null)
         {
             authorQuery = " AND author_s:" + userId;
         }
-
+        
         String query = "object_type_s:" + objectType + authorQuery + " AND name:" + searchQuery + " AND -status_s:DELETE";
 
         try

@@ -48,6 +48,7 @@
         <module>acm-service-protect-url</module>
         <module>acm-service-scheduler</module>
         <module>acm-service-message-broker</module>
+        <module>acm-service-compress-folder</module>
     </modules>
 
 

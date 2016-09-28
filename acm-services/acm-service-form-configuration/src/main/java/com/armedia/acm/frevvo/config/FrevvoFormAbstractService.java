@@ -1,7 +1,3 @@
-
-/**
- *
- */
 package com.armedia.acm.frevvo.config;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
@@ -36,7 +32,6 @@ import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.service.ldap.AcmUserActionExecutor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
@@ -47,7 +42,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -57,9 +51,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author riste.tutureski
- */
+
 public abstract class FrevvoFormAbstractService implements FrevvoFormService
 {
 
@@ -198,10 +190,9 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
             return container.getFolder().getCmisFolderId();
         }
 
-        AcmContainer found = null;
         try
         {
-            found = getEcmFileService().getOrCreateContainer(objectType, id);
+            AcmContainer found = getEcmFileService().getOrCreateContainer(objectType, id);
             return found.getFolder().getCmisFolderId();
         } catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)
         {
@@ -211,6 +202,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
 
     }
 
+    @Override
     public String findCmisFolderId(Long folderId, AcmContainer container, String objectType, Long objectId)
     {
         String cmisFolderId = null;
@@ -239,15 +231,14 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
         // hopefully the container has it, but sometimes the container isn't set on the parent object
         if (container != null)
         {
-            // the atttachment folder does not have a not-null constraint :-( but the folder id is not-null in the db.
+            // the attachment folder does not have a not-null constraint :-( but the folder id is not-null in the db.
             return container.getAttachmentFolder() == null ? container.getFolder().getCmisFolderId()
                     : container.getAttachmentFolder().getCmisFolderId();
         }
 
-        AcmContainer found = null;
         try
         {
-            found = getEcmFileService().getOrCreateContainer(objectType, id);
+            AcmContainer found = getEcmFileService().getOrCreateContainer(objectType, id);
             return found.getAttachmentFolder().getCmisFolderId();
         } catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)
         {
@@ -309,6 +300,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
         return xml;
     }
 
+    @Override
     public void updateXML(AcmContainerEntity entity, Authentication auth, Class<?> c)
     {
         if (entity != null)
@@ -395,7 +387,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
     }
 
     public MultiValueMap<String, MultipartFile> updateFileName(String newName, String type,
-            MultiValueMap<String, MultipartFile> attachments) throws IOException
+                                                               MultiValueMap<String, MultipartFile> attachments) throws IOException
     {
         String key = findAttachmentKey(type, attachments);
 
@@ -448,13 +440,13 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
     }
 
     public FrevvoUploadedFiles saveAttachments(MultiValueMap<String, MultipartFile> attachments, String targetCmisFolderId,
-            String parentObjectType, Long parentObjectId) throws AcmCreateObjectFailedException, AcmUserActionFailedException
+                                               String parentObjectType, Long parentObjectId) throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         return saveAttachments(getAttachmentFileType(""), attachments, targetCmisFolderId, parentObjectType, parentObjectId);
     }
 
     public FrevvoUploadedFiles saveAttachments(String fileType, MultiValueMap<String, MultipartFile> attachments, String targetCmisFolderId,
-            String parentObjectType, Long parentObjectId) throws AcmCreateObjectFailedException, AcmUserActionFailedException
+                                               String parentObjectType, Long parentObjectId) throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         FrevvoUploadedFiles retval = new FrevvoUploadedFiles();
 
@@ -544,7 +536,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
     }
 
     private EcmFile uploadFile(String fileType, String targetCmisFolderId, String parentObjectType, Long parentObjectId,
-            MultipartFile attachment) throws AcmCreateObjectFailedException, AcmUserActionFailedException
+                               MultipartFile attachment) throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         try
         {
@@ -748,7 +740,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
      * @throws MuleException
      */
     private Map<String, String> getGroups(List<String> roles, Map<String, List<String>> rolesToGroups, int startRow, int maxRows,
-            String sort, Authentication auth) throws MuleException
+                                          String sort, Authentication auth) throws MuleException
     {
         Map<String, String> groups = new HashMap<>();
 

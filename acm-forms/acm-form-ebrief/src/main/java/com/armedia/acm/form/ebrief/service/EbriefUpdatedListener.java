@@ -5,6 +5,7 @@ package com.armedia.acm.form.ebrief.service;
 
 import java.util.Properties;
 
+import com.armedia.acm.frevvo.config.FrevvoFormService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
@@ -23,7 +24,7 @@ public class EbriefUpdatedListener implements ApplicationListener<CaseEvent> {
 	private final Logger LOG = LoggerFactory.getLogger(getClass());
 	
 	private Properties properties;
-	private EbriefService ebriefService;
+	private FrevvoFormService ebriefService;
 	
 	@Override
 	public void onApplicationEvent(CaseEvent event) {
@@ -56,7 +57,7 @@ public class EbriefUpdatedListener implements ApplicationListener<CaseEvent> {
 	}
 
 
-	public EbriefService getEbriefService() {
+	public FrevvoFormService getEbriefService() {
 		return ebriefService;
 	}
 
