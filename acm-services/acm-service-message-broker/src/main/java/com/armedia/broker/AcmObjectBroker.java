@@ -35,24 +35,21 @@ public abstract class AcmObjectBroker<E extends Serializable> extends DefaultMes
     protected final Queue outboundQueue;
     protected final Queue inboundQueue;
 
-    protected final AcmObjectBrokerListener<E> listener;
     protected AcmObjectBrokerHandler<E> handler;
 
-    protected final ConnectionFactory connectionFactory;
     protected JmsTemplate producerTemplate;
 
     protected final ObjectMapper mapper = new ObjectMapper();
 
     public AcmObjectBroker(ConnectionFactory connectionFactory, String outboundQueue, String inboundQueue, Class<E> entityClass)
     {
-        this.connectionFactory = connectionFactory;
+
         this.outboundQueue = outboundQueue != null ? getQueue(outboundQueue) : null;
         this.inboundQueue = inboundQueue != null ? getQueue(inboundQueue) : null;
         this.entityClass = entityClass;
-        this.listener = new AcmObjectBrokerListener<E>(this);
 
         setConnectionFactory(connectionFactory);
-        setMessageListener(listener);
+        setMessageListener(new AcmObjectBrokerListener<E>(this));
 
         init();
     }
@@ -68,7 +65,7 @@ public abstract class AcmObjectBroker<E extends Serializable> extends DefaultMes
         }
         if (outboundQueue != null)
         {
-            CachingConnectionFactory cachedConnectionFactory = new CachingConnectionFactory(connectionFactory);
+            CachingConnectionFactory cachedConnectionFactory = new CachingConnectionFactory(getConnectionFactory());
             producerTemplate = new JmsTemplate(cachedConnectionFactory);
             producerTemplate.setDefaultDestination(outboundQueue);
         }
