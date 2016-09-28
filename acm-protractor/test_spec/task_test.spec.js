@@ -22,10 +22,10 @@ function testAsync(done) {
 
 describe('Create new task ', function() {
 
-    beforeEach(function(done) {
-
-        authentication.loginAsSupervisor();
-        testAsync(done);
+    beforeEach(function(done) { 
+    	
+        authentication.loginAsSupervisor();       
+        testAsync(done);        
 
     });
 
@@ -110,7 +110,7 @@ describe('Create new task ', function() {
         expect(taskPage.saveButton.isEnabled()).toBe(false);
     });
 
-    it('should verify save button disabled when perecent is empty', function() {
+    it('should verify save button disabled when percent is empty', function() {
 
         taskPage.newBtn.click();
         taskPage.taskBtn.click();
@@ -150,7 +150,7 @@ describe('Create new task ', function() {
         });
     });
 
-    it('shoudl create new task verify assignee in Tasks page', function() {
+    it('should create new task verify assignee in Tasks page', function() {
 
         taskPage.newBtn.click();
         taskPage.taskBtn.click();
@@ -163,7 +163,7 @@ describe('Create new task ', function() {
 
     });
 
-    it('should create new task verify cretaed date', function() {
+    it('should create new task verify created date', function() {
 
         taskPage.newBtn.click();
         taskPage.taskBtn.click();
@@ -235,7 +235,7 @@ describe('Create new task ', function() {
     });
 
 
-    it('should create new task with diffrent user', function() {
+    it('should create new task with different user', function() {
 
         taskPage.newBtn.click();
         taskPage.taskBtn.click();
@@ -275,7 +275,7 @@ describe('Create new task ', function() {
 
     });
 
-    it('should create new task click subscribe button verify if it si changed to unsubscribe', function() {
+    it('should create new task click subscribe button verify if it is changed to unsubscribe', function() {
 
         taskPage.newBtn.click();
         taskPage.taskBtn.click();
