@@ -34,7 +34,7 @@ exports.config = {
     //          'maxInstances': 5
     //        }],
 
-    specs: ['..\\test_spec\\task_test.spec.js'],
+    specs: ['../test_spec/task_test.spec.js'],
 
     jasmineNodeOpts: {
         showColors: true,
