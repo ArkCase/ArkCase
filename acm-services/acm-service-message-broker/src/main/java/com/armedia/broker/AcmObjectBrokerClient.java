@@ -72,19 +72,32 @@ public abstract class AcmObjectBrokerClient<E extends Serializable> extends Defa
     }
 
     /**
-     * Send object to outbound queue
+     * Send object to default outbound queue(s)
      * 
      * @param entity
      * @throws JsonProcessingException
+     * @throws JMSException
      */
-    public void sendObject(E entity) throws JsonProcessingException, JmsException
+    public void sendObject(E entity) throws JsonProcessingException, JMSException
+    {
+        sendObject(outboundQueue.getQueueName(), entity);
+    }
+
+    /**
+     * Send object to given outbound queue
+     * 
+     * @param destination
+     * @param entity
+     * @throws JsonProcessingException
+     */
+    public void sendObject(String destination, E entity) throws JsonProcessingException, JmsException
     {
         if (producerTemplate == null)
         {
             throw new IllegalStateException("No outbound queue is specified for sending messages");
         }
         String message = getMapper().writeValueAsString(entity);
-        producerTemplate.send(new MessageCreator()
+        producerTemplate.send(destination, new MessageCreator()
         {
             @Override
             public Message createMessage(Session session) throws JMSException
