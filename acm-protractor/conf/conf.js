@@ -1,3 +1,8 @@
+var HtmlScreenshotReporter = require(process.env['USERPROFILE'] + '/node_modules/protractor-jasmine2-screenshot-reporter');      
+var reporter = new HtmlScreenshotReporter({
+  dest: 'target/screenshots',
+  filename: 'AutoTestRun-report.html'
+});
 exports.config = {
     //seleniumAddress: 'http://localhost:4444/wd/hub',
     directConnect: true,
@@ -39,25 +44,20 @@ exports.config = {
     jasmineNodeOpts: {
         showColors: true,
     },
-
-
-    onPrepare: function () {
-    	var AllureReporter = require(process.env['USERPROFILE'] + '/node_modules/jasmine-allure-reporter');        
-        jasmine.getEnv().addReporter(new AllureReporter({
-        	allureReport: {
-        		resultsDir: 'allure-results'
-        	}
-        }));
-        jasmine.getEnv().afterEach(function(done){
-          browser.takeScreenshot().then(function (png) {
-            allure.createAttachment('Screenshot', function () {
-              return new Buffer(png, 'base64')
-            }, 'image/png')();
-            done();
-          })  
+    beforeLaunch: function() {
+        return new Promise(function(resolve){
+          reporter.beforeLaunch(resolve);
         });
+      },
+    onPrepare: function () {
+    	jasmine.getEnv().addReporter(reporter);
         browser.driver.manage().window().maximize();       
-        browser.driver.get('http://cloud.arkcase.com/arkcase/login');
+        browser.driver.get('https://core.arkcase.dev.armedia.com/arkcase/login');  
         
-    }
+    },
+    afterLaunch: function(exitCode) {
+        return new Promise(function(resolve){
+          reporter.afterLaunch(resolve.bind(this, exitCode));
+        });
+      }
 };
