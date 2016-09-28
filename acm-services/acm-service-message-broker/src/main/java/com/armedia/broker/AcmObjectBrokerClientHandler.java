@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @author dame.gjorgjievski
  *
  */
-public interface AcmObjectBrokerHandler<E extends Serializable>
+public interface AcmObjectBrokerClientHandler<E extends Serializable>
 {
     /**
      * Handle for received objects
