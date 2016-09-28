@@ -5,7 +5,9 @@
                 <span translate>tasks.comp.details.title</span>
                 <div class="pull-right">
                     <!--<span class=""><i class='fa fa-pencil' ng-click='editDetails()'></i></span>-->
-                    <button class="btn btn-default btn-xs" ng-click="saveDetails()"><i class="fa fa-lg fa-save"></i></button>
+                    <button class="btn btn-default btn-xs" ng-click="saveDetails()" permission="saveDetail"
+                            permission-properties="objectInfo" permission-action="disable"><i
+                            class="fa fa-lg fa-save"></i></button>
                     <!--<button class="btn btn-default btn-sm" title="Edit" ng-click="editDetails()"><i class="fa fa-pencil"></i></button>-->
                     <!--<button class="btn btn-default btn-sm" title="Save" ng-click="saveDetails()"><i class="fa fa-save"></i></button>-->
                 </div>

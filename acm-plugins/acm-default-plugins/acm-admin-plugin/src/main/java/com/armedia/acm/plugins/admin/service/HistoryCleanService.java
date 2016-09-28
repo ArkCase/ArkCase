@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.admin.service;
 import com.armedia.acm.audit.dao.AuditDao;
 import com.armedia.acm.plugins.admin.exception.AcmPropertiesManagementException;
 import com.armedia.acm.services.notification.dao.NotificationDao;
+import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +29,7 @@ public class HistoryCleanService
         {
             historyDays = jsonPropertiesManagementService.getProperties().getInt("historyDays");
         }
-        catch (AcmPropertiesManagementException | NullPointerException | ClassCastException e)
+        catch (AcmPropertiesManagementException | JSONException | NullPointerException | ClassCastException e)
         {
             log.warn("History clean setting is not defined, disabling by default.");
             return;

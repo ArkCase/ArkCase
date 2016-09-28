@@ -28,6 +28,7 @@ import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserActionName;
+
 import org.activiti.engine.RuntimeService;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -36,6 +37,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.PersistenceException;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -61,7 +63,9 @@ public class CaseFileService extends FrevvoFormAbstractService
 
     private FunctionalAccessService functionalAccessService;
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.armedia.acm.frevvo.config.FrevvoFormService#get(java.lang.String)
      */
     @Override
@@ -85,12 +89,14 @@ public class CaseFileService extends FrevvoFormAbstractService
         return result;
     }
 
-    /* (non-Javadoc)
-     * @see com.armedia.acm.frevvo.config.FrevvoFormService#save(java.lang.String, org.springframework.util.MultiValueMap)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.armedia.acm.frevvo.config.FrevvoFormService#save(java.lang.String,
+     * org.springframework.util.MultiValueMap)
      */
     @Override
-    public boolean save(String xml,
-                        MultiValueMap<String, MultipartFile> attachments) throws Exception
+    public boolean save(String xml, MultiValueMap<String, MultipartFile> attachments) throws Exception
     {
         CaseFile saved = saveCaseFileFromXml(xml, attachments);
         return saved != null;
@@ -115,15 +121,9 @@ public class CaseFileService extends FrevvoFormAbstractService
         // Create Frevvo form from CaseFile
         form = getCaseFileFactory().asFrevvoCaseFile(getCaseFile(), form, this);
 
-        updateXMLAttachment(attachments, getFormName(), form);
-
         // Save Attachments
-        FrevvoUploadedFiles frevvoFiles = saveAttachments(
-                getAttachmentFileType(form),
-                attachments,
-                form.getCmisFolderId(),
-                FrevvoFormName.CASE_FILE.toUpperCase(),
-                form.getId());
+        FrevvoUploadedFiles frevvoFiles = saveAttachments(getAttachmentFileType(form), attachments, form.getCmisFolderId(),
+                FrevvoFormName.CASE_FILE.toUpperCase(), form.getId());
 
         // Log the last user action
         if (null != form && null != form.getId())
@@ -135,11 +135,7 @@ public class CaseFileService extends FrevvoFormAbstractService
         if (!"edit".equals(mode))
         {
             CaseFileWorkflowListener workflowListener = new CaseFileWorkflowListener();
-            workflowListener.handleNewCaseFile(
-                    getCaseFile(),
-                    frevvoFiles,
-                    getActivitiRuntimeService(),
-                    getFileWorkflowBusinessRule(),
+            workflowListener.handleNewCaseFile(getCaseFile(), frevvoFiles, getActivitiRuntimeService(), getFileWorkflowBusinessRule(),
                     this);
         }
 
@@ -187,7 +183,9 @@ public class CaseFileService extends FrevvoFormAbstractService
         return getCaseFileFactory().asFrevvoCaseFile((CaseFile) obj, (CaseFileForm) form, this);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.armedia.acm.frevvo.config.FrevvoFormService#getFormName()
      */
     @Override
@@ -416,7 +414,14 @@ public class CaseFileService extends FrevvoFormAbstractService
         CaseFile caseFile = getCaseFile();
         if (caseFile != null)
         {
-            getCaseFileEventUtility().raiseEvent(getCaseFile(), getCaseFile().getStatus(), new Date(), ipAddress, userId, getAuthentication());
+            getCaseFileEventUtility().raiseEvent(getCaseFile(), getCaseFile().getStatus(), new Date(), ipAddress, userId,
+                    getAuthentication());
+
+            String mode = getRequest().getParameter("mode");
+            if (!"edit".equals(mode))
+            {
+                getCaseFileEventUtility().raiseEvent(getCaseFile(), "created", new Date(), ipAddress, userId, getAuthentication());
+            }
         }
     }
 
@@ -490,13 +495,14 @@ public class CaseFileService extends FrevvoFormAbstractService
         this.caseFile = caseFile;
     }
 
+    @Override
     public FunctionalAccessService getFunctionalAccessService()
     {
         return functionalAccessService;
     }
 
-    public void setFunctionalAccessService(
-            FunctionalAccessService functionalAccessService)
+    @Override
+    public void setFunctionalAccessService(FunctionalAccessService functionalAccessService)
     {
         this.functionalAccessService = functionalAccessService;
     }
