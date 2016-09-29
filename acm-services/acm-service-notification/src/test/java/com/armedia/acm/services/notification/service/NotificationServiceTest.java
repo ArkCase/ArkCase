@@ -1,12 +1,6 @@
-/**
- *
- */
 package com.armedia.acm.services.notification.service;
 
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.eq;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertEquals;
 
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
@@ -34,9 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author riste.tutureski
- */
+
 public class NotificationServiceTest extends EasyMockSupport
 {
 
@@ -159,6 +151,9 @@ public class NotificationServiceTest extends EasyMockSupport
         notificationSenderMap.put("smtp", smtpNotificationServer);
         notificationSenderFactory.setNotificationSenderMap(notificationSenderMap);
 
+        NotificationUtils mockNotificationUtils = createMock(NotificationUtils.class);
+        smtpNotificationServer.setNotificationUtils(mockNotificationUtils);
+
         Map<String, NotificationSenderFactory> senders = new HashMap<>();
         senders.put("notificationSender", notificationSenderFactory);
 
@@ -213,6 +208,8 @@ public class NotificationServiceTest extends EasyMockSupport
                 .andReturn(new ArrayList<>()).anyTimes();
         expect(mockNotificationFormatter.replaceFormatPlaceholders(notification1)).andReturn(notification1).atLeastOnce();
         expect(mockNotificationFormatter.replaceFormatPlaceholders(notification2)).andReturn(notification2).atLeastOnce();
+        expect(mockNotificationUtils.buildNotificationLink(anyString(), anyLong(),
+                anyString(), anyLong())).andReturn(null).anyTimes();
 
         replayAll();
 
@@ -286,10 +283,14 @@ public class NotificationServiceTest extends EasyMockSupport
         rules.put("assignRule", assignRule);
         rules.put("unassignRule", unassignRule);
 
+        NotificationUtils mockNotificationUtils = createMock(NotificationUtils.class);
+
         NotificationSenderFactory notificationSenderFactory = new NotificationSenderFactory();
         notificationSenderFactory.setPropertyFileManager(mockPropertyFileManager);
         Map<String, NotificationSender> notificationSenderMap = new HashMap<String, NotificationSender>();
+
         SmtpNotificationSender smtpNotificationServer = new SmtpNotificationSender();
+        smtpNotificationServer.setNotificationUtils(mockNotificationUtils);
         smtpNotificationServer.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
         smtpNotificationServer.setMuleContextManager(mockMuleContextManager);
         smtpNotificationServer.setPropertyFileManager(mockPropertyFileManager);
@@ -313,6 +314,7 @@ public class NotificationServiceTest extends EasyMockSupport
         expect(mockSpringContextHolder.getAllBeansOfType(NotificationSenderFactory.class)).andReturn(senders).anyTimes();
         expect(mockNotificationDao.executeQuery(capture(propertiesCapture), eq(0), eq(10), capture(ruleCapture))).andReturn(notifications)
                 .anyTimes();
+
         mockAuditPropertyEntityAdapter.setUserId(eq("NOTIFICATION-BATCH-INSERT"));
         expectLastCall().anyTimes();
         expect(mockPropertyFileManager.load(capture(stringCapture), eq("notification.user.email.host"), capture(stringCapture)))
@@ -330,6 +332,9 @@ public class NotificationServiceTest extends EasyMockSupport
 
         expect(mockNotificationFormatter.replaceFormatPlaceholders(notification1)).andReturn(notification1).atLeastOnce();
         expect(mockNotificationFormatter.replaceFormatPlaceholders(notification2)).andReturn(notification2).atLeastOnce();
+        expect(mockNotificationUtils.buildNotificationLink(anyString(), anyLong(),
+                anyString(), anyLong())).andReturn(null).anyTimes();
+
         try
         {
             Capture<Map<String, Object>> messagePropsCapture = EasyMock.newCapture();
