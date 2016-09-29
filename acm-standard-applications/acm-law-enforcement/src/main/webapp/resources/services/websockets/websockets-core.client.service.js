@@ -16,7 +16,6 @@ angular.module("services").factory("WebSocketsListener", ['$q', '$timeout', 'Web
             LISTEN_TOPIC_OBJECTS: "/topic/objects/changed",
             MESSAGE_BROKER: "/app/print-message",
             shouldStart: true,
-            listener: $q.defer(),
             socket: {
                 client: null,
                 stomp: null
@@ -41,13 +40,6 @@ angular.module("services").factory("WebSocketsListener", ['$q', '$timeout', 'Web
                 this.socket.stomp.send(destination, {
                     priority: 9
                 }, JSON.stringify(message));
-            },
-
-            receive: function () {
-                if (!this.isConnected()) {
-                    return;
-                }
-                return this.listener.promise;
             },
 
             disconnect: function () {
