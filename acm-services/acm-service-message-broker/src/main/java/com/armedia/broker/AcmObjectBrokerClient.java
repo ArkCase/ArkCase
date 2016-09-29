@@ -1,7 +1,7 @@
 package com.armedia.broker;
 
+import com.armedia.acm.objectonverter.ObjectConverter;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,6 +10,7 @@ import org.springframework.jms.connection.CachingConnectionFactory;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
@@ -18,8 +19,6 @@ import javax.jms.Queue;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 
-import java.io.Serializable;
-
 /**
  * Generic JMS object broker client
  * 
@@ -27,19 +26,29 @@ import java.io.Serializable;
  *
  * @param <E>
  */
-public abstract class AcmObjectBrokerClient<E extends Serializable> extends DefaultMessageListenerContainer
+public abstract class AcmObjectBrokerClient<E> extends DefaultMessageListenerContainer
 {
     private static final Logger LOG = LogManager.getLogger(AcmObjectBrokerClient.class);
 
     protected final Class<E> entityClass;
+
     protected final Queue outboundQueue;
     protected final Queue inboundQueue;
 
-    protected AcmObjectBrokerClientHandler<E> handler;
+    protected static final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 
+    protected ObjectConverter converter = ObjectConverter.createJSONConverter();
+    protected AcmObjectBrokerClientHandler<E> handler;
     protected JmsTemplate producerTemplate;
 
-    protected final ObjectMapper mapper = new ObjectMapper();
+    static
+    {
+        executor.setBeanName("AcmObjectBrokerClientExecutor");
+        executor.setQueueCapacity(100);
+        executor.setCorePoolSize(5);
+        executor.setMaxPoolSize(10);
+        executor.setWaitForTasksToCompleteOnShutdown(false);
+    }
 
     public AcmObjectBrokerClient(ConnectionFactory connectionFactory, String outboundQueue, String inboundQueue, Class<E> entityClass)
     {
@@ -96,7 +105,7 @@ public abstract class AcmObjectBrokerClient<E extends Serializable> extends Defa
         {
             throw new IllegalStateException("No outbound queue is specified for sending messages");
         }
-        String message = getMapper().writeValueAsString(entity);
+        String message = getConverter().getMarshaller().marshal(entity);
         producerTemplate.send(destination, new MessageCreator()
         {
             @Override
@@ -140,13 +149,23 @@ public abstract class AcmObjectBrokerClient<E extends Serializable> extends Defa
     }
 
     /**
-     * Get object mapper
+     * Get object converter
      * 
      * @return
      */
-    protected ObjectMapper getMapper()
+    protected ObjectConverter getConverter()
     {
-        return mapper;
+        return converter;
+    }
+
+    /**
+     * Get broker client task executor
+     * 
+     * @return
+     */
+    public static ThreadPoolTaskExecutor getExecutor()
+    {
+        return executor;
     }
 
     /**
