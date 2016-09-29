@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/doc-tree/doc-tree-ext-core.client.service.js directives/doc-tree/doc-tree-ext-core.client.service.js}
+ * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/doc-tree/doc-tree-ext.core.client.service.js directives/doc-tree/doc-tree-ext.core.client.service.js}
  *
  * DocTree common extensions for core. Currently, a DocTree extension can add or customize tree table column or/and menu command.
  * We use name convention 'renderXxxx' to customize table column and 'handleXxxx' to customzie command
