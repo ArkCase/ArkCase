@@ -7,7 +7,7 @@ angular.module("services").factory("WebSocketsListener", ['$q', '$timeout', 'Web
             //The number of milliseconds to delay before attempting to reconnect.
             RECONNECT_INTERVAL: 1000,
             //The rate of increase of the reconnect delay. Allows reconnect attempts to back off when problems persist.
-            RECONNECT_DECAY: 1.5,
+            RECONNECT_DELAY: 1.5,
             RECONNECT_ATTEMPTS: 0,
             MAX_RECONNECT_ATTEMPTS: 5,
             //The maximum number of milliseconds to delay a reconnection attempt
@@ -82,7 +82,7 @@ angular.module("services").factory("WebSocketsListener", ['$q', '$timeout', 'Web
                         return;
                     }
                 }
-                var timeout = target.RECONNECT_INTERVAL * Math.pow(target.RECONNECT_DECAY, target.RECONNECT_ATTEMPTS);
+                var timeout = target.RECONNECT_INTERVAL * Math.pow(target.RECONNECT_DELAY, target.RECONNECT_ATTEMPTS);
                 setTimeout(function () {
                     target.RECONNECT_ATTEMPTS++;
                     target.connect();
