@@ -5,21 +5,18 @@ import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.EcmFileEmailedEvent;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.service.outlook.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksResultDTO;
-import com.armedia.acm.services.notification.model.SmtpEventSentEvent;
 import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
-import com.armedia.acm.services.tag.model.AcmAssociatedTag;
+import com.armedia.acm.services.notification.model.SmtpEventSentEvent;
 import com.armedia.acm.services.users.model.AcmUser;
-
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
@@ -29,7 +26,6 @@ import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
 
 import javax.activation.DataHandler;
-
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,7 +36,7 @@ public class SmtpNotificationSender implements NotificationSender, ApplicationEv
 {
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
-
+    String flow = "vm://sendEmailViaSmtp.in";
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private PropertyFileManager propertyFileManager;
     private String notificationPropertyFileLocation;
@@ -48,8 +44,8 @@ public class SmtpNotificationSender implements NotificationSender, ApplicationEv
     private AuthenticationTokenService authenticationTokenService;
     private AuthenticationTokenDao authenticationTokenDao;
     private EcmFileService ecmFileService;
-    String flow = "vm://sendEmailViaSmtp.in";
     private ApplicationEventPublisher eventPublisher;
+    private NotificationUtils notificationUtils;
 
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
@@ -75,7 +71,13 @@ public class SmtpNotificationSender implements NotificationSender, ApplicationEv
             messageProps.put("to", notification.getUserEmail());
             messageProps.put("subject", notification.getTitle());
 
-            MuleMessage received = getMuleContextManager().send(flow, notification.getNote(), messageProps);
+            String notificationLink = getNotificationUtils().buildNotificationLink(notification.getParentType(), notification.getParentId(),
+                    notification.getRelatedObjectType(), notification.getRelatedObjectId());
+
+            String messageBody = notificationLink != null ? String.format("%s Link: %s", notification.getNote(),
+                    notificationLink) : notification.getNote();
+
+            MuleMessage received = getMuleContextManager().send(flow, messageBody, messageProps);
 
             exception = received.getInboundProperty("sendEmailException");
         } catch (MuleException e)
@@ -160,7 +162,7 @@ public class SmtpNotificationSender implements NotificationSender, ApplicationEv
 
     @Override
     public List<EmailWithEmbeddedLinksResultDTO> sendEmailWithEmbeddedLinks(EmailWithEmbeddedLinksDTO in, Authentication authentication,
-            AcmUser user) throws Exception
+                                                                            AcmUser user) throws Exception
     {
         List<EmailWithEmbeddedLinksResultDTO> emailResultList = new ArrayList<>();
         Exception exception = null;
@@ -327,4 +329,13 @@ public class SmtpNotificationSender implements NotificationSender, ApplicationEv
         this.ecmFileService = ecmFileService;
     }
 
+    public NotificationUtils getNotificationUtils()
+    {
+        return notificationUtils;
+    }
+
+    public void setNotificationUtils(NotificationUtils notificationUtils)
+    {
+        this.notificationUtils = notificationUtils;
+    }
 }
