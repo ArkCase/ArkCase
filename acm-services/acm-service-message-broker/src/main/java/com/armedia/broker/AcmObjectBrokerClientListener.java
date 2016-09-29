@@ -9,7 +9,6 @@ import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 
 import java.io.IOException;
-import java.io.Serializable;
 
 /**
  * ACM Object Message Listener
@@ -17,7 +16,7 @@ import java.io.Serializable;
  * @author dame.gjorgjievski
  *
  */
-public class AcmObjectBrokerClientListener<E extends Serializable> implements MessageListener
+public class AcmObjectBrokerClientListener<E> implements MessageListener
 {
 
     private static final Logger LOG = LogManager.getLogger(AcmObjectBrokerClientListener.class);
@@ -35,18 +34,55 @@ public class AcmObjectBrokerClientListener<E extends Serializable> implements Me
         try
         {
             TextMessage msg = (TextMessage) message;
-            LOG.info("Consumed entity object: " + msg.getText());
-            E entity = broker.getMapper().readValue(msg.getText(), broker.getEntityClass());
+            LOG.debug("Consumed entity object: " + msg.getText().substring(0, 100));
 
-            if (broker.getHandler().handleObject(entity))
+            E entity = broker.getConverter().getUnmarshaller().unmarshall(msg.getText(), broker.getEntityClass());
+
+            if (entity == null && !msg.getText().isEmpty())
             {
-                message.acknowledge();
+                throw new IOException("Failed to deserialize object from " + msg.getText().substring(0, 100));
             }
+
+            AcmObjectBrokerClient.getExecutor().execute(createEntityHandlerTask(entity, message));
 
         } catch (JMSException | IOException e)
         {
             LOG.error("Failed to consume/deserialize message " + message, e);
         }
+    }
+
+    /**
+     * Create entity handler runnable
+     * 
+     * @param entity
+     * @param message
+     * @return
+     */
+    private Runnable createEntityHandlerTask(E entity, Message message)
+    {
+        return new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                if (broker == null || entity == null)
+                {
+                    return;
+                }
+
+                if (broker.getHandler().handleObject(entity))
+                {
+                    try
+                    {
+                        message.acknowledge();
+
+                    } catch (JMSException e)
+                    {
+                        LOG.error("Failed to aknowledge message " + message, e);
+                    }
+                }
+            }
+        };
     }
 
 }

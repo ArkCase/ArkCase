@@ -1,14 +1,12 @@
 package com.armedia.broker;
 
-import java.io.Serializable;
-
 /**
  * Handling interface for received objects from message broker
  * 
  * @author dame.gjorgjievski
  *
  */
-public interface AcmObjectBrokerClientHandler<E extends Serializable>
+public interface AcmObjectBrokerClientHandler<E>
 {
     /**
      * Handle for received objects
