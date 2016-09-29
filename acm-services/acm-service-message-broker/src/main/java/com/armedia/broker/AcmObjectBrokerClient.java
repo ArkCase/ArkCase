@@ -21,7 +21,7 @@ import javax.jms.TextMessage;
 import java.io.Serializable;
 
 /**
- * Generic ACM ActiveMQ object broker
+ * Generic JMS object broker client
  * 
  * @author dame.gjorgjievski
  *
