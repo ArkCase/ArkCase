@@ -6,9 +6,7 @@ import com.armedia.acm.services.notification.service.Executor;
 import com.armedia.acm.services.notification.service.CustomTitleFormatter;
 import com.armedia.acm.services.notification.service.UsersNotified;
 
-/**
- * @author riste.tutureski
- */
+
 public interface NotificationRule
 {
 

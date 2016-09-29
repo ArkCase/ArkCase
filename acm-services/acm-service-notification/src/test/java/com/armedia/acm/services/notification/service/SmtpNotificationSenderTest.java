@@ -58,6 +58,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
     private InputStream mockInputStream;
     private EcmFile mockEcmFile;
     private ApplicationEventPublisher mockApplicationEventPublisher;
+    private NotificationUtils mockNotificationUtils;
 
     @Before
     public void setUp()
@@ -76,6 +77,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         mockInputStream = createMock(InputStream.class);
         mockEcmFile = createMock(EcmFile.class);
         mockApplicationEventPublisher = createMock(ApplicationEventPublisher.class);
+        mockNotificationUtils = createMock(NotificationUtils.class);
 
         smtpNotificationSender.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
         smtpNotificationSender.setPropertyFileManager(mockPropertyFileManager);
@@ -85,6 +87,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         smtpNotificationSender.setAuthenticationTokenDao(mockAuthenticationTokenDao);
         smtpNotificationSender.setEcmFileService(mockEcmFileService);
         smtpNotificationSender.setApplicationEventPublisher(mockApplicationEventPublisher);
+        smtpNotificationSender.setNotificationUtils(mockNotificationUtils);
     }
 
     @Test
@@ -94,6 +97,10 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         notification.setUserEmail("user_email");
         notification.setTitle("title");
         notification.setNote("the_note");
+
+        expect(mockNotificationUtils.buildNotificationLink(notification.getParentType(), notification.getParentId(),
+                notification.getRelatedObjectType(), notification.getRelatedObjectId())).andReturn(null);
+
         smtpNotificationSender.getAuditPropertyEntityAdapter().setUserId(NotificationConstants.SYSTEM_USER);
         Capture<Map<String, Object>> messagePropsCapture = EasyMock.newCapture();
         expect(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), eq("the_note"), capture(messagePropsCapture)))
@@ -118,6 +125,10 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         notification.setUserEmail("user_email");
         notification.setTitle("title");
         notification.setNote("the_note");
+
+        expect(mockNotificationUtils.buildNotificationLink(notification.getParentType(), notification.getParentId(),
+                notification.getRelatedObjectType(), notification.getRelatedObjectId())).andReturn(null);
+
         smtpNotificationSender.getAuditPropertyEntityAdapter().setUserId(NotificationConstants.SYSTEM_USER);
         Capture<Map<String, Object>> messagePropsCapture = EasyMock.newCapture();
         expect(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), eq("the_note"), capture(messagePropsCapture)))
