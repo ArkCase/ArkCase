@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.armedia.acm.services.notification.service;
 
 import com.armedia.acm.services.notification.dao.NotificationDao;
@@ -11,7 +8,6 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,9 +15,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author riste.tutureski
- */
+
 public class NotificationToSolrTransformer implements AcmObjectToSolrDocTransformer<Notification>
 {
 
@@ -29,6 +23,7 @@ public class NotificationToSolrTransformer implements AcmObjectToSolrDocTransfor
 
     private NotificationDao notificationDao;
     private UserDao userDao;
+    private NotificationUtils notificationUtils;
 
     @Override
     public List<Notification> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
@@ -39,7 +34,7 @@ public class NotificationToSolrTransformer implements AcmObjectToSolrDocTransfor
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(Notification in)
     {
-        LOG.debug("Creating Solr advnced search document for Notification.");
+        LOG.debug("Creating Solr advanced search document for Notification.");
 
         SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
 
@@ -141,9 +136,15 @@ public class NotificationToSolrTransformer implements AcmObjectToSolrDocTransfor
     {
         Long relatedObjectId = in.getRelatedObjectId();
         String relatedObjectType = in.getRelatedObjectType();
+        String relatedObjectNumber = in.getRelatedObjectNumber();
+        String notificationLink = getNotificationUtils().buildNotificationLink(in.getParentType(), in.getParentId(),
+                relatedObjectType, relatedObjectId);
         additionalProperties.put("related_object_id_l", relatedObjectId);
         additionalProperties.put("related_object_type_s", relatedObjectType);
+        additionalProperties.put("related_object_number_s", relatedObjectNumber);
+        additionalProperties.put("notification_link_s", notificationLink);
     }
+
 
     public NotificationDao getNotificationDao()
     {
@@ -169,5 +170,15 @@ public class NotificationToSolrTransformer implements AcmObjectToSolrDocTransfor
     public Class<?> getAcmObjectTypeSupported()
     {
         return Notification.class;
+    }
+
+    public NotificationUtils getNotificationUtils()
+    {
+        return notificationUtils;
+    }
+
+    public void setNotificationUtils(NotificationUtils notificationUtils)
+    {
+        this.notificationUtils = notificationUtils;
     }
 }
