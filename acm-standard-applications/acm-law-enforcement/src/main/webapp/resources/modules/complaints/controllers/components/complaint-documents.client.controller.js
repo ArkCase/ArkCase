@@ -3,11 +3,11 @@
 angular.module('complaints').controller('Complaints.DocumentsController', ['$scope', '$stateParams', '$modal', '$q', '$timeout'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Complaint.InfoService'
     , 'Helper.ObjectBrowserService', 'DocTreeService', 'Authentication', 'PermissionsService', 'Object.ModelService'
-    , 'DocTreeExt.Core'
+    , 'DocTreeExt.Core', 'DocTreeExt.Checkin'
     , function ($scope, $stateParams, $modal, $q, $timeout
         , Util, ConfigService, ObjectService, ObjectLookupService, ComplaintInfoService
         , HelperObjectBrowserService, DocTreeService, Authentication, PermissionsService, ObjectModelService
-        , DocTreeExtCore) {
+        , DocTreeExtCore, DocTreeExtCheckin) {
 
 
         Authentication.queryUserInfo().then(
@@ -81,10 +81,10 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
 
         $scope.onInitTree = function(treeControl) {
             $scope.treeControl = treeControl;
-            DocTreeExtCore.handleCheckout(treeControl, $scope);
-            DocTreeExtCore.handleCheckin(treeControl, $scope);
+            DocTreeExtCheckin.handleCheckout(treeControl, $scope);
+            DocTreeExtCheckin.handleCheckin(treeControl, $scope);
+            DocTreeExtCheckin.handleCancelEditing(treeControl, $scope);
             DocTreeExtCore.handleEditWithWebDAV(treeControl, $scope);
-            DocTreeExtCore.handleCancelEditing(treeControl, $scope);
 
 
             //
