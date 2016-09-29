@@ -5,13 +5,13 @@ angular.module("services").factory("WebSocketsListener", ['$q', '$timeout', 'Web
 
         var service = {
             //The number of milliseconds to delay before attempting to reconnect.
-            RECCONECT_INTERVAL: 1000,
+            RECONNECT_INTERVAL: 1000,
             //The rate of increase of the reconnect delay. Allows reconnect attempts to back off when problems persist.
-            RECCONECT_DECAY: 1.5,
-            RECCONECT_ATTEMPTS: 0,
-            MAX_RECCONECT_ATTEMPTS: 5,
+            RECONNECT_DECAY: 1.5,
+            RECONNECT_ATTEMPTS: 0,
+            MAX_RECONNECT_ATTEMPTS: 5,
             //The maximum number of milliseconds to delay a reconnection attempt
-            MAX_RECCONECT_INTERVAL: 30000,
+            MAX_RECONNECT_INTERVAL: 30000,
             SOCKET_URL: "/arkcase/stomp",
             LISTEN_TOPIC_OBJECTS: "/topic/objects/changed",
             MESSAGE_BROKER: "/app/print-message",
@@ -77,16 +77,16 @@ angular.module("services").factory("WebSocketsListener", ['$q', '$timeout', 'Web
         var errorCallback = function (target) {
             return function (error) {
                 console.log("WS error", error);
-                if (target.RECCONECT_ATTEMPTS) {
-                    if (target.MAX_RECCONECT_ATTEMPTS && target.RECCONECT_ATTEMPTS > target.MAX_RECCONECT_ATTEMPTS) {
+                if (target.RECONNECT_ATTEMPTS) {
+                    if (target.MAX_RECONNECT_ATTEMPTS && target.RECONNECT_ATTEMPTS > target.MAX_RECONNECT_ATTEMPTS) {
                         return;
                     }
                 }
-                var timeout = target.RECCONECT_INTERVAL * Math.pow(target.RECCONECT_DECAY, target.RECCONECT_ATTEMPTS);
+                var timeout = target.RECONNECT_INTERVAL * Math.pow(target.RECONNECT_DECAY, target.RECONNECT_ATTEMPTS);
                 setTimeout(function () {
-                    target.RECCONECT_ATTEMPTS++;
+                    target.RECONNECT_ATTEMPTS++;
                     target.connect();
-                }, timeout > target.MAX_RECCONECT_INTERVAL ? target.MAX_RECCONECT_INTERVAL : timeout);
+                }, timeout > target.MAX_RECONNECT_INTERVAL ? target.MAX_RECONNECT_INTERVAL : timeout);
             }
         };
 
