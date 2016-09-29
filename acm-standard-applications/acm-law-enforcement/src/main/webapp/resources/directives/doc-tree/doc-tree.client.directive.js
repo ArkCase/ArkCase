@@ -2327,7 +2327,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             service: Ecm.replaceFile
                             , param: {
                                 fileId: fileId
-                            }//xxxx
+                            }
                             , data: formData
                             , onSuccess: function (data) {
                                 if (Validator.validateReplaceInfo(data)) {
