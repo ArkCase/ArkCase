@@ -64,6 +64,7 @@ angular.module("services").factory("WebSocketsListener", ['$q', '$timeout', 'Web
 
         var connectCallback = function (target) {
             return function (frame) {
+                target.RECONNECT_ATTEMPTS = 0;
                 target.socket.stomp.subscribe(target.LISTEN_TOPIC_OBJECTS, function (data) {
                     var message = JSON.parse(data.body);
                     $timeout(function () {
