@@ -23,27 +23,34 @@ public class JSONUnmarshaller implements AcmUnmarshaller
     private Logger LOG = LoggerFactory.getLogger(getClass());
 
     // FIXME not sure why we are instating new ObjectMapper instead we can use it one which is in ApplicationContext
-    private static ObjectMapper mapper = new ObjectMapper();
-    static
-    {
-        mapper.registerModule(new JavaTimeModule());
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    }
+    private ObjectMapper mapper;
 
     @Override
     public <E> E unmarshall(String source, Class<E> c)
     {
+        initMapper();
         E output = null;
-
         try
         {
             output = mapper.readValue(source, c);
         } catch (IOException e)
         {
-            LOG.error("Error while creating Object from XML: " + e.getMessage(), e);
+            System.out.println("Error unmarshalling " + e.getMessage());
+            LOG.error("Error while creating Object from JSON: " + e.getMessage(), e);
         }
 
         return output;
+    }
+
+    private void initMapper()
+    {
+        if (mapper != null)
+        {
+            return;
+        }
+        mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
 }

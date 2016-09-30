@@ -35,20 +35,11 @@ public abstract class AcmObjectBrokerClient<E> extends DefaultMessageListenerCon
     protected final Queue outboundQueue;
     protected final Queue inboundQueue;
 
-    protected static final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+    protected final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 
     protected ObjectConverter converter = ObjectConverter.createJSONConverter();
     protected AcmObjectBrokerClientHandler<E> handler;
     protected JmsTemplate producerTemplate;
-
-    static
-    {
-        executor.setBeanName("AcmObjectBrokerClientExecutor");
-        executor.setQueueCapacity(100);
-        executor.setCorePoolSize(5);
-        executor.setMaxPoolSize(10);
-        executor.setWaitForTasksToCompleteOnShutdown(false);
-    }
 
     public AcmObjectBrokerClient(ConnectionFactory connectionFactory, String outboundQueue, String inboundQueue, Class<E> entityClass)
     {
@@ -64,10 +55,14 @@ public abstract class AcmObjectBrokerClient<E> extends DefaultMessageListenerCon
     }
 
     /**
-     * Initialize inbound and outbound queues
+     * Initialize async executor, inbound and outbound queues
      */
     private final void init()
     {
+        executor.setBeanName("AcmObjectBrokerClientExecutor");
+        executor.setWaitForTasksToCompleteOnShutdown(false);
+        executor.initialize();
+
         if (inboundQueue != null)
         {
             setDestination(inboundQueue);
@@ -163,7 +158,7 @@ public abstract class AcmObjectBrokerClient<E> extends DefaultMessageListenerCon
      * 
      * @return
      */
-    public static ThreadPoolTaskExecutor getExecutor()
+    public ThreadPoolTaskExecutor getExecutor()
     {
         return executor;
     }
