@@ -35,7 +35,6 @@ public class JSONUnmarshaller implements AcmUnmarshaller
             output = mapper.readValue(source, c);
         } catch (IOException e)
         {
-            System.out.println("Error unmarshalling " + e.getMessage());
             LOG.error("Error while creating Object from JSON: " + e.getMessage(), e);
         }
 
