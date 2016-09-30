@@ -57,5 +57,23 @@
             </list>
         </property>
     </bean>
+    
+    <bean id="acmListPageNotesPluginPrivileges" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivileges">
+        <property name="pluginName" value="Delete Note Service Plugin"/>
+        <property name="privileges">
+            <list>
+                <ref bean="acmListNotesPrivilege"/>
+            </list>
+        </property>
+        <property name="urlPrivileges">
+            <list>
+                <bean id="acmListNotesUrlPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/note/{parentType}/{parentId}/page"/>
+                    <property name="requiredPrivilege" ref="acmListNotesPrivilege"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
 
 </beans>
