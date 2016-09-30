@@ -94,6 +94,7 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                             gridHelper.setColumnDefs(config);
                             gridHelper.setBasicOptions(config);
                             gridHelper.disableGridScrolling(config);
+                            gridHelper.setExternalPaging(config, scope.retrieveGridData);
                             gridHelper.setUserNameFilter(promiseUsers);
                             scope.retrieveGridData();
                         }
@@ -114,15 +115,25 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                 }
 
                 scope.retrieveGridData = function () {
-                    if (Util.goodPositive(scope.notesInit.currentObjectId, false)) {
-                        var info = scope.notesInit;
-                        var promiseQueryNotes = ObjectNoteService.queryNotes(info.objectType, info.currentObjectId, info.noteType);
-                        $q.all([promiseQueryNotes,promiseUsers]).then(function (data) {
-                            var notes = data[0];
-                            scope.gridOptions.data = notes;
-                            scope.gridOptions.totalItems = notes.length;
-                        });
-                    }
+                	var info = scope.notesInit;
+                    var promiseQueryNotes = ObjectNoteService.queryNotesPage(
+                    		info.objectType
+                    		, info.currentObjectId
+                    		, info.noteTitle
+                    		, Util.goodValue(scope.start, 0)
+                    		, Util.goodValue(scope.pageSize, 10)
+                    		, Util.goodMapValue(scope.sort, "by")
+                    		, Util.goodMapValue(scope.sort, "dir")
+                            
+                    );
+                    
+                    $q.all([promiseQueryNotes,promiseUsers]).then(function (data) {
+                        var notesData = data[0];
+                        scope.gridOptions = scope.gridOptions || {};
+                        scope.gridOptions.data = notesData.resultPage;
+                        scope.gridOptions.totalItems = notesData.totalCount;
+                    });
+                   
                 };
 
                 scope.addNew = function () {

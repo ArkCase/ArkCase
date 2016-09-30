@@ -45,6 +45,7 @@
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
+      "enableSorting": true,
       "paginationPageSizes": [
         5,
         10,
