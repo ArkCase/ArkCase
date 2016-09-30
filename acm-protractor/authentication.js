@@ -1,4 +1,6 @@
-var Objects = require('./Objects.json');
+var logger = require('./log');
+var Objects = require('./json/Objects.json');
+var logs = require(process.env['USERPROFILE'] + '/node_modules/winston');
 
 var helpers = function helpers() {
 
@@ -10,6 +12,7 @@ var helpers = function helpers() {
         browser.driver.findElement(
             by.id(Objects.loginpage.locators.loginbutton)).click();
         browser.driver.sleep(12000);
+        logger.log('Info', 'User succesfully logged in');
     },
 
     this.logout = function() {
@@ -20,6 +23,7 @@ var helpers = function helpers() {
             element(by.xpath('.//*[@class="alert alert-success"]'))
             .getText()).toEqual(
             'You have been logged out successfully.');
+        logger.log('Info', 'User succesfully logged out');
     }
 };
 

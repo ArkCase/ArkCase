@@ -1,4 +1,4 @@
-var Objects = require('../Objects.json');
+var Objects = require('../json/Objects.json');
 var TasksPage = function() {
 
 
