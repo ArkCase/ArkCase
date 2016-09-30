@@ -154,6 +154,16 @@ public abstract class AcmObjectBrokerClient<E> extends DefaultMessageListenerCon
     }
 
     /**
+     * Set object converter
+     * 
+     * @return
+     */
+    protected void setConverter(ObjectConverter converter)
+    {
+        this.converter = converter;
+    }
+
+    /**
      * Get broker client task executor
      * 
      * @return
