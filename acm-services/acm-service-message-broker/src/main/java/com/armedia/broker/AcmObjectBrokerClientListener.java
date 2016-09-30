@@ -34,16 +34,22 @@ public class AcmObjectBrokerClientListener<E> implements MessageListener
         try
         {
             TextMessage msg = (TextMessage) message;
-            LOG.debug("Consumed entity object: " + msg.getText().substring(0, 100));
+
+            if (msg.getText().isEmpty())
+            {
+                throw new IOException("Cannot consume empty message");
+            }
 
             E entity = broker.getConverter().getUnmarshaller().unmarshall(msg.getText(), broker.getEntityClass());
 
-            if (entity == null && !msg.getText().isEmpty())
+            if (entity == null)
             {
                 throw new IOException("Failed to deserialize object from " + msg.getText().substring(0, 100));
             }
 
-            AcmObjectBrokerClient.getExecutor().execute(createEntityHandlerTask(entity, message));
+            LOG.debug("Consumed entity object: " + msg.getText().substring(0, 100));
+
+            broker.getExecutor().execute(createEntityHandlerTask(broker, entity, message));
 
         } catch (JMSException | IOException e)
         {
@@ -52,20 +58,21 @@ public class AcmObjectBrokerClientListener<E> implements MessageListener
     }
 
     /**
-     * Create entity handler runnable
+     * Create entity handler task
      * 
+     * @param broker
      * @param entity
      * @param message
      * @return
      */
-    private Runnable createEntityHandlerTask(E entity, Message message)
+    private Runnable createEntityHandlerTask(AcmObjectBrokerClient<E> broker, E entity, Message message)
     {
         return new Runnable()
         {
             @Override
             public void run()
             {
-                if (broker == null || entity == null)
+                if (broker == null || message == null || entity == null)
                 {
                     return;
                 }
