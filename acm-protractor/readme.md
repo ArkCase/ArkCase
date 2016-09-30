@@ -61,3 +61,14 @@ then use them in the test, next row will return j_username
 
 > Object.page.locators.username 
 
+### Using Logging in tests
+At the beggining of test add this row:
+```
+> var logger = require('../log');
+
+```
+then use logging in the test, next row will log Info message with text "Username inserted": 
+```
+> logger.log('info', 'Username inserted');
+
+```
