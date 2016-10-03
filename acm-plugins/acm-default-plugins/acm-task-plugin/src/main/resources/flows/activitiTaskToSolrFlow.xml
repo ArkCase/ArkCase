@@ -87,6 +87,10 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 
         <logger level="DEBUG" category="com.armedia.acm.plugins.task.service" message="Got ACM task"/>
 
+        <!-- workaround solution, used as dummy search request that is never executed, in order to provide proper subsequent execution of advanced and quick search -->
+        <set-payload value="#[flowVars['quickSearchJson']]"/>
+        <http:outbound-endpoint ref="submitQuicksearchDocumentsSolrEndpoint"/>
+
         <set-payload value="#[flowVars['advancedSearchJson']]"/>
         <http:outbound-endpoint ref="submitAdvancedSearchDocumentsSolrEndpoint"/>
 
