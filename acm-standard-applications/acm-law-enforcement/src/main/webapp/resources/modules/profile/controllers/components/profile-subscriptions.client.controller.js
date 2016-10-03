@@ -1,8 +1,9 @@
 'use strict';
 
-angular.module('profile').controller('Profile.SubscriptionController', ['$scope', 'Profile.SubscriptionService', 'Object.SubscriptionService',
-    function ($scope, SubscriptionService, ObjectSubscriptionService) {
+angular.module('profile').controller('Profile.SubscriptionController', ['$scope', 'Object.SubscriptionService', 'Authentication',
+    function ($scope, ObjectSubscriptionService, Authentication) {
         $scope.$emit('req-component-config', 'subscription');
+
         $scope.unsubscribe = function (rowEntity) {
             var index = $scope.subscribptionGridOptions.data.indexOf(rowEntity);
             var userID = rowEntity.userID;
@@ -11,6 +12,7 @@ angular.module('profile').controller('Profile.SubscriptionController', ['$scope'
             ObjectSubscriptionService.unsubscribe(userID, type, parentID);
             $scope.subscribptionGridOptions.data.splice(index, 1);
         };
+
         $scope.unsubscriptSelected = function () {
             var rowSelected = $scope.gridApi.selection.getSelectedRows();
             for (var i = 0; i < rowSelected.length; i++) {
@@ -40,22 +42,27 @@ angular.module('profile').controller('Profile.SubscriptionController', ['$scope'
                 };
 
             }
-        }
+        };
 
-        SubscriptionService.getSubscriptions().then(function (data) {
-            for (var i = 0; i < data.length; i++) {
-                $scope.subscribptionGridOptions.data.push(
-                    {
-                        "title": data[i].objectTitle,
-                        "type": data[i].subscriptionObjectType,
-                        "created": moment(data[i].created).format('MM-DD-YYYY'),
-                        "parentID": data[i].objectId,
-                        "userID": data[i].userId
-                    }
-                );
-            }
+        Authentication.queryUserInfo().then(function (userInfo) {
+            $scope.userId = userInfo.userId;
+            $scope.parentType = userInfo.parentType;
+            $scope.objectInfo = userInfo.objectInfo;
+
+            ObjectSubscriptionService.getSubscriptions(userInfo.userId, userInfo.parentType, userInfo.objectInfo).then(function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    $scope.subscribptionGridOptions.data.push(
+                        {
+                            "title": data[i].objectTitle,
+                            "type": data[i].subscriptionObjectType,
+                            "created": moment(data[i].created).format('MM-DD-YYYY'),
+                            "parentID": data[i].objectId,
+                            "userID": data[i].userId
+                        }
+                    );
+                }
+            });
         });
-
 
     }
 ]);
