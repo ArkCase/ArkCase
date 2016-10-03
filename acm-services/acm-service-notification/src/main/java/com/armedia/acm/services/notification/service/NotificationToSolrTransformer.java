@@ -42,7 +42,7 @@ public class NotificationToSolrTransformer implements AcmObjectToSolrDocTransfor
         solr.setObject_id_s(Long.toString(in.getId()));
         solr.setObject_type_s(NotificationConstants.OBJECT_TYPE);
         solr.setTitle_parseable(in.getTitle());
-        solr.setTitle_parseable_lcs(in.getTitle());
+        solr.setTitle_parseable_lcs(in.getTitle().toLowerCase());
         solr.setParent_id_s(Long.toString(in.getParentId()));
         solr.setParent_type_s(in.getParentType());
         solr.setParent_number_lcs(in.getParentName());
