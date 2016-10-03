@@ -229,4 +229,10 @@
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="OXMFilePath" value="${user.home}/.arkcase/acm${capture.oxm.file.path}"/>
     </bean>
+
+    <bean id="complaintPersonAssociationChangeListener"
+          class="com.armedia.acm.plugins.complaint.service.ComplaintPersonAssociationChangeListener">
+        <property name="complaintEventPublisher" ref="complaintEventPublisher"/>
+        <property name="complaintDao" ref="acmComplaintDao"/>
+    </bean>
 </beans>
