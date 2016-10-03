@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.armedia.acm.plugins.person.service;
 
 import java.util.List;
@@ -9,13 +6,10 @@ import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.Identification;
 import com.armedia.acm.plugins.person.model.xml.FrevvoPerson;
 
-/**
- * @author riste.tutureski
- *
- */
+
 public interface PersonService {
 
-	public Person get(Long id);
+	Person get(Long id);
 	
 	/**
 	 *  Add person identification to the Person object for given key (field name) and value
@@ -25,7 +19,7 @@ public interface PersonService {
 	 * @param person
 	 * @return
 	 */
-	public Person addPersonIdentification(String key, String value, Person person);
+	Person addPersonIdentification(String key, String value, Person person);
 	
 	/**
 	 * Add person identifications for given list of keys (field names). The values are taken from Frevvo Person object
@@ -35,7 +29,7 @@ public interface PersonService {
 	 * @param person
 	 * @return
 	 */
-	public Person addPersonIdentifications(List<String> keys, Person person);
+	Person addPersonIdentifications(List<String> keys, Person person);
 	
 	/**
 	 * This method will set all person identifications values in the appropriate field in Person object using reflection
@@ -43,7 +37,7 @@ public interface PersonService {
 	 * @param identifications
 	 * @param person
 	 */
-	public Person setPersonIdentifications(List<Identification> identifications, Person person);
+	Person setPersonIdentifications(List<Identification> identifications, Person person);
 	
 	/**
 	 * The method will return the type of the person created via Frevvo form.
@@ -51,7 +45,7 @@ public interface PersonService {
 	 * @param person
 	 * @return
 	 */
-	public String getPersonType(FrevvoPerson person);
+	String getPersonType(FrevvoPerson person);
 	
 	/**
 	 * This method will return the list of person identification keys
@@ -59,6 +53,6 @@ public interface PersonService {
 	 * @param person
 	 * @return
 	 */
-	public List<String> getPersonIdentificationKeys(FrevvoPerson person);
+	List<String> getPersonIdentificationKeys(FrevvoPerson person);
 	
 }
