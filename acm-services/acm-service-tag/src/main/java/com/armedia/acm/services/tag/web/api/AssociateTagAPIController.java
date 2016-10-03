@@ -48,10 +48,7 @@ public class AssociateTagAPIController
             throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException
     {
 
-        if (log.isInfoEnabled())
-        {
-            log.info("Creating new tag association on object['" + objectType + "]:[" + objectId + "] and tagId: " + tagId);
-        }
+        log.info("Creating new tag association on object [{}]:[{}] and tagId: {}", objectType, objectId, tagId);
 
         AcmTag tagForAssociating = getTagService().findTag(tagId);
         AcmAssociatedTag newAssociatedTag = null;
@@ -65,17 +62,16 @@ public class AssociateTagAPIController
             Throwable t = ExceptionUtils.getRootCause(e);
             if (t instanceof SQLIntegrityConstraintViolationException)
             {
-                if (log.isDebugEnabled())
-                    log.debug("Tag associated on object['" + objectType + "]:[" + objectId + "] and tagId: " + tagId + " already exists",
-                            e);
+
+                log.debug("Tag associated on object [{}]:[{}] and tagId: {} already exists", objectType, objectId, tagId, e);
 
                 List<AcmAssociatedTag> associatedTagList = getAssociatedTagService().getAcmAssociatedTagByTagIdAndObjectIdAndType(tagId,
                         objectId, objectType);
                 if (associatedTagList.isEmpty())
                 {
-                    if (log.isErrorEnabled())
-                        log.error("Constraint Violation Exception occurred while trying to assign a tag with tagId: " + tagId
-                                + "  on object[" + objectType + "]:[" + objectId + "]", e);
+
+                    log.error("Constraint Violation Exception occurred while trying to assign a tag with tagId: {} on object [{}]:[{}]",
+                            objectType, objectId, tagId, e);
                     throw new AcmCreateObjectFailedException(objectType, "Tag Association  on object [" + objectType + "]:[" + objectId
                             + "] and tagId: " + tagId + " was not inserted into the DB", e);
                 } else
@@ -84,9 +80,9 @@ public class AssociateTagAPIController
                 }
             } else
             {
-                if (log.isErrorEnabled())
-                    log.error("Exception occurred while trying to associate tag with tagId: " + tagId + " on object[" + objectType + "]:["
-                            + objectId + "]", e);
+
+                log.error("Exception occurred while trying to associate tag with tagId: {} on object [{}]:[{}]", objectType, objectId,
+                        tagId, e);
 
                 getAssociatedTagEventPublisher().publishAssociatedTagCreatedEvent(newAssociatedTag, authentication, false);
 
