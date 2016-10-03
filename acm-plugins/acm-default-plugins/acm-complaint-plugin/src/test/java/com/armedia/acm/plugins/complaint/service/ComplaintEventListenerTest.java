@@ -7,6 +7,9 @@ import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.ComplaintConstants;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.outlook.service.OutlookContainerCalendarService;
+import com.armedia.acm.plugins.person.model.Person;
+import com.armedia.acm.plugins.person.model.PersonAlias;
+import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.plugins.task.model.TaskConstants;
 import com.armedia.acm.service.objecthistory.dao.AcmAssignmentDao;
 import com.armedia.acm.service.objecthistory.model.AcmAssignment;
@@ -18,11 +21,13 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantConstants;
 import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 import org.easymock.Capture;
+import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.easymock.EasyMock.*;
@@ -480,5 +485,110 @@ public class ComplaintEventListenerTest extends EasyMockSupport
         verifyEvent(ipAddressCapture.getValue(), complaintCapture.getValue(), complaint);
         assertEquals(complaint.getContainer().getContainerObjectId(), containerIdCapture.getValue());
         assertEquals(complaint.getContainer().getCalendarFolderId(), calendarIdCapture.getValue());
+    }
+
+    @Test
+    public void testAliasAdded()
+    {
+        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshaller();
+        Complaint jsonComplaint = getComplaint();
+        PersonAssociation personAssociation = getPersonAssociation(1L, "TestAlias1");
+        jsonComplaint.getPersonAssociations().add(personAssociation);
+        String currentJsonObject = acmMarshaller.marshal(jsonComplaint);
+
+        AcmObjectHistory previousHistory = new AcmObjectHistory();
+        previousHistory.setObjectType(ComplaintConstants.OBJECT_TYPE);
+        previousHistory.setObjectString(currentJsonObject);
+
+        expect(mockAcmObjectHistoryService.getAcmObjectHistory(OBJECT_ID, ComplaintConstants.OBJECT_TYPE)).andReturn(previousHistory);
+
+        AcmObjectHistory currentHistory = new AcmObjectHistory();
+        currentHistory.setObjectType(ComplaintConstants.OBJECT_TYPE);
+        //add alias
+        PersonAlias newPersonAlias = getPersonAlias(2L, "TestAlias2");
+        List<PersonAlias> personAliases = personAssociation.getPerson().getPersonAliases();
+        personAliases.add(newPersonAlias);
+        personAssociation.getPerson().setPersonAliases(personAliases);
+        jsonComplaint.getPersonAssociations().add(personAssociation);
+        currentJsonObject = acmMarshaller.marshal(jsonComplaint);
+        currentHistory.setObjectString(currentJsonObject);
+
+        AcmObjectHistoryEvent event = new AcmObjectHistoryEvent(currentHistory);
+        event.setIpAddress(IP_ADDRESS);
+        event.setUserId(USER_ID);
+        Capture<String> eventString = Capture.newInstance();
+        mockComplaintEventPublisher.publishComplaintModified(EasyMock.anyObject(), EasyMock.anyString(), capture(eventString));
+        expectLastCall().once();
+
+        replayAll();
+        complaintEventListener.onApplicationEvent(event);
+
+        verifyAll();
+        assertEquals(eventString.getValue(), "personAlias.added");
+    }
+
+    @Test
+    public void testAliasAddedAndRemoved()
+    {
+        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshaller();
+        Complaint jsonComplaint = getComplaint();
+        PersonAssociation personAssociation = getPersonAssociation(1L, "TestAlias1");
+        jsonComplaint.getPersonAssociations().add(personAssociation);
+        String currentJsonObject = acmMarshaller.marshal(jsonComplaint);
+
+        AcmObjectHistory previousHistory = new AcmObjectHistory();
+        previousHistory.setObjectType(ComplaintConstants.OBJECT_TYPE);
+        previousHistory.setObjectString(currentJsonObject);
+
+        expect(mockAcmObjectHistoryService.getAcmObjectHistory(OBJECT_ID, ComplaintConstants.OBJECT_TYPE)).andReturn(previousHistory);
+
+        AcmObjectHistory currentHistory = new AcmObjectHistory();
+        currentHistory.setObjectType(ComplaintConstants.OBJECT_TYPE);
+        //add alias
+        PersonAlias newPersonAlias = getPersonAlias(2L, "TestAlias2");
+        List<PersonAlias> personAliases = Arrays.asList(newPersonAlias);
+        personAssociation.getPerson().setPersonAliases(personAliases);
+        jsonComplaint.getPersonAssociations().add(personAssociation);
+        currentJsonObject = acmMarshaller.marshal(jsonComplaint);
+        currentHistory.setObjectString(currentJsonObject);
+
+        AcmObjectHistoryEvent event = new AcmObjectHistoryEvent(currentHistory);
+        event.setIpAddress(IP_ADDRESS);
+        event.setUserId(USER_ID);
+        Capture<String> eventString1 = Capture.newInstance();
+        Capture<String> eventString2 = Capture.newInstance();
+        mockComplaintEventPublisher.publishComplaintModified(EasyMock.anyObject(), EasyMock.anyString(), capture(eventString1));
+        expectLastCall().once();
+        mockComplaintEventPublisher.publishComplaintModified(EasyMock.anyObject(), EasyMock.anyString(), capture(eventString2));
+        expectLastCall().once();
+
+        replayAll();
+        complaintEventListener.onApplicationEvent(event);
+
+        verifyAll();
+        assertEquals(eventString1.getValue(), "personAlias.added");
+        assertEquals(eventString2.getValue(), "personAlias.deleted");
+    }
+
+    PersonAssociation getPersonAssociation(Long id, String name)
+    {
+        PersonAlias personAlias = getPersonAlias(id, name);
+        List<PersonAlias> existingAliases = new ArrayList<>();
+        existingAliases.add(personAlias);
+        Person person = new Person();
+        person.setId(id);
+        person.setPersonAliases(existingAliases);
+        PersonAssociation personAssociation = new PersonAssociation();
+        personAssociation.setId(id);
+        personAssociation.setPerson(person);
+        return personAssociation;
+    }
+
+    PersonAlias getPersonAlias(Long id, String name)
+    {
+        PersonAlias personAlias = new PersonAlias();
+        personAlias.setId(id);
+        personAlias.setAliasValue(name);
+        return personAlias;
     }
 }
