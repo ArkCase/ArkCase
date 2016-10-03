@@ -105,6 +105,9 @@
         <p>
             <small><span>ArkCase</span><br>&copy;<span>2014, 2015, 2016</span></small>
         </p>
+        <p>
+            <small><span>Version: ${project.version}</span></small>
+        </p>
     </div>
 </footer>
 </body>
