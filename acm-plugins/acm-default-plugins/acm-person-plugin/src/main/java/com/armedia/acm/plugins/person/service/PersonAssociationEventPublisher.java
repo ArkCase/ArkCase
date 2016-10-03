@@ -1,6 +1,5 @@
 package com.armedia.acm.plugins.person.service;
 
-import com.armedia.acm.auth.AcmAuthenticationDetails;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociationAddEvent;
 import com.armedia.acm.plugins.person.model.PersonAssociationDeletedEvent;
@@ -10,16 +9,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.security.core.Authentication;
 
 /**
  * Created by armdev on 4/10/14.
  */
 public class PersonAssociationEventPublisher implements ApplicationEventPublisherAware
 {
-    private ApplicationEventPublisher eventPublisher;
-
     private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private ApplicationEventPublisher eventPublisher;
 
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
@@ -29,31 +26,25 @@ public class PersonAssociationEventPublisher implements ApplicationEventPublishe
 
     public void publishPersonAssociationEvent(
             PersonAssociation source,
-            Authentication authentication,
+            String ipAddress,
             boolean newPersonAssociation,
             boolean succeeded)
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug("Publishing a person event.");
-        }
+        log.debug("Publishing a person event.");
 
         PersonAssociationPersistenceEvent personAssociationPersistenceEvent =
                 newPersonAssociation ? new PersonAssociationAddEvent(source, source.getParentType(), source.getParentId()) :
                         new PersonAssociationUpdatedEvent(source, source.getParentType(), source.getParentId());
         personAssociationPersistenceEvent.setSucceeded(succeeded);
-        if ( authentication.getDetails() != null && authentication.getDetails() instanceof AcmAuthenticationDetails)
-        {
-            personAssociationPersistenceEvent.setIpAddress(((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress());
-        }
 
         eventPublisher.publishEvent(personAssociationPersistenceEvent);
     }
-    
-    public void publishPersonAssociationDeletedEvent(PersonAssociation source){
-       PersonAssociationDeletedEvent event = new PersonAssociationDeletedEvent(source, source.getParentType(), source.getParentId());
-       event.setSucceeded(true);
-       eventPublisher.publishEvent(event);
+
+    public void publishPersonAssociationDeletedEvent(PersonAssociation source)
+    {
+        PersonAssociationDeletedEvent event = new PersonAssociationDeletedEvent(source, source.getParentType(), source.getParentId());
+        event.setSucceeded(true);
+        eventPublisher.publishEvent(event);
     }
 
 }
