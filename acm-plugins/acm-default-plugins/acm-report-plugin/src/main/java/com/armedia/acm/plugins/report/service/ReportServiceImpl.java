@@ -45,7 +45,12 @@ public class ReportServiceImpl implements ReportService
 {
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
-
+    private final String PENTAHO_REPORT_URL_TEMPLATE = "PENTAHO_REPORT_URL_TEMPLATE";
+    private final String PENTAHO_REPORT_URL_TEMPLATE_DEFAULT = "/pentaho/api/repos/{path}/viewer";
+    private final String PENTAHO_SERVER_USER = "PENTAHO_SERVER_USER";
+    private final String PENTAHO_SERVER_USER_DEFAULT = "admin";
+    private final String PENTAHO_SERVER_PASSWORD = "PENTAHO_SERVER_PASSWORD";
+    private final String PENTAHO_SERVER_PASSWORD_DEFAULT = "password";
     private String reportsPropertiesFileLocation;
     private String reportToGroupsMapPropertiesFileLocation;
     private String reportServerConfigPropertiesFileLocation;
@@ -56,13 +61,6 @@ public class ReportServiceImpl implements ReportService
     private PentahoReportUrl reportUrl;
     private ExecuteSolrQuery executeSolrQuery;
     private SearchResults searchResults;
-
-    private final String PENTAHO_REPORT_URL_TEMPLATE = "PENTAHO_REPORT_URL_TEMPLATE";
-    private final String PENTAHO_REPORT_URL_TEMPLATE_DEFAULT = "/pentaho/api/repos/{path}/viewer";
-    private final String PENTAHO_SERVER_USER = "PENTAHO_SERVER_USER";
-    private final String PENTAHO_SERVER_USER_DEFAULT = "admin";
-    private final String PENTAHO_SERVER_PASSWORD = "PENTAHO_SERVER_PASSWORD";
-    private final String PENTAHO_SERVER_PASSWORD_DEFAULT = "password";
 
     @Override
     public List<Report> getPentahoReports() throws Exception, MuleException
@@ -204,7 +202,7 @@ public class ReportServiceImpl implements ReportService
             }
         }
 
-        LOG.debug("Report authorization: " + authorized);
+        LOG.debug("Report authorization: {}", authorized);
         return authorized;
     }
 
@@ -220,7 +218,7 @@ public class ReportServiceImpl implements ReportService
             Authentication auth = new UsernamePasswordAuthenticationToken(userId, userId);
             String response = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, 0, 1, "");
 
-            LOG.debug("Response: " + response);
+            LOG.debug("Response: {}", response);
 
             if (response != null && getSearchResults().getNumFound(response) > 0)
             {
@@ -233,7 +231,7 @@ public class ReportServiceImpl implements ReportService
             }
         } catch (Exception e)
         {
-            LOG.error("Cannot retrieve User informatio from Solr for userId=" + userId, e);
+            LOG.error("Cannot retrieve User information from Solr for userId={}", userId, e);
         }
 
         return retval;
@@ -297,15 +295,10 @@ public class ReportServiceImpl implements ReportService
     {
         String url = getPropertyFileManager().load(getReportServerConfigPropertiesFileLocation(), PENTAHO_REPORT_URL_TEMPLATE,
                 PENTAHO_REPORT_URL_TEMPLATE_DEFAULT);
-        String user = getPropertyFileManager().load(getReportServerConfigPropertiesFileLocation(), PENTAHO_SERVER_USER,
-                PENTAHO_SERVER_USER_DEFAULT);
-        String password = getPropertyFileManager().load(getReportServerConfigPropertiesFileLocation(), PENTAHO_SERVER_PASSWORD,
-                PENTAHO_SERVER_PASSWORD_DEFAULT);
 
         if (url != null)
         {
             url = url.replace("{path}", path);
-            url = url + "?userid=" + user + "&password=" + password;
         }
 
         return url;
