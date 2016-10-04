@@ -281,6 +281,7 @@ public class ReportServiceImpl implements ReportService
                 } else
                 {
                     propertiesToDelete.add(key);
+                    reportPluginProperties.remove(key);
                 }
             }
 
