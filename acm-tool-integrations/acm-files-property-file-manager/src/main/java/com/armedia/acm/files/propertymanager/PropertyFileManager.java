@@ -89,22 +89,27 @@ public class PropertyFileManager
     {
         if (properties != null && properties.size() > 0)
         {
+            Properties p = new Properties();
 
-            try (FileInputStream in = new FileInputStream(fileName); FileOutputStream out = new FileOutputStream(fileName))
+            try (FileInputStream in = new FileInputStream(fileName))
             {
-
-                Properties p = new Properties();
                 p.load(in);
 
                 for (String key : properties)
                 {
                     p.remove(key);
                 }
+            } catch (IOException e)
+            {
+                log.debug("Could not update properties file: " + e.getMessage(), e);
+            }
 
+            try (FileOutputStream out = new FileOutputStream(fileName))
+            {
                 p.store(out, null);
             } catch (IOException e)
             {
-                log.debug("Could not remove properties file: " + e.getMessage(), e);
+                log.debug("Could not update properties file: " + e.getMessage(), e);
             }
         }
     }

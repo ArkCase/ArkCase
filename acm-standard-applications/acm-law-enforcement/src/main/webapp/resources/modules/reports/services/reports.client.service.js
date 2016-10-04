@@ -10,8 +10,8 @@
  *
  * The BuildUrl is used for building report url with given parameters.
  */
-angular.module('reports').factory('Reports.BuildUrl', ['$sce', 'Util.DateService',
-    function ($sce, UtilDateService) {
+angular.module('reports').factory('Reports.BuildUrl', ['$sce', 'Util.DateService', '$http',
+    function ($sce, UtilDateService, $http) {
         return {
 
             /**
@@ -47,6 +47,23 @@ angular.module('reports').factory('Reports.BuildUrl', ['$sce', 'Util.DateService
                     reportUrl += "&caseStatus=" + params.stateSelected;
                 }
                 return $sce.trustAsResourceUrl(reportUrl);
+            },
+
+            /**
+             * @ngdoc method
+             * @name getAuthorizedReports
+             * @methodOf reports.service:Reports.BuildUrl
+             *
+             * @description
+             * Performs retrieving all reports that particular user has authorized access
+             *
+             * @returns {HttpPromise} Future info about accessible reports
+             */
+            getAuthorizedReports: function () {
+                return $http({
+                    method: "GET",
+                    url: "api/latest/plugin/report/authorized"
+                });
             }
         }
     }
