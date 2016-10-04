@@ -41,15 +41,12 @@ public class GetAuthorizedReportsAPIController
     public Map<String, String> getAuthorizedReports(Authentication auth)
     {
         String userid = auth.getName();
-        LOG.debug("User [{}] is retrieving the list of reports it has access to", userid);
+        LOG.debug("User [{}] is retrieving the list of reports they have access to", userid);
 
-        List<Report> authorizedReports = getReportService().getAcmReports(userid);
         Map<String, String> reports = new HashMap<>();
 
-        if (authorizedReports != null)
-        {
-            authorizedReports.forEach(r -> reports.put(r.getPropertyName(), r.getPropertyPath()));
-        }
+        List<Report> authorizedReports = getReportService().getAcmReports(userid);
+        authorizedReports.forEach(r -> reports.put(r.getPropertyName(), r.getPropertyPath()));
 
         return reports;
     }
