@@ -29,7 +29,17 @@ angular.module('services').factory('DocTreeExt.Checkin', ['$q', '$modal', '$tran
         });
 
         var Service = {
-
+            /**
+             * @ngdoc method
+             * @name getColumnRenderers
+             * @methodOf services:DocTreeExt.Checkin
+             *
+             * @description
+             * Return list of renderers this extension provides. This function is required for a docTree extension
+             *
+             * @param {Object} DocTree  DocTree object defined in doc-tree directive
+             *
+             */
             getColumnRenderers: function(DocTree) {
                 return [
                     {
@@ -53,7 +63,17 @@ angular.module('services').factory('DocTreeExt.Checkin', ['$q', '$modal', '$tran
                         }
                     }
                 ];
-            }
+            }            /**
+             * @ngdoc method
+             * @name getCommandHandlers
+             * @methodOf services:DocTreeExt.Checkin
+             *
+             * @description
+             * Return list of command handlers this extension provides. This function is required for a docTree extension
+             *
+             * @param {Object} DocTree  DocTree object defined in doc-tree directive
+             *
+             */
             ,getCommandHandlers: function(DocTree) {
                 return [
                     {
@@ -128,7 +148,6 @@ angular.module('services').factory('DocTreeExt.Checkin', ['$q', '$modal', '$tran
                             return DocTree.Command.executeSubmitFiles(nodes, args);
                         },
                         onPostCmd: function (nodes, args) {
-                            //Comment.openModal(node);
                             var node = nodes[0];
                             var noteHelper = new HelperNoteService.Note();
                             var fileId = node.data.objectId;
@@ -141,7 +160,7 @@ angular.module('services').factory('DocTreeExt.Checkin', ['$q', '$modal', '$tran
                             };
 
                             var modalInstance = $modal.open({
-                                templateUrl: "directives/doc-tree/doc-tree.checkin.dialog.html"
+                                templateUrl: "directives/doc-tree/doc-tree-ext.checkin.dialog.html"
                                 , controller: 'directives.DocTreeCheckinDialogController'
                                 , animation: true
                                 , size: 'lg'
