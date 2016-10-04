@@ -1,10 +1,11 @@
-var taskPage = require('./Pages/task_page.js');
-var tasksPage = require('./Pages/tasks_page.js');
-var authentication = require('./authentication.js');
-var utils = require('./utils.js');
+var logger = require('../log');
+var taskPage = require('../Pages/task_page.js');
+var tasksPage = require('../Pages/tasks_page.js');
+var authentication = require('../authentication.js');
+var utils = require('../util/utils.js');
 var robot = require(process.env['USERPROFILE'] + '/node_modules/robotjs');
 var bot = require(process.env['USERPROFILE'] + '/node_modules/robot-js');
-var Objects = require('./Objects.json');
+var Objects = require('../json/Objects.json');
 var flag = false;
 var now = new Date();
 var day = ("0" + now.getDate()).slice(-2);
@@ -33,7 +34,7 @@ describe('tasks page test', function() {
 
         authentication.logout();
 
-    }); ?
+    }); 
 
     it('should create new task and add note', function() {
 
@@ -558,5 +559,6 @@ taskPage.saveButton.click().then(function() {
 
     });
 });
-});
-});
+})
+
+

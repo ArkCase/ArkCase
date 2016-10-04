@@ -1,6 +1,11 @@
+var HtmlScreenshotReporter = require(process.env['USERPROFILE'] + '/node_modules/protractor-jasmine2-screenshot-reporter');      
+var reporter = new HtmlScreenshotReporter({
+  dest: 'target/screenshots',
+  filename: 'AutoTestRun-report.html'
+});
 exports.config = {
-    seleniumAddress: 'http://localhost:4444/wd/hub',
-    // directConnect: true,
+    //seleniumAddress: 'http://localhost:4444/wd/hub',
+    directConnect: true,
     defaultTimeoutInterval: 20000,
 
     cababilities: {
@@ -34,17 +39,25 @@ exports.config = {
     //          'maxInstances': 5
     //        }],
 
-    specs: ['./tasks_page.spec.js'],
+    specs: ['../test_spec/task_test.spec.js'],
 
     jasmineNodeOpts: {
         showColors: true,
     },
-
-
-    onPrepare: function() {
-        browser.driver.get('http://cloud.arkcase.com/arkcase/login');
-        browser.driver.manage().window().maximize();
-        browser.ignoresynchronization = true;
-
+    beforeLaunch: function() {
+        return new Promise(function(resolve){
+          reporter.beforeLaunch(resolve);
+        });
+      },
+    onPrepare: function () {
+    	jasmine.getEnv().addReporter(reporter);
+        browser.driver.manage().window().maximize();       
+        browser.driver.get('https://core.arkcase.dev.armedia.com/arkcase/login');  
+        
     },
+    afterLaunch: function(exitCode) {
+        return new Promise(function(resolve){
+          reporter.afterLaunch(resolve.bind(this, exitCode));
+        });
+      }
 };

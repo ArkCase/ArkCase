@@ -1,6 +1,7 @@
-var dashPage = require('./Pages/dashboard_page.js');
-var authentication = require('./authentication.js');
-var Objects = require('./Objects.json');
+var logger = require('../log');
+var dashPage = require('../Pages/dashboard_page.js');
+var authentication = require('../authentication.js');
+var Objects = require('../json/Objects.json');
 var flag = false;
 
 
