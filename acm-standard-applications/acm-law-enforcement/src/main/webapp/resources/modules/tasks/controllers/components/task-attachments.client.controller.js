@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$stateParams', '$modal'
-    , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Task.InfoService', 'Helper.ObjectBrowserService', 'DocTreeService', 
-    'PermissionsService', 'DocTreeExt.Core', 'Authentication'
+    , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Task.InfoService', 'Helper.ObjectBrowserService'
+    , 'Authentication', 'DocTreeService', 'PermissionsService', 'DocTreeExt.Core', 'DocTreeExt.Checkin'
     , function ($scope, $stateParams, $modal
-        , Util, ConfigService, ObjectService, ObjectLookupService, TaskInfoService, HelperObjectBrowserService, DocTreeService, 
-        PermissionsService, DocTreeExtCore, Authentication) {
+        , Util, ConfigService, ObjectService, ObjectLookupService, TaskInfoService, HelperObjectBrowserService
+        , Authentication, DocTreeService, PermissionsService, DocTreeExtCore, DocTreeExtCheckin) {
 
 		Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -66,10 +66,10 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
 
         $scope.onInitTree = function(treeControl) {
             $scope.treeControl = treeControl;
-            DocTreeExtCore.handleCheckout(treeControl, $scope);
-            DocTreeExtCore.handleCheckin(treeControl, $scope);
+            DocTreeExtCheckin.handleCheckout(treeControl, $scope);
+            DocTreeExtCheckin.handleCheckin(treeControl, $scope);
+            DocTreeExtCheckin.handleCancelEditing(treeControl, $scope);
             DocTreeExtCore.handleEditWithWebDAV(treeControl, $scope);
-            DocTreeExtCore.handleCancelEditing(treeControl, $scope);
             
             treeControl.addCommandHandler({
                 name: "remove"
