@@ -22,5 +22,9 @@
     <bean id="saveReportsToGroupsAPIController" class="com.armedia.acm.plugins.report.web.api.SaveReportToGroupsMapAPIController">
         <property name="reportService" ref="reportService"/>
     </bean>
+
+    <bean id="getAuthorizedReportsAPIController" class="com.armedia.acm.plugins.report.web.api.GetAuthorizedReportsAPIController">
+        <property name="reportService" ref="reportService"/>
+    </bean>
 </beans>
 
