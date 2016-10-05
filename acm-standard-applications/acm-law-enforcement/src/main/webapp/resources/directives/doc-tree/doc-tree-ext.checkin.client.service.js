@@ -63,7 +63,9 @@ angular.module('services').factory('DocTreeExt.Checkin', ['$q', '$modal', '$tran
                         }
                     }
                 ];
-            }            /**
+            }
+
+            /**
              * @ngdoc method
              * @name getCommandHandlers
              * @methodOf services:DocTreeExt.Checkin
