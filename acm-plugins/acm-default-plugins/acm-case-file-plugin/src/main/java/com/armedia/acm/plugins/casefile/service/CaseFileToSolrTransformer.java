@@ -119,7 +119,7 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
     private String setTitleProperty(CaseFile caseFile)
     {
         String title = caseFile.getTitle();
-        return title != null ? title.toLowerCase() : "";
+        return title;
     }
 
     @Override

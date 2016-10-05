@@ -122,7 +122,7 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
     private String setTitleProperty(Complaint complaint)
     {
         String title = complaint.getComplaintTitle();
-        return title != null ? title.toLowerCase() : "";
+        return title;
     }
 
     @Override

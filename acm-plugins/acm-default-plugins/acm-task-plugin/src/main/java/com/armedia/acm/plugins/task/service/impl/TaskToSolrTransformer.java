@@ -8,7 +8,6 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -144,7 +143,7 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
     private String setTitleProperty(AcmTask task)
     {
         String title = task.getTitle();
-        return title != null ? title.toLowerCase() : "";
+        return title;
     }
 
     @Override
