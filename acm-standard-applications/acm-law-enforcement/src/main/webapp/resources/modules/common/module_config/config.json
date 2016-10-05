@@ -7,6 +7,7 @@
     "maximumOpen": 5
   },
   "docTree": {
+    "extensions": ["DocTreeExt.Checkin", "DocTreeExt.Email"],
     "columnDefs": [
       {
         "name": "checkbox",
@@ -538,7 +539,6 @@
         "uiIcon": "ui-icon-pencil"
       }
     },
-    "extensions": ["DocTreeExt.Checkin"],
     "emailDialog": {
       "enableFiltering": false,
       "multiSelect": true,
