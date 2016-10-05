@@ -10,7 +10,6 @@ import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
-
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -28,7 +27,6 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -279,9 +277,11 @@ public class ReportServiceImpl implements ReportService
                 {
                     String value = createPentahoReportUri(report.getPropertyPath());
                     propertiesToUpdate.put(key, value);
+                    reportPluginProperties.put(key, value);
                 } else
                 {
                     propertiesToDelete.add(key);
+                    reportPluginProperties.remove(key);
                 }
             }
 
