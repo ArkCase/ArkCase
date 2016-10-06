@@ -21,6 +21,9 @@ import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAlias;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
+import com.armedia.acm.services.tag.model.AcmAssociatedTag;
+import com.armedia.acm.services.tag.service.AssociatedTagService;
+import com.armedia.acm.services.tag.service.TagService;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserActionName;
 import org.json.JSONObject;
@@ -46,6 +49,8 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
     private AcmPluginManager acmPluginManager;
     private PersonDao personDao;
     private ComplaintEventPublisher complaintEventPublisher;
+    private TagService tagService;
+    private AssociatedTagService associatedTagService;
 
     private ComplaintFactory complaintFactory;
 
@@ -170,6 +175,10 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
         boolean isNew = acmComplaint.getComplaintId() == null;
 
         acmComplaint = getSaveComplaintTransaction().saveComplaint(acmComplaint, getAuthentication());
+
+        LOG.debug("Creating Tag and AssociatedTag object.");
+        String tagName = acmComplaint.getTag();
+        AcmAssociatedTag returnedAssociatedTag = getAssociatedTagService().saveAssociateTag("COMPLAINT", acmComplaint.getComplaintId(), getTagService().saveTag(tagName, tagName, tagName));
 
         getComplaintEventPublisher().publishComplaintEvent(acmComplaint, getAuthentication(), isNew, true);
 
@@ -552,5 +561,25 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
             ComplaintEventPublisher complaintEventPublisher)
     {
         this.complaintEventPublisher = complaintEventPublisher;
+    }
+
+    public TagService getTagService()
+    {
+        return tagService;
+    }
+
+    public void setTagService(TagService tagService)
+    {
+        this.tagService = tagService;
+    }
+
+    public AssociatedTagService getAssociatedTagService()
+    {
+        return associatedTagService;
+    }
+
+    public void setAssociatedTagService(AssociatedTagService associatedTagService)
+    {
+        this.associatedTagService = associatedTagService;
     }
 }
