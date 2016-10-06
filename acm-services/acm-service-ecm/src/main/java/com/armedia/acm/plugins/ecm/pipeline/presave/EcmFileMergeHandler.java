@@ -43,10 +43,10 @@ public class EcmFileMergeHandler implements PipelineHandler<EcmFile, EcmFileTran
             pipelineContext.setIsAppend(false);
 
             // Only certain file formats can be merged (PDF at this point is the only one supported)
-            String fileExtension = FilenameUtils.getExtension(entity.getFileName());
+            String fileExtension = FilenameUtils.getExtension(entity.getFileActiveVersionNameExtension());
             if (fileExtension == null || fileExtension.isEmpty())
             {
-                fileExtension = FilenameUtils.getExtension(entity.getFileActiveVersionNameExtension());
+                fileExtension = FilenameUtils.getExtension(entity.getFileName());
             }
 
             // Only certain file types (authorization, abstract, etc.) are merged directly within the Bactes extension application

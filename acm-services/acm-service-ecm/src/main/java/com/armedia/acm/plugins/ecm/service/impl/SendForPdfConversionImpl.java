@@ -31,10 +31,10 @@ public class SendForPdfConversionImpl implements SendForPdfConversion {
         FileOutputStream captureFileOutputStream = null;
         try {
             // Creates a filename in the format that Ephesoft expects for this drop file
-            String fileExtension = FilenameUtils.getExtension(toBeConverted.getFileName());
+            String fileExtension = FilenameUtils.getExtension(toBeConverted.getFileActiveVersionNameExtension());
             if (fileExtension == null || fileExtension.isEmpty())
             {
-                fileExtension = FilenameUtils.getExtension(toBeConverted.getFileActiveVersionNameExtension());
+                fileExtension = FilenameUtils.getExtension(toBeConverted.getFileName());
             }
             String fileName = buildEphesoftFileName(toBeConverted, fileExtension);
 
