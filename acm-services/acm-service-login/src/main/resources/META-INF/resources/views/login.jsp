@@ -36,6 +36,8 @@
 
     <link rel="stylesheet" href="<%= request.getContextPath()%>/lib/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" href="<%= request.getContextPath()%>/assets/css/login.css">
+    <!-- custom css-->
+    <link rel="stylesheet" href="<%= request.getContextPath()%>/branding/customcss">
 </head>
 <body>
 <div class="login-wrapper">
