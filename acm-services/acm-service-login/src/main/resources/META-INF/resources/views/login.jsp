@@ -1,8 +1,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%--
-  User: riste.tutureski
-  Date: 8/5/2015
-  Time: 12:44
+<%@ page import="java.io.IOException" %>
+<%@ page import="java.io.InputStream" %>
+<%@ page import="java.util.Properties" %>
+User: riste.tutureski
+Date: 8/5/2015
+Time: 12:44
 --%>
 <!DOCTYPE html>
 <html lang="en">
@@ -102,11 +104,36 @@
 
 <footer id="footer">
     <div class="text-center padder">
+        <%
+            //get version and project name from Maven manifest
+            String name = null;
+            String version = null;
+            Properties prop = new Properties();
+
+            if (name == null && version == null)
+            {
+                try (InputStream inputStream = application.getResourceAsStream("/META-INF/MANIFEST.MF"))
+                {
+                    if (inputStream != null)
+                    {
+                        prop.load(inputStream);
+                        name = prop.getProperty("Implementation-Title", "");
+                        version = prop.getProperty("Implementation-Version", "");
+                    }
+                } catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+            } else
+            {
+                version = "3.0.58-SNAPSHOT hardcoded value";
+            }
+        %>
         <p>
-            <small><span>ArkCase</span><br>&copy;<span>2014, 2015, 2016</span></small>
+            <small><span><%= name %></span><br>&copy;<span>2014, 2015, 2016</span></small>
         </p>
         <p>
-            <small><span>Version: ${project.version}</span></small>
+            Version: <%= version %>
         </p>
     </div>
 </footer>
