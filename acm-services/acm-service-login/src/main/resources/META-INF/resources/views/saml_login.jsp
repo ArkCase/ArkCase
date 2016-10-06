@@ -21,6 +21,8 @@
 	    }
 	    window.onload = addUrlHashToLocalStorageAndRedirectToSamlLogin;
     </script>
+	<!-- custom css-->
+	<link rel="stylesheet" href="<%= request.getContextPath()%>/branding/customcss">
 </head>
 <body>
 	<!-- This page is only used to save the hash of a not authorized request in local storage -->
