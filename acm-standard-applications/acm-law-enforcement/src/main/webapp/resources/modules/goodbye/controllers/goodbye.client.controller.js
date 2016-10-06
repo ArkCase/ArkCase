@@ -11,11 +11,9 @@ angular.module('goodbye').controller('GoodbyeController', ['$window'
             
             // disconnect websocket
             WebSocketService.disconnect();
-            
-            //localStorage.removeItem('redirectURL');
+
             sessionStorage.removeItem('redirectURL');
             sessionStorage.removeItem('redirectState');
-            //sessionStorage.removeItem('warningAccepted');
             Store.Registry.clearSessionCache();
             Store.Registry.clearLocalCache();
 
