@@ -3,7 +3,6 @@ package com.armedia.acm.plugins.ecm.service.impl;
 import com.armedia.acm.plugins.ecm.exception.EphesoftException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.SendForPdfConversion;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,11 +30,7 @@ public class SendForPdfConversionImpl implements SendForPdfConversion {
         FileOutputStream captureFileOutputStream = null;
         try {
             // Creates a filename in the format that Ephesoft expects for this drop file
-            String fileExtension = FilenameUtils.getExtension(toBeConverted.getFileActiveVersionNameExtension());
-            if (fileExtension == null || fileExtension.isEmpty())
-            {
-                fileExtension = FilenameUtils.getExtension(toBeConverted.getFileName());
-            }
+            String fileExtension = toBeConverted.getFileExtension();
             String fileName = buildEphesoftFileName(toBeConverted, fileExtension);
 
             // Copies supported file types to the Ephesoft hot folder
