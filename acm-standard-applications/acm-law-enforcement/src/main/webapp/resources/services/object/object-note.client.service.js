@@ -47,21 +47,21 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'Acm.Stor
 	         * @param {Object} params Map of input parameter
 	         * @param {String} params.parentType  Object type
 	         * @param {String} params.parentId  Object ID
-	         * @param {Function} onSuccess (Optional)Callback function of success query
-	         * @param {Function} onError (Optional) Callback function when fail
-	         *
-	         * @returns {Object} Object returned by $resource
-	         */
-	        //* @param {Number} params.start Zero based start number of record
-	        //* @param {Number} params.count Max Number of list to return
-	        //* @param {String} params.sort  Sort value, with format 'sortBy sortDir', sortDir can be 'asc' or 'desc'
+	         * @param {Number} params.start Zero based start number of record
+	         * @param {Number} params.n Max Number of list to return
+	         * @param {String} params.sort  Sort value, with format 'sortBy sortDir', sortDir can be 'asc' or 'desc'
+             * @param {Function} onSuccess (Optional)Callback function of success query
+             * @param {Function} onError (Optional) Callback function when fail
+             *
+             * @returns {Object} Object returned by $resource
+             */
 	        , _queryNotesPage: {
 	            method: 'GET',
 	            url: 'api/latest/plugin/note/:parentType/:parentId/page?start=:start&n=:n&s=:sort',
 	            cache: false,
 	            isArray: false
 	        }
-        
+
             /**
              * @ngdoc method
              * @name _saveNote
@@ -174,14 +174,19 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'Acm.Stor
 
         /**
          * @ngdoc method
-         * @name queryNotes
+         * @name queryNotesPage
          * @methodOf services:Object.NoteService
          *
          * @description
-         * Query list of notes of an object
+         * Query list of notes of an object sorted and paged
          *
          * @param {String} objectType  Object type
          * @param {Number} objectId  Object ID
+         * @param {String} noteType  Note type
+         * @param {Number} start  Start number of the result list required
+         * @param {Number} n  Number of page results
+         * @param {String} sortBy  Field the sort will be performed
+         * @param {String} sortDir ASC or DESC sorting
          *
          * @returns {Object} Promise
          */
