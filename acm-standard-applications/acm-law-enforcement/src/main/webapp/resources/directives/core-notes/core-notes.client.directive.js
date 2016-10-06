@@ -115,33 +115,29 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                 }
 
                 scope.retrieveGridData = function () {
-                	var info = scope.notesInit;
+                    var info = scope.notesInit;
                     var promiseQueryNotes = ObjectNoteService.queryNotesPage(
-                    		info.objectType
-                    		, info.currentObjectId
-                    		, info.noteTitle
-                    		, Util.goodValue(scope.start, 0)
-                    		, Util.goodValue(scope.pageSize, 10)
-                    		, Util.goodMapValue(scope.sort, "by")
-                    		, Util.goodMapValue(scope.sort, "dir")
-                            
+                        info.objectType
+                        , info.currentObjectId
+                        , info.noteTitle
+                        , Util.goodValue(scope.start, 0)
+                        , Util.goodValue(scope.pageSize, 10)
+                        , Util.goodMapValue(scope.sort, "by")
+                        , Util.goodMapValue(scope.sort, "dir")
                     );
-                    
-                    $q.all([promiseQueryNotes,promiseUsers]).then(function (data) {
-                        var notesData = data[0];
+
+                    promiseQueryNotes.then(function (data) {
                         scope.gridOptions = scope.gridOptions || {};
-                        scope.gridOptions.data = notesData.resultPage;
-                        scope.gridOptions.totalItems = notesData.totalCount;
+                        scope.gridOptions.data = data.resultPage;
+                        scope.gridOptions.totalItems = data.totalCount;
                     });
-                   
+
                 };
 
                 scope.addNew = function () {
                     var info = scope.notesInit;
                     var note = noteHelper.createNote(info.currentObjectId, info.objectType, info.tag,
-                        scope.userId, info.noteType
-                        )
-                        ;
+                        scope.userId, info.noteType);
                     showModal(note, false);
                 };
                 scope.editRow = function (rowEntity) {
