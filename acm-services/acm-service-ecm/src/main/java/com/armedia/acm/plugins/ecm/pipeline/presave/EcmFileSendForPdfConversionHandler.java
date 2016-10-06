@@ -28,10 +28,10 @@ public class EcmFileSendForPdfConversionHandler implements PipelineHandler<EcmFi
     public void execute(EcmFile entity, EcmFileTransactionPipelineContext pipelineContext) throws PipelineProcessException
     {
         // Any file format which cannot be merged by ArkCase will be sent for external format conversion
-        String fileExtension = FilenameUtils.getExtension(entity.getFileName());
+        String fileExtension = FilenameUtils.getExtension(entity.getFileActiveVersionNameExtension());
         if (fileExtension == null || fileExtension.isEmpty())
         {
-            fileExtension = FilenameUtils.getExtension(entity.getFileActiveVersionNameExtension());
+            fileExtension = FilenameUtils.getExtension(entity.getFileName());
         }
 
         // Only certain file types (authorization, abstract, etc.) are converted to PDF
