@@ -21,7 +21,7 @@ import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAlias;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
-import com.armedia.acm.services.tag.model.AcmAssociatedTag;
+import com.armedia.acm.services.tag.model.AcmTag;
 import com.armedia.acm.services.tag.service.AssociatedTagService;
 import com.armedia.acm.services.tag.service.TagService;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -180,7 +180,8 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
         {
             LOG.debug("Creating Tag and AssociatedTag object.");
             String tagName = acmComplaint.getTag();
-            AcmAssociatedTag returnedAssociatedTag = getAssociatedTagService().saveAssociateTag("COMPLAINT", acmComplaint.getComplaintId(), getTagService().saveTag(tagName, tagName, tagName));
+            AcmTag complaintTag = getTagService().saveTag(tagName, tagName, tagName);
+            getAssociatedTagService().saveAssociateTag("COMPLAINT", acmComplaint.getComplaintId(), complaintTag);
         }
 
         getComplaintEventPublisher().publishComplaintEvent(acmComplaint, getAuthentication(), isNew, true);
