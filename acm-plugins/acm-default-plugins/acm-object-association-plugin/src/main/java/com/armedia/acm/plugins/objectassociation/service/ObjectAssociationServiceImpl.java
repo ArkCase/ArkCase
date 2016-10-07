@@ -1,34 +1,40 @@
 package com.armedia.acm.plugins.objectassociation.service;
 
 import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.plugins.objectassociation.dao.ObjectAssociationDao;
 import com.armedia.acm.plugins.objectassociation.model.AcmChildObjectEntity;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import java.util.Map;
 
-/**
- * 
- * @author vladimir.radeski
- *
- */
 
 public class ObjectAssociationServiceImpl implements ObjectAssociationService
 {
     private SpringContextHolder springContextHolder;
 
+    private ObjectAssociationDao objectAssociationDao;
+
     @Override
     public void addReference(Long id, String number, String type, String title, String status, Long parentId, String parentType)
     {
-        AcmAbstractDao<AcmChildObjectEntity> dao = getDaoForChildObjectEntity(parentType);
-        if (dao != null)
+        ObjectAssociation oa = makeObjectAssociation(id, number, type, title, status);
+        if (parentType.equals("TASK"))
         {
-            AcmChildObjectEntity entity = dao.find(parentId);
-            if (entity != null)
+            oa.setParentId(parentId);
+            oa.setParentType(parentType);
+            getObjectAssociationDao().save(oa);
+        } else
+        {
+            AcmAbstractDao<AcmChildObjectEntity> dao = getDaoForChildObjectEntity(parentType);
+            if (dao != null)
             {
-                ObjectAssociation oa = makeObjectAssociation(id, number, type, title, status);
-                entity.addChildObject(oa);
-                dao.save(entity);
+                AcmChildObjectEntity entity = dao.find(parentId);
+                if (entity != null)
+                {
+                    entity.addChildObject(oa);
+                    dao.save(entity);
+                }
             }
         }
     }
@@ -78,4 +84,13 @@ public class ObjectAssociationServiceImpl implements ObjectAssociationService
         this.springContextHolder = springContextHolder;
     }
 
+    public ObjectAssociationDao getObjectAssociationDao()
+    {
+        return objectAssociationDao;
+    }
+
+    public void setObjectAssociationDao(ObjectAssociationDao objectAssociationDao)
+    {
+        this.objectAssociationDao = objectAssociationDao;
+    }
 }
