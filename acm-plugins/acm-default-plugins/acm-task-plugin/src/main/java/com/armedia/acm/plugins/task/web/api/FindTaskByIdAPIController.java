@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
-@RequestMapping({ "/api/v1/plugin/task", "/api/latest/plugin/task" })
+@RequestMapping({"/api/v1/plugin/task", "/api/latest/plugin/task"})
 public class FindTaskByIdAPIController
 {
     private TaskDao taskDao;
@@ -43,47 +43,36 @@ public class FindTaskByIdAPIController
             HttpSession session
     ) throws AcmObjectNotFoundException
     {
-        if ( log.isInfoEnabled() )
-        {
-            log.info("Finding task with ID '" + taskId + "'");
-        }
+        log.info("Finding task with id:'{}'", taskId);
 
         try
         {
             AcmTask retval = getTaskDao().findById(taskId);
 
-            if ( retval.getReviewDocumentPdfRenditionId() != null )
+            if (retval.getReviewDocumentPdfRenditionId() != null)
             {
                 EcmFile docUnderReview = getFileDao().find(retval.getReviewDocumentPdfRenditionId());
                 retval.setDocumentUnderReview(docUnderReview);
             }
 
-            List<ObjectAssociation> childObjects = getObjectAssociations(retval);
+            List<ObjectAssociation> childObjects = getObjectAssociationDao()
+                    .findByParentTypeAndId(retval.getObjectType(), retval.getId());
             retval.setChildObjects(childObjects);
 
             raiseEvent(authentication, session, retval, true);
 
             return retval;
 
-        }
-        catch (AcmTaskException | ActivitiException e)
+        } catch (AcmTaskException | ActivitiException e)
         {
             // gen up a fake task so we can audit the failure
             AcmTask fakeTask = new AcmTask();
             fakeTask.setTaskId(taskId);
             raiseEvent(authentication, session, fakeTask, false);
 
-            log.error("Could not find task with id '" + taskId + "': " + e.getMessage(), e);
+            log.error("Could not find task with id:'{}' {}", taskId, e.getMessage(), e);
             throw new AcmObjectNotFoundException("task", taskId, e.getMessage(), e);
         }
-    }
-
-    private List<ObjectAssociation> getObjectAssociations(AcmTask task)
-    {
-        String parentType = task.getBusinessProcessId() == null ? "TASK" : "BUSINESS_PROCESS";
-        Long parentId = task.getBusinessProcessId() == null ? task.getTaskId() : task.getBusinessProcessId();
-
-        return getObjectAssociationDao().findByParentTypeAndId(parentType, parentId);
     }
 
     protected void raiseEvent(Authentication authentication, HttpSession session, AcmTask task, boolean succeeded)

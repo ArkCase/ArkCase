@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystemEntity, AcmParentObjectInfo, AcmNotifiableEntity
 {
@@ -172,15 +173,15 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
         this.attachedToObjectId = attachedToObjectId;
     }
 
-    public void setParentObjectId(Long parentObjectId)
-    {
-        this.parentObjectId = parentObjectId;
-    }
-
     @Override
     public Long getParentObjectId()
     {
         return parentObjectId;
+    }
+
+    public void setParentObjectId(Long parentObjectId)
+    {
+        this.parentObjectId = parentObjectId;
     }
 
     @Override
@@ -548,5 +549,16 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
     public String getNotifiableEntityTitle()
     {
         return title;
+    }
+
+    public List<ObjectAssociation> getReferences()
+    {
+        if (getChildObjects() != null)
+        {
+            return getChildObjects().stream().filter(child -> "REFERENCE".equals(child.getAssociationType()))
+                    .collect(Collectors.toList());
+        }
+
+        return new ArrayList<>();
     }
 }
