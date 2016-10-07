@@ -84,10 +84,10 @@ public class NoteDao extends AcmAbstractDao<Note>
         query.select(note);
         query.where(cb.and(cb.equal(note.get("parentId"), parentId)), cb.and(cb.equal(note.get("parentType"),
                 parentType), cb.and(cb.equal(note.get("type"), type))));
-        if (sortDirection.equals("ASC"))
+        if (sortDirection.equalsIgnoreCase("ASC"))
         {
             query.orderBy(cb.asc(note.get(sortField)));
-        } else
+        } else if (sortDirection.equalsIgnoreCase("DESC"))
         {
             query.orderBy(cb.desc(note.get(sortField)));
         }
