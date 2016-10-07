@@ -12,6 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,20 +77,27 @@ public class NoteDao extends AcmAbstractDao<Note>
                 sortDirection = parts[1];
             }
         }
-        TypedQuery<Note> note = getEntityManager().createQuery(
-                "SELECT note " +
-                        "FROM Note note " +
-                        "WHERE note.parentId = :parentId AND " +
-                        "note.parentType  = :parentType AND " +
-                        "note.type = :type ORDER BY note." + sortField + " " + sortDirection, Note.class);
 
-        note.setParameter("type", type);
-        note.setParameter("parentType", parentType.toUpperCase());
-        note.setParameter("parentId", parentId);
-        note.setFirstResult(start);
-        note.setMaxResults(n);
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Note> query = cb.createQuery(Note.class);
+        Root<Note> note = query.from(Note.class);
+        query.select(note);
+        query.where(cb.and(cb.equal(note.get("parentId"), parentId)), cb.and(cb.equal(note.get("parentType"),
+                parentType), cb.and(cb.equal(note.get("type"), type))));
+        if (sortDirection.equals("ASC"))
+        {
+            query.orderBy(cb.asc(note.get(sortField)));
+        } else
+        {
+            query.orderBy(cb.desc(note.get(sortField)));
+        }
 
-        List<Note> notes = note.getResultList();
+        TypedQuery<Note> queryNotes = getEntityManager().createQuery(query);
+
+        queryNotes.setFirstResult(start);
+        queryNotes.setMaxResults(n);
+
+        List<Note> notes = queryNotes.getResultList();
         if (null == notes)
         {
             notes = new ArrayList<>();
