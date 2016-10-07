@@ -1,9 +1,10 @@
 'use strict';
 
 angular.module('tasks').controller('Tasks.ReferencesController', ['$scope', '$stateParams'
-    , 'UtilService', 'ConfigService', 'Task.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', '$modal', 'Object.ReferenceService', 'ObjectService'
-    , function ($scope, $stateParams
-        , Util, ConfigService, TaskInfoService, HelperUiGridService, HelperObjectBrowserService, $modal, referenceService, ObjectService) {
+    , 'UtilService', 'ConfigService', 'Task.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService'
+    , '$modal', 'Object.ReferenceService', 'ObjectService'
+    , function ($scope, $stateParams, Util, ConfigService, TaskInfoService, HelperUiGridService
+        , HelperObjectBrowserService, $modal, referenceService, ObjectService) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -57,7 +58,7 @@ angular.module('tasks').controller('Tasks.ReferencesController', ['$scope', '$st
             $scope.$emit('report-object-refreshed', $stateParams.id);
         };
 
-        // open addreference modal
+        // open add reference modal
         $scope.addReference = function () {
             var modalInstance = $modal.open({
                 animation: $scope.animationsEnabled,
@@ -66,7 +67,7 @@ angular.module('tasks').controller('Tasks.ReferencesController', ['$scope', '$st
                 size: 'lg',
                 resolve: {
                     $filter: function () {
-                    	var filter = $scope.modalConfig.searchFilter + "&-id:" + $scope.objectInfo.taskId + "-TASK";
+                    	var filter = $scope.modalConfig.searchFilter;
                         if ($scope.gridOptions.data.length > 0) {
                             for (var i = 0; i < $scope.gridOptions.data.length; i++) {
                                 var data = $scope.gridOptions.data[i];
