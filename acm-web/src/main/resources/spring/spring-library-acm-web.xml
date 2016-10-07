@@ -9,6 +9,10 @@
         <property name="warningMessage" value="${login.warning.message}"/>
     </bean>
 
+    <bean id="applicationMetaInfoService" class="com.armedia.acm.web.api.service.ApplicationMetaInfoServiceImpl">
+        <property name="version" value="${login.version}"/>
+    </bean>
+
     <bean id="corsFilter" class="com.armedia.acm.web.api.CorsFilter"/>
     <!--
     <bean id="asyncAplicationListenerExecutor"
