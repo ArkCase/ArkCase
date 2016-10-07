@@ -10,6 +10,7 @@ import com.armedia.acm.services.tag.model.AcmAssociatedTag;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 import javax.persistence.CascadeType;
@@ -438,5 +439,21 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     public String getParentObjectType()
     {
         return getContainer() != null ? getContainer().getContainerObjectType() : null;
+    }
+
+    /**
+     * Retrieve file extension (without the dot character).
+     *
+     * @return file extension
+     */
+    @JsonIgnore
+    public String getFileExtension()
+    {
+        String fileExtension = FilenameUtils.getExtension(getFileActiveVersionNameExtension());
+        if (fileExtension == null || fileExtension.isEmpty())
+        {
+            fileExtension = FilenameUtils.getExtension(getFileName());
+        }
+        return fileExtension;
     }
 }
