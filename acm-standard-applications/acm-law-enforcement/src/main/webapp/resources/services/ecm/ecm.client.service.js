@@ -87,11 +87,6 @@ angular.module('services').factory('EcmService', ['$resource', 'Acm.StoreService
                 method: 'GET',
                 url: 'api/latest/plugin/audit/FILE/:fileId'
             }
-            , getFileNotes: {
-                method: 'GET',
-                url: 'api/latest/plugin/note/file/:fileId',
-                isArray: true
-            }
             , getFileParticipants: {
                 method: 'GET',
                 url: 'api/v1/service/participant/FILE/:fileId',
