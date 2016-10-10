@@ -1,8 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
-  User: riste.tutureski
-  Date: 8/5/2015
-  Time: 12:44
+User: riste.tutureski
+Date: 8/5/2015
+Time: 12:44
 --%>
 <!DOCTYPE html>
 <html lang="en">
@@ -106,6 +106,9 @@
     <div class="text-center padder">
         <p>
             <small><span>ArkCase</span><br>&copy;<span>2014, 2015, 2016</span></small>
+        </p>
+        <p>
+            Version: ${version}
         </p>
     </div>
 </footer>
