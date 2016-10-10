@@ -4,6 +4,8 @@
 package com.armedia.acm.form.casefile.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.form.casefile.model.CaseFileForm;
 import com.armedia.acm.form.casefile.model.CaseFileFormConstants;
 import com.armedia.acm.form.config.xml.OwningGroupItem;
@@ -16,6 +18,11 @@ import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.SaveCaseService;
 import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
+import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
+import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.dao.IdentificationDao;
@@ -56,6 +63,7 @@ public class CaseFileService extends FrevvoFormAbstractService
     private IdentificationDao identificationDao;
     private FileWorkflowBusinessRule fileWorkflowBusinessRule;
     private CaseFileEventUtility caseFileEventUtility;
+    private String caseFolderNameFormat;
 
     private RuntimeService activitiRuntimeService;
 
@@ -115,8 +123,8 @@ public class CaseFileService extends FrevvoFormAbstractService
         // Save Case File to the database
         saveCaseFile(form);
 
-        // Save Reference (Reinvestigation)
-        form = saveReference(form);
+        // Handle Case Reinvestigation
+        form = handleCaseReinvestigation(form);
 
         // Create Frevvo form from CaseFile
         form = getCaseFileFactory().asFrevvoCaseFile(getCaseFile(), form, this);
@@ -359,16 +367,13 @@ public class CaseFileService extends FrevvoFormAbstractService
         return fullName;
     }
 
-    private CaseFileForm saveReference(CaseFileForm form)
+    private CaseFileForm handleCaseReinvestigation(CaseFileForm form)
     {
         String mode = getRequest().getParameter("mode");
         if (mode != null && "reinvestigate".equals(mode))
         {
-            LOG.info("Saving reference ...");
-
             String oldCaseIdAsString = getRequest().getParameter("caseId");
             String oldCaseNumber = getRequest().getParameter("caseNumber");
-            String oldCaseTitle = getRequest().getParameter("caseTitle");
             Long oldCaseId = null;
             try
             {
@@ -380,30 +385,90 @@ public class CaseFileService extends FrevvoFormAbstractService
 
             if (oldCaseId != null && oldCaseNumber != null && form.getId() != null && form.getCaseNumber() != null)
             {
-                String status = CaseFileFormConstants.STATUS_ACTIVE;
-                CaseFile caseFile = getCaseFileDao().find(oldCaseId);
-                if (caseFile != null && caseFile.getStatus() != null)
+                CaseFile oldCaseFile = getCaseFileDao().find(oldCaseId);
+                if (oldCaseFile != null)
                 {
-                    status = caseFile.getStatus();
+                    form = saveReference(form, oldCaseFile);
+                    copyCaseDocuments(oldCaseFile, getCaseFile());
                 }
+            }
+        }
+        return form;
+    }
 
-                ObjectAssociation objectAssociation = new ObjectAssociation();
+    private CaseFileForm saveReference(CaseFileForm form, CaseFile oldCaseFile)
+    {
 
-                objectAssociation.setStatus(status);
-                objectAssociation.setParentType(getFormName().toUpperCase());
-                objectAssociation.setParentId(form.getId());
-                objectAssociation.setParentName(form.getCaseNumber());
-                objectAssociation.setTargetType(getFormName().toUpperCase());
-                objectAssociation.setTargetId(oldCaseId);
-                objectAssociation.setTargetName(oldCaseNumber);
-                objectAssociation.setTargetTitle(oldCaseTitle);
-                objectAssociation.setAssociationType(CaseFileFormConstants.ASSOCIATION_TYPE_REFERENCE);
+        LOG.info("Saving reference ...");
 
-                getObjectAssociationDao().save(objectAssociation);
+        String status = CaseFileFormConstants.STATUS_ACTIVE;
+        String oldCaseTitle = "REINVESTIGATE_" + oldCaseFile.getCaseNumber();
+
+        if (oldCaseFile != null)
+        {
+            if (oldCaseFile.getStatus() != null)
+            {
+                status = oldCaseFile.getStatus();
+            }
+            if (oldCaseFile.getTitle() != null)
+            {
+                oldCaseTitle = oldCaseFile.getTitle();
             }
         }
 
+        ObjectAssociation objectAssociation = new ObjectAssociation();
+
+        objectAssociation.setStatus(status);
+        objectAssociation.setParentType(getFormName().toUpperCase());
+        objectAssociation.setParentId(form.getId());
+        objectAssociation.setParentName(form.getCaseNumber());
+        objectAssociation.setTargetType(getFormName().toUpperCase());
+        objectAssociation.setTargetId(oldCaseFile.getId());
+        objectAssociation.setTargetName(oldCaseFile.getCaseNumber());
+        objectAssociation.setTargetTitle(oldCaseTitle);
+        objectAssociation.setAssociationType(CaseFileFormConstants.ASSOCIATION_TYPE_REFERENCE);
+
+        getObjectAssociationDao().save(objectAssociation);
+
         return form;
+
+    }
+
+    private void copyCaseDocuments(CaseFile oldCase, CaseFile newCase)
+    {
+        try
+        {
+            if (oldCase != null && newCase != null)
+            {
+                AcmContainer oldContainer = getEcmFileService().getOrCreateContainer(oldCase.getObjectType(), oldCase.getId());
+                AcmCmisObjectList files = getEcmFileService().allFilesForContainer(getAuthentication(), oldContainer);
+
+                AcmContainer newContainer = getEcmFileService().getOrCreateContainer(newCase.getObjectType(), newCase.getId());
+
+                String caseFolderName = String.format(getCaseFolderNameFormat(), oldCase.getCaseNumber());
+
+                oldContainer.getFolder().setParentFolderId(newContainer.getFolder().getId());
+                oldContainer.getFolder().setName(caseFolderName);
+
+                if (files != null && files.getChildren() != null)
+                {
+                    for (AcmCmisObject file : files.getChildren())
+                    {
+                        EcmFile ecmFile = getEcmFileService().findById(file.getObjectId());
+                        if (!ecmFile.getFileType().equals("case_file_xml"))
+                        {
+                            ecmFile.setContainer(newContainer);
+                            ecmFile.setStatus(EcmFileConstants.RECORD);
+
+                            getEcmFileDao().save(ecmFile);
+                        }
+                    }
+                }
+            }
+        } catch (AcmListObjectsFailedException | AcmCreateObjectFailedException | AcmUserActionFailedException e)
+        {
+            LOG.error("Cannot save old case documents.", e);
+        }
     }
 
     private void raiseCaseEvent()
@@ -515,5 +580,15 @@ public class CaseFileService extends FrevvoFormAbstractService
     public void setCaseFileEventUtility(CaseFileEventUtility caseFileEventUtility)
     {
         this.caseFileEventUtility = caseFileEventUtility;
+    }
+
+    public String getCaseFolderNameFormat()
+    {
+        return caseFolderNameFormat;
+    }
+
+    public void setCaseFolderNameFormat(String caseFolderNameFormat)
+    {
+        this.caseFolderNameFormat = caseFolderNameFormat;
     }
 }
