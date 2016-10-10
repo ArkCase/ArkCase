@@ -4,8 +4,10 @@ import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.objectassociation.dao.ObjectAssociationDao;
 import com.armedia.acm.plugins.objectassociation.model.AcmChildObjectEntity;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import com.armedia.acm.plugins.objectassociation.model.ObjectAssociationConstants;
 import com.armedia.acm.spring.SpringContextHolder;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -18,23 +20,15 @@ public class ObjectAssociationServiceImpl implements ObjectAssociationService
     @Override
     public void addReference(Long id, String number, String type, String title, String status, Long parentId, String parentType)
     {
-        ObjectAssociation oa = makeObjectAssociation(id, number, type, title, status);
-        if (parentType.equals("TASK"))
+        AcmAbstractDao<AcmChildObjectEntity> dao = getDaoForChildObjectEntity(parentType);
+        if (dao != null)
         {
-            oa.setParentId(parentId);
-            oa.setParentType(parentType);
-            getObjectAssociationDao().save(oa);
-        } else
-        {
-            AcmAbstractDao<AcmChildObjectEntity> dao = getDaoForChildObjectEntity(parentType);
-            if (dao != null)
+            AcmChildObjectEntity entity = dao.find(parentId);
+            if (entity != null)
             {
-                AcmChildObjectEntity entity = dao.find(parentId);
-                if (entity != null)
-                {
-                    entity.addChildObject(oa);
-                    dao.save(entity);
-                }
+                ObjectAssociation oa = makeObjectAssociation(id, number, type, title, status);
+                entity.addChildObject(oa);
+                dao.save(entity);
             }
         }
     }
@@ -60,17 +54,27 @@ public class ObjectAssociationServiceImpl implements ObjectAssociationService
         return null;
     }
 
+    @Override
+    public ObjectAssociation saveObjectAssociation(ObjectAssociation oa)
+    {
+        return getObjectAssociationDao().save(oa);
+    }
+
+    @Override
+    public List<ObjectAssociation> findByParentTypeAndId(String type, Long id)
+    {
+        return getObjectAssociationDao().findByParentTypeAndId(type, id);
+    }
+
     private ObjectAssociation makeObjectAssociation(Long id, String number, String type, String title, String status)
     {
         ObjectAssociation oa = new ObjectAssociation();
-
         oa.setTargetId(id);
         oa.setTargetName(number);
         oa.setTargetType(type);
         oa.setTargetTitle(title);
         oa.setStatus(status);
-        oa.setAssociationType("REFERENCE");
-
+        oa.setAssociationType(ObjectAssociationConstants.OBJECT_TYPE);
         return oa;
     }
 

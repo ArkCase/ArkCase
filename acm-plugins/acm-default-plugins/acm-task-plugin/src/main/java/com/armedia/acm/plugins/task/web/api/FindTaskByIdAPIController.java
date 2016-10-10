@@ -1,16 +1,10 @@
 package com.armedia.acm.plugins.task.web.api;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.objectassociation.dao.ObjectAssociationDao;
-import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
-import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
-import com.armedia.acm.plugins.task.service.TaskDao;
+import com.armedia.acm.plugins.task.service.AcmTaskService;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
-import org.activiti.engine.ActivitiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -21,15 +15,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
 @RequestMapping({"/api/v1/plugin/task", "/api/latest/plugin/task"})
 public class FindTaskByIdAPIController
 {
-    private TaskDao taskDao;
-
-    private EcmFileDao fileDao;
-    private ObjectAssociationDao objectAssociationDao;
+    private AcmTaskService taskService;
 
     private TaskEventPublisher taskEventPublisher;
 
@@ -40,39 +30,28 @@ public class FindTaskByIdAPIController
     public AcmTask findTaskById(
             @PathVariable("taskId") Long taskId,
             Authentication authentication,
-            HttpSession session
-    ) throws AcmObjectNotFoundException
+            HttpSession session) throws AcmObjectNotFoundException
     {
         log.info("Finding task with id:'{}'", taskId);
 
-        try
+        AcmTask task = getTaskService().retrieveTask(taskId);
+        if (task != null)
         {
-            AcmTask retval = getTaskDao().findById(taskId);
-
-            if (retval.getReviewDocumentPdfRenditionId() != null)
-            {
-                EcmFile docUnderReview = getFileDao().find(retval.getReviewDocumentPdfRenditionId());
-                retval.setDocumentUnderReview(docUnderReview);
-            }
-
-            List<ObjectAssociation> childObjects = getObjectAssociationDao()
-                    .findByParentTypeAndId(retval.getObjectType(), retval.getId());
-            retval.setChildObjects(childObjects);
-
-            raiseEvent(authentication, session, retval, true);
-
-            return retval;
-
-        } catch (AcmTaskException | ActivitiException e)
-        {
-            // gen up a fake task so we can audit the failure
-            AcmTask fakeTask = new AcmTask();
-            fakeTask.setTaskId(taskId);
-            raiseEvent(authentication, session, fakeTask, false);
-
-            log.error("Could not find task with id:'{}' {}", taskId, e.getMessage(), e);
-            throw new AcmObjectNotFoundException("task", taskId, e.getMessage(), e);
+            raiseEvent(authentication, session, task, true);
+            return task;
         }
+
+        log.error("Could not find task with id:'{}' {}");
+        raiseFakeEvent(taskId, authentication, session);
+        throw new AcmObjectNotFoundException("task", taskId, null);
+    }
+
+    private void raiseFakeEvent(Long taskId, Authentication authentication, HttpSession session)
+    {
+        // gen up a fake task so we can audit the failure
+        AcmTask fakeTask = new AcmTask();
+        fakeTask.setTaskId(taskId);
+        raiseEvent(authentication, session, fakeTask, false);
     }
 
     protected void raiseEvent(Authentication authentication, HttpSession session, AcmTask task, boolean succeeded)
@@ -81,17 +60,6 @@ public class FindTaskByIdAPIController
         AcmApplicationTaskEvent event = new AcmApplicationTaskEvent(task, "findById", authentication.getName(),
                 succeeded, ipAddress);
         getTaskEventPublisher().publishTaskEvent(event);
-    }
-
-
-    public TaskDao getTaskDao()
-    {
-        return taskDao;
-    }
-
-    public void setTaskDao(TaskDao taskDao)
-    {
-        this.taskDao = taskDao;
     }
 
     public TaskEventPublisher getTaskEventPublisher()
@@ -104,23 +72,13 @@ public class FindTaskByIdAPIController
         this.taskEventPublisher = taskEventPublisher;
     }
 
-    public EcmFileDao getFileDao()
+    public AcmTaskService getTaskService()
     {
-        return fileDao;
+        return taskService;
     }
 
-    public void setFileDao(EcmFileDao fileDao)
+    public void setTaskService(AcmTaskService taskService)
     {
-        this.fileDao = fileDao;
-    }
-
-    public ObjectAssociationDao getObjectAssociationDao()
-    {
-        return objectAssociationDao;
-    }
-
-    public void setObjectAssociationDao(ObjectAssociationDao objectAssociationDao)
-    {
-        this.objectAssociationDao = objectAssociationDao;
+        this.taskService = taskService;
     }
 }

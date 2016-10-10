@@ -3,13 +3,15 @@
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
-       <bean id="objectAssociationDao" class="com.armedia.acm.plugins.objectassociation.dao.ObjectAssociationDao"/>
-       
-       <bean id="objectAssociationService" class="com.armedia.acm.plugins.objectassociation.service.ObjectAssociationServiceImpl">
-       		<property name="springContextHolder" ref="acmContextHolder"/>
-           <property name="objectAssociationDao" ref="objectAssociationDao"/>
-       </bean>
-       
-       <bean id="objectAssociationEventPublisher" class="com.armedia.acm.plugins.objectassociation.service.ObjectAssociationEventPublisher"/>
+    <bean id="objectAssociationDao" class="com.armedia.acm.plugins.objectassociation.dao.ObjectAssociationDao"/>
+
+    <bean id="objectAssociationService"
+          class="com.armedia.acm.plugins.objectassociation.service.ObjectAssociationServiceImpl">
+        <property name="springContextHolder" ref="acmContextHolder"/>
+        <property name="objectAssociationDao" ref="objectAssociationDao"/>
+    </bean>
+
+    <bean id="objectAssociationEventPublisher"
+          class="com.armedia.acm.plugins.objectassociation.service.ObjectAssociationEventPublisher"/>
 
 </beans>
