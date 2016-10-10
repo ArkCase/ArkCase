@@ -7,6 +7,7 @@ import com.armedia.acm.data.AcmLegacySystemEntity;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import com.armedia.acm.plugins.objectassociation.model.ObjectAssociationConstants;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.search.model.SearchConstants;
@@ -555,7 +556,8 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
     {
         if (getChildObjects() != null)
         {
-            return getChildObjects().stream().filter(child -> "REFERENCE".equals(child.getAssociationType()))
+            return getChildObjects().stream().filter(child ->
+                    ObjectAssociationConstants.OBJECT_TYPE.equals(child.getAssociationType()))
                     .collect(Collectors.toList());
         }
 
