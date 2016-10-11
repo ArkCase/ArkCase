@@ -7,7 +7,6 @@ import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserRole;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
@@ -38,9 +37,9 @@ public class LdapSyncDatabaseHelper
         if (!singleUser)
         {
             // Mark all users invalid... users still in LDAP will change to valid during the sync
+            getGroupDao().markAllGroupsInactive(directoryName, ROLE_TYPE_LDAP_GROUP);
             getUserDao().markAllUsersInvalid(directoryName);
             getUserDao().markAllRolesInvalid(directoryName);
-            getGroupDao().markAllGroupsInactive(ROLE_TYPE_LDAP_GROUP);
 
             persistApplicationRoles(allRoles, ROLE_TYPE_APPLICATION_ROLE, null);
         }
@@ -48,16 +47,16 @@ public class LdapSyncDatabaseHelper
 
         persistUsers(directoryName, users);
 
-        storeRoles(usersByRole);
-        storeRoles(usersByLdapGroup);
+        storeRoles(directoryName, usersByRole);
+        storeRoles(directoryName, usersByLdapGroup);
     }
 
-    private void storeRoles(Map<String, Set<AcmUser>> userMap)
+    private void storeRoles(String directoryName, Map<String, Set<AcmUser>> userMap)
     {
-        userMap.forEach((key, value) -> persistUserRoles(value, key));
+        userMap.forEach((key, value) -> persistUserRoles(directoryName, value, key));
     }
 
-    private List<AcmUserRole> persistUserRoles(Set<AcmUser> savedUsers, String roleName)
+    private List<AcmUserRole> persistUserRoles(String directoryName, Set<AcmUser> savedUsers, String roleName)
     {
         int userCount = savedUsers.size();
         int current = 0;
@@ -92,6 +91,11 @@ public class LdapSyncDatabaseHelper
         AcmGroup group = getGroupDao().findByName(roleName);
         if (group != null)
         {
+            Set<AcmUser> currentUsers = group.getMembers();
+            // keep users from other LDAP directories as members
+            currentUsers.stream().filter(p -> !directoryName.equals(p.getUserDirectoryName()));
+            users.addAll(currentUsers);
+
             group.setMembers(users);
             getGroupDao().save(group);
         }
