@@ -7,7 +7,7 @@
     "maximumOpen": 5
   },
   "docTree": {
-    "extensions": ["DocTreeExt.Checkin", "DocTreeExt.Email"],
+    "extensions": ["DocTreeExt.Checkin", "DocTreeExt.Email", "DocTreeExt.WebDAV", "DocTreeExt.Record", "DocTreeExt.Template"],
     "columnDefs": [
       {
         "name": "checkbox",
