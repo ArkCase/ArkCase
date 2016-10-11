@@ -7,6 +7,7 @@ import com.armedia.acm.data.AcmLegacySystemEntity;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import com.armedia.acm.plugins.objectassociation.model.ObjectAssociationConstants;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.search.model.SearchConstants;
@@ -19,6 +20,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystemEntity, AcmParentObjectInfo, AcmNotifiableEntity
 {
@@ -172,15 +174,15 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
         this.attachedToObjectId = attachedToObjectId;
     }
 
-    public void setParentObjectId(Long parentObjectId)
-    {
-        this.parentObjectId = parentObjectId;
-    }
-
     @Override
     public Long getParentObjectId()
     {
         return parentObjectId;
+    }
+
+    public void setParentObjectId(Long parentObjectId)
+    {
+        this.parentObjectId = parentObjectId;
     }
 
     @Override
@@ -548,5 +550,17 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
     public String getNotifiableEntityTitle()
     {
         return title;
+    }
+
+    public List<ObjectAssociation> getReferences()
+    {
+        if (getChildObjects() != null)
+        {
+            return getChildObjects().stream().filter(child ->
+                    ObjectAssociationConstants.OBJECT_TYPE.equals(child.getAssociationType()))
+                    .collect(Collectors.toList());
+        }
+
+        return new ArrayList<>();
     }
 }

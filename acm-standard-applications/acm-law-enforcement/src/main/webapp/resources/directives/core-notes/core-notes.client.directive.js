@@ -94,6 +94,7 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                             gridHelper.setColumnDefs(config);
                             gridHelper.setBasicOptions(config);
                             gridHelper.disableGridScrolling(config);
+                            gridHelper.setExternalPaging(config, scope.retrieveGridData);
                             gridHelper.setUserNameFilter(promiseUsers);
                             scope.retrieveGridData();
                         }
@@ -114,23 +115,29 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                 }
 
                 scope.retrieveGridData = function () {
-                    if (Util.goodPositive(scope.notesInit.currentObjectId, false)) {
-                        var info = scope.notesInit;
-                        var promiseQueryNotes = ObjectNoteService.queryNotes(info.objectType, info.currentObjectId, info.noteType);
-                        $q.all([promiseQueryNotes,promiseUsers]).then(function (data) {
-                            var notes = data[0];
-                            scope.gridOptions.data = notes;
-                            scope.gridOptions.totalItems = notes.length;
-                        });
-                    }
+                    var info = scope.notesInit;
+                    var promiseQueryNotes = ObjectNoteService.queryNotesPage(
+                        info.objectType
+                        , info.currentObjectId
+                        , info.noteTitle
+                        , Util.goodValue(scope.start, 0)
+                        , Util.goodValue(scope.pageSize, 10)
+                        , Util.goodMapValue(scope.sort, "by")
+                        , Util.goodMapValue(scope.sort, "dir")
+                    );
+
+                    promiseQueryNotes.then(function (data) {
+                        scope.gridOptions = scope.gridOptions || {};
+                        scope.gridOptions.data = data.resultPage;
+                        scope.gridOptions.totalItems = data.totalCount;
+                    });
+
                 };
 
                 scope.addNew = function () {
                     var info = scope.notesInit;
                     var note = noteHelper.createNote(info.currentObjectId, info.objectType, info.tag,
-                        scope.userId, info.noteType
-                        )
-                        ;
+                        scope.userId, info.noteType);
                     showModal(note, false);
                 };
                 scope.editRow = function (rowEntity) {
