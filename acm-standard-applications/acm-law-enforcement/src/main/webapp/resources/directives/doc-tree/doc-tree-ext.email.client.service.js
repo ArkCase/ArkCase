@@ -229,3 +229,24 @@ angular.module('directives').controller('directives.DocTreeEmailDialogController
 );
 
 
+
+//, validateSentEmails: function (data) {
+//    if (!Util.isArray(data)) {
+//        return false;
+//    }
+//    for (var i = 0; i < data.length; i++) {
+//        if (!Validator.validateSentEmail(data[i])) {
+//            return false;
+//        }
+//    }
+//    return true;
+//}
+//, validateSentEmail: function (data) {
+//    if (Util.isEmpty(data.state)) {
+//        return false;
+//    }
+//    if (Util.isEmpty(data.userEmail)) {
+//        return false;
+//    }
+//    return true;
+//}

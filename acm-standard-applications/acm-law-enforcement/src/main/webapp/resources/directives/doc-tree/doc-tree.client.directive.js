@@ -82,14 +82,12 @@
  </file>
  </example>
  */
-angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', '$filter', '$log', '$timeout', '$injector'
+angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', '$filter', '$log', '$injector'
     , 'Acm.StoreService', 'UtilService', 'Util.DateService', 'ConfigService', 'LookupService'
-    , 'EcmService', 'Ecm.RecordService', 'Authentication', 'Helper.NoteService', 'Object.NoteService'
-    , '$browser', '$location', 'Object.LockingService', 'ObjectService', 'Object.CorrespondenceService', 'TicketService'
-    , function ($q, $translate, $modal, $filter, $log, $timeout, $injector
+    , 'EcmService', 'ObjectService'
+    , function ($q, $translate, $modal, $filter, $log, $injector
         , Store, Util, UtilDateService, ConfigService, LookupService
-        , Ecm, EcmRecordService, Authentication, HelperNoteService, ObjectNoteService
-        , $browser, $location, LockingService, ObjectService, ObjectCorrespondenceService, TicketService
+        , Ecm, ObjectService
     ) {
 
         LookupService.getUserFullNames().then(function (userFullNames) {
@@ -330,11 +328,11 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             } //end _getDefaultTreeArgs
 
             //, create: function (treeArgs) {
-            , create: function () {
+            , create: function (jqTree) {
                 var treeArgsToUse = this._getDefaultTreeArgs();
                 //_.merge(treeArgsToUse, treeArgs);
 
-                DocTree.jqTree.fancytree(treeArgsToUse)
+                jqTree.fancytree(treeArgsToUse)
                     .on("command", DocTree.Command.onCommand)
                     .on("mouseenter", ".fancytree-node", function (event) {
                         var node = $.ui.fancytree.getNode(event);
@@ -353,7 +351,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         }
                     });
 
-                DocTree.tree = DocTree.jqTree.fancytree("getTree");
+                var tree = jqTree.fancytree("getTree");
                 var jqTreeBody = DocTree.jqTree.find("tbody");
                 DocTree.ExternalDnd.startExternalDnd(jqTreeBody);
 
@@ -361,10 +359,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 jqTreeBody.on("change", "select.docversion", DocTree.onChangeVersion);
                 jqTreeBody.on("dblclick", "select.docversion", DocTree.onDblClickVersion);
 
-                var jqTreeHead = DocTree.jqTree.find("thead");
+                var jqTreeHead = jqTree.find("thead");
                 jqTreeHead.find("input:checkbox").on("click", function (e) {
                     DocTree.onClickBtnChkAllDocument(e, this);
                 });
+
+                return tree;
             }
             , refreshDocTree: function () {
                 var jqTreeBody = DocTree.jqTree.find("tbody");
@@ -606,7 +606,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             }
 
             /**
-             * @description Update a tree node
+             * @description Update data of a tree node
              *
              * @param node Tree node to update
              * @param value New value
@@ -1037,7 +1037,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     return renderer;
                 }
 
-                , getDefaultRenderers: function () {
+                , getCoreRenderers: function () {
                     return [
                         {
                             name: "checkbox",
@@ -1208,7 +1208,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     return promiseUploadFile;
                 }
 
-                , getDefaultHandlers: function () {
+                , getCoreHandlers: function () {
                     return [
                         {
                             name: "moveUp",
@@ -1421,39 +1421,39 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             execute: function (nodes, args) {
                             }
                         }
-                        , {
-                            name: "editWithWebDAV",
-                            execute: function (nodes, args) {
-                                var node = nodes[0];
-                                var fileId = node.data.objectId;
-                                var promiseTicket = TicketService.getArkCaseTicket();
-                                promiseTicket.then(function (ticketData) {
-                                    var acmTicket = ticketData.data;
-                                    LockingService.lockObject(fileId, ObjectService.ObjectTypes.FILE,
-                                        ObjectService.LockTypes.WORD_EDIT_LOCK, false).then(function (lockedFile) {
-                                        var absUrl = $location.absUrl();
-                                        var baseHref = $browser.baseHref();
-                                        var appUrl = absUrl.substring(0, absUrl.indexOf(baseHref) + baseHref.length);
-
-                                        ITHit.WebDAV.Client.DocManager.EditDocument(appUrl + "webdav/" + acmTicket + "/" + ObjectService.ObjectTypes.FILE + "/" + ObjectService.LockTypes.WORD_EDIT_LOCK + "/" +
-                                            node.data.objectId + node.data.ext, appUrl + "webdav", protocolInstallMessage);
-                                        function protocolInstallMessage(message) {
-                                            var installerFilePath = appUrl + "assets/js/Plugins/" + ITHit.WebDAV.Client.DocManager.GetInstallFileName();
-
-                                            var protocolMessage = "You must install a helper program to edit this file.  " +
-                                                "Select 'OK' to download the helper program installer; and then install " +
-                                                "the helper program by running the downloaded installer.  After " +
-                                                "installing the helper program, edit this file again.";
-                                            if (confirm(protocolMessage)) {
-                                                window.open(installerFilePath);
-                                            }
-                                        }
-
-                                        DocTree.refreshTree();
-                                    })
-                                });
-                            }
-                        }
+                        //, {
+                        //    name: "editWithWebDAV",
+                        //    execute: function (nodes, args) {
+                        //        var node = nodes[0];
+                        //        var fileId = node.data.objectId;
+                        //        var promiseTicket = TicketService.getArkCaseTicket();
+                        //        promiseTicket.then(function (ticketData) {
+                        //            var acmTicket = ticketData.data;
+                        //            LockingService.lockObject(fileId, ObjectService.ObjectTypes.FILE,
+                        //                ObjectService.LockTypes.WORD_EDIT_LOCK, false).then(function (lockedFile) {
+                        //                var absUrl = $location.absUrl();
+                        //                var baseHref = $browser.baseHref();
+                        //                var appUrl = absUrl.substring(0, absUrl.indexOf(baseHref) + baseHref.length);
+                        //
+                        //                ITHit.WebDAV.Client.DocManager.EditDocument(appUrl + "webdav/" + acmTicket + "/" + ObjectService.ObjectTypes.FILE + "/" + ObjectService.LockTypes.WORD_EDIT_LOCK + "/" +
+                        //                    node.data.objectId + node.data.ext, appUrl + "webdav", protocolInstallMessage);
+                        //                function protocolInstallMessage(message) {
+                        //                    var installerFilePath = appUrl + "assets/js/Plugins/" + ITHit.WebDAV.Client.DocManager.GetInstallFileName();
+                        //
+                        //                    var protocolMessage = "You must install a helper program to edit this file.  " +
+                        //                        "Select 'OK' to download the helper program installer; and then install " +
+                        //                        "the helper program by running the downloaded installer.  After " +
+                        //                        "installing the helper program, edit this file again.";
+                        //                    if (confirm(protocolMessage)) {
+                        //                        window.open(installerFilePath);
+                        //                    }
+                        //                }
+                        //
+                        //                DocTree.refreshTree();
+                        //            })
+                        //        });
+                        //    }
+                        //}
                         //, {
                         //    name: "email",
                         //    execute: function (nodes, args) {
@@ -1461,27 +1461,27 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         //        Email.openModal(nodes);
                         //    }
                         //}
-                        , {
-                            name: "declare",
-                            execute: function (nodes, args) {
-                                var declareAsRecordData = [];
-                                var nodesToDeclare = nodes; //(batch) ? selNodes : [node];
-                                for (var i = 0; i < nodes.length; i++) {
-                                    var declareAsRecord = {};
-                                    declareAsRecord.id = Util.goodValue(nodes[i].data.objectId);
-                                    declareAsRecord.type = Util.goodValue(nodes[i].data.objectType.toUpperCase());
-                                    declareAsRecordData.push(declareAsRecord);
-                                }
-
-                                if (!Util.isArrayEmpty(declareAsRecordData)) {
-                                    DocTree.Op.declareAsRecord(nodesToDeclare, declareAsRecordData).done(function () {
-                                        $timeout(function () {
-                                            DocTree.refreshTree();
-                                        }, 1000);
-                                    });
-                                }
-                            }
-                        }
+                        //, {
+                        //    name: "declare",
+                        //    execute: function (nodes, args) {
+                        //        var declareAsRecordData = [];
+                        //        var nodesToDeclare = nodes; //(batch) ? selNodes : [node];
+                        //        for (var i = 0; i < nodes.length; i++) {
+                        //            var declareAsRecord = {};
+                        //            declareAsRecord.id = Util.goodValue(nodes[i].data.objectId);
+                        //            declareAsRecord.type = Util.goodValue(nodes[i].data.objectType.toUpperCase());
+                        //            declareAsRecordData.push(declareAsRecord);
+                        //        }
+                        //
+                        //        if (!Util.isArrayEmpty(declareAsRecordData)) {
+                        //            DocTree.Op.declareAsRecord(nodesToDeclare, declareAsRecordData).done(function () {
+                        //                $timeout(function () {
+                        //                    DocTree.refreshTree();
+                        //                }, 1000);
+                        //            });
+                        //        }
+                        //    }
+                        //}
                         , {
                             name: "print",
                             execute: function (nodes, args) {
@@ -1489,6 +1489,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         }
                         , {
                             name: "form/",
+                            getArgs: function (data) {
+                                return {fileType: data.cmd.substring(this.name.length)};
+                            },
                             execute: function (nodes, args) {
                                 var node = nodes[0];
                                 DocTree.uploadForm(node, args.fileType);
@@ -1496,6 +1499,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         }
                         , {
                             name: "file/",
+                            getArgs: function (data) {
+                                return {fileType: data.cmd.substring(this.name.length)};
+                            },
                             execute: function (nodes, args) {
                                 var selectFiles = DocTree.Command.findHandler("selectFiles/");
                                 selectFiles.execute(nodes, args);
@@ -1508,45 +1514,48 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 });
                             }
                         }
-                        , {
-                            name: "template/",
-                            execute: function (nodes, args) {
-
-                                var names = [args.label];
-                                var template = args.templateType;
-
-                                var selectedFolderId = nodes[0].data.objectId;
-                                var promiseCorrespondence = ObjectCorrespondenceService.createCorrespondence(template,
-                                    DocTree.getObjType(), DocTree.getObjId(), selectedFolderId);
-
-                                var promiseAddNodes = DocTree._addingFileNodes(nodes[0], names, names[0]);
-
-                                var cacheKey = DocTree.getCacheKeyByNode(nodes[0]);
-                                $q.all([promiseCorrespondence, promiseAddNodes]).then(
-                                    function (successData) {
-                                        var uploadedFile = successData[0];
-                                        var fileNodes = successData[1];
-                                        var file = DocTree.fileToSolrData(uploadedFile);
-                                        var folderList = DocTree.cacheFolderList.get(cacheKey);
-
-                                        if (Validator.validateFolderList(folderList)) {
-                                            folderList.children.push(file);
-                                            folderList.totalChildren++;
-                                            DocTree.cacheFolderList.put(cacheKey, folderList);
-                                            if (!Util.isEmpty(uploadedFile) && Validator.validateFancyTreeNodes(fileNodes)) {
-                                                var type = Util.goodValue(uploadedFile.fileType);
-                                                var fileNode = DocTree._matchFileNode(type, type, fileNodes);
-                                                if (fileNode) {
-                                                    DocTree._fileDataToNodeData(file, fileNode);
-                                                    fileNode.renderTitle();
-                                                    fileNode.setStatus("ok");
-                                                }
-                                            }
-                                        }
-
-                                    });
-                            }
-                        }
+                        //, {
+                        //    name: "template/",
+                        //    getArgs: function (data) {
+                        //        return {templateType: data.cmd.substring(this.name.length), label: data.label};
+                        //    },
+                        //    execute: function (nodes, args) {
+                        //
+                        //        var names = [args.label];
+                        //        var template = args.templateType;
+                        //
+                        //        var selectedFolderId = nodes[0].data.objectId;
+                        //        var promiseCorrespondence = ObjectCorrespondenceService.createCorrespondence(template,
+                        //            DocTree.getObjType(), DocTree.getObjId(), selectedFolderId);
+                        //
+                        //        var promiseAddNodes = DocTree._addingFileNodes(nodes[0], names, names[0]);
+                        //
+                        //        var cacheKey = DocTree.getCacheKeyByNode(nodes[0]);
+                        //        $q.all([promiseCorrespondence, promiseAddNodes]).then(
+                        //            function (successData) {
+                        //                var uploadedFile = successData[0];
+                        //                var fileNodes = successData[1];
+                        //                var file = DocTree.fileToSolrData(uploadedFile);
+                        //                var folderList = DocTree.cacheFolderList.get(cacheKey);
+                        //
+                        //                if (Validator.validateFolderList(folderList)) {
+                        //                    folderList.children.push(file);
+                        //                    folderList.totalChildren++;
+                        //                    DocTree.cacheFolderList.put(cacheKey, folderList);
+                        //                    if (!Util.isEmpty(uploadedFile) && Validator.validateFancyTreeNodes(fileNodes)) {
+                        //                        var type = Util.goodValue(uploadedFile.fileType);
+                        //                        var fileNode = DocTree._matchFileNode(type, type, fileNodes);
+                        //                        if (fileNode) {
+                        //                            DocTree._fileDataToNodeData(file, fileNode);
+                        //                            fileNode.renderTitle();
+                        //                            fileNode.setStatus("ok");
+                        //                        }
+                        //                    }
+                        //                }
+                        //
+                        //            });
+                        //    }
+                        //}
                         , {
                             name: "submitFiles/",
                             execute: function (nodes, args) {
@@ -1615,23 +1624,20 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         nodes = [node];
                     }
 
-                    var cmd, args;
-                    if (0 == data.cmd.indexOf("form/")) {
-                        cmd = "form/";
-                        args = {fileType: data.cmd.substring(5)};  //5 = length of "form/"
-                    } else if (0 == data.cmd.indexOf("file/")) {
-                        cmd = "file/";
-                        args = {fileType: data.cmd.substring(5)};  //5 = length of "file/"
-                    } else if (0 == data.cmd.indexOf("template/")) {
-                        cmd = "template/";
-                        args = {templateType: data.cmd.substring(cmd.length), label: data.label};
+                    var tokens = data.cmd.split("/");
+                    var name = tokens[0];
+                    if (1 < tokens.length) {
+                        name += "/";
                     }
-                    else {
-                        cmd = data.cmd;
-                    }
-                    var handler = DocTree.Command.findHandler(cmd);
+
+                    var handler = DocTree.Command.findHandler(name);
                     if (handler) {
-                        if ("file/" == cmd) {
+                        var args;
+                        if (handler.getArgs) {
+                            args = handler.getArgs(data);
+                        }
+
+                        if ("file/" == name) {
                             handler.execute(nodes, args);
                         } else {
                             DocTree.Command.handleCommand(handler, nodes, args);
@@ -3062,109 +3068,180 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     }
                     return dfd.promise();
                 }
-                , lodgeDocuments: function (folderNames, docIds, frFolderNode) {
-                    var dfd = $.Deferred();
 
-                    //make a copy
-                    var findNames = [];
-                    for (var i = 0; i < folderNames.length; i++) {
-                        findNames.push(folderNames[i]);
-                    }
-
-
-                    var node = DocTree.findNodeByPathNames(findNames);
-                    if (Validator.validateNode(node)) {
-                        DocTree.markNodePending(node);
-                    }
-
-                    DocTree.lodgeDocuments(folderNames, docIds)
-                        .done(function (createdFolder) {
-
-//                    //
-//                    // remove files from original folder cache
-//                    //
-//                    var frCacheKey = DocTree.getCacheKeyByNode(frFolderNode);
-//                    var frFolderList = DocTree.cacheFolderList.get(frCacheKey);
-//                    for (var i = 0; i < docIds.length; i++) {
-//                        var idx = DocTree.findFolderItemIdx(docIds[i], frFolderList);
-//                        if (0 <= idx) {
-//                            frFolderList.children.splice(idx, 1);
-//                            frFolderList.totalChildren--;
-//                        }
+//
+// lodgeDocuments is legacy code. It is no longer used. It will be deleted
+//
+//                , lodgeDocuments: function (folderNames, docIds, frFolderNode) {
+//                    var dfd = $.Deferred();
+//
+//                    //make a copy
+//                    var findNames = [];
+//                    for (var i = 0; i < folderNames.length; i++) {
+//                        findNames.push(folderNames[i]);
 //                    }
-//                    DocTree.cacheFolderList.put(frCacheKey, frFolderList);
-
-                            //
-                            // fix target folders
-                            //
-                            var node = DocTree.findNodeByPathNames(findNames);
-                            if (Validator.validateNode(node)) {
-                                var cacheKey = DocTree.getCacheKeyByNode(node);
-                                DocTree.cacheFolderList.remove(cacheKey);
-                                node.setExpanded(false);
-                                node.resetLazy();
-                                DocTree.markNodeOk(node);
-                            }
-
-                            while (2 < findNames.length) {
-                                node = DocTree.findNodeByPathNames(findNames);
-                                if (Validator.validateNode(node)) {
-                                    var parent = node.parent;
-                                    var cacheKey = DocTree.getCacheKeyByNode(parent);
-                                    var folderList = DocTree.cacheFolderList.get(cacheKey);
-                                    var idx = DocTree.findFolderItemIdx(node.data.objectId, folderList);
-                                    if (0 > idx) {
-                                        //not found, this must be newly created folder, no folder info available for now, so we can only close parent
-                                        DocTree.cacheFolderList.remove(cacheKey);
-                                        parent.setExpanded(false);
-                                        parent.resetLazy();
-                                    }
-                                }
-                                findNames.pop();
-                            }
-
-
-                            dfd.resolve(createdFolder.objectId);
-                        })
-                        .fail(function (response) {
-                            dfd.reject(response);
-                        })
-                    ;
-                    return dfd.promise();
-                }
-
-                , declareAsRecord: function (nodes, declareAsRecordData) {
-                    var dfd = $.Deferred();
-                    var objType = DocTree.getObjType();
-                    var objId = DocTree.getObjId();
-                    EcmRecordService.declareAsRecord(objType, objId, declareAsRecordData)
-                        .then(function (data) {
-                            for (var j = 0; j < nodes.length; j++) {
-                                if (DocTree.isFolderNode(nodes[j])) {
-                                    for (var i = 0; i < nodes[j].children.length; i++) {
-                                        if (Validator.validateNode(nodes[j].children[i])) {
-                                            nodes[j].children[i].data.status = "RECORD";
-                                            nodes[j].children[i].renderTitle();
-                                        }
-                                    }
-                                } else if (DocTree.isFileNode(nodes[j])) {
-                                    nodes[j].data.status = "RECORD";
-                                    nodes[j].renderTitle();
-                                }
-                            }
-                            dfd.resolve(data);
-                        });
-                    return dfd.promise();
-                }
+//
+//
+//                    var node = DocTree.findNodeByPathNames(findNames);
+//                    if (Validator.validateNode(node)) {
+//                        DocTree.markNodePending(node);
+//                    }
+//
+//                    DocTree.lodgeDocuments(folderNames, docIds)
+//                        .done(function (createdFolder) {
+//
+////                    //
+////                    // remove files from original folder cache
+////                    //
+////                    var frCacheKey = DocTree.getCacheKeyByNode(frFolderNode);
+////                    var frFolderList = DocTree.cacheFolderList.get(frCacheKey);
+////                    for (var i = 0; i < docIds.length; i++) {
+////                        var idx = DocTree.findFolderItemIdx(docIds[i], frFolderList);
+////                        if (0 <= idx) {
+////                            frFolderList.children.splice(idx, 1);
+////                            frFolderList.totalChildren--;
+////                        }
+////                    }
+////                    DocTree.cacheFolderList.put(frCacheKey, frFolderList);
+//
+//                            //
+//                            // fix target folders
+//                            //
+//                            var node = DocTree.findNodeByPathNames(findNames);
+//                            if (Validator.validateNode(node)) {
+//                                var cacheKey = DocTree.getCacheKeyByNode(node);
+//                                DocTree.cacheFolderList.remove(cacheKey);
+//                                node.setExpanded(false);
+//                                node.resetLazy();
+//                                DocTree.markNodeOk(node);
+//                            }
+//
+//                            while (2 < findNames.length) {
+//                                node = DocTree.findNodeByPathNames(findNames);
+//                                if (Validator.validateNode(node)) {
+//                                    var parent = node.parent;
+//                                    var cacheKey = DocTree.getCacheKeyByNode(parent);
+//                                    var folderList = DocTree.cacheFolderList.get(cacheKey);
+//                                    var idx = DocTree.findFolderItemIdx(node.data.objectId, folderList);
+//                                    if (0 > idx) {
+//                                        //not found, this must be newly created folder, no folder info available for now, so we can only close parent
+//                                        DocTree.cacheFolderList.remove(cacheKey);
+//                                        parent.setExpanded(false);
+//                                        parent.resetLazy();
+//                                    }
+//                                }
+//                                findNames.pop();
+//                            }
+//
+//
+//                            dfd.resolve(createdFolder.objectId);
+//                        })
+//                        .fail(function (response) {
+//                            dfd.reject(response);
+//                        })
+//                    ;
+//                    return dfd.promise();
+//                }
+//
+//                , declareAsRecord: function (nodes, declareAsRecordData) {
+//                    var dfd = $.Deferred();
+//                    var objType = DocTree.getObjType();
+//                    var objId = DocTree.getObjId();
+//                    EcmRecordService.declareAsRecord(objType, objId, declareAsRecordData)
+//                        .then(function (data) {
+//                            for (var j = 0; j < nodes.length; j++) {
+//                                if (DocTree.isFolderNode(nodes[j])) {
+//                                    for (var i = 0; i < nodes[j].children.length; i++) {
+//                                        if (Validator.validateNode(nodes[j].children[i])) {
+//                                            nodes[j].children[i].data.status = "RECORD";
+//                                            nodes[j].children[i].renderTitle();
+//                                        }
+//                                    }
+//                                } else if (DocTree.isFileNode(nodes[j])) {
+//                                    nodes[j].data.status = "RECORD";
+//                                    nodes[j].renderTitle();
+//                                }
+//                            }
+//                            dfd.resolve(data);
+//                        });
+//                    return dfd.promise();
+//                }
 
             } // end Op
 
 
-            , makeUploadDocForm: function ($s) {
+            //
+            // Build a table template:
+            //
+            // '<table id="treeDoc" class="table table-striped th-sortable table-hover">'
+            //+ '<thead>'
+            //+ '<tr>'
+            //+ '<th id="selectDoc" width2="6%"><input type="checkbox"/></th>'
+            //+ '<th id="docID" width2="4%" >ID</th>'
+            //+ '<th id="docTitle" width="35%">Title</th>'
+            //+ '<th id="docType" width="12%">Type</th>'
+            //+ '<th id="docCreated" width="10%">Created</th>'
+            //+ '<th id="docAuthor" width="16%">Author</th>'
+            //+ '<th id="docVersion" width="6%">Version</th>'
+            //+ '<th id="docStatus" width="8%">Status</th>'
+            //+ '</tr>'
+            //+ '</thead>'
+            //+ '<tbody>'
+            //+ '<tr>'
+            //+ '<td headers="selectDoc"></td>'
+            //+ '<td headers="docID"></td>'
+            //+ '<td headers="docTitle"></td>'
+            //+ '<td headers="docType"></td>'
+            //+ '<td headers="docCreated"></td>'
+            //+ '<td headers="docAuthor"></td>'
+            //+ '<td headers="docVersion"></td>'
+            //+ '<td headers="docStatus"></td>'
+            //+ '</tr>'
+            //+ '</tbody>'
+            //+ '</table>'
+            , makeTable: function (element, columnDefs) {
+                var jqTable = $("<table/>")
+                    .addClass("table table-striped th-sortable table-hover")
+                    .appendTo($(element));
+                var jqThead = $("<thead/>").appendTo(jqTable);
+                var jqTrHead = $("<tr/>")
+                    .appendTo(jqThead);
+                var jqTbody = $("<tbody/>").appendTo(jqTable);
+                var jqTrBody = $("<tr/>")
+                    .appendTo(jqTbody);
+
+                var jqTh, jqTd;
+                _.each(columnDefs, function (columnDef) {
+                    var name = columnDef.name;
+                    var field = Util.goodValue(columnDef.field, name);
+                    var cellTemplate = columnDef.cellTemplate;
+                    var displayName = $translate.instant(columnDef.displayName);
+                    var headTemplate = columnDef.headTemplate;
+                    if ("checkbox" == name) {
+                        headTemplate = "<input type='checkbox'/>";
+                    }
+                    var width = Util.goodValue(columnDef.width, "10%");
+                    jqTh = $("<th/>")
+                        .attr("width", width)
+                        //.text(displayName)
+                        .appendTo(jqTrHead);
+                    if (headTemplate) {
+                        $(headTemplate).appendTo(jqTh);
+                    } else {
+                        jqTh.text(displayName);
+                    }
+
+                    jqTd = $("<td/>")
+                        .appendTo(jqTrBody);
+                });
+
+                return jqTable;
+            }
+            , makeUploadDocForm: function (jqTree) {
                 this.jqFormUploadDoc = $("<form/>")
                     .attr("id", "formUploadDoc")
                     .attr("style", "display:none;")
-                    .appendTo($s);
+                    .appendTo(jqTree);
                 this.jqFileInput = $("<input/>")
                     .attr("type", "file")
                     .attr("id", "file")
@@ -3179,12 +3256,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     DocTree.onSubmitFormUploadFile(e, this);
                 });
             }
-            , makeDownloadDocForm: function ($s) {
+            , makeDownloadDocForm: function (jqTree) {
                 this.jqFormDownloadDoc = $("<form/>")
                     .attr("id", "formDownloadDoc")
                     .attr("action", "#")
                     .attr("style", "display:none;")
-                    .appendTo($s);
+                    .appendTo(jqTree);
             }
 
             , uploadForm: function (node, formType) {
@@ -3208,23 +3285,23 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 DocTree.jqFileInput.click();
             }
 
-            , replaceFileWithSelectedFile: function (node, files, callback) {
-                var fileType = Util.goodValue(node.data.type);
-                if (!Util.isEmpty(fileType)) {
-                    DocTree.uploadSetting = {
-                        replaceFileNode: node
-                        , uploadToFolderNode: node.parent
-                        , uploadFileType: fileType
-                        , uploadFileNew: false
-                        , deferUploadFile: $q.defer()
-                    };
-                    //var args = {files: files, refresh: false};
-                    var args = {files: files};
-                    var replaceFiles = DocTree.Command.findHandler("replaceFiles/");
-                    replaceFiles.onPostCmd = callback;
-                    DocTree.Command.handleCommand(replaceFiles, [node], args);
-                }
-            }
+            //, replaceFileWithSelectedFile: function (node, files, callback) {
+            //    var fileType = Util.goodValue(node.data.type);
+            //    if (!Util.isEmpty(fileType)) {
+            //        DocTree.uploadSetting = {
+            //            replaceFileNode: node
+            //            , uploadToFolderNode: node.parent
+            //            , uploadFileType: fileType
+            //            , uploadFileNew: false
+            //            , deferUploadFile: $q.defer()
+            //        };
+            //        //var args = {files: files, refresh: false};
+            //        var args = {files: files};
+            //        var replaceFiles = DocTree.Command.findHandler("replaceFiles/");
+            //        replaceFiles.onPostCmd = callback;
+            //        DocTree.Command.handleCommand(replaceFiles, [node], args);
+            //    }
+            //}
             , _addFileNode: function (folderNode, name, type) {
                 var fileNode = folderNode.addChildren({
                     "title": name,
@@ -4488,26 +4565,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 }
                 return true;
             }
-            //, validateSentEmails: function (data) {
-            //    if (!Util.isArray(data)) {
-            //        return false;
-            //    }
-            //    for (var i = 0; i < data.length; i++) {
-            //        if (!Validator.validateSentEmail(data[i])) {
-            //            return false;
-            //        }
-            //    }
-            //    return true;
-            //}
-            //, validateSentEmail: function (data) {
-            //    if (Util.isEmpty(data.state)) {
-            //        return false;
-            //    }
-            //    if (Util.isEmpty(data.userEmail)) {
-            //        return false;
-            //    }
-            //    return true;
-            //}
 
         };
 
@@ -4523,8 +4580,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 , treeControl: '='
                 , objectType: '='
                 , objectId: '='
-                , fileTypes: '='
-                , correspondenceForms: '='
+                //, fileTypes: '='
+                //, correspondenceForms: '='
                 , uploadForm: '&'
                 , onInitTree: '&'
                 , readOnly: '@'
@@ -4533,6 +4590,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             , link: function (scope, element, attrs) {
                 Ui.scope = scope;
 
+                DocTree.scope = scope;
                 DocTree.jqTree = null;
                 DocTree.setObjType(scope.objectType);
                 DocTree.setObjId(scope.objectId);
@@ -4556,13 +4614,16 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     }
                 };
 
-                DocTree.Command.setHandlers(DocTree.Command.getDefaultHandlers());
-                DocTree.Column.setRenderers(DocTree.Column.getDefaultRenderers());
+                DocTree.Command.setHandlers(DocTree.Command.getCoreHandlers());
+                DocTree.Column.setRenderers(DocTree.Column.getCoreRenderers());
 
 
                 // With scope.treeControl set above, according to Angular documentation, the host controller $scope.treeControl should be defined.
                 // Yet, it is not always the case. It works sometimes and does not the other times. As a work around, scope.treeControl is
                 // passed as argument of onInitTree(). Parent controller need to assign it to its $scope.treeControl
+                //if ("undefined" != typeof attrs.onInitTree) {
+                //    scope.onInitTree()(scope.treeControl);
+                //}
                 if ("undefined" != typeof attrs.onInitTree) {
                     scope.onInitTree()(scope.treeControl);
                 }
@@ -4585,108 +4646,39 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     return moduleConfig;
                 });
 
-                scope.$watchGroup(['treeConfig', 'objectInfo', 'fileTypes', 'correspondenceForms'], function (newValues, oldValues, scope) {
+                scope.$watchGroup(['treeConfig', 'objectInfo', 'treeConfig.fileTypes'], function (newValues, oldValues, scope) {
                 	
                 	promiseCommon.then(function () {
-                	
-	                	var treeConfig = newValues[0];
-	                    var objectInfo = newValues[1];
-	                    var fileTypes = newValues[2];
-	                    var correspondenceForms = newValues[3];
-	                    _.merge(DocTree.treeConfig, treeConfig);
-	
-	                    DocTree.objectInfo = objectInfo;
-	
-	                    //
-	                    // Build a table template:
-	                    //
-	                    // '<table id="treeDoc" class="table table-striped th-sortable table-hover">'
-	                    //+ '<thead>'
-	                    //+ '<tr>'
-	                    //+ '<th id="selectDoc" width2="6%"><input type="checkbox"/></th>'
-	                    //+ '<th id="docID" width2="4%" >ID</th>'
-	                    //+ '<th id="docTitle" width="35%">Title</th>'
-	                    //+ '<th id="docType" width="12%">Type</th>'
-	                    //+ '<th id="docCreated" width="10%">Created</th>'
-	                    //+ '<th id="docAuthor" width="16%">Author</th>'
-	                    //+ '<th id="docVersion" width="6%">Version</th>'
-	                    //+ '<th id="docStatus" width="8%">Status</th>'
-	                    //+ '</tr>'
-	                    //+ '</thead>'
-	                    //+ '<tbody>'
-	                    //+ '<tr>'
-	                    //+ '<td headers="selectDoc"></td>'
-	                    //+ '<td headers="docID"></td>'
-	                    //+ '<td headers="docTitle"></td>'
-	                    //+ '<td headers="docType"></td>'
-	                    //+ '<td headers="docCreated"></td>'
-	                    //+ '<td headers="docAuthor"></td>'
-	                    //+ '<td headers="docVersion"></td>'
-	                    //+ '<td headers="docStatus"></td>'
-	                    //+ '</tr>'
-	                    //+ '</tbody>'
-	                    //+ '</table>'
-	
-	                    if (!Util.isEmpty(DocTree.jqTree)) {
-	                        DocTree.jqTree.empty();
-	                    }
-	
-	                    if (Util.goodMapValue(DocTree.treeConfig, "columnDefs")) {
-	                        var columnDefs = DocTree.treeConfig.columnDefs;
-	                        var jqTable = $("<table/>")
-	                            .addClass("table table-striped th-sortable table-hover")
-	                            .appendTo($(element));
-	                        var jqThead = $("<thead/>").appendTo(jqTable);
-	                        var jqTrHead = $("<tr/>")
-	                            .appendTo(jqThead);
-	                        var jqTbody = $("<tbody/>").appendTo(jqTable);
-	                        var jqTrBody = $("<tr/>")
-	                            .appendTo(jqTbody);
-	
-	                        var jqTh, jqTd;
-	                        _.each(columnDefs, function (columnDef) {
-	                            var name = columnDef.name;
-	                            var field = Util.goodValue(columnDef.field, name);
-	                            var cellTemplate = columnDef.cellTemplate;
-	                            var displayName = $translate.instant(columnDef.displayName);
-	                            var headTemplate = columnDef.headTemplate;
-	                            if ("checkbox" == name) {
-	                                headTemplate = "<input type='checkbox'/>";
-	                            }
-	                            var width = Util.goodValue(columnDef.width, "10%");
-	                            jqTh = $("<th/>")
-	                                .attr("width", width)
-	                                //.text(displayName)
-	                                .appendTo(jqTrHead);
-	                            if (headTemplate) {
-	                                $(headTemplate).appendTo(jqTh);
-	                            } else {
-	                                jqTh.text(displayName);
-	                            }
-	
-	                            jqTd = $("<td/>")
-	                                .appendTo(jqTrBody);
-	                        });
-	
-	                        DocTree.jqTree = jqTable;
-	
-	                        DocTree.create();
-	                        DocTree.makeDownloadDocForm(DocTree.jqTree);
-	                        DocTree.makeUploadDocForm(DocTree.jqTree);
-	
-	                        if (Util.goodValue(fileTypes)) {
-	                            DocTree.fileTypes = fileTypes;
-	                            var jqTreeBody = DocTree.jqTree.find("tbody");
-	                            DocTree.Menu.useContextMenu(jqTreeBody);
-	                        }
-	
-	                        if (Util.goodValue(correspondenceForms)) {
-	                            DocTree.correspondenceForms = correspondenceForms;
-	                            var jqTreeBody = DocTree.jqTree.find("tbody");
-	                            DocTree.Menu.useContextMenu(jqTreeBody);
-	                        }
-	                    }
-	
+
+                        DocTree.objectInfo = newValues[1];
+
+	                    _.merge(DocTree.treeConfig, newValues[0]);
+                        if (!Util.isEmpty(DocTree.jqTree)) {
+                            DocTree.jqTree.empty();
+                        }
+
+                        if (Util.goodMapValue(DocTree.treeConfig, "columnDefs")) {
+                            DocTree.jqTree = DocTree.makeTable(element, DocTree.treeConfig.columnDefs);
+                            DocTree.tree = DocTree.create(DocTree.jqTree);
+                            DocTree.makeDownloadDocForm(DocTree.jqTree);
+                            DocTree.makeUploadDocForm(DocTree.jqTree);
+
+                            var fileTypes = Util.goodMapValue(DocTree.treeConfig, "fileTypes", []).concat(Util.goodMapValue(DocTree.treeConfig, "formTypes", []));
+                            DocTree.fileTypes = fileTypes;
+                            var jqTreeBody = DocTree.jqTree.find("tbody");
+                            DocTree.Menu.useContextMenu(jqTreeBody);
+
+                            var extensions = Util.goodMapValue(DocTree.treeConfig, "extensions", []);
+                            for (var i = 0; i < extensions.length; i++) {
+                                if ($injector.has(extensions[i])) {
+                                    var extService = $injector.get(extensions[i]);
+                                    if (extService.onConfigUpdated) {
+                                        extService.onConfigUpdated(DocTree);
+                                    }
+                                }
+                            }
+                        }
+
 	                });
                 });	
             }
