@@ -189,8 +189,8 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         {
             for (AcmGroup group : groups)
             {
-                    group.setStatus(AcmGroupStatus.INACTIVE);
-                    save(group);
+                group.setStatus(AcmGroupStatus.INACTIVE);
+                save(group);
             }
         }
     }
