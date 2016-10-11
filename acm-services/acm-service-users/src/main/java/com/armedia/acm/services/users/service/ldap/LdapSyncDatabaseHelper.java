@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by armdev on 5/29/14.
@@ -93,8 +94,8 @@ public class LdapSyncDatabaseHelper
         {
             Set<AcmUser> currentUsers = group.getMembers();
             // keep users from other LDAP directories as members
-            currentUsers.stream().filter(p -> !directoryName.equals(p.getUserDirectoryName()));
-            users.addAll(currentUsers);
+            Set<AcmUser> keepUsers = currentUsers.stream().filter(p -> !directoryName.equals(p.getUserDirectoryName())).collect(Collectors.toSet());
+            users.addAll(keepUsers);
 
             group.setMembers(users);
             getGroupDao().save(group);
