@@ -163,36 +163,34 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
     @Transactional
     public void markAllGroupsInactive(String directoryName, String groupType)
     {
-        // retrieve all non-deleted groups
-        Query query = getEm().createQuery("SELECT group FROM AcmGroup group WHERE group.type = :groupType AND group.status != :groupStatus");
+        // the following query should read:
+        // "select groups that are associated exclusively to a single directory"
+        Query query = getEm().createQuery(
+                "SELECT group FROM AcmGroup group " +
+                        "WHERE group.type = :groupType " +
+                        "AND group.status != :groupStatus " +
+                        "AND group.name NOT IN " +
+                        "(SELECT DISTINCT userRole.roleName FROM AcmUserRole userRole " +
+                        "WHERE userRole.userRoleState = :userRoleState " +
+                        "AND userRole.userId IN " +
+                        // valid users retrieved from other directories
+                        "(SELECT user.userId FROM AcmUser user " +
+                        "WHERE user.userDirectoryName != :directoryName " +
+                        "AND user.userState = :userState))");
         query.setParameter("groupType", groupType);
         query.setParameter("groupStatus", AcmGroupStatus.DELETE);
-
-        List<AcmGroup> groups = query.getResultList();
-
-        // the following query should read:
-        // "retrieve all valid role (group) names associated with valid users affiliated to other LDAP directories"
-        query = getEm().createQuery("SELECT DISTINCT userRole.roleName FROM AcmUserRole userRole " +
-                "WHERE userRole.userRoleState = :userRoleState " +
-                "AND userRole.userId IN " +
-                // valid users retrieved from other directories
-                "(SELECT user.userId FROM AcmUser user WHERE user.userDirectoryName != :directoryName " +
-                "AND user.userState = :userState)");
         query.setParameter("userRoleState", "VALID");
         query.setParameter("directoryName", directoryName);
         query.setParameter("userState", "VALID");
 
-        List<String> excludedGroups = query.getResultList();
+        List<AcmGroup> groups = query.getResultList();
 
         if (groups != null && groups.size() > 0)
         {
             for (AcmGroup group : groups)
             {
-                if (excludedGroups == null || !excludedGroups.contains(group.getName()))
-                {
                     group.setStatus(AcmGroupStatus.INACTIVE);
                     save(group);
-                }
             }
         }
     }
