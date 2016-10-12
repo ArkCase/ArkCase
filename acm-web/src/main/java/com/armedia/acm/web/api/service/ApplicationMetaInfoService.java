@@ -20,12 +20,6 @@ public class ApplicationMetaInfoService implements InitializingBean, ServletCont
 
     private String version;
 
-    @Override
-    public void setServletContext(ServletContext servletContext)
-    {
-        this.servletContext = servletContext;
-    }
-
     ServletContext servletContext;
 
     public String getVersion()
@@ -36,6 +30,12 @@ public class ApplicationMetaInfoService implements InitializingBean, ServletCont
     public void setVersion(String version)
     {
         this.version = version;
+    }
+
+    @Override
+    public void setServletContext(ServletContext servletContext)
+    {
+        this.servletContext = servletContext;
     }
 
     public void findVersion()
@@ -53,12 +53,10 @@ public class ApplicationMetaInfoService implements InitializingBean, ServletCont
 
     }
 
-
     @Override
     public void afterPropertiesSet() throws Exception
     {
         findVersion();
     }
-
 
 }
