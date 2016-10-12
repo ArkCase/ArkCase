@@ -2,10 +2,13 @@
 
 angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$stateParams', '$modal', '$q', '$timeout'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Case.InfoService', 'DocTreeService'
-    , 'Helper.ObjectBrowserService', 'Authentication', 'PermissionsService', 'Object.ModelService', 'DocTreeExt.Core'
+    , 'Helper.ObjectBrowserService', 'Authentication', 'PermissionsService', 'Object.ModelService'
+    , 'DocTreeExt.Core', 'DocTreeExt.Checkin'
     , function ($scope, $stateParams, $modal, $q, $timeout
         , Util, ConfigService, ObjectService, ObjectLookupService, CaseInfoService, DocTreeService
-        , HelperObjectBrowserService, Authentication, PermissionsService, ObjectModelService, DocTreeExtCore) {
+        , HelperObjectBrowserService, Authentication, PermissionsService, ObjectModelService
+        , DocTreeExtCore, DocTreeExtCheckin
+    ) {
 
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -79,10 +82,10 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
 
         $scope.onInitTree = function(treeControl) {
             $scope.treeControl = treeControl;
-            DocTreeExtCore.handleCheckout(treeControl, $scope);
-            DocTreeExtCore.handleCheckin(treeControl, $scope);
+            DocTreeExtCheckin.handleCheckout(treeControl, $scope);
+            DocTreeExtCheckin.handleCheckin(treeControl, $scope);
+            DocTreeExtCheckin.handleCancelEditing(treeControl, $scope);
             DocTreeExtCore.handleEditWithWebDAV(treeControl, $scope);
-            DocTreeExtCore.handleCancelEditing(treeControl, $scope);
 
             //$scope.treeControl.addCommandHandler({
             //    name: "sample"
@@ -106,17 +109,21 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
             //    }
             //});
 
-            //if there is subscription from other object we want to unsubscribe
-            //we want to have only one subscription from the current object
-            if ($scope.subscription) {
-                $scope.$bus.unsubscribe($scope.subscription);
-            }
-            var eventName = "object.changed/" + $scope.objectType + "/" + $scope.objectId;
-            $scope.subscription = $scope.$bus.subscribe(eventName, function (data) {
-                if (data.objectType == 'FILE') {
-                    $scope.treeControl.refreshTree();
-                }
-            });
+            //
+            // object changed event handling has side effect of making local update of title, classification not working properly.
+            //
+            //
+            ////if there is subscription from other object we want to unsubscribe
+            ////we want to have only one subscription from the current object
+            //if ($scope.subscription) {
+            //    $scope.$bus.unsubscribe($scope.subscription);
+            //}
+            //var eventName = "object.changed/" + $scope.objectType + "/" + $scope.objectId;
+            //$scope.subscription = $scope.$bus.subscribe(eventName, function (data) {
+            //    if (data.objectType == 'FILE') {
+            //        $scope.treeControl.refreshTree();
+            //    }
+            //});
         };
 
         $scope.onClickRefresh = function () {

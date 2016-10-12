@@ -10,6 +10,7 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
 import com.armedia.acm.plugins.objectassociation.model.AcmChildObjectEntity;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import com.armedia.acm.plugins.objectassociation.model.ObjectAssociationConstants;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.service.milestone.model.AcmMilestone;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
@@ -511,7 +512,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
         {
             for (ObjectAssociation child : childObjects)
             {
-                if ("REFERENCE".equals(child.getAssociationType()))
+                if (ObjectAssociationConstants.OBJECT_TYPE.equals(child.getAssociationType()))
                 {
                     retval.add(child);
                 }

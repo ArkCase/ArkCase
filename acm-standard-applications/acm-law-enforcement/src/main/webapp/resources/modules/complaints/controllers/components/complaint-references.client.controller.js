@@ -65,7 +65,7 @@ angular.module('complaints').controller('Complaints.ReferencesController', ['$sc
             $scope.$emit('report-object-refreshed', $stateParams.id);
         };
 
-        // open addreference modal
+        // open add reference modal
         $scope.addReference = function () {
             var modalInstance = $modal.open({
                 animation: $scope.animationsEnabled,
@@ -98,7 +98,7 @@ angular.module('complaints').controller('Complaints.ReferencesController', ['$sc
                     reference.referenceNumber = chosenReference.name;
                     reference.referenceStatus = chosenReference.status_lcs;
                     reference.parentId = $stateParams.id;
-                    reference.parentType = 'COMPLAINT';
+                    reference.parentType = ObjectService.ObjectTypes.COMPLAINT;
                     referenceService.addReference(reference).then(
                         function (objectSaved) {
                             $scope.refresh();
