@@ -154,12 +154,34 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         return group;
     }
 
+    /**
+     * Mark user groups that are associated exclusively to a single directory inactive.
+     *
+     * @param directoryName LDAP directory name
+     * @param groupType     user group type
+     */
     @Transactional
-    public void markAllGroupsInactive(String groupType)
+    public void markAllGroupsInactive(String directoryName, String groupType)
     {
-        Query query = getEm().createQuery("SELECT group FROM AcmGroup group WHERE group.type = :groupType AND group.status != :groupStatus");
+        // the following query should read:
+        // "select groups that are associated exclusively to a single directory"
+        Query query = getEm().createQuery(
+                "SELECT group FROM AcmGroup group " +
+                        "WHERE group.type = :groupType " +
+                        "AND group.status != :groupStatus " +
+                        "AND group.name NOT IN " +
+                        "(SELECT DISTINCT userRole.roleName FROM AcmUserRole userRole " +
+                        "WHERE userRole.userRoleState = :userRoleState " +
+                        "AND userRole.userId IN " +
+                        // valid users retrieved from other directories
+                        "(SELECT user.userId FROM AcmUser user " +
+                        "WHERE user.userDirectoryName != :directoryName " +
+                        "AND user.userState = :userState))");
         query.setParameter("groupType", groupType);
         query.setParameter("groupStatus", AcmGroupStatus.DELETE);
+        query.setParameter("userRoleState", "VALID");
+        query.setParameter("directoryName", directoryName);
+        query.setParameter("userState", "VALID");
 
         List<AcmGroup> groups = query.getResultList();
 
