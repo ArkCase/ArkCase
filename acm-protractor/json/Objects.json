@@ -9,11 +9,11 @@
         "data": {
             "supervisoruser": {
                 "username": "samuel-acm",
-                "password": "AcMd3v$"
+                "password": "Armedia#1"
             },
             "adminuser": {
                 "username": "ann-acm",
-                "password": "AcMd3v$"
+                "password": "Armedia#1"
             }
         }
     },
@@ -48,7 +48,9 @@
             "pictureButton": ".//*[@class='note-insert btn-group']/button[2]",
             "linkInputText": "/html/body/div[1]/div[2]/div/div/div[2]/div[1]/input",
             "linkInputUrl": "/html/body/div[1]/div[2]/div/div/div[2]/div[2]/input",
-            "chooseFilesBtn": ".//*[@class='form-group row note-group-select-from-files']/input"
+            "chooseFilesBtn": ".//*[@class='form-group row note-group-select-from-files']/input",
+            "associateNumberInput": "associateNumber",
+            "taskState": ".//*[@class='clearfix']/div[2]/div[6]/div"
         },
 
         "data": {
@@ -70,8 +72,7 @@
 
         "locators": {
 
-            "priority": ".//*[@class='clearfix']/div[2]/div[3]/div/a",
-            "taskState": ".//*[@class='clearfix']/div[2]/div[6]/div",
+            "priority": ".//*[@class='clearfix']/div[2]/div[3]/div/a",            
             "assignee": ".//*[@class='clearfix']/div[2]/div[2]/div/a",
             "assigneeDropDown": ".//*[@class='clearfix']/div[2]/div[2]/div/form/div/select",
             "selectAssignee": ".//*[.='Ann Administrator']",
@@ -283,7 +284,7 @@
             "zipInputConfirmBtn": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[6]/form/div/span/button[1]",
             "mainOfficePhone": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[1]/a",
             "mainOfficePhoneInput": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[1]/form/div/input",
-            "mainOfficePhoneConfirmBtn": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[1]/form/div/span/button[1]",
+            "mainOfficePhoneConfirmBtn": ".btn.btn-primary.btn-sm",
             "fax": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[2]/a",
             "faxInput": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[2]/form/div/input",
             "faxConfirmBtn": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[2]/form/div/span/button[1]",
