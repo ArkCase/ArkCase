@@ -29,16 +29,38 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'Acm.Stor
              *
              * @returns {Object} Object returned by $resource
              */
-            //* @param {Number} params.start Zero based start number of record
-            //* @param {Number} params.count Max Number of list to return
-            //* @param {String} params.sort  Sort value, with format 'sortBy sortDir', sortDir can be 'asc' or 'desc'
             _queryNotes: {
                 method: 'GET',
-                //url: 'api/latest/plugin/note/:parentType/:parentId?start=:start&n=:count&s=:sort',
                 url: 'api/latest/plugin/note/:parentType/:parentId',
                 cache: false,
                 isArray: true
             }
+        
+	        /**
+	         * @ngdoc method
+	         * @name _queryNotes
+	         * @methodOf services:Object.NoteService
+	         *
+	         * @description
+	         * Query list of notes for an object.
+	         *
+	         * @param {Object} params Map of input parameter
+	         * @param {String} params.parentType  Object type
+	         * @param {String} params.parentId  Object ID
+	         * @param {Number} params.start Zero based start number of record
+	         * @param {Number} params.n Max Number of list to return
+	         * @param {String} params.sort  Sort value, with format 'sortBy sortDir', sortDir can be 'asc' or 'desc'
+             * @param {Function} onSuccess (Optional)Callback function of success query
+             * @param {Function} onError (Optional) Callback function when fail
+             *
+             * @returns {Object} Object returned by $resource
+             */
+	        , _queryNotesPage: {
+	            method: 'GET',
+	            url: 'api/latest/plugin/note/:parentType/:parentId/page?start=:start&n=:n&s=:sort',
+	            cache: false,
+	            isArray: false
+	        }
 
             /**
              * @ngdoc method
@@ -113,7 +135,7 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'Acm.Stor
         Service.CacheNames = {
             NOTES: "Notes"
         };
-
+        
         /**
          * @ngdoc method
          * @name queryNotes
@@ -145,6 +167,56 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'Acm.Stor
                         notes = data;
                         cacheNotes.put(cacheKey, notes);
                         return notes;
+                    }
+                }
+            });
+        };
+
+        /**
+         * @ngdoc method
+         * @name queryNotesPage
+         * @methodOf services:Object.NoteService
+         *
+         * @description
+         * Query list of notes of an object sorted and paged
+         *
+         * @param {String} objectType  Object type
+         * @param {Number} objectId  Object ID
+         * @param {String} noteType  Note type
+         * @param {Number} start  Start number of the result list required
+         * @param {Number} n  Number of page results
+         * @param {String} sortBy  Field the sort will be performed
+         * @param {String} sortDir ASC or DESC sorting
+         *
+         * @returns {Object} Promise
+         */
+        Service.queryNotesPage = function (objectType, objectId, noteType, start, n, sortBy, sortDir) {
+            noteType = noteType || "GENERAL";
+        	var cacheCaseNoteData = new Store.CacheFifo(Service.CacheNames.NOTES);
+            var cacheKey = objectType + "." + objectId + "." + noteType + "." + start + "." + n + "." + sortBy + "." + sortDir;
+            var noteData = cacheCaseNoteData.get(cacheKey);
+
+            var sort = "";
+            if (!Util.isEmpty(sortBy)) {
+                sort = sortBy + " " + Util.goodValue(sortDir, "asc");
+            }
+
+            return Util.serviceCall({
+                service: Service._queryNotesPage
+                , param: {
+                    parentType: objectType
+                    , parentId: objectId
+                    , start: start
+                    , n: n
+                    , sort: sort
+                }
+                , result: noteData
+                , onSuccess: function (data) {
+                    if (Service.validateNotesData(data)) {
+                    	noteData = data;
+                        cacheCaseNoteData.put(cacheKey, noteData);
+                        return noteData;
+
                     }
                 }
             });
@@ -295,6 +367,34 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'Acm.Stor
             }
             return true;
         };
+        
+        /**
+         * @ngdoc method
+         * @name validateNotesData
+         * @methodOf services:Object.NoteService
+         *
+         * @description
+         * Validate note data
+         *
+         * @param {Object} data  Data to be validated
+         *
+         * @returns {Boolean} Return true if data is valid
+         */
+        Service.validateNotesData = function (data) {
+            if (!Util.isArray(data.resultPage)) {
+                return false;
+            }
+            for (var i = 0; i < data.resultPage.length; i++) {
+                if (!this.validateNote(data.resultPage[i])) {
+                    return false;
+                }
+            }
+            if (Util.isEmpty(data.totalCount)) {
+                return false;
+            }
+            return true;
+        };        
+        
 
         return Service;
     }

@@ -3,11 +3,11 @@
 angular.module('complaints').controller('Complaints.DocumentsController', ['$scope', '$stateParams', '$modal', '$q', '$timeout'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Complaint.InfoService'
     , 'Helper.ObjectBrowserService', 'DocTreeService', 'Authentication', 'PermissionsService', 'Object.ModelService'
-    , 'DocTreeExt.Core'
+    , 'DocTreeExt.Core', 'DocTreeExt.Checkin'
     , function ($scope, $stateParams, $modal, $q, $timeout
         , Util, ConfigService, ObjectService, ObjectLookupService, ComplaintInfoService
         , HelperObjectBrowserService, DocTreeService, Authentication, PermissionsService, ObjectModelService
-        , DocTreeExtCore) {
+        , DocTreeExtCore, DocTreeExtCheckin) {
 
 
         Authentication.queryUserInfo().then(
@@ -81,22 +81,27 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
 
         $scope.onInitTree = function(treeControl) {
             $scope.treeControl = treeControl;
-            DocTreeExtCore.handleCheckout(treeControl, $scope);
-            DocTreeExtCore.handleCheckin(treeControl, $scope);
+            DocTreeExtCheckin.handleCheckout(treeControl, $scope);
+            DocTreeExtCheckin.handleCheckin(treeControl, $scope);
+            DocTreeExtCheckin.handleCancelEditing(treeControl, $scope);
             DocTreeExtCore.handleEditWithWebDAV(treeControl, $scope);
-            DocTreeExtCore.handleCancelEditing(treeControl, $scope);
 
-            //if there is subscription from other object we want to unsubscribe
-            //we want to have only one subscription from the current object
-            if ($scope.subscription) {
-                $scope.$bus.unsubscribe($scope.subscription);
-            }
-            var eventName = "object.changed/" + $scope.objectType + "/" + $scope.objectId;
-            $scope.subscription = $scope.$bus.subscribe(eventName, function (data) {
-                if (data.objectType == 'FILE') {
-                    $scope.treeControl.refreshTree();
-                }
-            });
+
+            //
+            // object changed event handling has side effect of making local update of title, classification not working properly.
+            //
+            //
+            ////if there is subscription from other object we want to unsubscribe
+            ////we want to have only one subscription from the current object
+            //if ($scope.subscription) {
+            //    $scope.$bus.unsubscribe($scope.subscription);
+            //}
+            //var eventName = "object.changed/" + $scope.objectType + "/" + $scope.objectId;
+            //$scope.subscription = $scope.$bus.subscribe(eventName, function (data) {
+            //    if (data.objectType == 'FILE') {
+            //        $scope.treeControl.refreshTree();
+            //    }
+            //});
         };
 
 
