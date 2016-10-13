@@ -138,7 +138,7 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
                     // Check objectProperties
                     if (isEnabled && action.objectProperties) {
                         _.forEach(action.objectProperties, function (value, key) {
-                            isEnabled = isEnabled && (_.indexOf(value, _.get(objectProperties, key)) != -1);
+                            isEnabled = isEnabled && ((_.indexOf(value, _.get(objectProperties, key)) != -1) || (_.get(objectProperties, key) === value));
                             // exit from loop if properties are not equal
                             return isEnabled;
                         });
