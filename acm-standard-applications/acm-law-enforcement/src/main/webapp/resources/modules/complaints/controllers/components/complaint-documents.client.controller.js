@@ -3,45 +3,17 @@
 angular.module('complaints').controller('Complaints.DocumentsController', ['$scope', '$stateParams', '$modal', '$q', '$timeout'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Complaint.InfoService'
     , 'Helper.ObjectBrowserService', 'DocTreeService', 'Authentication', 'PermissionsService', 'Object.ModelService'
-    , 'DocTreeExt.Core', 'DocTreeExt.Checkin'
+    , 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin'
     , function ($scope, $stateParams, $modal, $q, $timeout
         , Util, ConfigService, ObjectService, ObjectLookupService, ComplaintInfoService
         , HelperObjectBrowserService, DocTreeService, Authentication, PermissionsService, ObjectModelService
-        , DocTreeExtCore, DocTreeExtCheckin) {
+        , DocTreeExtWebDAV, DocTreeExtCheckin) {
 
 
         Authentication.queryUserInfo().then(
             function (userInfo) {
                 $scope.user = userInfo.userId;
                 return userInfo;
-            }
-        );
-
-        ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.COMPLAINT).then(
-            function (formTypes) {
-                $timeout(function() {
-                    $scope.fileTypes = $scope.fileTypes || [];
-                    $scope.fileTypes = $scope.fileTypes.concat(Util.goodArray(formTypes));
-                }, 0);
-                return formTypes;
-            }
-        );
-        ObjectLookupService.getFileTypes().then(
-            function (fileTypes) {
-                $timeout(function() {
-                    $scope.fileTypes = $scope.fileTypes || [];
-                    $scope.fileTypes = $scope.fileTypes.concat(Util.goodArray(fileTypes));
-                }, 0);
-                return fileTypes;
-            }
-        );
-
-        ObjectLookupService.getComplaintCorrespondenceForms().then(
-            function (correspondenceForms) {
-                $timeout(function() {
-                    $scope.correspondenceForms = Util.goodArray(correspondenceForms);
-                }, 0);
-                return correspondenceForms;
             }
         );
 
@@ -64,10 +36,19 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
             }
         });
 
+        var promiseFormTypes = ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.COMPLAINT);
+        var promiseFileTypes = ObjectLookupService.getFileTypes();
+        var promiseCorrespondenceForms = ObjectLookupService.getComplaintCorrespondenceForms();
         var onConfigRetrieved = function (config) {
-            $scope.config = config;
             $scope.treeConfig = config.docTree;
             $scope.allowParentOwnerToCancel = config.docTree.allowParentOwnerToCancel;
+
+            $q.all([promiseFormTypes, promiseFileTypes, promiseCorrespondenceForms]).then(
+                function (data) {
+                    $scope.treeConfig.formTypes = data[0];
+                    $scope.treeConfig.fileTypes = data[1];
+                    $scope.treeConfig.correspondenceForms = data[2];
+                });
         };
 
 
@@ -84,24 +65,7 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
             DocTreeExtCheckin.handleCheckout(treeControl, $scope);
             DocTreeExtCheckin.handleCheckin(treeControl, $scope);
             DocTreeExtCheckin.handleCancelEditing(treeControl, $scope);
-            DocTreeExtCore.handleEditWithWebDAV(treeControl, $scope);
-
-
-            //
-            // object changed event handling has side effect of making local update of title, classification not working properly.
-            //
-            //
-            ////if there is subscription from other object we want to unsubscribe
-            ////we want to have only one subscription from the current object
-            //if ($scope.subscription) {
-            //    $scope.$bus.unsubscribe($scope.subscription);
-            //}
-            //var eventName = "object.changed/" + $scope.objectType + "/" + $scope.objectId;
-            //$scope.subscription = $scope.$bus.subscribe(eventName, function (data) {
-            //    if (data.objectType == 'FILE') {
-            //        $scope.treeControl.refreshTree();
-            //    }
-            //});
+            DocTreeExtWebDAV.handleEditWithWebDAV(treeControl, $scope);
         };
 
 

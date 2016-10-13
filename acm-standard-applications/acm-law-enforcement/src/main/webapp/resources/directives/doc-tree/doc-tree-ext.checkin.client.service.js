@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/doc-tree/doc-tree-ext.checkin.client.service.js directives/doc-tree/doc-tree-ext.chckin.client.service.js}
+ * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/doc-tree/doc-tree-ext.checkin.client.service.js directives/doc-tree/doc-tree-ext.checkin.client.service.js}
  *
  * DocTree extensions for check-in, check-out functions.
  */
@@ -63,7 +63,9 @@ angular.module('services').factory('DocTreeExt.Checkin', ['$q', '$modal', '$tran
                         }
                     }
                 ];
-            }            /**
+            }
+
+            /**
              * @ngdoc method
              * @name getCommandHandlers
              * @methodOf services:DocTreeExt.Checkin
