@@ -129,6 +129,7 @@ public class CloseComplaintRequestService
 
         ObjectAssociation originalComplaint = makeObjectAssociation(updatedComplaint.getComplaintId(),
                 updatedComplaint.getComplaintNumber(), "COMPLAINT", updatedComplaint.getComplaintTitle());
+        originalComplaint.setStatus("CLOSED");
         existingCaseFile.addChildObject(originalComplaint);
 
         addPersonsToCaseFile(updatedComplaint.getPersonAssociations(), existingCaseFile);
@@ -233,6 +234,7 @@ public class CloseComplaintRequestService
 
         ObjectAssociation originalComplaint = makeObjectAssociation(updatedComplaint.getComplaintId(),
                 updatedComplaint.getComplaintNumber(), objectType, updatedComplaint.getComplaintTitle());
+        originalComplaint.setStatus("CLOSED");
         log.debug("reference object title: " + originalComplaint.getTargetTitle());
         caseFile.addChildObject(originalComplaint);
 
@@ -310,6 +312,7 @@ public class CloseComplaintRequestService
         {
             ObjectAssociation caseFileObjectAssociation = makeObjectAssociation(caseFile.getId(), caseFile.getCaseNumber(), objectType,
                     caseFile.getTitle());
+            caseFileObjectAssociation.setStatus(caseFile.getStatus());
             complaint.addChildObject(caseFileObjectAssociation);
             getComplaintDao().save(complaint);
         }
