@@ -39,7 +39,7 @@ describe('Create new task ', function() {
     it('should create new task status active', function() {
         taskPage.newBtn.click();
         taskPage.taskBtn.click();
-        expect(taskPage.taskTitle.getText()).toEqual(Objects.taskpage.data.taskTitle);
+        expect(taskPage.taskTitle.getText()).toEqual(Objects.taskspage.data.taskTitle);
         taskPage.Subject.click();
         taskPage.Subject.sendKeys(Objects.taskpage.data.Subject);
         expect(taskPage.StartDate.getText()).not.toBeTruthy();
@@ -50,8 +50,8 @@ describe('Create new task ', function() {
         taskPage.percentCompleteInput.clear();
         taskPage.percentCompleteInput.sendKeys(Objects.taskpage.data.percentCompleteInput);
         taskPage.saveButton.click().then(function() {
-            expect(taskPage.tasksTitle.getText()).toEqual(Objects.taskpage.data.tasksTitle);
-            expect(tasksPage.taskState.getText()).toEqual(Objects.taskpage.data.taskStateActive);
+            expect(taskPage.tasksTitle.getText()).toEqual(Objects.taskspage.data.tasksTitle);
+            expect(tasksPage.taskState.getText()).toEqual(Objects.taskspage.data.taskStateActive);
         });
     });
 
@@ -67,7 +67,7 @@ describe('Create new task ', function() {
         taskPage.todayDateFromCalendar.click();
         expect(taskPage.DueDateInput.getText()).not.toBeTruthy();
         taskPage.saveButton.click().then(function() {
-            expect(tasksPage.priority.getText()).toEqual(Objects.taskpage.data.priorityLow);
+            expect(tasksPage.priority.getText()).toEqual(Objects.taskspage.data.priorityLow);
         });
     });
 
@@ -83,7 +83,7 @@ describe('Create new task ', function() {
         taskPage.todayDateFromCalendar.click();
         expect(taskPage.DueDateInput.getText()).not.toBeTruthy();
         taskPage.saveButton.click().then(function() {
-            expect(tasksPage.priority.getText()).toEqual(Objects.taskpage.data.priorityHigh);
+            expect(tasksPage.priority.getText()).toEqual(Objects.taskspage.data.priorityHigh);
         });
     });
 
@@ -99,7 +99,7 @@ describe('Create new task ', function() {
         taskPage.todayDateFromCalendar.click();
         expect(taskPage.DueDateInput.getText()).not.toBeTruthy();
         taskPage.saveButton.click().then(function() {
-            expect(tasksPage.priority.getText()).toEqual(Objects.taskpage.data.priorityExpedite);
+            expect(tasksPage.priority.getText()).toEqual(Objects.taskspage.data.priorityExpedite);
         });
     });
 
@@ -130,10 +130,10 @@ describe('Create new task ', function() {
         taskPage.DueDateBtn.click();
         taskPage.todayDateFromCalendar.click();
         taskPage.notesTextArea.click();
-        taskPage.notesTextArea.sendKeys(Objects.taskpage.data.notesTextArea);
+        taskPage.notesTextArea.sendKeys(Objects.taskspage.data.notesTextArea);
         taskPage.saveButton.click().then(function() {
             tasksPage.detailsLink.click();
-            expect(tasksPage.detailsTextArea.getText()).toEqual(Objects.taskpage.data.notesTextArea);
+            expect(tasksPage.detailsTextArea.getText()).toEqual(Objects.taskspage.data.notesTextArea);
         });
     });
 
@@ -159,7 +159,7 @@ describe('Create new task ', function() {
         taskPage.DueDateBtn.click();
         taskPage.todayDateFromCalendar.click();
         taskPage.saveButton.click();
-        expect(tasksPage.assignee.getText()).toEqual(Objects.taskspage.assigneeSamuel);
+        expect(tasksPage.assignee.getText()).toEqual(Objects.taskspage.data.assigneeSamuel);
 
     });
 
@@ -216,7 +216,7 @@ describe('Create new task ', function() {
         taskPage.todayDateFromCalendar.click();
         taskPage.saveButton.click().then(function() {
             tasksPage.completeBtn.click();
-            expect(tasksPage.taskState.getText()).toEqual(taskspage.data.taskStateClosed);
+            expect(tasksPage.taskState.getText()).toEqual(Objects.taskspage.data.taskStateClosed);
         });
     });
 
@@ -230,7 +230,7 @@ describe('Create new task ', function() {
         taskPage.todayDateFromCalendar.click();
         taskPage.saveButton.click().then(function() {
             tasksPage.deleteBtn.click();
-            expect(tasksPage.taskState.getText()).toEqual(Objects.taskspage.taskStateDelete);
+            expect(tasksPage.taskState.getText()).toEqual(Objects.taskspage.data.taskStateDelete);
         });
     });
 
@@ -250,7 +250,7 @@ describe('Create new task ', function() {
         taskPage.DueDateBtn.click();
         taskPage.todayDateFromCalendar.click();
         taskPage.saveButton.click().then(function() {
-            expect(tasksPage.assignee.getText()).toEqual(Objects.taskpage.data.searchUser);
+            expect(tasksPage.assignee.getText()).toEqual(Objects.taskspage.data.administrator);
         });
     });
 
