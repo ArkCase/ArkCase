@@ -24,7 +24,7 @@
             "taskButton": "Task",
             "taskTitle": ".module-header",
             "subject": "subject",
-            "startDate": ".//*[@id='taskStartDate']",
+            "startDate": "taskStartDate",
             "dueDateBtn": ".//*[@class='input-group']/span/button",
             "todayDateFromCalendar": "Today",
             "DueDateInput": "dueDate",
