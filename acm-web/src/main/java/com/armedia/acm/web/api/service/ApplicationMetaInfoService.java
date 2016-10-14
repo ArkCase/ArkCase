@@ -3,22 +3,24 @@ package com.armedia.acm.web.api.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.web.context.ServletContextAware;
 
-import java.io.FileInputStream;
+import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-import java.util.jar.JarFile;
 
 /**
  * Created by jovan.ivanovski on 10/7/2016.
  */
-public class ApplicationMetaInfoService implements InitializingBean
+public class ApplicationMetaInfoService implements InitializingBean, ServletContextAware
 {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private String version;
+
+    ServletContext servletContext;
 
     public String getVersion()
     {
@@ -30,27 +32,25 @@ public class ApplicationMetaInfoService implements InitializingBean
         this.version = version;
     }
 
+    @Override
+    public void setServletContext(ServletContext servletContext)
+    {
+        this.servletContext = servletContext;
+    }
+
     public void findVersion()
     {
         Properties prop = new Properties();
-        String className = getClass().getSimpleName() + ".class";
-        String classPath = getClass().getResource(className).toString();
 
-        if (classPath != null && classPath.startsWith("jar"))
+        try (InputStream manifestStream = servletContext.getResourceAsStream("/META-INF/MANIFEST.MF"))
         {
-            String manifestPath = classPath.substring(10, classPath.lastIndexOf("/WEB-INF/")) + "/" + JarFile.MANIFEST_NAME;
-            try (InputStream inputStream = new FileInputStream(manifestPath))
-            {
-                if (inputStream != null)
-                {
-                    prop.load(inputStream);
-                    version = prop.getProperty("Implementation-Version", "");
-                }
-            } catch (IOException e)
-            {
-                log.warn("Could not open manifest file: {}", e.getMessage(), e);
-            }
+            prop.load(manifestStream);
+            version = prop.getProperty("Implementation-Version", "");
+        } catch (IOException e)
+        {
+            log.warn("Could not open manifest file: {}", e.getMessage(), e);
         }
+
     }
 
     @Override
@@ -58,4 +58,5 @@ public class ApplicationMetaInfoService implements InitializingBean
     {
         findVersion();
     }
+
 }
