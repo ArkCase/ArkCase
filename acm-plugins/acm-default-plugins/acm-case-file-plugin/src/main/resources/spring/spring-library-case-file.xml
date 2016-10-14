@@ -175,7 +175,7 @@
         <property name="acmObjectHistoryService" ref="acmObjectHistoryService"/>
         <property name="nonHistoryGeneratingEvents">
             <list>
-                <value>com.armedia.acm.casefile.event.search</value>
+                <value>com.armedia.acm.casefile.search</value>
                 <value>com.armedia.acm.casefile.viewed</value>
             </list>
         </property>
