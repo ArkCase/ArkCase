@@ -7,6 +7,7 @@ import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.Disposition;
 import com.armedia.acm.plugins.casefile.service.SaveCaseService;
+import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
 import com.armedia.acm.plugins.complaint.dao.CloseComplaintRequestDao;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.CloseComplaintRequest;
@@ -51,6 +52,7 @@ public class CloseComplaintRequestService
     private String complaintFolderNameFormat;
     private String caseFileDetailsFormat;
     private String complaintDetailsFormat;
+    private CaseFileEventUtility caseFileEventUtility;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -246,6 +248,8 @@ public class CloseComplaintRequestService
 
         addChildObjectsToCaseFile(updatedComplaint, fullInvestigation, auth);
 
+        getCaseFileEventUtility().raiseEvent(fullInvestigation, "created", new Date(), null, userId, auth);
+
         return fullInvestigation;
     }
 
@@ -414,4 +418,15 @@ public class CloseComplaintRequestService
     {
         this.complaintDetailsFormat = complaintDetailsFormat;
     }
+
+    public CaseFileEventUtility getCaseFileEventUtility()
+    {
+        return caseFileEventUtility;
+    }
+
+    public void setCaseFileEventUtility(CaseFileEventUtility caseFileEventUtility)
+    {
+        this.caseFileEventUtility = caseFileEventUtility;
+    }
+
 }
