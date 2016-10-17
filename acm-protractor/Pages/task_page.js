@@ -21,7 +21,7 @@ var searchUserInput = element(by.xpath(Objects.taskpage.locators.searchUserInput
 var searchUserBtn = element(by.xpath(Objects.taskpage.locators.searchUserBtn));
 var searchedName = element.all(by.repeater(Objects.taskpage.locators.searchedName)).get(0);
 var confimrBtn = element(by.xpath(Objects.taskpage.locators.confimrBtn));
-var notesTextArea = element(by.xpath(Objects.taskpage.locators.notesTextArea));
+var noteTextArea = element(by.xpath(Objects.taskpage.locators.notesTextArea));
 var linkButton = element.all(by.xpath(Objects.taskpage.locators.linkButton)).get(0);
 var linkInputText = element(by.xpath(Objects.taskpage.locators.linkInputText));
 var linkInputUrl = element(by.xpath(Objects.taskpage.locators.linkInputUrl));
@@ -41,6 +41,36 @@ var deleteBtn = element(by.buttonText(Objects.taskspage.locators.deleteBtn));
 var taskState = element(by.xpath(Objects.taskpage.locators.taskState));
 var subscribeBtn = element(by.buttonText(Objects.taskspage.locators.subscribeBtn));
 var unsubscribeBtn = element(by.buttonText(Objects.taskspage.locators.unsubscribeBtn));
+var notesLink = element.all(by.repeater(Objects.taskspage.locators.notesLink)).get(4);
+var notesTableTitle = element(by.css(Objects.taskspage.locators.notesTableTitle));
+var addNoteBtn = element(by.xpath(Objects.taskspage.locators.addNoteBtn));
+var notesTextArea = element(by.model(Objects.taskspage.locators.notesTextArea));
+var noteName = element.all(by.repeater(Objects.taskspage.locators.noteName)).get(0);
+var noteCreatedDate = element.all(by.repeater(Objects.taskspage.locators.noteCreatedDate)).get(1);
+var noteAuthor = element.all(by.repeater(Objects.taskspage.locators.noteAuthor)).get(2);
+var notePopUpTitle = element(by.xpath(Objects.taskspage.locators.notePopUpTitle));
+var noteSaveBtn = element(by.buttonText(Objects.taskspage.locators.noteSaveBtn));
+var deleteNoteBtn = element.all(by.repeater(Objects.taskspage.locators.deleteNoteBtn)).get(3).all(by.tagName(Objects.taskspage.locators.tag)).get(1);
+var editNoteBtn = element.all(by.repeater(Objects.taskspage.locators.editNoteBtn)).get(3).all(by.tagName(Objects.taskspage.locators.tag)).get(0);
+var priorityLink = element(by.xpath(Objects.taskspage.locators.priority));
+var priorityDropDownEdit = element(by.xpath(Objects.taskspage.locators.priorityDropDown));
+var editSubmitButton = element(by.css(Objects.taskpage.locators.editSubmitButton));
+var percentCompletition = element(by.xpath(Objects.taskspage.locators.percentCompletition)); 
+var percentCompletitionInput = element(by.xpath(Objects.taskspage.locators.percentCompletitionInput));
+var taskSubjectEdit = element(by.xpath(Objects.taskspage.locators.taskSubject));
+var taskSubjectInput = element(by.xpath(Objects.taskspage.locators.taskSubjectInput));
+var assigneeDropDown = element(by.xpath(Objects.taskspage.locators.assigneeDropDown));
+var tagsLink = element.all(by.repeater(Objects.taskspage.locators.tagsLink)).get(9);
+var tagsTableTitle = element(by.css(Objects.taskspage.locators.tagsTableTitle));
+var addTagBtn = element(by.xpath(Objects.taskspage.locators.addTagBtn));
+var addTagPopUpTitle = element(by.xpath(Objects.taskspage.locators.addTagPopUpTitle));
+var tagTextArea = element(by.xpath(Objects.taskspage.locators.tagTextArea));
+var saveTagBtn = element(by.buttonText(Objects.taskspage.locators.saveTagBtn));
+var tagName = element.all(by.repeater(Objects.taskspage.locators.addedtagName)).get(0);
+var tagCreatedDate = element.all(by.repeater(Objects.taskspage.locators.tagCreatedDate)).get(1);
+var tagCreatedBy = element.all(by.repeater(Objects.taskspage.locators.tagCreatedBy)).get(2);
+var tagDeleteBtn = element.all(by.repeater(Objects.taskspage.locators.tagDeleteBtn)).get(3).all(by.tagName(Objects.taskspage.locators.tag)).get(0);
+
 var TaskPage = function() {
 	this.clickNewButton = function() {
 		newBtn.click();
@@ -71,18 +101,7 @@ var TaskPage = function() {
 		this.insertDueDateToday();	
 		this.selectPriority(priority);
 		this.insertPercentComplete(percent);	
-		this.insertTextNote(note);
-//		switch (notetype) {
-//		case "text":
-//			this.insertTextNote(note);
-//			break;
-//		case "link":
-//			this.insertLinkNote(text, url);
-//			break;
-//		default:
-//			this.insertTextNote(note);
-//			break;
-//		}		
+		this.insertTextNote(note);	
 		return this;
 	};
 	this.insertPercentComplete = function(percent){
@@ -92,9 +111,9 @@ var TaskPage = function() {
 		return this;
 	};
 	this.insertTextNote = function(note){
-		notesTextArea.click();
-		notesTextArea.clear();
-		notesTextArea.sendKeys(note);
+		noteTextArea.click();
+		noteTextArea.clear();
+		noteTextArea.sendKeys(note);
 		return this;
 	};
 	this.addAssignee = function(assignee) {
@@ -194,10 +213,153 @@ var TaskPage = function() {
 		this.insertDueDateToday();	
 		this.selectPriority(priority);
 		this.insertPercentComplete(percent);	
-		this.insertTextNote(text, url);
+		this.insertLinkNote(text, url);
+		return this;		
+	}
+	this.clickNotesLink = function(){
+		notesLink.click();
+		return this;
+	}
+	this.returnNotesTableTitle = function(){
+		return notesTableTitle.getText();
+	}
+	this.clickAddNoteButton = function(){
+		addNoteBtn.click();
+		return this;
+	}
+	this.returnNotePopUpTitle = function(){
+		return notePopUpTitle.getText();
+	}
+	this.insertNoteFromOverviewTab = function(note){
+		notesTextArea.click();
+		notesTextArea.clear();
+		notesTextArea.sendKeys(note);
+		noteSaveBtn.click();
+		return this;
+	}
+	this.returnNoteName = function(){
+		return noteName.getText();
+	}
+	this.returnNoteCreatedDate = function(){
+		return noteCreatedDate.getText();
+	}
+	this.returnNoteAuthor = function(){
+		return noteAuthor.getText();
+	}
+	this.clickDeleteNoteButton = function(){
+		deleteNoteBtn.click();
+		return this;
+	}
+	this.addedNoteNameIsPresent = function(){
+		return noteName.isPresent();
+	}
+	this.clickEditNoteButton = function(){
+		editNoteBtn.click();
+		return this;
+	}
+	this.clickPriorityEdit = function(){
+		priorityLink.click();
+		return this;
+	}
+	this.selectPriorityEdit = function(priority){		
+		priorityDropDownEdit.$('[value="string:'+ priority +'"]').click();
+		return this;
+	}
+	this.confirmEdit = function(){
+		editSubmitButton.click();
+		return this;
+	}
+	this.editPriority = function(priority){
+		this.clickPriorityEdit();
+		this.selectPriorityEdit(priority);
+		this.confirmEdit();		
+	}
+	this.clickPercentCompletition = function(){
+		percentCompletition.click();
 		return this;
 		
 	}
+	this.insertPercentEdit = function(percent){
+		percentCompletitionInput.click();
+		percentCompletitionInput.clear();
+		percentCompletitionInput.sendKeys(percent);
+		return this;
+	}
+	this.editPercent = function(percent){
+		this.clickPercentCompletition();
+		this.insertPercentEdit(percent);
+		this.confirmEdit();
+	}	
+	this.clickTaskSubjectEdit = function(){
+		taskSubjectEdit.click();
+		return this
+	}
+	this.insertSubjectEdit = function(subject){
+		taskSubjectInput.click();
+		taskSubjectInput.clear();
+		taskSubjectInput.sendKeys(subject);
+	}
+	this.editTaskSubject = function(subject){
+		this.clickTaskSubjectEdit();
+		this.insertSubjectEdit(subject);
+		this.confirmEdit();
+	}
+	this.clickAssignee = function(){
+		assignee.click();
+		return this;
+	}
+	this.selectAssigneeEdit = function(assignee){		
+		assigneeDropDown.$('[value="string:'+ assignee +'"]').click();
+		return this;
+	}
+	this.editAssignee = function(assignee){
+		this.clickAssignee();
+		this.selectAssigneeEdit(assignee);
+		this.confirmEdit();
+	}
+	this.completeButtonIsPresent = function(){
+		return completeBtn.isDisplayed();
+	}
+	this.deleteButtonIsPresent = function(){
+		return deleteBtn.isDisplayed();
+	}
+	this.clickTagsLink = function(){
+		tagsLink.click();
+		return this;
+	}
+	this.tagsTableTittle = function(){
+		return tagsTableTitle.getText();
+	}
+	this.clickAddTagButton = function(){
+		addTagBtn.click();
+		return this;
+	}
+	this.returnAddTagPopUpTitle = function(){
+		return addTagPopUpTitle.getText();
+	}
+	this.clickAddTagPopUpTitle = function(){
+		addTagPopUpTitle.click();
+		return this;
+	}
+	this.clickSaveTagButton = function(){
+		saveTagBtn.click();
+		return this;
+	}
+	this.returnTagName = function(){
+		return tagName.getText();
+	}
+	this.returnTagCreatedDate = function(){
+		return tagCreatedDate.getText();
+	}
+	this.returnTagCreatedBy = function(){
+		return tagCreatedBy.getText();
+	}
+	this.insertTag = function(tag){
+		tagTextArea.click();
+		tagTextArea.clear();
+		tagTextArea.sendKeys(tag);
+	}
+
 
 };
 
