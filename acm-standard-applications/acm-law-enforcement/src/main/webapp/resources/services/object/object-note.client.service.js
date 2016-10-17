@@ -194,6 +194,7 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'Acm.Stor
             noteType = noteType || "GENERAL";
         	var cacheCaseNoteData = new Store.CacheFifo(Service.CacheNames.NOTES);
             var cacheKey = objectType + "." + objectId + "." + noteType + "." + start + "." + n + "." + sortBy + "." + sortDir;
+            Service.clearCash(cacheCaseNoteData, cacheKey);
             var noteData = cacheCaseNoteData.get(cacheKey);
 
             var sort = "";
@@ -395,6 +396,30 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'Acm.Stor
             return true;
         };        
         
+        /**
+         * @ngdoc method
+         * @name clearCash
+         * @methodOf services:Object.NoteService
+         *
+         * @description
+         * Clear cash for notes
+         *
+         * @param {Object} cacheCaseNoteData  Note name
+         * @param {String} cacheKey  
+         *
+         * @returns [Undefined] don't return anything.
+         */
+        Service.clearCash = function (cacheCaseNoteData, cacheKey){
+    		var cacheKeys = cacheCaseNoteData.keys();
+            _.each(cacheKeys, function (key){
+                if(key == null) {
+                    return;
+                }
+                if(key.indexOf(cacheKey) == 0) {
+                    cacheCaseNoteData.remove(key);
+                }
+            });
+    	}
 
         return Service;
     }
