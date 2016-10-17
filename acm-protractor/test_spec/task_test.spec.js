@@ -37,272 +37,118 @@ describe('Create new task ', function() {
 
 
     it('should create new task status active', function() {
-        taskPage.newBtn.click();
-        taskPage.taskBtn.click();
-        expect(taskPage.taskTitle.getText()).toEqual(Objects.taskspage.data.taskTitle);
-        taskPage.Subject.click();
-        taskPage.Subject.sendKeys(Objects.taskpage.data.Subject);
-        expect(taskPage.StartDate.getText()).not.toBeTruthy();
-        taskPage.DueDateBtn.click();
-        taskPage.todayDateFromCalendar.click();
-        expect(taskPage.DueDateInput.getText()).not.toBeTruthy();
-        taskPage.percentCompleteInput.click();
-        taskPage.percentCompleteInput.clear();
-        taskPage.percentCompleteInput.sendKeys(Objects.taskpage.data.percentCompleteInput);
-        taskPage.saveButton.click().then(function() {
-            expect(taskPage.tasksTitle.getText()).toEqual(Objects.taskspage.data.tasksTitle);
-            expect(tasksPage.taskState.getText()).toEqual(Objects.taskspage.data.taskStateActive);
-        });
+    	
+    	taskPage.clickNewButton().clickTaskButton();        
+        expect(taskPage.returnTasksTitle()).toEqual(Objects.taskspage.data.taskTitle);
+        taskPage.insertSubject(Objects.taskpage.data.Subject);
+        expect(taskPage.returnStartDateInput()).not.toBeTruthy();
+        taskPage.insertDueDateToday();
+        expect(taskPage.returnDueDateInput()).not.toBeTruthy();
+        taskPage.insertPercentComplete(Objects.taskpage.data.percentCompleteInput).clickSave();
+        expect(taskPage.returnTasksTitle()).toEqual(Objects.taskpage.data.tasksTitle);
+        expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateActive);
+        
     });
 
 
     it('should create new task with priority low', function() {
-        taskPage.newBtn.click();
-        taskPage.taskBtn.click();
-        taskPage.Subject.click();
-        taskPage.Subject.sendKeys(Objects.taskpage.data.Subject);
-        taskPage.priorityDropDown.click();
-        taskPage.priorityLow.click();
-        taskPage.DueDateBtn.click();
-        taskPage.todayDateFromCalendar.click();
-        expect(taskPage.DueDateInput.getText()).not.toBeTruthy();
-        taskPage.saveButton.click().then(function() {
-            expect(tasksPage.priority.getText()).toEqual(Objects.taskspage.data.priorityLow);
-        });
+        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea);
+        expect(taskPage.returnDueDateText()).not.toBeTruthy();
+        taskPage.clickSave();
+        expect(taskPage.returnPriority()).toEqual(Objects.taskspage.data.priorityLow);        
     });
 
-    it('should create new task with priority high', function() {
-
-        taskPage.newBtn.click();
-        taskPage.taskBtn.click();
-        taskPage.Subject.click();
-        taskPage.Subject.sendKeys(Objects.taskpage.data.Subject);
-        taskPage.priorityDropDown.click();
-        taskPage.priorityHigh.click();
-        taskPage.DueDateBtn.click();
-        taskPage.todayDateFromCalendar.click();
-        expect(taskPage.DueDateInput.getText()).not.toBeTruthy();
-        taskPage.saveButton.click().then(function() {
-            expect(tasksPage.priority.getText()).toEqual(Objects.taskspage.data.priorityHigh);
-        });
+    it('should create new task with priority High', function() {
+        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, "High", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea);
+        expect(taskPage.returnDueDateText()).not.toBeTruthy();
+        taskPage.clickSave();
+        expect(taskPage.returnPriority()).toEqual(Objects.taskspage.data.priorityHigh);        
     });
-
     it('should create new task with priority Expedite', function() {
-
-        taskPage.newBtn.click();
-        taskPage.taskBtn.click();
-        taskPage.Subject.click();
-        taskPage.Subject.sendKeys(Objects.taskpage.data.Subject);
-        taskPage.priorityDropDown.click();
-        taskPage.priorityExpedite.click();
-        taskPage.DueDateBtn.click();
-        taskPage.todayDateFromCalendar.click();
-        expect(taskPage.DueDateInput.getText()).not.toBeTruthy();
-        taskPage.saveButton.click().then(function() {
-            expect(tasksPage.priority.getText()).toEqual(Objects.taskspage.data.priorityExpedite);
-        });
+        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, "Expedite", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea);
+        expect(taskPage.returnDueDateText()).not.toBeTruthy();
+        taskPage.clickSave();
+        expect(taskPage.returnPriority()).toEqual(Objects.taskspage.data.priorityExpedite);        
     });
 
     it('should verify save button is disabled when subject is empty and due date', function() {
 
-        taskPage.newBtn.click();
-        taskPage.taskBtn.click();
-        expect(taskPage.saveButton.isEnabled()).toBe(false);
+    	taskPage.clickNewButton().clickTaskButton();
+        expect(taskPage.returnSaveButtonEnabled()).toBe(false);
     });
 
-    it('should verify save button disabled when percent is empty', function() {
+   it('should verify save button disabled when percent is empty', function() {
 
-        taskPage.newBtn.click();
-        taskPage.taskBtn.click();
-        taskPage.percentCompleteInput.click();
-        taskPage.percentCompleteInput.clear();
-        expect(taskPage.saveButton.isEnabled()).toBe(false);
+	    taskPage.clickNewButton().clickTaskButton().clearPercentInput();       
+        expect(taskPage.returnSaveButtonEnabled()).toBe(false);
 
     });
 
+    it('should create new task with notes verify subject, assignee, start date, note', function() {
 
-    it('should create new task with notes verify in details section', function() {
+    	taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+    	expect(taskPage.returnTaskSubject()).toEqual(Objects.taskpage.data.Subject);
+    	expect(taskPage.returnAssignee()).toEqual(Objects.taskspage.data.assigneeSamuel);
+    	expect(taskPage.returnInsertedStartDate()).toEqual(today);
+    	expect(taskPage.returnInsertedDueDate()).toEqual(today);
+    	expect(taskPage.returnPercent()).toEqual(Objects.taskpage.data.percentCompleteInput);
+    	taskPage.clickDetailsLink();
+        expect(taskPage.returnDetailsTextArea()).toEqual(Objects.taskspage.data.notesTextArea);        
+        
+    });  
 
-        taskPage.newBtn.click();
-        taskPage.taskBtn.click();
-        taskPage.Subject.click();
-        taskPage.Subject.sendKeys(Objects.taskpage.data.Subject);
-        taskPage.DueDateBtn.click();
-        taskPage.todayDateFromCalendar.click();
-        taskPage.notesTextArea.click();
-        taskPage.notesTextArea.sendKeys(Objects.taskspage.data.notesTextArea);
-        taskPage.saveButton.click().then(function() {
-            tasksPage.detailsLink.click();
-            expect(tasksPage.detailsTextArea.getText()).toEqual(Objects.taskspage.data.notesTextArea);
-        });
-    });
-
-    it('should create new task verify task subject in Tasks page', function() {
-
-        taskPage.newBtn.click();
-        taskPage.taskBtn.click();
-        taskPage.Subject.click();
-        taskPage.Subject.sendKeys(Objects.taskpage.data.Subject);
-        taskPage.DueDateBtn.click();
-        taskPage.todayDateFromCalendar.click();
-        taskPage.saveButton.click().then(function() {
-            expect(tasksPage.taskSubject.getText()).toEqual(Objects.taskpage.data.Subject);
-        });
-    });
-
-    it('should create new task verify assignee in Tasks page', function() {
-
-        taskPage.newBtn.click();
-        taskPage.taskBtn.click();
-        taskPage.Subject.click();
-        taskPage.Subject.sendKeys(Objects.taskpage.data.Subject);
-        taskPage.DueDateBtn.click();
-        taskPage.todayDateFromCalendar.click();
-        taskPage.saveButton.click();
-        expect(tasksPage.assignee.getText()).toEqual(Objects.taskspage.data.assigneeSamuel);
-
-    });
-
-    it('should create new task verify created date', function() {
-
-        taskPage.newBtn.click();
-        taskPage.taskBtn.click();
-        taskPage.Subject.click();
-        taskPage.Subject.sendKeys(Objects.taskpage.data.Subject);
-        taskPage.DueDateBtn.click();
-        taskPage.todayDateFromCalendar.click();
-        taskPage.saveButton.click().then(function() {
-            expect(tasksPage.startDate.getText()).toEqual(today);
-        });
-
-    });
-
-    it('should create new task verify due date', function() {
-
-        taskPage.newBtn.click();
-        taskPage.taskBtn.click();
-        taskPage.Subject.click();
-        taskPage.Subject.sendKeys(Objects.taskpage.data.Subject);
-        taskPage.DueDateBtn.click();
-        taskPage.todayDateFromCalendar.click();
-        taskPage.saveButton.click().then(function() {
-            expect(tasksPage.dueDate.getText()).toEqual(today);
-        });
-    });
-
-    it('should create new task verify perecent', function() {
-
-        taskPage.newBtn.click();
-        taskPage.taskBtn.click();
-        taskPage.Subject.click();
-        taskPage.Subject.sendKeys(Objects.taskpage.data.Subject);
-        taskPage.percentCompleteInput.click();
-        taskPage.percentCompleteInput.clear();
-        taskPage.percentCompleteInput.sendKeys(Objects.taskpage.data.percentCompleteInput);
-        taskPage.DueDateBtn.click();
-        taskPage.todayDateFromCalendar.click();
-        taskPage.saveButton.click().then(function() {
-            expect(tasksPage.percent.getText()).toEqual(Objects.taskpage.data.percentCompleteInput);
-        });
-    });
 
     it('should create new task click complete button and verify task state', function() {
 
-        taskPage.newBtn.click();
-        taskPage.taskBtn.click();
-        taskPage.Subject.click();
-        taskPage.Subject.sendKeys('verify complete state');
-        taskPage.DueDateBtn.click();
-        taskPage.todayDateFromCalendar.click();
-        taskPage.saveButton.click().then(function() {
-            tasksPage.completeBtn.click();
-            expect(tasksPage.taskState.getText()).toEqual(Objects.taskspage.data.taskStateClosed);
-        });
+    	taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, "High", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+        taskPage.clickCompleteButton();
+        expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateClosed);
+       
     });
 
     it('should create new task click delete button and verify task state', function() {
 
-        taskPage.newBtn.click();
-        taskPage.taskBtn.click();
-        taskPage.Subject.click();
-        taskPage.Subject.sendKeys(Objects.taskpage.data.Subject);
-        taskPage.DueDateBtn.click();
-        taskPage.todayDateFromCalendar.click();
-        taskPage.saveButton.click().then(function() {
-            tasksPage.deleteBtn.click();
-            expect(tasksPage.taskState.getText()).toEqual(Objects.taskspage.data.taskStateDelete);
-        });
+    	taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+        taskPage.clickDeleteButton();
+        expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateDelete);
+        
     });
-
 
     it('should create new task with different user', function() {
 
-        taskPage.newBtn.click();
-        taskPage.taskBtn.click();
-        taskPage.assigneeInput.click();
-        taskPage.searchUserInput.click();
-        taskPage.searchUserInput.sendKeys(Objects.taskpage.data.searchUser);
-        taskPage.searchUserBtn.click();
-        taskPage.searchedName.click();
-        taskPage.confimrBtn.click();
-        taskPage.Subject.click();
-        taskPage.Subject.sendKeys(Objects.taskpage.data.Subject);
-        taskPage.DueDateBtn.click();
-        taskPage.todayDateFromCalendar.click();
-        taskPage.saveButton.click().then(function() {
-            expect(tasksPage.assignee.getText()).toEqual(Objects.taskspage.data.administrator);
-        });
+    	taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskpage.data.searchUser, Objects.taskpage.data.Subject, "Expedite", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+        expect(taskPage.returnAssignee()).toEqual(Objects.taskspage.data.administrator);
+       
     });
 
     it('should create new task add link verify', function() {
 
-        taskPage.newBtn.click();
-        taskPage.taskBtn.click();
-        taskPage.Subject.click();
-        taskPage.Subject.sendKeys(Objects.taskpage.data.Subject);
-        taskPage.DueDateBtn.click();
-        taskPage.todayDateFromCalendar.click();
-        taskPage.linkButton.click().then(function() {
-            taskPage.linkInputText.sendKeys(Objects.taskpage.data.linkInputText);
-            taskPage.linkInputUrl.clear();
-            taskPage.linkInputUrl.sendKeys(Objects.taskpage.data.linkInputUrl);
-            taskPage.insertLinkBtn.click();
-            taskPage.saveButton.click();
-            expect(taskPage.tasksTitle.getText()).toEqual(Objects.taskpage.data.tasksTitle);
-            tasksPage.detailsLink.click();
-            expect(tasksPage.detailsTextArea.getText()).toEqual(Objects.taskpage.data.linkInputText);
-        });
-
+    	taskPage.clickNewButton().clickTaskButton().insertTaskDataLinkNote(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskpage.data.linkInputText, Objects.taskpage.data.linkInputUrl).clickSave();
+        expect(taskPage.returnTasksTitle()).toEqual(Objects.taskpage.data.tasksTitle);
+        taskPage.clickDetailsLink();
+        expect(taskPage.returnDetailsTextArea()).toEqual(Objects.taskpage.data.linkInputText);
+       
     });
 
     it('should create new task click subscribe button verify if it is changed to unsubscribe', function() {
 
-        taskPage.newBtn.click();
-        taskPage.taskBtn.click();
-        taskPage.Subject.click();
-        taskPage.Subject.sendKeys(Objects.taskpage.data.Subject);
-        taskPage.DueDateBtn.click();
-        taskPage.todayDateFromCalendar.click();
-        taskPage.saveButton.click().then(function() {
-            tasksPage.subscribeBtn.click();
-            expect(tasksPage.unsubscribeBtn.getText()).toEqual(Objects.taskspage.data.unsubscribeBtn);
-        });
+    	taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, "High", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+        taskPage.clickSubscribeButton();
+        expect(taskPage.returnUnsubscribeButtonText()).toEqual(Objects.taskspage.data.unsubscribeBtn);
+        
     });
 
     it('should create new task click unsubscribe button verify if it is changed to subscribe', function() {
 
-        taskPage.newBtn.click();
-        taskPage.taskBtn.click();
-        taskPage.Subject.click();
-        taskPage.Subject.sendKeys(Objects.taskpage.data.Subject);
-        taskPage.DueDateBtn.click();
-        taskPage.todayDateFromCalendar.click();
-        taskPage.saveButton.click().then(function() {
-            tasksPage.subscribeBtn.click();
-            expect(tasksPage.unsubscribeBtn.getText()).toEqual(Objects.taskspage.data.unsubscribeBtn);
-            tasksPage.unsubscribeBtn.click();
-            expect(tasksPage.subscribeBtn.getText()).toEqual(Objects.taskspage.data.subscribeBtn);
-
-        });
+    	taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+        taskPage.clickSubscribeButton();
+        expect(taskPage.returnUnsubscribeButtonText()).toEqual(Objects.taskspage.data.unsubscribeBtn);
+        taskPage.clickUnsubscribeButton();
+        expect(taskPage.returnSubscribeButtonText()).toEqual(Objects.taskspage.data.subscribeBtn);
     });
-});
+    
+})
+
+        
+    
+

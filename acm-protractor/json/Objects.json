@@ -9,11 +9,11 @@
         "data": {
             "supervisoruser": {
                 "username": "samuel-acm",
-                "password": "Armedia#1"
+                "password": "AcMd3v$"
             },
             "adminuser": {
                 "username": "ann-acm",
-                "password": "Armedia#1"
+                "password": "AcMd3v$"
             }
         }
     },
@@ -24,7 +24,7 @@
             "taskButton": "Task",
             "taskTitle": ".module-header",
             "subject": "subject",
-            "startDate": ".//*[@id='taskStartDate']",
+            "startDate": "taskStartDate",
             "dueDateBtn": ".//*[@class='input-group']/span/button",
             "todayDateFromCalendar": "Today",
             "DueDateInput": "dueDate",
@@ -211,13 +211,13 @@
             "saveChangesBtn": ".//*[@class='well-sm clearfix ng-scope']/span/a[3]/i",
             "undoChangesBtn": ".//*[@class='well-sm clearfix ng-scope']/span/a[4]/i",
             "addNewWidgetTitle": ".modal-header ng-scope",
-            "casesByStatus": ".//*[@class='dl-horizontal']/dt[1]/a",
-            "myCases": ".//*[@class='dl-horizontal']/dt[2]/a",
-            "myComplaints": ".//*[@class='dl-horizontal']/dt[3]/a",
-            "newComplaints": ".//*[@class='dl-horizontal']/dt[4]/a",
-            "teamWorkload": ".//*[@class='dl-horizontal']/dt[5]/a",
-            "weather": ".//*[@class='dl-horizontal']/dt[6]/a",
-            "news": ".//*[@class='dl-horizontal']/dt[7]/a",
+            "casesByStatus": "Cases By Status",
+            "myCases": "My Cases",
+            "myComplaints": "My Complaints",
+            "newComplaints": "New Complaints",
+            "teamWorkload": "Team Workload",
+            "weather": "Weather",
+            "news": "News",
             "closeBtn": "Close",
             "widgetTitle": ".//*[@class='panel-heading clearfix']/div/h3",
             "reloadWidgetContentBtn": ".//*[@class='panel-title ng-binding ng-scope']/span/a[1]/i",
