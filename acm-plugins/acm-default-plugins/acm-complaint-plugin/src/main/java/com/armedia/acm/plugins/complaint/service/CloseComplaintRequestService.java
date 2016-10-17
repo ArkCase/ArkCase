@@ -21,6 +21,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
+import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -34,8 +35,10 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by armdev on 11/13/14.
@@ -249,6 +252,25 @@ public class CloseComplaintRequestService
         addChildObjectsToCaseFile(updatedComplaint, fullInvestigation, auth);
 
         getCaseFileEventUtility().raiseEvent(fullInvestigation, "created", new Date(), null, userId, auth);
+
+        List<String> approvers = new ArrayList<String>();
+        List<AcmParticipant> acmParticipants = getCloseComplaintRequestDao().findByComplaintId(updatedComplaint.getComplaintId())
+                .getParticipants();
+        if (!acmParticipants.isEmpty())
+        {
+            for (AcmParticipant acmParticipant : acmParticipants)
+            {
+                if ("approver".equals(acmParticipant.getParticipantType()))
+                {
+                    approvers.add(acmParticipant.getParticipantLdapId());
+                }
+            }
+        }
+        String approversString = approvers.stream().collect(Collectors.joining(","));
+
+        getCaseFileEventUtility().raiseCustomEvent(fullInvestigation,
+                "Case Created from Complaint " + updatedComplaint.getComplaintNumber() + " approval by " + approversString, new Date(),
+                null, userId, auth);
 
         return fullInvestigation;
     }

@@ -34,6 +34,15 @@ public class CaseFileEventUtility implements ApplicationEventPublisherAware
         applicationEventPublisher.publishEvent(event);
     }
 
+    public void raiseCustomEvent(CaseFile caseFile, String caseState, Date eventDate, String ipAddress, String userId, Authentication auth)
+    {
+        String eventType = caseState;
+        eventDate = eventDate == null ? new Date() : eventDate;
+        CaseEvent event = new CaseEvent(caseFile, ipAddress, userId, eventType, eventDate, true, auth);
+
+        applicationEventPublisher.publishEvent(event);
+    }
+
     public void raiseCaseFileModifiedEvent(CaseFile source, String ipAddress, String eventStatus)
     {
 
