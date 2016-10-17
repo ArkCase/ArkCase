@@ -146,6 +146,89 @@ describe('Create new task ', function() {
         taskPage.clickUnsubscribeButton();
         expect(taskPage.returnSubscribeButtonText()).toEqual(Objects.taskspage.data.subscribeBtn);
     });
+
+    it('should create new task and add note', function() {
+
+    	taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+        taskPage.clickNotesLink();
+        expect(taskPage.returnNotesTableTitle()).toEqual(Objects.taskspage.data.notesTableTitle)
+        taskPage.clickAddNoteButton();
+        expect(taskPage.returnNotePopUpTitle()).toEqual(Objects.taskspage.data.notePopUpTitle);
+        taskPage.insertNoteFromOverviewTab(Objects.taskspage.data.notesTextArea); 
+        expect(taskPage.addedNoteNameIsPresent()).toBe(true, 'Added note does not exist in the grid');
+        expect("Note name is not correct", taskPage.returnNoteName()).toEqual(Objects.taskspage.data.notesTextArea);
+        expect("Created date of note is not correct", taskPage.returnNoteCreatedDate()).toEqual(today);
+        expect("Supervisor is not correct", taskPage.returnNoteAuthor()).toEqual(Objects.taskspage.data.supervisor);
+       
+        
+
+    });
+    it('should create new task add note and delete the note', function() {
+
+    	taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+        taskPage.clickNotesLink().clickAddNoteButton().insertNoteFromOverviewTab(Objects.taskspage.data.noteTextArea);  
+        expect(taskPage.addedNoteNameIsPresent()).toBe(true, 'Added note does not exist in the grid');
+        taskPage.clickDeleteNoteButton();
+        expect(taskPage.addedNoteNameIsPresent()).toBe(false, 'The note is not deleted');
+
+    });
+    it('should create new task add note and edit the note', function() {
+
+    	taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+    	taskPage.clickNotesLink().clickAddNoteButton().insertNoteFromOverviewTab(Objects.taskspage.data.noteTextArea);
+        expect(taskPage.addedNoteNameIsPresent()).toBe(true, 'Added note does not exist in the grid');
+        taskPage.clickEditNoteButton();
+        expect(taskPage.returnNotePopUpTitle()).toEqual(Objects.taskspage.data.noteTitleEditRecord);
+        taskPage.insertNoteFromOverviewTab(Objects.taskspage.data.noteText);        
+        expect(taskPage.returnNoteName()).toEqual(Objects.taskspage.data.noteText, 'The note is not updated');
+    		
+    
+    	
+    });
+    it('should create new task and edit priority to high', function() {
+
+    	taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+    	taskPage.editPriority("High");        
+        expect(taskPage.returnPriority()).toEqual(Objects.taskspage.data.priorityHigh, "Priority is not updated");            
+       
+       
+    });
+    it('should create new task and edit priority to Expedite', function() {
+
+    	taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, "High", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+    	taskPage.editPriority("Expedite");        
+        expect(taskPage.returnPriority()).toEqual(Objects.taskspage.data.priorityExpedite, "Priority is not updated");  
+    });
+    it('should create new task and edit percent of completition', function() {
+
+    	taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, "Expedite", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+        taskPage.editPercent(Objects.taskspage.data.percentCompletitionInput);            
+        expect(taskPage.returnPercent()).toEqual(Objects.taskspage.data.percentCompletitionInput, 'Percent is not updated');
+       
+    });
+    it('should create new task and edit task subject', function() {
+
+    	taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+        taskPage.editTaskSubject(Objects.taskspage.data.taskSubjectInput);
+        expect(taskPage.returnTaskSubject()).toEqual(Objects.taskspage.data.taskSubjectInput, 'Task subject is not updated');
+
+    });
+    it('should create new task and edit assignee from samuel to ann', function() {
+
+    	taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, "High", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+        taskPage.editAssignee("ann-acm");
+        expect(taskPage.returnAssignee()).toEqual(Objects.taskspage.data.administrator, 'The assignee is not updated');
+
+    });
+    it('should create new task change assignee and verify is button complete and delete are not displyed', function() {
+
+    	taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, "Expedite", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+        taskPage.editAssignee("ann-acm");
+        expect(taskPage.returnAssignee()).toEqual(Objects.taskspage.data.administrator, 'The assignee is not updated');
+        expect(taskPage.completeButtonIsPresent()).toBe(false, 'Complete button should not be displyed');
+        expect(taskPage.deleteButtonIsPresent()).toBe(false, 'Delete  button should not be displyed');
+       
+    });
     
 })
 
