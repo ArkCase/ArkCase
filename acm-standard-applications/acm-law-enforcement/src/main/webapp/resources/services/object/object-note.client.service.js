@@ -194,7 +194,6 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'Acm.Stor
             noteType = noteType || "GENERAL";
         	var cacheCaseNoteData = new Store.CacheFifo(Service.CacheNames.NOTES);
             var cacheKey = objectType + "." + objectId + "." + noteType + "." + start + "." + n + "." + sortBy + "." + sortDir;
-            Service.clearCash(cacheCaseNoteData, cacheKey);
             var noteData = cacheCaseNoteData.get(cacheKey);
 
             var sort = "";
@@ -215,7 +214,7 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'Acm.Stor
                 , onSuccess: function (data) {
                     if (Service.validateNotesData(data)) {
                     	noteData = data;
-                        cacheCaseNoteData.put(cacheKey, noteData);
+                    	cacheCaseNoteData.put(cacheKey, noteData);
                         return noteData;
 
                     }
@@ -235,7 +234,7 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'Acm.Stor
          *
          * @returns {Object} Promise
          */
-        Service.saveNote = function (noteInfo) {
+        Service.saveNote = function (noteInfo, start, n, sortBy, sortDir) {
             if (noteInfo.id && 0 != noteInfo.id) {     //Don't validate when creating new note; there is no id yet
                 if (!Service.validateNote(noteInfo)) {
                     return Util.errorPromise($translate.instant("common.service.error.invalidData"));
@@ -249,19 +248,10 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'Acm.Stor
                         var noteInfo = data;
                         var cacheKey = Util.goodValue(noteInfo.parentType) + "." + Util.goodValue(noteInfo.parentId, 0) + "." + Util.goodValue(noteInfo.type, "GENERAL");
                         var cacheNotes = new Store.CacheFifo(Service.CacheNames.NOTES);
-                        var notes = cacheNotes.get(cacheKey);
-                        if (notes == null)
-                            notes = [];
-                        //update noteInfo into notes
-                        var index = _.findIndex(notes, function (note) {
-                            return Util.compare(note.id, noteInfo.id);
-                        });
-                        if (index < 0)
-                            notes.push(noteInfo);
-                        else
-                            notes[index] = noteInfo;
-                        cacheNotes.put(cacheKey, notes);
-                        return notes;
+                        
+                        Service.clearCache(cacheNotes, cacheKey);
+                       
+                        return noteInfo;
                     }
                 }
             });
@@ -398,25 +388,25 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'Acm.Stor
         
         /**
          * @ngdoc method
-         * @name clearCash
+         * @name clearCache
          * @methodOf services:Object.NoteService
          *
          * @description
-         * Clear cash for notes
+         * Clear cache for notes
          *
          * @param {Object} cacheCaseNoteData  Note name
          * @param {String} cacheKey  
          *
          * @returns [Undefined] don't return anything.
          */
-        Service.clearCash = function (cacheCaseNoteData, cacheKey){
-    		var cacheKeys = cacheCaseNoteData.keys();
+        Service.clearCache = function (cacheNotes, objectType, objectId){
+    		var cacheKeys = cacheNotes.keys();
             _.each(cacheKeys, function (key){
                 if(key == null) {
                     return;
                 }
-                if(key.indexOf(cacheKey) == 0) {
-                    cacheCaseNoteData.remove(key);
+                if(key.indexOf(objectType + "." + objectId) == 0) {
+                	cacheNotes.remove(key);
                 }
             });
     	}
