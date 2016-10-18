@@ -306,7 +306,6 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'Acm.Stor
          * @returns {Boolean} Return true if data is valid
          */
         Service.validateNotes = function (data) {
-            /*
              if (Util.isEmpty(data)) {
              return false;
              }
@@ -318,7 +317,6 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'Acm.Stor
              return false;
              }
              }
-             */
             return true;
         };
 
