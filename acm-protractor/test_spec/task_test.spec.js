@@ -1,12 +1,9 @@
 var logger = require('../log');
+var utils = require('../util/utils.js');
 var taskPage = require('../Pages/task_page.js');
 var tasksPage = require('../Pages/tasks_page.js');
 var authentication = require('../authentication.js');
 var Objects = require('../json/Objects.json');
-var now = new Date();
-var day = ("0" + now.getDate()).slice(-2);
-var month = ("0" + (now.getMonth() + 1)).slice(-2);
-var today = (month) + "/" + (day) + "/" + now.getFullYear();
 var flag = false;
 
 function testAsync(done) {
@@ -16,7 +13,7 @@ function testAsync(done) {
 
         // Invoke the special done callback
         done();
-    }, 8000);
+    }, 20000);
 }
 
 
@@ -89,8 +86,8 @@ describe('Create new task ', function() {
     	taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
     	expect(taskPage.returnTaskSubject()).toEqual(Objects.taskpage.data.Subject);
     	expect(taskPage.returnAssignee()).toEqual(Objects.taskspage.data.assigneeSamuel);
-    	expect(taskPage.returnInsertedStartDate()).toEqual(today);
-    	expect(taskPage.returnInsertedDueDate()).toEqual(today);
+    	expect(taskPage.returnInsertedStartDate()).toEqual(utils.returnToday("/"));
+    	expect(taskPage.returnInsertedDueDate()).toEqual(utils.returnToday("/"));
     	expect(taskPage.returnPercent()).toEqual(Objects.taskpage.data.percentCompleteInput);
     	taskPage.clickDetailsLink();
         expect(taskPage.returnDetailsTextArea()).toEqual(Objects.taskspage.data.notesTextArea);        
@@ -157,7 +154,7 @@ describe('Create new task ', function() {
         taskPage.insertNoteFromOverviewTab(Objects.taskspage.data.notesTextArea); 
         expect(taskPage.addedNoteNameIsPresent()).toBe(true, 'Added note does not exist in the grid');
         expect("Note name is not correct", taskPage.returnNoteName()).toEqual(Objects.taskspage.data.notesTextArea);
-        expect("Created date of note is not correct", taskPage.returnNoteCreatedDate()).toEqual(today);
+        expect("Created date of note is not correct", taskPage.returnNoteCreatedDate()).toEqual(utils.returnToday("/"));
         expect("Supervisor is not correct", taskPage.returnNoteAuthor()).toEqual(Objects.taskspage.data.supervisor);
        
         
