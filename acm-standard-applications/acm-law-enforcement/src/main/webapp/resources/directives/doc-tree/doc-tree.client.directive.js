@@ -962,7 +962,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 }
                 , addData: function (data) {
                     var arr = [];
-                    if (Util.isArray(data)) {
+
+                    if (Util.isEmpty(data)) {
+                        return;
+                    } else if (Util.isArray(data)) {
                         arr = data;
                     } else if ("string" == typeof data) {
                         arr = [data];
@@ -988,7 +991,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                 , addRenderers: function (renderers) {
                     for (var i = 0; i < renderers.length; i++) {
-                        this.addRenderer(renderers[i].name, renderers[i].renderer);
+                        DocTree.CustomData.addData(renderers[i].model);
+                        DocTree.Column.addRenderer(renderers[i].name, renderers[i].renderer);
                     }
                 }
                 , addRenderer: function (name, renderer) {
@@ -3649,7 +3653,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 });
             }
         };
-        
+
         var Ui = {
             dlgModal: function ($s, onClickBtnPrimary, onClickBtnDefault) {
                 var a = $s.html();
@@ -4247,9 +4251,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 // With scope.treeControl set above, according to Angular documentation, the host controller $scope.treeControl should be defined.
                 // Yet, it is not always the case. It works sometimes and does not the other times. As a work around, scope.treeControl is
                 // passed as argument of onInitTree(). Parent controller need to assign it to its $scope.treeControl
-                //if ("undefined" != typeof attrs.onInitTree) {
-                //    scope.onInitTree()(scope.treeControl);
-                //}
                 if ("undefined" != typeof attrs.onInitTree) {
                     scope.onInitTree()(scope.treeControl);
                 }
