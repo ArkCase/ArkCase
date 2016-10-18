@@ -61,9 +61,10 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                     }
                 );
 
-                //scope.isReadOnly = function (objectInfo) {
-                //    return scope.notesInit.isReadOnly;
-                //}
+                // set scope.isReadOnly for addButton in gridHelper
+                scope.isReadOnly = function (objectInfo) {
+                    return scope.notesInit.isReadOnly;
+                };
 
                 var noteHelper = new HelperNoteService.Note();
                 var gridHelper = new HelperUiGridService.Grid({scope: scope});
