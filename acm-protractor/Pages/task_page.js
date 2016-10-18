@@ -70,6 +70,24 @@ var tagName = element.all(by.repeater(Objects.taskspage.locators.addedtagName)).
 var tagCreatedDate = element.all(by.repeater(Objects.taskspage.locators.tagCreatedDate)).get(1);
 var tagCreatedBy = element.all(by.repeater(Objects.taskspage.locators.tagCreatedBy)).get(2);
 var tagDeleteBtn = element.all(by.repeater(Objects.taskspage.locators.tagDeleteBtn)).get(3).all(by.tagName(Objects.taskspage.locators.tag)).get(0);
+var detailsSaveBtn = element(by.xpath(Objects.taskspage.locators.detailsSaveBtn));
+var refreshBtn = element(by.css(Objects.taskspage.locators.refreshBtn));
+var workflowLink = element.all(by.repeater(Objects.taskspage.locators.workflowLink)).get(6);
+var workflowTitle = element(by.css(Objects.taskspage.locators.workflowTitle));
+var workflowParticipant = element.all(by.repeater(Objects.taskspage.locators.workflowParticipant)).get(0);
+var workflowStatus = element.all(by.repeater(Objects.taskspage.locators.workflowStatus)).get(2);
+var workflowStartDate = element.all(by.repeater(Objects.taskspage.locators.workflowStartDate)).get(3);
+var historyLink = element.all(by.repeater(Objects.taskspage.locators.historyLink)).get(7);
+var historyTableTitle = element(by.css(Objects.taskspage.locators.historyTableTitle));
+var historyEventName = element.all(by.repeater(Objects.taskspage.locators.historyEventName)).get(0);
+var historyDate = element.all(by.repeater(Objects.taskspage.locators.historyDate)).get(1);
+var historyUser = element.all(by.repeater(Objects.taskspage.locators.historyUser)).get(2);
+var detailsLinkBtn = element(by.xpath(Objects.taskspage.locators.detailsLinkBtn));
+var insertLinkTitle = element(by.xpath(Objects.taskspage.locators.insertLinkTitle));
+var insertLinkText = element(by.xpath(Objects.taskspage.locators.insertLinkText));
+var insertLinkUrl = element(by.xpath(Objects.taskspage.locators.insertLinkUrl));
+var insertLinkBtn = element(by.buttonText(Objects.taskspage.locators.insertLinkBtn));
+var headerImageLink = element(by.css(Objects.taskspage.locators.headerImageLink));
 
 var TaskPage = function() {
 	this.clickNewButton = function() {
@@ -327,7 +345,7 @@ var TaskPage = function() {
 		tagsLink.click();
 		return this;
 	}
-	this.tagsTableTittle = function(){
+	this.returnTagsTableTittle = function(){
 		return tagsTableTitle.getText();
 	}
 	this.clickAddTagButton = function(){
@@ -358,7 +376,86 @@ var TaskPage = function() {
 		tagTextArea.click();
 		tagTextArea.clear();
 		tagTextArea.sendKeys(tag);
+		return this;
 	}
+	this.clickDeleteTagButton = function(){
+		tagDeleteBtn.click();
+		return this;
+	}
+	this.returnTagNameisPresent = function(){
+		return tagName.isPresent();
+	}
+	this.insertDetailsTextAreaText = function(details){
+		detailsTextArea.click();
+		detailsTextArea.clear();
+		detailsTextArea.sendKeys(details);
+		return this;
+	}
+	this.clickSaveDetailsButton = function(){
+		detailsSaveBtn.click();
+		return this;
+	}
+	this.clickRefreshButton = function(){
+		refreshBtn.click();
+		return this;
+	}
+	this.clickWorkflowLink = function(){
+		workflowLink.click();
+		return this;
+	}
+	this.returnWorkflowTitle = function(){
+		return workflowTitle.getText();
+	}
+	this.returnWorkflowParticipant = function(){
+		return workflowParticipant.getText();
+	}
+	this.returnWorkflowStatus = function(){
+		return workflowStatus.getText();
+	}
+	this.returnWorkflowStartDate = function(){
+		return workflowStartDate.getText();
+	}
+	this.clickHistoryLink = function(){
+		historyLink.click();
+		return this;
+	}
+	this.returnHistoryTableTitle = function(){
+		return historyTableTitle.getText();
+	}
+	this.returnHistoryEventName = function(){
+		return historyEventName.getText();
+	}
+	this.returnHistoryUser = function(){
+		return historyUser.getText();
+	}
+	this.returnHistoryDate = function(){
+		return historyDate.getText();
+	}
+	this.clickInsertLinkInDetails = function(){
+		detailsLinkBtn.click();
+		return this;
+	}
+	this.insertDetailsTextAreaLink = function(text, url){
+		insertLinkText.click();
+        insertLinkText.sendKeys(text);
+        insertLinkUrl.clear();
+        insertLinkUrl.sendKeys(url);
+        insertLinkBtn.click();		
+	}
+	this.returnInsertLinkTitle = function(){
+		return insertLinkTitle.getText();
+	}
+	this.returnTaskTitle = function(){
+		return taskTitle.getText();
+	}
+	this.clickHeaderImageLink = function(){
+		headerImageLink.click();
+		return this;
+	}
+	this.returnDashboardTitle = function(){
+		return dashboardTitle.getText();
+	}
+	
 
 
 };

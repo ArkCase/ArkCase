@@ -219,14 +219,93 @@ describe('Create new task ', function() {
     });
     it('should create new task change assignee and verify is button complete and delete are not displyed', function() {
 
-    	taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, "Expedite", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+    	 taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, "Expedite", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
         taskPage.editAssignee("ann-acm");
         expect(taskPage.returnAssignee()).toEqual(Objects.taskspage.data.administrator, 'The assignee is not updated');
         expect(taskPage.completeButtonIsPresent()).toBe(false, 'Complete button should not be displyed');
         expect(taskPage.deleteButtonIsPresent()).toBe(false, 'Delete  button should not be displyed');
        
     });
+    it('should create new task add tag and verify added tag', function() {
+
+    	taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+        taskPage.clickTagsLink();
+        expect(taskPage.returnTagsTableTittle()).toEqual(Objects.taskspage.data.tagsTableTitle);
+        taskPage.clickAddTagButton();
+        expect(taskPage.returnAddTagPopUpTitle()).toEqual(Objects.taskspage.data.addTagPopUpTitle);
+        browser.driver.actions().mouseDown(taskPage.tagTextArea).click().sendKeys(Objects.taskspage.data.tagTextArea).perform();
+        taskPage.clickAddTagPopUpTitle().clickSaveTagButton();
+        expect(taskPage.returnTagName()).toEqual(Objects.taskspage.data.tagTextArea, 'Created tag name is wrong');
+        expect(taskPage.returnTagCreatedDate()).toEqual(today, 'Created tag date is wrong');
+        expect(taskPage.returnTagCreatedBy()).toEqual(Objects.taskspage.data.supervisor, 'Created tag by is wrong');
+
+    });
+    it('should create new task add tag and delete added tag', function() {
+
+    	taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, "High", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+        taskPage.clickTagsLink();
+        expect(taskPage.returnTagsTableTittle()).toEqual(Objects.taskspage.data.tagsTableTitle);
+        taskPage.clickAddTagButton();
+        expect(taskPage.returnAddTagPopUpTitle()).toEqual(Objects.taskspage.data.addTagPopUpTitle);
+        browser.driver.actions().mouseDown(taskPage.tagTextArea).click().sendKeys(Objects.taskspage.data.tagTextArea).perform();
+        taskPage.clickAddTagPopUpTitle().clickSaveTagButton();
+        taskPage.clickDeleteTagButton();
+        expect(taskPage.returnTagNameisPresent()).toBe(false, 'The tag is not deleted');
+
+    });
+    it('should create new task add text task details verify if it saved', function() {
+
+    	taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, "Expedite", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+        taskPage.clickDetailsLink();
+        taskPage.insertDetailsTextAreaText(Objects.taskspage.data.detailsTextArea);
+        taskPage.clickSaveDetailsButton();
+        taskPage.clickRefreshButton();
+        expect(taskPage.returnDetailsTextArea()).toEqual(Objects.taskspage.data.detailsTextArea, 'After refresh the details text is not saved');
+
+
+    });
+    it('should create new task and verify workflow table data', function() {
+
+    	taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+        taskPage.workflowLink.click();
+        expect(taskPage.returnWorkflowTitle()).toEqual(Objects.taskspage.data.workflowTitle);
+        expect(taskPage.returnWorkflowParticipant()).toEqual(Objects.taskspage.data.supervisor);
+        expect(taskPage.returnWorkflowStatus()).toEqual(Objects.taskspage.data.workflowStatus);
+        expect(taskPage.returnWorkflowStartDate()).toEqual(utils.returnToday("/"));
+
+    });
+    it('should create new task and verify history table data', function() {
+
+    	taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+        taskPage.clickHistoryLink();
+        expect(taskPage.returnHistoryTableTitle()).toEqual(Objects.taskspage.data.historyTableTitle);
+        expect(taskPage.returnHistoryEventName()).toEqual(Objects.taskspage.data.historyEventName);
+        expect(taskPage.returnHistoryUser()).toEqual(Objects.taskspage.data.supervisor);
+        expect(taskPage.returnHistoryDate()).toContain(utils.returnToday("/"));
+
+    });
+    it('should create new task add link from task details', function() {
+
+    	taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+    	taskPage.clickDetailsLink();
+        taskPage.clickInsertLinkInDetails();
+        expect(taskPage.returnInsertLinkTitle()).toEqual(Objects.taskspage.data.insertLinkTitle);
+        taskPage.insertDetailsTextAreaLink(Objects.taskspage.data.insertLinkText, Objects.taskspage.data.insertLinkUrl);
+        expect(taskPage.returnDetailsTextArea()).toEqual(Objects.taskspage.data.insertLinkText, 'The link is not added');
+        taskPage.clickSaveDetailsButton();
+        expect(taskPage.returnDetailsTextArea()).toEqual(Objects.taskspage.data.insertLinkText, 'The link is not added');
+
+    });
+    it('should navigate to task page and click on header image and verify if redirects to home page', function() {
+
+    	taskPage.clickNewButton().clickTaskButton();
+        expect(taskPage.returnTaskTitle()).toEqual(Objects.taskspage.data.taskTitle);
+        taskPage.clickHeaderImageLink();
+        expect(taskPage.returnDashboardTitle()).toEqual(Objects.taskspage.data.dashboardTitle, 'Header image does not redirects to home page');
+
+    });
     
+
 })
 
         
