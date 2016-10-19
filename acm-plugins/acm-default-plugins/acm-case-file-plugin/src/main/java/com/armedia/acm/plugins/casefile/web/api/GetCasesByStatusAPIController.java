@@ -42,7 +42,7 @@ public class GetCasesByStatusAPIController
     private ExecuteSolrQuery executeSolrQuery;
 
     /**
-     * REST api for retrieving active case files by status
+     * REST api for retrieving case files by status.
      *
      * @param authentication
      * @return
