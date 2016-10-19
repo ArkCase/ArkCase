@@ -2,18 +2,11 @@ package com.armedia.acm.data;
 
 import org.eclipse.persistence.descriptors.DescriptorEvent;
 import org.eclipse.persistence.descriptors.DescriptorEventAdapter;
-import org.eclipse.persistence.internal.sessions.DirectToFieldChangeRecord;
-import org.eclipse.persistence.internal.sessions.ObjectChangeSet;
-import org.eclipse.persistence.queries.DeleteObjectQuery;
-import org.eclipse.persistence.queries.InsertObjectQuery;
-import org.eclipse.persistence.queries.UpdateObjectQuery;
-import org.eclipse.persistence.sessions.changesets.ChangeRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -24,9 +17,6 @@ public class ObjectChangesBySessionAccumulator extends DescriptorEventAdapter
     private Map<String, AcmObjectChangelist> changesBySession =
             Collections.synchronizedMap(new HashMap<String, AcmObjectChangelist>());
 
-    private Map<String, List<AcmEntityChangesHolder>> entityChangesBySession =
-            Collections.synchronizedMap(new HashMap<>());
-
     @Override
     public void postInsert(DescriptorEvent event)
     {
@@ -36,14 +26,6 @@ public class ObjectChangesBySessionAccumulator extends DescriptorEventAdapter
         try
         {
             String sessionName = event.getSession().getName();
-            if (event.getQuery() instanceof InsertObjectQuery)
-            {
-                InsertObjectQuery insertObjectQuery = (InsertObjectQuery) event.getQuery();
-                ObjectChangeSet objectChanges = insertObjectQuery.getObjectChangeSet();
-                AcmEntityChangesHolder acmEntityChangesHolder = processChangeRecords(objectChanges,
-                        AcmEntityChangeEvent.ACTION.INSERT);
-                getEntityChangesBySession().get(sessionName).add(acmEntityChangesHolder);
-            }
             getChangesBySession().get(sessionName).getAddedObjects().add(event.getObject());
         } catch (NullPointerException npe)
         {
@@ -83,14 +65,6 @@ public class ObjectChangesBySessionAccumulator extends DescriptorEventAdapter
         try
         {
             String sessionName = event.getSession().getName();
-            if (event.getQuery() instanceof UpdateObjectQuery)
-            {
-                UpdateObjectQuery updateObjectQuery = (UpdateObjectQuery) event.getQuery();
-                ObjectChangeSet objectChanges = updateObjectQuery.getObjectChangeSet();
-                AcmEntityChangesHolder acmEntityChangesHolder = processChangeRecords(objectChanges,
-                        AcmEntityChangeEvent.ACTION.UPDATE);
-                getEntityChangesBySession().get(sessionName).add(acmEntityChangesHolder);
-            }
             getChangesBySession().get(sessionName).getUpdatedObjects().add(event.getObject());
         } catch (NullPointerException npe)
         {
@@ -123,32 +97,6 @@ public class ObjectChangesBySessionAccumulator extends DescriptorEventAdapter
 
     }
 
-    private AcmEntityChangesHolder processChangeRecords(ObjectChangeSet objectChanges, AcmEntityChangeEvent.ACTION changeAction)
-    {
-        List<ChangeRecord> changeRecords = objectChanges.getChanges();
-        log.debug("Process changes -> class:{}", objectChanges.getClassName());
-        AcmEntityChangesHolder acmEntityChangesHolder = new AcmEntityChangesHolder(objectChanges.getClassName(),
-                objectChanges.getId().toString(), changeAction);
-        changeRecords.stream()
-                .filter(changeRecord -> changeRecord instanceof DirectToFieldChangeRecord)
-                .forEach(changeRecord ->
-                {
-                    DirectToFieldChangeRecord directToFieldChangeRecord = (DirectToFieldChangeRecord) changeRecord;
-                    log.debug("Change: {} : -> {} -> {}", directToFieldChangeRecord.getAttribute(),
-                            directToFieldChangeRecord.getOldValue(),
-                            directToFieldChangeRecord.getNewValue());
-                    acmEntityChangesHolder.addPropertyChange(directToFieldChangeRecord.getAttribute(),
-                            directToFieldChangeRecord.getOldValue(), directToFieldChangeRecord.getNewValue());
-                });
-        return acmEntityChangesHolder;
-    }
-
-    private AcmEntityChangesHolder processDeleteQuery(DeleteObjectQuery deleteObjectQuery){
-        String entityId = deleteObjectQuery.getPrimaryKey().toString();
-        String entityClass = deleteObjectQuery.getObject().getClass().getName();
-        return new AcmEntityChangesHolder(entityClass, entityId, AcmEntityChangeEvent.ACTION.DELETE);
-    }
-
     @Override
     public void postDelete(DescriptorEvent event)
     {
@@ -158,12 +106,6 @@ public class ObjectChangesBySessionAccumulator extends DescriptorEventAdapter
         try
         {
             String sessionName = event.getSession().getName();
-            if (event.getQuery() instanceof DeleteObjectQuery)
-            {
-                DeleteObjectQuery deleteObjectQuery = (DeleteObjectQuery) event.getQuery();
-                AcmEntityChangesHolder acmEntityChangesHolder = processDeleteQuery(deleteObjectQuery);
-                getEntityChangesBySession().get(sessionName).add(acmEntityChangesHolder);
-            }
             getChangesBySession().get(sessionName).getDeletedObjects().add(event.getObject());
         } catch (NullPointerException npe)
         {
@@ -204,15 +146,5 @@ public class ObjectChangesBySessionAccumulator extends DescriptorEventAdapter
     public void setChangesBySession(Map<String, AcmObjectChangelist> changesBySession)
     {
         this.changesBySession = changesBySession;
-    }
-
-    public Map<String, List<AcmEntityChangesHolder>> getEntityChangesBySession()
-    {
-        return entityChangesBySession;
-    }
-
-    public void setEntityChangesBySession(Map<String, List<AcmEntityChangesHolder>> entityChangesBySession)
-    {
-        this.entityChangesBySession = entityChangesBySession;
     }
 }

@@ -21,7 +21,6 @@ public class SessionAccumulatingSessionListener extends SessionEventAdapter impl
     private ObjectChangesBySessionAccumulator descriptorListener;
 
     private ApplicationEventPublisher applicationEventPublisher;
-    private AcmEntityEventPublisher acmEntityEventPublisher;
 
     @Override
     public void postAcquireClientSession(SessionEvent event)
@@ -32,7 +31,6 @@ public class SessionAccumulatingSessionListener extends SessionEventAdapter impl
 
         event.getSession().setName(name);
         descriptorListener.getChangesBySession().put(name, new AcmObjectChangelist());
-        descriptorListener.getEntityChangesBySession().put(name, new CopyOnWriteArrayList<>());
     }
 
     @Override
@@ -42,7 +40,6 @@ public class SessionAccumulatingSessionListener extends SessionEventAdapter impl
         log.trace("releasing session: {}", event.getSession().getName());
 
         descriptorListener.getChangesBySession().remove(event.getSession().getName());
-        descriptorListener.getEntityChangesBySession().remove(event.getSession().getName());
     }
 
     @Override
@@ -67,11 +64,6 @@ public class SessionAccumulatingSessionListener extends SessionEventAdapter impl
                 getApplicationEventPublisher().publishEvent(new AcmDatabaseChangesEvent(changelist));
             }
         }
-
-        Map<String, List<AcmEntityChangesHolder>> entityChangesBySession = getDescriptorListener().getEntityChangesBySession();
-        log.trace("Raising entity change events: {}", entityChangesBySession.size());
-        entityChangesBySession.get(sessionName).forEach(entityChangesHolder ->
-                getAcmEntityEventPublisher().publishEntityChangedEvent(entityChangesHolder));
     }
 
     @Override
@@ -104,13 +96,4 @@ public class SessionAccumulatingSessionListener extends SessionEventAdapter impl
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
-    public AcmEntityEventPublisher getAcmEntityEventPublisher()
-    {
-        return acmEntityEventPublisher;
-    }
-
-    public void setAcmEntityEventPublisher(AcmEntityEventPublisher acmEntityEventPublisher)
-    {
-        this.acmEntityEventPublisher = acmEntityEventPublisher;
-    }
 }
