@@ -50,7 +50,8 @@
             "linkInputUrl": "/html/body/div[1]/div[2]/div/div/div[2]/div[2]/input",
             "chooseFilesBtn": ".//*[@class='form-group row note-group-select-from-files']/input",
             "associateNumberInput": "associateNumber",
-            "taskState": ".//*[@class='clearfix']/div[2]/div[6]/div"
+            "taskState": ".//*[@class='clearfix']/div[2]/div[6]/div",
+            "editSubmitButton": ".btn.btn-primary.btn-sm"
         },
 
         "data": {
@@ -109,7 +110,7 @@
             "notesTableTitle": ".panel-title",
             "addNoteBtn": ".//*[@class='btn btn-default btn-xs']",
             "notePopUpTitle": ".//*[@class='modal-header ng-scope']",
-            "noteTextArea": "note.note",
+            "notesTextArea": "note.note",
             "noteSaveBtn": "Save",
             "noteName": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
             "noteCreatedDate": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
