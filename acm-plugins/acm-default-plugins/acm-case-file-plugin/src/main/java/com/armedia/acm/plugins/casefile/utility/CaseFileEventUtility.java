@@ -34,11 +34,12 @@ public class CaseFileEventUtility implements ApplicationEventPublisherAware
         applicationEventPublisher.publishEvent(event);
     }
 
-    public void raiseCustomEvent(CaseFile caseFile, String caseState, Date eventDate, String ipAddress, String userId, Authentication auth)
+    public void raiseCustomEvent(CaseFile caseFile, String caseState, String eventDescription, Date eventDate, String ipAddress,
+            String userId, Authentication auth)
     {
-        String eventType = caseState;
+        String eventType = "com.armedia.acm.casefile." + caseState;
         eventDate = eventDate == null ? new Date() : eventDate;
-        CaseEvent event = new CaseEvent(caseFile, ipAddress, userId, eventType, eventDate, true, auth);
+        CaseEvent event = new CaseEvent(caseFile, ipAddress, userId, eventType, eventDescription, eventDate, true, auth);
 
         applicationEventPublisher.publishEvent(event);
     }
