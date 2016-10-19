@@ -57,7 +57,7 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'Acm.Stor
              */
 	        , _queryNotesPage: {
 	            method: 'GET',
-	            url: 'api/latest/plugin/note/:parentType/:parentId/page?start=:start&n=:n&s=:sort',
+	            url: 'api/latest/plugin/note/:parentType/:parentId/page?type=:type&start=:start&n=:n&s=:sort',
 	            cache: false,
 	            isArray: false
 	        }
@@ -206,6 +206,7 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'Acm.Stor
                 , param: {
                     parentType: objectType
                     , parentId: objectId
+                    , type: noteType
                     , start: start
                     , n: n
                     , sort: sort
@@ -247,7 +248,7 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'Acm.Stor
                     if (Service.validateNote(data)) {
                         var noteInfo = data;                       
                         
-                        Service.clearCache(noteInfo.parentType, noteInfo.parentId, noteInfo.noteType);
+                        Service.clearCache(noteInfo.parentType, noteInfo.parentId, noteInfo.type);
                        
                         return noteInfo;
                     }
@@ -407,7 +408,7 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'Acm.Stor
                 if(key == null) {
                     return;
                 }
-                if(key.indexOf(cacheSubKey)) {
+                if(key.indexOf(cacheSubKey) >= 0) {
                 	cacheNotes.remove(key);
                 }
             });
