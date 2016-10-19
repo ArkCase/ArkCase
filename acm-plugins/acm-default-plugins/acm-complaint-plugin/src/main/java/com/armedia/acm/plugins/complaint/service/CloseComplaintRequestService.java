@@ -63,8 +63,8 @@ public class CloseComplaintRequestService
     private EntityManager entityManager;
 
     @Transactional
-    public void handleCloseComplaintRequestApproved(Long complaintId, Long closeComplaintRequestId, String user, Date approvalDate)
-            throws PipelineProcessException
+    public void handleCloseComplaintRequestApproved(Long complaintId, Long closeComplaintRequestId, String user, Date approvalDate,
+            String ipAddress) throws PipelineProcessException
     {
         CloseComplaintRequest updatedRequest = updateCloseComplaintRequestStatus(closeComplaintRequestId);
 
@@ -75,7 +75,7 @@ public class CloseComplaintRequestService
 
         if (shouldFullInvestigationBeOpened)
         {
-            CaseFile fullInvestigation = openFullInvestigation(updatedComplaint, user, null, updatedComplaint.getObjectType());
+            CaseFile fullInvestigation = openFullInvestigation(updatedComplaint, user, null, updatedComplaint.getObjectType(), ipAddress);
             log.debug("Opened a full investigation: " + fullInvestigation.getCaseNumber());
 
             // Add CaseFile as Reference to the Complaint
@@ -87,7 +87,7 @@ public class CloseComplaintRequestService
 
         if (shouldComplaintBeAddedToExistingCase)
         {
-            CaseFile updatedCaseFile = addToExistingCaseFile(updatedRequest, updatedComplaint, user);
+            CaseFile updatedCaseFile = addToExistingCaseFile(updatedRequest, updatedComplaint, user, ipAddress);
             if (updatedCaseFile != null)
             {
                 log.debug("Added complaint to existing case file: " + updatedCaseFile.getCaseNumber());
@@ -110,8 +110,8 @@ public class CloseComplaintRequestService
         getComplaintEventPublisher().publishComplaintUpdated(updatedComplaint, user);
     }
 
-    private CaseFile addToExistingCaseFile(CloseComplaintRequest updatedRequest, Complaint updatedComplaint, String userId)
-            throws PipelineProcessException
+    private CaseFile addToExistingCaseFile(CloseComplaintRequest updatedRequest, Complaint updatedComplaint, String userId,
+            String ipAddress) throws PipelineProcessException
     {
         String caseNumber = updatedRequest.getDisposition().getExistingCaseNumber();
 
@@ -219,7 +219,7 @@ public class CloseComplaintRequestService
         return "add_existing_case".equals(updatedRequest.getDisposition().getDispositionType());
     }
 
-    public CaseFile openFullInvestigation(Complaint updatedComplaint, String userId, CaseFile caseFile, String objectType)
+    public CaseFile openFullInvestigation(Complaint updatedComplaint, String userId, CaseFile caseFile, String objectType, String ipAddress)
             throws PipelineProcessException
     {
         if (caseFile == null)
@@ -251,8 +251,6 @@ public class CloseComplaintRequestService
 
         addChildObjectsToCaseFile(updatedComplaint, fullInvestigation, auth);
 
-        getCaseFileEventUtility().raiseEvent(fullInvestigation, "created", new Date(), null, userId, auth);
-
         List<String> approvers = new ArrayList<String>();
         List<AcmParticipant> acmParticipants = getCloseComplaintRequestDao().findByComplaintId(updatedComplaint.getComplaintId())
                 .getParticipants();
@@ -268,9 +266,9 @@ public class CloseComplaintRequestService
         }
         String approversString = approvers.stream().collect(Collectors.joining(","));
 
-        getCaseFileEventUtility().raiseCustomEvent(fullInvestigation,
+        getCaseFileEventUtility().raiseCustomEvent(fullInvestigation, "createdFromComplaint",
                 "Case Created from Complaint " + updatedComplaint.getComplaintNumber() + " approval by " + approversString, new Date(),
-                null, userId, auth);
+                ipAddress, userId, auth);
 
         return fullInvestigation;
     }
