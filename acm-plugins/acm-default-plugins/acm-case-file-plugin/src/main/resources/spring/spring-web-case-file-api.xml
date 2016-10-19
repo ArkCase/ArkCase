@@ -17,7 +17,7 @@
 
     <bean id="getCasesByStatusAPIController"
           class="com.armedia.acm.plugins.casefile.web.api.GetCasesByStatusAPIController">
-        <property name="caseFileDao" ref="caseFileDao"/>
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
 
     <bean id="listCaseFilesByUserAPIController"
