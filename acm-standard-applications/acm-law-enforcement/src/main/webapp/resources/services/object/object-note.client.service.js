@@ -245,10 +245,9 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'Acm.Stor
                 , data: noteInfo
                 , onSuccess: function (data) {
                     if (Service.validateNote(data)) {
-                        var noteInfo = data;;
-                        var cacheNotes = new Store.CacheFifo(Service.CacheNames.NOTES);
+                        var noteInfo = data;                       
                         
-                        Service.clearCache(cacheNotes, noteInfo.parentType, noteInfo.parentId);
+                        Service.clearCache(noteInfo.parentType, noteInfo.parentId, noteInfo.noteType);
                        
                         return noteInfo;
                     }
@@ -391,25 +390,28 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'Acm.Stor
          * @methodOf services:Object.NoteService
          *
          * @description
-         * Clear cache for new or updated notes 
+         * Clear cache for notes 
          *
-         * @param {Object} cacheNotes cache to be cleared
          * @param {String} objectType  Object type
          * @param {Number} objectId  Object ID  
+         * @param {String} noteType  Type of note (GENERAL default ) 
          *
          * @returns [Undefined] don't return anything.
          */
-        Service.clearCache = function (cacheNotes, objectType, objectId){
+        Service.clearCache = function (objectType, objectId, noteType){        	
+            noteType = noteType || "GENERAL";
+        	var cacheNotes = new Store.CacheFifo(Service.CacheNames.NOTES);
+        	var cacheSubKey = objectType + "." + objectId + "." + noteType;
     		var cacheKeys = cacheNotes.keys();
             _.each(cacheKeys, function (key){
                 if(key == null) {
                     return;
                 }
-                if(key.indexOf(objectType + "." + objectId) == 0) {
+                if(key.indexOf(cacheSubKey)) {
                 	cacheNotes.remove(key);
                 }
             });
-    	}
+        }    	
 
         return Service;
     }
