@@ -234,7 +234,7 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'Acm.Stor
          *
          * @returns {Object} Promise
          */
-        Service.saveNote = function (noteInfo, start, n, sortBy, sortDir) {
+        Service.saveNote = function (noteInfo) {
             if (noteInfo.id && 0 != noteInfo.id) {     //Don't validate when creating new note; there is no id yet
                 if (!Service.validateNote(noteInfo)) {
                     return Util.errorPromise($translate.instant("common.service.error.invalidData"));
@@ -245,11 +245,10 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'Acm.Stor
                 , data: noteInfo
                 , onSuccess: function (data) {
                     if (Service.validateNote(data)) {
-                        var noteInfo = data;
-                        var cacheKey = Util.goodValue(noteInfo.parentType) + "." + Util.goodValue(noteInfo.parentId, 0) + "." + Util.goodValue(noteInfo.type, "GENERAL");
+                        var noteInfo = data;;
                         var cacheNotes = new Store.CacheFifo(Service.CacheNames.NOTES);
                         
-                        Service.clearCache(cacheNotes, cacheKey);
+                        Service.clearCache(cacheNotes, noteInfo.parentType, noteInfo.parentId);
                        
                         return noteInfo;
                     }
@@ -392,10 +391,11 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'Acm.Stor
          * @methodOf services:Object.NoteService
          *
          * @description
-         * Clear cache for notes
+         * Clear cache for new or updated notes 
          *
-         * @param {Object} cacheCaseNoteData  Note name
-         * @param {String} cacheKey  
+         * @param {Object} cacheNotes cache to be cleared
+         * @param {String} objectType  Object type
+         * @param {Number} objectId  Object ID  
          *
          * @returns [Undefined] don't return anything.
          */
