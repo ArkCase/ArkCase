@@ -1,9 +1,9 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$stateParams', '$modal'
+angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$stateParams', '$q', '$modal'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Task.InfoService', 'Helper.ObjectBrowserService'
     , 'Authentication', 'DocTreeService', 'PermissionsService', 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin'
-    , function ($scope, $stateParams, $modal
+    , function ($scope, $stateParams, $q, $modal
         , Util, ConfigService, ObjectService, ObjectLookupService, TaskInfoService, HelperObjectBrowserService
         , Authentication, DocTreeService, PermissionsService, DocTreeExtWebDAV, DocTreeExtCheckin) {
 
