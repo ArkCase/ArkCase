@@ -1,0 +1,78 @@
+<project
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <parent>
+        <groupId>com.armedia.acm</groupId>
+        <artifactId>acm-tool-integrations</artifactId>
+        <version>3.0.58-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+    <artifactId>acm-mule-module-cmis</artifactId>
+    <packaging>jar</packaging>
+
+    <name>ACM Mule CMIS Connector</name>
+    <description>This plugin adds the ability to Mule to connect to the ECM repository using Kerberos authentication.</description>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+        </dependency>
+
+        <!-- Mule Dependencies -->
+        <dependency>
+            <groupId>org.apache.chemistry.opencmis</groupId>
+            <artifactId>chemistry-opencmis-client-impl</artifactId>           
+        </dependency>
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-ognl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.alfresco.cmis.client</groupId>
+            <artifactId>alfresco-opencmis-extension</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-frontend-jaxws</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-transports-http</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-devkit-support</artifactId>
+        </dependency>
+        <dependency>
+             <groupId>org.mule.tools.devkit</groupId>
+             <artifactId>mule-devkit-annotations</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.ui</groupId>
+            <artifactId>workbench</artifactId>
+            <version>3.3.0-I20070608-1100</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.eclipse</groupId>
+                    <artifactId>jface</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse</groupId>
+                    <artifactId>swt</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+
+</project>
