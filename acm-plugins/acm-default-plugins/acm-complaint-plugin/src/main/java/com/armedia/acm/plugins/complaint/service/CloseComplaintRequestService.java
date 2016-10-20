@@ -22,6 +22,7 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.services.participants.model.ParticipantTypes;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -145,6 +146,12 @@ public class CloseComplaintRequestService
 
         addChildObjectsToCaseFile(updatedComplaint, existingCaseFile, auth);
 
+        getCaseFileEventUtility()
+                .raiseCustomEvent(
+                        existingCaseFile, "updatedFromComplaint", "Case Updated from Closed Complaint "
+                                + updatedComplaint.getComplaintNumber() + " approval by " + getClosedComplaintApprovers(updatedComplaint),
+                        new Date(), ipAddress, userId, auth);
+
         return existingCaseFile;
 
     }
@@ -253,26 +260,30 @@ public class CloseComplaintRequestService
 
         addChildObjectsToCaseFile(updatedComplaint, fullInvestigation, auth);
 
+        getCaseFileEventUtility().raiseCustomEvent(fullInvestigation, "createdFromComplaint", "Case Created from Complaint "
+                + updatedComplaint.getComplaintNumber() + " approval by " + getClosedComplaintApprovers(updatedComplaint), new Date(),
+                ipAddress, userId, auth);
+
+        return fullInvestigation;
+    }
+
+    private String getClosedComplaintApprovers(Complaint closingComplaint)
+    {
         List<String> approvers = new ArrayList<String>();
-        List<AcmParticipant> acmParticipants = getCloseComplaintRequestDao().findByComplaintId(updatedComplaint.getComplaintId())
+        List<AcmParticipant> acmParticipants = getCloseComplaintRequestDao().findByComplaintId(closingComplaint.getComplaintId())
                 .getParticipants();
         if (!acmParticipants.isEmpty())
         {
             for (AcmParticipant acmParticipant : acmParticipants)
             {
-                if ("approver".equals(acmParticipant.getParticipantType()))
+                if (ParticipantTypes.APPROVER.equals(acmParticipant.getParticipantType()))
                 {
                     approvers.add(acmParticipant.getParticipantLdapId());
                 }
             }
         }
         String approversString = approvers.stream().collect(Collectors.joining(","));
-
-        getCaseFileEventUtility().raiseCustomEvent(fullInvestigation, "createdFromComplaint",
-                "Case Created from Complaint " + updatedComplaint.getComplaintNumber() + " approval by " + approversString, new Date(),
-                ipAddress, userId, auth);
-
-        return fullInvestigation;
+        return approversString;
     }
 
     private String formatCaseDetails(Complaint updatedComplaint)
