@@ -1,6 +1,5 @@
 var Objects = require('../json/Objects.json');
-var newBtn = element(by.linkText(Objects.taskpage.locators.newButton));
-var taskBtn = element(by.linkText(Objects.taskpage.locators.taskButton));
+var basePage = require('./base_page.js');
 var taskTitle = element(by.css(Objects.taskpage.locators.taskTitle));
 var Subject = element(by.id(Objects.taskpage.locators.subject));
 var StartDateInput = element(by.id(Objects.taskpage.locators.startDate));
@@ -101,14 +100,6 @@ var startDateInputEdit = element(by.model(Objects.taskspage.locators.startDateIn
 var dueDateValue = element(by.model(Objects.taskspage.locators.dueDateInput));
 
 var TaskPage = function() {
-	this.clickNewButton = function() {
-		newBtn.click();
-		return this;
-	};
-	this.clickTaskButton = function() {
-		taskBtn.click();
-		return this;
-	};
 	this.insertSubject = function(subject) {
 		Subject.clear();
 		Subject.click();
@@ -565,4 +556,5 @@ var TaskPage = function() {
 
 };
 
+TaskPage.prototype = basePage;
 module.exports = new TaskPage();
