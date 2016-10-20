@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.complaint.service;
 
 import com.armedia.acm.activiti.AcmBusinessProcessEvent;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
@@ -23,7 +24,6 @@ public class CloseComplaintRequestProcessEndHandler implements ApplicationListen
 
         log.debug("Continue to close complaint processing? " + isCloseComplaintWorkflow);
 
-
         if (isCloseComplaintWorkflow)
         {
             try
@@ -37,12 +37,12 @@ public class CloseComplaintRequestProcessEndHandler implements ApplicationListen
                 log.debug("User: [{}]", user);
 
                 getCloseComplaintRequestService().handleCloseComplaintRequestApproved(complaintId, requestId, user,
-                        acmBusinessProcessEvent.getEventDate());
+                        acmBusinessProcessEvent.getEventDate(), acmBusinessProcessEvent.getIpAddress());
             } catch (Exception e)
             {
-                // we want to log an exception here so we can see what went wrong.  And we can't throw an
+                // we want to log an exception here so we can see what went wrong. And we can't throw an
                 // exception from an event handler; plus, we want the exception to propagate, which will roll
-                // back all Activiti updates.  So we catch the exception, log it, and throw a runtime exception.
+                // back all Activiti updates. So we catch the exception, log it, and throw a runtime exception.
                 log.error("Exception handling completed close case request: " + e.getMessage(), e);
                 throw new RuntimeException(e);
             }

@@ -31,8 +31,8 @@ public class CaseFileUpdatedListener implements ApplicationListener<CaseEvent>
     @Override
     public void onApplicationEvent(CaseEvent event)
     {
-        if ("com.armedia.acm.casefile.event.created".equals(event.getEventType().toLowerCase())
-                || "com.armedia.acm.casefile.event.updated".equals(event.getEventType().toLowerCase()))
+        if ("com.armedia.acm.casefile.created".equals(event.getEventType().toLowerCase())
+                || "com.armedia.acm.casefile.updated".equals(event.getEventType().toLowerCase()))
         {
             LOG.debug("Updating Frevvo XML file ...");
 

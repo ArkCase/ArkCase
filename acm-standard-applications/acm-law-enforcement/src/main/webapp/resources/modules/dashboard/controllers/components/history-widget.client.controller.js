@@ -35,6 +35,12 @@ angular.module('dashboard.history', ['adf.provider'])
 
                         _.forEach(results, function (result) {
                             var eventType = result.fullEventType;
+                            if (result.eventType != null && result.eventType != "") {
+                                eventType = result.eventType;
+                            }
+                            if (result.eventDescription != null && result.eventDescription != "") {
+                                eventType = result.eventDescription;
+                            }
                             if (eventType === "") {
                                 //Do nothing
                             }
