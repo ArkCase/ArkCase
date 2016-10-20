@@ -14,4 +14,11 @@
         </property>
     </bean>
 
+    <import resource="file:${user.home}/.arkcase/acm/app-config.xml"/>
+
+    <bean id="logoutUrl" class="java.lang.String" factory-method="valueOf">
+        <constructor-arg value="logoutUrl"/>
+    </bean>
+
+
 </beans>
