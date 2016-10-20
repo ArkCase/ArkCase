@@ -12,7 +12,7 @@
     	<property name="acmParticipantDao" ref="acmParticipantDao" />
     </bean>
 
-    <bean id="costService" class="com.armedia.acm.form.cost.service.CostService">
+    <bean id="costService" class="com.armedia.acm.form.cost.service.CostService" scope="prototype">
         <property name="costFactory" ref="costFactory"/>
         <property name="properties" ref="acm-form-properties" />
         <property name="ecmFileService" ref="ecmFileService"/>

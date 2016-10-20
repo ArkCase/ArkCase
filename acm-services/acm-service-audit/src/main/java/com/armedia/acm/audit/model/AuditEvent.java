@@ -2,6 +2,7 @@ package com.armedia.acm.audit.model;
 
 import com.armedia.acm.data.converter.UUIDToStringConverter;
 import com.google.common.base.Joiner;
+
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
@@ -21,6 +22,7 @@ import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,13 +37,7 @@ public class AuditEvent
     private static DateTimeFormatter dtf = ISODateTimeFormat.dateTime();
 
     @Id
-    @TableGenerator(name = "acm_audit_log_gen",
-            table = "acm_audit_log_id",
-            pkColumnName = "cm_seq_name",
-            valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_audit_log",
-            initialValue = 100,
-            allocationSize = 1)
+    @TableGenerator(name = "acm_audit_log_gen", table = "acm_audit_log_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_audit_log", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_audit_log_gen")
     @Column(name = "cm_audit_id")
     private Long id;
@@ -55,6 +51,9 @@ public class AuditEvent
 
     @Column(name = "cm_audit_activity")
     private String fullEventType;
+
+    @Column(name = "cm_audit_description")
+    private String eventDescription;
 
     @Column(name = "cm_audit_activity_result")
     private String eventResult;
@@ -122,6 +121,16 @@ public class AuditEvent
     public void setFullEventType(String fullEventType)
     {
         this.fullEventType = fullEventType;
+    }
+
+    public String getEventDescription()
+    {
+        return eventDescription;
+    }
+
+    public void setEventDescription(String eventDescription)
+    {
+        this.eventDescription = eventDescription;
     }
 
     public String getEventResult()
@@ -217,15 +226,14 @@ public class AuditEvent
     @Transient
     public String getEventType()
     {
-        //check if auditLookup is not null and get the type
+        // check if auditLookup is not null and get the type
         if (getAuditLookup() != null)
             return getAuditLookup().getAuditBuisinessName();
 
-        /*int lastDot = getFullEventType().lastIndexOf('.');
-        if (lastDot >= 0)
-        {
-            return getFullEventType().substring(lastDot + 1, getFullEventType().length());
-        }*/
+        /*
+         * int lastDot = getFullEventType().lastIndexOf('.'); if (lastDot >= 0) { return
+         * getFullEventType().substring(lastDot + 1, getFullEventType().length()); }
+         */
         return getFullEventType();
     }
 
@@ -267,17 +275,12 @@ public class AuditEvent
         {
             eventPropertiesString = Joiner.on(" | ").withKeyValueSeparator(": ").useForNull("").join(getEventProperties());
         }
-        return "Event date/time: " + dtf.print(getEventDate().getTime())
-                + " | Originating IP address: " + getIpAddress()
-                + " | RequestId: " + getRequestId()
+        return "Event date/time: " + dtf.print(getEventDate().getTime()) + " | Originating IP address: " + getIpAddress() + " | RequestId: "
+                + getRequestId()
                 /// trackId is not used anymore
                 // + " | Track Id: " + getTrackId()
-                + " | User: " + getUserId()
-                + " | Event type: " + getFullEventType()
-                + " | Event result: " + getEventResult()
-                + " | Object type: " + getObjectType()
-                + " | Object Id: " + getObjectId()
-                + " | Status: " + getStatus()
+                + " | User: " + getUserId() + " | Event type: " + getFullEventType() + " | Event result: " + getEventResult()
+                + " | Object type: " + getObjectType() + " | Object Id: " + getObjectId() + " | Status: " + getStatus()
                 + (eventPropertiesString == null ? "" : " | " + eventPropertiesString);
     }
 }

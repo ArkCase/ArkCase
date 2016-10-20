@@ -1,6 +1,7 @@
 /* @override http://dev.jsapn.armedianet.com/arkcase/modules/core/css/core.css
 	http://localhost:8080/arkcase/modules/core/css/core.css
-	http://10.21.4.149/arkcase/modules/core/css/core.css */
+	http://10.21.4.149/arkcase/modules/core/css/core.css
+	https://core.arkcase.dev.armedia.com/arkcase/modules/core/css/core.css */
 
 /* @override http://sharecaredev.armedianet.com/arkcase/modules/core/css/core.css */
 
@@ -243,6 +244,18 @@ body {
     width: 198px;
 }
 
+
+.leftnav-menu footer::before {
+	content: "Powered by ArkCase.com";
+	color: #ccc;
+	font-size: 10px;
+	text-align: center;
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	width: 150px;
+}
+
 .leftnav-menu footer .btn-icon {
     background: none;
     color: #9aa4b3;
@@ -395,18 +408,18 @@ body {
 }
 
 .module-content .right-sidebar footer {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    padding: 0px;
-    margin: 0px;
-    width: 480px;
-    height: 60px;
-    margin-left: 10px;
-    margin-right: 10px;
-    z-index: 1001;
-    border: 1px solid #ddd;
-    border-bottom: 0px;
+	position: fixed;
+	bottom: -16px;
+	right: 0;
+	padding: 0;
+	margin: 0;
+	width: 480px;
+	min-height: 60px;
+	margin-left: 10px;
+	margin-right: 10px;
+	z-index: 1001;
+	border: 1px solid #ddd;
+	border-bottom: 0px;
 }
 
 body.fullscreen header.navbar-arkcase {

@@ -72,4 +72,15 @@
 
     <task:scheduler id="historyCleanScheduler" pool-size="1"/>
 
+    <!-- How often to purge older history events. -->
+    <task:scheduled-tasks scheduler="historyCleanScheduler">
+        <task:scheduled ref="historyCleanJob" method="cleanHistory" cron="0 0 0/6 * * *"/>
+    </task:scheduled-tasks>
+
+    <bean id="historyCleanJob" class="com.armedia.acm.plugins.admin.service.HistoryCleanService" init-method="cleanHistory">
+        <property name="jsonPropertiesManagementService" ref="angularPropertiesManagementService"/>
+        <property name="auditDao" ref="auditDao"/>
+        <property name="notificationDao" ref="notificationDao"/>
+    </bean>
+
 </beans>

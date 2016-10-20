@@ -2,7 +2,6 @@ package com.armedia.arkcase.uitests.complaints;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -13,6 +12,7 @@ import org.openqa.selenium.support.How;
 import org.testng.asserts.SoftAssert;
 
 import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
+import com.armedia.arkcase.uitests.base.WaitHelper;
 
 public class ComplaintsPage extends ArkCaseTestBase {
 
@@ -71,7 +71,7 @@ public class ComplaintsPage extends ArkCaseTestBase {
 	WebElement root;
 	@FindBy(how = How.XPATH, using = "/html/body/ul/li[2]")
 	WebElement newDocument;
-	@FindBy(how = How.XPATH, using = "/html/body/ul/li[2]/ul/li[8]")
+	@FindBy(how = How.XPATH, using = ".//li[@data-command='file/Other']")
 	WebElement newDocumentOther;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/doc-tree/table/tbody/tr[3]/td[3]/span")
 	WebElement secondRowTitle;
@@ -141,7 +141,7 @@ public class ComplaintsPage extends ArkCaseTestBase {
 	}
 
 	public ComplaintsPage clickBrowseButton() {
-		browseImageBtn.click();
+		WaitHelper.ClickElementAtPoint(browseImageBtn, driver);	
 		return this;
 	}
 
@@ -250,19 +250,21 @@ public class ComplaintsPage extends ArkCaseTestBase {
 		return this;
 	}
 
-	public void clickDocumentsLink() {
+	public ComplaintsPage clickDocumentsLink() {
 		documentsLink.click();
+		return this;
 	}
 
 	public void verifyDocumenstTableTitle() {
 		Assert.assertEquals("Documents table title is wrong", "Documents", documentsTableTitle.getText());
 	}
 
-	public void performRightClickOnRoot() {
+	public ComplaintsPage performRightClickOnRoot() {
 
 		Actions actions = new Actions(driver);
 		Action action = actions.contextClick(root).build();
 		action.perform();
+		return this;
 	}
 
 	public void checkIfRightClickOnRootIsWorking() {
@@ -272,9 +274,10 @@ public class ComplaintsPage extends ArkCaseTestBase {
 
 	}
 
-	public void clickNewDocument() {
+	public ComplaintsPage clickNewDocument() {
 		Assert.assertEquals("New document label name is wrong", "New Document", newDocument.getText());
 		newDocument.click();
+		return this;
 	}
 
 	public void verifyNewDocumentMenu() {
@@ -311,41 +314,47 @@ public class ComplaintsPage extends ArkCaseTestBase {
 
 	}
 
-	public void clickTaskLink() {
+	public ComplaintsPage clickTaskLink() {
 		tasksLink.click();
+		return this;
 	}
 
 	public void verifyTaskTableTitle() {
 		Assert.assertEquals("Task table title is wrong", "Tasks", tasksTableTitle.getText());
 	}
 
-	public void clickAddTaskButton() {
+	public ComplaintsPage clickAddTaskButton() {
 		addTaskBtn.click();
+		return this;
 	}
 
-	public void clickModuleComplaints() {
+	public ComplaintsPage clickModuleComplaints() {
 		Assert.assertEquals("Complaints module lable name is wrong", "Complaints", moduleComplaints.getText());
 		moduleComplaints.click();
+		return this;
 	}
 
-	public void verifyIfTaskIsCredated() {
+	public void verifyIfTaskIsCreated() {
 		int i = driver
 				.findElements(By
 						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[1]"))
 				.size();
-		Assert.assertTrue("Cretaed task is not shown in tasks table", i != 0);
+		Assert.assertTrue("Created task is not shown in tasks table", i != 0);
 	}
 
 	public void verifyComplaintTitleInTasksPage(String title) {
 		Assert.assertEquals("Complaint title in tasks page is wrong", title, complaintsTitleInTasks.getText());
 	}
 
-	public void clickComplaintTitleInTasksPage() {
+	public ComplaintsPage clickComplaintTitleInTasksPage() {
 		complaintsTitleInTasks.click();
+		return this;
+	}
+	
+	public ComplaintsPage clickRefreshButton(){
+		refreshPageBtn.click();
+		return this;
 	}
 
-	public void verifyCreatedTask() {
-
-	}
-
+	
 }

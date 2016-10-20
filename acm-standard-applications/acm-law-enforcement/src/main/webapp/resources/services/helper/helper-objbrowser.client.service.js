@@ -143,6 +143,31 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                         that.scope.treeControl.refresh();
                     }
                 });
+
+
+                /**
+                 * @ngdoc event
+                 * @name req-switch-object
+                 * @methodOf services:Helper.ObjectBrowserService.Tree
+                 *
+                 * @param {Object} eventData Event data
+                 * @param {String} eventData.objectId Object ID
+                 * @param {String} eventData.objectType Object type
+                 * @param {String} (Optional)eventData.objectSubtype Object subType
+                 *
+                 * @description
+                 * Send this event to select a tree node for the specified object
+                 */
+                that.scope.$on('req-switch-object', function (e, eventData) {
+                    if (that.scope.treeControl) {
+                        var nodeId = eventData.objectId;
+                        var nodeType = (eventData.objectSubtype)? eventData.objectSubtype : eventData.objectType;
+                        that.scope.treeControl.select({
+                            nodeId: nodeId
+                            , nodeType: nodeType
+                        }, true);
+                    }
+                });
             }
 
 
@@ -271,6 +296,23 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     that.scope.$broadcast('object-update-failed', objectInfo);
                 });
 
+                /**
+                 * @ngdoc event
+                 * @name request-show-object
+                 * @methodOf services:Helper.ObjectBrowserService.Content
+                 *
+                 * @param {Object} eventData Event data
+                 * @param {String} eventData.objectId Object ID
+                 * @param {String} eventData.objectType Object type
+                 * @param {String} (Optional)eventData.objectSubtype Object subType
+                 *
+                 * @description
+                 * Send this event to open up an object
+                 */
+                that.scope.$on('request-show-object', function (e, eventData) {
+                    that.scope.$broadcast('req-switch-object', eventData);
+                });
+
                 that.scope.$on('req-select-object', function (e, selectedObject) {
                     that.scope.$broadcast('object-selected', selectedObject);
 
@@ -396,10 +438,10 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                 that.validateObjectInfo = (arg.validateObjectInfo) ? arg.validateObjectInfo : function (data) {
                     return (!Util.isEmpty(data));
                 };
-                that.onObjectInfoRetrieved = function (objectInfo) {
+                that.onObjectInfoRetrieved = function (objectInfo, e) {
                     that.scope.objectInfo = objectInfo;
                     if (arg.onObjectInfoRetrieved) {
-                        arg.onObjectInfoRetrieved(objectInfo);
+                        arg.onObjectInfoRetrieved(objectInfo, e);
                     }
                 };
                 that.onConfigRetrieved = function (componentConfig) {
@@ -419,22 +461,21 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     return componentConfig;
                 });
 
-
                 that.previousId = null;
                 that.scope.$on('object-updated', function (e, objectInfo, objectId) {
                     that.currentObjectId = Service.getCurrentObjectId();
                     if (that.currentObjectId == objectId) {
-                        onObjectInfoUpdated(objectInfo, objectId);
+                        onObjectInfoUpdated(objectInfo, objectId, e);
                     }
                 });
 
                 that.scope.$on('object-refreshed', function (e, objectInfo) {
                     that.previousId = null;
                     that.currentObjectId = Service.getCurrentObjectId();
-                    onObjectInfoUpdated(objectInfo, that.currentObjectId);
+                    onObjectInfoUpdated(objectInfo, that.currentObjectId, e);
                 });
 
-                that.currentObjectId = Service.getCurrentObjectId();
+                that.currentObjectId = that.scope.currentObjectId = Service.getCurrentObjectId();
                 if (Util.goodPositive(that.currentObjectId, false)) {
                     if (!Util.compare(that.previousId, that.currentObjectId)) {
                         that.retrieveObjectInfo(that.currentObjectId).then(function (objectInfo) {
@@ -444,7 +485,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     }
                 }
 
-                var onObjectInfoUpdated = function (objectInfo, objectId) {
+                var onObjectInfoUpdated = function (objectInfo, objectId, e) {
                     if (!that.validateObjectInfo(objectInfo)) {
                         return;
                     }
@@ -464,11 +505,10 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     that.previousId = objectId;
 
                     that.deferConfigDone.promise.then(function (data) {
-                        that.onObjectInfoRetrieved(objectInfo);
+                        that.onObjectInfoRetrieved(objectInfo, e);
                     });
                 };
-
-            }
+          }
         };
 
         Service.Tree.prototype = {

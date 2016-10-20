@@ -30,12 +30,12 @@ angular.module('reports').controller('ReportsController', ['$scope', 'UtilServic
         var promiseServerConfig = LookupService.getConfig("acm-reports-server-config");
 
         // Retrieves the properties from the acm-reports.properties file
-        var promiseReportConfig = LookupService.getConfig("acm-reports");
+        var promiseReportConfig = BuildUrl.getAuthorizedReports();
 
         $q.all([promiseServerConfig, promiseReportConfig, promiseModuleConfig])
             .then(function (data) {
                 var reportsConfig = data[0];
-                $scope.data.reports = data[1];
+                $scope.data.reports = data[1].data;
                 $scope.config = data[2];
 
                 // On some reason reports list contains URL and PORT info

@@ -1,7 +1,7 @@
 package com.armedia.acm.services.users.model.ldap;
 
-
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.ContextMapper;
@@ -21,8 +21,7 @@ public class AcmUserGroupsContextMapper implements ContextMapper
             "givenName",
             "dn",
             "distinguishedname",
-            "memberOf"
-    };
+            "memberOf" };
     private Logger log = LoggerFactory.getLogger(getClass());
     private String userIdAttributeName;
     private String mailAttributeName;
@@ -44,7 +43,7 @@ public class AcmUserGroupsContextMapper implements ContextMapper
         user.setFullName(fullName);
 
         // because of how the LDAP query paging works, we can no longer return null for the disabled accounts.
-        // so we return them, but mark them DISABLED.  The DAO will filter them.
+        // so we return them, but mark them DISABLED. The DAO will filter them.
         String uac = MapperUtils.getAttribute(adapter, "userAccountControl");
         if (isUserDisabled(uac))
         {
@@ -57,7 +56,7 @@ public class AcmUserGroupsContextMapper implements ContextMapper
 
         user.setUserId(MapperUtils.getAttribute(adapter, getUserIdAttributeName()));
         user.setMail(MapperUtils.getAttribute(adapter, getMailAttributeName()));
-        user.setDistinguishedName(MapperUtils.getAttribute(adapter, "dn", "distinguishedname"));
+        user.setDistinguishedName(adapter.getDn().toString());
 
         Set<String> ldapGroupsForUser = new HashSet<>();
         if (adapter.attributeExists("memberOf"))
@@ -76,7 +75,8 @@ public class AcmUserGroupsContextMapper implements ContextMapper
         {
             long userAccountControl = Long.valueOf(uac);
             return (userAccountControl & ACTIVE_DIRECTORY_DISABLED_BIT) == ACTIVE_DIRECTORY_DISABLED_BIT;
-        } catch (NumberFormatException nfe)
+        }
+        catch (NumberFormatException nfe)
         {
             log.warn("user account control value [{}] is not a number!", uac);
             return false;

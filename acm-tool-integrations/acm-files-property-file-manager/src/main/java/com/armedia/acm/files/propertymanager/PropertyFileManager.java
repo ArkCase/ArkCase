@@ -14,7 +14,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
 
 /**
@@ -61,22 +60,52 @@ public class PropertyFileManager
     {
         if (propertiesMap != null && propertiesMap.size() > 0)
         {
+            Properties p = new Properties();
 
-            try (FileInputStream in = new FileInputStream(fileName);
-                 FileOutputStream out = new FileOutputStream(fileName))
+            try (InputStream in = new FileInputStream(fileName))
             {
-                Properties p = new Properties();
-
                 if (!clean)
                 {
                     p.load(in);
                 }
+            } catch (IOException e)
+            {
+                log.warn("Could not open properties file: {}", e.getMessage(), e);
+            }
 
-                for (Entry<String, String> entry : propertiesMap.entrySet())
+            try (OutputStream out = new FileOutputStream(fileName))
+            {
+                propertiesMap.forEach((key, value) -> p.setProperty(key, value));
+                p.store(out, null);
+            } catch (IOException e)
+            {
+                log.warn("Could not update properties file: " + e.getMessage(), e);
+            }
+        }
+
+    }
+
+    public void removeMultiple(List<String> properties, String fileName)
+    {
+        if (properties != null && properties.size() > 0)
+        {
+            Properties p = new Properties();
+
+            try (FileInputStream in = new FileInputStream(fileName))
+            {
+                p.load(in);
+
+                for (String key : properties)
                 {
-                    p.setProperty(entry.getKey(), entry.getValue());
+                    p.remove(key);
                 }
+            } catch (IOException e)
+            {
+                log.debug("Could not update properties file: " + e.getMessage(), e);
+            }
 
+            try (FileOutputStream out = new FileOutputStream(fileName))
+            {
                 p.store(out, null);
             } catch (IOException e)
             {
@@ -85,34 +114,8 @@ public class PropertyFileManager
         }
     }
 
-    public void removeMultiple(List<String> properties, String fileName)
-    {
-        if (properties != null && properties.size() > 0)
-        {
-
-            try (FileInputStream in = new FileInputStream(fileName);
-                 FileOutputStream out = new FileOutputStream(fileName))
-            {
-
-                Properties p = new Properties();
-                p.load(in);
-
-                for (String key : properties)
-                {
-                    p.remove(key);
-                }
-
-                p.store(out, null);
-            } catch (IOException e)
-            {
-                log.debug("Could not remove properties file: " + e.getMessage(), e);
-            }
-        }
-    }
-
     public String load(String filename, String key, String defaultValue) throws AcmEncryptionException
     {
-
 
         Properties p = new Properties();
         String retval = defaultValue;

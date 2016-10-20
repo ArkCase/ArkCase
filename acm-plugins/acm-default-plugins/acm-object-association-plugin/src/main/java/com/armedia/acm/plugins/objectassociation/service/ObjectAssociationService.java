@@ -2,17 +2,18 @@ package com.armedia.acm.plugins.objectassociation.service;
 
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.objectassociation.model.AcmChildObjectEntity;
+import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 
-/**
- * 
- * @author vladimir.radeski
- *
- */
+import java.util.List;
+
 
 public interface ObjectAssociationService
 {
-    public void addReference(Long id, String number, String type, String title, String status, Long parentId, String parentType);
+    void addReference(Long id, String number, String type, String title, String status, Long parentId, String parentType);
 
-    public AcmAbstractDao<AcmChildObjectEntity> getDaoForChildObjectEntity(String objectType);
+    AcmAbstractDao<AcmChildObjectEntity> getDaoForChildObjectEntity(String objectType);
 
+    ObjectAssociation saveObjectAssociation(ObjectAssociation oa);
+
+    List<ObjectAssociation> findByParentTypeAndId(String type, Long id);
 }

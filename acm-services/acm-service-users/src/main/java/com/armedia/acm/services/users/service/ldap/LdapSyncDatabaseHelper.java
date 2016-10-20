@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by armdev on 5/29/14.
@@ -30,21 +31,16 @@ public class LdapSyncDatabaseHelper
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Transactional
-    @CacheEvict(value="quiet-user-cache", allEntries=true)
-    public void updateDatabase(String directoryName,
-                               Set<String> allRoles,
-                               List<AcmUser> users,
-                               Map<String, Set<AcmUser>> usersByRole,
-                               Map<String, Set<AcmUser>> usersByLdapGroup,
-                               Map<String, String> childParentPair,
-                               boolean singleUser)
+    @CacheEvict(value = "quiet-user-cache", allEntries = true)
+    public void updateDatabase(String directoryName, Set<String> allRoles, List<AcmUser> users, Map<String, Set<AcmUser>> usersByRole,
+            Map<String, Set<AcmUser>> usersByLdapGroup, Map<String, String> childParentPair, boolean singleUser)
     {
         if (!singleUser)
         {
             // Mark all users invalid... users still in LDAP will change to valid during the sync
+            getGroupDao().markAllGroupsInactive(directoryName, ROLE_TYPE_LDAP_GROUP);
             getUserDao().markAllUsersInvalid(directoryName);
             getUserDao().markAllRolesInvalid(directoryName);
-            getGroupDao().markAllGroupsInactive(ROLE_TYPE_LDAP_GROUP);
 
             persistApplicationRoles(allRoles, ROLE_TYPE_APPLICATION_ROLE, null);
         }
@@ -52,19 +48,16 @@ public class LdapSyncDatabaseHelper
 
         persistUsers(directoryName, users);
 
-        storeRoles(usersByRole);
-        storeRoles(usersByLdapGroup);
+        storeRoles(directoryName, usersByRole);
+        storeRoles(directoryName, usersByLdapGroup);
     }
 
-    private void storeRoles(Map<String, Set<AcmUser>> userMap)
+    private void storeRoles(String directoryName, Map<String, Set<AcmUser>> userMap)
     {
-        for (Map.Entry<String, Set<AcmUser>> userMapEntry : userMap.entrySet())
-        {
-            persistUserRoles(userMapEntry.getValue(), userMapEntry.getKey());
-        }
+        userMap.forEach((key, value) -> persistUserRoles(directoryName, value, key));
     }
 
-    private List<AcmUserRole> persistUserRoles(Set<AcmUser> savedUsers, String roleName)
+    private List<AcmUserRole> persistUserRoles(String directoryName, Set<AcmUser> savedUsers, String roleName)
     {
         int userCount = savedUsers.size();
         int current = 0;
@@ -99,6 +92,11 @@ public class LdapSyncDatabaseHelper
         AcmGroup group = getGroupDao().findByName(roleName);
         if (group != null)
         {
+            Set<AcmUser> currentUsers = group.getMembers();
+            // keep users from other LDAP directories as members
+            Set<AcmUser> keepUsers = currentUsers.stream().filter(p -> !directoryName.equals(p.getUserDirectoryName())).collect(Collectors.toSet());
+            users.addAll(keepUsers);
+
             group.setMembers(users);
             getGroupDao().save(group);
         }

@@ -1,9 +1,10 @@
 'use strict';
 
 angular.module('tasks').controller('Tasks.ReferencesController', ['$scope', '$stateParams'
-    , 'UtilService', 'ConfigService', 'Task.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', '$modal', 'Object.ReferenceService', 'ObjectService'
-    , function ($scope, $stateParams
-        , Util, ConfigService, TaskInfoService, HelperUiGridService, HelperObjectBrowserService, $modal, referenceService, ObjectService) {
+    , 'UtilService', 'ConfigService', 'Task.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService'
+    , '$modal', 'Object.ReferenceService', 'ObjectService'
+    , function ($scope, $stateParams, Util, ConfigService, TaskInfoService, HelperUiGridService
+        , HelperObjectBrowserService, $modal, referenceService, ObjectService) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -42,6 +43,10 @@ angular.module('tasks').controller('Tasks.ReferencesController', ['$scope', '$st
             var targetType = Util.goodMapValue(rowEntity, "targetType");
             var targetId = Util.goodMapValue(rowEntity, "targetId");
             gridHelper.showObject(targetType, targetId);
+
+            if (ObjectService.ObjectTypes.TASK == targetType || ObjectService.ObjectTypes.ADHOC_TASK == targetType) {
+                $scope.$emit('request-show-object', {objectId: targetId, objectType: targetType});
+            }
         };
 
         ConfigService.getModuleConfig("tasks").then(function (moduleConfig) {
@@ -53,7 +58,7 @@ angular.module('tasks').controller('Tasks.ReferencesController', ['$scope', '$st
             $scope.$emit('report-object-refreshed', $stateParams.id);
         };
 
-        // open addreference modal
+        // open add reference modal
         $scope.addReference = function () {
             var modalInstance = $modal.open({
                 animation: $scope.animationsEnabled,
@@ -62,7 +67,7 @@ angular.module('tasks').controller('Tasks.ReferencesController', ['$scope', '$st
                 size: 'lg',
                 resolve: {
                     $filter: function () {
-                    	var filter = $scope.modalConfig.searchFilter + "&-id:" + $scope.currentObjectId + "-TASK";
+                    	var filter = $scope.modalConfig.searchFilter;
                         if ($scope.gridOptions.data.length > 0) {
                             for (var i = 0; i < $scope.gridOptions.data.length; i++) {
                                 var data = $scope.gridOptions.data[i];
@@ -87,7 +92,7 @@ angular.module('tasks').controller('Tasks.ReferencesController', ['$scope', '$st
                     reference.referenceStatus = chosenReference.status_lcs;
                     reference.parentId = $stateParams.id;
                     reference.parentType = ObjectService.ObjectTypes.TASK;
-                    referenceService.addReference(reference).then(
+                    referenceService.addReferenceToTask(reference).then(
                         function (objectSaved) {
                         	$scope.refresh();
                             return objectSaved;

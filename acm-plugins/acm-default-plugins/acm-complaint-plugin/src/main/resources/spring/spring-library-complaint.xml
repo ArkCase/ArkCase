@@ -83,6 +83,7 @@
         <property name="complaintFolderNameFormat" value="Complaint (%s)"/>
         <property name="caseFileDetailsFormat" value="This case file is based on Complaint '%s'.%s"/>
         <property name="complaintDetailsFormat" value="&lt;p/&gt;Complaint '%s' had these details:&lt;p/&gt;%s"/>
+        <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
     </bean>
 
     <bean id="closeComplaintRequestProcessEndHandler"
@@ -124,7 +125,8 @@
           class="com.armedia.acm.plugins.complaint.pipeline.postsave.ComplaintEcmFolderHandler">
         <property name="ecmFileService" ref="ecmFileService"/>
     </bean>
-    <bean id="complaintOutlookHandler" class="com.armedia.acm.plugins.complaint.pipeline.postsave.ComplaintOutlookHandler">
+    <bean id="complaintOutlookHandler"
+          class="com.armedia.acm.plugins.complaint.pipeline.postsave.ComplaintOutlookHandler">
         <property name="autoCreateFolderForComplaint" value="${complaint.auto_create_calendar_folder}"/>
         <property name="outlookContainerCalendarService" ref="outlookContainerService"/>
     </bean>
@@ -179,7 +181,7 @@
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
 
-    <bean id="complaintService" class="com.armedia.acm.plugins.complaint.service.ComplaintService">
+    <bean id="complaintService" class="com.armedia.acm.plugins.complaint.service.ComplaintService" scope="prototype">
         <property name="objectAssociationDao" ref="objectAssociationDao"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="ecmFileService" ref="ecmFileService"/>
@@ -196,6 +198,8 @@
         <property name="complaintEventPublisher" ref="complaintEventPublisher"/>
         <property name="functionalAccessService" ref="functionalAccessService"/>
         <property name="searchResults" ref="searchResults"/>
+        <property name="tagService" ref="tagService"/>
+        <property name="associatedTagService" ref="associatedTagService"/>
     </bean>
 
     <bean id="complaintHistoryListener" class="com.armedia.acm.plugins.complaint.service.ComplaintHistoryListener">

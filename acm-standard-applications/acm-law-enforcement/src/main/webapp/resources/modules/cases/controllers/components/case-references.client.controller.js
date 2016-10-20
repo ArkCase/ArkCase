@@ -1,9 +1,12 @@
 'use strict';
 
-angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$stateParams'
-    , 'UtilService', 'ConfigService', 'Case.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', '$modal', 'Object.ReferenceService'
-    , function ($scope, $stateParams
-        , Util, ConfigService, CaseInfoService, HelperUiGridService, HelperObjectBrowserService, $modal, referenceService) {
+angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$stateParams', '$modal'
+    , 'UtilService', 'ConfigService', 'Case.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService'
+    , 'Object.ReferenceService', 'ObjectService'
+    , function ($scope, $stateParams, $modal
+        , Util, ConfigService, CaseInfoService, HelperUiGridService, HelperObjectBrowserService
+        , referenceService, ObjectService
+    ) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -42,13 +45,17 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
             var targetType = Util.goodMapValue(rowEntity, "targetType");
             var targetId = Util.goodMapValue(rowEntity, "targetId");
             gridHelper.showObject(targetType, targetId);
-            
-            $scope.$bus.publish('object-tree.select', {
-            	nodeId : targetId,
-            	nodeType : targetType,
-            	pageStart : 0,
-            	subKey : null
-            });
+
+            if (ObjectService.ObjectTypes.CASE_FILE == targetType) {
+                $scope.$emit('request-show-object', {objectId: targetId, objectType: targetType});
+            }
+
+            //$scope.$bus.publish('object-tree.select', {
+            //	nodeId : targetId,
+            //	nodeType : targetType,
+            //	pageStart : 0,
+            //	subKey : null
+            //});
         };
 
         ConfigService.getModuleConfig("cases").then(function (moduleConfig) {
@@ -60,7 +67,7 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
             $scope.$emit('report-object-refreshed', $stateParams.id);
         };
 
-        // open addreference modal
+        // open add reference modal
         $scope.addReference = function () {
             var modalInstance = $modal.open({
                 animation: $scope.animationsEnabled,
@@ -69,7 +76,7 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
                 size: 'lg',
                 resolve: {
                     $filter: function () {
-                    	var filter = $scope.modalConfig.searchFilter + "&-id:" + $scope.currentObjectId + "-CASE_FILE";
+                    	var filter = $scope.modalConfig.searchFilter + "&-id:" + $scope.objectInfo.id + "-CASE_FILE";
                         if ($scope.gridOptions.data.length > 0) {
                             for (var i = 0; i < $scope.gridOptions.data.length; i++) {
                                 var data = $scope.gridOptions.data[i];
@@ -93,7 +100,7 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
                     reference.referenceNumber = chosenReference.name;
                     reference.referenceStatus = chosenReference.status_lcs;
                     reference.parentId = $stateParams.id;
-                    reference.parentType = 'CASE_FILE';
+                    reference.parentType = ObjectService.ObjectTypes.CASE_FILE;
                     referenceService.addReference(reference).then(
                         function (objectSaved) {
                             $scope.refresh();

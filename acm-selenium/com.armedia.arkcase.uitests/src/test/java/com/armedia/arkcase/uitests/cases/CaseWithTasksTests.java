@@ -42,7 +42,7 @@ public class CaseWithTasksTests extends ArkCaseTestBase {
 		casePom.nextButton.click();
 		Thread.sleep(3000);
 		casePom.verifyInitiatorTab();
-		casePom.initiatorTitle.click();
+		casePom.initiatorTitleClick();
 		Thread.sleep(2000);
 		casePom.clickInitiatorMr();
 		Thread.sleep(2000);

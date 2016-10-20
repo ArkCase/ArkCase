@@ -59,8 +59,10 @@
  </file>
  </example>
  */
-angular.module('directives').directive('search', ['SearchService', 'Search.QueryBuilderService', '$q', 'UtilService', 'Object.LookupService', '$window', 'uiGridExporterConstants', '$translate', 'Tags.TagsService',
-    function (SearchService, SearchQueryBuilder, $q, Util, ObjectLookupService, $window, uiGridExporterConstants, $translate, TagsService) {
+angular.module('directives').directive('search', ['SearchService', 'Search.QueryBuilderService', '$q', 'UtilService'
+    , 'Object.LookupService', '$window', 'uiGridExporterConstants', '$translate', 'Tags.TagsService', 'ObjectService'
+    , function (SearchService, SearchQueryBuilder, $q, Util
+        , ObjectLookupService, $window, uiGridExporterConstants, $translate, TagsService, ObjectService) {
         return {
             restrict: 'E',              //match only element name
             scope: {
@@ -72,7 +74,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                 filter: '@',
                 multiFilter: '@',
                 config: '=',            //= : two way binding so that the data can be monitored for changes
-                customLabels: '=?'
+                customization: '=?'
             },
 
             link: function (scope) {    //dom operations
@@ -81,10 +83,13 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                 scope.selectedItem = null;
                 scope.emptySearch = true;
                 scope.exportUrl = "";
+
                 if (typeof scope.config.emptySearch !== 'undefined') {
                     scope.emptySearch = scope.config.emptySearch;
                 }
-                scope.queryExistingItems = function () {
+
+                scope.queryExistingItems = function (start) {
+                    scope.start = Util.goodNumber(start, 0);
                     if (!scope.searchQuery || scope.searchQuery.length === 0) {
                         if (!scope.emptySearch) {
                             scope.searchQuery = "";
@@ -235,7 +240,6 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                             scope.filters = "";
                             scope.filters += 'fq="' + facet + '":' + field;
                         }
-                        scope.queryExistingItems();
                     } else {
                         if (scope.filters.indexOf('&fq="' + facet + '":' + field) > -1) {
                             scope.filters = scope.filters.split('&fq="' + facet + '":' + field).join('');
@@ -244,55 +248,36 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                             scope.filters = '';
                             scope.clearAllFacets();
                         }
-                        scope.queryExistingItems();
+                    }
+                    scope.queryExistingItems();
+                };
+
+                scope.onClickObjLink = function (event, objectData) {
+                    event.preventDefault();
+
+                    if (Util.goodMapValue(scope, "customization.showObject", false)) {
+                        scope.customization.showObject(objectData);
+
+                    } else {
+                    	var objectTypeKey = Util.goodMapValue(objectData, "object_type_s");
+                        var objectId = Util.goodMapValue(objectData, "object_id_s");
+                        ObjectService.showObject(objectTypeKey, objectId);
                     }
                 };
 
-                var promiseObjectTypes = ObjectLookupService.getObjectTypes().then(
-                    function (objectTypes) {
-                        scope.objectTypes = objectTypes;
-                        return objectTypes;
+                scope.onClickParentObjLink = function (event, objectData) {
+                    event.preventDefault();
+
+                    if (Util.goodMapValue(scope, "customization.showParentObject", false)) {
+                    	scope.customization.showParentObject(objectData);
+
+                    } else {
+                        var parentReference = Util.goodMapValue(objectData, "parent_ref_s", "-");
+                        var objectId = parentReference.substring(0, parentReference.indexOf('-'));
+                        var objectTypeKey = parentReference.substring(parentReference.indexOf('-') + 1);
+
+                        ObjectService.showObject(objectTypeKey, objectId);
                     }
-                );
-
-                scope.onClickObjLink = function (event, objectType, objectId) {
-                    event.preventDefault();
-                    promiseObjectTypes.then(function (data) {
-                        var found = _.find(scope.objectTypes, {type: objectType});
-                        if (found && found.url) {
-                            var url = Util.goodValue(found.url);
-                            var id = objectId;
-                            url = url.replace(":id", id);
-
-                            // Target property is used to control open mode: _parent, _blank
-                            if (found.target) {
-                                $window.open(url, found.target);
-                            } else {
-                                $window.location.href = url;
-                            }
-                        }
-                    });
-                };
-
-                scope.onClickParentObjLink = function (event, parentReference) {
-                    var objectId = parentReference.substring(0, parentReference.indexOf('-'));
-                    var objectType = parentReference.substring(parentReference.indexOf('-') + 1);
-                    event.preventDefault();
-                    promiseObjectTypes.then(function (data) {
-                        var found = _.find(scope.objectTypes, {type: objectType});
-                        if (found && found.url) {
-                            var url = Util.goodValue(found.url);
-                            var id = objectId;
-                            url = url.replace(":id", id);
-
-                            // Target property is used to control open mode: _parent, _blank
-                            if (found.target) {
-                                $window.open(url, found.target);
-                            } else {
-                                $window.location.href = url;
-                            }
-                        }
-                    });
                 };
 
                 scope.keyUp = function (event) {
@@ -310,8 +295,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
 
                 scope.clearAllFacets = function () {
                     var selections = scope.currentFacetSelection;
-                    for (var selection in selections)
-                    {
+                    for (var selection in selections) {
                         selections[selection] = false;
                     }
                 };
@@ -350,7 +334,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                                 gridApi.pagination.on.paginationChanged(scope, function (newPage, pageSize) {
                                     scope.start = (newPage - 1) * pageSize;   //newPage is 1-based index
                                     scope.pageSize = pageSize;
-                                    scope.queryExistingItems();
+                                    scope.queryExistingItems(scope.start);
                                 });
                             }
                         };
@@ -372,7 +356,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                             if (scope.filter) {
                                 scope.filters = 'fq=' + scope.filter;
                             }
-                            scope.queryExistingItems();
+                            scope.queryExistingItems(scope.start);
                         }
                     }, true);
                 });

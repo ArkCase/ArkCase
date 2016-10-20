@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('profile').controller('Profile.PicController', ['$scope', '$rootScope', 'Profile.UserInfoService', 'Profile.ProfilePictureService','$log',
-    function ($scope, $rootScope, UserInfoService, ProfilePictureService,$log) {
+                                                               'Dialog.BootboxService','$translate',
+    function ($scope, $rootScope, UserInfoService, ProfilePictureService,$log,DialogService,$translate) {
         $scope.$emit('req-component-config', 'picture');
         $scope.changePic = function () {
             $("#file").click();
@@ -10,21 +11,26 @@ angular.module('profile').controller('Profile.PicController', ['$scope', '$rootS
             if ($scope.userPicture != null) {
                 UserInfoService.getUserInfo().then(function (data) {
                     var userID = data.userOrgId;
+                    if ($scope.userPicture.$error){
+                        DialogService.alert($translate.instant("profile.picture.uploadImgError"));
+                    }
+                    else {
                     ProfilePictureService.changePic($scope.userPicture, userID)
-                            .success(function (fileInfo) {
-                                var ecmFileID = fileInfo[0].fileId;
-                                $scope.profileEcmFileID = ecmFileID;
-                                UserInfoService.getUserInfo().then(function (infoData) {
-                                    infoData.ecmFileId = $scope.profileEcmFileID;
-                                    UserInfoService.updateUserInfo(infoData);
-                                    $scope.imgSrc = !$scope.profileEcmFileID ? 'modules/profile/img/nopic.png' :
-                                    'api/latest/plugin/ecm/download?ecmFileId='+$scope.profileEcmFileID+'&inline=true';
-                                    $rootScope.$broadcast('uploadedPicture', $scope.profileEcmFileID);
-                                });
-                            })
-                            .error(function () {
-                                $log.error('error during uploading user profile picture');
+                        .success(function (fileInfo) {
+                            var ecmFileID = fileInfo[0].fileId;
+                            $scope.profileEcmFileID = ecmFileID;
+                            UserInfoService.getUserInfo().then(function (infoData) {
+                                infoData.ecmFileId = $scope.profileEcmFileID;
+                                UserInfoService.updateUserInfo(infoData);
+                                $scope.imgSrc = !$scope.profileEcmFileID ? 'modules/profile/img/nopic.png' :
+                                'api/latest/plugin/ecm/download?ecmFileId='+$scope.profileEcmFileID+'&inline=true';
+                                $rootScope.$broadcast('uploadedPicture', $scope.profileEcmFileID);
                             });
+                        })
+                        .error(function () {
+                            $log.error('error during uploading user profile picture');
+                        });
+                    }
                 });
             }
         };

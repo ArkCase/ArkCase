@@ -12,17 +12,20 @@ import org.springframework.security.core.GrantedAuthority;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Check if particular user is granted access to a given object.
- * Created by Petar Ilin <petar.ilin@armedia.com> on 05.11.2015.
+ * Check if particular user is granted access to a given object. Created by Petar Ilin <petar.ilin@armedia.com> on
+ * 05.11.2015.
  */
 public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
 {
@@ -58,8 +61,8 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
     }
 
     /**
-     * Check if particular user is granted access to a given object.
-     * This is accomplished with iterating over all configured AC entries until the first positive match
+     * Check if particular user is granted access to a given object. This is accomplished with iterating over all
+     * configured AC entries until the first positive match
      *
      * @param authentication authentication token
      * @param targetId       the identifier for the object instance
@@ -68,6 +71,7 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
      * @param solrDocument   Solr data stored for this object
      * @return true if user is allowed to access this object, false otherwise
      */
+    @Override
     public boolean isAccessGranted(Authentication authentication, Long targetId, String targetType, String permission, String solrDocument)
     {
         if (accessControlRules == null || accessControlRules.getAccessControlRuleList() == null)
@@ -75,10 +79,12 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
             log.warn("Missing access control rules configuration");
             return false;
         }
-        log.debug("Checking if [{}] is granted executing [{}] on object of type [{}] with id [{}]", authentication.getName(), permission, targetType, targetId);
+        log.debug("Checking if [{}] is granted executing [{}] on object of type [{}] with id [{}]", authentication.getName(), permission,
+                targetType, targetId);
         boolean granted = false;
 
-        Map<String, Object> targetObjectProperties = retrieveTargetObjectProperties(accessControlRules.getPropertiesMapping(), solrDocument);
+        Map<String, Object> targetObjectProperties = retrieveTargetObjectProperties(accessControlRules.getPropertiesMapping(),
+                solrDocument);
 
         // loop trough configured access control rules, break on first positive match
         for (AccessControlRule accessControlRule : accessControlRules.getAccessControlRuleList())
@@ -98,7 +104,8 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
             // check if target sub type matches (NOTE: it is optional in JSON rules structure)
             if (accessControlRule.getObjectSubType() != null)
             {
-                // FIXME: unsafe - "object_sub_type_s" to "objectSubType" mapping has to be defined in accessControlRules.json
+                // FIXME: unsafe - "object_sub_type_s" to "objectSubType" mapping has to be defined in
+                // accessControlRules.json
                 String targetSubType = (String) targetObjectProperties.get("objectSubType");
                 if (targetSubType == null || !targetSubType.equals(accessControlRule.getObjectSubType()))
                 {
@@ -122,13 +129,15 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
             granted = evaluate(accessControlRule.getObjectProperties(), authentication, targetObjectProperties);
             if (granted)
             {
-                log.debug("[{}] is granted executing [{}] on object of type [{}] with id [{}], matching rule [{}]", authentication.getName(), permission, targetType, targetId, accessControlRule);
+                log.debug("[{}] is granted executing [{}] on object of type [{}] with id [{}], matching rule [{}]",
+                        authentication.getName(), permission, targetType, targetId, accessControlRule);
                 break;
             }
         }
         if (!granted)
         {
-            log.warn("[{}] is denied executing [{}] on object of type [{}] with id [{}], no matching rule found", authentication.getName(), permission, targetType, targetId);
+            log.warn("[{}] is denied executing [{}] on object of type [{}] with id [{}], no matching rule found", authentication.getName(),
+                    permission, targetType, targetId);
         }
         return granted;
     }
@@ -169,7 +178,8 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
      * @param targetObjectProperties target object properties (retrieved from Solr)
      * @return true if all of the roles are assigned to the user, false if any of the roles is missing
      */
-    private boolean checkRolesAll(List<String> userRolesAll, Collection<? extends GrantedAuthority> grantedAuthorities, Map<String, Object> targetObjectProperties)
+    private boolean checkRolesAll(List<String> userRolesAll, Collection<? extends GrantedAuthority> grantedAuthorities,
+                                  Map<String, Object> targetObjectProperties)
     {
         if (userRolesAll == null || userRolesAll.isEmpty())
         {
@@ -210,7 +220,8 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
      * @param targetObjectProperties target object properties (retrieved from Solr)
      * @return true if any of the roles are assigned to the user, false if none of the roles are assigned
      */
-    private boolean checkRolesAny(List<String> userRolesAny, Collection<? extends GrantedAuthority> grantedAuthorities, Map<String, Object> targetObjectProperties)
+    private boolean checkRolesAny(List<String> userRolesAny, Collection<? extends GrantedAuthority> grantedAuthorities,
+                                  Map<String, Object> targetObjectProperties)
     {
         if (userRolesAny == null || userRolesAny.isEmpty())
         {
@@ -270,26 +281,24 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
      * @param targetObjectProperties target object properties (retrieved from Solr)
      * @return evaluated AC rule
      */
-    private boolean evaluate(Map<String, Object> requiredProperties, Authentication authentication, Map<String, Object> targetObjectProperties)
+    private boolean evaluate(Map<String, Object> requiredProperties, Authentication authentication,
+                             Map<String, Object> targetObjectProperties)
     {
         if (requiredProperties == null || requiredProperties.isEmpty())
         {
             // no required properties
             return true;
         }
-        for (Map.Entry<String, Object> requiredProperty : requiredProperties.entrySet())
+        Optional<Entry<String, Object>> result = requiredProperties.entrySet().stream().filter(requiredProperty ->
         {
             String key = requiredProperty.getKey();
             Object value = targetObjectProperties.get(key);
             Object expectedValue = requiredProperty.getValue();
-            if (value == null || !value.equals(expectedValue))
-            {
-                // some of the required properties do not match, fail this check
-                log.warn("Object property [{}] does not match expected value [{} != {}]", key, value, expectedValue);
-                return false;
-            }
-        }
-        return true;
+            return value == null || (expectedValue.getClass().isArray() ? !Arrays.asList(expectedValue).contains(value) : !value.equals(expectedValue));
+        }).peek(entry -> log.warn("Object property [{}] does not match expected value [{} != {}]", entry.getKey(),
+                targetObjectProperties.get(entry.getKey()), entry.getValue())).findFirst();
+
+        return !result.isPresent();
     }
 
     @Override
@@ -297,7 +306,6 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
     {
         return accessControlRules;
     }
-
 
     @Override
     public void setAccessControlRules(AccessControlRules accessControlRules)

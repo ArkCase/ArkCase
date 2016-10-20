@@ -8,7 +8,6 @@ import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.plugins.ecm.service.PageCountService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
-
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +52,8 @@ public class EcmFileMergedMetadataHandler implements PipelineHandler<EcmFile, Ec
             EcmFileVersion version = new EcmFileVersion();
             version.setCmisObjectId(cmisDocument.getId());
             version.setVersionTag(cmisDocument.getVersionLabel());
+            version.setVersionMimeType(oldFile.getFileActiveVersionMimeType());
+            version.setVersionFileNameExtension(oldFile.getFileActiveVersionNameExtension());
             oldFile.getVersions().add(version);
             oldFile.setModified(new Date());
             try

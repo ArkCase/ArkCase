@@ -11,8 +11,8 @@
  * Basic object service
  */
 
-angular.module('services').factory('ObjectService', ['$state', '$window', 'UtilService', 'Object.LookupService'
-    , function ($state, $window, Util, ObjectLookupService) {
+angular.module('services').factory('ObjectService', ['$state', '$window', '$log', 'UtilService', 'Object.LookupService'
+    , function ($state, $window, $log, Util, ObjectLookupService) {
         return {
             ObjectTypes: {
                 CASE_FILE: "CASE_FILE"
@@ -32,55 +32,51 @@ angular.module('services').factory('ObjectService', ['$state', '$window', 'UtilS
                 , CANCEL_LOCK: "CANCEL_LOCK"
                 , OBJECT_LOCK: "OBJECT_LOCK "
             }
-            /**
-             * @ngdoc method
-             * @name gotoUrl
-             * @methodOf services:Object.ObjectService
-             *
-             * @param {String} objType ArkCase Object type
-             * @param {String} objId ArkCase Object ID
-             *
-             * @description
-             * Go to a page via URL that show the specified ArkCase Object (Case, Complaint, Document, etc.)
-             */
+
             , gotoUrl: function (objType, objId) {
-                ObjectLookupService.getObjectTypes().then(
-                    function (objectTypes) {
-                        var found = _.find(objectTypes, {type: objType});
-                        if (found) {
-                            var url = Util.goodValue(found.url);
-                            url = url.replace(":id", objId);
-                            url = url.replace(":type", objType);
-                            $window.location.href = url;
-                        }
-                        return objectTypes;
-                    }
-                );
+                console.log("Warning: Object.ObjectService.gotoUrl() is phasing out. Please use Object.ObjectService.showObject() instead");
+                this.showObject(objType, objId);
+            }
+
+            , gotoState: function (objType, objId) {
+                console.log("Warning: Object.ObjectService.gotoState() is phasing out. Please use Object.ObjectService.showObject() instead");
+                this.showObject(objType, objId);
             }
 
             /**
              * @ngdoc method
-             * @name gotoState
+             * @name showObject
              * @methodOf services:Object.ObjectService
              *
-             * @param {String} objType ArkCase Object type
+             * @param {String} objTypeKey ArkCase Object type
              * @param {String} objId ArkCase Object ID
              *
              * @description
-             * Go to a state by Angular route that show the specified ArkCase Object (Case, Complaint, Document, etc.)
-             * 
-             * TODO : currently using url heuristic replace ("/", ".") and ("/:id/", "") to get state key,  
-             * for consistency sake "state" property should be included in ObjectLookupService.getObjectTypes() pulled from backend, 
-             * angular prefers states rather than urls
+             * Go to a page to show an object. If the view page is angular page, use state configuration (Case, Complaint, etc.);
+             * else if the view page is non Angular page, use URL in configuration (Document, File, etc.)
              */
-            , gotoState: function (objType, objId) {
+            , showObject: function (objTypeKey, objId) {
                 ObjectLookupService.getObjectTypes().then(
                     function (objectTypes) {
-                        var found = _.find(objectTypes, {type: objType});
-                        if (found) {
-                            var state = Util.goodValue(found.state);
+                        var found = _.find(objectTypes, {key: objTypeKey});
+                        var objType = Util.goodMapValue(found, "type");
+
+                        if (Util.goodMapValue(found, "state", false)) {
                             var params = { id : objId, type : objType };
-                            $state.go(state, params);
+                            $state.go(found.state, params);
+
+                        } else if (Util.goodMapValue(found, "url", false)) {
+                            var url = found.url;
+                            url = url.replace(":id", objId);
+                            url = url.replace(":type", objType);
+                            if (Util.goodMapValue(found, "target", false)) {
+                                $window.open(url, found.target);
+                            } else {
+                                $window.location.href = url;
+                            }
+                            
+                        } else {
+                            $log.warn("No state or url specified in object type lookup");
                         }
                         return objectTypes;
                     }

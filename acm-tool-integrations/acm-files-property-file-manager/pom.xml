@@ -3,14 +3,15 @@
     <parent>
         <groupId>com.armedia.acm</groupId>
         <artifactId>acm-tool-integrations</artifactId>
-        <version>3.0.57</version>
+        <version>3.1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.armedia.acm.acm-tool-integrations</groupId>
     <artifactId>acm-files-property-file-manager</artifactId>
     <name>Tool Integrations: Property File Manager</name>
-    <description>Read / write properties from / to  a properties file, and manage the Spring property placeholders.</description>
+    <description>Read / write properties from / to a properties file, and manage the Spring property placeholders.
+    </description>
 
     <dependencies>
 
@@ -24,14 +25,42 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
-        
+
         <!-- acm -->
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-encryption</artifactId>
             <version>${acm.version}</version>
         </dependency>
-        
+
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${apache-commons-io.version}</version>
+        </dependency>
+
+        <!-- testing -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <version>${easymock.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymockclassextension</artifactId>
+            <version>${easymock-extension.version}</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
 </project>

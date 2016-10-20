@@ -12,7 +12,7 @@
     	<property name="personService" ref="personService" />
     </bean>
     
-    <bean id="ebriefService" class="com.armedia.acm.form.ebrief.service.EbriefService">
+    <bean id="ebriefService" class="com.armedia.acm.form.ebrief.service.EbriefService" scope="prototype">
     	<property name="ebriefFactory" ref="ebriefFactory" />
     	<property name="ecmFileDao" ref="ecmFileDao" />
     	<property name="ecmFileService" ref="ecmFileService" />
@@ -20,7 +20,7 @@
     
     <bean id="ebriefUpdatedListener" class="com.armedia.acm.form.ebrief.service.EbriefUpdatedListener">
     	<property name="properties" ref="acm-forms-properties" />
-    	<property name="ebriefService" ref="ebriefService" />
+    	<lookup-method name="getEbriefService" bean="ebriefService"/>
     </bean>
 
 </beans>

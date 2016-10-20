@@ -10,7 +10,6 @@ import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
-
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -28,7 +27,6 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -45,7 +43,12 @@ public class ReportServiceImpl implements ReportService
 {
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
-
+    private final String PENTAHO_REPORT_URL_TEMPLATE = "PENTAHO_REPORT_URL_TEMPLATE";
+    private final String PENTAHO_REPORT_URL_TEMPLATE_DEFAULT = "/pentaho/api/repos/{path}/viewer";
+    private final String PENTAHO_SERVER_USER = "PENTAHO_SERVER_USER";
+    private final String PENTAHO_SERVER_USER_DEFAULT = "admin";
+    private final String PENTAHO_SERVER_PASSWORD = "PENTAHO_SERVER_PASSWORD";
+    private final String PENTAHO_SERVER_PASSWORD_DEFAULT = "password";
     private String reportsPropertiesFileLocation;
     private String reportToGroupsMapPropertiesFileLocation;
     private String reportServerConfigPropertiesFileLocation;
@@ -56,13 +59,6 @@ public class ReportServiceImpl implements ReportService
     private PentahoReportUrl reportUrl;
     private ExecuteSolrQuery executeSolrQuery;
     private SearchResults searchResults;
-
-    private final String PENTAHO_REPORT_URL_TEMPLATE = "PENTAHO_REPORT_URL_TEMPLATE";
-    private final String PENTAHO_REPORT_URL_TEMPLATE_DEFAULT = "/pentaho/api/repos/{path}/viewer";
-    private final String PENTAHO_SERVER_USER = "PENTAHO_SERVER_USER";
-    private final String PENTAHO_SERVER_USER_DEFAULT = "admin";
-    private final String PENTAHO_SERVER_PASSWORD = "PENTAHO_SERVER_PASSWORD";
-    private final String PENTAHO_SERVER_PASSWORD_DEFAULT = "password";
 
     @Override
     public List<Report> getPentahoReports() throws Exception, MuleException
@@ -99,8 +95,7 @@ public class ReportServiceImpl implements ReportService
             {
                 throw new RuntimeException(xml);
             }
-        }
-        else
+        } else
         {
             throw new RuntimeException("Taking Pentaho reports failed.");
         }
@@ -114,15 +109,14 @@ public class ReportServiceImpl implements ReportService
         List<Report> reports = new ArrayList<Report>();
         if (getReportPluginProperties() != null)
         {
-            for (Entry<String, String> entry : getReportPluginProperties().entrySet())
+            reports.addAll(getReportPluginProperties().entrySet().stream().map(entry ->
             {
                 Report report = new Report();
                 report.setPropertyName(entry.getKey());
                 report.setPropertyPath(entry.getValue());
                 report.setTitle(createReportTitleFromKey(entry.getKey()));
-
-                reports.add(report);
-            }
+                return report;
+            }).collect(Collectors.toList()));
         }
 
         return reports;
@@ -169,7 +163,8 @@ public class ReportServiceImpl implements ReportService
 
         if (reports != null)
         {
-            reports.stream().forEach(report -> {
+            reports.stream().forEach(report ->
+            {
                 retval.put(report.getTitle(), getReportUrl().getReportUrlPath(report.getPropertyName()));
             });
         }
@@ -197,8 +192,7 @@ public class ReportServiceImpl implements ReportService
                                 .findAny();
 
                         authorized = optional.isPresent();
-                    }
-                    catch (Exception e)
+                    } catch (Exception e)
                     {
                         LOG.warn("Element found is null. Proceed with execution.");
                     }
@@ -206,7 +200,7 @@ public class ReportServiceImpl implements ReportService
             }
         }
 
-        LOG.debug("Report authorization: " + authorized);
+        LOG.debug("Report authorization: {}", authorized);
         return authorized;
     }
 
@@ -222,7 +216,7 @@ public class ReportServiceImpl implements ReportService
             Authentication auth = new UsernamePasswordAuthenticationToken(userId, userId);
             String response = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, 0, 1, "");
 
-            LOG.debug("Response: " + response);
+            LOG.debug("Response: {}", response);
 
             if (response != null && getSearchResults().getNumFound(response) > 0)
             {
@@ -233,10 +227,9 @@ public class ReportServiceImpl implements ReportService
                     retval = getSearchResults().extractStringList(doc, SearchConstants.PROPERTY_GROUPS_ID_SS);
                 }
             }
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
-            LOG.error("Cannot retrieve User informatio from Solr for userId=" + userId, e);
+            LOG.error("Cannot retrieve User information from Solr for userId={}", userId, e);
         }
 
         return retval;
@@ -248,11 +241,12 @@ public class ReportServiceImpl implements ReportService
         boolean success;
         try
         {
-            getPropertyFileManager().storeMultiple(prepareReportToGroupsMapForSaving(reportsToGroupsMap),
+            Map<String, String> prepared = prepareReportToGroupsMapForSaving(reportsToGroupsMap);
+            getPropertyFileManager().storeMultiple(prepared,
                     getReportToGroupsMapPropertiesFileLocation(), true);
+            setReportToGroupsMapProperties(prepared);
             success = true;
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             LOG.error("Cannot save report to groups map", e);
             success = false;
@@ -283,10 +277,11 @@ public class ReportServiceImpl implements ReportService
                 {
                     String value = createPentahoReportUri(report.getPropertyPath());
                     propertiesToUpdate.put(key, value);
-                }
-                else
+                    reportPluginProperties.put(key, value);
+                } else
                 {
                     propertiesToDelete.add(key);
+                    reportPluginProperties.remove(key);
                 }
             }
 
@@ -300,15 +295,10 @@ public class ReportServiceImpl implements ReportService
     {
         String url = getPropertyFileManager().load(getReportServerConfigPropertiesFileLocation(), PENTAHO_REPORT_URL_TEMPLATE,
                 PENTAHO_REPORT_URL_TEMPLATE_DEFAULT);
-        String user = getPropertyFileManager().load(getReportServerConfigPropertiesFileLocation(), PENTAHO_SERVER_USER,
-                PENTAHO_SERVER_USER_DEFAULT);
-        String password = getPropertyFileManager().load(getReportServerConfigPropertiesFileLocation(), PENTAHO_SERVER_PASSWORD,
-                PENTAHO_SERVER_PASSWORD_DEFAULT);
 
         if (url != null)
         {
             url = url.replace("{path}", path);
-            url = url + "?userid=" + user + "&password=" + password;
         }
 
         return url;
@@ -327,8 +317,7 @@ public class ReportServiceImpl implements ReportService
             Unmarshaller unmarshaller = context.createUnmarshaller();
             JAXBElement<?> jaxbElement = unmarshaller.unmarshal(element, c);
             obj = jaxbElement.getValue();
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             LOG.error("Error while creating Object from XML. ", e);
         }
@@ -342,10 +331,7 @@ public class ReportServiceImpl implements ReportService
 
         if (reportsToGroupsMap != null && reportsToGroupsMap.size() > 0)
         {
-            for (Map.Entry<String, List<String>> entry : reportsToGroupsMap.entrySet())
-            {
-                retval.put(entry.getKey(), StringUtils.join(entry.getValue(), ","));
-            }
+            reportsToGroupsMap.forEach((key, value) -> retval.put(key, StringUtils.join(value, ",")));
         }
 
         return retval;
@@ -353,20 +339,13 @@ public class ReportServiceImpl implements ReportService
 
     private Map<String, List<String>> prepareReportToGroupsMapForRetrieving(Map<String, String> reportsToGroupsMap)
     {
-        Map<String, List<String>> retval = new HashMap<String, List<String>>();
-
         if (reportsToGroupsMap != null && reportsToGroupsMap.size() > 0)
         {
-            for (Map.Entry<String, String> entry : reportsToGroupsMap.entrySet())
-            {
-                if (!("".equals(entry.getValue())) && entry.getValue() != null)
-                {
-                    retval.put(entry.getKey(), Arrays.asList(entry.getValue().split(",")));
-                }
-            }
+            return reportsToGroupsMap.entrySet().stream().filter(entry -> !"".equals(entry.getValue()) && entry.getValue() != null)
+                    .collect(Collectors.toMap(Entry::getKey, entry -> Arrays.<String> asList(entry.getValue().split(","))));
         }
 
-        return retval;
+        return new HashMap<String, List<String>>();
     }
 
     public MuleContextManager getMuleContextManager()

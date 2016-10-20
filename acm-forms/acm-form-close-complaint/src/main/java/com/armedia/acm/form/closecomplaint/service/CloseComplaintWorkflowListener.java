@@ -5,6 +5,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.slf4j.Logger;
@@ -88,6 +89,7 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
         pvars.put("COMPLAINT", closeComplaintFormEvent.getComplaintId());
         pvars.put("REQUEST_TYPE", "CLOSE_COMPLAINT_REQUEST");
         pvars.put("REQUEST_ID", closeComplaintFormEvent.getRequest().getId());
+        pvars.put("IP_ADDRESS", closeComplaintFormEvent.getIpAddress());
 
         log.debug("starting process: " + processName);
 

@@ -225,16 +225,16 @@
         "title": "Module Configuration"
       },
       "userName.config": {
-        "title": "User names display configuration",
-        "userId.label": "Use user identifier",
-        "userName.label": "Use full user name",
+        "title": "Username Display Configuration",
+        "userId.label": "Use User Identifier",
+        "userName.label": "Use Full Username",
         "apply": "Apply",
         "modal.title": "Information",
         "modal.info": "Settings will take effect after refresh",
         "modal.ok": "OK"
       },
       "login.config": {
-        "title": "Login configuration",
+        "title": "Login Configuration",
         "idleLimit.label": "Login idle limit (in milliseconds)",
         "inform": "Settings will take effect for all new user sessions",
         "apply.label": "Apply"

@@ -1,15 +1,14 @@
-
-/**
- * 
- */
 package com.armedia.acm.frevvo.config;
 
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
 import org.json.JSONObject;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,46 +17,50 @@ import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenS
 import com.armedia.acm.services.users.dao.ldap.UserActionDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 
-/**
- * @author riste.tutureski
- *
- */
 public interface FrevvoFormService {
 
-	public Object init();
-	public Object get(String action);
-	public boolean save(String xml, MultiValueMap<String, MultipartFile> attachments) throws Exception;
-	
-	public Map<String, Object> getProperties();
-	public void setProperties(Map<String, Object> properties);
-	
-	public HttpServletRequest getRequest();
-	public void setRequest(HttpServletRequest request);
-	
-	public Authentication getAuthentication();
-	public void setAuthentication(Authentication authentication);
-	
-	public AuthenticationTokenService getAuthenticationTokenService();
-	public void setAuthenticationTokenService(AuthenticationTokenService authenticationTokenService);
-	
-	public UserDao getUserDao();
-	public void setUserDao(UserDao userDao);
+	Object init();
+	Object get(String action);
 
-	public UserActionDao getUserActionDao();
-	public void setUserActionDao(UserActionDao userActionDao);
+	@Transactional
+	boolean save(String xml, MultiValueMap<String, MultipartFile> attachments) throws Exception;
 	
-	public EcmFileService getEcmFileService();
-	public void setEcmFileService(EcmFileService ecmFileService);
+	Map<String, Object> getProperties();
+	void setProperties(Map<String, Object> properties);
 	
-	public String getServletContextPath();
-    public void setServletContextPath(String servletContextPath);
+	HttpServletRequest getRequest();
+	void setRequest(HttpServletRequest request);
+	
+
+	Authentication getAuthentication();
+	void setAuthentication(Authentication authentication);
+	
+	AuthenticationTokenService getAuthenticationTokenService();
+	void setAuthenticationTokenService(AuthenticationTokenService authenticationTokenService);
+	
+	UserDao getUserDao();
+	void setUserDao(UserDao userDao);
+
+	UserActionDao getUserActionDao();
+	void setUserActionDao(UserActionDao userActionDao);
+	
+	EcmFileService getEcmFileService();
+	void setEcmFileService(EcmFileService ecmFileService);
+	
+	String getServletContextPath();
+    void setServletContextPath(String servletContextPath);
 
     String getFormName();
 	Class<?> getFormClass();
 
-	void setUserIpAddress(String userIpAddress);
 	String getUserIpAddress();
+
+	void setUserIpAddress(String userIpAddress);
 	
-	public JSONObject createResponse(Object object);
-	
+	JSONObject createResponse(Object object);
+
+	void updateXML(AcmContainerEntity entity, Authentication auth, Class<?> c);
+
+	String findCmisFolderId(Long folderId, AcmContainer container, String objectType, Long objectId);
+
 }

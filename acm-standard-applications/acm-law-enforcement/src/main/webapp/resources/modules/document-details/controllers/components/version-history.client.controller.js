@@ -14,24 +14,22 @@ angular.module('document-details').controller('Document.VersionHistoryController
         }
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
-        var promiseUsers = gridHelper.getUsers();
-
+        
         $scope.$watchCollection('versions', function (newValue, oldValue) {
             if (newValue && newValue.length) {
-                var promiseConfig = ConfigService.getComponentConfig("document-details", "versionHistory").then(function (config) {
-                    gridHelper.setColumnDefs(config);
-                    gridHelper.setBasicOptions(config);
-                    gridHelper.disableGridScrolling(config);
-                    gridHelper.setExternalPaging(config, $scope.retrieveGridData);
-                    gridHelper.setUserNameFilter(promiseUsers);
+            	$q.all([gridHelper.getUsers(), ConfigService.getComponentConfig("document-details", "versionHistory")]).then(function (data) {
+                    gridHelper.setColumnDefs(data[1]);
+                    gridHelper.setBasicOptions(data[1]);
+                    gridHelper.disableGridScrolling(data[1]);
+                    gridHelper.setExternalPaging(data[1], $scope.retrieveGridData);
+                    gridHelper.setUserNameFilter(data[0]);
 
                     $scope.retrieveGridData();
-                    return config;
+                    return data[1];
                 });
             }
 
         })
-
 
         $scope.retrieveGridData = function () {
             if ($scope.versions && $scope.versions.length) {
