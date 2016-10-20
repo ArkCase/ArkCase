@@ -10,4 +10,21 @@
     <bean id="logoutUrl" class="java.lang.String">
         <constructor-arg index="0" value="/logout"/>
     </bean>
+
+    <bean id="muleContextManager" class="com.armedia.acm.muletools.mulecontextmanager.MuleContextManager">
+        <property name="specificConfigFiles">
+            <list>
+                <value>/flows/MuleCmisConnectorFlow.xml</value>
+                <value>/flows/MuleActiveMqConnectorFlow.xml</value>
+                <value>/flows/addFileFlow.xml</value>
+                <value>/flows/addNewFolderFlow.xml</value>
+                <value>/flows/getFolderFlow.xml</value>
+                <value>/flows/moveFolderFlow.xml</value>
+                <value>/flows/copyFileFlow.xml</value>
+                <value>/flows/createFolderFlow.xml</value>
+            </list>
+        </property>
+    </bean>
+
+    <import resource="file:${user.home}/.arkcase/acm/app-config.xml"/>
 </beans>

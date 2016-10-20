@@ -10,6 +10,7 @@
           "id": "ID",
           "description": "Description",
           "objNumber": "Object Number",
+          "parentNumber": "Parent Number",
           "objType": "Object Type",
           "modified": "Modified"
         }

@@ -12,9 +12,7 @@
  */
 angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '$translate'
     , 'UtilService', 'LookupService', 'ApplicationConfigService', 'Object.LookupService', 'ObjectService', 'uiGridConstants', 'Object.AuditService'
-    , function ($resource, $q, $translate, Util, LookupService, ApplicationConfigService, ObjectLookupService, ObjectService, uiGridConstants
-        , ObjectAuditService) {
-  
+    , function ($resource, $q, $translate, Util, LookupService, ApplicationConfigService, ObjectLookupService, ObjectService, uiGridConstants, ObjectAuditService) {
         var Service = {
             Lookups: {
                 USER_FULL_NAMES: "userFullNames"
@@ -332,30 +330,30 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
                 });
             }
 
-            /**
-             * @ngdoc method
-             * @name showUserFullNames
-             * @methodOf services:Helper.UiGridService
-             *
-             * @description
-             * Replace user id with user full name.
-             */
-            , showUserFullNames: function () {
-                var that = this;
-                $q.all([ApplicationConfigService.getProperty(ApplicationConfigService.PROPERTIES.DISPLAY_USERNAME)]).then(function (result)
+                    /**
+                     * @ngdoc method
+                     * @name showUserFullNames
+                     * @methodOf services:Helper.UiGridService
+                     *
+                     * @description
+                     * Replace user id with user full name.
+                     */
+                    , showUserFullNames: function () {
+                    var that = this;
+                    $q.all([ApplicationConfigService.getProperty(ApplicationConfigService.PROPERTIES.DISPLAY_USERNAME)]).then(function (result)
                     {
-                      var userNamePop = result[0];
-      
-      				        if (userNamePop == "userName" && _.get(that, 'scope.config.columnDefs')) {
-      					        for (var i = 0; i < that.scope.config.columnDefs.length; i++) {
-                                      if (that.scope.config.columnDefs[i].hasOwnProperty('fullNameField')) {
-      								    var tempColumn = angular.copy(that.scope.config.columnDefs[i]);
-      								    tempColumn.field = tempColumn.fullNameField;
-      								    that.scope.config.columnDefs.splice(i,1, tempColumn);
-      							    }
-      						    }
-      					    }
-                });
+                        var userNamePop = result[0];
+
+				        if (userNamePop == "userName" && _.get(that, 'scope.config.columnDefs')) {
+					        for (var i = 0; i < that.scope.config.columnDefs.length; i++) {
+                                if (that.scope.config.columnDefs[i].hasOwnProperty('fullNameField')) {
+								    var tempColumn = angular.copy(that.scope.config.columnDefs[i]);
+								    tempColumn.field = tempColumn.fullNameField;
+								    that.scope.config.columnDefs.splice(i,1, tempColumn);
+							    }
+						    }
+					    }
+                    });
             }
 
             /**
@@ -464,14 +462,16 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
              * @name showObject
              * @methodOf services:Helper.UiGridService
              *
-             * @param {String} objType ArkCase Object type
+             * @param {String} objTypeKey Lookup key for an ArkCase Object type. Typically, lookup key is of format
+             * "OBJECT_TYPE" or "OBJECT_TYPE.SUB_TYPE"
              * @param {String} objId ArkCase Object ID
              *
              * @description
              * Go to a page state that show the specified ArkCase Object (Case, Complaint, Document, etc.)
              */
-            , showObject: function (objType, objId) {
-                return ObjectService.gotoState(objType, objId);
+            , showObject: function (objTypeKey, objId) {
+                return ObjectService.showObject(objTypeKey, objId);
+
             }
 
             /**
@@ -722,7 +722,7 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
                       that.retrieveAuditData(objectType, objectId);
                 });
             }
-           
+
         };
 
         return Service;

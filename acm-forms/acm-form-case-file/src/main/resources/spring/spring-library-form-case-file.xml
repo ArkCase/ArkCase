@@ -12,7 +12,7 @@
         <property name="acmParticipantDao" ref="acmParticipantDao"/>
     </bean>
 
-    <bean id="caseFileService" class="com.armedia.acm.form.casefile.service.CaseFileService">
+    <bean id="caseFileService" class="com.armedia.acm.form.casefile.service.CaseFileService" scope="prototype">
         <property name="caseFileFactory" ref="caseFileFactory"/>
         <property name="objectAssociationDao" ref="objectAssociationDao"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
@@ -34,6 +34,7 @@
         <property name="functionalAccessService" ref="functionalAccessService"/>
         <property name="searchResults" ref="searchResults"/>
         <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
+        <property name="caseFolderNameFormat" value="Case (%s)"/>
     </bean>
 
     <bean id="caseFilePSFactory" class="com.armedia.acm.form.casefile.service.CaseFilePSFactory">
@@ -41,11 +42,11 @@
         <property name="objectAssociationDao" ref="objectAssociationDao"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="ecmFileService" ref="ecmFileService"/>
-        <property name="formService" ref="caseFilePSService"/>
         <property name="personService" ref="personService"/>
+        <lookup-method name="getFormService" bean="caseFilePSService"/>
     </bean>
 
-    <bean id="caseFilePSService" class="com.armedia.acm.form.casefile.service.CaseFilePSService">
+    <bean id="caseFilePSService" class="com.armedia.acm.form.casefile.service.CaseFilePSService" scope="prototype">
         <property name="caseFilePSFactory" ref="caseFilePSFactory"/>
         <property name="objectAssociationDao" ref="objectAssociationDao"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
@@ -55,8 +56,8 @@
 
     <bean id="caseFileUpdatedListener" class="com.armedia.acm.form.casefile.service.CaseFileUpdatedListener">
         <property name="properties" ref="acm-forms-properties"/>
-        <property name="caseFileService" ref="caseFileService"/>
-        <property name="caseFilePSService" ref="caseFilePSService"/>
+        <lookup-method name="getCaseFileService" bean="caseFileService"/>
+        <lookup-method name="getCaseFilePSService" bean="caseFilePSService"/>
     </bean>
 
 </beans>

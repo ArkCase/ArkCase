@@ -7,8 +7,8 @@ angular.module('tasks').controller('Tasks.TagsController', ['$scope', '$q', '$st
         , Util, ObjectService, TaskInfoService
         , HelperUiGridService, HelperObjectBrowserService, ObjectTagsService, $modal, messageService) {
 
-		$scope.tags = [];
-	
+        $scope.tags = [];
+
         var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
@@ -20,13 +20,13 @@ angular.module('tasks').controller('Tasks.TagsController', ['$scope', '$q', '$st
                 return onConfigRetrieved(componentConfig);
             }
             , onObjectInfoRetrieved: function (objectInfo) {
-            	onObjectInfoRetrieved(objectInfo);
+                onObjectInfoRetrieved(objectInfo);
             }
         });
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
-        
-        
+        var promiseUsers = gridHelper.getUsers();
+
         $scope.addNew = function () {
             var modalInstance = $modal.open({
                 animation: $scope.animationsEnabled,
@@ -35,44 +35,44 @@ angular.module('tasks').controller('Tasks.TagsController', ['$scope', '$q', '$st
                 size: 'lg'
             });
 
-            modalInstance.result.then(function (tags) {            	
-            	_.forEach(tags, function(tag) {         	
-            		if(tag.id){
-            			if(tag.object_id_s){
-		            		var tagsFound = _.filter($scope.tags, function (tagAss) {
-		                        return tagAss.id == tag.object_id_s;
-		                    });
-		            		if(tagsFound.length == 0) {
-			            		ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.TASK, tag.object_id_s).then(
-			                            function (returnedTag) {
-			                            	var tagToAdd = angular.copy(returnedTag);
-											tagToAdd.tagName = tag.tags_s;
-                                            tagToAdd.id = returnedTag.tagId;
-			                                $scope.tags.push(tagToAdd);
-			                                $scope.gridOptions.data = $scope.tags;
-			                                $scope.gridOptions.totalItems = $scope.tags.length;
-			                            }
-			                        );
-		            		}
-		            		else {
-		            			messageService.info(tag.tags_s + " " + $translate.instant('tasks.comp.tags.message.tagAssociated'));
-		            			_.remove(tagsFound, function(){
-		            				return tag;
-		            			});
-		            		}
-            			}
-            			else {
-            				ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.TASK, tag.id).then(
-		                            function () {
-		                                $scope.tags.push(tag);
-		                                $scope.gridOptions.data = $scope.tags;
-		                                $scope.gridOptions.totalItems = $scope.tags.length;
-		                            }
-		                        );
-            			}
-            		}
-            	});             
-            	
+            modalInstance.result.then(function (tags) {
+                _.forEach(tags, function (tag) {
+                    if (tag.id) {
+                        if (tag.object_id_s) {
+                            var tagsFound = _.filter($scope.tags, function (tagAss) {
+                                return tagAss.id == tag.object_id_s;
+                            });
+                            if (tagsFound.length == 0) {
+                                ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.TASK, tag.object_id_s).then(
+                                    function (returnedTag) {
+                                        var tagToAdd = angular.copy(returnedTag);
+                                        tagToAdd.tagName = tag.tags_s;
+                                        tagToAdd.id = returnedTag.tagId;
+                                        $scope.tags.push(tagToAdd);
+                                        $scope.gridOptions.data = $scope.tags;
+                                        $scope.gridOptions.totalItems = $scope.tags.length;
+                                    }
+                                );
+                            }
+                            else {
+                                messageService.info(tag.tags_s + " " + $translate.instant('tasks.comp.tags.message.tagAssociated'));
+                                _.remove(tagsFound, function () {
+                                    return tag;
+                                });
+                            }
+                        }
+                        else {
+                            ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.TASK, tag.id).then(
+                                function () {
+                                    $scope.tags.push(tag);
+                                    $scope.gridOptions.data = $scope.tags;
+                                    $scope.gridOptions.totalItems = $scope.tags.length;
+                                }
+                            );
+                        }
+                    }
+                });
+
             }, function () {
                 // Cancel button was clicked.
             });
@@ -80,12 +80,12 @@ angular.module('tasks').controller('Tasks.TagsController', ['$scope', '$q', '$st
 
         var onConfigRetrieved = function (config) {
 
-        	$scope.config = config;
+            $scope.config = config;
             gridHelper.addButton(config, "delete");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
-            gridHelper.showUserFullNames();
+            gridHelper.setUserNameFilter(promiseUsers);
 
         };
 
@@ -94,7 +94,7 @@ angular.module('tasks').controller('Tasks.TagsController', ['$scope', '$q', '$st
 
             var currentObjectId = Util.goodMapValue(objectInfo, "taskId");
             if (Util.goodPositive(currentObjectId, false)) {
-            	var promiseQueryTags = ObjectTagsService.getAssociateTags(currentObjectId, ObjectService.ObjectTypes.TASK);
+                var promiseQueryTags = ObjectTagsService.getAssociateTags(currentObjectId, ObjectService.ObjectTypes.TASK);
                 $q.all([promiseQueryTags]).then(function (data) {
                     $scope.tags = data[0];
                     $scope.gridOptions = $scope.gridOptions || {};

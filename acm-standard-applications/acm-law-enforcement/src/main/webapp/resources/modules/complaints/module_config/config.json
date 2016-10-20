@@ -431,12 +431,13 @@
               "name": "fullAddress",
               "displayName": "complaints.comp.locations.table.columns.address",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div ng-bind-html='row.entity.fullAddress' title='{{row.entity.fullAddress}}' class='ui-grid-cell-contents'></div>"
+              "cellTemplate": "<div ng-bind-html='row.entity.location.fullAddress' title='{{row.entity.location.fullAddress}}' class='ui-grid-cell-contents'></div>"
             },
             {
               "name": "modified",
               "displayName": "complaints.comp.locations.table.columns.modified",
               "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
               "width": 150
             },
             {
@@ -574,15 +575,15 @@
             "headerCellFilter": "translate"
           },
           {
-            "name": "created",
-            "displayName": "complaints.comp.people.contactMethods.table.columns.created",
+            "name": "modified",
+            "displayName": "complaints.comp.people.contactMethods.table.columns.modified",
             "headerCellFilter": "translate",
-            "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+            "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
             "enableCellEdit": false
           },
           {
-            "name": "creator",
-            "displayName": "complaints.comp.people.contactMethods.table.columns.creator",
+            "name": "modifier",
+            "displayName": "complaints.comp.people.contactMethods.table.columns.modifier",
             "headerCellFilter": "translate",
             "lookup": "userFullNames"
           }
@@ -615,15 +616,15 @@
             "headerCellFilter": "translate"
           },
           {
-            "name": "created",
-            "displayName": "complaints.comp.people.organizations.table.columns.created",
+            "name": "modified",
+            "displayName": "complaints.comp.people.organizations.table.columns.modified",
             "headerCellFilter": "translate",
-            "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+            "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
             "enableCellEdit": false
           },
           {
-            "name": "creator",
-            "displayName": "complaints.comp.people.organizations.table.columns.creator",
+            "name": "modifier",
+            "displayName": "complaints.comp.people.organizations.table.columns.modifier",
             "headerCellFilter": "translate",
             "lookup": "userFullNames"
           }
@@ -673,15 +674,15 @@
             "headerCellFilter": "translate"
           },
           {
-            "name": "created",
-            "displayName": "complaints.comp.people.addresses.table.columns.created",
+            "name": "modified",
+            "displayName": "complaints.comp.people.addresses.table.columns.modified",
             "headerCellFilter": "translate",
-            "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+            "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
             "enableCellEdit": false
           },
           {
-            "name": "creator",
-            "displayName": "complaints.comp.people.addresses.table.columns.creator",
+            "name": "modifier",
+            "displayName": "complaints.comp.people.addresses.table.columns.modifier",
             "headerCellFilter": "translate",
             "lookup": "userFullNames"
           }
@@ -711,15 +712,15 @@
             "headerCellFilter": "translate"
           },
           {
-            "name": "created",
-            "displayName": "complaints.comp.people.aliases.table.columns.created",
+            "name": "modified",
+            "displayName": "complaints.comp.people.aliases.table.columns.modified",
             "headerCellFilter": "translate",
-            "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+            "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
             "enableCellEdit": false
           },
           {
-            "name": "creator",
-            "displayName": "complaints.comp.people.aliases.table.columns.creator",
+            "name": "modifier",
+            "displayName": "complaints.comp.people.aliases.table.columns.modifier",
             "headerCellFilter": "translate",
             "lookup": "userFullNames"
           }
@@ -749,15 +750,15 @@
             "headerCellFilter": "translate"
           },
           {
-            "name": "created",
-            "displayName": "complaints.comp.people.securityTags.table.columns.created",
+            "name": "modified",
+            "displayName": "complaints.comp.people.securityTags.table.columns.modified",
             "headerCellFilter": "translate",
-            "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+            "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
             "enableCellEdit": false
           },
           {
-            "name": "creator",
-            "displayName": "complaints.comp.people.securityTags.table.columns.creator",
+            "name": "modifier",
+            "displayName": "complaints.comp.people.securityTags.table.columns.modifier",
             "headerCellFilter": "translate",
             "fullNameField": "creator_full_name_lcs"
           }
@@ -1034,7 +1035,8 @@
         {
           "name": "eventType",
           "displayName": "complaints.comp.history.table.columns.eventType",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div ng-if='row.entity.eventDescription'>{{row.entity.eventDescription}}</div><div ng-if='!row.entity.eventDescription'>{{row.entity.eventType}}</div>"
         },
         {
           "name": "eventDate",
@@ -1175,7 +1177,7 @@
           "name": "creator",
           "displayName": "complaints.comp.tags.table.columns.createdBy",
           "headerCellFilter": "translate",
-          "fullNameField": "creator_full_name_lcs"
+          "lookup": "userFullNames"
         }
       ],
       "filters": "\"Object Type\": TAG",

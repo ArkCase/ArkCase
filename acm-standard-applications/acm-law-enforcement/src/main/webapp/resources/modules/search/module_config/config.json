@@ -31,13 +31,13 @@
           "name": "name",
           "displayName": "search.comp.grid.columns.name",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity.object_type_s, row.entity.object_id_s)' data-toggle='tooltip' data-placement='bottom' title={{row.entity.name}}>{{row.entity.name}}</a>"
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)' data-toggle='tooltip' data-placement='bottom' title={{row.entity.name}}>{{row.entity.name}}</a>"
         },
         {
           "name": "object_type_s",
           "displayName": "search.comp.grid.columns.type",
           "headerCellFilter": "translate",
-          "cellFilter": "mapKeyValue: grid.appScope.customLabels"
+          "cellFilter": "mapKeyValue: grid.appScope.customization.labels"
         },
         {
           "name": "title_parseable",
@@ -49,7 +49,7 @@
           "name": "parent_number_lcs",
           "displayName": "search.comp.grid.columns.parent",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickParentObjLink($event, row.entity.parent_ref_s)' data-toggle='tooltip' data-placement='bottom' title={{row.entity.parent_number_lcs}}>{{row.entity.parent_number_lcs}}</a>"
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickParentObjLink($event, row.entity)' data-toggle='tooltip' data-placement='bottom' title={{row.entity.parent_number_lcs}}>{{row.entity.parent_number_lcs}}</a>"
         },
         {
           "name": "assignee_full_name_lcs",

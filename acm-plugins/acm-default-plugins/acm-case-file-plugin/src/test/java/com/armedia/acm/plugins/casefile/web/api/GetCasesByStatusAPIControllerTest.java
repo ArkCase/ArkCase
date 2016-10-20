@@ -1,13 +1,11 @@
 package com.armedia.acm.plugins.casefile.web.api;
 
-import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseByStatusDto;
-import com.armedia.acm.plugins.casefile.model.CasesByStatusAndTimePeriod;
-import com.armedia.acm.plugins.casefile.model.TimePeriod;
-import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
-import com.armedia.acm.plugins.casefile.web.api.GetCasesByStatusAPIController;
-import com.armedia.acm.plugins.casefile.web.api.ListCaseFilesByUserAPIController;
+import com.armedia.acm.services.search.model.SearchConstants;
+import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.io.IOUtils;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,11 +24,10 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
-import java.util.Arrays;
-import java.util.Date;
+import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.List;
 
-import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -52,7 +49,7 @@ public class GetCasesByStatusAPIControllerTest extends EasyMockSupport {
 
     private GetCasesByStatusAPIController unit;
 
-    private CaseFileDao mockCaseFileDao;
+    private ExecuteSolrQuery mockExecuteSolrQuery;
     private Authentication mockAuthentication;
 
     @Autowired
@@ -63,169 +60,27 @@ public class GetCasesByStatusAPIControllerTest extends EasyMockSupport {
     @Before
     public void setUp() throws Exception
     {
-        mockCaseFileDao = createMock(CaseFileDao.class);
+        mockExecuteSolrQuery = createMock(ExecuteSolrQuery.class);
         mockHttpSession = new MockHttpSession();
         mockAuthentication = createMock(Authentication.class);
 
         unit = new GetCasesByStatusAPIController();
 
-        unit.setCaseFileDao(mockCaseFileDao);
+        unit.setExecuteSolrQuery(mockExecuteSolrQuery);
 
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
     }
-    @Test
-    public  void lastYearCaseByStatusTest()  throws Exception  {
-        String user = "user";
-
-        CaseByStatusDto caseByStatusDto = new CaseByStatusDto();
-        caseByStatusDto.setCount(34);
-        caseByStatusDto.setStatus("TEST STATUS");
-        String ipAddress = "ipAddress";
-
-
-        expect(mockCaseFileDao.getCasesByStatusAndByTimePeriod(TimePeriod.ONE_YEAR)).andReturn(Arrays.asList(caseByStatusDto)).anyTimes();
-
-        mockHttpSession.setAttribute("acm_ip_address", ipAddress);
-
-        // MVC test classes must call getName() somehow
-        expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
-
-        replayAll();
-
-        MvcResult result = mockMvc.perform(
-                get("/api/latest/plugin/casebystatus/{timePeriod}", CasesByStatusAndTimePeriod.LAST_YEAR.getPeriod())
-                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-                        .principal(mockAuthentication)
-                        .session(mockHttpSession))
-                .andReturn();
-
-        verifyAll();
-
-        assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
-        assertTrue(result.getResponse().getContentType().startsWith(MediaType.APPLICATION_JSON_VALUE));
-
-        String returned = result.getResponse().getContentAsString();
-
-        log.info("results: " + returned);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        List<CaseByStatusDto> caseByStatusDtos = objectMapper.readValue(returned,
-                objectMapper.getTypeFactory().constructParametricType(List.class, CaseByStatusDto.class));
-
-        assertEquals(1, caseByStatusDtos.size());
-
-        CaseByStatusDto found = caseByStatusDtos.get(0);
-        assertEquals(caseByStatusDto.getCount(), found.getCount());
-    }
 
     @Test
-    public  void lastMonthCaseByStatusTest()  throws Exception  {
-        String user = "user";
-        CaseByStatusDto caseByStatusDto = new CaseByStatusDto();
-        caseByStatusDto.setCount(34);
-        caseByStatusDto.setStatus("TEST STATUS");
-        String ipAddress = "ipAddress";
-
-
-        expect(mockCaseFileDao.getCasesByStatusAndByTimePeriod(TimePeriod.THIRTY_DAYS)).andReturn(Arrays.asList(caseByStatusDto)).anyTimes();
-
-        mockHttpSession.setAttribute("acm_ip_address", ipAddress);
-
-        // MVC test classes must call getName() somehow
-        expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
-
-        replayAll();
-
-        MvcResult result = mockMvc.perform(
-                get("/api/latest/plugin/casebystatus/{timePeriod}", CasesByStatusAndTimePeriod.LAST_MONTH.getPeriod())
-                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-                        .principal(mockAuthentication)
-                        .session(mockHttpSession))
-                .andReturn();
-
-        verifyAll();
-
-        assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
-        assertTrue(result.getResponse().getContentType().startsWith(MediaType.APPLICATION_JSON_VALUE));
-
-        String returned = result.getResponse().getContentAsString();
-
-        log.info("results: " + returned);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        List<CaseByStatusDto> caseByStatusDtos = objectMapper.readValue(returned,
-                objectMapper.getTypeFactory().constructParametricType(List.class, CaseByStatusDto.class));
-
-        assertEquals(1, caseByStatusDtos.size());
-
-        CaseByStatusDto found = caseByStatusDtos.get(0);
-        assertEquals(caseByStatusDto.getCount(), found.getCount());
-    }
-
-    @Test
-    public  void lastSevenDaysCaseByStatusTest()  throws Exception  {
-
-        String user = "user";
-        CaseByStatusDto caseByStatusDto = new CaseByStatusDto();
-        caseByStatusDto.setCount(34);
-        caseByStatusDto.setStatus("TEST STATUS");
-        String ipAddress = "ipAddress";
-
-
-        expect(mockCaseFileDao.getCasesByStatusAndByTimePeriod(TimePeriod.SEVEN_DAYS)).andReturn(Arrays.asList(caseByStatusDto)).anyTimes();
-
-        mockHttpSession.setAttribute("acm_ip_address", ipAddress);
-
-        // MVC test classes must call getName() somehow
-        expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
-
-        replayAll();
-
-        MvcResult result = mockMvc.perform(
-                get("/api/latest/plugin/casebystatus/{timePeriod}", CasesByStatusAndTimePeriod.LAST_WEEK.getPeriod())
-                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-                        .principal(mockAuthentication)
-                        .session(mockHttpSession))
-                .andReturn();
-
-        verifyAll();
-
-        assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
-        assertTrue(result.getResponse().getContentType().startsWith(MediaType.APPLICATION_JSON_VALUE));
-
-        String returned = result.getResponse().getContentAsString();
-
-        log.info("results: " + returned);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        List<CaseByStatusDto> caseByStatusDtos = objectMapper.readValue(returned,
-                objectMapper.getTypeFactory().constructParametricType(List.class, CaseByStatusDto.class));
-
-        assertEquals(1, caseByStatusDtos.size());
-
-        CaseByStatusDto found = caseByStatusDtos.get(0);
-        assertEquals(caseByStatusDto.getCount(), found.getCount());
-    }
-
-    @Test
-    public void allCaseByStatusTest() throws Exception
+    public void allCasesByStatusTest() throws Exception
     {
-        String user = "user";
-        CaseByStatusDto caseByStatusDto = new CaseByStatusDto();
-        caseByStatusDto.setCount(34);
-        caseByStatusDto.setStatus("TEST STATUS");
-        String ipAddress = "ipAddress";
+        String facetQuery = "object_type_s:CASE_FILE&rows=0&fl=id&wt=json&indent=true&facet=true&facet.mincount=1&facet.field=" + SearchConstants.PROPERTY_STATUS;
 
+        InputStream facetInputStream = getClass().getClassLoader().getResourceAsStream("SolrFacetResponseGetNumberOfCaseFilesByStatusTest.json");
+        String facetSolrResponse = IOUtils.toString(facetInputStream, Charset.forName("UTF-8"));
 
-        expect(mockCaseFileDao.getAllCasesByStatus()).andReturn(Arrays.asList(caseByStatusDto));
-
-        mockHttpSession.setAttribute("acm_ip_address", ipAddress);
-
-        // MVC test classes must call getName() somehow
-        expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
+        expect(mockAuthentication.getName()).andReturn("user");
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, facetQuery, 0, 1, "")).andReturn(facetSolrResponse);
 
         replayAll();
 
@@ -248,11 +103,25 @@ public class GetCasesByStatusAPIControllerTest extends EasyMockSupport {
         ObjectMapper objectMapper = new ObjectMapper();
 
         List<CaseByStatusDto> caseByStatusDtos = objectMapper.readValue(returned,
-                objectMapper.getTypeFactory().constructParametricType(List.class, CaseByStatusDto.class));
+                objectMapper.getTypeFactory().constructParametrizedType(List.class, List.class, CaseByStatusDto.class));
 
-        assertEquals(1, caseByStatusDtos.size());
+        assertEquals(8, caseByStatusDtos.size());
 
-        CaseByStatusDto found = caseByStatusDtos.get(0);
-        assertEquals(caseByStatusDto.getCount(), found.getCount());
+        assertEquals("DRAFT", caseByStatusDtos.get(0).getStatus());
+        assertEquals(1757, caseByStatusDtos.get(0).getCount());
+        assertEquals("Transcribe", caseByStatusDtos.get(1).getStatus());
+        assertEquals(1044, caseByStatusDtos.get(1).getCount());
+        assertEquals("Archive", caseByStatusDtos.get(2).getStatus());
+        assertEquals(216, caseByStatusDtos.get(2).getCount());
+        assertEquals("Rejected", caseByStatusDtos.get(3).getStatus());
+        assertEquals(101, caseByStatusDtos.get(3).getCount());
+        assertEquals("Quality Control", caseByStatusDtos.get(4).getStatus());
+        assertEquals(94, caseByStatusDtos.get(4).getCount());
+        assertEquals("Fulfill", caseByStatusDtos.get(5).getStatus());
+        assertEquals(84, caseByStatusDtos.get(5).getCount());
+        assertEquals("Distribution", caseByStatusDtos.get(6).getStatus());
+        assertEquals(67, caseByStatusDtos.get(6).getCount());
+        assertEquals("Billing", caseByStatusDtos.get(7).getStatus());
+        assertEquals(59, caseByStatusDtos.get(7).getCount());
     }
 }

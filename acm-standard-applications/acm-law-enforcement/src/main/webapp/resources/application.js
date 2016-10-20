@@ -17,8 +17,8 @@ angular
             '$translateProvider',
             '$translatePartialLoaderProvider',
             '$httpProvider',
-            function($locationProvider, $translateProvider,
-                     $translatePartialLoaderProvider, $httpProvider) {
+            function ($locationProvider, $translateProvider,
+                      $translatePartialLoaderProvider, $httpProvider) {
                 $locationProvider.hashPrefix('!');
 
                 $httpProvider.interceptors.push(httpInterceptor);
@@ -27,7 +27,7 @@ angular
 
                 function noCacheInterceptor() {
                     return {
-                        request: function(config) {
+                        request: function (config) {
                             // Appends timestamp to url to avoid
                             // caching issues on IE
                             // only on GET requests with no explicit
@@ -75,8 +75,8 @@ angular
                             // Spring security on the server
                             // remembers the last requested page
                             var redirectUrl = response.headers()['acm_concurrent_session_redirect'];
-                            if(redirectUrl){
-                                $window.location.href=redirectUrl;
+                            if (redirectUrl) {
+                                $window.location.href = redirectUrl;
                                 return ($q.reject(null));
                             }
                             sessionStorage.redirectState = angular
@@ -94,7 +94,7 @@ angular
                         // Send error message to MessageService if
                         // is not suppressed
                         if (isErrorSuppressed(response)) {
-                            return ($q.reject(null));
+                            return $q.reject(response);
                         } else {
                             // Only throw http error as last resort
                             if (response.data) {
@@ -122,7 +122,7 @@ angular
                         angular
                             .forEach(
                                 ApplicationConfiguration.suppressedErrorList,
-                                function(error) {
+                                function (error) {
                                     if (error.url == response.config.url && error.status == response.status) {
                                         isSuppressed = true;
                                     }
@@ -133,7 +133,7 @@ angular
             }
         ]).run(
     ['$translate', '$translatePartialLoader',
-        function($translate, $translatePartialLoader) {
+        function ($translate, $translatePartialLoader) {
             $translatePartialLoader.addPart('core');
             $translatePartialLoader.addPart('welcome');
             $translate.refresh();
@@ -144,18 +144,18 @@ angular
 angular
     .element(document)
     .ready(
-        function() {
+        function () {
             $
                 .getJSON(
                     'api/latest/plugin/admin/labelmanagement/default-language',
-                    function(result) {
+                    function (result) {
                         ACM_SETTINGS.LANG = result.defaultLang || ACM_SETTINGS.LANG;
                         angular
                             .bootstrap(
                                 document, [ApplicationConfiguration.applicationModuleName]);
                     })
                 .fail(
-                    function() {
+                    function () {
                         // If language is missed then use
                         // default lang settings (en)
                         angular

@@ -43,7 +43,9 @@
         "type": "Type",
         "value": "Value",
         "created": "Date Added",
-        "creator": "Added By"
+        "creator": "Added By",
+        "modified": "Last Modified",
+        "modifier": "Modified By"
       }
     },
     "organizations": {
@@ -52,7 +54,9 @@
         "type": "Type",
         "value": "Value",
         "created": "Date Added",
-        "creator": "Added By"
+        "creator": "Added By",
+        "modified": "Last Modified",
+        "modifier": "Modified By"
       }
     },
     "addresses": {
@@ -65,7 +69,9 @@
         "zip": "Zip",
         "country": "Country",
         "created": "Date Added",
-        "creator": "Added By"
+        "creator": "Added By",
+        "modified": "Last Modified",
+        "modifier": "Modified By"
       }
     },
     "aliases": {
@@ -74,7 +80,9 @@
         "type": "Type",
         "value": "Value",
         "created": "Date Added",
-        "creator": "Added By"
+        "creator": "Added By",
+        "modified": "Last Modified",
+        "modifier": "Modified By"
       }
     },
     "securityTags": {
@@ -83,7 +91,9 @@
         "type": "Type",
         "value": "Value",
         "created": "Date Added",
-        "creator": "Added By"
+        "creator": "Added By",
+        "modified": "Last Modified",
+        "modifier": "Modified By"
       }
     }
   },

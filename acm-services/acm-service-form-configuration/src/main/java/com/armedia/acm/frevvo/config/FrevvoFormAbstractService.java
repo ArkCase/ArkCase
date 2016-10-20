@@ -1,7 +1,3 @@
-
-/**
- *
- */
 package com.armedia.acm.frevvo.config;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
@@ -54,11 +50,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
-/**
- * @author riste.tutureski
- */
+
 public abstract class FrevvoFormAbstractService implements FrevvoFormService
 {
 
@@ -93,9 +86,8 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
         String containerIdString = getRequest().getParameter("containerId");
         String folderIdString = getRequest().getParameter("folderId");
 
-        if (("edit".equals(mode) || "reinvestigate".equals(mode)) &&
-                null != containerIdString && !"".equals(containerIdString) &&
-                null != folderIdString && !"".equals(folderIdString))
+        if (("edit".equals(mode) || "reinvestigate".equals(mode)) && null != containerIdString && !"".equals(containerIdString)
+                && null != folderIdString && !"".equals(folderIdString))
         {
             Long xmlId = null;
             try
@@ -110,7 +102,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
                 }
             } catch (Exception e)
             {
-                LOG.warn("EcmFile with id=" + xmlId + " is not found while edit mode. Empty Frevvo form will be shown.");
+                LOG.warn("EcmFile with id={} is not found while edit mode. Empty Frevvo form will be shown.", xmlId);
             }
         }
 
@@ -122,7 +114,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
     {
         String jsonString = getGson().toJson(object);
 
-        LOG.debug("returning JSON: " + jsonString);
+        LOG.debug("returning JSON: {}", jsonString);
         JSONObject json = new JSONObject(jsonString);
 
         return json;
@@ -173,8 +165,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
     }
 
     @Override
-    public void setAuthenticationTokenService(
-            AuthenticationTokenService authenticationTokenService)
+    public void setAuthenticationTokenService(AuthenticationTokenService authenticationTokenService)
     {
         this.authenticationTokenService = authenticationTokenService;
     }
@@ -199,19 +190,19 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
             return container.getFolder().getCmisFolderId();
         }
 
-        AcmContainer found = null;
         try
         {
-            found = getEcmFileService().getOrCreateContainer(objectType, id);
+            AcmContainer found = getEcmFileService().getOrCreateContainer(objectType, id);
             return found.getFolder().getCmisFolderId();
         } catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)
         {
-            LOG.error("Can not find or create a CMIS folder for '" + objectType + "', id '" + id + "'", e);
+            LOG.error("Can not find or create a CMIS folder for '{}', id '{}'", objectType, id, e);
             return null;
         }
 
     }
 
+    @Override
     public String findCmisFolderId(Long folderId, AcmContainer container, String objectType, Long objectId)
     {
         String cmisFolderId = null;
@@ -223,7 +214,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
                 cmisFolderId = folder.getCmisFolderId();
             } catch (Exception e)
             {
-                LOG.warn("Cannot find folder for provided folderId=" + folderId + ". Will try to find the attachment folder or to create one.");
+                LOG.warn("Cannot find folder for provided folderId={}. Will try to find the attachment folder or to create one.", folderId);
             }
         }
 
@@ -240,18 +231,18 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
         // hopefully the container has it, but sometimes the container isn't set on the parent object
         if (container != null)
         {
-            // the atttachment folder does not have a not-null constraint :-(  but the folder id is not-null in the db.
-            return container.getAttachmentFolder() == null ? container.getFolder().getCmisFolderId() : container.getAttachmentFolder().getCmisFolderId();
+            // the attachment folder does not have a not-null constraint :-( but the folder id is not-null in the db.
+            return container.getAttachmentFolder() == null ? container.getFolder().getCmisFolderId()
+                    : container.getAttachmentFolder().getCmisFolderId();
         }
 
-        AcmContainer found = null;
         try
         {
-            found = getEcmFileService().getOrCreateContainer(objectType, id);
+            AcmContainer found = getEcmFileService().getOrCreateContainer(objectType, id);
             return found.getAttachmentFolder().getCmisFolderId();
         } catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)
         {
-            LOG.error("Can not find or create a CMIS folder for '" + objectType + "', id '" + id + "'", e);
+            LOG.error("Can not find or create a CMIS folder for '{}', id '{}'", objectType, id, e);
             return null;
         }
 
@@ -309,6 +300,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
         return xml;
     }
 
+    @Override
     public void updateXML(AcmContainerEntity entity, Authentication auth, Class<?> c)
     {
         if (entity != null)
@@ -364,7 +356,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
                 retval = convertFromXMLToObject(cleanXML(existingXml), c);
             } catch (MuleException e)
             {
-                LOG.error("Cannot download file with id=" + id);
+                LOG.error("Cannot download file with id={}", id);
             }
         }
 
@@ -381,7 +373,9 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
             {
                 MultipartFile originalXml = files.get(0);
                 InputStream updatedXmlContent = new ByteArrayInputStream(updatedXmlFile.getBytes());
-                AcmMultipartFile updatedXml = new AcmMultipartFile(originalXml.getName(), originalXml.getOriginalFilename(), originalXml.getContentType(), originalXml.isEmpty(), originalXml.getSize(), originalXml.getBytes(), updatedXmlContent, false);
+                AcmMultipartFile updatedXml = new AcmMultipartFile(originalXml.getName(), originalXml.getOriginalFilename(),
+                        originalXml.getContentType(), originalXml.isEmpty(), originalXml.getSize(), originalXml.getBytes(),
+                        updatedXmlContent, false);
 
                 // Remove old XML file
                 attachments.remove("form_" + formName);
@@ -392,7 +386,8 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
         }
     }
 
-    public MultiValueMap<String, MultipartFile> updateFileName(String newName, String type, MultiValueMap<String, MultipartFile> attachments) throws IOException
+    public MultiValueMap<String, MultipartFile> updateFileName(String newName, String type,
+                                                               MultiValueMap<String, MultipartFile> attachments) throws IOException
     {
         String key = findAttachmentKey(type, attachments);
 
@@ -403,7 +398,8 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
             {
                 MultipartFile originalFile = files.get(0);
                 String fullFileName = newName + "." + type.toLowerCase();
-                AcmMultipartFile updatedFile = new AcmMultipartFile(fullFileName, fullFileName, originalFile.getContentType(), originalFile.isEmpty(), originalFile.getSize(), originalFile.getBytes(), originalFile.getInputStream(), false);
+                AcmMultipartFile updatedFile = new AcmMultipartFile(fullFileName, fullFileName, originalFile.getContentType(),
+                        originalFile.isEmpty(), originalFile.getSize(), originalFile.getBytes(), originalFile.getInputStream(), false);
 
                 // Remove old file
                 attachments.remove(key);
@@ -443,21 +439,14 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
         return null;
     }
 
-    public FrevvoUploadedFiles saveAttachments(
-            MultiValueMap<String, MultipartFile> attachments,
-            String targetCmisFolderId,
-            String parentObjectType,
-            Long parentObjectId) throws AcmCreateObjectFailedException, AcmUserActionFailedException
+    public FrevvoUploadedFiles saveAttachments(MultiValueMap<String, MultipartFile> attachments, String targetCmisFolderId,
+                                               String parentObjectType, Long parentObjectId) throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         return saveAttachments(getAttachmentFileType(""), attachments, targetCmisFolderId, parentObjectType, parentObjectId);
     }
 
-    public FrevvoUploadedFiles saveAttachments(
-            String fileType,
-            MultiValueMap<String, MultipartFile> attachments,
-            String targetCmisFolderId,
-            String parentObjectType,
-            Long parentObjectId) throws AcmCreateObjectFailedException, AcmUserActionFailedException
+    public FrevvoUploadedFiles saveAttachments(String fileType, MultiValueMap<String, MultipartFile> attachments, String targetCmisFolderId,
+                                               String parentObjectType, Long parentObjectId) throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         FrevvoUploadedFiles retval = new FrevvoUploadedFiles();
 
@@ -480,23 +469,15 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
                         EcmFile formXml = null;
 
                         // Update XML form if the mode is "edit", otherwise create new
-                        if ("edit".equals(mode) &&
-                                null != containerIdString && !"".equals(containerIdString) &&
-                                null != folderIdString && !"".equals(folderIdString))
+                        if ("edit".equals(mode) && null != containerIdString && !"".equals(containerIdString) && null != folderIdString
+                                && !"".equals(folderIdString))
                         {
                             EcmFile file = getEcmFile(containerIdString, folderIdString, getFormName().toLowerCase() + "_xml");
 
-                            formXml = getEcmFileService().update(
-                                    file,
-                                    xmlAttachment,
-                                    getAuthentication());
+                            formXml = getEcmFileService().update(file, xmlAttachment, getAuthentication());
                         } else
                         {
-                            formXml = uploadFile(
-                                    getFormName() + "_xml",
-                                    targetCmisFolderId,
-                                    parentObjectType,
-                                    parentObjectId,
+                            formXml = uploadFile(getFormName() + "_xml", targetCmisFolderId, parentObjectType, parentObjectId,
                                     xmlAttachment);
                         }
                         retval.setFormXml(formXml);
@@ -511,33 +492,25 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
                         EcmFile pdfRendition = null;
                         String _fileType = getFormName();
 
-                        if (pdfAttachment != null && pdfAttachment.getContentType() != null &&
-                                pdfAttachment.getContentType().contains(EcmFileConstants.MIME_TYPE_PNG) && pdfAttachment.getContentType().contains(EcmFileConstants.MIME_TYPE_FREVVO_SIGNATURE_KEY))
+                        if (pdfAttachment != null && pdfAttachment.getContentType() != null
+                                && pdfAttachment.getContentType().contains(EcmFileConstants.MIME_TYPE_PNG)
+                                && pdfAttachment.getContentType().contains(EcmFileConstants.MIME_TYPE_FREVVO_SIGNATURE_KEY))
                         {
                             _fileType += "_signature";
                         }
 
                         // Update PDF form if the mode is "edit", otherwise create new
-                        if ("edit".equals(mode) &&
-                                null != containerIdString && !"".equals(containerIdString) &&
-                                null != folderIdString && !"".equals(folderIdString))
+                        if ("edit".equals(mode) && null != containerIdString && !"".equals(containerIdString) && null != folderIdString
+                                && !"".equals(folderIdString))
                         {
                             EcmFile file = getEcmFile(containerIdString, folderIdString, _fileType.toLowerCase());
                             file.setFileName(pdfAttachment.getName());
                             getEcmFileDao().save(file);
 
-                            pdfRendition = getEcmFileService().update(
-                                    file,
-                                    pdfAttachment,
-                                    getAuthentication());
+                            pdfRendition = getEcmFileService().update(file, pdfAttachment, getAuthentication());
                         } else
                         {
-                            pdfRendition = uploadFile(
-                                    _fileType,
-                                    targetCmisFolderId,
-                                    parentObjectType,
-                                    parentObjectId,
-                                    pdfAttachment);
+                            pdfRendition = uploadFile(_fileType, targetCmisFolderId, parentObjectType, parentObjectId, pdfAttachment);
                         }
                         retval.setPdfRendition(pdfRendition);
                     }
@@ -550,12 +523,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
                     {
                         for (final MultipartFile attachment : attachmentsList)
                         {
-                            EcmFile uploaded = uploadFile(
-                                    fileType,
-                                    targetCmisFolderId,
-                                    parentObjectType,
-                                    parentObjectId,
-                                    attachment);
+                            EcmFile uploaded = uploadFile(fileType, targetCmisFolderId, parentObjectType, parentObjectId, attachment);
                             retval.getUploadedFiles().add(uploaded);
                         }
                     }
@@ -567,38 +535,22 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
         return retval;
     }
 
-    private EcmFile uploadFile(String fileType,
-                               String targetCmisFolderId,
-                               String parentObjectType,
-                               Long parentObjectId,
-                               MultipartFile attachment)
-            throws AcmCreateObjectFailedException, AcmUserActionFailedException
+    private EcmFile uploadFile(String fileType, String targetCmisFolderId, String parentObjectType, Long parentObjectId,
+                               MultipartFile attachment) throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         try
         {
-            AcmMultipartFile file = new AcmMultipartFile(
-                    attachment.getName(),
-                    attachment.getOriginalFilename(),
-                    attachment.getContentType(),
-                    attachment.isEmpty(),
-                    attachment.getSize(),
-                    attachment.getBytes(),
-                    attachment.getInputStream(),
-                    true);
+            AcmMultipartFile file = new AcmMultipartFile(attachment.getName(), attachment.getOriginalFilename(),
+                    attachment.getContentType(), attachment.isEmpty(), attachment.getSize(), attachment.getBytes(),
+                    attachment.getInputStream(), true);
 
-            EcmFile uploaded = getEcmFileService().upload(
-                    attachment.getOriginalFilename(),
-                    fileType,
-                    file,
-                    getAuthentication(),
-                    targetCmisFolderId,
-                    parentObjectType,
-                    parentObjectId);
+            EcmFile uploaded = getEcmFileService().upload(attachment.getOriginalFilename(), fileType, file, getAuthentication(),
+                    targetCmisFolderId, parentObjectType, parentObjectId);
 
             return uploaded;
         } catch (IOException e)
         {
-            LOG.error("Could not upload file: " + e.getMessage(), e);
+            LOG.error("Could not upload file: {}", e.getMessage(), e);
             throw new AcmCreateObjectFailedException("file", e.getMessage(), e);
         }
     }
@@ -631,7 +583,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
             ecmFile = getEcmFileDao().findForContainerAttachmentFolderAndFileType(containerId, folderId, fileType);
         } catch (Exception e)
         {
-            LOG.warn("EcmFile with for containerId=" + containerIdString + " and folderId=" + folderIdString + " is not found.");
+            LOG.warn("EcmFile with for containerId={} and folderId={} is not found.", containerIdString, folderIdString);
         }
 
         return ecmFile;
@@ -750,7 +702,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
                 return getGroupsList(groups);
             } catch (Exception e)
             {
-                LOG.error("Cannot find groups with privilege = " + privilege + ".", e);
+                LOG.error("Cannot find groups with privilege = {}.", privilege, e);
             }
         }
 
@@ -769,13 +721,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
 
         if (groups != null)
         {
-            for (Entry<String, String> entry : groups.entrySet())
-            {
-                String groupId = entry.getKey();
-                String groupName = entry.getValue();
-
-                options.add(groupId + "=" + groupName);
-            }
+            groups.forEach((groupId, groupName) -> options.add(String.format("%1$s=%2$s", groupId, groupName)));
         }
 
         return options;
@@ -793,7 +739,8 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
      * @return
      * @throws MuleException
      */
-    private Map<String, String> getGroups(List<String> roles, Map<String, List<String>> rolesToGroups, int startRow, int maxRows, String sort, Authentication auth) throws MuleException
+    private Map<String, String> getGroups(List<String> roles, Map<String, List<String>> rolesToGroups, int startRow, int maxRows,
+                                          String sort, Authentication auth) throws MuleException
     {
         Map<String, String> groups = new HashMap<>();
 
@@ -914,8 +861,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
         return functionalAccessService;
     }
 
-    public void setFunctionalAccessService(
-            FunctionalAccessService functionalAccessService)
+    public void setFunctionalAccessService(FunctionalAccessService functionalAccessService)
     {
         this.functionalAccessService = functionalAccessService;
     }

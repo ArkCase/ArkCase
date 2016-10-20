@@ -46,7 +46,7 @@ angular.module('tasks').factory('Task.NewTaskService', ['$resource', '$state', '
          * @returns {*}
          */
         Service.saveAdHocTask = function (taskData) {
-            return Util.serviceCall({
+        	return Util.serviceCall({
                 service: Service.createNewTask
                 , data: taskData
                 , onSuccess: function (data) {
@@ -55,6 +55,9 @@ angular.module('tasks').factory('Task.NewTaskService', ['$resource', '$state', '
                         return data;
                     }
                 }
+        		, onError: function(errorData){
+        			return errorData;
+        		}
             })
         };
 

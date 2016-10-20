@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.task.web.api;
 
+import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
@@ -40,25 +41,25 @@ public class CreateAdHocTaskAPIController
     @RequestMapping(value = "/adHocTask", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmTask createAdHocTask(@RequestBody AcmTask in, Authentication authentication, HttpSession httpSession)
-            throws AcmCreateObjectFailedException
+            throws AcmCreateObjectFailedException, AcmAppErrorJsonMsg
     {
-        if (log.isInfoEnabled())
-        {
-            log.info("Creating ad-hoc task.");
-        }
 
+        log.info("Creating ad-hoc task.");
+
+        String attachedToObjectType = in.getAttachedToObjectType();
+        String attachedToObjectName = in.getAttachedToObjectName();
         try
         {
             in.setOwner(authentication.getName());
             // On creation task is always ACTIVE
             in.setStatus(TaskConstants.STATE_ACTIVE);
-            // find the complaint id by name
+
             String parentObjectType = null;
-            String obj;
             Long objectId = null;
-            if (in.getAttachedToObjectName() != "")
+            if (attachedToObjectName != "")
             {
-                obj = getObjectsFromSolr(in.getAttachedToObjectType(), in.getAttachedToObjectName(), authentication, 0, 10, "", null);
+                // find the associated object (CASE/COMPLAINT) id by it's name
+                String obj = getObjectsFromSolr(attachedToObjectType, attachedToObjectName, authentication, 0, 10, "", null);
                 if (obj != null && getSearchResults().getNumFound(obj) > 0)
                 {
                     JSONArray results = getSearchResults().getDocuments(obj);
@@ -67,8 +68,9 @@ public class CreateAdHocTaskAPIController
                     parentObjectType = getSearchResults().extractString(result, SearchConstants.PROPERTY_OBJECT_TYPE_S);
                 } else
                 {
-                    in.setAttachedToObjectName(null);
-
+                    throw new AcmAppErrorJsonMsg(
+                            String.format("Task failed to create. Associated object" + " with name [%s] not found.", attachedToObjectName),
+                            TaskConstants.OBJECT_TYPE, "associated-object", null);
                 }
             }
 
@@ -76,11 +78,15 @@ public class CreateAdHocTaskAPIController
             {
                 in.setAttachedToObjectId(objectId);
                 in.setAttachedToObjectType(parentObjectType);
+                in.setAttachedToObjectName(attachedToObjectName);
                 in.setParentObjectId(objectId);
                 in.setParentObjectType(parentObjectType);
+                in.setParentObjectName(attachedToObjectName);
             } else
             {
                 in.setAttachedToObjectId(null);
+                in.setAttachedToObjectType(null);
+                in.setAttachedToObjectName(null);
             }
 
             AcmTask adHocTask = getTaskDao().createAdHocTask(in);
@@ -114,7 +120,7 @@ public class CreateAdHocTaskAPIController
     {
         String retval = null;
 
-        log.debug("Taking objects from Solr for object type = " + objectType);
+        log.debug("Taking objects from Solr for objectType:{}", objectType);
 
         String authorQuery = "";
         if (userId != null)

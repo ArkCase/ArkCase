@@ -1,0 +1,323 @@
+{
+    "siteurl": "http://cloud.arkcase.com",
+    "loginpage": {
+        "locators": {
+            "username": "j_username",
+            "password": "j_password",
+            "loginbutton": "submit"
+        },
+        "data": {
+            "supervisoruser": {
+                "username": "samuel-acm",
+                "password": "AcMd3v$"
+            },
+            "adminuser": {
+                "username": "ann-acm",
+                "password": "AcMd3v$"
+            }
+        }
+    },
+    "taskpage": {
+
+        "locators": {
+            "newButton": "New",
+            "taskButton": "Task",
+            "taskTitle": ".module-header",
+            "subject": "subject",
+            "startDate": "taskStartDate",
+            "dueDateBtn": ".//*[@class='input-group']/span/button",
+            "todayDateFromCalendar": "Today",
+            "DueDateInput": "dueDate",
+            "percentCompleteInput": "percentComplete",
+            "saveButton": "saveButton",
+            "tasksTitle": ".//*[@class='module-header']/h3/span",
+            "priorityDropDown": "config.data.priority",
+            "priorityLow": ".//*[.='Low']",
+            "priorityMedium": ".//*[.='Medium']",
+            "priorityHigh": ".//*[.='High']",
+            "priorityExpedite": ".//*[.='Expedite']",
+            "assigneeInput": "assignee",
+            "userSearchTitle": "'.//*[@class='modal-header ng-binding ng-scope']",
+            "searchUserInput": ".//*[@class='modal-search']/div[1]/div/input",
+            "searchUserBtn": ".//*[@class='btn btn-md btn-primary ng-binding']",
+            "searchedName": "rowRenderIndex, row) in rowContainer.renderedRows track by $index",
+            "confimrBtn": ".//*[@class='btn btn-primary ng-binding']",
+            "notesTextArea": ".//*[@class='note-editable panel-body']",
+            "linkButton": ".//*[@class='note-insert btn-group']/button[1]",
+            "insertLinkBtn": "Insert Link",
+            "pictureButton": ".//*[@class='note-insert btn-group']/button[2]",
+            "linkInputText": "/html/body/div[1]/div[2]/div/div/div[2]/div[1]/input",
+            "linkInputUrl": "/html/body/div[1]/div[2]/div/div/div[2]/div[2]/input",
+            "chooseFilesBtn": ".//*[@class='form-group row note-group-select-from-files']/input",
+            "associateNumberInput": "associateNumber",
+            "taskState": ".//*[@class='clearfix']/div[2]/div[6]/div",
+            "editSubmitButton": ".btn.btn-primary.btn-sm"
+        },
+
+        "data": {
+            "taskTitle": "New Task",
+            "searchUser": "Ann administrator",
+            "Subject": "Ad hoc task",
+            "linkInputText": "Armedia",
+            "linkInputUrl": "http://armedia.com/",
+            "tasksTitle": "Tasks",
+            "percentCompleteInput": "50",
+            "StartDate": "08/15/2016",
+            "DueDateInput": "10/15/2016"
+
+
+        }
+    },
+
+    "taskspage": {
+
+        "locators": {
+
+            "priority": ".//*[@class='clearfix']/div[2]/div[3]/div/a",            
+            "assignee": ".//*[@class='clearfix']/div[2]/div[2]/div/a",
+            "assigneeDropDown": ".//*[@class='clearfix']/div[2]/div[2]/div/form/div/select",
+            "selectAssignee": ".//*[.='Ann Administrator']",
+            "assigneeBtn": ".//*[@class='clearfix']/div[2]/div[2]/div/form/div/span/button[1]",
+            "taskSubject": ".//*[@class='clearfix']/div[1]/div/h4/a",
+            "taskSubjectInput": ".//*[@class='clearfix']/div[1]/div/h4/form/div/input",
+            "taskSubjectBtn": ".//*[@class='clearfix']/div[1]/div/h4/form/div/span/button[1]",
+            "startDate": ".//*[@class='clearfix']/div[2]/div[4]/div/a",
+            "startDateInput": ".//*[@class='clearfix']/div[2]/div[4]/div/form/div/input",
+            "startDateToday": "Today",
+            "startDateConfrimBtn": ".//*[@class='clearfix']/div[2]/div[4]/div/form/div/span/button[1]",
+            "dueDate": ".//*[@class='clearfix']/div[2]/div[5]/div/a",
+            "dueDateInput": ".//*[@class='clearfix']/div[2]/div[5]/div/form/div/input",
+            "dueDateToday": "Today",
+            "dueDateConfirmBtn": ".//*[@class='clearfix']/div[2]/div[5]/div/form/div/span/button[1]",
+            "percent": ".//*[@class='clearfix']/div[2]/div[1]/div/a",
+            "priorityDropDown": ".//*[@class='clearfix']/div[2]/div[3]/div/form/div/select",
+            "priorityLow": ".//*[.='Low']",
+            "priorityHigh": ".//*[.='High']",
+            "priorityExpedite": ".//*[.='Expedite']",
+            "priorityBtn": ".//*[@class='clearfix']//div/span/button[1]",
+            "percentCompletition": ".//*[@class='clearfix']/div[2]/div[1]/div/a",
+            "percentCompletitionInput": ".//*[@class='clearfix']/div[2]/div[1]/div/form/div/input",
+            "percentCompletitionBtn": ".//*[@class='clearfix']/div[2]/div[1]/div/form/div/span/button[1]",
+            "completeBtn": "Complete",
+            "deleteBtn": "Delete",
+            "refreshBtn": "ng-click='refresh()']",
+            "detailsLink": "link in componentLinks",
+            "detailsTextArea": ".//*[@class='note-editable panel-body']",
+            "detailsSaveBtn": ".//*[@class='panel-title']/div/button/i",
+            "subscribeBtn": "Subscribe",
+            "unsubscribeBtn": "Unsubscribe",
+            "notesLink": "link in componentLinks",
+            "notesTableTitle": ".panel-title",
+            "addNoteBtn": ".//*[@class='btn btn-default btn-xs']",
+            "notePopUpTitle": ".//*[@class='modal-header ng-scope']",
+            "notesTextArea": "note.note",
+            "noteSaveBtn": "Save",
+            "noteName": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
+            "noteCreatedDate": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
+            "noteAuthor": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
+            "deleteNoteBtn": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
+            "editNoteBtn": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
+            "tagsLink": "link in componentLinks",
+            "tagsTableTitle": ".panel-title",
+            "addTagBtn": ".//*[@class='btn btn-default btn-xs']",
+            "addTagPopUpTitle": "/html/body/div[5]/div/div/div[1]",
+            "tagTextArea": "/html/body/div[5]/div/div/div[2]/tags-input/div/div",
+            "saveTagBtn": "Add Tag",
+            "addedtagName": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
+            "tagCreatedDate": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
+            "tagCreatedBy": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
+            "tagDeleteBtn": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
+            "workflowLink": "link in componentLinks",
+            "workflowTitle": ".panel-title",
+            "workflowParticipant": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
+            "workflowStatus": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
+            "workflowStartDate": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
+            "workflowEndDate": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
+            "historyLink": "link in componentLinks",
+            "historyTableTitle": ".panel-title",
+            "historyEventName": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
+            "historyDate": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
+            "historyUser": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
+            "detailsLinkBtn": "//*[@class='note-insert btn-group']/button[1]",
+            "insertLinkTitle": "html/body/div[1]/div[2]/div/div/div[1]/h4",
+            "insertLinkText": "html/body/div[1]/div[2]/div/div/div[2]/div[1]/input",
+            "insertLinkUrl": "html/body/div[1]/div[2]/div/div/div[2]/div[2]/input",
+            "insertLinkBtn": "Insert Link",
+            "headerImageLink": ".navbar-header",
+            "dashboardTitle": ".module-header",
+            "attachmentsLink": "link in componentLinks",
+            "attachmentsTableTitle": ".panel-title",
+            "root": ".//*[@class='panel-body']/doc-tree/table[2]/tbody/tr[1]/td[3]/span/span[3]",
+            "newDocument": ".ui-menu-item",
+            "otherDocument": "//*[@id='ui-id-14']",
+            "documentTitle": ".//*[@class='panel-body']/doc-tree/table[2]/tbody/tr[2]/td[3]/span/span[3]",
+            "newFolder": ".ui-menu-item",
+            "documentTitleInput": ".//*[@class='panel-body']/doc-tree/table[2]/tbody/tr[2]/td[3]/span/span[3]/input",
+            "tag": "a"
+
+        },
+
+
+
+        "data": {
+            "assigneeSamuel": "Samuel Supervisor",
+            "taskStateActive": "ACTIVE",
+            "priorityLow": "Low",
+            "priorityHigh": "High",
+            "priorityExpedite": "Expedite",
+            "notesTextArea": "Text",
+            "taskStateDelete": "DELETE",
+            "unsubscribeBtn": "Unsubscribe",
+            "subscribeBtn": "Subscribe",
+            "taskStateClosed": "CLOSED",
+            "notesTableTitle": "Notes",
+            "notePopUpTitle": "Add Note",
+            "noteTextArea": "note",
+            "supervisor": "Samuel Supervisor",
+            "noteTitleEditRecord": "Edit Record",
+            "noteText": "note2",
+            "percentCompletitionInput": "40",
+            "taskSubjectInput": "ad hoc edit",
+            "administrator": "Ann Administrator",
+            "tagsTableTitle": "Tags",
+            "addTagPopUpTitle": "Tag",
+            "tagTextArea": "mouse",
+            "tagTextArea2": "keyb",
+            "detailsTextArea": "details",
+            "workflowTitle": "Workflow",
+            "workflowStatus": "ACTIVE",
+            "historyTableTitle": "History",
+            "historyEventName": "Task Created",
+            "insertLinkTitle": "Insert Link",
+            "insertLinkText": "arkcase",
+            "insertLinkUrl": "http://www.arkcase.com/",
+            "dashboardTitle": "Dashboard",
+            "taskTitle": "New Task",
+            "attachmentsTableTitle": "Attachments",
+            "documentImageTitle": "imageprofile",
+            "documentWordTitle": "ArkCaseTesting",
+            "documentExcelWordTitle": "caseSummary",
+            "documentPdfTitle": "caseSummary",
+            "documentTitleInput": "folder"
+
+        }
+    },
+
+    "dashboardpage": {
+
+        "locators": {
+            "editBtn": ".//*[@class='well-sm clearfix ng-scope']/span/a/i",
+            "addNewWidgetBtn": ".//*[@class='well-sm clearfix ng-scope']/span/a[1]/i",
+            "editDashboardBtn": ".//*[@class='well-sm clearfix ng-scope']/span/a[2]/i",
+            "saveChangesBtn": ".//*[@class='well-sm clearfix ng-scope']/span/a[3]/i",
+            "undoChangesBtn": ".//*[@class='well-sm clearfix ng-scope']/span/a[4]/i",
+            "addNewWidgetTitle": ".modal-header ng-scope",
+            "casesByStatus": "Cases By Status",
+            "myCases": "My Cases",
+            "myComplaints": "My Complaints",
+            "newComplaints": "New Complaints",
+            "teamWorkload": "Team Workload",
+            "weather": "Weather",
+            "news": "News",
+            "closeBtn": "Close",
+            "widgetTitle": ".//*[@class='panel-heading clearfix']/div/h3",
+            "reloadWidgetContentBtn": ".//*[@class='panel-title ng-binding ng-scope']/span/a[1]/i",
+            "chnageWidgetLocationBtn": ".//*[@class='panel-title ng-binding ng-scope']/span/a[2]/i",
+            "editWidgetConfigurationBtn": ".//*[@class='panel-title ng-binding ng-scope']/span/a[5]/i",
+            "removeWidgetBtn": ".//*[@class='panel-title ng-binding ng-scope']/span/a[7]"
+
+        },
+
+        "data": {
+            "widgetTitleCasesByStatus": "Cases By Status",
+            "widgetTitleMyCases": "My Cases",
+            "widgetTitleMyComplaints": "My Complaints",
+            "widgetTitleNewComplaints": "New Complaints",
+            "widgetTitleTeamWorkload": "Team Workload",
+            "widgetTitleWeather": "Weather",
+            "widgetTitleNews": "News"
+        }
+    },
+
+
+    "userpage": {
+
+        "locators": {
+
+            "userName": ".//*[@class='col-xs-8']/h4[2]/a",
+            "userNameInput": ".//*[@class='col-xs-8']/h4[2]/form/div/input",
+            "userNameConfirmBtn": ".//*[@class='col-xs-8']/h4[2]/form/div/span/button[1]",
+            "userNavigation": ".fullname",
+            "userNavigationProfile": "Profile",
+            "userPageHeader": ".//*[@class='module-header']/h3",
+            "userLocation": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[1]/a",
+            "userLocationInput": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[1]/form/div/input",
+            "userLocationConfirmBtn": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[1]//form/div/span/button[1]",
+            "officePhone": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[1]/a",
+            "officePhoneInput": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[1]/form/div/input",
+            "officePhoneConfirmBtn": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[1]/form/div/span/button[1]",
+            "imAccount": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[2]/a[1]",
+            "imAccountInput": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[2]/form/div/input",
+            "imAccountConfirmBtn": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[2]/form/div/span/button[1]",
+            "shortImAccount": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[2]/a[2]",
+            "shortImAccountInput": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[2]/form/div/input",
+            "shortImAccountConfirmBtn": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[2]/form/div/span/button[1]",
+            "mobilephone": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[2]/a",
+            "mobilephoneInput": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[2]/form/div/input",
+            "mobilephoneConfirmBtn": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[2]/form/div/span/button[1]",
+            "companyName": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[1]/a",
+            "companyNameInput": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[1]/form/div/input",
+            "companyNameConfirmBtn": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[1]/form/div/span/button[1]",
+            "addressOne": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[2]/a",
+            "addressOneInput": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[2]/form/div/input",
+            "addressOneConfirmBtn": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[2]/form/div/span/button[1]",
+            "addressTwo": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[3]/a",
+            "addressTwoInput": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[3]/form/div/input",
+            "addressTwoConfirmBtn": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[3]/form/div/span/button[1]",
+            "city": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[4]/a",
+            "cityInput": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[4]/form/div/input",
+            "cityInputConfirmBtn": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[4]/form/div/span/button[1]",
+            "state": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[5]/a",
+            "stateInput": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[5]/form/div/input",
+            "stateInputConfirmBtn": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[5]/form/div/span/button[1]",
+            "zip": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[6]/a",
+            "zipInput": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[6]/form/div/input",
+            "zipInputConfirmBtn": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[6]/form/div/span/button[1]",
+            "mainOfficePhone": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[1]/a",
+            "mainOfficePhoneInput": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[1]/form/div/input",
+            "mainOfficePhoneConfirmBtn": ".btn.btn-primary.btn-sm",
+            "fax": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[2]/a",
+            "faxInput": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[2]/form/div/input",
+            "faxConfirmBtn": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[2]/form/div/span/button[1]",
+            "website": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[3]/a",
+            "websiteInput": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[3]/form/div/input",
+            "websiteConfirmBtn": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[3]/form/div/span/button[1]",
+            "changeProfilePic": "//*[@id='lnkChangePicture']/u/span"
+
+        },
+
+        "data": {
+
+            "userNavigationProfile": "Profile",
+            "userPageHeader": "User Profile",
+            "userNameInput": "Supervisor",
+            "userLocationInput": "New York",
+            "officePhoneInput": "000-000",
+            "imAccountInput": "user",
+            "shortImaccountInput": "short",
+            "mobilephoneInput": "555-555",
+            "companyNameInput": "Armedia",
+            "addressOneInput": "Address One",
+            "addressTwoInput": "Address Two",
+            "cityInput": "DC",
+            "stateInput": "Washington",
+            "zipInput": "10000",
+            "mainOfficePhoneInput": "123-456",
+            "faxInput": "ar-123",
+            "websiteInput": "www.arkcase.com"
+
+        }
+
+    }
+
+}
