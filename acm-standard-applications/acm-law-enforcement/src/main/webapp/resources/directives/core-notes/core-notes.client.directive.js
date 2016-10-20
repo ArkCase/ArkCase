@@ -61,9 +61,10 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                     }
                 );
 
+                // set scope.isReadOnly for addButton in gridHelper
                 scope.isReadOnly = function (objectInfo) {
                     return scope.notesInit.isReadOnly;
-                }
+                };
 
                 var noteHelper = new HelperNoteService.Note();
                 var gridHelper = new HelperUiGridService.Grid({scope: scope});
@@ -74,7 +75,8 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                         scope.notesInit.noteTitle = $translate.instant("common.directive.coreNotes.title");
                     }
                     if (config) {
-                        // if buttons were defined in config, try to use the getConfigurableButton method
+                    	
+                            // if buttons were defined in config, try to use the getConfigurableButton method
                         if (Util.goodArray(config.buttons)) {
                             _.each(config.buttons, function (button) {
                                 gridHelper.addConfigurableButton(config, button);
@@ -113,7 +115,7 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                         }
                     });
                     return buttonPresent;
-                }
+                };
 
                 scope.retrieveGridData = function () {
                     var info = scope.notesInit;

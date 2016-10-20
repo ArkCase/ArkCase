@@ -13,7 +13,8 @@
         <div class="panel-body">
             <doc-tree object-type="objectType" object-id="objectId" tree-control="treeControl"
                       upload-form="uploadForm" tree-config="treeConfig"
-                      object-info="objectInfo" on-init-tree="onInitTree" ng-if="objectInfo && treeConfig" >
+                      object-info="objectInfo" on-init-tree="onInitTree" ng-if="objectInfo && treeConfig"
+                      read-only="{{objectInfo.isReadOnly}}">
             </doc-tree>
         </div>
     </div>
