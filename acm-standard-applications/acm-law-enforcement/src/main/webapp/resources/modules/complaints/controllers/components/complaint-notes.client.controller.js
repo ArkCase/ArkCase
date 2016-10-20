@@ -6,7 +6,8 @@ angular.module('complaints').controller('Complaints.NotesController', ['$scope',
         ConfigService.getComponentConfig("complaints", "notes").then(function (config) {
             $scope.notesInit = {
                 objectType: ObjectService.ObjectTypes.COMPLAINT,
-                currentObjectId: $stateParams.id
+                currentObjectId: $stateParams.id,
+                noteType: "GENERAL"
             };
             $scope.config = config;
             return config;

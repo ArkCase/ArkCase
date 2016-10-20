@@ -75,6 +75,7 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                         scope.notesInit.noteTitle = $translate.instant("common.directive.coreNotes.title");
                     }
                     if (config) {
+                    	
                             // if buttons were defined in config, try to use the getConfigurableButton method
                         if (Util.goodArray(config.buttons)) {
                             _.each(config.buttons, function (button) {
@@ -100,6 +101,7 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                         gridHelper.setUserNameFilter(promiseUsers);
                         scope.retrieveGridData();
                     }
+                    
                 });
 
                 // check if config file has an entry for any named button
