@@ -1,6 +1,7 @@
-var HtmlScreenshotReporter = require(process.env['USERPROFILE'] + '/node_modules/protractor-jasmine2-screenshot-reporter');      
+var HtmlScreenshotReporter = require(process.env['USERPROFILE'] + '/node_modules/protractor-jasmine2-screenshot-reporter');  
+var utils = require('../util/utils.js');
 var reporter = new HtmlScreenshotReporter({
-  dest: 'target/screenshots',
+  dest: 'target/screenshots_'+ utils.returnToday("_"),
   filename: 'AutoTestRun-report.html'
 });
 exports.config = {
@@ -42,7 +43,7 @@ exports.config = {
     specs: [            
            '../test_spec/dashboard_test.spec.js',
            '../test_spec/user_test.spec.js',
-           '../test_spec/task_test.spec.js'
+          '../test_spec/task_test.spec.js'
 //           '../test_spec/tasks_test.spec.js'            
     ],
     
