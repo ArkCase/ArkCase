@@ -81,8 +81,9 @@ describe('dashboard page test', function() {
 
     it('should add/delete widget news', function() {
 
-    	dashPage.clickEditButton().clickAddWidgetButton().addWidget("News").clickSaveChangesButton();
-        expect(dashPage.returnWidgetTitle()).toEqual(Objects.dashboardpage.data.widgetTitleNews);        
-        dashPage.clickEditButton().removeWidgetButton().clickSaveChangesButton(); 
-    });
-});
+ dashPage.clickEditButton().clickAddWidgetButton().addWidget("News").clickSaveChangesButton();
+ expect(dashPage.returnWidgetTitle()).toEqual(Objects.dashboardpage.data.widgetTitleNews);
+ dashPage.clickEditButton().removeWidgetButton().clickSaveChangesButton();
+ });
+ });
+

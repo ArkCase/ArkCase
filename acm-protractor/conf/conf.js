@@ -40,6 +40,7 @@ exports.config = {
     //          'maxInstances': 5
     //        }],
 
+
     specs: [            
            '../test_spec/dashboard_test.spec.js',
            '../test_spec/user_test.spec.js',
@@ -51,6 +52,7 @@ exports.config = {
     jasmineNodeOpts: {
         showColors: true,
         defaultTimeoutInterval: 50000
+
     },
     beforeLaunch: function() {
         return new Promise(function(resolve){

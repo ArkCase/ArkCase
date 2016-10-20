@@ -73,7 +73,7 @@
 
         "locators": {
 
-            "priority": ".//*[@class='clearfix']/div[2]/div[3]/div/a",            
+            "priority": ".//*[@class='clearfix']/div[2]/div[3]/div/a",
             "assignee": ".//*[@class='clearfix']/div[2]/div[2]/div/a",
             "assigneeDropDown": ".//*[@class='clearfix']/div[2]/div[2]/div/form/div/select",
             "selectAssignee": ".//*[.='Ann Administrator']",
@@ -317,6 +317,38 @@
             "websiteInput": "www.arkcase.com"
 
         }
+
+    },
+
+    "casepage": {
+
+        "locators": {
+
+            "newButton": "New",
+            "newCaseBtn": "Case",
+            "caseType": "input _frevvo-disable-backspace",
+            "caseArson": ".//*[@class='input _frevvo-disable-backspace']/..//li[3]",
+            "firstName": "initiatorFirstName",
+            "lastName": "initiatorLastName",
+            "nextBtn":  "//*[@name='actionType'][@value='Next']",
+            "submitBtn": "//*[@name='actionType'][@value='Submit']",
+            "casesTitle": ".//*[@class='ng-binding']/..//h4/a",
+            "casesPageTitle": ".//*[@class='module-header']/h3/span",
+            "caseTitle" : "caseTitle",
+            "casesType": ".//a[@editable-select='objectInfo.caseType']" 
+
+        },
+
+        "data": {
+
+            "caseTitle": "New Case",
+            "firstName": "Milan",
+            "lastName": "Jovanovski",
+            "casesType": "Arson",
+            "casesPageTitle": "Cases"
+
+        }
+
 
     }
 
