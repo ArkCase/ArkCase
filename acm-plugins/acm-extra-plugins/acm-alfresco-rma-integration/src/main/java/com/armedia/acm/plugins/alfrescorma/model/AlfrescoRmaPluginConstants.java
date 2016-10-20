@@ -14,7 +14,7 @@ public interface AlfrescoRmaPluginConstants
     String RECORD_MULE_ENDPOINT = "jms://rmaRecord.in";
     String FOLDER_MULE_ENDPOINT = "jms://rmaFolder.in";
 
-    String CASE_CLOSED_EVENT = "com.armedia.acm.casefile.event.closed";
+    String CASE_CLOSED_EVENT = "com.armedia.acm.casefile.closed";
 
     String CASE_CLOSE_INTEGRATION_KEY = "alfresco_rma_declare_records_on_case_close";
     String COMPLAINT_CLOSE_INTEGRATION_KEY = "alfresco_rma_declare_records_on_complaint_close";
