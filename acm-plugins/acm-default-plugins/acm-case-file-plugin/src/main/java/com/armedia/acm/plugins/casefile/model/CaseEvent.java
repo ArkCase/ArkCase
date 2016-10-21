@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.casefile.model;
 
 import com.armedia.acm.core.model.AcmEvent;
+
 import org.springframework.security.core.Authentication;
 
 import java.util.Date;
@@ -13,13 +14,7 @@ public class CaseEvent extends AcmEvent
     private Authentication eventUser;
     private CaseFile caseFile;
 
-    public CaseEvent(
-            CaseFile source,
-            String ipAddress,
-            String user,
-            String eventType,
-            Date eventDate,
-            boolean userActionSucceeded,
+    public CaseEvent(CaseFile source, String ipAddress, String user, String eventType, Date eventDate, boolean userActionSucceeded,
             Authentication eventUser)
     {
         super(source);
@@ -33,6 +28,13 @@ public class CaseEvent extends AcmEvent
         setObjectType("CASE_FILE");
         setEventUser(eventUser);
         setCaseFile(source);
+    }
+
+    public CaseEvent(CaseFile source, String ipAddress, String user, String eventType, String eventDescription, Date eventDate,
+            boolean userActionSucceeded, Authentication eventUser)
+    {
+        this(source, ipAddress, user, eventType, eventDate, userActionSucceeded, eventUser);
+        setEventDescription(eventDescription);
     }
 
     public Authentication getEventUser()
