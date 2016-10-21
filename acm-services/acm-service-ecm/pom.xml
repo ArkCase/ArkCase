@@ -100,6 +100,11 @@
             <artifactId>acm-service-object-lock</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-mule-module-cmis</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <!-- spring -->
         <dependency>
@@ -156,10 +161,6 @@
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-vm</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mule.modules</groupId>
-            <artifactId>mule-module-cmis</artifactId>
         </dependency>
         <!-- The Mule CMIS module depends on an outdated version of some OSGi OGNL library. If the core ECM service
              specifically depends on mule-module-ognl, then that forces Maven to use the right version of the library,

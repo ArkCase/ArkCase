@@ -35,6 +35,7 @@
         <module>acm-form-configuration</module>
         <module>acm-websockets</module>
         <module>acm-proxy-http</module>
+        <module>acm-mule-module-cmis</module>
     </modules>
 
 </project>

@@ -52,7 +52,10 @@
         <javax.servlet.version>3.1.0</javax.servlet.version>
         <javax-persistence.version>2.1.0</javax-persistence.version>
         <javax-validation.version>1.1.0.Final</javax-validation.version>
-
+        <chemistry.version>0.9.0</chemistry.version>
+        <alfresco-opencmis-extension.version>0.7</alfresco-opencmis-extension.version>
+        <cxf.version>3.0.3</cxf.version>
+        
         <joda-time.version>2.3</joda-time.version>
 
         <json-schema-validator.version>2.2.6</json-schema-validator.version>
@@ -1261,15 +1264,54 @@
                 <groupId>org.mule.modules</groupId>
                 <artifactId>mule-module-devkit-support</artifactId>
                 <version>${mule.version}</version>
-                <scope>runtime</scope>
+                <scope>compile</scope>
             </dependency>
             <dependency>
-                <groupId>org.mule.modules</groupId>
-                <artifactId>mule-module-cmis</artifactId>
-                <version>${mule-cmis-connector.version}</version>
+                <groupId>org.mule.tools.devkit</groupId>
+                <artifactId>mule-devkit-annotations</artifactId>
+                <version>${mule.version}</version>
+                <scope>compile</scope>
             </dependency>
             <!-- end of mule -->
 
+            <!-- chemistry -->
+            <dependency>
+                <groupId>org.apache.chemistry.opencmis</groupId>
+                <artifactId>chemistry-opencmis-client-impl</artifactId>
+                <version>${chemistry.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.sun.xml.ws</groupId>
+                        <artifactId>jaxws-rt</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.sun.xml.bind</groupId>
+                        <artifactId>jaxb-impl</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            
+            <!--  alfresco -->
+            <dependency>
+                <groupId>org.alfresco.cmis.client</groupId>
+                <artifactId>alfresco-opencmis-extension</artifactId>
+                <version>${alfresco-opencmis-extension.version}</version>
+                <type>jar</type>
+            </dependency>            
+            
+            <!-- cxf -->
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-frontend-jaxws</artifactId>
+                <version>${cxf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-transports-http</artifactId>
+                <version>${cxf.version}</version>
+            </dependency>
+            
+            
             <!-- microsoft outlook / exchange integration -->
             <dependency>
                 <groupId>com.microsoft.ews-java-api</groupId>

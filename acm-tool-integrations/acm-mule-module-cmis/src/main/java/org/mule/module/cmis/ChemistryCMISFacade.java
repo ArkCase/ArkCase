@@ -19,6 +19,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.armedia.mule.cmis.kerberos.KerberosAuthenticationProvider;
+import com.armedia.mule.cmis.kerberos.KerberosHttpInvoker;
+
 import org.alfresco.cmis.client.AlfrescoDocument;
 import org.apache.chemistry.opencmis.client.api.ChangeEvent;
 import org.apache.chemistry.opencmis.client.api.ChangeEvents;
@@ -63,6 +66,8 @@ import org.mule.module.cmis.exception.CMISConnectorConnectionException;
 public class ChemistryCMISFacade implements CMISFacade 
 {
 	public static Logger log = Logger.getLogger(ChemistryCMISFacade.class);
+	
+	private static final String KERBEROS_USERNAME_PREFIX = "KERBEROS/";
 	
     private Session session;
     private Map<String, String> connectionParameters;
@@ -1063,7 +1068,17 @@ public class ChemistryCMISFacade implements CMISFacade
         Map<String, String> parameters = new HashMap<String, String>();
 
         // user credentials
-        parameters.put(SessionParameter.USER, username.trim());
+        if (username.trim().startsWith(KERBEROS_USERNAME_PREFIX))
+        {
+            parameters.put(SessionParameter.USER, username.trim().substring(KERBEROS_USERNAME_PREFIX.length()));
+            parameters.put(SessionParameter.HTTP_INVOKER_CLASS, KerberosHttpInvoker.class.getName());
+            parameters.put(SessionParameter.AUTHENTICATION_PROVIDER_CLASS, KerberosAuthenticationProvider.class.getName());
+        }
+        else
+        {
+            parameters.put(SessionParameter.USER, username.trim());
+        }
+
         parameters.put(SessionParameter.PASSWORD, password.trim());
 
         // connection settings... we prefer SOAP over ATOMPUB because some rare
