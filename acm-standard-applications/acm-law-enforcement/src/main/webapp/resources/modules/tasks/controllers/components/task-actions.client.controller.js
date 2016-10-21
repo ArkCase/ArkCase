@@ -2,11 +2,11 @@
 
 angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state', '$stateParams', '$modal'
     , 'UtilService', 'ConfigService', 'Authentication'
-    , 'Task.InfoService', 'Task.WorkflowService', 'Object.SubscriptionService', 'ObjectService'
+    , 'Task.InfoService', 'Task.WorkflowService', 'Object.SubscriptionService', 'Object.SignatureService', 'ObjectService'
     , 'Helper.ObjectBrowserService'
     , function ($scope, $state, $stateParams, $modal
         , Util, ConfigService, Authentication
-        , TaskInfoService, TaskWorkflowService, ObjectSubscriptionService, ObjectService
+        , TaskInfoService, TaskWorkflowService, ObjectSubscriptionService, ObjectSignatureService, ObjectService
         , HelperObjectBrowserService) {
 
         new HelperObjectBrowserService.Component({
@@ -93,6 +93,8 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
             modalInstance.result.then(function (result) {
                 if (result) {
                     console.log("sign task here");
+                    alert(result.pass);
+                    ObjectSignatureService.confirmSignature(ObjectService.ObjectTypes.TASK, $scope.objectInfo.taskId, result.pass);
                 }
             });
         };
@@ -210,10 +212,12 @@ angular.module('tasks').controller('Tasks.SignatureDialogController', ['$scope',
         function ($scope, $modalInstance, aValue) {
             $scope.valuePassed = aValue;
             $scope.onClickCancel = function () {
-                $modalInstance.close(false);
+                //$modalInstance.close(false);
+                $modalInstance.dismiss('Cancel');
             };
             $scope.onClickOk = function () {
-                $modalInstance.close(true);
+                //$modalInstance.close(true);
+                $modalInstance.close({pass: $scope.password});
             };
         }
     ]

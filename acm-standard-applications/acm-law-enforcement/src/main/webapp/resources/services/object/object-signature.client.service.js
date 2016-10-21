@@ -13,6 +13,26 @@
 angular.module('services').factory('Object.SignatureService', ['$resource', 'Acm.StoreService', 'UtilService',
     function ($resource, Store, Util) {
         var Service = $resource('api/latest/plugin', {}, {
+
+            /**
+             * @ngdoc method
+             * @name confirmSignature
+             * @methodOf services:Object.SignatureService
+             *
+             * @descrption
+             * Sign with confirming password
+             *
+             * @param {String} params.objectType Object type
+             * @param {Number} params.objectId  Object ID
+             * @param {String} confirmPassword Password to be checked
+             *
+             * @returns {Object} Object returned by $resource
+             */
+            _confirmSignature: {
+                method: 'POST',
+                url: '/api/latest/plugin/signature/confirm/:objectType/:objectId?confirmPassword=:pass'
+            },
+
             /**
              * @ngdoc method
              * @name findSignatures
@@ -38,6 +58,23 @@ angular.module('services').factory('Object.SignatureService', ['$resource', 'Acm
 
         });
 
+        Service.confirmSignature = function (objectType, objectId, pass) {
+            return Util.serviceCall({
+                service: Service._confirmSignature
+                , param: {
+                    objectType: objectType
+                    , objectId: objectId
+                    , pass: pass
+                }
+                , data: {}
+                ,
+                onSuccess: function (data) {
+                    //validate?
+                    //if (Service.validateSignature(data)) {
+                    return data;
+                }
+            });
+        };
 
         Service.SessionCacheNames = {};
         Service.CacheNames = {
