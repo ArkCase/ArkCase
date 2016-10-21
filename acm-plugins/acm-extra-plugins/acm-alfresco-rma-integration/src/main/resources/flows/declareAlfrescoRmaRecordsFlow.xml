@@ -154,10 +154,8 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
         <logger category="com.armedia.acm.plugins.alfrescorma" level="DEBUG"
                 message="Alfresco version:  #[message.inboundProperties['alfresco_rma_module_version']]"/>
         <choice doc:name="Set RMA properties based on RMA module version">
-            <when expression="message.inboundProperties['alfresco_rma_module_version'] == '2.3'">
-                <set-variable variableName="alf-set-data-msg"
-                              value="{ &quot;prop_dod_publicationDate&quot;: &quot;#[flowVars['alf-rma-publication-date']]&quot;, &quot;prop_dod_originator&quot;: &quot;#[flowVars['alf-originator']]&quot;, &quot;prop_dod_originatingOrganization&quot;: &quot;#[flowVars['alf-origin-org']]&quot;, &quot;prop_dod_dateReceived&quot;: &quot;#[flowVars['alf-rma-date-received']]&quot; }"
-                              doc:name="Data JSON"/>
+            <when expression="message.inboundProperties['alfresco_rma_module_version'] >= 2.3">
+                <set-variable variableName="alf-set-data-msg" value="{ &quot;prop_dod_publicationDate&quot;: &quot;#[flowVars['alf-rma-publication-date']]&quot;, &quot;prop_dod_originator&quot;: &quot;#[flowVars['alf-originator']]&quot;, &quot;prop_dod_originatingOrganization&quot;: &quot;#[flowVars['alf-origin-org']]&quot;, &quot;prop_dod_dateReceived&quot;: &quot;#[flowVars['alf-rma-date-received']]&quot; }" doc:name="Data JSON"/>
             </when>
             <otherwise>
                 <!-- by default use the old alfresco 4.2 (rma 2.1) property names -->
