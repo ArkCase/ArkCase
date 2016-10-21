@@ -4,7 +4,7 @@
 
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>3.0.58-SNAPSHOT</version>
+    <version>3.1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>ArkCase Case Management System</name>
@@ -563,6 +563,19 @@
             </resource>
         </resources>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
@@ -1782,7 +1795,6 @@
                     </reportSet>
                 </reportSets>
             </plugin>
-
 
         </plugins>
     </reporting>

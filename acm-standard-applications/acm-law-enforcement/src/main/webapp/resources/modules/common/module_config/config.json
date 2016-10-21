@@ -7,30 +7,7 @@
     "maximumOpen": 5
   },
   "docTree": {
-    "emailDialog": {
-      "enableFiltering": false,
-      "multiSelect": true,
-      "columnDefs": [
-        {
-          "name": "name",
-          "displayName": "common.directive.docTree.emailDialog.gridColumns.name",
-          "headerCellFilter": "translate"
-        },
-        {
-          "name": "email_lcs",
-          "displayName": "common.directive.docTree.emailDialog.gridColumns.email",
-          "headerCellFilter": "translate"
-        }
-      ],
-      "paginationPageSizes": [
-        5,
-        10,
-        20,
-        50
-      ],
-      "paginationPageSize": 10,
-      "start": 0
-    },
+    "extensions": ["DocTreeExt.Checkin", "DocTreeExt.Email", "DocTreeExt.WebDAV", "DocTreeExt.Record", "DocTreeExt.Template"],
     "columnDefs": [
       {
         "name": "checkbox",
@@ -561,6 +538,30 @@
         "cmd": "edit",
         "uiIcon": "ui-icon-pencil"
       }
+    },
+    "emailDialog": {
+      "enableFiltering": false,
+      "multiSelect": true,
+      "columnDefs": [
+        {
+          "name": "name",
+          "displayName": "common.directive.docTree.emailDialog.gridColumns.name",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "email_lcs",
+          "displayName": "common.directive.docTree.emailDialog.gridColumns.email",
+          "headerCellFilter": "translate"
+        }
+      ],
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
+      "start": 0
     },
     "fileExtensionRegex": "\\.(doc|dot|docx|dotx|docm|dotm|docb|pdf|xlsx|xls|ppt)$"
   }

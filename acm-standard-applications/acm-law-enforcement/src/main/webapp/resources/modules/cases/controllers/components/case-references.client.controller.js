@@ -67,7 +67,7 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
             $scope.$emit('report-object-refreshed', $stateParams.id);
         };
 
-        // open addreference modal
+        // open add reference modal
         $scope.addReference = function () {
             var modalInstance = $modal.open({
                 animation: $scope.animationsEnabled,
@@ -100,7 +100,7 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
                     reference.referenceNumber = chosenReference.name;
                     reference.referenceStatus = chosenReference.status_lcs;
                     reference.parentId = $stateParams.id;
-                    reference.parentType = 'CASE_FILE';
+                    reference.parentType = ObjectService.ObjectTypes.CASE_FILE;
                     referenceService.addReference(reference).then(
                         function (objectSaved) {
                             $scope.refresh();

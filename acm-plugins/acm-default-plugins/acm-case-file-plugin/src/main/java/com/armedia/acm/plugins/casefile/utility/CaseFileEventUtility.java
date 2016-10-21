@@ -7,6 +7,7 @@ import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 import com.armedia.acm.plugins.casefile.model.CaseFileModifiedEvent;
 import com.armedia.acm.plugins.casefile.model.CaseFileParticipantsModifiedEvent;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -26,9 +27,19 @@ public class CaseFileEventUtility implements ApplicationEventPublisherAware
 
     public void raiseEvent(CaseFile caseFile, String caseState, Date eventDate, String ipAddress, String userId, Authentication auth)
     {
-        String eventType = "com.armedia.acm.casefile.event." + caseState;
+        String eventType = "com.armedia.acm.casefile." + caseState;
         eventDate = eventDate == null ? new Date() : eventDate;
         CaseEvent event = new CaseEvent(caseFile, ipAddress, userId, eventType, eventDate, true, auth);
+
+        applicationEventPublisher.publishEvent(event);
+    }
+
+    public void raiseCustomEvent(CaseFile caseFile, String caseState, String eventDescription, Date eventDate, String ipAddress,
+            String userId, Authentication auth)
+    {
+        String eventType = "com.armedia.acm.casefile." + caseState;
+        eventDate = eventDate == null ? new Date() : eventDate;
+        CaseEvent event = new CaseEvent(caseFile, ipAddress, userId, eventType, eventDescription, eventDate, true, auth);
 
         applicationEventPublisher.publishEvent(event);
     }
@@ -64,7 +75,8 @@ public class CaseFileEventUtility implements ApplicationEventPublisherAware
             ipAddress = ((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress();
         }
 
-        CaseEvent event = new CaseEvent(source, ipAddress, authentication.getName(), CaseFileConstants.EVENT_TYPE_CREATED, new Date(), true, authentication);
+        CaseEvent event = new CaseEvent(source, ipAddress, authentication.getName(), CaseFileConstants.EVENT_TYPE_CREATED, new Date(), true,
+                authentication);
         applicationEventPublisher.publishEvent(event);
     }
 
@@ -76,7 +88,8 @@ public class CaseFileEventUtility implements ApplicationEventPublisherAware
             ipAddress = ((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress();
         }
 
-        CaseEvent event = new CaseEvent(source, ipAddress, authentication.getName(), CaseFileConstants.EVENT_TYPE_VIEWED, new Date(), true, authentication);
+        CaseEvent event = new CaseEvent(source, ipAddress, authentication.getName(), CaseFileConstants.EVENT_TYPE_VIEWED, new Date(), true,
+                authentication);
         applicationEventPublisher.publishEvent(event);
     }
 
