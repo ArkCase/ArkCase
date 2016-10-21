@@ -30,7 +30,7 @@ angular.module('services').factory('Object.SignatureService', ['$resource', 'Acm
              */
             _confirmSignature: {
                 method: 'POST',
-                url: '/api/latest/plugin/signature/confirm/:objectType/:objectId?confirmPassword=:pass'
+                url: 'api/latest/plugin/signature/confirm/:objectType/:objectId?confirmPassword=:pass'
             },
 
             /**

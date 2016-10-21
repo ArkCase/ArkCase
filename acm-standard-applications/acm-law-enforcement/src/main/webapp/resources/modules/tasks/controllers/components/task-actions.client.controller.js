@@ -83,17 +83,11 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
         $scope.sign = function () {
             var modalInstance = $modal.open({
                 templateUrl: "modules/tasks/views/components/task-signature.dialog.html",
-                controller: 'Tasks.SignatureDialogController',
-                resolve: {
-                    aValue: function () {
-                        return "some value";
-                    }
-                }
+                controller: 'Tasks.SignatureDialogController'
             });
             modalInstance.result.then(function (result) {
                 if (result) {
                     console.log("sign task here");
-                    alert(result.pass);
                     ObjectSignatureService.confirmSignature(ObjectService.ObjectTypes.TASK, $scope.objectInfo.taskId, result.pass);
                 }
             });
@@ -208,9 +202,8 @@ angular.module('tasks').controller('Tasks.RejectDialogController', ['$scope', '$
         }
     ]
 );
-angular.module('tasks').controller('Tasks.SignatureDialogController', ['$scope', '$modalInstance', 'aValue',
-        function ($scope, $modalInstance, aValue) {
-            $scope.valuePassed = aValue;
+angular.module('tasks').controller('Tasks.SignatureDialogController', ['$scope', '$modalInstance',
+    function ($scope, $modalInstance) {
             $scope.onClickCancel = function () {
                 //$modalInstance.close(false);
                 $modalInstance.dismiss('Cancel');
