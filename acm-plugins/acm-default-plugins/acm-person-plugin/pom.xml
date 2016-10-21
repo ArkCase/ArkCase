@@ -118,6 +118,11 @@
             <artifactId>acm-service-search</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-mule-module-cmis</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
         
         <!-- date time -->
         <dependency>
@@ -161,10 +166,6 @@
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-vm</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mule.modules</groupId>
-            <artifactId>mule-module-cmis</artifactId>
         </dependency>
         <dependency>
             <groupId>org.mule.modules</groupId>

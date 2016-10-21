@@ -83,11 +83,6 @@
             <groupId>javax.el</groupId>
             <artifactId>javax.el-api</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-encryption</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
 
     </dependencies>
 
