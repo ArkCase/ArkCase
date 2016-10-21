@@ -40,7 +40,7 @@ public class AssociateTagAPIController
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PreAuthorize("#objectType == 'FILE' or hasPermission(#objectId, #objectType, 'addTag')")
+    @PreAuthorize("hasPermission(#objectId, #objectType, 'addTag')")
     @RequestMapping(value = "{objectId}/{objectType}/{tagId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmAssociatedTag associateTag(@PathVariable("objectId") Long objectId, @PathVariable("objectType") String objectType,
