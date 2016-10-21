@@ -1,4 +1,5 @@
 var Objects=require('../json/Objects.json');
+var basePage = require('./base_page.js');
 var editBtn = element(by.xpath(Objects.dashboardpage.locators.editBtn));
 var addNewWidgetBtn = element(by.xpath(Objects.dashboardpage.locators.addNewWidgetBtn));
 var editDashboardBtn = element(by.xpath(Objects.dashboardpage.locators.editDashboardBtn));
@@ -78,4 +79,5 @@ var DashboardPage = function() {
 
 };
 
+DashboardPage.prototype = basePage;
 module.exports = new DashboardPage();
