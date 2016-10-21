@@ -47,7 +47,14 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             $scope.dateInfo = $scope.dateInfo || {};
             $scope.dateInfo.dueDate = UtilDateService.isoToDate($scope.objectInfo.dueDate);
             $scope.dateInfo.taskStartDate = UtilDateService.isoToDate($scope.objectInfo.taskStartDate);
-            $scope.assignee = ObjectModelService.getAssignee($scope.objectInfo);
+            $scope.assignee = ObjectModelService.getAssignee($scope.objectInfo); 
+            console.log("**onObjectInfoRetrieved**");
+            
+            console.log("--$scope.objectInfo--");
+            console.log($scope.objectInfo);
+            
+            console.log("--$scope.assignee--");
+            console.log($scope.assignee);
         };
 
         $scope.defaultDatePickerFormat = UtilDateService.defaultDatePickerFormat;
@@ -69,10 +76,21 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             //var taskInfo = Util.omitNg($scope.objectInfo);
             //TasksModelsService.setAssignee($scope.objectInfo, $scope.assignee);
             $scope.objectInfo.assignee = assignee;
+            console.log("**updateAssignee**");
+            console.log("--assignee--");
+            console.log(assignee);
             saveTask();
         };
         $scope.updateStartDate = function (taskStartDate) {
             $scope.objectInfo.taskStartDate = UtilDateService.dateToIso($scope.dateInfo.taskStartDate);
+            console.log("**updateStartDate**");
+            
+            console.log("--taskStartDate--");
+            console.log(taskStartDate);
+
+            console.log("--$scope.objectInfo.taskStartDate--");
+            console.log($scope.objectInfo.taskStartDate);
+
             saveTask();
         };
         $scope.updateDueDate = function (dueDate) {
@@ -85,8 +103,13 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
 
         function saveTask() {
             var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
+            console.log("**saveTask**");
+            
             if (TaskInfoService.validateTaskInfo($scope.objectInfo)) {
                 var objectInfo = Util.omitNg($scope.objectInfo);
+                console.log("--objectInfo---");
+                console.log(objectInfo);
+                
                 promiseSaveInfo = TaskInfoService.saveTaskInfo(objectInfo);
                 promiseSaveInfo.then(
                     function (taskInfo) {
