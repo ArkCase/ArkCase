@@ -40,6 +40,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by armdev on 4/7/14.
@@ -511,5 +512,38 @@ public class Person implements Serializable, AcmEntity
     public void setClassName(String className)
     {
         this.className = className;
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return Objects.equals(id, person.id) &&
+                Objects.equals(title, person.title) &&
+                Objects.equals(company, person.company) &&
+                Objects.equals(status, person.status) &&
+                Objects.equals(givenName, person.givenName) &&
+                Objects.equals(middleName, person.middleName) &&
+                Objects.equals(familyName, person.familyName) &&
+                Objects.equals(hairColor, person.hairColor) &&
+                Objects.equals(eyeColor, person.eyeColor) &&
+                Objects.equals(heightInInches, person.heightInInches) &&
+                Objects.equals(weightInPounds, person.weightInPounds) &&
+                Objects.equals(dateOfBirth, person.dateOfBirth) &&
+                Objects.equals(placeOfBirth, person.placeOfBirth) &&
+                Objects.equals(dateMarried, person.dateMarried) &&
+                Objects.equals(created, person.created) &&
+                Objects.equals(creator, person.creator) &&
+                Objects.equals(modified, person.modified) &&
+                Objects.equals(modifier, person.modifier) &&
+                Objects.equals(className, person.className);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(id, title, company, status, givenName, middleName, familyName, hairColor, eyeColor, heightInInches, weightInPounds, dateOfBirth, placeOfBirth, dateMarried, created, creator, modified, modifier, className);
     }
 }

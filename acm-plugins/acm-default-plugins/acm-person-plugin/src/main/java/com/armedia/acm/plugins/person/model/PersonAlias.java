@@ -177,12 +177,17 @@ public class PersonAlias implements Serializable, AcmEntity
         PersonAlias that = (PersonAlias) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(aliasType, that.aliasType) &&
-                Objects.equals(aliasValue, that.aliasValue);
+                Objects.equals(aliasTypes, that.aliasTypes) &&
+                Objects.equals(aliasValue, that.aliasValue) &&
+                Objects.equals(created, that.created) &&
+                Objects.equals(creator, that.creator) &&
+                Objects.equals(modified, that.modified) &&
+                Objects.equals(modifier, that.modifier);
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(id, aliasType, aliasValue);
+        return Objects.hash(id, aliasType, aliasTypes, aliasValue, created, creator, modified, modifier);
     }
 }
