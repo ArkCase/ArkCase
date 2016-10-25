@@ -39,7 +39,6 @@ public class ComplaintAccessControlRulesTest
         assertTrue(xls.exists());
 
         String drl = sc.compile(xls.getInputStream(), InputType.XLS);
-        log.info("DRL: " + drl);
 
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
         DecisionTableConfiguration dtconf = KnowledgeBuilderFactory.newDecisionTableConfiguration();
@@ -48,6 +47,7 @@ public class ComplaintAccessControlRulesTest
 
         if (kbuilder.hasErrors())
         {
+            log.info("DRL: " + drl);
             for (KnowledgeBuilderError error : kbuilder.getErrors())
             {
                 log.error("Error building rules: " + error);
@@ -75,7 +75,7 @@ public class ComplaintAccessControlRulesTest
 
         workingMemory.execute(complaint);
 
-        assertEquals(3, complaint.getParticipants().get(0).getPrivileges().size());
+        assertEquals(4, complaint.getParticipants().get(0).getPrivileges().size());
 
         assertEquals(1, complaint.getParticipants().get(0).getPrivileges().stream().
                 filter(app -> app.getAccessType().equals("deny") && app.getObjectAction().equals("read")).count());
@@ -85,6 +85,9 @@ public class ComplaintAccessControlRulesTest
 
         assertEquals(1, complaint.getParticipants().get(0).getPrivileges().stream().
                 filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("addComment")).count());
+
+        assertEquals(1, complaint.getParticipants().get(0).getPrivileges().stream().
+                filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("addTag")).count());
     }
 
     @Test
@@ -101,7 +104,7 @@ public class ComplaintAccessControlRulesTest
 
         workingMemory.execute(complaint);
 
-        assertEquals(3, complaint.getParticipants().get(0).getPrivileges().size());
+        assertEquals(4, complaint.getParticipants().get(0).getPrivileges().size());
 
         assertEquals(1, complaint.getParticipants().get(0).getPrivileges().stream().
                 filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("read")).count());
@@ -111,6 +114,9 @@ public class ComplaintAccessControlRulesTest
 
         assertEquals(1, complaint.getParticipants().get(0).getPrivileges().stream().
                 filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("addComment")).count());
+
+        assertEquals(1, complaint.getParticipants().get(0).getPrivileges().stream().
+                filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("addTag")).count());
     }
 
 
