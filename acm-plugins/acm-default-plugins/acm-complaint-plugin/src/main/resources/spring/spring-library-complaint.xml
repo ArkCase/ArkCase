@@ -83,6 +83,7 @@
         <property name="complaintFolderNameFormat" value="Complaint (%s)"/>
         <property name="caseFileDetailsFormat" value="This case file is based on Complaint '%s'.%s"/>
         <property name="complaintDetailsFormat" value="&lt;p/&gt;Complaint '%s' had these details:&lt;p/&gt;%s"/>
+        <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
     </bean>
 
     <bean id="closeComplaintRequestProcessEndHandler"

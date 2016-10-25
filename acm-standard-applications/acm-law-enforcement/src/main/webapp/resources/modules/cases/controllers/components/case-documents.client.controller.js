@@ -3,11 +3,11 @@
 angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$stateParams', '$modal', '$q', '$timeout'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Case.InfoService', 'DocTreeService'
     , 'Helper.ObjectBrowserService', 'Authentication', 'PermissionsService', 'Object.ModelService'
-    , 'DocTreeExt.Core', 'DocTreeExt.Checkin'
+    , 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin'
     , function ($scope, $stateParams, $modal, $q, $timeout
         , Util, ConfigService, ObjectService, ObjectLookupService, CaseInfoService, DocTreeService
         , HelperObjectBrowserService, Authentication, PermissionsService, ObjectModelService
-        , DocTreeExtCore, DocTreeExtCheckin
+        , DocTreeExtWebDAV, DocTreeExtCheckin
     ) {
 
         Authentication.queryUserInfo().then(
@@ -32,39 +32,20 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
             }
         });
 
-
+        var promiseFormTypes = ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.CASE_FILE);
+        var promiseFileTypes = ObjectLookupService.getFileTypes();
+        var promiseCorrespondenceForms = ObjectLookupService.getCaseFileCorrespondenceForms();
         var onConfigRetrieved = function (config) {
             $scope.treeConfig = config.docTree;
             $scope.allowParentOwnerToCancel = config.docTree.allowParentOwnerToCancel;
+
+            $q.all([promiseFormTypes, promiseFileTypes, promiseCorrespondenceForms]).then(
+                function (data) {
+                    $scope.treeConfig.formTypes = data[0];
+                    $scope.treeConfig.fileTypes = data[1];
+                    $scope.treeConfig.correspondenceForms = data[2];
+                });
         };
-
-        ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.CASE_FILE).then(
-            function (formTypes) {
-                $timeout(function() {
-                    $scope.fileTypes = $scope.fileTypes || [];
-                    $scope.fileTypes = $scope.fileTypes.concat(Util.goodArray(formTypes));
-                }, 0);
-                return formTypes;
-            }
-        );
-        ObjectLookupService.getFileTypes().then(
-            function (fileTypes) {
-                $timeout(function() {
-                    $scope.fileTypes = $scope.fileTypes || [];
-                    $scope.fileTypes = $scope.fileTypes.concat(Util.goodArray(fileTypes));
-                }, 0);
-                return fileTypes;
-            }
-        );
-
-        ObjectLookupService.getCaseFileCorrespondenceForms().then(
-            function (correspondenceForms) {
-                $timeout(function() {
-                    $scope.correspondenceForms = Util.goodArray(correspondenceForms);
-                }, 0);
-                return correspondenceForms;
-            }
-        );
 
 
         $scope.objectType = ObjectService.ObjectTypes.CASE_FILE;
@@ -85,7 +66,7 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
             DocTreeExtCheckin.handleCheckout(treeControl, $scope);
             DocTreeExtCheckin.handleCheckin(treeControl, $scope);
             DocTreeExtCheckin.handleCancelEditing(treeControl, $scope);
-            DocTreeExtCore.handleEditWithWebDAV(treeControl, $scope);
+            DocTreeExtWebDAV.handleEditWithWebDAV(treeControl, $scope);
 
             //$scope.treeControl.addCommandHandler({
             //    name: "sample"
@@ -106,22 +87,6 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
             //            console.log("Possible to add onPostCmd code here, too");
             //        });
             //        console.log("Possible to add onPostCmd code here");
-            //    }
-            //});
-
-            //
-            // object changed event handling has side effect of making local update of title, classification not working properly.
-            //
-            //
-            ////if there is subscription from other object we want to unsubscribe
-            ////we want to have only one subscription from the current object
-            //if ($scope.subscription) {
-            //    $scope.$bus.unsubscribe($scope.subscription);
-            //}
-            //var eventName = "object.changed/" + $scope.objectType + "/" + $scope.objectId;
-            //$scope.subscription = $scope.$bus.subscribe(eventName, function (data) {
-            //    if (data.objectType == 'FILE') {
-            //        $scope.treeControl.refreshTree();
             //    }
             //});
         };

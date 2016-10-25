@@ -2,9 +2,9 @@
     <div class="clearfix">
         <div class="row">
             <div class="col-xs-6">
-                <h4><a href="#" editable-text="objectInfo.title" onaftersave="saveCase()">{{objectInfo.title ||
-                    "Unknown"
-                    }}</a> ({{objectInfo.status}})</h4></div>
+                <h4><a href="#" editable-text="objectInfo.title" onaftersave="saveCase()"
+                       permission="editCase" permission-properties="objectInfo" permission-action="disable">
+                    {{objectInfo.title || "Unknown"}}</a> ({{objectInfo.status}})</h4></div>
             <div class="col-xs-6  text-right">
                 <h4>{{objectInfo.caseNumber}}</h4>
             </div>
@@ -13,6 +13,7 @@
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
                     <a href="#" editable-select="objectInfo.caseType" onaftersave="saveCase()"
+                       permission="editCase" permission-properties="objectInfo" permission-action="disable"
                        e-ng-options="c.value as c.text for c in caseTypes">{{objectInfo.caseType ||
                         'Unknown'}}</a>
                 </div>
@@ -28,6 +29,7 @@
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
                     <a href="#" editable-select="objectInfo.priority" onaftersave="saveCase()"
+                       permission="editCase" permission-properties="objectInfo" permission-action="disable"
                        e-ng-options="p.value as p.text for p in priorities">{{ objectInfo.priority ||
                         'Unknown'}}</a>
                 </div>
@@ -38,6 +40,7 @@
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
                     <a href="#" editable-select="assignee" onaftersave="updateAssignee()"
+                       permission="editCase" permission-properties="objectInfo" permission-action="disable"
                        e-ng-options="user.id as user.name for user in assignees">{{assignee |
                         mapKeyValue: assignees:'id':'name' || 'Unknown'}}</a>
                 </div>
@@ -46,6 +49,7 @@
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
                     <a href="#" editable-select="owningGroup" onaftersave="updateOwningGroup()"
+                       permission="editCase" permission-properties="objectInfo" permission-action="disable"
                        e-ng-options="o.value as o.text for o in owningGroups"> {{owningGroup || 'Unknown'}}</a>
                 </div>
                 <small class="text-muted">Owning Group</small>
@@ -57,7 +61,8 @@
                        e-ng-click="onPickerClick()" e-is-open="picker.opened"
                        e-init-date="dateInfo.dueDate"
                        e-on-open-focus="false"
-                       onaftersave="updateDueDate(dateInfo.dueDate)">
+                       onaftersave="updateDueDate(dateInfo.dueDate)"
+                       permission="editCase" permission-properties="objectInfo" permission-action="disable">
                         {{ (dateInfo.dueDate | date: ('common.defaultDateUIFormat' | translate)) || 'Unknown' }}</a>
                 </div>
                 <small class="text-muted">Due Date</small>

@@ -1,0 +1,47 @@
+{
+  "responseHeader": {
+    "status": 0,
+    "QTime": 0,
+    "params": {
+      "q": "object_type_s:CASE_FILE",
+      "facet.field": "status_s",
+      "indent": "true",
+      "facet.mincount": "1",
+      "rows": "0",
+      "wt": "json",
+      "facet": "true"
+    }
+  },
+  "response": {
+    "numFound": 3422,
+    "start": 0,
+    "docs": []
+  },
+  "facet_counts": {
+    "facet_queries": {},
+    "facet_fields": {
+      "status_s": [
+        "DRAFT",
+        1757,
+        "Transcribe",
+        1044,
+        "Archive",
+        216,
+        "Rejected",
+        101,
+        "Quality Control",
+        94,
+        "Fulfill",
+        84,
+        "Distribution",
+        67,
+        "Billing",
+        59
+      ]
+    },
+    "facet_dates": {},
+    "facet_ranges": {},
+    "facet_intervals": {},
+    "facet_heatmaps": {}
+  }
+}
