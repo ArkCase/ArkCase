@@ -11,6 +11,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "acm_contact_method")
@@ -185,5 +186,28 @@ public class ContactMethod implements Serializable, AcmEntity
     public ContactMethod returnBase() 
     {
     	return this;
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ContactMethod that = (ContactMethod) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(created, that.created) &&
+                Objects.equals(creator, that.creator) &&
+                Objects.equals(modified, that.modified) &&
+                Objects.equals(modifier, that.modifier) &&
+                Objects.equals(status, that.status) &&
+                Objects.equals(type, that.type) &&
+                Objects.equals(types, that.types) &&
+                Objects.equals(value, that.value);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(id, created, creator, modified, modifier, status, type, types, value);
     }
 }

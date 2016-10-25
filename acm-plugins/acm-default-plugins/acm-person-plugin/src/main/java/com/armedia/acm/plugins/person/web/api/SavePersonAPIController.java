@@ -1,6 +1,5 @@
 package com.armedia.acm.plugins.person.web.api;
 
-import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.service.PersonEventPublisher;
@@ -39,20 +38,19 @@ public class SavePersonAPIController
         log.trace("person title: {}", in.getTitle());
 
         boolean isInsert = in.getId() == null;
-        String ipAddress = AuthenticationUtils.getUserIpAddress();
 
         try
         {
             Person saved = getPersonTransaction().savePerson(in, auth);
 
-            getEventPublisher().publishPersonEvent(saved, ipAddress, isInsert, true);
+            getEventPublisher().publishPersonEvent(saved, isInsert, true);
 
             return saved;
 
         } catch (MuleException | TransactionException e)
         {
 
-            getEventPublisher().publishPersonEvent(in, ipAddress, isInsert, false);
+            getEventPublisher().publishPersonEvent(in, isInsert, false);
 
             throw new AcmCreateObjectFailedException("person", e.getMessage(), e);
         }
