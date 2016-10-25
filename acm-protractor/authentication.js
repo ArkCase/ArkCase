@@ -4,21 +4,23 @@ var logs = require(process.env['USERPROFILE'] + '/node_modules/winston');
 
 var helpers = function helpers() {
 
-    this.loginAsSupervisor = function() {
+    this.loginAsSupervisor = function() { 
+    	browser.ignoresynchronization = true;
         browser.driver.findElement(by.id(Objects.loginpage.locators.username))
             .sendKeys(Objects.loginpage.data.supervisoruser.username);
         browser.driver.findElement(by.id(Objects.loginpage.locators.password))
             .sendKeys(Objects.loginpage.data.supervisoruser.password);
         browser.driver.findElement(
-            by.id(Objects.loginpage.locators.loginbutton)).click();
+            by.id(Objects.loginpage.locators.loginbutton)).click();        
         browser.driver.sleep(12000);
         logger.log('Info', 'User succesfully logged in');
+        return require('./Pages/dashboard_page.js')
     },
 
     this.logout = function() {
         element(by.css('.fullname')).click();
         var logout = element(by.linkText('Logout'));
-        logout.click();
+        logout.click();          
         expect(
             element(by.xpath('.//*[@class="alert alert-success"]'))
             .getText()).toEqual(

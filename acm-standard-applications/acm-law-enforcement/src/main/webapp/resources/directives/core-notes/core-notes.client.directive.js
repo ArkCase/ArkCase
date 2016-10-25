@@ -61,9 +61,10 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                     }
                 );
 
+                // set scope.isReadOnly for addButton in gridHelper
                 scope.isReadOnly = function (objectInfo) {
                     return scope.notesInit.isReadOnly;
-                }
+                };
 
                 var noteHelper = new HelperNoteService.Note();
                 var gridHelper = new HelperUiGridService.Grid({scope: scope});
@@ -72,33 +73,35 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                 scope.$watchCollection('config', function (config, oldValue) {
                     if (!scope.notesInit.noteTitle) {
                         scope.notesInit.noteTitle = $translate.instant("common.directive.coreNotes.title");
-                        if (config) {
+                    }
+                    if (config) {
+                    	
                             // if buttons were defined in config, try to use the getConfigurableButton method
-                            if (Util.goodArray(config.buttons)) {
-                                _.each(config.buttons, function (button) {
-                                    gridHelper.addConfigurableButton(config, button);
-                                });
-                                // check if the config had an entry for 'edit'. If not, add in default edit button
-                                if (!hasButton(config, "edit")) {
-                                    gridHelper.addButton(config, "edit");
-                                }
-                                // check if the config had an entry for 'delete'. If not, add in default delete button
-                                if (!hasButton(config, "delete")) {
-                                    gridHelper.addButton(config, "delete");
-                                }
-                            } else {
-                                // no buttons were found in the config, use the default settings
+                        if (Util.goodArray(config.buttons)) {
+                            _.each(config.buttons, function (button) {
+                                gridHelper.addConfigurableButton(config, button);
+                            });
+                            // check if the config had an entry for 'edit'. If not, add in default edit button
+                            if (!hasButton(config, "edit")) {
                                 gridHelper.addButton(config, "edit");
+                            }
+                            // check if the config had an entry for 'delete'. If not, add in default delete button
+                            if (!hasButton(config, "delete")) {
                                 gridHelper.addButton(config, "delete");
                             }
-                            gridHelper.setColumnDefs(config);
-                            gridHelper.setBasicOptions(config);
-                            gridHelper.disableGridScrolling(config);
-                            gridHelper.setExternalPaging(config, scope.retrieveGridData);
-                            gridHelper.setUserNameFilter(promiseUsers);
-                            scope.retrieveGridData();
+                        } else {
+                            // no buttons were found in the config, use the default settings
+                            gridHelper.addButton(config, "edit");
+                            gridHelper.addButton(config, "delete");
                         }
+                        gridHelper.setColumnDefs(config);
+                        gridHelper.setBasicOptions(config);
+                        gridHelper.disableGridScrolling(config);
+                        gridHelper.setExternalPaging(config, scope.retrieveGridData);
+                        gridHelper.setUserNameFilter(promiseUsers);
+                        scope.retrieveGridData();
                     }
+                    
                 });
 
                 // check if config file has an entry for any named button
@@ -112,14 +115,14 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                         }
                     });
                     return buttonPresent;
-                }
+                };
 
                 scope.retrieveGridData = function () {
                     var info = scope.notesInit;
                     var promiseQueryNotes = ObjectNoteService.queryNotesPage(
                         info.objectType
                         , info.currentObjectId
-                        , info.noteTitle
+                        , info.noteType
                         , Util.goodValue(scope.start, 0)
                         , Util.goodValue(scope.pageSize, 10)
                         , Util.goodMapValue(scope.sort, "by")
