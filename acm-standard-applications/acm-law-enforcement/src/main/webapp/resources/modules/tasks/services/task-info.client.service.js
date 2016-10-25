@@ -10,8 +10,9 @@
  *
  * Task.InfoService provides functions for Task database data
  */
-angular.module('tasks').factory('Task.InfoService', ['$resource', '$translate', 'Acm.StoreService', 'UtilService', 'Object.InfoService',
-    function ($resource, $translate, Store, Util, ObjectInfoService) {
+angular.module('tasks').factory('Task.InfoService', ['$resource', '$translate', 'Acm.StoreService', 'UtilService', 'Object.InfoService'
+    , 'Object.ModelService'
+    , function ($resource, $translate, Store, Util, ObjectInfoService, ObjectModelService) {
         var Service = $resource('api/latest/plugin', {}, {
             /**
              * ngdoc method
@@ -137,6 +138,9 @@ angular.module('tasks').factory('Task.InfoService', ['$resource', '$translate', 
          * @returns {Object} Promise
          */
         Service.saveTaskInfo = function (taskInfo) {
+        	if (Util.isEmpty(taskInfo.assignee)) {
+            	taskInfo.assignee = ObjectModelService.getAssignee(taskInfo);
+            }
             if (!Service.validateTaskInfo(taskInfo)) {
                 return Util.errorPromise($translate.instant("common.service.error.invalidData"));
             }
