@@ -6,14 +6,14 @@ var EC = protractor.ExpectedConditions;
 var helpers = function helpers() {
 
     this.loginAsSupervisor = function() { 
-    	browser.ignoresynchronization = true;
+        browser.ignoresynchronization = true;
         browser.driver.findElement(by.id(Objects.loginpage.locators.username))
             .sendKeys(Objects.loginpage.data.adminuser.username);
         browser.driver.findElement(by.id(Objects.loginpage.locators.password))
             .sendKeys(Objects.loginpage.data.adminuser.password);
         browser.driver.findElement(
             by.id(Objects.loginpage.locators.loginbutton)).click();        
-        browser.driver.sleep(12000);
+        browser.wait(EC.visibilityOf(element(by.xpath(".//*[@class='well-sm clearfix ng-scope']/span/a/i"))),25000);
         logger.log('Info', 'User succesfully logged in');
         return require('./Pages/dashboard_page.js')
     },
@@ -22,7 +22,7 @@ var helpers = function helpers() {
         element(by.css('.fullname')).click();
         var logout = element(by.linkText('Logout'));
         logout.click();  
-         browser.wait(EC.visibilityOf(element(by.xpath(".//*[@class='alert alert-success']"))), 5000);      
+         browser.wait(EC.visibilityOf(element(by.xpath(".//*[@class='alert alert-success']"))), 15000);      
         expect(
             element(by.xpath('.//*[@class="alert alert-success"]'))
             .getText()).toEqual(
