@@ -103,9 +103,7 @@ angular.module('services').factory('Object.SubscriptionService', ['$http', '$res
         Service.getSubscriptions = function (userId, objectType, objectId) {
             var cacheSubscriptions = new Store.CacheFifo(Service.CacheNames.SUBSCRIPTION_DATA);
             var cacheKey = userId + "." + objectType + "." + objectId;
-            console.log("cache keys in getSubscriptions", cacheKey);
             var subscriptions = cacheSubscriptions.get(cacheKey);
-            console.log("after cacheSubscriptions.get", subscriptions);
             return Util.serviceCall({
                 service: Service._getSubscriptions
                 , param: {
@@ -234,7 +232,6 @@ angular.module('services').factory('Object.SubscriptionService', ['$http', '$res
                     if (Service.validateUnsubscribe(data)) {
                         var cacheSubscriptions = new Store.CacheFifo(Service.CacheNames.SUBSCRIPTION_DATA);
                         var cacheKey = userId + "." + objectType + "." + objectId;
-                        console.log("cache key is userId+objectType+objectId", cacheKey);
                         cacheSubscriptions.remove(cacheKey);
                         return data;
                     }
