@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:aop="http://www.springframework.org/schema/aop" xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="caseFilePluginProperties"
           class="org.springframework.beans.factory.config.PropertiesFactoryBean">
@@ -23,16 +23,9 @@
         </property>
     </bean>
 
-    <bean id="caseFileDao" class="com.armedia.acm.plugins.casefile.dao.CaseFileDao">
-        <aop:scoped-proxy proxy-target-class="true"/>
-    </bean>
-
     <bean id="changeCaseStatusDao"
           class="com.armedia.acm.plugins.casefile.dao.ChangeCaseStatusDao"/>
     <bean id="dispositionDao" class="com.armedia.acm.plugins.casefile.dao.DispositionDao"/>
-
-    <bean id="caseFileEventUtility"
-          class="com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility"/>
 
     <bean id="caseFileEventListener"
           class="com.armedia.acm.plugins.casefile.service.CaseFileEventListener">
@@ -73,96 +66,10 @@
         </property>
     </bean>
 
-    <bean id="saveCaseFileBusinessRule"
-          class="com.armedia.acm.plugins.casefile.service.SaveCaseFileBusinessRule">
-        <property name="ruleSpreadsheetFilename" value="drools-case-file-rules.xlsx"/>
-    </bean>
-
-    <bean id="splitCaseFileBusinessRule"
-          class="com.armedia.acm.plugins.casefile.service.SplitCaseFileBusinessRule">
-        <property name="ruleSpreadsheetFilename" value="drools-split-case-file-rules.xlsx"/>
-    </bean>
-
-    <!-- pre-save handlers -->
-    <bean id="caseFileSetCreatorHandler"
-          class="com.armedia.acm.plugins.casefile.pipeline.presave.CaseFileSetCreatorHandler"/>
-
     <!-- post-save handlers -->
     <bean id="caseFileEventHandler"
           class="com.armedia.acm.plugins.casefile.pipeline.postsave.CaseFileEventHandler">
         <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
-    </bean>
-    <bean id="caseFileRulesHandler"
-          class="com.armedia.acm.plugins.casefile.pipeline.postsave.CaseFileRulesHandler">
-        <property name="saveRule" ref="saveCaseFileBusinessRule"/>
-    </bean>
-    <bean id="caseFileContainerHandler"
-          class="com.armedia.acm.plugins.casefile.pipeline.postsave.CaseFileContainerHandler"/>
-    <bean id="caseFileEcmFolderHandler"
-          class="com.armedia.acm.plugins.casefile.pipeline.postsave.CaseFileEcmFolderHandler">
-        <property name="ecmFileService" ref="ecmFileService"/>
-    </bean>
-    <bean id="caseFileOutlookHandler"
-          class="com.armedia.acm.plugins.casefile.pipeline.postsave.CaseFileOutlookHandler">
-        <property name="autoCreateFolderForCaseFile"
-                  value="${casefile.auto_create_calendar_folder}"/>
-        <property name="outlookContainerCalendarService" ref="outlookContainerService"/>
-    </bean>
-    <bean id="caseFileFolderStructureHandler"
-          class="com.armedia.acm.plugins.casefile.pipeline.postsave.CaseFileFolderStructureHandler">
-        <property name="folderStructureAsString" value="${casefile.folder.structure}"/>
-        <property name="ecmFileService" ref="ecmFileService"/>
-        <property name="acmFolderService" ref="acmFolderService"/>
-    </bean>
-
-    <bean id="caseFilePipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
-        <property name="preSaveHandlers">
-            <list
-                    value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
-                <ref bean="caseFileSetCreatorHandler"/>
-            </list>
-        </property>
-        <property name="postSaveHandlers">
-            <list
-                    value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
-                <ref bean="caseFileRulesHandler"/>
-                <ref bean="caseFileContainerHandler"/>
-                <ref bean="caseFileEcmFolderHandler"/>
-                <ref bean="caseFileOutlookHandler"/>
-                <ref bean="caseFileFolderStructureHandler"/>
-                <ref bean="caseFileStartBusinessProcessIfNeededHandler"/>
-            </list>
-        </property>
-    </bean>
-
-    <bean id="saveCaseService"
-          class="com.armedia.acm.plugins.casefile.service.SaveCaseServiceImpl">
-        <property name="caseFileDao" ref="caseFileDao"/>
-        <property name="pipelineManager" ref="caseFilePipelineManager"/>
-    </bean>
-
-    <bean id="mergeCaseService"
-          class="com.armedia.acm.plugins.casefile.service.MergeCaseServiceImpl">
-        <property name="saveCaseService" ref="saveCaseService"/>
-        <property name="caseFileDao" ref="caseFileDao"/>
-        <property name="acmFolderDao" ref="acmFolderDao"/>
-        <property name="acmFolderService" ref="acmFolderService"/>
-        <property name="ecmFileService" ref="ecmFileService"/>
-        <property name="acmContainerDao" ref="acmContainerFolderDao"/>
-        <property name="ecmFileDao" ref="ecmFileDao"/>
-        <property name="acmParticipantService" ref="acmParticipantService"/>
-        <property name="excludeDocumentTypes"
-                  value="${casefile.merge.exclude_document_types}"/>
-    </bean>
-
-    <bean id="splitCaseService"
-          class="com.armedia.acm.plugins.casefile.service.SplitCaseServiceImpl">
-        <property name="saveCaseService" ref="saveCaseService"/>
-        <property name="caseFileDao" ref="caseFileDao"/>
-        <property name="acmTaskService" ref="acmTaskService"/>
-        <property name="acmFolderService" ref="acmFolderService"/>
-        <property name="typesToCopy" value="${casefile.split.typesToCopy}"/>
-        <property name="splitCaseFileBusinessRule" ref="splitCaseFileBusinessRule"/>
     </bean>
 
     <bean id="changeCaseStatusProcessEndListener"
@@ -199,9 +106,6 @@
         </property>
     </bean>
 
-    <bean id="acmQueueDao"
-          class="com.armedia.acm.plugins.casefile.dao.AcmQueueDao"/>
-
     <bean id="queuePropertyFileChangeWatcher"
           class="com.armedia.acm.plugins.casefile.dao.QueuePropertyFileChangeWatcher">
         <property name="acmQueueDao" ref="acmQueueDao"/>
@@ -219,19 +123,6 @@
           class="com.armedia.acm.plugins.casefile.service.QueueToSolrTransformer">
         <property name="acmQueueDao" ref="acmQueueDao"/>
         <property name="userDao" ref="userJpaDao"/>
-    </bean>
-
-    <bean id="caseFileStartBusinessProcessBusinessRule"
-          class="com.armedia.acm.plugins.casefile.service.CaseFileStartBusinessProcessBusinessRule">
-        <property name="ruleSpreadsheetFilename"
-                  value="drools-start-business-process-rules.xlsx"/>
-    </bean>
-
-    <bean id="caseFileStartBusinessProcessIfNeededHandler"
-          class="com.armedia.acm.plugins.casefile.pipeline.postsave.CaseFileStartBusinessProcessIfNeededHandler">
-        <property name="startBusinessProcessBusinessRule"
-                  ref="caseFileStartBusinessProcessBusinessRule"/>
-        <property name="startBusinessProcessService" ref="startBusinessProcessService"/>
     </bean>
 
     <bean id="caseFileNextPossibleQueuesBusinessRule"
