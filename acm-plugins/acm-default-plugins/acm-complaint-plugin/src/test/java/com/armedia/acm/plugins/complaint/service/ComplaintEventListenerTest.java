@@ -7,9 +7,6 @@ import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.ComplaintConstants;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.outlook.service.OutlookContainerCalendarService;
-import com.armedia.acm.plugins.person.model.Person;
-import com.armedia.acm.plugins.person.model.PersonAlias;
-import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.plugins.task.model.TaskConstants;
 import com.armedia.acm.service.objecthistory.dao.AcmAssignmentDao;
 import com.armedia.acm.service.objecthistory.model.AcmAssignment;
@@ -21,13 +18,11 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantConstants;
 import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 import org.easymock.Capture;
-import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.easymock.EasyMock.*;

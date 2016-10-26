@@ -252,30 +252,4 @@ public class Organization implements Serializable, AcmEntity
         this.className = className;
     }
 
-    @Override
-    public boolean equals(Object o)
-    {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Organization that = (Organization) o;
-        return Objects.equals(organizationId, that.organizationId) &&
-                Objects.equals(organizationType, that.organizationType) &&
-                Objects.equals(organizationTypes, that.organizationTypes) &&
-                Objects.equals(organizationValue, that.organizationValue) &&
-                Objects.equals(created, that.created) &&
-                Objects.equals(creator, that.creator) &&
-                Objects.equals(modified, that.modified) &&
-                Objects.equals(modifier, that.modifier) &&
-                Objects.equals(identifications, that.identifications) &&
-                Objects.equals(addresses, that.addresses) &&
-                Objects.equals(contactMethods, that.contactMethods) &&
-                Objects.equals(className, that.className);
-    }
-
-    @Override
-    public int hashCode()
-    {
-        return Objects.hash(organizationId, organizationType, organizationTypes, organizationValue, created, creator,
-                modified, modifier, identifications, addresses, contactMethods, className);
-    }
 }

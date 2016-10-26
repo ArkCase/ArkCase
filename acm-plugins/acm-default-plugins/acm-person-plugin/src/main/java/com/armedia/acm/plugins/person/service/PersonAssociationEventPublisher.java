@@ -22,6 +22,7 @@ import org.springframework.context.ApplicationEventPublisherAware;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -122,7 +123,7 @@ public class PersonAssociationEventPublisher implements ApplicationEventPublishe
                 .collect(Collectors.toList());
 
         return IntStream.range(0, sortedExisting.size())
-                .anyMatch(i -> !sortedExisting.get(i).equals(sortedUpdated.get(i)));
+                .anyMatch(i -> !isPostalAddressChanged(sortedExisting.get(i), sortedUpdated.get(i)));
     }
 
     private void checkForContactRelatedEvents(Person existingPerson, Person updatedPerson, boolean succeeded,
@@ -168,7 +169,7 @@ public class PersonAssociationEventPublisher implements ApplicationEventPublishe
                 .collect(Collectors.toList());
 
         return IntStream.range(0, sortedExisting.size())
-                .anyMatch(i -> !sortedExisting.get(i).equals(sortedUpdated.get(i)));
+                .anyMatch(i -> !isContactMethodChanged(sortedExisting.get(i), sortedUpdated.get(i)));
     }
 
     private void checkForOrganizationRelatedEvents(Person existingPerson, Person updatedPerson, boolean succeeded,
@@ -214,7 +215,7 @@ public class PersonAssociationEventPublisher implements ApplicationEventPublishe
                 .collect(Collectors.toList());
 
         return IntStream.range(0, sortedExisting.size())
-                .anyMatch(i -> !sortedExisting.get(i).equals(sortedUpdated.get(i)));
+                .anyMatch(i -> !isOrganizationChanged(sortedExisting.get(i), sortedUpdated.get(i)));
     }
 
 
@@ -271,7 +272,7 @@ public class PersonAssociationEventPublisher implements ApplicationEventPublishe
                 .collect(Collectors.toList());
 
         return IntStream.range(0, sortedExisting.size())
-                .anyMatch(i -> !sortedExisting.get(i).equals(sortedUpdated.get(i)));
+                .anyMatch(i -> !isPersonAliasChanged(sortedExisting.get(i), sortedUpdated.get(i)));
     }
 
     public void publishPersonEvent(Person person, String eventAction, boolean succeeded, String parentType, Long parentId)
@@ -303,4 +304,32 @@ public class PersonAssociationEventPublisher implements ApplicationEventPublishe
         eventPublisher.publishEvent(event);
     }
 
+    private boolean isContactMethodChanged(ContactMethod ex, ContactMethod up)
+    {
+        return Objects.equals(ex.getType(), up.getType())
+                && Objects.equals(ex.getValue(), up.getValue());
+    }
+
+    private boolean isPersonAliasChanged(PersonAlias ex, PersonAlias up)
+    {
+        return Objects.equals(ex.getAliasType(), up.getAliasType())
+                && Objects.equals(ex.getAliasValue(), up.getAliasValue());
+    }
+
+    private boolean isPostalAddressChanged(PostalAddress ex, PostalAddress up)
+    {
+        return Objects.equals(ex.getType(), up.getType())
+                && Objects.equals(ex.getStreetAddress(), up.getStreetAddress())
+                && Objects.equals(ex.getCity(), up.getCity())
+                && Objects.equals(ex.getCountry(), up.getCountry())
+                && Objects.equals(ex.getZip(), up.getZip())
+                && Objects.equals(ex.getState(), up.getState())
+                && ex.getId().equals(up.getId());
+    }
+
+    private boolean isOrganizationChanged(Organization ex, Organization up)
+    {
+        return Objects.equals(ex.getOrganizationType(), up.getOrganizationType())
+                && Objects.equals(ex.getOrganizationValue(), up.getOrganizationValue());
+    }
 }

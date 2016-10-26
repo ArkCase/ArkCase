@@ -517,6 +517,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                         else {
                             ObjectPersonService.addPersonAssociation(scope.personAssociation).then(
                                 function (personAssociation) {
+                                    refresh();
                                     scope.objectInfo.personAssociations.push(personAssociation);
                                     scope.retrieveGridData();
                                 }
@@ -766,6 +767,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                     var personAssociation = Util.omitNg(pa);
                     ObjectPersonService.addPersonAssociation(personAssociation).then(
                         function (personAssociation) {
+                            refresh();
                             scope.personAssociation = personAssociation;
                             var idxPa = _.findIndex(scope.objectInfo.personAssociations, function (pa) {
                                 return Util.compare(pa.id, personAssociation.id);
