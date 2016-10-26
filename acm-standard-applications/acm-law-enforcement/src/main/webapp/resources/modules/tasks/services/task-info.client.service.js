@@ -138,9 +138,6 @@ angular.module('tasks').factory('Task.InfoService', ['$resource', '$translate', 
          * @returns {Object} Promise
          */
         Service.saveTaskInfo = function (taskInfo) {
-        	if (Util.isEmpty(taskInfo.assignee)) {
-            	taskInfo.assignee = ObjectModelService.getAssignee(taskInfo);
-            }
             if (!Service.validateTaskInfo(taskInfo)) {
                 return Util.errorPromise($translate.instant("common.service.error.invalidData"));
             }
