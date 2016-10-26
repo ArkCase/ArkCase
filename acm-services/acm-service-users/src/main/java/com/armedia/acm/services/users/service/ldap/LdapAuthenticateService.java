@@ -25,11 +25,9 @@ public class LdapAuthenticateService {
         LdapTemplate template = getLdapDao().buildLdapTemplate(getLdapAuthenticateConfig());
         
         String userIdAttributeName = getLdapAuthenticateConfig().getUserIdAttributeName();
-		//String searchBase = getLdapAuthenticateConfig().getBaseDC() + ',' + getLdapAuthenticateConfig().getSearchBase();
 		String searchBase = getLdapAuthenticateConfig().getSearchBase();
 
 		String filter = "(" + userIdAttributeName + "=" + userName + ")";
-		log.debug("searchBase[" + searchBase + "], filter[" + filter + "]");
 		boolean authenticated = template.authenticate(searchBase, filter, password);
 
 		if (debug) {
