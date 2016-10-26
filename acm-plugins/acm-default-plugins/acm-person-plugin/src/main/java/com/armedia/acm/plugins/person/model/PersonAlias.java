@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlTransient;
@@ -167,5 +168,5 @@ public class PersonAlias implements Serializable, AcmEntity
     public PersonAlias returnBase() {
     	return this;
     }
-    
+
 }

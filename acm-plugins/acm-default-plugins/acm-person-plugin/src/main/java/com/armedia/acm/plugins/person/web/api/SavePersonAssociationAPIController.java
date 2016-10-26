@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.person.web.api;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.plugins.person.service.PersonAssociationEventPublisher;
+import com.armedia.acm.plugins.person.service.PersonAssociationService;
 import com.armedia.acm.plugins.person.service.SavePersonAssociationTransaction;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -17,13 +18,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping({ "/api/v1/plugin/personAssociation", "/api/latest/plugin/personAssociation" })
-public class SavePersonAssociationAPIController {
-    
+@RequestMapping({"/api/v1/plugin/personAssociation", "/api/latest/plugin/personAssociation"})
+public class SavePersonAssociationAPIController
+{
+
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    private SavePersonAssociationTransaction personAssociationTransaction;
-    private PersonAssociationEventPublisher personAssociationEventPublisher;
+    private PersonAssociationService personAssociationService;
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -32,51 +33,20 @@ public class SavePersonAssociationAPIController {
             Authentication auth
     ) throws AcmCreateObjectFailedException
     {
-        if ( log.isTraceEnabled() )
-        {
-            log.trace("Got a personAssociation: " + in +"; person ID: '" + in.getId()+ "'");
-            log.trace("personAssociation parentType: " + in.getParentType());
-        }
+        log.trace("Got a personAssociation: {}; person ID: '{}'", in, in.getId());
+        log.trace("personAssociation parentType: {}", in.getParentType());
 
-        boolean isInsert = in.getId()== null;
-
-        try
-        {
-            PersonAssociation saved = getPersonAssociationTransaction().savePersonAsssociation(in, auth);
-
-          getPersonAssociationEventPublisher().publishPersonAssociationEvent(saved, auth, isInsert, true);
-          
-          return saved;
-
-        } catch ( MuleException | TransactionException e)
-        {
-      
-            getPersonAssociationEventPublisher().publishPersonAssociationEvent(in, auth, isInsert, false); 
-
-            throw new AcmCreateObjectFailedException("personAssociation", e.getMessage(), e);
-        }
+        return getPersonAssociationService().savePersonAssociation(in, auth);
 
     }
 
-    public SavePersonAssociationTransaction getPersonAssociationTransaction() {
-        return personAssociationTransaction;
+    public PersonAssociationService getPersonAssociationService()
+    {
+        return personAssociationService;
     }
 
-    public void setPersonAssociationTransaction(SavePersonAssociationTransaction personAssociationTransaction) {
-        this.personAssociationTransaction = personAssociationTransaction;
+    public void setPersonAssociationService(PersonAssociationService personAssociationService)
+    {
+        this.personAssociationService = personAssociationService;
     }
-
-    public PersonAssociationEventPublisher getPersonAssociationEventPublisher() {
-        return personAssociationEventPublisher;
-    }
-
-    public void setPersonAssociationEventPublisher(PersonAssociationEventPublisher personAssociationEventPublisher) {
-        this.personAssociationEventPublisher = personAssociationEventPublisher;
-    }
-
-
-       
-
-   
-
 }

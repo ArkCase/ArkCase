@@ -1,18 +1,10 @@
 package com.armedia.acm.plugins.person.web.api;
 
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.eq;
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
-import com.armedia.acm.plugins.person.service.PersonAssociationEventPublisher;
-import com.armedia.acm.plugins.person.service.SavePersonAssociationTransaction;
-
+import com.armedia.acm.plugins.person.service.PersonAssociationService;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
@@ -35,16 +27,23 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 
 import java.util.Date;
 
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:/spring/spring-web-acm-web.xml", "classpath:/spring/spring-library-person-plugin-test.xml" })
+@ContextConfiguration(locations = {"classpath:/spring/spring-web-acm-web.xml", "classpath:/spring/spring-library-person-plugin-test.xml"})
 public class SavePersonAssociationAPIControllerTest extends EasyMockSupport
 {
     private MockMvc mockMvc;
 
     private SavePersonAssociationAPIController unit;
-    private SavePersonAssociationTransaction mockSaveTransaction;
-    private PersonAssociationEventPublisher mockEventPublisher;
+
     private Authentication mockAuthentication;
+
+    private PersonAssociationService mockPersonAssociationService;
 
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
@@ -56,20 +55,15 @@ public class SavePersonAssociationAPIControllerTest extends EasyMockSupport
     {
         unit = new SavePersonAssociationAPIController();
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
-
-        mockSaveTransaction = createMock(SavePersonAssociationTransaction.class);
-        mockEventPublisher = createMock(PersonAssociationEventPublisher.class);
+        mockPersonAssociationService = createMock(PersonAssociationService.class);
         mockAuthentication = createMock(Authentication.class);
-
-        unit.setPersonAssociationTransaction(mockSaveTransaction);
-        unit.setPersonAssociationEventPublisher(mockEventPublisher);
+        unit.setPersonAssociationService(mockPersonAssociationService);
     }
 
     @Test
     public void addPersonAssociation_saveExistingPersonAssociation() throws Exception
     {
         Person person = new Person();
-
         person.setId(500L);
         person.setTitle("Dr");
         person.setCreator("testCreator");
@@ -97,29 +91,29 @@ public class SavePersonAssociationAPIControllerTest extends EasyMockSupport
         ObjectMapper objectMapper = new ObjectMapper();
         String in = objectMapper.writeValueAsString(perAssoc);
 
-        log.debug("Input JSON: " + in);
+        log.debug("Input JSON: {}", in);
 
         Capture<PersonAssociation> found = Capture.newInstance();
 
-        expect(mockSaveTransaction.savePersonAsssociation(capture(found), eq(mockAuthentication))).andReturn(saved);
-        mockEventPublisher.publishPersonAssociationEvent(capture(found), eq(mockAuthentication), eq(false), eq(true));
+        expect(mockPersonAssociationService.savePersonAssociation(capture(found), eq(mockAuthentication))).andReturn(saved);
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");
 
         replayAll();
 
-        MvcResult result = mockMvc.perform(post("/api/latest/plugin/personAssociation").accept(MediaType.parseMediaType("application/json;charset=UTF-8")).contentType(MediaType.APPLICATION_JSON)
+        MvcResult result = mockMvc.perform(post("/api/latest/plugin/personAssociation")
+                .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+                .contentType(MediaType.APPLICATION_JSON)
                 .principal(mockAuthentication).content(in)).andReturn();
 
-        log.info("results: " + result.getResponse().getContentAsString());
+        log.info("results: {}", result.getResponse().getContentAsString());
 
         verifyAll();
 
         assertEquals(saved, found.getValue());
 
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
-
     }
 
     @Test
@@ -127,9 +121,10 @@ public class SavePersonAssociationAPIControllerTest extends EasyMockSupport
     {
         String notPersonAssociationJson = "{ \"user\": \"com\", \"className\": \"com.armedia.acm.plugins.person.model.PersonAssociation\" }";
 
-        Capture<PersonAssociation> found = new Capture<>();
+        Capture<PersonAssociation> found = Capture.newInstance();
         // With upgrading spring version, bad JSON is not the problem for entering the execution in the controller
-        expect(mockSaveTransaction.savePersonAsssociation(capture(found), eq(mockAuthentication))).andThrow(new RuntimeException());
+        expect(mockPersonAssociationService.savePersonAssociation(capture(found), eq(mockAuthentication)))
+                .andThrow(new RuntimeException());
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");
@@ -147,7 +142,6 @@ public class SavePersonAssociationAPIControllerTest extends EasyMockSupport
     public void addPersonAssociation_exception() throws Exception
     {
         Person person = new Person();
-
         person.setId(500L);
         person.setTitle("Dr");
         person.setCreator("testCreator");
@@ -176,25 +170,28 @@ public class SavePersonAssociationAPIControllerTest extends EasyMockSupport
         ObjectMapper objectMapper = new ObjectMapper();
         String in = objectMapper.writeValueAsString(perAssoc);
 
-        log.debug("Input JSON: " + in);
+        log.debug("Input JSON: {}", in);
 
-        Capture<PersonAssociation> found = new Capture<>();
+        Capture<PersonAssociation> found = Capture.newInstance();
 
-        expect(mockSaveTransaction.savePersonAsssociation(capture(found), eq(mockAuthentication))).andThrow(new CannotCreateTransactionException("testException"));
-        mockEventPublisher.publishPersonAssociationEvent(capture(found), eq(mockAuthentication), eq(false), eq(false));
+        expect(mockPersonAssociationService.savePersonAssociation(capture(found), eq(mockAuthentication)))
+                .andThrow(new AcmCreateObjectFailedException("PERSON-ASSOCIATION", "", null));
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");
 
         replayAll();
 
-        mockMvc.perform(post("/api/latest/plugin/personAssociation").accept(MediaType.parseMediaType("application/json;charset=UTF-8")).contentType(MediaType.APPLICATION_JSON)
-                .principal(mockAuthentication).content(in)).andExpect(status().isBadRequest()).andExpect(content().contentType(MediaType.TEXT_PLAIN));
+        mockMvc.perform(post("/api/latest/plugin/personAssociation")
+                .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .principal(mockAuthentication).content(in))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.TEXT_PLAIN));
 
         verifyAll();
 
         assertEquals(perAssoc.getId(), found.getValue().getId());
-
     }
 
 }

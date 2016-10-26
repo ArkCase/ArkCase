@@ -41,11 +41,14 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
 
             if (isComplaint)
             {
+
+                String ipAddress = event.getIpAddress();
+
                 // Converter for JSON string to Object
                 AcmUnmarshaller converter = ObjectConverter.createJSONUnmarshaller();
 
                 String jsonUpdatedComplaint = acmObjectHistory.getObjectString();
-                Complaint updatedComplaint = (Complaint) converter.unmarshall(jsonUpdatedComplaint, Complaint.class);
+                Complaint updatedComplaint = converter.unmarshall(jsonUpdatedComplaint, Complaint.class);
 
                 AcmAssignment acmAssignment = createAcmAssignment(updatedComplaint);
 
@@ -54,41 +57,42 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
 
                 if (acmObjectHistoryExisting != null)
                 {
-
                     String json = acmObjectHistoryExisting.getObjectString();
-                    Complaint existing = (Complaint) converter.unmarshall(json, Complaint.class);
+                    Complaint existing = converter.unmarshall(json, Complaint.class);
 
                     acmAssignment.setOldAssignee(ParticipantUtils.getAssigneeIdFromParticipants(existing.getParticipants()));
 
                     if (isPriorityChanged(existing, updatedComplaint))
                     {
-                        getComplaintEventPublisher().publishComplaintModified(updatedComplaint, event.getIpAddress(), "priority.changed");
+                        getComplaintEventPublisher().publishComplaintModified(updatedComplaint, ipAddress, "priority.changed");
                     }
 
                     if (isDetailsChanged(existing, updatedComplaint))
                     {
-                        getComplaintEventPublisher().publishComplaintModified(updatedComplaint, event.getIpAddress(), "details.changed");
+                        getComplaintEventPublisher().publishComplaintModified(updatedComplaint, ipAddress, "details.changed");
                     }
 
                     if (isStatusChanged(existing, updatedComplaint))
                     {
                         String calId = updatedComplaint.getContainer().getCalendarFolderId();
                         if (updatedComplaint.getStatus().equals(complaintStatusClosed) &&
-                                shouldDeleteCalendarFolder && calId != null){
+                                shouldDeleteCalendarFolder && calId != null)
+                        {
 
                             //delete shared calendar if complaint closed
                             getCalendarService().deleteFolder(updatedComplaint.getContainer().getContainerObjectId(),
                                     calId, DeleteMode.MoveToDeletedItems);
                         }
-                        getComplaintEventPublisher().publishComplaintModified(updatedComplaint, event.getIpAddress(), "status.changed");
+                        getComplaintEventPublisher().publishComplaintModified(updatedComplaint, ipAddress, "status.changed");
                     }
 
                     if (isLocationChanged(existing, updatedComplaint))
                     {
-                        getComplaintEventPublisher().publishComplaintModified(updatedComplaint, event.getIpAddress(), "location.updated");
+                        getComplaintEventPublisher().publishComplaintModified(updatedComplaint, ipAddress, "location.updated");
                     }
 
                     checkParticipants(existing, updatedComplaint, event.getIpAddress());
+
                 }
 
                 if (isAssigneeChanged(acmAssignment))
@@ -97,7 +101,7 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
                     getAcmAssignmentDao().save(acmAssignment);
 
                     // Raise an event
-                    getAcmObjectHistoryEventPublisher().publishAssigneeChangeEvent(acmAssignment, event.getUserId(), event.getIpAddress());
+                    getAcmObjectHistoryEventPublisher().publishAssigneeChangeEvent(acmAssignment, event.getUserId(), ipAddress);
                 }
             }
         }
