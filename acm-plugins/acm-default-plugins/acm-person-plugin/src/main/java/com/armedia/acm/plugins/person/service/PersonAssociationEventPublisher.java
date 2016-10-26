@@ -323,8 +323,7 @@ public class PersonAssociationEventPublisher implements ApplicationEventPublishe
                 && Objects.equals(ex.getCity(), up.getCity())
                 && Objects.equals(ex.getCountry(), up.getCountry())
                 && Objects.equals(ex.getZip(), up.getZip())
-                && Objects.equals(ex.getState(), up.getState())
-                && ex.getId().equals(up.getId());
+                && Objects.equals(ex.getState(), up.getState());
     }
 
     private boolean isOrganizationChanged(Organization ex, Organization up)
