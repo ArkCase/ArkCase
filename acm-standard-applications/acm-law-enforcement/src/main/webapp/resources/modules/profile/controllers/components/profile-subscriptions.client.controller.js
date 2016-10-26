@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('profile').controller('Profile.SubscriptionController', ['$scope', 'Object.SubscriptionService', 'Authentication',
-    function ($scope, ObjectSubscriptionService, Authentication) {
+angular.module('profile').controller('Profile.SubscriptionController', ['$http', '$scope', 'Object.SubscriptionService', 'Authentication',
+    function ($http, $scope, ObjectSubscriptionService, Authentication) {
         $scope.$emit('req-component-config', 'subscription');
 
         $scope.unsubscribe = function (rowEntity) {
@@ -44,24 +44,18 @@ angular.module('profile').controller('Profile.SubscriptionController', ['$scope'
             }
         };
 
-        Authentication.queryUserInfo().then(function (userInfo) {
-            $scope.userId = userInfo.userId;
-            $scope.parentType = userInfo.parentType;
-            $scope.objectInfo = userInfo.objectInfo;
-
-            ObjectSubscriptionService.getSubscriptions(userInfo.userId, userInfo.parentType, userInfo.objectInfo).then(function (data) {
-                for (var i = 0; i < data.length; i++) {
-                    $scope.subscribptionGridOptions.data.push(
-                        {
-                            "title": data[i].objectTitle,
-                            "type": data[i].subscriptionObjectType,
-                            "created": moment(data[i].created).format('MM-DD-YYYY'),
-                            "parentID": data[i].objectId,
-                            "userID": data[i].userId
-                        }
-                    );
-                }
-            });
+        ObjectSubscriptionService.getListOfSubscriptionsForUser().then(function (data) {
+            for (var i = 0; i < data.length; i++) {
+                $scope.subscribptionGridOptions.data.push(
+                    {
+                        "title": data[i].objectTitle,
+                        "type": data[i].subscriptionObjectType,
+                        "created": moment(data[i].created).format('MM-DD-YYYY'),
+                        "parentID": data[i].objectId,
+                        "userID": data[i].userId
+                    }
+                );
+            }
         });
 
     }

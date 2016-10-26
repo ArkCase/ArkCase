@@ -10,8 +10,8 @@
 
  * Object.SubscriptionService includes methods for managing subscriptions
  */
-angular.module('services').factory('Object.SubscriptionService', ['$resource', '$q', 'Acm.StoreService', 'UtilService', 'Object.ListService', 'Authentication'
-    , function ($resource, $q, Store, Util, ObjectListService, Authentication) {
+angular.module('services').factory('Object.SubscriptionService', ['$http', '$resource', '$q', 'Acm.StoreService', 'UtilService', 'Object.ListService', 'Authentication'
+    , function ($http, $resource, $q, Store, Util, ObjectListService, Authentication) {
         var Service = $resource('api/latest/service', {}, {
             /**
              * @ngdoc method
@@ -103,7 +103,9 @@ angular.module('services').factory('Object.SubscriptionService', ['$resource', '
         Service.getSubscriptions = function (userId, objectType, objectId) {
             var cacheSubscriptions = new Store.CacheFifo(Service.CacheNames.SUBSCRIPTION_DATA);
             var cacheKey = userId + "." + objectType + "." + objectId;
+            console.log("cache keys in getSubscriptions", cacheKey);
             var subscriptions = cacheSubscriptions.get(cacheKey);
+            console.log("after cacheSubscriptions.get", subscriptions);
             return Util.serviceCall({
                 service: Service._getSubscriptions
                 , param: {
@@ -120,6 +122,43 @@ angular.module('services').factory('Object.SubscriptionService', ['$resource', '
                     }
                 }
             });
+        };
+
+        /**
+         * @ngdoc method
+         * @name getListOfSubscriptionsForUser
+         * @methodOf services:Object.SubscriptionService
+         *
+         * @description
+         * Query subscriptions for the provided user without additional params.
+         *
+         * @returns {Object} userInfo with Promise
+         */
+        Service.getListOfSubscriptionsForUser = function () {
+            var deferred = $q.defer();
+            Authentication.queryUserInfo().then(
+                function (userInfo) {
+                    var user = userInfo.userId;
+                    if (user) {
+                        var request = $http({
+                            method: "GET",
+                            url: "api/v1/service/subscription/" + user
+                        }).then(
+                            function successCallback(response) {
+                                deferred.resolve(response.data);
+                            },
+                            function errorCallback(response) {
+                                if (!angular.isObject(response.data) || !response.data.message) {
+                                    deferred.reject("An unknown error occurred.");
+                                }
+                                deferred.reject(response.data.message);
+                            }
+                        );
+                    }
+                    return userInfo;
+                }
+            );
+            return deferred.promise;
         };
 
         /**
@@ -195,6 +234,7 @@ angular.module('services').factory('Object.SubscriptionService', ['$resource', '
                     if (Service.validateUnsubscribe(data)) {
                         var cacheSubscriptions = new Store.CacheFifo(Service.CacheNames.SUBSCRIPTION_DATA);
                         var cacheKey = userId + "." + objectType + "." + objectId;
+                        console.log("cache key is userId+objectType+objectId", cacheKey);
                         cacheSubscriptions.remove(cacheKey);
                         return data;
                     }
