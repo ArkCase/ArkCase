@@ -188,26 +188,4 @@ public class ContactMethod implements Serializable, AcmEntity
     	return this;
     }
 
-    @Override
-    public boolean equals(Object o)
-    {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ContactMethod that = (ContactMethod) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(created, that.created) &&
-                Objects.equals(creator, that.creator) &&
-                Objects.equals(modified, that.modified) &&
-                Objects.equals(modifier, that.modifier) &&
-                Objects.equals(status, that.status) &&
-                Objects.equals(type, that.type) &&
-                Objects.equals(types, that.types) &&
-                Objects.equals(value, that.value);
-    }
-
-    @Override
-    public int hashCode()
-    {
-        return Objects.hash(id, created, creator, modified, modifier, status, type, types, value);
-    }
 }

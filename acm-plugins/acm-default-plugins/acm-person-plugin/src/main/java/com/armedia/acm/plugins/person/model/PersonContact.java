@@ -284,31 +284,4 @@ public class PersonContact implements Serializable, AcmEntity
         this.lastName = lastName;
     }
 
-    @Override
-    public boolean equals(Object o)
-    {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        PersonContact that = (PersonContact) o;
-        return Objects.equals(attention, that.attention) &&
-                Objects.equals(companyName, that.companyName) &&
-                Objects.equals(personName, that.personName) &&
-                Objects.equals(firstName, that.firstName) &&
-                Objects.equals(middleInitials, that.middleInitials) &&
-                Objects.equals(lastName, that.lastName) &&
-                Objects.equals(identifications, that.identifications) &&
-                Objects.equals(addresses, that.addresses) &&
-                Objects.equals(contactMethods, that.contactMethods) &&
-                Objects.equals(created, that.created) &&
-                Objects.equals(creator, that.creator) &&
-                Objects.equals(modified, that.modified) &&
-                Objects.equals(modifier, that.modifier) &&
-                Objects.equals(className, that.className);
-    }
-
-    @Override
-    public int hashCode()
-    {
-        return Objects.hash(attention, companyName, personName, firstName, middleInitials, lastName, identifications, addresses, contactMethods, created, creator, modified, modifier, className);
-    }
 }
