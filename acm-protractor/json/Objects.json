@@ -9,11 +9,11 @@
         "data": {
             "supervisoruser": {
                 "username": "samuel-acm",
-                "password": "AcMd3v$"
+                "password": "Armedia#1"
             },
             "adminuser": {
                 "username": "ann-acm",
-                "password": "AcMd3v$"
+                "password": "Armedia#1"
             }
         }
     },
@@ -320,22 +320,41 @@
 
     },
 
-    "casepage": {
+   "casepage": {
 
         "locators": {
 
             "newButton": "New",
             "newCaseBtn": "Case",
             "caseType": "input _frevvo-disable-backspace",
-            "caseArson": ".//*[@class='input _frevvo-disable-backspace']/..//li[3]",
+            "caseArson": "Arson", 
             "firstName": "initiatorFirstName",
             "lastName": "initiatorLastName",
-            "nextBtn":  "//*[@name='actionType'][@value='Next']",
+            "nextBtn": "//*[@name='actionType'][@value='Next']",
             "submitBtn": "//*[@name='actionType'][@value='Submit']",
-            "casesTitle": ".//*[@class='ng-binding']/..//h4/a",
+            "casesTitle": ".//a[@editable-text='objectInfo.title']",
             "casesPageTitle": ".//*[@class='module-header']/h3/span",
-            "caseTitle" : "caseTitle",
-            "casesType": ".//a[@editable-select='objectInfo.caseType']" 
+            "caseTitle": "caseTitle",
+            "casesType": ".//a[@editable-select='objectInfo.caseType']",
+            "changeCaseStatusBtn": ".//*[@class='pull-right']/..//div/a[3]",
+            "newCasesBtn": ".//*[@class='pull-right']/..//div/a[1]",
+            "editBtn": ".//*[@class='pull-right']/..//div/a[2]",
+            "subscribeBtn": ".//*[@class='pull-right']/..//div/button[2]",
+            "mergeBtn": ".//*[@class='pull-right']/..//div/button[3]",
+            "splitBtn": ".//*[@class='pull-right']/..//div/button[4]",
+            "refreshBtn": ".//*[@class='btn-group']/..//button[5]",
+            "changeCaseStatusTitle": "facade",
+            "changeStatusDropDown": "input _frevvo-disable-backspace",
+            "statusClosed": ".//*[@class='input _frevvo-disable-backspace']/..//li[4]",
+            "selectApprover": ".//*[@class='f-table-row s-expanded s-linked s-untyped s-invalid']/..//td[5]",
+            "addUser": ".//*[@id='labPoTitle']",
+            "searchForUser": ".//*[@id='edtPoSearch']",
+            "goBtn": ".//*[@class='input-group']/..//span/button",
+            "addBtn": ".//*[@id='dlgObjectPicker']/div/div/div[3]/button[2]",
+            "searchedUser": "//*[@id='divPoResults']/div/table/tbody/tr/td[3]",
+            "tasksLink": ".//*[@class='tabbed-footer']/..//ul/li[7]/a",
+            "tasksTable": ".//*[@class='panel panel-success panel-grid']",
+            "taskTitle": ".//*[@class='ng-binding ng-scope']"
 
         },
 
@@ -345,7 +364,9 @@
             "firstName": "Milan",
             "lastName": "Jovanovski",
             "casesType": "Arson",
-            "casesPageTitle": "Cases"
+            "casesPageTitle": "Cases",
+            "approverSamuel": "samuel",
+            "automatedTaskTitle": "Review Request to Change Case Status"
 
         }
 

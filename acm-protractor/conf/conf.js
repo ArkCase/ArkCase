@@ -42,15 +42,16 @@ exports.config = {
 
 
     specs: [            
-           '../test_spec/dashboard_test.spec.js',
+          '../test_spec/dashboard_test.spec.js',
            '../test_spec/user_test.spec.js',
-           '../test_spec/task_test.spec.js'
+           '../test_spec/task_test.spec.js',
+           '../test_spec/case_test.spec.js'
     ],
     
 
     jasmineNodeOpts: {
         showColors: true,
-        defaultTimeoutInterval: 50000
+        defaultTimeoutInterval: 90000
 
     },
     beforeLaunch: function() {
@@ -61,7 +62,7 @@ exports.config = {
     onPrepare: function () {
     	jasmine.getEnv().addReporter(reporter);
         browser.driver.manage().window().maximize();    
-        browser.driver.get('https://core.arkcase.dev.armedia.com/arkcase/login'); 
+        browser.driver.get('https://cloud.arkcase.com/arkcase/login'); 
         browser.manage().timeouts().setScriptTimeout(60000);
     },
     afterLaunch: function(exitCode) {
