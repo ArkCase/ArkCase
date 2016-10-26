@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="getPersonTypesAPIController" class="com.armedia.acm.plugins.person.web.api.GetPersonTypesAPIController">
@@ -31,9 +31,7 @@
     </bean>
 
     <bean id="savePersonAssociationAPIController" class="com.armedia.acm.plugins.person.web.api.SavePersonAssociationAPIController">
-        <property name="personAssociationTransaction" ref="savePersonAssociationTransaction"/>
-        <property name="personAssociationEventPublisher" ref="personAssociationEventPublisher"/>
+        <property name="personAssociationService" ref="personAssociationService"/>
     </bean>
-
 
 </beans>
