@@ -1,5 +1,6 @@
 var Objects = require('../json/Objects.json');
 var utils = require('../util/utils.js');
+var basePage = require('./base_page.js');
 var userName = element(by.xpath(Objects.userpage.locators.userName));
 var userNameInput = element(by.xpath(Objects.userpage.locators.userNameInput));
 var userNameConfirmBtn = element(by.xpath(Objects.userpage.locators.userNameConfirmBtn));
@@ -71,7 +72,7 @@ var UserPage = function(){
 		return this;
 	}
 	this.returnUserNavigationProfile = function(){
-		return userNavigationProfile.getText();		
+		return userNavigationProfile.getText();
 	}
 	this.clickUserNavigationProfile = function(){
 		userNavigationProfile.click();
@@ -406,5 +407,5 @@ var UserPage = function(){
 
 };
 
-
+UserPage.prototype = basePage;
 module.exports = new UserPage();

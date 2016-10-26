@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.complaint.service;
 
 import com.armedia.acm.auth.AcmAuthenticationDetails;
+import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.pipeline.ComplaintPipelineContext;
@@ -33,11 +34,7 @@ public class SaveComplaintTransaction
         // populate the context
         pipelineContext.setAuthentication(authentication);
         pipelineContext.setNewComplaint(complaint.getId() == null);
-        String ipAddress = null;
-        if (authentication.getDetails() != null && authentication.getDetails() instanceof AcmAuthenticationDetails)
-        {
-            ipAddress = ((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress();
-        }
+        String ipAddress = AuthenticationUtils.getUserIpAddress();
         pipelineContext.setIpAddress(ipAddress);
 
         return pipelineManager.executeOperation(complaint, pipelineContext, () ->

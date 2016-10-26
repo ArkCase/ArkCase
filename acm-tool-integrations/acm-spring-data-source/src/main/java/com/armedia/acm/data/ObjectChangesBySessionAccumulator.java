@@ -8,14 +8,12 @@ import org.slf4j.LoggerFactory;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.WeakHashMap;
 
-/**
- * Created by armdev on 10/21/14.
- */
+
 public class ObjectChangesBySessionAccumulator extends DescriptorEventAdapter
 {
     private Logger log = LoggerFactory.getLogger(getClass());
+
     private Map<String, AcmObjectChangelist> changesBySession =
             Collections.synchronizedMap(new HashMap<String, AcmObjectChangelist>());
 
@@ -23,39 +21,34 @@ public class ObjectChangesBySessionAccumulator extends DescriptorEventAdapter
     public void postInsert(DescriptorEvent event)
     {
         super.postInsert(event);
-        log.trace("After insert: " + event.getObject().getClass().getName());
+        log.trace("After insert: {}", event.getObject().getClass().getName());
 
         try
         {
-            getChangesBySession().get(event.getSession().getName()).getAddedObjects().add(event.getObject());
-        }
-        catch (NullPointerException npe)
+            String sessionName = event.getSession().getName();
+            getChangesBySession().get(sessionName).getAddedObjects().add(event.getObject());
+        } catch (NullPointerException npe)
         {
             String nullPart = "[???]";
             if (getChangesBySession() == null)
             {
                 nullPart = "getChangesBySession";
-            }
-            else if ( event == null)
+            } else if (event == null)
             {
                 nullPart = "event";
-            }
-            else if ( event.getSession() == null )
+            } else if (event.getSession() == null)
             {
                 nullPart = "event.getSession";
-            } else if ( event.getSession().getName() == null )
+            } else if (event.getSession().getName() == null)
             {
                 nullPart = "event.getSession().getName()";
-            }
-            else if ( getChangesBySession().get(event.getSession().getName()) == null )
+            } else if (getChangesBySession().get(event.getSession().getName()) == null)
             {
                 nullPart = "getChangesBySession().get(event.getSession().getName())";
-            }
-            else if ( event.getObject() == null )
+            } else if (event.getObject() == null)
             {
                 nullPart = "event.getObject()";
-            }
-            else if ( getChangesBySession().get(event.getSession().getName()).getAddedObjects() == null )
+            } else if (getChangesBySession().get(event.getSession().getName()).getAddedObjects() == null)
             {
                 nullPart = "getChangesBySession().get(event.getSession().getName()).getAddedObjects()";
             }
@@ -67,40 +60,34 @@ public class ObjectChangesBySessionAccumulator extends DescriptorEventAdapter
     public void postUpdate(DescriptorEvent event)
     {
         super.postUpdate(event);
-        log.trace("After update: " + event.getObject().getClass().getName());
+        log.trace("After update: {}", event.getObject().getClass().getName());
 
         try
         {
-            getChangesBySession().get(event.getSession().getName()).getUpdatedObjects().add(event.getObject());
-        }
-        catch (NullPointerException npe)
+            String sessionName = event.getSession().getName();
+            getChangesBySession().get(sessionName).getUpdatedObjects().add(event.getObject());
+        } catch (NullPointerException npe)
         {
             String nullPart = "[???]";
-            if ( getChangesBySession() == null )
+            if (getChangesBySession() == null)
             {
                 nullPart = "getChangesBySession";
-            }
-            else if ( event == null )
+            } else if (event == null)
             {
                 nullPart = "event";
-            }
-            else if ( event.getSession() == null )
+            } else if (event.getSession() == null)
             {
                 nullPart = "event.getSession";
-            }
-            else if ( event.getSession().getName() == null )
+            } else if (event.getSession().getName() == null)
             {
                 nullPart = "event.getSession().getName()";
-            }
-            else if ( getChangesBySession().get(event.getSession().getName()) == null )
+            } else if (getChangesBySession().get(event.getSession().getName()) == null)
             {
                 nullPart = "getChangesBySession().get(event.getSession().getName())";
-            }
-            else if ( event.getObject() == null )
+            } else if (event.getObject() == null)
             {
                 nullPart = "event.getObject()";
-            }
-            else if ( getChangesBySession().get(event.getSession().getName()).getUpdatedObjects() == null )
+            } else if (getChangesBySession().get(event.getSession().getName()).getUpdatedObjects() == null)
             {
                 nullPart = "getChangesBySession().get(event.getSession().getName()).getUpdatedObjects()";
             }
@@ -114,40 +101,34 @@ public class ObjectChangesBySessionAccumulator extends DescriptorEventAdapter
     public void postDelete(DescriptorEvent event)
     {
         super.postDelete(event);
-        log.trace("After delete: " + event.getObject().getClass().getName());
+        log.trace("After delete: {}", event.getObject().getClass().getName());
 
         try
         {
-            getChangesBySession().get(event.getSession().getName()).getDeletedObjects().add(event.getObject());
-        }
-        catch (NullPointerException npe)
+            String sessionName = event.getSession().getName();
+            getChangesBySession().get(sessionName).getDeletedObjects().add(event.getObject());
+        } catch (NullPointerException npe)
         {
             String nullPart = "[???]";
-            if ( getChangesBySession() == null )
+            if (getChangesBySession() == null)
             {
                 nullPart = "getChangesBySession";
-            }
-            else if ( event == null )
+            } else if (event == null)
             {
                 nullPart = "event";
-            }
-            else if ( event.getSession() == null )
+            } else if (event.getSession() == null)
             {
                 nullPart = "event.getSession";
-            }
-            else if ( event.getSession().getName() == null )
+            } else if (event.getSession().getName() == null)
             {
                 nullPart = "event.getSession().getName()";
-            }
-            else if ( getChangesBySession().get(event.getSession().getName()) == null )
+            } else if (getChangesBySession().get(event.getSession().getName()) == null)
             {
                 nullPart = "getChangesBySession().get(event.getSession().getName())";
-            }
-            else if ( event.getObject() == null )
+            } else if (event.getObject() == null)
             {
                 nullPart = "event.getObject()";
-            }
-            else if ( getChangesBySession().get(event.getSession().getName()).getDeletedObjects() == null )
+            } else if (getChangesBySession().get(event.getSession().getName()).getDeletedObjects() == null)
             {
                 nullPart = "getChangesBySession().get(event.getSession().getName()).getDeletedObjects()";
             }
