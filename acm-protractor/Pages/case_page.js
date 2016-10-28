@@ -1,5 +1,5 @@
 var Objects = require('../json/Objects.json');
-
+var taskPage = require('../Pages/task_page.js');
 var EC = protractor.ExpectedConditions;
 var newBtn = element(by.linkText(Objects.casepage.locators.newButton));
 var newCaseBtn = element(by.linkText(Objects.casepage.locators.newCaseBtn));
@@ -9,7 +9,7 @@ var casesTitle = element(by.xpath(Objects.casepage.locators.casesTitle));
 var casesType = element(by.xpath(Objects.casepage.locators.casesType));
 var casesPageTitle = element(by.xpath(Objects.casepage.locators.casesPageTitle));
 var caseTitle = element(by.name(Objects.casepage.locators.caseTitle));
-var caseType = element(by.className(Objects.casepage.locators.caseType));
+var caseTypeDropDown = element(by.className(Objects.casepage.locators.caseType));
 var nextBtn = element(by.xpath(Objects.casepage.locators.nextBtn));
 var firstName = element(by.name(Objects.casepage.locators.firstName));
 var lastName = element(by.name(Objects.casepage.locators.lastName));
@@ -31,6 +31,13 @@ var searchedUser = element(by.xpath(Objects.casepage.locators.searchedUser));
 var tasksLinkBtn = element(by.xpath(Objects.casepage.locators.tasksLink));
 var refreshBtn = element(by.xpath(Objects.casepage.locators.refreshBtn));
 var taskTitle = element(by.xpath(Objects.casepage.locators.taskTitle));
+var priorityLink = element(by.xpath(Objects.casepage.locators.priority));
+var priorityDropDownEdit = element(by.xpath(Objects.casepage.locators.priorityDropDown));
+var priorityBtn = element(by.xpath(Objects.casepage.locators.priorityBtn));
+var createdDate = element(by.xpath(Objects.casepage.locators.createdDate));
+var assigneeLink = element(by.xpath(Objects.casepage.locators.assignee));
+var assigneeDropDown = element(by.xpath(Objects.casepage.locators.assigneeDropDown));
+var assigneeBtn = element(by.xpath(Objects.casepage.locators.assigneeBtn));
 
 
 
@@ -55,14 +62,16 @@ var CasePage = function() {
         return this;
     }
 
-    this.submitGeneralInformation = function(title) {
+    this.submitGeneralInformation = function(title, type) {
 
         caseTitle.click().then(function() {
             caseTitle.sendKeys(title);
         });
 
-        caseType.click().then(function() {
-            caseArson.click();
+        caseTypeDropDown.click().then(function() {
+
+            var caseType = element(by.linkText(type)).click();
+
         });
 
         nextBtn.click();
@@ -196,7 +205,7 @@ var CasePage = function() {
 
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.tasksTable))), 20000).then(function() {
             refreshBtn.click().then(function() {
-                browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.taskTitle))), 20000);
+                browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.taskTitle))), 30000);
             });
         });
         return this;
@@ -211,10 +220,62 @@ var CasePage = function() {
     }
 
     this.clickTaskTitle = function() {
-
         taskTitle.click();
+    }
+
+    this.waitForPriority = function() {
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.priority))), 20000);
+    }
+
+    this.returnPriority = function() {
+
+        return priorityLink.getText();
 
     }
+
+    this.waitForCreatedDate = function() {
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.createdDate))), 20000);
+    }
+
+    this.returnCreatedDate = function() {
+        return createdDate.getText();
+    }
+
+
+    this.editPriority = function(priority) {
+
+        priorityLink.click().then(function() {
+            priorityDropDownEdit.$('[value="string:' + priority + '"]').click().then(function() {
+                priorityBtn.click();
+            });
+        });
+
+    }
+
+    this.editAssignee = function(assignee) {
+
+        assigneeLink.click().then(function() {
+            browser.wait(EC.presenceOf(element(by.xpath("//*[@class='clearfix']/div[3]/div[1]/div/form/div/select/option[8]"))), 5000).then(function() {
+                assigneeDropDown.$('[value="string:' + assignee + '"]').click().then(function() {
+                    assigneeBtn.click();
+                });
+
+            });
+        });
+        return this;
+    }
+
+
+    this.waitForAssignee = function() {
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.assignee))), 20000);
+    }
+
+    this.returnAssignee = function() {
+        return assigneeLink.getText();
+    }
+
+
+
 
 
 };
