@@ -44,7 +44,7 @@ angular.module('profile').controller('Profile.SubscriptionController', ['$http',
             }
         };
 
-        ObjectSubscriptionService.getListOfSubscriptionsForUser().then(function (data) {
+        ObjectSubscriptionService.getListOfSubscriptionsByUser().then(function (data) {
             for (var i = 0; i < data.length; i++) {
                 $scope.subscribptionGridOptions.data.push(
                     {
