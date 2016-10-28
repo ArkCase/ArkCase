@@ -69,13 +69,6 @@ public class DashboardPropertyReader
             log.error("Widgets list was not populated, error occurred: [{}]", e.getMessage(), e);
         }
 
-        try
-        {
-            this.dashboardWidgetsOnly = getDashboardWidgets();
-        } catch (AcmDashboardException e)
-        {
-            log.error("Dashboard Widgets list was not populated, error occurred: [{}] ", e.getMessage(), e);
-        }
         if (isNewWidgetForAdding)
         {
             addNewWidgets();
@@ -86,6 +79,13 @@ public class DashboardPropertyReader
         {
             initWidgetTable();
             initWidgetRolesTable();
+        }
+        try
+        {
+            this.dashboardWidgetsOnly = getDashboardWidgets();
+        } catch (AcmDashboardException e)
+        {
+            log.error("Dashboard Widgets list was not populated, error occurred: [{}] ", e.getMessage(), e);
         }
 
         updateModuleTable();
@@ -128,7 +128,7 @@ public class DashboardPropertyReader
                 }
 
                 widgetSet.addAll(Arrays.asList(retVal.split(DashboardConstants.COMMA_SPLITTER)));
-                widgetSet.stream().forEach(widgetName ->
+                widgetSet.forEach(widgetName ->
                 {
                     try
                     {
@@ -225,7 +225,7 @@ public class DashboardPropertyReader
 
     private void updateModuleTable()
     {
-        moduleNameList.stream().forEach(module ->
+        moduleNameList.forEach(module ->
         {
             try
             {
@@ -276,16 +276,16 @@ public class DashboardPropertyReader
             widgetsThatNeedToBeInserted.addAll(setOfAllWidgetsFromPropertyFile);
             widgetsThatNeedToBeInserted.removeAll(setOfAllWidgetsInDb);
 
-            widgetsThatNeedToBeDeleted.stream().forEach(widget ->
+            widgetsThatNeedToBeDeleted.forEach(widget ->
             {
                 widgetDao.deleteAllWidgetRolesByWidgetName(widget.getWidgetName());
                 widgetDao.deleteWidget(widget);
             });
 
-            widgetsThatNeedToBeInserted.stream().forEach(widget -> widgetDao.saveWidget(widget));
+            widgetsThatNeedToBeInserted.forEach(widget -> widgetDao.saveWidget(widget));
         } else
         {
-            setOfAllWidgetsFromPropertyFile.stream().forEach(widget -> widgetDao.saveWidget(widget));
+            setOfAllWidgetsFromPropertyFile.forEach(widget -> widgetDao.saveWidget(widget));
         }
     }
 
@@ -293,13 +293,9 @@ public class DashboardPropertyReader
     {
         List<Widget> widgetList = new ArrayList<>();
         String[] widgetNames = dashboardWidgets.split(",");
-        List<String> widgetNamesList = new ArrayList<>();
-        for (String widgetName : widgetNames)
-        {
-            widgetNamesList.add(widgetName);
-        }
+        List<String> widgetNamesList = Arrays.asList(widgetNames);
 
-        widgetNamesList.stream().forEach(widget ->
+        widgetNamesList.forEach(widget ->
         {
             try
             {
