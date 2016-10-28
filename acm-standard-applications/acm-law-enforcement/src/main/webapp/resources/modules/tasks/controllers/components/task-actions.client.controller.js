@@ -88,8 +88,7 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
             modalInstance.result.then(function (result) {
                 if (result) {
                     console.log("sign task here");
-                    ObjectSignatureService.confirmSignature(ObjectService.ObjectTypes.TASK, $scope.objectInfo.taskId, result.pass).then(function () {
-                    });
+                    ObjectSignatureService.confirmSignature(ObjectService.ObjectTypes.TASK, $scope.objectInfo.taskId, result.pass);
                 }
             });
         };
