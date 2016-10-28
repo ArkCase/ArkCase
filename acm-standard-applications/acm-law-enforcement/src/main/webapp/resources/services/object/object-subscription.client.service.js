@@ -10,8 +10,8 @@
 
  * Object.SubscriptionService includes methods for managing subscriptions
  */
-angular.module('services').factory('Object.SubscriptionService', ['$http', '$resource', '$q', 'Acm.StoreService', 'UtilService', 'Object.ListService', 'Authentication'
-    , function ($http, $resource, $q, Store, Util, ObjectListService, Authentication) {
+angular.module('services').factory('Object.SubscriptionService', ['$resource', '$q', 'Acm.StoreService', 'UtilService', 'Authentication'
+    , function ($resource, $q, Store, Util, Authentication) {
         var Service = $resource('api/latest/service', {}, {
             /**
              * @ngdoc method
@@ -33,6 +33,27 @@ angular.module('services').factory('Object.SubscriptionService', ['$http', '$res
             _getSubscriptions: {
                 method: 'GET',
                 url: 'api/latest/service/subscription/:userId/:objectType/:objectId',
+                isArray: true
+            }
+
+            /**
+             * @ngdoc method
+             * @name _getListOfSubscriptionsByUser
+             * @methodOf services:Object.SubscriptionService
+             *
+             * @description
+             * Query subscriptions for a given user with an object.
+             *
+             * @param {Object} params Map of input parameter
+             * @param {Object} params.userId Subscription user
+             * @param {Function} onSuccess (Optional)Callback function of success query
+             * @param {Function} onError (Optional) Callback function when fail
+             *
+             * @returns {Object} Object returned by $resource
+             */
+            , _getListOfSubscriptionsByUser: {
+                method: 'GET',
+                url: 'api/latest/service/subscription/:userId',
                 isArray: true
             }
 
@@ -124,39 +145,46 @@ angular.module('services').factory('Object.SubscriptionService', ['$http', '$res
 
         /**
          * @ngdoc method
-         * @name getListOfSubscriptionsForUser
+         * @name getListOfSubscriptionsByUser
          * @methodOf services:Object.SubscriptionService
          *
          * @description
-         * Query subscriptions for the provided user without additional params.
+         * Query subscriptions by user without additional params.
          *
-         * @returns {Object} userInfo with Promise
+         * @returns {Object} list of subscriptions
          */
-        Service.getListOfSubscriptionsForUser = function () {
-            var deferred = $q.defer();
-            Authentication.queryUserInfo().then(
+        Service.getListOfSubscriptionsByUser = function () {
+            var result = $q.defer();
+            var userId = null;
+
+            return Authentication.queryUserInfo().then(
                 function (userInfo) {
-                    var user = userInfo.userId;
-                    if (user) {
-                        var request = $http({
-                            method: "GET",
-                            url: "api/v1/service/subscription/" + user
-                        }).then(
-                            function successCallback(response) {
-                                deferred.resolve(response.data);
-                            },
-                            function errorCallback(response) {
-                                if (!angular.isObject(response.data) || !response.data.message) {
-                                    deferred.reject("An unknown error occurred.");
-                                }
-                                deferred.reject(response.data.message);
+                    result.resolve(userInfo);
+                    userId = userInfo.userId;
+                    var cacheKey = userId;
+
+                    var cacheSubscriptions = new Store.CacheFifo(Service.CacheNames.SUBSCRIPTION_DATA);
+                    var listOfSubscriptions = cacheSubscriptions.get(cacheKey);
+
+                    return Util.serviceCall({
+                        service: Service._getListOfSubscriptionsByUser
+                        , param: {
+                            userId: userId
+                        }
+                        , result: listOfSubscriptions
+                        , onSuccess: function (data) {
+                            if (Service.validateSubscriptions(data)) {
+                                listOfSubscriptions = data;
+                                result.resolve(data);
+                                cacheSubscriptions.put(cacheKey, listOfSubscriptions);
+                                return listOfSubscriptions;
                             }
-                        );
-                    }
-                    return userInfo;
+                        }
+                    });
+
                 }
-            );
-            return deferred.promise;
+            )
+            return result;
         };
 
         /**
@@ -320,4 +348,5 @@ angular.module('services').factory('Object.SubscriptionService', ['$http', '$res
 
         return Service;
     }
-]);
+])
+;
