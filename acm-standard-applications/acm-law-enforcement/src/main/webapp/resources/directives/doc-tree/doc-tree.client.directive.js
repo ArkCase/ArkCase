@@ -675,7 +675,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 if (Validator.validateFancyTreeNode(node)) {
                     $(node.span).removeClass("pending");
                     if(!node.folder) {
-                      node.title = node.title.replace($translate.instant("common.directive.docTree.waitUploading"), node.data.name);
+                      node.title = node.data.name;
                       node.renderTitle();
                     }
                     node.setStatus("ok");
