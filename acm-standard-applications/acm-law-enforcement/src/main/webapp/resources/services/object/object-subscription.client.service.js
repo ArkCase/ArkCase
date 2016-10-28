@@ -214,6 +214,11 @@ angular.module('services').factory('Object.SubscriptionService', ['$resource', '
                     if (Service.validateSubscription(data)) {
                         var subscription = data;
                         var cacheSubscriptions = new Store.CacheFifo(Service.CacheNames.SUBSCRIPTION_DATA);
+
+                        //This particular key is introduced for getListOfSubscriptionsByUser function
+                        var cacheKeyUser = userId;
+                        cacheSubscriptions.get(cacheKeyUser);
+
                         var cacheKey = userId + "." + objectType + "." + objectId;
                         var subscriptions = cacheSubscriptions.get(cacheKey);
                         if (subscriptions == null)
@@ -226,6 +231,7 @@ angular.module('services').factory('Object.SubscriptionService', ['$resource', '
                             subscriptions.push(subscription);
                         else
                             subscriptions[index] = subscription;
+                        cacheSubscriptions.put(cacheKeyUser, subscriptions);
                         cacheSubscriptions.put(cacheKey, subscriptions);
                         return subscription;
                     }
@@ -259,6 +265,11 @@ angular.module('services').factory('Object.SubscriptionService', ['$resource', '
                 , onSuccess: function (data) {
                     if (Service.validateUnsubscribe(data)) {
                         var cacheSubscriptions = new Store.CacheFifo(Service.CacheNames.SUBSCRIPTION_DATA);
+
+                        //This particular key is introduced for getListOfSubscriptionsByUser function
+                        var cacheKeyUser = userId;
+                        cacheSubscriptions.remove(cacheKeyUser);
+
                         var cacheKey = userId + "." + objectType + "." + objectId;
                         cacheSubscriptions.remove(cacheKey);
                         return data;
