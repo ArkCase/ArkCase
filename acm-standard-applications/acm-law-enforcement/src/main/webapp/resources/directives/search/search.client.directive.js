@@ -62,8 +62,7 @@
 angular.module('directives').directive('search', ['SearchService', 'Search.QueryBuilderService', '$q', 'UtilService'
     , 'Object.LookupService', '$window', 'uiGridExporterConstants', '$translate', 'Tags.TagsService', 'ObjectService'
     , function (SearchService, SearchQueryBuilder, $q, Util
-        , ObjectLookupService, $window, uiGridExporterConstants, $translate, TagsService, ObjectService
-    ) {
+        , ObjectLookupService, $window, uiGridExporterConstants, $translate, TagsService, ObjectService) {
         return {
             restrict: 'E',              //match only element name
             scope: {
@@ -84,11 +83,11 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                 scope.selectedItem = null;
                 scope.emptySearch = true;
                 scope.exportUrl = "";
-                
+
                 if (typeof scope.config.emptySearch !== 'undefined') {
                     scope.emptySearch = scope.config.emptySearch;
                 }
-               
+
                 scope.queryExistingItems = function (start) {
                     scope.start = Util.goodNumber(start, 0);
                     if (!scope.searchQuery || scope.searchQuery.length === 0) {
@@ -252,7 +251,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                     }
                     scope.queryExistingItems();
                 };
-                
+
                 scope.onClickObjLink = function (event, objectData) {
                     event.preventDefault();
 
@@ -265,7 +264,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                         ObjectService.showObject(objectTypeKey, objectId);
                     }
                 };
-                
+
                 scope.onClickParentObjLink = function (event, objectData) {
                     event.preventDefault();
 
@@ -273,19 +272,14 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                     	scope.customization.showParentObject(objectData);
 
                     } else {
-                    	if(typeof (objectData.related_object_type_s && objectData.related_object_id_l) !== 'undefined'){
-                    		var objectTypeKey = Util.goodMapValue(objectData, "related_object_type_s");
-                            var objectId = Util.goodMapValue(objectData, "related_object_id_l");
-                    	}else {
-                            var parentReference = Util.goodMapValue(objectData, "parent_ref_s", "-");
-                            var objectId = parentReference.substring(0, parentReference.indexOf('-'));
-                            var objectTypeKey = parentReference.substring(parentReference.indexOf('-') + 1);
-                           
-                    	}
-                    	 ObjectService.showObject(objectTypeKey, objectId);
+                        var parentReference = Util.goodMapValue(objectData, "parent_ref_s", "-");
+                        var objectId = parentReference.substring(0, parentReference.indexOf('-'));
+                        var objectTypeKey = parentReference.substring(parentReference.indexOf('-') + 1);
+
+                        ObjectService.showObject(objectTypeKey, objectId);
                     }
                 };
-                
+
                 scope.keyUp = function (event) {
                     scope.searchQuery = scope.searchQuery.replace('*', '');
                     if (event.keyCode == 13 && scope.searchQuery) {

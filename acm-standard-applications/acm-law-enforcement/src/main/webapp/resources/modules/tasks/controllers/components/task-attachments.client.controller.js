@@ -1,32 +1,16 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$stateParams', '$modal'
-    , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Task.InfoService', 'Helper.ObjectBrowserService', 'DocTreeService', 
-    'PermissionsService', 'DocTreeExt.Core', 'Authentication'
-    , function ($scope, $stateParams, $modal
-        , Util, ConfigService, ObjectService, ObjectLookupService, TaskInfoService, HelperObjectBrowserService, DocTreeService, 
-        PermissionsService, DocTreeExtCore, Authentication) {
+angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$stateParams', '$q', '$modal'
+    , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Task.InfoService', 'Helper.ObjectBrowserService'
+    , 'Authentication', 'DocTreeService', 'PermissionsService', 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin'
+    , function ($scope, $stateParams, $q, $modal
+        , Util, ConfigService, ObjectService, ObjectLookupService, TaskInfoService, HelperObjectBrowserService
+        , Authentication, DocTreeService, PermissionsService, DocTreeExtWebDAV, DocTreeExtCheckin) {
 
 		Authentication.queryUserInfo().then(
             function (userInfo) {
                 $scope.user = userInfo.userId;
                 return userInfo;
-            }
-        );
-	
-        ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.TASK).then(
-            function (formTypes) {
-                $scope.fileTypes = $scope.fileTypes || [];
-                $scope.fileTypes = $scope.fileTypes.concat(Util.goodArray(formTypes));
-                return formTypes;
-            }
-        );
-
-        ObjectLookupService.getFileTypes().then(
-            function (fileTypes) {
-                $scope.fileTypes = $scope.fileTypes || [];
-                $scope.fileTypes = $scope.fileTypes.concat(Util.goodArray(fileTypes));
-                return fileTypes;
             }
         );
 
@@ -45,9 +29,17 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
             }
         });
 
+        var promiseFormTypes = ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.TASK);
+        var promiseFileTypes = ObjectLookupService.getFileTypes();
         var onConfigRetrieved = function (config) {
             $scope.config = config;
             $scope.treeConfig = config.docTree;
+
+            $q.all([promiseFormTypes, promiseFileTypes]).then(
+                function (data) {
+                    $scope.treeConfig.formTypes = data[0];
+                    $scope.treeConfig.fileTypes = data[1];
+                });
         };
 
         $scope.objectType = ObjectService.ObjectTypes.TASK;
@@ -66,10 +58,10 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
 
         $scope.onInitTree = function(treeControl) {
             $scope.treeControl = treeControl;
-            DocTreeExtCore.handleCheckout(treeControl, $scope);
-            DocTreeExtCore.handleCheckin(treeControl, $scope);
-            DocTreeExtCore.handleEditWithWebDAV(treeControl, $scope);
-            DocTreeExtCore.handleCancelEditing(treeControl, $scope);
+            DocTreeExtCheckin.handleCheckout(treeControl, $scope);
+            DocTreeExtCheckin.handleCheckin(treeControl, $scope);
+            DocTreeExtCheckin.handleCancelEditing(treeControl, $scope);
+            DocTreeExtWebDAV.handleEditWithWebDAV(treeControl, $scope);
             
             treeControl.addCommandHandler({
                 name: "remove"

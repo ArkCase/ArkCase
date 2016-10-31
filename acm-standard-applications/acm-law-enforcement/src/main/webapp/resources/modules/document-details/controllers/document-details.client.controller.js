@@ -11,7 +11,6 @@ angular.module('document-details').controller('DocumentDetailsController', ['$sc
         $scope.ecmFileProperties = {};
         $scope.snowboundUrl = '';
         $scope.ecmFileEvents = [];
-        $scope.ecmFileNotes = [];
         $scope.ecmFileParticipants = [];
         $scope.userList = [];
         $scope.caseInfo = {};
@@ -51,11 +50,10 @@ angular.module('document-details').controller('DocumentDetailsController', ['$sc
         // Retrieves the metadata for the file which is being opened in the viewer
         var ecmFileInfo = EcmService.getFile({fileId: $stateParams['id']});
         var ecmFileEvents = EcmService.getFileEvents({fileId: $stateParams['id']});
-        var ecmFileNotes = EcmService.getFileNotes({fileId: $stateParams['id']});
         var ecmFileParticipants = EcmService.getFileParticipants({fileId: $stateParams['id']});
 
         $q.all([ticketInfo, userInfo, totalUserInfo, ecmFileConfig,
-                ecmFileInfo.$promise, ecmFileEvents.$promise, ecmFileNotes.$promise, ecmFileParticipants.$promise, formsConfig])
+                ecmFileInfo.$promise, ecmFileEvents.$promise, ecmFileParticipants.$promise, formsConfig])
             .then(function (data) {
                     $scope.acmTicket = data[0].data;
                     $scope.userId = data[1].userId;
@@ -63,9 +61,8 @@ angular.module('document-details').controller('DocumentDetailsController', ['$sc
                     $scope.ecmFileProperties = data[3];
                     $scope.ecmFile = data[4];
                     $scope.ecmFileEvents = data[5];
-                    $scope.ecmFileNotes = data[6];
-                    $scope.ecmFileParticipants = data[7];
-                    $scope.formsConfig = data[8];
+                    $scope.ecmFileParticipants = data[6];
+                    $scope.formsConfig = data[7];
                     $timeout(function () {
                         $scope.$broadcast('document-data', $scope.ecmFile);
                     }, 1000);
