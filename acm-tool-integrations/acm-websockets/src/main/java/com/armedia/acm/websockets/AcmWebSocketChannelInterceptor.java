@@ -32,14 +32,14 @@ public class AcmWebSocketChannelInterceptor extends ChannelInterceptorAdapter
         if (simpSessionType == SimpMessageType.CONNECT)
         {
             Principal principal = (Principal) messageHeaders.get("simpUser");
-            log.debug("Web Socket Session {} CONNECT, user {}", simpSessionId, principal.getName());
+            log.trace("Web Socket Session {} CONNECT, user {}", simpSessionId, principal.getName());
         } else if (simpSessionType == SimpMessageType.DISCONNECT)
         {
-            log.debug("Web Socket Session {} DISCONNECT", simpSessionId);
+            log.trace("Web Socket Session {} DISCONNECT", simpSessionId);
         } else if (simpSessionType == SimpMessageType.SUBSCRIBE)
         {
             Principal principal = (Principal) messageHeaders.get("simpUser");
-            log.debug("Web Socket Session {} SUBSCRIBE, user {}", simpSessionId, principal.getName());
+            log.trace("Web Socket Session {} SUBSCRIBE, user {}", simpSessionId, principal.getName());
         }
         return message;
     }
