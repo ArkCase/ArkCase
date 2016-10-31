@@ -7,7 +7,7 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
         , Util, ConfigService, ObjectService, ObjectLookupService, TaskInfoService, HelperObjectBrowserService
         , Authentication, DocTreeService, PermissionsService, DocTreeExtWebDAV, DocTreeExtCheckin) {
 
-		Authentication.queryUserInfo().then(
+        Authentication.queryUserInfo().then(
             function (userInfo) {
                 $scope.user = userInfo.userId;
                 return userInfo;
@@ -47,25 +47,27 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
             $scope.objectId = objectInfo.taskId;
-            PermissionsService.getActionPermission('editAttachments', objectInfo).then(function(result) {
+            PermissionsService.getActionPermission('editAttachments', objectInfo).then(function (result) {
                 objectInfo.isReadOnly = !result;
             });
         };
 
         $scope.uploadForm = function (type, folderId, onCloseForm) {
-            return DocTreeService.uploadFrevvoForm(type, folderId, onCloseForm, $scope.objectInfo, $scope.fileTypes);
+            var fileTypes = Util.goodArray($scope.treeConfig.fileTypes);
+            fileTypes = fileTypes.concat(Util.goodArray($scope.treeConfig.formTypes));
+            return DocTreeService.uploadFrevvoForm(type, folderId, onCloseForm, $scope.objectInfo, fileTypes);
         };
 
-        $scope.onInitTree = function(treeControl) {
+        $scope.onInitTree = function (treeControl) {
             $scope.treeControl = treeControl;
             DocTreeExtCheckin.handleCheckout(treeControl, $scope);
             DocTreeExtCheckin.handleCheckin(treeControl, $scope);
             DocTreeExtCheckin.handleCancelEditing(treeControl, $scope);
             DocTreeExtWebDAV.handleEditWithWebDAV(treeControl, $scope);
-            
+
             treeControl.addCommandHandler({
                 name: "remove"
-                , onAllowCmd: function(nodes) {
+                , onAllowCmd: function (nodes) {
                     var len = 0;
                     if (Util.isArray(nodes[0].children)) {
                         len = nodes[0].children.length;
