@@ -49,7 +49,7 @@ angular.module('dashboard.signature', ['adf.provider'])
                         $scope.config = config;
                         $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
 
-                        var signatures = info[0];
+                        var signatures = info;
                         $scope.gridOptions.data = signatures;
                         $scope.gridOptions.totalItems = signatures.length;
                     },
