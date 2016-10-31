@@ -1,21 +1,21 @@
 package com.armedia.acm.plugins.objectassociation.service;
 
 import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.plugins.objectassociation.dao.ObjectAssociationDao;
 import com.armedia.acm.plugins.objectassociation.model.AcmChildObjectEntity;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import com.armedia.acm.plugins.objectassociation.model.ObjectAssociationConstants;
 import com.armedia.acm.spring.SpringContextHolder;
 
+import java.util.List;
 import java.util.Map;
 
-/**
- * 
- * @author vladimir.radeski
- *
- */
 
 public class ObjectAssociationServiceImpl implements ObjectAssociationService
 {
     private SpringContextHolder springContextHolder;
+
+    private ObjectAssociationDao objectAssociationDao;
 
     @Override
     public void addReference(Long id, String number, String type, String title, String status, Long parentId, String parentType)
@@ -54,17 +54,27 @@ public class ObjectAssociationServiceImpl implements ObjectAssociationService
         return null;
     }
 
+    @Override
+    public ObjectAssociation saveObjectAssociation(ObjectAssociation oa)
+    {
+        return getObjectAssociationDao().save(oa);
+    }
+
+    @Override
+    public List<ObjectAssociation> findByParentTypeAndId(String type, Long id)
+    {
+        return getObjectAssociationDao().findByParentTypeAndId(type, id);
+    }
+
     private ObjectAssociation makeObjectAssociation(Long id, String number, String type, String title, String status)
     {
         ObjectAssociation oa = new ObjectAssociation();
-
         oa.setTargetId(id);
         oa.setTargetName(number);
         oa.setTargetType(type);
         oa.setTargetTitle(title);
         oa.setStatus(status);
-        oa.setAssociationType("REFERENCE");
-
+        oa.setAssociationType(ObjectAssociationConstants.OBJECT_TYPE);
         return oa;
     }
 
@@ -78,4 +88,13 @@ public class ObjectAssociationServiceImpl implements ObjectAssociationService
         this.springContextHolder = springContextHolder;
     }
 
+    public ObjectAssociationDao getObjectAssociationDao()
+    {
+        return objectAssociationDao;
+    }
+
+    public void setObjectAssociationDao(ObjectAssociationDao objectAssociationDao)
+    {
+        this.objectAssociationDao = objectAssociationDao;
+    }
 }

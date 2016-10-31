@@ -1,5 +1,6 @@
 package com.armedia.acm.services.note.web.api;
 
+import com.armedia.acm.core.query.QueryResultPageWithTotalCount;
 import com.armedia.acm.services.note.dao.NoteDao;
 import com.armedia.acm.services.note.model.Note;
 import com.armedia.acm.services.note.model.NoteConstants;
@@ -64,7 +65,7 @@ public class ListAllNotesAPIControllerTest extends EasyMockSupport
 
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
     }
-
+    
     @Test
     public void listNote() throws Exception
     {
@@ -154,6 +155,104 @@ public class ListAllNotesAPIControllerTest extends EasyMockSupport
 
         MvcResult result = mockMvc.perform(
                 get("/api/v1/plugin/note/{parentType}/{parentId}", parentType, parentId)
+                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+                        .session(mockHttpSession)
+                        .principal(mockAuthentication))
+                .andReturn();
+
+        verifyAll();
+    }
+
+    @Test
+    public void listPageNote() throws Exception
+    {
+        String type = "GENERAL";
+        Long parentId = 1329L;
+        String parentType = "COMPLAINT";
+
+        Note note = new Note();
+
+        note.setId(700L);
+        note.setCreator("testCreator");
+        note.setCreated(new Date());
+        note.setNote("Note");
+        note.setType(type);
+        note.setParentType(parentType);
+        note.setParentId(parentId);
+
+        List<Note> noteList = new ArrayList<>();
+        noteList.add(note);
+
+
+        mockHttpSession.setAttribute("acm_ip_address", "ipAddress");
+
+        expect(mockNoteDao.listNotesPage(type, parentId, parentType, 0, 10, "")).andReturn(noteList);
+        expect(mockNoteDao.countAll(type, parentId, parentType)).andReturn(1);
+        // MVC test classes must call getName() somehow
+        expect(mockAuthentication.getName()).andReturn("userName").atLeastOnce();
+
+        replayAll();
+
+        MvcResult result = mockMvc.perform(
+                get("/api/v1/plugin/note/{parentType}/{parentId}/page?start={start}&n={n}&s={s}", parentType, parentId, 0, 10, "")
+                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+                        .session(mockHttpSession)
+                        .principal(mockAuthentication))
+                .andReturn();
+
+        verifyAll();
+
+        assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
+        assertTrue(result.getResponse().getContentType().startsWith(MediaType.APPLICATION_JSON_VALUE));
+
+        String returned = result.getResponse().getContentAsString();
+        ObjectMapper mapper = new ObjectMapper();
+        QueryResultPageWithTotalCount<Note> fromReturnedNoteList = mapper.readValue(
+                returned,
+                mapper.getTypeFactory().constructParametricType(QueryResultPageWithTotalCount.class, Note.class));
+
+        assertNotNull(fromReturnedNoteList);
+        assertEquals(fromReturnedNoteList.getTotalCount(), 1);
+        assertEquals(fromReturnedNoteList.getResultPage().get(0).getType(), type);
+        assertEquals(fromReturnedNoteList.getResultPage().get(0).getParentId(), parentId);
+        assertEquals(fromReturnedNoteList.getResultPage().get(0).getParentType(), parentType);
+        assertEquals(fromReturnedNoteList.getResultPage().get(0).getObjectType(), NoteConstants.OBJECT_TYPE);
+
+        log.info("note size : ", fromReturnedNoteList.getTotalCount());
+        log.info("note : ", fromReturnedNoteList.getResultPage().get(0).getNote());
+    }
+
+    @Test
+    public void listPageNote_exception() throws Exception
+    {
+        String type = "GENERAL";
+        Long parentId = 1329L;
+        String parentType = "COMPLAINT";
+
+        Note note = new Note();
+
+        note.setId(700L);
+        note.setCreator("testCreator");
+        note.setCreated(new Date());
+        note.setNote("Note");
+        note.setType(type);
+        note.setParentType(parentType);
+        note.setParentId(parentId);
+
+        List<Note> noteList = new ArrayList<>();
+        noteList.add(note);
+
+
+        mockHttpSession.setAttribute("acm_ip_address", "ipAddress");
+
+        expect(mockNoteDao.listNotesPage(type, parentId, parentType, 0, 10, "")).andThrow(new QueryTimeoutException("test exception"));
+        // MVC test classes must call getName() somehow
+        expect(mockAuthentication.getName()).andReturn("userName").atLeastOnce();
+
+        replayAll();
+
+        MvcResult result = mockMvc.perform(
+                get("/api/v1/plugin/note/{parentType}/{parentId}/page?start={start}&n={n}&s={s}", parentType, parentId, 0, 10, "")
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .session(mockHttpSession)
                         .principal(mockAuthentication))

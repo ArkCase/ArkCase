@@ -575,15 +575,15 @@
             "headerCellFilter": "translate"
           },
           {
-            "name": "created",
-            "displayName": "complaints.comp.people.contactMethods.table.columns.created",
+            "name": "modified",
+            "displayName": "complaints.comp.people.contactMethods.table.columns.modified",
             "headerCellFilter": "translate",
-            "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+            "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
             "enableCellEdit": false
           },
           {
-            "name": "creator",
-            "displayName": "complaints.comp.people.contactMethods.table.columns.creator",
+            "name": "modifier",
+            "displayName": "complaints.comp.people.contactMethods.table.columns.modifier",
             "headerCellFilter": "translate",
             "lookup": "userFullNames"
           }
@@ -616,15 +616,15 @@
             "headerCellFilter": "translate"
           },
           {
-            "name": "created",
-            "displayName": "complaints.comp.people.organizations.table.columns.created",
+            "name": "modified",
+            "displayName": "complaints.comp.people.organizations.table.columns.modified",
             "headerCellFilter": "translate",
-            "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+            "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
             "enableCellEdit": false
           },
           {
-            "name": "creator",
-            "displayName": "complaints.comp.people.organizations.table.columns.creator",
+            "name": "modifier",
+            "displayName": "complaints.comp.people.organizations.table.columns.modifier",
             "headerCellFilter": "translate",
             "lookup": "userFullNames"
           }
@@ -674,15 +674,15 @@
             "headerCellFilter": "translate"
           },
           {
-            "name": "created",
-            "displayName": "complaints.comp.people.addresses.table.columns.created",
+            "name": "modified",
+            "displayName": "complaints.comp.people.addresses.table.columns.modified",
             "headerCellFilter": "translate",
-            "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+            "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
             "enableCellEdit": false
           },
           {
-            "name": "creator",
-            "displayName": "complaints.comp.people.addresses.table.columns.creator",
+            "name": "modifier",
+            "displayName": "complaints.comp.people.addresses.table.columns.modifier",
             "headerCellFilter": "translate",
             "lookup": "userFullNames"
           }
@@ -712,15 +712,15 @@
             "headerCellFilter": "translate"
           },
           {
-            "name": "created",
-            "displayName": "complaints.comp.people.aliases.table.columns.created",
+            "name": "modified",
+            "displayName": "complaints.comp.people.aliases.table.columns.modified",
             "headerCellFilter": "translate",
-            "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+            "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
             "enableCellEdit": false
           },
           {
-            "name": "creator",
-            "displayName": "complaints.comp.people.aliases.table.columns.creator",
+            "name": "modifier",
+            "displayName": "complaints.comp.people.aliases.table.columns.modifier",
             "headerCellFilter": "translate",
             "lookup": "userFullNames"
           }
@@ -750,15 +750,15 @@
             "headerCellFilter": "translate"
           },
           {
-            "name": "created",
-            "displayName": "complaints.comp.people.securityTags.table.columns.created",
+            "name": "modified",
+            "displayName": "complaints.comp.people.securityTags.table.columns.modified",
             "headerCellFilter": "translate",
-            "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+            "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
             "enableCellEdit": false
           },
           {
-            "name": "creator",
-            "displayName": "complaints.comp.people.securityTags.table.columns.creator",
+            "name": "modifier",
+            "displayName": "complaints.comp.people.securityTags.table.columns.modifier",
             "headerCellFilter": "translate",
             "fullNameField": "creator_full_name_lcs"
           }
@@ -1035,7 +1035,8 @@
         {
           "name": "eventType",
           "displayName": "complaints.comp.history.table.columns.eventType",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div ng-if='row.entity.eventDescription'>{{row.entity.eventDescription}}</div><div ng-if='!row.entity.eventDescription'>{{row.entity.eventType}}</div>"
         },
         {
           "name": "eventDate",

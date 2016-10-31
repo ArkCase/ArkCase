@@ -3,13 +3,13 @@
     <parent>
         <groupId>com.armedia.acm</groupId>
         <artifactId>acm-standard-applications</artifactId>
-        <version>3.0.58-SNAPSHOT</version>
+        <version>3.1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.armedia.acm.acm-standard-applications</groupId>
     <artifactId>acm-law-enforcement</artifactId>
-    <version>3.0.58-SNAPSHOT</version>
+    <version>3.1.0</version>
     <packaging>war</packaging>
     <name>ACM Standard Application: Law Enforcement</name>
 
@@ -64,6 +64,12 @@
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-plugin-manager</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-message-broker</artifactId>
             <version>${acm.version}</version>
         </dependency>
 
@@ -410,6 +416,7 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>
+
     </dependencies>
 
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="listTasksAPIController" class="com.armedia.acm.plugins.task.web.api.ListTasksAPIController">
@@ -32,10 +32,8 @@
     </bean>
 
     <bean id="findTaskByIdAPIController" class="com.armedia.acm.plugins.task.web.api.FindTaskByIdAPIController">
-        <property name="taskDao" ref="acmTaskDao"/>
         <property name="taskEventPublisher" ref="taskEventPublisher"/>
-        <property name="fileDao" ref="ecmFileDao"/>
-        <property name="objectAssociationDao" ref="objectAssociationDao"/>
+        <property name="taskService" ref="acmTaskService"/>
     </bean>
 
     <bean id="saveTaskAPIController" class="com.armedia.acm.plugins.task.web.api.SaveTaskAPIController">
@@ -55,6 +53,11 @@
     <bean id="deleteProcessInstanceAPIController"
           class="com.armedia.acm.plugins.task.web.api.DeleteProcessInstanceAPIController">
         <property name="taskDao" ref="acmTaskDao"/>
+    </bean>
+
+    <bean id="saveTaskReferenceAPIController"
+          class="com.armedia.acm.plugins.task.web.api.SaveTaskReferenceAPIController">
+        <property name="taskService" ref="acmTaskService"/>
     </bean>
 
 </beans>
