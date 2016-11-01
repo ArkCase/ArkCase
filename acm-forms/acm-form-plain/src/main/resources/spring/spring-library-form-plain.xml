@@ -15,6 +15,7 @@
         <property name="acmFolderService" ref="acmFolderService"/>
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
         <property name="applicationEventPublisher" ref="frevvoApplicationEventPublisher"/>
+        <property name="ecmFileDao" ref="ecmFileDao"/>
     </bean>
     
 </beans>

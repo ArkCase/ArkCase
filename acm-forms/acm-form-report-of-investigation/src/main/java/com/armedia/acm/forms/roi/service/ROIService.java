@@ -166,6 +166,11 @@ public class ROIService extends FrevvoFormAbstractService {
     }
 
 	@Override
+	public void setFormName(String formName) {
+		// No implementation needed so far
+	}
+
+	@Override
 	public Class<?> getFormClass()
 	{
 		return ROIForm.class;
