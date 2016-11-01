@@ -9,11 +9,11 @@
         "data": {
             "supervisoruser": {
                 "username": "samuel-acm",
-                "password": "AcMd3v$"
+                "password": "Armedia#1"
             },
             "adminuser": {
                 "username": "ann-acm",
-                "password": "AcMd3v$"
+                "password": "Armedia#1"
             }
         }
     },
@@ -37,7 +37,7 @@
             "priorityHigh": ".//*[.='High']",
             "priorityExpedite": ".//*[.='Expedite']",
             "assigneeInput": "assignee",
-            "userSearchTitle": "'.//*[@class='modal-header ng-binding ng-scope']",
+            "userSearchTitle": ".//*[@class='modal-header ng-binding ng-scope']",
             "searchUserInput": ".//*[@class='modal-search']/div[1]/div/input",
             "searchUserBtn": ".//*[@class='btn btn-md btn-primary ng-binding']",
             "searchedName": "rowRenderIndex, row) in rowContainer.renderedRows track by $index",
@@ -73,7 +73,7 @@
 
         "locators": {
 
-            "priority": ".//*[@class='clearfix']/div[2]/div[3]/div/a",            
+            "priority": ".//*[@class='clearfix']/div[2]/div[3]/div/a",
             "assignee": ".//*[@class='clearfix']/div[2]/div[2]/div/a",
             "assigneeDropDown": ".//*[@class='clearfix']/div[2]/div[2]/div/form/div/select",
             "selectAssignee": ".//*[.='Ann Administrator']",
@@ -153,7 +153,9 @@
             "documentTitle": ".//*[@class='panel-body']/doc-tree/table[2]/tbody/tr[2]/td[3]/span/span[3]",
             "newFolder": ".ui-menu-item",
             "documentTitleInput": ".//*[@class='panel-body']/doc-tree/table[2]/tbody/tr[2]/td[3]/span/span[3]/input",
-            "tag": "a"
+            "tag": "a",
+           "approveBtn": ".//*[@class='btn btn-sm btn-default ng-binding ng-scope']/..//button[7]"
+
 
         },
 
@@ -317,6 +319,73 @@
             "websiteInput": "www.arkcase.com"
 
         }
+
+    },
+
+   "casepage": {
+
+        "locators": {
+
+            "newButton": "New",
+            "newCaseBtn": "Case",
+            "caseType": "input _frevvo-disable-backspace",
+            "caseArson": "Arson", 
+            "firstName": "initiatorFirstName",
+            "lastName": "initiatorLastName",
+            "nextBtn": "//*[@name='actionType'][@value='Next']",
+            "submitBtn": "//*[@name='actionType'][@value='Submit']",
+            "casesTitle": ".//a[@editable-text='objectInfo.title']",
+            "casesPageTitle": ".//*[@class='module-header']/h3/span",
+            "caseTitle": "caseTitle",
+            "priority": ".//a[@editable-select='objectInfo.priority']",
+            "priorityDropDown": ".//*[@class='clearfix']/div[2]/div[3]/div/form/div/select",
+            "priorityLow": ".//*[.='Low']",
+            "priorityHigh": ".//*[.='High']",
+            "priorityExpedite": ".//*[.='Expedite']",
+            "priorityBtn": ".//*[@class='clearfix']//div/span/button[1]",
+            "assignee": ".//a[@editable-select='assignee']",
+            "assigneeDropDown":"//*[@class='clearfix']/div[3]/div[1]/div/form/div/select", 
+            "assigneeBtn": ".//*[@class='editable-controls form-group']/..//button[1]",
+            "createdDate": ".//*[@class='h4 font-bold ng-binding']/..//div",
+            "casesType": ".//a[@editable-select='objectInfo.caseType']",
+            "changeCaseStatusBtn": ".//*[@class='pull-right']/..//div/a[3]",
+            "newCasesBtn": ".//*[@class='pull-right']/..//div/a[1]",
+            "editBtn": ".//*[@class='pull-right']/..//div/a[2]",
+            "subscribeBtn": ".//*[@class='pull-right']/..//div/button[2]",
+            "mergeBtn": ".//*[@class='pull-right']/..//div/button[3]",
+            "splitBtn": ".//*[@class='pull-right']/..//div/button[4]",
+            "refreshBtn": ".//*[@class='btn-group']/..//button[5]",
+            "changeCaseStatusTitle": "facade",
+            "changeStatusDropDown": "input _frevvo-disable-backspace",
+            "statusClosed": ".//*[@class='input _frevvo-disable-backspace']/..//li[4]",
+            "selectApprover": ".//*[@class='f-table-row s-expanded s-linked s-untyped s-invalid']/..//td[5]",
+            "addUser": ".//*[@id='labPoTitle']",
+            "searchForUser": ".//*[@id='edtPoSearch']",
+            "goBtn": ".//*[@class='input-group']/..//span/button",
+            "addBtn": ".//*[@id='dlgObjectPicker']/div/div/div[3]/button[2]",
+            "searchedUser": "//*[@id='divPoResults']/div/table/tbody/tr/td[3]",
+            "tasksLink": ".//*[@class='tabbed-footer']/..//ul/li[7]/a",
+            "tasksTable": ".//*[@class='panel panel-success panel-grid']",
+            "taskTitle": ".//*[@class='ng-binding ng-scope']"
+
+        },
+
+        "data": {
+
+            "caseTitle": "New Case",
+            "firstName": "Milan",
+            "lastName": "Jovanovski",
+            "casesType": "Arson",
+            "casesPageTitle": "Cases",
+            "approverSamuel": "samuel",
+            "automatedTaskTitle": "Review Request to Change Case Status",
+            "priorityMedium": "Medium",
+            "priorityHigh": "High",
+            "priorityExpedite": "Expedite",
+            "assigneeSamuel": "Samuel Supervisor"
+
+        }
+
 
     }
 

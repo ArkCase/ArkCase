@@ -4,7 +4,8 @@
   "notifyMessage": {
     "duration": 5000,
     "position": "right",
-    "maximumOpen": 5
+    "maximumOpen": 5,
+    "allowDuplicate": false
   },
   "docTree": {
     "extensions": ["DocTreeExt.Checkin", "DocTreeExt.Email", "DocTreeExt.WebDAV", "DocTreeExt.Record", "DocTreeExt.Template"],
