@@ -153,11 +153,6 @@ public class ChangeCaseStatusService extends FrevvoFormAbstractService
     }
 
     @Override
-    public void setFormName(String formName) {
-        // No implementation needed so far
-    }
-
-    @Override
     public Class<?> getFormClass()
     {
         return ChangeCaseStatusForm.class;
