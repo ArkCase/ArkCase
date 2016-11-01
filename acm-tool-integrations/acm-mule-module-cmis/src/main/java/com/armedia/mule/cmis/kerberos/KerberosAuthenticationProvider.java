@@ -6,6 +6,8 @@ import org.apache.chemistry.opencmis.client.bindings.spi.cookies.CmisCookieManag
 import org.apache.chemistry.opencmis.commons.SessionParameter;
 import org.apache.chemistry.opencmis.commons.impl.DateTimeHelper;
 import org.apache.chemistry.opencmis.commons.impl.XMLUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -23,6 +25,8 @@ import java.util.Map;
 public class KerberosAuthenticationProvider extends AbstractAuthenticationProvider
 {
     private static final long serialVersionUID = 1L;
+
+    private static final Logger LOG = LoggerFactory.getLogger(KerberosHttpInvoker.class);
 
     private static final String WSSE_NAMESPACE = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd";
     private static final String WSU_NAMESPACE = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd";
@@ -169,7 +173,7 @@ public class KerberosAuthenticationProvider extends AbstractAuthenticationProvid
         catch (ParserConfigurationException e)
         {
             // shouldn't happen...
-            e.printStackTrace();
+            LOG.error("Parser configuration error", e);
         }
 
         return null;

@@ -10,12 +10,12 @@ import org.apache.chemistry.opencmis.client.bindings.spi.http.Response;
 import org.apache.chemistry.opencmis.commons.SessionParameter;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisConnectionException;
 import org.apache.chemistry.opencmis.commons.impl.UrlBuilder;
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthSchemeProvider;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.AuthSchemes;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.GzipCompressingEntity;
@@ -29,10 +29,8 @@ import org.apache.http.config.RegistryBuilder;
 import org.apache.http.entity.AbstractHttpEntity;
 import org.apache.http.impl.auth.SPNegoSchemeFactory;
 import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,7 +50,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
 import java.security.AccessController;
 import java.security.Principal;
 import java.security.PrivilegedAction;
@@ -69,8 +66,11 @@ import java.util.stream.Collectors;
  */
 public class KerberosHttpInvoker implements HttpInvoker
 {
+    // TODO: exclusion of original mule-module-cmis from build
 
     private static final Logger LOG = LoggerFactory.getLogger(KerberosHttpInvoker.class);
+
+    private HttpClient httpClient;
 
     public KerberosHttpInvoker()
     {
@@ -122,11 +122,6 @@ public class KerberosHttpInvoker implements HttpInvoker
             {
                 LOG.debug(method + " " + url);
             }
-
-            // connect
-            // HttpURLConnection conn = (HttpURLConnection) (new URL(url.toString())).openConnection();
-            // TODO check // conn.setDoOutput(writer != null);
-            // TODO check // conn.setAllowUserInteraction(false);
 
             // authenticate
             AbstractAuthenticationProvider authProvider = (AbstractAuthenticationProvider) CmisBindingsHelper
@@ -229,9 +224,10 @@ public class KerberosHttpInvoker implements HttpInvoker
             Map<String, List<String>> responseHeaders = Arrays.asList(response.getAllHeaders()).stream()
                     .collect(Collectors.toMap(header -> header.getName(), header -> Collections.singletonList(header.getValue())));
 
-            return new Response(response.getStatusLine().getStatusCode(), EntityUtils.toString(response.getEntity(), "UTF-8"),
-                    responseHeaders, response.getEntity().getContent(),
-                    new ByteArrayInputStream((response.getStatusLine().getReasonPhrase()).getBytes(StandardCharsets.UTF_8)));
+            return new Response(response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase(), responseHeaders,
+                    response.getEntity().getContent(),
+                    response.getStatusLine().getStatusCode() >= 200 && response.getStatusLine().getStatusCode() < 300 ? null
+                            : new ByteArrayInputStream(response.getStatusLine().getReasonPhrase().getBytes()));
         }
         catch (Exception e)
         {
@@ -242,261 +238,239 @@ public class KerberosHttpInvoker implements HttpInvoker
     private HttpResponse call(String url, String method, String contentType, Map<String, String> headers, Output writer,
             BindingSession session, BigInteger offset, BigInteger length, AbstractAuthenticationProvider authProvider) throws IOException
     {
-        CloseableHttpClient httpclient = getHttpClient(session);
+        HttpClient httpclient = getHttpClient(session);
 
-        try
+        HttpUriRequest request = null;
+        switch (method)
         {
-            HttpUriRequest request = null;
-            switch (method)
-            {
-            case "GET":
-                request = new HttpGet(url);
-                break;
-            case "POST":
-                request = new HttpPost(url);
-                break;
-            case "PUT":
-                request = new HttpPut(url);
-                break;
-            case "DELETE":
-                request = new HttpDelete(url);
-                break;
-            default:
-                throw new RuntimeException("HTTP method: " + method + " not implemented!");
-            }
+        case "GET":
+            request = new HttpGet(url);
+            break;
+        case "POST":
+            request = new HttpPost(url);
+            break;
+        case "PUT":
+            request = new HttpPut(url);
+            break;
+        case "DELETE":
+            request = new HttpDelete(url);
+            break;
+        default:
+            throw new RuntimeException("HTTP method: " + method + " not implemented!");
+        }
 
-            request.setHeader(HTTP.USER_AGENT, ClientVersion.OPENCMIS_CLIENT);
+        request.setHeader(HTTP.USER_AGENT, ClientVersion.OPENCMIS_CLIENT);
 
-            if (authProvider != null)
+        if (authProvider != null)
+        {
+            Map<String, List<String>> httpHeaders = authProvider.getHTTPHeaders(url.toString());
+            if (httpHeaders != null)
             {
-                Map<String, List<String>> httpHeaders = authProvider.getHTTPHeaders(url.toString());
-                if (httpHeaders != null)
+                for (Map.Entry<String, List<String>> header : httpHeaders.entrySet())
                 {
-                    for (Map.Entry<String, List<String>> header : httpHeaders.entrySet())
+                    if (header.getKey() != null && header.getValue() != null && !header.getValue().isEmpty())
                     {
-                        if (header.getKey() != null && header.getValue() != null && !header.getValue().isEmpty())
+                        String key = header.getKey();
+                        if (key.equalsIgnoreCase("user-agent"))
                         {
-                            String key = header.getKey();
-                            if (key.equalsIgnoreCase("user-agent"))
+                            request.setHeader(HTTP.USER_AGENT, header.getValue().get(0));
+                        }
+                        else
+                        {
+                            for (String value : header.getValue())
                             {
-                                request.setHeader(HTTP.USER_AGENT, header.getValue().get(0));
-                            }
-                            else
-                            {
-                                for (String value : header.getValue())
+                                if (value != null)
                                 {
-                                    if (value != null)
-                                    {
-                                        request.addHeader(key, value);
-                                    }
+                                    request.addHeader(key, value);
                                 }
                             }
                         }
                     }
                 }
-
-                // TODO
-                /*
-                 * if (conn instanceof HttpsURLConnection) { SSLSocketFactory sf = authProvider.getSSLSocketFactory(); HostnameVerifier hv =
-                 * authProvider.getHostnameVerifier(); if (sf != null) { Scheme https = new Scheme("https", 443, new
-                 * org.apache.http.conn.ssl.SSLSocketFactory(sf, hv));
-                 * httpclient.getConnectionManager().getSchemeRegistry().register(https); httpclient. ((HttpsURLConnection)
-                 * conn).setSSLSocketFactory(sf); } }
-                 */
             }
-
-            // set content type
-            if (contentType != null)
-            {
-                request.setHeader(HTTP.CONTENT_TYPE, contentType);
-            }
-
-            // set other headers
-            if (headers != null)
-            {
-                for (Map.Entry<String, String> header : headers.entrySet())
-                {
-                    request.setHeader(header.getKey(), header.getValue());
-                }
-            }
-
-            // range
-            if ((offset != null) || (length != null))
-            {
-                StringBuilder sb = new StringBuilder("bytes=");
-
-                if ((offset == null) || (offset.signum() == -1))
-                {
-                    offset = BigInteger.ZERO;
-                }
-
-                sb.append(offset.toString());
-                sb.append("-");
-
-                if ((length != null) && (length.signum() == 1))
-                {
-                    sb.append(offset.add(length.subtract(BigInteger.ONE)).toString());
-                }
-
-                request.addHeader("Range", sb.toString());
-            }
-
-            // locale
-            if (session.get(CmisBindingsHelper.ACCEPT_LANGUAGE) instanceof String)
-            {
-                request.addHeader("Accept-Language", session.get(CmisBindingsHelper.ACCEPT_LANGUAGE).toString());
-            }
-
-            // compression
-            Object compression = session.get(SessionParameter.COMPRESSION);
-            if ((compression != null) && Boolean.parseBoolean(compression.toString()))
-            {
-                request.addHeader("Accept-Encoding", "gzip,deflate");
-            }
-
-            // send data
-            if (writer != null)
-            {
-                AbstractHttpEntity entity = new AbstractHttpEntity()
-                {
-                    @Override
-                    public boolean isRepeatable()
-                    {
-                        return false;
-                    }
-
-                    @Override
-                    public long getContentLength()
-                    {
-                        return -1;
-                    }
-
-                    @Override
-                    public boolean isStreaming()
-                    {
-                        return false;
-                    }
-
-                    @Override
-                    public InputStream getContent() throws IOException
-                    {
-                        // Should be implemented as well but is irrelevant for this case
-                        throw new UnsupportedOperationException();
-                    }
-
-                    @Override
-                    public void writeTo(final OutputStream outstream) throws IOException
-                    {
-                        if (outstream == null)
-                        {
-                            throw new IllegalArgumentException("Output stream may not be null");
-                        }
-                        try
-                        {
-                            writer.write(outstream);
-                        }
-                        catch (Exception e)
-                        {
-                            throw new IOException(e);
-                        }
-                    }
-                };
-
-                Object clientCompression = session.get(SessionParameter.CLIENT_COMPRESSION);
-
-                if ((clientCompression != null) && Boolean.parseBoolean(clientCompression.toString()))
-                {
-                    GzipCompressingEntity gzipCompressingEntity = new GzipCompressingEntity(entity);
-                    ((HttpPost) request).setEntity(gzipCompressingEntity);
-                }
-                else
-                {
-                    ((HttpPost) request).setEntity(entity);
-                }
-            }
-
-            // log after connect
-            if (LOG.isTraceEnabled())
-            {
-                LOG.trace(method + " " + url + " > Headers: " + request.getAllHeaders());
-            }
-
-            HttpResponse response = httpclient.execute(request);
-            HttpEntity entity = response.getEntity();
-
-            LOG.warn("----------------------------------------");
-
-            LOG.warn("STATUS >> " + response.getStatusLine());
-
-            if (entity != null)
-            {
-                LOG.warn("RESULT >> " + EntityUtils.toString(entity));
-            }
-
-            LOG.warn("----------------------------------------");
-
-            EntityUtils.consume(entity);
-
-            return response;
-        }
-        finally
-        {
-            httpclient.close();
-        }
-    }
-
-    private CloseableHttpClient getHttpClient(BindingSession session)
-    {
-
-        Credentials use_jaas_creds = new Credentials()
-        {
-            @Override
-            public String getPassword()
-            {
-                return null;
-            }
-
-            @Override
-            public Principal getUserPrincipal()
-            {
-                return null;
-            }
-        };
-
-        CredentialsProvider credsProvider = new BasicCredentialsProvider();
-        credsProvider.setCredentials(new AuthScope(null, -1, null), use_jaas_creds);
-        Registry<AuthSchemeProvider> authSchemeRegistry = RegistryBuilder.<AuthSchemeProvider> create()
-                .register(AuthSchemes.SPNEGO, new SPNegoSchemeFactory(true)).build();
-
-        RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
-
-        // timeouts
-        int connectTimeout = session.get(SessionParameter.CONNECT_TIMEOUT, -1);
-        if (connectTimeout >= 0)
-        {
-            requestConfigBuilder.setConnectTimeout(connectTimeout);
-            requestConfigBuilder.setSocketTimeout(connectTimeout);
         }
 
-        int readTimeout = session.get(SessionParameter.READ_TIMEOUT, -1);
-        if (readTimeout >= 0)
+        // set content type
+        if (contentType != null)
         {
-            requestConfigBuilder.setConnectionRequestTimeout(readTimeout);
+            request.setHeader(HTTP.CONTENT_TYPE, contentType);
+        }
+
+        // set other headers
+        if (headers != null)
+        {
+            for (Map.Entry<String, String> header : headers.entrySet())
+            {
+                request.setHeader(header.getKey(), header.getValue());
+            }
+        }
+
+        // range
+        if ((offset != null) || (length != null))
+        {
+            StringBuilder sb = new StringBuilder("bytes=");
+
+            if ((offset == null) || (offset.signum() == -1))
+            {
+                offset = BigInteger.ZERO;
+            }
+
+            sb.append(offset.toString());
+            sb.append("-");
+
+            if ((length != null) && (length.signum() == 1))
+            {
+                sb.append(offset.add(length.subtract(BigInteger.ONE)).toString());
+            }
+
+            request.addHeader("Range", sb.toString());
+        }
+
+        // locale
+        if (session.get(CmisBindingsHelper.ACCEPT_LANGUAGE) instanceof String)
+        {
+            request.addHeader("Accept-Language", session.get(CmisBindingsHelper.ACCEPT_LANGUAGE).toString());
         }
 
         // compression
         Object compression = session.get(SessionParameter.COMPRESSION);
         if ((compression != null) && Boolean.parseBoolean(compression.toString()))
         {
-            requestConfigBuilder.setContentCompressionEnabled(true);
+            request.addHeader("Accept-Encoding", "gzip,deflate");
         }
 
-        RequestConfig requestConfig = requestConfigBuilder.build();
+        // send data
+        if (writer != null)
+        {
+            AbstractHttpEntity entity = new AbstractHttpEntity()
+            {
+                @Override
+                public boolean isRepeatable()
+                {
+                    // must be repeatable because of Kerberos authentication flow
+                    return true;
+                }
 
-        CloseableHttpClient httpclient = HttpClients.custom().setDefaultAuthSchemeRegistry(authSchemeRegistry)
-                .setDefaultCredentialsProvider(credsProvider).setDefaultRequestConfig(requestConfig).build();
+                @Override
+                public long getContentLength()
+                {
+                    return -1;
+                }
 
-        return httpclient;
+                @Override
+                public boolean isStreaming()
+                {
+                    return false;
+                }
+
+                @Override
+                public InputStream getContent() throws IOException
+                {
+                    // Should be implemented as well but is irrelevant for this case
+                    throw new UnsupportedOperationException();
+                }
+
+                @Override
+                public void writeTo(final OutputStream outstream) throws IOException
+                {
+                    if (outstream == null)
+                    {
+                        throw new IllegalArgumentException("Output stream may not be null");
+                    }
+                    try
+                    {
+                        writer.write(outstream);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new IOException(e);
+                    }
+                }
+            };
+
+            Object clientCompression = session.get(SessionParameter.CLIENT_COMPRESSION);
+
+            if ((clientCompression != null) && Boolean.parseBoolean(clientCompression.toString()))
+            {
+                GzipCompressingEntity gzipCompressingEntity = new GzipCompressingEntity(entity);
+                ((HttpPost) request).setEntity(gzipCompressingEntity);
+            }
+            else
+            {
+                ((HttpPost) request).setEntity(entity);
+            }
+        }
+
+        // log after connect
+        if (LOG.isTraceEnabled())
+        {
+            LOG.trace(method + " " + url + " > Headers: " + request.getAllHeaders());
+        }
+
+        HttpResponse response = httpclient.execute(request);
+
+        LOG.warn("----------------------------------------");
+
+        LOG.warn("STATUS >> " + response.getStatusLine());
+
+        LOG.warn("----------------------------------------");
+
+        return response;
+    }
+
+    private synchronized HttpClient getHttpClient(BindingSession session)
+    {
+        if (httpClient == null)
+        {
+            Credentials use_jaas_creds = new Credentials()
+            {
+                @Override
+                public String getPassword()
+                {
+                    return null;
+                }
+
+                @Override
+                public Principal getUserPrincipal()
+                {
+                    return null;
+                }
+            };
+
+            CredentialsProvider credsProvider = new BasicCredentialsProvider();
+            credsProvider.setCredentials(new AuthScope(null, -1, null), use_jaas_creds);
+            Registry<AuthSchemeProvider> authSchemeRegistry = RegistryBuilder.<AuthSchemeProvider> create()
+                    .register(AuthSchemes.SPNEGO, new SPNegoSchemeFactory(true)).build();
+
+            RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
+
+            // timeouts
+            int connectTimeout = session.get(SessionParameter.CONNECT_TIMEOUT, -1);
+            if (connectTimeout >= 0)
+            {
+                requestConfigBuilder.setConnectTimeout(connectTimeout);
+                requestConfigBuilder.setSocketTimeout(connectTimeout);
+            }
+
+            int readTimeout = session.get(SessionParameter.READ_TIMEOUT, -1);
+            if (readTimeout >= 0)
+            {
+                requestConfigBuilder.setConnectionRequestTimeout(readTimeout);
+            }
+
+            // compression
+            Object compression = session.get(SessionParameter.COMPRESSION);
+            if ((compression != null) && Boolean.parseBoolean(compression.toString()))
+            {
+                requestConfigBuilder.setContentCompressionEnabled(true);
+            }
+
+            RequestConfig requestConfig = requestConfigBuilder.build();
+
+            httpClient = HttpClients.custom().setDefaultAuthSchemeRegistry(authSchemeRegistry).setDefaultCredentialsProvider(credsProvider)
+                    .setDefaultRequestConfig(requestConfig).build();
+        }
+        return httpClient;
     }
 
     class KerberosCallBackHandler implements CallbackHandler
