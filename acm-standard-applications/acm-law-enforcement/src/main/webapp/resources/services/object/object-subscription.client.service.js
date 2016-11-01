@@ -218,30 +218,20 @@ angular.module('services').factory('Object.SubscriptionService', ['$resource', '
                         //This particular key is introduced for getListOfSubscriptionsByUser function
                         var cacheKeyUser = userId;
                         var userSubscriptions = cacheSubscriptions.get(cacheKeyUser);
-                        if (userSubscriptions == null)
+                        if (userSubscriptions == null) {
                             userSubscriptions = [];
+                        }
 
-                        var index = _.findIndex(userSubscriptions, function (sub) {
-                            return Util.compare(sub.id, subscription.id);
-                        });
-                        if (index < 0)
-                            userSubscriptions.push(subscription);
-                        else
-                            userSubscriptions[index] = subscription;
+                        userSubscriptions.push(subscription);
                         cacheSubscriptions.put(cacheKeyUser, userSubscriptions);
 
                         var cacheKey = userId + "." + objectType + "." + objectId;
                         var subscriptions = cacheSubscriptions.get(cacheKey);
-                        if (subscriptions == null)
+                        if (subscriptions == null) {
                             subscriptions = [];
-                        //update subscription into subscriptions
-                        var index = _.findIndex(subscriptions, function (sub) {
-                            return Util.compare(sub.id, subscription.id);
-                        });
-                        if (index < 0)
-                            subscriptions.push(subscription);
-                        else
-                            subscriptions[index] = subscription;
+                        }
+
+                        subscriptions.push(subscription);
                         cacheSubscriptions.put(cacheKey, subscriptions);
 
                         return subscription;
