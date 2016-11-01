@@ -1,5 +1,6 @@
 var Objects = require('../json/Objects.json');
 var basePage = require('./base_page.js');
+var EC = protractor.ExpectedConditions;
 var taskTitle = element(by.css(Objects.taskpage.locators.taskTitle));
 var Subject = element(by.id(Objects.taskpage.locators.subject));
 var StartDateInput = element(by.id(Objects.taskpage.locators.startDate));
@@ -98,6 +99,11 @@ var documentTitle = element(by.xpath(Objects.taskspage.locators.documentTitle));
 var documentTitleInput = element(by.xpath(Objects.taskspage.locators.documentTitleInput));
 var startDateInputEdit = element(by.model(Objects.taskspage.locators.startDateInput))
 var dueDateValue = element(by.model(Objects.taskspage.locators.dueDateInput));
+var approveBtn=element(by.xpath(Objects.taskspage.locators.approveBtn));
+
+
+
+
 
 var TaskPage = function() {
 	this.insertSubject = function(subject) {
@@ -552,6 +558,16 @@ var TaskPage = function() {
 	this.returnNotesTextArea = function(){
 		return notesTextArea.getText();
 	}
+	this.clickApproveBtn=function(){
+
+		   browser.wait(EC.presenceOf(element(by.xpath(Objects.taskspage.locators.approveBtn))), 20000).then(function() {
+		approveBtn.click().then(function(){
+		browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskpage.locators.taskState))),10000);	
+		});
+		 });
+		return this;
+	}
+
 
 
 };
