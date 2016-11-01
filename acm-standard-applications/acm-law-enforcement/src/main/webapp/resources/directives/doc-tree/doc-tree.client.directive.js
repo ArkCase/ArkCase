@@ -252,6 +252,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         , close: function (event, data) {
                             // Editor was removed
                             if (data.save) {
+                            	data.node.name = data.node.title;
                                 DocTree.markNodePending(data.node);
                             }
                             DocTree.editSetting.isEditing = false;
@@ -665,7 +666,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 if (Validator.validateFancyTreeNode(node)) {
                     $(node.span).addClass("pending");
                     if(!node.folder) {
-                      node.title = $translate.instant("common.directive.docTree.waitUploading") + node.data.name;
+                      node.title = $translate.instant("common.directive.docTree.waitUploading") + node.name;
                       node.renderTitle();
                     }
                     node.setStatus("loading");
@@ -2896,8 +2897,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 }
                             }).then(
                                 function (renamedInfo) {
-                                	node.data.name = renamedInfo.fileName;
-                                	node.title = $translate.instant("common.directive.docTree.waitUploading") + node.data.name;
+                                	node.title = renamedInfo.fileName;
+                                	node.tooltip = node.title;
                                 	DocTree.markNodeOk(node);
                                     dfd.resolve(renamedInfo);
                                 }
