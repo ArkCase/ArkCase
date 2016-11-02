@@ -10,8 +10,8 @@
 
  * Object.SubscriptionService includes methods for managing subscriptions
  */
-angular.module('services').factory('Object.SubscriptionService', ['$resource', '$q', 'Acm.StoreService', 'UtilService', 'Object.ListService', 'Authentication'
-    , function ($resource, $q, Store, Util, ObjectListService, Authentication) {
+angular.module('services').factory('Object.SubscriptionService', ['$resource', '$q', 'Acm.StoreService', 'UtilService', 'Authentication'
+    , function ($resource, $q, Store, Util, Authentication) {
         var Service = $resource('api/latest/service', {}, {
             /**
              * @ngdoc method
@@ -33,6 +33,27 @@ angular.module('services').factory('Object.SubscriptionService', ['$resource', '
             _getSubscriptions: {
                 method: 'GET',
                 url: 'api/latest/service/subscription/:userId/:objectType/:objectId',
+                isArray: true
+            }
+
+            /**
+             * @ngdoc method
+             * @name _getListOfSubscriptionsByUser
+             * @methodOf services:Object.SubscriptionService
+             *
+             * @description
+             * Query subscriptions for a given user with an object.
+             *
+             * @param {Object} params Map of input parameter
+             * @param {Object} params.userId Subscription user
+             * @param {Function} onSuccess (Optional)Callback function of success query
+             * @param {Function} onError (Optional) Callback function when fail
+             *
+             * @returns {Object} Object returned by $resource
+             */
+            , _getListOfSubscriptionsByUser: {
+                method: 'GET',
+                url: 'api/latest/service/subscription/:userId',
                 isArray: true
             }
 
@@ -124,6 +145,50 @@ angular.module('services').factory('Object.SubscriptionService', ['$resource', '
 
         /**
          * @ngdoc method
+         * @name getListOfSubscriptionsByUser
+         * @methodOf services:Object.SubscriptionService
+         *
+         * @description
+         * Query subscriptions by user without additional params.
+         *
+         * @returns {Object} list of subscriptions
+         */
+        Service.getListOfSubscriptionsByUser = function () {
+            var result = $q.defer();
+            var userId = null;
+
+            return Authentication.queryUserInfo().then(
+                function (userInfo) {
+                    result.resolve(userInfo);
+                    userId = userInfo.userId;
+                    var cacheKey = userId;
+
+                    var cacheSubscriptions = new Store.CacheFifo(Service.CacheNames.SUBSCRIPTION_DATA);
+                    var listOfSubscriptions = cacheSubscriptions.get(cacheKey);
+
+                    return Util.serviceCall({
+                        service: Service._getListOfSubscriptionsByUser
+                        , param: {
+                            userId: userId
+                        }
+                        , result: listOfSubscriptions
+                        , onSuccess: function (data) {
+                            if (Service.validateSubscriptions(data)) {
+                                listOfSubscriptions = data;
+                                result.resolve(data);
+                                cacheSubscriptions.put(cacheKey, listOfSubscriptions);
+                                return listOfSubscriptions;
+                            }
+                        }
+                    });
+
+                }
+            )
+            return result;
+        };
+
+        /**
+         * @ngdoc method
          * @name subscribe
          * @methodOf services:Object.SubscriptionService
          *
@@ -149,19 +214,26 @@ angular.module('services').factory('Object.SubscriptionService', ['$resource', '
                     if (Service.validateSubscription(data)) {
                         var subscription = data;
                         var cacheSubscriptions = new Store.CacheFifo(Service.CacheNames.SUBSCRIPTION_DATA);
+
+                        //This particular key is introduced for getListOfSubscriptionsByUser function
+                        var cacheKeyUser = userId;
+                        var userSubscriptions = cacheSubscriptions.get(cacheKeyUser);
+                        if (userSubscriptions == null) {
+                            userSubscriptions = [];
+                        }
+
+                        userSubscriptions.push(subscription);
+                        cacheSubscriptions.put(cacheKeyUser, userSubscriptions);
+
                         var cacheKey = userId + "." + objectType + "." + objectId;
                         var subscriptions = cacheSubscriptions.get(cacheKey);
-                        if (subscriptions == null)
+                        if (subscriptions == null) {
                             subscriptions = [];
-                        //update subscription into subscriptions
-                        var index = _.findIndex(subscriptions, function (sub) {
-                            return Util.compare(sub.id, subscription.id);
-                        });
-                        if (index < 0)
-                            subscriptions.push(subscription);
-                        else
-                            subscriptions[index] = subscription;
+                        }
+
+                        subscriptions.push(subscription);
                         cacheSubscriptions.put(cacheKey, subscriptions);
+
                         return subscription;
                     }
                 }
@@ -194,6 +266,11 @@ angular.module('services').factory('Object.SubscriptionService', ['$resource', '
                 , onSuccess: function (data) {
                     if (Service.validateUnsubscribe(data)) {
                         var cacheSubscriptions = new Store.CacheFifo(Service.CacheNames.SUBSCRIPTION_DATA);
+
+                        //This particular key is introduced for getListOfSubscriptionsByUser function
+                        var cacheKeyUser = userId;
+                        cacheSubscriptions.remove(cacheKeyUser);
+
                         var cacheKey = userId + "." + objectType + "." + objectId;
                         cacheSubscriptions.remove(cacheKey);
                         return data;
@@ -283,4 +360,5 @@ angular.module('services').factory('Object.SubscriptionService', ['$resource', '
 
         return Service;
     }
-]);
+])
+;
