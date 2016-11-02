@@ -1,6 +1,6 @@
 <databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
     
@@ -129,5 +129,11 @@
         </insert>
 
     </changeSet>
+
+    <changeSet id="07-delete-widgets-related-data" author="nadica.cuculova" >
+        <delete tableName="acm_dashboard"/>
+        <delete tableName="acm_user_preference"/>
+    </changeSet>
+    
 </databaseChangeLog>
 
