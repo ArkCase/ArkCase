@@ -20,13 +20,9 @@ angular.module('preference').controller('Preference.WidgetsListController', ['$s
 
         function toggleDefaultView() {
 
-            var collapsed = ($scope.defaultViewExpand === 'true');
+            var collapsed = ($scope.defaultViewExpand === 'false');
             _.forEach($scope.widgets, function (widget) {
-                if (collapsed) {
-                    widget.isCollapsed = false;
-                } else {
-                    widget.isCollapsed = true;
-                }
+                widget.isCollapsed = collapsed;
             });
 
             DashboardService.getConfig({moduleName: $scope.moduleName}, function (config) {
@@ -142,10 +138,10 @@ angular.module('preference').controller('Preference.WidgetsListController', ['$s
             PreferenceService.getPreferredWidgets({moduleName: $scope.moduleName}, function (preferredWidgets) {
                 preferredWidgets.preferredWidgets = removeNonObjectWidgets(preferredWidgets.preferredWidgets);
                 _.forEach(widgets, function (widget) {
-                    if ($scope.defaultViewExpand === "true") {
-                        widget.isCollapsed = false;
-                    } else {
+                    if ($scope.defaultViewExpand === "false") {
                         widget.isCollapsed = true;
+                    } else {
+                        widget.isCollapsed = false;
                     }
                     widget.enabled = _.includes(preferredWidgets.preferredWidgets, widget.commonName);
                 });
