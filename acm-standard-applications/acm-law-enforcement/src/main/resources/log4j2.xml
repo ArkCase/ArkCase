@@ -39,6 +39,10 @@
             <AppenderRef ref="Console"/>
             <AppenderRef ref="file-log"/>
         </Logger>
+        <Logger name="com.jcraft" level="warn" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="file-log"/>
+        </Logger>
         <Root level="info" additivity="false">
             <AppenderRef ref="Console"/>
             <AppenderRef ref="file-log"/>
