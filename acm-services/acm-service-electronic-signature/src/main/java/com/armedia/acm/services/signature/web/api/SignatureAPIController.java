@@ -92,9 +92,10 @@ public class SignatureAPIController
             boolean succeeded)
     {
         String ipAddress = (String) httpSession.getAttribute("acm_ip_address");
-        ApplicationSignatureEvent event = new ApplicationSignatureEvent(signed, "sign", succeeded, ipAddress);
-        getSignatureEventPublisher().publishSignatureEvent(event);
-    }
+		ApplicationSignatureEvent event = new ApplicationSignatureEvent(signed, String.format("%s.%s", "com.armedia.acm.app.signature.signed", signed.getObjectType().toLowerCase()), succeeded, ipAddress);
+		log.debug("Sign event type: " + event.getEventType());
+		getSignatureEventPublisher().publishSignatureEvent(event);
+	}
 
 	public SignatureDao getSignatureDao() {
 		return signatureDao;
