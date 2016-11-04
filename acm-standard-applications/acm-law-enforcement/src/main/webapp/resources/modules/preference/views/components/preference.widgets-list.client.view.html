@@ -4,25 +4,47 @@
         <label><input type="radio" ng-model="defaultViewExpand" value="false" ng-change="toggleDefaultView()"/> Expanded</label>
         <label><input type="radio" ng-model="defaultViewExpand" value="true" ng-change="toggleDefaultView()"/> Collapsed</label>
     </form>
-    <div class="panel panel-default" ng-repeat="widget in widgets">
-        <div class="panel-heading">
-            <h4 class="panel-title">
-                <a data-toggle="collapse" data-parent="#accordion" href="#{{widget.id}}"
-                   ng-click="toggleWidget($event, widget)">
-                    {{widget.title}}
-                </a>
-                <div class="pull-right">
-                    <span ng-if="!widget.enabled" class="label label-warning"
-                          ng-click="enableWidget($event, widget, true)">Disabled</span>
-                    <span ng-if="widget.enabled" class="label label-success"
-                          ng-click="enableWidget($event, widget, false)">Enabled</span>
-                </div>
-            </h4>
-        </div>
-        <div id="{{widget.id}}" class="panel-collapse collapse in" collapse="widget.isCollapsed">
-            <div class="panel-body">
-                {{widget.description}}
+
+    <!--<div class="panel panel-default" ng-repeat="widget in widgets">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#{{widget.id}}" close-others="false"
+                       ng-click="toggleWidget($event, widget)">
+                        {{widget.title}}
+                    </a>
+                    <div class="pull-right">
+                        <span ng-if="!widget.enabled" class="label label-warning"
+                              ng-click="enableWidget($event, widget, true)">Disabled</span>
+                        <span ng-if="widget.enabled" class="label label-success"
+                              ng-click="enableWidget($event, widget, false)">Enabled</span>
+                    </div>
+                </h4>
             </div>
-        </div>
-    </div>
+            <div id="{{widget.id}}" class="panel-collapse collapse in" collapse="widget.isCollapsed">
+                <div class="panel-body">
+                    {{widget.description}}
+                </div>
+            </div>
+        </div>-->
+    <accordion close-others="false">
+        <accordion-group class="panel panel-default" is-open="widget.isCollapsed" ng-repeat="widget in widgets">
+            <accordion-heading>
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <span ng-click="toggleWidget($event, widget)">{{widget.title}}</span>
+                        <div class="pull-right">
+						<span ng-if="!widget.enabled" class="label label-warning"
+                              ng-click="enableWidget($event, widget, true)">Disabled</span>
+                            <span ng-if="widget.enabled" class="label label-success"
+                                  ng-click="enableWidget($event, widget, false)">Enabled</span>
+                        </div>
+                    </h4>
+                </div>
+            </accordion-heading>
+            <div class="panel-collapse collapse in">
+                <div class="panel-body">{{widget.description}}</div>
+            </div>
+        </accordion-group>
+    </accordion>
+
 </div>

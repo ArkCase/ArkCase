@@ -251,7 +251,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         , close: function (event, data) {
                             // Editor was removed
                             if (data.save) {
-                                DocTree.markNodePending(data.node);
+                            	var fileName = data.node.title;
+                                DocTree.markNodePending(data.node, fileName);
                             }
                             DocTree.editSetting.isEditing = false;
                         }
@@ -660,11 +661,15 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 }
                 Util.deferred(DocTree.Controller.viewChangedTree);
             }
-            , markNodePending: function (node) {
+            , markNodePending: function (node, fileName) {
                 if (Validator.validateFancyTreeNode(node)) {
                     $(node.span).addClass("pending");
                     if (!node.folder) {
-                        node.title = $translate.instant("common.directive.docTree.waitUploading") + node.data.name;
+                    	if(fileName){
+                    		node.title = $translate.instant("common.directive.docTree.waitUploading") + fileName;
+                    	}else {
+                    		node.title = $translate.instant("common.directive.docTree.waitUploading") + node.data.name;
+                    	}
                         node.renderTitle();
                     }
                     node.setStatus("loading");
@@ -2902,7 +2907,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 }
                             }).then(
                                 function (renamedInfo) {
-                                    DocTree.markNodeOk(node);
+                                	node.title = renamedInfo.fileName;
+                                	node.tooltip = node.title;
+                                	DocTree.markNodeOk(node);
                                     dfd.resolve(renamedInfo);
                                 }
                                 , function (errorData) {
