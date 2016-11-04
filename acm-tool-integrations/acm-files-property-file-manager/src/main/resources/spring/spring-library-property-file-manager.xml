@@ -12,7 +12,7 @@
         <property name="ignoreResourceNotFound" value="true"/>
         <property name="localOverride" value="false"/>
         <property name="order" value="42"/>
-        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+        <property name="ignoreUnresolvablePlaceholders" value="false"/>
         <property name="locations">
             <list>
                 <value>file:${user.home}/.arkcase/acm/acmEmailReceiver.properties</value>
