@@ -130,10 +130,5 @@
 
     </changeSet>
 
-    <changeSet id="07-delete-widgets-related-data" author="nadica.cuculova" >
-        <delete tableName="acm_dashboard"/>
-        <delete tableName="acm_user_preference"/>
-    </changeSet>
-    
 </databaseChangeLog>
 
