@@ -224,7 +224,14 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                             scope.facets.splice(0, scope.facets.length)
                         }
                         _.forEach(facets, function (value, key) {
-                            if (value) {
+                            //check if facet key is in hidden facets
+                            //and if it is we will ignore it
+                            var found = false;
+                            if (typeof scope.config.hiddenFacets !== 'undefined' &&
+                                Util.isArray(scope.config.hiddenFacets)) {
+                                found = scope.config.hiddenFacets.includes(key);
+                            }
+                            if (!found && value) {
                                 scope.facets.push({"name": key, "fields": value});
                             }
                         });
@@ -259,7 +266,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                         scope.customization.showObject(objectData);
 
                     } else {
-                    	var objectTypeKey = Util.goodMapValue(objectData, "object_type_s");
+                        var objectTypeKey = Util.goodMapValue(objectData, "object_type_s");
                         var objectId = Util.goodMapValue(objectData, "object_id_s");
                         ObjectService.showObject(objectTypeKey, objectId);
                     }
@@ -269,7 +276,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                     event.preventDefault();
 
                     if (Util.goodMapValue(scope, "customization.showParentObject", false)) {
-                    	scope.customization.showParentObject(objectData);
+                        scope.customization.showParentObject(objectData);
 
                     } else {
                         var parentReference = Util.goodMapValue(objectData, "parent_ref_s", "-");
