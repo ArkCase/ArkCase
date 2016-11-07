@@ -10,4 +10,12 @@
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="alfrescoRmaPluginProperties" ref="alfrescoRmaPluginPropertiesForSpring"/>
     </bean>
+
+
+    <bean id="createOrFindRecordFolderService"
+          class="com.armedia.acm.plugins.alfrescorma.service.CreateOrFindRecordFolderService"
+          parent="alfrescoService">
+        <property name="rmaRootFolder" value="${rma_root_folder}"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
+    </bean>
 </beans>
