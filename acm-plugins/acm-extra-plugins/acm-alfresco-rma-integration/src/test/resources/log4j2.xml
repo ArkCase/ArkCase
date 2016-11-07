@@ -7,7 +7,7 @@
     </Appenders>
     <Loggers>
         <!-- INFO and above to console and log file; com.armedia debug and above to log file -->
-        <Logger name="com.armedia" additivity="false">
+        <Logger name="com.armedia" additivity="false" level="debug">
             <AppenderRef ref="Console" level="debug"/>
         </Logger>
         <Root level="info" additivity="false">
