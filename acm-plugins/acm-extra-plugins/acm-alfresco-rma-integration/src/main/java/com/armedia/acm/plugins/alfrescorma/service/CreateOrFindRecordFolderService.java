@@ -23,6 +23,7 @@ public class CreateOrFindRecordFolderService extends AlfrescoService<String>
 
     private final String service = "/s/api/type/rma%3arecordFolder/formprocessor";
     private final String query = "alf_ticket={ticket}";
+    private final RestTemplate restTemplate;
 
     private EcmFileService ecmFileService;
 
@@ -31,6 +32,11 @@ public class CreateOrFindRecordFolderService extends AlfrescoService<String>
     private transient final Logger LOG = LoggerFactory.getLogger(getClass());
 
     private static final String BASE_PATH = "/Sites/rm/documentLibrary";
+
+    public CreateOrFindRecordFolderService()
+    {
+        restTemplate = new RestTemplate();
+    }
 
 
     /**
@@ -62,10 +68,9 @@ public class CreateOrFindRecordFolderService extends AlfrescoService<String>
 
         HttpEntity<String> entity = buildRestEntity(createFolderPayload);
 
-        final RestTemplate template = new RestTemplate();
         try
         {
-            ResponseEntity<String> response = template.postForEntity(url, entity, String.class, ticket);
+            ResponseEntity<String> response = restTemplate.postForEntity(url, entity, String.class, ticket);
             LOG.debug("create record folder response: {}", response.getBody());
 
             JSONObject jsonResponse = new JSONObject(response.getBody());
@@ -116,26 +121,26 @@ public class CreateOrFindRecordFolderService extends AlfrescoService<String>
         return createFolderPayload;
     }
 
-    private void validateContext(Map<String, Object> context) throws AlfrescoServiceException
+    private void validateContext(Map<String, Object> context) throws IllegalArgumentException
     {
         if (context == null)
         {
-            throw new AlfrescoServiceException("Context must not be null");
+            throw new IllegalArgumentException("Context must not be null");
         }
 
         if (context.get("categoryFolder") == null || !(context.get("categoryFolder") instanceof CmisObject))
         {
-            throw new AlfrescoServiceException("Context must include a categoryFolder of type CmisObject");
+            throw new IllegalArgumentException("Context must include a categoryFolder of type CmisObject");
         }
 
         if (context.get("recordFolderName") == null || !(context.get("recordFolderName") instanceof String))
         {
-            throw new AlfrescoServiceException("Context must include a recordFolderName of type String");
+            throw new IllegalArgumentException("Context must include a recordFolderName of type String");
         }
 
         if (context.get("ticket") == null || !(context.get("ticket") instanceof String))
         {
-            throw new AlfrescoServiceException("Context must include a ticket of type String");
+            throw new IllegalArgumentException("Context must include a ticket of type String");
         }
     }
 
