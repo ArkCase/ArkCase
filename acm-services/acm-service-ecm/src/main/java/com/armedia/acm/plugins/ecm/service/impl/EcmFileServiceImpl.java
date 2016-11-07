@@ -89,6 +89,20 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     private FolderAndFilesUtils folderAndFilesUtils;
 
     @Override
+    public CmisObject findObjectByPath(String path) throws Exception
+    {
+        MuleMessage muleMessage = getMuleContextManager().send("vm://getObjectByPath.in", path);
+
+        if (muleMessage.getInboundProperty("findObjectByPathException") != null)
+        {
+            throw (Exception) muleMessage.getInboundProperty("findObjectByPathException");
+        }
+
+        return (CmisObject) muleMessage.getPayload();
+
+    }
+
+    @Override
     public EcmFile upload(String originalFileName, String fileType, String fileCategory, InputStream fileContents, String fileContentType,
             String fileName, Authentication authentication, String targetCmisFolderId, String parentObjectType, Long parentObjectId)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException
