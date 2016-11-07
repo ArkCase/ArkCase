@@ -86,6 +86,7 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
         pvars.put("REQUEST_TYPE", "CHANGE_CASE_STATUS");
         pvars.put("REQUEST_ID", event.getRequest().getId());
         pvars.put("IP_ADDRESS", event.getIpAddress());
+        pvars.put("PENDING_STATUS", event.getRequest().getStatus());
 
         LOG.debug("Starting process: [{}]", processName);
 

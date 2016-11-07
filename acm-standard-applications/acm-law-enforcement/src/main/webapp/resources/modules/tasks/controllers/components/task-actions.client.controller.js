@@ -153,6 +153,12 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
                 TaskWorkflowService.completeTaskWithOutcome(taskInfo, name).then(
                     function (taskInfo) {
                         $scope.$emit("report-object-updated", taskInfo);
+                        if (taskInfo.pendingStatus != null && taskInfo.pendingStatus == "DELETED") {
+                            // wait solr to index the change, and update the tree i.e. remove task from tree
+                            setTimeout(function () {
+                                $scope.$emit("report-tree-updated", taskInfo);
+                            }, 4000);
+                        }
                         return taskInfo;
                     },
                     function (error) {
