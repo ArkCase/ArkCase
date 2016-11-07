@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="getDashboardSettings" class="com.armedia.acm.plugins.dashboard.web.api.GetDashboardConfigAPIController">
@@ -49,8 +49,10 @@
         <property name="dashboardPlugin" ref="dashboardPlugin"/>
         <property name="moduleDao" ref="moduleDao"/>
         <property name="widgetDao" ref="acmWidgetDao"/>
+        <property name="dashboardDao" ref="acmDashboardDao"/>
         <property name="userDao" ref="acmUserDao"/>
         <property name="moduleEventPublisher" ref="moduleEventPublisher"/>
+        <property name="userPreferenceService" ref="userPreferenceService"/>
     </bean>
 
     <bean id="userPreferenceService" class="com.armedia.acm.plugins.dashboard.service.UserPreferenceService">
