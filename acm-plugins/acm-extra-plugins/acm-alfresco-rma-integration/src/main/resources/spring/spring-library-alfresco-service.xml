@@ -24,5 +24,11 @@
         <property name="alfrescoRmaModuleVersion" value="${alfresco_rma_module_version}"/>
     </bean>
 
+    <bean id="moveToRecordFolderService" class="com.armedia.acm.plugins.alfrescorma.service.MoveToRecordFolderService"
+          parent="alfrescoService">
+        <property name="rmaRootFolder" value="${rma_root_folder}"/>
+
+    </bean>
+
 
 </beans>

@@ -57,7 +57,7 @@ public class SetRecordMetadataServiceIT
     }
 
     @Test
-    public void declareRecord() throws Exception
+    public void setRecordMetadat() throws Exception
     {
         assertNotNull(declareRecordService);
 
