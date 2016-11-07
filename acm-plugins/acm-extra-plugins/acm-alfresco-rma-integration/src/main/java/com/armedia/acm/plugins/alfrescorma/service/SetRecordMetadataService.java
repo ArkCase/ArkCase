@@ -56,7 +56,7 @@ public class SetRecordMetadataService extends AlfrescoService<String> implements
     @Override
     public String doService(Map<String, Object> context) throws AlfrescoServiceException
     {
-        validateConext(context);
+        validateContext(context);
 
         String ticket = (String) context.get("ticket");
 
@@ -130,7 +130,7 @@ public class SetRecordMetadataService extends AlfrescoService<String> implements
         return setRecordMetadataPayload;
     }
 
-    private void validateConext(Map<String, Object> context) throws IllegalArgumentException
+    private void validateContext(Map<String, Object> context) throws IllegalArgumentException
     {
         if (context == null)
         {

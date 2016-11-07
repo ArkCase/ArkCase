@@ -35,7 +35,7 @@ public class DeclareRecordService extends AlfrescoService<String>
     /**
      * The context must have:
      * <ul>
-     *   <li>Key ecmFileId: String, CMIS ID of the document to be declared as a record</li>
+     *   <li>Key ecmFileId: String, versionSeriesId (NOT the document id) of the document to be declared as a record</li>
      *   <li>Key ticket: String, Alfresco ticket</li>
      * </ul>
      */
