@@ -94,12 +94,9 @@ public class CreateOrFindRecordFolderService extends AlfrescoService<String>
 
     private JSONObject buildPost(CmisObject categoryFolder, String recordFolderName)
     {
-
         String categoryFolderId = categoryFolder.getId();
 
-
         String rmaIdentifier = recordFolderName + "_" + categoryFolder.getName();
-
 
         JSONObject createFolderPayload = new JSONObject();
         createFolderPayload.put("alf_destination", categoryFolderId);

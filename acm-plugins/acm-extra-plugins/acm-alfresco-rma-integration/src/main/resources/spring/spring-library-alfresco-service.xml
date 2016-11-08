@@ -25,9 +25,7 @@
     </bean>
 
     <bean id="moveToRecordFolderService" class="com.armedia.acm.plugins.alfrescorma.service.MoveToRecordFolderService"
-          parent="alfrescoService">
-        <property name="rmaRootFolder" value="${rma_root_folder}"/>
-    </bean>
+          parent="alfrescoService"/>
 
     <bean id="completeRecordService" class="com.armedia.acm.plugins.alfrescorma.service.CompleteRecordService"
           parent="alfrescoService"/>

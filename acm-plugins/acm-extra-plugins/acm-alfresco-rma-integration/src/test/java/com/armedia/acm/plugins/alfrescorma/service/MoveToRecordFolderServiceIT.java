@@ -119,15 +119,14 @@ public class MoveToRecordFolderServiceIT
         recordFolderContext.put("categoryFolder", cmisObject);
         String folderName = UUID.randomUUID().toString();
         recordFolderContext.put("recordFolderName", folderName);
-        findRecordFolderService.service(recordFolderContext);
+        String recordFolderId = findRecordFolderService.service(recordFolderContext);
 
 
         // now we can finally move our record
         Map<String, Object> context = new HashMap<>();
         context.put("ecmFileId", ecmFileId);
         context.put("ticket", ticket);
-        context.put("categoryFolderName", categoryFolderName);
-        context.put("recordFolderName", folderName);
+        context.put("recordFolderId", recordFolderId);
         String movedId = service.service(context);
 
         assertEquals(ecmFileId, movedId);
