@@ -111,7 +111,7 @@ public class AlfrescoRecordsService implements InitializingBean
 
             log.debug("recordFolderId: {}", recordFolderId);
 
-            moveToRecordFolder(recordFolderName, alfTicket, cmisObjectId, categoryFolder);
+            moveToRecordFolder(recordFolderId, alfTicket, cmisObjectId);
 
             completeRecord(alfTicket, cmisObjectId);
 
@@ -126,13 +126,11 @@ public class AlfrescoRecordsService implements InitializingBean
         completeRecordContext.put("ticket", alfTicket);
     }
 
-    protected void moveToRecordFolder(String recordFolderName, String alfTicket, String cmisFileId, CmisObject categoryFolder)
-            throws AlfrescoServiceException
+    protected void moveToRecordFolder(String recordFolderId, String alfTicket, String cmisFileId) throws AlfrescoServiceException
     {
         Map<String, Object> moveToRecordFolderContext = new HashMap<>();
         moveToRecordFolderContext.put("ecmFileId", cmisFileId);
-        moveToRecordFolderContext.put("categoryFolderName", categoryFolder.getName());
-        moveToRecordFolderContext.put("recordFolderName", recordFolderName);
+        moveToRecordFolderContext.put("recordFolderId", recordFolderId);
         moveToRecordFolderContext.put("ticket", alfTicket);
         getMoveToRecordFolderService().service(moveToRecordFolderContext);
     }

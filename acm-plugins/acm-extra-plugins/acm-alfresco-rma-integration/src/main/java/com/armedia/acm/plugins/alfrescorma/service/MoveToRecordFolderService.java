@@ -18,10 +18,8 @@ import java.util.Map;
  */
 public class MoveToRecordFolderService extends AlfrescoService<String>
 {
-    private final String service = "/s/slingshot/doclib/action/move-to/site/rm/documentLibrary";
+    private final String service = "/s/slingshot/doclib/action/move-to/node";
     private final String query = "alf_ticket={ticket}";
-
-    private String rmaRootFolder;
 
     private final RestTemplate restTemplate;
 
@@ -36,8 +34,7 @@ public class MoveToRecordFolderService extends AlfrescoService<String>
      * The context must have:
      * <ul>
      * <li>Key ecmFileId: String, CMIS Version Series ID (NOT the id, the versionSeriesId) of the document which will be moved</li>
-     * <li>Key categoryFolderName: String</li>
-     * <li>Key recordFolderName: String</li>
+     * <li>Key recordFolderId: String, CMIS Object ID of the target folder</li>
      * <li>Key ticket: String, Alfresco ticket</li>
      * </ul>
      */
@@ -47,13 +44,13 @@ public class MoveToRecordFolderService extends AlfrescoService<String>
         validateContext(context);
 
         String ticket = (String) context.get("ticket");
-        String categoryFolderName = (String) context.get("categoryFolderName");
-        String recordFolderName = (String) context.get("recordFolderName");
 
         JSONObject moveToRecordFolderPayload = buildPost(context);
 
-        final String fullService = service + "/" + getRmaRootFolder() + "/" + categoryFolderName + "/" +
-                recordFolderName;
+        String recordFolderId = (String) context.get("recordFolderId");
+        String urlPathParameter = recordFolderId.replace("://", "/");
+
+        final String fullService = service + "/" + urlPathParameter;
 
         final String url = baseUrl() + fullService + "?" + query;
 
@@ -116,14 +113,9 @@ public class MoveToRecordFolderService extends AlfrescoService<String>
             throw new IllegalArgumentException("Context must include an ecmFileId of type String");
         }
 
-        if (context.get("categoryFolderName") == null || !(context.get("categoryFolderName") instanceof String))
+        if (context.get("recordFolderId") == null || !(context.get("recordFolderId") instanceof String))
         {
-            throw new IllegalArgumentException("Context must include a categoryFolderName of type String");
-        }
-
-        if (context.get("recordFolderName") == null || !(context.get("recordFolderName") instanceof String))
-        {
-            throw new IllegalArgumentException("Context must include a recordFolderName of type String");
+            throw new IllegalArgumentException("Context must include a recordFolderId of type String");
         }
 
         if (context.get("ticket") == null || !(context.get("ticket") instanceof String))
@@ -132,13 +124,4 @@ public class MoveToRecordFolderService extends AlfrescoService<String>
         }
     }
 
-    public String getRmaRootFolder()
-    {
-        return rmaRootFolder;
-    }
-
-    public void setRmaRootFolder(String rmaRootFolder)
-    {
-        this.rmaRootFolder = rmaRootFolder;
-    }
 }
