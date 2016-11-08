@@ -160,7 +160,7 @@ angular.module('services').factory('Object.SignatureService', ['$resource', 'Acm
          * @param {Object} data Data to be validated
          * @returns {Boolean} Return true if data is valid
          */
-        Service.validtateSignature = function (data) {
+        Service.validateSignature = function (data) {
             if (!Util.isEmpty(data))
                 return false;
             if (!Util.isEmpty(data.signedBy))
