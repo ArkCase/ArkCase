@@ -1,15 +1,13 @@
 package com.armedia.acm.plugins.alfrescorma.service;
 
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
-import com.armedia.acm.plugins.alfrescorma.model.AcmRecordFolder;
+import com.armedia.acm.plugins.alfrescorma.exception.AlfrescoServiceException;
 import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
+import com.armedia.acm.plugins.complaint.model.ComplaintConstants;
 import com.armedia.acm.plugins.complaint.model.ComplaintCreatedEvent;
-import org.mule.api.MuleException;
+import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
-
-import java.util.Map;
 
 /**
  * Created by armdev on 5/1/14.
@@ -18,7 +16,6 @@ public class AcmComplaintFolderListener implements ApplicationListener<Complaint
 {
     private transient Logger log = LoggerFactory.getLogger(getClass());
     private AlfrescoRecordsService alfrescoRecordsService;
-    private MuleContextManager muleContextManager;
 
     @Override
     public void onApplicationEvent(ComplaintCreatedEvent complaintCreatedEvent)
@@ -40,45 +37,16 @@ public class AcmComplaintFolderListener implements ApplicationListener<Complaint
             return;
         }
 
-        AcmRecordFolder folder = new AcmRecordFolder();
-        folder.setFolderType("COMPLAINT");
-        folder.setFolderName(complaintCreatedEvent.getComplaintNumber());
-
-        String propertyKey = AlfrescoRmaPluginConstants.CATEGORY_FOLDER_PROPERTY_KEY_PREFIX + "COMPLAINT";
-
-        String categoryFolder = getAlfrescoRecordsService().getAlfrescoRmaProperties().getProperty(propertyKey);
-
-        folder.setCategoryFolder(categoryFolder);
-
-        Map<String, Object> messageProperties = getAlfrescoRecordsService().getAlfrescoRmaPropertiesMap();
-
         try
         {
-            if ( log.isTraceEnabled() )
-            {
-                log.trace("sending JMS message.");
-            }
-            getMuleContextManager().send(AlfrescoRmaPluginConstants.FOLDER_MULE_ENDPOINT, folder, messageProperties);
-            if ( log.isTraceEnabled() )
-            {
-                log.trace("done");
-            }
-
-        }
-        catch (MuleException e)
+            String ticket = getAlfrescoRecordsService().getTicketService().service(null);
+            CmisObject categoryFolder = getAlfrescoRecordsService().findCategoryFolder(ComplaintConstants.OBJECT_TYPE);
+            getAlfrescoRecordsService().createOrFindRecordFolder(complaintCreatedEvent.getComplaintNumber(), ticket, categoryFolder);
+        } catch (AlfrescoServiceException e)
         {
-            log.error("Could not create RMA folder: " + e.getMessage(), e);
+            log.error("Could not create record folder for complaint: {}", e.getMessage(), e);
         }
-    }
 
-    public MuleContextManager getMuleContextManager()
-    {
-        return muleContextManager;
-    }
-
-    public void setMuleContextManager(MuleContextManager muleContextManager)
-    {
-        this.muleContextManager = muleContextManager;
     }
 
     public AlfrescoRecordsService getAlfrescoRecordsService()
