@@ -23,36 +23,21 @@
     </properties>
 
     <dependencies>
-
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
         </dependency>
-
-        <!-- Mule Dependencies -->
         <dependency>
             <groupId>org.apache.chemistry.opencmis</groupId>
             <artifactId>chemistry-opencmis-client-impl</artifactId>           
-        </dependency>
-        <dependency>
-            <groupId>org.mule.modules</groupId>
-            <artifactId>mule-module-ognl</artifactId>
         </dependency>
         <dependency>
             <groupId>org.alfresco.cmis.client</groupId>
             <artifactId>alfresco-opencmis-extension</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-frontend-jaxws</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-transports-http</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.mule.modules</groupId>
-            <artifactId>mule-module-devkit-support</artifactId>
+            <artifactId>mule-module-devkit-support</artifactId>            
         </dependency>
         <dependency>
              <groupId>org.mule.tools.devkit</groupId>
@@ -66,6 +51,7 @@
             <groupId>org.eclipse.ui</groupId>
             <artifactId>workbench</artifactId>
             <version>3.3.0-I20070608-1100</version>
+            <scope>compile</scope>
             <exclusions>
                 <exclusion>
                     <groupId>org.eclipse</groupId>
@@ -75,7 +61,53 @@
                     <groupId>org.eclipse</groupId>
                     <artifactId>swt</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse</groupId>
+                    <artifactId>help</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.core</groupId>
+                    <artifactId>expressions</artifactId>
+                </exclusion>                
+                <exclusion>
+                    <groupId>org.eclipse.jface</groupId>
+                    <artifactId>databinding</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.core</groupId>
+                    <artifactId>databinding</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.equinox</groupId>
+                    <artifactId>preferences</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse</groupId>
+                    <artifactId>osgi</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.core</groupId>
+                    <artifactId>jobs</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.equinox</groupId>
+                    <artifactId>registry</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.core</groupId>
+                    <artifactId>contenttype</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.equinox</groupId>
+                    <artifactId>app</artifactId>
+                </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.equinox</groupId>
+            <artifactId>common</artifactId>
+            <version>3.3.0-v20070426</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
