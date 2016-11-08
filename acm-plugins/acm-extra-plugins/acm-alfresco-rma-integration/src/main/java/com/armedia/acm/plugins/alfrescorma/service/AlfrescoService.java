@@ -31,7 +31,7 @@ public abstract class AlfrescoService<T>
         return url;
     }
 
-    public final T service(Map<String, Object> context) throws AlfrescoServiceException
+    public T service(Map<String, Object> context) throws AlfrescoServiceException
     {
         short attempt = 0;
         AlfrescoServiceException lastException = null;

@@ -14,23 +14,29 @@
         <property name="localOverride" value="false"/>
     </bean>
 
-    <bean id="acmComplaintFolderListener"
-          class="com.armedia.acm.plugins.alfrescorma.service.AcmComplaintFolderListener">
-        <property name="muleContextManager" ref="muleContextManager"/>
+    <bean id="acmComplaintFolderListener" class="com.armedia.acm.plugins.alfrescorma.service.AcmComplaintFolderListener">
         <property name="alfrescoRecordsService" ref="alfrescoRecordsService"/>
     </bean>
 
     <bean id="acmFileListener" class="com.armedia.acm.plugins.alfrescorma.service.AcmFileListener">
-        <property name="muleContextManager" ref="muleContextManager"/>
         <property name="alfrescoRecordsService" ref="alfrescoRecordsService"/>
     </bean>
 
     <bean id="alfrescoRecordsService" class="com.armedia.acm.plugins.alfrescorma.service.AlfrescoRecordsService">
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="alfrescoRmaProperties" ref="alfrescoRmaPluginPropertiesForSpring"/>
-        <property name="muleContextManager" ref="muleContextManager"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
+<<<<<<< HEAD
         <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+=======
+        <property name="completeRecordService" ref="completeRecordService"/>
+        <property name="moveToRecordFolderService" ref="moveToRecordFolderService"/>
+        <property name="createOrFindRecordFolderService" ref="createOrFindRecordFolderService"/>
+        <property name="declareRecordService" ref="declareRecordService"/>
+        <property name="findCategoryFolderService" ref="alfrescoFindCategoryFolderService"/>
+        <property name="setRecordMetadataService" ref="setRecordMetadataService"/>
+        <property name="ticketService" ref="alfrescoGetTicketService"/>
+>>>>>>> 05f8334... EDTRM-1869 Convert record declaration code to use the new Alfresco RMA Spring service beans
     </bean>
 
     <bean id="acmComplaintCloseListener" class="com.armedia.acm.plugins.alfrescorma.service.AcmComplaintClosedListener">
@@ -42,11 +48,14 @@
         <property name="alfrescoRecordsService" ref="alfrescoRecordsService"/>
     </bean>
 
+<<<<<<< HEAD
     <bean id="acmFileDeclarationListener"
           class="com.armedia.acm.plugins.alfrescorma.service.AcmFileDeclareRequestListener">
         <property name="muleContextManager" ref="muleContextManager"/>
+=======
+    <bean id="acmFileDeclarationListener" class="com.armedia.acm.plugins.alfrescorma.service.AcmFileDeclareRequestListener">
+>>>>>>> 05f8334... EDTRM-1869 Convert record declaration code to use the new Alfresco RMA Spring service beans
         <property name="alfrescoRecordsService" ref="alfrescoRecordsService"/>
-        <property name="ecmFileDao" ref="ecmFileDao"/>
     </bean>
 
     <bean id="acmFolderDeclarationListener"

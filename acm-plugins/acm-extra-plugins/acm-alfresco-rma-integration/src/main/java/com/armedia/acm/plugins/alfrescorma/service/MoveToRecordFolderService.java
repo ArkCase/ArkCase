@@ -35,9 +35,9 @@ public class MoveToRecordFolderService extends AlfrescoService<String>
     /**
      * The context must have:
      * <ul>
-     * <li>Key ecmFileId: String, CMIS Version Series ID (NOT the id, the versionSeriesId) of the document which will have its metadata set</li>
+     * <li>Key ecmFileId: String, CMIS Version Series ID (NOT the id, the versionSeriesId) of the document which will be moved</li>
      * <li>Key categoryFolderName: String</li>
-     * <li>Key recordFolderName: String</li>t
+     * <li>Key recordFolderName: String</li>
      * <li>Key ticket: String, Alfresco ticket</li>
      * </ul>
      */
