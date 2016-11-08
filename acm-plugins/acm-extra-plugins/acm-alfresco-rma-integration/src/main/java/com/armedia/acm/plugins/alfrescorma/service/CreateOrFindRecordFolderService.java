@@ -7,8 +7,6 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -92,14 +90,6 @@ public class CreateOrFindRecordFolderService extends AlfrescoService<String>
             }
         }
 
-    }
-
-    private HttpEntity<String> buildRestEntity(JSONObject createFolderPayload)
-    {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        return new HttpEntity<>(createFolderPayload.toString(), headers);
     }
 
     private JSONObject buildPost(CmisObject categoryFolder, String recordFolderName)

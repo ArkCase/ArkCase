@@ -6,9 +6,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -92,14 +90,6 @@ public class MoveToRecordFolderService extends AlfrescoService<String>
             LOG.error("Exception moving record: {} {}", e.getMessage(), e);
             throw new AlfrescoServiceException(e.getMessage(), e);
         }
-    }
-
-    private HttpEntity<String> buildRestEntity(JSONObject moveToRecordFolderPayload)
-    {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        return new HttpEntity<>(moveToRecordFolderPayload.toString(), headers);
     }
 
     private JSONObject buildPost(Map<String, Object> context)
