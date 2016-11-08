@@ -1,8 +1,12 @@
 package com.armedia.acm.plugins.alfrescorma.service;
 
 import com.armedia.acm.plugins.alfrescorma.exception.AlfrescoServiceException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 
 import java.util.Map;
 
@@ -58,6 +62,14 @@ public abstract class AlfrescoService<T>
 
     }
 
+    protected HttpEntity<String> buildRestEntity(JSONObject payload)
+    {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        return new HttpEntity<>(payload.toString(), headers);
+    }
+
     public abstract T doService(Map<String, Object> context) throws AlfrescoServiceException;
 
     public String getProtocol()
@@ -99,4 +111,5 @@ public abstract class AlfrescoService<T>
     {
         this.contextRoot = contextRoot;
     }
+
 }

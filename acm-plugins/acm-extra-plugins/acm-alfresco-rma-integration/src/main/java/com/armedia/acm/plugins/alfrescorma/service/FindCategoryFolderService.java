@@ -13,7 +13,7 @@ import java.util.Properties;
 /**
  * Created by dmiller on 11/7/2016.
  */
-public class AlfrescoFindCategoryFolderService extends AlfrescoService<CmisObject>
+public class FindCategoryFolderService extends AlfrescoService<CmisObject>
 {
     private EcmFileService ecmFileService;
 

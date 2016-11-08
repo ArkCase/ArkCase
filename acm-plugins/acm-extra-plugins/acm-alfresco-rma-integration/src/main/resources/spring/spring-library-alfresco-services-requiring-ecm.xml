@@ -4,7 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="alfrescoFindCategoryFolderService"
-          class="com.armedia.acm.plugins.alfrescorma.service.AlfrescoFindCategoryFolderService"
+          class="com.armedia.acm.plugins.alfrescorma.service.FindCategoryFolderService"
           parent="alfrescoService">
         <property name="rmaRootFolder" value="${rma_root_folder}"/>
         <property name="ecmFileService" ref="ecmFileService"/>

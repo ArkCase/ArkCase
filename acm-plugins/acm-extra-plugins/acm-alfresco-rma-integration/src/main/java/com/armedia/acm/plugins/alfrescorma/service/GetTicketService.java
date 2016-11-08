@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * Created by dmiller on 11/7/2016.
  */
-public class AlfrescoGetTicketService extends AlfrescoService<String>
+public class GetTicketService extends AlfrescoService<String>
 {
     private final int EXPECTED_TICKET_LENGTH = 47;
     private final int START_TAG_OFFSET = 7;
@@ -28,7 +28,7 @@ public class AlfrescoGetTicketService extends AlfrescoService<String>
 
     private transient final Logger LOG = LoggerFactory.getLogger(getClass());
 
-    public AlfrescoGetTicketService()
+    public GetTicketService()
     {
         restTemplate = new RestTemplate();
     }
