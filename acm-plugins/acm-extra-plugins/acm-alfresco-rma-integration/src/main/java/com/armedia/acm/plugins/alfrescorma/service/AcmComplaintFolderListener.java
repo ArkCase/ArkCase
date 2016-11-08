@@ -4,7 +4,7 @@ import com.armedia.acm.plugins.alfrescorma.exception.AlfrescoServiceException;
 import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
 import com.armedia.acm.plugins.complaint.model.ComplaintConstants;
 import com.armedia.acm.plugins.complaint.model.ComplaintCreatedEvent;
-import org.apache.chemistry.opencmis.client.api.CmisObject;
+import org.apache.chemistry.opencmis.client.api.Folder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
@@ -40,7 +40,7 @@ public class AcmComplaintFolderListener implements ApplicationListener<Complaint
         try
         {
             String ticket = getAlfrescoRecordsService().getTicketService().service(null);
-            CmisObject categoryFolder = getAlfrescoRecordsService().findCategoryFolder(ComplaintConstants.OBJECT_TYPE);
+            Folder categoryFolder = getAlfrescoRecordsService().findFolder(ComplaintConstants.OBJECT_TYPE);
             getAlfrescoRecordsService().createOrFindRecordFolder(complaintCreatedEvent.getComplaintNumber(), ticket, categoryFolder);
         } catch (AlfrescoServiceException e)
         {

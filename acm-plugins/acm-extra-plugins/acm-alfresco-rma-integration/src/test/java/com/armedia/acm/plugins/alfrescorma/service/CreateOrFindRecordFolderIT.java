@@ -1,6 +1,6 @@
 package com.armedia.acm.plugins.alfrescorma.service;
 
-import org.apache.chemistry.opencmis.client.api.CmisObject;
+import org.apache.chemistry.opencmis.client.api.Folder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -40,8 +40,8 @@ public class CreateOrFindRecordFolderIT
     private AlfrescoService<String> service;
 
     @Autowired
-    @Qualifier("alfrescoFindCategoryFolderService")
-    private AlfrescoService<CmisObject> categoryFolderService;
+    @Qualifier("findFolderService")
+    private AlfrescoService<Folder> findFolderService;
 
     @Autowired
     @Qualifier("alfrescoGetTicketService")
@@ -59,14 +59,14 @@ public class CreateOrFindRecordFolderIT
         Map<String, Object> findFolderContext = new HashMap<>();
 
         // J1 only works in JSAP extension, when forward-porting to ArkCase use a different path here
-        findFolderContext.put("categoryFolderPath", "J1");
-        CmisObject categoryFolder = categoryFolderService.service(findFolderContext);
+        findFolderContext.put("folderPath", "J1");
+        Folder categoryFolder = findFolderService.service(findFolderContext);
 
         assertNotNull(categoryFolder);
 
         Map<String, Object> context = new HashMap<>();
         context.put("ticket", ticket);
-        context.put("categoryFolder", categoryFolder);
+        context.put("parentFolder", categoryFolder);
 
         String folderName = UUID.randomUUID().toString();
         context.put("recordFolderName", folderName);

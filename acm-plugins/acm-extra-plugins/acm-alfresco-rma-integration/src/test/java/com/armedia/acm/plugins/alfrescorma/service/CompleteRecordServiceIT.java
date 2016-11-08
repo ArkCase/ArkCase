@@ -1,8 +1,8 @@
 package com.armedia.acm.plugins.alfrescorma.service;
 
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
-import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
+import org.apache.chemistry.opencmis.client.api.Folder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,8 +50,8 @@ public class CompleteRecordServiceIT
     private AlfrescoService<String> setRecordMetadataService;
 
     @Autowired
-    @Qualifier("alfrescoFindCategoryFolderService")
-    private AlfrescoService<CmisObject> findCategoryFolderService;
+    @Qualifier("findFolderService")
+    private AlfrescoService<Folder> findFolderService;
 
     @Autowired
     @Qualifier("createOrFindRecordFolderService")
@@ -83,7 +83,7 @@ public class CompleteRecordServiceIT
     }
 
     @Test
-    public void moveToRecordFolder() throws Exception
+    public void completeRecord() throws Exception
     {
         assertNotNull(declareRecordService);
 
@@ -112,25 +112,23 @@ public class CompleteRecordServiceIT
         // find a category folder
         Map<String, Object> categoryContext = new HashMap<>();
         // J1 only works in JSAP extension, when forward-porting to ArkCase use a different path here
-        categoryContext.put("categoryFolderPath", "J1");
-        CmisObject cmisObject = findCategoryFolderService.service(categoryContext);
-        String categoryFolderName = cmisObject.getName();
+        categoryContext.put("folderPath", "J1");
+        Folder folder = findFolderService.service(categoryContext);
 
         // create a record folder
         Map<String, Object> recordFolderContext = new HashMap<>();
         recordFolderContext.put("ticket", ticket);
-        recordFolderContext.put("categoryFolder", cmisObject);
+        recordFolderContext.put("parentFolder", folder);
         String folderName = UUID.randomUUID().toString();
         recordFolderContext.put("recordFolderName", folderName);
-        findRecordFolderService.service(recordFolderContext);
+        String recordFolderId = findRecordFolderService.service(recordFolderContext);
 
 
         // move record
         Map<String, Object> moveContext = new HashMap<>();
         moveContext.put("ecmFileId", ecmFileId);
         moveContext.put("ticket", ticket);
-        moveContext.put("categoryFolderName", categoryFolderName);
-        moveContext.put("recordFolderName", folderName);
+        moveContext.put("recordFolderId", recordFolderId);
         String movedId = moveToRecordFolderService.service(moveContext);
 
         assertEquals(ecmFileId, movedId);

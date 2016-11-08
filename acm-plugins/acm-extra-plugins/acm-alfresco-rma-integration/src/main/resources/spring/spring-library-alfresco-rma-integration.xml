@@ -33,7 +33,7 @@
         <property name="moveToRecordFolderService" ref="moveToRecordFolderService"/>
         <property name="createOrFindRecordFolderService" ref="createOrFindRecordFolderService"/>
         <property name="declareRecordService" ref="declareRecordService"/>
-        <property name="findCategoryFolderService" ref="alfrescoFindCategoryFolderService"/>
+        <property name="findFolderService" ref="findFolderService"/>
         <property name="setRecordMetadataService" ref="setRecordMetadataService"/>
         <property name="ticketService" ref="alfrescoGetTicketService"/>
 >>>>>>> 05f8334... EDTRM-1869 Convert record declaration code to use the new Alfresco RMA Spring service beans

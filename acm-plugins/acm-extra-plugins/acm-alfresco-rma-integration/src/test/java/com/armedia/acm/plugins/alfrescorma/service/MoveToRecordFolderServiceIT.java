@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.alfrescorma.service;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
+import org.apache.chemistry.opencmis.client.api.Folder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,8 +52,8 @@ public class MoveToRecordFolderServiceIT
     private AlfrescoService<String> setRecordMetadataService;
 
     @Autowired
-    @Qualifier("alfrescoFindCategoryFolderService")
-    private AlfrescoService<CmisObject> findCategoryFolderService;
+    @Qualifier("findFolderService")
+    private AlfrescoService<Folder> findFolderService;
 
     @Autowired
     @Qualifier("createOrFindRecordFolderService")
@@ -109,14 +110,14 @@ public class MoveToRecordFolderServiceIT
         // find a category folder
         Map<String, Object> categoryContext = new HashMap<>();
         // J1 only works in JSAP extension, when forward-porting to ArkCase use a different path here
-        categoryContext.put("categoryFolderPath", "J1");
-        CmisObject cmisObject = findCategoryFolderService.service(categoryContext);
+        categoryContext.put("folderPath", "J1");
+        CmisObject cmisObject = findFolderService.service(categoryContext);
         String categoryFolderName = cmisObject.getName();
 
         // create a record folder
         Map<String, Object> recordFolderContext = new HashMap<>();
         recordFolderContext.put("ticket", ticket);
-        recordFolderContext.put("categoryFolder", cmisObject);
+        recordFolderContext.put("parentFolder", cmisObject);
         String folderName = UUID.randomUUID().toString();
         recordFolderContext.put("recordFolderName", folderName);
         String recordFolderId = findRecordFolderService.service(recordFolderContext);

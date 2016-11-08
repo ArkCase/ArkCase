@@ -13,7 +13,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 
-import org.apache.chemistry.opencmis.client.api.CmisObject;
+import org.apache.chemistry.opencmis.client.api.Folder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -48,7 +48,7 @@ public class AlfrescoRecordsService implements InitializingBean
     private GetTicketService ticketService;
     private DeclareRecordService declareRecordService;
     private SetRecordMetadataService setRecordMetadataService;
-    private FindCategoryFolderService findCategoryFolderService;
+    private FindFolderService findFolderService;
     private CreateOrFindRecordFolderService createOrFindRecordFolderService;
     private MoveToRecordFolderService moveToRecordFolderService;
     private CompleteRecordService completeRecordService;
@@ -59,6 +59,7 @@ public class AlfrescoRecordsService implements InitializingBean
         {
             AcmCmisObjectList files = getEcmFileService().allFilesForContainer(auth, container);
             declareAsRecords(files, container, receiveDate, recordFolderName);
+
         }
         catch (AcmListObjectsFailedException e)
         {
@@ -105,7 +106,7 @@ public class AlfrescoRecordsService implements InitializingBean
 
             writeRecordMetadata(receiveDate, originatorOrg, alfTicket, cmisObjectId, originator);
 
-            CmisObject categoryFolder = findCategoryFolder(container.getObjectType());
+            Folder categoryFolder = findFolder(container.getObjectType());
 
             String recordFolderId = createOrFindRecordFolder(recordFolderName, alfTicket, categoryFolder);
 
@@ -119,11 +120,12 @@ public class AlfrescoRecordsService implements InitializingBean
         }
     }
 
-    protected void completeRecord(String alfTicket, String cmisFileId)
+    protected void completeRecord(String alfTicket, String cmisFileId) throws AlfrescoServiceException
     {
         Map<String, Object> completeRecordContext = new HashMap<>();
         completeRecordContext.put("ecmFileId", cmisFileId);
         completeRecordContext.put("ticket", alfTicket);
+        getCompleteRecordService().service(completeRecordContext);
     }
 
     protected void moveToRecordFolder(String recordFolderId, String alfTicket, String cmisFileId) throws AlfrescoServiceException
@@ -135,23 +137,22 @@ public class AlfrescoRecordsService implements InitializingBean
         getMoveToRecordFolderService().service(moveToRecordFolderContext);
     }
 
-    protected String createOrFindRecordFolder(String recordFolderName, String alfTicket, CmisObject categoryFolder)
-            throws AlfrescoServiceException
+    protected String createOrFindRecordFolder(String recordFolderName, String alfTicket, Folder folder) throws AlfrescoServiceException
     {
         Map<String, Object> findRecordFolderContext = new HashMap<>();
-        findRecordFolderContext.put("categoryFolder", categoryFolder);
+        findRecordFolderContext.put("parentFolder", folder);
         findRecordFolderContext.put("recordFolderName", recordFolderName);
         findRecordFolderContext.put("ticket", alfTicket);
         return getCreateOrFindRecordFolderService().service(findRecordFolderContext);
     }
 
-    protected CmisObject findCategoryFolder(String containerObjectType) throws AlfrescoServiceException
+    protected Folder findFolder(String containerObjectType) throws AlfrescoServiceException
     {
         // find the category folder
         Map<String, Object> findCategoryFolderContext = new HashMap<>();
         findCategoryFolderContext.put("objectType", containerObjectType);
-        CmisObject categoryFolder = findCategoryFolderService.service(findCategoryFolderContext);
-        return categoryFolder;
+        Folder folder = getFindFolderService().service(findCategoryFolderContext);
+        return folder;
     }
 
     protected void writeRecordMetadata(Date receiveDate, String originatorOrg, String alfTicket, String cmisFileId, String originator)
@@ -193,8 +194,11 @@ public class AlfrescoRecordsService implements InitializingBean
                     log.debug("File with ID : " + ecmFile.getFileId() + " Status is changed to " + EcmFileConstants.RECORD);
                 }
             }
+
         }
-        catch (AcmObjectNotFoundException e)
+        catch (
+
+        AcmObjectNotFoundException e)
         {
             if (log.isErrorEnabled())
             {
@@ -251,16 +255,6 @@ public class AlfrescoRecordsService implements InitializingBean
         this.ecmFileDao = ecmFileDao;
     }
 
-    public Map<String, Object> getAlfrescoRmaPropertiesMap()
-    {
-        return alfrescoRmaPropertiesMap;
-    }
-
-    protected void setAlfrescoRmaPropertiesMap(Map<String, Object> alfrescoRmaPropertiesMap)
-    {
-        this.alfrescoRmaPropertiesMap = alfrescoRmaPropertiesMap;
-    }
-
     public AcmEncryptablePropertyUtils getEncryptablePropertyUtils()
     {
         return encryptablePropertyUtils;
@@ -301,14 +295,14 @@ public class AlfrescoRecordsService implements InitializingBean
         this.setRecordMetadataService = setRecordMetadataService;
     }
 
-    public FindCategoryFolderService getFindCategoryFolderService()
+    public FindFolderService getFindFolderService()
     {
-        return findCategoryFolderService;
+        return findFolderService;
     }
 
-    public void setFindCategoryFolderService(FindCategoryFolderService findCategoryFolderService)
+    public void setFindFolderService(FindFolderService findFolderService)
     {
-        this.findCategoryFolderService = findCategoryFolderService;
+        this.findFolderService = findFolderService;
     }
 
     public CreateOrFindRecordFolderService getCreateOrFindRecordFolderService()
@@ -339,5 +333,15 @@ public class AlfrescoRecordsService implements InitializingBean
     public void setCompleteRecordService(CompleteRecordService completeRecordService)
     {
         this.completeRecordService = completeRecordService;
+    }
+
+    public Map<String, Object> getAlfrescoRmaPropertiesMap()
+    {
+        return alfrescoRmaPropertiesMap;
+    }
+
+    public void setAlfrescoRmaPropertiesMap(Map<String, Object> alfrescoRmaPropertiesMap)
+    {
+        this.alfrescoRmaPropertiesMap = alfrescoRmaPropertiesMap;
     }
 }
