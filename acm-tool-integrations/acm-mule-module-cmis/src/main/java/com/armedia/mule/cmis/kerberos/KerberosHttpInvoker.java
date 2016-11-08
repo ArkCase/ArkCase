@@ -40,8 +40,6 @@ import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.NameCallback;
 import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.callback.UnsupportedCallbackException;
-import javax.security.auth.login.AppConfigurationEntry;
-import javax.security.auth.login.Configuration;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
 
@@ -54,8 +52,6 @@ import java.security.AccessController;
 import java.security.Principal;
 import java.security.PrivilegedAction;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -66,9 +62,9 @@ import java.util.stream.Collectors;
  */
 public class KerberosHttpInvoker implements HttpInvoker
 {
-    // TODO: exclusion of original mule-module-cmis from build
-
     private static final Logger LOG = LoggerFactory.getLogger(KerberosHttpInvoker.class);
+
+    private static final String APP_CONFIGURATION_ENTRY_NAME = "MuleAlfrescoLogin";
 
     private HttpClient httpClient;
 
@@ -114,14 +110,7 @@ public class KerberosHttpInvoker implements HttpInvoker
 
         try
         {
-            // delete
-            LOG.warn(method + " " + url);
-
-            // log before connect
-            if (LOG.isDebugEnabled())
-            {
-                LOG.debug(method + " " + url);
-            }
+            LOG.debug("Http method: {}. URL: {}", method, url);
 
             // authenticate
             AbstractAuthenticationProvider authProvider = (AbstractAuthenticationProvider) CmisBindingsHelper
@@ -145,44 +134,9 @@ public class KerberosHttpInvoker implements HttpInvoker
             HttpResponse response = null;
             try
             {
-                // delete
-                LOG.warn("User: " + user + "\nPassword: " + password);
+                LOG.debug("User: {} | Password: {}", user, password);
 
-                // TODO: set configuration from external file (-Djava.security.auth.login.config=~/.arkcase/acm/sso/kerberos-login.conf)
-                Configuration.setConfiguration(new Configuration()
-                {
-                    @Override
-                    public AppConfigurationEntry[] getAppConfigurationEntry(String inName)
-                    {
-                        if ("MuleAlfrescoLogin".equals(inName))
-                        {
-                            // Login module for Mule to Alfresco
-                            Map<String, String> options = new HashMap<>();
-                            options.put("storeKey", "true");
-                            options.put("useKeyTab", "true");
-                            options.put("keytab", "file:~/.keytabs/***REMOVED***");
-                            options.put("principal", "***REMOVED***");
-
-                            return new AppConfigurationEntry[] {
-                                    new AppConfigurationEntry("com.sun.security.auth.module.Krb5LoginModule",
-                                            AppConfigurationEntry.LoginModuleControlFlag.REQUIRED, options) };
-                        }
-                        else if ("SQLJDBCDriver".equals(inName))
-                        {
-                            // Login module for SQL Server
-                            Map<String, String> options = new HashMap<>();
-                            options.put("useTicketCache", "true");
-                            options.put("doNotPrompt", "true");
-
-                            return new AppConfigurationEntry[] {
-                                    new AppConfigurationEntry("com.sun.security.auth.module.Krb5LoginModule",
-                                            AppConfigurationEntry.LoginModuleControlFlag.REQUIRED, options) };
-                        }
-                        return null;
-                    }
-                });
-
-                LoginContext loginContext = new LoginContext("MuleAlfrescoLogin", new KerberosCallBackHandler(user, password));
+                LoginContext loginContext = new LoginContext(APP_CONFIGURATION_ENTRY_NAME, new KerberosCallBackHandler(user, password));
                 loginContext.login();
 
                 PrivilegedAction<HttpResponse> sendAction = new PrivilegedAction<HttpResponse>()
@@ -193,20 +147,20 @@ public class KerberosHttpInvoker implements HttpInvoker
                         try
                         {
                             Subject current = Subject.getSubject(AccessController.getContext());
-                            LOG.warn("----------------------------------------");
+                            LOG.debug("----------------------------------------");
 
                             Set<Principal> principals = current.getPrincipals();
                             for (Principal next : principals)
                             {
-                                LOG.warn("DOAS Principal: " + next.getName());
+                                LOG.debug("DOAS Principal: {}", next.getName());
                             }
-                            LOG.warn("----------------------------------------");
+                            LOG.debug("----------------------------------------");
 
                             return call(url.toString(), method, contentType, headers, writer, session, offset, length, authProvider);
                         }
                         catch (IOException e)
                         {
-                            LOG.warn("IOException", e);
+                            LOG.error("IOException", e);
                             return null;
                         }
                     }
@@ -216,16 +170,16 @@ public class KerberosHttpInvoker implements HttpInvoker
             }
             catch (LoginException le)
             {
-                LOG.warn("Failed login!", le);
+                LOG.error("Failed login!", le);
             }
 
             // get the response
-            // TODO use header.getElements(), instead of header.getValue()
             Map<String, List<String>> responseHeaders = Arrays.asList(response.getAllHeaders()).stream()
-                    .collect(Collectors.toMap(header -> header.getName(), header -> Collections.singletonList(header.getValue())));
+                    .collect(Collectors.toMap(header -> header.getName(), header -> Arrays.asList(header.getElements()).stream()
+                            .map(headerElement -> headerElement.getValue()).collect(Collectors.toList())));
 
             return new Response(response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase(), responseHeaders,
-                    response.getEntity().getContent(),
+                    response.getEntity() == null ? null : response.getEntity().getContent(),
                     response.getStatusLine().getStatusCode() >= 200 && response.getStatusLine().getStatusCode() < 300 ? null
                             : new ByteArrayInputStream(response.getStatusLine().getReasonPhrase().getBytes()));
         }
@@ -402,18 +356,15 @@ public class KerberosHttpInvoker implements HttpInvoker
         }
 
         // log after connect
-        if (LOG.isTraceEnabled())
-        {
-            LOG.trace(method + " " + url + " > Headers: " + request.getAllHeaders());
-        }
+        LOG.trace("Headers: {}", (Object[]) request.getAllHeaders());
 
         HttpResponse response = httpclient.execute(request);
 
-        LOG.warn("----------------------------------------");
+        LOG.debug("----------------------------------------");
 
-        LOG.warn("STATUS >> " + response.getStatusLine());
+        LOG.debug("STATUS >> {}", response.getStatusLine());
 
-        LOG.warn("----------------------------------------");
+        LOG.debug("----------------------------------------");
 
         return response;
     }
