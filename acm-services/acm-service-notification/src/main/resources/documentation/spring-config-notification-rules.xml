@@ -17,8 +17,8 @@
 			<value>
 				<![CDATA[
 					SELECT 
-					  	CONCAT('${objectTypeLabel}:', a.objectName, ' assigned to ', u.fullName, ' on ', a.created) AS title,
-					  	CONCAT('${objectTypeLabel}:', a.objectName, ' was assigned to ', u.fullName, ' on ', a.created, '.  Click here to view: ${urlanchor}') AS note,
+					  	CONCAT('${objectTypeLabel}:', a.objectName, ' assigned to ', u.fullName) AS title,
+					  	CONCAT('${objectTypeLabel}:', a.objectName, ' was assigned to ', u.fullName, '.  Click here to view: ${urlanchor}') AS note,
 					  	'user' AS notificationType,
 					  	a.objectId AS objectId,
 					  	a.objectType AS objectType,
@@ -51,8 +51,8 @@
 			<value>
 				<![CDATA[
 					SELECT 	
-						CONCAT('${objectTypeLabel}:', a.objectName, ' unassigned from ', u.fullName, ' on ', a.created) AS title,
-					 	CONCAT('${objectTypeLabel}:', a.objectName, ' was unassigned from ', u.fullName, ' on ', a.created, '.  Click here to view: ${urlanchor}') AS note,
+						CONCAT('${objectTypeLabel}:', a.objectName, ' unassigned from ', u.fullName) AS title,
+					 	CONCAT('${objectTypeLabel}:', a.objectName, ' was unassigned from ', u.fullName, '.  Click here to view: ${urlanchor}') AS note,
 					 	'user' AS notificationType,
 					  	a.objectId AS objectId,
 					  	a.objectType AS objectType,
@@ -106,7 +106,7 @@
 			<value>
 				<![CDATA[
 					SELECT
-					  	CONCAT('${objectTypeLabel}:', ecmf.fileName, ' uploaded in ${parentTypeLabel}:${nameLabel} on ', a.eventDate) AS title,
+					  	CONCAT('${objectTypeLabel}:', ecmf.fileName, ' uploaded in ${parentTypeLabel}:${nameLabel}') AS title,
 					  	NULL AS note,
 					  	'user' AS notificationType,
 					  	a.objectId AS objectId,
@@ -149,7 +149,7 @@
 			<value>
 				<![CDATA[
                   	SELECT
-                    	CONCAT('${objectTypeLabel} deleted in ${parentTypeLabel}:${nameLabel} on ', a.eventDate) AS title,
+                    	'${objectTypeLabel} deleted in ${parentTypeLabel}:${nameLabel}' AS title,
                      	NULL AS note,
                       	'user' AS notificationType,
                       	a.objectId AS objectId,
@@ -186,8 +186,8 @@
 			<value>
 				<![CDATA[
                     SELECT
-                      	CONCAT('${objectTypeLabel}:', ecmf.fileName, ' replaced on ', a.eventDate) AS title,
-                      	CONCAT('${objectTypeLabel}:', ecmf.fileName, ' replaced on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+                      	CONCAT('${objectTypeLabel}:', ecmf.fileName, ' replaced') AS title,
+                      	CONCAT('${objectTypeLabel}:', ecmf.fileName, ' replaced', '.  Link: ${urlanchor}') AS note,
                       	'user' AS notificationType,
                       	a.objectId AS objectId,
                       	a.objectType AS objectType,
@@ -225,8 +225,8 @@
 			<value>
 				<![CDATA[
                     SELECT 
-                    	CONCAT('${objectTypeLabel}:', ecmf.fileName, ' versioned on ', a.eventDate) AS title,
-                    	CONCAT('${objectTypeLabel}:', ecmf.fileName, ' versioned on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+                    	CONCAT('${objectTypeLabel}:', ecmf.fileName, ' versioned') AS title,
+                    	CONCAT('${objectTypeLabel}:', ecmf.fileName, ' versioned', '.  Link: ${urlanchor}') AS note,
                     	'user' AS notificationType,
                     	a.objectId AS objectId,
                     	a.objectType AS objectType,
@@ -263,8 +263,8 @@
 			<value>
 				<![CDATA[
                 	SELECT 
-  						CONCAT('${objectTypeLabel}:', c.complaintNumber, ' status changed on ', a.eventDate) AS title,
-  						CONCAT('${objectTypeLabel}:', c.complaintNumber, ' status changed on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+  						CONCAT('${objectTypeLabel}:', c.complaintNumber, ' status changed') AS title,
+  						CONCAT('${objectTypeLabel}:', c.complaintNumber, ' status changed', '.  Link: ${urlanchor}') AS note,
   						'user' AS notificationType,
   						a.objectId AS objectId,
   						a.objectType AS objectType,
@@ -297,8 +297,8 @@
 			<value>
 				<![CDATA[
                 	SELECT
-       					CONCAT('${objectTypeLabel}:', c.caseNumber, ' status changed on ', a.eventDate) AS title,
-       					CONCAT('${objectTypeLabel}:', c.caseNumber, ' status changed on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+       					CONCAT('${objectTypeLabel}:', c.caseNumber, ' status changed') AS title,
+       					CONCAT('${objectTypeLabel}:', c.caseNumber, ' status changed', '.  Link: ${urlanchor}') AS note,
        					'user' AS notificationType,
        					a.objectId AS objectId,
        					a.objectType AS objectType,
@@ -332,7 +332,7 @@
 			<value>
 				<![CDATA[
                    	SELECT 
-       					CONCAT('${objectTypeLabel} added in ${parentTypeLabel}:${nameLabel} on ', a.eventDate) AS title,
+       					'${objectTypeLabel} added in ${parentTypeLabel}:${nameLabel}' AS title,
 				    	NULL AS note,
 				    	'user' AS notificationType,
 				    	a.objectId AS objectId,
@@ -365,8 +365,8 @@
 			<value>
 				<![CDATA[
                     SELECT 
-  						CONCAT('${objectTypeLabel}:', c.complaintNumber, ' priority changed on ', a.eventDate) AS title,
-  						CONCAT('${objectTypeLabel}:', c.complaintNumber, ' priority changed on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+  						CONCAT('${objectTypeLabel}:', c.complaintNumber, ' priority changed') AS title,
+  						CONCAT('${objectTypeLabel}:', c.complaintNumber, ' priority changed', '.  Link: ${urlanchor}') AS note,
   						'user' AS notificationType,
   						a.objectId AS objectId,
   						a.objectType AS objectType,
@@ -399,8 +399,8 @@
 			<value>
 				<![CDATA[
                     SELECT 
-  						CONCAT('${objectTypeLabel}:', c.complaintNumber, ' details updated on ', a.eventDate) AS title,
-  						CONCAT('${objectTypeLabel}:', c.complaintNumber, ' details updated on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+  						CONCAT('${objectTypeLabel}:', c.complaintNumber, ' details updated') AS title,
+  						CONCAT('${objectTypeLabel}:', c.complaintNumber, ' details updated', '.  Link: ${urlanchor}') AS note,
   						'user' AS notificationType,
   						a.objectId AS objectId,
   						a.objectType AS objectType,
@@ -433,8 +433,8 @@
 			<value>
 				<![CDATA[
                     SELECT 
-       					CONCAT('${objectTypeLabel}:', c.caseNumber, ' priority changed on ', a.eventDate) AS title,
-       					CONCAT('${objectTypeLabel}:', c.caseNumber, ' priority changed on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+       					CONCAT('${objectTypeLabel}:', c.caseNumber, ' priority changed') AS title,
+       					CONCAT('${objectTypeLabel}:', c.caseNumber, ' priority changed', '.  Link: ${urlanchor}') AS note,
        					'user' AS notificationType,
        					a.objectId AS objectId,
        					a.objectType AS objectType,
@@ -467,8 +467,8 @@
 			<value>
 				<![CDATA[
                     SELECT 
-       					CONCAT('${objectTypeLabel}:', c.caseNumber, ' details updated on ', a.eventDate) AS title,
-       					CONCAT('${objectTypeLabel}:', c.caseNumber, ' details updated on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+       					CONCAT('${objectTypeLabel}:', c.caseNumber, ' details updated') AS title,
+       					CONCAT('${objectTypeLabel}:', c.caseNumber, ' details updated', '.  Link: ${urlanchor}') AS note,
        					'user' AS notificationType,
        					a.objectId AS objectId,
        					a.objectType AS objectType,
@@ -502,7 +502,7 @@
 			<value>
 				<![CDATA[
                     SELECT 
-                    	CONCAT('${objectTypeLabel}:${nameLabel} details updated on ', a.eventDate) AS title,
+                    	'${objectTypeLabel}:${nameLabel} details updated' AS title,
                     	NULL AS note,
                     	'user' AS notificationType,
                     	a.objectId AS objectId,
@@ -536,7 +536,7 @@
 			<value>
 				<![CDATA[
                     SELECT 
-                    	CONCAT('${objectTypeLabel}:${nameLabel} priority changed on ', a.eventDate) AS title,
+                    	'${objectTypeLabel}:${nameLabel} priority changed' AS title,
                     	NULL AS note,
                     	'user' AS notificationType,
                     	a.objectId AS objectId,
@@ -570,7 +570,7 @@
 			<value>
 				<![CDATA[
                     SELECT 
-                    	CONCAT('${objectTypeLabel}:${nameLabel} status changed on ', a.eventDate) AS title,
+                    	'${objectTypeLabel}:${nameLabel} status changed' AS title,
                     	NULL AS note,
                     	'user' AS notificationType,
                     	a.objectId AS objectId,
@@ -604,7 +604,7 @@
 			<value>
 				<![CDATA[
                     SELECT 
-			    		CONCAT('${objectTypeLabel} added in ${parentTypeLabel}:${nameLabel} on ', a.eventDate) AS title,
+			    		'${objectTypeLabel} added in ${parentTypeLabel}:${nameLabel}' AS title,
 			    		NULL as note,
 			    		'user' AS notificationType,
 			    		a.objectId AS objectId,
@@ -638,7 +638,7 @@
 			<value>
 				<![CDATA[
                   	SELECT
-				    	CONCAT('${objectTypeLabel} deleted in ${parentTypeLabel}:${nameLabel} on ', a.eventDate) AS title,
+				    	'${objectTypeLabel} deleted in ${parentTypeLabel}:${nameLabel}' AS title,
 				    	NULL AS note,
 				    	'user' AS notificationType,
 				    	a.objectId AS objectId,
@@ -671,8 +671,8 @@
 			<value>
 				<![CDATA[
 	                SELECT 
-				    	CONCAT('${objectTypeLabel} added in ${parentTypeLabel}:', c.complaintNumber, ' on ', a.eventDate) AS title,
-						CONCAT('${objectTypeLabel} added in ${parentTypeLabel}:', c.complaintNumber, ' on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+				    	CONCAT('${objectTypeLabel} added in ${parentTypeLabel}:', c.complaintNumber) AS title,
+						CONCAT('${objectTypeLabel} added in ${parentTypeLabel}:', c.complaintNumber, '.  Link: ${urlanchor}') AS note,
 						'user' AS notificationType,
 						a.objectId AS objectId,
 				    	a.objectType AS objectType,
@@ -705,8 +705,8 @@
 			<value>
 				<![CDATA[
 	                SELECT 
-				    	CONCAT('${objectTypeLabel} deleted in ${parentTypeLabel}:', c.complaintNumber, ' on ', a.eventDate) AS title,
-						CONCAT('${objectTypeLabel} deleted in ${parentTypeLabel}:', c.complaintNumber, ' on ', a.eventDate, '. Link: ${urlanchor}') AS note,
+				    	CONCAT('${objectTypeLabel} deleted in ${parentTypeLabel}:', c.complaintNumber) AS title,
+						CONCAT('${objectTypeLabel} deleted in ${parentTypeLabel}:', c.complaintNumber, '. Link: ${urlanchor}') AS note,
 						'user' AS notificationType,
 						a.objectId AS objectId,
 				    	a.objectType AS objectType,
@@ -739,8 +739,8 @@
 			<value>
 				<![CDATA[
 	                SELECT 
-						CONCAT('${objectTypeLabel} added in ${parentTypeLabel}:', c.caseNumber, ' on ', a.eventDate) AS title,
-						CONCAT('${objectTypeLabel} added in ${parentTypeLabel}:', c.caseNumber, ' on ', a.eventDate, '. Link: ${urlanchor}') AS note,
+						CONCAT('${objectTypeLabel} added in ${parentTypeLabel}:', c.caseNumber) AS title,
+						CONCAT('${objectTypeLabel} added in ${parentTypeLabel}:', c.caseNumber, '. Link: ${urlanchor}') AS note,
 						'user' AS notificationType,
 						a.objectId AS objectId,
 				    	a.objectType AS objectType,
@@ -773,8 +773,8 @@
 			<value>
 				<![CDATA[
 	                SELECT
-						CONCAT('${objectTypeLabel} deleted in ${parentTypeLabel}:', c.caseNumber, ' on ', a.eventDate) AS title,
-						CONCAT('${objectTypeLabel} deleted in ${parentTypeLabel}:', c.caseNumber, ' on ', a.eventDate, '. Link: ${urlanchor}') AS note,
+						CONCAT('${objectTypeLabel} deleted in ${parentTypeLabel}:', c.caseNumber) AS title,
+						CONCAT('${objectTypeLabel} deleted in ${parentTypeLabel}:', c.caseNumber, '. Link: ${urlanchor}') AS note,
 						'user' AS notificationType,
 						a.objectId AS objectId,
 				    	a.objectType AS objectType,
@@ -807,8 +807,8 @@
 			<value>
 				<![CDATA[
                     SELECT
-                    	CONCAT('Calendar event added on ', a.eventDate) AS title,
-                    	CONCAT('Calendar event added on ', a.eventDate, '. Link: ${urlanchor}') AS note,
+                    	'Calendar event added' AS title,
+                    	CONCAT('Calendar event added', '. Link: ${urlanchor}') AS note,
                     	'user' AS notificationType,
                     	a.objectId AS objectId,
                     	a.objectType AS objectType,
@@ -841,7 +841,7 @@
 			<value>
 				<![CDATA[
                     SELECT
-  						CONCAT('Correspondence ', ecmf.fileName, ' added in ${parentTypeLabel}:${nameLabel} on ', a.eventDate) AS title,
+  						CONCAT('Correspondence ', ecmf.fileName, ' added in ${parentTypeLabel}:${nameLabel}') AS title,
   						NULL AS note,
   						'user' AS notificationType,
   						a.objectId AS objectId,
