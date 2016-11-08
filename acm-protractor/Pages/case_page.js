@@ -38,6 +38,99 @@ var createdDate = element(by.xpath(Objects.casepage.locators.createdDate));
 var assigneeLink = element(by.xpath(Objects.casepage.locators.assignee));
 var assigneeDropDown = element(by.xpath(Objects.casepage.locators.assigneeDropDown));
 var assigneeBtn = element(by.xpath(Objects.casepage.locators.assigneeBtn));
+var notesLink = element(by.xpath(Objects.casepage.locators.notesLink));
+var addNoteBtn = element(by.xpath(Objects.casepage.locators.addNoteBtn));
+var noteTextArea = element(by.model(Objects.casepage.locators.noteTextArea));
+var saveNoteBtn = element(by.xpath(Objects.casepage.locators.saveNoteBtn));
+var addedNoteName = element.all(by.repeater(Objects.casepage.locators.addedNoteName)).get(0);
+var deleteNoteBtn = element.all(by.repeater(Objects.casepage.locators.deleteNoteBtn)).get(3).all(by.tagName(Objects.casepage.locators.tag)).get(1);
+var editNoteBtn = element.all(by.repeater(Objects.casepage.locators.editNoteBtn)).get(3).all(by.tagName(Objects.casepage.locators.tag)).get(0);
+var emptyNoteTable = element(by.xpath(Objects.casepage.locators.emptyNoteTable));
+var showLinksBtn = element(by.xpath(Objects.casepage.locatorsshowLinksBtn));
+var addNewTaskBtn = element(by.xpath(Objects.casepage.locators.addNewTaskBtn));
+var taskAssighnee = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(1);
+var taskCreated = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(2);
+var taskPriority = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(3);
+var taskDueDate = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(4);
+var taskStatus = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(5);
+var poeopleLinkBtn = element(by.xpath(Objects.casepage.locators.peopleLinkBtn));
+var peopleTypeColumn = element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(1);
+var peopleFirstNameColumn = element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(2);
+var peopleLastNameColumn = element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(3);
+var peopleTable = element(by.xpath(Objects.casepage.locators.peopleTable));
+var addPeopleBtn = element(by.xpath(Objects.casepage.locators.addPeopleBtn));
+var personsTypeDropDown = element(by.model(Objects.casepage.locators.personsTypeDropDown));
+var personFirstNameInput = element(by.model(Objects.casepage.locators.personFirstNameInput));
+var personLastNameInput = element(by.model(Objects.casepage.locators.personLastNameInput));
+var savePersonBtn = element(by.xpath(Objects.casepage.locators.savePersonBtn));
+var peopleTypeColumnSecondRow = element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(6);
+var peopleFirstNameColumnSecondRow = element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(7);
+var peopleLastNameColumnSecondRow = element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(8);
+var deletePersonBtn = element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(4).all(by.tagName(Objects.casepage.locators.tag)).get(1);
+var editPersonBtn = element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(4).all(by.tagName(Objects.casepage.locators.tag)).get(0);
+var addContactMethodBtn = element(by.css(Objects.casepage.locators.addContactMethodBtn));
+var contactMethodsLinkBtn = element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(0).all(by.tagName(Objects.casepage.locators.tag)).get(0);
+var contactMethodTypes = element(by.model(Objects.casepage.locators.contactMethodTypes));
+var contactValue = element(by.model(Objects.casepage.locators.contactValue));
+var saveContactBtn = element(by.css(Objects.casepage.locators.saveContactBtn));
+var contactMethodTypeFirstRow = element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(5);
+var contactMethodValueFirstRow = element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(6);
+var contactMethodLastModifiedFirstRow = element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(7);
+var contactMethodModifiedByFirstRow = element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(8);
+var contactMethodDeleteBtn = element(by.css(Objects.casepage.locators.deleteContactMethodBtn));
+var contactMethodEditBtn = element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(9).all(by.tagName(Objects.casepage.locators.tag)).get(0);
+var emptyContactMethodTable = element(by.css(Objects.casepage.locators.emptyContactMethodTable));
+var editContactMethodBtn = element(by.css(Objects.casepage.locators.editContactMethodBtn));
+var organizationsLinkBtn = element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(0).all(by.tagName(Objects.casepage.locators.tag)).get(1);
+var addOrganizationBtn = element(by.css(Objects.casepage.locators.addOgranizationBtn));
+var organizationTypeDropdown = element(by.model(Objects.casepage.locators.organizationTypeDropDown));
+var organizationValueInput = element(by.model(Objects.casepage.locators.organizationValueInput));
+var saveOrganizationBtn = element(by.css(Objects.casepage.locators.saveOrganizationBtn));
+var organizationTypeFirstRow = element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(5);
+var organizationValueFirstRow = element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(6);
+var organizationLastModifiedFirstRow = element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(7);
+var organizationModifiedByFirstRow = element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(8);
+var organizationDeleteBtn = element(by.css(Objects.casepage.locators.organizationDeleteBtn));
+var organizationEditBtn = element(by.css(Objects.casepage.locators.organizationEditBtn));
+var addressLinkBtn = element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(0).all(by.tagName(Objects.casepage.locators.tag)).get(2);
+var addAddressBtn = element(by.css(Objects.casepage.locators.addAddressBtn));
+var addressTypeDropDow = element(by.model(Objects.casepage.locators.addressTypeDropDow));
+var streetAddress = element(by.model(Objects.casepage.locators.streetAddress));
+var addressCity = element(by.model(Objects.casepage.locators.addressCity));
+var addressState = element(by.model(Objects.casepage.locators.addressState));
+var addressZip = element(by.model(Objects.casepage.locators.addressZip));
+var addressCountry = element(by.model(Objects.casepage.locators.addressCountry));
+var saveAddressBtn = element(by.css(Objects.casepage.locators.saveAddressBtn));
+var addressTypeValue = element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(5);
+var addressStreetValue = element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(6);
+var addressCityValue = element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(7);
+var addressStateValue = element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(8);
+var addressZipValue = element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(9);
+var addressCountryValue = element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(10);
+var addresLastModifiedByValue = element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(11);
+var addressModifiedByValue = element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(12);
+var deleteAddressBtn = element(by.css(Objects.casepage.locators.deleteAddressBtn));
+var editAddressBtn = element(by.css(Objects.casepage.locators.editAddressBtn));
+var aliassesLinkBtn = element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(0).all(by.tagName(Objects.casepage.locators.tag)).get(3);
+var addAliasesBtn = element(by.css(Objects.casepage.locators.addAliasesBtn));
+var aliasesDropdown = element(by.model(Objects.casepage.locators.aliasesDropdown));
+var aliasesInputValue = element(by.model(Objects.casepage.locators.aliasesValue));
+var saveAliasBtn = element(by.css(Objects.casepage.locators.saveAliasesBtn));
+var aliasesTypeValue = element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(5);
+var aliasesValue = element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(6);
+var aliasesLastModified = element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(7);
+var aliasesModifiedBy = element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(8);
+var deleteAliasBtn = element(by.css(Objects.casepage.locators.deleteAliasBtn));
+var editAliasBtn = element(by.css(Objects.casepage.locators.editAliasBtn));
+
+
+
+
+
+
+
+
+
 
 
 
@@ -67,11 +160,8 @@ var CasePage = function() {
         caseTitle.click().then(function() {
             caseTitle.sendKeys(title);
         });
-
         caseTypeDropDown.click().then(function() {
-
             var caseType = element(by.linkText(type)).click();
-
         });
 
         nextBtn.click();
@@ -156,10 +246,9 @@ var CasePage = function() {
     this.selectCaseStatusClosed = function() {
 
         browser.ignoreSynchronization = true;
-
         browser.wait(EC.visibilityOf(element(by.className(Objects.casepage.locators.changeCaseStatusTitle))), 15000);
         changeStatusDropDown.click().then(function() {
-            browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.statusClosed))), 10000).then(function() {
+            browser.wait(EC.textToBePresentInElement((statusClosed), Objects.casepage.data.statusClosed), 10000).then(function() {
                 statusClosed.click();
             });
         });
@@ -189,38 +278,35 @@ var CasePage = function() {
         browser.executeScript('arguments[0].click()', submitBtn);
     }
 
-
     this.clickTasksLinkBtn = function() {
 
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.tasksLink))), 20000).then(function() {
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.tasksLink))), 30000).then(function() {
 
             tasksLinkBtn.click();
         });
-
         return this;
-
     }
 
     this.waitForTasksTable = function() {
 
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.tasksTable))), 20000).then(function() {
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.tasksTable))), 30000).then(function() {
             refreshBtn.click().then(function() {
-                browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.taskTitle))), 30000);
+                browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.taskTitle))), 30000, "After 30 second task is not shown in the task table");
             });
         });
         return this;
     }
 
-
-
     this.returnAutomatedTask = function() {
 
         return taskTitle.getText();
-
     }
 
     this.clickTaskTitle = function() {
         taskTitle.click();
+    }
+    this.returnTaskTitle = function() {
+        return taskTitle.getText();
     }
 
     this.waitForPriority = function() {
@@ -230,7 +316,6 @@ var CasePage = function() {
     this.returnPriority = function() {
 
         return priorityLink.getText();
-
     }
 
     this.waitForCreatedDate = function() {
@@ -241,7 +326,6 @@ var CasePage = function() {
         return createdDate.getText();
     }
 
-
     this.editPriority = function(priority) {
 
         priorityLink.click().then(function() {
@@ -249,7 +333,7 @@ var CasePage = function() {
                 priorityBtn.click();
             });
         });
-
+        return this;
     }
 
     this.editAssignee = function(assignee) {
@@ -265,19 +349,511 @@ var CasePage = function() {
         return this;
     }
 
-
     this.waitForAssignee = function() {
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.assignee))), 20000);
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.assignee))), 20000);
     }
 
     this.returnAssignee = function() {
         return assigneeLink.getText();
     }
 
+    this.clickNotesLink = function() {
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.notesLink))), 20000);
+        notesLink.click().then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.addNoteBtn))), 10000);
+        });
+        return this;
+    }
+
+    this.addNote = function(note) {
+
+        addNoteBtn.click().then(function() {
+            browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.noteTextArea))), 10000).then(function() {
+                noteTextArea.click().then(function() {
+                    noteTextArea.sendKeys(note).then(function() {
+                        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.saveNoteBtn))), 10000).then(function() {
+                            saveNoteBtn.click().then(function() {
+                                browser.wait(EC.presenceOf(element.all(by.repeater(Objects.casepage.locators.addedNoteName)).get(0)), 10000);
+                            });
+                        });
+                    });
+                });
+            });
+        });
+        return this;
+    }
+
+    this.returnNoteName = function() {
+        return addedNoteName.getText();
+
+    }
+
+    this.deleteNote = function() {
+        browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.casepage.locators.deleteNoteBtn)).get(3).all(by.tagName(Objects.casepage.locators.tag)).get(1)), 10000).then(function() {
+            deleteNoteBtn.click().then(function() {
+                browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.emptyNoteTable))), 10000);
+            });
+        });
+        return this;
+    }
+
+    this.editNote = function(note) {
+        browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.casepage.locators.editNoteBtn)).get(3).all(by.tagName(Objects.casepage.locators.tag)).get(0)), 10000).then(function() {
+            editNoteBtn.click().then(function() {
+                noteTextArea.clear().then(function() {
+                    noteTextArea.sendKeys(note).then(function() {
+                        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.saveNoteBtn))), 10000).then(function() {
+                            saveNoteBtn.click().then(function() {
+                                browser.wait(EC.textToBePresentInElement((addedNoteName), Objects.casepage.data.editnote), 10000);
+                            });
+                        });
+                    });
+                });
+            });
+        });
+        return this;
+    }
+
+    this.clickAddTaskButton = function() {
+
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.addNewTaskBtn))), 30000).then(function() {
+            addNewTaskBtn.click().then(function() {
+                browser.wait(EC.visibilityOf(element(by.id(Objects.taskpage.locators.subject))), 30000);
+            });
+        });
+
+        return this;
+    }
+    this.returnTaskTableAssignee = function() {
+        return taskAssighnee.getText();
+    }
+
+    this.returnTaskTableCreatedDate = function() {
+        return taskCreated.getText();
+    }
+
+    this.returnTaskTablePriority = function() {
+        return taskPriority.getText();
+    }
+
+    this.returnTaskTableDueDate = function() {
+        return taskDueDate.getText();
+    }
+
+    this.returnTaskTableStatus = function() {
+        return taskStatus.getText();
+    }
+
+    this.clickPeopleLinkBtn = function() {
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.peopleLinkBtn))), 30000).then(function() {
+            poeopleLinkBtn.click().then(function() {
+                browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.peopleTable))), 15000).then(function() {
+                    browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(1)), 15000);
+                });
+            });
+        });
+        return this;
+    }
+    this.returnPeopleType = function() {
+        return peopleTypeColumn.getText();
+    }
+
+    this.returnPeopleFirstName = function() {
+        return peopleFirstNameColumn.getText();
+    }
+    this.returnPeopleLastName = function() {
+        return peopleLastNameColumn.getText();
+    }
+
+    this.addPerson = function(personType, firstName, lastName) {
+
+        addPeopleBtn.click().then(function() {
+            browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.personsTypeDropDown))), 15000, "Add people pop up is not shown").then(function() {
+                personsTypeDropDown.$('[value="string:' + personType + '"]').click().then(function() {
+                    personFirstNameInput.click().then(function() {
+                        personFirstNameInput.sendKeys(firstName).then(function() {
+                            personLastNameInput.click().then(function() {
+                                personLastNameInput.sendKeys(lastName).then(function() {
+                                    savePersonBtn.click().then(function() {
+                                        browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(6)), 15000, "Person is not added");
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+        return this;
+    }
 
 
+    this.returnPeopleTypeSecondRow = function() {
+        return peopleTypeColumnSecondRow.getText();
+    }
+    this.returnPeopleFirstNameColumnSecondRow = function() {
+        return peopleFirstNameColumnSecondRow.getText();
+    }
+
+    this.returnPeopleLastNameColumnSecondRow = function() {
+        return peopleLastNameColumnSecondRow.getText();
+    }
+
+    this.deletePerson = function() {
+        browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(4).all(by.tagName(Objects.casepage.locators.tag)).get(1))).then(function() {
+            deletePersonBtn.click().then(function() {
+                element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).then(function(items) {
+                    expect(items.length).toBe(0, "The person is not deleted");
+                });
+
+            });
+        });
+        return this;
+    }
+    this.editPerson = function(personType, firstName, lastName) {
+        browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(4).all(by.tagName(Objects.casepage.locators.tag)).get(0))).then(function() {
+            editPersonBtn.click().then(function() {
+                browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.personsTypeDropDown))), 15000, "Add people pop up is not shown").then(function() {
+                    personsTypeDropDown.$('[value="string:' + personType + '"]').click().then(function() {
+                        personFirstNameInput.clear().then(function() {
+                            personFirstNameInput.sendKeys(firstName).then(function() {
+                                personLastNameInput.clear().then(function() {
+                                    personLastNameInput.sendKeys(lastName).then(function() {
+                                        savePersonBtn.click().then(function() {
+                                            browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(1)), 15000);
+                                        });
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+
+        return this;
+    }
+
+    this.addContactMethod = function(contactMethodType, contactvalue) {
+
+        contactMethodsLinkBtn.click().then(function() {
+            browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.addContactMethodBtn))), 10000).then(function() {
+                addContactMethodBtn.click().then(function() {
+                    browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.contactMethodTypes))), 10000).then(function() {
+                        contactMethodTypes.$('[value="string:' + contactMethodType + '"]').click().then(function() {
+                            contactValue.sendKeys(contactvalue).then(function() {
+                                saveContactBtn.click().then(function() {
+                                    browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(5)), 10000).then(function() {
+                                        browser.sleep(8000);
+                                        contactMethodsLinkBtn.click();
+                                    });
+                                });
+                            });
+                        });
+
+                    });
+                });
+
+            });
+        });
+        return this;
+
+    }
+
+    this.returnContatMethodType = function() {
+        return contactMethodTypeFirstRow.getText();
+
+    }
+
+    this.returncontactMethodValueFirstRow = function() {
+
+        return contactMethodValueFirstRow.getText();
+    }
+
+    this.returncontactMethodLastModifiedFirstRow = function() {
+        return contactMethodLastModifiedFirstRow.getText();
+    }
+
+    this.returncontactMethodModifiedByFirstRow = function() {
+        return contactMethodModifiedByFirstRow.getText();
+    }
+
+    this.deleteContactMethod = function() {
+        browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.deleteContactMethodBtn))), 10000).then(function() {
+            contactMethodDeleteBtn.click().then(function() {
+                element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).then(function(items) {
+                    expect(items.length).toBe(5, "The contact method is not deleted");
+                });
+            });
+        });
+        return this;
+    }
+
+    this.editContactMethod = function(contactMethodType, contactvalue) {
+
+        browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.editContactMethodBtn))), 10000).then(function() {
+            editContactMethodBtn.click().then(function() {
+                browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.contactMethodTypes))), 10000).then(function() {
+                    contactMethodTypes.$('[value="string:' + contactMethodType + '"]').click().then(function() {
+                        contactValue.clear().then(function() {
+                            contactValue.sendKeys(contactvalue).then(function() {
+                                saveContactBtn.click().then(function() {
+                                    browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(5)), 10000);
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+        return this;
+    }
+
+    this.addOrganization = function(organizationType, organizationvalue) {
+
+        organizationsLinkBtn.click().then(function() {
+            browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.addOgranizationBtn))), 10000).then(function() {
+                addOrganizationBtn.click().then(function() {
+                    browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.organizationTypeDropDown))), 10000).then(function() {
+                        organizationTypeDropdown.$('[value="string:' + organizationType + '"]').click().then(function() {
+                            organizationValueInput.sendKeys(organizationvalue).then(function() {
+                                saveOrganizationBtn.click().then(function() {
+                                    browser.sleep(8000);
+                                    organizationsLinkBtn.click();
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+        return this;
+    }
+
+    this.returnorganizationTypeFirstRow = function() {
+        return organizationTypeFirstRow.getText();
+    }
+
+    this.returnorganizationValueFirstRow = function() {
+        return organizationValueFirstRow.getText();
+    }
+
+    this.returnorganizationLastModifiedFirstRow = function() {
+        return organizationLastModifiedFirstRow.getText();
+    }
+
+    this.returnorganizationModifiedByFirstRow = function() {
+        return organizationModifiedByFirstRow.getText();
+    }
+
+    this.deleteOrganization = function() {
+        organizationDeleteBtn.click().then(function() {
+            element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).then(function(items) {
+                expect(items.length).toBe(5, "The organization is not deleted");
+            });
+        });
+        return this;
+    }
+
+    this.editOrganization = function(organizationType, organizationvalue) {
+        organizationEditBtn.click().then(function() {
+            browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.organizationTypeDropDown))), 10000).then(function() {
+                organizationTypeDropdown.$('[value="string:' + organizationType + '"]').click().then(function() {
+                    organizationValueInput.clear().then(function() {
+                        organizationValueInput.sendKeys(organizationvalue).then(function() {
+                            saveOrganizationBtn.click().then(function() {
+                                browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(6)), 10000);
+                            });
+                        });
+                    });
+                });
+            });
+
+        });
+
+        return this;
+    }
+
+    this.addAddress = function(addressType, street, city, state, zip, country) {
+
+        addressLinkBtn.click().then(function() {
+            browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.addAddressBtn))), 10000).then(function() {
+                addAddressBtn.click().then(function() {
+                    browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.addressTypeDropDow))), 10000).then(function() {
+                        addressTypeDropDow.$('[value="string:' + addressType + '"]').click().then(function() {
+                            streetAddress.sendKeys(street).then(function() {
+                                addressCity.sendKeys(city).then(function() {
+                                    addressState.sendKeys(state).then(function() {
+                                        addressZip.sendKeys(zip).then(function() {
+                                            addressCountry.sendKeys(country).then(function() {
+                                                saveAddressBtn.click().then(function() {
+                                                    browser.sleep(8000);
+                                                    addressLinkBtn.click();
+                                                });
+                                            });
+
+                                        });
+
+                                    });
+
+                                });
+
+                            });
+
+                        });
+                    });
+
+                });
+
+            });
+
+        });
 
 
+        return this;
+    }
+    this.returnAddressType = function() {
+        return addressTypeValue.getText();
+    }
+    this.returnAddressStreet = function() {
+        return addressStreetValue.getText();
+    }
+    this.returnAddressCity = function() {
+        return addressCityValue.getText();
+    }
+    this.returnAddressState = function() {
+        return addressStateValue.getText();
+    }
+    this.returnAddressZip = function() {
+        return addressZipValue.getText();
+    }
+
+    this.returnaddressCountryValue = function() {
+        return addressCountryValue.getText();
+    }
+    this.returnAddressModifiedBy = function() {
+        return addressModifiedByValue.getText();
+    }
+    this.returnAddressLastModified = function() {
+        return addresLastModifiedByValue.getText();
+    }
+
+    this.returnAddressModifiedBy = function() {
+        return addressModifiedByValue.getText();
+    }
+
+    this.deleteAddress = function() {
+        deleteAddressBtn.click().then(function() {
+            element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).then(function(items) {
+                expect(items.length).toBe(5, "The address is not deleted");
+            });
+        });
+        return this;
+    }
+
+    this.editAddress = function(addressType, street, city, state, zip, country) {
+
+        editAddressBtn.click().then(function() {
+            browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.addressTypeDropDow))), 10000).then(function() {
+                addressTypeDropDow.$('[value="string:' + addressType + '"]').click().then(function() {
+                    streetAddress.clear().then(function() {
+                        streetAddress.sendKeys(street).then(function() {
+                            addressCity.clear().then(function() {
+                                addressCity.sendKeys(city).then(function() {
+                                    addressState.clear().then(function() {
+                                        addressState.sendKeys(state).then(function() {
+                                            addressZip.clear().then(function() {
+                                                addressZip.sendKeys(zip).then(function() {
+                                                    addressCountry.clear().then(function() {
+                                                        addressCountry.sendKeys(country).then(function() {
+                                                            saveAddressBtn.click();
+                                                        });
+                                                    });
+                                                });
+
+                                            });
+                                        });
+                                    });
+
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+
+        });
+    }
+    this.returnAliasesType = function() {
+        return aliasesTypeValue.getText();
+    }
+    this.returnAliasesValue = function() {
+        return aliasesValue.getText();
+    }
+    this.returnAliasesLastModified = function() {
+        return aliasesLastModified.getText();
+    }
+    this.returnAliasesModifiedBy = function() {
+        return aliasesModifiedBy.getText();
+    }
+
+    this.addAlias = function(aliasType, aliasValue) {
+
+        aliassesLinkBtn.click().then(function() {
+            browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.addAliasesBtn))), 10000).then(function() {
+                addAliasesBtn.click().then(function() {
+                    browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.aliasesDropdown))), 10000).then(function() {
+                        aliasesDropdown.$('[value="string:' + aliasType + '"]').click().then(function() {
+                            aliasesInputValue.sendKeys(aliasValue).then(function() {
+                                saveAliasBtn.click().then(function() {
+                                    browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(6)), 10000).then(function() {
+                                        browser.sleep(8000);
+                                        aliassesLinkBtn.click();
+
+                                    });
+                                });
+
+                            });
+
+                        });
+
+                    });
+
+                });
+            });
+        });
+        return this;
+
+    }
+
+    this.deleteAlias = function() {
+        deleteAliasBtn.click().then(function() {
+            element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).then(function(items) {
+                expect(items.length).toBe(5, "The alias is not deleted");
+            });
+        });
+        return this;
+    }
+
+    this.editAlias = function(aliasType, aliasValue) {
+        editAliasBtn.click().then(function() {
+            browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.aliasesDropdown))), 10000).then(function() {
+                aliasesDropdown.$('[value="string:' + aliasType + '"]').click().then(function() {
+                    aliasesInputValue.clear().then(function() {
+                        aliasesInputValue.sendKeys(aliasValue).then(function() {
+                            saveAliasBtn.click().then(function() {
+                                browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(6)), 10000);
+
+                            });
+
+                        });
+                    });
+                });
+            });
+        });
+
+        return this;
+    }
 };
 
 module.exports = new CasePage();
