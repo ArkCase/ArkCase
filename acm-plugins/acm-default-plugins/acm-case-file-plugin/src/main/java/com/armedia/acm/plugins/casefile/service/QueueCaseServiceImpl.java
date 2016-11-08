@@ -5,6 +5,7 @@ import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.AcmQueue;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
+import com.armedia.acm.plugins.casefile.pipeline.postsave.CaseFileRulesHandler;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.users.service.tracker.UserTrackerService;
@@ -25,6 +26,8 @@ public class QueueCaseServiceImpl implements QueueCaseService
 
     private UserTrackerService userTrackerService;
     private AcmQueueDao acmQueueDao;
+
+    private CaseFileRulesHandler rulesHandler;
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -93,6 +96,9 @@ public class QueueCaseServiceImpl implements QueueCaseService
         log.debug("Case file state: {}, queue: {}", caseFile.getStatus(),
                 caseFile.getQueue() == null ? "null" : caseFile.getQueue().getName());
 
+        CaseFilePipelineContext ctx = new CaseFilePipelineContext();
+        rulesHandler.execute(caseFile, ctx);
+
         return caseFile;
     }
 
@@ -134,5 +140,10 @@ public class QueueCaseServiceImpl implements QueueCaseService
     public void setAcmQueueDao(AcmQueueDao acmQueueDao)
     {
         this.acmQueueDao = acmQueueDao;
+    }
+
+    public void setRulesHandler(CaseFileRulesHandler rulesHandler)
+    {
+        this.rulesHandler = rulesHandler;
     }
 }

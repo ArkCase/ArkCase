@@ -26,6 +26,7 @@
         <property name="caseFileDao" ref="caseFileDao"/>
         <property name="userTrackerService" ref="userTrackerService"/>
         <property name="acmQueueDao" ref="acmQueueDao"/>
+        <property name="rulesHandler" ref="caseFileRulesHandler"/>
     </bean>
 
 </beans>
