@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.alfrescorma.service;
 
 import org.apache.chemistry.opencmis.client.api.CmisObject;
+import org.apache.chemistry.opencmis.client.api.Folder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,11 +30,11 @@ import static org.junit.Assert.assertNotNull;
         "/spring/spring-library-data-access-control.xml",
         "/spring/spring-library-particpants.xml"
 })
-public class AlfrescoFindCategoryFolderIT
+public class FindFolderServiceIT
 {
     @Autowired
-    @Qualifier("alfrescoFindCategoryFolderService")
-    private AlfrescoService<CmisObject> service;
+    @Qualifier("findFolderService")
+    private AlfrescoService<Folder> service;
 
     @Test
     public void findCategoryFolder() throws Exception
@@ -43,7 +44,7 @@ public class AlfrescoFindCategoryFolderIT
         Map<String, Object> context = new HashMap<>();
 
         // J1 only works in JSAP extension, when forward-porting to ArkCase use a different path here
-        context.put("categoryFolderPath", "J1");
+        context.put("folderPath", "J1");
 
         CmisObject cmisObject = service.service(context);
 

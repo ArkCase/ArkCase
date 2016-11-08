@@ -3,8 +3,8 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
-    <bean id="alfrescoFindCategoryFolderService"
-          class="com.armedia.acm.plugins.alfrescorma.service.FindCategoryFolderService"
+    <bean id="findFolderService"
+          class="com.armedia.acm.plugins.alfrescorma.service.FindFolderService"
           parent="alfrescoService">
         <property name="rmaRootFolder" value="${rma_root_folder}"/>
         <property name="ecmFileService" ref="ecmFileService"/>
@@ -15,7 +15,6 @@
     <bean id="createOrFindRecordFolderService"
           class="com.armedia.acm.plugins.alfrescorma.service.CreateOrFindRecordFolderService"
           parent="alfrescoService">
-        <property name="rmaRootFolder" value="${rma_root_folder}"/>
         <property name="ecmFileService" ref="ecmFileService"/>
     </bean>
 </beans>

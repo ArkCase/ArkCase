@@ -51,7 +51,7 @@ public class AcmComplaintFolderListenerTest extends EasyMockSupport
 
         expect(mockService.getTicketService()).andReturn(mockTicketService);
         expect(mockTicketService.service(null)).andReturn("ticket");
-        expect(mockService.findCategoryFolder(ComplaintConstants.OBJECT_TYPE)).andReturn(null);
+        expect(mockService.findFolder(ComplaintConstants.OBJECT_TYPE)).andReturn(null);
         expect(mockService.createOrFindRecordFolder(complaint.getComplaintNumber(), "ticket", null)).andReturn(null);
 
         ComplaintCreatedEvent event = new ComplaintCreatedEvent(new Complaint());

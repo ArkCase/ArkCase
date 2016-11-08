@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.alfrescorma.service;
 import com.armedia.acm.plugins.alfrescorma.exception.AlfrescoServiceException;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
+import org.apache.chemistry.opencmis.client.api.Folder;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,11 +26,7 @@ public class CreateOrFindRecordFolderService extends AlfrescoService<String>
 
     private EcmFileService ecmFileService;
 
-    private String rmaRootFolder;
-
     private transient final Logger LOG = LoggerFactory.getLogger(getClass());
-
-    private static final String BASE_PATH = "/Sites/rm/documentLibrary";
 
     public CreateOrFindRecordFolderService()
     {
@@ -40,7 +37,7 @@ public class CreateOrFindRecordFolderService extends AlfrescoService<String>
     /**
      * The context must have:
      * <ul>
-     * <li>Key categoryFolder: CmisObject for the record category folder</li>
+     * <li>Key parentFolder: type Folder,  for the target folder; the new folder is created under here</li>
      * <li>Key recordFolderName: String title of the record folder</li>
      * <li>Key ticket: String, Alfresco ticket</li>
      * </ul>
@@ -55,12 +52,13 @@ public class CreateOrFindRecordFolderService extends AlfrescoService<String>
         validateContext(context);
 
         String ticket = (String) context.get("ticket");
-        CmisObject categoryFolder = (CmisObject) context.get("categoryFolder");
+
+        Folder parentFolder = (Folder) context.get("parentFolder");
         String recordFolderName = (String) context.get("recordFolderName");
 
-        LOG.debug("Searching for folder {} under category folder {}", recordFolderName, categoryFolder.getName());
+        LOG.debug("Searching for folder {} under category folder {}", recordFolderName, parentFolder.getName());
 
-        JSONObject createFolderPayload = buildPost(categoryFolder, recordFolderName);
+        JSONObject createFolderPayload = buildPost(parentFolder, recordFolderName);
 
         String url = baseUrl() + "/" + service + "?" + query;
 
@@ -77,8 +75,8 @@ public class CreateOrFindRecordFolderService extends AlfrescoService<String>
         } catch (HttpServerErrorException e)
         {
             LOG.debug("Error creating folder {} under {}, presumably it already exists, looking for it now.",
-                    recordFolderName, categoryFolder.getName());
-            String path = BASE_PATH + "/" + getRmaRootFolder() + "/" + categoryFolder.getName() + "/" + recordFolderName;
+                    recordFolderName, parentFolder.getName());
+            String path = parentFolder.getPath() + "/" + recordFolderName;
             try
             {
                 CmisObject recordFolder = getEcmFileService().findObjectByPath(path);
@@ -115,9 +113,9 @@ public class CreateOrFindRecordFolderService extends AlfrescoService<String>
             throw new IllegalArgumentException("Context must not be null");
         }
 
-        if (context.get("categoryFolder") == null || !(context.get("categoryFolder") instanceof CmisObject))
+        if (context.get("parentFolder") == null || !(context.get("parentFolder") instanceof Folder))
         {
-            throw new IllegalArgumentException("Context must include a categoryFolder of type CmisObject");
+            throw new IllegalArgumentException("Context must include a parentFolder of type Folder");
         }
 
         if (context.get("recordFolderName") == null || !(context.get("recordFolderName") instanceof String))
@@ -139,16 +137,6 @@ public class CreateOrFindRecordFolderService extends AlfrescoService<String>
     public void setEcmFileService(EcmFileService ecmFileService)
     {
         this.ecmFileService = ecmFileService;
-    }
-
-    public String getRmaRootFolder()
-    {
-        return rmaRootFolder;
-    }
-
-    public void setRmaRootFolder(String rmaRootFolder)
-    {
-        this.rmaRootFolder = rmaRootFolder;
     }
 
 
