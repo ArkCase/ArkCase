@@ -10,8 +10,8 @@
 
  * CallObjectsService contains wrapper functions of ObjectsService to support default error handling, data validation and data cache.
  */
-angular.module('services').factory('Object.ModelService', ['$q', '$resource', 'UtilService',
-    function ($q, $resource, Util) {
+angular.module('services').factory('Object.ModelService', ['$q', '$resource', 'UtilService', 'Admin.OrganizationalHierarchyService',
+    function ($q, $resource, Util, AdminOrganizationalHierarchyService) {
         return {
 
             /**
@@ -214,6 +214,28 @@ angular.module('services').factory('Object.ModelService', ['$q', '$resource', 'U
 
                 return restricted;
             }
+
+            , checkIfUserCanRestrict: function (userId, objectInfo) {
+                var owningGroup = this.getParticipantByType(objectInfo, "owning group");
+                var assignee = this.getAssignee(objectInfo);
+                var supervisor = this.getParticipantByType(objectInfo, "supervisor");
+                var owningGroupName = owningGroup.replace(/\./g, '_002E_');
+                if (Util.compare(assignee, userId)) {
+                    return $q.resolve(true);
+                } else if (Util.compare(supervisor, userId)) {
+                    return $q.resolve(true);
+                } else {
+                    var canRestrict = AdminOrganizationalHierarchyService.getUsersForGroup(owningGroupName).then(function (data) {
+                            var owningGroupUsers = _.get(data, 'data.response.docs');
+                            var userInGroup = _.find(owningGroupUsers, function (user) {
+                                return user.object_id_s === userId;
+                            });
+                            return userInGroup !== undefined ? true : false;
+                        }
+                    );
+                    return $q.resolve(canRestrict);
+                }
+            }
         }
-    }
-]);
+    }])
+;
