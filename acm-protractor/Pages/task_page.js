@@ -1,6 +1,6 @@
 var Objects = require('../json/Objects.json');
-var newBtn = element(by.linkText(Objects.taskpage.locators.newButton));
-var taskBtn = element(by.linkText(Objects.taskpage.locators.taskButton));
+var basePage = require('./base_page.js');
+var EC = protractor.ExpectedConditions;
 var taskTitle = element(by.css(Objects.taskpage.locators.taskTitle));
 var Subject = element(by.id(Objects.taskpage.locators.subject));
 var StartDateInput = element(by.id(Objects.taskpage.locators.startDate));
@@ -88,16 +88,24 @@ var insertLinkText = element(by.xpath(Objects.taskspage.locators.insertLinkText)
 var insertLinkUrl = element(by.xpath(Objects.taskspage.locators.insertLinkUrl));
 var insertLinkBtn = element(by.buttonText(Objects.taskspage.locators.insertLinkBtn));
 var headerImageLink = element(by.css(Objects.taskspage.locators.headerImageLink));
+var attachmentsLink = element.all(by.repeater(Objects.taskspage.locators.attachmentsLink)).get(3);
+var attachmentsTableTitle = element(by.css(Objects.taskspage.locators.attachmentsTableTitle));
+var root = element(by.xpath(Objects.taskspage.locators.root));
+var newDocument = element.all(by.css(Objects.taskspage.locators.newDocument)).get(1);
+var otherDocument = element(by.xpath(Objects.taskspage.locators.otherDocument));
+var documentTitle = element(by.xpath(Objects.taskspage.locators.documentTitle));
+var newFolder = element.all(by.css(Objects.taskspage.locators.newFolder)).get(0);
+var documentTitle = element(by.xpath(Objects.taskspage.locators.documentTitle));
+var documentTitleInput = element(by.xpath(Objects.taskspage.locators.documentTitleInput));
+var startDateInputEdit = element(by.model(Objects.taskspage.locators.startDateInput))
+var dueDateValue = element(by.model(Objects.taskspage.locators.dueDateInput));
+var approveBtn=element(by.xpath(Objects.taskspage.locators.approveBtn));
+
+
+
+
 
 var TaskPage = function() {
-	this.clickNewButton = function() {
-		newBtn.click();
-		return this;
-	};
-	this.clickTaskButton = function() {
-		taskBtn.click();
-		return this;
-	};
 	this.insertSubject = function(subject) {
 		Subject.clear();
 		Subject.click();
@@ -113,15 +121,29 @@ var TaskPage = function() {
 		saveButton.click();
 		return this;
 	};
-	this.insertTaskData = function(assignee, subject, priority, percent, note){
+	this.insertTaskData = function(assignee, subject, startdate, duedate, priority, percent, note){
 		this.addAssignee(assignee);
 		this.insertSubject(subject);
-		this.insertDueDateToday();	
+		this.insertStartDate(startdate);
+		this.insertDueDate(duedate);
 		this.selectPriority(priority);
 		this.insertPercentComplete(percent);	
 		this.insertTextNote(note);	
 		return this;
 	};
+	this.insertStartDate = function(date){
+		StartDateInput.click();
+		StartDateInput.clear();
+		StartDateInput.sendKeys(date);
+		return this;
+	}
+	this.insertDueDate = function(date){
+		DueDateInput.click();
+		DueDateInput.clear();
+		DueDateInput.sendKeys(date);
+		return this;
+
+	}
 	this.insertPercentComplete = function(percent){
 		percentCompleteInput.click();
 		percentCompleteInput.clear();
@@ -212,7 +234,7 @@ var TaskPage = function() {
 		return tasksTitle.getText();
 	}
 	this.returnStartDateInput = function(){
-		return StartDateInput.getText(); 
+		return startDate.getText();
 	}
 	this.returnDueDateInput = function(){
 		return DueDateInput.getText();
@@ -225,10 +247,11 @@ var TaskPage = function() {
         insertLinkBtn.click();
         return this;
 	}
-	this.insertTaskDataLinkNote = function(assignee, subject, priority, percent, text, url){
+	this.insertTaskDataLinkNote = function(assignee, subject, startdate, duedate, priority, percent, text, url){
 		this.addAssignee(assignee);
 		this.insertSubject(subject);
-		this.insertDueDateToday();	
+		this.insertStartDate(startdate);
+		this.insertDueDate(duedate);
 		this.selectPriority(priority);
 		this.insertPercentComplete(percent);	
 		this.insertLinkNote(text, url);
@@ -455,9 +478,99 @@ var TaskPage = function() {
 	this.returnDashboardTitle = function(){
 		return dashboardTitle.getText();
 	}
-	
+	this.clickAttachmentsLink = function(){
+		attachmentsLink.click();
+		return this;
+	}
+	this.returnAttachementsTableTitle = function(){
+		return attachmentsTableTitle.getText();
+	}
+	this.clickRootFolder = function(){
+		root.click();
+		return this;
+	}
+	this.clickNewDocument = function(){
+		newDocument.click();
+		return this;
+	}
+	this.clickOtherDocument = function(){
+		otherDocument.click();
+		return this;
+	}
+	this.returnDocumentTitle = function(){
+		return documentTitle.getText();
+	}
+	this.clickNewFolder = function(){
+		newFolder.click();
+		return this;
+	}
+	this.insertDocumentTitle = function(title){
+		documentTitleInput.click();
+		documentTitleInput.clear();
+		documentTitleInput.sendKeys(title);
+		return this;
+	}
+	this.clickAttachmentTitle = function () {
+		attachmentsTableTitle.click();
+		return this;
+
+	}
+	this.insertStartDateEdit = function(date){
+		startDateInputEdit.click();
+		startDateInputEdit.clear();
+		startDateInputEdit.sendKeys(date);
+		return this;
+		
+	}
+	this.clickStartDate = function(){
+		startDate.click();
+		return this;
+	}
+	this.editStartDate = function(date){
+		this.clickStartDate();
+		this.insertStartDateEdit(date);
+		this.confirmEdit();
+	}
+	this.clickDueDate = function(){
+		dueDate.click();
+		return this;
+	}
+	this.insertDueDateEdit = function(date){
+		dueDateValue.click();
+		dueDateValue.clear();
+		dueDateValue.sendKeys(date);
+		return this;
+	}
+	this.editDueDate = function(date){
+		this.clickDueDate();
+		this.insertDueDateEdit(date);
+		this.confirmEdit();
+
+	}
+	this.clickPictureButton = function(){
+		pictureButton.click();
+		return this;
+	}
+	this.clickChooseFileButton = function () {
+		chooseFilesBtn.click();
+		return this;
+	}
+	this.returnNotesTextArea = function(){
+		return notesTextArea.getText();
+	}
+	this.clickApproveBtn=function(){
+
+		   browser.wait(EC.presenceOf(element(by.xpath(Objects.taskspage.locators.approveBtn))), 20000).then(function() {
+		approveBtn.click().then(function(){
+		browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskpage.locators.taskState))),10000);	
+		});
+		 });
+		return this;
+	}
+
 
 
 };
 
+TaskPage.prototype = basePage;
 module.exports = new TaskPage();

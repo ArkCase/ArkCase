@@ -52,6 +52,11 @@
                                       relay-port="${acm.websockets.stomp_broker_relay.relay_port}"
                                       heartbeat-send-interval="${acm.websockets.stomp_broker_relay.heartbeat_send_interval}"
                                       heartbeat-receive-interval="${acm.websockets.stomp_broker_relay.heartbeat_receive_interval}"/>
+        <websocket:client-inbound-channel>
+            <websocket:interceptors>
+                <bean class="com.armedia.acm.websockets.AcmWebSocketChannelInterceptor"></bean>
+            </websocket:interceptors>
+        </websocket:client-inbound-channel>
     </websocket:message-broker>
 
     <bean class="com.armedia.acm.websockets.configuration.StompBrokerRelayMessageHandlerBeanPostProcessor">

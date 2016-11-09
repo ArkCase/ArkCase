@@ -88,8 +88,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
     , 'EcmService', 'ObjectService'
     , function ($q, $translate, $modal, $filter, $log, $injector
         , Store, Util, UtilDateService, ConfigService, LookupService
-        , Ecm, ObjectService
-    ) {
+        , Ecm, ObjectService) {
 
         LookupService.getUserFullNames().then(function (userFullNames) {
             DocTree.userFullNames = userFullNames;
@@ -252,7 +251,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         , close: function (event, data) {
                             // Editor was removed
                             if (data.save) {
-                                DocTree.markNodePending(data.node);
+                            	var fileName = data.node.title;
+                                DocTree.markNodePending(data.node, fileName);
                             }
                             DocTree.editSetting.isEditing = false;
                         }
@@ -661,12 +661,16 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 }
                 Util.deferred(DocTree.Controller.viewChangedTree);
             }
-            , markNodePending: function (node) {
+            , markNodePending: function (node, fileName) {
                 if (Validator.validateFancyTreeNode(node)) {
                     $(node.span).addClass("pending");
-                    if(!node.folder) {
-                      node.title = $translate.instant("common.directive.docTree.waitUploading") + node.data.name;
-                      node.renderTitle();
+                    if (!node.folder) {
+                    	if(fileName){
+                    		node.title = $translate.instant("common.directive.docTree.waitUploading") + fileName;
+                    	}else {
+                    		node.title = $translate.instant("common.directive.docTree.waitUploading") + node.data.name;
+                    	}
+                        node.renderTitle();
                     }
                     node.setStatus("loading");
                 }
@@ -674,9 +678,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             , markNodeOk: function (node) {
                 if (Validator.validateFancyTreeNode(node)) {
                     $(node.span).removeClass("pending");
-                    if(!node.folder) {
-                      node.title = node.title.replace($translate.instant("common.directive.docTree.waitUploading"), '');
-                      node.renderTitle();
+                    if (!node.folder) {
+                        node.title = node.title.replace($translate.instant("common.directive.docTree.waitUploading"), '');
+                        node.renderTitle();
                     }
                     node.setStatus("ok");
                 }
@@ -1418,6 +1422,13 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         , {
                             name: "edit",
                             execute: function (nodes, args) {
+                            }
+                        }
+                        , {
+                            name: "editForm",
+                            execute: function (nodes, args) {
+                                var node = nodes[0];
+                                DocTree.editForm(node);
                             }
                         }
                         , {
@@ -2896,7 +2907,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 }
                             }).then(
                                 function (renamedInfo) {
-                                    DocTree.markNodeOk(node);
+                                	node.title = renamedInfo.fileName;
+                                	node.tooltip = node.title;
+                                	DocTree.markNodeOk(node);
                                     dfd.resolve(renamedInfo);
                                 }
                                 , function (errorData) {
@@ -3070,6 +3083,18 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 };
 
                 var url = DocTree.doUploadForm(formType, node.data.objectId);
+                if (url) {
+                    Ui.dlgOpenWindow(url, "", 1060, $(window).height() - 30, DocTree.onLoadingFrevvoForm);
+                }
+            }
+            , editForm: function (node) {
+                DocTree.uploadSetting = {
+                    uploadToFolderNode: node
+                    , uploadFileType: node.data.type
+                    , deferUploadFile: $q.defer()
+                };
+
+                var url = DocTree.doUploadForm(node.data.type, node.parent.data.objectId, '', true);
                 if (url) {
                     Ui.dlgOpenWindow(url, "", 1060, $(window).height() - 30, DocTree.onLoadingFrevvoForm);
                 }
@@ -3332,8 +3357,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 if (DocTree.uploadSetting.uploadFileNew) {
                     DocTree.Op.uploadFiles(fd, folderNode, names, fileType)
                         .then(function (data) {
-                                _.each(data.nodes, function(node){
-                                  DocTree.markNodeOk(node)
+                                _.each(data.nodes, function (node) {
+                                    DocTree.markNodeOk(node)
                                 });
                                 dfd.resolve(data);
                             },
@@ -3345,8 +3370,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     var replaceNode = DocTree.uploadSetting.replaceFileNode;
                     DocTree.Op.replaceFile(fd, replaceNode, names[0])
                         .then(function (data) {
-                                _.each(data.nodes, function(node){
-                                  DocTree.markNodeOk(node)
+                                _.each(data.nodes, function (node) {
+                                    DocTree.markNodeOk(node)
                                 });
                                 dfd.resolve(data);
                             },
@@ -4274,12 +4299,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 });
 
                 scope.$watchGroup(['treeConfig', 'objectInfo', 'treeConfig.fileTypes'], function (newValues, oldValues, scope) {
-                	
-                	promiseCommon.then(function () {
+
+                    promiseCommon.then(function () {
 
                         DocTree.objectInfo = newValues[1];
 
-	                    _.merge(DocTree.treeConfig, newValues[0]);
+                        _.merge(DocTree.treeConfig, newValues[0]);
                         if (!Util.isEmpty(DocTree.jqTree)) {
                             DocTree.jqTree.empty();
                         }
@@ -4306,8 +4331,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             }
                         }
 
-	                });
-                });	
+                    });
+                });
             }
         };
 
