@@ -26,7 +26,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -352,31 +351,16 @@ public class DashboardPropertyReader
 
     public String removeWidgetFromDashboardConfig(String config, String widgetName)
     {
-        JSONObject jsonConfig = new JSONObject(config);
         try
         {
-            JSONArray rows = jsonConfig.getJSONArray("rows");
-            for (int i = 0; i < rows.length(); i++)
-            {
-                JSONArray columns = rows.getJSONObject(i).getJSONArray("columns");
-                for (int j = 0; j < columns.length(); j++)
-                {
-                    JSONArray widgets = columns.getJSONObject(j).getJSONArray("widgets");
-                    for (int k = widgets.length() - 1; k >= 0; k--)
-                    {
-                        JSONObject widget = widgets.getJSONObject(k);
-                        if (Objects.equals(widget.getString("type"), widgetName))
-                        {
-                            widgets.remove(k);
-                        }
-                    }
-                }
-            }
-        } catch (JSONException e){
-            log.warn("JSON configuration can not be parsed. {}", e.getMessage());
+            JSONObject jsonConfig = new JSONObject(config);
+            return DashboardService.removeWidgetsFromJson(jsonConfig, new HashSet<>(Arrays.asList(widgetName)));
+        } catch (JSONException e)
+        {
+            log.warn("Not valid JSON format. {}", e.getMessage());
         }
+        return config;
 
-        return jsonConfig.toString();
     }
 
     public AcmPlugin getDashboardPlugin()
