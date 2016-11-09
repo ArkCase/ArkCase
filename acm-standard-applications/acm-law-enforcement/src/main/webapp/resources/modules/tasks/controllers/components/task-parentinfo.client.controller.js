@@ -93,6 +93,13 @@ angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$st
                     }
                 );
             }
+            
+            var parentObjectType = $scope.objectInfo.parentObjectType;
+            var parentObjectId = $scope.objectInfo.parentObjectId;
+            var eventName = "object.changed/" + parentObjectType + "/" + parentObjectId;
+            $scope.$bus.subscribe(eventName, function (data) {
+                MessageService.info(parentObjectType + " with ID " + parentObjectId + " was updated.");
+            });
         };
     }
 ]);
