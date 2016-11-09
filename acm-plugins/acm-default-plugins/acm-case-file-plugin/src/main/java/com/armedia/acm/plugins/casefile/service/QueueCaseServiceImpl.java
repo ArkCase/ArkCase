@@ -9,6 +9,7 @@ import com.armedia.acm.plugins.casefile.pipeline.postsave.CaseFileRulesHandler;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.users.service.tracker.UserTrackerService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -90,14 +91,14 @@ public class QueueCaseServiceImpl implements QueueCaseService
 
         caseFile = getCaseFileDao().save(caseFile);
 
+        CaseFilePipelineContext ctx = new CaseFilePipelineContext();
+        rulesHandler.execute(caseFile, ctx);
+
         // flush in case another handler needs to see our changes
         getCaseFileDao().getEm().flush();
 
         log.debug("Case file state: {}, queue: {}", caseFile.getStatus(),
                 caseFile.getQueue() == null ? "null" : caseFile.getQueue().getName());
-
-        CaseFilePipelineContext ctx = new CaseFilePipelineContext();
-        rulesHandler.execute(caseFile, ctx);
 
         return caseFile;
     }
