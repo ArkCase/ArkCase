@@ -1000,7 +1000,7 @@ a.editable.editable-click {
 
 /* Style of invalid fields */
 input.ng-invalid, textarea.ng-invalid, select.ng-invalid {
-    border-color: #ff7373;
+    border-color: #fdadad;
 }
 
 /* Dropdowns in the left sidebar (ie. datepicker) */ 
