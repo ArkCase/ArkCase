@@ -2,11 +2,11 @@
 
 angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state', '$stateParams', '$q', '$modal'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Case.LookupService'
-    , 'Object.SubscriptionService', 'Case.InfoService', 'Case.MergeSplitService'
+    , 'Object.SubscriptionService', 'Object.ModelService', 'Case.InfoService', 'Case.MergeSplitService'
     , 'Helper.ObjectBrowserService'
     , function ($scope, $state, $stateParams, $q, $modal
         , Util, ConfigService, ObjectService, Authentication, CaseLookupService
-        , ObjectSubscriptionService, CaseInfoService, MergeSplitService
+        , ObjectSubscriptionService, ObjectModelService, CaseInfoService, MergeSplitService
         , HelperObjectBrowserService) {
 
         new HelperObjectBrowserService.Component({
@@ -39,6 +39,9 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
                     });
                     $scope.showBtnSubscribe = Util.isEmpty(found);
                     $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
+                    ObjectModelService.checkIfUserCanRestrict($scope.userId, objectInfo).then(function (result) {
+                        $scope.isUserAbleToRestrict = result;
+                    });
                 });
             });
 
@@ -64,11 +67,15 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
         };
 
         $scope.onClickRestrict = function ($event) {
-            if ($scope.restricted != $scope.objectInfo.restricted) {
+            if ($scope.isUserAbleToRestrict && $scope.restricted != $scope.objectInfo.restricted) {
                 $scope.objectInfo.restricted = $scope.restricted;
 
                 var caseInfo = Util.omitNg($scope.objectInfo);
-                CaseInfoService.saveCaseInfo(caseInfo);
+                CaseInfoService.saveCaseInfo(caseInfo).then(function () {
+
+                }, function () {
+                    $scope.restricted = !$scope.restricted;
+                });
             }
         };
 
