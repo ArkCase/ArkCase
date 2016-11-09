@@ -2,16 +2,22 @@ package com.armedia.acm.plugins.dashboard.service;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
+import com.armedia.acm.plugins.dashboard.dao.DashboardDao;
 import com.armedia.acm.plugins.dashboard.dao.ModuleDao;
 import com.armedia.acm.plugins.dashboard.dao.WidgetDao;
 import com.armedia.acm.plugins.dashboard.exception.AcmDashboardException;
+import com.armedia.acm.plugins.dashboard.model.Dashboard;
 import com.armedia.acm.plugins.dashboard.model.DashboardConstants;
 import com.armedia.acm.plugins.dashboard.model.module.Module;
+import com.armedia.acm.plugins.dashboard.model.userPreference.UserPreference;
 import com.armedia.acm.plugins.dashboard.model.widget.Widget;
 import com.armedia.acm.plugins.dashboard.model.widget.WidgetRole;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmRole;
+import org.apache.commons.collections.CollectionUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +26,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -33,6 +40,8 @@ public class DashboardPropertyReader
     private ModuleDao moduleDao;
     private WidgetDao widgetDao;
     private UserDao userDao;
+    private DashboardDao dashboardDao;
+    private UserPreferenceService userPreferenceService;
     private ModuleEventPublisher moduleEventPublisher;
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -69,13 +78,6 @@ public class DashboardPropertyReader
             log.error("Widgets list was not populated, error occurred: [{}]", e.getMessage(), e);
         }
 
-        try
-        {
-            this.dashboardWidgetsOnly = getDashboardWidgets();
-        } catch (AcmDashboardException e)
-        {
-            log.error("Dashboard Widgets list was not populated, error occurred: [{}] ", e.getMessage(), e);
-        }
         if (isNewWidgetForAdding)
         {
             addNewWidgets();
@@ -86,6 +88,13 @@ public class DashboardPropertyReader
         {
             initWidgetTable();
             initWidgetRolesTable();
+        }
+        try
+        {
+            this.dashboardWidgetsOnly = getDashboardWidgets();
+        } catch (AcmDashboardException e)
+        {
+            log.error("Dashboard Widgets list was not populated, error occurred: [{}] ", e.getMessage(), e);
         }
 
         updateModuleTable();
@@ -128,7 +137,7 @@ public class DashboardPropertyReader
                 }
 
                 widgetSet.addAll(Arrays.asList(retVal.split(DashboardConstants.COMMA_SPLITTER)));
-                widgetSet.stream().forEach(widgetName ->
+                widgetSet.forEach(widgetName ->
                 {
                     try
                     {
@@ -225,7 +234,7 @@ public class DashboardPropertyReader
 
     private void updateModuleTable()
     {
-        moduleNameList.stream().forEach(module ->
+        moduleNameList.forEach(module ->
         {
             try
             {
@@ -276,16 +285,22 @@ public class DashboardPropertyReader
             widgetsThatNeedToBeInserted.addAll(setOfAllWidgetsFromPropertyFile);
             widgetsThatNeedToBeInserted.removeAll(setOfAllWidgetsInDb);
 
-            widgetsThatNeedToBeDeleted.stream().forEach(widget ->
+            widgetsThatNeedToBeDeleted.forEach(widget ->
             {
-                widgetDao.deleteAllWidgetRolesByWidgetName(widget.getWidgetName());
+                String widgetName = widget.getWidgetName();
+                Long widgetId = widget.getWidgetId();
+
+                widgetDao.deleteAllWidgetRolesByWidgetName(widgetName);
+
+                deleteUserWidgetPreferences(widgetId, widgetName);
+
                 widgetDao.deleteWidget(widget);
             });
 
-            widgetsThatNeedToBeInserted.stream().forEach(widget -> widgetDao.saveWidget(widget));
+            widgetsThatNeedToBeInserted.forEach(widget -> widgetDao.saveWidget(widget));
         } else
         {
-            setOfAllWidgetsFromPropertyFile.stream().forEach(widget -> widgetDao.saveWidget(widget));
+            setOfAllWidgetsFromPropertyFile.forEach(widget -> widgetDao.saveWidget(widget));
         }
     }
 
@@ -293,13 +308,9 @@ public class DashboardPropertyReader
     {
         List<Widget> widgetList = new ArrayList<>();
         String[] widgetNames = dashboardWidgets.split(",");
-        List<String> widgetNamesList = new ArrayList<>();
-        for (String widgetName : widgetNames)
-        {
-            widgetNamesList.add(widgetName);
-        }
+        List<String> widgetNamesList = Arrays.asList(widgetNames);
 
-        widgetNamesList.stream().forEach(widget ->
+        widgetNamesList.forEach(widget ->
         {
             try
             {
@@ -310,6 +321,62 @@ public class DashboardPropertyReader
             }
         });
         return widgetList;
+    }
+
+    private void deleteUserWidgetPreferences(Long widgetId, String widgetName)
+    {
+        List<UserPreference> userPreferences = userPreferenceService.findByWidgetId(widgetId);
+        if (CollectionUtils.isNotEmpty(userPreferences))
+        {
+            userPreferences.forEach(userPreference ->
+            {
+                String moduleName = userPreference.getModule().getModuleName();
+                try
+                {
+                    // also update preferred widget in JSON configuration
+                    Dashboard dashboard = dashboardDao.getDashboardConfigForUserAndModuleName(userPreference.getUser(),
+                            moduleName);
+                    String configFiltered = removeWidgetFromDashboardConfig(dashboard.getDashboardConfig(), widgetName);
+                    dashboard.setDashboardConfig(configFiltered);
+                    dashboardDao.save(dashboard);
+                } catch (AcmObjectNotFoundException e)
+                {
+                    log.debug("No dashboard configuration for widget {} and module {}. {}", widgetName, moduleName,
+                            e.getMessage());
+                }
+            });
+
+            userPreferenceService.deleteByWidgetId(widgetId);
+        }
+    }
+
+    public String removeWidgetFromDashboardConfig(String config, String widgetName)
+    {
+        JSONObject jsonConfig = new JSONObject(config);
+        try
+        {
+            JSONArray rows = jsonConfig.getJSONArray("rows");
+            for (int i = 0; i < rows.length(); i++)
+            {
+                JSONArray columns = rows.getJSONObject(i).getJSONArray("columns");
+                for (int j = 0; j < columns.length(); j++)
+                {
+                    JSONArray widgets = columns.getJSONObject(j).getJSONArray("widgets");
+                    for (int k = widgets.length() - 1; k >= 0; k--)
+                    {
+                        JSONObject widget = widgets.getJSONObject(k);
+                        if (Objects.equals(widget.getString("type"), widgetName))
+                        {
+                            widgets.remove(k);
+                        }
+                    }
+                }
+            }
+        } catch (JSONException e){
+            log.warn("JSON configuration can not be parsed. {}", e.getMessage());
+        }
+
+        return jsonConfig.toString();
     }
 
     public AcmPlugin getDashboardPlugin()
@@ -390,5 +457,25 @@ public class DashboardPropertyReader
     public void setUserDao(UserDao userDao)
     {
         this.userDao = userDao;
+    }
+
+    public UserPreferenceService getUserPreferenceService()
+    {
+        return userPreferenceService;
+    }
+
+    public void setUserPreferenceService(UserPreferenceService userPreferenceService)
+    {
+        this.userPreferenceService = userPreferenceService;
+    }
+
+    public DashboardDao getDashboardDao()
+    {
+        return dashboardDao;
+    }
+
+    public void setDashboardDao(DashboardDao dashboardDao)
+    {
+        this.dashboardDao = dashboardDao;
     }
 }

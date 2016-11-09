@@ -17,9 +17,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping({ "/api/v1/plugin/person", "/api/latest/plugin/person" })
-public class SavePersonAPIController {
-    
+@RequestMapping({"/api/v1/plugin/person", "/api/latest/plugin/person"})
+public class SavePersonAPIController
+{
+
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private SavePersonTransaction personTransaction;
@@ -33,48 +34,48 @@ public class SavePersonAPIController {
     ) throws AcmCreateObjectFailedException
     {
 
-        if ( log.isTraceEnabled() )
-        {
-            log.trace("Got a Person: " + in +"; person ID: '" + in.getId()+ "'");
-            log.trace("person title: " + in.getTitle());
-        }
+        log.trace("Got a Person: {}; person ID: '{}'", in, in.getId());
+        log.trace("person title: {}", in.getTitle());
 
-        boolean isInsert = in.getId()== null;
+        boolean isInsert = in.getId() == null;
 
         try
         {
             Person saved = getPersonTransaction().savePerson(in, auth);
 
-          getEventPublisher().publishPersonEvent(saved, auth, isInsert, true);
-          
-          return saved;
+            getEventPublisher().publishPersonEvent(saved, isInsert, true);
 
-        } catch ( MuleException | TransactionException e)
+            return saved;
+
+        } catch (MuleException | TransactionException e)
         {
-      
-            getEventPublisher().publishPersonEvent(in, auth, isInsert, false);
+
+            getEventPublisher().publishPersonEvent(in, isInsert, false);
 
             throw new AcmCreateObjectFailedException("person", e.getMessage(), e);
         }
 
     }
 
-    public SavePersonTransaction getPersonTransaction() {
+    public SavePersonTransaction getPersonTransaction()
+    {
         return personTransaction;
     }
 
-    public void setPersonTransaction(SavePersonTransaction personTransaction) {
+    public void setPersonTransaction(SavePersonTransaction personTransaction)
+    {
         this.personTransaction = personTransaction;
     }
 
-    public PersonEventPublisher getEventPublisher() {
+    public PersonEventPublisher getEventPublisher()
+    {
         return eventPublisher;
     }
 
-    public void setEventPublisher(PersonEventPublisher eventPublisher) {
+    public void setEventPublisher(PersonEventPublisher eventPublisher)
+    {
         this.eventPublisher = eventPublisher;
     }
 
-   
 
 }

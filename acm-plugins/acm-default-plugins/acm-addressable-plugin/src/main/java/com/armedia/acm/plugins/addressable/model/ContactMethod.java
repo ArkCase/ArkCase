@@ -11,6 +11,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "acm_contact_method")
@@ -186,4 +187,5 @@ public class ContactMethod implements Serializable, AcmEntity
     {
     	return this;
     }
+
 }

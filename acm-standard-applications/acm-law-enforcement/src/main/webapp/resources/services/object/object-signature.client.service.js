@@ -13,6 +13,28 @@
 angular.module('services').factory('Object.SignatureService', ['$resource', 'Acm.StoreService', 'UtilService',
     function ($resource, Store, Util) {
         var Service = $resource('api/latest/plugin', {}, {
+
+            /**
+             * @ngdoc method
+             * @name confirmSignature
+             * @methodOf services:Object.SignatureService
+             *
+             * @descrption
+             * Sign with confirming password
+             *
+             * @param {String} params.objectType Object type
+             * @param {Number} params.objectId  Object ID
+             * @param {String} confirmPassword Password to be checked
+             * @param {Function} onSuccess (Optional)Callback function of success query
+             * @param {Function} onError (Optional) Callback function when fail
+             *
+             * @returns {Object} Object returned by $resource
+             */
+            _confirmSignature: {
+                method: 'POST',
+                url: 'api/latest/plugin/signature/confirm/:objectType/:objectId?confirmPassword=:pass'
+            },
+
             /**
              * @ngdoc method
              * @name findSignatures
@@ -38,6 +60,36 @@ angular.module('services').factory('Object.SignatureService', ['$resource', 'Acm
 
         });
 
+        /**
+         * @ngdoc method
+         * @name confirmSignature
+         * @methodOf services:Object.SignatureService
+         *
+         * @descrption
+         * Sign with confirming password
+         *
+         * @param objectType Object type
+         * @param objectId Object ID
+         * @param pass Password to be checked
+         * @returns {Object} Promise
+         */
+        Service.confirmSignature = function (objectType, objectId, pass) {
+            return Util.serviceCall({
+                service: Service._confirmSignature
+                , param: {
+                    objectType: objectType
+                    , objectId: objectId
+                    , pass: pass
+                }
+                , data: {}
+                ,
+                onSuccess: function (data) {
+                    if (Service.validateSignature(data)) {
+                        return data;
+                    }
+                }
+            });
+        };
 
         Service.SessionCacheNames = {};
         Service.CacheNames = {
@@ -98,6 +150,23 @@ angular.module('services').factory('Object.SignatureService', ['$resource', 'Acm
             return true;
         };
 
+        /**
+         * @ngdoc method
+         * @name validateSignature
+         * @methodOf services:Object.SignatureService
+         *
+         * @descrption
+         * Validate signature data
+         * @param {Object} data Data to be validated
+         * @returns {Boolean} Return true if data is valid
+         */
+        Service.validateSignature = function (data) {
+            if (!Util.isEmpty(data))
+                return false;
+            if (!Util.isEmpty(data.signedBy))
+                return false;
+            return true;
+        };
 
         return Service;
     }

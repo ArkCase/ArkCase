@@ -83,25 +83,42 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
                                 };
                                 task.acm$_taskActionDone = true;
 
-                                var found = _.find($scope.myTasks, {taskId: tasks[i].id});
-                                if (found) {
-                                    if (!found.completed && found.adhocTask) {
-                                        task.acm$_taskOutcomes.push({id: "complete", value: "Complete"});
-                                        task.acm$_taskOutcomes.push({id: "delete", value: "Delete"});
-                                        task.acm$_taskActionDone = false;
-
-                                    } else if (!found.completed && !found.adhocTask && !Util.isArrayEmpty(found.availableOutcomes)) {
-                                        var availableOutcomes = Util.goodArray(found.availableOutcomes);
+                                if (task.status_s === "ACTIVE" && task.adhocTask_b) {
+                                    task.acm$_taskOutcomes.push({id: "complete", value: "Complete"});
+                                    task.acm$_taskOutcomes.push({id: "delete", value: "Delete"});
+                                    task.acm$_taskActionDone = false;
+                                }
+                                else if (task.status_s === "ACTIVE" && !task.adhocTask_b && !Util.isArrayEmpty(task.outcome_value_ss)) {
+                                    var availableOutcomes = Util.goodArray(task.outcome_value_ss);
+                                    if (availableOutcomes !== undefined && availableOutcomes.length > 0) {
                                         for (var j = 0; j < availableOutcomes.length; j++) {
                                             var outcome = {
-                                                id: Util.goodValue(availableOutcomes[j].description),
-                                                value: Util.goodValue(availableOutcomes[j].description)
+                                                id: Util.goodValue(availableOutcomes[j]),
+                                                value: Util.goodValue(availableOutcomes[j])
                                             };
                                             task.acm$_taskOutcomes.push(outcome);
                                         }
-                                        task.acm$_taskActionDone = (1 >= availableOutcomes.length); //1 for '(Select One)'
                                     }
+                                    task.acm$_taskActionDone = (1 >= availableOutcomes.length); //1 for '(Select One)'
                                 }
+
+                                // var found = _.find($scope.myTasks, {taskId: tasks[i].id});
+                                // if (found) {
+                                //     if (!found.completed && found.adhocTask) {
+                                //
+                                //
+                                //     } else if (!found.completed && !found.adhocTask && !Util.isArrayEmpty(found.availableOutcomes)) {
+                                //         var availableOutcomes = Util.goodArray(found.availableOutcomes);
+                                //         for (var j = 0; j < availableOutcomes.length; j++) {
+                                //             var outcome = {
+                                //                 id: Util.goodValue(availableOutcomes[j].description),
+                                //                 value: Util.goodValue(availableOutcomes[j].description)
+                                //             };
+                                //             task.acm$_taskOutcomes.push(outcome);
+                                //         }
+                                //         task.acm$_taskActionDone = (1 >= availableOutcomes.length); //1 for '(Select One)'
+                                //     }
+                                // }
                             }
                         }); //end $q
 

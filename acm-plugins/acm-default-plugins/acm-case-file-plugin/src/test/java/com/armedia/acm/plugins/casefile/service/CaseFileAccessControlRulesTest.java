@@ -39,7 +39,6 @@ public class CaseFileAccessControlRulesTest
         assertTrue(xls.exists());
 
         String drl = sc.compile(xls.getInputStream(), InputType.XLS);
-        log.info("DRL: " + drl);
 
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
         DecisionTableConfiguration dtconf = KnowledgeBuilderFactory.newDecisionTableConfiguration();
@@ -48,6 +47,8 @@ public class CaseFileAccessControlRulesTest
 
         if (kbuilder.hasErrors())
         {
+            log.info("DRL has errors: " + drl);
+
             for (KnowledgeBuilderError error : kbuilder.getErrors())
             {
                 log.error("Error building rules: " + error);
@@ -75,13 +76,20 @@ public class CaseFileAccessControlRulesTest
 
         workingMemory.execute(caseFile);
 
-        assertEquals(2, caseFile.getParticipants().get(0).getPrivileges().size());
+        caseFile.getParticipants().get(0).getPrivileges().stream().forEach(pr -> log.info(
+                "type: {}, action: {}", pr.getAccessType(), pr.getObjectAction()
+        ));
+
+        assertEquals(3, caseFile.getParticipants().get(0).getPrivileges().size());
 
         assertEquals(1, caseFile.getParticipants().get(0).getPrivileges().stream().
                 filter(app -> app.getAccessType().equals("deny") && app.getObjectAction().equals("read")).count());
 
         assertEquals(1, caseFile.getParticipants().get(0).getPrivileges().stream().
                 filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("subscribe")).count());
+
+        assertEquals(1, caseFile.getParticipants().get(0).getPrivileges().stream().
+                filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("addTag")).count());
 
     }
 
@@ -99,13 +107,20 @@ public class CaseFileAccessControlRulesTest
 
         workingMemory.execute(caseFile);
 
-        assertEquals(2, caseFile.getParticipants().get(0).getPrivileges().size());
+        caseFile.getParticipants().get(0).getPrivileges().stream().forEach(pr -> log.info(
+                "type: {}, action: {}", pr.getAccessType(), pr.getObjectAction()
+        ));
+
+        assertEquals(3, caseFile.getParticipants().get(0).getPrivileges().size());
 
         assertEquals(1, caseFile.getParticipants().get(0).getPrivileges().stream().
                 filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("read")).count());
 
         assertEquals(1, caseFile.getParticipants().get(0).getPrivileges().stream().
                 filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("subscribe")).count());
+
+        assertEquals(1, caseFile.getParticipants().get(0).getPrivileges().stream().
+                filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("addTag")).count());
     }
 
 
