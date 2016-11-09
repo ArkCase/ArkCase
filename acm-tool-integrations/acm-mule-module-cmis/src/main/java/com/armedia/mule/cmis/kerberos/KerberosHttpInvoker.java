@@ -134,7 +134,7 @@ public class KerberosHttpInvoker implements HttpInvoker
             HttpResponse response = null;
             try
             {
-                LOG.debug("User: {} | Password: {}", user, password);
+                LOG.debug("User: {} | Password-length: {}", user, password.length());
 
                 LoginContext loginContext = new LoginContext(APP_CONFIGURATION_ENTRY_NAME, new KerberosCallBackHandler(user, password));
                 loginContext.login();
@@ -174,8 +174,8 @@ public class KerberosHttpInvoker implements HttpInvoker
             }
 
             // get the response
-            Map<String, List<String>> responseHeaders = Arrays.asList(response.getAllHeaders()).stream()
-                    .collect(Collectors.toMap(header -> header.getName(), header -> Arrays.asList(header.getElements()).stream()
+            Map<String, List<String>> responseHeaders = Arrays.stream(response.getAllHeaders())
+                    .collect(Collectors.toMap(header -> header.getName(), header -> Arrays.stream(header.getElements())
                             .map(headerElement -> headerElement.getValue()).collect(Collectors.toList())));
 
             return new Response(response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase(), responseHeaders,
