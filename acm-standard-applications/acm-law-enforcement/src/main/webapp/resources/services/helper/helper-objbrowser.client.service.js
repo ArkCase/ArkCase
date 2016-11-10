@@ -375,6 +375,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     SyncDataLoader.load(that.moduleId, that.getObjectInfo, [id], function (objectInfo) {
                           that.scope.progressMsg = null;
                           that.scope.objectInfo = objectInfo;
+                          that.scope.$broadcast('object-updated', objectInfo, id);
 
                           //when object is loaded we want to subscribe to change events
                           var objectId = id;
