@@ -3,9 +3,11 @@
 angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$stateParams'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Case.InfoService', 'Complaint.InfoService', 'Task.InfoService'
     , 'CostTracking.InfoService', 'TimeTracking.InfoService', 'Object.ModelService', 'LookupService', 'Helper.ObjectBrowserService'
+    , 'MessageService'
     , function ($scope, $stateParams
         , Util, ConfigService, ObjectService, CaseInfoService, ComplaintInfoService, TaskInfoService
-        , CostTrackingInfoService, TimeTrackingInfoService, ObjectModelService, LookupService, HelperObjectBrowserService) {
+        , CostTrackingInfoService, TimeTrackingInfoService, ObjectModelService, LookupService, HelperObjectBrowserService
+        , MessageService) {
 
         new HelperObjectBrowserService.Component({
             moduleId: "tasks"
