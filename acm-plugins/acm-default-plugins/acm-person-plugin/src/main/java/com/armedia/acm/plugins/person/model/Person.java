@@ -128,6 +128,7 @@ public class Person implements Serializable, AcmEntity
     @JoinTable(name = "acm_person_contact_method", joinColumns = {
             @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id")}, inverseJoinColumns = {
             @JoinColumn(name = "cm_contact_method_id", referencedColumnName = "cm_contact_method_id")})
+    @OrderBy(value = "id")
     private List<ContactMethod> contactMethods = new ArrayList<>();
 
     @ElementCollection
