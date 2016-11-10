@@ -27,6 +27,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -35,12 +36,12 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Created by armdev on 4/7/14.
@@ -120,14 +121,15 @@ public class Person implements Serializable, AcmEntity
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "acm_person_postal_address", joinColumns = {
-            @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id")}, inverseJoinColumns = {
-            @JoinColumn(name = "cm_address_id", referencedColumnName = "cm_address_id")})
+            @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id") }, inverseJoinColumns = {
+                    @JoinColumn(name = "cm_address_id", referencedColumnName = "cm_address_id") })
     private List<PostalAddress> addresses = new ArrayList<>();
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "acm_person_contact_method", joinColumns = {
-            @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id")}, inverseJoinColumns = {
-            @JoinColumn(name = "cm_contact_method_id", referencedColumnName = "cm_contact_method_id")})
+            @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id") }, inverseJoinColumns = {
+                    @JoinColumn(name = "cm_contact_method_id", referencedColumnName = "cm_contact_method_id") })
+    @OrderBy(value = "id")
     private List<ContactMethod> contactMethods = new ArrayList<>();
 
     @ElementCollection
@@ -143,14 +145,14 @@ public class Person implements Serializable, AcmEntity
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(name = "acm_person_identification", joinColumns = {
-            @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id")}, inverseJoinColumns = {
-            @JoinColumn(name = "cm_identification_id", referencedColumnName = "cm_identification_id", unique = true)})
+            @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id") }, inverseJoinColumns = {
+                    @JoinColumn(name = "cm_identification_id", referencedColumnName = "cm_identification_id", unique = true) })
     private List<Identification> identifications = new ArrayList<>();
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "acm_person_organization", joinColumns = {
-            @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id")}, inverseJoinColumns = {
-            @JoinColumn(name = "cm_organization_id", referencedColumnName = "cm_organization_id")})
+            @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id") }, inverseJoinColumns = {
+                    @JoinColumn(name = "cm_organization_id", referencedColumnName = "cm_organization_id") })
     private List<Organization> organizations = new ArrayList<>();
 
     @Column(name = "cm_class_name")
