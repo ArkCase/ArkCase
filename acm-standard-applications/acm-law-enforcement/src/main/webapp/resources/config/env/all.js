@@ -34,7 +34,6 @@ module.exports = {
                 'lib/fancytree/dist/skin-win8/ui.fancytree.css',
                 'lib/angular-xeditable/dist/css/xeditable.css',
                 'lib/summernote/dist/summernote.css',
-                'lib/angular-dashboard-framework/dist/angular-dashboard-framework.css',
                 'lib/angular-notify/dist/angular-notify.css',
                 'lib/handsontable/dist/handsontable.full.css',
                 'lib/ng-tags-input/ng-tags-input.css',
@@ -67,7 +66,6 @@ module.exports = {
                 'lib/angular-translate-loader-partial/angular-translate-loader-partial.min.js',
                 'lib/angular-xeditable/dist/js/xeditable.min.js',
                 'lib/Sortable/Sortable.min.js',
-                'lib/angular-dashboard-framework/dist/angular-dashboard-framework.min.js',
                 'lib/fancytree/dist/jquery.fancytree.min.js',
                 'lib/fancytree/dist/src/jquery.fancytree.table.js',
                 'lib/fancytree/dist/src/jquery.fancytree.gridnav.js',
@@ -98,7 +96,8 @@ module.exports = {
             'modules/**/css/*.css',
             'custom_modules/**/css/*.css',
             'assets/css/arkcase-extension.css',
-            'custom_assets/css/arkcase-extension.css'
+            'custom_assets/css/arkcase-extension.css',
+            'vendors/angular-dashboard-framework/angular-dashboard-framework.css'
         ],
         scss: [
             'modules/**/scss/*.scss',
@@ -111,7 +110,8 @@ module.exports = {
             'services/*.js',   // Includes services/services.client.module.js file only
             'directives/*.js', // Includes directives/directives.client.js file only
             'filters/*.js',
-            'filters/*/*.js'
+            'filters/*/*.js',
+            'vendors/angular-dashboard-framework/angular-dashboard-framework.js'
         ],
         distJs: ['assets/dist/vendors.min.js', 'assets/dist/application.min.js'],
         distCss: ['assets/dist/application.min.css'], // Can't use this, because CSS has fonts and images dependencies
