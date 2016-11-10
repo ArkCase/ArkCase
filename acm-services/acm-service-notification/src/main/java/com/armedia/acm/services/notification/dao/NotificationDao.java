@@ -155,7 +155,6 @@ public class NotificationDao extends AcmAbstractDao<Notification>
             String parentType = (String) obj[4];
             Long relatedObjectId = (Long) obj[7];
             String relatedObjectType = (String) obj[8];
-            Date actionDate = (Date) obj[9];
             String objectType = relatedObjectType != null ? relatedObjectType : parentType;
             Long objectId = relatedObjectType != null ? relatedObjectId : parentId;
             UsersNotified usersNotified = rule.getUsersNotified();
@@ -163,7 +162,6 @@ public class NotificationDao extends AcmAbstractDao<Notification>
 
             setNotificationsTitle(notificationsForAssociatedUsers, rule);
             setNotificationsRelatedObjectNumber(notificationsForAssociatedUsers);
-            setNotificationActionDate(notificationsForAssociatedUsers, actionDate);
 
             notifications.addAll(notificationsForAssociatedUsers);
         }
@@ -193,14 +191,6 @@ public class NotificationDao extends AcmAbstractDao<Notification>
                     .getNotificationParentOrRelatedObjectNumber(notification.getRelatedObjectType(),
                             notification.getRelatedObjectId());
             notification.setRelatedObjectNumber(relatedObjectNumber);
-        });
-    }
-
-    private void setNotificationActionDate(List<Notification> notifications, Date actionDate)
-    {
-        notifications.forEach(notification ->
-        {
-            notification.setActionDate(actionDate);
         });
     }
 
