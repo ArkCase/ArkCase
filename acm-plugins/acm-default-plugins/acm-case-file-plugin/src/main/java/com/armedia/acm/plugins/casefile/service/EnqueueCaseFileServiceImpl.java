@@ -12,10 +12,12 @@ import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.plugins.casefile.web.api.CaseFileEnqueueResponse;
 import com.armedia.acm.plugins.casefile.web.api.CaseFileEnqueueResponse.ErrorReason;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -140,7 +142,16 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         List<String> nextPossibleQueues = verifyNextPossibleQueues(context, caseFile);
         if (nextPossibleQueues.isEmpty() || !nextPossibleQueues.contains(nextQueue))
         {
-            return new CaseFileEnqueueResponse(ErrorReason.NEXT_POSSIBLE, nextQueue, caseFile);
+            List<String> errorList = null;
+            if (nextPossibleQueues.isEmpty())
+            {
+                errorList = Arrays.asList(String.format("There is no next possible queue defined for %s queue.", nextQueue));
+            } else if (!nextPossibleQueues.contains(nextQueue))
+            {
+                errorList = Arrays
+                        .asList(String.format("Queue %s in not in the next possible queues list %s", nextQueue, nextPossibleQueues));
+            }
+            return new CaseFileEnqueueResponse(ErrorReason.NEXT_POSSIBLE, errorList, nextQueue, caseFile);
         }
 
         List<String> cannotEnterReasons = verifyNextConditions(context, caseFile);
@@ -152,7 +163,7 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         startLeaveProcess(context, caseFile);
         startEnterProcess(context, caseFile);
 
-        // we don't need to explicitly save the case file.  Since the casefile is a managed entity (because we did
+        // we don't need to explicitly save the case file. Since the casefile is a managed entity (because we did
         // not detach it) any changes we made are automatically applied at the end of the transaction.
 
         return new CaseFileEnqueueResponse(ErrorReason.NO_ERROR, nextQueue, caseFile);
