@@ -19,28 +19,15 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
             }
         });
 
-        var promiseQueryUser = Authentication.queryUserInfo();
-        var promiseGetGroups = ObjectLookupService.getGroups();
-
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
-
+            $scope.restricted = objectInfo.restricted;
             $scope.showCreateAndClose = ($scope.objectInfo.status !== "CLOSED");
 
-            var group = ObjectModelService.getGroup(objectInfo);
-            var assignee = ObjectModelService.getAssignee(objectInfo);
-            var promiseGetApprovers = ComplaintLookupService.getApprovers(group, assignee);
-            $q.all([promiseQueryUser, promiseGetGroups, promiseGetApprovers]).then(function (data) {
-                var userInfo = data[0];
-                var groups = data[1];
-                var assignees = data[2];
-                $scope.restricted = ObjectModelService.checkRestriction(userInfo.userId, assignee, group, assignees, groups);
-            });
-
-
-            promiseQueryUser.then(function (userInfo) {
+            Authentication.queryUserInfo().then(function (userInfo) {
                 $scope.userId = userInfo.userId;
-                ObjectSubscriptionService.getSubscriptions(userInfo.userId, ObjectService.ObjectTypes.COMPLAINT, $scope.objectInfo.complaintId).then(function (subscriptions) {
+                ObjectSubscriptionService.getSubscriptions(userInfo.userId, ObjectService.ObjectTypes.COMPLAINT
+                    , $scope.objectInfo.complaintId).then(function (subscriptions) {
                     var found = _.find(subscriptions, {
                         userId: userInfo.userId,
                         subscriptionObjectType: ObjectService.ObjectTypes.COMPLAINT,
@@ -49,22 +36,27 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
                     $scope.showBtnSubscribe = Util.isEmpty(found);
                     $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
                 });
+                ObjectModelService.checkIfUserCanRestrict($scope.userId, objectInfo).then(function (result) {
+                    $scope.isUserAbleToRestrict = result;
+                });
             });
 
             $scope.closeParams = {
                 complaintId: objectInfo.complaintId
                 , complaintNumber: objectInfo.complaintNumber
             };
-
         };
 
-        $scope.restricted = false;
         $scope.onClickRestrict = function ($event) {
-            if ($scope.restricted != $scope.objectInfo.restricted) {
+            if ($scope.isUserAbleToRestrict && $scope.restricted != $scope.objectInfo.restricted) {
                 $scope.objectInfo.restricted = $scope.restricted;
 
                 var complaintInfo = Util.omitNg($scope.objectInfo);
-                ComplaintInfoService.saveComplaintInfo(complaintInfo);
+                ComplaintInfoService.saveComplaintInfo(complaintInfo).then(function () {
+
+                }, function () {
+                    $scope.restricted = !$scope.restricted;
+                });
             }
         };
 
