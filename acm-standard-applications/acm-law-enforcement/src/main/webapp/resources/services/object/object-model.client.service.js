@@ -230,7 +230,7 @@ angular.module('services').factory('Object.ModelService', ['$q', '$resource', 'U
                             var userInGroup = _.find(owningGroupUsers, function (user) {
                                 return user.object_id_s === userId;
                             });
-                            return userInGroup !== undefined ? true : false;
+                            return userInGroup ? true : false;
                         }
                     );
                     return $q.resolve(canRestrict);
