@@ -62,7 +62,10 @@
       "start": 0,
       "filter": "\"Object Type\": NOTIFICATION & \"Owner\": userId",
       "filterName": "Object Type",
-      "reportFileName": "notifications"
+      "reportFileName": "notifications",
+      "hiddenFacets": [
+        "Owner"
+      ]
     }
   ]
 }

@@ -41,7 +41,7 @@ angular.module('dashboard.reworkDetails', ['adf.provider'])
 
                 $q.all([promiseConfig, promiseInfo]).then(function (data) {
                         var config = _.find(data[0].components, {id: "main"});
-                        var info = data[1];
+                        var info = angular.copy(data[1]);
                         var widgetInfo = _.find(config.widgets, function (widget) {
                             return widget.id === "reworkDetails";
                         });

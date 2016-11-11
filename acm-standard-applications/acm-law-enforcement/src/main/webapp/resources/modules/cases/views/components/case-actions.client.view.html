@@ -2,7 +2,7 @@
     <div class="col-xs-4">
         <div class="checkbox">
             <label>
-                <input type="checkbox" ng-model="restricted" ng-click="onClickRestrict($event)">
+                <input type="checkbox" ng-model="restricted" ng-click="onClickRestrict($event)" ng-disabled="!isUserAbleToRestrict">
                 <span translate>cases.comp.actions.restrict</span>
             </label>
         </div>
