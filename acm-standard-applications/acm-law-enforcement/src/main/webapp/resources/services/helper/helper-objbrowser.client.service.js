@@ -299,7 +299,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     SyncDataLoader.reset(that.moduleId, [objectId]);
                     SyncDataLoader.load(that.moduleId, that.getObjectInfo, [objectId], function (objectInfo) {
                         that.scope.objectInfo = objectInfo;
-                        that.scope.$broadcast('object-refreshed', objectInfo);
+                        that.scope.$broadcast('object-refreshed', objectInfo, true);
                         return objectInfo;
                     }, function (error) {
                         that.scope.objectInfo = null;
@@ -317,7 +317,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     that.currentObjectId = Service.getCurrentObjectId();
                     var objectId = that.getObjectIdFromInfo(objectInfo);
                     that.scope.objectInfo = objectInfo;
-                    that.scope.$broadcast('object-updated', objectInfo, objectId);
+                    that.scope.$broadcast('object-updated', objectInfo, objectId, true);
                 });
 
                 that.scope.$on('report-object-update-failed', function (e, objectInfo) {
@@ -497,8 +497,8 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                 });
 
                 that.previousId = null;
-                that.scope.$on('object-updated', function (e, objectInfo, objectId) {
-                    if(that.loaded != Service.getCurrentObjectId()) {
+                that.scope.$on('object-updated', function (e, objectInfo, objectId, reload) {
+                    if(reload || that.loaded != Service.getCurrentObjectId()) {
                        delete that.loaded;
                     } else {
                        return;
@@ -509,7 +509,12 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     }
                 });
 
-                that.scope.$on('object-refreshed', function (e, objectInfo) {
+                that.scope.$on('object-refreshed', function (e, objectInfo, reload) {
+                    if(reload || that.loaded != Service.getCurrentObjectId()) {
+                       delete that.loaded;
+                    } else {
+                       return;
+                    }
                     that.previousId = null;
                     that.currentObjectId = Service.getCurrentObjectId();
                     onObjectInfoUpdated(objectInfo, that.currentObjectId, e);
