@@ -47,7 +47,7 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             $scope.dateInfo = $scope.dateInfo || {};
             $scope.dateInfo.dueDate = UtilDateService.isoToDate($scope.objectInfo.dueDate);
             $scope.dateInfo.taskStartDate = UtilDateService.isoToDate($scope.objectInfo.taskStartDate);
-            $scope.assignee = ObjectModelService.getAssignee($scope.objectInfo);
+            $scope.assignee = ObjectModelService.getAssignee($scope.objectInfo); 
         };
 
         $scope.defaultDatePickerFormat = UtilDateService.defaultDatePickerFormat;

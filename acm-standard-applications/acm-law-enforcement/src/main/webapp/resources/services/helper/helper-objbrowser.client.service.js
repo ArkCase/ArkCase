@@ -16,6 +16,36 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
     , 'Acm.StoreService', 'UtilService', 'ConfigService', 'ServCommService', 'MessageService'
     , function ($q, $resource, $translate, Store, Util, ConfigService, ServCommService, MessageService) {
 
+        var SyncDataLoader = {
+            data : {},
+            getKey : function(moduleId, args) {
+                return moduleId + "_" + args.join("_"); 
+            },
+            load : function(moduleId, dataLoadFunc, args, success, error) {
+                var that = this;
+                var key = this.getKey(moduleId, args);
+                var entry = this.data[key];
+                if(entry) {
+                  if(entry.then) {
+                      entry.then(success, error);
+                  } else {
+                      success.apply(this,[entry]);
+                  }
+                } else {
+                  entry = that.data[key] = dataLoadFunc.apply(this, args);
+                  entry.then(function(data){
+                     entry = that.data[key] = data;
+                     return entry;
+                  }).then(success, error);
+                }
+                return entry;
+            },
+            reset: function(moduleId, args) {
+                var key = this.getKey(moduleId, args);
+                this.data[key] = null;
+            }
+        }
+
         var Service = {
             VariableNames: {
                 CURRENT_OBJECT_SETTING: "CurrentObjectSetting"
@@ -266,19 +296,17 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
 
                 that.scope.$on('report-object-refreshed', function (e, objectId) {
                     that.resetObjectInfo();
-
-                    that.getObjectInfo(objectId).then(
-                        function (objectInfo) {
-                            that.scope.objectInfo = objectInfo;
-                            that.scope.$broadcast('object-refreshed', objectInfo);
-                            return objectInfo;
-                        }
-                        , function (error) {
-                            that.scope.objectInfo = null;
-                            //todo: display error
-                            return error;
-                        }
-                    );
+                    SyncDataLoader.reset(that.moduleId, [objectId]);
+                    SyncDataLoader.load(that.moduleId, that.getObjectInfo, [objectId], function (objectInfo) {
+                        that.scope.objectInfo = objectInfo;
+                        that.scope.$broadcast('object-refreshed', objectInfo);
+                        return objectInfo;
+                    }, function (error) {
+                        that.scope.objectInfo = null;
+                        //todo: display error
+                        return error;
+                  })
+                   
                 });
 
                 that.scope.$on('report-tree-updated', function (e, objectInfo) {
@@ -333,56 +361,54 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                 });
 
                 ServCommService.handleResponse(that.scope);
-                //that.scope.$on('rootScope:servcomm-response', function (event, data) {
-                //    console.log("Help.objbrowser, rootScope:servcomm-response");
-                //    //that.scope.$emit('report-object-refreshed', that.stateParams.id);
-                //});
 
                 that.scope.progressMsg = $translate.instant("common.objects.progressNoData");
                 var loadObject = function (id) {
-                    if (Util.goodPositive(id)) {
-                        if (that.scope.objectInfo && that.getObjectIdFromInfo(that.scope.objectInfo) != id) {
-                            that.scope.objectInfo = null;
-                        }
-                        that.scope.progressMsg = $translate.instant("common.objects.progressLoading") + " " + id + "...";
-                        that.getObjectInfo(id).then(
-                            function (objectInfo) {
-                                that.scope.progressMsg = null;
-                                that.scope.objectInfo = objectInfo;
-                                that.scope.$broadcast('object-updated', objectInfo, id);
-
-                                //when object is loaded we want to subscribe to change events
-                                var objectId = id;
-                                var objectType = that.getObjectTypeFromInfo(that.scope.objectInfo);
-
-                                //objectType fix for task
-                                if (objectType == 'ADHOC') {
-                                    objectType = 'TASK';
-                                }
-
-                                var eventName = "object.changed/" + objectType + "/" + objectId;
-
-                                //if there is subscription from other object we want to unsubscribe
-                                //we want to have only one subscription from the current object
-                                if (that.scope.subscription) {
-                                    that.scope.$bus.unsubscribe(that.scope.subscription);
-                                }
-                                that.scope.subscription = that.scope.$bus.subscribe(eventName, function (data) {
-                                    //when we receive message that object was changed show it
-                                    //we can change to show other popups with generated links etc...
-                                    MessageService.info(objectType + " with ID " + objectId + " was updated.");
-                                });
-
-                                return objectInfo;
-                            }
-                            , function (error) {
-                                that.scope.objectInfo = null;
-                                that.scope.progressMsg = $translate.instant("common.objects.progressError") + " " + id;
-                                that.scope.$broadcast('object-update-failed', error);
-                                return error;
-                            }
-                        );
+                    if (!Util.goodPositive(id)) {
+                        return;
                     }
+                    if (that.scope.objectInfo && that.getObjectIdFromInfo(that.scope.objectInfo) != id) {
+                        that.scope.objectInfo = null;
+                    }
+                    
+                    that.scope.progressMsg = $translate.instant("common.objects.progressLoading") + " " + id + "...";
+                    SyncDataLoader.load(that.moduleId, that.getObjectInfo, [id], function (objectInfo) {
+                          that.scope.progressMsg = null;
+                          that.scope.objectInfo = objectInfo;
+                          that.scope.$broadcast('object-updated', objectInfo, id);
+
+                          //when object is loaded we want to subscribe to change events
+                          var objectId = id;
+                          var objectType = that.getObjectTypeFromInfo(that.scope.objectInfo);
+
+                          //objectType fix for task
+                          if (objectType == 'ADHOC') {
+                              objectType = 'TASK';
+                          }
+
+                          var eventName = "object.changed/" + objectType + "/" + objectId;
+
+                          //if there is subscription from other object we want to unsubscribe
+                          //we want to have only one subscription from the current object
+                          if (that.scope.subscription) {
+                              that.scope.$bus.unsubscribe(that.scope.subscription);
+                          }
+                          that.scope.subscription = that.scope.$bus.subscribe(eventName, function (data) {
+                              //when we receive message that object was changed show it
+                              //we can change to show other popups with generated links etc...
+                              MessageService.info(objectType + " with ID " + objectId + " was updated.");
+                          });
+
+                          return objectInfo;
+                      }
+                      , function (error) {
+                          that.scope.objectInfo = null;
+                          that.scope.progressMsg = $translate.instant("common.objects.progressError") + " " + id;
+                          that.scope.$broadcast('object-update-failed', error);
+                          return error;
+                      }
+                    );
+                    
                 };
 
                 var objectSetting = Service.updateObjectSetting(that.moduleId, null, that.stateParams.id, that.stateParams.type);
@@ -435,6 +461,12 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                 that.moduleId = arg.moduleId;
                 that.componentId = arg.componentId;
                 that.retrieveObjectInfo = arg.retrieveObjectInfo;
+                that.currentObjectId = that.scope.currentObjectId = Service.getCurrentObjectId();
+                
+                if(!that.currentObjectId) {
+                    return;
+                }
+                
                 that.validateObjectInfo = (arg.validateObjectInfo) ? arg.validateObjectInfo : function (data) {
                     return (!Util.isEmpty(data));
                 };
@@ -475,33 +507,19 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     onObjectInfoUpdated(objectInfo, that.currentObjectId, e);
                 });
 
-                that.currentObjectId = that.scope.currentObjectId = Service.getCurrentObjectId();
-                if (Util.goodPositive(that.currentObjectId, false)) {
-                    if (!Util.compare(that.previousId, that.currentObjectId)) {
-                        that.retrieveObjectInfo(that.currentObjectId).then(function (objectInfo) {
-                            onObjectInfoUpdated(objectInfo, that.currentObjectId);
-                            return objectInfo;
-                        });
-                    }
-                }
+                SyncDataLoader.load(that.moduleId, that.retrieveObjectInfo, [that.currentObjectId], function (objectInfo) {
+                    onObjectInfoUpdated(objectInfo, that.currentObjectId);
+                    return objectInfo;
+                });
 
-                var onObjectInfoUpdated = function (objectInfo, objectId, e) {
+                function onObjectInfoUpdated (objectInfo, objectId, e) {
                     if (!that.validateObjectInfo(objectInfo)) {
                         return;
                     }
                     if (!Util.goodPositive(objectId, false)) {
                         return;
                     }
-                    // EDTRM-491 Delete Adhoc task doesn't do anything: The fix is to remove the below block.
-                    //
-                    // With the below code, then when we re-load the same object, for example because we acted on
-                    // it (deleted it, completed it etc etc), the new state of the object will not be displayed.
-                    // So I have commented this code out, and added this warning comment, so nobody will try to add it
-                    // back in later..... Of course I am open to better ideas.  --DGM
-                    //if (Util.compare(that.previousId, objectId)) {
-                    //    return;   NOTE do not enable this code, or re-add similar code somewhere else, until
-                    //              you have read and understood the above comment.
-                    //}
+
                     that.previousId = objectId;
 
                     that.deferConfigDone.promise.then(function (data) {
@@ -587,7 +605,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
 
 
                 if (that.firstLoad && Util.goodPositive(that.nodeId)) {
-                    that.getNodeData(that.nodeId).then(
+                    SyncDataLoader.load(that.moduleId, that.getNodeData, [that.nodeId], 
                         function (objectInfo) {
                             var treeNode = that.makeTreeNode(objectInfo);
                             that.scope.treeControl.select({

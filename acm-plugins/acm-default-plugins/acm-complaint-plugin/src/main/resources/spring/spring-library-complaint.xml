@@ -233,4 +233,5 @@
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="OXMFilePath" value="${user.home}/.arkcase/acm${capture.oxm.file.path}"/>
     </bean>
+
 </beans>
