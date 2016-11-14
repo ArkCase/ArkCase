@@ -17,15 +17,16 @@
 			<value>
 				<![CDATA[
 					SELECT 
-					  	CONCAT('${objectTypeLabel}:', a.objectName, ' assigned to ', u.fullName, ' on ', a.created) AS title,
-					  	CONCAT('${objectTypeLabel}:', a.objectName, ' was assigned to ', u.fullName, ' on ', a.created, '.  Click here to view: ${urlanchor}') AS note,
+					  	CONCAT('${objectTypeLabel}:', a.objectName, ' assigned to ', u.fullName) AS title,
+					  	CONCAT('${objectTypeLabel}:', a.objectName, ' was assigned to ', u.fullName) AS note,
 					  	'user' AS notificationType,
 					  	a.objectId AS objectId,
 					  	a.objectType AS objectType,
 					  	a.objectName AS objectName,
 					  	a.objectTitle AS objectTitle,
 					  	NULL AS relatedObjectId,
-					 	NULL AS relatedObjectType
+					 	NULL AS relatedObjectType,
+					 	a.created AS actionDate
 					FROM 
 						AcmAssignment a, AcmUser u 
 					WHERE 
@@ -51,15 +52,16 @@
 			<value>
 				<![CDATA[
 					SELECT 	
-						CONCAT('${objectTypeLabel}:', a.objectName, ' unassigned from ', u.fullName, ' on ', a.created) AS title,
-					 	CONCAT('${objectTypeLabel}:', a.objectName, ' was unassigned from ', u.fullName, ' on ', a.created, '.  Click here to view: ${urlanchor}') AS note,
+						CONCAT('${objectTypeLabel}:', a.objectName, ' unassigned from ', u.fullName) AS title,
+					 	CONCAT('${objectTypeLabel}:', a.objectName, ' was unassigned from ', u.fullName) AS note,
 					 	'user' AS notificationType,
 					  	a.objectId AS objectId,
 					  	a.objectType AS objectType,
 					  	a.objectName AS objectName,
 					  	a.objectTitle AS objectTitle,
 					  	NULL AS relatedObjectId,
-					  	NULL AS relatedObjectType
+					  	NULL AS relatedObjectType,
+					  	a.created AS actionDate
 					FROM 
 						AcmAssignment a, AcmUser u 
 					WHERE 
@@ -106,7 +108,7 @@
 			<value>
 				<![CDATA[
 					SELECT
-					  	CONCAT('${objectTypeLabel}:', ecmf.fileName, ' uploaded in ${parentTypeLabel}:${nameLabel} on ', a.eventDate) AS title,
+					  	CONCAT('${objectTypeLabel}:', ecmf.fileName, ' uploaded in ${parentTypeLabel}:${nameLabel}') AS title,
 					  	NULL AS note,
 					  	'user' AS notificationType,
 					  	a.objectId AS objectId,
@@ -114,7 +116,8 @@
 					  	ecmf.fileName AS objectName,
 					  	ecmf.fileName AS objectTitle,
 					  	a.parentObjectId AS relatedObjectId,
-					  	a.parentObjectType AS relatedObjectType
+					  	a.parentObjectType AS relatedObjectType,
+					  	a.eventDate AS actionDate
 					FROM
 						AuditEvent a
 					JOIN AcmUser u ON a.userId = u.userId
@@ -149,7 +152,7 @@
 			<value>
 				<![CDATA[
                   	SELECT
-                    	CONCAT('${objectTypeLabel} deleted in ${parentTypeLabel}:${nameLabel} on ', a.eventDate) AS title,
+                    	'${objectTypeLabel} deleted in ${parentTypeLabel}:${nameLabel}' AS title,
                      	NULL AS note,
                       	'user' AS notificationType,
                       	a.objectId AS objectId,
@@ -157,7 +160,8 @@
                       	'' AS objectName,
                       	'' AS objectTitle,
                       	a.parentObjectId AS relatedObjectId,
-					  	a.parentObjectType AS relatedObjectType
+					  	a.parentObjectType AS relatedObjectType,
+					  	a.eventDate AS actionDate
                     FROM
                     	AuditEvent a
                     JOIN AcmUser u ON a.userId = u.userId    
@@ -186,15 +190,16 @@
 			<value>
 				<![CDATA[
                     SELECT
-                      	CONCAT('${objectTypeLabel}:', ecmf.fileName, ' replaced on ', a.eventDate) AS title,
-                      	CONCAT('${objectTypeLabel}:', ecmf.fileName, ' replaced on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+                      	CONCAT('${objectTypeLabel}:', ecmf.fileName, ' replaced') AS title,
+                      	CONCAT('${objectTypeLabel}:', ecmf.fileName, ' replaced') AS note,
                       	'user' AS notificationType,
                       	a.objectId AS objectId,
                       	a.objectType AS objectType,
                       	ecmf.fileName AS objectName,
                       	ecmf.fileName AS objectTitle,
                       	a.parentObjectId AS relatedObjectId,
-					  	a.parentObjectType AS relatedObjectType
+					  	a.parentObjectType AS relatedObjectType,
+					  	a.eventDate AS actionDate
                     FROM
                         AuditEvent a
                     JOIN AcmUser u ON a.userId = u.userId
@@ -225,15 +230,16 @@
 			<value>
 				<![CDATA[
                     SELECT 
-                    	CONCAT('${objectTypeLabel}:', ecmf.fileName, ' versioned on ', a.eventDate) AS title,
-                    	CONCAT('${objectTypeLabel}:', ecmf.fileName, ' versioned on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+                    	CONCAT('${objectTypeLabel}:', ecmf.fileName, ' versioned') AS title,
+                    	CONCAT('${objectTypeLabel}:', ecmf.fileName, ' versioned') AS note,
                     	'user' AS notificationType,
                     	a.objectId AS objectId,
                     	a.objectType AS objectType,
                     	ecmf.fileName AS objectName,
                     	ecmf.fileName AS objectTitle,
                     	a.parentObjectId AS relatedObjectId,
-						a.parentObjectType AS relatedObjectType
+						a.parentObjectType AS relatedObjectType,
+						a.eventDate AS actionDate
                     FROM
                     	AuditEvent a
                     JOIN AcmUser u ON a.userId = u.userId
@@ -263,15 +269,16 @@
 			<value>
 				<![CDATA[
                 	SELECT 
-  						CONCAT('${objectTypeLabel}:', c.complaintNumber, ' status changed on ', a.eventDate) AS title,
-  						CONCAT('${objectTypeLabel}:', c.complaintNumber, ' status changed on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+  						CONCAT('${objectTypeLabel}:', c.complaintNumber, ' status changed') AS title,
+  						CONCAT('${objectTypeLabel}:', c.complaintNumber, ' status changed') AS note,
   						'user' AS notificationType,
   						a.objectId AS objectId,
   						a.objectType AS objectType,
   						c.complaintNumber AS objectName,
   						c.complaintTitle AS objectTitle,
   						a.parentObjectId AS relatedObjectId,
-			    		a.parentObjectType AS relatedObjectType
+			    		a.parentObjectType AS relatedObjectType,
+			    		a.eventDate AS actionDate
 					FROM
   						AuditEvent a
   					JOIN AcmUser u ON a.userId = u.userId
@@ -297,15 +304,16 @@
 			<value>
 				<![CDATA[
                 	SELECT
-       					CONCAT('${objectTypeLabel}:', c.caseNumber, ' status changed on ', a.eventDate) AS title,
-       					CONCAT('${objectTypeLabel}:', c.caseNumber, ' status changed on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+       					CONCAT('${objectTypeLabel}:', c.caseNumber, ' status changed') AS title,
+       					CONCAT('${objectTypeLabel}:', c.caseNumber, ' status changed') AS note,
        					'user' AS notificationType,
        					a.objectId AS objectId,
        					a.objectType AS objectType,
        					c.caseNumber AS objectName,
        					c.title AS objectTitle,
        					a.parentObjectId AS relatedObjectId,
-						a.parentObjectType AS relatedObjectType
+						a.parentObjectType AS relatedObjectType,
+						a.eventDate AS actionDate
 					FROM
 						AuditEvent a
 					JOIN AcmUser u ON a.userId = u.userId
@@ -332,7 +340,7 @@
 			<value>
 				<![CDATA[
                    	SELECT 
-       					CONCAT('${objectTypeLabel} added in ${parentTypeLabel}:${nameLabel} on ', a.eventDate) AS title,
+       					'${objectTypeLabel} added in ${parentTypeLabel}:${nameLabel}' AS title,
 				    	NULL AS note,
 				    	'user' AS notificationType,
 				    	a.objectId AS objectId,
@@ -340,7 +348,8 @@
 				    	CONCAT(a.objectType, "_", a.objectId) AS objectName,
 				    	CONCAT(a.objectType, "_", a.objectId) AS objectTitle,
 				    	a.parentObjectId AS relatedObjectId,
-						a.parentObjectType AS relatedObjectType
+						a.parentObjectType AS relatedObjectType,
+						a.eventDate AS actionDate
 					FROM
 				  		AuditEvent a
 				 	JOIN AcmUser u ON a.userId = u.userId
@@ -365,15 +374,16 @@
 			<value>
 				<![CDATA[
                     SELECT 
-  						CONCAT('${objectTypeLabel}:', c.complaintNumber, ' priority changed on ', a.eventDate) AS title,
-  						CONCAT('${objectTypeLabel}:', c.complaintNumber, ' priority changed on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+  						CONCAT('${objectTypeLabel}:', c.complaintNumber, ' priority changed') AS title,
+  						CONCAT('${objectTypeLabel}:', c.complaintNumber, ' priority changed') AS note,
   						'user' AS notificationType,
   						a.objectId AS objectId,
   						a.objectType AS objectType,
   						c.complaintNumber AS objectName,
   						c.complaintTitle AS objectTitle,
   						a.parentObjectId AS parentId,
-			    		a.parentObjectType AS parentType
+			    		a.parentObjectType AS parentType,
+			    		a.eventDate AS actionDate
 					FROM
   						AuditEvent a
   					JOIN AcmUser u ON a.userId = u.userId
@@ -399,15 +409,16 @@
 			<value>
 				<![CDATA[
                     SELECT 
-  						CONCAT('${objectTypeLabel}:', c.complaintNumber, ' details updated on ', a.eventDate) AS title,
-  						CONCAT('${objectTypeLabel}:', c.complaintNumber, ' details updated on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+  						CONCAT('${objectTypeLabel}:', c.complaintNumber, ' details updated') AS title,
+  						CONCAT('${objectTypeLabel}:', c.complaintNumber, ' details updated') AS note,
   						'user' AS notificationType,
   						a.objectId AS objectId,
   						a.objectType AS objectType,
   						c.complaintNumber AS objectName,
   						c.complaintTitle AS objectTitle,
   						a.parentObjectId AS parentId,
-						a.parentObjectType AS parentType
+						a.parentObjectType AS parentType,
+						a.eventDate AS actionDate
 					FROM
   						AuditEvent a
   					JOIN AcmUser u ON a.userId = u.userId
@@ -433,15 +444,16 @@
 			<value>
 				<![CDATA[
                     SELECT 
-       					CONCAT('${objectTypeLabel}:', c.caseNumber, ' priority changed on ', a.eventDate) AS title,
-       					CONCAT('${objectTypeLabel}:', c.caseNumber, ' priority changed on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+       					CONCAT('${objectTypeLabel}:', c.caseNumber, ' priority changed') AS title,
+       					CONCAT('${objectTypeLabel}:', c.caseNumber, ' priority changed') AS note,
        					'user' AS notificationType,
        					a.objectId AS objectId,
        					a.objectType AS objectType,
        					c.caseNumber AS objectName,
        					c.title AS objectTitle,
        					a.parentObjectId AS parentId,
-						a.parentObjectType AS parentType
+						a.parentObjectType AS parentType,
+						a.eventDate AS actionDate
 					FROM
 						AuditEvent a
 					JOIN AcmUser u ON a.userId = u.userId
@@ -467,15 +479,16 @@
 			<value>
 				<![CDATA[
                     SELECT 
-       					CONCAT('${objectTypeLabel}:', c.caseNumber, ' details updated on ', a.eventDate) AS title,
-       					CONCAT('${objectTypeLabel}:', c.caseNumber, ' details updated on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+       					CONCAT('${objectTypeLabel}:', c.caseNumber, ' details updated') AS title,
+       					CONCAT('${objectTypeLabel}:', c.caseNumber, ' details updated') AS note,
        					'user' AS notificationType,
        					a.objectId AS objectId,
        					a.objectType AS objectType,
        					c.caseNumber AS objectName,
        					c.title AS objectTitle,
        					a.parentObjectId AS parentId,
-						a.parentObjectType AS parentType
+						a.parentObjectType AS parentType,
+						a.eventDate AS actionDate
 					FROM
 						AuditEvent a
 					JOIN AcmUser u ON a.userId = u.userId
@@ -502,7 +515,7 @@
 			<value>
 				<![CDATA[
                     SELECT 
-                    	CONCAT('${objectTypeLabel}:${nameLabel} details updated on ', a.eventDate) AS title,
+                    	'${objectTypeLabel}:${nameLabel} details updated' AS title,
                     	NULL AS note,
                     	'user' AS notificationType,
                     	a.objectId AS objectId,
@@ -510,7 +523,8 @@
                     	CONCAT(a.objectType, '_', a.objectId) AS objectName,
                     	CONCAT(a.objectType, '_', a.objectId) AS objectTitle,
                     	NULL AS parentId,
-						NULL AS parentType
+						NULL AS parentType,
+						a.eventDate AS actionDate
                     FROM 
                     	AuditEvent a
                     JOIN AcmUser u ON a.userId = u.userId
@@ -536,7 +550,7 @@
 			<value>
 				<![CDATA[
                     SELECT 
-                    	CONCAT('${objectTypeLabel}:${nameLabel} priority changed on ', a.eventDate) AS title,
+                    	'${objectTypeLabel}:${nameLabel} priority changed' AS title,
                     	NULL AS note,
                     	'user' AS notificationType,
                     	a.objectId AS objectId,
@@ -544,7 +558,8 @@
                     	CONCAT(a.objectType, '_', a.objectId) AS objectName,
                     	CONCAT(a.objectType, '_', a.objectId) AS objectTitle,
                     	NULL AS parentId,
-						NULL AS parentType
+						NULL AS parentType,
+						a.eventDate AS actionDate
                     FROM
                     	AuditEvent a
                     JOIN AcmUser u ON a.userId = u.userId
@@ -570,7 +585,7 @@
 			<value>
 				<![CDATA[
                     SELECT 
-                    	CONCAT('${objectTypeLabel}:${nameLabel} status changed on ', a.eventDate) AS title,
+                    	'${objectTypeLabel}:${nameLabel} status changed' AS title,
                     	NULL AS note,
                     	'user' AS notificationType,
                     	a.objectId AS objectId,
@@ -578,7 +593,8 @@
                     	CONCAT(a.objectType, '_', a.objectId) AS objectName,
                     	CONCAT(a.objectType, '_', a.objectId) AS objectTitle,
                     	NULL AS parentId,
-						NULL AS parentType
+						NULL AS parentType,
+						a.eventDate AS actionDate
                     FROM
                     	AuditEvent a
                     JOIN AcmUser u ON a.userId = u.userId
@@ -604,7 +620,7 @@
 			<value>
 				<![CDATA[
                     SELECT 
-			    		CONCAT('${objectTypeLabel} added in ${parentTypeLabel}:${nameLabel} on ', a.eventDate) AS title,
+			    		'${objectTypeLabel} added in ${parentTypeLabel}:${nameLabel}' AS title,
 			    		NULL as note,
 			    		'user' AS notificationType,
 			    		a.objectId AS objectId,
@@ -612,7 +628,8 @@
 			    		CONCAT(a.objectType, "_", a.objectId) AS objectName,
 			    		CONCAT(a.objectType, "_", a.objectId) AS objectTitle,
 			    		a.parentObjectId AS relatedObjectId,
-						a.parentObjectType AS relatedObjectType
+						a.parentObjectType AS relatedObjectType,
+						a.eventDate AS actionDate
 					FROM
 			  			AuditEvent a
 			  		JOIN AcmUser u ON a.userId = u.userId
@@ -638,7 +655,7 @@
 			<value>
 				<![CDATA[
                   	SELECT
-				    	CONCAT('${objectTypeLabel} deleted in ${parentTypeLabel}:${nameLabel} on ', a.eventDate) AS title,
+				    	'${objectTypeLabel} deleted in ${parentTypeLabel}:${nameLabel}' AS title,
 				    	NULL AS note,
 				    	'user' AS notificationType,
 				    	a.objectId AS objectId,
@@ -646,7 +663,8 @@
 				    	'' AS objectName,
 				    	'' AS objectTitle,
 				    	a.parentObjectId AS relatedObjectId,
-						a.parentObjectType AS relatedObjectType
+						a.parentObjectType AS relatedObjectType,
+						a.eventDate AS actionDate
 					FROM
 				  		AuditEvent a
 				  	JOIN AcmUser u ON a.userId = u.userId
@@ -671,15 +689,16 @@
 			<value>
 				<![CDATA[
 	                SELECT 
-				    	CONCAT('${objectTypeLabel} added in ${parentTypeLabel}:', c.complaintNumber, ' on ', a.eventDate) AS title,
-						CONCAT('${objectTypeLabel} added in ${parentTypeLabel}:', c.complaintNumber, ' on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+				    	CONCAT('${objectTypeLabel} added in ${parentTypeLabel}:', c.complaintNumber) AS title,
+						CONCAT('${objectTypeLabel} added in ${parentTypeLabel}:', c.complaintNumber) AS note,
 						'user' AS notificationType,
 						a.objectId AS objectId,
 				    	a.objectType AS objectType,
 						CONCAT(a.objectType, '_', a.objectId) AS objectName,
 						CONCAT(a.objectType, '_', a.objectId) AS objectTitle,
 						a.parentObjectId AS relatedObjectId,
-						a.parentObjectType AS relatedObjectType
+						a.parentObjectType AS relatedObjectType,
+						a.eventDate AS actionDate
 					FROM
 					  	AuditEvent a
 					JOIN AcmUser u ON a.userId = u.userId
@@ -705,15 +724,16 @@
 			<value>
 				<![CDATA[
 	                SELECT 
-				    	CONCAT('${objectTypeLabel} deleted in ${parentTypeLabel}:', c.complaintNumber, ' on ', a.eventDate) AS title,
-						CONCAT('${objectTypeLabel} deleted in ${parentTypeLabel}:', c.complaintNumber, ' on ', a.eventDate, '. Link: ${urlanchor}') AS note,
+				    	CONCAT('${objectTypeLabel} deleted in ${parentTypeLabel}:', c.complaintNumber) AS title,
+						CONCAT('${objectTypeLabel} deleted in ${parentTypeLabel}:', c.complaintNumber) AS note,
 						'user' AS notificationType,
 						a.objectId AS objectId,
 				    	a.objectType AS objectType,
 						'' AS objectName,
 						'' AS objectTitle,
 						a.parentObjectId AS relatedObjectId,
-						a.parentObjectType AS relatedObjectType
+						a.parentObjectType AS relatedObjectType,
+						a.eventDate AS actionDate
 					FROM
 					  	AuditEvent a
 					JOIN AcmUser u ON a.userId = u.userId
@@ -739,15 +759,16 @@
 			<value>
 				<![CDATA[
 	                SELECT 
-						CONCAT('${objectTypeLabel} added in ${parentTypeLabel}:', c.caseNumber, ' on ', a.eventDate) AS title,
-						CONCAT('${objectTypeLabel} added in ${parentTypeLabel}:', c.caseNumber, ' on ', a.eventDate, '. Link: ${urlanchor}') AS note,
+						CONCAT('${objectTypeLabel} added in ${parentTypeLabel}:', c.caseNumber) AS title,
+						CONCAT('${objectTypeLabel} added in ${parentTypeLabel}:', c.caseNumber) AS note,
 						'user' AS notificationType,
 						a.objectId AS objectId,
 				    	a.objectType AS objectType,
 						CONCAT(a.objectType, '_', a.objectId) AS objectName,
 						CONCAT(a.objectType, '_', a.objectId) AS objectTitle,
 						a.parentObjectId AS relatedObjectId,
-						a.parentObjectType AS relatedObjectType
+						a.parentObjectType AS relatedObjectType,
+						a.eventDate AS actionDate
 					FROM
 					  	AuditEvent a
 					JOIN AcmUser u ON a.userId = u.userId
@@ -773,15 +794,16 @@
 			<value>
 				<![CDATA[
 	                SELECT
-						CONCAT('${objectTypeLabel} deleted in ${parentTypeLabel}:', c.caseNumber, ' on ', a.eventDate) AS title,
-						CONCAT('${objectTypeLabel} deleted in ${parentTypeLabel}:', c.caseNumber, ' on ', a.eventDate, '. Link: ${urlanchor}') AS note,
+						CONCAT('${objectTypeLabel} deleted in ${parentTypeLabel}:', c.caseNumber) AS title,
+						CONCAT('${objectTypeLabel} deleted in ${parentTypeLabel}:', c.caseNumber) AS note,
 						'user' AS notificationType,
 						a.objectId AS objectId,
 				    	a.objectType AS objectType,
 						'' AS objectName,
 						'' AS objectTitle,
 						a.parentObjectId AS relatedObjectId,
-						a.parentObjectType AS relatedObjectType
+						a.parentObjectType AS relatedObjectType,
+						a.eventDate AS actionDate
 					FROM
 					  	AuditEvent a
 					JOIN AcmUser u ON a.userId = u.userId
@@ -807,15 +829,16 @@
 			<value>
 				<![CDATA[
                     SELECT
-                    	CONCAT('Calendar event added on ', a.eventDate) AS title,
-                    	CONCAT('Calendar event added on ', a.eventDate, '. Link: ${urlanchor}') AS note,
+                    	'Calendar event added' AS title,
+                    	'Calendar event added' AS note,
                     	'user' AS notificationType,
                     	a.objectId AS objectId,
                     	a.objectType AS objectType,
                     	CONCAT('CALENDAR_EVENT_', a.objectId) AS objectName,
                     	CONCAT('CALENDAR_EVENT_', a.objectId) AS objectTitle,
                     	a.parentObjectId AS relatedObjectId,
-						a.parentObjectType AS relatedObjectType
+						a.parentObjectType AS relatedObjectType,
+						a.eventDate AS actionDate
                     FROM
 				 	 	AuditEvent a
 					JOIN AcmUser u ON a.userId = u.userId
@@ -841,7 +864,7 @@
 			<value>
 				<![CDATA[
                     SELECT
-  						CONCAT('Correspondence ', ecmf.fileName, ' added in ${parentTypeLabel}:${nameLabel} on ', a.eventDate) AS title,
+  						CONCAT('Correspondence ', ecmf.fileName, ' added in ${parentTypeLabel}:${nameLabel}') AS title,
   						NULL AS note,
   						'user' AS notificationType,
   						a.objectId AS objectId,
@@ -849,7 +872,8 @@
   						ecmf.fileName AS objectName,
   						ecmf.fileName AS objectTitle,
   						a.parentObjectId AS relatedObjectId,
-						a.parentObjectType AS relatedObjectType
+						a.parentObjectType AS relatedObjectType,
+						a.eventDate AS actionDate
 					FROM
 				 	 	AuditEvent a
 					JOIN AcmUser u ON a.userId = u.userId
