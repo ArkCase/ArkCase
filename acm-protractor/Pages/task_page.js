@@ -1,6 +1,8 @@
 var Objects = require('../json/Objects.json');
 var basePage = require('./base_page.js');
 var EC = protractor.ExpectedConditions;
+var SelectWrapper = require('../util/select-wrapper.js');
+var taskBtn = element(by.linkText(Objects.taskpage.locators.taskButton));
 var taskTitle = element(by.css(Objects.taskpage.locators.taskTitle));
 var Subject = element(by.id(Objects.taskpage.locators.subject));
 var StartDateInput = element(by.id(Objects.taskpage.locators.startDate));
@@ -10,11 +12,7 @@ var DueDateInput = element(by.id(Objects.taskpage.locators.DueDateInput));
 var percentCompleteInput = element(by.id(Objects.taskpage.locators.percentCompleteInput));
 var saveButton = element(by.id(Objects.taskpage.locators.saveButton));
 var tasksTitle = element(by.xpath(Objects.taskpage.locators.tasksTitle));
-var priorityDropDown = element(by.model(Objects.taskpage.locators.priorityDropDown));
-var priorityLow = element(by.xpath(Objects.taskpage.locators.priorityLow));
-var priorityMedium = element(by.xpath(Objects.taskpage.locators.priorityMedium));
-var priorityHigh = element(by.xpath(Objects.taskpage.locators.priorityHigh));
-var priorityExpedite = element(by.xpath(Objects.taskpage.locators.priorityExpedite));
+var priorityDropDown = new SelectWrapper(by.model(Objects.taskpage.locators.priorityDropDown));
 var assigneeInput = element(by.id(Objects.taskpage.locators.assigneeInput));
 var userSearchTitle = element(by.xpath(Objects.taskpage.locators.userSearchTitle));
 var searchUserInput = element(by.xpath(Objects.taskpage.locators.searchUserInput));
@@ -53,13 +51,13 @@ var noteSaveBtn = element(by.buttonText(Objects.taskspage.locators.noteSaveBtn))
 var deleteNoteBtn = element.all(by.repeater(Objects.taskspage.locators.deleteNoteBtn)).get(3).all(by.tagName(Objects.taskspage.locators.tag)).get(1);
 var editNoteBtn = element.all(by.repeater(Objects.taskspage.locators.editNoteBtn)).get(3).all(by.tagName(Objects.taskspage.locators.tag)).get(0);
 var priorityLink = element(by.xpath(Objects.taskspage.locators.priority));
-var priorityDropDownEdit = element(by.xpath(Objects.taskspage.locators.priorityDropDown));
+var priorityDropDownEdit = new SelectWrapper(by.xpath(Objects.taskspage.locators.priorityDropDown));
 var editSubmitButton = element(by.css(Objects.taskpage.locators.editSubmitButton));
 var percentCompletition = element(by.xpath(Objects.taskspage.locators.percentCompletition));
 var percentCompletitionInput = element(by.xpath(Objects.taskspage.locators.percentCompletitionInput));
 var taskSubjectEdit = element(by.xpath(Objects.taskspage.locators.taskSubject));
 var taskSubjectInput = element(by.xpath(Objects.taskspage.locators.taskSubjectInput));
-var assigneeDropDown = element(by.xpath(Objects.taskspage.locators.assigneeDropDown));
+var assigneeDropDown = new SelectWrapper(by.model(Objects.taskspage.locators.assigneeDropDown));
 var tagsLink = element.all(by.repeater(Objects.taskspage.locators.tagsLink)).get(9);
 var tagsTableTitle = element(by.css(Objects.taskspage.locators.tagsTableTitle));
 var addTagBtn = element(by.xpath(Objects.taskspage.locators.addTagBtn));
@@ -102,11 +100,11 @@ var dueDateValue = element(by.model(Objects.taskspage.locators.dueDateInput));
 var approveBtn = element(by.xpath(Objects.taskspage.locators.approveBtn));
 var caseTitleInTasks = element(by.xpath(Objects.taskspage.locators.caseTitleInTasks));
 
-
-
-
-
 var TaskPage = function() {
+    this.clickTaskButton = function(){
+        taskBtn.click();
+        return this;
+    }
     this.insertSubject = function(subject) {
         Subject.clear();
         Subject.click();
@@ -167,7 +165,7 @@ var TaskPage = function() {
         return this;
     };
     this.selectPriority = function(priority) {
-        priorityDropDown.$('[value="string:' + priority + '"]').click();
+        priorityDropDown.selectByText(priority);
         return this;
     }
     this.returnDueDateText = function() {
@@ -247,7 +245,7 @@ var TaskPage = function() {
         linkInputUrl.sendKeys(url);
         insertLinkBtn.click();
         return this;
-    }
+     }
     this.insertTaskDataLinkNote = function(assignee, subject, startdate, duedate, priority, percent, text, url) {
         this.addAssignee(assignee);
         this.insertSubject(subject);
@@ -304,7 +302,7 @@ var TaskPage = function() {
         return this;
     }
     this.selectPriorityEdit = function(priority) {
-        priorityDropDownEdit.$('[value="string:' + priority + '"]').click();
+        priorityDropDownEdit.selectByText(priority);
         return this;
     }
     this.confirmEdit = function() {
@@ -351,7 +349,7 @@ var TaskPage = function() {
         return this;
     }
     this.selectAssigneeEdit = function(assignee) {
-        assigneeDropDown.$('[value="string:' + assignee + '"]').click();
+        assigneeDropDown.selectByText(assignee);
         return this;
     }
     this.editAssignee = function(assignee) {
@@ -459,8 +457,9 @@ var TaskPage = function() {
         detailsLinkBtn.click();
         return this;
     }
-    this.insertDetailsTextAreaLink = function(text, url) {
-        insertLinkText.click();
+
+	this.insertDetailsTextAreaLink = function(text, url){
+		insertLinkText.click();
         insertLinkText.sendKeys(text);
         insertLinkUrl.clear();
         insertLinkUrl.sendKeys(url);
@@ -568,15 +567,15 @@ var TaskPage = function() {
         });
         return this;
     }
+	this.clickCaseTitleInTasks = function() {
+		browser.wait(EC.presenceOf(element(by.xpath(Objects.taskspage.locators.caseTitleInTasks))), 30000).then(function() {
+			caseTitleInTasks.click().then(function() {
+				browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.tasksLink))), 30000);
 
-    this.clickCaseTitleInTasks = function() {
-        browser.wait(EC.presenceOf(element(by.xpath(Objects.taskspage.locators.caseTitleInTasks))), 30000).then(function() {
-            caseTitleInTasks.click().then(function() {
-                browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.tasksLink))), 30000);
-                
-            });
-        });
-    }
+			});
+		});
+	}
+
 
 };
 
