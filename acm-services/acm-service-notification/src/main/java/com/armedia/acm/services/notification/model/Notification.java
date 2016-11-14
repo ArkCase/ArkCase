@@ -101,6 +101,9 @@ public class Notification implements Serializable, AcmObject, AcmEntity
     @Column(name = "cm_related_object_number")
     private String relatedObjectNumber;
 
+    @Column(name = "cm_notification_action_date")
+    private Date actionDate;
+
     @Transient
     private String userEmail;
 
@@ -313,6 +316,16 @@ public class Notification implements Serializable, AcmObject, AcmEntity
     public void setRelatedObjectNumber(String relatedObjectNumber)
     {
         this.relatedObjectNumber = relatedObjectNumber;
+    }
+
+    public Date getActionDate()
+    {
+        return actionDate;
+    }
+
+    public void setActionDate(Date actionDate)
+    {
+        this.actionDate = actionDate;
     }
 
     public String getUserEmail()
