@@ -88,6 +88,12 @@
         <property name="alwaysUseDefaultTargetUrl" value="false"/>
         <property name="sessionRegistry" ref="sessionRegistry"/>
         <property name="sessionAuthenticationStrategy" ref="concurrentSessionControlAuthenticationStrategy"/>
+        <property name="ignoreSavedUrls">
+            <list value-type="java.lang.String">
+                <value>/stomp</value>
+                <value>/api</value>
+            </list>
+        </property>
     </bean>
 
     <bean id="acmRedirectStrategy" class="com.armedia.acm.auth.AcmRedirectStrategy"/>
