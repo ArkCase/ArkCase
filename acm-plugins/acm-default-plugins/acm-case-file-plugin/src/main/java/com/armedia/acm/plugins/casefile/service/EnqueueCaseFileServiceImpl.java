@@ -145,11 +145,11 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
             List<String> errorList = null;
             if (nextPossibleQueues.isEmpty())
             {
-                errorList = Arrays.asList(String.format("There is no next possible queue defined for %s queue.", nextQueue));
+                errorList = Arrays.asList(String.format("From the %s queue, it is not possible to move to any other queue.", nextQueue));
             } else if (!nextPossibleQueues.contains(nextQueue))
             {
-                errorList = Arrays
-                        .asList(String.format("Queue %s in not in the next possible queues list %s", nextQueue, nextPossibleQueues));
+                errorList = Arrays.asList(
+                        String.format("From the %s queue, it is not possible to move to the %s queue.", nextQueue, nextPossibleQueues));
             }
             return new CaseFileEnqueueResponse(ErrorReason.NEXT_POSSIBLE, errorList, nextQueue, caseFile);
         }
