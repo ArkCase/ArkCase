@@ -159,6 +159,12 @@
             <column name="cm_parent_object_type" type="VARCHAR(128)"/>
         </addColumn>
     </changeSet>
+    
+    <changeSet id="12-acm_audit_add_event_description_column" author="sasko.tanaskoski">
+        <addColumn tableName="acm_audit_log">
+            <column name="cm_audit_description" type="VARCHAR(1024)"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
     
 

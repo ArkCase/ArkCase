@@ -42,6 +42,7 @@ public class NotificationToSolrTransformer implements AcmObjectToSolrDocTransfor
         solr.setObject_id_s(Long.toString(in.getId()));
         solr.setObject_type_s(NotificationConstants.OBJECT_TYPE);
         solr.setTitle_parseable(in.getTitle());
+        solr.setTitle_parseable_lcs(in.getTitle());
         solr.setParent_id_s(Long.toString(in.getParentId()));
         solr.setParent_type_s(in.getParentType());
         solr.setParent_number_lcs(in.getParentName());
@@ -137,11 +138,13 @@ public class NotificationToSolrTransformer implements AcmObjectToSolrDocTransfor
         Long relatedObjectId = in.getRelatedObjectId();
         String relatedObjectType = in.getRelatedObjectType();
         String relatedObjectNumber = in.getRelatedObjectNumber();
+        Date actionDate = in.getActionDate();
         String notificationLink = getNotificationUtils().buildNotificationLink(in.getParentType(), in.getParentId(),
                 relatedObjectType, relatedObjectId);
         additionalProperties.put("related_object_id_l", relatedObjectId);
         additionalProperties.put("related_object_type_s", relatedObjectType);
         additionalProperties.put("related_object_number_s", relatedObjectNumber);
+        additionalProperties.put("action_date_tdt", actionDate);
         additionalProperties.put("notification_link_s", notificationLink);
     }
 

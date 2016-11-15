@@ -2,7 +2,12 @@
     <h3><span translate>Sign Task</span></h3>
 </div>
 <div class="modal-body">
+    <!--
     The body of the dialog with the value to pass '{{valuePassed}}'
+    -->
+    <div> Sign with your password:
+        <input type="password" placeholder="Enter password" ng-model="password"/>
+    </div>
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-default" ng-click="onClickCancel()">Cancel</button>

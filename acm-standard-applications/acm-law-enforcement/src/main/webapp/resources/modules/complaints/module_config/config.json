@@ -1035,7 +1035,8 @@
         {
           "name": "eventType",
           "displayName": "complaints.comp.history.table.columns.eventType",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div ng-if='row.entity.eventDescription'>{{row.entity.eventDescription}}</div><div ng-if='!row.entity.eventDescription'>{{row.entity.eventType}}</div>"
         },
         {
           "name": "eventDate",

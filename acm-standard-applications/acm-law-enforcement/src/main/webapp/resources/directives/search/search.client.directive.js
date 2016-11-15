@@ -246,7 +246,14 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                             scope.facets.splice(0, scope.facets.length)
                         }
                         _.forEach(facets, function (value, key) {
-                            if (value) {
+                            //check if facet key is in hidden facets
+                            //and if it is we will ignore it
+                            var hidden = false;
+                            if (typeof scope.config.hiddenFacets !== 'undefined' &&
+                                Util.isArray(scope.config.hiddenFacets)) {
+                                hidden = scope.config.hiddenFacets.includes(key);
+                            }
+                            if (!hidden && value) {
                                 scope.facets.push({"name": key, "fields": value});
                             }
                         });

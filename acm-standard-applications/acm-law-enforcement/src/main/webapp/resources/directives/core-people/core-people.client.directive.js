@@ -172,7 +172,8 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                     scope.objectInfo = objectInfo;
                     if (!scope.objectInfoLoaded) {
                         scope.objectInfoLoaded = true;
-                        $q.all([promiseUsers, promisePersonTypes, promiseContactMethodTypes, promiseOrganizationTypes, promiseAddressTypes, promiseAliasTypes]).then(function () {
+                        $q.all([promiseUsers, promisePersonTypes, promiseContactMethodTypes, promiseOrganizationTypes
+                            , promiseAddressTypes, promiseAliasTypes]).then(function () {
                             scope.retrieveGridData();
                         }); //end $q
                     }
@@ -329,7 +330,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                             return Util.compare(contact.id, rowEntity.id);
                         });
                         personAssociation.person.contactMethods.splice(idxContact, 1);
-                        saveObjectInfoAndRefresh();
+                        saveObjectInfoAndRefresh(personAssociation);
                     }
                 };
 
@@ -377,7 +378,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                             return Util.compare(organization.organizationId, rowEntity.organizationId);
                         });
                         personAssociation.person.organizations.splice(idxOrganization, 1);
-                        saveObjectInfoAndRefresh();
+                        saveObjectInfoAndRefresh(personAssociation);
                     }
                 };
 
@@ -431,7 +432,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                         });
                         personAssociation.person.addresses.splice(idxAddresses, 1);
 
-                        saveObjectInfoAndRefresh();
+                        saveObjectInfoAndRefresh(personAssociation);
 
                     }
                 };
@@ -477,7 +478,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                             return Util.compare(alias.id, rowEntity.id);
                         });
                         personAssociation.person.personAliases.splice(idxAlias, 1);
-                        saveObjectInfoAndRefresh();
+                        saveObjectInfoAndRefresh(personAssociation);
                     }
                 };
 
@@ -511,14 +512,14 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                         if (data.isEdit) {
                             var index = _.indexOf(_.pluck(scope.objectInfo.personAssociations, 'id'), scope.personAssociation.id);
                             scope.objectInfo.personAssociations[index] = scope.personAssociation;
-                            saveObjectInfoAndRefresh();
+                            saveObjectInfoAndRefresh(scope.personAssociation);
                         }
                         else {
                             ObjectPersonService.addPersonAssociation(scope.personAssociation).then(
                                 function (personAssociation) {
+                                    refresh();
                                     scope.objectInfo.personAssociations.push(personAssociation);
                                     scope.retrieveGridData();
-                                    refresh();
                                 }
                             );
                         }
@@ -560,12 +561,8 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                         contactMethod.value = data.contact.value;
                         if (!data.isEdit) {
                             personAssociation.person.contactMethods.push(contactMethod);
-                            //set objectInfoLoaded to false
-                            // so it will reload when new saved object info with id for contact method
-                            //come from database
-                            scope.objectInfoLoaded = false;
                         }
-                        saveObjectInfoAndRefresh();
+                        saveObjectInfoAndRefresh(personAssociation);
                     });
                 };
                 var showModalOrganizations = function (organization, isEdit) {
@@ -605,12 +602,8 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                         organization.organizationValue = data.organization.organizationValue;
                         if (!data.isEdit) {
                             personAssociation.person.organizations.push(organization);
-                            //set objectInfoLoaded to false
-                            // so it will reload when new saved object info with id for organization
-                            //come from database
-                            scope.objectInfoLoaded = false;
                         }
-                        saveObjectInfoAndRefresh();
+                        saveObjectInfoAndRefresh(personAssociation);
                     });
                 };
                 var showModalAddresses = function (address, isEdit) {
@@ -654,12 +647,8 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                         address.country = data.address.country;
                         if (!data.isEdit) {
                             personAssociation.person.addresses.push(address);
-                            //set objectInfoLoaded to false
-                            // so it will reload when new saved object info with id for address
-                            //come from database
-                            scope.objectInfoLoaded = false;
                         }
-                        saveObjectInfoAndRefresh();
+                        saveObjectInfoAndRefresh(personAssociation);
                     });
                 };
                 var showModalAliases = function (alias, isEdit) {
@@ -699,12 +688,8 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                         alias.aliasValue = data.alias.aliasValue;
                         if (!data.isEdit) {
                             personAssociation.person.personAliases.push(alias);
-                            //set objectInfoLoaded to false
-                            // so it will reload when new saved object info with id for alias
-                            //come from database
-                            scope.objectInfoLoaded = false;
                         }
-                        saveObjectInfoAndRefresh();
+                        saveObjectInfoAndRefresh(personAssociation);
                     });
                 };
 
@@ -778,15 +763,17 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                     };
                 };
 
-                var saveObjectInfoAndRefresh = function () {
-                    var saveObject = Util.omitNg(scope.objectInfo);
-                    scope.peopleInit.saveObjectInfo(saveObject).then(
-                        function (objectSaved) {
+                var saveObjectInfoAndRefresh = function (pa) {
+                    var personAssociation = Util.omitNg(pa);
+                    ObjectPersonService.addPersonAssociation(personAssociation).then(
+                        function (personAssociation) {
                             refresh();
-                            return objectSaved;
-                        }
-                        , function (error) {
-                            return error;
+                            scope.personAssociation = personAssociation;
+                            var idxPa = _.findIndex(scope.objectInfo.personAssociations, function (pa) {
+                                return Util.compare(pa.id, personAssociation.id);
+                            });
+                            scope.objectInfo.personAssociations[idxPa] = personAssociation;
+                            scope.retrieveGridData();
                         }
                     );
                 };

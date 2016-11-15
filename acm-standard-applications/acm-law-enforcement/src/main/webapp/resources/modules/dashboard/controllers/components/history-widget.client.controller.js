@@ -22,7 +22,7 @@ angular.module('dashboard.history', ['adf.provider'])
 
             var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
             if (Util.goodPositive(currentObjectId, false)) {
-                ObjectAuditService.queryAudit($stateParams.type
+                ObjectAuditService.queryAudit($stateParams.type == "ADHOC" ? "TASK" : $stateParams.type
                     , currentObjectId
                     , Util.goodValue($scope.start, 0)
                     , Util.goodValue($scope.pageSize, 10)
@@ -35,6 +35,12 @@ angular.module('dashboard.history', ['adf.provider'])
 
                         _.forEach(results, function (result) {
                             var eventType = result.fullEventType;
+                            if (result.eventType != null && result.eventType != "") {
+                                eventType = result.eventType;
+                            }
+                            if (result.eventDescription != null && result.eventDescription != "") {
+                                eventType = result.eventDescription;
+                            }
                             if (eventType === "") {
                                 //Do nothing
                             }

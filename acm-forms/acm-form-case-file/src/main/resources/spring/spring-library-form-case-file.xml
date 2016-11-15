@@ -34,6 +34,7 @@
         <property name="functionalAccessService" ref="functionalAccessService"/>
         <property name="searchResults" ref="searchResults"/>
         <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
+        <property name="caseFolderNameFormat" value="Case (%s)"/>
     </bean>
 
     <bean id="caseFilePSFactory" class="com.armedia.acm.form.casefile.service.CaseFilePSFactory">
