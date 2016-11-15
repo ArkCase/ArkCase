@@ -6,7 +6,6 @@ import com.armedia.acm.services.signature.model.Signature;
 import com.armedia.acm.services.signature.service.SignatureEventPublisher;
 import com.armedia.acm.services.users.service.ldap.LdapAuthenticateManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -26,9 +25,10 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { 
@@ -123,8 +123,8 @@ public class SignatureAPIControllerTest extends EasyMockSupport {
 		assertEquals(signedSignature.getObjectId(), objectId);
 
 		ApplicationSignatureEvent event = capturedEvent.getValue();
-		assertEquals(objectId, event.getObjectId());
-		assertEquals(objectType, event.getObjectType());
+		assertEquals(objectId, event.getParentObjectId());
+		assertEquals(objectType, event.getParentObjectType());
 		assertTrue(event.isSucceeded());
 	}
 	
@@ -163,8 +163,8 @@ public class SignatureAPIControllerTest extends EasyMockSupport {
 		verifyAll();
 
 		ApplicationSignatureEvent event = capturedEvent.getValue();
-		assertEquals(objectId, event.getObjectId());
-		assertEquals(objectType, event.getObjectType());
+		assertEquals(objectId, event.getParentObjectId());
+		assertEquals(objectType, event.getParentObjectType());
 		assertFalse(event.isSucceeded());
 	}
 
@@ -206,8 +206,8 @@ public class SignatureAPIControllerTest extends EasyMockSupport {
 		verifyAll();
 
 		ApplicationSignatureEvent event = capturedEvent.getValue();
-		assertEquals(objectId, event.getObjectId());
-		assertEquals(objectType, event.getObjectType());
+		assertEquals(objectId, event.getParentObjectId());
+		assertEquals(objectType, event.getParentObjectType());
 		assertFalse(event.isSucceeded());
 
 	 }

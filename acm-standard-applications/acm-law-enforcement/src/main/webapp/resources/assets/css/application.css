@@ -830,7 +830,7 @@ thead {
     left: 40%;
 }
 
-a.editable.editable-click.editable-hide {
+a.editable.editable-click {
     display: inline-block !important;
 }
 
@@ -1000,7 +1000,7 @@ a.editable.editable-click.editable-hide {
 
 /* Style of invalid fields */
 input.ng-invalid, textarea.ng-invalid, select.ng-invalid {
-    border-color: #ff7373;
+    border-color: #fdadad;
 }
 
 /* Dropdowns in the left sidebar (ie. datepicker) */ 

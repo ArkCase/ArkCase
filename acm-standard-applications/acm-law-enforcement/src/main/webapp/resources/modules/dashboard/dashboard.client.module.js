@@ -25,7 +25,6 @@ ApplicationConfiguration.registerModule('dashboard', [
     'dashboard.references',
     'dashboard.workflow',
     'dashboard.history',
-    'dashboard.correspondence',
     'dashboard.time',
     'dashboard.cost',
     'dashboard.calendar',

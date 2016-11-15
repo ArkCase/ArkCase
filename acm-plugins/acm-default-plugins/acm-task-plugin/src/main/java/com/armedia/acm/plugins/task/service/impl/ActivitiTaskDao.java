@@ -1054,7 +1054,11 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
                         TaskOutcome outcome = new TaskOutcome();
                         outcome.setName(fv.getId());
                         outcome.setDescription(fv.getName());
-                        outcome.setFieldsRequiredWhenOutcomeIsChosen(getRequiredFieldsPerOutcomeMap().get(fv.getId()));
+                        List<String> fieldsRequiredWhenOutcomeIsChosen = getRequiredFieldsPerOutcomeMap().get(fv.getId());
+                        if (fieldsRequiredWhenOutcomeIsChosen != null)
+                        {
+                            outcome.setFieldsRequiredWhenOutcomeIsChosen(fieldsRequiredWhenOutcomeIsChosen);
+                        }
                         retval.getAvailableOutcomes().add(outcome);
                     }
                 }
@@ -1320,6 +1324,8 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
             acmTask.setNextAssignee((String) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_NEXT_ASSIGNEE));
 
             acmTask.setLegacySystemId((String) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_LEGACY_SYSTEM_ID));
+
+            acmTask.setPendingStatus((String) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PENDING_STATUS));
         }
     }
 
