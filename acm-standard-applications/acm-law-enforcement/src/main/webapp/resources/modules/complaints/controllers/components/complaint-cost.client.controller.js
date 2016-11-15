@@ -37,7 +37,11 @@ angular.module('complaints').controller('Complaints.CostController', ['$scope', 
         };
 
         if (Util.goodPositive(componentHelper.currentObjectId, false)) {
-            ObjectCostService.queryCostsheets(ObjectService.ObjectTypes.COMPLAINT, componentHelper.currentObjectId).then(
+        	$scope.newCostsheetParamsFromObject = {
+        		objectId: componentHelper.currentObjectId,
+                type: 'COMPLAINT'
+            }
+        	ObjectCostService.queryCostsheets(ObjectService.ObjectTypes.COMPLAINT, componentHelper.currentObjectId).then(
                 function (costsheets) {
                     componentHelper.promiseConfig.then(function (config) {
                         for (var i = 0; i < costsheets.length; i++) {
