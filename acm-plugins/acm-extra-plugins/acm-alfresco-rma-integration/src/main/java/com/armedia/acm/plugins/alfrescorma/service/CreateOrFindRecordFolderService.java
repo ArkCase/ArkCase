@@ -94,7 +94,8 @@ public class CreateOrFindRecordFolderService extends AlfrescoService<String>
     {
         String categoryFolderId = categoryFolder.getId();
 
-        String rmaIdentifier = recordFolderName + "_" + categoryFolder.getName();
+        // The rma_identifier must always be unique, need unique id of parent folder
+        String rmaIdentifier = categoryFolder.getId() + "_" + recordFolderName;
 
         JSONObject createFolderPayload = new JSONObject();
         createFolderPayload.put("alf_destination", categoryFolderId);
