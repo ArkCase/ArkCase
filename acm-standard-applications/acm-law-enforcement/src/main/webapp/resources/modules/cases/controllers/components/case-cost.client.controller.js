@@ -41,6 +41,10 @@ angular.module('cases').controller('Cases.CostController', ['$scope', '$statePar
         var onObjectInfoRetrieved = function (objectInfo) {
             var currentObjectId = Util.goodMapValue(objectInfo, "id");
             if (Util.goodPositive(currentObjectId, false)) {
+            	$scope.newCostsheetParamsFromObject = {
+            		objectId: objectInfo.id,
+                    type: 'CASE_FILE'
+                }
                 ObjectCostService.queryCostsheets(ObjectService.ObjectTypes.CASE_FILE, currentObjectId).then(
                     function (costsheets) {
                         for (var i = 0; i < costsheets.length; i++) {
