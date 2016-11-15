@@ -17,19 +17,19 @@ import java.util.List;
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
-public class SpringLdapDaoTest extends EasyMockSupport
+public class SpringLdapPagedDaoTest extends EasyMockSupport
 {
     // TODO: will rework
 
     private LdapTemplate mockLdapTemplate;
     private AcmUserGroupsContextMapper mockUserGroupsContextMapper;
-    private SpringLdapDao.PagedResultsDirContextProcessorBuilder mockBuilder;
+    private SpringLdapPagedDao.PagedResultsDirContextProcessorBuilder mockBuilder;
     private PagedResultsDirContextProcessor mockPagedResultsDirContextProcessor;
     private PagedResultsCookie mockPagedResultsCookie;
 
     private AcmLdapSyncConfig syncConfig;
 
-    private SpringLdapDao unit;
+    private SpringLdapPagedDao unit;
 
 
     @Before
@@ -37,11 +37,11 @@ public class SpringLdapDaoTest extends EasyMockSupport
     {
         mockLdapTemplate = createMock(LdapTemplate.class);
         mockUserGroupsContextMapper = createMock(AcmUserGroupsContextMapper.class);
-        mockBuilder = createMock(SpringLdapDao.PagedResultsDirContextProcessorBuilder.class);
+        mockBuilder = createMock(SpringLdapPagedDao.PagedResultsDirContextProcessorBuilder.class);
         mockPagedResultsDirContextProcessor = createMock(PagedResultsDirContextProcessor.class);
         mockPagedResultsCookie = createMock(PagedResultsCookie.class);
 
-        unit = new SpringLdapDao();
+        unit = new SpringLdapPagedDao();
         unit.setUserGroupsContextMapper(mockUserGroupsContextMapper);
         unit.setBuilder(mockBuilder);
 

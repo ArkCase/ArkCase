@@ -10,8 +10,17 @@
     <bean id="acmUserGroupsContextMapper" class="com.armedia.acm.services.users.model.ldap.AcmUserGroupsContextMapper"/>
     <bean id="acmGroupContextMapper" class="com.armedia.acm.services.users.model.ldap.AcmGroupContextMapper"/>
 
-    <bean id="springLdapDao" class="com.armedia.acm.services.users.dao.ldap.SpringLdapDao">
+    <bean id="springLdapPagedDao" class="com.armedia.acm.services.users.dao.ldap.SpringLdapPagedDao">
         <property name="acmGroupContextMapper" ref="acmGroupContextMapper"/>
+        <property name="userGroupsContextMapper" ref="acmUserGroupsContextMapper"/>
+    </bean>
+
+    <bean id="customPagedLdapDao" class="com.armedia.acm.services.users.dao.ldap.CustomPagedLdapDao">
+        <property name="acmGroupContextMapper" ref="acmGroupContextMapper"/>
+        <property name="userGroupsContextMapper" ref="acmUserGroupsContextMapper"/>
+    </bean>
+
+    <bean id="springLdapUserDao" class="com.armedia.acm.services.users.dao.ldap.SpringLdapUserDao">
         <property name="userGroupsContextMapper" ref="acmUserGroupsContextMapper"/>
     </bean>
 
