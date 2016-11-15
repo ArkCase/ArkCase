@@ -1,11 +1,10 @@
 package com.armedia.acm.services.users.service.ldap;
 
+import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
+import com.armedia.acm.services.users.model.ldap.AcmLdapAuthenticateConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.LdapTemplate;
-
-import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
-import com.armedia.acm.services.users.model.ldap.AcmLdapAuthenticateConfig;
 
 /**
  * Authenticates a user id and password against LDAP directory.  To support multiple LDAP configurations, create multiple Spring 
@@ -26,11 +25,11 @@ public class LdapAuthenticateService {
         LdapTemplate template = getLdapDao().buildLdapTemplate(getLdapAuthenticateConfig());
         
         String userIdAttributeName = getLdapAuthenticateConfig().getUserIdAttributeName();
-        String searchBase = getLdapAuthenticateConfig().getSearchBase();
-                
-        String filter = "(" + userIdAttributeName + "=" + userName + ")";
-        boolean authenticated = template.authenticate(searchBase, filter, password);
-        
+		String searchBase = getLdapAuthenticateConfig().getSearchBase();
+
+		String filter = "(" + userIdAttributeName + "=" + userName + ")";
+		boolean authenticated = template.authenticate(searchBase, filter, password);
+
 		if (debug) {
 			log.debug("searchBase[" + searchBase + "], filter[" + filter + "], authenticated[" + authenticated + "]");
 		}

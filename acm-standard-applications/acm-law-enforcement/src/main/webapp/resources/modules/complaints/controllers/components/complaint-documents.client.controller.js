@@ -18,7 +18,9 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
         );
 
         $scope.uploadForm = function (type, folderId, onCloseForm) {
-            return DocTreeService.uploadFrevvoForm(type, folderId, onCloseForm, $scope.objectInfo, $scope.fileTypes);
+            var fileTypes = Util.goodArray($scope.treeConfig.fileTypes);
+            fileTypes = fileTypes.concat(Util.goodArray($scope.treeConfig.formTypes));
+            return DocTreeService.uploadFrevvoForm(type, folderId, onCloseForm, $scope.objectInfo, fileTypes);
         };
 
         var componentHelper = new HelperObjectBrowserService.Component({
@@ -60,7 +62,7 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
             $scope.assignee = ObjectModelService.getAssignee(objectInfo);
         };
 
-        $scope.onInitTree = function(treeControl) {
+        $scope.onInitTree = function (treeControl) {
             $scope.treeControl = treeControl;
             DocTreeExtCheckin.handleCheckout(treeControl, $scope);
             DocTreeExtCheckin.handleCheckin(treeControl, $scope);

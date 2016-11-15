@@ -9,11 +9,11 @@
         "data": {
             "supervisoruser": {
                 "username": "samuel-acm",
-                "password": "AcMd3v$"
+                "password": "Armedia#1"
             },
             "adminuser": {
                 "username": "ann-acm",
-                "password": "AcMd3v$"
+                "password": "Armedia#1"
             }
         }
     },
@@ -37,7 +37,7 @@
             "priorityHigh": ".//*[.='High']",
             "priorityExpedite": ".//*[.='Expedite']",
             "assigneeInput": "assignee",
-            "userSearchTitle": "'.//*[@class='modal-header ng-binding ng-scope']",
+            "userSearchTitle": ".//*[@class='modal-header ng-binding ng-scope']",
             "searchUserInput": ".//*[@class='modal-search']/div[1]/div/input",
             "searchUserBtn": ".//*[@class='btn btn-md btn-primary ng-binding']",
             "searchedName": "rowRenderIndex, row) in rowContainer.renderedRows track by $index",
@@ -73,7 +73,7 @@
 
         "locators": {
 
-            "priority": ".//*[@class='clearfix']/div[2]/div[3]/div/a",            
+            "priority": ".//*[@class='clearfix']/div[2]/div[3]/div/a",
             "assignee": ".//*[@class='clearfix']/div[2]/div[2]/div/a",
             "assigneeDropDown": ".//*[@class='clearfix']/div[2]/div[2]/div/form/div/select",
             "selectAssignee": ".//*[.='Ann Administrator']",
@@ -82,11 +82,11 @@
             "taskSubjectInput": ".//*[@class='clearfix']/div[1]/div/h4/form/div/input",
             "taskSubjectBtn": ".//*[@class='clearfix']/div[1]/div/h4/form/div/span/button[1]",
             "startDate": ".//*[@class='clearfix']/div[2]/div[4]/div/a",
-            "startDateInput": ".//*[@class='clearfix']/div[2]/div[4]/div/form/div/input",
+            "startDateInput": "$data",
             "startDateToday": "Today",
             "startDateConfrimBtn": ".//*[@class='clearfix']/div[2]/div[4]/div/form/div/span/button[1]",
             "dueDate": ".//*[@class='clearfix']/div[2]/div[5]/div/a",
-            "dueDateInput": ".//*[@class='clearfix']/div[2]/div[5]/div/form/div/input",
+            "dueDateInput": "$data",
             "dueDateToday": "Today",
             "dueDateConfirmBtn": ".//*[@class='clearfix']/div[2]/div[5]/div/form/div/span/button[1]",
             "percent": ".//*[@class='clearfix']/div[2]/div[1]/div/a",
@@ -149,11 +149,14 @@
             "attachmentsTableTitle": ".panel-title",
             "root": ".//*[@class='panel-body']/doc-tree/table[2]/tbody/tr[1]/td[3]/span/span[3]",
             "newDocument": ".ui-menu-item",
-            "otherDocument": "//*[@id='ui-id-14']",
+            "otherDocument": "//li[@data-command='file/Other']",
             "documentTitle": ".//*[@class='panel-body']/doc-tree/table[2]/tbody/tr[2]/td[3]/span/span[3]",
             "newFolder": ".ui-menu-item",
             "documentTitleInput": ".//*[@class='panel-body']/doc-tree/table[2]/tbody/tr[2]/td[3]/span/span[3]/input",
-            "tag": "a"
+            "tag": "a",
+            "approveBtn": ".//*[@class='btn btn-sm btn-default ng-binding ng-scope']/..//button[7]",
+            "caseTitleInTasks": ".//*[@class='ng-binding']/..//h4/a"
+
 
         },
 
@@ -317,6 +320,162 @@
             "websiteInput": "www.arkcase.com"
 
         }
+
+    },
+
+    "casepage": {
+
+        "locators": {
+
+            "newButton": "New",
+            "newCaseBtn": "Case",
+            "caseType": "input _frevvo-disable-backspace",
+            "caseArson": "Arson",
+            "firstName": "initiatorFirstName",
+            "lastName": "initiatorLastName",
+            "nextBtn": "//*[@name='actionType'][@value='Next']",
+            "submitBtn": "//*[@name='actionType'][@value='Submit']",
+            "casesTitle": ".//a[@editable-text='objectInfo.title']",
+            "casesPageTitle": ".//*[@class='module-header']/h3/span",
+            "caseTitle": "caseTitle",
+            "priority": ".//a[@editable-select='objectInfo.priority']",
+            "priorityDropDown": ".//*[@class='clearfix']/div[2]/div[3]/div/form/div/select",
+            "priorityLow": ".//*[.='Low']",
+            "priorityHigh": ".//*[.='High']",
+            "priorityExpedite": ".//*[.='Expedite']",
+            "priorityBtn": ".//*[@class='clearfix']//div/span/button[1]",
+            "assignee": ".//a[@editable-select='assignee']",
+            "assigneeDropDown": "//*[@class='clearfix']/div[3]/div[1]/div/form/div/select",
+            "assigneeBtn": ".//*[@class='editable-controls form-group']/..//button[1]",
+            "createdDate": ".//*[@class='h4 font-bold ng-binding']/..//div",
+            "casesType": ".//a[@editable-select='objectInfo.caseType']",
+            "changeCaseStatusBtn": ".//*[@class='pull-right']/..//div/a[3]",
+            "newCasesBtn": ".//*[@class='pull-right']/..//div/a[1]",
+            "editBtn": ".//*[@class='pull-right']/..//div/a[2]",
+            "subscribeBtn": ".//*[@class='pull-right']/..//div/button[2]",
+            "mergeBtn": ".//*[@class='pull-right']/..//div/button[3]",
+            "splitBtn": ".//*[@class='pull-right']/..//div/button[4]",
+            "refreshBtn": ".//*[@class='btn-group']/..//button[5]",
+            "changeCaseStatusTitle": "facade",
+            "changeStatusDropDown": "input _frevvo-disable-backspace",
+            "statusClosed": ".//*[@class='input _frevvo-disable-backspace']/..//li[4]",
+            "selectApprover": ".//*[@class='f-table-row s-expanded s-linked s-untyped s-invalid']/..//td[5]",
+            "addUser": ".//*[@id='labPoTitle']",
+            "searchForUser": ".//*[@id='edtPoSearch']",
+            "goBtn": ".//*[@class='input-group']/..//span/button",
+            "addBtn": ".//*[@id='dlgObjectPicker']/div/div/div[3]/button[2]",
+            "searchedUser": "//*[@id='divPoResults']/div/table/tbody/tr/td[3]",
+            "tasksLink": ".//*[@class='tabbed-footer']/..//ul/li[7]/a",
+            "tasksTable": ".//*[@class='panel panel-success panel-grid']",
+            "taskTitle": ".//*[@class='ng-binding ng-scope']",
+            "notesLink": ".//*[@class='tabbed-footer']/..//ul/li[6]/a",
+            "addNoteBtn": ".//*[@class='panel-title']/..//button",
+            "noteTextArea": "note.note",
+            "saveNoteBtn": ".//*[@class='modal-footer ng-scope']/..//button[2]",
+            "addedNoteName": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
+            "deleteNoteBtn": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
+            "editNoteBtn": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
+            "tag": "a",
+            "emptyNoteTable": "ui-grid-viewport ng-isolate-scope",
+            "addNewTaskBtn": ".//*[@class='panel-title']/..//button/i",
+            "taskTableRows": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
+            "peopleLinkBtn": ".//*[@class='tabbed-footer']/..//ul/li[3]/a",
+            "peopleTableColumns": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
+            "peopleTable": ".//*[@class='panel panel-success panel-grid']",
+            "addPeopleBtn": ".//*[@class='panel-title']/..//button",
+            "personsTypeDropDown": "person.personType",
+            "personFirstNameInput":"person.givenName",
+            "personLastNameInput": "person.familyName",
+            "savePersonBtn": ".//*[@class='modal-footer ng-scope']/..//button[2]",
+            "addContactMethodBtn": "[ng-click = 'grid.appScope.addNewContactMethods(row)']",
+            "contactMethodTypes": "contact.contactMethodType",
+            "contactValue": "contact.value",
+            "saveContactBtn": "[ng-click = 'onClickOk()']",
+            "deleteContactMethodBtn": "[ng-click = 'grid.appScope.deleteRowContactMethods(row.entity)']",
+            "emptyContactMethodTable": "[ng-style='colContainer.getViewportStyle()']" ,
+            "editContactMethodBtn": "[ng-click='grid.appScope.editRowContactMethods(row.entity)']",
+            "addOgranizationBtn": "[ng-click='grid.appScope.addNewOrganizations(row)']",
+            "organizationTypeDropDown":"organization.organizationType",
+            "organizationValueInput": "organization.organizationValue",
+            "saveOrganizationBtn":"[ng-click = 'onClickOk()']",
+            "organizationDeleteBtn":"[ng-click='grid.appScope.deleteRowOrganizations(row.entity)']",
+            "emptyOrganizationTable": "[ng-style='colContainer.getViewportStyle()']",
+            "organizationEditBtn": " [ng-click='grid.appScope.editRowOrganizations(row.entity)']",
+            "addAddressBtn": "[ng-click = 'grid.appScope.addNewAddresses(row)']",
+            "addressTypeDropDow": "address.addressType",
+            "streetAddress": "address.streetAddress",
+            "addressCity": "address.city",
+            "addressState": "address.state",
+            "addressZip": "address.zip",
+            "addressCountry": "address.country",
+            "saveAddressBtn": "[ng-click = 'onClickOk()']",
+            "deleteAddressBtn": "[ng-click='grid.appScope.deleteRowAddresses(row.entity)']",
+            "editAddressBtn": "[ng-click='grid.appScope.editRowAddresses(row.entity)']",
+            "addAliasesBtn": "[ng-click='grid.appScope.addNewAliases(row)']",
+            "aliasesDropdown": "alias.aliasType",
+            "aliasesValue": "alias.aliasValue",
+            "saveAliasesBtn":"[ng-click = 'onClickOk()']",
+            "deleteAliasBtn": "[ng-click='grid.appScope.deleteRowAliases(row.entity)']",
+            "editAliasBtn": "[ng-click='grid.appScope.editRowAliases(row.entity)']"
+
+        },
+
+        "data": {
+
+            "caseTitle": "New Case",
+            "firstName": "Milan",
+            "lastName": "Jovanovski",
+            "casesType": "Arson",
+            "casesPageTitle": "Cases",
+            "approverSamuel": "samuel",
+            "automatedTaskTitle": "Review Request to Change Case Status",
+            "priorityMedium": "Medium",
+            "priorityHigh": "High",
+            "priorityExpedite": "Expedite",
+            "assigneeSamuel": "Samuel Supervisor",
+            "note": "note",
+            "editnote": "test",
+            "peopleTypeInitiaor": "Initiator",
+            "peopleFirstName": "Milan",
+            "peopleLastName": "Jovanovski",
+            "peopleFirstNameEdit": "Milan1",
+            "peopleLastNameedit":"Jovanovski1",
+            "peopleTypeDefendant": "Defendant",
+            "peopleTypeWitness": "Witness",
+            "peopleTypeWASOfficer": "WAS Officer",
+            "peopleTypeVictim": "Victim",
+            "peopleTypeDefenseCounsel": "Defense Counsel",
+            "peopleTypeForensicScientist": "Forensic Scientist",
+            "contactMethodHomePhone": "Home Phone",
+            "contactMethodOffice": "Office Phone",
+            "contactMethodMobile": "Mobile",
+            "contactMethodEmail": "Email",
+            "contactMethodFacebook": "Facebook",
+            "organizationTypeNonProfit":"Non-Profit",
+            "organizationTypeGoverment":"Government",
+            "organizationTypeCorporation":"Corporation",
+            "addressTypeBusiness": "Business",
+            "addressTypeHome": "Home",
+            "street": "First street",
+            "city": "city",
+            "state": "state",
+            "zip":"1000",
+            "country": "Arizona",
+            "editStreet":"Second street",
+            "editCity": "edit city",
+            "editState": "Washington",
+            "editZip": "9000",
+            "editCountry": "New york",
+            "aliaseFKA": "FKA",
+            "aliasMarried": "Married",
+            "aliasValue": "Alias",
+            "editAlias": "editAlias",
+            "statusClosed":"Closed"
+
+
+
+        }
+
 
     }
 

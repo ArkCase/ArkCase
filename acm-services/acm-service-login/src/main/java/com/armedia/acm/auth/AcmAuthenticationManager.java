@@ -6,7 +6,6 @@ import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.service.group.GroupService;
 import com.armedia.acm.spring.SpringContextHolder;
-
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,9 +73,9 @@ public class AcmAuthenticationManager implements AuthenticationManager
             } else
             {
                 ae = ExceptionUtils.getRootCauseMessage(lastException).contains("UnknownHostException")
-                        ? new AuthenticationServiceException("There was an error in connecting with the authentication services!",
+                        ? new AuthenticationServiceException("There was an unknown error in connecting with the authentication services!",
                                 lastException)
-                        : new AuthenticationServiceException("Unknown error occurred!", lastException);
+                        : new AuthenticationServiceException(ExceptionUtils.getRootCauseMessage(lastException), lastException);
             }
             getAuthenticationEventPublisher().publishAuthenticationFailure(ae, authentication);
             log.debug("Detailed exception: ", lastException);

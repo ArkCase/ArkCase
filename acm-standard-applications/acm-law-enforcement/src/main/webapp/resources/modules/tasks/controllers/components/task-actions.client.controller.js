@@ -2,11 +2,11 @@
 
 angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state', '$stateParams', '$modal'
     , 'UtilService', 'ConfigService', 'Authentication'
-    , 'Task.InfoService', 'Task.WorkflowService', 'Object.SubscriptionService', 'ObjectService'
+    , 'Task.InfoService', 'Task.WorkflowService', 'Object.SubscriptionService', 'Object.SignatureService', 'ObjectService'
     , 'Helper.ObjectBrowserService'
     , function ($scope, $state, $stateParams, $modal
         , Util, ConfigService, Authentication
-        , TaskInfoService, TaskWorkflowService, ObjectSubscriptionService, ObjectService
+        , TaskInfoService, TaskWorkflowService, ObjectSubscriptionService, ObjectSignatureService, ObjectService
         , HelperObjectBrowserService) {
 
         new HelperObjectBrowserService.Component({
@@ -83,16 +83,12 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
         $scope.sign = function () {
             var modalInstance = $modal.open({
                 templateUrl: "modules/tasks/views/components/task-signature.dialog.html",
-                controller: 'Tasks.SignatureDialogController',
-                resolve: {
-                    aValue: function () {
-                        return "some value";
-                    }
-                }
+                controller: 'Tasks.SignatureDialogController'
             });
             modalInstance.result.then(function (result) {
                 if (result) {
                     console.log("sign task here");
+                    ObjectSignatureService.confirmSignature(ObjectService.ObjectTypes.TASK, $scope.objectInfo.taskId, result.pass);
                 }
             });
         };
@@ -157,6 +153,12 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
                 TaskWorkflowService.completeTaskWithOutcome(taskInfo, name).then(
                     function (taskInfo) {
                         $scope.$emit("report-object-updated", taskInfo);
+                        if (taskInfo.pendingStatus != null && taskInfo.pendingStatus == "DELETED") {
+                            // wait solr to index the change, and update the tree i.e. remove task from tree
+                            setTimeout(function () {
+                                $scope.$emit("report-tree-updated", taskInfo);
+                            }, 4000);
+                        }
                         return taskInfo;
                     },
                     function (error) {
@@ -206,14 +208,13 @@ angular.module('tasks').controller('Tasks.RejectDialogController', ['$scope', '$
         }
     ]
 );
-angular.module('tasks').controller('Tasks.SignatureDialogController', ['$scope', '$modalInstance', 'aValue',
-        function ($scope, $modalInstance, aValue) {
-            $scope.valuePassed = aValue;
+angular.module('tasks').controller('Tasks.SignatureDialogController', ['$scope', '$modalInstance',
+    function ($scope, $modalInstance) {
             $scope.onClickCancel = function () {
-                $modalInstance.close(false);
+                $modalInstance.dismiss('Cancel');
             };
             $scope.onClickOk = function () {
-                $modalInstance.close(true);
+                $modalInstance.close({pass: $scope.password});
             };
         }
     ]

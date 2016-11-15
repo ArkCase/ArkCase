@@ -10,10 +10,10 @@ import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -39,6 +39,7 @@ public class ParticipantsNotified implements UsersNotified
         notification.setParentTitle((String) obj[6]);
         notification.setRelatedObjectId((Long) obj[7]);
         notification.setRelatedObjectType((String) obj[8]);
+        notification.setActionDate((Date) obj[9]);
         notification.setStatus(NotificationConstants.STATUS_NEW);
         notification.setAction(NotificationConstants.ACTION_DEFAULT);
         notification.setData("{\"usr\":\"/plugin/" + ((String) obj[4]).toLowerCase() + "/" + obj[3] + "\"}");

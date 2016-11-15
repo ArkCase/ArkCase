@@ -12,6 +12,7 @@ import com.armedia.acm.form.plainconfiguration.service.PlainConfigurationFormSer
 import com.armedia.acm.form.project.service.ProjectService;
 import com.armedia.acm.form.time.service.TimeService;
 import com.armedia.acm.forms.roi.service.ROIService;
+import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
 import com.armedia.acm.service.frevvo.forms.web.api.FrevvoFormController;
@@ -267,9 +268,9 @@ public class FrevvoFormServiceFactory
 			{
 				String contextPath = request.getServletContext().getContextPath();
 
-				if (service.getFormName() == null && service instanceof PlainFormService)
+				if (service.getFormName() == null && "true".equals(plainForm))
 				{
-					((PlainFormService) service).setFormName(name);
+					service.setFormName(name);
 				}
 
 				service.setServletContextPath(contextPath);

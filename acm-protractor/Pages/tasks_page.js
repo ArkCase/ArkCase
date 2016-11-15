@@ -2,7 +2,7 @@ var Objects = require('../json/Objects.json');
 var TasksPage = function() {
 
 
-    this.priority = element(by.xpath(Objects.taskspage.locators.priority));
+    this. priority = element(by.xpath(Objects.taskspage.locators.priority));
     this.taskState = element(by.xpath(Objects.taskspage.locators.taskState));
     this.assignee = element(by.xpath(Objects.taskspage.locators.assignee));
     this.assigneeDropDown = element(by.xpath(Objects.taskspage.locators.assigneeDropDown));

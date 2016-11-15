@@ -7,8 +7,7 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
     , function ($scope, $stateParams, $modal, $q, $timeout
         , Util, ConfigService, ObjectService, ObjectLookupService, CaseInfoService, DocTreeService
         , HelperObjectBrowserService, Authentication, PermissionsService, ObjectModelService
-        , DocTreeExtWebDAV, DocTreeExtCheckin
-    ) {
+        , DocTreeExtWebDAV, DocTreeExtCheckin) {
 
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -16,7 +15,7 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
                 return userInfo;
             }
         );
-        
+
         var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
@@ -58,10 +57,12 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
 
 
         $scope.uploadForm = function (type, folderId, onCloseForm) {
-            return DocTreeService.uploadFrevvoForm(type, folderId, onCloseForm, $scope.objectInfo, $scope.fileTypes);
+            var fileTypes = Util.goodArray($scope.treeConfig.fileTypes);
+            fileTypes = fileTypes.concat(Util.goodArray($scope.treeConfig.formTypes));
+            return DocTreeService.uploadFrevvoForm(type, folderId, onCloseForm, $scope.objectInfo, fileTypes);
         };
 
-        $scope.onInitTree = function(treeControl) {
+        $scope.onInitTree = function (treeControl) {
             $scope.treeControl = treeControl;
             DocTreeExtCheckin.handleCheckout(treeControl, $scope);
             DocTreeExtCheckin.handleCheckin(treeControl, $scope);
