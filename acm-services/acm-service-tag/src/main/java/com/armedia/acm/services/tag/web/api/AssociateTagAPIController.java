@@ -8,12 +8,10 @@ import com.armedia.acm.services.tag.model.AcmTag;
 import com.armedia.acm.services.tag.service.AssociatedTagEventPublisher;
 import com.armedia.acm.services.tag.service.AssociatedTagService;
 import com.armedia.acm.services.tag.service.TagService;
-
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +26,7 @@ import java.util.List;
  * Created by marjan.stefanoski on 24.03.2015.
  */
 @Controller
-@RequestMapping({ "/api/v1/service/tag", "/api/latest/service/tag" })
+@RequestMapping({"/api/v1/service/tag", "/api/latest/service/tag"})
 public class AssociateTagAPIController
 {
 
@@ -40,11 +38,11 @@ public class AssociateTagAPIController
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PreAuthorize("hasPermission(#objectId, #objectType, 'addTag')")
+    //    @PreAuthorize("hasPermission(#objectId, #objectType, 'addTag')")
     @RequestMapping(value = "{objectId}/{objectType}/{tagId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmAssociatedTag associateTag(@PathVariable("objectId") Long objectId, @PathVariable("objectType") String objectType,
-            @PathVariable("tagId") Long tagId, Authentication authentication)
+                                         @PathVariable("tagId") Long tagId, Authentication authentication)
             throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException
     {
 

@@ -18,7 +18,7 @@
       "enabled": "true",
       "type": "grid",
       "enableFiltering": false,
-      "typeAheadColumn": "tag_token_lcs",
+      "typeAheadColumn": "title_parseable",
       "emptySearch": false,
       "columnDefs": [
         {
@@ -30,6 +30,26 @@
         {
           "name": "tag_token_lcs",
           "displayName": "tags.comp.grid.columns.name",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "description_parseable",
+          "displayName": "tags.comp.grid.columns.description",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "name",
+          "displayName": "tags.comp.grid.columns.tagname",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "tag_s",
+          "displayName": "tags.comp.grid.columns.tag",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "title_parseable",
+          "displayName": "tags.comp.grid.columns.tagtitle",
           "headerCellFilter": "translate"
         },
         {

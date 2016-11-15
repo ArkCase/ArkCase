@@ -131,20 +131,42 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                 };
 
                 scope.checkTag = function (tagSelected) {
-                    if (!tagSelected.tag_token_lcs) {
+                    // if (!tagSelected.tag_token_lcs) {
+                    //     return false;
+                    // }
+                    // return true;
+                    if (!tagSelected.title_parseable) {
                         return false;
                     }
                     return true;
                 };
 
                 scope.loadTags = function loadTags(query) {
+                    // var deferred = $q.defer();
+                    // TagsService.searchTags({
+                    //     query: query,
+                    //     filter: 'fq=' + scope.filter
+                    // }).then(function (tags) {
+                    //     deferred.resolve(tags);
+                    // });
+                    // return deferred.promise;
                     var deferred = $q.defer();
-                    TagsService.searchTags({
-                        query: query,
-                        filter: 'fq=' + scope.filter
-                    }).then(function (tags) {
+                    autoSuggest(query, "QUICK", "TAG").then(function (tags) {
                         deferred.resolve(tags);
                     });
+                    return deferred.promise;
+                }
+
+                function autoSuggest(autoSuggestQuery, core, objectType) {
+                    var deferred = $q.defer();
+                    SearchService.queryAutoSuggestSearch({
+                            query: autoSuggestQuery,
+                            objectType: objectType,
+                            core: core
+                        },
+                        function (res) {
+                            deferred.resolve(res.response.docs);
+                        });
                     return deferred.promise;
                 }
 
@@ -259,7 +281,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                         scope.customization.showObject(objectData);
 
                     } else {
-                    	var objectTypeKey = Util.goodMapValue(objectData, "object_type_s");
+                        var objectTypeKey = Util.goodMapValue(objectData, "object_type_s");
                         var objectId = Util.goodMapValue(objectData, "object_id_s");
                         ObjectService.showObject(objectTypeKey, objectId);
                     }
@@ -269,7 +291,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                     event.preventDefault();
 
                     if (Util.goodMapValue(scope, "customization.showParentObject", false)) {
-                    	scope.customization.showParentObject(objectData);
+                        scope.customization.showParentObject(objectData);
 
                     } else {
                         var parentReference = Util.goodMapValue(objectData, "parent_ref_s", "-");

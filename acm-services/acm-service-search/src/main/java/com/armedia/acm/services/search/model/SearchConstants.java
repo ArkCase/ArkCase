@@ -7,6 +7,11 @@ public interface SearchConstants
 {
     String CATCH_ALL_QUERY = "catch_all:";
 
+    String SUGGEST_NGRAM_QUERY = "suggest_ngram:";
+
+    String CORE_QUICK = "QUICK";
+    String CORE_ADVANCED = "ADVANCED";
+
     String DATE_FACET_PRE_KEY = "facet.date.";
     String FACET_PRE_KEY = "facet.";
 
