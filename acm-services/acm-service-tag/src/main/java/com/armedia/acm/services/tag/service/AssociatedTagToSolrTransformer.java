@@ -60,6 +60,8 @@ public class AssociatedTagToSolrTransformer implements AcmObjectToSolrDocTransfo
             solr.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
         }
 
+        solr.setAdditionalProperty("tag_title_parseable", in.getTag().getTagText());
+
         return solr;
     }
 
