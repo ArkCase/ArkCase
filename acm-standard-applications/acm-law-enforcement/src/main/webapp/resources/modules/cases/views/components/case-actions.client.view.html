@@ -2,7 +2,7 @@
     <div class="col-xs-4">
         <div class="checkbox">
             <label>
-                <input type="checkbox" ng-model="restricted" ng-click="onClickRestrict($event)">
+                <input type="checkbox" ng-model="restricted" ng-click="onClickRestrict($event)" ng-disabled="!isUserAbleToRestrict">
                 <span translate>cases.comp.actions.restrict</span>
             </label>
         </div>
@@ -14,7 +14,8 @@
                 <i class="fa fa-edit"></i>
                 <span translate>cases.comp.actions.new.button</span>
             </a>
-            <a class="btn btn-sm btn-default" ui-sref="frevvo.edit-case(editParams)">
+            <a class="btn btn-sm btn-default" ui-sref="frevvo.edit-case(editParams)"
+               permission="editCase" permission-properties="objectInfo" permission-action="hide">
                 <i class="fa fa-edit"></i>
                 <span translate>cases.comp.actions.edit.button</span>
             </a>
@@ -22,7 +23,8 @@
                 <i class="fa fa-edit"></i>
                 <span translate>cases.comp.actions.status.button</span>
             </a>
-            <a class="btn btn-sm btn-default" ui-sref="frevvo.reinvestigate(reinvestigateParams)">
+            <a class="btn btn-sm btn-default" ui-sref="frevvo.reinvestigate(reinvestigateParams)"
+               permission="reinvestigateCase" permission-properties="objectInfo" permission-action="hide">
                 <i class="fa fa-reply"></i>
                 <span translate>cases.comp.actions.reinvestigate.button</span>
             </a>

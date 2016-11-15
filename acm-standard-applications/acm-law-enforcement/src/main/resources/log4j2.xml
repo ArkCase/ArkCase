@@ -1,47 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Configuration monitorInterval="30" packages="com.armedia.acm.audit.log4j2">
-    <Appenders>
-        <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout>
-                <pattern>%highlight{%d{yyyy-MM-dd HH:mm:ss,SSS} [%-5p] [%t] %c - %confidential{%m}%n}</pattern>
-            </PatternLayout>
-        </Console>
-        <RollingFile name="file-log" fileName="${sys:catalina.base}/logs/arkcase.log"
-                     filePattern="${sys:catalina.base}/logs/arkcase-%d{yyyy-MM-dd}.log">
-            <PatternLayout>
-                <pattern>%highlight{%d{yyyy-MM-dd HH:mm:ss,SSS} [%-5p] [%t] %c - %confidential{%m}%n}</pattern>
-            </PatternLayout>
-            <Policies>
-                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
-            </Policies>
-            <ThresholdFilter level="debug"/>
-        </RollingFile>
-    </Appenders>
-    <Loggers>
-        <!-- INFO and above to console and log file; com.armedia debug and above to log file -->
-        <Logger name="com.armedia" level="debug" additivity="false">
-            <AppenderRef ref="Console"/>
-            <AppenderRef ref="file-log"/>
-        </Logger>
-        <Logger name="com.armedia.acm.userinterface.angular.AngularResourceCopier" level="debug" additivity="false">
-            <AppenderRef ref="Console"/>
-            <AppenderRef ref="file-log"/>
-        </Logger>
-        <Logger name="org.springframework" level="info" additivity="false">
-            <AppenderRef ref="Console"/>
-            <AppenderRef ref="file-log"/>
-        </Logger>
-        <Logger name="org.springframework.security.saml" level="info" additivity="false">
-            <AppenderRef ref="Console"/>
-            <AppenderRef ref="file-log"/>
-        </Logger>
-        <Logger name="org.opensaml" level="info" additivity="false">
-            <AppenderRef ref="Console"/>
-            <AppenderRef ref="file-log"/>
-        </Logger>
-        <Root level="info" additivity="false">
-            <AppenderRef ref="Console"/>
-            <AppenderRef ref="file-log"/>
-        </Root>
-    </Loggers>
-</Configuration>
+<!--
+        This file no longer represents Log4j configuration,
+        the configuration is externalized in configuration folder
+        $HOME/.arkcase/acm/log4j2.xml (see context.xml)
+-->

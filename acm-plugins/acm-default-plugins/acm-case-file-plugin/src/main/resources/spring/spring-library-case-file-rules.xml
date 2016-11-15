@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+    <bean id="caseFileRulesHandler"
+          class="com.armedia.acm.plugins.casefile.pipeline.postsave.CaseFileRulesHandler">
+        <property name="saveRule" ref="saveCaseFileBusinessRule"/>
+    </bean>
+
+    <bean id="saveCaseFileBusinessRule"
+          class="com.armedia.acm.plugins.casefile.service.SaveCaseFileBusinessRule">
+        <property name="ruleSpreadsheetFilename" value="drools-case-file-rules.xlsx"/>
+    </bean>
+
+    <bean id="caseFileStartBusinessProcessBusinessRule"
+          class="com.armedia.acm.plugins.casefile.service.CaseFileStartBusinessProcessBusinessRule">
+        <property name="ruleSpreadsheetFilename"
+                  value="drools-start-business-process-rules.xlsx"/>
+    </bean>
+
+    <bean id="splitCaseFileBusinessRule"
+          class="com.armedia.acm.plugins.casefile.service.SplitCaseFileBusinessRule">
+        <property name="ruleSpreadsheetFilename" value="drools-split-case-file-rules.xlsx"/>
+    </bean>
+
+</beans>

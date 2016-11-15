@@ -8,12 +8,12 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by armdev on 1/14/15.
@@ -82,7 +82,7 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
         doc.setAdditionalProperty("candidate_group_ss", in.getCandidateGroups());
 
         // needed a _lcs property for sorting
-        doc.setTitle_parseable_lcs(setTitleProperty(in));
+        doc.setTitle_parseable_lcs(in.getTitle());
 
         /** Additional properties for full names instead of ID's */
         AcmUser creator = getUserDao().quietFindByUserId(in.getOwner());
@@ -92,6 +92,14 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
         }
 
         doc.setAdditionalProperty("parent_title_s", in.getParentObjectTitle());
+
+        doc.setAdditionalProperty("outcome_name_s", in.getOutcomeName());
+
+        if (in.getAvailableOutcomes() != null)
+        {
+            List<String> outcomeValues = in.getAvailableOutcomes().stream().map(ao -> ao.getDescription()).collect(Collectors.toList());
+            doc.setAdditionalProperty("outcome_value_ss", outcomeValues);
+        }
 
         log.trace("returning an advanced search doc");
 
@@ -134,17 +142,19 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
         doc.setAdditionalProperty("candidate_group_ss", in.getCandidateGroups());
         doc.setAdditionalProperty("parent_title_s", in.getParentObjectTitle());
 
-        doc.setTitle_parseable_lcs(setTitleProperty(in));
+        doc.setTitle_parseable_lcs(in.getTitle());
+
+        doc.setAdditionalProperty("outcome_name_s", in.getOutcomeName());
+
+        if (in.getAvailableOutcomes() != null)
+        {
+            List<String> outcomeValues = in.getAvailableOutcomes().stream().map(ao -> ao.getDescription()).collect(Collectors.toList());
+            doc.setAdditionalProperty("outcome_value_ss", outcomeValues);
+        }
 
         log.trace("returning a quick search doc");
 
         return doc;
-    }
-
-    private String setTitleProperty(AcmTask task)
-    {
-        String title = task.getTitle();
-        return title != null ? title.toLowerCase() : "";
     }
 
     @Override

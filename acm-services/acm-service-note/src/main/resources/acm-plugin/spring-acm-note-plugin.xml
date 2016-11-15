@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
 
@@ -41,7 +41,7 @@
     </bean>
 
     <bean id="acmListNotesPluginPrivileges" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivileges">
-        <property name="pluginName" value="Delete Note Service Plugin"/>
+        <property name="pluginName" value="List Notes Service Plugin"/>
         <property name="privileges">
             <list>
                 <ref bean="acmListNotesPrivilege"/>
@@ -52,6 +52,24 @@
                 <bean id="acmListNotesUrlPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
                     <property name="url" value="/api/{version}/plugin/note/{parentType}/{parentId}"/>
+                    <property name="requiredPrivilege" ref="acmListNotesPrivilege"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+    
+    <bean id="acmListPageNotesPluginPrivileges" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivileges">
+        <property name="pluginName" value="List Notes Paged Service Plugin"/>
+        <property name="privileges">
+            <list>
+                <ref bean="acmListNotesPrivilege"/>
+            </list>
+        </property>
+        <property name="urlPrivileges">
+            <list>
+                <bean id="acmListNotesUrlPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/note/{parentType}/{parentId}/page"/>
                     <property name="requiredPrivilege" ref="acmListNotesPrivilege"/>
                 </bean>
             </list>

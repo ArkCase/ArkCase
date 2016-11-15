@@ -30,27 +30,25 @@ public abstract class AcmObjectBrokerClient<E> extends DefaultMessageListenerCon
 {
     private static final Logger LOG = LogManager.getLogger(AcmObjectBrokerClient.class);
 
-    protected final Class<E> entityClass;
+    private final Class<E> entityClass;
 
-    protected final Queue outboundQueue;
-    protected final Queue inboundQueue;
+    private final Queue outboundQueue;
+    private final Queue inboundQueue;
 
-    protected final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+    private ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 
-    protected ObjectConverter converter = ObjectConverter.createJSONConverter();
-    protected AcmObjectBrokerClientHandler<E> handler;
-    protected JmsTemplate producerTemplate;
+    private ObjectConverter converter = ObjectConverter.createJSONConverter();
+    private AcmObjectBrokerClientHandler<E> handler;
+    private JmsTemplate producerTemplate;
 
     public AcmObjectBrokerClient(ConnectionFactory connectionFactory, String outboundQueue, String inboundQueue, Class<E> entityClass)
     {
-
         this.outboundQueue = outboundQueue != null ? getQueue(outboundQueue) : null;
         this.inboundQueue = inboundQueue != null ? getQueue(inboundQueue) : null;
         this.entityClass = entityClass;
 
         setConnectionFactory(connectionFactory);
         setMessageListener(new AcmObjectBrokerClientListener<E>(this));
-
         init();
     }
 
@@ -59,20 +57,33 @@ public abstract class AcmObjectBrokerClient<E> extends DefaultMessageListenerCon
      */
     private final void init()
     {
-        executor.setBeanName("AcmObjectBrokerClientExecutor");
-        executor.setWaitForTasksToCompleteOnShutdown(false);
-        executor.initialize();
-
         if (inboundQueue != null)
         {
             setDestination(inboundQueue);
         }
+
+        CachingConnectionFactory cachedConnectionFactory = new CachingConnectionFactory(getConnectionFactory());
+        producerTemplate = new JmsTemplate(cachedConnectionFactory);
         if (outboundQueue != null)
         {
-            CachingConnectionFactory cachedConnectionFactory = new CachingConnectionFactory(getConnectionFactory());
-            producerTemplate = new JmsTemplate(cachedConnectionFactory);
             producerTemplate.setDefaultDestination(outboundQueue);
         }
+
+        executor.setBeanName("AcmObjectBrokerClientExecutor");
+        executor.setWaitForTasksToCompleteOnShutdown(false);
+        executor.initialize();
+    }
+
+    /**
+     * Send entity to default outbound queue(s)
+     * 
+     * @param entity
+     * @throws JsonProcessingException
+     * @throws JMSException
+     */
+    public void sendEntity(E entity) throws JsonProcessingException, JMSException
+    {
+        sendObject(entity);
     }
 
     /**
@@ -82,25 +93,37 @@ public abstract class AcmObjectBrokerClient<E> extends DefaultMessageListenerCon
      * @throws JsonProcessingException
      * @throws JMSException
      */
-    public void sendObject(E entity) throws JsonProcessingException, JMSException
+    public void sendObject(Object object) throws JsonProcessingException, JMSException
     {
-        sendObject(outboundQueue.getQueueName(), entity);
+        if (outboundQueue == null)
+        {
+            throw new IllegalStateException("No default destination queue is specified");
+        }
+        sendObject(outboundQueue.getQueueName(), object);
+    }
+
+    /**
+     * Send entity to given outbound queue
+     * 
+     * @param destination
+     * @param entity
+     * @throws JsonProcessingException
+     */
+    public void sendEntity(String destination, E entity) throws JsonProcessingException, JmsException
+    {
+        sendObject(destination, entity);
     }
 
     /**
      * Send object to given outbound queue
      * 
      * @param destination
-     * @param entity
+     * @param object
      * @throws JsonProcessingException
      */
-    public void sendObject(String destination, E entity) throws JsonProcessingException, JmsException
+    public void sendObject(String destination, Object object) throws JsonProcessingException, JmsException
     {
-        if (producerTemplate == null)
-        {
-            throw new IllegalStateException("No outbound queue is specified for sending messages");
-        }
-        String message = getConverter().getMarshaller().marshal(entity);
+        String message = getConverter().getMarshaller().marshal(object);
         producerTemplate.send(destination, new MessageCreator()
         {
             @Override
@@ -158,7 +181,7 @@ public abstract class AcmObjectBrokerClient<E> extends DefaultMessageListenerCon
      * 
      * @return
      */
-    protected void setConverter(ObjectConverter converter)
+    public void setConverter(ObjectConverter converter)
     {
         this.converter = converter;
     }
@@ -168,9 +191,36 @@ public abstract class AcmObjectBrokerClient<E> extends DefaultMessageListenerCon
      * 
      * @return
      */
-    public ThreadPoolTaskExecutor getExecutor()
+    protected ThreadPoolTaskExecutor getExecutor()
     {
         return executor;
+    }
+
+    /**
+     * Set broker client task executor
+     * 
+     * @param executor
+     */
+    public void setExecutor(ThreadPoolTaskExecutor executor)
+    {
+        if (this.executor != null)
+        {
+            this.executor.shutdown();
+        }
+        this.executor = executor;
+    }
+
+    /**
+     * Set maximum number of concurrent worker threads
+     * 
+     * @param num
+     */
+    public void setMaxConcurrentWorkers(int num)
+    {
+        if (executor != null)
+        {
+            executor.setCorePoolSize(num);
+        }
     }
 
     /**

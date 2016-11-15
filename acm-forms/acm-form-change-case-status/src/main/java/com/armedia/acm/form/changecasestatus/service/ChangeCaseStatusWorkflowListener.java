@@ -8,6 +8,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.slf4j.Logger;
@@ -24,7 +25,6 @@ import java.util.Map;
  */
 public class ChangeCaseStatusWorkflowListener implements ApplicationListener<ChangeCaseStatusFormEvent>
 {
-
 
     private FileWorkflowBusinessRule fileWorkflowBusinessRule;
 
@@ -85,6 +85,8 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
         pvars.put("CASE_FILE", event.getCaseId());
         pvars.put("REQUEST_TYPE", "CHANGE_CASE_STATUS");
         pvars.put("REQUEST_ID", event.getRequest().getId());
+        pvars.put("IP_ADDRESS", event.getIpAddress());
+        pvars.put("PENDING_STATUS", event.getRequest().getStatus());
 
         LOG.debug("Starting process: [{}]", processName);
 
@@ -113,8 +115,7 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
         return fileWorkflowBusinessRule;
     }
 
-    public void setFileWorkflowBusinessRule(
-            FileWorkflowBusinessRule fileWorkflowBusinessRule)
+    public void setFileWorkflowBusinessRule(FileWorkflowBusinessRule fileWorkflowBusinessRule)
     {
         this.fileWorkflowBusinessRule = fileWorkflowBusinessRule;
     }

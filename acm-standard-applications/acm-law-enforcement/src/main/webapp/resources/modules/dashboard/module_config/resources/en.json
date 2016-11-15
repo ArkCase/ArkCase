@@ -164,11 +164,6 @@
         "description": "Displays note details",
         "noDataMessage": "Currently there are no notes to display"
       },
-      "correspondence": {
-        "title": "Correspondence",
-        "description": "Displays correspondence details",
-        "noDataMessage": "Currently there are no correspondence to display"
-      },
       "time": {
         "title": "Time",
         "description": "Displays chart for hours per user",

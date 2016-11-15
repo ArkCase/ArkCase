@@ -47,6 +47,13 @@ var helpers = function helpers() {
             robot.moveMouse(883, 538);
             robot.mouseClick("right");
         }
+        this.returnToday = function(sign){
+ 		   var now = new Date();
+ 		   var day = ("0" + now.getDate()).slice(-2);
+ 		   var month = ("0" + (now.getMonth() + 1)).slice(-2);
+ 		   return today = (month) + sign + (day) + sign + now.getFullYear();
+ 	   }
+
 
 
 };

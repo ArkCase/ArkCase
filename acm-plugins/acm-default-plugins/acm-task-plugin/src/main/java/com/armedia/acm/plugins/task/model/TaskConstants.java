@@ -6,6 +6,7 @@ package com.armedia.acm.plugins.task.model;
 public interface TaskConstants
 {
     String OBJECT_TYPE = "TASK";
+    String SYSTEM_OBJECT_TYPE = "BUSINESS_PROCESS";
     String STATE_ACTIVE = "ACTIVE";
     String STATE_CLOSED = "CLOSED";
     String STATE_TERMINATED = "TERMINATED";
@@ -36,10 +37,11 @@ public interface TaskConstants
     String VARIABLE_NAME_REVIEWERS = "reviewers";
     String VARIABLE_NAME_TASK_NAME = "taskName";
     String VARIABLE_NAME_DOC_AUTHOR = "documentAuthor";
-
+    String VARIABLE_NAME_PENDING_STATUS = "PENDING_STATUS";
 
     String IDENTITY_LINK_TYPE_CANDIDATE = "candidate";
     String VARIABLE_NAME_NEXT_ASSIGNEE = "NEXT_ASSIGNEE";
 
     String VARIABLE_NAME_LEGACY_SYSTEM_ID = "LEGACY_SYSTEM_ID";
+
 }

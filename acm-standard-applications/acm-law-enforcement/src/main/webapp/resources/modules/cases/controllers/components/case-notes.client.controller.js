@@ -6,7 +6,8 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
         ConfigService.getComponentConfig("cases", "notes").then(function (config) {
             $scope.notesInit = {
                 objectType: ObjectService.ObjectTypes.CASE_FILE,
-                currentObjectId: $stateParams.id
+                currentObjectId: $stateParams.id,
+                noteType: "GENERAL"
             };
             $scope.config = config;
             return config;
