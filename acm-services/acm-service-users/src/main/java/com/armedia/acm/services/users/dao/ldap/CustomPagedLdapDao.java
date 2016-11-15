@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 public class CustomPagedLdapDao implements SpringLdapDao
 {
-    static final Logger log = LoggerFactory.getLogger(SpringLdapDao.class);
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     private AcmGroupContextMapper acmGroupContextMapper;
 
