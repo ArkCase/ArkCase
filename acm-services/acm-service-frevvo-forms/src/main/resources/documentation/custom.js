@@ -1,68 +1,58 @@
 // frevvo custom JavaScript
 
-// Import Application CSS
-document.writeln('<link href="/frevvo/arkcase/libs/app.css" rel="stylesheet" />');
-
 // Import jQuery
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/jquery-1.11.0/jquery-1.11.0.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/libs/jquery-1.11.0/jquery-1.11.0.js"></script>');
 document.writeln('<script type="text/javascript">var frevvo_jQuery = jQuery.noConflict(true);</script>');
 
 // Import jQuery UI
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/jquery-ui-1.10.3/js/jquery-ui-1.10.3.custom.js"></script>');
-document.writeln('<link href="/frevvo/arkcase/libs/jquery-ui-1.10.3/css/ui-lightness/jquery-ui-1.10.3.custom.css" rel="stylesheet" />');
+document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/libs/jquery-ui-1.10.3/js/jquery-ui-1.10.3.custom.js"></script>');
+document.writeln('<link href="/frevvo/js-28315/arkcase/libs/jquery-ui-1.10.3/css/ui-lightness/jquery-ui-1.10.3.custom.css" rel="stylesheet" />');
 
 // Import Bootstrap
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/bootstrap-3.1.1/js/bootstrap.js"></script>');
-document.writeln('<link href="/frevvo/arkcase/libs/bootstrap-3.1.1/css/bootstrap.css" rel="stylesheet" />');
-
-// Import jTable
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/jtable-2.4.0/jquery.jtable.js"></script>');
-document.writeln('<link href="/frevvo/arkcase/libs/jtable-2.4.0/themes/acm/jtable.css" rel="stylesheet" />');
+document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/libs/bootstrap-3.1.1/js/bootstrap.js"></script>');
+document.writeln('<link href="/frevvo/js-28315/arkcase/libs/bootstrap-3.1.1/css/bootstrap.css" rel="stylesheet" />');
 
 // Import Font Awesome
-document.writeln('<link rel="stylesheet" href="/frevvo/arkcase/libs/font-awesome/css/font-awesome.css" type="text/css">');
+document.writeln('<link rel="stylesheet" href="/frevvo/js-28315/arkcase/libs/font-awesome/css/font-awesome.css" type="text/css">');
 
 // Import Rich TextArea Plugin
-document.writeln('<link rel="stylesheet" href="/frevvo/arkcase/rich-textarea-plugin-v3.0/summernote/summernote.css" type="text/css">');
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/rich-textarea-plugin-v3.0/summernote/summernote.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/rich-textarea-plugin-v3.0/richtextarea.plugin.js"></script>');
+document.writeln('<link rel="stylesheet" href="/frevvo/js-28315/arkcase/rich-textarea-plugin-v3.0/summernote/summernote.css" type="text/css">');
+document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/rich-textarea-plugin-v3.0/summernote/summernote.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/rich-textarea-plugin-v3.0/richtextarea.plugin.js"></script>');
 
 // Import ArkCase libs
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/app/app.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/app/appCallback.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/app/appController.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/app/appEvent.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/app/appModel.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/app/appObject.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/app/appService.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/app/appView.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/core/acm.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/core/acmAjax.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/core/acmDialog.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/core/acmDispatcher.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/core/acmModel.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/core/acmObject.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/core/acmService.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/core/acmValidator.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/ex/acmEx.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/ex/acmExModel.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/ex/acmExObject.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/ex/acmExService.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/profile/profile.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/profile/profileController.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/profile/profileModel.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/profile/profileService.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/profile/profileView.js"></script>');
-
-// Import User Picker Plugin
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/user-picker-plugin-v1.2/search/searchBase.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/user-picker-plugin-v1.2/search/searchBaseController.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/user-picker-plugin-v1.2/search/searchBaseModel.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/user-picker-plugin-v1.2/search/searchBaseService.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/user-picker-plugin-v1.2/search/searchBaseView.js"></script>');
+// Still we need these libraries because for Advanced User Picker we are taking more information for the user using REST call (please see method "doAdvancedUserPicker(..)")
+document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/libs/app/app.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/libs/app/appCallback.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/libs/app/appController.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/libs/app/appEvent.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/libs/app/appModel.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/libs/app/appObject.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/libs/app/appService.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/libs/app/appView.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/libs/core/acm.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/libs/core/acmAjax.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/libs/core/acmDialog.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/libs/core/acmDispatcher.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/libs/core/acmModel.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/libs/core/acmObject.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/libs/core/acmService.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/libs/core/acmValidator.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/libs/ex/acmEx.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/libs/ex/acmExModel.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/libs/ex/acmExObject.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/libs/ex/acmExService.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/libs/profile/profile.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/libs/profile/profileController.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/libs/profile/profileModel.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/libs/profile/profileService.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/libs/profile/profileView.js"></script>');
 
 // Frevvo Patch
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/patch/form.pack.js.patch"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/patch/form.pack.js.patch"></script>');
+
+// Frevvo Messaging
+var frevvoMessaging = null;
 
 var CustomEventHandlers = {
    setup: function (el) {
@@ -83,62 +73,50 @@ var CustomEventHandlers = {
    },
    
    createUserPicker: function() {
-		var container = document.getElementById('container');
-		var userPickerContainer = document.createElement('div');
-		
-		userPickerContainer.innerHTML = userPickerString;
-		container.appendChild(userPickerContainer);
-		
-		App.create();
-		App.onInitialized();
-		
-		AcmEx.create();
-		AcmEx.onInitialize();
-		
-		SearchBase.create();
-		SearchBase.onInitialized();
-		
-		Profile.create();
-		Profile.onInitialized();
+       if (frevvoMessaging == null) {
+            frevvoMessaging = {};
+            frevvoMessaging.elements = {};
+            frevvoMessaging.receiver = window.parent.parent;
+            frevvoMessaging.send = function send(message) {
+                frevvoMessaging.receiver.postMessage(message, '*');
+            }
+            frevvoMessaging.receive = function receive(e) {
+                if (e.data.source == "arkcase") {
+                    // Do actions sent from Arkcase
+                    if (e.data.action == "fill-user-picker-data") {
+                        var element = frevvoMessaging.elements[e.data.elementId];
+                        if (isSimpleUserPicker(element)) {
+                            // Simple user picker (fill only user id and full name)
+                            doSimpleUserPicker(element, e.data.data.object_id_s, e.data.data.name);
+                        } else if (isAdvancedUserPicker(element)){
+                            // Advanced user picker (fill user id, full name, first name, last name, location, email, phone ... etc ...)
+                            doAdvancedUserPicker(element, e.data.data.object_id_s);
+                        }
+                    }
+                }
+            }
+            
+            window.addEventListener('message', frevvoMessaging.receive);
+        }
    },
    
    showUserPicker: function(event, element) {
-		this.scrollTop(event, element);
-   
-		var filters = [{key: "Object Type", values: ["USER"]}];
-		
-		var owningGroup = getOwningGroup();
-		if (owningGroup !== null && owningGroup !== "" && filterByOwningGroup(element)){
-			filters.push({key: "Group", values: [owningGroup]});
-		}
-		
-		SearchBase.showSearchDialog({name: "pickUser"
-			,title: "Add User"
-			,prompt: "Enter to search for users."
-			,btnGoText: "Go!"
-			,btnOkText: "Add"
-			,btnCancelText: "Cancel"
-			,filters: filters
-			,jtArgs: {
-				multiselect: false
-				,selecting:true
-				,selectingCheckboxes:true
-			}
-			,onClickBtnPrimary : function(event, ctrl) {
-				SearchBase.View.Results.getSelectedRows().each(function () {
-					var record = frevvo_jQuery(this).data('record');
-					if (record && record.id && record.name) {						
-						if (isSimpleUserPicker(element)) {
-							// Simple user picker (fill only user id and full name)
-							doSimpleUserPicker(element, record.id, record.name);
-						} else if (isAdvancedUserPicker(element)){
-							// Advanced user picker (fill user id, full name, first name, last name, location, email, phone ... etc ...)
-							doAdvancedUserPicker(element, record.id);
-						}
-					}
-				});
-			}
-		});
+        if (frevvoMessaging != null) {
+            var message = {};
+            message.source = "frevvo";
+            message.data = "";
+            message.action = "open-user-picker";
+            message.elementId = element.id;
+            frevvoMessaging.elements[element.id] = element;
+            
+            var owningGroup = getOwningGroup();
+            if (owningGroup != null) {
+                message.data = {"owningGroup": owningGroup};
+            }
+            
+            // Open user picker
+            frevvoMessaging.send(message);
+        }
    }
 }
 
@@ -270,6 +248,7 @@ function getOwningGroup() {
 		return element.value;
 	}catch(e) {
 		// Normal behaviour - the element is not found
+        return null;
 	}
 }
 
