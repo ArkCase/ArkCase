@@ -9,7 +9,7 @@
         <property name="auditService" ref="auditService"/>
     </bean>
 
-    <task:executor id="auditorExecutor" pool-size="5"/>
+    <task:executor id="auditorExecutor" pool-size="20"/>
 
     <bean id="auditDao" class="com.armedia.acm.audit.dao.AuditDao"/>
 
