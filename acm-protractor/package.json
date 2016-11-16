@@ -18,8 +18,8 @@
 	"winston": "1.0.1",
 	"selenium-webdriver": "^2.47.1",
 	"exceljs": "^0.2.3",
-	"jasmine-allure-reporter": "^0.2.3"
-
+	"jasmine-allure-reporter": "^0.2.3",
+    "winston": "^1.0.1"
 	
 	},
 	

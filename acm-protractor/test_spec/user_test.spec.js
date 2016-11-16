@@ -14,12 +14,11 @@ function testAsync(done) {
         done();
     }, 20000);
 }
-
 // Specs
-//describe("Testing async calls with beforeEach and passing the special done callback around", function() {
+// describe("Testing async calls with beforeEach and passing the special done callback around", function() {
 //
 //    beforeEach(function() {
-//        // Make an async call, passing the special done callback        
+//        // Make an async call, passing the special done callback
 //        testAsync(done);
 //    });
 //
@@ -27,12 +26,15 @@ function testAsync(done) {
 //        expect(flag).toEqual(true);
 //    });
 //
-//});
+// });
 
 describe('edit user profile page', function() {
 
     authentication.loginAsSupervisor();
-    logger.log('Info', 'User succesfully logged in as supervisor')
+    logger.log('Info', 'User succesfully logged in as supervisor');
+    //testAsync(done);
+
+
 
     it('should navigate to user profile page', function() {
 
