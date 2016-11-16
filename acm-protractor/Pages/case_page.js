@@ -3,6 +3,7 @@ var waitHelper = require('../util/waitHelper.js');
 var util = require('../util/utils.js');
 var Objects = require('../json/Objects.json');
 var taskPage = require('../Pages/task_page.js');
+var basePage = require('./base_page.js');
 var EC = protractor.ExpectedConditions;
 var newBtn = element(by.linkText(Objects.casepage.locators.newButton));
 var newCaseBtn = element(by.linkText(Objects.casepage.locators.newCaseBtn));

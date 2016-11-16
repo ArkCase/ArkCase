@@ -58,9 +58,10 @@ var ComplaintPage = function() {
             browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.incidentCategoryDDListBox))), 30000).then(function () {
                 browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.complaintPage.locators.incidentCategoryDDListBox))), 30000).then(function () {
                     incidentCategoryDDListBox.click().then(function() {
-                        var incidentCategory = element(by.linkText(category));
-                        waitHelper.waitElementToBeVisible(incidentCategory);
-                        incidentCategory.click();
+                        browser.wait(EC.textToBePresentInElement((incidentCategoryDDListBox), category), 10000).then(function () {
+                            var incidentCategory = element(by.linkText(category));
+                            incidentCategory.click();
+                        })
 
                     });
 
