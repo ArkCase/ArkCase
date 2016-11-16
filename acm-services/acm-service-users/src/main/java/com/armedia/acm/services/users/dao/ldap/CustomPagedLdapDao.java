@@ -86,9 +86,14 @@ public class CustomPagedLdapDao implements SpringLdapDao
             // filter out the DISABLED users
             acmUsers = acmUsers.stream().filter(u -> !("DISABLED".equals(u.getUserState()))).collect(Collectors.toList());
 
+            String userDomain = syncConfig.getUserDomain();
+            if (userDomain != null && !userDomain.trim().isEmpty())
+            {
+                String userDomainSuffix = "@" + userDomain;
+                acmUsers.forEach(u -> u.setUserId(u.getUserId() + userDomainSuffix));
+            }
+
             log.info("LDAP sync number of enabled users: {}", acmUsers.size());
-
-
         }
         return acmUsers;
     }
