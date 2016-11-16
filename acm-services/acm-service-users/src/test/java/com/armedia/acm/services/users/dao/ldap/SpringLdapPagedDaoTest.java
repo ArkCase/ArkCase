@@ -22,7 +22,6 @@ public class SpringLdapPagedDaoTest extends EasyMockSupport
     // TODO: will rework
 
     private LdapTemplate mockLdapTemplate;
-    private AcmUserGroupsContextMapper mockUserGroupsContextMapper;
     private SpringLdapPagedDao.PagedResultsDirContextProcessorBuilder mockBuilder;
     private PagedResultsDirContextProcessor mockPagedResultsDirContextProcessor;
     private PagedResultsCookie mockPagedResultsCookie;
@@ -36,13 +35,12 @@ public class SpringLdapPagedDaoTest extends EasyMockSupport
     public void setUp()
     {
         mockLdapTemplate = createMock(LdapTemplate.class);
-        mockUserGroupsContextMapper = createMock(AcmUserGroupsContextMapper.class);
+    //    mockUserGroupsContextMapper = createMock(AcmUserGroupsContextMapper.class);
         mockBuilder = createMock(SpringLdapPagedDao.PagedResultsDirContextProcessorBuilder.class);
         mockPagedResultsDirContextProcessor = createMock(PagedResultsDirContextProcessor.class);
         mockPagedResultsCookie = createMock(PagedResultsCookie.class);
 
         unit = new SpringLdapPagedDao();
-        unit.setUserGroupsContextMapper(mockUserGroupsContextMapper);
         unit.setBuilder(mockBuilder);
 
         syncConfig = new AcmLdapSyncConfig();
@@ -60,9 +58,6 @@ public class SpringLdapPagedDaoTest extends EasyMockSupport
         // since we set this property, all the user ids should end with it
         syncConfig.setUserDomain("dead.net");
 
-        mockUserGroupsContextMapper.setMailAttributeName(syncConfig.getMailAttributeName());
-        mockUserGroupsContextMapper.setUserIdAttributeName(syncConfig.getUserIdAttributeName());
-
         expect(mockBuilder.build(syncConfig.getSyncPageSize(), null)).andReturn(mockPagedResultsDirContextProcessor);
         expect(mockPagedResultsDirContextProcessor.getCookie()).andReturn(mockPagedResultsCookie);
         expect(mockPagedResultsCookie.getCookie()).andReturn(null);
@@ -77,7 +72,7 @@ public class SpringLdapPagedDaoTest extends EasyMockSupport
                 eq(syncConfig.getAllUsersSearchBase()),
                 eq(syncConfig.getAllUsersFilter()),
                 anyObject(SearchControls.class),
-                eq(mockUserGroupsContextMapper),
+                anyObject(AcmUserGroupsContextMapper.class),
                 anyObject(PagedResultsDirContextProcessor.class))).andReturn(acmUsers);
 
         replayAll();
@@ -100,9 +95,6 @@ public class SpringLdapPagedDaoTest extends EasyMockSupport
     {
         syncConfig.setUserDomain(null);
 
-        mockUserGroupsContextMapper.setMailAttributeName(syncConfig.getMailAttributeName());
-        mockUserGroupsContextMapper.setUserIdAttributeName(syncConfig.getUserIdAttributeName());
-
         expect(mockBuilder.build(syncConfig.getSyncPageSize(), null)).andReturn(mockPagedResultsDirContextProcessor);
         expect(mockPagedResultsDirContextProcessor.getCookie()).andReturn(mockPagedResultsCookie);
         expect(mockPagedResultsCookie.getCookie()).andReturn(null);
@@ -117,7 +109,7 @@ public class SpringLdapPagedDaoTest extends EasyMockSupport
                 eq(syncConfig.getAllUsersSearchBase()),
                 eq(syncConfig.getAllUsersFilter()),
                 anyObject(SearchControls.class),
-                eq(mockUserGroupsContextMapper),
+                anyObject(AcmUserGroupsContextMapper.class),
                 anyObject(PagedResultsDirContextProcessor.class))).andReturn(acmUsers);
 
         replayAll();

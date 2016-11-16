@@ -19,13 +19,12 @@ public class SpringLdapUserDao
 {
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    private AcmUserGroupsContextMapper userGroupsContextMapper;
-
     public AcmUser findUser(String username, LdapTemplate template, AcmLdapSyncConfig config, String[] attributes)
     {
         SearchControls searchControls = new SearchControls();
         searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
 
+        AcmUserGroupsContextMapper userGroupsContextMapper = new AcmUserGroupsContextMapper();
         userGroupsContextMapper.setUserIdAttributeName(config.getUserIdAttributeName());
         userGroupsContextMapper.setMailAttributeName(config.getMailAttributeName());
 
@@ -53,15 +52,5 @@ public class SpringLdapUserDao
         }
 
         throw new UsernameNotFoundException("User with id [" + username + "] cannot be found");
-    }
-
-    public AcmUserGroupsContextMapper getUserGroupsContextMapper()
-    {
-        return userGroupsContextMapper;
-    }
-
-    public void setUserGroupsContextMapper(AcmUserGroupsContextMapper userGroupsContextMapper)
-    {
-        this.userGroupsContextMapper = userGroupsContextMapper;
     }
 }
