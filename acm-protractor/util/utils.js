@@ -7,7 +7,6 @@ var helpers = function helpers() {
     var uploadPathPdf = home + '\\.arkcase\\seleniumTests\\filesForUpload\\caseSummary.pdf';
     var uplaodPathXlsx = home + '\\.arkcase\\seleniumTests\\filesForUpload\\caseSummary.xlsx';
 
-
     this.uploadPng = function() {
 
             sleep(2000);
@@ -53,6 +52,9 @@ var helpers = function helpers() {
  		   var month = ("0" + (now.getMonth() + 1)).slice(-2);
  		   return today = (month) + sign + (day) + sign + now.getFullYear();
  	   }
+ 	   this.rightClick = function () {
+           browser.actions().click(protractor.Button.RIGHT).perform();
+       }
 
 
 
