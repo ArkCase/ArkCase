@@ -23,10 +23,6 @@ public class CustomPagedLdapDao implements SpringLdapDao
 {
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    private AcmGroupContextMapper acmGroupContextMapper;
-
-    private AcmUserGroupsContextMapper userGroupsContextMapper;
-
     @Override
     public List<AcmUser> findUsersPaged(LdapTemplate template, AcmLdapSyncConfig syncConfig)
     {
@@ -45,7 +41,7 @@ public class CustomPagedLdapDao implements SpringLdapDao
         }
         AggregateDirContextProcessor sortedAndPaged = buildSortedAndPagesProcessor(syncConfig, syncConfig.getUserIdAttributeName());
 
-
+        AcmUserGroupsContextMapper userGroupsContextMapper = new AcmUserGroupsContextMapper();
         userGroupsContextMapper.setUserIdAttributeName(syncConfig.getUserIdAttributeName());
         userGroupsContextMapper.setMailAttributeName(syncConfig.getMailAttributeName());
         String searchFilter = syncConfig.getAllUsersFilter();
@@ -117,6 +113,7 @@ public class CustomPagedLdapDao implements SpringLdapDao
         searchControls.setReturningAttributes(new String[]{"cn", "memberOf"});
 
         AggregateDirContextProcessor sortedAndPaged = buildSortedAndPagesProcessor(config, "cn");
+        AcmGroupContextMapper acmGroupContextMapper = new AcmGroupContextMapper();
 
         boolean searchGroups = true;
         boolean skipFirst = false;
@@ -159,26 +156,6 @@ public class CustomPagedLdapDao implements SpringLdapDao
         log.info("LDAP sync number of groups: {}", acmGroups.size());
 
         return acmGroups;
-    }
-
-    public AcmGroupContextMapper getAcmGroupContextMapper()
-    {
-        return acmGroupContextMapper;
-    }
-
-    public void setAcmGroupContextMapper(AcmGroupContextMapper acmGroupContextMapper)
-    {
-        this.acmGroupContextMapper = acmGroupContextMapper;
-    }
-
-    public AcmUserGroupsContextMapper getUserGroupsContextMapper()
-    {
-        return userGroupsContextMapper;
-    }
-
-    public void setUserGroupsContextMapper(AcmUserGroupsContextMapper userGroupsContextMapper)
-    {
-        this.userGroupsContextMapper = userGroupsContextMapper;
     }
 
 }

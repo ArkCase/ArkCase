@@ -23,9 +23,6 @@ public class SpringLdapPagedDao implements SpringLdapDao
 {
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    private AcmGroupContextMapper acmGroupContextMapper;
-
-    private AcmUserGroupsContextMapper userGroupsContextMapper;
     private PagedResultsDirContextProcessorBuilder builder = new PagedResultsDirContextProcessorBuilder();
 
     private <T> List<T> fetchLdapPaged(LdapTemplate template, String searchBase, String searchFilter,
@@ -73,6 +70,7 @@ public class SpringLdapPagedDao implements SpringLdapDao
             searchControls.setReturningAttributes(allAttributes);
         }
 
+        AcmUserGroupsContextMapper userGroupsContextMapper = new AcmUserGroupsContextMapper();
         userGroupsContextMapper.setUserIdAttributeName(syncConfig.getUserIdAttributeName());
         userGroupsContextMapper.setMailAttributeName(syncConfig.getMailAttributeName());
 
@@ -109,32 +107,13 @@ public class SpringLdapPagedDao implements SpringLdapDao
         searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
         searchControls.setReturningAttributes(new String[]{"cn", "memberOf"});
 
+        AcmGroupContextMapper acmGroupContextMapper = new AcmGroupContextMapper();
         String searchBase = syncConfig.getGroupSearchBase();
         List<LdapGroup> acmGroups = fetchLdapPaged(template, searchBase, syncConfig.getGroupSearchFilter(),
                 searchControls, syncConfig.getSyncPageSize(), acmGroupContextMapper);
 
         log.info("LDAP sync number of groups: {}", acmGroups.size());
         return acmGroups;
-    }
-
-    public AcmGroupContextMapper getAcmGroupContextMapper()
-    {
-        return acmGroupContextMapper;
-    }
-
-    public void setAcmGroupContextMapper(AcmGroupContextMapper acmGroupContextMapper)
-    {
-        this.acmGroupContextMapper = acmGroupContextMapper;
-    }
-
-    public AcmUserGroupsContextMapper getUserGroupsContextMapper()
-    {
-        return userGroupsContextMapper;
-    }
-
-    public void setUserGroupsContextMapper(AcmUserGroupsContextMapper userGroupsContextMapper)
-    {
-        this.userGroupsContextMapper = userGroupsContextMapper;
     }
 
     public PagedResultsDirContextProcessorBuilder getBuilder()
