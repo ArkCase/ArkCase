@@ -12,9 +12,9 @@
  * Content part consists list of Components.
  * Tree helper uses 'object-tree' directive. Content helper includes component links and data loading. Component helper includes common object info handling
  */
-angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resource', '$translate'
+angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resource', '$translate', '$timeout'
     , 'Acm.StoreService', 'UtilService', 'ConfigService', 'ServCommService', 'MessageService'
-    , function ($q, $resource, $translate, Store, Util, ConfigService, ServCommService, MessageService) {
+    , function ($q, $resource, $translate, $timeout, Store, Util, ConfigService, ServCommService, MessageService) {
 
         var SyncDataLoader = {
             data : {},
@@ -299,7 +299,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     SyncDataLoader.reset(that.moduleId, [objectId]);
                     SyncDataLoader.load(that.moduleId, that.getObjectInfo, [objectId], function (objectInfo) {
                         that.scope.objectInfo = objectInfo;
-                        that.scope.$broadcast('object-refreshed', objectInfo);
+                        that.scope.$broadcast('object-refreshed', objectInfo, true);
                         return objectInfo;
                     }, function (error) {
                         that.scope.objectInfo = null;
@@ -317,7 +317,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     that.currentObjectId = Service.getCurrentObjectId();
                     var objectId = that.getObjectIdFromInfo(objectInfo);
                     that.scope.objectInfo = objectInfo;
-                    that.scope.$broadcast('object-updated', objectInfo, objectId);
+                    that.scope.$broadcast('object-updated', objectInfo, objectId, true);
                 });
 
                 that.scope.$on('report-object-update-failed', function (e, objectInfo) {
@@ -375,6 +375,10 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     SyncDataLoader.load(that.moduleId, that.getObjectInfo, [id], function (objectInfo) {
                           that.scope.progressMsg = null;
                           that.scope.objectInfo = objectInfo;
+                          $timeout(function(){
+                            that.scope.$broadcast('object-updated', objectInfo, id);
+                          }, 0);
+                          
 
                           //when object is loaded we want to subscribe to change events
                           var objectId = id;
@@ -461,15 +465,15 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                 that.componentId = arg.componentId;
                 that.retrieveObjectInfo = arg.retrieveObjectInfo;
                 that.currentObjectId = that.scope.currentObjectId = Service.getCurrentObjectId();
-                
-                if(!that.currentObjectId) {
-                    return;
-                }
-                
+
                 that.validateObjectInfo = (arg.validateObjectInfo) ? arg.validateObjectInfo : function (data) {
                     return (!Util.isEmpty(data));
                 };
                 that.onObjectInfoRetrieved = function (objectInfo, e) {
+                    if(that.loaded) {
+                       return;
+                    }
+                    that.loaded = that.currentObjectId;
                     that.scope.objectInfo = objectInfo;
                     if (arg.onObjectInfoRetrieved) {
                         arg.onObjectInfoRetrieved(objectInfo, e);
@@ -493,14 +497,24 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                 });
 
                 that.previousId = null;
-                that.scope.$on('object-updated', function (e, objectInfo, objectId) {
+                that.scope.$on('object-updated', function (e, objectInfo, objectId, reload) {
+                    if(reload || that.loaded != Service.getCurrentObjectId()) {
+                       delete that.loaded;
+                    } else {
+                       return;
+                    }
                     that.currentObjectId = Service.getCurrentObjectId();
                     if (that.currentObjectId == objectId) {
                         onObjectInfoUpdated(objectInfo, objectId, e);
                     }
                 });
 
-                that.scope.$on('object-refreshed', function (e, objectInfo) {
+                that.scope.$on('object-refreshed', function (e, objectInfo, reload) {
+                    if(reload || that.loaded != Service.getCurrentObjectId()) {
+                       delete that.loaded;
+                    } else {
+                       return;
+                    }
                     that.previousId = null;
                     that.currentObjectId = Service.getCurrentObjectId();
                     onObjectInfoUpdated(objectInfo, that.currentObjectId, e);

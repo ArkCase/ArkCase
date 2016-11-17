@@ -11,8 +11,8 @@ import org.springframework.security.web.savedrequest.SavedRequest;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
+import java.util.List;
 
 public class AcmLoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler
 {
@@ -21,6 +21,7 @@ public class AcmLoginSuccessHandler extends SavedRequestAwareAuthenticationSucce
     private AcmLoginSuccessOperations loginSuccessOperations;
     private SessionRegistry sessionRegistry;
     private SessionAuthenticationStrategy sessionAuthenticationStrategy;
+    private List<String> ignoreSavedUrls;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
@@ -33,10 +34,14 @@ public class AcmLoginSuccessHandler extends SavedRequestAwareAuthenticationSucce
         SavedRequest savedRequest = (SavedRequest) request.getSession().getAttribute("SPRING_SECURITY_SAVED_REQUEST");
         if (savedRequest != null)
         {
-            String requestUrl = savedRequest.getRedirectUrl();
-            if (requestUrl != null && requestUrl.contains("/arkcase/stomp"))
+            String redirectUrl = savedRequest.getRedirectUrl();
+            if (redirectUrl != null)
             {
-                request.getSession().removeAttribute("SPRING_SECURITY_SAVED_REQUEST");
+                String contextPath = request.getContextPath();
+                if (ignoreSavedUrls.stream().anyMatch(url -> redirectUrl.contains(contextPath + url)))
+                {
+                    request.getSession().removeAttribute("SPRING_SECURITY_SAVED_REQUEST");
+                }
             }
         }
         super.onAuthenticationSuccess(request, response, authentication);
@@ -62,5 +67,10 @@ public class AcmLoginSuccessHandler extends SavedRequestAwareAuthenticationSucce
     public void setSessionAuthenticationStrategy(SessionAuthenticationStrategy sessionAuthenticationStrategy)
     {
         this.sessionAuthenticationStrategy = sessionAuthenticationStrategy;
+    }
+
+    public void setIgnoreSavedUrls(List<String> ignoreSavedUrls)
+    {
+        this.ignoreSavedUrls = ignoreSavedUrls;
     }
 }

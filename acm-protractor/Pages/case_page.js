@@ -1,5 +1,9 @@
+var logger = require('../log');
+var waitHelper = require('../util/waitHelper.js');
+var util = require('../util/utils.js');
 var Objects = require('../json/Objects.json');
 var taskPage = require('../Pages/task_page.js');
+var basePage = require('./base_page.js');
 var EC = protractor.ExpectedConditions;
 var newBtn = element(by.linkText(Objects.casepage.locators.newButton));
 var newCaseBtn = element(by.linkText(Objects.casepage.locators.newCaseBtn));
@@ -38,6 +42,7 @@ var createdDate = element(by.xpath(Objects.casepage.locators.createdDate));
 var assigneeLink = element(by.xpath(Objects.casepage.locators.assignee));
 var assigneeDropDown = element(by.xpath(Objects.casepage.locators.assigneeDropDown));
 var assigneeBtn = element(by.xpath(Objects.casepage.locators.assigneeBtn));
+var expandLinksButton = element(by.xpath(Objects.casepage.locators.expandLinksButton));
 var notesLink = element(by.xpath(Objects.casepage.locators.notesLink));
 var addNoteBtn = element(by.xpath(Objects.casepage.locators.addNoteBtn));
 var noteTextArea = element(by.model(Objects.casepage.locators.noteTextArea));
@@ -124,114 +129,86 @@ var deleteAliasBtn = element(by.css(Objects.casepage.locators.deleteAliasBtn));
 var editAliasBtn = element(by.css(Objects.casepage.locators.editAliasBtn));
 
 
-
-
-
-
-
-
-
-
-
-
 var CasePage = function() {
 
     browser.ignoreSynchronization = true;
-    this.navigateToNewCasePage = function() {
-
-        newBtn.click().then(function() {
-            newCaseBtn.click();
-        });
-        return this;
-
-    }
-
-    this.switchToIframes = function() {
-        browser.ignoreSynchronization = true;
-        browser.wait(EC.visibilityOf(element(by.className("new-iframe ng-scope"))), 30000);
-        browser.switchTo().frame(browser.driver.findElement(by.className("new-iframe ng-scope"))).then(function() {
-            browser.switchTo().frame(browser.driver.findElement(By.className("frevvo-form")));
-        });
-        return this;
-    }
 
     this.submitGeneralInformation = function(title, type) {
 
-        caseTitle.click().then(function() {
+        browser.wait(EC.visibilityOf(element(by.name(Objects.casepage.locators.caseTitle))), 30000);
+        caseTitle.click().then(function () {
             caseTitle.sendKeys(title);
         });
-        caseTypeDropDown.click().then(function() {
-            var caseType = element(by.linkText(type)).click();
+
+        browser.wait(EC.visibilityOf(element(by.className(Objects.casepage.locators.caseType))), 30000);
+        caseTypeDropDown.click().then(function () {
+
+            var caseType = element(by.linkText(type));
+            waitHelper.waitElementToBeVisible(caseType);
+            caseType.click();
         });
 
         nextBtn.click();
         return this;
-
-    }
+    };
 
     this.initiatorInformation = function(firstname, lastname) {
 
-        browser.wait(EC.visibilityOf(element(by.name(Objects.casepage.locators.firstName))), 5000);
-        firstName.click().then(function() {
+        browser.wait(EC.visibilityOf(element(by.name(Objects.casepage.locators.firstName))), 30000);
+        firstName.click().then(function () {
             firstName.sendKeys(firstname);
         });
-        lastName.click().then(function() {
+        lastName.click().then(function () {
             lastName.sendKeys(lastname);
         });
 
         submitBtn.click();
         return this;
-    }
+    };
 
-
-
-    this.switchToDefaultContent = function() {
-
-        browser.driver.switchTo().defaultContent();
-
-    }
 
     this.waitForCaseType = function() {
 
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesType))), 30000);
-    }
+
+    };
 
     this.waitForCaseTitle = function() {
 
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesTitle))), 30000);
-    }
 
+    };
 
     this.returnCasesPageTitle = function() {
 
         return casesPageTitle.getText();
-    }
+
+    };
 
     this.returnCaseTitle = function() {
 
-        return casesTitle.getText();
-    }
+            return casesTitle.getText();
+    };
+
 
     this.returnCaseType = function() {
 
 
         return casesType.getText();
-    }
+
+    };
 
     this.waitForChangeCaseButton = function() {
 
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.changeCaseStatusBtn))), 30000);
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.changeCaseStatusBtn))), 30000);
 
-    }
-
+        };
 
     this.clickRefreshBtn = function() {
 
         refreshBtn.click();
-    }
 
-
-
+    };
     this.clickChangeCaseBtn = function() {
 
         changeCaseStatusBtn.click().then(function() {
@@ -240,23 +217,23 @@ var CasePage = function() {
         });
 
         return this;
-    }
 
-
+    };
     this.selectCaseStatusClosed = function() {
 
         browser.ignoreSynchronization = true;
         browser.wait(EC.visibilityOf(element(by.className(Objects.casepage.locators.changeCaseStatusTitle))), 15000);
         changeStatusDropDown.click().then(function() {
             browser.wait(EC.textToBePresentInElement((statusClosed), Objects.casepage.data.statusClosed), 10000).then(function() {
+
+
+
                 statusClosed.click();
             });
         });
 
         return this;
-    }
-
-
+    };
     this.selectApprover = function(approverSamuel) {
 
         selectApprover.click().then(function() {
@@ -276,17 +253,19 @@ var CasePage = function() {
 
     this.chnageCaseSubmit = function() {
         browser.executeScript('arguments[0].click()', submitBtn);
-    }
+    };
+
 
     this.clickTasksLinkBtn = function() {
 
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.tasksLink))), 30000).then(function() {
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.tasksLink))), 20000).then(function() {
 
             tasksLinkBtn.click();
         });
-        return this;
-    }
 
+        return this;
+
+    };
     this.waitForTasksTable = function() {
 
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.tasksTable))), 30000).then(function() {
@@ -295,36 +274,38 @@ var CasePage = function() {
             });
         });
         return this;
-    }
+
+    };
 
     this.returnAutomatedTask = function() {
 
+        return taskTitle.getText();
+
+    }
+
+    this.returnTaskTitle = function() {
         return taskTitle.getText();
     }
 
     this.clickTaskTitle = function() {
         taskTitle.click();
-    }
-    this.returnTaskTitle = function() {
-        return taskTitle.getText();
-    }
+    };
 
     this.waitForPriority = function() {
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.priority))), 20000);
-    }
+    };
 
     this.returnPriority = function() {
-
         return priorityLink.getText();
-    }
+    };
 
     this.waitForCreatedDate = function() {
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.createdDate))), 20000);
-    }
+    };
 
     this.returnCreatedDate = function() {
         return createdDate.getText();
-    }
+    };
 
     this.editPriority = function(priority) {
 
@@ -334,7 +315,7 @@ var CasePage = function() {
             });
         });
         return this;
-    }
+    };
 
     this.editAssignee = function(assignee) {
 
@@ -351,12 +332,17 @@ var CasePage = function() {
 
     this.waitForAssignee = function() {
         browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.assignee))), 20000);
-    }
+    };
 
     this.returnAssignee = function() {
         return assigneeLink.getText();
-    }
+    };
 
+    this.clickExpandLinks = function(){
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.changeCaseStatusBtn))), 30000);
+        expandLinksButton.click();
+        return this;
+    };
     this.clickNotesLink = function() {
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.notesLink))), 20000);
         notesLink.click().then(function() {
@@ -856,4 +842,7 @@ var CasePage = function() {
     }
 };
 
+
+CasePage.prototype = basePage;
 module.exports = new CasePage();
+

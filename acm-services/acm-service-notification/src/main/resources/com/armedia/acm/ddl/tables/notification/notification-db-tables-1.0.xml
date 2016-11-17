@@ -162,4 +162,10 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="15-add-column-notification-action-date" author="teng.wang">
+        <addColumn tableName="acm_notification">
+            <column name="cm_notification_action_date" type="${timestampType}"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
