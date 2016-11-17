@@ -9,13 +9,36 @@
         "data": {
             "supervisoruser": {
                 "username": "samuel-acm",
-                "password": "Armedia#1"
+                "password": "AcMd3v$"
             },
             "adminuser": {
                 "username": "ann-acm",
                 "password": "Armedia#1"
             }
         }
+    },
+    "basepage":{
+        "locators":{
+            "newButton": "New",
+            "root": ".//span[@title='root']",
+            "newCorrespondence": ".//li[@data-command='subMenuCorrespondenceForms']",
+            "docRow": "//table/tbody/tr[3]",
+            "docTitle": "//table/tbody/tr[3]/td[3]/span/span[3]",
+            "docExtension": "//table/tbody/tr[3]/td[4]",
+            "docType": "//table/tbody/tr[3]/td[5]",
+            "docCreated": "//table/tbody/tr[3]/td[6]",
+            "docModified": "//table/tbody/tr[3]/td[7]",
+            "docAuthor": "//table/tbody/tr[3]/td[8]",
+            "docVersion": "//table/tbody/tr[3]/td[9]/span/select/option",
+            "docStatus": "//table/tbody/tr[3]/td[10]",
+            "deleteDoc": ".//li[@data-command='remove']",
+            "downloadDoc": ".//li[@data-command='download']"
+
+        },
+        "data":{
+
+        }
+
     },
     "taskpage": {
 
@@ -75,7 +98,7 @@
 
             "priority": ".//*[@class='clearfix']/div[2]/div[3]/div/a",
             "assignee": ".//*[@class='clearfix']/div[2]/div[2]/div/a",
-            "assigneeDropDown": ".//*[@class='clearfix']/div[2]/div[2]/div/form/div/select",
+            "assigneeDropDown": "$data",
             "selectAssignee": ".//*[.='Ann Administrator']",
             "assigneeBtn": ".//*[@class='clearfix']/div[2]/div[2]/div/form/div/span/button[1]",
             "taskSubject": ".//*[@class='clearfix']/div[1]/div/h4/a",
@@ -323,10 +346,32 @@
 
     },
 
-    "casepage": {
-
+    "complaintPage": {
         "locators": {
-
+            "complaintButton": "item in menu.items | orderBy: 'position' ",
+            "firstFrame": "//iframe",
+            "secondFrame": "/html/body/iframe",
+            "initiatorTab": ".//div[@extid='Step1']",
+            "incidentTab": ".//div[@extid='Step2']",
+            "peopleTab": ".//div[@extid='Step3']",
+            "attachmentsTab": ".//div[@extid='Step4']",
+            "participantsTab": ".//div[@extid='Step5']",
+            "firstName": "initiatorFirstName",
+            "lastName": "initiatorLastName",
+            "incidentCategoryDDListBox": ".//div[@cname='category']/div/input[1]",
+            "complaintTitle": "complaintTitle",
+            "submitButton": "Submit",
+            "radioButtonNewInitiator": ".//*[@value='newInitiator']"
+        },
+        "data": {
+            "firstName": "ComplaintFirstName",
+            "lastName": "ComplaintLastName",
+            "category": "Agricultural",
+            "title": "ComplaintTitle"
+        }
+    },
+    "casepage": {
+        "locators": {
             "newButton": "New",
             "newCaseBtn": "Case",
             "caseType": "input _frevvo-disable-backspace",
@@ -416,12 +461,15 @@
             "aliasesValue": "alias.aliasValue",
             "saveAliasesBtn":"[ng-click = 'onClickOk()']",
             "deleteAliasBtn": "[ng-click='grid.appScope.deleteRowAliases(row.entity)']",
-            "editAliasBtn": "[ng-click='grid.appScope.editRowAliases(row.entity)']"
+            "editAliasBtn": "[ng-click='grid.appScope.editRowAliases(row.entity)']",
+            "caseTypeListBox": ".//ul[@role='listbox']/li",
+            "documentsLink": "//span[contains(text(),'Documents')]",
+            "expandLinksButton": ".//a[@title='Show links']",
+            "fancyTreeExpandTop": "html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/object-tree/section/div/div/div/ul/li[1]/span/span[1]"
 
         },
 
         "data": {
-
             "caseTitle": "New Case",
             "firstName": "Milan",
             "lastName": "Jovanovski",
@@ -470,11 +518,10 @@
             "aliasMarried": "Married",
             "aliasValue": "Alias",
             "editAlias": "editAlias",
-            "statusClosed":"Closed"
-
-
-
+            "statusClosed":"Closed",
+            "automatedTaskTitle": "Review Request to Change Case Status"
         }
+
 
 
     }
