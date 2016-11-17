@@ -27,6 +27,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -128,6 +129,7 @@ public class Person implements Serializable, AcmEntity
     @JoinTable(name = "acm_person_contact_method", joinColumns = {
             @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id")}, inverseJoinColumns = {
             @JoinColumn(name = "cm_contact_method_id", referencedColumnName = "cm_contact_method_id")})
+    @OrderBy(value = "id")
     private List<ContactMethod> contactMethods = new ArrayList<>();
 
     @ElementCollection

@@ -2,6 +2,7 @@ package com.armedia.acm.services.users.service.ldap;
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
+import com.armedia.acm.services.users.dao.ldap.SpringLdapUserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.LdapGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
@@ -9,6 +10,7 @@ import com.armedia.acm.services.users.model.ldap.AcmUserGroupsContextMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,11 +47,13 @@ public class LdapSyncService
     private String directoryName;
     private boolean syncEnabled = true;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
+    private SpringLdapUserDao springLdapUserDao;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
     // this method is used by scheduled jobs in Spring beans loaded dynamically from the ACM configuration
     // folder ($HOME/.acm).
+    @Transactional
     public void ldapSync()
     {
         if (!isSyncEnabled())
@@ -66,8 +70,8 @@ public class LdapSyncService
         // If we opened up a database transaction, then spend a minute or so querying LDAP, the database transaction
         // could time out. So we run all the LDAP queries first, then do all the database operations all at once.
         LdapTemplate template = getLdapDao().buildLdapTemplate(getLdapSyncConfig());
-        List<AcmUser> ldapUsers = ldapDao.findUsersPaged(template, getLdapSyncConfig());
-        List<LdapGroup> acmGroups = ldapDao.findGroupsPaged(template, getLdapSyncConfig());
+        List<AcmUser> ldapUsers = getLdapDao().findUsersPaged(template, getLdapSyncConfig());
+        List<LdapGroup> acmGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig());
 
         processRecordsAndUpdateDatabase(ldapUsers, acmGroups, false);
     }
@@ -84,10 +88,10 @@ public class LdapSyncService
 
         log.info("Starting sync user '{}' from ldap '{}'", username, getLdapSyncConfig().getLdapUrl());
 
-        AcmUser user = getLdapDao().findUser(username, template, getLdapSyncConfig(),
+        AcmUser user = getSpringLdapUserDao().findUser(username, template, getLdapSyncConfig(),
                 AcmUserGroupsContextMapper.USER_LDAP_ATTRIBUTES);
         List<AcmUser> acmUsers = Arrays.asList(user);
-        List<LdapGroup> acmGroups = ldapDao.findGroupsPaged(template, getLdapSyncConfig());
+        List<LdapGroup> acmGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig());
 
         processRecordsAndUpdateDatabase(acmUsers, acmGroups, true);
 
@@ -349,5 +353,15 @@ public class LdapSyncService
     public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
     {
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
+    }
+
+    public SpringLdapUserDao getSpringLdapUserDao()
+    {
+        return springLdapUserDao;
+    }
+
+    public void setSpringLdapUserDao(SpringLdapUserDao springLdapUserDao)
+    {
+        this.springLdapUserDao = springLdapUserDao;
     }
 }
