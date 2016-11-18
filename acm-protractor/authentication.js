@@ -22,21 +22,27 @@ var helpers = function helpers() {
     },
 
         this.logout = function () {
-            var logoutLink = element(by.css('.fullname'));
-            var logout = element(by.linkText('Logout'));
-            browser.wait(EC.elementToBeClickable(element(by.css('.fullname'))), 10000).then(function () {
-                browser.executeScript('arguments[0].click()', logoutLink).then(function () {
-                    browser.executeScript('arguments[0].click()', logout).then(function () {
-                        browser.wait(EC.visibilityOf(element(by.xpath(".//*[@class='alert alert-success']"))), 20000);
-                        expect(
-                            element(by.xpath('.//*[@class="alert alert-success"]'))
-                                .getText()).toEqual(
-                            'You have been logged out successfully.');
-                        logger.log('Info', 'User succesfully logged out');
+            browser.wait(EC.visibilityOf(element(by.css('.fullname'))), 30000).then(function () {
+                var logoutLink = element(by.css('.fullname'));
+                browser.wait(EC.elementToBeClickable(element(by.css('.fullname'))), 10000).then(function () {
+                    browser.executeScript('arguments[0].click()', logoutLink).then(function () {
+                        browser.wait(EC.visibilityOf(element(by.linkText("Logout"))), 30000).then(function () {
+                            var logout = element(by.linkText("Logout"));
+                            browser.executeScript('arguments[0].click()', logout).then(function () {
+                                browser.wait(EC.visibilityOf(element(by.xpath(".//*[@class='alert alert-success']"))), 20000);
+                                expect(
+                                    element(by.xpath('.//*[@class="alert alert-success"]'))
+                                        .getText()).toEqual(
+                                    'You have been logged out successfully.');
+                                logger.log('Info', 'User succesfully logged out');
+
+                            });
+                        })
 
                     });
                 });
             });
+
         };
 };
 
