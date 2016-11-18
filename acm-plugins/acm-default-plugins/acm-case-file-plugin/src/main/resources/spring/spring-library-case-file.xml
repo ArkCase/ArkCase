@@ -33,6 +33,7 @@
         <property name="acmObjectHistoryEventPublisher" ref="acmObjectHistoryEventPublisher"/>
         <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
         <property name="acmAssignmentDao" ref="acmAssignmentDao"/>
+        <property name="acmOwningGroupDao" ref="acmOwningGroupDao"/>
         <property name="calendarService" ref="outlookContainerService"/>
         <property name="shouldDeleteCalendarFolder"
                   value="${casefile.delete_calendar_folder_after_case_closed}"/>

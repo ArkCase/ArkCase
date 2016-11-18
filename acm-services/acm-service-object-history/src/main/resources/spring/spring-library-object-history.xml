@@ -19,4 +19,7 @@
     
     <!-- Assignment DAO -->
     <bean id="acmAssignmentDao" class="com.armedia.acm.service.objecthistory.dao.AcmAssignmentDao"/>
+
+    <!-- Owning Group DAO-->
+    <bean id="acmOwningGroupDao" class="com.armedia.acm.service.objecthistory.dao.AcmOwningGroupDao"/>
 </beans>
