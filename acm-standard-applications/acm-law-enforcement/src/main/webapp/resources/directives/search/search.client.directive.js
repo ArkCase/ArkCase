@@ -105,9 +105,11 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                                 if (scope.filters.indexOf("Tag Token") <= 0) {
                                     scope.filters += "&fq" + scope.multiFilter;
                                 }
-                                _.map(scope.searchQuery, function (tag) {
-                                    scope.filters += tag.tag_token_lcs + "|";
-                                });
+
+                                    scope.filters += scope.searchQuery;
+                                // _.map(scope.searchQuery, function (tag) {
+                                //     scope.filters += tag.tag_token_lcs + "|";
+                                // });
                             }
                         }
                         var query = SearchQueryBuilder.buildFacetedSearchQuery((scope.multiFilter ? "*" : scope.searchQuery + "*"), scope.filters, scope.pageSize, scope.start);
@@ -131,10 +133,8 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                 };
 
                 scope.checkTag = function (tagSelected) {
-                    // if (!tagSelected.tag_token_lcs) {
-                    //     return false;
-                    // }
-                    // return true;
+                    scope.searchQuery = "\"" + tagSelected.title_parseable + "\"";
+                    scope.queryTypeahead = someName(tagSelected);
                     if (!tagSelected.title_parseable) {
                         return false;
                     }
@@ -142,14 +142,6 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                 };
 
                 scope.loadTags = function loadTags(query) {
-                    // var deferred = $q.defer();
-                    // TagsService.searchTags({
-                    //     query: query,
-                    //     filter: 'fq=' + scope.filter
-                    // }).then(function (tags) {
-                    //     deferred.resolve(tags);
-                    // });
-                    // return deferred.promise;
                     var deferred = $q.defer();
                     autoSuggest(query, "QUICK", "TAG").then(function (tags) {
                         deferred.resolve(tags);
@@ -157,11 +149,25 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                     return deferred.promise;
                 }
 
+                function someName(tagSelected) {
+                    var query = SearchQueryBuilder.buildFacetedSearchQuery(tagSelected.title_parseable, scope.filters, 10, 0);
+                    var deferred = $q.defer();
+                    if (query) {
+                        SearchService.queryFilteredSearch({
+                            query: query
+                        }, function (res) {
+                            var result = _.pluck(res.response.docs, scope.typeAheadColumn);
+                            deferred.resolve(result);
+                        });
+                    }
+                    return deferred.promise;
+                }
+
                 function autoSuggest(autoSuggestQuery, core, objectType) {
                     var deferred = $q.defer();
                     SearchService.queryAutoSuggestSearch({
                             query: autoSuggestQuery,
-                            objectType: objectType,
+                            filter: "object_type_s:" + objectType,
                             core: core
                         },
                         function (res) {
