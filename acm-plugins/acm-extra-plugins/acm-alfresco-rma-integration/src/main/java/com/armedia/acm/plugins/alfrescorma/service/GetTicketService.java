@@ -1,12 +1,12 @@
 package com.armedia.acm.plugins.alfrescorma.service;
 
 import com.armedia.acm.plugins.alfrescorma.exception.AlfrescoServiceException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 
@@ -15,35 +15,27 @@ import java.util.Map;
  */
 public class GetTicketService extends AlfrescoService<String>
 {
-    private final int EXPECTED_TICKET_LENGTH = 47;
-    private final int START_TAG_OFFSET = 7;
-    private final int END_TAG_OFFSET = 10;
-    private final RestTemplate restTemplate;
+    private static final String KERBEROS_USERNAME_PREFIX = "KERBEROS/";
+
+    private final static int EXPECTED_TICKET_LENGTH = 47;
+    private final static String OPEN_TICKET_TAG = "<ticket>";
+    private final static String END_TICKET_TAG = "</ticket>";
+
+    private TicketEntityService ticketEntityService;
 
     private String user;
     private String password;
 
-    private final String service = "/s/api/login";
-    private final String query = "u={user}" + "&" + "pw={password}";
-
     private transient final Logger LOG = LoggerFactory.getLogger(getClass());
-
-    public GetTicketService()
-    {
-        restTemplate = new RestTemplate();
-    }
-
 
     @Override
     public String doService(Map<String, Object> context) throws AlfrescoServiceException
     {
         String base = baseUrl();
 
-        String ticketUrl = base + "/" + service + "?" + query;
-
         try
         {
-            ResponseEntity<String> response = restTemplate.getForEntity(ticketUrl, String.class, user, password);
+            ResponseEntity<String> response = getTicketEntityService().getEntity(base, user, password);
 
             if (!HttpStatus.OK.equals(response.getStatusCode()))
             {
@@ -53,14 +45,15 @@ public class GetTicketService extends AlfrescoService<String>
 
             String ticketXml = response.getBody();
 
-            int openTagIndex = ticketXml.indexOf("ticket");
-            int length = ticketXml.length();
-            String ticket = ticketXml.substring(openTagIndex + START_TAG_OFFSET, length - END_TAG_OFFSET);
+            int openTagIndex = ticketXml.indexOf(OPEN_TICKET_TAG);
+            int endTagIndex = ticketXml.indexOf(END_TICKET_TAG);
+            String ticket = ticketXml.substring(openTagIndex + OPEN_TICKET_TAG.length(), endTagIndex);
 
             validateResponse(ticket);
 
             return ticket;
-        } catch (RestClientException rce)
+        }
+        catch (RestClientException rce)
         {
             throw new AlfrescoServiceException(rce.getMessage(), rce);
         }
@@ -95,4 +88,21 @@ public class GetTicketService extends AlfrescoService<String>
         this.password = password;
     }
 
+    public synchronized TicketEntityService getTicketEntityService()
+    {
+        if (ticketEntityService == null)
+        {
+            if (getUser().startsWith(KERBEROS_USERNAME_PREFIX))
+            {
+                ticketEntityService = new KerberosTicketEntityService();
+                // remove KERBEROS/ prefix from username
+                user = user.trim().substring(KERBEROS_USERNAME_PREFIX.length());
+            }
+            else
+            {
+                ticketEntityService = new BasicAuthTicketEntityService();
+            }
+        }
+        return ticketEntityService;
+    }
 }
