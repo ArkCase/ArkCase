@@ -1,7 +1,6 @@
 var EC = protractor.ExpectedConditions;
 var Objects=require('../json/Objects.json');
 var util = require('../util/utils.js');
-var wait = require('../util/waitHelper');
 var newBtn = element(by.xpath(Objects.basepage.locators.newButton));
 var root = element(by.xpath(Objects.basepage.locators.root));
 var newCorrespondence = element(by.xpath(Objects.basepage.locators.newCorrespondence));
@@ -17,7 +16,6 @@ var deleteDoc = element(by.xpath(Objects.basepage.locators.deleteDoc));
 var downloadDoc = element(by.xpath(Objects.basepage.locators.downloadDoc));
 var docRow = element(by.xpath(Objects.basepage.locators.docRow));
 var fancyTreeExpandTop = element(by.xpath(Objects.casepage.locators.fancyTreeExpandTop));
-var root = element(by.xpath(Objects.taskspage.locators.root));
 var notesLink = element(by.xpath(Objects.casepage.locators.notesLink));
 var addNoteBtn = element(by.xpath(Objects.casepage.locators.addNoteBtn));
 var noteTextArea = element(by.model(Objects.casepage.locators.noteTextArea));
@@ -34,6 +32,7 @@ var taskCreated = element.all(by.repeater(Objects.casepage.locators.taskTableRow
 var taskPriority = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(3);
 var taskDueDate = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(4);
 var taskStatus = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(5);
+var newDocument = element.all(by.xpath(Objects.basepage.locators.newDocument));
 
 
 var BasePage = function(){
@@ -176,7 +175,7 @@ var BasePage = function(){
 			   });
 		   })
 
-	   }
+	   };
 	   this.switchToIframes = function() {
 		   browser.ignoreSynchronization = true;
 		   browser.wait(EC.visibilityOf(element(by.className("new-iframe ng-scope"))), 30000);
@@ -197,7 +196,7 @@ var BasePage = function(){
 			browser.actions().click(protractor.Button.RIGHT).perform();
 		});
 		return this;
-	}
+	};
 	this.clickExpandFancyTreeTopElementAndSubLink = function (link) {
 		browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.fancyTreeExpandTop))), 30000).then(function () {
 			fancyTreeExpandTop.click().then(function () {
@@ -348,6 +347,58 @@ var BasePage = function(){
 	this.returnTaskTableStatus = function() {
 		return taskStatus.getText();
 	};
+
+	this.clickNewDocument = function() {
+		newDocument.click();
+		return this;
+	};
+
+	this.selectDocument = function (docType) {
+		xPathStr = ".//li[@data-command='file/";
+
+		var completexPath;
+		switch (docType) {
+			case "Medical Release":
+				completexPath = xPathStr + "mr']";
+				break;
+			case "General Release":
+				completexPath = xPathStr + "gr']";
+				break;
+			case "eDelivery":
+				completexPath = xPathStr + "ev']";
+				break;
+			case "SF86 Signature":
+				completexPath = xPathStr + "sig']";
+				break;
+			case "Notice of Investigation":
+				completexPath = xPathStr + "noi']";
+				break;
+			case "Witness Interview Request":
+				completexPath = xPathStr + "wir']";
+				break;
+			case "Report of Investigation":
+				completexPath = xPathStr + "roi']";
+				break;
+			case "Other":
+				completexPath = xPathStr + "Other']";
+				break;
+			default:
+				completexPath = xPathStr + "Other']";
+				break;
+		}
+
+		var el = element(by.xpath(completexPath));
+		el.click();
+		return this;
+
+	};
+	this.addDocument = function (doctype) {
+		this.clickNewDocument();
+		this.selectDocument(doctype);
+		return this;
+
+	}
+
 
 
 };

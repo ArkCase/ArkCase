@@ -34,7 +34,8 @@
             "deleteDoc": ".//li[@data-command='remove']",
             "downloadDoc": ".//li[@data-command='download']",
             "fadeElementDeleteNote": "//*[@modal-animation-class='fade']",
-            "fadeElementEditNote": "//*[@ng-click='close($event)'"
+            "fadeElementEditNote": "//*[@ng-click='close($event)'",
+            "newDocument": ".//li[@data-command='subMenuFileTypes']"
 
         },
         "data":{
