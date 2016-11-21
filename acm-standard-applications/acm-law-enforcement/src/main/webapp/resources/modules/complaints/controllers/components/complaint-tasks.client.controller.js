@@ -18,7 +18,7 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
-        var promiseMyTasks = ObjectTaskService.queryCurrentUserTasks();
+        var promiseMyTasks = ObjectTaskService.queryCurrentUserTasksByParentType(ObjectService.ObjectTypes.COMPLAINT);
 
         $q.all([componentHelper.promiseConfig, promiseMyTasks]).then(function (data) {
             var config = data[0];
@@ -44,7 +44,7 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
                 }
             }
 
-            $scope.retrieveGridData();
+            //$scope.retrieveGridData();
         });
 
 
@@ -65,7 +65,7 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
                     , Util.goodValue($scope.sort.dir)
                 ).then(
                     function (data) {
-                        $q.all([promiseMyTasks]).then(function () {
+                        //$q.all([promiseMyTasks]).then(function () {
                             var tasks = data.response.docs;
                             $scope.gridOptions = $scope.gridOptions || {};
                             $scope.gridOptions.data = tasks;
@@ -120,7 +120,7 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
                                 //     }
                                 // }
                             }
-                        }); //end $q
+                        //}); //end $q
 
                         return data;
                     }
