@@ -3,7 +3,7 @@ var basePage = require('./base_page.js');
 var EC = protractor.ExpectedConditions;
 var SelectWrapper = require('../util/select-wrapper.js');
 var waitHelper = require('../util/waitHelper.js');
-var complaintButton = element(By.repeater(Objects.complaintPage.locators.complaintButton));
+var complaintButton = element(By.linkText(Objects.complaintPage.locators.complaintButton));
 var firstName = element(By.name(Objects.complaintPage.locators.firstName));
 var lastName = element(By.name(Objects.complaintPage.locators.lastName));
 var initiatorTab = element(By.xpath(Objects.complaintPage.locators.initiatorTab));
@@ -20,7 +20,13 @@ var radioButtonNewInitiator = element(by.xpath(Objects.complaintPage.locators.ra
 var ComplaintPage = function() {
     browser.ignoreSynchronization = true;
     this.clickComplaintButton = function () {
-        complaintButton.click();
+        browser.wait(EC.presenceOf(element(by.linkText(Objects.complaintPage.locators.complaintButton))), 30000).then(function () {
+            browser.wait(EC.visibilityOf(element(by.linkText(Objects.complaintPage.locators.complaintButton))), 30000).then(function () {
+                browser.wait(EC.elementToBeClickable(element(by.linkText(Objects.complaintPage.locators.complaintButton))), 30000).then(function () {
+                    complaintButton.click();
+                });
+            });
+        });
         return this;
     };
 
@@ -30,6 +36,7 @@ var ComplaintPage = function() {
             browser.wait(EC.visibilityOf(element(by.name(Objects.complaintPage.locators.firstName))), 30000).then(function () {
                 browser.wait(EC.elementToBeClickable(element(by.name(Objects.complaintPage.locators.firstName))), 30000).then(function () {
                     firstName.click().then(function () {
+                        firstName.clear();
                         firstName.sendKeys(name);
                     })
                 });
@@ -58,10 +65,11 @@ var ComplaintPage = function() {
             browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.incidentCategoryDDListBox))), 30000).then(function () {
                 browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.complaintPage.locators.incidentCategoryDDListBox))), 30000).then(function () {
                     incidentCategoryDDListBox.click().then(function() {
-                        browser.wait(EC.textToBePresentInElement((incidentCategoryDDListBox), category), 10000).then(function () {
+                        browser.wait(EC.visibilityOf(element(by.linkText(category))), 30000).then(function () {
                             var incidentCategory = element(by.linkText(category));
                             incidentCategory.click();
                         })
+
 
                     });
 
@@ -113,6 +121,19 @@ var ComplaintPage = function() {
         browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.complaintPage.locators.radioButtonNewInitiator))), 30000).then(function () {
             radioButtonNewInitiator.click();
         });
+        return this;
+    };
+    this.returnFirstNameValue = function () {
+        return firstName.getAttribute("value");
+    };
+    this.returnLastNameValue = function () {
+        return lastName.getAttribute("value");
+    };
+    this.reenterFirstName = function (name) {
+        if (this.returnFirstNameValue() == "")
+        {
+            firstName.sendKeys(name);
+        }
         return this;
     }
 

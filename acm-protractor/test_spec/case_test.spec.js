@@ -134,7 +134,7 @@ describe('case page tests', function() {
 
     it('should create new case add new note and verify added note', function() {
 
-        casePage.navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
         casePage.clickNotesLink();
         casePage.addNote(Objects.casepage.data.note);
@@ -143,7 +143,7 @@ describe('case page tests', function() {
 
     it('should craete new case add/delete note', function() {
 
-        casePage.navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
+        casePage.clickNewButton.navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
         casePage.clickNotesLink();
         casePage.addNote(Objects.casepage.data.note);
@@ -153,7 +153,7 @@ describe('case page tests', function() {
 
     it('should create new case add new note and verify added note', function() {
 
-        casePage.navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
         casePage.clickNotesLink();
         casePage.addNote(Objects.casepage.data.note);
@@ -163,7 +163,7 @@ describe('case page tests', function() {
 
     it('should create new case and add task from tasks table verify the task', function() {
 
-        casePage.navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
         casePage.clickTasksLinkBtn();
         casePage.clickAddTaskButton();
