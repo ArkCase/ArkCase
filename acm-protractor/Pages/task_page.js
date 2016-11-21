@@ -101,7 +101,7 @@ var approveBtn = element(by.xpath(Objects.taskspage.locators.approveBtn));
 var caseTitleInTasks = element(by.xpath(Objects.taskspage.locators.caseTitleInTasks));
 
 var TaskPage = function() {
-    this.clickTaskButton = function(){
+    this.clickTaskButton = function() {
         taskBtn.click();
         return this;
     }
@@ -245,7 +245,7 @@ var TaskPage = function() {
         linkInputUrl.sendKeys(url);
         insertLinkBtn.click();
         return this;
-     }
+    }
     this.insertTaskDataLinkNote = function(assignee, subject, startdate, duedate, priority, percent, text, url) {
         this.addAssignee(assignee);
         this.insertSubject(subject);
@@ -458,8 +458,8 @@ var TaskPage = function() {
         return this;
     }
 
-	this.insertDetailsTextAreaLink = function(text, url){
-		insertLinkText.click();
+    this.insertDetailsTextAreaLink = function(text, url) {
+        insertLinkText.click();
         insertLinkText.sendKeys(text);
         insertLinkUrl.clear();
         insertLinkUrl.sendKeys(url);
@@ -560,28 +560,28 @@ var TaskPage = function() {
     }
     this.clickApproveBtn = function() {
 
-        browser.wait(EC.presenceOf(element(by.xpath(Objects.taskspage.locators.approveBtn))), 30000).then(function() {
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.taskspage.locators.approveBtn))), 30000, "Approve button is not displayed").then(function() {
             approveBtn.click().then(function() {
                 browser.wait(EC.textToBePresentInElement((taskState), Objects.taskspage.data.taskStateClosed), 10000);
             });
         });
         return this;
     }
-	this.clickCaseTitleInTasks = function() {
-        browser.wait(EC.invisibilityOf(element(by.xpath(Objects.basepage.locators.notificationMessage))), 30000).then(function () {
+    this.clickCaseTitleInTasks = function() {
+        browser.wait(EC.invisibilityOf(element(by.xpath(Objects.basepage.locators.notificationMessage))), 30000).then(function() {
             browser.wait(EC.presenceOf(element(by.xpath(Objects.taskspage.locators.caseTitleInTasks))), 30000).then(function() {
-                browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.caseTitleInTasks))), 30000).then(function () {
-                    browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.taskspage.locators.caseTitleInTasks))), 30000).then(function () {
-                        caseTitleInTasks.click().then(function () {
+                browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.caseTitleInTasks))), 30000).then(function() {
+                    browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.taskspage.locators.caseTitleInTasks))), 30000).then(function() {
+                        caseTitleInTasks.click().then(function() {
                             browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.tasksLink))), 30000);
-
                         });
                     });
                 });
             });
+
         });
 
-	}
+    }
 
 
 };
