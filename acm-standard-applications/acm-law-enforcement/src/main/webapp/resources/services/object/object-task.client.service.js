@@ -58,6 +58,28 @@ angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'Ac
                 cache: false,
                 isArray: true
             }
+            /**
+             * @ngdoc method
+             * @name _queryMyTasksByParentType
+             * @methodOf services:Object.TaskService
+             *
+             * @description
+             * Query task for a user.
+             *
+             * @param {Object} params Map of input parameter
+             * @param {String} params.user  User ID
+             * @param {String} params.parentType  Parent Object Type
+             * @param {Function} onSuccess (Optional)Callback function of success query
+             * @param {Function} onError (Optional) Callback function when fail
+             *
+             * @returns {Object} Object returned by $resource
+             */
+            , _queryMyTasksByParentType: {
+                method: 'GET',
+                url: 'api/v1/plugin/search/advancedSearch?q=assignee_id_lcs\\::user+AND+object_type_s\\:TASK+AND+parent_type_s\\::parentType',
+                cache: false,
+                isArray: false
+            }
         });
 
         Service.SessionCacheNames = {};
@@ -124,10 +146,8 @@ angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'Ac
          * @returns {Object} Promise
          */
         Service.queryChildTasks = function (parentType, parentId, start, n, sortBy, sortDir) {
-            var cacheChildTaskData = new Store.CacheFifo(Service.CacheNames.CHILD_TASK_DATA);
-            var cacheKey = parentType + "." + parentId + "." + start + "." + n + "." + sortBy + "." + sortDir;
-            var taskData = cacheChildTaskData.get(cacheKey);
-
+            var taskData;
+            
             var sort = "";
             if (!Util.isEmpty(sortBy)) {
                 sort = sortBy + " " + Util.goodValue(sortDir, "asc");
@@ -146,7 +166,6 @@ angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'Ac
                 , onSuccess: function (data) {
                     if (Service.validateChildTaskData(data)) {
                         taskData = data;
-                        cacheChildTaskData.put(cacheKey, taskData);
                         return taskData;
                     }
                 }
@@ -218,6 +237,25 @@ angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'Ac
                 }
             });
         };
+        
+        Service.queryMyTasksByParentType = function (userId, parentType) {
+            var myTasks;
+
+            return Util.serviceCall({
+                service: Service._queryMyTasksByParentType
+                , param: {
+                    user: userId
+                    , parentType: parentType
+                }
+                , result: myTasks
+                , onSuccess: function (data) {
+                    if (Service.validateMyTasksByParentType(data)) {
+                        myTasks = _.map(data, _.partialRight(_.pick, "taskId", "adhocTask", "completed", "status", "availableOutcomes"));
+                        return myTasks;
+                    }
+                }
+            });
+        };
 
         /**
          * @ngdoc method
@@ -238,6 +276,12 @@ angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'Ac
             return true;
         };
 
+        Service.validateMyTasksByParentType = function (data) {
+            if (!SearchService.validateSolrData(data)) {
+                return false;
+            }
+            return true;
+        };
 
         /**
          * @ngdoc method
@@ -254,6 +298,40 @@ angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'Ac
             Authentication.queryUserInfo().then(
                 function (userInfo) {
                     Service.queryMyTasks(userInfo.userId).then(
+                        function (myTasks) {
+                            dfd.resolve(myTasks);
+                            return myTasks;
+                        }
+                        , function (error) {
+                            dfd.reject(error);
+                            return error;
+                        }
+                    );
+                    return userInfo;
+                }
+                , function (error) {
+                    dfd.reject(error);
+                    return error;
+                }
+            );
+            return dfd.promise;
+        };
+        
+        /**
+         * @ngdoc method
+         * @name queryMyTasksByParentType
+         * @methodOf services:Object.TaskService
+         *
+         * @description
+         * Query list of tasks from Solr for current login user and parent type.
+         *
+         * @returns {Object} Promise
+         */
+        Service.queryCurrentUserTasksByParentType = function (parentType) {
+            var dfd = $q.defer();
+            Authentication.queryUserInfo().then(
+                function (userInfo) {
+                    Service.queryMyTasksByParentType(userInfo.userId, parentType).then(
                         function (myTasks) {
                             dfd.resolve(myTasks);
                             return myTasks;

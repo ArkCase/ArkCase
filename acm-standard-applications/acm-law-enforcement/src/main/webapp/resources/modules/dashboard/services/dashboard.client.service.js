@@ -42,8 +42,10 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
 
             queryMyTasks: {
                 method: 'GET',
-                url: 'api/v1/plugin/task/forUser/:userId',
-                isArray: true,
+                url: 'api/v1/plugin/search/advancedSearch?q=assignee_id_lcs\\::userId+' +
+                'AND+object_type_s\\:TASK+' +
+                'AND+NOT+status_lcs\\:CLOSED&start=:startWith&n=:pageSize&s=:sortBy :sortDir',
+                isArray: false,
                 data: ''
             },
 

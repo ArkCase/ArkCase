@@ -63,7 +63,7 @@ public class AcmEventResponseLauncher implements ApplicationListener<AcmEvent>
                 {
                     log.error("Could not dispatch Mule event: {}", e.getMessage(), e);
                 }
-                break;
+
             }
         }
     }

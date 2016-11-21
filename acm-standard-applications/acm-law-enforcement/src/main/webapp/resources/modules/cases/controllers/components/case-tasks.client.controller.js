@@ -24,7 +24,7 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
-        var promiseMyTasks = ObjectTaskService.queryCurrentUserTasks();
+        var promiseMyTasks = ObjectTaskService.queryCurrentUserTasksByParentType(ObjectService.ObjectTypes.CASE_FILE);
 
         var onConfigRetrieved = function (config) {
             gridHelper.setColumnDefs(config);
@@ -77,7 +77,7 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
                     , Util.goodValue($scope.sort.dir)
                 ).then(
                     function (data) {
-                        $q.all([promiseMyTasks]).then(function () {
+                        //$q.all([promiseMyTasks]).then(function () {
                             var tasks = data.response.docs;
                             $scope.gridOptions = $scope.gridOptions || {};
                             $scope.gridOptions.data = tasks;
@@ -115,7 +115,7 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
                                     }
                                 }
                             }
-                        }); //end $q
+                        //}); //end $q
 
                         return data;
                     }
