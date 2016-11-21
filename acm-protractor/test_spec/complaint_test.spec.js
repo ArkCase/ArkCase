@@ -86,6 +86,20 @@ describe('Create new complaint ', function() {
         expect(complaintPage.returnTaskTableDueDate()).toEqual(Objects.taskspage.datataskStateActive);
     });
 
+    it('should create new complaint and verify adding new document', function() {
+
+        complaintPage.clickNewButton().clickComplaintButton().switchToIframes().submitInitiatorInformation(Objects.complaintPage.data.firstName, Objects.complaintPage.data.lastName);
+        expect(complaintPage.returnFirstNameValue()).toEqual(Objects.complaintPage.data.firstName);
+        expect(complaintPage.returnLastNameValue()).toEqual(Objects.complaintPage.data.lastName);
+        complaintPage.reenterFirstName(Objects.complaintPage.data.firstName).clickTab("Incident").insertIncidentInformation("Arson", Objects.complaintPage.data.title).clickSubmitButton();
+        complaintPage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Documents");
+        complaintPage.rightClickRootFolder().addDocument("Notice of Investigation");
+        utils.uploadDocx();
+        complaintPage.validateDocGridData(true, "ArkCaseTesting", ".docx", "Notice of Investigation", utils.returnToday("/"), utils.returnToday("/"), userPage.returnUserNavigationProfile(), "1.0", "ACTIVE");
+
+    });
+
+
 })
 
 

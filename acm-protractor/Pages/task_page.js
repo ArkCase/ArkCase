@@ -89,7 +89,6 @@ var headerImageLink = element(by.css(Objects.taskspage.locators.headerImageLink)
 var attachmentsLink = element.all(by.repeater(Objects.taskspage.locators.attachmentsLink)).get(3);
 var attachmentsTableTitle = element(by.css(Objects.taskspage.locators.attachmentsTableTitle));
 var root = element(by.xpath(Objects.taskspage.locators.root));
-var newDocument = element.all(by.css(Objects.taskspage.locators.newDocument)).get(1);
 var otherDocument = element(by.xpath(Objects.taskspage.locators.otherDocument));
 var documentTitle = element(by.xpath(Objects.taskspage.locators.documentTitle));
 var newFolder = element.all(by.css(Objects.taskspage.locators.newFolder)).get(0);
@@ -487,10 +486,6 @@ var TaskPage = function() {
     }
     this.clickRootFolder = function() {
         root.click();
-        return this;
-    }
-    this.clickNewDocument = function() {
-        newDocument.click();
         return this;
     }
     this.clickOtherDocument = function() {
