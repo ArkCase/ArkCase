@@ -19,7 +19,7 @@
     },
     "basepage":{
         "locators":{
-            "newButton": "New",
+            "newButton": ".//a[@class='dropdown-toggle']/i",
             "root": ".//span[@title='root']",
             "newCorrespondence": ".//li[@data-command='subMenuCorrespondenceForms']",
             "docRow": "//table/tbody/tr[3]",
@@ -32,7 +32,9 @@
             "docVersion": "//table/tbody/tr[3]/td[9]/span/select/option",
             "docStatus": "//table/tbody/tr[3]/td[10]",
             "deleteDoc": ".//li[@data-command='remove']",
-            "downloadDoc": ".//li[@data-command='download']"
+            "downloadDoc": ".//li[@data-command='download']",
+            "fadeElementDeleteNote": "//*[@modal-animation-class='fade']",
+            "fadeElementEditNote": "//*[@ng-click='close($event)'"
 
         },
         "data":{
@@ -178,7 +180,8 @@
             "documentTitleInput": ".//*[@class='panel-body']/doc-tree/table[2]/tbody/tr[2]/td[3]/span/span[3]/input",
             "tag": "a",
             "approveBtn": ".//*[@class='btn btn-sm btn-default ng-binding ng-scope']/..//button[7]",
-            "caseTitleInTasks": ".//*[@class='ng-binding']/..//h4/a"
+            "caseTitleInTasks": ".//*[@class='ng-binding']/..//h4/a",
+            "notificationMessage": ".//*[@ng-show='!$messageTemplate']"
 
 
         },
@@ -348,7 +351,7 @@
 
     "complaintPage": {
         "locators": {
-            "complaintButton": "item in menu.items | orderBy: 'position' ",
+            "complaintButton": "Complaint",
             "firstFrame": "//iframe",
             "secondFrame": "/html/body/iframe",
             "initiatorTab": ".//div[@extid='Step1']",

@@ -132,7 +132,10 @@ var editAliasBtn = element(by.css(Objects.casepage.locators.editAliasBtn));
 var CasePage = function() {
 
     browser.ignoreSynchronization = true;
-
+    this.navigateToNewCasePage = function(){
+        newCaseBtn.click();
+        return this;
+    };
     this.submitGeneralInformation = function(title, type) {
 
         browser.wait(EC.visibilityOf(element(by.name(Objects.casepage.locators.caseTitle))), 30000);
@@ -255,36 +258,10 @@ var CasePage = function() {
         browser.executeScript('arguments[0].click()', submitBtn);
     };
 
-
-    this.clickTasksLinkBtn = function() {
-
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.tasksLink))), 20000).then(function() {
-
-            tasksLinkBtn.click();
-        });
-
-        return this;
-
-    };
-    this.waitForTasksTable = function() {
-
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.tasksTable))), 30000).then(function() {
-            refreshBtn.click().then(function() {
-                browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.taskTitle))), 30000, "After 30 second task is not shown in the task table");
-            });
-        });
-        return this;
-
-    };
-
     this.returnAutomatedTask = function() {
 
         return taskTitle.getText();
 
-    }
-
-    this.returnTaskTitle = function() {
-        return taskTitle.getText();
     }
 
     this.clickTaskTitle = function() {
@@ -343,62 +320,6 @@ var CasePage = function() {
         expandLinksButton.click();
         return this;
     };
-    this.clickNotesLink = function() {
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.notesLink))), 20000);
-        notesLink.click().then(function() {
-            browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.addNoteBtn))), 10000);
-        });
-        return this;
-    }
-
-    this.addNote = function(note) {
-
-        addNoteBtn.click().then(function() {
-            browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.noteTextArea))), 10000).then(function() {
-                noteTextArea.click().then(function() {
-                    noteTextArea.sendKeys(note).then(function() {
-                        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.saveNoteBtn))), 10000).then(function() {
-                            saveNoteBtn.click().then(function() {
-                                browser.wait(EC.presenceOf(element.all(by.repeater(Objects.casepage.locators.addedNoteName)).get(0)), 10000);
-                            });
-                        });
-                    });
-                });
-            });
-        });
-        return this;
-    }
-
-    this.returnNoteName = function() {
-        return addedNoteName.getText();
-
-    }
-
-    this.deleteNote = function() {
-        browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.casepage.locators.deleteNoteBtn)).get(3).all(by.tagName(Objects.casepage.locators.tag)).get(1)), 10000).then(function() {
-            deleteNoteBtn.click().then(function() {
-                browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.emptyNoteTable))), 10000);
-            });
-        });
-        return this;
-    }
-
-    this.editNote = function(note) {
-        browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.casepage.locators.editNoteBtn)).get(3).all(by.tagName(Objects.casepage.locators.tag)).get(0)), 10000).then(function() {
-            editNoteBtn.click().then(function() {
-                noteTextArea.clear().then(function() {
-                    noteTextArea.sendKeys(note).then(function() {
-                        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.saveNoteBtn))), 10000).then(function() {
-                            saveNoteBtn.click().then(function() {
-                                browser.wait(EC.textToBePresentInElement((addedNoteName), Objects.casepage.data.editnote), 10000);
-                            });
-                        });
-                    });
-                });
-            });
-        });
-        return this;
-    }
 
     this.clickAddTaskButton = function() {
 
@@ -409,25 +330,6 @@ var CasePage = function() {
         });
 
         return this;
-    }
-    this.returnTaskTableAssignee = function() {
-        return taskAssighnee.getText();
-    }
-
-    this.returnTaskTableCreatedDate = function() {
-        return taskCreated.getText();
-    }
-
-    this.returnTaskTablePriority = function() {
-        return taskPriority.getText();
-    }
-
-    this.returnTaskTableDueDate = function() {
-        return taskDueDate.getText();
-    }
-
-    this.returnTaskTableStatus = function() {
-        return taskStatus.getText();
     }
 
     this.clickPeopleLinkBtn = function() {
