@@ -100,19 +100,22 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                         }
                     }
                     if (scope.pageSize >= 0 && scope.start >= 0) {
-                        if (scope.multiFilter) {
+                        if (scope.multiFilter && !scope.isAutoSuggestActive) {
                             if (scope.searchQuery) {
                                 if (scope.filters.indexOf("Tag Token") <= 0) {
                                     scope.filters += "&fq" + scope.multiFilter;
                                 }
-
-                                    scope.filters += scope.searchQuery;
-                                // _.map(scope.searchQuery, function (tag) {
-                                //     scope.filters += tag.tag_token_lcs + "|";
-                                // });
+                                _.map(scope.searchQuery, function (tag) {
+                                    scope.filters += tag.tag_token_lcs + "|";
+                                });
                             }
                         }
-                        var query = SearchQueryBuilder.buildFacetedSearchQuery((scope.multiFilter ? "*" : scope.searchQuery + "*"), scope.filters, scope.pageSize, scope.start);
+
+                        if (!scope.isAutoSuggestActive) {
+                            var query = SearchQueryBuilder.buildFacetedSearchQuery((scope.multiFilter ? "*" : scope.searchQuery + "*"), scope.filters, scope.pageSize, scope.start);
+                        } else {
+                            var query = SearchQueryBuilder.buildFacetedSearchQuery(scope.searchQuery, scope.filters, scope.pageSize, scope.start);
+                        }
                         if (query) {
                             setExportUrl(query);
                             SearchService.queryFilteredSearch({
@@ -134,7 +137,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
 
                 scope.checkTag = function (tagSelected) {
                     scope.searchQuery = "\"" + tagSelected.title_parseable + "\"";
-                    scope.queryTypeahead = someName(tagSelected);
+                    // scope.queryTypeahead = someName(tagSelected);
                     if (!tagSelected.title_parseable) {
                         return false;
                     }
@@ -391,7 +394,15 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                             if (scope.filter) {
                                 scope.filters = 'fq=' + scope.filter;
                             }
+
+                            scope.isAutoSuggestActive = false;
+                            if (config.isAutoSuggestActive) {
+                                scope.isAutoSuggestActive = config.isAutoSuggestActive;
+
+                            }
+
                             scope.queryExistingItems(scope.start);
+
                         }
                     }, true);
                 });
