@@ -33,9 +33,10 @@
                         ng-model="searchQuery"
                         typeahead="result for result in queryTypeahead($viewValue)"
                         placeholder="{{searchPlaceholder}}"
-                        typeahead-wait-ms="5"
+                        typeahead-wait-ms="10"
                         typeahead-loading="loadingResults"
                         typeahead-no-results="noResults"
+
                 >
                 <tags-input
                         ng-if="isMultiFilter"
@@ -48,7 +49,7 @@
                         replace-spaces-with-dashes="false"
                         add-from-autocomplete-only="true"
                 >
-                    <auto-complete min-length="1" max-results-to-show="10" source="loadTags($query)"></auto-complete>
+                    <auto-complete min-length="2" max-results-to-show="10" source="loadTags($query)"></auto-complete>
                 </tags-input>
                 <span class="input-group-btn">
                     <button class="btn btn-md btn-primary" type="button"
