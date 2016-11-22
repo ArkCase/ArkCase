@@ -126,7 +126,7 @@
             "percentCompletitionBtn": ".//*[@class='clearfix']/div[2]/div[1]/div/form/div/span/button[1]",
             "completeBtn": "Complete",
             "deleteBtn": "Delete",
-            "refreshBtn": "ng-click='refresh()']",
+            "refreshBtn": ".//button[@ng-click='refresh()']",
             "detailsLink": "link in componentLinks",
             "detailsTextArea": ".//*[@class='note-editable panel-body']",
             "detailsSaveBtn": ".//*[@class='panel-title']/div/button/i",

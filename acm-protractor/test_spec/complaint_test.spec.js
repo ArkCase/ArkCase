@@ -99,6 +99,32 @@ describe('Create new complaint ', function() {
 
     });
 
+    it('should create new complaint and verify text details add verify if is saved', function() {
+
+        complaintPage.clickNewButton().clickComplaintButton().switchToIframes().submitInitiatorInformation(Objects.complaintPage.data.firstName, Objects.complaintPage.data.lastName).reenterFirstName(Objects.complaintPage.data.firstName).clickTab("Incident").insertIncidentInformation("Arson", Objects.complaintPage.data.title).clickSubmitButton();
+        complaintPage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Details");
+        complaintPage.insertDetailsTextAreaText(Objects.taskspage.data.detailsTextArea);
+        complaintPage.clickSaveDetailsButton();
+        complaintPage.clickRefreshButton();
+        expect(complaintPage.returnDetailsTextArea()).toEqual(Objects.taskspage.data.detailsTextArea, 'After refresh the details text is not saved');
+
+    });
+
+    it('should create new complaint and add link from details', function() {
+
+        complaintPage.clickNewButton().clickComplaintButton().switchToIframes().submitInitiatorInformation(Objects.complaintPage.data.firstName, Objects.complaintPage.data.lastName).reenterFirstName(Objects.complaintPage.data.firstName).clickTab("Incident").insertIncidentInformation("Arson", Objects.complaintPage.data.title).clickSubmitButton();
+        complaintPage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Details");
+        complaintPage.clickInsertLinkInDetails();
+        expect(complaintPage.returnInsertLinkTitle()).toEqual(Objects.taskspage.data.insertLinkTitle);
+        complaintPage.insertDetailsTextAreaLink(Objects.taskspage.data.insertLinkText, Objects.taskspage.data.insertLinkUrl);
+        expect(complaintPage.returnDetailsTextArea()).toEqual(Objects.taskspage.data.insertLinkText, 'The link is not added');
+        complaintPage.clickSaveDetailsButton();
+        expect(complaintPage.returnDetailsTextArea()).toEqual(Objects.taskspage.data.insertLinkText, 'The link is not added');
+
+    });
+
+
+
 
 })
 
