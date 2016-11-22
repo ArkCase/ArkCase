@@ -120,7 +120,11 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService', 'Admin.Modu
                     context.validateMenuExistance(menuObj.menuId);
                     // Check if we have defined permission rule with name of menu
                     (function processMenuPermission(menuObj) {
-                        PermissionsService.getActionPermission(menuObj.menuItemURL, null).then(function (moduleAllowedByActionPermission) {
+                        var action = menuObj.permissionAction;
+                        if (!action) {
+                            action = menuObj.menuItemURL;
+                        }
+                        PermissionsService.getActionPermission(action, null).then(function (moduleAllowedByActionPermission) {
                             var moduleObject = null;
                             var moduleAllowedByRoles = false;
 
@@ -160,6 +164,7 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService', 'Admin.Modu
                                     }
                                 })
                             }
+                            ц
                         })
                     })(menuObj);
                 }
