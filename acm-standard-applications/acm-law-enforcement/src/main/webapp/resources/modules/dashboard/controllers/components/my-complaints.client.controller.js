@@ -14,7 +14,7 @@ angular.module('dashboard.my-complaints')
             var paginationOptions = {
                 pageNumber: 1,
                 pageSize: 5,
-                sortBy: 'complaintNumber',
+                sortBy: 'id',
                 sortDir: 'desc'
             };
             vm.gridOptions = {
@@ -55,8 +55,8 @@ angular.module('dashboard.my-complaints')
                         pageSize: paginationOptions.pageSize
                     },
                     function (data) {
-                        vm.gridOptions.data = data;
-                        vm.gridOptions.totalItems = data.length;
+                        vm.gridOptions.data = data.response.docs;
+                        vm.gridOptions.totalItems = data.response.numFound;
                     }
                 );
             }

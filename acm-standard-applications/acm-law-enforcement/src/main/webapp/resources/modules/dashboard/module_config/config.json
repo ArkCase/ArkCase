@@ -134,33 +134,33 @@
       "paginationPageSize": 5,
       "columnDefs": [
         {
-          "name": "complaintNumber",
+          "name": "object_id_s",
           "displayName": "dashboard.widgets.myComplaints.table.header.number",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.complaintId})\">{{COL_FIELD}}<\/a>",
+          "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>",
           "width": 175
         },
         {
-          "name": "complaintTitle",
+          "name": "title_parseable",
           "displayName": "dashboard.widgets.myComplaints.table.header.title",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.complaintId})\">{{COL_FIELD}}<\/a>"
+          "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>"
         },
         {
-          "name": "priority",
+          "name": "priority_lcs",
           "displayName": "dashboard.widgets.myComplaints.table.header.priority",
           "headerCellFilter": "translate",
           "width": 75
         },
         {
-          "name": "created",
+          "name": "create_date_tdt",
           "displayName": "dashboard.widgets.myComplaints.table.header.created",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div>{{ row.entity.create_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>",
           "width": 70
         },
         {
-          "name": "status",
+          "name": "status_lcs",
           "displayName": "dashboard.widgets.myComplaints.table.header.status",
           "headerCellFilter": "translate",
           "width": 100
