@@ -56,16 +56,17 @@ angular.module('services').factory('DocTreeExt.Template', ['$q', 'UtilService', 
                             var template = args.templateType;
 
                             var selectedFolderId = nodes[0].data.objectId;
-                            var promiseFolderId = Util.serviceCall({
+
+                            var promiseFolderId = $q.when(selectedFolderId > 0 ? selectedFolderId : Util.serviceCall({
                                 service: Ecm.retrieveContainer,
                                 param: {
                                     objId: nodes[0].data.containerObjectId,
                                     objType: nodes[0].data.containerObjectType
                                 },
                                 onSuccess: function (data) {
-                                    return selectedFolderId > 0 ? selectedFolderId : data.folderId;
+                                    return data.folderId;
                                 }
-                            });
+                            }));
 
                             promiseFolderId.then(function (result) {
                                 var retrievedFolderId = result;
