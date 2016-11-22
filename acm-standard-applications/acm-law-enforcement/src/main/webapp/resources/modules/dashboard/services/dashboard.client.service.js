@@ -28,8 +28,9 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
 
             queryNewComplaints: {
                 method: 'GET',
-                url: 'api/v1/plugin/complaint/list/lastMonth',
-                isArray: true,
+                url: 'api/v1/plugin/search/advancedSearch?q=object_type_s\\:COMPLAINT+' +
+                'AND create_date_tdt\\:[NOW-1MONTH TO NOW]',
+                isArray: false,
                 data: ''
             },
 
@@ -51,8 +52,10 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
 
             queryMyComplaints: {
                 method: 'GET',
-                url: 'api/v1/plugin/complaint/forUser/:userId',
-                isArray: true,
+                url: 'api/v1/plugin/search/advancedSearch?q=assignee_id_lcs\\::userId+' +
+                'AND+object_type_s\\:COMPLAINT+' +
+                'AND+NOT+status_lcs\\:CLOSED&start=:startWith&n=:pageSize&s=:sortBy :sortDir',
+                isArray: false,
                 data: ''
             },
 
