@@ -164,7 +164,6 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService', 'Admin.Modu
                                     }
                                 })
                             }
-                            ц
                         })
                     })(menuObj);
                 }
