@@ -77,7 +77,7 @@
         <task:scheduled ref="historyCleanJob" method="cleanHistory" cron="0 0 0/6 * * *"/>
     </task:scheduled-tasks>
 
-    <bean id="historyCleanJob" class="com.armedia.acm.plugins.admin.service.HistoryCleanService" init-method="cleanHistory">
+    <bean id="historyCleanJob" class="com.armedia.acm.plugins.admin.service.HistoryCleanService">
         <property name="jsonPropertiesManagementService" ref="angularPropertiesManagementService"/>
         <property name="auditDao" ref="auditDao"/>
         <property name="notificationDao" ref="notificationDao"/>
