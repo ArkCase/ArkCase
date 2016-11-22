@@ -10,8 +10,8 @@
  *
  * DocTree extensions for Correspondence Template functions.
  */
-angular.module('services').factory('DocTreeExt.Template', ['$q', 'UtilService', 'Object.CorrespondenceService'
-    , function ($q, Util, ObjectCorrespondenceService
+angular.module('services').factory('DocTreeExt.Template', ['$q', 'UtilService', 'Object.CorrespondenceService', 'EcmService'
+    , function ($q, Util, ObjectCorrespondenceService, Ecm
     ) {
 
         var Service = {
@@ -56,10 +56,24 @@ angular.module('services').factory('DocTreeExt.Template', ['$q', 'UtilService', 
                             var template = args.templateType;
 
                             var selectedFolderId = nodes[0].data.objectId;
-                            var promiseCorrespondence = ObjectCorrespondenceService.createCorrespondence(template,
-                                DocTree.getObjType(), DocTree.getObjId(), selectedFolderId);
+                            var promiseFolderId = Util.serviceCall({
+                                service: Ecm.retrieveContainer,
+                                param: {
+                                    objId: nodes[0].data.containerObjectId,
+                                    objType: nodes[0].data.containerObjectType
+                                },
+                                onSuccess: function (data) {
+                                    return selectedFolderId > 0 ? selectedFolderId : data.folderId;
+                                }
+                            });
 
-                            var promiseAddNodes = DocTree._addingFileNodes(nodes[0], names, names[0]);
+                            promiseFolderId.then(function (result) {
+                                var retrievedFolderId = result;
+                                var promiseCorrespondence = ObjectCorrespondenceService.createCorrespondence(template,
+                                    DocTree.getObjType(), DocTree.getObjId(), retrievedFolderId);
+
+                                var promiseAddNodes = DocTree._addingFileNodes(nodes[0], names, names[0]);
+
 
                             var cacheKey = DocTree.getCacheKeyByNode(nodes[0]);
                             $q.all([promiseCorrespondence, promiseAddNodes]).then(function (successData) {
@@ -83,6 +97,7 @@ angular.module('services').factory('DocTreeExt.Template', ['$q', 'UtilService', 
                                     }
                                 }
 
+                            });
                             });
                         }
                     }

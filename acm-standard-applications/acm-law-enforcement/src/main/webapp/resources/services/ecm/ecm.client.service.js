@@ -14,6 +14,12 @@ angular.module('services').factory('EcmService', ['$resource', 'Acm.StoreService
     , function ($resource, StoreService, Util) {
 
         var Service = $resource('api/latest/service', {}, {
+            retrieveContainer: {
+                method: 'GET',
+                url: 'api/latest/service/ecm/container/:objType/:objId',
+                cache: false,
+                isArray: false
+            },
             retrieveFolderList: {
                 method: 'GET',
                 url: 'api/latest/service/ecm/folder/:objType/:objId/:folderId?start=:start&n=:n&s=:sortBy&dir=:sortDir',
