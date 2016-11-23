@@ -13,7 +13,6 @@ var helpers = function helpers() {
             browser.driver.findElement(by.id(Objects.loginpage.locators.password))
                 .sendKeys(Objects.loginpage.data.supervisoruser.password);
             browser.driver.findElement(by.id(Objects.loginpage.locators.loginbutton)).click();
-            browser.driver.wait(EC.visibilityOf(element(by.xpath(".//*[@class='well-sm clearfix ng-scope']/span/a/i"))), 20000);
             logger.log('Info', 'User succesfully logged in');
             return require('./Pages/dashboard_page.js')
         });
