@@ -63,6 +63,8 @@
       "filter": "\"Object Type\": SUBSCRIPTION_EVENT & \"Owner\": userId",
       "filterName": "Object Type",
       "reportFileName": "subscriptions",
+      "isAutoSuggestActive": true,
+      "objectType": "SUBSCRIPTION_EVENT",
       "hiddenFacets": [
         "Owner"
       ]
