@@ -44,8 +44,10 @@ controller('Dashboard.TeamWorkloadController', ['$scope', 'config', '$translate'
 
                     // Count number of assigned tasks for users
                     angular.forEach(solrData.response.docs, function (task) {
-                        var user = task.assignee_id_lcs;
-                        tasksData[user] ? tasksData[user]++ : tasksData[user] = 1;
+                        if (task.assignee_id_lcs) {
+                            var user = task.assignee_id_lcs;
+                            tasksData[user] ? tasksData[user]++ : tasksData[user] = 1;
+                        }
                     });
 
                     angular.forEach(tasksData, function (count, user) {

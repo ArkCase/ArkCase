@@ -32,7 +32,7 @@ public class RetrieveTasksAPIController
     public String getActiveTasksByDueDate(@PathVariable("due") String due, Authentication authentication)
     {
 
-        String solrQuery = "object_type_s:TASK AND NOT status_lcs:CLOSED";
+        String solrQuery = "object_type_s:TASK AND status_lcs:ACTIVE";
         String solrResponse = "";
 
         switch (AcmTasksForAPeriod.getTasksForPeriodByText(due))
