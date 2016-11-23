@@ -14,7 +14,7 @@ controller('Dashboard.TeamWorkloadController', ['$scope', 'config', '$translate'
         }
         function applyConfig(e, componentId, configuration) {
             if (componentId == 'teamWorkload') {
-                DashboardService.queryTeamWorkload({due: config.due}, function (tasks) {
+                DashboardService.queryTeamWorkload({due: config.due}, function (solrData) {
 
                     var chartTitle = '';
                     switch (config.due) {
@@ -43,8 +43,8 @@ controller('Dashboard.TeamWorkloadController', ['$scope', 'config', '$translate'
                     var labels = [];
 
                     // Count number of assigned tasks for users
-                    angular.forEach(tasks, function (task) {
-                        var user = task.assignee;
+                    angular.forEach(solrData.response.docs, function (task) {
+                        var user = task.assignee_id_lcs;
                         tasksData[user] ? tasksData[user]++ : tasksData[user] = 1;
                     });
 
