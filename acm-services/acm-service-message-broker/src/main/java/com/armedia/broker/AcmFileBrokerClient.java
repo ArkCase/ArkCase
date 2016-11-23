@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * File message producer for ActiveMQ Sends large files as BlobMessage
+ * File message producer for ActiveMQ Sends/receives large files as BlobMessage
  * 
  * @author dame.gjorgjievski
  *
@@ -31,9 +31,12 @@ public class AcmFileBrokerClient
     private final ActiveMQConnectionFactory connectionFactory;
     private final String outboundQueue;
     private final String inboundQueue;
+
     private JmsTemplate producerTemplate;
+    private String fileUploadUrl;
 
     public static final String PROP_FILE_NAME = "fileName";
+    public static final String PROP_FILE_UPLOAD_URL = "fileUploadUrl";
 
     public AcmFileBrokerClient(ActiveMQConnectionFactory connectionFactory, String outboundQueue, String inboundQueue)
     {
@@ -93,6 +96,10 @@ public class AcmFileBrokerClient
                 MessageProducer producer = session.createProducer(queue);
                 BlobMessage message = session.createBlobMessage(file);
                 message.setStringProperty(PROP_FILE_NAME, file.getName());
+                if (fileUploadUrl != null)
+                {
+                    message.setStringProperty(PROP_FILE_UPLOAD_URL, fileUploadUrl);
+                }
                 if (properties != null)
                 {
                     for (Map.Entry<String, Object> prop : properties.entrySet())
@@ -143,32 +150,28 @@ public class AcmFileBrokerClient
                 MessageConsumer consumer = session.createConsumer(queue);
                 BlobMessage message = (BlobMessage) consumer.receive(2000);
                 message.acknowledge();
-                if (message instanceof BlobMessage)
+
+                String fileName = message.getStringProperty(PROP_FILE_NAME);
+                if (fileName == null)
                 {
-                    BlobMessage blobMessage = message;
-                    String fileName = blobMessage.getStringProperty(PROP_FILE_NAME);
-                    if (fileName == null)
+                    fileName = UUID.randomUUID().toString();
+                }
+                String[] fileNameParts = getFileNameParts(fileName);
+                file = File.createTempFile(fileNameParts[0], fileNameParts[1]);
+                file.setWritable(true);
+                file.deleteOnExit();
+                try (FileOutputStream fos = new FileOutputStream(file))
+                {
+                    InputStream in = message.getInputStream();
+                    byte[] buffer = new byte[1024];
+                    while (true)
                     {
-                        fileName = UUID.randomUUID().toString();
-                    }
-                    String[] fileNameParts = getFileNameParts(fileName);
-                    file = File.createTempFile(fileNameParts[0], fileNameParts[1]);
-                    file.setWritable(true);
-                    file.deleteOnExit();
-                    try (FileOutputStream fos = new FileOutputStream(file))
-                    {
-                        InputStream in = blobMessage.getInputStream();
-                        byte[] buffer = new byte[1024];
-                        while (true)
+                        int bytesRead = in.read(buffer);
+                        if (bytesRead == -1)
                         {
-                            int bytesRead = in.read(buffer);
-                            if (bytesRead == -1)
-                            {
-                                break;
-                            }
-                            fos.write(buffer, 0, bytesRead);
+                            break;
                         }
-                        fos.close();
+                        fos.write(buffer, 0, bytesRead);
                     }
                 }
 
@@ -198,6 +201,20 @@ public class AcmFileBrokerClient
             result[1] = ".tmp";
         }
         return result;
+    }
+
+    public String getFileUploadUrl()
+    {
+        return fileUploadUrl;
+    }
+
+    public void setFileUploadUrl(String fileUploadUrl)
+    {
+        if (!fileUploadUrl.endsWith("/"))
+        {
+            fileUploadUrl += "/";
+        }
+        this.fileUploadUrl = fileUploadUrl;
     }
 
     /**
