@@ -29,7 +29,7 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
             queryNewComplaints: {
                 method: 'GET',
                 url: 'api/v1/plugin/search/advancedSearch?q=object_type_s\\:COMPLAINT+' +
-                'AND create_date_tdt\\:[NOW-1MONTH TO NOW]',
+                'AND+create_date_tdt\\:[NOW-1MONTH TO NOW]',
                 isArray: false,
                 data: ''
             },
@@ -37,7 +37,7 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
             queryNewCases: {
                 method: 'GET',
                 url: 'api/v1/plugin/search/advancedSearch?q=object_type_s\\:CASE_FILE+' +
-                'AND create_date_tdt\\:[NOW-1MONTH TO NOW]',
+                'AND+create_date_tdt\\:[NOW-1MONTH TO NOW]',
                 isArray: false
             },
 
@@ -70,11 +70,11 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
 
             queryTeamWorkload: {
                 method: 'GET',
-                url: 'api/v1/plugin/task/list/:due',
-                isArray: true,
+                url: 'api/v1/plugin/task/getListByDueDate/:due',
+                isArray: false,
                 data: ''
             },
-
+            
             getWidgetsPerRoles: {
                 method: 'GET',
                 url: 'api/latest/plugin/dashboard/widgets/get',
