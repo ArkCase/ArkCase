@@ -40,6 +40,9 @@ var insertLinkTitle = element(by.xpath(Objects.taskspage.locators.insertLinkTitl
 var insertLinkText = element(by.xpath(Objects.taskspage.locators.insertLinkText));
 var insertLinkUrl = element(by.xpath(Objects.taskspage.locators.insertLinkUrl));
 var insertLinkBtn = element(by.buttonText(Objects.taskspage.locators.insertLinkBtn));
+var detailsPicture = element(by.xpath(Objects.basepage.locators.detailsPicture));
+var browseButton = element(by.name(Objects.basepage.locators.browseButton));
+var detailsUploadedImage = element(by.xpath(Objects.basepage.locators.detailsUploadedImage));
 
 
 var BasePage = function(){
@@ -442,7 +445,37 @@ var BasePage = function(){
 		insertLinkUrl.clear();
 		insertLinkUrl.sendKeys(url);
 		insertLinkBtn.click();
+	};
+	this.clickDetailsAddPicture = function () {
+		browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.detailsPicture))), 30000).then(function () {
+			detailsPicture.click();
+			return this;
+		})
+	};
+	this.uploadPicture = function () {
+         browseButton.click().then(function () {
+			 util.uploadPng();
+		 });
+		 return this;
+	};
+	this.returnDetailsUploadedImage = function () {
+		return detailsUploadedImage.isDisabled();
+	};
+	this.returnAutomatedTask = function() {
+		return taskTitle.getText();
+
+	};
+	this.clickTaskTitle = function() {
+		taskTitle.click();
+	};
+	this.navigateToPage = function(link){
+		xPathStr = ".//a[@title='";
+		var completexPath = xPathStr + link + "']";
+		var el = element(by.xpath(completexPath));
+		el.click();
+		return this;
 	}
+
 
 };
 	
