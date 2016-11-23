@@ -91,6 +91,7 @@
       "filter": "\"Object Type\": ASSOCIATED_TAG",
       "multiFilter": "\"Tag Token\":",
       "filterName": "Object Type",
+      "objectType": "TAG",
       "isAutoSuggestActive": true
     }
   ]

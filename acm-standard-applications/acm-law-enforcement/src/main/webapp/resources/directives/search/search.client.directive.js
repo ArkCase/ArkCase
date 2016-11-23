@@ -111,10 +111,10 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                             }
                         }
 
-                        if (!scope.isAutoSuggestActive) {
-                            var query = SearchQueryBuilder.buildFacetedSearchQuery((scope.multiFilter ? "*" : scope.searchQuery + "*"), scope.filters, scope.pageSize, scope.start);
+                        if (scope.isAutoSuggestActive && scope.searchQuery !== "") {
+                            var query = SearchQueryBuilder.buildFacetedSearchQuery("\"" + scope.searchQuery + "\"", scope.filters, scope.pageSize, scope.start);
                         } else {
-                            var query = SearchQueryBuilder.buildFacetedSearchQuery(scope.searchQuery, scope.filters, scope.pageSize, scope.start);
+                            var query = SearchQueryBuilder.buildFacetedSearchQuery((scope.multiFilter ? "*" : scope.searchQuery + "*"), scope.filters, scope.pageSize, scope.start);
                         }
                         if (query) {
                             setExportUrl(query);
@@ -136,8 +136,8 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                 };
 
                 scope.checkTag = function (tagSelected) {
-                    scope.searchQuery = "\"" + tagSelected.title_parseable + "\"";
-                    // scope.queryTypeahead = someName(tagSelected);
+                    scope.searchQuery = tagSelected.title_parseable;
+                    scope.queryExistingItems();
                     if (!tagSelected.title_parseable) {
                         return false;
                     }
@@ -146,23 +146,9 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
 
                 scope.loadTags = function loadTags(query) {
                     var deferred = $q.defer();
-                    autoSuggest(query, "QUICK", "TAG").then(function (tags) {
+                    autoSuggest(query, "QUICK", scope.objectType).then(function (tags) {
                         deferred.resolve(tags);
                     });
-                    return deferred.promise;
-                }
-
-                function someName(tagSelected) {
-                    var query = SearchQueryBuilder.buildFacetedSearchQuery(tagSelected.title_parseable, scope.filters, 10, 0);
-                    var deferred = $q.defer();
-                    if (query) {
-                        SearchService.queryFilteredSearch({
-                            query: query
-                        }, function (res) {
-                            var result = _.pluck(res.response.docs, scope.typeAheadColumn);
-                            deferred.resolve(result);
-                        });
-                    }
                     return deferred.promise;
                 }
 
@@ -180,23 +166,19 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                 }
 
                 scope.queryTypeahead = function (typeaheadQuery) {
-                    typeaheadQuery = typeaheadQuery.replace('*', '');
-                    typeaheadQuery = '/' + typeaheadQuery + '.*/';
                     if (!scope.hideTypeahead) {
                         if (scope.filters && scope.filters.indexOf("USER") >= 0) {
                             return scope.queryTypeaheadForUser(typeaheadQuery);
                         } else {
-                            var query = SearchQueryBuilder.buildFacetedSearchQuery(typeaheadQuery, scope.filters, 10, 0);
                             var deferred = $q.defer();
-                            if (query) {
-                                SearchService.queryFilteredSearch({
-                                    query: query
-                                }, function (res) {
-                                    var result = _.pluck(res.response.docs, scope.typeAheadColumn);
-                                    deferred.resolve(result);
+                            if (typeaheadQuery.length >= 2) {
+                                var deferred = $q.defer();
+                                autoSuggest(typeaheadQuery, "QUICK", scope.objectType).then(function (res) {
+                                    var results = _.pluck(res, scope.typeAheadColumn);
+                                    deferred.resolve(results);
                                 });
+                                return deferred.promise;
                             }
-                            return deferred.promise;
                         }
                     }
                 };
@@ -346,6 +328,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                         scope.filterName = config.filterName;
                         scope.pageSize = config.paginationPageSize;
                         scope.start = config.start;
+                        scope.objectType = config.objectType;
                         scope.gridOptions = {
                             enableColumnResizing: true,
                             enableRowSelection: true,
