@@ -134,7 +134,7 @@
       "paginationPageSize": 5,
       "columnDefs": [
         {
-          "name": "object_id_s",
+          "name": "name",
           "displayName": "dashboard.widgets.myComplaints.table.header.number",
           "headerCellFilter": "translate",
           "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>",

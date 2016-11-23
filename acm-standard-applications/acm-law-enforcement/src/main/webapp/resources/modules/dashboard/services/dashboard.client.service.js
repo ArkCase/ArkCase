@@ -37,7 +37,7 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
             queryNewCases: {
                 method: 'GET',
                 url: 'api/v1/plugin/search/advancedSearch?q=object_type_s\\:CASE_FILE+' +
-                'AND+create_date_tdt\\:[NOW-1MONTH TO NOW]',
+                'AND+NOT+status_lcs\\:DELETED+AND+create_date_tdt\\:[NOW-1MONTH TO NOW]',
                 isArray: false
             },
 
@@ -45,7 +45,7 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
                 method: 'GET',
                 url: 'api/v1/plugin/search/advancedSearch?q=assignee_id_lcs\\::userId+' +
                 'AND+object_type_s\\:TASK+' +
-                'AND+NOT+status_lcs\\:CLOSED&start=:startWith&n=:pageSize&s=:sortBy :sortDir',
+                'AND+status_lcs\\:ACTIVE&start=:startWith&n=:pageSize&s=:sortBy :sortDir',
                 isArray: false,
                 data: ''
             },
@@ -62,8 +62,8 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
             queryMyCases: {
                 method: 'GET',
                 url: 'api/v1/plugin/search/advancedSearch?q=assignee_id_lcs\\::userId+' +
-                'AND+object_type_s\\:CASE_FILE+' +
-                'AND+NOT+status_lcs\\:DRAFT&start=:startWith&n=:pageSize&s=:sortBy :sortDir',
+                'AND+object_type_s\\:CASE_FILE+AND+NOT+status_lcs\\:CLOSED+' +
+                'AND+NOT+status_lcs\\:DELETED&start=:startWith&n=:pageSize&s=:sortBy :sortDir',
                 isArray: false,
                 data: ''
             },
