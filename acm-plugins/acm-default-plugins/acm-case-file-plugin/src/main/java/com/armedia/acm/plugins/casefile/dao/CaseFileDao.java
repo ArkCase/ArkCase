@@ -9,6 +9,7 @@ import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 import com.armedia.acm.plugins.casefile.model.TimePeriod;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
+
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -59,6 +61,15 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile> implements AcmNotifica
 
     }
 
+    public <T extends CaseFile> List<T> findCaseFilesByIds(Class<T> resultClass, List<Long> caseFileIds)
+    {
+        String queryString = "SELECT cf FROM CaseFile cf WHERE TYPE(cf) = :type AND cf.id IN :caseFileIds";
+        TypedQuery<T> query = getEm().createQuery(queryString, resultClass);
+        query.setParameter("type", resultClass);
+        query.setParameter("caseFileIds", caseFileIds);
+        return query.getResultList();
+    }
+
     public List<CaseByStatusDto> getAllCasesByStatus()
     {
         String queryText = "SELECT cf.status, COUNT(cf) as counted FROM CaseFile cf GROUP BY cf.status";
@@ -66,7 +77,7 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile> implements AcmNotifica
 
         List<Object[]> caseGroupedByS = caseGroupedByStatus.getResultList();
 
-        List<CaseByStatusDto> result = new ArrayList<CaseByStatusDto>();
+        List<CaseByStatusDto> result = new ArrayList<>();
 
         for (Object[] caseStatus : caseGroupedByS)
         {
@@ -80,7 +91,7 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile> implements AcmNotifica
 
     public List<CaseFile> getCaseFilesByUser(String user) throws AcmObjectNotFoundException
     {
-        String queryText = "SELECT cf FROM CaseFile cf " + "WHERE cf.creator = :user";
+        String queryText = "SELECT cf FROM CaseFile cf WHERE cf.creator = :user";
         Query casesByUser = getEm().createQuery(queryText);
         casesByUser.setParameter("user", user);
         List<CaseFile> retval = casesByUser.getResultList();
@@ -93,8 +104,10 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile> implements AcmNotifica
 
     public List<CaseFile> getNotClosedCaseFilesByUser(String user) throws AcmObjectNotFoundException
     {
-        String queryText = "SELECT cf " + "FROM CaseFile cf, " + "     AcmParticipant ap " + "WHERE " + "     cf.id = ap.objectId " + "AND  ap.objectType = '" + CaseFileConstants.OBJECT_TYPE + "' "
-                + "AND  ap.participantType = '" + ParticipantTypes.ASSIGNEE + "' " + "AND  ap.participantLdapId = :user " + "AND  cf.status <> :statusName " + "ORDER BY " + "     cf.dueDate ASC";
+        String queryText = "SELECT cf " + "FROM CaseFile cf, " + "     AcmParticipant ap " + "WHERE " + "     cf.id = ap.objectId "
+                + "AND  ap.objectType = '" + CaseFileConstants.OBJECT_TYPE + "' " + "AND  ap.participantType = '"
+                + ParticipantTypes.ASSIGNEE + "' " + "AND  ap.participantLdapId = :user " + "AND  cf.status <> :statusName " + "ORDER BY "
+                + "     cf.dueDate ASC";
         Query casesByUser = getEm().createQuery(queryText);
         casesByUser.setParameter("user", user);
         casesByUser.setParameter("statusName", "CLOSED");
@@ -115,7 +128,7 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile> implements AcmNotifica
 
         List<Object[]> caseGroupedByS = caseGroupedByStatus.getResultList();
 
-        List<CaseByStatusDto> result = new ArrayList<CaseByStatusDto>();
+        List<CaseByStatusDto> result = new ArrayList<>();
 
         for (Object[] caseStatus : caseGroupedByS)
         {
@@ -145,7 +158,7 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile> implements AcmNotifica
 
         query.select(cf);
 
-        query.where(builder.and(builder.like(builder.lower(cf.<String> get("caseNumber")), "%" + expression.toLowerCase() + "%")));
+        query.where(builder.and(builder.like(builder.lower(cf.<String>get("caseNumber")), "%" + expression.toLowerCase() + "%")));
 
         query.orderBy(builder.asc(cf.get("caseNumber")));
 
@@ -158,7 +171,8 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile> implements AcmNotifica
     @Transactional
     public int updateComplaintStatus(Long caseId, String newStatus, String modifier, Date date)
     {
-        Query updateStatusQuery = getEm().createQuery("UPDATE CaseFile " + "SET status = :newStatus, " + "modified = :modified, " + "modifier = :modifier " + "WHERE caseId = :caseId");
+        Query updateStatusQuery = getEm().createQuery("UPDATE CaseFile " + "SET status = :newStatus, " + "modified = :modified, "
+                + "modifier = :modifier " + "WHERE caseId = :caseId");
         updateStatusQuery.setParameter("newStatus", newStatus);
         updateStatusQuery.setParameter("modified", date);
         updateStatusQuery.setParameter("modifier", modifier);
