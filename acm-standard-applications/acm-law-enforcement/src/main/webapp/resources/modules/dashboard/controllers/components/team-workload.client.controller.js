@@ -39,8 +39,10 @@ controller('Dashboard.TeamWorkloadController', ['$scope', 'config', '$translate'
                     var data = [];
                     var labels = [];
                     angular.forEach(tasksByUser, function (tasksByUserIter) {
-                        labels.push(tasksByUserIter.user);
-                        data.push(tasksByUserIter.taskCount);
+                        if (tasksByUserIter.user) {
+                            labels.push(tasksByUserIter.user);
+                            data.push(tasksByUserIter.taskCount);
+                        }
                     });
                     vm.showChart = data.length > 0 ? true : false;
                     vm.data = data;
