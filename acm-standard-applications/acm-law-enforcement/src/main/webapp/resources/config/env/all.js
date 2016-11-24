@@ -65,6 +65,7 @@ module.exports = {
                 'lib/angular-translate/angular-translate.min.js',
                 'lib/angular-translate-loader-partial/angular-translate-loader-partial.min.js',
                 'lib/angular-xeditable/dist/js/xeditable.min.js',
+                'lib/angular-dashboard-framework-armedia/dist/angular-dashboard-framework.js',
                 'lib/Sortable/Sortable.min.js',
                 'lib/fancytree/dist/jquery.fancytree.min.js',
                 'lib/fancytree/dist/src/jquery.fancytree.table.js',
@@ -96,8 +97,7 @@ module.exports = {
             'modules/**/css/*.css',
             'custom_modules/**/css/*.css',
             'assets/css/arkcase-extension.css',
-            'custom_assets/css/arkcase-extension.css',
-            'vendors/angular-dashboard-framework/angular-dashboard-framework.css'
+            'custom_assets/css/arkcase-extension.css'
         ],
         scss: [
             'modules/**/scss/*.scss',
@@ -110,8 +110,7 @@ module.exports = {
             'services/*.js',   // Includes services/services.client.module.js file only
             'directives/*.js', // Includes directives/directives.client.js file only
             'filters/*.js',
-            'filters/*/*.js',
-            'vendors/angular-dashboard-framework/angular-dashboard-framework.js'
+            'filters/*/*.js'
         ],
         distJs: ['assets/dist/vendors.min.js', 'assets/dist/application.min.js'],
         distCss: ['assets/dist/application.min.css'], // Can't use this, because CSS has fonts and images dependencies
