@@ -66,7 +66,7 @@ var websiteConfirmBtn = element(by.xpath(Objects.userpage.locators.websiteConfir
 
 var changeProfilePic = element(by.xpath(Objects.userpage.locators.changeProfilePic));
 
-var UserPage = function(){ 
+var UserPage = function(){
 	this.clickUserNavigation = function(){
 		userNavigation.click();
 		return this;
@@ -396,12 +396,11 @@ var UserPage = function(){
 	this.returnWebSite = function(){
 		return website.getText();
 	}
-	this.changePicture = function(){
-		changeProfilePic.click();
-		utils.uploadPng();
-		return this;
+	this.changePicture = function() {
+		changeProfilePic.click().then(function () {
+			utils.uploadPng();
+		});
 	}
-	
 	
 	
 

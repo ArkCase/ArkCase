@@ -38,10 +38,13 @@ public class SpringLdapDaoIT
     static final int RUNS = 10;
 
     @Autowired
-    private SpringLdapDao springLdapDao;
+    private CustomPagedLdapDao springLdapDao;
 
     @Autowired
     private AcmLdapSyncConfig acmSyncLdapConfig;
+
+    @Autowired
+    private SpringLdapUserDao springLdapUserDao;
 
     @Test
     public void findUsersWithAllAttributes()
@@ -101,7 +104,7 @@ public class SpringLdapDaoIT
         for (int i = 0; i < RUNS; ++i)
         {
             long start = System.currentTimeMillis();
-            List<AcmUser> result = springLdapDao.findUsersPaged(ldapTemplate, acmSyncLdapConfig, attributes);
+            List<AcmUser> result = springLdapDao.findUsers(ldapTemplate, acmSyncLdapConfig, attributes);
             long time = System.currentTimeMillis() - start;
             sum += time;
             log.debug("Result: {}", result.size());
@@ -118,10 +121,11 @@ public class SpringLdapDaoIT
 
         String userName = "ann-acm";
         long start = System.currentTimeMillis();
-        AcmUser acmUser = springLdapDao.findUser(userName, ldapTemplate, acmSyncLdapConfig,
+        AcmUser acmUser = springLdapUserDao.findUser(userName, ldapTemplate, acmSyncLdapConfig,
                 AcmUserGroupsContextMapper.USER_LDAP_ATTRIBUTES);
         long time = System.currentTimeMillis() - start;
         log.debug("Time: {}ms", time);
         log.debug("User found: {}", acmUser.getDistinguishedName());
     }
 }
+

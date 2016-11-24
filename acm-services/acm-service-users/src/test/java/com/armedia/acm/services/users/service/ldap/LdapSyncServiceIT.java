@@ -1,6 +1,6 @@
+
 package com.armedia.acm.services.users.service.ldap;
 
-import com.armedia.acm.services.users.dao.ldap.SpringLdapDaoIT;
 import com.armedia.acm.services.users.model.AcmUser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +23,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 )
 public class LdapSyncServiceIT
 {
-    static final Logger log = LoggerFactory.getLogger(SpringLdapDaoIT.class);
+    static final Logger log = LoggerFactory.getLogger(LdapSyncServiceIT.class);
 
     @Autowired
     private LdapSyncService ldapSyncService;
