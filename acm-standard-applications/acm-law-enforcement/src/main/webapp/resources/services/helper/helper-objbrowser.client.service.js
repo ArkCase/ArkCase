@@ -520,10 +520,12 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     onObjectInfoUpdated(objectInfo, that.currentObjectId, e);
                 });
 
-                SyncDataLoader.load(that.moduleId, that.retrieveObjectInfo, [that.currentObjectId], function (objectInfo) {
-                    onObjectInfoUpdated(objectInfo, that.currentObjectId);
-                    return objectInfo;
-                });
+                if(that.currentObjectId) {
+                    SyncDataLoader.load(that.moduleId, that.retrieveObjectInfo, [that.currentObjectId], function (objectInfo) {
+                        onObjectInfoUpdated(objectInfo, that.currentObjectId);
+                        return objectInfo;
+                    });
+                }
 
                 function onObjectInfoUpdated (objectInfo, objectId, e) {
                     if (!that.validateObjectInfo(objectInfo)) {
