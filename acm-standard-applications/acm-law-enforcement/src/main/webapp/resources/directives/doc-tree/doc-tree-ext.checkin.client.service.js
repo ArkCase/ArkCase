@@ -10,10 +10,12 @@
  *
  * DocTree extensions for check-in, check-out functions.
  */
-angular.module('services').factory('DocTreeExt.Checkin', ['$q', '$modal', '$translate', 'UtilService', 'LookupService'
-    , 'Authentication', 'ObjectService', 'PermissionsService', 'Object.LockingService', 'Helper.NoteService', 'Object.NoteService'
-    , function ($q, $modal, $translate, Util, LookupService
-        , Authentication, ObjectService, PermissionsService, LockingService, HelperNoteService, ObjectNoteService
+angular.module('services').factory('DocTreeExt.Checkin', ['$q', '$modal', '$translate', 'UtilService', 'Authentication'
+    , 'ObjectService', 'PermissionsService', 'Object.LockingService', 'Helper.NoteService', 'Object.NoteService'
+    , 'Profile.UserInfoService'
+    , function ($q, $modal, $translate, Util, Authentication
+        , ObjectService, PermissionsService, LockingService, HelperNoteService, ObjectNoteService
+        , UserInfoService
     ) {
         var userId = "";
         Authentication.queryUserInfo().then(
@@ -22,11 +24,6 @@ angular.module('services').factory('DocTreeExt.Checkin', ['$q', '$modal', '$tran
                 return userInfo;
             }
         );
-
-        var userFullNames;
-        LookupService.getUserFullNames().then(function (names) {
-            userFullNames = names;
-        });
 
         var Service = {
             /**
@@ -47,17 +44,16 @@ angular.module('services').factory('DocTreeExt.Checkin', ['$q', '$modal', '$tran
                         renderer: function (element, node, columnDef, isReadOnly) {
                             $(element).empty();
                             if (Util.goodMapValue(node, "data.lock")) {
-                                if (userFullNames) {
-                                    var found = _.find(userFullNames, {id: node.data.lock.creator});
-                                    var userFullName = Util.goodMapValue(found, "name");
-                                    var lockedTitle = $translate.instant("common.directive.docTree.lockedTitle") + userFullName;
+                                //UserInfoService.getUserInfoByIdQuietly(node.data.lock.creator).then(function (userInfo) {
+                                UserInfoService.getUserInfoById(node.data.lock.creator).then(function (userInfo) {
+                                    var lockedTitle = $translate.instant("common.directive.docTree.lockedTitle") + userInfo.fullName;
                                     var jqSpan = $("<span class='ui-icon ui-icon-locked' title='" + lockedTitle + "'/>").appendTo($(element));
                                     jqSpan.hover(function () {
                                         $(this).tooltip('show');
                                     }, function () {
                                         $(this).tooltip('hide');
                                     });
-                                }
+                                });
                             }
                             $(element).addClass("");
                         }
@@ -390,3 +386,4 @@ angular.module('directives').controller('directives.DocTreeCheckinDialogControll
         }
     ]
 );
+
