@@ -35,8 +35,8 @@ public class SuggesterAPIController
     @ResponseBody
     public String suggest(
             @RequestParam(value = "q") String query,
-            @RequestParam(value = "core", required = false, defaultValue = "QUICK") String core,
-            @RequestParam(value = "filter", required = false, defaultValue = "") String filter,
+            @RequestParam(value = "core", defaultValue = "QUICK") String core,
+            @RequestParam(value = "filter", required = false) String filter,
             Authentication authentication
     ) throws MuleException
     {

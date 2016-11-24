@@ -154,15 +154,26 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
 
                 function autoSuggest(autoSuggestQuery, core, objectType) {
                     var deferred = $q.defer();
-                    SearchService.queryAutoSuggestSearch({
-                            query: autoSuggestQuery,
-                            filter: "object_type_s:" + objectType,
-                            core: core
-                        },
-                        function (res) {
-                            deferred.resolve(res.response.docs);
-                        });
-                    return deferred.promise;
+                    if (objectType != null) {
+                        SearchService.queryAutoSuggestSearch({
+                                query: autoSuggestQuery,
+                                filter: "object_type_s:" + objectType,
+                                core: core
+                            },
+                            function (res) {
+                                deferred.resolve(res.response.docs);
+                            });
+                        return deferred.promise;
+                    } else {
+                        SearchService.queryAutoSuggestSearchNoFilters({
+                                query: autoSuggestQuery,
+                                core: core
+                            },
+                            function (res) {
+                                deferred.resolve(res.response.docs);
+                            });
+                        return deferred.promise;
+                    }
                 }
 
                 scope.queryTypeahead = function (typeaheadQuery) {
@@ -173,11 +184,19 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                             var deferred = $q.defer();
                             if (typeaheadQuery.length >= 2) {
                                 var deferred = $q.defer();
-                                autoSuggest(typeaheadQuery, "QUICK", scope.objectType).then(function (res) {
-                                    var results = _.pluck(res, scope.typeAheadColumn);
-                                    deferred.resolve(results);
-                                });
-                                return deferred.promise;
+                                if (scope.objectType !== 'undefined') {
+                                    autoSuggest(typeaheadQuery, "QUICK", scope.objectType).then(function (res) {
+                                        var results = _.pluck(res, scope.typeAheadColumn);
+                                        deferred.resolve(results);
+                                    });
+                                    return deferred.promise;
+                                } else {
+                                    autoSuggest(typeaheadQuery, "QUICK", null).then(function (res) {
+                                        var results = _.pluck(res, scope.typeAheadColumn);
+                                        deferred.resolve(results);
+                                    });
+                                    return deferred.promise;
+                                }
                             }
                         }
                     }

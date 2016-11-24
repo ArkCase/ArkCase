@@ -39,6 +39,8 @@ public class UserToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmU
         solr.setLast_name_lcs(in.getLastName());
         solr.setEmail_lcs(in.getMail());
 
+        solr.setTitle_parseable(in.getFullName());
+
         solr.setCreate_date_tdt(in.getCreated());
         solr.setModified_date_tdt(in.getModified());
 
@@ -60,6 +62,7 @@ public class UserToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmU
 
         SolrDocument solr = new SolrDocument();
         solr.setName(in.getFullName());
+        solr.setTitle_parseable(in.getFullName());
         solr.setObject_id_s(in.getUserId() + "");
         solr.setObject_type_s("USER");
         solr.setId(in.getUserId() + "-USER");

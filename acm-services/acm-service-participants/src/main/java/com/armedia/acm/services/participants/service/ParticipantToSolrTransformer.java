@@ -42,7 +42,7 @@ public class ParticipantToSolrTransformer implements AcmObjectToSolrDocTransform
         solr.setCreate_date_tdt(in.getCreated());
         solr.setCreator_lcs(in.getCreator());
         solr.setModified_date_tdt(in.getModified());
-
+        solr.setTitle_parseable(in.getParticipantLdapId());
         /** Additional properties for full names instead of ID's */
         AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
         if (creator != null)
@@ -77,7 +77,7 @@ public class ParticipantToSolrTransformer implements AcmObjectToSolrDocTransform
         solrDoc.setAdditionalProperty("parent_object_type_s", in.getObjectType());
         solrDoc.setAdditionalProperty("parent_object_id_i", in.getObjectId());
         solrDoc.setParent_ref_s(String.format("%d-%s", in.getObjectId(), in.getObjectType()));
-
+        solrDoc.setTitle_parseable(in.getParticipantLdapId());
         return solrDoc;
     }
 

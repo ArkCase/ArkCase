@@ -50,6 +50,7 @@ public class PersonAliasToSolrTransformer implements AcmObjectToSolrDocTransform
         orgDoc.setValue_parseable(org.getAliasValue());
 
         orgDoc.setName(org.getAliasValue());
+        orgDoc.setTitle_parseable(org.getAliasValue());
 
         /** Additional properties for full names instead of ID's */
         AcmUser creator = getUserDao().quietFindByUserId(org.getCreator());
