@@ -10,11 +10,11 @@
  *
  * DocTree extensions for check-in, check-out functions.
  */
-angular.module('services').factory('DocTreeExt.Checkin', ['$q', '$modal', '$translate', 'UtilService', 'LookupService'
-    , 'Authentication', 'ObjectService', 'PermissionsService', 'Object.LockingService', 'Helper.NoteService', 'Object.NoteService'
+angular.module('services').factory('DocTreeExt.Checkin', ['$q', '$modal', '$translate', 'UtilService', 'Authentication'
+    , 'ObjectService', 'PermissionsService', 'Object.LockingService', 'Helper.NoteService', 'Object.NoteService'
     , 'Profile.UserInfoService'
-    , function ($q, $modal, $translate, Util, LookupService
-        , Authentication, ObjectService, PermissionsService, LockingService, HelperNoteService, ObjectNoteService
+    , function ($q, $modal, $translate, Util, Authentication
+        , ObjectService, PermissionsService, LockingService, HelperNoteService, ObjectNoteService
         , UserInfoService
     ) {
         var userId = "";
