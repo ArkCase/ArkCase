@@ -71,7 +71,7 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
             queryTeamWorkload: {
                 method: 'GET',
                 url: 'api/v1/plugin/task/getListByDueDate/:due',
-                isArray: false,
+                isArray: true,
                 data: ''
             },
             

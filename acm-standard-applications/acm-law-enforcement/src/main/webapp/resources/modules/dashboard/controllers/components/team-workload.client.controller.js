@@ -14,7 +14,7 @@ controller('Dashboard.TeamWorkloadController', ['$scope', 'config', '$translate'
         }
         function applyConfig(e, componentId, configuration) {
             if (componentId == 'teamWorkload') {
-                DashboardService.queryTeamWorkload({due: config.due}, function (solrData) {
+                DashboardService.queryTeamWorkload({due: config.due}, function (tasksByUser) {
 
                     var chartTitle = '';
                     switch (config.due) {
@@ -35,30 +35,18 @@ controller('Dashboard.TeamWorkloadController', ['$scope', 'config', '$translate'
                             break;
 
                     }
-
-                    vm.chartTitle = chartTitle;
-
-                    var tasksData = {};
+                    
                     var data = [];
                     var labels = [];
-
-                    // Count number of assigned tasks for users
-                    angular.forEach(solrData.response.docs, function (task) {
-                        if (task.assignee_id_lcs) {
-                            var user = task.assignee_id_lcs;
-                            tasksData[user] ? tasksData[user]++ : tasksData[user] = 1;
-                        }
+                    angular.forEach(tasksByUser, function (tasksByUserIter) {
+                        labels.push(tasksByUserIter.user);
+                        data.push(tasksByUserIter.taskCount);
                     });
-
-                    angular.forEach(tasksData, function (count, user) {
-                        data.push(count);
-                        labels.push(user);
-                    });
-
-                    vm.showChart = labels.length > 0 && data.length > 0 ? true : false;
+                    vm.showChart = data.length > 0 ? true : false;
                     vm.data = data;
                     vm.labels = labels;
-                });
+                    vm.chartTitle = chartTitle;
+                 });
             }
         }
     }
