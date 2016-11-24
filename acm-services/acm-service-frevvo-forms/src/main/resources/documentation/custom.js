@@ -64,7 +64,7 @@ var CustomEventHandlers = {
        } else if (CustomView.hasClass(el, 'createUserPicker')) {
            this.createUserPicker();
        } else if (isSimpleUserPicker(el) || isAdvancedUserPicker(el)) {
-           FEvent.observe(el, 'focus', this.showUserPicker.bindAsObserver(this, el));
+           FEvent.observe(el, 'click', this.showUserPicker.bindAsObserver(this, el));
        }
    },
    
@@ -73,24 +73,28 @@ var CustomEventHandlers = {
    },
    
    createUserPicker: function() {
-       if (frevvoMessaging == null) {
+       if (isEmpty(frevvoMessaging)) {
             frevvoMessaging = {};
             frevvoMessaging.elements = {};
-            frevvoMessaging.receiver = window.parent.parent;
+            frevvoMessaging.receiver = getArkCaseWindow();
             frevvoMessaging.send = function send(message) {
-                frevvoMessaging.receiver.postMessage(message, '*');
+                if (!isEmpty(frevvoMessaging.receiver)) {
+                    frevvoMessaging.receiver.postMessage(message, '*');
+                }
             }
             frevvoMessaging.receive = function receive(e) {
-                if (e.data.source == "arkcase") {
+                if (!isEmpty(e) && !isEmpty(e.data) && !isEmpty(e.data.source) && e.data.source == "arkcase") {
                     // Do actions sent from Arkcase
-                    if (e.data.action == "fill-user-picker-data") {
+                    if (!isEmpty(e.data.action) && !isEmpty(e.data.elementId) && !isEmpty(frevvoMessaging.elements) && e.data.action == "fill-user-picker-data") {
                         var element = frevvoMessaging.elements[e.data.elementId];
-                        if (isSimpleUserPicker(element)) {
-                            // Simple user picker (fill only user id and full name)
-                            doSimpleUserPicker(element, e.data.data.object_id_s, e.data.data.name);
-                        } else if (isAdvancedUserPicker(element)){
-                            // Advanced user picker (fill user id, full name, first name, last name, location, email, phone ... etc ...)
-                            doAdvancedUserPicker(element, e.data.data.object_id_s);
+                        if (!isEmpty(element)) {
+                            if (isSimpleUserPicker(element)) {
+                                // Simple user picker (fill only user id and full name)
+                                doSimpleUserPicker(element, e.data.data.object_id_s, e.data.data.name);
+                            } else if (isAdvancedUserPicker(element)){
+                                // Advanced user picker (fill user id, full name, first name, last name, location, email, phone ... etc ...)
+                                doAdvancedUserPicker(element, e.data.data.object_id_s);
+                            }
                         }
                     }
                 }
@@ -101,7 +105,7 @@ var CustomEventHandlers = {
    },
    
    showUserPicker: function(event, element) {
-        if (frevvoMessaging != null) {
+        if (!isEmpty(frevvoMessaging)) {
             var message = {};
             message.source = "frevvo";
             message.data = "";
@@ -110,7 +114,7 @@ var CustomEventHandlers = {
             frevvoMessaging.elements[element.id] = element;
             
             var owningGroup = getOwningGroup();
-            if (owningGroup != null) {
+            if (!isEmpty(owningGroup)) {
                 message.data = {"owningGroup": owningGroup};
             }
             
@@ -118,6 +122,37 @@ var CustomEventHandlers = {
             frevvoMessaging.send(message);
         }
    }
+}
+
+/**
+ * Get ArkCase window. Because Frevvo is adding one additional iframe, Frevvo form is shown in the second iframe (one iframe set by ArkCase and one by Frevvo itself)
+ *
+ * window - Frevvo form iframe
+ * window.parent - iframe added from ArkCase side
+ * window.parent.parent - ArkCase window
+ */
+function getArkCaseWindow() {
+    if (!isEmpty(window) && !isEmpty(window.parent) && !isEmpty(window.parent.parent)) {
+        return window.parent.parent;
+    }
+    
+    return null;
+}
+
+/**
+ * Check if value is empty
+ */
+function isEmpty(val) {
+    if (undefined == val) {
+        return true;
+    } else if ("" === val) {
+        return true;
+    } else if (null == val) {
+        return true;
+    } else if ("null" == val) {
+        return true;
+    }
+    return false;
 }
 
 /**
@@ -251,67 +286,6 @@ function getOwningGroup() {
         return null;
 	}
 }
-
-/**
- * This method will return the state if we should add filter by groups while showing the user picker for the first time.
- * This can be happen if we have picked some group
- */
-function filterByOwningGroup(element){
-	try{
-		var elementType = element.parentNode.parentNode.parentNode.parentNode.getElementsBySelector('.' + element.name + '_type input')[0];
-		if (elementType && elementType.value === 'group-user') {
-			return true;
-		}
-	}catch(e) {
-		// Normal behaviour - the element is not found
-	}
-	return false;
-}
-
-/**
- * UI for the user picker
- */
-var userPickerString = '<div class="modal fade" id="dlgObjectPicker" tabindex="-1" role="dialog" aria-labelledby="labPoTitle" aria-hidden="true" style="display: none;">' +
-							'<div class="modal-dialog modal-lg">' +
-								'<div class="modal-content">' +
-									'<div class="modal-header">' +
-										'<button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>' +
-										'<h4 class="modal-title" id="labPoTitle">Choose Objects</h4>' +
-									'</div>' +
-									'<header class="header bg-gradient b-b clearfix">' +
-										'<div class="row m-t-sm">' +
-											'<div class="col-md-12 m-b-sm">' +
-												'<div class="input-group">' +
-													'<input type="text" class="input-md form-control" id="edtPoSearch" placeholder=\'<spring:message code="search.input.placeholder" text="Type in your search query to find complaints, cases, tasks, and documents." />\'>' +
-													'<span class="input-group-btn">' +
-													'<button class="btn btn-md" type="button"><spring:message code="search.submit.text" text="Go!" /></button>' +
-													'</span> </div>' +
-											'</div>' +
-										'</div>' +
-									'</header>' +
-									'<div class="modal-body">' +
-										'<div class="row">' +
-											'<div class="col-xs-3 hidden">' +
-												'<div class="facets" id="divPoFacets">' +
-						
-												'</div>' +
-											'</div>' +
-											'<div class="full-width">' +
-												'<section class="panel panel-default">' +
-													'<div class="table-responsive" id="divPoResults">' +
-														
-													'</div>' +
-												'</section>' +
-											'</div>' +
-										'</div>' +
-									'</div>' +
-									'<div class="modal-footer">' +
-										'<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>' +
-										'<button type="button" class="btn btn-primary">OK</button>' +
-									'</div>' +
-								'</div>' +
-							'</div>' +
-						'</div>';
 
 /* Rich Text Area properties - START */
 var rtaSelector = 'div.rta_container span.f-message:not([style="display: none;"])';
