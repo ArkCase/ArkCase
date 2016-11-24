@@ -1,5 +1,6 @@
 var logger = require('../log');
 var casePage = require('../Pages/case_page.js');
+var userPage = require('../Pages/user_profile_page.js');
 var authentication = require('../authentication.js');
 var Objects = require('../json/Objects.json');
 var taskPage = require('../Pages/task_page.js');
@@ -14,6 +15,7 @@ function testAsync(done) {
         flag = true;
         done();
     }, 60000);
+
 }
 
 function waitUrl(myUrl) {
@@ -36,13 +38,15 @@ describe('case page tests', function() {
 
     afterEach(function() {
 
-        authentication.logout();
+         authentication.logout();
+
 
     });
 
     it('should create new case and verify case title', function() {
 
-        casePage.navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
+
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
         casePage.waitForCaseTitle();
         expect(casePage.returnCaseTitle()).toEqual(Objects.casepage.data.caseTitle);
@@ -50,7 +54,8 @@ describe('case page tests', function() {
 
     it('should create new case and verify case type', function() {
 
-        casePage.navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
+
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
         casePage.waitForCaseType();
         expect(casePage.returnCaseType()).toEqual(Objects.casepage.data.casesType);
@@ -58,7 +63,7 @@ describe('case page tests', function() {
 
     it('should create new case and change case status to closed, verify the automated task in tasks table and approve', function() {
 
-        casePage.navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
         casePage.waitForChangeCaseButton();
         casePage.clickChangeCaseBtn();
@@ -73,7 +78,7 @@ describe('case page tests', function() {
 
     it('should create new case and verify the priority filed', function() {
 
-        casePage.navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
         casePage.waitForPriority();
         expect(casePage.returnPriority()).toEqual(Objects.casepage.data.priorityMedium);
@@ -82,7 +87,7 @@ describe('case page tests', function() {
 
     it('should create new case and verify the created date', function() {
 
-        casePage.navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
         casePage.waitForCreatedDate();
         expect(casePage.returnCreatedDate()).toEqual(utils.returnToday("/"));
@@ -91,7 +96,7 @@ describe('case page tests', function() {
 
     it('should create new case and edit the priority to High', function() {
 
-        casePage.navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
         casePage.waitForPriority();
         casePage.editPriority('High');
@@ -101,7 +106,7 @@ describe('case page tests', function() {
 
     it('should create new case and edit the priority to Medium', function() {
 
-        casePage.navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
         casePage.waitForPriority();
         casePage.editPriority('Medium');
@@ -111,7 +116,7 @@ describe('case page tests', function() {
 
     it('should create new case and edit the priority to Medium', function() {
 
-        casePage.navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
         casePage.waitForPriority();
         casePage.editPriority('Expedite');
@@ -120,17 +125,16 @@ describe('case page tests', function() {
 
     it('should create new case and edit the assignee from ann to samuel', function() {
 
-        casePage.navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
         casePage.waitForAssignee();
         casePage.editAssignee("samuel-acm").waitForAssignee();
         expect(casePage.returnAssignee()).toEqual(Objects.casepage.data.assigneeSamuel);
     });
 
-
     it('should create new case add new note and verify added note', function() {
 
-        casePage.navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
         casePage.clickNotesLink();
         casePage.addNote(Objects.casepage.data.note);
@@ -139,7 +143,7 @@ describe('case page tests', function() {
 
     it('should craete new case add/delete note', function() {
 
-        casePage.navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
+        casePage.clickNewButton.navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
         casePage.clickNotesLink();
         casePage.addNote(Objects.casepage.data.note);
@@ -149,7 +153,7 @@ describe('case page tests', function() {
 
     it('should create new case add new note and verify added note', function() {
 
-        casePage.navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
         casePage.clickNotesLink();
         casePage.addNote(Objects.casepage.data.note);
@@ -159,7 +163,7 @@ describe('case page tests', function() {
 
     it('should create new case and add task from tasks table verify the task', function() {
 
-        casePage.navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
         casePage.clickTasksLinkBtn();
         casePage.clickAddTaskButton();
@@ -367,4 +371,14 @@ describe('case page tests', function() {
 
     });
 
-});
+    it('should create new case and verify adding correspondence document', function() {
+
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson").initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
+        casePage.switchToDefaultContent().clickExpandFancyTreeTopElement();
+        casePage.rightClickRootFolder().addCorrespondence("case", "Notice of Investigation");
+        casePage.validateDocGridData(true, "Notice of Investigation", ".docx", "Notice of Investigation", utils.returnToday("/"), utils.returnToday("/"), userPage.returnUserNavigationProfile(), "1.0", "ACTIVE");
+
+    });
+
+})
+
