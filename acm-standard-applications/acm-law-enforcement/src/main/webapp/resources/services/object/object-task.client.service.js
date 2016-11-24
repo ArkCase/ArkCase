@@ -58,28 +58,7 @@ angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'Ac
                 cache: false,
                 isArray: true
             }
-            /**
-             * @ngdoc method
-             * @name _queryMyTasksByParentType
-             * @methodOf services:Object.TaskService
-             *
-             * @description
-             * Query task for a user.
-             *
-             * @param {Object} params Map of input parameter
-             * @param {String} params.user  User ID
-             * @param {String} params.parentType  Parent Object Type
-             * @param {Function} onSuccess (Optional)Callback function of success query
-             * @param {Function} onError (Optional) Callback function when fail
-             *
-             * @returns {Object} Object returned by $resource
-             */
-            , _queryMyTasksByParentType: {
-                method: 'GET',
-                url: 'api/v1/plugin/search/advancedSearch?q=assignee_id_lcs\\::user+AND+object_type_s\\:TASK+AND+parent_type_s\\::parentType',
-                cache: false,
-                isArray: false
-            }
+
         });
 
         Service.SessionCacheNames = {};
@@ -237,51 +216,6 @@ angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'Ac
                 }
             });
         };
-        
-        Service.queryMyTasksByParentType = function (userId, parentType) {
-            var myTasks;
-
-            return Util.serviceCall({
-                service: Service._queryMyTasksByParentType
-                , param: {
-                    user: userId
-                    , parentType: parentType
-                }
-                , result: myTasks
-                , onSuccess: function (data) {
-                    if (Service.validateMyTasksByParentType(data)) {
-                        myTasks = _.map(data, _.partialRight(_.pick, "taskId", "adhocTask", "completed", "status", "availableOutcomes"));
-                        return myTasks;
-                    }
-                }
-            });
-        };
-
-        /**
-         * @ngdoc method
-         * @name validateMyTasks
-         * @methodOf services:Object.TaskService
-         *
-         * @description
-         * Validate task array for a user
-         *
-         * @param {Object} data  Data to be validated
-         *
-         * @returns {Boolean} Return true if data is valid
-         */
-        Service.validateMyTasks = function (data) {
-            if (!Util.isArray(data)) {
-                return false;
-            }
-            return true;
-        };
-
-        Service.validateMyTasksByParentType = function (data) {
-            if (!SearchService.validateSolrData(data)) {
-                return false;
-            }
-            return true;
-        };
 
         /**
          * @ngdoc method
@@ -316,39 +250,24 @@ angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'Ac
             );
             return dfd.promise;
         };
-        
+
         /**
          * @ngdoc method
-         * @name queryMyTasksByParentType
+         * @name validateMyTasks
          * @methodOf services:Object.TaskService
          *
          * @description
-         * Query list of tasks from Solr for current login user and parent type.
+         * Validate task array for a user
          *
-         * @returns {Object} Promise
+         * @param {Object} data  Data to be validated
+         *
+         * @returns {Boolean} Return true if data is valid
          */
-        Service.queryCurrentUserTasksByParentType = function (parentType) {
-            var dfd = $q.defer();
-            Authentication.queryUserInfo().then(
-                function (userInfo) {
-                    Service.queryMyTasksByParentType(userInfo.userId, parentType).then(
-                        function (myTasks) {
-                            dfd.resolve(myTasks);
-                            return myTasks;
-                        }
-                        , function (error) {
-                            dfd.reject(error);
-                            return error;
-                        }
-                    );
-                    return userInfo;
-                }
-                , function (error) {
-                    dfd.reject(error);
-                    return error;
-                }
-            );
-            return dfd.promise;
+        Service.validateMyTasks = function (data) {
+            if (!Util.isArray(data)) {
+                return false;
+            }
+            return true;
         };
 
         return Service;
