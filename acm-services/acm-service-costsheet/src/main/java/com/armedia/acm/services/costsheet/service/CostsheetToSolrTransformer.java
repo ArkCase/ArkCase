@@ -15,7 +15,6 @@ import java.util.List;
 
 /**
  * @author riste.tutureski
- *
  */
 public class CostsheetToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmCostsheet>
 {
@@ -43,6 +42,7 @@ public class CostsheetToSolrTransformer implements AcmObjectToSolrDocTransformer
 
         solr.setId(in.getId() + "-" + CostsheetConstants.OBJECT_TYPE);
         solr.setName(in.getTitle());
+        solr.setTitle_parseable(in.getTitle());
         solr.setObject_id_s(Long.toString(in.getId()));
         solr.setObject_type_s(CostsheetConstants.OBJECT_TYPE);
         solr.setParent_object_id_s(Long.toString(in.getParentId()));

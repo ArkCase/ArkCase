@@ -164,6 +164,28 @@ angular.module('search').factory('SearchService', ['$resource', 'UtilService', '
                     var searchObj = JSON.parse(data);
                     return searchObj;
                 }
+            },
+
+            /**
+             * @ngdoc method
+             * @name queryAutoSuggestSearch
+             * @methodOf services:Search.SearchService
+             *
+             * @description
+             * Performs "Auto-Suggest Search" REST call by supplying default filters
+             *
+             * @param {String} query Query to send to the server
+             * @returns {HttpPromise} Future info about auto-suggest search
+             */
+            queryAutoSuggestSearchNoFilters: {
+                method: 'GET',
+                url: "api/v1/plugin/search/suggest?q=:query&core=:core",
+                cache: false,
+                isArray: false,
+                transformResponse: function (data, headerGetter) {
+                    var searchObj = JSON.parse(data);
+                    return searchObj;
+                }
             }
         });
 
