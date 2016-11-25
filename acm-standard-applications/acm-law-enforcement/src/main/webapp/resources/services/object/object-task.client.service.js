@@ -125,7 +125,9 @@ angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'Ac
          * @returns {Object} Promise
          */
         Service.queryChildTasks = function (parentType, parentId, start, n, sortBy, sortDir) {
-            var taskData;
+            var cacheChildTaskData = new Store.CacheFifo(Service.CacheNames.CHILD_TASK_DATA);
+            var cacheKey = parentType + "." + parentId + "." + start + "." + n + "." + sortBy + "." + sortDir;
+            var taskData = cacheChildTaskData.get(cacheKey);
             
             var sort = "";
             if (!Util.isEmpty(sortBy)) {
@@ -145,6 +147,7 @@ angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'Ac
                 , onSuccess: function (data) {
                     if (Service.validateChildTaskData(data)) {
                         taskData = data;
+                        cacheChildTaskData.put(cacheKey, taskData);
                         return taskData;
                     }
                 }
