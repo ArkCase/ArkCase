@@ -8,6 +8,7 @@ var utils = require('../util/utils.js');
 var userPage = require('../Pages/user_profile_page.js');
 var flag = false;
 var EC = protractor.ExpectedConditions;
+var timeTrackingPage = require('../Pages/time_tracking_page.js');
 
 
 function testAsync(done) {
@@ -62,7 +63,6 @@ describe('case page tests', function() {
         casePage.waitForCaseType();
         expect(casePage.returnCaseType()).toEqual(Objects.casepage.data.casesType);
     });
-
     it('should create new case and change case status to closed, verify the automated task in tasks table and approve', function() {
 
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
@@ -155,7 +155,6 @@ describe('case page tests', function() {
         casePage.addNote(Objects.casepage.data.note);
         casePage.deleteNote();
     });
-
     it('should create new case add new note and verify added note', function() {
 
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
@@ -245,9 +244,9 @@ describe('case page tests', function() {
         casePage.clickPeopleLinkBtn();
         casePage.addContactMethod(Objects.casepage.data.contactMethodFacebook, Objects.casepage.data.contactMethodFacebook);
         expect(casePage.returnContatMethodType()).toEqual(Objects.casepage.data.contactMethodFacebook);
-        expect(casePage.returnContactMethodValueFirstColumn()).toEqual(Objects.casepage.data.contactMethodFacebook);
-        expect(casePage.returncontactMethodLastModifiedFirstColumn()).toEqual(utils.returnToday("/"));
-        expect(casePage.returncontactMethodModifiedByFirstcolumn()).toEqual(Objects.casepage.data.assigneeSamuel);
+        expect(casePage.returncontactMethodValueFirstRow()).toEqual(Objects.casepage.data.contactMethodFacebook);
+        expect(casePage.returncontactMethodLastModifiedFirstRow()).toEqual(utils.returnToday("/"));
+        expect(casePage.returncontactMethodModifiedByFirstRow()).toEqual(Objects.casepage.data.assigneeSamuel);
 
     });
 
@@ -272,9 +271,9 @@ describe('case page tests', function() {
         casePage.addContactMethod(Objects.casepage.data.contactMethodFacebook, Objects.casepage.data.contactMethodFacebook);
         casePage.editContactMethod(Objects.casepage.data.contactMethodEmail, Objects.casepage.data.contactMethodEmail);
         expect(casePage.returnContatMethodType()).toEqual(Objects.casepage.data.contactMethodEmail);
-        expect(casePage.returnContactMethodValueFirstColumn()).toEqual(Objects.casepage.data.contactMethodEmail);
-        expect(casePage.returncontactMethodLastModifiedFirstColumn()).toEqual(utils.returnToday("/"));
-        expect(casePage.returncontactMethodModifiedByFirstcolumn()).toEqual(Objects.casepage.data.assigneeSamuel);
+        expect(casePage.returncontactMethodValueFirstRow()).toEqual(Objects.casepage.data.contactMethodEmail);
+        expect(casePage.returncontactMethodLastModifiedFirstRow()).toEqual(utils.returnToday("/"));
+        expect(casePage.returncontactMethodModifiedByFirstRow()).toEqual(Objects.casepage.data.assigneeSamuel);
     });
 
     it('should create new case and add organization', function() {
@@ -292,7 +291,6 @@ describe('case page tests', function() {
     });
 
     it('should create new case add/delete organization', function() {
-
 
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
         casePage.clickNextBtn();
@@ -436,7 +434,6 @@ describe('case page tests', function() {
         casePage.deleteTag();
 
     });
-
 
     it('should create new case and click subscribe button and verify if unubscribe btn is displayed', function() {
 
@@ -606,4 +603,27 @@ describe('case page tests', function() {
 
     });
 
+    it('should create new case add timesheet and verify in cases timesheet table', function() {
+
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
+        casePage.clickNextBtn();
+        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
+        casePage.switchToDefaultContent();
+        element(by.xpath(Objects.casepage.locators.caseID)).getText().then(function(text) {
+            console.log(text);
+            casePage.clickNewButton();
+            timeTrackingPage.navigateToTimeTrackingPage();
+            casePage.switchToIframes();
+            timeTrackingPage.submitTimesheetTable("Case", text, "8");
+            casePage.selectApprover(Objects.casepage.data.approverSamuel);
+            timeTrackingPage.clickSaveBtn().clickModuleCasesFiles();
+            casePage.TimeTable();
+            expect(casePage.returnTimesheetFormName()).toContain(Objects.casepage.data.timeSheet);
+            expect(casePage.returnTimesheetUser()).toEqual(Objects.casepage.data.assigneeSamuel);
+            expect(casePage.returnTimesheetModifiedDate()).toEqual(utils.returnToday("/"));
+            expect(casePage.returnTimesheetStatus()).toEqual(Objects.casepage.data.statusDraft);
+            expect(casePage.returnTimesheetHours()).toEqual(Objects.casepage.data.totalHours);
+
+        });
+    });
 });

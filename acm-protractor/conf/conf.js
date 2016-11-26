@@ -63,8 +63,8 @@ exports.config = {
         jasmine.getEnv().addReporter(reporter);
 
         browser.driver.manage().window().maximize();
-        browser.driver.get('https://core.arkcase.dev.armedia.com/arkcase/login');
-        browser.manage().timeouts().setScriptTimeout(60000);
+        browser.driver.get('https://cloud.arkcase.com/arkcase/login');
+        browser.manage().timeouts().setScriptTimeout(90000);
         browser.manage().timeouts().pageLoadTimeout(40000);
     },
     afterLaunch: function(exitCode) {
