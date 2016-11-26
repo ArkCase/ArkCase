@@ -9,7 +9,7 @@
         "data": {
             "supervisoruser": {
                 "username": "samuel-acm",
-                "password": "AcMd3v$"
+                "password": "Armedia#1"
             },
             "adminuser": {
                 "username": "ann-acm",
@@ -17,8 +17,9 @@
             }
         }
     },
-    "basepage":{
-        "locators":{
+    "basepage": {
+
+        "locators": {
             "newButton": ".//a[@class='dropdown-toggle']/i",
             "root": ".//span[@title='root']",
             "newCorrespondence": ".//li[@data-command='subMenuCorrespondenceForms']",
@@ -37,7 +38,7 @@
             "fadeElementEditNote": "//*[@ng-click='close($event)'"
 
         },
-        "data":{
+        "data": {
 
         }
 
@@ -400,7 +401,7 @@
             "changeCaseStatusBtn": "[ui-sref='frevvo.change-case-status(changeCaseStatusParams)']",
             "newCasesButton": "[ui-sref='frevvo.new-case()']",
             "editBtn": "[ui-sref='frevvo.edit-case(editParams)']",
-            "subscribeButton":"Subscribe",
+            "subscribeButton": "Subscribe",
             "unsubscribeButton": "Unsubscribe",
             "mergeBtn": ".//*[@class='pull-right']/..//div/button[3]",
             "splitBtn": ".//*[@class='pull-right']/..//div/button[4]",
@@ -408,7 +409,7 @@
             "changeCaseStatusTitle": "facade",
             "changeStatusDropDown": "input _frevvo-disable-backspace",
             "statusClosed": ".//*[@class='input _frevvo-disable-backspace']/..//li[4]",
-            "selectApprover": ".//*[@class='f-table-row s-expanded s-linked s-untyped s-invalid']/..//td[5]",
+            "selectApprover": "approverName",
             "addUser": ".//*[@id='labPoTitle']",
             "searchForUser": ".//*[@id='edtPoSearch']",
             "goBtn": ".//*[@class='input-group']/..//span/button",
@@ -417,7 +418,7 @@
             "tasksLink": ".//*[@class='tabbed-footer']/..//ul/li[7]/a",
             "tasksTable": ".//*[@class='panel panel-success panel-grid']",
             "taskTitle": ".//*[@class='ng-binding ng-scope']",
-            "notesLink": ".//*[@class='tabbed-footer']/..//ul/li[6]/a",
+            "notesLink": ".//*[@class='fa fa-comments']",
             "addNoteBtn": ".//*[@class='panel-title']/..//button",
             "noteTextArea": "note.note",
             "saveNoteBtn": ".//*[@class='modal-footer ng-scope']/..//button[2]",
@@ -428,12 +429,12 @@
             "emptyNoteTable": ".//*[@class='ui-grid-viewport ng-isolate-scope']",
             "addNewTaskBtn": ".//*[@class='panel-title']/..//button/i",
             "taskTableRows": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
-            "peopleLinkBtn": ".//*[@class='tabbed-footer']/..//ul/li[3]/a",
+            "peopleLinkBtn": ".//*[@class='fa fa-user']",
             "peopleTableColumns": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
             "peopleTable": ".//*[@class='panel panel-success panel-grid']",
             "addPeopleBtn": ".//*[@class='panel-title']/..//button",
             "personsTypeDropDown": "person.personType",
-            "personFirstNameInput":"person.givenName",
+            "personFirstNameInput": "person.givenName",
             "personLastNameInput": "person.familyName",
             "savePersonBtn": ".//*[@class='modal-footer ng-scope']/..//button[2]",
             "addContactMethodBtn": "[ng-click = 'grid.appScope.addNewContactMethods(row)']",
@@ -441,13 +442,13 @@
             "contactValue": "contact.value",
             "saveContactBtn": "[ng-click = 'onClickOk()']",
             "deleteContactMethodBtn": "[ng-click = 'grid.appScope.deleteRowContactMethods(row.entity)']",
-            "emptyContactMethodTable": "[ng-style='colContainer.getViewportStyle()']" ,
+            "emptyContactMethodTable": "[ng-style='colContainer.getViewportStyle()']",
             "editContactMethodBtn": "[ng-click='grid.appScope.editRowContactMethods(row.entity)']",
             "addOgranizationBtn": "[ng-click='grid.appScope.addNewOrganizations(row)']",
-            "organizationTypeDropDown":"organization.organizationType",
+            "organizationTypeDropDown": "organization.organizationType",
             "organizationValueInput": "organization.organizationValue",
-            "saveOrganizationBtn":"[ng-click = 'onClickOk()']",
-            "organizationDeleteBtn":"[ng-click='grid.appScope.deleteRowOrganizations(row.entity)']",
+            "saveOrganizationBtn": "[ng-click = 'onClickOk()']",
+            "organizationDeleteBtn": "[ng-click='grid.appScope.deleteRowOrganizations(row.entity)']",
             "emptyOrganizationTable": "[ng-style='colContainer.getViewportStyle()']",
             "organizationEditBtn": " [ng-click='grid.appScope.editRowOrganizations(row.entity)']",
             "addAddressBtn": "[ng-click = 'grid.appScope.addNewAddresses(row)']",
@@ -463,23 +464,23 @@
             "addAliasesBtn": "[ng-click='grid.appScope.addNewAliases(row)']",
             "aliasesDropdown": "alias.aliasType",
             "aliasesValue": "alias.aliasValue",
-            "saveAliasesBtn":"[ng-click = 'onClickOk()']",
+            "saveAliasesBtn": "[ng-click = 'onClickOk()']",
             "deleteAliasBtn": "[ng-click='grid.appScope.deleteRowAliases(row.entity)']",
             "editAliasBtn": "[ng-click='grid.appScope.editRowAliases(row.entity)']",
             "caseTypeListBox": ".//ul[@role='listbox']/li",
             "documentsLink": "//span[contains(text(),'Documents')]",
             "expandLinksButton": ".//a[@title='Show links']",
             "fancyTreeExpandTop": "html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/object-tree/section/div/div/div/ul/li[1]/span/span[1]",
-            "tagsLinkBtn": ".//*[@class='tabbed-footer']/..//ul/li[12]/a",
+            "tagsLinkBtn": ".//*[@class='fa fa-tags']",
             "addNewTagBtn": "[ng-click='addNew()']",
             "addTagInput": "newTag.text",
-            "tagPopUpTitle":".//*[@class='modal-header ng-scope']/..//h3/span",
+            "tagPopUpTitle": ".//*[@class='modal-header ng-scope']/..//h3/span",
             "addTagBtn": "[ng-click='onClickOk()']",
             "tagTableColumns": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
             "deleteTagBtn": "[ng-click='grid.appScope.deleteRow(row.entity)']",
             "refreshCasesList": "[ng-click='onClickRefresh()']",
             "firstCaseInCasesList": ".//*[@class='tree']/..//ul/li[1]",
-            "referenceLink": ".//*[@class='tabbed-footer']/..//ul/li[8]/a",
+            "referenceLink": ".//*[@class='fa fa-exchange']",
             "addReferenceBtn": "[ng-click='addReference()']",
             "searchForReferenceInput": "searchQuery",
             "searchReferenceBtn": "[ng-click='queryExistingItems()']",
@@ -489,15 +490,16 @@
             "referenceRow": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
             "cancelBtn": "[ng-click='onClickCancel()']",
             "newTimesheetLink": "Timesheet",
-            "timesheetLinkBtn":  ".//*[@class='tabbed-footer']/..//ul/li[10]/a",
+            "timesheetLinkBtn": ".//*[@class='fa fa-clock-o']",
             "dueDate": "[editable-bsdate='dateInfo.dueDate']",
             "dueDateInput": "[init-date='dateInfo.dueDate']",
             "dueDateTodayBtn": "Today",
             "confirmDueDateBtn": ".//*[@class='editable-controls form-group']/..//button[1]",
             "newCostsheetLink=": "Costsheet",
-            "hitstoryLink":".//*[@class='tabbed-footer']/..//ul/li[9]/a",
+            "hitstoryLink": ".//*[@class='fa fa-bell-o']",
             "historyTable": ".//*[@class='panel panel-success panel-grid']",
-            "historyTableRow": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid"
+            "historyTableRow": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
+            "timesheetTableRow": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid"
 
 
 
@@ -521,7 +523,7 @@
             "peopleFirstName": "Milan",
             "peopleLastName": "Jovanovski",
             "peopleFirstNameEdit": "Milan1",
-            "peopleLastNameedit":"Jovanovski1",
+            "peopleLastNameedit": "Jovanovski1",
             "peopleTypeDefendant": "Defendant",
             "peopleTypeWitness": "Witness",
             "peopleTypeWASOfficer": "WAS Officer",
@@ -533,17 +535,17 @@
             "contactMethodMobile": "Mobile",
             "contactMethodEmail": "Email",
             "contactMethodFacebook": "Facebook",
-            "organizationTypeNonProfit":"Non-Profit",
-            "organizationTypeGoverment":"Government",
-            "organizationTypeCorporation":"Corporation",
+            "organizationTypeNonProfit": "Non-Profit",
+            "organizationTypeGoverment": "Government",
+            "organizationTypeCorporation": "Corporation",
             "addressTypeBusiness": "Business",
             "addressTypeHome": "Home",
             "street": "First street",
             "city": "city",
             "state": "state",
-            "zip":"1000",
+            "zip": "1000",
             "country": "Arizona",
-            "editStreet":"Second street",
+            "editStreet": "Second street",
             "editCity": "edit city",
             "editState": "Washington",
             "editZip": "9000",
@@ -552,16 +554,52 @@
             "aliasMarried": "Married",
             "aliasValue": "Alias",
             "editAlias": "editAlias",
-            "statusClosed":"Closed",
+            "statusClosed": "Closed",
             "automatedTaskTitle": "Review Request to Change Case Status",
             "tagname": "tag1",
             "unsubscribeBtn": "Unsubscribe",
             "subscribeBtn": "Subscribe",
-            "caseName":"NewCaseNew",
+            "caseName": "NewCaseNew",
             "referenceCaseName": "Reference case",
             "referenceType": "CASE_FILE",
-            "referenceStatusDraft":"DRAFT",
-            "historyEvent": "Case File Created"
+            "referenceStatusDraft": "DRAFT",
+            "historyEvent": "Case File Created",
+            "timeSheet": "Timesheet",
+            "totalHours": "56",
+            "statusDraft": "DRAFT"
+        }
+
+    },
+
+    "timetrackingPage": {
+
+        "locators": {
+
+            "newTimesheetLink": "Timesheet",
+            "timesheetDropDown": ".//*[@class='input _frevvo-disable-backspace']",
+            "sundayInput": "sunday",
+            "mondayInput": "monday",
+            "tuesdayInput": "tuesday",
+            "wednsdayInput": "wednesday",
+            "thursdayInput": "thursday",
+            "fridayInput": "friday",
+            "saturdayInput": "saturday",
+            "timetrackingTitle": ".//*[@class='f-message decorator']/..//div/b",
+            "saveBtn": "Save",
+            "newTimesheetBtn": "New Timesheet",
+            "editTimesheetBtn": "Edit Timesheet",
+            "caseFileModule": "html/body/div[1]/div/div[1]/nav/ul/li[2]/a",
+            "timesheetsPageTitle": ".//*[@class='module-header']/..//h3/span",
+            "nextWeekBtn": "Next Week",
+            "periodInput": "period"
+
+
+
+        },
+        "data": {
+
+            "date": "00"
+
         }
 
 
