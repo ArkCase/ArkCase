@@ -18,7 +18,7 @@ function testAsync(done) {
 
 describe('Create new task ', function() {
 
-    beforeEach(function(done) { 
+    beforeEach(function(done) {
     	
         authentication.loginAsSupervisor();       
         testAsync(done);        
@@ -209,22 +209,22 @@ describe('Create new task ', function() {
         expect(taskPage.returnTaskSubject()).toEqual(Objects.taskspage.data.taskSubjectInput, 'Task subject is not updated');
 
     });
-    it('should create new task and edit assignee from samuel to ann', function() {
+     it('should create new task and edit assignee from samuel to ann', function() {
 
-    	taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "High", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
-        taskPage.editAssignee("ann-acm");
-        expect(taskPage.returnAssignee()).toEqual(Objects.taskspage.data.administrator, 'The assignee is not updated');
+     	taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "High", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+         taskPage.editAssignee("Ann Administrator");
+         expect(taskPage.returnAssignee()).toEqual(Objects.taskspage.data.administrator, 'The assignee is not updated');
 
-    });
-    it('should create new task change assignee and verify is button complete and delete are not displyed', function() {
+     });
+     it('should create new task change assignee and verify is button complete and delete are not displayed', function() {
 
-    	 taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Expedite", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
-        taskPage.editAssignee("ann-acm");
-        expect(taskPage.returnAssignee()).toEqual(Objects.taskspage.data.administrator, 'The assignee is not updated');
-        expect(taskPage.completeButtonIsPresent()).toBe(false, 'Complete button should not be displyed');
-        expect(taskPage.deleteButtonIsPresent()).toBe(false, 'Delete  button should not be displyed');
+     	 taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Expedite", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+         taskPage.editAssignee("Ann Administrator");
+         expect(taskPage.returnAssignee()).toEqual(Objects.taskspage.data.administrator, 'The assignee is not updated');
+         expect(taskPage.completeButtonIsPresent()).toBe(false, 'Complete button should not be displyed');
+         expect(taskPage.deleteButtonIsPresent()).toBe(false, 'Delete  button should not be displyed');
 
-    });
+     });
     it('should create new task add tag and verify added tag', function() {
 
     	taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
@@ -233,7 +233,7 @@ describe('Create new task ', function() {
         taskPage.clickAddTagButton();
         expect(taskPage.returnAddTagPopUpTitle()).toEqual(Objects.taskspage.data.addTagPopUpTitle);
         browser.driver.actions().mouseDown(taskPage.tagTextArea).click().sendKeys(Objects.taskspage.data.tagTextArea).perform();
-        taskPage.clickAddTagPopUpTitle().clickSaveTagButton();
+        taskPage.clickSaveTagButton();
         expect(taskPage.returnTagName()).toEqual(Objects.taskspage.data.tagTextArea, 'Created tag name is wrong');
         expect(taskPage.returnTagCreatedDate()).toEqual(today, 'Created tag date is wrong');
         expect(taskPage.returnTagCreatedBy()).toEqual(Objects.taskspage.data.supervisor, 'Created tag by is wrong');
@@ -247,7 +247,7 @@ describe('Create new task ', function() {
         taskPage.clickAddTagButton();
         expect(taskPage.returnAddTagPopUpTitle()).toEqual(Objects.taskspage.data.addTagPopUpTitle);
         browser.driver.actions().mouseDown(taskPage.tagTextArea).click().sendKeys(Objects.taskspage.data.tagTextArea).perform();
-        taskPage.clickAddTagPopUpTitle().clickSaveTagButton();
+        taskPage.clickSaveTagButton();
         taskPage.clickDeleteTagButton();
         expect(taskPage.returnTagNameisPresent()).toBe(false, 'The tag is not deleted');
 
