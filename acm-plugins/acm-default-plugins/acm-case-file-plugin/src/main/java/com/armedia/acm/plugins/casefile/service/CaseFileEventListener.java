@@ -7,11 +7,9 @@ import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
 import com.armedia.acm.plugins.outlook.service.OutlookContainerCalendarService;
 import com.armedia.acm.service.objecthistory.dao.AcmAssignmentDao;
-import com.armedia.acm.service.objecthistory.dao.AcmOwningGroupDao;
 import com.armedia.acm.service.objecthistory.model.AcmAssignment;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistory;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistoryEvent;
-import com.armedia.acm.service.objecthistory.model.AcmOwningGroup;
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryEventPublisher;
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryService;
 import com.armedia.acm.services.participants.model.AcmParticipant;
@@ -30,7 +28,6 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
     private AcmObjectHistoryEventPublisher acmObjectHistoryEventPublisher;
     private CaseFileEventUtility caseFileEventUtility;
     private AcmAssignmentDao acmAssignmentDao;
-    private AcmOwningGroupDao acmOwningGroupDao;
     private OutlookContainerCalendarService calendarService;
     private boolean shouldDeleteCalendarFolder;
     private String caseFileStatusClosed;
@@ -53,7 +50,6 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                 CaseFile updatedCaseFile = converter.unmarshall(jsonUpdatedCaseFile, CaseFile.class);
 
                 AcmAssignment acmAssignment = createAcmAssignment(updatedCaseFile);
-                AcmOwningGroup acmOwningGroup = createAcmOwningGroup(updatedCaseFile);
 
                 AcmObjectHistory acmObjectHistoryExisting = getAcmObjectHistoryService().getAcmObjectHistory(updatedCaseFile.getId(),
                         CaseFileConstants.OBJECT_TYPE);
@@ -65,7 +61,6 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                     CaseFile existing = converter.unmarshall(json, CaseFile.class);
 
                     acmAssignment.setOldAssignee(ParticipantUtils.getAssigneeIdFromParticipants(existing.getParticipants()));
-                    acmOwningGroup.setOldGroup(ParticipantUtils.getOwningGroupIdFromParticipants(existing.getParticipants()));
 
                     if (isPriorityChanged(existing, updatedCaseFile))
                     {
@@ -110,13 +105,6 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                     // Raise an event
                     getAcmObjectHistoryEventPublisher().publishAssigneeChangeEvent(assignmentSaved, event.getUserId(), event.getIpAddress());
                 }
-
-                if (isOwningGroupChanged(acmOwningGroup))
-                {
-                    AcmOwningGroup owningGroupSaved = getAcmOwningGroupDao().save(acmOwningGroup);
-                    getAcmObjectHistoryEventPublisher().publishOwningGroupChangeEvent(owningGroupSaved, event.getUserId(), event.getIpAddress());
-                }
-
             }
         }
     }
@@ -138,22 +126,6 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
         assignment.setObjectType(CaseFileConstants.OBJECT_TYPE);
 
         return assignment;
-    }
-
-    public boolean isOwningGroupChanged(AcmOwningGroup owningGroup)
-    {
-        String newGroup = owningGroup.getNewGroup();
-        String oldGroup = owningGroup.getOldGroup();
-        return !Objects.equals(newGroup, oldGroup);
-    }
-
-    private AcmOwningGroup createAcmOwningGroup(CaseFile updatedCaseFile)
-    {
-        AcmOwningGroup owningGroup = new AcmOwningGroup();
-        owningGroup.setObjectId(updatedCaseFile.getId());
-        owningGroup.setObjectType(CaseFileConstants.OBJECT_TYPE);
-        owningGroup.setNewGroup(ParticipantUtils.getOwningGroupIdFromParticipants(updatedCaseFile.getParticipants()));
-        return owningGroup;
     }
 
     private boolean isPriorityChanged(CaseFile caseFile, CaseFile updatedCaseFile)
@@ -251,16 +223,6 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
     public void setAcmAssignmentDao(AcmAssignmentDao acmAssignmentDao)
     {
         this.acmAssignmentDao = acmAssignmentDao;
-    }
-
-    public AcmOwningGroupDao getAcmOwningGroupDao()
-    {
-        return acmOwningGroupDao;
-    }
-
-    public void setAcmOwningGroupDao(AcmOwningGroupDao acmOwningGroupDao)
-    {
-        this.acmOwningGroupDao = acmOwningGroupDao;
     }
 
     public OutlookContainerCalendarService getCalendarService()

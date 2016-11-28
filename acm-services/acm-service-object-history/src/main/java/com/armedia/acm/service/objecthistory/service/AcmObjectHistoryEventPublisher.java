@@ -8,8 +8,6 @@ import com.armedia.acm.service.objecthistory.model.AcmAssignment;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistory;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistoryEvent;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistoryEventType;
-import com.armedia.acm.service.objecthistory.model.AcmOwningGroup;
-import com.armedia.acm.service.objecthistory.model.AcmOwningGroupChangeEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
@@ -35,16 +33,6 @@ public class AcmObjectHistoryEventPublisher implements ApplicationEventPublisher
     public void publishAssigneeChangeEvent(AcmAssignment source, String userId, String ipAddress)
     {
         AcmAssigneeChangeEvent event = new AcmAssigneeChangeEvent(source, userId);
-
-        event.setIpAddress(ipAddress);
-        event.setSucceeded(true);
-
-        getEventPublisher().publishEvent(event);
-    }
-
-    public void publishOwningGroupChangeEvent(AcmOwningGroup source, String userId, String ipAddress)
-    {
-        AcmOwningGroupChangeEvent event = new AcmOwningGroupChangeEvent(source, userId);
 
         event.setIpAddress(ipAddress);
         event.setSucceeded(true);
