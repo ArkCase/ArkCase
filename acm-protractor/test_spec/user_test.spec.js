@@ -14,19 +14,19 @@ function testAsync(done) {
         done();
     }, 20000);
 }
-// Specs
-// describe("Testing async calls with beforeEach and passing the special done callback around", function() {
-//
-//    beforeEach(function() {
-//        // Make an async call, passing the special done callback
-//        testAsync(done);
-//    });
-//
-//    it("Should be true if the async call has completed", function() {
-//        expect(flag).toEqual(true);
-//    });
-//
-// });
+//Specs
+describe("Testing async calls with beforeEach and passing the special done callback around", function() {
+
+   beforeEach(function(done) {
+       // Make an async call, passing the special done callback
+       testAsync(done);
+   });
+
+   it("Should be true if the async call has completed", function() {
+       expect(flag).toEqual(true);
+   });
+
+});
 
 describe('edit user profile page', function() {
 

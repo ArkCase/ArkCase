@@ -23,13 +23,11 @@ var noteTextArea = element(by.xpath(Objects.taskpage.locators.notesTextArea));
 var linkButton = element.all(by.xpath(Objects.taskpage.locators.linkButton)).get(0);
 var linkInputText = element(by.xpath(Objects.taskpage.locators.linkInputText));
 var linkInputUrl = element(by.xpath(Objects.taskpage.locators.linkInputUrl));
-var insertLinkBtn = element(by.buttonText(Objects.taskpage.locators.insertLinkBtn));
 var pictureButton = element.all(by.xpath(Objects.taskpage.locators.pictureButton)).get(0);
 var chooseFilesBtn = element(by.xpath(Objects.taskpage.locators.chooseFilesBtn));
 var priority = element(by.xpath(Objects.taskspage.locators.priority));
 var taskSubject = element(by.xpath(Objects.taskspage.locators.taskSubject));
 var detailsLink = element.all(by.repeater(Objects.taskspage.locators.detailsLink)).get(1);
-var detailsTextArea = element(by.xpath(Objects.taskspage.locators.detailsTextArea));
 var assignee = element(by.xpath(Objects.taskspage.locators.assignee));
 var percent = element(by.xpath(Objects.taskspage.locators.percent));
 var startDate = element(by.xpath(Objects.taskspage.locators.startDate));
@@ -68,8 +66,6 @@ var tagName = element.all(by.repeater(Objects.taskspage.locators.addedtagName)).
 var tagCreatedDate = element.all(by.repeater(Objects.taskspage.locators.tagCreatedDate)).get(1);
 var tagCreatedBy = element.all(by.repeater(Objects.taskspage.locators.tagCreatedBy)).get(2);
 var tagDeleteBtn = element.all(by.repeater(Objects.taskspage.locators.tagDeleteBtn)).get(3).all(by.tagName(Objects.taskspage.locators.tag)).get(0);
-var detailsSaveBtn = element(by.xpath(Objects.taskspage.locators.detailsSaveBtn));
-var refreshBtn = element(by.css(Objects.taskspage.locators.refreshBtn));
 var workflowLink = element.all(by.repeater(Objects.taskspage.locators.workflowLink)).get(6);
 var workflowTitle = element(by.css(Objects.taskspage.locators.workflowTitle));
 var workflowParticipant = element.all(by.repeater(Objects.taskspage.locators.workflowParticipant)).get(0);
@@ -80,20 +76,14 @@ var historyTableTitle = element(by.css(Objects.taskspage.locators.historyTableTi
 var historyEventName = element.all(by.repeater(Objects.taskspage.locators.historyEventName)).get(0);
 var historyDate = element.all(by.repeater(Objects.taskspage.locators.historyDate)).get(1);
 var historyUser = element.all(by.repeater(Objects.taskspage.locators.historyUser)).get(2);
-var detailsLinkBtn = element(by.xpath(Objects.taskspage.locators.detailsLinkBtn));
-var insertLinkTitle = element(by.xpath(Objects.taskspage.locators.insertLinkTitle));
-var insertLinkText = element(by.xpath(Objects.taskspage.locators.insertLinkText));
-var insertLinkUrl = element(by.xpath(Objects.taskspage.locators.insertLinkUrl));
 var insertLinkBtn = element(by.buttonText(Objects.taskspage.locators.insertLinkBtn));
 var headerImageLink = element(by.css(Objects.taskspage.locators.headerImageLink));
 var attachmentsLink = element.all(by.repeater(Objects.taskspage.locators.attachmentsLink)).get(3);
 var attachmentsTableTitle = element(by.css(Objects.taskspage.locators.attachmentsTableTitle));
 var root = element(by.xpath(Objects.taskspage.locators.root));
-var newDocument = element.all(by.css(Objects.taskspage.locators.newDocument)).get(1);
 var otherDocument = element(by.xpath(Objects.taskspage.locators.otherDocument));
 var documentTitle = element(by.xpath(Objects.taskspage.locators.documentTitle));
 var newFolder = element.all(by.css(Objects.taskspage.locators.newFolder)).get(0);
-var documentTitle = element(by.xpath(Objects.taskspage.locators.documentTitle));
 var documentTitleInput = element(by.xpath(Objects.taskspage.locators.documentTitleInput));
 var startDateInputEdit = element(by.model(Objects.taskspage.locators.startDateInput))
 var dueDateValue = element(by.model(Objects.taskspage.locators.dueDateInput));
@@ -186,9 +176,7 @@ var TaskPage = function() {
         detailsLink.click();
         return this;
     }
-    this.returnDetailsTextArea = function() {
-        return detailsTextArea.getText();
-    }
+
     this.returnTaskSubject = function() {
         return taskSubject.getText();
     }
@@ -407,20 +395,7 @@ var TaskPage = function() {
     this.returnTagNameisPresent = function() {
         return tagName.isPresent();
     }
-    this.insertDetailsTextAreaText = function(details) {
-        detailsTextArea.click();
-        detailsTextArea.clear();
-        detailsTextArea.sendKeys(details);
-        return this;
-    }
-    this.clickSaveDetailsButton = function() {
-        detailsSaveBtn.click();
-        return this;
-    }
-    this.clickRefreshButton = function() {
-        refreshBtn.click();
-        return this;
-    }
+
     this.clickWorkflowLink = function() {
         workflowLink.click();
         return this;
@@ -453,21 +428,7 @@ var TaskPage = function() {
     this.returnHistoryDate = function() {
         return historyDate.getText();
     }
-    this.clickInsertLinkInDetails = function() {
-        detailsLinkBtn.click();
-        return this;
-    }
 
-	this.insertDetailsTextAreaLink = function(text, url){
-		insertLinkText.click();
-        insertLinkText.sendKeys(text);
-        insertLinkUrl.clear();
-        insertLinkUrl.sendKeys(url);
-        insertLinkBtn.click();
-    }
-    this.returnInsertLinkTitle = function() {
-        return insertLinkTitle.getText();
-    }
     this.returnTaskTitle = function() {
         return taskTitle.getText();
     }
@@ -487,10 +448,6 @@ var TaskPage = function() {
     }
     this.clickRootFolder = function() {
         root.click();
-        return this;
-    }
-    this.clickNewDocument = function() {
-        newDocument.click();
         return this;
     }
     this.clickOtherDocument = function() {
@@ -568,12 +525,19 @@ var TaskPage = function() {
         return this;
     }
 	this.clickCaseTitleInTasks = function() {
-		browser.wait(EC.presenceOf(element(by.xpath(Objects.taskspage.locators.caseTitleInTasks))), 30000).then(function() {
-			caseTitleInTasks.click().then(function() {
-				browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.tasksLink))), 30000);
+        browser.wait(EC.invisibilityOf(element(by.xpath(Objects.basepage.locators.notificationMessage))), 30000).then(function () {
+            browser.wait(EC.presenceOf(element(by.xpath(Objects.taskspage.locators.caseTitleInTasks))), 30000).then(function() {
+                browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.caseTitleInTasks))), 30000).then(function () {
+                    browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.taskspage.locators.caseTitleInTasks))), 30000).then(function () {
+                        caseTitleInTasks.click().then(function () {
+                            browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.tasksLink))), 30000);
 
-			});
-		});
+                        });
+                    });
+                });
+            });
+        });
+
 	}
 
 
