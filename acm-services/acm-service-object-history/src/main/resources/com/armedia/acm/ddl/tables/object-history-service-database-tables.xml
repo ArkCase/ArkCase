@@ -107,47 +107,4 @@
             <column name="cm_seq_name" value="acm_assignment"></column>
         </insert>
     </changeSet>
-
-    <changeSet id="09-create-owninggroup-table" author="teng.wang">
-        <createTable tableName="acm_owninggroup">
-            <column name="cm_owninggroup_id" type="${idType}">
-                <constraints primaryKey="true" primaryKeyName="pk_cm_owninggroup_id"/>
-            </column>
-            <column name="cm_owninggroup_object_id" type="${fkIdType}">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cm_owninggroup_object_type" type="VARCHAR(1024)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cm_owninggroup_new_group" type="VARCHAR(1024)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cm_owninggroup_old_group" type="VARCHAR(1024)">
-                <constraints nullable="true"/>
-            </column>
-            <column name="cm_owninggroup_created" type="${timestampType}">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cm_owninggroup_creator" type="VARCHAR(1024)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cm_owninggroup_modified" type="${timestampType}">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cm_owninggroup_modifier" type="VARCHAR(1024)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-
-    <changeSet id="10-acm_owninggroup-id" author="teng.wang">
-        <createTable tableName="acm_owninggroup_id">
-            <column name="cm_seq_num" type="${idType}"/>
-            <column name="cm_seq_name" type="VARCHAR(255)"/>
-        </createTable>
-        <insert tableName="acm_owninggroup_id">
-            <column name="cm_seq_num" value="100"></column>
-            <column name="cm_seq_name" value="acm_owninggroup"></column>
-        </insert>
-    </changeSet>
 </databaseChangeLog>
