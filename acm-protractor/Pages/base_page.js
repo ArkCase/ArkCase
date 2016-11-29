@@ -147,6 +147,14 @@ var timesheetUser = element.all(by.repeater(Objects.casepage.locators.timesheetT
 var timesheetTotalHours = element.all(by.repeater(Objects.casepage.locators.timesheetTableRow)).get(2);
 var timesheetModifiedDate = element.all(by.repeater(Objects.casepage.locators.timesheetTableRow)).get(3);
 var timesheetStatus = element.all(by.repeater(Objects.casepage.locators.timesheetTableRow)).get(4);
+var costSheetLinkBtn = element(by.xpath(Objects.casepage.locators.costSheetLinkBtn));
+var costSheetFormName = element.all(by.repeater(Objects.casepage.locators.timesheetTableRow)).get(0);
+var costSheetUser = element.all(by.repeater(Objects.casepage.locators.timesheetTableRow)).get(1);
+var costSheetTotalCost = element.all(by.repeater(Objects.casepage.locators.timesheetTableRow)).get(2);
+var costSheetModifiedDate = element.all(by.repeater(Objects.casepage.locators.timesheetTableRow)).get(3);
+var costSheetStatus = element.all(by.repeater(Objects.casepage.locators.timesheetTableRow)).get(4);
+var caseFileModule = element(by.css(Objects.timetrackingPage.locators.caseFileModule));
+
 
 
 var BasePage = function() {
@@ -305,6 +313,24 @@ var BasePage = function() {
         });
         return this;
     }
+
+
+    this.clickFirstTopElementInList = function() {
+        browser.sleep(10000);
+        refreshCasesList.click().then(function() {
+            browser.sleep(10000);
+            firstCaseInCasesList.click().then(function() {
+                browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesTitle))), 30000, "Case title is not displayed");
+            });
+        });
+        return this;
+    }
+    this.clickRefreshBtn = function() {
+
+        refreshBtn.click();
+    }
+
+
     this.clickExpandFancyTreeTopElementAndSubLink = function(link) {
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.fancyTreeExpandTop))), 30000).then(function() {
             fancyTreeExpandTop.click().then(function() {
@@ -1112,10 +1138,12 @@ var BasePage = function() {
 
     this.TimeTable = function() {
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.timesheetLinkBtn))), 30000, "Time link btn is not displayed").then(function() {
+            browser.sleep(10000);
             timesheetLinkBtn.click().then(function() {
-                browser.sleep(10000);
-                element.all(by.repeater(Objects.casepage.locators.timesheetTableRow)).then(function(items) {
-                    expect(items.length).toBe(5, "Time sheet is not displayed in the time table");
+                browser.wait(EC.visibilityOf(element(by.repeater(Objects.casepage.locators.timesheetTableRow))), 30000).then(function() {
+                    element.all(by.repeater(Objects.casepage.locators.timesheetTableRow)).then(function(items) {
+                        expect(items.length).toBe(5, "Time sheet is not displayed in the time table");
+                    });
                 });
             });
         });
@@ -1146,7 +1174,39 @@ var BasePage = function() {
     this.returnTimesheetHours = function() {
         return timesheetTotalHours.getText();
     }
+    this.returncostSheetFormName = function() {
+        return costSheetFormName.getText();
+    }
+    this.returncostSheetUser = function() {
+        return costSheetUser.getText();
+    }
+    this.returncostSheetTotalCost = function() {
+        return costSheetTotalCost.getText();
+    }
+    this.returncostSheetModifiedDate = function() {
+        return costSheetModifiedDate.getText();
+    }
+    this.returncostSheetStatus = function() {
+        return costSheetStatus.getText();
+    }
 
+    this.CostTable = function() {
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.costSheetLinkBtn))), 30000, "Cost link btn is not displayed").then(function() {
+            browser.sleep(10000);
+            costSheetLinkBtn.click().then(function() {
+                browser.wait(EC.visibilityOf(element(by.repeater(Objects.casepage.locators.timesheetTableRow))), 30000).then(function() {
+                    element.all(by.repeater(Objects.casepage.locators.timesheetTableRow)).then(function(items) {
+                        expect(items.length).toBe(5, "Cost sheet is not displayed in the cost table");
+                    });
+                });
+            });
+        });
+    }
+    this.clickModuleCasesFiles = function() {
+
+        browser.executeScript('arguments[0].click()', caseFileModule);
+        return this;
+    }
 
 };
 

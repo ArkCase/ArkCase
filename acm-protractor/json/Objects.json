@@ -499,7 +499,8 @@
             "hitstoryLink": ".//*[@class='fa fa-bell-o']",
             "historyTable": ".//*[@class='panel panel-success panel-grid']",
             "historyTableRow": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
-            "timesheetTableRow": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid"
+            "timesheetTableRow": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
+            "costSheetLinkBtn": ".//*[@class='fa fa-money']"
 
 
 
@@ -588,7 +589,7 @@
             "saveBtn": "Save",
             "newTimesheetBtn": "New Timesheet",
             "editTimesheetBtn": "Edit Timesheet",
-            "caseFileModule": "html/body/div[1]/div/div[1]/nav/ul/li[2]/a",
+            "caseFileModule": "a[href*='#!/cases//main']",
             "timesheetsPageTitle": ".//*[@class='module-header']/..//h3/span",
             "nextWeekBtn": "Next Week",
             "periodInput": "period"
@@ -599,11 +600,43 @@
         "data": {
 
             "date": "00"
+        }
+    },
+
+    "costsheetPage": {
+
+        "locators": {
+
+            "costsheetLink": "Costsheet",
+            "typeDropDown": "type",
+            "codeDropDown": "objectId",
+            "dateInput": "date",
+            "titleInput": "title",
+            "descriptionInput": ".//*[@class='f-control Twelve columns  f-input  s-valid  s-linked Text  s-untyped']",
+            "amountInput": "amount",
+            "saveBtn": "Save",
+            "expensesDropDown": ".//*[@class='input _frevvo-disable-backspace']",
+            "costsheetPageTitle": ".//*[@class='module-header']/..//h3/span"
+
+
+        },
+
+        "data": {
+
+            "Taxi": "Taxi",
+            "Hotel": "Hotel",
+            "Overtime": "Overtime",
+            "Food": "Food",
+            "Ammount": "300",
+            "verifyAmmount":"$300.00" 
 
         }
 
 
-
     }
-
 }
+
+
+
+
+
