@@ -35,6 +35,15 @@ public class RetrieveTasksAPIController
 
     private ExecuteSolrQuery executeSolrQuery;
 
+    /**
+     * REST controller for retrieving tasks by user for due date.
+     *
+     * @param authentication
+     *            authentication object
+     * @param due
+     *            due date
+     * @return list of TaskByUser objects
+     */
     @RequestMapping(value = "/getListByDueDate/{due}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<TaskByUser> getActiveTasksByDueDate(@PathVariable("due") String dueDate, Authentication authentication)
@@ -58,6 +67,15 @@ public class RetrieveTasksAPIController
 
     }
 
+    /**
+     * This method will return grouping results in the list from the Solr
+     *
+     * @param authentication
+     *            - authentication object
+     * @param dueDate
+     *            - dueDate string
+     * @return - list of user tasks pairs
+     */
     private List<Object> retrieveUserTasksCount(Authentication authentication, String dueDate)
     {
         final List<Object> userTaskCount = new ArrayList<>();
@@ -77,6 +95,15 @@ public class RetrieveTasksAPIController
         return userTaskCount;
     }
 
+    /**
+     * This method returns Solr response for grouping search
+     *
+     * @param authentication
+     *            - authentication object
+     * @param dueDate
+     *            - due date string
+     * @return - Solr response in string representation
+     */
     private String getSolrResponse(Authentication authentication, String dueDate)
     {
         String solrQuery = "object_type_s:TASK+AND+status_s:ACTIVE";
