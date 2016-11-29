@@ -76,14 +76,11 @@ var historyTableTitle = element(by.css(Objects.taskspage.locators.historyTableTi
 var historyEventName = element.all(by.repeater(Objects.taskspage.locators.historyEventName)).get(0);
 var historyDate = element.all(by.repeater(Objects.taskspage.locators.historyDate)).get(1);
 var historyUser = element.all(by.repeater(Objects.taskspage.locators.historyUser)).get(2);
-<<<<<<< Updated upstream
 var insertLinkBtn = element(by.buttonText(Objects.taskspage.locators.insertLinkBtn));
-=======
 var detailsLinkBtn = element(by.xpath(Objects.taskspage.locators.detailsLinkBtn));
 var insertLinkTitle = element(by.xpath(Objects.taskspage.locators.insertLinkTitle));
 var insertLinkText = element(by.xpath(Objects.taskspage.locators.insertLinkText));
 var insertLinkUrl = element(by.xpath(Objects.taskspage.locators.insertLinkUrl));
->>>>>>> Stashed changes
 var headerImageLink = element(by.css(Objects.taskspage.locators.headerImageLink));
 var attachmentsLink = element.all(by.repeater(Objects.taskspage.locators.attachmentsLink)).get(3);
 var attachmentsTableTitle = element(by.css(Objects.taskspage.locators.attachmentsTableTitle));
