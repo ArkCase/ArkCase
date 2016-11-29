@@ -1,7 +1,6 @@
 var EC = protractor.ExpectedConditions;
 var Objects=require('../json/Objects.json');
 var util = require('../util/utils.js');
-var wait = require('../util/waitHelper');
 var newBtn = element(by.xpath(Objects.basepage.locators.newButton));
 var root = element(by.xpath(Objects.basepage.locators.root));
 var newCorrespondence = element(by.xpath(Objects.basepage.locators.newCorrespondence));
@@ -17,7 +16,6 @@ var deleteDoc = element(by.xpath(Objects.basepage.locators.deleteDoc));
 var downloadDoc = element(by.xpath(Objects.basepage.locators.downloadDoc));
 var docRow = element(by.xpath(Objects.basepage.locators.docRow));
 var fancyTreeExpandTop = element(by.xpath(Objects.casepage.locators.fancyTreeExpandTop));
-var root = element(by.xpath(Objects.taskspage.locators.root));
 var notesLink = element(by.xpath(Objects.casepage.locators.notesLink));
 var addNoteBtn = element(by.xpath(Objects.casepage.locators.addNoteBtn));
 var noteTextArea = element(by.model(Objects.casepage.locators.noteTextArea));
@@ -27,13 +25,24 @@ var deleteNoteBtn = element.all(by.repeater(Objects.casepage.locators.deleteNote
 var editNoteBtn = element.all(by.repeater(Objects.casepage.locators.editNoteBtn)).get(3).all(by.tagName(Objects.casepage.locators.tag)).get(0);
 var addNewTaskBtn = element(by.xpath(Objects.casepage.locators.addNewTaskBtn));
 var tasksLinkBtn = element(by.xpath(Objects.casepage.locators.tasksLink));
-var refreshBtn = element(by.xpath(Objects.casepage.locators.refreshBtn));
 var taskTitle = element(by.xpath(Objects.casepage.locators.taskTitle));
 var taskAssighnee = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(1);
 var taskCreated = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(2);
 var taskPriority = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(3);
 var taskDueDate = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(4);
 var taskStatus = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(5);
+var newDocument = element.all(by.xpath(Objects.basepage.locators.newDocument));
+var detailsTextArea = element(by.xpath(Objects.taskspage.locators.detailsTextArea));
+var detailsSaveBtn = element(by.xpath(Objects.taskspage.locators.detailsSaveBtn));
+var refreshBtn = element(by.xpath(Objects.taskspage.locators.refreshBtn));
+var detailsLinkBtn = element(by.xpath(Objects.taskspage.locators.detailsLinkBtn));
+var insertLinkTitle = element(by.xpath(Objects.taskspage.locators.insertLinkTitle));
+var insertLinkText = element(by.xpath(Objects.taskspage.locators.insertLinkText));
+var insertLinkUrl = element(by.xpath(Objects.taskspage.locators.insertLinkUrl));
+var insertLinkBtn = element(by.buttonText(Objects.taskspage.locators.insertLinkBtn));
+var detailsPicture = element(by.xpath(Objects.basepage.locators.detailsPicture));
+var browseButton = element(by.name(Objects.basepage.locators.browseButton));
+var detailsUploadedImage = element(by.xpath(Objects.basepage.locators.detailsUploadedImage));
 
 
 var BasePage = function(){
@@ -176,7 +185,7 @@ var BasePage = function(){
 			   });
 		   })
 
-	   }
+	   };
 	   this.switchToIframes = function() {
 		   browser.ignoreSynchronization = true;
 		   browser.wait(EC.visibilityOf(element(by.className("new-iframe ng-scope"))), 30000);
@@ -197,7 +206,7 @@ var BasePage = function(){
 			browser.actions().click(protractor.Button.RIGHT).perform();
 		});
 		return this;
-	}
+	};
 	this.clickExpandFancyTreeTopElementAndSubLink = function (link) {
 		browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.fancyTreeExpandTop))), 30000).then(function () {
 			fancyTreeExpandTop.click().then(function () {
@@ -348,6 +357,124 @@ var BasePage = function(){
 	this.returnTaskTableStatus = function() {
 		return taskStatus.getText();
 	};
+
+	this.clickNewDocument = function() {
+		newDocument.click();
+		return this;
+	};
+
+	this.selectDocument = function (docType) {
+		xPathStr = ".//li[@data-command='file/";
+
+		var completexPath;
+		switch (docType) {
+			case "Medical Release":
+				completexPath = xPathStr + "mr']";
+				break;
+			case "General Release":
+				completexPath = xPathStr + "gr']";
+				break;
+			case "eDelivery":
+				completexPath = xPathStr + "ev']";
+				break;
+			case "SF86 Signature":
+				completexPath = xPathStr + "sig']";
+				break;
+			case "Notice of Investigation":
+				completexPath = xPathStr + "noi']";
+				break;
+			case "Witness Interview Request":
+				completexPath = xPathStr + "wir']";
+				break;
+			case "Report of Investigation":
+				completexPath = xPathStr + "roi']";
+				break;
+			case "Other":
+				completexPath = xPathStr + "Other']";
+				break;
+			default:
+				completexPath = xPathStr + "Other']";
+				break;
+		}
+
+		var el = element(by.xpath(completexPath));
+		el.click();
+		return this;
+
+	};
+	this.addDocument = function (doctype) {
+		this.clickNewDocument();
+		this.selectDocument(doctype);
+		return this;
+
+	};
+	this.insertDetailsTextAreaText = function(details) {
+		browser.wait(EC.presenceOf(element(by.xpath(Objects.taskspage.locators.detailsTextArea))), 30000).then(function() {
+			browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.detailsTextArea))), 30000).then(function() {
+				browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.taskspage.locators.detailsTextArea))), 30000).then(function () {
+					detailsTextArea.clear();
+					detailsTextArea.sendKeys(details);
+					return this;
+				});
+			});
+		});
+	};
+	this.clickSaveDetailsButton = function() {
+		detailsSaveBtn.click();
+		return this;
+	};
+	this.clickRefreshButton = function() {
+		refreshBtn.click();
+		return this;
+	};
+	this.returnDetailsTextArea = function() {
+		return detailsTextArea.getText();
+	};
+	this.clickInsertLinkInDetails = function() {
+		browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.detailsLinkBtn))), 30000).then(function() {
+			detailsLinkBtn.click();
+			return this;
+		});
+	};
+	this.returnInsertLinkTitle = function() {
+		return insertLinkTitle.getText();
+	};
+	this.insertDetailsTextAreaLink = function(text, url){
+		insertLinkText.click();
+		insertLinkText.sendKeys(text);
+		insertLinkUrl.clear();
+		insertLinkUrl.sendKeys(url);
+		insertLinkBtn.click();
+	};
+	this.clickDetailsAddPicture = function () {
+		browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.detailsPicture))), 30000).then(function () {
+			detailsPicture.click();
+			return this;
+		})
+	};
+	this.uploadPicture = function () {
+         browseButton.click().then(function () {
+			 util.uploadPng();
+		 });
+		 return this;
+	};
+	this.returnDetailsUploadedImage = function () {
+		return detailsUploadedImage.isDisabled();
+	};
+	this.returnAutomatedTask = function() {
+		return taskTitle.getText();
+
+	};
+	this.clickTaskTitle = function() {
+		taskTitle.click();
+	};
+	this.navigateToPage = function(link){
+		xPathStr = ".//a[@title='";
+		var completexPath = xPathStr + link + "']";
+		var el = element(by.xpath(completexPath));
+		el.click();
+		return this;
+	}
 
 
 };
