@@ -37,6 +37,8 @@ angular.module('tasks').controller('Tasks.TagsController', ['$scope', '$q', '$st
 
             modalInstance.result.then(function (tags) {
                 _.forEach(tags, function (tag) {
+                    tag.object_id_s = tag.id.split("-")[0];
+                    tag.tags_s = tag.title_parseable;
                     if (tag.id) {
                         if (tag.object_id_s) {
                             var tagsFound = _.filter($scope.tags, function (tagAss) {
