@@ -14,7 +14,7 @@ angular.module('dashboard.my-complaints')
             var paginationOptions = {
                 pageNumber: 1,
                 pageSize: 5,
-                sortBy: 'complaintNumber',
+                sortBy: 'id',
                 sortDir: 'desc'
             };
             vm.gridOptions = {
@@ -23,9 +23,29 @@ angular.module('dashboard.my-complaints')
                 enableRowSelection: true,
                 enableSelectAll: false,
                 enableRowHeaderSelection: false,
+                useExternalPagination: true,
+                useExternalSorting: true,
                 multiSelect: false,
                 noUnselect: false,
-                columnDefs: []
+                columnDefs: [],
+                onRegisterApi: function (gridApi) {
+                    vm.gridApi = gridApi;
+
+                    gridApi.core.on.sortChanged($scope, function (grid, sortColumns) {
+                        if (sortColumns.length == 0) {
+                            paginationOptions.sort = null;
+                        } else {
+                            paginationOptions.sortBy = sortColumns[0].name;
+                            paginationOptions.sortDir = sortColumns[0].sort.direction;
+                        }
+                        getPage();
+                    });
+                    gridApi.pagination.on.paginationChanged($scope, function (newPage, pageSize) {
+                        paginationOptions.pageNumber = newPage;
+                        paginationOptions.pageSize = pageSize;
+                        getPage();
+                    });
+                }
             };
 
 
@@ -55,8 +75,8 @@ angular.module('dashboard.my-complaints')
                         pageSize: paginationOptions.pageSize
                     },
                     function (data) {
-                        vm.gridOptions.data = data;
-                        vm.gridOptions.totalItems = data.length;
+                        vm.gridOptions.data = data.response.docs;
+                        vm.gridOptions.totalItems = data.response.numFound;
                     }
                 );
             }
