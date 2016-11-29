@@ -14,7 +14,7 @@ controller('Dashboard.TeamWorkloadController', ['$scope', 'config', '$translate'
         }
         function applyConfig(e, componentId, configuration) {
             if (componentId == 'teamWorkload') {
-                DashboardService.queryTeamWorkload({due: config.due}, function (tasks) {
+                DashboardService.queryTeamWorkload({due: config.due}, function (tasksByUser) {
 
                     var chartTitle = '';
                     switch (config.due) {
@@ -35,28 +35,20 @@ controller('Dashboard.TeamWorkloadController', ['$scope', 'config', '$translate'
                             break;
 
                     }
-
-                    vm.chartTitle = chartTitle;
-
-                    var tasksData = {};
+                    
                     var data = [];
                     var labels = [];
-
-                    // Count number of assigned tasks for users
-                    angular.forEach(tasks, function (task) {
-                        var user = task.assignee;
-                        tasksData[user] ? tasksData[user]++ : tasksData[user] = 1;
+                    angular.forEach(tasksByUser, function (tasksByUserIter) {
+                        if (tasksByUserIter.user) {
+                            labels.push(tasksByUserIter.user);
+                            data.push(tasksByUserIter.taskCount);
+                        }
                     });
-
-                    angular.forEach(tasksData, function (count, user) {
-                        data.push(count);
-                        labels.push(user);
-                    });
-
-                    vm.showChart = labels.length > 0 && data.length > 0 ? true : false;
+                    vm.showChart = data.length > 0 ? true : false;
                     vm.data = data;
                     vm.labels = labels;
-                });
+                    vm.chartTitle = chartTitle;
+                 });
             }
         }
     }
