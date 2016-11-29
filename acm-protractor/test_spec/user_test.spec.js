@@ -1,6 +1,7 @@
 var logger = require('../log');
 var userPage = require('../Pages/user_profile_page.js');
 var authentication = require('../authentication.js');
+var loginPage = require('../Pages/login_page.js');
 var robot = require(process.env['USERPROFILE'] + '/node_modules/robotjs');
 var utils = require('../util/utils.js');
 var Objects = require('../json/Objects.json');
@@ -17,26 +18,25 @@ function testAsync(done) {
 //Specs
 describe("Testing async calls with beforeEach and passing the special done callback around", function() {
 
-   beforeEach(function(done) {
-       // Make an async call, passing the special done callback
-       testAsync(done);
-   });
+    beforeEach(function(done) {
+        // Make an async call, passing the special done callback
 
-   it("Should be true if the async call has completed", function() {
-       expect(flag).toEqual(true);
-   });
+        testAsync(done);
+    });
+
+    it("Should be true if the async call has completed", function() {
+        expect(flag).toEqual(true);
+    });
 
 });
 
 describe('edit user profile page', function() {
 
-    authentication.loginAsSupervisor();
-    logger.log('Info', 'User succesfully logged in as supervisor');
-    //testAsync(done);
 
+        loginPage.Login(Objects.loginpage.data.supervisoruser.username, Objects.loginpage.data.supervisoruser.password);
+        logger.log('Info', 'User succesfully logged in as supervisor');
 
-
-    it('should navigate to user profile page', function() {
+       it('should navigate to user profile page', function() {
 
         userPage.clickUserNavigation();
         expect(userPage.returnUserNavigationProfile()).toEqual(Objects.userpage.data.userNavigationProfile);
@@ -155,7 +155,7 @@ describe('edit user profile page', function() {
 
     it('should logout', function() {
 
-        authentication.logout();
+        loginPage.Logout();
 
     });
 

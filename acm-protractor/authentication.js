@@ -27,7 +27,6 @@ var helpers = function helpers() {
                             var logout = element(by.linkText("Logout"));
                             browser.executeScript('arguments[0].click()', logout).then(function () {
                                 browser.ignoresynchronization = true;
-                                    browser.driver.wait(EC.visibilityOf(element(by.css(".alert.alert-success"))), 30000).then(function () {
                                         expect(
                                             element(by.css(".alert.alert-success"))
                                                 .getText()).toEqual(
@@ -35,7 +34,7 @@ var helpers = function helpers() {
                                         logger.log('Info', 'User succesfully logged out');
                                     })
 
-                            });
+
                         })
 
                     });
