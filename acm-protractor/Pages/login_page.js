@@ -18,6 +18,8 @@ var LoginPage = function() {
     };
     this.Login = function (username, password) {
         browser.ignoresynchronization = true;
+        browser.executeScript('window.sessionStorage.clear();');
+        browser.executeScript('window.localStorage.clear();');
         this.insertUserName(username);
         this.insertPassword(password);
         this.clickLogin();
