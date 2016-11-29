@@ -154,6 +154,8 @@ var costSheetTotalCost = element.all(by.repeater(Objects.casepage.locators.times
 var costSheetModifiedDate = element.all(by.repeater(Objects.casepage.locators.timesheetTableRow)).get(3);
 var costSheetStatus = element.all(by.repeater(Objects.casepage.locators.timesheetTableRow)).get(4);
 var caseFileModule = element(by.css(Objects.timetrackingPage.locators.caseFileModule));
+var refreshList = element(by.css(Objects.casepage.locators.refreshCasesList));
+var firstElementInList = element(by.xpath(Objects.casepage.locators.firstCaseInCasesList));
 
 
 
@@ -317,9 +319,9 @@ var BasePage = function() {
 
     this.clickFirstTopElementInList = function() {
         browser.sleep(10000);
-        refreshCasesList.click().then(function() {
+        refreshList.click().then(function() {
             browser.sleep(10000);
-            firstCaseInCasesList.click().then(function() {
+            firstElementInList.click().then(function() {
                 browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesTitle))), 30000, "Case title is not displayed");
             });
         });
