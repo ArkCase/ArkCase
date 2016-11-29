@@ -16,7 +16,6 @@ var saturdayInput = element(by.name(Objects.timetrackingPage.locators.saturdayIn
 var saveBtn = element(by.buttonText(Objects.timetrackingPage.locators.saveBtn));
 var editTimesheet = element(by.buttonText(Objects.timetrackingPage.locators.editTimesheetBtn));
 var newTimesheet = element(by.buttonText(Objects.timetrackingPage.locators.newTimesheetBtn));
-var caseFileModule = element(by.xpath(Objects.timetrackingPage.locators.caseFileModule));
 var timeSheetsPageTitle = element(by.xpath(Objects.timetrackingPage.locators.timesheetsPageTitle));
 var nextWeekBtn = element(by.buttonText(Objects.timetrackingPage.locators.nextWeekBtn));
 var periodInput = element(by.name(Objects.timetrackingPage.locators.periodInput));
@@ -87,14 +86,7 @@ var timeTrackingPage = function() {
           browser.driver.switchTo().defaultContent();
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.timetrackingPage.locators.timesheetsPageTitle))), 30000, "Timesheets page title is not displayed");
         return this;
-    }
-    this.clickModuleCasesFiles = function() {
-
-         browser.executeScript('arguments[0].click()', caseFileModule);
-            browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.timesheetLinkBtn))), 30000);
-    
-        return this;
-    }
+}
 };
 
 module.exports = new timeTrackingPage();

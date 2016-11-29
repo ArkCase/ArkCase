@@ -158,16 +158,7 @@ var CasePage = function() {
 
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesTitle))), 60000, "Case title is not displayed");
     }
-    this.clickFirstCaseInCasesList = function() {
-        browser.sleep(10000);
-        refreshCasesList.click().then(function() {
-            browser.sleep(10000);
-            firstCaseInCasesList.click().then(function() {
-                browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesTitle))), 30000, "Case title is not displayed");
-            });
-        });
-        return this;
-    }
+
 
     this.returnCasesPageTitle = function() {
 
@@ -194,10 +185,7 @@ var CasePage = function() {
 
     };
 
-    this.clickRefreshBtn = function() {
 
-        refreshBtn.click();
-    }
 
     this.clickChangeCaseBtn = function() {
 
