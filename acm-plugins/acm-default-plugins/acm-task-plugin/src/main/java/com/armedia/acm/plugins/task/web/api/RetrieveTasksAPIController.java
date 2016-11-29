@@ -87,7 +87,7 @@ public class RetrieveTasksAPIController
             solrQuery += "+AND+due_tdt:[* TO NOW]";
             break;
         case DUE_TOMORROW:
-            solrQuery += "+AND+due_tdtt:[NOW TO NOW+1DAY]";
+            solrQuery += "+AND+due_tdt:[NOW TO NOW+1DAY]";
             break;
         case DUE_IN_7_DAYS:
             solrQuery += "+AND+due_tdt:[NOW TO NOW+7DAYS]";
