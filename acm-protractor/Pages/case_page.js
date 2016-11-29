@@ -237,35 +237,9 @@ var CasePage = function() {
 
         return this;
     };
-    this.selectApprover = function(approverSamuel) {
-
-        selectApprover.click().then(function() {
-            browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.addUser))), 10000);
-            searchForUser.click();
-            searchForUser.sendKeys(approverSamuel);
-            goBtn.click().then(function() {
-                browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchedUser))), 3000);
-                searchedUser.click().then(function() {
-                    browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.addBtn))), 3000);
-                    addBtn.click();
-                });
-            });
-        });
-        return this;
-    }
 
     this.chnageCaseSubmit = function() {
         browser.executeScript('arguments[0].click()', submitBtn);
-    };
-
-    this.returnAutomatedTask = function() {
-
-        return taskTitle.getText();
-
-    }
-
-    this.clickTaskTitle = function() {
-        taskTitle.click();
     };
 
     this.waitForPriority = function() {
@@ -742,6 +716,8 @@ var CasePage = function() {
 
         return this;
     }
+
+
 };
 
 
