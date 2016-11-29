@@ -55,34 +55,30 @@ angular.module('services').factory('DocTreeExt.Template', ['$q', 'UtilService', 
                             var names = [args.label];
                             var template = args.templateType;
 
-                            var selectedFolderId = nodes[0].data.objectId;
-                            var promiseCorrespondence = ObjectCorrespondenceService.createCorrespondence(template,
-                                DocTree.getObjType(), DocTree.getObjId(), selectedFolderId);
+                            DocTree._addingFileNodes(nodes[0], names, names[0]).then(function (data) {
+                                var selectedFolderId = nodes[0].data.objectId;
+                                ObjectCorrespondenceService.createCorrespondence(template,
+                                    DocTree.getObjType(), DocTree.getObjId(), selectedFolderId).then(function (uploadedFile) {
+                                    var cacheKey = DocTree.getCacheKeyByNode(nodes[0]);
+                                    var fileNodes = data;
+                                    var file = DocTree.fileToSolrData(uploadedFile);
+                                    var folderList = DocTree.cacheFolderList.get(cacheKey);
 
-                            var promiseAddNodes = DocTree._addingFileNodes(nodes[0], names, names[0]);
-
-                            var cacheKey = DocTree.getCacheKeyByNode(nodes[0]);
-                            $q.all([promiseCorrespondence, promiseAddNodes]).then(function (successData) {
-                                var uploadedFile = successData[0];
-                                var fileNodes = successData[1];
-                                var file = DocTree.fileToSolrData(uploadedFile);
-                                var folderList = DocTree.cacheFolderList.get(cacheKey);
-
-                                if (DocTree.Validator.validateFolderList(folderList)) {
-                                    folderList.children.push(file);
-                                    folderList.totalChildren++;
-                                    DocTree.cacheFolderList.put(cacheKey, folderList);
-                                    if (!Util.isEmpty(uploadedFile) && DocTree.Validator.validateFancyTreeNodes(fileNodes)) {
-                                        var type = Util.goodValue(uploadedFile.fileType);
-                                        var fileNode = DocTree._matchFileNode(type, type, fileNodes);
-                                        if (fileNode) {
-                                            DocTree._fileDataToNodeData(file, fileNode);
-                                            fileNode.renderTitle();
-                                            fileNode.setStatus("ok");
+                                    if (DocTree.Validator.validateFolderList(folderList)) {
+                                        folderList.children.push(file);
+                                        folderList.totalChildren++;
+                                        DocTree.cacheFolderList.put(cacheKey, folderList);
+                                        if (!Util.isEmpty(uploadedFile) && DocTree.Validator.validateFancyTreeNodes(fileNodes)) {
+                                            var type = Util.goodValue(uploadedFile.fileType);
+                                            var fileNode = DocTree._matchFileNode(type, type, fileNodes);
+                                            if (fileNode) {
+                                                DocTree._fileDataToNodeData(file, fileNode);
+                                                fileNode.renderTitle();
+                                                fileNode.setStatus("ok");
+                                            }
                                         }
                                     }
-                                }
-
+                                })
                             });
                         }
                     }
