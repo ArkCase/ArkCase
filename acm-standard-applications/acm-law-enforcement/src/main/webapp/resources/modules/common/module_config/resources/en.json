@@ -206,5 +206,12 @@
   },
   "common.comp.acmLogin": {
     "confirmLogout": "For your protection, application is about to logout. Click Cancel to stay logged in."
+  },
+  "common.objectTypes": {
+    "CASE_FILE": "Case File",
+    "COMPLAINT": "Complaint",
+    "TASK": "Task",
+    "TIMESHEET": "Timesheet",
+    "COSTSHEET": "Costsheet"
   }
 }
