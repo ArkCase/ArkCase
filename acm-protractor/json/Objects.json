@@ -50,7 +50,6 @@
             "cancelEditingDisabled": ".//li[@data-command='cancelEditing'][@aria-disabled='true']",
             "lockIcon": "//table/tbody/tr[2]/td[2]/span",
             "tasksLink": "Tasks"
-
         },
         "data":{
 

@@ -548,6 +548,5 @@ var BasePage = function(){
         tasksLink.click();
         return this;
     }
-
 };
 module.exports = new BasePage();

@@ -30,8 +30,8 @@ describe("Testing async calls with beforeEach and passing the special done callb
 
 });
 
-describe('edit user profile page', function() {
 
+describe('edit user profile page', function() {
 
         loginPage.Login(Objects.loginpage.data.supervisoruser.username, Objects.loginpage.data.supervisoruser.password);
         logger.log('Info', 'User succesfully logged in as supervisor');
@@ -158,6 +158,7 @@ describe('edit user profile page', function() {
         loginPage.Logout();
 
     });
+
 
 
 });
