@@ -34,7 +34,6 @@ var helpers = function helpers() {
                                         logger.log('Info', 'User succesfully logged out');
                                     })
 
-
                         })
 
                     });

@@ -27,7 +27,6 @@ describe("Testing async calls with beforeEach and passing the special done callb
 
 });
 
-
 describe('dashboard page test', function() {
 
 
@@ -91,6 +90,7 @@ describe('dashboard page test', function() {
         expect(dashPage.returnWidgetTitle()).toEqual(Objects.dashboardpage.data.widgetTitleNews);
         dashPage.clickEditButton().removeWidgetButton().clickSaveChangesButton();
 
+
     });
 
     it('should logout', function() {
@@ -98,6 +98,5 @@ describe('dashboard page test', function() {
         loginPage.Logout();
 
     });
-
  });
 
