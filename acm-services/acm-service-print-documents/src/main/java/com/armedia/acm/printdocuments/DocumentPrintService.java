@@ -1,7 +1,5 @@
 package com.armedia.acm.printdocuments;
 
-import com.armedia.acm.plugins.casefile.model.CaseFile;
-
 import java.io.IOException;
 import java.util.List;
 
@@ -15,7 +13,7 @@ import java.util.List;
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Nov 16, 2016
  *
  */
-public interface DocumentPrintService<CF extends CaseFile, PD extends PrintDocument<CF>>
+public interface DocumentPrintService<CF, PD extends PrintDocument<CF>>
 {
 
     /**
