@@ -98,6 +98,13 @@ angular.module('cases').controller('Cases.TagsController', ['$scope', '$q', '$st
             if (Util.goodPositive(currentObjectId, false)) {
                 var promiseQueryTags = ObjectTagsService.getAssociateTags(currentObjectId, ObjectService.ObjectTypes.CASE_FILE);
                 $q.all([promiseQueryTags]).then(function (data) {
+
+                    _.forEach(data[0], function (tag) {
+                        var tmp = tag.tagName;
+                        tag.tagName = tag.tagText;
+                        tag.tagText = tmp;
+                    });
+
                     $scope.tags = data[0];
                     $scope.gridOptions = $scope.gridOptions || {};
                     $scope.gridOptions.data = $scope.tags;

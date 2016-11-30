@@ -98,6 +98,13 @@ angular.module('complaints').controller('Complaints.TagsController', ['$scope', 
             if (Util.goodPositive(currentObjectId, false)) {
                 var promiseQueryTags = ObjectTagsService.getAssociateTags(currentObjectId, ObjectService.ObjectTypes.COMPLAINT);
                 $q.all([promiseQueryTags]).then(function (data) {
+
+                    _.forEach(data[0], function (tag) {
+                        var tmp = tag.tagName;
+                        tag.tagName = tag.tagText;
+                        tag.tagText = tmp;
+                    });
+
                     $scope.tags = data[0];
                     $scope.gridOptions = $scope.gridOptions || {};
                     $scope.gridOptions.data = $scope.tags;
