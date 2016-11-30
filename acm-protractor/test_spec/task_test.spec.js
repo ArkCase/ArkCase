@@ -255,7 +255,7 @@ describe('Create new task ', function() {
     it('should create new task add text task details verify if it saved', function() {
 
     	taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Expedite", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
-        taskPage.clickDetailsLink();
+        taskPage.clickExpandFancyTreeTopElementAndSubLink("Details");
         taskPage.insertDetailsTextAreaText(Objects.taskspage.data.detailsTextArea);
         taskPage.clickSaveDetailsButton();
         taskPage.clickRefreshButton();
@@ -285,8 +285,8 @@ describe('Create new task ', function() {
     });
     it('should create new task add link from task details', function() {
 
-    	taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Expedite", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
-    	taskPage.clickDetailsLink();
+        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Expedite", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+        taskPage.clickExpandFancyTreeTopElementAndSubLink("Details");
         taskPage.clickInsertLinkInDetails();
         expect(taskPage.returnInsertLinkTitle()).toEqual(Objects.taskspage.data.insertLinkTitle);
         taskPage.insertDetailsTextAreaLink(Objects.taskspage.data.insertLinkText, Objects.taskspage.data.insertLinkUrl);
@@ -361,7 +361,6 @@ describe('Create new task ', function() {
 
     });
 
-
     it('should create new task and edit due date', function() {
 
         taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), Objects.taskpage.data.DueDateInput, "Expedite", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
@@ -369,8 +368,6 @@ describe('Create new task ', function() {
         expect(taskPage.returnInsertedDueDate()).toEqual(today);
 
     });
-
-
 
     it('should create new task,add picture and verify in details', function() {
 

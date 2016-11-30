@@ -33,7 +33,11 @@ angular.module('cases').controller('CasesListController', ['$scope', '$state', '
                     ObjectService.gotoUrl(ObjectService.ObjectTypes.CASE_FILE, data.objectId);
                 }
                 else {
-                    MessageService.info(data.objectType + " with ID " + data.objectId + " was created.");
+                    var objectTypeString = $translate.instant('common.objectTypes.' + data.objectType);
+                    if (!objectTypeString) {
+                        objectTypeString = data.objectType;
+                    }
+                    MessageService.info(objectTypeString + " with ID " + data.objectId + " was created.");
                 }
             }
         });
