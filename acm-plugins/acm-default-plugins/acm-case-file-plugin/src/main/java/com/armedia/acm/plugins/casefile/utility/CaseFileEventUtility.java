@@ -76,6 +76,20 @@ public class CaseFileEventUtility implements ApplicationEventPublisherAware
         applicationEventPublisher.publishEvent(event);
     }
 
+    public void raiseParticipantsModifiedInCaseFile(AcmParticipant participant, CaseFile source, String ipAddress, String eventStatus, String description)
+    {
+        CaseFileParticipantsModifiedEvent event = new CaseFileParticipantsModifiedEvent(participant);
+        event.setEventStatus(eventStatus);
+        event.setSucceeded(true);
+        event.setIpAddress(ipAddress);
+        event.setParentObjectId(source.getId());
+        event.setParentObjectType(source.getObjectType());
+        event.setParentObjectName(source.getCaseNumber());
+        event.setEventDescription(description);
+        applicationEventPublisher.publishEvent(event);
+    }
+
+
     public void raiseCaseFileCreated(CaseFile source, Authentication authentication)
     {
 

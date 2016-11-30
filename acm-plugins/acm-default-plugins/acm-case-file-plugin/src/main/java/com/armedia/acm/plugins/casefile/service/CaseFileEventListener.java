@@ -80,6 +80,16 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                                 "Case File Title changed from " + title + " to " + updatedTitle);
                     }
 
+
+                    String owningGroup = ParticipantUtils.getOwningGroupIdFromParticipants(existing.getParticipants());
+                    String updatedOwningGroup = ParticipantUtils.getOwningGroupIdFromParticipants(updatedCaseFile.getParticipants());
+                    if (!Objects.equals(owningGroup, updatedOwningGroup))
+                    {
+                        AcmParticipant updatedParticipant = updatedCaseFile.getParticipants().stream().filter(p -> "owning group".equals(p.getParticipantType())).findFirst().orElse(null);
+                        getCaseFileEventUtility().raiseParticipantsModifiedInCaseFile(updatedParticipant, updatedCaseFile, event.getIpAddress(), "changed",
+                                "Owning Group Changed from " + owningGroup + " to " + updatedOwningGroup);
+                    }
+
                     checkParticipants(existing, updatedCaseFile, event.getIpAddress());
 
                     if (isStatusChanged(existing, updatedCaseFile))

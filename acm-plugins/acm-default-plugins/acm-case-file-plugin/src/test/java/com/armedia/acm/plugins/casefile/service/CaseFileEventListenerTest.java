@@ -137,7 +137,7 @@ public class CaseFileEventListenerTest extends EasyMockSupport
         expect(mockAcmObjectHistoryService.getAcmObjectHistory(OBJECT_ID, CaseFileConstants.OBJECT_TYPE)).andReturn(previousHistory);
         expect(mockAcmAssignmentDao.save(capture(captureAssignment))).andReturn(assignment);
 
-        mockAcmObjectHistoryEventPublisher.publishAssigneeChangeEvent(capture(captureAssignment), capture(captureUserId),
+        mockAcmObjectHistoryEventPublisher.publishAssigneeChangeEvent(eq(assignment), capture(captureUserId),
                 capture(captureIpAddress));
         expectLastCall().anyTimes();
 
