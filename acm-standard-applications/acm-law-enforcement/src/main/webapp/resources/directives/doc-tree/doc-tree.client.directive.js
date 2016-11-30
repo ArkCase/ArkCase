@@ -84,16 +84,12 @@
  </example>
  */
 angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', '$filter', '$log', '$injector'
-    , 'Acm.StoreService', 'UtilService', 'Util.DateService', 'ConfigService', 'LookupService'
-    , 'EcmService', 'ObjectService'
+    , 'Acm.StoreService', 'UtilService', 'Util.DateService', 'ConfigService', 'Profile.UserInfoService'
+    , 'EcmService'
     , function ($q, $translate, $modal, $filter, $log, $injector
-        , Store, Util, UtilDateService, ConfigService, LookupService
-        , Ecm, ObjectService) {
-
-        LookupService.getUserFullNames().then(function (userFullNames) {
-            DocTree.userFullNames = userFullNames;
-        });
-
+        , Store, Util, UtilDateService, ConfigService, UserInfoService
+        , Ecm
+    ) {
         var cacheTree = new Store.CacheFifo();
         var cacheFolderList = new Store.CacheFifo();
 
@@ -251,7 +247,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         , close: function (event, data) {
                             // Editor was removed
                             if (data.save) {
-                            	var fileName = data.node.title;
+                                var fileName = data.node.title;
                                 DocTree.markNodePending(data.node, fileName);
                             }
                             DocTree.editSetting.isEditing = false;
@@ -665,11 +661,11 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 if (Validator.validateFancyTreeNode(node)) {
                     $(node.span).addClass("pending");
                     if (!node.folder) {
-                    	if(fileName){
-                    		node.title = $translate.instant("common.directive.docTree.waitUploading") + fileName;
-                    	}else {
-                    		node.title = $translate.instant("common.directive.docTree.waitUploading") + node.data.name;
-                    	}
+                        if(fileName){
+                            node.title = $translate.instant("common.directive.docTree.waitUploading") + fileName;
+                        }else {
+                            node.title = $translate.instant("common.directive.docTree.waitUploading") + node.data.name;
+                        }
                         node.renderTitle();
                     }
                     node.setStatus("loading");
@@ -1087,10 +1083,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         , {
                             name: "author",
                             renderer: function (element, node, columnDef, isReadOnly) {
-                                if (DocTree.userFullNames) {
-                                    var versionUser = Util.goodValue(node.data.creator);
-                                    var found = _.find(DocTree.userFullNames, {id: versionUser});
-                                    $(element).text(Util.goodMapValue(found, "name"));
+                                var versionUser = Util.goodValue(node.data.creator);
+                                if (versionUser) {
+                                    //UserInfoService.getUserInfoByIdQuietly(versionUser).then(function (userInfo) {
+                                    UserInfoService.getUserInfoById(versionUser).then(function (userInfo) {
+                                        $(element).text(Util.goodMapValue(userInfo, "fullName"));
+                                    })
                                 }
                             }
                         }
@@ -2907,9 +2905,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 }
                             }).then(
                                 function (renamedInfo) {
-                                	node.title = renamedInfo.fileName;
-                                	node.tooltip = node.title;
-                                	DocTree.markNodeOk(node);
+                                    node.title = renamedInfo.fileName;
+                                    node.tooltip = node.title;
+                                    DocTree.markNodeOk(node);
                                     dfd.resolve(renamedInfo);
                                 }
                                 , function (errorData) {
