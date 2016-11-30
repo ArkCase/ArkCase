@@ -1,6 +1,7 @@
 var EC = protractor.ExpectedConditions;
 var Objects=require('../json/Objects.json');
 var util = require('../util/utils.js');
+var logger = require('../log');
 var newBtn = element(by.xpath(Objects.basepage.locators.newButton));
 var root = element(by.xpath(Objects.basepage.locators.root));
 var newCorrespondence = element(by.xpath(Objects.basepage.locators.newCorrespondence));
@@ -31,7 +32,7 @@ var taskCreated = element.all(by.repeater(Objects.casepage.locators.taskTableRow
 var taskPriority = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(3);
 var taskDueDate = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(4);
 var taskStatus = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(5);
-var newDocument = element.all(by.xpath(Objects.basepage.locators.newDocument));
+var newDocument = element(by.xpath(Objects.basepage.locators.newDocument));
 var detailsTextArea = element(by.xpath(Objects.taskspage.locators.detailsTextArea));
 var detailsSaveBtn = element(by.xpath(Objects.taskspage.locators.detailsSaveBtn));
 var refreshBtn = element(by.xpath(Objects.taskspage.locators.refreshBtn));
@@ -43,7 +44,17 @@ var insertLinkBtn = element(by.buttonText(Objects.taskspage.locators.insertLinkB
 var detailsPicture = element(by.xpath(Objects.basepage.locators.detailsPicture));
 var browseButton = element(by.name(Objects.basepage.locators.browseButton));
 var detailsUploadedImage = element(by.xpath(Objects.basepage.locators.detailsUploadedImage));
-
+var fullnameLink = element(by.css(Objects.basepage.locators.fullnameLink));
+var logoutLink = element(by.linkText(Objects.basepage.locators.logoutLink));
+var checkOut = element(by.xpath(Objects.basepage.locators.checkout));
+var checkIn = element(by.xpath(Objects.basepage.locators.checkin));
+var cancelEditing = element(by.xpath(Objects.basepage.locators.cancelEditing));
+var logoutSucesfullMessage = element(by.xpath(Objects.basepage.locators.logoutSucesfullMessage));
+var checkoutDisabled = element(by.xpath(Objects.basepage.locators.checkoutDisabled));
+var checkinDisabled = element(by.xpath(Objects.basepage.locators.checkinDisabled));
+var cancelEditingDisabled = element(by.xpath(Objects.basepage.locators.cancelEditingDisabled));
+var lockIcon = element(by.xpath(Objects.basepage.locators.lockIcon));
+var tasksLink = element(by.xpath(Objects.basepage.locators.tasksLink));
 
 var BasePage = function(){
 
@@ -184,16 +195,15 @@ var BasePage = function(){
 				   expect(this.returnDocStatusGrid()).toEqual(status);
 			   });
 		   })
-
 	   };
-	   this.switchToIframes = function() {
-		   browser.ignoreSynchronization = true;
-		   browser.wait(EC.visibilityOf(element(by.className("new-iframe ng-scope"))), 30000);
-		   browser.switchTo().frame(browser.driver.findElement(by.className("new-iframe ng-scope"))).then(function() {
-			   browser.switchTo().frame(browser.driver.findElement(By.className("frevvo-form")));
+	this.switchToIframes = function() {
+		browser.ignoreSynchronization = true;
+		browser.wait(EC.visibilityOf(element(by.className("new-iframe ng-scope"))), 30000);
+		browser.switchTo().frame(browser.driver.findElement(by.className("new-iframe ng-scope"))).then(function() {
+			browser.switchTo().frame(browser.driver.findElement(By.className("frevvo-form")));
 		});
 		return this;
-	   };
+	};
 	this.switchToDefaultContent = function() {
 
 		browser.driver.switchTo().defaultContent();
@@ -308,7 +318,6 @@ var BasePage = function(){
 	};
 
 	this.clickAddTaskButton = function() {
-
 		browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.addNewTaskBtn))), 30000).then(function() {
 			addNewTaskBtn.click().then(function() {
 				browser.wait(EC.visibilityOf(element(by.id(Objects.taskpage.locators.subject))), 30000);
@@ -359,7 +368,13 @@ var BasePage = function(){
 	};
 
 	this.clickNewDocument = function() {
-		newDocument.click();
+		browser.wait(EC.presenceOf(element(by.xpath(Objects.basepage.locators.newDocument))), 30000).then(function () {
+			browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.newDocument))), 30000).then(function () {
+				browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.basepage.locators.newDocument))), 30000).then(function () {
+					newDocument.click();
+				});
+			});
+		});
 		return this;
 	};
 
@@ -475,8 +490,63 @@ var BasePage = function(){
 		el.click();
 		return this;
 	}
+	this.clickFullNameLink = function () {
+		browser.wait(EC.visibilityOf(element(by.css('.fullname'))), 30000).then(function () {
+			browser.wait(EC.elementToBeClickable(element(by.css('.fullname'))), 30000).then(function () {
+				fullnameLink.click();
+			});
+		});
+		return this;
+	};
+	this.clickLogout = function () {
+		browser.wait(EC.visibilityOf(element(by.linkText("Logout"))), 30000).then(function () {
+			logoutLink.click().then(function () {
+				browser.ignoresynchronization = true;
+				expect(logoutSucesfullMessage.getText()).toEqual('You have been logged out successfully.');
+			})
+		});
+		return this;
+	};
+	this.Logout = function (){
+		this.clickFullNameLink();
+		this.clickLogout();
+		return this;
+	};
+	this.clickCheckin = function () {
+		checkIn.click();
+		return this;
+	};
+	this.clickCheckOut = function () {
+		checkOut.click();
+		return this;
+	};
+	this.clickCancelEditing = function () {
+		cancelEditing.click();
+		return this;
+	};
+	this.rightClickDocument = function () {
+		browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.docTitle))), 30000).then(function () {
+			docTitle.click();
+			browser.actions().click(protractor.Button.RIGHT).perform();
+		});
+		return this;
 
-
+	};
+	this.validateChekoutEnabled= function () {
+        return !checkoutDisabled.isPresent();
+	};
+	this.validateCheckinEnabled = function () {
+		return !checkinDisabled.isPresent();
+	};
+	this.validateCancelEditingEnabled = function () {
+		return !cancelEditingDisabled.isPresent();
+	};
+	this.lockIconIsPresent = function () {
+		return lockIcon.isPresent();
+	};
+	this.clickTasksLink = function () {
+        tasksLink.click();
+        return this;
+    }
 };
-	
 module.exports = new BasePage();
