@@ -206,5 +206,14 @@
   },
   "common.comp.acmLogin": {
     "confirmLogout": "For your protection, application is about to logout. Click Cancel to stay logged in."
+  },
+  "frevvo.dialogUserPicker": {
+    "header": "Choose User",
+    "table.columns": {
+      "name": "Name",
+      "type": "Type",
+      "title": "Title",
+      "id": "Username"
+    }
   }
 }

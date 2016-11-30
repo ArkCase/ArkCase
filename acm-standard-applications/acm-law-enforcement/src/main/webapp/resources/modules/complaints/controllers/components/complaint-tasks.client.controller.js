@@ -14,14 +14,18 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
             , componentId: "tasks"
             , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
             , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
+            , onConfigRetrieved: function (componentConfig) {
+                return onConfigRetrieved(componentConfig);
+            }
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
+            }
         });
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
-        var promiseMyTasks = ObjectTaskService.queryCurrentUserTasks();
 
-        $q.all([componentHelper.promiseConfig, promiseMyTasks]).then(function (data) {
-            var config = data[0];
+        var onConfigRetrieved = function (config) {
 
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
@@ -30,11 +34,6 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
             gridHelper.setUserNameFilter(promiseUsers);
 
             for (var i = 0; i < $scope.gridOptions.columnDefs.length; i++) {
-                //if ("taskId" == $scope.gridOptions.columnDefs[i].name) {
-                //    $scope.gridOptions.columnDefs[i].cellTemplate = "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.object_id_s}}</a>";
-                //    //$scope.gridOptions.columnDefs[i].cellTemplate = "<a ui-sref='tasks.id({type: \"TASK\", id: row.entity.object_id_s})'>{{row.entity.object_id_s}}</a>";
-                //
-                //} else
                 if (HelperUiGridService.Lookups.TASK_OUTCOMES == $scope.config.columnDefs[i].lookup) {
                     $scope.gridOptions.columnDefs[i].cellTemplate = '<span ng-hide="row.entity.acm$_taskActionDone"><select'
                         + ' ng-options="option.value for option in row.entity.acm$_taskOutcomes track by option.id"'
@@ -44,18 +43,16 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
                 }
             }
 
-            $scope.retrieveGridData();
-        });
+            componentHelper.doneConfig(config);
+            return false;
+        };
 
+        var onObjectInfoRetrieved = function (objectInfo) {
+            $scope.objectInfo = objectInfo;
+            retrieveGridData();
+        };
 
-        //var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-        //if (Util.goodPositive(currentObjectId, false)) {
-        //    ComplaintInfoService.getComplaintInfo(currentObjectId).then(function (complaintInfo) {
-        //        $scope.objectInfo = complaintInfo;
-        //        return complaintInfo;
-        //    });
-        //}
-        $scope.retrieveGridData = function () {
+        var retrieveGridData = function () {
             if (Util.goodPositive(componentHelper.currentObjectId, false)) {
                 ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.COMPLAINT
                     , componentHelper.currentObjectId
@@ -63,68 +60,45 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
                     , Util.goodValue($scope.pageSize, 10)
                     , Util.goodValue($scope.sort.by)
                     , Util.goodValue($scope.sort.dir)
-                ).then(
-                    function (data) {
-                        $q.all([promiseMyTasks]).then(function () {
-                            var tasks = data.response.docs;
-                            $scope.gridOptions = $scope.gridOptions || {};
-                            $scope.gridOptions.data = tasks;
-                            $scope.gridOptions.totalItems = data.response.numFound;
+                ).then(function (data) {
+                    var tasks = data.response.docs;
+                    $scope.gridOptions = $scope.gridOptions || {};
+                    $scope.gridOptions.data = tasks;
+                    $scope.gridOptions.totalItems = data.response.numFound;
 
-                            for (var i = 0; i < tasks.length; i++) {
-                                var task = tasks[i];
-                                task.acm$_taskOutcomes = [{
-                                    id: "noop",
-                                    value: $translate.instant("common.select.option.none")
-                                }];
-                                task.acm$_taskOutcome = {
-                                    id: "noop",
-                                    value: $translate.instant("common.select.option.none")
-                                };
-                                task.acm$_taskActionDone = true;
+                    for (var i = 0; i < tasks.length; i++) {
+                        var task = tasks[i];
+                        task.acm$_taskOutcomes = [{
+                            id: "noop",
+                            value: $translate.instant("common.select.option.none")
+                        }];
+                        task.acm$_taskOutcome = {
+                                id: "noop",
+                                value: $translate.instant("common.select.option.none")
+                        };
+                        task.acm$_taskActionDone = true;
 
-                                if (task.status_s === "ACTIVE" && task.adhocTask_b) {
-                                    task.acm$_taskOutcomes.push({id: "complete", value: "Complete"});
-                                    task.acm$_taskOutcomes.push({id: "delete", value: "Delete"});
-                                    task.acm$_taskActionDone = false;
+                        if (task.status_s === "ACTIVE" && task.adhocTask_b) {
+                            task.acm$_taskOutcomes.push({id: "complete", value: "Complete"});
+                            task.acm$_taskOutcomes.push({id: "delete", value: "Delete"});
+                            task.acm$_taskActionDone = false;
+                        }
+                        else if (task.status_s === "ACTIVE" && !task.adhocTask_b && !Util.isArrayEmpty(task.outcome_value_ss)) {
+                            var availableOutcomes = Util.goodArray(task.outcome_value_ss);
+                            if (availableOutcomes !== undefined && availableOutcomes.length > 0) {
+                                for (var j = 0; j < availableOutcomes.length; j++) {
+                                    var outcome = {
+                                            id: Util.goodValue(availableOutcomes[j]),
+                                            value: Util.goodValue(availableOutcomes[j])
+                                    };
+                                    task.acm$_taskOutcomes.push(outcome);
                                 }
-                                else if (task.status_s === "ACTIVE" && !task.adhocTask_b && !Util.isArrayEmpty(task.outcome_value_ss)) {
-                                    var availableOutcomes = Util.goodArray(task.outcome_value_ss);
-                                    if (availableOutcomes !== undefined && availableOutcomes.length > 0) {
-                                        for (var j = 0; j < availableOutcomes.length; j++) {
-                                            var outcome = {
-                                                id: Util.goodValue(availableOutcomes[j]),
-                                                value: Util.goodValue(availableOutcomes[j])
-                                            };
-                                            task.acm$_taskOutcomes.push(outcome);
-                                        }
-                                    }
-                                    task.acm$_taskActionDone = (1 >= availableOutcomes.length); //1 for '(Select One)'
-                                }
-
-                                // var found = _.find($scope.myTasks, {taskId: tasks[i].id});
-                                // if (found) {
-                                //     if (!found.completed && found.adhocTask) {
-                                //
-                                //
-                                //     } else if (!found.completed && !found.adhocTask && !Util.isArrayEmpty(found.availableOutcomes)) {
-                                //         var availableOutcomes = Util.goodArray(found.availableOutcomes);
-                                //         for (var j = 0; j < availableOutcomes.length; j++) {
-                                //             var outcome = {
-                                //                 id: Util.goodValue(availableOutcomes[j].description),
-                                //                 value: Util.goodValue(availableOutcomes[j].description)
-                                //             };
-                                //             task.acm$_taskOutcomes.push(outcome);
-                                //         }
-                                //         task.acm$_taskActionDone = (1 >= availableOutcomes.length); //1 for '(Select One)'
-                                //     }
-                                // }
                             }
-                        }); //end $q
-
-                        return data;
+                            task.acm$_taskActionDone = (1 >= availableOutcomes.length); //1 for '(Select One)'
+                        }
                     }
-                ); //end then
+                    return data;
+                }); //end then
             }
         };
 

@@ -19,11 +19,15 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
+import com.armedia.acm.services.timesheet.model.AcmTime;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 import com.armedia.acm.services.timesheet.model.TimesheetConstants;
 import com.armedia.acm.services.timesheet.service.TimesheetEventPublisher;
 import com.armedia.acm.services.timesheet.service.TimesheetService;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.google.common.base.Objects;
+
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +40,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author riste.tutureski
@@ -89,9 +94,21 @@ public class TimeService extends FrevvoFormChargeAbstractService
             {
                 form = getTimeFactory().asFrevvoTimeForm(timesheet);
                 form = (TimeForm) populateEditInformation(form, timesheet.getContainer(), FrevvoFormName.TIMESHEET.toLowerCase());
+                if (form.getItems() != null)
+                {
+                    String objectIdString = getRequest().getParameter("_id");
+                    String objectType = getRequest().getParameter("_type");
+                    String objectNumber = getRequest().getParameter("_number");
+     
+                    TimeItem found = findTimeItem(form.getItems());
+                    if (found == null && StringUtils.isNotEmpty(objectIdString) && StringUtils.isNotEmpty(objectType) && StringUtils.isNotEmpty(objectNumber))
+                    {
+                        form.getItems().add(getTimeItem());
+                    }
+                }
             } else
-            {
-                form.setItems(Arrays.asList(new TimeItem()));
+            {                
+                form.setItems(Arrays.asList(getTimeItem()));
             }
 
         }
@@ -108,6 +125,67 @@ public class TimeService extends FrevvoFormChargeAbstractService
         result = convertFromObjectToXML(form);
 
         return result;
+    }
+    
+    private TimeItem getTimeItem()
+    {
+        TimeItem timeItem = new TimeItem();
+        
+        String objectIdString = getRequest().getParameter("_id");
+        String objectType = getRequest().getParameter("_type");
+        String objectNumber = getRequest().getParameter("_number");
+        
+        if (StringUtils.isNotEmpty(objectIdString) && StringUtils.isNotEmpty(objectType) && StringUtils.isNotEmpty(objectNumber))
+        {
+            Long objectId = null;
+            
+            try
+            {
+                objectId = Long.parseLong(objectIdString);
+            }
+            catch(Exception e)
+            {
+                LOG.warn("Cannot convert string [{}] to long type. null value will be used instead", objectIdString);
+                
+            }
+            
+            timeItem.setObjectId(objectId);
+            timeItem.setType(objectType);
+            timeItem.setCode(objectNumber);
+        }
+        
+        return timeItem;
+    }
+    
+    private TimeItem findTimeItem(List<TimeItem> timeItems)
+    {
+        TimeItem timeItem = null;
+        
+        String objectIdString = getRequest().getParameter("_id");
+        String objectType = getRequest().getParameter("_type");
+        
+        if (timeItems != null && StringUtils.isNotEmpty(objectIdString) && StringUtils.isNotEmpty(objectType))
+        {            
+            try
+            {
+                final Long objectId = Long.parseLong(objectIdString);
+                Optional<TimeItem> found = timeItems.stream().filter(item -> Objects.equal(item.getObjectId(), objectId) && 
+                                                                             Objects.equal(item.getType(), objectType)
+                                                                    ).findFirst();
+            
+                if (found != null && found.isPresent())
+                {
+                    timeItem = found.get();
+                }
+            }
+            catch(Exception e)
+            {
+                LOG.warn("Cannot convert string [{}] to long type. null item will be returned", objectIdString);
+                
+            }
+        }
+        
+        return timeItem;
     }
 
     @Override
