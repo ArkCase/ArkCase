@@ -41,12 +41,20 @@ angular.module('frevvo').config(['$stateProvider',
                 url: '/new-costsheet',
                 params: {name: 'new-costsheet'}
             })
+            .state('frevvo.new-costsheet-from-object', {
+            	url: '/new-costsheet/:type/:objectId',
+                params: {name: 'new-costsheet'}
+            })
             .state('frevvo.edit-costsheet', {
                 url: '/edit-costsheet/:id',
                 params: {name: 'edit-costsheet'}
             })
             .state('frevvo.new-timesheet', {
                 url: '/new-timesheet',
+                params: {name: 'new-timesheet'}
+            })
+             .state('frevvo.new-timesheet-from-object', {
+            	url: '/new-timesheet/:_type/:_id/:_number',
                 params: {name: 'new-timesheet'}
             })
             .state('frevvo.edit-timesheet', {
