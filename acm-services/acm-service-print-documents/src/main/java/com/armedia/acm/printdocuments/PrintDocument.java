@@ -1,6 +1,6 @@
 package com.armedia.acm.printdocuments;
 
-import com.armedia.acm.plugins.casefile.model.CaseFile;
+import java.io.InputStream;
 
 /**
  * Abstraction containing binary data of PDF versions of documents associated with an instance or instances of a
@@ -14,7 +14,7 @@ import com.armedia.acm.plugins.casefile.model.CaseFile;
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Nov 16, 2016
  *
  */
-public interface PrintDocument<CF extends CaseFile>
+public interface PrintDocument<CF>
 {
 
     /**
@@ -23,8 +23,20 @@ public interface PrintDocument<CF extends CaseFile>
     String getFileName();
 
     /**
-     * @return binary data from the generated PDF document.
+     * @return input stream containing the binary data from the generated PDF document.
      */
-    byte[] getContent();
+    InputStream getContent();
+
+    /**
+     * Return the number of bytes of the underlying binary data to be served.
+     * 
+     * @return
+     */
+    long getContentLength();
+
+    /**
+     * Cleans up any resources associated with the content.
+     */
+    void releaseContent();
 
 }
