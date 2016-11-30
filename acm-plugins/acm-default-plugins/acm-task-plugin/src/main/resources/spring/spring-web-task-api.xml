@@ -11,6 +11,9 @@
         <property ref="acmTaskDao" name="taskDao"/>
         <property ref="taskEventPublisher" name="taskEventPublisher"/>
     </bean>
+    <bean id="retrieveTasksAPIController" class="com.armedia.acm.plugins.task.web.api.RetrieveTasksAPIController">
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
+    </bean>
     <bean id="completeTaskAPIController" class="com.armedia.acm.plugins.task.web.api.CompleteTaskAPIController">
         <property name="taskDao" ref="acmTaskDao"/>
         <property name="taskEventPublisher" ref="taskEventPublisher"/>
