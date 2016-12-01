@@ -213,5 +213,14 @@
     "TASK": "Task",
     "TIMESHEET": "Timesheet",
     "COSTSHEET": "Costsheet"
+  },
+  "frevvo.dialogUserPicker": {
+    "header": "Choose User",
+    "table.columns": {
+      "name": "Name",
+      "type": "Type",
+      "title": "Title",
+      "id": "Username"
+    }
   }
 }
