@@ -1,7 +1,9 @@
 var logger = require('../log');
 var utils = require('../util/utils.js');
 var taskPage = require('../Pages/task_page.js');
+var userPage = require('../Pages/user_profile_page.js');
 var authentication = require('../authentication.js');
+var loginPage = require('../Pages/login_page.js');
 var Objects = require('../json/Objects.json');
 var flag = false;
 
@@ -19,16 +21,15 @@ function testAsync(done) {
 describe('Create new task ', function() {
 
     beforeEach(function(done) {
-    	
-        authentication.loginAsSupervisor();       
+
+        loginPage.Login(Objects.loginpage.data.supervisoruser.username, Objects.loginpage.data.supervisoruser.password);
         testAsync(done);        
 
     });
 
     afterEach(function() {
 
-        authentication.logout();
-        browser.ignoresynchronization = true;
+        loginPage.Logout();
     });
 
 
@@ -255,7 +256,7 @@ describe('Create new task ', function() {
     it('should create new task add text task details verify if it saved', function() {
 
     	taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Expedite", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
-        taskPage.clickDetailsLink();
+        taskPage.clickExpandFancyTreeTopElementAndSubLink("Details");
         taskPage.insertDetailsTextAreaText(Objects.taskspage.data.detailsTextArea);
         taskPage.clickSaveDetailsButton();
         taskPage.clickRefreshButton();
@@ -285,8 +286,8 @@ describe('Create new task ', function() {
     });
     it('should create new task add link from task details', function() {
 
-    	taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Expedite", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
-    	taskPage.clickDetailsLink();
+        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Expedite", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+        taskPage.clickExpandFancyTreeTopElementAndSubLink("Details");
         taskPage.clickInsertLinkInDetails();
         expect(taskPage.returnInsertLinkTitle()).toEqual(Objects.taskspage.data.insertLinkTitle);
         taskPage.insertDetailsTextAreaLink(Objects.taskspage.data.insertLinkText, Objects.taskspage.data.insertLinkUrl);
@@ -305,10 +306,10 @@ describe('Create new task ', function() {
     });
     it('should create new task navigate to attachments section add png document', function() {
 
-    	taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
-    	taskPage.clickAttachmentsLink();
+        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+        taskPage.clickAttachmentsLink();
         expect(taskPage.returnAttachementsTableTitle()).toEqual(Objects.taskspage.data.attachmentsTableTitle, 'Attachments table title is wrong');
-    	taskPage.clickRootFolder();
+        taskPage.clickRootFolder();
         utils.mouseMoveToRoot();
         taskPage.clickNewDocument().clickOtherDocument();
         utils.uploadPng();
@@ -316,7 +317,7 @@ describe('Create new task ', function() {
     });
     it('should create new task navigate to attachments section add docx document', function() {
 
-    	taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "High", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave().clickAttachmentsLink().clickRootFolder();
+    	   taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "High", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave().clickAttachmentsLink().clickRootFolder();
         utils.mouseMoveToRoot();
         taskPage.clickNewDocument().clickOtherDocument();
         utils.uploadDocx();
@@ -361,7 +362,6 @@ describe('Create new task ', function() {
 
     });
 
-
     it('should create new task and edit due date', function() {
 
         taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), Objects.taskpage.data.DueDateInput, "Expedite", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
@@ -369,8 +369,6 @@ describe('Create new task ', function() {
         expect(taskPage.returnInsertedDueDate()).toEqual(today);
 
     });
-
-
 
     it('should create new task,add picture and verify in details', function() {
 
@@ -382,6 +380,51 @@ describe('Create new task ', function() {
         taskPage.clickSave();
         taskPage.clickDetailsLink();
         expect(taskPage.returnDetailsTextArea()).not.toBeTruthy();
+
+    });
+
+    it('should create new task, verify checkout, cancel editing ', function() {
+
+        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), Objects.taskpage.data.DueDateInput, "Expedite", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+        taskPage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Attachments");
+        taskPage.rightClickRootFolder();
+        taskPage.addDocument("Notice of Investigation");
+        taskPage.validateDocGridData(true, "Notice of Investigation", ".docx", "Notice of Investigation", utils.returnToday("/"), utils.returnToday("/"), userPage.returnUserNavigationProfile(), "1.0", "ACTIVE");
+        expect(taskPage.lockIconIsPresent()).not.toBeTruthy();
+        taskPage.rightClickDocument();
+        expect(taskPage.validateChekoutEnabled()).toBeTruthy();
+        expect(taskPage.validateCheckinEnabled()).not.toBeTruthy();
+        expect(taskPage.validateCancelEditingEnabled()).not.toBeTruthy();
+        taskPage.clickCheckOut();
+        expect(taskPage.lockIconIsPresent()).toBeTruthy();
+        taskPage.rightClickDocument();
+        expect(taskPage.validateChekoutEnabled()).not.toBeTruthy();
+        expect(taskPage.validateCheckinEnabled()).toBeTruthy();
+        expect(taskPage.validateCancelEditingEnabled()).toBeTruthy();
+        taskPage.clickCancelEditing();
+        expect(taskPage.lockIconIsPresent()).not.toBeTruthy();
+        taskPage.rightClickDocument();
+        expect(taskPage.validateChekoutEnabled()).toBeTruthy();
+        expect(taskPage.validateCheckinEnabled()).not.toBeTruthy();
+        expect(taskPage.validateCancelEditingEnabled()).not.toBeTruthy();
+
+    });
+
+    it('should create new task, verify checkout, checkin', function() {
+
+        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), Objects.taskpage.data.DueDateInput, "Expedite", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+        taskPage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Attachments");
+        taskPage.rightClickRootFolder();
+        taskPage.addDocument("Notice of Investigation");
+        taskPage.validateDocGridData(true, "Notice of Investigation", ".docx", "Notice of Investigation", utils.returnToday("/"), utils.returnToday("/"), userPage.returnUserNavigationProfile(), "1.0", "ACTIVE");
+        taskPage.rightClickDocument().clickCheckOut();
+        expect(taskPage.lockIconIsPresent()).toBeTruthy();
+        taskPage.clickCheckin();
+        expect(taskPage.lockIconIsPresent()).not.toBeTruthy();
+        taskPage.rightClickDocument();
+        expect(taskPage.validateChekoutEnabled()).toBeTruthy();
+        expect(taskPage.validateCheckinEnabled()).not.toBeTruthy();
+        expect(taskPage.validateCancelEditingEnabled()).not.toBeTruthy();
 
     });
 
