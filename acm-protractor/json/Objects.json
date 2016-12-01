@@ -427,6 +427,7 @@
             "splitBtn": ".//*[@class='pull-right']/..//div/button[4]",
             "refreshBtn": ".//*[@class='btn-group']/..//button[5]",
             "changeCaseStatusTitle": "facade",
+            "reinvestigateBtn":"[ui-sref='frevvo.reinvestigate(reinvestigateParams)']", 
             "changeStatusDropDown": "input _frevvo-disable-backspace",
             "statusClosed": ".//*[@class='input _frevvo-disable-backspace']/..//li[4]",
             "selectApprover": "approverName",
@@ -435,7 +436,7 @@
             "goBtn": ".//*[@class='input-group']/..//span/button",
             "addBtn": ".//*[@id='dlgObjectPicker']/div/div/div[3]/button[2]",
             "searchedUser": "//*[@id='divPoResults']/div/table/tbody/tr/td[3]",
-            "tasksLink": ".//*[@class='tabbed-footer']/..//ul/li[7]/a",
+            "tasksLink": ".//*[@class='fa fa-check-circle']",
             "tasksTable": ".//*[@class='panel panel-success panel-grid']",
             "taskTitle": ".//*[@class='ng-binding ng-scope']",
             "notesLink": ".//*[@class='fa fa-comments']",
@@ -500,6 +501,7 @@
             "deleteTagBtn": "[ng-click='grid.appScope.deleteRow(row.entity)']",
             "refreshCasesList": "[ng-click='onClickRefresh()']",
             "firstCaseInCasesList": ".//*[@class='tree']/..//ul/li[1]",
+            "secondCaseInCasesList": ".//*[@class='tree']/..//ul/li[2]",
             "referenceLink": ".//*[@class='fa fa-exchange']",
             "addReferenceBtn": "[ng-click='addReference()']",
             "searchForReferenceInput": "searchQuery",
@@ -520,7 +522,9 @@
             "historyTable": ".//*[@class='panel panel-success panel-grid']",
             "historyTableRow": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
             "timesheetTableRow": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
-            "costSheetLinkBtn": ".//*[@class='fa fa-money']"
+            "costSheetLinkBtn": ".//*[@class='fa fa-money']",
+            "caseTitleStatus": ".//*[@class='ng-binding']"
+
 
 
 

@@ -26,7 +26,6 @@ var splitBtn = element(by.xpath(Objects.casepage.locators.splitBtn));
 var changeCaseStatusTitle = element(by.className(Objects.casepage.locators.changeCaseStatusTitle));
 var changeStatusDropDown = element(by.className(Objects.casepage.locators.changeStatusDropDown));
 var statusClosed = element(by.xpath(Objects.casepage.locators.statusClosed));
-var refreshBtn = element(by.xpath(Objects.casepage.locators.refreshBtn));
 var taskTitle = element(by.xpath(Objects.casepage.locators.taskTitle));
 var priorityLink = element(by.xpath(Objects.casepage.locators.priority));
 var priorityDropDownEdit = element(by.xpath(Objects.casepage.locators.priorityDropDown));
@@ -54,6 +53,8 @@ var taskStatus = element.all(by.repeater(Objects.casepage.locators.taskTableRows
 var refreshCasesList = element(by.css(Objects.casepage.locators.refreshCasesList));
 var firstCaseInCasesList = element(by.xpath(Objects.casepage.locators.firstCaseInCasesList));
 var caseID = element(by.xpath(Objects.casepage.locators.caseID));
+var reinvestigateBtn = element(by.css(Objects.casepage.locators.reinvestigateBtn));
+var casesTitleStatus = element.all(by.xpath(Objects.casepage.locators.caseTitleStatus)).get(0);
 
 
 
@@ -170,7 +171,13 @@ var CasePage = function() {
 
         return casesTitle.getText();
     };
+    this.caseTitleStatus = function(titleStatus) {
 
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.caseTitleStatus))), 30000).then(function() {
+            browser.wait(EC.textToBePresentInElement((casesTitleStatus), titleStatus), 10000);
+
+        });
+    }
 
     this.returnCaseType = function() {
 
@@ -184,7 +191,6 @@ var CasePage = function() {
         browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.changeCaseStatusBtn))), 30000);
 
     };
-
 
 
     this.clickChangeCaseBtn = function() {
@@ -287,6 +293,12 @@ var CasePage = function() {
     }
     this.getCaseId = function() {
         return caseID.getText();
+    }
+
+    this.clickReinvesigateBtn = function() {
+        browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.reinvestigateBtn))), 30000, "Reinvestigate button is not displayed").then(function() {
+            reinvestigateBtn.click();
+        });
     }
 };
 

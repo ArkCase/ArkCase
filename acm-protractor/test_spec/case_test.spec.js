@@ -44,7 +44,7 @@ describe('case page tests', function() {
          loginPage.Logout();
 
     });
-    
+
         it('should create new case and verify case title', function() {
 
             casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
@@ -475,7 +475,7 @@ describe('case page tests', function() {
             expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateClosed, 'The task state should be CLOSED');
         });
 
-        it('should create new case and change case status to active, verify the automated task in tasks table and approve', function() {
+        it('should create new case and change case status to Inactive, verify the automated task in tasks table and approve', function() {
 
             casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
             casePage.clickNextBtn();
@@ -603,7 +603,7 @@ describe('case page tests', function() {
             casePage.validateDocGridData(true, "Notice of Investigation", ".docx", "Notice of Investigation", utils.returnToday("/"), utils.returnToday("/"), userPage.returnUserNavigationProfile(), "1.0", "ACTIVE");
 
         });
-  
+
         it('should create new case add timesheet and verify in cases timesheet table', function() {
 
             casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
@@ -627,29 +627,62 @@ describe('case page tests', function() {
                 expect(casePage.returnTimesheetHours()).toEqual(Objects.casepage.data.totalHours);
             });
         });
-  
-    it('should create new case add costsheet and verify in the cases costsheet table', function() {
 
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
+        it('should create new case add costsheet and verify in the cases costsheet table', function() {
+
+            casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
+            casePage.clickNextBtn();
+            casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
+            casePage.switchToDefaultContent();
+            element(by.xpath(Objects.casepage.locators.caseID)).getText().then(function(text) {
+                console.log(text);
+                casePage.clickNewButton();
+                costTrackingPage.navigateToExpensesPage();
+                casePage.switchToIframes();
+                costTrackingPage.submitExpenses("Case", text, Objects.costsheetPage.data.Taxi, Objects.costsheetPage.data.taxi, Objects.costsheetPage.data.Ammount);
+                costTrackingPage.clickSaveBtn();
+                casePage.clickModuleCasesFiles();
+                casePage.CostTable();
+                expect(casePage.returncostSheetFormName()).toContain("Costsheet");
+                expect(casePage.returncostSheetUser()).toEqual(Objects.casepage.data.assigneeSamuel);
+                expect(casePage.returncostSheetModifiedDate()).toEqual(utils.returnToday("/"));
+                expect(casePage.returncostSheetTotalCost()).toEqual(Objects.costsheetPage.data.verifyAmmount);
+                expect(casePage.returncostSheetStatus()).toEqual(Objects.casepage.data.statusDraft);
+            });
+        });
+
+    it('should create new case closed it, reinvestigate and verify in the reference table', function() {
+
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
         casePage.clickNextBtn();
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
         casePage.switchToDefaultContent();
+        casePage.waitForChangeCaseButton();
         element(by.xpath(Objects.casepage.locators.caseID)).getText().then(function(text) {
             console.log(text);
-            casePage.clickNewButton();
-            costTrackingPage.navigateToExpensesPage();
-            casePage.switchToIframes();
-            costTrackingPage.submitExpenses("Case", text, Objects.costsheetPage.data.Taxi, Objects.costsheetPage.data.taxi, Objects.costsheetPage.data.Ammount);
-            costTrackingPage.clickSaveBtn();
-            casePage.clickModuleCasesFiles();
-            casePage.CostTable();
-            expect(casePage.returncostSheetFormName()).toContain("Costsheet");
-            expect(casePage.returncostSheetUser()).toEqual(Objects.casepage.data.assigneeSamuel);
-            expect(casePage.returncostSheetModifiedDate()).toEqual(utils.returnToday("/"));
-            expect(casePage.returncostSheetTotalCost()).toEqual(Objects.costsheetPage.data.verifyAmmount);
-            expect(casePage.returncostSheetStatus()).toEqual(Objects.casepage.data.statusDraft);
+            casePage.clickChangeCaseBtn();
+            casePage.switchToIframes().selectCaseStatus("Closed");
+            casePage.selectApprover(Objects.casepage.data.approverSamuel).chnageCaseSubmit();
+            casePage.clickTasksLinkBtn().waitForTasksTable();
+            expect(casePage.returnAutomatedTask()).toContain(Objects.casepage.data.automatedTaskTitle);
+            casePage.clickTaskTitle();
+            taskPage.clickApproveBtn();
+            taskPage.clickCaseTitleInTasks();
+            casePage.clickRefreshBtn();
+            casePage.caseTitleStatus("CLOSED");
+            casePage.clickReinvesigateBtn();
+            casePage.switchToIframes().submitGeneralInformation("New", "Agricultural");
+            casePage.clickSubmitBtn();
+            casePage.waitForCaseTitle();
+            casePage.clickSecondElementInList();
+            expect(casePage.returnCaseType()).toEqual("Agricultural")
+            casePage.clikReferenceLink();
+            expect(casePage.returnReferenceNumber()).toEqual(text);
+            expect(casePage.returnReferenceTitle()).toEqual("New Case");
+            expect(casePage.returnReferenceModified()).toEqual(utils.returnToday("/"));
+            expect(casePage.returnReferenceType()).toEqual(Objects.casepage.data.referenceType);
+            expect(casePage.returnReferenceStatus()).toEqual("CLOSED");
         });
-
     });
 
 });
