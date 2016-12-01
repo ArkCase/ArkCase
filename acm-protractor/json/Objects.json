@@ -35,11 +35,21 @@
             "downloadDoc": ".//li[@data-command='download']",
             "fadeElementDeleteNote": "//*[@modal-animation-class='fade']",
             "fadeElementEditNote": "//*[@ng-click='close($event)'",
-            "newDocument": ".//li[@data-command='subMenuFileTypes']",
             "detailsPicture": ".//button[@data-original-title='Picture']",
             "browseButton": "files",
-            "detailsUploadedImage": ".//*[@class='note-editable panel-body']/p/img"
-
+            "detailsUploadedImage": ".//*[@class='note-editable panel-body']/p/img",
+            "fullnameLink": ".fullname",
+            "logoutLink": "Logout",
+            "newDocument": ".//li[@data-command='subMenuFileTypes']",
+            "checkout": ".//li[@data-command='checkout']",
+            "checkin" : ".//li[@data-command='checkin']",
+            "cancelEditing": ".//li[@data-command='cancelEditing']",
+            "logoutSucesfullMessage": ".//*[@class='alert alert-success']",
+            "checkoutDisabled": ".//li[@data-command='checkout'][@aria-disabled='true']",
+            "checkinDisabled": ".//li[@data-command='checkin'][@aria-disabled='true']",
+            "cancelEditingDisabled": ".//li[@data-command='cancelEditing'][@aria-disabled='true']",
+            "lockIcon": "//table/tbody/tr[2]/td[2]/span",
+            "tasksLink": "Tasks"
         },
         "data":{
 
@@ -531,8 +541,7 @@
             "aliasMarried": "Married",
             "aliasValue": "Alias",
             "editAlias": "editAlias",
-            "statusClosed":"Closed",
-            "automatedTaskTitle": "Review Request to Change Case Status"
+            "statusClosed":"Closed"
         }
 
 

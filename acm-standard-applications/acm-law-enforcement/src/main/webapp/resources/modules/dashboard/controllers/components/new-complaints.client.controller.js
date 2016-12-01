@@ -14,13 +14,13 @@ angular.module('dashboard.new-complaints').controller('Dashboard.NewComplaintsCo
         function applyConfig(e, componentId, config) {
             if (componentId == 'newComplaints') {
 
-                DashboardService.queryNewComplaints(function (complaints) {
+                DashboardService.queryNewComplaints(function (solrData) {
 
                     var data = {};
                     var chartData = [];
                     var labels = [];
-                    angular.forEach(complaints, function (complaint) {
-                        var day = complaint.created;
+                    angular.forEach(solrData.response.docs, function (complaintDoc) {
+                        var day = complaintDoc.create_date_tdt;
                         day = day.substring(0, day.indexOf("T"));
                         data[day] ? data[day]++ : data[day] = 1;
                     });
@@ -32,8 +32,8 @@ angular.module('dashboard.new-complaints').controller('Dashboard.NewComplaintsCo
 
                     vm.showChart = labels.length > 0 && chartData.length > 0 ? true : false;
 
-                    vm.labels = labels.reverse();
-                    vm.data = [chartData.reverse()];
+                    vm.labels = labels;
+                    vm.data = [chartData];
                     vm.series = [config.title];
                 })
             }
