@@ -162,8 +162,9 @@
          NOTE: This field is not indexed by default, since it is also copied to "text"
          using copyField below. This is to save space. Use this field for returning and
          highlighting document content. Use the "text" field to search the content. -->
-    <field name="content" type="text_general" indexed="false" stored="true" multiValued="true"/>
+    <!--   <field name="content" type="text_general" indexed="false" stored="true" multiValued="true"/> -->
 
+    <field name="content" type="text_general" indexed="true" stored="false" multiValued="true"/>
 
     <!-- catchall field, containing all other searchable text fields (implemented
          via copyField further on in this schema  -->
@@ -252,6 +253,15 @@
     <dynamicField name="*_parseable" type="text_parseable" indexed="true" stored="true"/>
     <dynamicField name="*_no_html_tags_parseable" type="text_no_html_tags_parseable" indexed="true" stored="true"/>
 
+    <!--Used for mapping facets in searchPlugin.properties. Field is not stored for performance factors. -->
+    <dynamicField name="*_facet" type="string" indexed="true" stored="false"/>
+
+    <!--acm copy fields -->
+    <!--Used for mapping facets in searchPlugin.properties. -->
+    <copyField source="*_lcs" dest="*_facet"/>
+    <copyField source="*_s" dest="*_facet"/>
+
+
     <!-- uncomment the following to ignore any fields that don't already match an existing
     field name or dynamic field, rather than reporting them as an error.
     alternately, change the type="ignored" to some other type e.g. "text" if you want
@@ -314,11 +324,15 @@
     <copyField source="*_tdt" dest="catch_all"/>
     <copyField source="*_b" dest="catch_all"/>
     <copyField source="*_t" dest="catch_all"/>
+    <copyField source="content" dest="catch_all"/>
+    <!--<copyField source="author" dest="catch_all"/>-->
     <copyField source="*_parseable" dest="catch_all"/>
     <copyField source="*_no_html_tags_parseable" dest="catch_all"/>
 
-    <copyField source="*name" dest="catch_all"/>
-    <copyField source="*id" dest="catch_all"/>
+    <copyField source="name" dest="catch_all"/>
+    <copyField source="id" dest="catch_all"/>
+
+    <copyField source="*_lcs" dest="catch_all"/>
 
     <!--End of ACM copy Fields-->
 
@@ -394,7 +408,7 @@
 
     <!-- The format for this date field is of the form 1995-12-31T23:59:59Z, and
          is a more restricted form of the canonical representation of dateTime
-         http://www.w3.org/TR/xmlschema-2/#dateTime    
+         http://www.w3.org/TR/xmlschema-2/#dateTime
          The trailing "Z" designates UTC time and is mandatory.
          Optional fractional seconds are allowed: 1995-12-31T23:59:59.999Z
          All other components are mandatory.
@@ -409,7 +423,7 @@
                NOW/DAY+6MONTHS+3DAYS
                   ... 6 months and 3 days in the future from the start of
                       the current day
-                      
+
          Consult the DateField javadocs for more information.
 
          Note: For faster range queries, consider the tdate type
@@ -442,11 +456,11 @@
 
     <!-- The "RandomSortField" is not used to store or search any
          data.  You can declare fields of this type it in your schema
-         to generate pseudo-random orderings of your docs for sorting 
+         to generate pseudo-random orderings of your docs for sorting
          or function purposes.  The ordering is generated based on the field
          name and the version of the index. As long as the index version
          remains unchanged, and the same field name is reused,
-         the ordering of the docs will be consistent.  
+         the ordering of the docs will be consistent.
          If you want different psuedo-random orderings of documents,
          for the same version of the index, use a dynamicField and
          change the field name in the request.
@@ -709,7 +723,7 @@
         </analyzer>
     </fieldType>
 
-    <!-- 
+    <!--
       Example of using PathHierarchyTokenizerFactory at index time, so
       queries for paths match documents at that path, or in descendent paths
     -->
@@ -721,7 +735,7 @@
             <tokenizer class="solr.KeywordTokenizerFactory"/>
         </analyzer>
     </fieldType>
-    <!-- 
+    <!--
       Example of using PathHierarchyTokenizerFactory at query time, so
       queries for paths match documents at that path, or in ancestor paths
     -->
@@ -740,7 +754,7 @@
 
     <!-- This point type indexes the coordinates as separate fields (subFields)
       If subFieldType is defined, it references a type, and a dynamic field
-      definition is created matching *___<typename>.  Alternately, if 
+      definition is created matching *___<typename>.  Alternately, if
       subFieldSuffix is defined, that is used to create the subFields.
       Example: if subFieldType="double", then the coordinates would be
         indexed in fields myloc_0___double,myloc_1___double.
@@ -841,6 +855,7 @@
             <filter class="solr.LowerCaseFilterFactory"/>
             <filter class="solr.ASCIIFoldingFilterFactory"/>
             <filter class="solr.KStemFilterFactory"/>
+            <filter class="solr.EdgeNGramFilterFactory" minGramSize="1" maxGramSize="50" side="front"/>
         </analyzer>
         <analyzer type="query">
             <charFilter class="solr.HTMLStripCharFilterFactory"/>
@@ -1211,7 +1226,7 @@
     <!-- Japanese using morphological analysis (see text_cjk for a configuration using bigramming)
 
          NOTE: If you want to optimize search for precision, use default operator AND in your query
-         parser config with <solrQueryParser defaultOperator="AND"/> further down in this file.  Use 
+         parser config with <solrQueryParser defaultOperator="AND"/> further down in this file.  Use
          OR if you would like to optimize for recall (default).
     -->
     <fieldType name="text_ja" class="solr.TextField" positionIncrementGap="100" autoGeneratePhraseQueries="false">
