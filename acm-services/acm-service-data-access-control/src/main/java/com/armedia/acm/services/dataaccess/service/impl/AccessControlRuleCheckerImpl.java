@@ -4,6 +4,7 @@ import com.armedia.acm.services.dataaccess.model.AccessControlRule;
 import com.armedia.acm.services.dataaccess.model.AccessControlRules;
 import com.armedia.acm.services.dataaccess.service.AccessControlRuleChecker;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +21,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Check if particular user is granted access to a given object. Created by Petar Ilin <petar.ilin@armedia.com> on
@@ -83,8 +87,11 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
                 targetType, targetId);
         boolean granted = false;
 
+        JSONObject solrJsonDocument = new JSONObject(solrDocument);
+        JSONObject solrJsonResult = solrJsonDocument.getJSONObject("response").getJSONArray("docs").getJSONObject(0);
+
         Map<String, Object> targetObjectProperties = retrieveTargetObjectProperties(accessControlRules.getPropertiesMapping(),
-                solrDocument);
+                solrJsonResult);
 
         // loop trough configured access control rules, break on first positive match
         for (AccessControlRule accessControlRule : accessControlRules.getAccessControlRuleList())
@@ -127,6 +134,10 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
             }
             // all initial checks passed, proceed with checking required object properties
             granted = evaluate(accessControlRule.getObjectProperties(), authentication, targetObjectProperties);
+
+            // proceed with checking if user is any of required participant types
+            granted = granted && checkParticipantTypes(accessControlRule.getUserIsParticipantTypeAny(), authentication, solrJsonResult);
+
             if (granted)
             {
                 log.debug("[{}] is granted executing [{}] on object of type [{}] with id [{}], matching rule [{}]",
@@ -143,23 +154,80 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
     }
 
     /**
+     * If userIsParticipantTypeAny in AC is defined, evaluate if principal is any of the defined participant's types
+     *
+     * @param userIsParticipantTypeAny list of "ANY" participants
+     * @param authentication           Authentication token
+     * @param solrJsonResult           JSONObject of parsed Solr documents response
+     * @return true if principal is any of the defined participant's types
+     */
+    private boolean checkParticipantTypes(List<String> userIsParticipantTypeAny, Authentication authentication, JSONObject solrJsonResult)
+    {
+        // if participants defined
+        if (solrJsonResult.has("acm_participants_lcs") && !userIsParticipantTypeAny.isEmpty())
+        {
+            JSONArray securityParticipants = new JSONArray(solrJsonResult.getString("acm_participants_lcs"));
+            Set<String> participantsOfTypeAny = getParticipantsOfType(securityParticipants, userIsParticipantTypeAny);
+            return participantsOfTypeAny.stream()
+                    .anyMatch(ldapId -> isParticipantAnyOf(ldapId, authentication));
+        }
+        // there are no participants that need to be checked, return true
+        return true;
+    }
+
+    /**
+     * Check if principal is the required participant or is member of the required group
+     *
+     * @param participants             Participants of CASE/COMPLAINT from SOLR result
+     * @param userIsParticipantTypeAny list of "ANY" participants
+     * @return set of all participant's ids whose types are found in the list userIsParticipantTypeAny
+     */
+    private Set<String> getParticipantsOfType(JSONArray participants, List<String> userIsParticipantTypeAny)
+    {
+        return IntStream.range(0, participants.length())
+                .mapToObj(participants::getJSONObject)
+                .peek(jsonObject -> System.out.println(jsonObject.toString()))
+                .filter(jsonObject -> userIsParticipantTypeAny.contains(jsonObject.getString("type")))
+                .map(jsonObject -> jsonObject.getString("ldapId"))
+                .collect(Collectors.toSet());
+    }
+
+
+    /**
+     * Check if principal is the required participant or is member of the required group
+     *
+     * @param participantId  Ldap id of the required participant type
+     * @param authentication Authentication token
+     * @return true if principal is the required participant or is in the required group
+     */
+    private boolean isParticipantAnyOf(String participantId, Authentication authentication)
+    {
+        String principalId = authentication.getName();
+        Set<String> principalAuthorities = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toSet());
+
+        boolean isParticipantPrincipal = participantId.equals(principalId);
+        boolean isPrincipalInGroup = principalAuthorities.contains(participantId);
+        return isPrincipalInGroup || isParticipantPrincipal;
+    }
+
+    /**
      * Retrieve target object properties by parsing Solr document stored for this object.
      *
-     * @param solrDocument Solr data stored for this object
+     * @param solrJsonResult JSONObject of parsed Solr documents response
      * @return map of retrieved properties
      */
-    private Map<String, Object> retrieveTargetObjectProperties(Map<String, String> propertiesMapping, String solrDocument)
+    private Map<String, Object> retrieveTargetObjectProperties(Map<String, String> propertiesMapping, JSONObject solrJsonResult)
     {
         Map<String, Object> targetObjectProperties = new HashMap<>();
 
-        JSONObject jsonObject = new JSONObject(solrDocument);
         // extract the doc element of Solr response
-        JSONObject solrProperties = jsonObject.getJSONObject("response").getJSONArray("docs").getJSONObject(0);
-        Iterator<String> it = solrProperties.keys();
+        Iterator<String> it = solrJsonResult.keys();
         while (it.hasNext())
         {
             String key = it.next();
-            Object value = solrProperties.get(key);
+            Object value = solrJsonResult.get(key);
             // add to map only if Solr property name mapping exists
             if (propertiesMapping.containsKey(key))
             {
