@@ -2961,6 +2961,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             }).then(
                                 function (activeVersion) {
                                     fileNode.data.activeVertionTag = Util.goodValue(activeVersion);
+                                    fileNode.data.version = activeVersion.activeVersionTag;
                                     fileNode.data.ext = Util.goodValue(activeVersion.fileActiveVersionNameExtension);
                                     DocTree.markNodeOk(fileNode);
                                     fileNode.renderTitle();
