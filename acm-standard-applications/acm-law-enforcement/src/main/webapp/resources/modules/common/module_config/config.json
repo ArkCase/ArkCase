@@ -564,6 +564,41 @@
       "paginationPageSize": 10,
       "start": 0
     },
+    "dialogUserPicker": {
+      "enableFiltering": false,
+      "multiSelect": false,
+      "showFacets": false,
+      "columnDefs": [
+        {
+          "name": "name",
+          "displayName": "frevvo.dialogUserPicker.table.columns.name",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "object_type_s",
+          "displayName": "frevvo.dialogUserPicker.table.columns.type",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "title",
+          "displayName": "frevvo.dialogUserPicker.table.columns.title",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "object_id_s",
+          "displayName": "frevvo.dialogUserPicker.table.columns.id",
+          "headerCellFilter": "translate"
+        }
+      ],
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
+      "start": 0
+    },
     "fileExtensionRegex": "\\.(doc|dot|docx|dotx|docm|dotm|docb|pdf|xlsx|xls|ppt)$"
   }
 }

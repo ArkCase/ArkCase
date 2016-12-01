@@ -1,9 +1,9 @@
 'use strict';
 
-angular.module('cases').controller('Cases.TimeController', ['$scope', '$stateParams'
+angular.module('cases').controller('Cases.TimeController', ['$scope', '$stateParams', '$state', '$translate'
     , 'UtilService', 'ObjectService', 'ConfigService', 'Object.TimeService', 'Case.InfoService'
     , 'Helper.UiGridService', 'Helper.ObjectBrowserService'
-    , function ($scope, $stateParams
+    , function ($scope, $stateParams, $state, $translate
         , Util, ObjectService, ConfigService, ObjectTimeService, CaseInfoService
         , HelperUiGridService, HelperObjectBrowserService) {
 
@@ -28,6 +28,7 @@ angular.module('cases').controller('Cases.TimeController', ['$scope', '$statePar
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
+            gridHelper.addButton(config, "edit");
 
             for (var i = 0; i < $scope.config.columnDefs.length; i++) {
                 if ("name" == $scope.config.columnDefs[i].name) {
@@ -63,6 +64,11 @@ angular.module('cases').controller('Cases.TimeController', ['$scope', '$statePar
 
             var currentObjectId = Util.goodMapValue(objectInfo, "id");
             if (Util.goodPositive(currentObjectId, false)) {
+            	$scope.newTimesheetParamsFromObject = {
+        			_id: objectInfo.id,
+        			_type: ObjectService.ObjectTypes.CASE_FILE,
+                    _number: objectInfo.caseNumber
+                }
                 ObjectTimeService.queryTimesheets(ObjectService.ObjectTypes.CASE_FILE, currentObjectId).then(
                     function (timesheets) {
                         for (var i = 0; i < timesheets.length; i++) {
@@ -80,5 +86,11 @@ angular.module('cases').controller('Cases.TimeController', ['$scope', '$statePar
                 );
             }
         };
+        $scope.editRow = function(rowEntity){
+        	var frevvoDateFormat = $translate.instant("common.frevvo.defaultDateFormat");
+            var startDate = moment(rowEntity.startDate).format(frevvoDateFormat);
+        	
+        	$state.go('frevvo.edit-timesheet',{period: startDate});
+        }
     }
 ]);

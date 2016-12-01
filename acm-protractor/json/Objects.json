@@ -35,8 +35,22 @@
             "deleteDoc": ".//li[@data-command='remove']",
             "downloadDoc": ".//li[@data-command='download']",
             "fadeElementDeleteNote": "//*[@modal-animation-class='fade']",
-            "fadeElementEditNote": "//*[@ng-click='close($event)'"
-
+            "fadeElementEditNote": "//*[@ng-click='close($event)'",
+            "detailsPicture": ".//button[@data-original-title='Picture']",
+            "browseButton": "files",
+            "detailsUploadedImage": ".//*[@class='note-editable panel-body']/p/img",
+            "fullnameLink": ".fullname",
+            "logoutLink": "Logout",
+            "newDocument": ".//li[@data-command='subMenuFileTypes']",
+            "checkout": ".//li[@data-command='checkout']",
+            "checkin" : ".//li[@data-command='checkin']",
+            "cancelEditing": ".//li[@data-command='cancelEditing']",
+            "logoutSucesfullMessage": ".//*[@class='alert alert-success']",
+            "checkoutDisabled": ".//li[@data-command='checkout'][@aria-disabled='true']",
+            "checkinDisabled": ".//li[@data-command='checkin'][@aria-disabled='true']",
+            "cancelEditingDisabled": ".//li[@data-command='cancelEditing'][@aria-disabled='true']",
+            "lockIcon": "//table/tbody/tr[2]/td[2]/span",
+            "tasksLink": "Tasks"
         },
         "data": {
 
@@ -126,7 +140,7 @@
             "percentCompletitionBtn": ".//*[@class='clearfix']/div[2]/div[1]/div/form/div/span/button[1]",
             "completeBtn": "Complete",
             "deleteBtn": "Delete",
-            "refreshBtn": "ng-click='refresh()']",
+            "refreshBtn": ".//button[@ng-click='refresh()']",
             "detailsLink": "link in componentLinks",
             "detailsTextArea": ".//*[@class='note-editable panel-body']",
             "detailsSaveBtn": ".//*[@class='panel-title']/div/button/i",
@@ -364,14 +378,20 @@
             "lastName": "initiatorLastName",
             "incidentCategoryDDListBox": ".//div[@cname='category']/div/input[1]",
             "complaintTitle": "complaintTitle",
-            "submitButton": "Submit",
-            "radioButtonNewInitiator": ".//*[@value='newInitiator']"
+            "submitButton": "//input[@name='actionType'][@value='Submit']",
+            "radioButtonNewInitiator": ".//*[@value='newInitiator']",
+            "closeComplaintButton": ".//a[@ui-sref='frevvo.close-complaint(closeParams)']",
+            "complaintDispositionDDListBox": ".//div[@cname='disposition']/div/input[1]",
+            "closeComplaintDescription": ".note-editable",
+            "fadeElementComplaint":".//div[@class='modal-backdrop fade in']"
         },
         "data": {
             "firstName": "ComplaintFirstName",
             "lastName": "ComplaintLastName",
             "category": "Agricultural",
-            "title": "ComplaintTitle"
+            "title": "ComplaintTitle",
+            "description": "Description",
+            "approver": "samuel"
         }
     },
     "casepage": {
