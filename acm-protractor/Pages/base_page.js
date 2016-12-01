@@ -154,6 +154,8 @@ var costSheetStatus = element.all(by.repeater(Objects.casepage.locators.timeshee
 var caseFileModule = element(by.css(Objects.timetrackingPage.locators.caseFileModule));
 var refreshList = element(by.css(Objects.casepage.locators.refreshCasesList));
 var firstElementInList = element(by.xpath(Objects.casepage.locators.firstCaseInCasesList));
+var refreshBtn = element(by.xpath(Objects.casepage.locators.refreshBtn));
+var secondElementInList = element(by.xpath(Objects.casepage.locators.secondCaseInCasesList));
 
 
 
@@ -325,11 +327,26 @@ var BasePage = function() {
         });
         return this;
     }
-    this.clickRefreshBtn = function() {
 
-        refreshBtn.click();
+    this.clickSecondElementInList = function() {
+
+        browser.sleep(10000);
+        refreshList.click().then(function() {
+            browser.sleep(10000);
+            secondElementInList.click().then(function() {
+                browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesTitle))), 30000, "Case title is not displayed");
+            });
+        });
+        return this;
+
     }
 
+    this.clickRefreshBtn = function() {
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.refreshBtn))), 30000, "Refresh button is not displayed").then(function() {
+            refreshBtn.click();
+            return this;
+        });
+    }
 
     this.clickExpandFancyTreeTopElementAndSubLink = function(link) {
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.fancyTreeExpandTop))), 30000).then(function() {
@@ -1052,7 +1069,7 @@ var BasePage = function() {
                                     browser.wait(EC.visibilityOf(element(by.repeater(Objects.casepage.locators.searchedReferenceResult))), 10000, "Searched reference is not displayed").then(function() {
                                         searchedReferenceResult.click().then(function() {
                                             addSearchedReferenceBtn.click().then(function() {
-                                                browser.wait(EC.visibilityOf(element(by.repeater(Objects.casepage.locators.addedReferenceRow))), 30000, "Added reference is not added");
+                                                browser.wait(EC.visibilityOf(element(by.repeater(Objects.casepage.locators.addedReferenceRow))), 30000, "Added reference is not displayed");
                                             });
                                         });
                                     });
@@ -1067,6 +1084,17 @@ var BasePage = function() {
         });
         return this;
     }
+
+    this.clikReferenceLink = function() {
+
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.referenceLink))), 30000, "Reference link is not displayed").then(function() {
+            referenceLink.click().then(function() {
+                browser.wait(EC.visibilityOf(element(by.repeater(Objects.casepage.locators.addedReferenceRow))), 30000, "Reference is not displayed");
+            });
+        });
+    }
+
+
     this.returnReferenceNumber = function() {
         return referenceNumber.getText();
     }
@@ -1120,7 +1148,7 @@ var BasePage = function() {
 
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.tasksTable))), 30000).then(function() {
             refreshBtn.click().then(function() {
-                browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.taskTitle))), 30000, "After 30 second task is not shown in the task table");
+                browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.taskTitle))), 60000, "After 60 second task is not shown in the task table");
             });
         });
         return this;

@@ -540,7 +540,7 @@ var TaskPage = function() {
         return this;
     }
     this.clickCaseTitleInTasks = function() {
-        browser.wait(EC.invisibilityOf(element(by.xpath(Objects.basepage.locators.notificationMessage))), 30000).then(function() {
+       
             browser.wait(EC.presenceOf(element(by.xpath(Objects.taskspage.locators.caseTitleInTasks))), 30000).then(function() {
                 browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.caseTitleInTasks))), 30000).then(function() {
                     browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.taskspage.locators.caseTitleInTasks))), 30000).then(function() {
@@ -550,9 +550,6 @@ var TaskPage = function() {
                     });
                 });
             });
-
-        });
-
     }
 
 
