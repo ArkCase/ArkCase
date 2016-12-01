@@ -14,8 +14,6 @@
 
     <bean id="caseFileMailHandler" class="com.armedia.acm.services.email.handler.AcmObjectMailHandler">
     	<constructor-arg index="0" ref="caseFileDao" />
-		<constructor-arg index="1" value="findByCaseNumber" />
-		<constructor-arg index="2" type="java.lang.Class" value="com.armedia.acm.plugins.casefile.model.CaseFile" />
         <property name="mailDirectory" value="${casefile.email.folder.relative.path}"/>
         <property name="enabled" value="${casefile.email.handler.enabled}"/>
         <property name="objectIdRegexPattern" value="${casefile.email.regex.case_number}"/>
