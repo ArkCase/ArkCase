@@ -84,16 +84,12 @@
  </example>
  */
 angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', '$filter', '$log', '$injector'
-    , 'Acm.StoreService', 'UtilService', 'Util.DateService', 'ConfigService', 'LookupService'
-    , 'EcmService', 'ObjectService'
+    , 'Acm.StoreService', 'UtilService', 'Util.DateService', 'ConfigService', 'Profile.UserInfoService'
+    , 'EcmService'
     , function ($q, $translate, $modal, $filter, $log, $injector
-        , Store, Util, UtilDateService, ConfigService, LookupService
-        , Ecm, ObjectService) {
-
-        LookupService.getUserFullNames().then(function (userFullNames) {
-            DocTree.userFullNames = userFullNames;
-        });
-
+        , Store, Util, UtilDateService, ConfigService, UserInfoService
+        , Ecm
+    ) {
         var cacheTree = new Store.CacheFifo();
         var cacheFolderList = new Store.CacheFifo();
 
@@ -251,7 +247,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         , close: function (event, data) {
                             // Editor was removed
                             if (data.save) {
-                            	var fileName = data.node.title;
+                                var fileName = data.node.title;
                                 DocTree.markNodePending(data.node, fileName);
                             }
                             DocTree.editSetting.isEditing = false;
@@ -665,11 +661,11 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 if (Validator.validateFancyTreeNode(node)) {
                     $(node.span).addClass("pending");
                     if (!node.folder) {
-                    	if(fileName){
-                    		node.title = $translate.instant("common.directive.docTree.waitUploading") + fileName;
-                    	}else {
-                    		node.title = $translate.instant("common.directive.docTree.waitUploading") + node.data.name;
-                    	}
+                        if(fileName){
+                            node.title = $translate.instant("common.directive.docTree.waitUploading") + fileName;
+                        }else {
+                            node.title = $translate.instant("common.directive.docTree.waitUploading") + node.data.name;
+                        }
                         node.renderTitle();
                     }
                     node.setStatus("loading");
@@ -1087,10 +1083,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         , {
                             name: "author",
                             renderer: function (element, node, columnDef, isReadOnly) {
-                                if (DocTree.userFullNames) {
-                                    var versionUser = Util.goodValue(node.data.creator);
-                                    var found = _.find(DocTree.userFullNames, {id: versionUser});
-                                    $(element).text(Util.goodMapValue(found, "name"));
+                                var versionUser = Util.goodValue(node.data.creator);
+                                if (versionUser) {
+                                    //UserInfoService.getUserInfoByIdQuietly(versionUser).then(function (userInfo) {
+                                    UserInfoService.getUserInfoById(versionUser).then(function (userInfo) {
+                                        $(element).text(Util.goodMapValue(userInfo, "fullName"));
+                                    })
                                 }
                             }
                         }
@@ -2907,9 +2905,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 }
                             }).then(
                                 function (renamedInfo) {
-                                	node.title = renamedInfo.fileName;
-                                	node.tooltip = node.title;
-                                	DocTree.markNodeOk(node);
+                                    node.title = renamedInfo.fileName;
+                                    node.tooltip = node.title;
+                                    DocTree.markNodeOk(node);
                                     dfd.resolve(renamedInfo);
                                 }
                                 , function (errorData) {
@@ -3701,73 +3699,162 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 bootbox.confirm(msg, callback);
             }
 
-            , _popupWindow: null
             , dlgOpenWindow: function (url, title, w, h, onDone) {
-                try {
-                    if (window.focus) {
-                        this._popupWindow.focus();
-                    }
-                } catch (e) {
-                    // Do nothing, normal behavior
-                }
+                var params = {};
+                params.frevvoFormUrl = url;
+                params.title = title;
+                params.w = w;
+                params.h = h;
+                params.onDone = onDone;
 
-                try {
-                    if (this._popupWindow == null || this._popupWindow == 'undefined' || this._popupWindow.closed) {
+                var modalInstance = $modal.open({
+                    templateUrl: "directives/doc-tree/doc-tree.frevvo.dialog.html",
+                    controller: ['$rootScope', '$scope', '$interval', 'params', function ($rootScope, $scope, $interval, params) {
+                        $scope.title = params.title;
+                        $scope.height = (params.h + 200) + "px";
+                        $scope.width = (params.w + 200) + "px";
+                        $scope.widthDialogBox = (params.w + 20) + "px";
+                        $scope.frevvoFormUrl = params.frevvoFormUrl;
+                        $scope.iframeLoaded = function(){
+                            startCheckFrevvoSubmission();
+                            startInitFrevvoMessaging();
+                        };
 
-                        var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : screen.left;
-                        var dualScreenTop = window.screenTop != undefined ? window.screenTop : screen.top;
-
-                        var width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
-                        var height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
-
-                        var left = ((width / 2) - (w / 2)) + dualScreenLeft;
-                        var top = ((height / 2) - (h / 2)) + dualScreenTop;
-
-                        this._popupWindow = window.open(url, title, 'scrollbars=yes, resizable=1, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
-
-                        if (window.focus) {
-                            this._popupWindow.focus();
+                        var initFrevvoMessagingPromise;
+                        function startInitFrevvoMessaging() {
+                            stopInitFrevvoMessaging();
+                            initFrevvoMessagingPromise = $interval(initFrevvoMessaging, 250);
                         }
 
-                        this._checkClosePopup(this._popupWindow, onDone);
-                    } else {
-                        if (window.focus) {
-                            this._popupWindow.focus();
+                        function stopInitFrevvoMessaging() {
+                            $interval.cancel(initFrevvoMessagingPromise);
+                        }
+
+                        function initFrevvoMessaging() {
+                            var frevvoIframe = getFrevvoIframe();
+                            if (!Util.isEmpty(frevvoIframe)) {
+                                stopInitFrevvoMessaging();
+                                if (Util.isEmpty($rootScope.frevvoMessaging)) {
+                                    $rootScope.frevvoMessaging = {};
+                                    $rootScope.frevvoMessaging.receiver = frevvoIframe;
+                                    $rootScope.frevvoMessaging.send = function send(message) {
+                                        if (!Util.isEmpty($rootScope.frevvoMessaging.receiver)) {
+                                            $rootScope.frevvoMessaging.receiver.postMessage(message, '*');
+                                        }
+                                    }
+                                    $rootScope.frevvoMessaging.receive = function receive(e) {
+                                        if (!Util.isEmpty(e) && !Util.isEmpty(e.data) && !Util.isEmpty(e.data.source) && e.data.source == "frevvo" && !Util.isEmpty(e.data.action)) {
+                                            // Do actions sent from Frevvo
+                                            if (e.data.action == "open-user-picker") {
+                                                openUserPicker(e.data);
+                                            }
+                                        }
+                                    }
+
+                                    window.addEventListener("message", $rootScope.frevvoMessaging.receive);
+                                } else {
+                                    $rootScope.frevvoMessaging.receiver = frevvoIframe;
+                                }
+                            }
+                        }
+
+                        function getFrevvoIframe() {
+                            if (!Util.isEmpty(document) &&
+                                !Util.isEmpty(document.getElementById('frevvoFormIframe')) &&
+                                !Util.isEmpty(document.getElementById('frevvoFormIframe').contentWindow) &&
+                                !Util.isEmpty(document.getElementById('frevvoFormIframe').contentWindow.document) &&
+                                !Util.isEmpty(document.getElementById('frevvoFormIframe').contentWindow.document.getElementsByTagName('iframe')) &&
+                                 document.getElementById('frevvoFormIframe').contentWindow.document.getElementsByTagName('iframe').length > 0 &&
+                                !Util.isEmpty(document.getElementById('frevvoFormIframe').contentWindow.document.getElementsByTagName('iframe')[0]) &&
+                                !Util.isEmpty(document.getElementById('frevvoFormIframe').contentWindow.document.getElementsByTagName('iframe')[0].contentWindow)
+                            ) {
+                                return document.getElementById('frevvoFormIframe').contentWindow.document.getElementsByTagName('iframe')[0].contentWindow;
+                            }
+
+                            return null;
+                        }
+
+                        function openUserPicker(data) {
+                            var params = {};
+
+                            params.header = $translate.instant("common.directive.coreParticipants.modal.dialogUserPicker.header");
+                            params.filter = '"Object Type": USER';
+                            params.config = Util.goodMapValue(DocTree.treeConfig, "dialogUserPicker");
+
+                            var modalInstanceUserPicker = $modal.open({
+                                templateUrl: "modules/frevvo/views/frevvo-participants-picker-modal.client.view.html",
+                                controller: ['$scope', '$modalInstance', 'params', function ($scope, $modalInstance, params) {
+                                    $scope.modalInstance = $modalInstance;
+                                    $scope.header = params.header;
+                                    $scope.filter = params.filter;
+                                    $scope.config = params.config;
+                                }],
+                                animation: true,
+                                size: 'lg',
+                                backdrop: 'static',
+                                resolve: {
+                                    params: function () {
+                                        return params;
+                                    }
+                                }
+                            });
+                            modalInstanceUserPicker.result.then(function (selected) {
+                                if (!Util.isEmpty(selected)) {
+                                    var message = {};
+                                    message.source = "arkcase";
+                                    message.data = selected;
+                                    message.action = "fill-user-picker-data";
+                                    message.elementId = data.elementId;
+
+                                    $rootScope.frevvoMessaging.send(message);
+                                }
+                            });
+                        }
+
+                        var promise;
+                        function startCheckFrevvoSubmission() {
+                            stopCheckFrevvoSubmission();
+                            promise = $interval(checkFrevvoSubmission, 250);
+                        }
+
+                        function stopCheckFrevvoSubmission() {
+                            $interval.cancel(promise);
+                        }
+
+                        $scope.close = function (callback) {
+                            stopCheckFrevvoSubmission();
+                            modalInstance.close(false);
+                            if (callback) {
+                                callback();
+                            }
+                        }
+
+                        function checkFrevvoSubmission() {
+                            if (!Util.isEmpty($rootScope.frevvoMessaging) &&
+                                !Util.isEmpty($rootScope.frevvoMessaging.receiver) &&
+                                !Util.isEmpty($rootScope.frevvoMessaging.receiver.document) &&
+                                !Util.isEmpty($rootScope.frevvoMessaging.receiver.document.body) &&
+                                !Util.isEmpty($rootScope.frevvoMessaging.receiver.document.body.getElementsByTagName('div')) &&
+                                $rootScope.frevvoMessaging.receiver.document.body.getElementsByTagName('div').length > 0 &&
+                                !Util.isEmpty($rootScope.frevvoMessaging.receiver.document.body.getElementsByTagName('div')[0])  &&
+                                !Util.isEmpty($rootScope.frevvoMessaging.receiver.document.body.getElementsByTagName('div')[0].innerHTML.trim()) &&
+                                !Util.isEmpty($rootScope.frevvoMessaging.receiver.document.body.getElementsByTagName('div')[0].innerHTML.trim()) &&
+                                angular.equals("Closing ...", $rootScope.frevvoMessaging.receiver.document.body.getElementsByTagName('div')[0].innerHTML.trim())
+                            ) {
+                                $scope.close(params.onDone);
+                            }
+                        }
+                    }],
+                    animation: true,
+                    size: 'lg',
+                    backdrop: 'static',
+                    resolve: {
+                        params: function () {
+                            return params;
                         }
                     }
-                } catch (e) {
-                    // Do nothing, normal behavior
-                }
+                });
             }
-            , _checkClosePopup: function (newWindow, onDone) {
-                var timer = setInterval(function () {
-                    var href = null;
-                    try {
-                        if (newWindow && newWindow.location && newWindow.location.href) {
-                            href = newWindow.location.href;
-                        }
-                    } catch (e) {
-
-                    }
-
-                    if (href &&
-                        href.indexOf('/web/') == -1 &&
-                        href.indexOf('/tn/') == -1 &&
-                        href.indexOf('/user/') == -1 &&
-                        href.indexOf('/app/') == -1 &&
-                        href.indexOf('/formtype/') == -1 &&
-                        href.indexOf('about:blank') == -1) {
-                        newWindow.close();
-                    }
-                    if (newWindow.closed) {
-                        clearInterval(timer);
-                        if (onDone) {
-                            onDone();
-                        }
-                    }
-                }, 50);
-            }
-
 
             , getValue: function ($s) {
                 return $s.val();

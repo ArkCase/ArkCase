@@ -2,7 +2,6 @@ var logger = require('./log');
 var Objects = require('./json/Objects.json');
 var EC = protractor.ExpectedConditions;
 var logs = require(process.env['USERPROFILE'] + '/node_modules/winston');
-var EC = protractor.ExpectedConditions;
 
 var helpers = function helpers() {
 

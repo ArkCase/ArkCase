@@ -198,7 +198,6 @@ var CasePage = function() {
     };
 
     this.selectCaseStatus = function(status) {
-
         var caseStatus = element(by.linkText(status));
         browser.wait(EC.visibilityOf(element(by.className(Objects.casepage.locators.changeCaseStatusTitle))), 15000).then(function() {
             changeStatusDropDown.click().then(function() {
@@ -207,13 +206,11 @@ var CasePage = function() {
                 });
             });
         });
-
-    }
+    };
 
     this.chnageCaseSubmit = function() {
         browser.executeScript('arguments[0].click()', submitBtn);
-    }
-
+    };
 
     this.waitForPriority = function() {
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.priority))), 20000);
@@ -291,10 +288,6 @@ var CasePage = function() {
     this.getCaseId = function() {
         return caseID.getText();
     }
-
-
-
-
 };
 
 
