@@ -5,7 +5,6 @@
 		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd"
        xmlns:int="http://www.springframework.org/schema/integration">
 
-
     <int:channel id="complaintFilteredMailChannel"/>
 
     <bean id="complaintMailFilter" class="com.armedia.acm.services.email.filter.AcmObjectPatternMailFilter">
@@ -15,15 +14,12 @@
 
     <bean id="complaintMailHandler" class="com.armedia.acm.services.email.handler.AcmObjectMailHandler">
         <constructor-arg index="0" ref="acmComplaintDao"/>
-        <constructor-arg index="1" value="findByComplaintNumber" />
-        <constructor-arg index="2" type="java.lang.Class" value="com.armedia.acm.plugins.complaint.model.Complaint" />
         <property name="mailDirectory" value="${casefile.email.folder.relative.path}"/>
         <property name="enabled" value="${complaint.email.handler.enabled}"/>
         <property name="objectIdRegexPattern" value="${complaint.email.regex.complaint_number}"/>
         <property name="acmFolderService" ref="acmFolderService"/>
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
-        
     </bean>
 
     <int:service-activator input-channel="complaintFilteredMailChannel" ref="complaintMailHandler" method="handle"/>

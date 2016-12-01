@@ -1,7 +1,7 @@
 package com.armedia.acm.services.email.handler;
 
 import com.armedia.acm.core.AcmObject;
-import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.data.AcmNameDao;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
@@ -33,13 +33,11 @@ import java.util.regex.Pattern;
  * 
  * @author dame.gjorgjievski
  */
-public class AcmObjectMailHandler<E extends AcmObject, DAO extends AcmAbstractDao<E>>
+public class AcmObjectMailHandler
 {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    private final AcmAbstractDao<E> entityDao;
-    private final String entityDaoMethod;
-    private final Class<E> entityClass;
+    private final AcmNameDao entityDao;
 
     private EcmFileService ecmFileService;
     private AcmFolderService acmFolderService;
@@ -49,11 +47,9 @@ public class AcmObjectMailHandler<E extends AcmObject, DAO extends AcmAbstractDa
     private String mailDirectory;
     private boolean enabled;
 
-    public AcmObjectMailHandler(DAO dao, String daoMethod, Class<E> entityClass)
+    public AcmObjectMailHandler(AcmNameDao dao)
     {
         this.entityDao = dao;
-        this.entityDaoMethod = daoMethod;
-        this.entityClass = entityClass;
     }
 
     @Transactional
@@ -64,20 +60,25 @@ public class AcmObjectMailHandler<E extends AcmObject, DAO extends AcmAbstractDa
         {
             return;
         }
+
         String entityId = extractIdFromSubject(message);
         if (entityId == null)
         {
             throw new EntityNotFoundException("Subject in the mail didn't match correct entity number. subject: " + message.getSubject());
         }
 
+        AcmObject entity = entityDao.findByName(entityId);
+        if (entity == null)
+        {
+            throw new EntityNotFoundException("No entity was found with given number: " + entityId);
+        }
+
         String userId = "mail-service";
         auditPropertyEntityAdapter.setUserId(userId);
         String tempDir = System.getProperty("java.io.tmpdir");
-        Object result = entityDao.getClass().getMethod(entityDaoMethod, String.class).invoke(entityId);
-        E entity = entityClass.cast(result);
-
         String messageFileName = System.currentTimeMillis() + "_" + entityId + ".eml";
         File messageFile = new File(tempDir + File.separator + messageFileName);
+
         try (OutputStream os = new FileOutputStream(messageFile))
         {
             message.writeTo(os);
