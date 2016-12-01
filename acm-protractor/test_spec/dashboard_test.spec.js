@@ -1,6 +1,7 @@
 var logger = require('../log');
 var dashPage = require('../Pages/dashboard_page.js');
 var authentication = require('../authentication.js');
+var loginPage = require('../Pages/login_page.js');
 var Objects = require('../json/Objects.json');
 var flag = false;
 
@@ -16,6 +17,7 @@ describe("Testing async calls with beforeEach and passing the special done callb
 
     beforeEach(function(done) {
         // Make an async call, passing the special done callback
+
         testAsync(done);
     });
 
@@ -27,7 +29,8 @@ describe("Testing async calls with beforeEach and passing the special done callb
 
 describe('dashboard page test', function() {
 
-    authentication.loginAsSupervisor();
+
+    loginPage.Login(Objects.loginpage.data.supervisoruser.username, Objects.loginpage.data.supervisoruser.password);
     logger.log('Info', 'User succesfully logged in as supervisor');
 
     it('should add/delete widget cases by status', function() {
@@ -86,11 +89,13 @@ describe('dashboard page test', function() {
         dashPage.clickEditButton().clickAddWidgetButton().addWidget("News").clickSaveChangesButton();
         expect(dashPage.returnWidgetTitle()).toEqual(Objects.dashboardpage.data.widgetTitleNews);
         dashPage.clickEditButton().removeWidgetButton().clickSaveChangesButton();
+
+
     });
 
     it('should logout', function() {
 
-        authentication.logout();
+        loginPage.Logout();
 
     });
  });
