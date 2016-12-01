@@ -1,4 +1,4 @@
-package com.armedia.arkcase.email.filter;
+package com.armedia.acm.services.email.filter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,22 +12,22 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Entity Pattern based mail filter
+ * Acm Object Pattern based mail filter Filters mail related to acm object by detecting title pattern
  * 
  * @author dame.gjorgjievski
  *
  */
-public class AcmEntityPatternMailFilter
+public class AcmObjectPatternMailFilter
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    private final String entityIdRegexPattern;
-    private final String entityTypeRegexPattern;
+    private final String objectIdRegexPattern;
+    private final String objectTypeRegexPattern;
 
-    public AcmEntityPatternMailFilter(String entityIdRegexPattern, String entityTypeRegexPattern)
+    public AcmObjectPatternMailFilter(String objectIdRegexPattern, String objectTypeRegexPattern)
     {
-        this.entityIdRegexPattern = entityIdRegexPattern;
-        this.entityTypeRegexPattern = entityTypeRegexPattern;
+        this.objectIdRegexPattern = objectIdRegexPattern;
+        this.objectTypeRegexPattern = objectTypeRegexPattern;
     }
 
     /**
@@ -41,7 +41,7 @@ public class AcmEntityPatternMailFilter
     public boolean accept(Message message) throws MessagingException, IOException
     {
         boolean matchesFilter = false;
-        Pattern pattern = Pattern.compile(String.format("%s %s", entityTypeRegexPattern, entityIdRegexPattern));
+        Pattern pattern = Pattern.compile(String.format("%s %s", objectTypeRegexPattern, objectIdRegexPattern));
 
         String subject = message.getSubject();
         if (!StringUtils.isEmpty(subject))

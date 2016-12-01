@@ -1,4 +1,4 @@
-package com.armedia.arkcase.email.handler;
+package com.armedia.acm.services.email.handler;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmAbstractDao;
@@ -28,14 +28,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * Acm Object mail handler, handles incoming entity related emails and imports the email files in entity contained email
+ * folder
  * 
  * @author dame.gjorgjievski
- * 
- *         Generic entity mail handler, handles incoming entity related emails and imports the email files in entity
- *         contained email folder
- *
  */
-public class AcmEntityMailHandler<E extends AcmObject, DAO extends AcmAbstractDao<E>>
+public class AcmObjectMailHandler<E extends AcmObject, DAO extends AcmAbstractDao<E>>
 {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -47,11 +45,11 @@ public class AcmEntityMailHandler<E extends AcmObject, DAO extends AcmAbstractDa
     private AcmFolderService acmFolderService;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
-    private String entityIdRegexPattern;
+    private String objectIdRegexPattern;
     private String mailDirectory;
     private boolean enabled;
 
-    public AcmEntityMailHandler(DAO dao, String daoMethod, Class<E> entityClass)
+    public AcmObjectMailHandler(DAO dao, String daoMethod, Class<E> entityClass)
     {
         this.entityDao = dao;
         this.entityDaoMethod = daoMethod;
@@ -109,7 +107,7 @@ public class AcmEntityMailHandler<E extends AcmObject, DAO extends AcmAbstractDa
         if (!StringUtils.isEmpty(subject))
         {
 
-            Pattern pattern = Pattern.compile(entityIdRegexPattern);
+            Pattern pattern = Pattern.compile(objectIdRegexPattern);
             Matcher matcher = pattern.matcher(subject);
             if (matcher.find())
             {
@@ -134,9 +132,9 @@ public class AcmEntityMailHandler<E extends AcmObject, DAO extends AcmAbstractDa
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 
-    public void setEntityIdRegexPattern(String entityIdRegexPattern)
+    public void setObjectIdRegexPattern(String objectIdRegexPattern)
     {
-        this.entityIdRegexPattern = entityIdRegexPattern;
+        this.objectIdRegexPattern = objectIdRegexPattern;
     }
 
     public void setMailDirectory(String mailDirectory)
