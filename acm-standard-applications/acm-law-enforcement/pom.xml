@@ -402,8 +402,8 @@
         </dependency>
 
         <dependency>
-            <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-print-documents</artifactId>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-object-data-processing-api</artifactId>
             <version>${acm.version}</version>
         </dependency>
 
