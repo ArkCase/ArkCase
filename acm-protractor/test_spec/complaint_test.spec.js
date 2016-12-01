@@ -5,6 +5,7 @@ var userPage = require('../Pages/user_profile_page.js');
 var authentication = require('../authentication.js');
 var taskPage = require('../Pages/task_page.js');
 var Objects = require('../json/Objects.json');
+var loginPage = require('../Pages/login_page.js');
 var flag = false;
 
 function testAsync(done) {
@@ -22,14 +23,14 @@ describe('Create new complaint ', function() {
 
     beforeEach(function(done) {
 
-        authentication.loginAsSupervisor();
+        loginPage.Login(Objects.loginpage.data.supervisoruser.username, Objects.loginpage.data.supervisoruser.password);
         testAsync(done);
 
     });
 
     afterEach(function() {
 
-        authentication.logout();
+        loginPage.Logout();
 
     });
 
