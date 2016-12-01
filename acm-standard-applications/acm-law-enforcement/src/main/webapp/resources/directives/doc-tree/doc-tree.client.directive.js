@@ -3716,29 +3716,47 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         $scope.widthDialogBox = (params.w + 20) + "px";
                         $scope.frevvoFormUrl = params.frevvoFormUrl;
                         $scope.iframeLoaded = function(){
-                            start();
-                            if (Util.isEmpty($rootScope.frevvoMessaging)) {
-                                $rootScope.frevvoMessaging = {};
-                                $rootScope.frevvoMessaging.receiver = getFrevvoIframe();
-                                $rootScope.frevvoMessaging.send = function send(message) {
-                                    if (!Util.isEmpty($rootScope.frevvoMessaging.receiver)) {
-                                        $rootScope.frevvoMessaging.receiver.postMessage(message, '*');
-                                    }
-                                }
-                                $rootScope.frevvoMessaging.receive = function receive(e) {
-                                    if (!Util.isEmpty(e) && !Util.isEmpty(e.data) && !Util.isEmpty(e.data.source) &&  e.data.source == "frevvo" && !Util.isEmpty(e.data.action)) {
-                                        // Do actions sent from Frevvo
-                                        if (e.data.action == "open-user-picker") {
-                                            openUserPicker(e.data);
+                            startCheckFrevvoSubmission();
+                            startInitFrevvoMessaging();
+                        };
+
+                        var initFrevvoMessagingPromise;
+                        function startInitFrevvoMessaging() {
+                            stopInitFrevvoMessaging();
+                            initFrevvoMessagingPromise = $interval(initFrevvoMessaging, 250);
+                        }
+
+                        function stopInitFrevvoMessaging() {
+                            $interval.cancel(initFrevvoMessagingPromise);
+                        }
+
+                        function initFrevvoMessaging() {
+                            var frevvoIframe = getFrevvoIframe();
+                            if (!Util.isEmpty(frevvoIframe)) {
+                                stopInitFrevvoMessaging();
+                                if (Util.isEmpty($rootScope.frevvoMessaging)) {
+                                    $rootScope.frevvoMessaging = {};
+                                    $rootScope.frevvoMessaging.receiver = frevvoIframe;
+                                    $rootScope.frevvoMessaging.send = function send(message) {
+                                        if (!Util.isEmpty($rootScope.frevvoMessaging.receiver)) {
+                                            $rootScope.frevvoMessaging.receiver.postMessage(message, '*');
                                         }
                                     }
-                                }
+                                    $rootScope.frevvoMessaging.receive = function receive(e) {
+                                        if (!Util.isEmpty(e) && !Util.isEmpty(e.data) && !Util.isEmpty(e.data.source) && e.data.source == "frevvo" && !Util.isEmpty(e.data.action)) {
+                                            // Do actions sent from Frevvo
+                                            if (e.data.action == "open-user-picker") {
+                                                openUserPicker(e.data);
+                                            }
+                                        }
+                                    }
 
-                                window.addEventListener("message", $rootScope.frevvoMessaging.receive);
-                            } else {
-                                $rootScope.frevvoMessaging.receiver = getFrevvoIframe();
+                                    window.addEventListener("message", $rootScope.frevvoMessaging.receive);
+                                } else {
+                                    $rootScope.frevvoMessaging.receiver = frevvoIframe;
+                                }
                             }
-                        };
+                        }
 
                         function getFrevvoIframe() {
                             if (!Util.isEmpty(document) &&
@@ -3794,17 +3812,17 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         }
 
                         var promise;
-                        function start() {
-                            stop();
+                        function startCheckFrevvoSubmission() {
+                            stopCheckFrevvoSubmission();
                             promise = $interval(checkFrevvoSubmission, 250);
                         }
 
-                        function stop() {
+                        function stopCheckFrevvoSubmission() {
                             $interval.cancel(promise);
                         }
 
                         $scope.close = function (callback) {
-                            stop();
+                            stopCheckFrevvoSubmission();
                             modalInstance.close(false);
                             if (callback) {
                                 callback();
