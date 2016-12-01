@@ -2,10 +2,10 @@
 
 angular.module('complaints').controller('Complaints.ActionsController', ['$scope', '$state', '$stateParams', '$q'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Object.LookupService', 'Complaint.LookupService'
-    , 'Object.SubscriptionService', 'Object.ModelService', 'Complaint.InfoService', 'Helper.ObjectBrowserService'
+    , 'Object.SubscriptionService', 'Complaint.InfoService', 'Helper.ObjectBrowserService'
     , function ($scope, $state, $stateParams, $q
         , Util, ConfigService, ObjectService, Authentication, ObjectLookupService, ComplaintLookupService
-        , ObjectSubscriptionService, ObjectModelService, ComplaintInfoService, HelperObjectBrowserService) {
+        , ObjectSubscriptionService, ComplaintInfoService, HelperObjectBrowserService) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -36,9 +36,6 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
                     $scope.showBtnSubscribe = Util.isEmpty(found);
                     $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
                 });
-                ObjectModelService.checkIfUserCanRestrict($scope.userId, objectInfo).then(function (result) {
-                    $scope.isUserAbleToRestrict = result;
-                });
             });
 
             $scope.closeParams = {
@@ -48,7 +45,7 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
         };
 
         $scope.onClickRestrict = function ($event) {
-            if ($scope.isUserAbleToRestrict && $scope.restricted != $scope.objectInfo.restricted) {
+            if ($scope.restricted != $scope.objectInfo.restricted) {
                 $scope.objectInfo.restricted = $scope.restricted;
 
                 var complaintInfo = Util.omitNg($scope.objectInfo);
