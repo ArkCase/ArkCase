@@ -36,6 +36,7 @@
         <module>acm-websockets</module>
         <module>acm-proxy-http</module>
         <module>acm-mule-module-cmis</module>
+        <module>acm-object-data-processing-api</module>
     </modules>
 
 </project>

@@ -49,7 +49,6 @@
         <module>acm-service-scheduler</module>
         <module>acm-service-message-broker</module>
         <module>acm-service-compress-folder</module>
-        <module>acm-service-print-documents</module>
     </modules>
 
 
