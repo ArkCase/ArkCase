@@ -9,7 +9,7 @@
         "data": {
             "supervisoruser": {
                 "username": "samuel-acm",
-                "password": "Armedia#1"
+                "password": "AcMd3v$"
             },
             "adminuser": {
                 "username": "ann-acm",
@@ -50,9 +50,12 @@
             "checkinDisabled": ".//li[@data-command='checkin'][@aria-disabled='true']",
             "cancelEditingDisabled": ".//li[@data-command='cancelEditing'][@aria-disabled='true']",
             "lockIcon": "//table/tbody/tr[2]/td[2]/span",
-            "tasksLink": "Tasks"
+            "tasksLink": "Tasks",
+            "reportTitle": "title"
+
         },
         "data": {
+            "reportTitle": "Report of Investigation Title"
 
         }
 

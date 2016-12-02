@@ -24,17 +24,22 @@ var searchForUser = element(by.xpath(Objects.casepage.locators.searchForUser));
 var goBtn = element(by.xpath(Objects.casepage.locators.goBtn));
 var addBtn = element(by.xpath(Objects.casepage.locators.addBtn));
 var searchedUser = element(by.xpath(Objects.casepage.locators.searchedUser));
+var newBtn = element(by.xpath(Objects.basepage.locators.newButton));
 
 var ComplaintPage = function() {
+
     browser.ignoreSynchronization = true;
     this.clickComplaintButton = function () {
-        browser.wait(EC.presenceOf(element(by.linkText(Objects.complaintPage.locators.complaintButton))), 30000).then(function () {
-            browser.wait(EC.visibilityOf(element(by.linkText(Objects.complaintPage.locators.complaintButton))), 30000).then(function () {
-                browser.wait(EC.elementToBeClickable(element(by.linkText(Objects.complaintPage.locators.complaintButton))), 30000).then(function () {
-                    complaintButton.click();
-                });
-            });
-        });
+        browser.ignoreSynchronization = false;
+                            browser.wait(EC.presenceOf(element(by.linkText(Objects.complaintPage.locators.complaintButton))), 30000).then(function () {
+                                browser.wait(EC.visibilityOf(element(by.linkText(Objects.complaintPage.locators.complaintButton))), 30000).then(function () {
+                                    browser.wait(EC.elementToBeClickable(element(by.linkText(Objects.complaintPage.locators.complaintButton))), 30000).then(function () {
+                                        complaintButton.click();
+                                    });
+                                });
+                            });
+
+
         return this;
     };
 
