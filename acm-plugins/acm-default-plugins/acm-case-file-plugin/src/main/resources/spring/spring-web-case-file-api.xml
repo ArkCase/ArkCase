@@ -63,6 +63,7 @@
         <property name="enqueueCaseFileService" ref="enqueueCaseFileService"/>
         <property name="userTrackerService" ref="userTrackerService"/>
         <property name="caseFileDao" ref="caseFileDao"/>
+        <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
     </bean>
 
 </beans>
