@@ -6,7 +6,6 @@ import com.armedia.acm.plugins.casefile.service.SaveCaseService;
 import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.users.service.tracker.UserTrackerService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -20,11 +19,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
-
 import java.util.Date;
 
 @Controller
-@RequestMapping({ "/api/v1/plugin/casefile", "/api/latest/plugin/casefile" })
+@RequestMapping({"/api/v1/plugin/casefile", "/api/latest/plugin/casefile"})
 public class SaveCaseFileAPIController
 {
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -36,7 +34,7 @@ public class SaveCaseFileAPIController
     private UserTrackerService userTrackerService;
 
     @PreAuthorize("#in.id == null or hasPermission(#in.id, 'CASE_FILE', 'saveCase')")
-    @RequestMapping(method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_XML_VALUE })
+    @RequestMapping(method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_XML_VALUE})
     @ResponseBody
     public CaseFile createCaseFile(@RequestBody CaseFile in, HttpSession session, Authentication auth) throws AcmCreateObjectFailedException
     {

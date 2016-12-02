@@ -146,7 +146,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
 
                 scope.loadTags = function loadTags(query) {
                     var deferred = $q.defer();
-                    autoSuggest(query, "QUICK", scope.objectType).then(function (tags) {
+                    autoSuggest(query, "QUICK", scope.autoSuggestObjectType).then(function (tags) {
                         deferred.resolve(tags);
                     });
                     return deferred.promise;

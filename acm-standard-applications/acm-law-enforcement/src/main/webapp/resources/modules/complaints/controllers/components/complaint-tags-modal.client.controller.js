@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.TagsModalController', ['$scope', '$q', '$modalInstance', 'ConfigService', 'Object.TagsService', 'Tags.TagsService', 'MessageService', '$translate',
-    function ($scope, $q, $modalInstance, ConfigService, ObjectTagsService, TagsService, messageService, $translate) {
+angular.module('complaints').controller('Complaints.TagsModalController', ['$scope', '$q', '$modalInstance', 'ConfigService', 'Object.TagsService', 'Tags.TagsService', 'MessageService', '$translate', 'SearchService',
+    function ($scope, $q, $modalInstance, ConfigService, ObjectTagsService, TagsService, messageService, $translate, SearchService) {
 
         $scope.tags = [];
         $scope.modalInstance = $modalInstance;
@@ -56,7 +56,7 @@ angular.module('complaints').controller('Complaints.TagsModalController', ['$sco
         // Load tags information
         function loadTags(query) {
             var deferred = $q.defer();
-            autoSuggest(query, "QUICK", $scope.config.objectType).then(function (tags) {
+            autoSuggest(query, "QUICK", $scope.config.autoSuggestObjectType).then(function (tags) {
                 deferred.resolve(tags);
             });
             return deferred.promise;

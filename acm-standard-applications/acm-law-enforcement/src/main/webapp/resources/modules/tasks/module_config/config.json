@@ -977,7 +977,7 @@
       "icon": "fa fa-tags",
       "enabled": true,
       "type": "grid",
-      "objectType": "TAG",
+      "autoSuggestObjectType": "TAG",
       "typeAheadColumn": "title_parseable",
       "enableFiltering": true,
       "paginationPageSizes": [
