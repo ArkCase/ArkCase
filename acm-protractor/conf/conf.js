@@ -1,8 +1,8 @@
-var HtmlScreenshotReporter = require(process.env['USERPROFILE'] + '/node_modules/protractor-jasmine2-screenshot-reporter');  
+var HtmlScreenshotReporter = require(process.env['USERPROFILE'] + '/node_modules/protractor-jasmine2-screenshot-reporter');
 var utils = require('../util/utils.js');
 var reporter = new HtmlScreenshotReporter({
-  dest: 'target/screenshots_'+ utils.returnToday("_"),
-  filename: 'AutoTestRun-report.html'
+    dest: 'target/screenshots_' + utils.returnToday("_"),
+    filename: 'AutoTestRun-report.html'
 });
 exports.config = {
     //seleniumAddress: 'http://localhost:4444/wd/hub',
@@ -21,33 +21,29 @@ exports.config = {
     //seleniumArgs: '-Dwebdriver.safari.driver='+process.env['USERPROFILE']+'/AppData/Roaming/npm/node_modules/protractor/selenium/SafariDriver.safariextz',
     // Capabilities to be passed to the webdriver instance.
     multiCapabilities: [{
-       'browserName': 'chrome',
-       'maxInstances': 5
+        'browserName': 'chrome',
+        'maxInstances': 5
     }],
     //if you want to run in paralel comment previous line and uncomment all above
-       //    }, {
-       //          'browserName': 'internet explorer',
-       //          'maxInstances': 5,
-       //          'version': '11'
-      //     }, {
-      //            'browserName': 'firefox',
-      //            'maxInstances': 5
+    //    }, {
+    //          'browserName': 'internet explorer',
+    //          'maxInstances': 5,
+    //          'version': '11'
+    //     }, {
+    //            'browserName': 'firefox',
+    //            'maxInstances': 5
 
-     //      }, {
-       //      'browserName': 'safari' ,
-        //     'maxInstances': 5
-         // }],
+    //      }, {
+    //      'browserName': 'safari' ,
+    //     'maxInstances': 5
+    // }],
 
     specs: [
-
-
           '../test_spec/dashboard_test.spec.js',
           '../test_spec/task_test.spec.js',
           '../test_spec/case_test.spec.js',
           '../test_spec/complaint_test.spec.js',
           '../test_spec/user_test.spec.js'
-
-
     ],
 
     jasmineNodeOpts: {
@@ -57,19 +53,21 @@ exports.config = {
 
     },
     beforeLaunch: function() {
-        return new Promise(function(resolve){
-          reporter.beforeLaunch(resolve);
+        return new Promise(function(resolve) {
+            reporter.beforeLaunch(resolve);
         });
-      },
-    onPrepare: function () {
-    	jasmine.getEnv().addReporter(reporter);
+    },
+    onPrepare: function() {
+        jasmine.getEnv().addReporter(reporter);
+
         browser.driver.manage().window().maximize();
-        browser.driver.get('https://core.arkcase.dev.armedia.com/arkcase/login');
-        browser.manage().timeouts().setScriptTimeout(60000);
+        browser.driver.get('https://cloud.arkcase.com/arkcase/login');
+        browser.manage().timeouts().setScriptTimeout(90000);
+        browser.manage().timeouts().pageLoadTimeout(40000);
     },
     afterLaunch: function(exitCode) {
-        return new Promise(function(resolve){
-          reporter.afterLaunch(resolve.bind(this, exitCode));
+        return new Promise(function(resolve) {
+            reporter.afterLaunch(resolve.bind(this, exitCode));
         });
-      }
+    }
 };
