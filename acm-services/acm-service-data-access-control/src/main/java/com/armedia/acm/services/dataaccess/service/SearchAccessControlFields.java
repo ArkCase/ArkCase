@@ -27,14 +27,20 @@ public class SearchAccessControlFields
             List<String> readers = getParticipantAccessChecker().getReaders(object);
 
             // due to how Solr works we have to replace any spaces in the participant ids with an unusual character.
-            readers = readers.stream().map(s -> s.replace(" ", DataAccessControlConstants.SPACE_REPLACE)).collect(Collectors.toList());
-
-
+            readers = readers
+                    .stream()
+                    .map(s -> s.replace(" ", DataAccessControlConstants.SPACE_REPLACE))
+                    .map(s -> s.replace(",", DataAccessControlConstants.COMMA_REPLACE))
+                    .collect(Collectors.toList());
             doc.setAllow_acl_ss(readers);
         }
 
         List<String> denied = getParticipantAccessChecker().getDenied(object);
-        denied = denied.stream().map(s -> s.replace(" ", DataAccessControlConstants.SPACE_REPLACE)).collect(Collectors.toList());
+        denied = denied
+                .stream()
+                .map(s -> s.replace(" ", DataAccessControlConstants.SPACE_REPLACE))
+                .map(s -> s.replace(",", DataAccessControlConstants.COMMA_REPLACE))
+                .collect(Collectors.toList());
         doc.setDeny_acl_ss(denied);
     }
 

@@ -42,6 +42,7 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
     private boolean adhocTask;
     private boolean completed;
     private String status;
+    private String pendingStatus;
     private Integer percentComplete;
     private String details;
 
@@ -275,6 +276,16 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
     public void setStatus(String status)
     {
         this.status = status;
+    }
+
+    public String getPendingStatus()
+    {
+        return pendingStatus;
+    }
+
+    public void setPendingStatus(String pendingStatus)
+    {
+        this.pendingStatus = pendingStatus;
     }
 
     public Integer getPercentComplete()
@@ -556,8 +567,7 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
     {
         if (getChildObjects() != null)
         {
-            return getChildObjects().stream().filter(child ->
-                    ObjectAssociationConstants.OBJECT_TYPE.equals(child.getAssociationType()))
+            return getChildObjects().stream().filter(child -> ObjectAssociationConstants.OBJECT_TYPE.equals(child.getAssociationType()))
                     .collect(Collectors.toList());
         }
 

@@ -1,12 +1,5 @@
 package com.armedia.acm.compressfolder;
 
-import static org.easymock.EasyMock.expect;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
@@ -14,18 +7,12 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.easymock.EasyMockRunner;
 import org.easymock.EasyMockSupport;
-import org.easymock.Mock;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
 import org.mule.api.MuleException;
 import org.springframework.core.io.ClassPathResource;
 
@@ -42,55 +29,53 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import static org.easymock.EasyMock.expect;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
+
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Sep 14, 2016
  *
  */
-@RunWith(EasyMockRunner.class)
 public class FolderCompressorTest extends EasyMockSupport
 {
 
-    /**
-     *
-     */
-    private static final String COMPRESSED_FILENAME_FORMAT = "%1$sacm-%2$d-%3$s.zip";
+    private final String COMPRESSED_FILENAME_FORMAT = "%1$sacm-%2$d-%3$s.zip";
 
     private DefaultFolderCompressor compressor;
 
     private File responseFolder;
 
     private File bigFile;
-
-    @Mock
     private AcmFolderService mockedFolderService;
 
-    @Mock
     private EcmFileService mockedFileService;
 
-    @Mock
     private AcmFolder mockedResponseFolder;
 
-    @Mock
     private AcmFolder mockedLevel1Folder;
 
-    @Mock
     private EcmFile mockedLevel1File;
 
-    @Mock
     private AcmFolder mockedLevel2Folder;
 
-    @Mock
     private EcmFile mockedLevel2File;
 
-    @Mock
     private EcmFile mockedLevel3File;
 
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
 
     @Before
     public void setUp() throws IOException
     {
+        mockedFileService = createMock(EcmFileService.class);
+        mockedLevel3File = createMock(EcmFile.class);
+        mockedResponseFolder = createMock(AcmFolder.class);
+        mockedFolderService = createMock(AcmFolderService.class);
+        mockedLevel1Folder = createMock(AcmFolder.class);
+        mockedLevel1File = createMock(EcmFile.class);
+        mockedLevel2Folder = createMock(AcmFolder.class);
+        mockedLevel2File = createMock(EcmFile.class);
+
         responseFolder = new ClassPathResource("response_folder").getFile();
         bigFile = new ClassPathResource("big_file.txt").getFile();
         assertNotNull(responseFolder);
@@ -98,6 +83,8 @@ public class FolderCompressorTest extends EasyMockSupport
         compressor.setFolderService(mockedFolderService);
         compressor.setFileService(mockedFileService);
         compressor.setCompressedFileNameFormat(COMPRESSED_FILENAME_FORMAT);
+        compressor.setMaxSize(2);
+        compressor.setSizeUnit(SizeUnit.GIGA.name());
     }
 
     @After
@@ -107,9 +94,6 @@ public class FolderCompressorTest extends EasyMockSupport
                 .deleteQuietly(new File(String.format(COMPRESSED_FILENAME_FORMAT, System.getProperty("java.io.tmpdir"), 101l, "Response")));
         FileUtils.deleteQuietly(new File(System.getProperty("java.io.tmpdir"), "folder_level_1"));
         FileUtils.deleteQuietly(new File(System.getProperty("java.io.tmpdir"), "file_level_1.txt"));
-
-        compressor.setMaxSize(2);
-        compressor.setSizeUnit(SizeUnit.GIGA.name());
     }
 
     /**
@@ -124,8 +108,8 @@ public class FolderCompressorTest extends EasyMockSupport
     public void testCompressFolder() throws Exception
     {
         expect(mockedFolderService.findById(101l)).andReturn(mockedResponseFolder);
-        expect(mockedResponseFolder.getName()).andReturn("Response");
-        expect(mockedResponseFolder.getId()).andReturn(101l).times(2);
+        expect(mockedResponseFolder.getName()).andReturn("Response").atLeastOnce();
+        expect(mockedResponseFolder.getId()).andReturn(101l).atLeastOnce();
         expect(mockedFolderService.getFolderChildren(101l)).andReturn(new ArrayList<>(Arrays.asList(mockedLevel1Folder, mockedLevel1File)));
         expect(mockedLevel1Folder.getObjectType()).andReturn(EcmFileConstants.OBJECT_FOLDER_TYPE).times(2);
         expect(mockedLevel1File.getObjectType()).andReturn(EcmFileConstants.OBJECT_FILE_TYPE).times(2);
@@ -235,6 +219,8 @@ public class FolderCompressorTest extends EasyMockSupport
             assertThat(readLines.get(0), is("level 3"));
         }
 
+        verifyAll();
+
     }
 
     @Test
@@ -247,10 +233,16 @@ public class FolderCompressorTest extends EasyMockSupport
 
         replayAll();
 
-        expectedException.expect(FolderCompressorException.class);
-        expectedException.expectMessage(is(String.format("No folder with id %d was found!", folderId)));
+        try
+        {
+            compressor.compressFolder(folderId);
+            fail("should have gotten an exception");
+        } catch (FolderCompressorException expectedException)
+        {
+            assertEquals(String.format("No folder with id %d was found!", folderId), expectedException.getMessage());
+        }
 
-        compressor.compressFolder(folderId);
+        verifyAll();
 
     }
 
@@ -261,8 +253,8 @@ public class FolderCompressorTest extends EasyMockSupport
         long folderId = 101l;
 
         expect(mockedFolderService.findById(folderId)).andReturn(mockedResponseFolder);
-        expect(mockedResponseFolder.getName()).andReturn("Response");
-        expect(mockedResponseFolder.getId()).andReturn(folderId).times(2);
+        expect(mockedResponseFolder.getName()).andReturn("Response").atLeastOnce();
+        expect(mockedResponseFolder.getId()).andReturn(folderId).atLeastOnce();
         expect(mockedFolderService.getFolderChildren(folderId)).andReturn(new ArrayList<>(Arrays.asList(mockedLevel1File)));
         expect(mockedLevel1File.getObjectType()).andReturn(EcmFileConstants.OBJECT_FILE_TYPE).times(2);
         expect(mockedLevel1File.getFileName()).andReturn(bigFile.getName());
@@ -271,13 +263,19 @@ public class FolderCompressorTest extends EasyMockSupport
 
         replayAll();
 
-        expectedException.expect(FolderCompressorException.class);
-        expectedException.expectMessage(containsString(String.format("Resulting compressed file is bigger than %1$s", 1024)));
-
         compressor.setMaxSize(1);
         compressor.setSizeUnit(SizeUnit.KILO.name());
 
-        compressor.compressFolder(folderId);
+        try
+        {
+            compressor.compressFolder(folderId);
+            fail("should have gotten an exception");
+        } catch (FolderCompressorException expectedException)
+        {
+            assertEquals(String.format("java.io.IOException: Resulting compressed file is bigger than %1$s", 1024), expectedException.getMessage());
+        }
+
+        verifyAll();
 
     }
 

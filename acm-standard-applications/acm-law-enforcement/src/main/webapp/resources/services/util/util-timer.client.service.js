@@ -66,23 +66,25 @@ angular.module('services').factory('Util.TimerService', ['UtilService'
              * @methodOf services:Util.TimerService
              *
              * @param {String} name Listener name
-             * @param {number} interval Time interval in milliseconds that the callback is called
              * @param {Function} callback A function responses to triggered timer event. Return true to continue receive
+             * @param {number} interval Time interval in milliseconds that the callback is called
              * timer events; return false means it is the last event, and the listener will be removed from lister list.
+             * @param {number} (Optional)initInterval Interval used for the first time. If set to 0, callback is called immediately.
              *
              * @description
              * Register a timer listener
              */
-            ,registerListener: function(name, interval, callback) { //interval in milliseconds
+            ,registerListener: function(name, callback, interval, initInterval) {
                 var count = interval / 100;                          //timer pulse is 100 ms
                 var i = this._findListener(name);
                 if (0 > i) {    //not found; create new entry
-                    this._listeners.push({name: name, callback: callback, count: count, countDown: count});
+                    var countDown = Util.goodValue(initInterval, interval) / 100;
+                    this._listeners.push({name: name, callback: callback, count: count, countDown: countDown});
                     this._listenerCount++;
                 } else {
                     var listener = this._listeners[i];
-                    listener.callback = callback;
-                    listener.count = count;
+                    listener.callback = Util.goodValue(callback, listener.callback);
+                    listener.count = Util.goodValue(count, listener.count);
                 }
             }
 
@@ -126,8 +128,6 @@ angular.module('services').factory('Util.TimerService', ['UtilService'
              * limit or when callback function return false
              */
             ,triggerEvent: function() {
-                //console.log("triggerEvent, this._listenerCount=" + this._listenerCount);
-
                 //need to loop backwards because of possible item removed while looping
                 for (var i = this._listenerCount - 1; 0 <= i; i--) {
                     var listener = this._listeners[i];
@@ -150,13 +150,14 @@ angular.module('services').factory('Util.TimerService', ['UtilService'
              * @param {String} name Listener name
              * @param {number} interval Time interval in milliseconds that the callback is called
              * @param {Function} callback A function responses to triggered time event
+             * @param {number} (Optional)initInterval Interval used for the first time. If set to 0, callback is called immediately
              *
              * @description
              * Register a timer listener
              */
-            ,useTimer: function(name, interval, callback) {
+            ,useTimer: function(name, interval, callback, initInterval) {
                 Service.startWorker("assets/js/acmTimer.js");
-                Service.registerListener(name, interval, callback);
+                Service.registerListener(name, callback, interval, initInterval);
             }
         };
 

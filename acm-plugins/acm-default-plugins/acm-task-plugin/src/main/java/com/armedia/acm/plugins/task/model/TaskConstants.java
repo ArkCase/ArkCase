@@ -37,7 +37,7 @@ public interface TaskConstants
     String VARIABLE_NAME_REVIEWERS = "reviewers";
     String VARIABLE_NAME_TASK_NAME = "taskName";
     String VARIABLE_NAME_DOC_AUTHOR = "documentAuthor";
-
+    String VARIABLE_NAME_PENDING_STATUS = "PENDING_STATUS";
 
     String IDENTITY_LINK_TYPE_CANDIDATE = "candidate";
     String VARIABLE_NAME_NEXT_ASSIGNEE = "NEXT_ASSIGNEE";

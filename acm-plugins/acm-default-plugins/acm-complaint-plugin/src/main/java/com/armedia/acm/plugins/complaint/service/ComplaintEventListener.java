@@ -18,6 +18,7 @@ import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 import org.springframework.context.ApplicationListener;
 
 import java.util.List;
+import java.util.Objects;
 
 public class ComplaintEventListener implements ApplicationListener<AcmObjectHistoryEvent>
 {
@@ -75,7 +76,7 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
                     if (isStatusChanged(existing, updatedComplaint))
                     {
                         String calId = updatedComplaint.getContainer().getCalendarFolderId();
-                        if (updatedComplaint.getStatus().equals(complaintStatusClosed) &&
+                        if (Objects.equals(updatedComplaint.getStatus(), complaintStatusClosed) &&
                                 shouldDeleteCalendarFolder && calId != null)
                         {
 
@@ -109,20 +110,9 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
 
     public boolean isAssigneeChanged(AcmAssignment assignment)
     {
-        if (assignment.getNewAssignee() != null && assignment.getOldAssignee() != null)
-        {
-            if (assignment.getNewAssignee().equals(assignment.getOldAssignee()))
-            {
-                return false;
-            }
-        }
 
-        if (assignment.getNewAssignee() == null && assignment.getOldAssignee() == null)
-        {
-            return false;
-        }
+        return !Objects.equals(assignment.getNewAssignee(), assignment.getOldAssignee());
 
-        return true;
     }
 
     private AcmAssignment createAcmAssignment(Complaint updatedComplaint)
@@ -141,35 +131,23 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
     {
         String updatedPriority = updatedComplaint.getPriority();
         String priority = complaint.getPriority();
-        return !updatedPriority.equals(priority);
+
+        return !Objects.equals(updatedPriority, priority);
     }
 
     private boolean isLocationChanged(Complaint complaint, Complaint updatedComplaint)
     {
         PostalAddress updatedLocation = updatedComplaint.getLocation();
         PostalAddress location = complaint.getLocation();
-        if (location != null)
-        {
-            return !location.equals(updatedLocation);
-        } else if (updatedLocation != null)
-        {
-            return true;
-        }
-        return false;
+        return !Objects.equals(updatedLocation, location);
     }
 
     private boolean isDetailsChanged(Complaint complaint, Complaint updatedComplaint)
     {
         String updatedDetails = updatedComplaint.getDetails();
         String details = complaint.getDetails();
-        if (updatedDetails != null && details != null)
-        {
-            return !details.equals(updatedDetails);
-        } else if (updatedDetails != null)
-        {
-            return true;
-        }
-        return false;
+        return !Objects.equals(details, updatedDetails);
+
     }
 
     private void checkParticipants(Complaint complaint, Complaint updatedComplaint, String ipAddress)
@@ -200,7 +178,7 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
     {
         String updatedStatus = updatedComplaint.getStatus();
         String status = complaint.getStatus();
-        return !updatedStatus.equals(status);
+        return !Objects.equals(updatedStatus, status);
     }
 
     private boolean checkExecution(String objectType)
