@@ -180,7 +180,13 @@ var lockIcon = element(by.xpath(Objects.basepage.locators.lockIcon));
 var tasksLink = element(by.xpath(Objects.basepage.locators.tasksLink));
 var reportTitle = element(by.name(Objects.basepage.locators.reportTitle));
 var submitButton = element(by.xpath(Objects.complaintPage.locators.submitButton));
-
+var docTreeExpand = element(by.xpath(Objects.basepage.locators.docTreeExpand));
+var fileTitle = element(by.xpath(Objects.basepage.locators.fileTitle));
+var docViewNotesLink = element(by.linkText(Objects.basepage.locators.docViewNotesLink));
+var docViewAddNoteButton = element(by.xpath(Objects.basepage.locators.docViewAddNoteButton));
+var noteText = element(by.model(Objects.taskspage.locators.notesTextArea));
+var saveButton = element(by.buttonText(Objects.basepage.locators.saveButton));
+var noteColumnValue = element(by.css(Objects.basepage.locators.noteColumnValue));
 
 var BasePage = function() {
 
@@ -279,21 +285,68 @@ var BasePage = function() {
     this.returnDocStatusGrid = function() {
         return docStatus.getText();
     };
-    this.clickDeleteDoc = function() {
+    this.clickDocAction = function(action) {
         browser.waitForAngular().then(function() {
-            docTitle.click().then(function() {
-                browser.actions().click(protractor.Button.RIGHT).perform().then(function() {
-                    deleteDoc.click();
-                    return this;
+                    var xPathStr = ".//li[@data-command='";
+                    var completexPath;
+                    switch (action) {
+                        case "Open":
+                            completexPath = xPathStr + "open']";
+                            break;
+                        case "Edit":
+                            completexPath = xPathStr + "editWithWebDAV']";
+                            break;
+                        case "Email":
+                            completexPath = xPathStr + "email']";
+                            break;
+                        case "Checkout":
+                            completexPath = xPathStr + "checkout']";
+                            break;
+                        case "Checkin":
+                            completexPath = xPathStr + "checkin']";
+                            break;
+                        case "Cancel Editing":
+                            completexPath = xPathStr + "cancelEditing']";
+                            break;
+                        case "Cut":
+                            completexPath = xPathStr + "cut']";
+                            break;
+                        case "Copy":
+                            completexPath = xPathStr + "copy']";
+                            break;
+                        case "Paste":
+                            completexPath = xPathStr + "paste']";
+                            break;
+                        case "Rename":
+                            completexPath = xPathStr + "rename']";
+                            break;
+                        case "Delete":
+                            completexPath = xPathStr + "remove']";
+                            break;
+                        case "Download":
+                            completexPath = xPathStr + "download']";
+                            break;
+                        case "Replace":
+                            completexPath = xPathStr + "replace']";
+                            break;
+                        case "Declare As Record":
+                            completexPath = xPathStr + "declare']";
+                            break;
+                        default:
+                            completexPath = xPathStr + "open']";
+                            break;
+                    }
+
+                    var el = element(by.xpath(completexPath));
+                    //browser.wait(EC.visibilityOf(element(by.xpath(completexPath))), 30000).then(function () {
+                        el.click();
+
                 });
-            });
-        });
+
+        return this;
 
     };
-    this.clickDownloadDoc = function() {
-        downloadDoc.click();
-        return this;
-    };
+
     this.returnDocRowAdded = function() {
         if (docRow.isPresent()) {
             return true;
@@ -1351,7 +1404,9 @@ var BasePage = function() {
 		xPathStr = ".//a[@title='";
 		var completexPath = xPathStr + link + "']";
 		var el = element(by.xpath(completexPath));
-		el.click();
+		browser.wait(EC.visibilityOf(element(by.xpath(completexPath))), 30000).then(function () {
+            el.click();
+        });
 		return this;
 	}
 	this.clickFullNameLink = function () {
@@ -1389,13 +1444,27 @@ var BasePage = function() {
 		return this;
 	};
 	this.rightClickDocument = function () {
-		browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.docTitle))), 30000).then(function () {
-			docTitle.click();
-			browser.actions().click(protractor.Button.RIGHT).perform();
+		browser.wait(EC.presenceOf(element(by.xpath(Objects.basepage.locators.docTitle))), 30000).then(function () {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.docTitle))), 30000).then(function () {
+                                   docTitle.click().then(function () {
+                        browser.actions().click(protractor.Button.RIGHT).perform();
+                    })
+                 });
 		});
 		return this;
 
 	};
+    this.rightClickFileTitle = function () {
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.basepage.locators.fileTitle))), 30000).then(function () {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.fileTitle))), 30000).then(function () {
+                fileTitle.click();
+                browser.actions().click(protractor.Button.RIGHT).perform();
+
+            });
+        });
+        return this;
+
+    };
 	this.validateChekoutEnabled= function () {
         return !checkoutDisabled.isPresent();
 	};
@@ -1413,7 +1482,6 @@ var BasePage = function() {
         return this;
     };
 	this.insertReportTitle = function (reporttitle) {
-	    EC.
         browser.wait(EC.presenceOf(element(by.name(Objects.basepage.locators.reportTitle))), 30000).then(function () {
             browser.wait(EC.visibilityOf(element(by.name(Objects.basepage.locators.reportTitle))), 30000).then(function () {
                 browser.wait(EC.elementToBeClickable(element(by.name(Objects.basepage.locators.reportTitle))), 30000).then(function () {
@@ -1432,8 +1500,57 @@ var BasePage = function() {
 	    this.selectApprover(approver);
 	    this.clickSubmitButton();
     };
+	this.moveToTab = function () {
+        browser.getAllWindowHandles().then(function (handles) {
+            newWindowHandle = handles[1]; // this is your new window
+            browser.switchTo().window(newWindowHandle);
+        });
+        return this;
+    };
+	this.clickDocTreeExpand = function () {
+	    browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.docTreeExpand))), 30000).then(function () {
+            docTreeExpand.click();
+        });
+        return this;
+    };
+	this.clickDocViewNotesLink = function () {
+	    browser.wait(EC.visibilityOf(element(by.linkText(Objects.basepage.locators.docViewNotesLink))), 30000).then(function () {
+            docViewNotesLink.click();
+        });
+	    return this;
+    };
+    this.clickDocViewAddNote = function () {
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.docViewAddNoteButton))), 30000).then(function () {
+            docViewAddNoteButton.click();
+        });
+        return this;
+    };
+    this.insertDocViewNote = function (note) {
+        browser.wait(EC.visibilityOf(element(by.model(Objects.taskspage.locators.notesTextArea))), 30000).then(function () {
+            noteText.sendKeys(note);
+        });
+        return this;
+    };
+    this.clickSaveButton = function () {
+        browser.wait(EC.visibilityOf(element(by.buttonText(Objects.basepage.locators.saveButton))), 30000).then(function () {
+            saveButton.click();
+        });
+        return this;
+    };
+    this.submitNote = function (note) {
+        this.clickDocViewAddNote();
+        this.insertDocViewNote(note);
+        this.clickSaveButton();
+        return this;
+    };
+    this.returnSavedNoteInGrid = function () {
+        browser.wait(EC.presenceOf(element(by.css(Objects.basepage.locators.noteColumnValue))), 30000).then(function () {
+            browser.wait(EC.visibilityOf(element(by.css(Objects.basepage.locators.noteColumnValue))), 30000).then(function () {
+                return noteColumnValue.getText();
+            });
+        })
 
-
+    }
 
 
 };

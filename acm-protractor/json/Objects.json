@@ -51,11 +51,18 @@
             "cancelEditingDisabled": ".//li[@data-command='cancelEditing'][@aria-disabled='true']",
             "lockIcon": "//table/tbody/tr[2]/td[2]/span",
             "tasksLink": "Tasks",
-            "reportTitle": "title"
+            "reportTitle": "title",
+            "docTreeExpand": "//doc-tree/table[2]/tbody/tr/td[3]/span/span[1]",
+            "fileTitle": "//table/tbody/tr[2]/td[3]/span/span[3]",
+            "docViewNotesLink": "Notes",
+            "docViewAddNoteButton":".//button[@ng-disabled='notesInit.isReadOnly']",
+            "saveButton": "Save",
+            "noteColumnValue": ".ui-grid-cell-contents.ng-binding.ng-scope"
 
         },
         "data": {
-            "reportTitle": "Report of Investigation Title"
+            "reportTitle": "Report of Investigation Title",
+            "note": "NoteText"
 
         }
 
@@ -494,7 +501,7 @@
             "caseTypeListBox": ".//ul[@role='listbox']/li",
             "documentsLink": "//span[contains(text(),'Documents')]",
             "expandLinksButton": ".//a[@title='Show links']",
-            "fancyTreeExpandTop": "html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/object-tree/section/div/div/div/ul/li[1]/span/span[1]",
+            "fancyTreeExpandTop": "//object-tree/section/div/div/div/ul/li[1]/span/span[1]",
             "tagsLinkBtn": ".//*[@class='fa fa-tags']",
             "addNewTagBtn": "[ng-click='addNew()']",
             "addTagInput": "newTag.text",

@@ -695,5 +695,15 @@ describe('case page tests', function() {
 
     });
 
+    it('should verify adding note in document viewer in cases', function() {
+
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson").clickNextBtn().initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
+        casePage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Documents");
+        casePage.clickDocTreeExpand().rightClickFileTitle().clickDocAction("Open");
+        casePage.moveToTab().clickDocViewNotesLink().submitNote(Objects.basepage.data.note);
+        expect(complaintPage.returnSavedNoteInGrid()).toEqual(Objects.basepage.data.note);
+
+    });
+
 
 });
