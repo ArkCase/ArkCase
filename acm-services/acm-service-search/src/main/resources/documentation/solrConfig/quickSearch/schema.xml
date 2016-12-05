@@ -183,6 +183,7 @@
     <!--ACM filed used for search purposes-->
     <field name="catch_all" type="text_no_html_tags_parseable" indexed="true" stored="false" multiValued="true"/>
 
+    <!--ACM fields used for autosuggest feature AFDP-2567-->
     <field name="suggest" type="text_suggest" indexed="true" stored="false"/>
 
     <field name="suggest_ngram" type="text_suggest_ngram" indexed="true" stored="false"/>
@@ -191,6 +192,7 @@
 
     <copyField source="title_parseable" dest="suggest_ngram"/>
 
+    <!--End if ACM fields used for autosuggest feature AFDP-2567-->
     <!--
       Some fields such as popularity and manu_exact could be modified to
       leverage doc values:
@@ -940,6 +942,9 @@
             />
         </analyzer>
     </fieldType>
+
+    <!-- AFDP-2567 (autosuggest) field types -->
+
     <fieldType name="text_suggest" class="solr.TextField"
                positionIncrementGap="100">
         <analyzer>
@@ -973,6 +978,8 @@
             <filter class="solr.EnglishPossessiveFilterFactory"/>
         </analyzer>
     </fieldType>
+    <!-- end of AFDP-2567 field types -->
+
     <!-- end of ACM field types -->
 
     <!-- some examples for different languages (generally ordered by ISO code) -->
