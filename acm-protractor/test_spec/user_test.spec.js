@@ -159,6 +159,4 @@ describe('edit user profile page', function() {
 
     });
 
-
-
 });
