@@ -7,6 +7,7 @@ import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.TaskOutcome;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
+
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,18 +28,12 @@ public class CompleteTaskWithOutcomeAPIController
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(value = "/completeTask",
-            method = RequestMethod.POST,
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/completeTask", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmTask completeTask(
-            Authentication authentication,
-            @RequestBody AcmTask in,
-            HttpSession httpSession
-    ) throws AcmUserActionFailedException
+    public AcmTask completeTask(Authentication authentication, @RequestBody AcmTask in, HttpSession httpSession)
+            throws AcmUserActionFailedException
     {
-        if ( log.isInfoEnabled() )
+        if (log.isInfoEnabled())
         {
             log.info("Completing task '" + in.getTaskId() + "'");
         }
@@ -55,21 +50,19 @@ public class CompleteTaskWithOutcomeAPIController
             AcmTask completed = getTaskDao().completeTask(authentication, in.getTaskId(), in.getOutcomeName(),
                     in.getTaskOutcome() == null ? null : in.getTaskOutcome().getName());
 
-            //TODO after demo should be found appropriate solution in taskDkao.
-            //this is a bug-926 fix (workaround)
-            completed.setStatus("CLOSED");
-            
+            // TODO after demo should be found appropriate solution in taskDkao.
+            // this is a bug-926 fix (workaround)
+            // completed.setStatus("CLOSED");
+
             publishTaskCompletedEvent(authentication, httpSession, completed, true);
 
             return completed;
-        }
-        catch (AcmTaskException e)
+        } catch (AcmTaskException e)
         {
             publishTaskCompletedEvent(authentication, httpSession, in, false);
 
             throw new AcmUserActionFailedException("complete", "task", in.getTaskId(), e.getMessage(), e);
-        }
-        catch (AcmUserActionFailedException e)
+        } catch (AcmUserActionFailedException e)
         {
             publishTaskCompletedEvent(authentication, httpSession, in, false);
             throw e;
@@ -79,11 +72,10 @@ public class CompleteTaskWithOutcomeAPIController
     private void validateCompleteTaskRequirements(AcmTask current, AcmTask in) throws AcmUserActionFailedException
     {
         // if a task has available outcomes, the task outcome must be set
-        if ( current.getAvailableOutcomes() != null &&
-                !current.getAvailableOutcomes().isEmpty() )
+        if (current.getAvailableOutcomes() != null && !current.getAvailableOutcomes().isEmpty())
         {
             // make sure a task outcome was chosen
-            if ( in.getTaskOutcome() == null )
+            if (in.getTaskOutcome() == null)
             {
                 throw new AcmUserActionFailedException("complete", "task", in.getTaskId(),
                         "Outcome must be selected to completed this task", null);
@@ -91,28 +83,28 @@ public class CompleteTaskWithOutcomeAPIController
 
             // now make sure it is valid (matches an available task outcome)
             TaskOutcome selectedTaskOutcome = null;
-            for ( TaskOutcome availableTaskOutcome : current.getAvailableOutcomes() )
+            for (TaskOutcome availableTaskOutcome : current.getAvailableOutcomes())
             {
-                if ( in.getTaskOutcome().getName().equals(availableTaskOutcome.getName()) )
+                if (in.getTaskOutcome().getName().equals(availableTaskOutcome.getName()))
                 {
                     selectedTaskOutcome = availableTaskOutcome;
                 }
             }
 
-            if ( selectedTaskOutcome == null )
+            if (selectedTaskOutcome == null)
             {
-                throw new AcmUserActionFailedException("complete", "task", in.getTaskId(),
-                        "Selected outcome is not valid for this task", null);
+                throw new AcmUserActionFailedException("complete", "task", in.getTaskId(), "Selected outcome is not valid for this task",
+                        null);
             }
 
             // now make sure any required fields are populated
-            if ( selectedTaskOutcome.getFieldsRequiredWhenOutcomeIsChosen() != null &&
-                    !selectedTaskOutcome.getFieldsRequiredWhenOutcomeIsChosen().isEmpty() )
+            if (selectedTaskOutcome.getFieldsRequiredWhenOutcomeIsChosen() != null
+                    && !selectedTaskOutcome.getFieldsRequiredWhenOutcomeIsChosen().isEmpty())
             {
                 JSONObject json = new JSONObject(in);
-                for ( String required : selectedTaskOutcome.getFieldsRequiredWhenOutcomeIsChosen() )
+                for (String required : selectedTaskOutcome.getFieldsRequiredWhenOutcomeIsChosen())
                 {
-                    if ( !json.has(required) || json.get(required) == null )
+                    if (!json.has(required) || json.get(required) == null)
                     {
                         throw new AcmUserActionFailedException("complete", "task", in.getTaskId(),
                                 "Required field '" + required + "' must be set to complete this task", null);
@@ -120,21 +112,15 @@ public class CompleteTaskWithOutcomeAPIController
                 }
             }
 
-
         }
     }
 
-    protected void publishTaskCompletedEvent(
-            Authentication authentication,
-            HttpSession httpSession,
-            AcmTask completed,
-            boolean succeeded)
+    protected void publishTaskCompletedEvent(Authentication authentication, HttpSession httpSession, AcmTask completed, boolean succeeded)
     {
         String ipAddress = (String) httpSession.getAttribute("acm_ip_address");
         AcmApplicationTaskEvent event = new AcmApplicationTaskEvent(completed, "complete", authentication.getName(), succeeded, ipAddress);
         getTaskEventPublisher().publishTaskEvent(event);
     }
-
 
     public TaskDao getTaskDao()
     {

@@ -17,22 +17,6 @@
     </bean>
 
     <!-- actions -->
-    <bean id="sendTasksSolrAction" class="com.armedia.acm.event.AcmAction">
-        <property name="actionId" value="SEND_TASKS_TO_SOLR"/>
-        <property name="actionName" value="Send Tasks to SOLR"/>
-        <property name="targetMuleEndpoint" value="jms://taskToSolr.in"/>
-        <property name="parameters">
-            <list/>
-        </property>
-    </bean>
-    <bean id="sendActivitiTasksToSolrAction" class="com.armedia.acm.event.AcmAction">
-        <property name="actionId" value="SEND_ACTIVITI_TASKS_TO_SOLR"/>
-        <property name="actionName" value="Send Activiti Tasks to SOLR"/>
-        <property name="targetMuleEndpoint" value="jms://activitiTaskToSolr.in"/>
-        <property name="parameters">
-            <list/>
-        </property>
-    </bean>
 
     <bean id="createTaskContainerFolder" class="com.armedia.acm.event.AcmAction">
         <property name="actionId" value="CREATE_TASK_CONTAINER_FOLDER"/>
@@ -59,109 +43,6 @@
     <bean id="adHocTaskCreatedFolderHandler" class="com.armedia.acm.event.EventResponse">
         <property name="eventName" value="com.armedia.acm.app.task.create"/>
         <property name="action" ref="createTaskContainerFolder"/>
-        <property name="enabled" value="true"/>
-        <property name="parameters">
-            <map/>
-        </property>
-        <property name="respondPredicate" ref="eventSucceededPredicate"/>
-    </bean>
-
-    <!-- event handlers quick search-->
-
-    <bean id="sendAdHocTaskCreateToSolrAction" class="com.armedia.acm.event.EventResponse">
-        <property name="eventName" value="com.armedia.acm.app.task.create"/>
-        <property name="action" ref="sendTasksSolrAction"/>
-        <property name="enabled" value="true"/>
-        <property name="parameters">
-            <map/>
-        </property>
-        <property name="respondPredicate" ref="eventSucceededPredicate"/>
-    </bean>
-
-    <bean id="sendAdHocTaskCompleteToSolrAction" class="com.armedia.acm.event.EventResponse">
-        <property name="eventName" value="com.armedia.acm.app.task.complete"/>
-        <property name="action" ref="sendTasksSolrAction"/>
-        <property name="enabled" value="true"/>
-        <property name="parameters">
-            <map/>
-        </property>
-        <property name="respondPredicate" ref="eventSucceededPredicate"/>
-    </bean>
-
-    <bean id="sendAdHocTaskDeleteToSolrAction" class="com.armedia.acm.event.EventResponse">
-        <property name="eventName" value="com.armedia.acm.app.task.delete"/>
-        <property name="action" ref="sendTasksSolrAction"/>
-        <property name="enabled" value="true"/>
-        <property name="parameters">
-            <map/>
-        </property>
-        <property name="respondPredicate" ref="eventSucceededPredicate"/>
-    </bean>
-
-    <bean id="sendAdHocTaskSaveToSolrAction" class="com.armedia.acm.event.EventResponse">
-        <property name="eventName" value="com.armedia.acm.app.task.save"/>
-        <property name="action" ref="sendTasksSolrAction"/>
-        <property name="enabled" value="true"/>
-        <property name="parameters">
-            <map/>
-        </property>
-        <property name="respondPredicate" ref="eventSucceededPredicate"/>
-    </bean>
-
-
-    <bean id="sendAdHocTaskTerminateToSolrAction" class="com.armedia.acm.event.EventResponse">
-        <property name="eventName" value="com.armedia.acm.app.task.terminate"/>
-        <property name="action" ref="sendTasksSolrAction"/>
-        <property name="enabled" value="true"/>
-        <property name="parameters">
-            <map/>
-        </property>
-        <property name="respondPredicate" ref="eventSucceededPredicate"/>
-    </bean>
-
-    <bean id="sendActivitiTaskCreateToSolrAction" class="com.armedia.acm.event.EventResponse">
-        <property name="eventName" value="com.armedia.acm.activiti.task.create"/>
-        <property name="action" ref="sendActivitiTasksToSolrAction"/>
-        <property name="enabled" value="true"/>
-        <property name="parameters">
-            <map/>
-        </property>
-        <property name="respondPredicate" ref="eventSucceededPredicate"/>
-    </bean>
-
-    <bean id="sendActivitiTaskCompleteToSolrAction" class="com.armedia.acm.event.EventResponse">
-        <property name="eventName" value="com.armedia.acm.activiti.task.complete"/>
-        <property name="action" ref="sendActivitiTasksToSolrAction"/>
-        <property name="enabled" value="true"/>
-        <property name="parameters">
-            <map/>
-        </property>
-        <property name="respondPredicate" ref="eventSucceededPredicate"/>
-    </bean>
-
-    <bean id="sendActivitiTaskDeleteToSolrAction" class="com.armedia.acm.event.EventResponse">
-        <property name="eventName" value="com.armedia.acm.activiti.task.delete"/>
-        <property name="action" ref="sendActivitiTasksToSolrAction"/>
-        <property name="enabled" value="true"/>
-        <property name="parameters">
-            <map/>
-        </property>
-        <property name="respondPredicate" ref="eventSucceededPredicate"/>
-    </bean>
-
-    <bean id="sendActivitiTaskSaveToSolrAction" class="com.armedia.acm.event.EventResponse">
-        <property name="eventName" value="com.armedia.acm.activiti.task.save"/>
-        <property name="action" ref="sendActivitiTasksToSolrAction"/>
-        <property name="enabled" value="true"/>
-        <property name="parameters">
-            <map/>
-        </property>
-        <property name="respondPredicate" ref="eventSucceededPredicate"/>
-    </bean>
-
-    <bean id="sendActivitiTaskAssignmentToSolrAction" class="com.armedia.acm.event.EventResponse">
-        <property name="eventName" value="com.armedia.acm.activiti.task.assignment"/>
-        <property name="action" ref="sendActivitiTasksToSolrAction"/>
         <property name="enabled" value="true"/>
         <property name="parameters">
             <map/>
@@ -287,5 +168,38 @@
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="objectAssociationService" ref="objectAssociationService"/>
         <property name="objectAssociationEventPublisher" ref="objectAssociationEventPublisher"/>
+    </bean>
+    
+    <bean id="acmApplicationTaskEventHandler" class="com.armedia.acm.plugins.task.service.impl.AcmApplicationTaskEventHandler">
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="taskDao" ref="acmTaskDao"/>
+        <property name="sendDocumentsToSolr" ref="sendDocumentsToSolr"/>
+        <property name="taskToSolrTransformer" ref="taskToSolrTransformer"/>
+        <property name="eventList">
+             <list value-type="java.lang.String">
+                 <value>create</value>
+                 <value>complete</value>
+                 <value>delete</value>
+                 <value>save</value>
+                 <value>assignment</value>
+             </list>
+         </property>
+    </bean>
+    
+    <bean id="acmTaskActivitiEventHandler" class="com.armedia.acm.plugins.task.service.impl.AcmTaskActivitiEventHandler">
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="taskDao" ref="acmTaskDao"/>
+        <property name="acmParticipantDao" ref="acmParticipantDao"/>
+        <property name="sendDocumentsToSolr" ref="sendDocumentsToSolr"/>
+        <property name="taskToSolrTransformer" ref="taskToSolrTransformer"/>
+        <property name="eventList">
+             <list value-type="java.lang.String">
+                 <value>create</value>
+                 <value>complete</value>
+                 <value>delete</value>
+                 <value>save</value>
+                 <value>terminate</value>
+             </list>
+         </property>
     </bean>
 </beans>
