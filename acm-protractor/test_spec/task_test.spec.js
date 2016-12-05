@@ -433,7 +433,7 @@ describe('Create new task ', function() {
 
     
 
-})
+});
 
         
     
