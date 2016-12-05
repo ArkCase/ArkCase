@@ -189,6 +189,7 @@
     <bean id="acmTaskActivitiEventHandler" class="com.armedia.acm.plugins.task.service.impl.AcmTaskActivitiEventHandler">
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="taskDao" ref="acmTaskDao"/>
+        <property name="dataAccessPrivilegeListener" ref="dataAccessPrivilegeListener"/>
         <property name="acmParticipantDao" ref="acmParticipantDao"/>
         <property name="sendDocumentsToSolr" ref="sendDocumentsToSolr"/>
         <property name="taskToSolrTransformer" ref="taskToSolrTransformer"/>
