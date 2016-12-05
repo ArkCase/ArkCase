@@ -89,9 +89,8 @@
       "paginationPageSize": 10,
       "start": 0,
       "filter": "\"Object Type\": ASSOCIATED_TAG",
-      "multiFilter": "\"Tag Token\":",
       "filterName": "Object Type",
-      "objectType": "TAG",
+      "autoSuggestObjectType": "TAG",
       "isAutoSuggestActive": true
     }
   ]
