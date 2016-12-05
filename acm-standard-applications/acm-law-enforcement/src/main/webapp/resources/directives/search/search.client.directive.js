@@ -146,18 +146,19 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
 
                 scope.loadTags = function loadTags(query) {
                     var deferred = $q.defer();
-                    autoSuggest(query, "QUICK", scope.autoSuggestObjectType).then(function (tags) {
+                    var autoSuggestObjectType = scope.objectType;
+                    autoSuggest(query, "QUICK", autoSuggestObjectType).then(function (tags) {
                         deferred.resolve(tags);
                     });
                     return deferred.promise;
                 }
 
-                function autoSuggest(autoSuggestQuery, core, objectType) {
+                function autoSuggest(autoSuggestQuery, core, autoSuggestObjectType) {
                     var deferred = $q.defer();
-                    if (objectType != null) {
+                    if (autoSuggestObjectType != null) {
                         SearchService.queryAutoSuggestSearch({
                                 query: autoSuggestQuery,
-                                filter: "object_type_s:" + objectType,
+                                filter: "object_type_s:" + autoSuggestObjectType,
                                 core: core
                             },
                             function (res) {
@@ -347,7 +348,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                         scope.filterName = config.filterName;
                         scope.pageSize = config.paginationPageSize;
                         scope.start = config.start;
-                        scope.objectType = config.objectType;
+                        scope.objectType = config.autoSuggestObjectType;
                         scope.gridOptions = {
                             enableColumnResizing: true,
                             enableRowSelection: true,
