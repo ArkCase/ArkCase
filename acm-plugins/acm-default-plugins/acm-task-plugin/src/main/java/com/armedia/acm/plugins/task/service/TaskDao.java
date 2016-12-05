@@ -6,6 +6,7 @@ import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.NumberOfDays;
 import com.armedia.acm.plugins.task.model.WorkflowHistoryInstance;
+
 import org.activiti.engine.task.Task;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.security.Principal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by armdev on 6/2/14.
@@ -26,8 +28,8 @@ public interface TaskDao
     void ensureCorrectAssigneeInParticipants(AcmTask in);
 
     /**
-     * Complete a task on behalf of the given user.  Returns an AcmTask including historical information
-     * (task start date, task duration in milliseconds, etc).
+     * Complete a task on behalf of the given user. Returns an AcmTask including historical information (task start
+     * date, task duration in milliseconds, etc).
      *
      * @param userThatCompletedTheTask
      * @param taskId
@@ -37,8 +39,8 @@ public interface TaskDao
     AcmTask completeTask(Principal userThatCompletedTheTask, Long taskId) throws AcmTaskException;
 
     /**
-     * Complete a task on behalf of the given user.  Returns an AcmTask including historical information
-     * (task start date, task duration in milliseconds, etc).
+     * Complete a task on behalf of the given user. Returns an AcmTask including historical information (task start
+     * date, task duration in milliseconds, etc).
      *
      * @param userThatDeletedTheTask
      * @param taskId
@@ -77,8 +79,8 @@ public interface TaskDao
     List<AcmTask> pastDueTasks();
 
     /**
-     * The given user is made assignee for the task. An exception is thrown if another
-     * user tries to claim already claimed task
+     * The given user is made assignee for the task. An exception is thrown if another user tries to claim already
+     * claimed task
      *
      * @param userId
      * @param taskId
@@ -86,7 +88,6 @@ public interface TaskDao
      * @throws AcmTaskException
      */
     void claimTask(Long taskId, String userId) throws AcmTaskException;
-
 
     /**
      * Unclaim a task i.e. the assignee will be set null.
@@ -109,7 +110,8 @@ public interface TaskDao
      * @throws AcmTaskException
      */
 
-    void deleteProcessInstance(String parentId, String processId, String deleteReason, Authentication authentication, String ipAddress) throws AcmTaskException;
+    void deleteProcessInstance(String parentId, String processId, String deleteReason, Authentication authentication, String ipAddress)
+            throws AcmTaskException;
 
     AcmTask findById(Long taskId) throws AcmTaskException;
 
@@ -127,4 +129,6 @@ public interface TaskDao
     void createFolderForTaskEvent(AcmTask task) throws AcmTaskException, AcmCreateObjectFailedException;
 
     AcmTask acmTaskFromActivitiTask(Task activitiTask);
+
+    AcmTask acmTaskFromActivitiTask(Task activitiTask, Map<String, Object> processVariables, Map<String, Object> localVariables);
 }

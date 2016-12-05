@@ -25,16 +25,6 @@ public class ExtractAcmTaskFromEvent
             return ((AcmApplicationTaskEvent) event).getAcmTask();
         } else
         {
-            if (event.getTaskEvent().equals("complete"))
-            {
-                try
-                {
-                    // When approving automated task, let activiti to perform completion, before retrieving task
-                    Thread.sleep(2000);
-                } catch (InterruptedException e)
-                {
-                }
-            }
             return getDao().findById(event.getObjectId());
         }
     }
