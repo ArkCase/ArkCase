@@ -1396,17 +1396,7 @@
         </arr>
     </requestHandler>
 
-    <!--<searchComponent name="suggest" class="solr.SuggestComponent">-->
-    <!--<lst name="suggester">-->
-    <!--<str name="name">mySuggester</str>-->
-    <!--<str name="lookupImpl">FuzzyLookupFactory</str>      &lt;!&ndash; org.apache.solr.spelling.suggest.fst &ndash;&gt;-->
-    <!--<str name="dictionaryImpl">DocumentDictionaryFactory-->
-    <!--</str>     &lt;!&ndash; org.apache.solr.spelling.suggest.HighFrequencyDictionaryFactory &ndash;&gt;-->
-    <!--<str name="field">cat</str>-->
-    <!--<str name="weightField">price</str>-->
-    <!--<str name="suggestAnalyzerFieldType">string</str>-->
-    <!--</lst>-->
-    <!--</searchComponent>-->
+    <!--AFDP-2567 autosuggest handlers and components-->
 
     <searchComponent class="solr.SpellCheckComponent" name="suggest">
         <lst name="spellchecker">
@@ -1447,17 +1437,9 @@
         </lst>
     </requestHandler>
 
-    <!--<requestHandler name="/suggest" class="solr.SearchHandler" startup="lazy">-->
-    <!--<lst name="defaults">-->
-    <!--<str name="suggest">true</str>-->
-    <!--<str name="suggest.count">10</str>-->
-    <!--</lst>-->
-    <!--<arr name="components">-->
-    <!--<str>suggest</str>-->
-    <!--</arr>-->
-    <!--</requestHandler>-->
-    <!-- Term Vector Component
+    <!--End of AFDP-2567 autosuggest handlers and components-->
 
+    <!-- Term Vector Component
          http://wiki.apache.org/solr/TermVectorComponent
       -->
     <searchComponent name="tvComponent" class="solr.TermVectorComponent"/>
