@@ -18,6 +18,7 @@ import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 import org.springframework.context.ApplicationListener;
 
 import java.util.List;
+import java.util.Objects;
 
 public class CaseFileEventListener implements ApplicationListener<AcmObjectHistoryEvent>
 {
@@ -46,7 +47,7 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                 AcmUnmarshaller converter = ObjectConverter.createJSONUnmarshaller();
 
                 String jsonUpdatedCaseFile = acmObjectHistory.getObjectString();
-                CaseFile updatedCaseFile = (CaseFile) converter.unmarshall(jsonUpdatedCaseFile, CaseFile.class);
+                CaseFile updatedCaseFile = converter.unmarshall(jsonUpdatedCaseFile, CaseFile.class);
 
                 AcmAssignment acmAssignment = createAcmAssignment(updatedCaseFile);
 
@@ -57,7 +58,7 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                 {
 
                     String json = acmObjectHistoryExisting.getObjectString();
-                    CaseFile existing = (CaseFile) converter.unmarshall(json, CaseFile.class);
+                    CaseFile existing = converter.unmarshall(json, CaseFile.class);
 
                     acmAssignment.setOldAssignee(ParticipantUtils.getAssigneeIdFromParticipants(existing.getParticipants()));
 
@@ -71,12 +72,30 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                         getCaseFileEventUtility().raiseCaseFileModifiedEvent(updatedCaseFile, event.getIpAddress(), "details.changed");
                     }
 
+                    String title = existing.getTitle();
+                    String updatedTitle = updatedCaseFile.getTitle();
+                    if (!Objects.equals(title, updatedTitle))
+                    {
+                        getCaseFileEventUtility().raiseCaseFileModifiedEvent(updatedCaseFile, event.getIpAddress(), "title.changed",
+                                "Case File Title changed from " + title + " to " + updatedTitle);
+                    }
+
+
+                    String owningGroup = ParticipantUtils.getOwningGroupIdFromParticipants(existing.getParticipants());
+                    String updatedOwningGroup = ParticipantUtils.getOwningGroupIdFromParticipants(updatedCaseFile.getParticipants());
+                    if (!Objects.equals(owningGroup, updatedOwningGroup))
+                    {
+                        AcmParticipant updatedParticipant = updatedCaseFile.getParticipants().stream().filter(p -> "owning group".equals(p.getParticipantType())).findFirst().orElse(null);
+                        getCaseFileEventUtility().raiseParticipantsModifiedInCaseFile(updatedParticipant, updatedCaseFile, event.getIpAddress(), "changed",
+                                "Owning Group Changed from " + owningGroup + " to " + updatedOwningGroup);
+                    }
+
                     checkParticipants(existing, updatedCaseFile, event.getIpAddress());
 
                     if (isStatusChanged(existing, updatedCaseFile))
                     {
                         String calId = updatedCaseFile.getContainer().getCalendarFolderId();
-                        if (updatedCaseFile.getStatus().equals(caseFileStatusClosed)
+                        if (Objects.equals(updatedCaseFile.getStatus(), caseFileStatusClosed)
                                 && shouldDeleteCalendarFolder && calId != null)
                         {
 
@@ -91,10 +110,10 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                 if (isAssigneeChanged(acmAssignment))
                 {
                     // Save assignment change in the database
-                    getAcmAssignmentDao().save(acmAssignment);
+                    AcmAssignment assignmentSaved = getAcmAssignmentDao().save(acmAssignment);
 
                     // Raise an event
-                    getAcmObjectHistoryEventPublisher().publishAssigneeChangeEvent(acmAssignment, event.getUserId(), event.getIpAddress());
+                    getAcmObjectHistoryEventPublisher().publishAssigneeChangeEvent(assignmentSaved, event.getUserId(), event.getIpAddress());
                 }
             }
         }
@@ -102,20 +121,9 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
 
     public boolean isAssigneeChanged(AcmAssignment assignment)
     {
-        if (assignment.getNewAssignee() != null && assignment.getOldAssignee() != null)
-        {
-            if (assignment.getNewAssignee().equals(assignment.getOldAssignee()))
-            {
-                return false;
-            }
-        }
-
-        if (assignment.getNewAssignee() == null && assignment.getOldAssignee() == null)
-        {
-            return false;
-        }
-
-        return true;
+        String newAssignee = assignment.getNewAssignee();
+        String oldAssignee = assignment.getOldAssignee();
+        return !Objects.equals(newAssignee, oldAssignee);
     }
 
     private AcmAssignment createAcmAssignment(CaseFile updatedCaseFile)
@@ -134,21 +142,14 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
     {
         String updatedPriority = updatedCaseFile.getPriority();
         String priority = caseFile.getPriority();
-        return !updatedPriority.equals(priority);
+        return !Objects.equals(updatedPriority, priority);
     }
 
     private boolean isDetailsChanged(CaseFile caseFile, CaseFile updatedCaseFile)
     {
         String updatedDetails = updatedCaseFile.getDetails();
         String details = caseFile.getDetails();
-        if (updatedDetails != null && details != null)
-        {
-            return !details.equals(updatedDetails);
-        } else if (updatedDetails != null)
-        {
-            return true;
-        }
-        return false;
+        return !Objects.equals(details, updatedDetails);
     }
 
     public void checkParticipants(CaseFile caseFile, CaseFile updatedCaseFile, String ipAddress)
@@ -161,7 +162,8 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
             if (!updated.contains(participant))
             {
                 // participant deleted
-                getCaseFileEventUtility().raiseParticipantsModifiedInCaseFile(participant, updatedCaseFile, ipAddress, "deleted");
+                getCaseFileEventUtility()
+                        .raiseParticipantsModifiedInCaseFile(participant, updatedCaseFile, ipAddress, "deleted");
             }
         }
 
@@ -170,7 +172,8 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
             if (!existing.contains(participant))
             {
                 // participant added
-                getCaseFileEventUtility().raiseParticipantsModifiedInCaseFile(participant, updatedCaseFile, ipAddress, "added");
+                getCaseFileEventUtility()
+                        .raiseParticipantsModifiedInCaseFile(participant, updatedCaseFile, ipAddress, "added");
             }
         }
     }
@@ -179,7 +182,7 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
     {
         String updatedStatus = updatedCaseFile.getStatus();
         String status = caseFile.getStatus();
-        return !updatedStatus.equals(status);
+        return !Objects.equals(updatedStatus, status);
     }
 
     private boolean checkExecution(String objectType)

@@ -130,15 +130,14 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
     /**
      * Constructs a new instance of the scheduler.
      *
-     * @param taskScheduler
-     *            has one thread that is run periodically in order to submit tasks to the <code>taskExecutor</code>. The
-     *            frequency at which the scheduler is run is defined in the JSON configuration file.
-     * @param taskExecutor
-     *            executes individual tasks submitted by the task scheduling thread. Individual tasks are defined in the
-     *            JSON configuration file in a JSON array containing JSON object defining individual tasks.
-     * @param springContextHolder
-     *            needed for obtaining instances of Spring beans by name. Beans defined in the tasks section of the JSON
-     *            configuration file must implement the <code>AcmSchedulableBean</code> interface.
+     * @param taskScheduler has one thread that is run periodically in order to submit tasks to the
+     *            <code>taskExecutor</code>. The frequency at which the scheduler is run is defined in the JSON
+     *            configuration file.
+     * @param taskExecutor executes individual tasks submitted by the task scheduling thread. Individual tasks are
+     *            defined in the JSON configuration file in a JSON array containing JSON object defining individual
+     *            tasks.
+     * @param springContextHolder needed for obtaining instances of Spring beans by name. Beans defined in the tasks
+     *            section of the JSON configuration file must implement the <code>AcmSchedulableBean</code> interface.
      *
      * @see AcmSchedulerConstants#SCHEDULE_INTERVAL_KEY for the key value in the JSON configuration representing the
      *      frequency at which the scheduler is run.
@@ -190,8 +189,7 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
     /**
      * Checks if the event was triggered by a change of the scheduler configuration file.
      *
-     * @param abstractConfigurationFileEvent
-     *            the event encapsulating a reference to the modified file.
+     * @param abstractConfigurationFileEvent the event encapsulating a reference to the modified file.
      * @return <code>true</code> if the event was triggered by the scheduler configuration <code>false</code> otherwise.
      */
     private boolean isConfigurationFileChange(AbstractConfigurationFileEvent abstractConfigurationFileEvent)
@@ -204,12 +202,10 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
     /**
      * Extracts the file last modified time.
      *
-     * @param configFile
-     *            a reference to the configuration file.
+     * @param configFile a reference to the configuration file.
      * @return a reference to an instance of <code>FileTime</code> associated with the scheduler configuration time
      *         referring to its last modification time.
-     * @throws IOException
-     *             if there is a problem while reading configuration file attributes.
+     * @throws IOException if there is a problem while reading configuration file attributes.
      */
     private FileTime getConfigLastModifiedTime(File configFile) throws IOException
     {
@@ -225,10 +221,8 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
      * was setup before, it attempts to stop it. If it is, it processes the individual tasks configuration, and sets up
      * the scheduler if one is not running already, or its configuration changed.
      *
-     * @param configFile
-     *            a reference to the scheduler configuration file.
-     * @throws IOException
-     *             if there was an error while reading the configuration file.
+     * @param configFile a reference to the scheduler configuration file.
+     * @throws IOException if there was an error while reading the configuration file.
      */
     private void processSchedulerConfiguration(File configFile) throws IOException
     {
@@ -260,8 +254,7 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
      * it was already configured, than it is updated. Tasks that were previously configured, but are no longer in the
      * configuration are removed from the <code>tasks</code> map.
      *
-     * @param configuration
-     *            JSON object that was created by parsing the contents of the configuration file.
+     * @param configuration JSON object that was created by parsing the contents of the configuration file.
      *
      * @see AcmSchedulerConstants#TASKS_KEY
      * @see #tasks
@@ -283,6 +276,7 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
         {
             JSONObject taskConfiguration = tasksConfigurations.getJSONObject(i);
             String taskName = taskConfiguration.getString(NAME_KEY);
+            keys.add(taskName);
             // how often in the configuration is given in minutes, needs to be converted in milliseconds.
             long howOften = taskConfiguration.getLong(HOW_OFTEN_KEY) * 60 * 1000;
             if (tasks.containsKey(taskName))
@@ -297,7 +291,6 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
                     AcmSchedulableBean schedulableBean = springContextHolder.getBeanByName(beanName, AcmSchedulableBean.class);
                     AcmSchedulerTask task = new AcmSchedulerTask(howOften,
                             taskConfiguration.has(TASK_LAST_RUN_KEY) ? taskConfiguration.getLong(TASK_LAST_RUN_KEY) : 0, schedulableBean);
-                    keys.add(taskName);
                     tasks.put(taskName, task);
                     log.debug("Added task {} for bean named {} to run every {} minutes.", taskName, beanName,
                             taskConfiguration.getString(HOW_OFTEN_KEY));
@@ -318,8 +311,7 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
      * executor. In case a scheduler was already setup, and the value in the configuration specifying how often is
      * should be run has changed, it is canceled and rescheduled.
      *
-     * @param configuration
-     *            JSON object that was created by parsing the contents of the configuration file.
+     * @param configuration JSON object that was created by parsing the contents of the configuration file.
      */
     private void setupScheduler(JSONObject configuration)
     {
@@ -344,8 +336,7 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
     /**
      * Creates a runnable to be submitted to the scheduler.
      *
-     * @param scheduleInterval
-     *            the interval at which the scheduler runs periodically.
+     * @param scheduleInterval the interval at which the scheduler runs periodically.
      * @return the runnable to be submitted to the scheduler.
      */
     private Runnable schedulerRunnable(long scheduleInterval)

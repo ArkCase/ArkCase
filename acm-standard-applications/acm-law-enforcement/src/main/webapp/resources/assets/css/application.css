@@ -1,3 +1,5 @@
+/* @override https://core.arkcase.dev.armedia.com/arkcase/assets/css/application.css */
+
 /* @override http://jsapn.armedianet.com/arkcase/assets/css/application.css
 	http://10.21.4.149/arkcase/assets/css/application.css
 	https://star.arkcase.dev.armedia.com/arkcase/assets/css/application.css */
@@ -830,7 +832,7 @@ thead {
     left: 40%;
 }
 
-a.editable.editable-click.editable-hide {
+a.editable.editable-click {
     display: inline-block !important;
 }
 
@@ -1000,7 +1002,7 @@ a.editable.editable-click.editable-hide {
 
 /* Style of invalid fields */
 input.ng-invalid, textarea.ng-invalid, select.ng-invalid {
-    border-color: #ff7373;
+    border-color: #fdadad;
 }
 
 /* Dropdowns in the left sidebar (ie. datepicker) */ 

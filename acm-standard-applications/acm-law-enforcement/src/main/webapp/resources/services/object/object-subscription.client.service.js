@@ -218,20 +218,18 @@ angular.module('services').factory('Object.SubscriptionService', ['$resource', '
                         //This particular key is introduced for getListOfSubscriptionsByUser function
                         var cacheKeyUser = userId;
                         var userSubscriptions = cacheSubscriptions.get(cacheKeyUser);
-                        if (userSubscriptions == null) {
-                            userSubscriptions = [];
+                        if (userSubscriptions !== null) {
+                            userSubscriptions.push(subscription);
                         }
 
-                        userSubscriptions.push(subscription);
                         cacheSubscriptions.put(cacheKeyUser, userSubscriptions);
 
                         var cacheKey = userId + "." + objectType + "." + objectId;
                         var subscriptions = cacheSubscriptions.get(cacheKey);
-                        if (subscriptions == null) {
-                            subscriptions = [];
+                        if (subscriptions !== null) {
+                            subscriptions.push(subscription);
                         }
 
-                        subscriptions.push(subscription);
                         cacheSubscriptions.put(cacheKey, subscriptions);
 
                         return subscription;

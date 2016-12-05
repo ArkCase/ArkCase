@@ -189,6 +189,15 @@ public class UserPreferenceService
         return widgets;
     }
 
+    public void deleteByWidgetId(Long widgetId){
+        userPreferenceDao.deleteByWidgetId(widgetId);
+    }
+
+    public List<UserPreference> findByWidgetId(Long widgetId)
+    {
+        return userPreferenceDao.findByWidgetId(widgetId);
+    }
+
     private Module getModule(String moduleName) throws AcmObjectNotFoundException
     {
         return moduleDao.getModuleByName(moduleName);

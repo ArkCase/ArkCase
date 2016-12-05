@@ -12,7 +12,7 @@
  */
 angular.module('services').factory('DocTreeService', ['UtilService', 'Object.LookupService'
     , function (Util, ObjectLookupService) {
-        return  {
+        return {
 
             /**
              * @ngdoc method
@@ -24,11 +24,12 @@ angular.module('services').factory('DocTreeService', ['UtilService', 'Object.Loo
              * @param {String} onCloseForm (Optional) Optional parametar for doc-tree
              * @param {String} objectType Object type
              * @param {String} fileTypes List of file types
+             * @param {String} containerId Container Id for the file
              *
              * @description
              * This method generates Frevvo plain form url.
              */
-            uploadFrevvoForm: function (type, folderId, onCloseForm, objectType, fileTypes) {
+            uploadFrevvoForm: function (type, folderId, onCloseForm, objectType, fileTypes, containerId) {
                 if (objectType) {
                     var fileType = _.find(fileTypes, {type: type});
                     if (ObjectLookupService.validatePlainForm(fileType)) {
@@ -52,6 +53,13 @@ angular.module('services').factory('DocTreeService', ['UtilService', 'Object.Loo
                             parametersAsString += key + ":'" + Util.goodValue(value) + "',";
                         }
                         parametersAsString += "folderId:'" + folderId + "',";
+
+                        //we will use same function for upload and edit form
+                        //if it is edit we need containerId for the file and mode
+                        if (containerId) {
+                            parametersAsString += "containerId:'" + containerId + "',";
+                            parametersAsString += "mode:'edit',";
+                        }
                         data += parametersAsString;
 
                         url = url.replace("_data=(", data);
@@ -60,7 +68,7 @@ angular.module('services').factory('DocTreeService', ['UtilService', 'Object.Loo
                 }
             },
 
-            silentReplace : function (value, replace, replacement) {
+            silentReplace: function (value, replace, replacement) {
                 if (!Util.isEmpty(value) && value.replace) {
                     value = value.replace(replace, replacement);
                 }

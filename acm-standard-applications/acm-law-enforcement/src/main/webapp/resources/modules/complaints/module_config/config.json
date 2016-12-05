@@ -85,7 +85,8 @@
       {
         "desc": "Sort Created Date Desc",
         "name": "sort-created-date-desc",
-        "value": "create_tdt DESC"
+        "value": "create_tdt DESC",
+        "default": true
       },
       {
         "desc": "Sort By Name",
@@ -95,8 +96,7 @@
       {
         "desc": "(No Sort)",
         "name": "",
-        "value": "",
-        "default": true
+        "value": ""
       }
     ],
     "nodeTypes": [

@@ -1,0 +1,895 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<namespace xmlns="http://www.mulesoft.org/schema/mule/tooling.attributes" xmlns:mule="http://www.mulesoft.org/schema/mule/core" prefix="cmis" url="http://www.mulesoft.org/schema/mule/cmis">
+  <global-cloud-connector metaData="static" connectivityTesting="on" extends="http://www.mulesoft.org/schema/mule/cmis/abstractCmisConnectorGeneric" abstract="true" image="" localId="parentConfig" icon="" description="" caption="CMIS"></global-cloud-connector>
+  <nested abstract="true" localId="connection-pooling-profile" description="" caption="">
+    <label description="" caption="Define connection pool configuration" name="poolingProfileLabel"></label>
+    <integer step="0" min="0" defaultValue="5" fillLine="true" description="Controls the maximum number of connections that can be borrowed from the pool at one time. When set to a negative value, there is no limit to the number of connections that may be active at one time. When maxActive is exceeded, the pool is said to be exhausted." caption="Max active" name="maxActive"></integer>
+    <integer step="0" min="0" defaultValue="5" fillLine="true" description="Controls the maximum number of connections that can sit idle in the pool at any time. When set to a negative value, there is no limit to the number of connections that may be idle at one time." caption="Max idle" name="maxIdle"></integer>
+    <enum defaultValue="INITIALISE_ONE" alwaysFill="true" description="Determines how connections in a pool should be initialized. The possible values are: INITIALISE_NONE (will not load any connection into the pool on startup), INITIALISE_ONE (will load one initial connection into the pool on startup), or INITIALISE_ALL (will load all connections in the pool on startup)" caption="Initialisation policy" name="initialisationPolicy">
+      <option value="INITIALISE_NONE"></option>
+      <option value="INITIALISE_ONE"></option>
+      <option value="INITIALISE_ALL"></option>
+    </enum>
+    <enum defaultValue="WHEN_EXHAUSTED_GROW" alwaysFill="true" description="Specifies the behavior of the connection pool when the pool is exhausted. Possible values are: &quot;WHEN_EXHAUSTED_FAIL&quot;, which will throw a NoSuchElementException, &quot;WHEN_EXHAUSTED_WAIT&quot;, which will block by invoking Object.wait(long) until a new or idle object is available, or WHEN_EXHAUSTED_GROW, which will create a new connection and return it, essentially making maxActive meaningless. If a positive maxWait value is supplied, it will block for at most that many milliseconds, after which a NoSuchElementException will be thrown. If maxThreadWait is a negative value, it will block indefinitely." caption="Exhausted action" name="exhaustedAction">
+      <option value="WHEN_EXHAUSTED_WAIT"></option>
+      <option value="WHEN_EXHAUSTED_FAIL"></option>
+      <option value="WHEN_EXHAUSTED_GROW"></option>
+    </enum>
+    <integer step="0" min="0" defaultValue="5" fillLine="true" description="When exhausted action is Wait (or block) this is the amount of time in milliseconds that the pool will wait before failing. Setting a negative value will block indefinitely until an idle instance becomes available." caption="Max wait" name="maxWait"></integer>
+    <integer step="0" min="0" defaultValue="1800000" fillLine="true" description="Determines the minimum amount of time a connection may sit idle in the pool before it is eligible for eviction. When non-positive, no connections will be evicted from the pool due to idle time alone." caption="Min eviction (ms)" name="minEvictionMillis"></integer>
+    <integer step="0" min="0" defaultValue="-1" fillLine="true" description="Specifies the number of milliseconds between runs of the connection evictor. When non-positive, no connection evictor is executed." caption="Eviction check interval (ms)" name="evictionCheckIntervalMillis"></integer>
+  </nested>
+  <nested abstract="true" localId="reconnectionStrategyElement" description="" caption="">
+    <label description="" caption="Define how mule should attempt to handle a connection failure" name="connectionLabel"></label>
+    <radioBoolean fillLine="true" description="Disable reconection strategy" caption="Do not use a Reconnection strategy" name="noReconnection"></radioBoolean>
+    <radioBoolean fillLine="true" description="A reconnection strategy that allows the user to configure how many times a reconnection should be attempted and how long to wait between attempts." caption="Standard Reconnection" name="standardReconnection"></radioBoolean>
+    <integer step="1" max="2147483647" min="1" defaultValue="2000" indented="true" controlled="standardReconnection" description="How often (in ms) to reconnect" caption="Frequency (ms)" name="reconnectionFrequency"></integer>
+    <integer step="1" max="2147483647" min="1" defaultValue="2" indented="true" controlled="standardReconnection,!reconnectForever" description="How many reconnection attempts to make" caption="Reconnection Attempts" name="reconnectionAttemps"></integer>
+    <boolean indented="true" controlled="standardReconnection" description="A reconnection strategy that retries an infinite number of times at the specified frequency." caption="Reconnect Forever" name="reconnectForever"></boolean>
+    <radioBoolean fillLine="true" description="A user-defined reconnection strategy." caption="Custom Reconnection" name="customReconnection"></radioBoolean>
+    <classname indented="true" controlled="customReconnection" description="A class that implements the RetryPolicyTemplate interface." caption="Class" name="class"></classname>
+    <childElement allowMultiple="true" controlled="customReconnection" description="Property elements." caption="Properties" name="http://www.springframework.org/schema/beans/property"></childElement>
+  </nested>
+  <global-cloud-connector metaData="static" connectivityTesting="on" extends="http://www.mulesoft.org/schema/mule/cmis/parentConfig" abstract="false" image="icons/large/cmis-connector-48x32.png" localId="config" icon="icons/small/cmis-connector-24x16.png" description="Global CMIS configuration information." caption="CMIS">
+    <attribute-category description="Cmis configuration properties." caption="General">
+      <group caption="Generic" id="cmisGenericProperties">
+        <name required="true" description="Give a name to this configuration so it can be later referenced by config-ref." caption="Name" name="name"></name>
+      </group>
+      <group caption="Connection" id="connection">
+        <string javaType="java.lang.String" required="false" description="CMIS username." caption="Username" name="username"></string>
+        <password javaType="java.lang.String" required="false" description="CMIS password." caption="Password" name="password"></password>
+        <string javaType="java.lang.String" required="false" description="URL base for the SOAP connector." caption="Base Url" name="baseUrl"></string>
+        <string javaType="java.lang.String" required="false" description="The identifier for the Repository that this connector instance works with." caption="Repository Id" name="repositoryId"></string>
+        <string defaultValue="ATOM" javaType="java.lang.String" required="false" description="The type of endpoint. Values: SOAP or ATOMPUB." caption="Endpoint" name="endpoint"></string>
+        <string defaultValue="10000" javaType="java.lang.String" required="false" description="The connection time-out specification." caption="Connection Timeout" name="connectionTimeout"></string>
+        <string defaultValue="false" javaType="java.lang.String" required="false" description="Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work." caption="Use Alfresco Extension" name="useAlfrescoExtension"></string>
+        <string defaultValue="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" javaType="java.lang.String" required="false" description="Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider." caption="Cxf Port Provider" name="cxfPortProvider"></string>
+      </group>
+    </attribute-category>
+    <attribute-category description="Pooling profile options." caption="Pooling Profile">
+      <group caption="Pooling Profile" id="poolingProfile">
+        <childElement inplace="true" description="" caption="" name="http://www.mulesoft.org/schema/mule/cmis/connection-pooling-profile"></childElement>
+      </group>
+    </attribute-category>
+    <attribute-category description="Reconnection options." caption="Reconnection">
+      <group caption="Strategies" id="reconnectionStrategies">
+        <childElement inplace="true" valuePersistence="org.mule.tooling.ui.modules.core.widgets.meta.HTTPTransactionValuePersistence" description="" caption="" name="http://www.mulesoft.org/schema/mule/core/reconnectionStrategyElement"></childElement>
+        <childElement allowedSubTypes="http://www.mulesoft.org/schema/mule/core/reconnect,http://www.mulesoft.org/schema/mule/core/reconnect-custom-strategy,http://www.mulesoft.org/schema/mule/core/reconnect-forever" allowSubTypes="true" visibleInDialog="false" description="" caption="" name="http://www.mulesoft.org/schema/mule/core/abstractReconnectionStrategy"></childElement>
+      </group>
+    </attribute-category>
+  </global-cloud-connector>
+  <cloud-connector abstract="true" image="icons/large/cmis-connector-48x32.png" localId="abstractCmisConnectorGeneric" icon="icons/small/cmis-connector-24x16.png" description="Interact with Cmis." caption="Abstractcmisconnectorgeneric">
+    <attribute-category description="General." caption="General">
+      <group caption="Generic" id="abstractCmisConnectorGeneric">
+        <globalRef requiredType="http://www.mulesoft.org/schema/mule/cmis/config" required="true" description="Specify which configuration to use for this invocation." caption="Config Reference" name="config-ref"></globalRef>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector extends="http://www.mulesoft.org/schema/mule/cmis/abstractCmisConnectorGeneric" image="icons/large/cmis-connector-48x32.png" localId="cmis-connector" icon="icons/small/cmis-connector-24x16.png" description="CMIS (Content Management Interoperability Services) is a standard for improving interoperability between ECM systems." caption="CMIS" aliasId="org.mule.tooling.ui.modules.core.pattern.cmis">
+    <attribute-category description="General." caption="General">
+      <group caption="Generic" id="cmisConnectorGeneric">
+        <modeSwitch alwaysCombo="true" description="Operation." caption="Operation" name="Cmis operations to execute">
+          <mode modeLabel="Apply acl" modeId="http://www.mulesoft.org/schema/mule/cmis/apply-acl"></mode>
+          <mode modeLabel="Apply aspect" modeId="http://www.mulesoft.org/schema/mule/cmis/apply-aspect"></mode>
+          <mode modeLabel="Apply policy" modeId="http://www.mulesoft.org/schema/mule/cmis/apply-policy"></mode>
+          <mode modeLabel="Cancel check out" modeId="http://www.mulesoft.org/schema/mule/cmis/cancel-check-out"></mode>
+          <mode modeLabel="Changelog" modeId="http://www.mulesoft.org/schema/mule/cmis/changelog"></mode>
+          <mode modeLabel="Check in" modeId="http://www.mulesoft.org/schema/mule/cmis/check-in"></mode>
+          <mode modeLabel="Check out" modeId="http://www.mulesoft.org/schema/mule/cmis/check-out"></mode>
+          <mode modeLabel="Create document by id" modeId="http://www.mulesoft.org/schema/mule/cmis/create-document-by-id"></mode>
+          <mode modeLabel="Create document by id from content" modeId="http://www.mulesoft.org/schema/mule/cmis/create-document-by-id-from-content"></mode>
+          <mode modeLabel="Create document by path" modeId="http://www.mulesoft.org/schema/mule/cmis/create-document-by-path"></mode>
+          <mode modeLabel="Create document by path from content" modeId="http://www.mulesoft.org/schema/mule/cmis/create-document-by-path-from-content"></mode>
+          <mode modeLabel="Create folder" modeId="http://www.mulesoft.org/schema/mule/cmis/create-folder"></mode>
+          <mode modeLabel="Create relationship" modeId="http://www.mulesoft.org/schema/mule/cmis/create-relationship"></mode>
+          <mode modeLabel="Delete" modeId="http://www.mulesoft.org/schema/mule/cmis/delete"></mode>
+          <mode modeLabel="Delete tree" modeId="http://www.mulesoft.org/schema/mule/cmis/delete-tree"></mode>
+          <mode modeLabel="Folder" modeId="http://www.mulesoft.org/schema/mule/cmis/folder"></mode>
+          <mode modeLabel="Get acl" modeId="http://www.mulesoft.org/schema/mule/cmis/get-acl"></mode>
+          <mode modeLabel="Get all versions" modeId="http://www.mulesoft.org/schema/mule/cmis/get-all-versions"></mode>
+          <mode modeLabel="Get applied policies" modeId="http://www.mulesoft.org/schema/mule/cmis/get-applied-policies"></mode>
+          <mode modeLabel="Get checkout docs" modeId="http://www.mulesoft.org/schema/mule/cmis/get-checkout-docs"></mode>
+          <mode modeLabel="Get content stream" modeId="http://www.mulesoft.org/schema/mule/cmis/get-content-stream"></mode>
+          <mode modeLabel="Get object by id" modeId="http://www.mulesoft.org/schema/mule/cmis/get-object-by-id"></mode>
+          <mode modeLabel="Get object by path" modeId="http://www.mulesoft.org/schema/mule/cmis/get-object-by-path"></mode>
+          <mode modeLabel="Get object relationships" modeId="http://www.mulesoft.org/schema/mule/cmis/get-object-relationships"></mode>
+          <mode modeLabel="Get or create folder by path" modeId="http://www.mulesoft.org/schema/mule/cmis/get-or-create-folder-by-path"></mode>
+          <mode modeLabel="Get parent folders" modeId="http://www.mulesoft.org/schema/mule/cmis/get-parent-folders"></mode>
+          <mode modeLabel="Get type definition" modeId="http://www.mulesoft.org/schema/mule/cmis/get-type-definition"></mode>
+          <mode modeLabel="Move object" modeId="http://www.mulesoft.org/schema/mule/cmis/move-object"></mode>
+          <mode modeLabel="Query" modeId="http://www.mulesoft.org/schema/mule/cmis/query"></mode>
+          <mode modeLabel="Repositories" modeId="http://www.mulesoft.org/schema/mule/cmis/repositories"></mode>
+          <mode modeLabel="Repository info" modeId="http://www.mulesoft.org/schema/mule/cmis/repository-info"></mode>
+          <mode modeLabel="Update object properties" modeId="http://www.mulesoft.org/schema/mule/cmis/update-object-properties"></mode>
+        </modeSwitch>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="org.apache.chemistry.opencmis.commons.data.Acl" metaData="static" extends="http://www.mulesoft.org/schema/mule/cmis/abstractCmisConnectorGeneric" abstract="true" image="icons/large/cmis-connector-48x32.png" localId="apply-acl" icon="icons/small/cmis-connector-24x16.png" caption="Apply Acl">
+    <attribute-category description="General." caption="General">
+      <group caption="General" id="general">
+        <string javaType="org.apache.chemistry.opencmis.client.api.CmisObject" required="false" description="The object whose Acl is intended to change." caption="Cmis Object Reference" name="cmisObject-ref"></string>
+        <string javaType="java.lang.String" required="false" description="The id of the object." caption="Object Id" name="objectId"></string>
+        <enum allowsCustom="true" javaType="org.apache.chemistry.opencmis.commons.enums.AclPropagation" required="true" supportsExpressions="true" description="Wheter to propagate changes or not. can be  REPOSITORYDETERMINED | OBJECTONLY | PROPAGATE." caption="Acl Propagation" name="aclPropagation">
+          <option value="OBJECTONLY"></option>
+          <option value="PROPAGATE"></option>
+          <option value="REPOSITORYDETERMINED"></option>
+        </enum>
+      </group>
+      <group caption="Add Aces" id="add Aces">
+        <element-controller-list listName="add-aces" itemName="add-ace" localName="apply-acl-add-aces" javaType="java.util.List&lt;org.apache.chemistry.opencmis.commons.data.Ace&gt;" required="true" description="Added access control entities." caption="Add Aces"></element-controller-list>
+      </group>
+      <group caption="Remove Aces" id="remove Aces">
+        <element-controller-list listName="remove-aces" itemName="remove-ace" localName="apply-acl-remove-aces" javaType="java.util.List&lt;org.apache.chemistry.opencmis.commons.data.Ace&gt;" required="true" description="Removed access control entities." caption="Remove Aces"></element-controller-list>
+      </group>
+    </attribute-category>
+    <attribute-category description="Connection." caption="Connection">
+      <group caption="Connection" id="connection">
+        <label caption="Use these fields to override the credentials defined in the CMIS connector."></label>
+        <label caption=""></label>
+        <string javaType="java.lang.String" required="false" description="CMIS username." caption="Username" name="username"></string>
+        <password javaType="java.lang.String" required="false" description="CMIS password." caption="Password" name="password"></password>
+        <string javaType="java.lang.String" required="false" description="URL base for the SOAP connector." caption="Base Url" name="baseUrl"></string>
+        <string javaType="java.lang.String" required="false" description="The identifier for the Repository that this connector instance works with." caption="Repository Id" name="repositoryId"></string>
+        <string defaultValue="ATOM" javaType="java.lang.String" required="false" description="The type of endpoint. Values: SOAP or ATOMPUB." caption="Endpoint" name="endpoint"></string>
+        <string defaultValue="10000" javaType="java.lang.String" required="false" description="The connection time-out specification." caption="Connection Timeout" name="connectionTimeout"></string>
+        <string defaultValue="false" javaType="java.lang.String" required="false" description="Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work." caption="Use Alfresco Extension" name="useAlfrescoExtension"></string>
+        <string defaultValue="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" javaType="java.lang.String" required="false" description="Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider." caption="Cxf Port Provider" name="cxfPortProvider"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="void" metaData="static" extends="http://www.mulesoft.org/schema/mule/cmis/abstractCmisConnectorGeneric" abstract="true" image="icons/large/cmis-connector-48x32.png" localId="apply-aspect" icon="icons/small/cmis-connector-24x16.png" caption="Apply Aspect">
+    <attribute-category description="General." caption="General">
+      <group caption="General" id="general">
+        <string javaType="java.lang.String" required="true" description="The name of the aspect to be applied to the object." caption="Aspect Name" name="aspectName"></string>
+        <string javaType="java.lang.String" required="true" description="The object's id." caption="Object Id" name="objectId"></string>
+        <element-controller-map mapName="properties" defaultValue="#[payload]" itemName="property" localName="apply-aspect-properties" javaType="java.util.Map&lt;java.lang.String,java.lang.String&gt;" required="false" description="The properties to set." caption="Properties"></element-controller-map>
+      </group>
+    </attribute-category>
+    <attribute-category description="Connection." caption="Connection">
+      <group caption="Connection" id="connection">
+        <label caption="Use these fields to override the credentials defined in the CMIS connector."></label>
+        <label caption=""></label>
+        <string javaType="java.lang.String" required="false" description="CMIS username." caption="Username" name="username"></string>
+        <password javaType="java.lang.String" required="false" description="CMIS password." caption="Password" name="password"></password>
+        <string javaType="java.lang.String" required="false" description="URL base for the SOAP connector." caption="Base Url" name="baseUrl"></string>
+        <string javaType="java.lang.String" required="false" description="The identifier for the Repository that this connector instance works with." caption="Repository Id" name="repositoryId"></string>
+        <string defaultValue="ATOM" javaType="java.lang.String" required="false" description="The type of endpoint. Values: SOAP or ATOMPUB." caption="Endpoint" name="endpoint"></string>
+        <string defaultValue="10000" javaType="java.lang.String" required="false" description="The connection time-out specification." caption="Connection Timeout" name="connectionTimeout"></string>
+        <string defaultValue="false" javaType="java.lang.String" required="false" description="Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work." caption="Use Alfresco Extension" name="useAlfrescoExtension"></string>
+        <string defaultValue="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" javaType="java.lang.String" required="false" description="Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider." caption="Cxf Port Provider" name="cxfPortProvider"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="void" metaData="static" extends="http://www.mulesoft.org/schema/mule/cmis/abstractCmisConnectorGeneric" abstract="true" image="icons/large/cmis-connector-48x32.png" localId="apply-policy" icon="icons/small/cmis-connector-24x16.png" caption="Apply Policy">
+    <attribute-category description="General." caption="General">
+      <group caption="General" id="general">
+        <string javaType="org.apache.chemistry.opencmis.client.api.CmisObject" required="false" description="The document from which to get the stream. Can be null if &quot;objectId&quot; is set." caption="Cmis Object Reference" name="cmisObject-ref"></string>
+        <string javaType="java.lang.String" required="false" description="Id of the document from which to get the stream. Can be null if &quot;object&quot; is set." caption="Object Id" name="objectId"></string>
+      </group>
+      <group caption="Policy Ids" id="policy Ids">
+        <element-controller-list listName="policy-ids" itemName="policy-id" localName="apply-policy-policy-ids" javaType="java.util.List&lt;org.apache.chemistry.opencmis.client.api.ObjectId&gt;" required="true" description="Policy ID's to apply." caption="Policy Ids"></element-controller-list>
+      </group>
+    </attribute-category>
+    <attribute-category description="Connection." caption="Connection">
+      <group caption="Connection" id="connection">
+        <label caption="Use these fields to override the credentials defined in the CMIS connector."></label>
+        <label caption=""></label>
+        <string javaType="java.lang.String" required="false" description="CMIS username." caption="Username" name="username"></string>
+        <password javaType="java.lang.String" required="false" description="CMIS password." caption="Password" name="password"></password>
+        <string javaType="java.lang.String" required="false" description="URL base for the SOAP connector." caption="Base Url" name="baseUrl"></string>
+        <string javaType="java.lang.String" required="false" description="The identifier for the Repository that this connector instance works with." caption="Repository Id" name="repositoryId"></string>
+        <string defaultValue="ATOM" javaType="java.lang.String" required="false" description="The type of endpoint. Values: SOAP or ATOMPUB." caption="Endpoint" name="endpoint"></string>
+        <string defaultValue="10000" javaType="java.lang.String" required="false" description="The connection time-out specification." caption="Connection Timeout" name="connectionTimeout"></string>
+        <string defaultValue="false" javaType="java.lang.String" required="false" description="Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work." caption="Use Alfresco Extension" name="useAlfrescoExtension"></string>
+        <string defaultValue="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" javaType="java.lang.String" required="false" description="Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider." caption="Cxf Port Provider" name="cxfPortProvider"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="void" metaData="static" extends="http://www.mulesoft.org/schema/mule/cmis/abstractCmisConnectorGeneric" abstract="true" image="icons/large/cmis-connector-48x32.png" localId="cancel-check-out" icon="icons/small/cmis-connector-24x16.png" caption="Cancel Check Out">
+    <attribute-category description="General." caption="General">
+      <group caption="General" id="general">
+        <string javaType="org.apache.chemistry.opencmis.client.api.CmisObject" required="false" description="The checked out document. Can be null if &quot;documentId&quot; is set." caption="Document Reference" name="document-ref"></string>
+        <string javaType="java.lang.String" required="false" description="Id of the checked out document. Can be null if &quot;document&quot; is set." caption="Document Id" name="documentId"></string>
+      </group>
+    </attribute-category>
+    <attribute-category description="Connection." caption="Connection">
+      <group caption="Connection" id="connection">
+        <label caption="Use these fields to override the credentials defined in the CMIS connector."></label>
+        <label caption=""></label>
+        <string javaType="java.lang.String" required="false" description="CMIS username." caption="Username" name="username"></string>
+        <password javaType="java.lang.String" required="false" description="CMIS password." caption="Password" name="password"></password>
+        <string javaType="java.lang.String" required="false" description="URL base for the SOAP connector." caption="Base Url" name="baseUrl"></string>
+        <string javaType="java.lang.String" required="false" description="The identifier for the Repository that this connector instance works with." caption="Repository Id" name="repositoryId"></string>
+        <string defaultValue="ATOM" javaType="java.lang.String" required="false" description="The type of endpoint. Values: SOAP or ATOMPUB." caption="Endpoint" name="endpoint"></string>
+        <string defaultValue="10000" javaType="java.lang.String" required="false" description="The connection time-out specification." caption="Connection Timeout" name="connectionTimeout"></string>
+        <string defaultValue="false" javaType="java.lang.String" required="false" description="Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work." caption="Use Alfresco Extension" name="useAlfrescoExtension"></string>
+        <string defaultValue="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" javaType="java.lang.String" required="false" description="Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider." caption="Cxf Port Provider" name="cxfPortProvider"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="org.apache.chemistry.opencmis.client.api.ChangeEvents" metaData="static" extends="http://www.mulesoft.org/schema/mule/cmis/abstractCmisConnectorGeneric" abstract="true" image="icons/large/cmis-connector-48x32.png" localId="changelog" icon="icons/small/cmis-connector-24x16.png" caption="Changelog">
+    <attribute-category description="General." caption="General">
+      <group caption="General" id="general">
+        <string javaType="java.lang.String" required="false" description="The change log token to start from or." caption="Change Log Token" name="changeLogToken"></string>
+        <boolean javaType="boolean" required="true" supportsExpressions="true" description="Indicates if changed properties should be included in the result." caption="Include Properties" name="includeProperties"></boolean>
+      </group>
+    </attribute-category>
+    <attribute-category description="Connection." caption="Connection">
+      <group caption="Connection" id="connection">
+        <label caption="Use these fields to override the credentials defined in the CMIS connector."></label>
+        <label caption=""></label>
+        <string javaType="java.lang.String" required="false" description="CMIS username." caption="Username" name="username"></string>
+        <password javaType="java.lang.String" required="false" description="CMIS password." caption="Password" name="password"></password>
+        <string javaType="java.lang.String" required="false" description="URL base for the SOAP connector." caption="Base Url" name="baseUrl"></string>
+        <string javaType="java.lang.String" required="false" description="The identifier for the Repository that this connector instance works with." caption="Repository Id" name="repositoryId"></string>
+        <string defaultValue="ATOM" javaType="java.lang.String" required="false" description="The type of endpoint. Values: SOAP or ATOMPUB." caption="Endpoint" name="endpoint"></string>
+        <string defaultValue="10000" javaType="java.lang.String" required="false" description="The connection time-out specification." caption="Connection Timeout" name="connectionTimeout"></string>
+        <string defaultValue="false" javaType="java.lang.String" required="false" description="Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work." caption="Use Alfresco Extension" name="useAlfrescoExtension"></string>
+        <string defaultValue="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" javaType="java.lang.String" required="false" description="Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider." caption="Cxf Port Provider" name="cxfPortProvider"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="org.apache.chemistry.opencmis.client.api.ObjectId" metaData="static" extends="http://www.mulesoft.org/schema/mule/cmis/abstractCmisConnectorGeneric" abstract="true" image="icons/large/cmis-connector-48x32.png" localId="check-in" icon="icons/small/cmis-connector-24x16.png" caption="Check In">
+    <attribute-category description="General." caption="General">
+      <group caption="General" id="general">
+        <string javaType="org.apache.chemistry.opencmis.client.api.CmisObject" required="false" description="The document to check-in. Can be null if &quot;documentId&quot; is set." caption="Document Reference" name="document-ref"></string>
+        <string javaType="java.lang.String" required="true" description="Check-in comment." caption="Checkin Comment" name="checkinComment"></string>
+        <string javaType="java.lang.String" required="false" description="Id of the document to check-in. Can be null if &quot;document&quot; is set." caption="Document Id" name="documentId"></string>
+        <string defaultValue="#[payload]" javaType="java.lang.Object" required="false" description="File content (no byte array or input stream for now)." caption="Content Reference" name="content-ref"></string>
+        <string javaType="java.lang.String" required="true" description="Name of the file." caption="Filename" name="filename"></string>
+        <string javaType="java.lang.String" required="true" description="Stream content-type." caption="Mime Type" name="mimeType"></string>
+        <boolean javaType="boolean" required="true" supportsExpressions="true" description="Whether it is major." caption="Major" name="major"></boolean>
+      </group>
+      <group caption="Properties" id="properties">
+        <element-controller-map mapName="properties" itemName="property" localName="check-in-properties" javaType="java.util.Map&lt;java.lang.String,java.lang.String&gt;" required="false" description="Custom properties." caption="Properties"></element-controller-map>
+      </group>
+    </attribute-category>
+    <attribute-category description="Connection." caption="Connection">
+      <group caption="Connection" id="connection">
+        <label caption="Use these fields to override the credentials defined in the CMIS connector."></label>
+        <label caption=""></label>
+        <string javaType="java.lang.String" required="false" description="CMIS username." caption="Username" name="username"></string>
+        <password javaType="java.lang.String" required="false" description="CMIS password." caption="Password" name="password"></password>
+        <string javaType="java.lang.String" required="false" description="URL base for the SOAP connector." caption="Base Url" name="baseUrl"></string>
+        <string javaType="java.lang.String" required="false" description="The identifier for the Repository that this connector instance works with." caption="Repository Id" name="repositoryId"></string>
+        <string defaultValue="ATOM" javaType="java.lang.String" required="false" description="The type of endpoint. Values: SOAP or ATOMPUB." caption="Endpoint" name="endpoint"></string>
+        <string defaultValue="10000" javaType="java.lang.String" required="false" description="The connection time-out specification." caption="Connection Timeout" name="connectionTimeout"></string>
+        <string defaultValue="false" javaType="java.lang.String" required="false" description="Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work." caption="Use Alfresco Extension" name="useAlfrescoExtension"></string>
+        <string defaultValue="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" javaType="java.lang.String" required="false" description="Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider." caption="Cxf Port Provider" name="cxfPortProvider"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="org.apache.chemistry.opencmis.client.api.ObjectId" metaData="static" extends="http://www.mulesoft.org/schema/mule/cmis/abstractCmisConnectorGeneric" abstract="true" image="icons/large/cmis-connector-48x32.png" localId="check-out" icon="icons/small/cmis-connector-24x16.png" caption="Check Out">
+    <attribute-category description="General." caption="General">
+      <group caption="General" id="general">
+        <string javaType="org.apache.chemistry.opencmis.client.api.CmisObject" required="false" description="The document to be checked out. Can be null if &quot;documentId&quot; is set." caption="Document Reference" name="document-ref"></string>
+        <string javaType="java.lang.String" required="false" description="Id of the document to be checked out. Can be null if &quot;document&quot; is set." caption="Document Id" name="documentId"></string>
+      </group>
+    </attribute-category>
+    <attribute-category description="Connection." caption="Connection">
+      <group caption="Connection" id="connection">
+        <label caption="Use these fields to override the credentials defined in the CMIS connector."></label>
+        <label caption=""></label>
+        <string javaType="java.lang.String" required="false" description="CMIS username." caption="Username" name="username"></string>
+        <password javaType="java.lang.String" required="false" description="CMIS password." caption="Password" name="password"></password>
+        <string javaType="java.lang.String" required="false" description="URL base for the SOAP connector." caption="Base Url" name="baseUrl"></string>
+        <string javaType="java.lang.String" required="false" description="The identifier for the Repository that this connector instance works with." caption="Repository Id" name="repositoryId"></string>
+        <string defaultValue="ATOM" javaType="java.lang.String" required="false" description="The type of endpoint. Values: SOAP or ATOMPUB." caption="Endpoint" name="endpoint"></string>
+        <string defaultValue="10000" javaType="java.lang.String" required="false" description="The connection time-out specification." caption="Connection Timeout" name="connectionTimeout"></string>
+        <string defaultValue="false" javaType="java.lang.String" required="false" description="Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work." caption="Use Alfresco Extension" name="useAlfrescoExtension"></string>
+        <string defaultValue="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" javaType="java.lang.String" required="false" description="Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider." caption="Cxf Port Provider" name="cxfPortProvider"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="org.apache.chemistry.opencmis.client.api.ObjectId" metaData="static" extends="http://www.mulesoft.org/schema/mule/cmis/abstractCmisConnectorGeneric" abstract="true" image="icons/large/cmis-connector-48x32.png" localId="create-document-by-id" icon="icons/small/cmis-connector-24x16.png" caption="Create Document By Id">
+    <attribute-category description="General." caption="General">
+      <group caption="General" id="general">
+        <string javaType="java.lang.String" required="true" description="Name of the file." caption="Filename" name="filename"></string>
+        <string javaType="java.lang.String" required="true" description="Folder Object Id." caption="Folder Id" name="folderId"></string>
+        <string defaultValue="#[payload]" javaType="java.lang.Object" required="false" description="File content as specified in the payload." caption="Content Reference" name="content-ref"></string>
+        <string javaType="java.lang.String" required="true" description="Stream content-type." caption="Mime Type" name="mimeType"></string>
+        <string javaType="java.lang.String" required="true" description="The type of the object." caption="Object Type" name="objectType"></string>
+        <enum allowsCustom="true" javaType="org.mule.module.cmis.VersioningState" required="true" supportsExpressions="true" description="An enumeration specifying what the versioning state of the newly-created object MUST be. If the repository does not support versioning, the repository MUST ignore the versioningState parameter.  Valid values are: o none:  The document MUST be created as a non-versionable document. o checkedout: The document MUST be created in the checked-out state. o major (default): The document MUST be created as a major version o minor: The document MUST be created as a minor version." caption="Versioning State" name="versioningState">
+          <option value="CHECKEDOUT"></option>
+          <option value="MAJOR"></option>
+          <option value="MINOR"></option>
+          <option value="NONE"></option>
+        </enum>
+      </group>
+      <group caption="Properties" id="properties">
+        <element-controller-map mapName="properties" defaultValue="" itemName="property" localName="create-document-by-id-properties" javaType="java.util.Map&lt;java.lang.String,java.lang.String&gt;" required="false" description="The properties optional document properties to set." caption="Properties"></element-controller-map>
+      </group>
+    </attribute-category>
+    <attribute-category description="Connection." caption="Connection">
+      <group caption="Connection" id="connection">
+        <label caption="Use these fields to override the credentials defined in the CMIS connector."></label>
+        <label caption=""></label>
+        <string javaType="java.lang.String" required="false" description="CMIS username." caption="Username" name="username"></string>
+        <password javaType="java.lang.String" required="false" description="CMIS password." caption="Password" name="password"></password>
+        <string javaType="java.lang.String" required="false" description="URL base for the SOAP connector." caption="Base Url" name="baseUrl"></string>
+        <string javaType="java.lang.String" required="false" description="The identifier for the Repository that this connector instance works with." caption="Repository Id" name="repositoryId"></string>
+        <string defaultValue="ATOM" javaType="java.lang.String" required="false" description="The type of endpoint. Values: SOAP or ATOMPUB." caption="Endpoint" name="endpoint"></string>
+        <string defaultValue="10000" javaType="java.lang.String" required="false" description="The connection time-out specification." caption="Connection Timeout" name="connectionTimeout"></string>
+        <string defaultValue="false" javaType="java.lang.String" required="false" description="Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work." caption="Use Alfresco Extension" name="useAlfrescoExtension"></string>
+        <string defaultValue="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" javaType="java.lang.String" required="false" description="Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider." caption="Cxf Port Provider" name="cxfPortProvider"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="org.apache.chemistry.opencmis.client.api.ObjectId" metaData="static" extends="http://www.mulesoft.org/schema/mule/cmis/abstractCmisConnectorGeneric" abstract="true" image="icons/large/cmis-connector-48x32.png" localId="create-document-by-id-from-content" icon="icons/small/cmis-connector-24x16.png" caption="Create Document By Id From Content">
+    <attribute-category description="General." caption="General">
+      <group caption="General" id="general">
+        <string javaType="java.lang.String" required="true" description="Name of the file." caption="Filename" name="filename"></string>
+        <string javaType="java.lang.String" required="true" description="Folder Object Id." caption="Folder Id" name="folderId"></string>
+        <string defaultValue="#[payload]" javaType="java.lang.Object" required="false" description="File content." caption="Content Reference" name="content-ref"></string>
+        <string javaType="java.lang.String" required="true" description="Stream content-type." caption="Mime Type" name="mimeType"></string>
+        <string javaType="java.lang.String" required="true" description="The type of the object." caption="Object Type" name="objectType"></string>
+        <enum allowsCustom="true" javaType="org.mule.module.cmis.VersioningState" required="true" supportsExpressions="true" description="An enumeration specifying what the versioning state of the newly-created object MUST be. If the repository does not support versioning, the repository MUST ignore the versioningState parameter.  Valid values are: o none:  The document MUST be created as a non-versionable document. o checkedout: The document MUST be created in the checked-out state. o major (default): The document MUST be created as a major version o minor: The document MUST be created as a minor version." caption="Versioning State" name="versioningState">
+          <option value="CHECKEDOUT"></option>
+          <option value="MAJOR"></option>
+          <option value="MINOR"></option>
+          <option value="NONE"></option>
+        </enum>
+        <element-controller-map mapName="properties" itemName="property" localName="create-document-by-id-from-content-properties" javaType="java.util.Map&lt;java.lang.String,java.lang.String&gt;" required="false" description="The properties optional document properties to set." caption="Properties"></element-controller-map>
+      </group>
+    </attribute-category>
+    <attribute-category description="Connection." caption="Connection">
+      <group caption="Connection" id="connection">
+        <label caption="Use these fields to override the credentials defined in the CMIS connector."></label>
+        <label caption=""></label>
+        <string javaType="java.lang.String" required="false" description="CMIS username." caption="Username" name="username"></string>
+        <password javaType="java.lang.String" required="false" description="CMIS password." caption="Password" name="password"></password>
+        <string javaType="java.lang.String" required="false" description="URL base for the SOAP connector." caption="Base Url" name="baseUrl"></string>
+        <string javaType="java.lang.String" required="false" description="The identifier for the Repository that this connector instance works with." caption="Repository Id" name="repositoryId"></string>
+        <string defaultValue="ATOM" javaType="java.lang.String" required="false" description="The type of endpoint. Values: SOAP or ATOMPUB." caption="Endpoint" name="endpoint"></string>
+        <string defaultValue="10000" javaType="java.lang.String" required="false" description="The connection time-out specification." caption="Connection Timeout" name="connectionTimeout"></string>
+        <string defaultValue="false" javaType="java.lang.String" required="false" description="Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work." caption="Use Alfresco Extension" name="useAlfrescoExtension"></string>
+        <string defaultValue="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" javaType="java.lang.String" required="false" description="Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider." caption="Cxf Port Provider" name="cxfPortProvider"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="org.apache.chemistry.opencmis.client.api.ObjectId" metaData="static" extends="http://www.mulesoft.org/schema/mule/cmis/abstractCmisConnectorGeneric" abstract="true" image="icons/large/cmis-connector-48x32.png" localId="create-document-by-path" icon="icons/small/cmis-connector-24x16.png" caption="Create Document By Path">
+    <attribute-category description="General." caption="General">
+      <group caption="General" id="general">
+        <string javaType="java.lang.String" required="true" description="Name of the file." caption="Filename" name="filename"></string>
+        <string javaType="java.lang.String" required="true" description="Folder in the repository that will hold the document." caption="Folder Path" name="folderPath"></string>
+        <string defaultValue="#[payload]" javaType="java.lang.Object" required="false" description="File content as specified in the payload." caption="Content Reference" name="content-ref"></string>
+        <string javaType="java.lang.String" required="true" description="Stream content-type." caption="Mime Type" name="mimeType"></string>
+        <string javaType="java.lang.String" required="true" description="The type of the object." caption="Object Type" name="objectType"></string>
+        <enum allowsCustom="true" javaType="org.mule.module.cmis.VersioningState" required="true" supportsExpressions="true" description="An enumeration specifying what the versioning state of the newly-created object MUST be. If the repository does not support versioning, the repository MUST ignore the versioningState parameter.  Valid values are: o none:  The document MUST be created as a non-versionable document. o checked-out: The document MUST be created in the checked-out state. o major (default): The document MUST be created as a major version o minor: The document MUST be created as a minor version." caption="Versioning State" name="versioningState">
+          <option value="CHECKEDOUT"></option>
+          <option value="MAJOR"></option>
+          <option value="MINOR"></option>
+          <option value="NONE"></option>
+        </enum>
+        <boolean defaultValue="false" javaType="boolean" required="false" supportsExpressions="true" description="If should folder structure must be created when there are missing intermediate folders." caption="Force" name="force"></boolean>
+      </group>
+      <group caption="Properties" id="properties">
+        <element-controller-map mapName="properties" itemName="property" localName="create-document-by-path-properties" javaType="java.util.Map&lt;java.lang.String,java.lang.String&gt;" required="false" description="The properties optional document properties to set." caption="Properties"></element-controller-map>
+      </group>
+    </attribute-category>
+    <attribute-category description="Connection." caption="Connection">
+      <group caption="Connection" id="connection">
+        <label caption="Use these fields to override the credentials defined in the CMIS connector."></label>
+        <label caption=""></label>
+        <string javaType="java.lang.String" required="false" description="CMIS username." caption="Username" name="username"></string>
+        <password javaType="java.lang.String" required="false" description="CMIS password." caption="Password" name="password"></password>
+        <string javaType="java.lang.String" required="false" description="URL base for the SOAP connector." caption="Base Url" name="baseUrl"></string>
+        <string javaType="java.lang.String" required="false" description="The identifier for the Repository that this connector instance works with." caption="Repository Id" name="repositoryId"></string>
+        <string defaultValue="ATOM" javaType="java.lang.String" required="false" description="The type of endpoint. Values: SOAP or ATOMPUB." caption="Endpoint" name="endpoint"></string>
+        <string defaultValue="10000" javaType="java.lang.String" required="false" description="The connection time-out specification." caption="Connection Timeout" name="connectionTimeout"></string>
+        <string defaultValue="false" javaType="java.lang.String" required="false" description="Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work." caption="Use Alfresco Extension" name="useAlfrescoExtension"></string>
+        <string defaultValue="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" javaType="java.lang.String" required="false" description="Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider." caption="Cxf Port Provider" name="cxfPortProvider"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="org.apache.chemistry.opencmis.client.api.ObjectId" metaData="static" extends="http://www.mulesoft.org/schema/mule/cmis/abstractCmisConnectorGeneric" abstract="true" image="icons/large/cmis-connector-48x32.png" localId="create-document-by-path-from-content" icon="icons/small/cmis-connector-24x16.png" caption="Create Document By Path From Content">
+    <attribute-category description="General." caption="General">
+      <group caption="General" id="general">
+        <string javaType="java.lang.String" required="true" description="Name of the file." caption="Filename" name="filename"></string>
+        <string javaType="java.lang.String" required="true" description="Folder in the repository that will hold the document." caption="Folder Path" name="folderPath"></string>
+        <string defaultValue="#[payload]" javaType="java.lang.Object" required="false" description="File content." caption="Content Reference" name="content-ref"></string>
+        <string javaType="java.lang.String" required="true" description="Stream content-type." caption="Mime Type" name="mimeType"></string>
+        <string javaType="java.lang.String" required="true" description="The type of the object." caption="Object Type" name="objectType"></string>
+        <enum allowsCustom="true" javaType="org.mule.module.cmis.VersioningState" required="true" supportsExpressions="true" description="An enumeration specifying what the versioning state of the newly-created object MUST be. If the repository does not support versioning, the repository MUST ignore the versioningState parameter." caption="Versioning State" name="versioningState">
+          <option value="CHECKEDOUT"></option>
+          <option value="MAJOR"></option>
+          <option value="MINOR"></option>
+          <option value="NONE"></option>
+        </enum>
+        <boolean defaultValue="false" javaType="boolean" required="false" supportsExpressions="true" description="If should folder structure must be created when there are missing intermediate folders." caption="Force" name="force"></boolean>
+        <element-controller-map mapName="properties" itemName="property" localName="create-document-by-path-from-content-properties" javaType="java.util.Map&lt;java.lang.String,java.lang.String&gt;" required="false" description="The properties optional document properties to set." caption="Properties"></element-controller-map>
+      </group>
+    </attribute-category>
+    <attribute-category description="Connection." caption="Connection">
+      <group caption="Connection" id="connection">
+        <label caption="Use these fields to override the credentials defined in the CMIS connector."></label>
+        <label caption=""></label>
+        <string javaType="java.lang.String" required="false" description="CMIS username." caption="Username" name="username"></string>
+        <password javaType="java.lang.String" required="false" description="CMIS password." caption="Password" name="password"></password>
+        <string javaType="java.lang.String" required="false" description="URL base for the SOAP connector." caption="Base Url" name="baseUrl"></string>
+        <string javaType="java.lang.String" required="false" description="The identifier for the Repository that this connector instance works with." caption="Repository Id" name="repositoryId"></string>
+        <string defaultValue="ATOM" javaType="java.lang.String" required="false" description="The type of endpoint. Values: SOAP or ATOMPUB." caption="Endpoint" name="endpoint"></string>
+        <string defaultValue="10000" javaType="java.lang.String" required="false" description="The connection time-out specification." caption="Connection Timeout" name="connectionTimeout"></string>
+        <string defaultValue="false" javaType="java.lang.String" required="false" description="Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work." caption="Use Alfresco Extension" name="useAlfrescoExtension"></string>
+        <string defaultValue="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" javaType="java.lang.String" required="false" description="Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider." caption="Cxf Port Provider" name="cxfPortProvider"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="org.apache.chemistry.opencmis.client.api.ObjectId" metaData="static" extends="http://www.mulesoft.org/schema/mule/cmis/abstractCmisConnectorGeneric" abstract="true" image="icons/large/cmis-connector-48x32.png" localId="create-folder" icon="icons/small/cmis-connector-24x16.png" caption="Create Folder">
+    <attribute-category description="General." caption="General">
+      <group caption="General" id="general">
+        <string javaType="java.lang.String" required="true" description="Folder name (eg: &quot;my documents&quot;)." caption="Folder Name" name="folderName"></string>
+        <string javaType="java.lang.String" required="true" description="Parent folder for the folder being created (eg: repository.rootFolder)." caption="Parent Object Id" name="parentObjectId"></string>
+      </group>
+    </attribute-category>
+    <attribute-category description="Connection." caption="Connection">
+      <group caption="Connection" id="connection">
+        <label caption="Use these fields to override the credentials defined in the CMIS connector."></label>
+        <label caption=""></label>
+        <string javaType="java.lang.String" required="false" description="CMIS username." caption="Username" name="username"></string>
+        <password javaType="java.lang.String" required="false" description="CMIS password." caption="Password" name="password"></password>
+        <string javaType="java.lang.String" required="false" description="URL base for the SOAP connector." caption="Base Url" name="baseUrl"></string>
+        <string javaType="java.lang.String" required="false" description="The identifier for the Repository that this connector instance works with." caption="Repository Id" name="repositoryId"></string>
+        <string defaultValue="ATOM" javaType="java.lang.String" required="false" description="The type of endpoint. Values: SOAP or ATOMPUB." caption="Endpoint" name="endpoint"></string>
+        <string defaultValue="10000" javaType="java.lang.String" required="false" description="The connection time-out specification." caption="Connection Timeout" name="connectionTimeout"></string>
+        <string defaultValue="false" javaType="java.lang.String" required="false" description="Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work." caption="Use Alfresco Extension" name="useAlfrescoExtension"></string>
+        <string defaultValue="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" javaType="java.lang.String" required="false" description="Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider." caption="Cxf Port Provider" name="cxfPortProvider"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="org.apache.chemistry.opencmis.client.api.ObjectId" metaData="static" extends="http://www.mulesoft.org/schema/mule/cmis/abstractCmisConnectorGeneric" abstract="true" image="icons/large/cmis-connector-48x32.png" localId="create-relationship" icon="icons/small/cmis-connector-24x16.png" caption="Create Relationship">
+    <attribute-category description="General." caption="General">
+      <group caption="General" id="general">
+        <string javaType="java.lang.String" required="true" description="The ID of the child (or target) object in the relationship." caption="Child Object Id" name="childObjectId"></string>
+        <string javaType="java.lang.String" required="true" description="The ID of the parent (or source) object in the relationship." caption="Parent Object Id" name="parentObjectId"></string>
+        <string javaType="java.lang.String" required="true" description="The name of the relationship type that should be associated with the objects." caption="Relationship Type" name="relationshipType"></string>
+      </group>
+    </attribute-category>
+    <attribute-category description="Connection." caption="Connection">
+      <group caption="Connection" id="connection">
+        <label caption="Use these fields to override the credentials defined in the CMIS connector."></label>
+        <label caption=""></label>
+        <string javaType="java.lang.String" required="false" description="CMIS username." caption="Username" name="username"></string>
+        <password javaType="java.lang.String" required="false" description="CMIS password." caption="Password" name="password"></password>
+        <string javaType="java.lang.String" required="false" description="URL base for the SOAP connector." caption="Base Url" name="baseUrl"></string>
+        <string javaType="java.lang.String" required="false" description="The identifier for the Repository that this connector instance works with." caption="Repository Id" name="repositoryId"></string>
+        <string defaultValue="ATOM" javaType="java.lang.String" required="false" description="The type of endpoint. Values: SOAP or ATOMPUB." caption="Endpoint" name="endpoint"></string>
+        <string defaultValue="10000" javaType="java.lang.String" required="false" description="The connection time-out specification." caption="Connection Timeout" name="connectionTimeout"></string>
+        <string defaultValue="false" javaType="java.lang.String" required="false" description="Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work." caption="Use Alfresco Extension" name="useAlfrescoExtension"></string>
+        <string defaultValue="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" javaType="java.lang.String" required="false" description="Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider." caption="Cxf Port Provider" name="cxfPortProvider"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="void" metaData="static" extends="http://www.mulesoft.org/schema/mule/cmis/abstractCmisConnectorGeneric" abstract="true" image="icons/large/cmis-connector-48x32.png" localId="delete" icon="icons/small/cmis-connector-24x16.png" caption="Delete">
+    <attribute-category description="General." caption="General">
+      <group caption="General" id="general">
+        <string javaType="org.apache.chemistry.opencmis.client.api.CmisObject" required="false" description="The object to be deleted. Can be null if &quot;objectId&quot; is set." caption="Cmis Object Reference" name="cmisObject-ref"></string>
+        <string javaType="java.lang.String" required="false" description="The object's id. Can be null if &quot;cmisObject&quot; is set." caption="Object Id" name="objectId"></string>
+        <boolean defaultValue="false" javaType="boolean" required="false" supportsExpressions="true" description="If true, deletes all version history of the object. Defaults to &quot;false&quot;." caption="All Versions" name="allVersions"></boolean>
+      </group>
+    </attribute-category>
+    <attribute-category description="Connection." caption="Connection">
+      <group caption="Connection" id="connection">
+        <label caption="Use these fields to override the credentials defined in the CMIS connector."></label>
+        <label caption=""></label>
+        <string javaType="java.lang.String" required="false" description="CMIS username." caption="Username" name="username"></string>
+        <password javaType="java.lang.String" required="false" description="CMIS password." caption="Password" name="password"></password>
+        <string javaType="java.lang.String" required="false" description="URL base for the SOAP connector." caption="Base Url" name="baseUrl"></string>
+        <string javaType="java.lang.String" required="false" description="The identifier for the Repository that this connector instance works with." caption="Repository Id" name="repositoryId"></string>
+        <string defaultValue="ATOM" javaType="java.lang.String" required="false" description="The type of endpoint. Values: SOAP or ATOMPUB." caption="Endpoint" name="endpoint"></string>
+        <string defaultValue="10000" javaType="java.lang.String" required="false" description="The connection time-out specification." caption="Connection Timeout" name="connectionTimeout"></string>
+        <string defaultValue="false" javaType="java.lang.String" required="false" description="Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work." caption="Use Alfresco Extension" name="useAlfrescoExtension"></string>
+        <string defaultValue="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" javaType="java.lang.String" required="false" description="Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider." caption="Cxf Port Provider" name="cxfPortProvider"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="java.util.List&lt;java.lang.String&gt;" metaData="static" extends="http://www.mulesoft.org/schema/mule/cmis/abstractCmisConnectorGeneric" abstract="true" image="icons/large/cmis-connector-48x32.png" localId="delete-tree" icon="icons/small/cmis-connector-24x16.png" caption="Delete Tree">
+    <attribute-category description="General." caption="General">
+      <group caption="General" id="general">
+        <string javaType="org.apache.chemistry.opencmis.client.api.CmisObject" required="false" description="Folder Object. Can be null if &quot;folderId&quot; is set." caption="Folder Reference" name="folder-ref"></string>
+        <string javaType="java.lang.String" required="false" description="Folder Object id. Can be null if &quot;folder&quot; is set." caption="Folder Id" name="folderId"></string>
+        <enum allowsCustom="true" javaType="org.apache.chemistry.opencmis.commons.enums.UnfileObject" required="false" supportsExpressions="true" description="Specifies how the repository must process file-able child- or descendant-objects." caption="Unfile" name="unfile">
+          <option value="DELETE"></option>
+          <option value="DELETESINGLEFILED"></option>
+          <option value="UNFILE"></option>
+        </enum>
+        <boolean javaType="boolean" required="true" supportsExpressions="true" description="If true, then delete all versions of the document. If false, delete only the document object specified." caption="Allversions" name="allversions"></boolean>
+        <boolean javaType="boolean" required="true" supportsExpressions="true" description="Specified whether to continue attempting to perform this operation even if deletion of a child- or descendant-object in the specified folder cannot be deleted or not." caption="Continue On Failure" name="continueOnFailure"></boolean>
+      </group>
+    </attribute-category>
+    <attribute-category description="Connection." caption="Connection">
+      <group caption="Connection" id="connection">
+        <label caption="Use these fields to override the credentials defined in the CMIS connector."></label>
+        <label caption=""></label>
+        <string javaType="java.lang.String" required="false" description="CMIS username." caption="Username" name="username"></string>
+        <password javaType="java.lang.String" required="false" description="CMIS password." caption="Password" name="password"></password>
+        <string javaType="java.lang.String" required="false" description="URL base for the SOAP connector." caption="Base Url" name="baseUrl"></string>
+        <string javaType="java.lang.String" required="false" description="The identifier for the Repository that this connector instance works with." caption="Repository Id" name="repositoryId"></string>
+        <string defaultValue="ATOM" javaType="java.lang.String" required="false" description="The type of endpoint. Values: SOAP or ATOMPUB." caption="Endpoint" name="endpoint"></string>
+        <string defaultValue="10000" javaType="java.lang.String" required="false" description="The connection time-out specification." caption="Connection Timeout" name="connectionTimeout"></string>
+        <string defaultValue="false" javaType="java.lang.String" required="false" description="Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work." caption="Use Alfresco Extension" name="useAlfrescoExtension"></string>
+        <string defaultValue="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" javaType="java.lang.String" required="false" description="Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider." caption="Cxf Port Provider" name="cxfPortProvider"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="java.lang.Object" metaData="static" extends="http://www.mulesoft.org/schema/mule/cmis/abstractCmisConnectorGeneric" abstract="true" image="icons/large/cmis-connector-48x32.png" localId="folder" icon="icons/small/cmis-connector-24x16.png" caption="Folder">
+    <attribute-category description="General." caption="General">
+      <group caption="General" id="general">
+        <enum allowsCustom="true" javaType="org.mule.module.cmis.NavigationOptions" required="true" supportsExpressions="true" description="NavigationOptions that specifies whether to get the parent folder, the list of immediate children or the whole descendants tree." caption="Get" name="get">
+          <option value="CHILDREN"></option>
+          <option value="DESCENDANTS"></option>
+          <option value="PARENT"></option>
+          <option value="TREE"></option>
+        </enum>
+        <string javaType="org.apache.chemistry.opencmis.client.api.Folder" required="false" description="Folder Object. Can be null if &quot;folderId&quot; is set." caption="Folder Reference" name="folder-ref"></string>
+        <string javaType="java.lang.String" required="false" description="Folder Object id. Can be null if &quot;folder&quot; is set." caption="Folder Id" name="folderId"></string>
+        <integer step="1" min="0" javaType="java.lang.Integer" required="false" description="If &quot;get&quot; value is DESCENDANTS, represents the depth of the descendants tree." caption="Depth" name="depth"></integer>
+        <string javaType="java.lang.String" required="false" description="Comma-separated list of properties to filter (only for CHILDREN or DESCENDANTS navigation)." caption="Filter" name="filter"></string>
+        <string javaType="java.lang.String" required="false" description="Comma-separated list of query names and the ascending modifier &quot;ASC&quot; or the descending modifier &quot;DESC&quot; for each query name (only for CHILDREN or DESCENDANTS navigation)." caption="Order By" name="orderBy"></string>
+      </group>
+    </attribute-category>
+    <attribute-category description="Connection." caption="Connection">
+      <group caption="Connection" id="connection">
+        <label caption="Use these fields to override the credentials defined in the CMIS connector."></label>
+        <label caption=""></label>
+        <string javaType="java.lang.String" required="false" description="CMIS username." caption="Username" name="username"></string>
+        <password javaType="java.lang.String" required="false" description="CMIS password." caption="Password" name="password"></password>
+        <string javaType="java.lang.String" required="false" description="URL base for the SOAP connector." caption="Base Url" name="baseUrl"></string>
+        <string javaType="java.lang.String" required="false" description="The identifier for the Repository that this connector instance works with." caption="Repository Id" name="repositoryId"></string>
+        <string defaultValue="ATOM" javaType="java.lang.String" required="false" description="The type of endpoint. Values: SOAP or ATOMPUB." caption="Endpoint" name="endpoint"></string>
+        <string defaultValue="10000" javaType="java.lang.String" required="false" description="The connection time-out specification." caption="Connection Timeout" name="connectionTimeout"></string>
+        <string defaultValue="false" javaType="java.lang.String" required="false" description="Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work." caption="Use Alfresco Extension" name="useAlfrescoExtension"></string>
+        <string defaultValue="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" javaType="java.lang.String" required="false" description="Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider." caption="Cxf Port Provider" name="cxfPortProvider"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="org.apache.chemistry.opencmis.commons.data.Acl" metaData="static" extends="http://www.mulesoft.org/schema/mule/cmis/abstractCmisConnectorGeneric" abstract="true" image="icons/large/cmis-connector-48x32.png" localId="get-acl" icon="icons/small/cmis-connector-24x16.png" caption="Get Acl">
+    <attribute-category description="General." caption="General">
+      <group caption="General" id="general">
+        <string javaType="org.apache.chemistry.opencmis.client.api.CmisObject" required="false" description="The object whose Acl is needed." caption="Cmis Object Reference" name="cmisObject-ref"></string>
+        <string javaType="java.lang.String" required="false" description="The id of the object." caption="Object Id" name="objectId"></string>
+      </group>
+    </attribute-category>
+    <attribute-category description="Connection." caption="Connection">
+      <group caption="Connection" id="connection">
+        <label caption="Use these fields to override the credentials defined in the CMIS connector."></label>
+        <label caption=""></label>
+        <string javaType="java.lang.String" required="false" description="CMIS username." caption="Username" name="username"></string>
+        <password javaType="java.lang.String" required="false" description="CMIS password." caption="Password" name="password"></password>
+        <string javaType="java.lang.String" required="false" description="URL base for the SOAP connector." caption="Base Url" name="baseUrl"></string>
+        <string javaType="java.lang.String" required="false" description="The identifier for the Repository that this connector instance works with." caption="Repository Id" name="repositoryId"></string>
+        <string defaultValue="ATOM" javaType="java.lang.String" required="false" description="The type of endpoint. Values: SOAP or ATOMPUB." caption="Endpoint" name="endpoint"></string>
+        <string defaultValue="10000" javaType="java.lang.String" required="false" description="The connection time-out specification." caption="Connection Timeout" name="connectionTimeout"></string>
+        <string defaultValue="false" javaType="java.lang.String" required="false" description="Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work." caption="Use Alfresco Extension" name="useAlfrescoExtension"></string>
+        <string defaultValue="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" javaType="java.lang.String" required="false" description="Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider." caption="Cxf Port Provider" name="cxfPortProvider"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="java.util.List&lt;org.apache.chemistry.opencmis.client.api.Document&gt;" metaData="static" extends="http://www.mulesoft.org/schema/mule/cmis/abstractCmisConnectorGeneric" abstract="true" image="icons/large/cmis-connector-48x32.png" localId="get-all-versions" icon="icons/small/cmis-connector-24x16.png" caption="Get All Versions">
+    <attribute-category description="General." caption="General">
+      <group caption="General" id="general">
+        <string javaType="org.apache.chemistry.opencmis.client.api.CmisObject" required="false" description="The document whose versions are to be retrieved." caption="Document Reference" name="document-ref"></string>
+        <string javaType="java.lang.String" required="false" description="Id of the document whose versions are to be retrieved." caption="Document Id" name="documentId"></string>
+        <string javaType="java.lang.String" required="false" description="Comma-separated list of properties to filter (only for CHILDREN or DESCENDANTS navigation)." caption="Filter" name="filter"></string>
+        <string javaType="java.lang.String" required="false" description="Comma-separated list of query names and the ascending modifier &quot;ASC&quot; or the descending modifier &quot;DESC&quot; for each query name (only for CHILDREN or DESCENDANTS navigation)." caption="Order By" name="orderBy"></string>
+      </group>
+    </attribute-category>
+    <attribute-category description="Connection." caption="Connection">
+      <group caption="Connection" id="connection">
+        <label caption="Use these fields to override the credentials defined in the CMIS connector."></label>
+        <label caption=""></label>
+        <string javaType="java.lang.String" required="false" description="CMIS username." caption="Username" name="username"></string>
+        <password javaType="java.lang.String" required="false" description="CMIS password." caption="Password" name="password"></password>
+        <string javaType="java.lang.String" required="false" description="URL base for the SOAP connector." caption="Base Url" name="baseUrl"></string>
+        <string javaType="java.lang.String" required="false" description="The identifier for the Repository that this connector instance works with." caption="Repository Id" name="repositoryId"></string>
+        <string defaultValue="ATOM" javaType="java.lang.String" required="false" description="The type of endpoint. Values: SOAP or ATOMPUB." caption="Endpoint" name="endpoint"></string>
+        <string defaultValue="10000" javaType="java.lang.String" required="false" description="The connection time-out specification." caption="Connection Timeout" name="connectionTimeout"></string>
+        <string defaultValue="false" javaType="java.lang.String" required="false" description="Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work." caption="Use Alfresco Extension" name="useAlfrescoExtension"></string>
+        <string defaultValue="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" javaType="java.lang.String" required="false" description="Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider." caption="Cxf Port Provider" name="cxfPortProvider"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="java.util.List&lt;org.apache.chemistry.opencmis.client.api.Policy&gt;" metaData="static" extends="http://www.mulesoft.org/schema/mule/cmis/abstractCmisConnectorGeneric" abstract="true" image="icons/large/cmis-connector-48x32.png" localId="get-applied-policies" icon="icons/small/cmis-connector-24x16.png" caption="Get Applied Policies">
+    <attribute-category description="General." caption="General">
+      <group caption="General" id="general">
+        <string defaultValue="#[payload]" javaType="org.apache.chemistry.opencmis.client.api.CmisObject" required="false" description="The document from which to get the stream. Can be null if &quot;objectId&quot; is set." caption="Cmis Object Reference" name="cmisObject-ref"></string>
+        <string javaType="java.lang.String" required="false" description="Id of the document from which to get the stream. Can be null if &quot;object&quot; is set." caption="Object Id" name="objectId"></string>
+      </group>
+    </attribute-category>
+    <attribute-category description="Connection." caption="Connection">
+      <group caption="Connection" id="connection">
+        <label caption="Use these fields to override the credentials defined in the CMIS connector."></label>
+        <label caption=""></label>
+        <string javaType="java.lang.String" required="false" description="CMIS username." caption="Username" name="username"></string>
+        <password javaType="java.lang.String" required="false" description="CMIS password." caption="Password" name="password"></password>
+        <string javaType="java.lang.String" required="false" description="URL base for the SOAP connector." caption="Base Url" name="baseUrl"></string>
+        <string javaType="java.lang.String" required="false" description="The identifier for the Repository that this connector instance works with." caption="Repository Id" name="repositoryId"></string>
+        <string defaultValue="ATOM" javaType="java.lang.String" required="false" description="The type of endpoint. Values: SOAP or ATOMPUB." caption="Endpoint" name="endpoint"></string>
+        <string defaultValue="10000" javaType="java.lang.String" required="false" description="The connection time-out specification." caption="Connection Timeout" name="connectionTimeout"></string>
+        <string defaultValue="false" javaType="java.lang.String" required="false" description="Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work." caption="Use Alfresco Extension" name="useAlfrescoExtension"></string>
+        <string defaultValue="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" javaType="java.lang.String" required="false" description="Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider." caption="Cxf Port Provider" name="cxfPortProvider"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="org.apache.chemistry.opencmis.client.api.ItemIterable&lt;org.apache.chemistry.opencmis.client.api.Document&gt;" metaData="static" extends="http://www.mulesoft.org/schema/mule/cmis/abstractCmisConnectorGeneric" abstract="true" image="icons/large/cmis-connector-48x32.png" localId="get-checkout-docs" icon="icons/small/cmis-connector-24x16.png" caption="Get Checkout Docs">
+    <attribute-category description="General." caption="General">
+      <group caption="General" id="general">
+        <string javaType="java.lang.String" required="false" description="Comma-separated list of properties to filter." caption="Filter" name="filter"></string>
+        <string javaType="java.lang.String" required="false" description="Comma-separated list of query names and the ascending modifier &quot;ASC&quot; or the descending modifier &quot;DESC&quot; for each query name." caption="Order By" name="orderBy"></string>
+      </group>
+    </attribute-category>
+    <attribute-category description="Connection." caption="Connection">
+      <group caption="Connection" id="connection">
+        <label caption="Use these fields to override the credentials defined in the CMIS connector."></label>
+        <label caption=""></label>
+        <string javaType="java.lang.String" required="false" description="CMIS username." caption="Username" name="username"></string>
+        <password javaType="java.lang.String" required="false" description="CMIS password." caption="Password" name="password"></password>
+        <string javaType="java.lang.String" required="false" description="URL base for the SOAP connector." caption="Base Url" name="baseUrl"></string>
+        <string javaType="java.lang.String" required="false" description="The identifier for the Repository that this connector instance works with." caption="Repository Id" name="repositoryId"></string>
+        <string defaultValue="ATOM" javaType="java.lang.String" required="false" description="The type of endpoint. Values: SOAP or ATOMPUB." caption="Endpoint" name="endpoint"></string>
+        <string defaultValue="10000" javaType="java.lang.String" required="false" description="The connection time-out specification." caption="Connection Timeout" name="connectionTimeout"></string>
+        <string defaultValue="false" javaType="java.lang.String" required="false" description="Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work." caption="Use Alfresco Extension" name="useAlfrescoExtension"></string>
+        <string defaultValue="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" javaType="java.lang.String" required="false" description="Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider." caption="Cxf Port Provider" name="cxfPortProvider"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="org.apache.chemistry.opencmis.commons.data.ContentStream" metaData="static" extends="http://www.mulesoft.org/schema/mule/cmis/abstractCmisConnectorGeneric" abstract="true" image="icons/large/cmis-connector-48x32.png" localId="get-content-stream" icon="icons/small/cmis-connector-24x16.png" caption="Get Content Stream">
+    <attribute-category description="General." caption="General">
+      <group caption="General" id="general">
+        <string javaType="org.apache.chemistry.opencmis.client.api.CmisObject" required="false" description="The document from which to get the stream. Can be null if &quot;objectId&quot; is set." caption="Cmis Object Reference" name="cmisObject-ref"></string>
+        <string javaType="java.lang.String" required="false" description="Id of the document from which to get the stream. Can be null if &quot;object&quot; is set." caption="Object Id" name="objectId"></string>
+      </group>
+    </attribute-category>
+    <attribute-category description="Connection." caption="Connection">
+      <group caption="Connection" id="connection">
+        <label caption="Use these fields to override the credentials defined in the CMIS connector."></label>
+        <label caption=""></label>
+        <string javaType="java.lang.String" required="false" description="CMIS username." caption="Username" name="username"></string>
+        <password javaType="java.lang.String" required="false" description="CMIS password." caption="Password" name="password"></password>
+        <string javaType="java.lang.String" required="false" description="URL base for the SOAP connector." caption="Base Url" name="baseUrl"></string>
+        <string javaType="java.lang.String" required="false" description="The identifier for the Repository that this connector instance works with." caption="Repository Id" name="repositoryId"></string>
+        <string defaultValue="ATOM" javaType="java.lang.String" required="false" description="The type of endpoint. Values: SOAP or ATOMPUB." caption="Endpoint" name="endpoint"></string>
+        <string defaultValue="10000" javaType="java.lang.String" required="false" description="The connection time-out specification." caption="Connection Timeout" name="connectionTimeout"></string>
+        <string defaultValue="false" javaType="java.lang.String" required="false" description="Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work." caption="Use Alfresco Extension" name="useAlfrescoExtension"></string>
+        <string defaultValue="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" javaType="java.lang.String" required="false" description="Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider." caption="Cxf Port Provider" name="cxfPortProvider"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="org.apache.chemistry.opencmis.client.api.CmisObject" metaData="static" extends="http://www.mulesoft.org/schema/mule/cmis/abstractCmisConnectorGeneric" abstract="true" image="icons/large/cmis-connector-48x32.png" localId="get-object-by-id" icon="icons/small/cmis-connector-24x16.png" caption="Get Object By Id">
+    <attribute-category description="General." caption="General">
+      <group caption="General" id="general">
+        <string javaType="java.lang.String" required="true" description="The object id." caption="Object Id" name="objectId"></string>
+      </group>
+    </attribute-category>
+    <attribute-category description="Connection." caption="Connection">
+      <group caption="Connection" id="connection">
+        <label caption="Use these fields to override the credentials defined in the CMIS connector."></label>
+        <label caption=""></label>
+        <string javaType="java.lang.String" required="false" description="CMIS username." caption="Username" name="username"></string>
+        <password javaType="java.lang.String" required="false" description="CMIS password." caption="Password" name="password"></password>
+        <string javaType="java.lang.String" required="false" description="URL base for the SOAP connector." caption="Base Url" name="baseUrl"></string>
+        <string javaType="java.lang.String" required="false" description="The identifier for the Repository that this connector instance works with." caption="Repository Id" name="repositoryId"></string>
+        <string defaultValue="ATOM" javaType="java.lang.String" required="false" description="The type of endpoint. Values: SOAP or ATOMPUB." caption="Endpoint" name="endpoint"></string>
+        <string defaultValue="10000" javaType="java.lang.String" required="false" description="The connection time-out specification." caption="Connection Timeout" name="connectionTimeout"></string>
+        <string defaultValue="false" javaType="java.lang.String" required="false" description="Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work." caption="Use Alfresco Extension" name="useAlfrescoExtension"></string>
+        <string defaultValue="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" javaType="java.lang.String" required="false" description="Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider." caption="Cxf Port Provider" name="cxfPortProvider"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="org.apache.chemistry.opencmis.client.api.CmisObject" metaData="static" extends="http://www.mulesoft.org/schema/mule/cmis/abstractCmisConnectorGeneric" abstract="true" image="icons/large/cmis-connector-48x32.png" localId="get-object-by-path" icon="icons/small/cmis-connector-24x16.png" caption="Get Object By Path">
+    <attribute-category description="General." caption="General">
+      <group caption="General" id="general">
+        <string javaType="java.lang.String" required="true" description="Path of the object to retrieve." caption="Path" name="path"></string>
+      </group>
+    </attribute-category>
+    <attribute-category description="Connection." caption="Connection">
+      <group caption="Connection" id="connection">
+        <label caption="Use these fields to override the credentials defined in the CMIS connector."></label>
+        <label caption=""></label>
+        <string javaType="java.lang.String" required="false" description="CMIS username." caption="Username" name="username"></string>
+        <password javaType="java.lang.String" required="false" description="CMIS password." caption="Password" name="password"></password>
+        <string javaType="java.lang.String" required="false" description="URL base for the SOAP connector." caption="Base Url" name="baseUrl"></string>
+        <string javaType="java.lang.String" required="false" description="The identifier for the Repository that this connector instance works with." caption="Repository Id" name="repositoryId"></string>
+        <string defaultValue="ATOM" javaType="java.lang.String" required="false" description="The type of endpoint. Values: SOAP or ATOMPUB." caption="Endpoint" name="endpoint"></string>
+        <string defaultValue="10000" javaType="java.lang.String" required="false" description="The connection time-out specification." caption="Connection Timeout" name="connectionTimeout"></string>
+        <string defaultValue="false" javaType="java.lang.String" required="false" description="Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work." caption="Use Alfresco Extension" name="useAlfrescoExtension"></string>
+        <string defaultValue="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" javaType="java.lang.String" required="false" description="Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider." caption="Cxf Port Provider" name="cxfPortProvider"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="java.util.List&lt;org.apache.chemistry.opencmis.client.api.Relationship&gt;" metaData="static" extends="http://www.mulesoft.org/schema/mule/cmis/abstractCmisConnectorGeneric" abstract="true" image="icons/large/cmis-connector-48x32.png" localId="get-object-relationships" icon="icons/small/cmis-connector-24x16.png" caption="Get Object Relationships">
+    <attribute-category description="General." caption="General">
+      <group caption="General" id="general">
+        <string javaType="org.apache.chemistry.opencmis.client.api.CmisObject" required="false" description="The object whose relationships are needed." caption="Cmis Object Reference" name="cmisObject-ref"></string>
+        <string javaType="java.lang.String" required="false" description="The id of the object." caption="Object Id" name="objectId"></string>
+      </group>
+    </attribute-category>
+    <attribute-category description="Connection." caption="Connection">
+      <group caption="Connection" id="connection">
+        <label caption="Use these fields to override the credentials defined in the CMIS connector."></label>
+        <label caption=""></label>
+        <string javaType="java.lang.String" required="false" description="CMIS username." caption="Username" name="username"></string>
+        <password javaType="java.lang.String" required="false" description="CMIS password." caption="Password" name="password"></password>
+        <string javaType="java.lang.String" required="false" description="URL base for the SOAP connector." caption="Base Url" name="baseUrl"></string>
+        <string javaType="java.lang.String" required="false" description="The identifier for the Repository that this connector instance works with." caption="Repository Id" name="repositoryId"></string>
+        <string defaultValue="ATOM" javaType="java.lang.String" required="false" description="The type of endpoint. Values: SOAP or ATOMPUB." caption="Endpoint" name="endpoint"></string>
+        <string defaultValue="10000" javaType="java.lang.String" required="false" description="The connection time-out specification." caption="Connection Timeout" name="connectionTimeout"></string>
+        <string defaultValue="false" javaType="java.lang.String" required="false" description="Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work." caption="Use Alfresco Extension" name="useAlfrescoExtension"></string>
+        <string defaultValue="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" javaType="java.lang.String" required="false" description="Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider." caption="Cxf Port Provider" name="cxfPortProvider"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="org.apache.chemistry.opencmis.client.api.CmisObject" metaData="static" extends="http://www.mulesoft.org/schema/mule/cmis/abstractCmisConnectorGeneric" abstract="true" image="icons/large/cmis-connector-48x32.png" localId="get-or-create-folder-by-path" icon="icons/small/cmis-connector-24x16.png" caption="Get Or Create Folder By Path">
+    <attribute-category description="General." caption="General">
+      <group caption="General" id="general">
+        <string javaType="java.lang.String" required="true" description="Path to the folder." caption="Folder Path" name="folderPath"></string>
+      </group>
+    </attribute-category>
+    <attribute-category description="Connection." caption="Connection">
+      <group caption="Connection" id="connection">
+        <label caption="Use these fields to override the credentials defined in the CMIS connector."></label>
+        <label caption=""></label>
+        <string javaType="java.lang.String" required="false" description="CMIS username." caption="Username" name="username"></string>
+        <password javaType="java.lang.String" required="false" description="CMIS password." caption="Password" name="password"></password>
+        <string javaType="java.lang.String" required="false" description="URL base for the SOAP connector." caption="Base Url" name="baseUrl"></string>
+        <string javaType="java.lang.String" required="false" description="The identifier for the Repository that this connector instance works with." caption="Repository Id" name="repositoryId"></string>
+        <string defaultValue="ATOM" javaType="java.lang.String" required="false" description="The type of endpoint. Values: SOAP or ATOMPUB." caption="Endpoint" name="endpoint"></string>
+        <string defaultValue="10000" javaType="java.lang.String" required="false" description="The connection time-out specification." caption="Connection Timeout" name="connectionTimeout"></string>
+        <string defaultValue="false" javaType="java.lang.String" required="false" description="Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work." caption="Use Alfresco Extension" name="useAlfrescoExtension"></string>
+        <string defaultValue="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" javaType="java.lang.String" required="false" description="Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider." caption="Cxf Port Provider" name="cxfPortProvider"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="java.util.List&lt;org.apache.chemistry.opencmis.client.api.Folder&gt;" metaData="static" extends="http://www.mulesoft.org/schema/mule/cmis/abstractCmisConnectorGeneric" abstract="true" image="icons/large/cmis-connector-48x32.png" localId="get-parent-folders" icon="icons/small/cmis-connector-24x16.png" caption="Get Parent Folders">
+    <attribute-category description="General." caption="General">
+      <group caption="General" id="general">
+        <string javaType="org.apache.chemistry.opencmis.client.api.CmisObject" required="false" description="The object whose parent folders are needed. can be null if &quot;objectId&quot; is set." caption="Cmis Object Reference" name="cmisObject-ref"></string>
+        <string javaType="java.lang.String" required="false" description="Id of the object whose parent folders are needed. can be null if &quot;object&quot; is set." caption="Object Id" name="objectId"></string>
+      </group>
+    </attribute-category>
+    <attribute-category description="Connection." caption="Connection">
+      <group caption="Connection" id="connection">
+        <label caption="Use these fields to override the credentials defined in the CMIS connector."></label>
+        <label caption=""></label>
+        <string javaType="java.lang.String" required="false" description="CMIS username." caption="Username" name="username"></string>
+        <password javaType="java.lang.String" required="false" description="CMIS password." caption="Password" name="password"></password>
+        <string javaType="java.lang.String" required="false" description="URL base for the SOAP connector." caption="Base Url" name="baseUrl"></string>
+        <string javaType="java.lang.String" required="false" description="The identifier for the Repository that this connector instance works with." caption="Repository Id" name="repositoryId"></string>
+        <string defaultValue="ATOM" javaType="java.lang.String" required="false" description="The type of endpoint. Values: SOAP or ATOMPUB." caption="Endpoint" name="endpoint"></string>
+        <string defaultValue="10000" javaType="java.lang.String" required="false" description="The connection time-out specification." caption="Connection Timeout" name="connectionTimeout"></string>
+        <string defaultValue="false" javaType="java.lang.String" required="false" description="Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work." caption="Use Alfresco Extension" name="useAlfrescoExtension"></string>
+        <string defaultValue="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" javaType="java.lang.String" required="false" description="Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider." caption="Cxf Port Provider" name="cxfPortProvider"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="org.apache.chemistry.opencmis.client.api.ObjectType" metaData="static" extends="http://www.mulesoft.org/schema/mule/cmis/abstractCmisConnectorGeneric" abstract="true" image="icons/large/cmis-connector-48x32.png" localId="get-type-definition" icon="icons/small/cmis-connector-24x16.png" caption="Get Type Definition">
+    <attribute-category description="General." caption="General">
+      <group caption="General" id="general">
+        <string javaType="java.lang.String" required="true" description="Object type Id." caption="Type Id" name="typeId"></string>
+      </group>
+    </attribute-category>
+    <attribute-category description="Connection." caption="Connection">
+      <group caption="Connection" id="connection">
+        <label caption="Use these fields to override the credentials defined in the CMIS connector."></label>
+        <label caption=""></label>
+        <string javaType="java.lang.String" required="false" description="CMIS username." caption="Username" name="username"></string>
+        <password javaType="java.lang.String" required="false" description="CMIS password." caption="Password" name="password"></password>
+        <string javaType="java.lang.String" required="false" description="URL base for the SOAP connector." caption="Base Url" name="baseUrl"></string>
+        <string javaType="java.lang.String" required="false" description="The identifier for the Repository that this connector instance works with." caption="Repository Id" name="repositoryId"></string>
+        <string defaultValue="ATOM" javaType="java.lang.String" required="false" description="The type of endpoint. Values: SOAP or ATOMPUB." caption="Endpoint" name="endpoint"></string>
+        <string defaultValue="10000" javaType="java.lang.String" required="false" description="The connection time-out specification." caption="Connection Timeout" name="connectionTimeout"></string>
+        <string defaultValue="false" javaType="java.lang.String" required="false" description="Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work." caption="Use Alfresco Extension" name="useAlfrescoExtension"></string>
+        <string defaultValue="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" javaType="java.lang.String" required="false" description="Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider." caption="Cxf Port Provider" name="cxfPortProvider"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="org.apache.chemistry.opencmis.client.api.FileableCmisObject" metaData="static" extends="http://www.mulesoft.org/schema/mule/cmis/abstractCmisConnectorGeneric" abstract="true" image="icons/large/cmis-connector-48x32.png" localId="move-object" icon="icons/small/cmis-connector-24x16.png" caption="Move Object">
+    <attribute-category description="General." caption="General">
+      <group caption="General" id="general">
+        <string javaType="java.lang.String" required="true" description="Id of the source folder." caption="Source Folder Id" name="sourceFolderId"></string>
+        <string javaType="java.lang.String" required="true" description="Id of the target folder." caption="Target Folder Id" name="targetFolderId"></string>
+        <string javaType="org.apache.chemistry.opencmis.client.api.FileableCmisObject" required="false" description="The object to move. Can be null if &quot;objectId&quot; is set." caption="Cmis Object Reference" name="cmisObject-ref"></string>
+        <string javaType="java.lang.String" required="false" description="The object's id. Can be null if &quot;cmisObject&quot; is set." caption="Object Id" name="objectId"></string>
+      </group>
+    </attribute-category>
+    <attribute-category description="Connection." caption="Connection">
+      <group caption="Connection" id="connection">
+        <label caption="Use these fields to override the credentials defined in the CMIS connector."></label>
+        <label caption=""></label>
+        <string javaType="java.lang.String" required="false" description="CMIS username." caption="Username" name="username"></string>
+        <password javaType="java.lang.String" required="false" description="CMIS password." caption="Password" name="password"></password>
+        <string javaType="java.lang.String" required="false" description="URL base for the SOAP connector." caption="Base Url" name="baseUrl"></string>
+        <string javaType="java.lang.String" required="false" description="The identifier for the Repository that this connector instance works with." caption="Repository Id" name="repositoryId"></string>
+        <string defaultValue="ATOM" javaType="java.lang.String" required="false" description="The type of endpoint. Values: SOAP or ATOMPUB." caption="Endpoint" name="endpoint"></string>
+        <string defaultValue="10000" javaType="java.lang.String" required="false" description="The connection time-out specification." caption="Connection Timeout" name="connectionTimeout"></string>
+        <string defaultValue="false" javaType="java.lang.String" required="false" description="Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work." caption="Use Alfresco Extension" name="useAlfrescoExtension"></string>
+        <string defaultValue="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" javaType="java.lang.String" required="false" description="Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider." caption="Cxf Port Provider" name="cxfPortProvider"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="org.apache.chemistry.opencmis.client.api.ItemIterable&lt;org.apache.chemistry.opencmis.client.api.QueryResult&gt;" metaData="static" extends="http://www.mulesoft.org/schema/mule/cmis/abstractCmisConnectorGeneric" abstract="true" image="icons/large/cmis-connector-48x32.png" localId="query" icon="icons/small/cmis-connector-24x16.png" caption="Query">
+    <attribute-category description="General." caption="General">
+      <group caption="General" id="general">
+        <string javaType="java.lang.String" required="true" description="The query statement (CMIS query language)." caption="Statement" name="statement"></string>
+        <string javaType="java.lang.String" required="false" description="Comma-separated list of properties to filter." caption="Filter" name="filter"></string>
+        <string javaType="java.lang.String" required="false" description="Comma-separated list of query names and the ascending modifier &quot;ASC&quot; or the descending modifier &quot;DESC&quot; for each query name." caption="Order By" name="orderBy"></string>
+        <boolean javaType="java.lang.Boolean" required="true" supportsExpressions="true" description="Specifies if the latest and non-latest versions of document objects should be included." caption="Search All Versions" name="searchAllVersions"></boolean>
+      </group>
+    </attribute-category>
+    <attribute-category description="Connection." caption="Connection">
+      <group caption="Connection" id="connection">
+        <label caption="Use these fields to override the credentials defined in the CMIS connector."></label>
+        <label caption=""></label>
+        <string javaType="java.lang.String" required="false" description="CMIS username." caption="Username" name="username"></string>
+        <password javaType="java.lang.String" required="false" description="CMIS password." caption="Password" name="password"></password>
+        <string javaType="java.lang.String" required="false" description="URL base for the SOAP connector." caption="Base Url" name="baseUrl"></string>
+        <string javaType="java.lang.String" required="false" description="The identifier for the Repository that this connector instance works with." caption="Repository Id" name="repositoryId"></string>
+        <string defaultValue="ATOM" javaType="java.lang.String" required="false" description="The type of endpoint. Values: SOAP or ATOMPUB." caption="Endpoint" name="endpoint"></string>
+        <string defaultValue="10000" javaType="java.lang.String" required="false" description="The connection time-out specification." caption="Connection Timeout" name="connectionTimeout"></string>
+        <string defaultValue="false" javaType="java.lang.String" required="false" description="Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work." caption="Use Alfresco Extension" name="useAlfrescoExtension"></string>
+        <string defaultValue="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" javaType="java.lang.String" required="false" description="Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider." caption="Cxf Port Provider" name="cxfPortProvider"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="java.util.List&lt;org.apache.chemistry.opencmis.client.api.Repository&gt;" metaData="static" extends="http://www.mulesoft.org/schema/mule/cmis/abstractCmisConnectorGeneric" abstract="true" image="icons/large/cmis-connector-48x32.png" localId="repositories" icon="icons/small/cmis-connector-24x16.png" caption="Repositories">
+    <attribute-category description="General." caption="General"></attribute-category>
+    <attribute-category description="Connection." caption="Connection">
+      <group caption="Connection" id="connection">
+        <label caption="Use these fields to override the credentials defined in the CMIS connector."></label>
+        <label caption=""></label>
+        <string javaType="java.lang.String" required="false" description="CMIS username." caption="Username" name="username"></string>
+        <password javaType="java.lang.String" required="false" description="CMIS password." caption="Password" name="password"></password>
+        <string javaType="java.lang.String" required="false" description="URL base for the SOAP connector." caption="Base Url" name="baseUrl"></string>
+        <string javaType="java.lang.String" required="false" description="The identifier for the Repository that this connector instance works with." caption="Repository Id" name="repositoryId"></string>
+        <string defaultValue="ATOM" javaType="java.lang.String" required="false" description="The type of endpoint. Values: SOAP or ATOMPUB." caption="Endpoint" name="endpoint"></string>
+        <string defaultValue="10000" javaType="java.lang.String" required="false" description="The connection time-out specification." caption="Connection Timeout" name="connectionTimeout"></string>
+        <string defaultValue="false" javaType="java.lang.String" required="false" description="Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work." caption="Use Alfresco Extension" name="useAlfrescoExtension"></string>
+        <string defaultValue="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" javaType="java.lang.String" required="false" description="Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider." caption="Cxf Port Provider" name="cxfPortProvider"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="org.apache.chemistry.opencmis.commons.data.RepositoryInfo" metaData="static" extends="http://www.mulesoft.org/schema/mule/cmis/abstractCmisConnectorGeneric" abstract="true" image="icons/large/cmis-connector-48x32.png" localId="repository-info" icon="icons/small/cmis-connector-24x16.png" caption="Repository Info">
+    <attribute-category description="General." caption="General"></attribute-category>
+    <attribute-category description="Connection." caption="Connection">
+      <group caption="Connection" id="connection">
+        <label caption="Use these fields to override the credentials defined in the CMIS connector."></label>
+        <label caption=""></label>
+        <string javaType="java.lang.String" required="false" description="CMIS username." caption="Username" name="username"></string>
+        <password javaType="java.lang.String" required="false" description="CMIS password." caption="Password" name="password"></password>
+        <string javaType="java.lang.String" required="false" description="URL base for the SOAP connector." caption="Base Url" name="baseUrl"></string>
+        <string javaType="java.lang.String" required="false" description="The identifier for the Repository that this connector instance works with." caption="Repository Id" name="repositoryId"></string>
+        <string defaultValue="ATOM" javaType="java.lang.String" required="false" description="The type of endpoint. Values: SOAP or ATOMPUB." caption="Endpoint" name="endpoint"></string>
+        <string defaultValue="10000" javaType="java.lang.String" required="false" description="The connection time-out specification." caption="Connection Timeout" name="connectionTimeout"></string>
+        <string defaultValue="false" javaType="java.lang.String" required="false" description="Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work." caption="Use Alfresco Extension" name="useAlfrescoExtension"></string>
+        <string defaultValue="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" javaType="java.lang.String" required="false" description="Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider." caption="Cxf Port Provider" name="cxfPortProvider"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="org.apache.chemistry.opencmis.client.api.CmisObject" metaData="static" extends="http://www.mulesoft.org/schema/mule/cmis/abstractCmisConnectorGeneric" abstract="true" image="icons/large/cmis-connector-48x32.png" localId="update-object-properties" icon="icons/small/cmis-connector-24x16.png" caption="Update Object Properties">
+    <attribute-category description="General." caption="General">
+      <group caption="General" id="general">
+        <string javaType="org.apache.chemistry.opencmis.client.api.CmisObject" required="false" description="Object to be updated. Can be null if &quot;objectId&quot; is set." caption="Cmis Object Reference" name="cmisObject-ref"></string>
+        <string javaType="java.lang.String" required="false" description="The object's id. Can be null if &quot;cmisObject&quot; is set." caption="Object Id" name="objectId"></string>
+      </group>
+      <group caption="Properties" id="properties">
+        <element-controller-map mapName="properties" itemName="property" localName="update-object-properties-properties" javaType="java.util.Map&lt;java.lang.String,java.lang.String&gt;" required="true" description="The properties to update." caption="Properties"></element-controller-map>
+      </group>
+    </attribute-category>
+    <attribute-category description="Connection." caption="Connection">
+      <group caption="Connection" id="connection">
+        <label caption="Use these fields to override the credentials defined in the CMIS connector."></label>
+        <label caption=""></label>
+        <string javaType="java.lang.String" required="false" description="CMIS username." caption="Username" name="username"></string>
+        <password javaType="java.lang.String" required="false" description="CMIS password." caption="Password" name="password"></password>
+        <string javaType="java.lang.String" required="false" description="URL base for the SOAP connector." caption="Base Url" name="baseUrl"></string>
+        <string javaType="java.lang.String" required="false" description="The identifier for the Repository that this connector instance works with." caption="Repository Id" name="repositoryId"></string>
+        <string defaultValue="ATOM" javaType="java.lang.String" required="false" description="The type of endpoint. Values: SOAP or ATOMPUB." caption="Endpoint" name="endpoint"></string>
+        <string defaultValue="10000" javaType="java.lang.String" required="false" description="The connection time-out specification." caption="Connection Timeout" name="connectionTimeout"></string>
+        <string defaultValue="false" javaType="java.lang.String" required="false" description="Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work." caption="Use Alfresco Extension" name="useAlfrescoExtension"></string>
+        <string defaultValue="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" javaType="java.lang.String" required="false" description="Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider." caption="Cxf Port Provider" name="cxfPortProvider"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+</namespace>
