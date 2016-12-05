@@ -61,15 +61,6 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile> implements AcmNotifica
 
     }
 
-    public <T extends CaseFile> List<T> findCaseFilesByIds(Class<T> resultClass, List<Long> caseFileIds)
-    {
-        String queryString = "SELECT cf FROM CaseFile cf WHERE TYPE(cf) = :type AND cf.id IN :caseFileIds";
-        TypedQuery<T> query = getEm().createQuery(queryString, resultClass);
-        query.setParameter("type", resultClass);
-        query.setParameter("caseFileIds", caseFileIds);
-        return query.getResultList();
-    }
-
     public List<CaseByStatusDto> getAllCasesByStatus()
     {
         String queryText = "SELECT cf.status, COUNT(cf) as counted FROM CaseFile cf GROUP BY cf.status";
@@ -158,7 +149,7 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile> implements AcmNotifica
 
         query.select(cf);
 
-        query.where(builder.and(builder.like(builder.lower(cf.<String>get("caseNumber")), "%" + expression.toLowerCase() + "%")));
+        query.where(builder.and(builder.like(builder.lower(cf.<String> get("caseNumber")), "%" + expression.toLowerCase() + "%")));
 
         query.orderBy(builder.asc(cf.get("caseNumber")));
 
