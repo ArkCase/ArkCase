@@ -22,14 +22,14 @@ public class AcmUserTaskEventHandler implements ApplicationEventPublisherAware
     {
         if (log.isDebugEnabled())
         {
-            log.debug("Got a task event '" + eventName + "'; execution of type'" + task.getClass().getName() + "'");
+            log.debug("Got a task event '{}'; execution of type '{}'", eventName, task.getClass().getName());
         }
 
         Map<String, Object> processVariables = getRuntimeService().getVariables(task.getProcessInstanceId());
-        log.debug("process variables from runtime: " + processVariables.size());
+        log.debug("process variables from runtime: {}", processVariables.size());
 
         Map<String, Object> localVariables = getRuntimeService().getVariablesLocal(task.getExecutionId());
-        log.debug("local variables from runtime: " + processVariables.size());
+        log.debug("local variables from runtime: {}", processVariables.size());
 
         AcmTaskActivitiEvent event = new AcmTaskActivitiEvent(task, eventName, processVariables, localVariables);
 
