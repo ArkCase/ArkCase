@@ -89,7 +89,8 @@ public class AcmFileBrokerClient implements IAcmFileBrokerClient
     @Override
     public void sendFile(File file, String queueName, Map<String, Object> properties) throws JMSException, IOException
     {
-        AcmFileBrokerClientExecutor<Void> executor = (ActiveMQSession session) -> {
+        AcmFileBrokerClientExecutor<Void> executor = (ActiveMQSession session) -> 
+        {
             Queue queue = session.createQueue(queueName);
             MessageProducer producer = session.createProducer(queue);
             BlobMessage message = session.createBlobMessage(file);
@@ -141,7 +142,8 @@ public class AcmFileBrokerClient implements IAcmFileBrokerClient
     @Override
     public File receiveFile(String queueName) throws JMSException, IOException
     {
-        AcmFileBrokerClientExecutor<File> executor = (ActiveMQSession session) -> {
+        AcmFileBrokerClientExecutor<File> executor = (ActiveMQSession session) -> 
+        {
             File file = null;
             Queue queue = session.createQueue(queueName);
             MessageConsumer consumer = session.createConsumer(queue);
