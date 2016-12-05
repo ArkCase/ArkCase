@@ -32,6 +32,10 @@
 			<artifactId>jackson-databind</artifactId>
 			<scope>compile</scope>
 		</dependency>
+       <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-broker</artifactId>
+        </dependency>
 
 		<!-- logging -->
         <dependency>
