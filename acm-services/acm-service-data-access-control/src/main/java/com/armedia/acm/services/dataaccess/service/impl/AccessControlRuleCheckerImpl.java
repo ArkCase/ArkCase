@@ -163,20 +163,25 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
      */
     private boolean checkParticipantTypes(List<String> userIsParticipantTypeAny, Authentication authentication, JSONObject solrJsonResult)
     {
-        // if participants defined
-        if (solrJsonResult.has("acm_participants_lcs") && !userIsParticipantTypeAny.isEmpty())
+        if (userIsParticipantTypeAny != null)
         {
-            JSONArray securityParticipants = new JSONArray(solrJsonResult.getString("acm_participants_lcs"));
-            Set<String> participantsOfTypeAny = getParticipantsOfType(securityParticipants, userIsParticipantTypeAny);
-            return participantsOfTypeAny.stream()
-                    .anyMatch(ldapId -> isParticipantAnyOf(ldapId, authentication));
+            // if participants defined
+            if (solrJsonResult.has("acm_participants_lcs"))
+            {
+                log.debug("Checking if {} is a participant of type in 'userIsParticipantTypeAny' list", authentication.getName());
+                JSONArray securityParticipants = new JSONArray(solrJsonResult.getString("acm_participants_lcs"));
+                Set<String> participantsOfTypeAny = getParticipantsOfType(securityParticipants, userIsParticipantTypeAny);
+                return participantsOfTypeAny.stream()
+                        .anyMatch(ldapId -> isParticipantAnyOf(ldapId, authentication));
+            }
         }
+        log.debug("No participants to be checked, returning true");
         // there are no participants that need to be checked, return true
         return true;
     }
 
     /**
-     * Check if principal is the required participant or is member of the required group
+     * Get set of all participant's ids whose types are in defined participant's types
      *
      * @param participants             Participants of CASE/COMPLAINT from SOLR result
      * @param userIsParticipantTypeAny list of "ANY" participants
