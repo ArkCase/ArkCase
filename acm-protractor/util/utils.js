@@ -55,6 +55,14 @@ var helpers = function helpers() {
  	   this.rightClick = function () {
            browser.actions().click(protractor.Button.RIGHT).perform();
        }
+       this.returnDate = function (sign, NoDays) {
+           var now = new Date();
+           var dueDate = new Date();
+           dueDate.setDate(now.getDate()+NoDays);
+           var day = ("0" + dueDate.getDate()).slice(-2);
+           var month = ("0" + (dueDate.getMonth() + 1)).slice(-2);
+           return dueDateOut = (month) + sign + (day) + sign + dueDate.getFullYear();
+       }
 
 
 

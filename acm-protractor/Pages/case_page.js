@@ -12,7 +12,6 @@ var caseArson = element(by.linkText(Objects.casepage.locators.caseArson));
 var casesTitle = element(by.xpath(Objects.casepage.locators.casesTitle));
 var casesType = element(by.xpath(Objects.casepage.locators.casesType));
 var casesPageTitle = element(by.xpath(Objects.casepage.locators.casesPageTitle));
-var caseTitle = element(by.name(Objects.casepage.locators.caseTitle));
 var caseTypeDropDown = element(by.className(Objects.casepage.locators.caseType));
 var nextBtn = element(by.xpath(Objects.casepage.locators.nextBtn));
 var firstName = element(by.name(Objects.casepage.locators.firstName));
@@ -55,9 +54,8 @@ var firstCaseInCasesList = element(by.xpath(Objects.casepage.locators.firstCaseI
 var caseID = element(by.xpath(Objects.casepage.locators.caseID));
 var reinvestigateBtn = element(by.css(Objects.casepage.locators.reinvestigateBtn));
 var casesTitleStatus = element.all(by.xpath(Objects.casepage.locators.caseTitleStatus)).get(0);
-
-
-
+var dueDate = element(by.xpath(Objects.casepage.locators.dueDate));
+var owningGroup = element(by.xpath(Objects.casepage.locators.owningGroup));
 
 
 var CasePage = function() {
@@ -299,6 +297,12 @@ var CasePage = function() {
         browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.reinvestigateBtn))), 30000, "Reinvestigate button is not displayed").then(function() {
             reinvestigateBtn.click();
         });
+    };
+    this.returnDueDate = function () {
+        return dueDate.getText();
+    };
+    this.returnOwningGroup = function () {
+        return owningGroup.getText();
     }
 };
 
