@@ -1,7 +1,9 @@
 package com.armedia.acm.plugins.task.service.impl;
 
 import com.armedia.acm.activiti.AcmTaskActivitiEvent;
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
+import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.services.dataaccess.service.impl.DataAccessPrivilegeListener;
@@ -11,6 +13,8 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.SendDocumentsToSolr;
 
 import org.activiti.engine.task.Task;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 
 import java.util.Arrays;
@@ -30,6 +34,7 @@ public class AcmTaskActivitiEventHandler implements ApplicationListener<AcmTaskA
     private SendDocumentsToSolr sendDocumentsToSolr;
     private TaskToSolrTransformer taskToSolrTransformer;
     private List<String> eventList;
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     public void onApplicationEvent(AcmTaskActivitiEvent event)
@@ -42,6 +47,17 @@ public class AcmTaskActivitiEventHandler implements ApplicationListener<AcmTaskA
 
             // ensure we set the right modifier and creator for any objects we end up inserting or updating
             getAuditPropertyEntityAdapter().setUserId(event.getUserId());
+
+            if (event.getTaskEvent().equals("create"))
+            {
+                try
+                {
+                    getTaskDao().createFolderForTaskEvent(acmTask);
+                } catch (AcmTaskException | AcmCreateObjectFailedException e)
+                {
+                    log.error("Failed to create task container folder!", e.getMessage(), e);
+                }
+            }
 
             getTaskDao().ensureCorrectAssigneeInParticipants(acmTask);
 

@@ -1,6 +1,5 @@
 package com.armedia.acm.plugins.task.service.impl;
 
-import com.armedia.acm.activiti.AcmTaskEvent;
 import com.armedia.acm.core.AcmNotifiableEntity;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.data.AcmNotificationDao;
@@ -76,7 +75,6 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
     private UserDao userDao;
     private AcmParticipantDao participantDao;
     private DataAccessPrivilegeListener dataAccessPrivilegeListener;
-    private ExtractAcmTaskFromEvent taskExtractor;
     private TaskBusinessRule taskBusinessRule;
     private EcmFileService fileService;
     private EcmFileDao fileDao;
@@ -392,10 +390,7 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
 
         if (activitiTasks != null)
         {
-            if (log.isDebugEnabled())
-            {
-                log.debug("Found '{}' tasks for user '{}'", activitiTasks.size(), user);
-            }
+            log.debug("Found '{}' tasks for user '{}'", activitiTasks.size(), user);
 
             for (Task activitiTask : activitiTasks)
             {
@@ -411,7 +406,7 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
     @Override
     public List<AcmTask> allTasks()
     {
-        log.info("Finding all tasks for all users '");
+        log.info("Finding all tasks for all users'");
 
         List<AcmTask> retval = new ArrayList<>();
 
@@ -420,10 +415,8 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
 
         if (activitiTasks != null)
         {
-            if (log.isDebugEnabled())
-            {
-                log.debug("Found '{}' tasks for all users", activitiTasks.size());
-            }
+
+            log.debug("Found '{}' tasks for all users", activitiTasks.size());
 
             for (Task activitiTask : activitiTasks)
             {
@@ -448,10 +441,8 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
 
         if (activitiTasks != null)
         {
-            if (log.isDebugEnabled())
-            {
-                log.debug("Found '{}' tasks for all users with past due date", activitiTasks.size());
-            }
+
+            log.debug("Found '{}' tasks for all users with past due date", activitiTasks.size());
 
             for (Task activitiTask : activitiTasks)
             {
@@ -566,11 +557,7 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
     @Override
     public List<AcmTask> dueSpecificDateTasks(NumberOfDays numberOfDaysFromToday)
     {
-        if (log.isInfoEnabled())
-        {
-            log.info(String.format("Finding all tasks for all users which due date is until %s from today",
-                    numberOfDaysFromToday.getnDays()));
-        }
+        log.info(String.format("Finding all tasks for all users which due date is until %s from today", numberOfDaysFromToday.getnDays()));
 
         List<AcmTask> retval = new ArrayList<>();
 
@@ -579,11 +566,8 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
 
         if (activitiTasks != null)
         {
-            if (log.isDebugEnabled())
-            {
-                log.debug("Found '{}' tasks for all users which due date is between today and {} from today", activitiTasks.size(),
-                        numberOfDaysFromToday.getnDays());
-            }
+            log.debug("Found '{}' tasks for all users which due date is between today and {} from today", activitiTasks.size(),
+                    numberOfDaysFromToday.getnDays());
 
             for (Task activitiTask : activitiTasks)
             {
@@ -956,25 +940,10 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
         List<AcmParticipant> participants = getParticipantDao().findParticipantsForObject("TASK", retval.getTaskId());
         retval.setParticipants(participants);
 
-        if (log.isTraceEnabled())
-        {
-            log.trace("Activiti task id '{}' for object type '{}', object id '{}' found for user '{}'", retval.getTaskId(),
-                    retval.getAttachedToObjectType(), retval.getAttachedToObjectId(), retval.getAssignee());
-        }
+        log.trace("Activiti task id '{}' for object type '{}', object id '{}' found for user '{}'", retval.getTaskId(),
+                retval.getAttachedToObjectType(), retval.getAttachedToObjectId(), retval.getAssignee());
 
         return retval;
-    }
-
-    @Override
-    public void createFolderForTaskEvent(AcmTaskEvent event) throws AcmTaskException, AcmCreateObjectFailedException
-    {
-        log.info("Creating folder for task with ID: {}", event.getObjectId());
-
-        getAuditPropertyEntityAdapter().setUserId(event.getUserId());
-
-        AcmTask task = getTaskExtractor().fromEvent(event);
-
-        createFolderForTaskEvent(task);
     }
 
     @Override
@@ -1165,87 +1134,7 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
                 .mapToInt(acmToActiviti -> acmToActiviti.getValue()).findFirst().orElse(TaskConstants.DEFAULT_PRIORITY);
     }
 
-    @Override
-    public AcmTask acmTaskFromActivitiTask(Task activitiTask)
-    {
-        if (activitiTask == null)
-        {
-            return null;
-        }
-
-        AcmTask acmTask = new AcmTask();
-
-        acmTask.setTaskId(Long.valueOf(activitiTask.getId()));
-        acmTask.setDueDate(activitiTask.getDueDate());
-        String taskPriority = acmPriorityFromActivitiPriority(activitiTask.getPriority());
-        acmTask.setPriority(taskPriority);
-        acmTask.setTitle(activitiTask.getName());
-        acmTask.setAssignee(activitiTask.getAssignee());
-        acmTask.setCreateDate(activitiTask.getCreateTime());
-        acmTask.setOwner(activitiTask.getOwner());
-
-        extractProcessVariables(activitiTask.getProcessVariables(), acmTask);
-
-        if (activitiTask.getTaskLocalVariables() != null)
-        {
-            extractTaskLocalVariables(acmTask, activitiTask.getTaskLocalVariables());
-
-            String details = (String) activitiTask.getTaskLocalVariables().get(TaskConstants.VARIABLE_NAME_DETAILS);
-            acmTask.setDetails(details);
-
-            // only on rework task, first time rework instructions will be fetched from process variables
-            // otherwise, rework instruction will be fetched via task local variable
-            String reworkInstructions = (String) activitiTask.getTaskLocalVariables().get(TaskConstants.VARIABLE_NAME_REWORK_INSTRUCTIONS);
-            if (reworkInstructions != null)
-            {
-                acmTask.setReworkInstructions(reworkInstructions);
-            }
-
-        }
-
-        // If start date is not provided, set start date as creation date
-        if (acmTask.getTaskStartDate() == null)
-        {
-            acmTask.setTaskStartDate(activitiTask.getCreateTime());
-        }
-
-        String status = findTaskStatus(activitiTask);
-        acmTask.setStatus(status);
-
-        String pid = activitiTask.getProcessDefinitionId();
-        String processInstanceId = activitiTask.getProcessInstanceId();
-        String taskDefinitionKey = activitiTask.getTaskDefinitionKey();
-
-        if (pid != null)
-        {
-            findProcessNameAndTaskOutcomes(acmTask, pid, processInstanceId, taskDefinitionKey);
-        } else
-        {
-            acmTask.setAdhocTask(true);
-        }
-
-        // if the task already has an assignee, we don't care about the candidate group.
-        if (acmTask.getAssignee() == null || acmTask.getAssignee().isEmpty())
-        {
-            List<String> candidateGroups = findCandidateGroups(activitiTask.getId());
-            acmTask.setCandidateGroups(candidateGroups);
-        }
-
-        if (log.isTraceEnabled())
-        {
-            log.trace("Activiti task id '{}' for object type '{}', object id '{}', object number '{}' found for user '{}'",
-                    acmTask.getTaskId(), acmTask.getAttachedToObjectType(), acmTask.getAttachedToObjectId(),
-                    acmTask.getAttachedToObjectName(), acmTask.getAssignee());
-        }
-
-        List<AcmParticipant> participants = getParticipantDao().findParticipantsForObject("TASK", acmTask.getTaskId());
-        acmTask.setParticipants(participants);
-
-        return acmTask;
-    }
-
-    @Override
-    public AcmTask acmTaskFromActivitiTask(Task activitiTask, Map<String, Object> processVariables, Map<String, Object> localVariables)
+    private AcmTask createAcmTask(Task activitiTask, Map<String, Object> processVariables, Map<String, Object> localVariables)
     {
         if (activitiTask == null)
         {
@@ -1310,17 +1199,26 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
             acmTask.setCandidateGroups(candidateGroups);
         }
 
-        if (log.isTraceEnabled())
-        {
-            log.trace("Activiti task id '{}' for object type '{}', object id '{}', object number '{}' found for user '{}'",
-                    acmTask.getTaskId(), acmTask.getAttachedToObjectType(), acmTask.getAttachedToObjectId(),
-                    acmTask.getAttachedToObjectName(), acmTask.getAssignee());
-        }
+        log.trace("Activiti task id '{}' for object type '{}', object id '{}', object number '{}' found for user '{}'", acmTask.getTaskId(),
+                acmTask.getAttachedToObjectType(), acmTask.getAttachedToObjectId(), acmTask.getAttachedToObjectName(),
+                acmTask.getAssignee());
 
         List<AcmParticipant> participants = getParticipantDao().findParticipantsForObject("TASK", acmTask.getTaskId());
         acmTask.setParticipants(participants);
 
         return acmTask;
+    }
+
+    @Override
+    public AcmTask acmTaskFromActivitiTask(Task activitiTask)
+    {
+        return createAcmTask(activitiTask, activitiTask.getProcessVariables(), activitiTask.getTaskLocalVariables());
+    }
+
+    @Override
+    public AcmTask acmTaskFromActivitiTask(Task activitiTask, Map<String, Object> processVariables, Map<String, Object> localVariables)
+    {
+        return createAcmTask(activitiTask, processVariables, localVariables);
     }
 
     private List<String> findCandidateGroups(String taskId)
@@ -1495,16 +1393,6 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
     public void setDataAccessPrivilegeListener(DataAccessPrivilegeListener dataAccessPrivilegeListener)
     {
         this.dataAccessPrivilegeListener = dataAccessPrivilegeListener;
-    }
-
-    public ExtractAcmTaskFromEvent getTaskExtractor()
-    {
-        return taskExtractor;
-    }
-
-    public void setTaskExtractor(ExtractAcmTaskFromEvent taskExtractor)
-    {
-        this.taskExtractor = taskExtractor;
     }
 
     public TaskBusinessRule getTaskBusinessRule()

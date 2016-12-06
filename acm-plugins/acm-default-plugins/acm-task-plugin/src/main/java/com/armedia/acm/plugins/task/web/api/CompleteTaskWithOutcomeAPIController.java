@@ -33,10 +33,7 @@ public class CompleteTaskWithOutcomeAPIController
     public AcmTask completeTask(Authentication authentication, @RequestBody AcmTask in, HttpSession httpSession)
             throws AcmUserActionFailedException
     {
-        if (log.isInfoEnabled())
-        {
-            log.info("Completing task '" + in.getTaskId() + "'");
-        }
+        log.info("Completing task '{}'", in.getTaskId());
 
         try
         {
@@ -49,10 +46,6 @@ public class CompleteTaskWithOutcomeAPIController
 
             AcmTask completed = getTaskDao().completeTask(authentication, in.getTaskId(), in.getOutcomeName(),
                     in.getTaskOutcome() == null ? null : in.getTaskOutcome().getName());
-
-            // TODO after demo should be found appropriate solution in taskDkao.
-            // this is a bug-926 fix (workaround)
-            // completed.setStatus("CLOSED");
 
             publishTaskCompletedEvent(authentication, httpSession, completed, true);
 
