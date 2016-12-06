@@ -2,10 +2,10 @@ package com.armedia.acm.services.notification.service;
 
 import com.armedia.acm.service.outlook.dao.impl.ExchangeWebServicesOutlookDao;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
-import com.armedia.acm.service.outlook.model.EmailTemplateFactory;
 import com.armedia.acm.service.outlook.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksResultDTO;
+import com.armedia.acm.service.outlook.model.MessageBodyFactory;
 import com.armedia.acm.service.outlook.model.OutlookDTO;
 import com.armedia.acm.service.outlook.service.OutlookService;
 import com.armedia.acm.services.notification.model.Notification;
@@ -45,6 +45,7 @@ public class MicrosoftExchangeNotificationSender extends NotificationSender
             EmailWithAttachmentsDTO in = new EmailWithAttachmentsDTO();
             in.setHeader("");
             in.setFooter("");
+            in.setTemplate(notificationTemplate);
 
             String notificationLink = getNotificationUtils().buildNotificationLink(notification.getParentType(), notification.getParentId(),
                     notification.getRelatedObjectType(), notification.getRelatedObjectId());
@@ -52,7 +53,7 @@ public class MicrosoftExchangeNotificationSender extends NotificationSender
             String messageBody = notificationLink != null ? String.format("%s Link: %s", notification.getNote(), notificationLink)
                     : notification.getNote();
 
-            in.setBody(new EmailTemplateFactory().buildMessageBodyFromTemplate(messageBody, "", ""));
+            in.setBody(new MessageBodyFactory().buildMessageBodyFromTemplate(messageBody, "", ""));
             in.setSubject(notification.getTitle());
             in.setEmailAddresses(Arrays.asList(notification.getUserEmail()));
 
@@ -88,6 +89,7 @@ public class MicrosoftExchangeNotificationSender extends NotificationSender
     @Override
     public void sendEmailWithAttachments(EmailWithAttachmentsDTO in, Authentication authentication, AcmUser user) throws Exception
     {
+        in.setTemplate(notificationTemplate);
         OutlookDTO outlookDTO = getOutlookService().retrieveOutlookPassword(authentication);
         AcmOutlookUser outlookUser = new AcmOutlookUser(authentication.getName(), user.getMail(), outlookDTO.getOutlookPassword());
         getOutlookService().sendEmailWithAttachments(in, outlookUser, authentication);
@@ -97,6 +99,7 @@ public class MicrosoftExchangeNotificationSender extends NotificationSender
     public List<EmailWithEmbeddedLinksResultDTO> sendEmailWithEmbeddedLinks(EmailWithEmbeddedLinksDTO in, Authentication authentication,
             AcmUser user) throws Exception
     {
+        in.setTemplate(notificationTemplate);
         OutlookDTO outlookDTO = getOutlookService().retrieveOutlookPassword(authentication);
         AcmOutlookUser outlookUser = new AcmOutlookUser(authentication.getName(), user.getMail(), outlookDTO.getOutlookPassword());
         return getOutlookService().sendEmailWithEmbeddedLinks(in, outlookUser, authentication);

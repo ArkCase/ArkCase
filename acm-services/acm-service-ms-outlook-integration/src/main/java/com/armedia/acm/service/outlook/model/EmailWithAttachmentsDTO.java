@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Created by manoj.dhungana on 7/28/2015.
  */
-public class EmailWithAttachmentsDTO extends EmailTemplateFactory
+public class EmailWithAttachmentsDTO extends MessageBodyFactory
 {
 
     private List<Long> attachmentIds;

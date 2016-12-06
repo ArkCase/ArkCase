@@ -9,18 +9,18 @@ import java.util.Map;
  * @author dame.gjorgjievski
  *
  */
-public class EmailTemplateFactory
+public class MessageBodyFactory
 {
 
-    private static final String DEFAULT_TEMPLATE = "${model.header} \r\r ${model.body} \r\r\r ${model.footer}";
+    private static final String DEFAULT_TEMPLATE = "${model.header} \n\n ${model.body} \n\n\n ${model.footer}";
 
     private String template;
 
-    public EmailTemplateFactory()
+    public MessageBodyFactory()
     {
     }
 
-    public EmailTemplateFactory(String template)
+    public MessageBodyFactory(String template)
     {
         this.template = template;
     }
