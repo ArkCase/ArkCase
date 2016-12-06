@@ -9,7 +9,7 @@
         "data": {
             "supervisoruser": {
                 "username": "samuel-acm",
-                "password": "Armedia#1"
+                "password": "AcMd3v$"
             },
             "adminuser": {
                 "username": "ann-acm",
@@ -45,14 +45,24 @@
             "checkout": ".//li[@data-command='checkout']",
             "checkin" : ".//li[@data-command='checkin']",
             "cancelEditing": ".//li[@data-command='cancelEditing']",
-            "logoutSucesfullMessage": ".//*[@class='alert alert-success']",
+            "logoutSucesfullMessage": ".alert.alert-success",
             "checkoutDisabled": ".//li[@data-command='checkout'][@aria-disabled='true']",
             "checkinDisabled": ".//li[@data-command='checkin'][@aria-disabled='true']",
             "cancelEditingDisabled": ".//li[@data-command='cancelEditing'][@aria-disabled='true']",
             "lockIcon": "//table/tbody/tr[2]/td[2]/span",
-            "tasksLink": "Tasks"
+            "tasksLink": "Tasks",
+            "reportTitle": "title",
+            "docTreeExpand": "//doc-tree/table[2]/tbody/tr/td[3]/span/span[1]",
+            "fileTitle": "//table/tbody/tr[2]/td[3]/span/span[3]",
+            "docViewNotesLink": "Notes",
+            "docViewAddNoteButton":".//button[@ng-disabled='notesInit.isReadOnly']",
+            "saveButton": "Save",
+            "noteColumnValue": ".ui-grid-cell-contents.ng-binding.ng-scope"
+
         },
         "data": {
+            "reportTitle": "Report of Investigation Title",
+            "note": "NoteText"
 
         }
 
@@ -491,7 +501,7 @@
             "caseTypeListBox": ".//ul[@role='listbox']/li",
             "documentsLink": "//span[contains(text(),'Documents')]",
             "expandLinksButton": ".//a[@title='Show links']",
-            "fancyTreeExpandTop": "html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/object-tree/section/div/div/div/ul/li[1]/span/span[1]",
+            "fancyTreeExpandTop": "//object-tree/section/div/div/div/ul/li[1]/span/span[1]",
             "tagsLinkBtn": ".//*[@class='fa fa-tags']",
             "addNewTagBtn": "[ng-click='addNew()']",
             "addTagInput": "newTag.text",
@@ -513,7 +523,7 @@
             "cancelBtn": "[ng-click='onClickCancel()']",
             "newTimesheetLink": "Timesheet",
             "timesheetLinkBtn": ".//*[@class='fa fa-clock-o']",
-            "dueDate": "[editable-bsdate='dateInfo.dueDate']",
+            "dueDate": "//a[@editable-bsdate='dateInfo.dueDate']",
             "dueDateInput": "[init-date='dateInfo.dueDate']",
             "dueDateTodayBtn": "Today",
             "confirmDueDateBtn": ".//*[@class='editable-controls form-group']/..//button[1]",
@@ -523,9 +533,8 @@
             "historyTableRow": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
             "timesheetTableRow": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
             "costSheetLinkBtn": ".//*[@class='fa fa-money']",
-            "caseTitleStatus": ".//*[@class='ng-binding']"
-
-
+            "caseTitleStatus": ".//*[@class='ng-binding']",
+            "owningGroup": ".//a[@editable-select='owningGroup']"
 
 
         },
@@ -580,7 +589,6 @@
             "aliasValue": "Alias",
             "editAlias": "editAlias",
             "statusClosed": "Closed",
-            "automatedTaskTitle": "Review Request to Change Case Status",
             "tagname": "tag1",
             "unsubscribeBtn": "Unsubscribe",
             "subscribeBtn": "Subscribe",
@@ -591,7 +599,8 @@
             "historyEvent": "Case File Created",
             "timeSheet": "Timesheet",
             "totalHours": "56",
-            "statusDraft": "DRAFT"
+            "statusDraft": "DRAFT",
+            "owningGroup": "ACM_INVESTIGATOR_DEV"
         }
 
     },

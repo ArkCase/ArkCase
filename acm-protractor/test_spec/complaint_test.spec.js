@@ -149,6 +149,30 @@ describe('Create new complaint ', function() {
 
     });
 
+    it('should create new complaint and verify adding new Report of Investigation document', function() {
+
+        complaintPage.clickNewButton().clickComplaintButton().switchToIframes().submitInitiatorInformation(Objects.complaintPage.data.firstName, Objects.complaintPage.data.lastName);
+        complaintPage.reenterFirstName(Objects.complaintPage.data.firstName).clickTab("Incident").insertIncidentInformation("Arson", Objects.complaintPage.data.title).clickSubmitButton();
+        complaintPage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Documents");
+        complaintPage.rightClickRootFolder().addDocument("Report of Investigation");
+        complaintPage.switchToIframes().submitReportOfInvestigation(Objects.basepage.data.reportTitle, Objects.taskspage.data.assigneeSamuel);
+        complaintPage.switchToDefaultContent().validateDocGridData(true, "Report of Investigation", ".pdf", "Report of Investigation", utils.returnToday("/"), utils.returnToday("/"), userPage.returnUserNavigationProfile(), "1.0", "ACTIVE");
+
+    });
+
+    it('should verify adding notes in document viewer in complaints', function() {
+
+        complaintPage.clickNewButton().clickComplaintButton().switchToIframes().submitInitiatorInformation(Objects.complaintPage.data.firstName, Objects.complaintPage.data.lastName);
+        complaintPage.reenterFirstName(Objects.complaintPage.data.firstName).clickTab("Incident").insertIncidentInformation("Arson", Objects.complaintPage.data.title).clickSubmitButton();
+        complaintPage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Documents");
+        complaintPage.clickDocTreeExpand().rightClickFileTitle().clickDocAction("Open");
+        complaintPage.moveToTab().clickDocViewNotesLink().submitNote(Objects.basepage.data.note);
+        expect(complaintPage.returnSavedNoteInGrid()).toEqual(Objects.basepage.data.note);
+
+
+    });
+
+
 })
 
 
