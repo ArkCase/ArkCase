@@ -160,6 +160,19 @@ describe('Create new complaint ', function() {
 
     });
 
+    it('should verify adding notes in document viewer in complaints', function() {
+
+        complaintPage.clickNewButton().clickComplaintButton().switchToIframes().submitInitiatorInformation(Objects.complaintPage.data.firstName, Objects.complaintPage.data.lastName);
+        complaintPage.reenterFirstName(Objects.complaintPage.data.firstName).clickTab("Incident").insertIncidentInformation("Arson", Objects.complaintPage.data.title).clickSubmitButton();
+        complaintPage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Documents");
+        complaintPage.clickDocTreeExpand().rightClickFileTitle().clickDocAction("Open");
+        complaintPage.moveToTab().clickDocViewNotesLink().submitNote(Objects.basepage.data.note);
+        expect(complaintPage.returnSavedNoteInGrid()).toEqual(Objects.basepage.data.note);
+
+
+    });
+
+
 })
 
 
