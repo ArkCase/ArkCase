@@ -701,7 +701,7 @@ describe('case page tests', function() {
         casePage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Documents");
         casePage.clickDocTreeExpand().rightClickFileTitle().clickDocAction("Open");
         casePage.moveToTab().clickDocViewNotesLink().submitNote(Objects.basepage.data.note);
-        expect(complaintPage.returnSavedNoteInGrid()).toEqual(Objects.basepage.data.note);
+        expect(casePage.returnSavedNoteInGrid()).toEqual(Objects.basepage.data.note);
 
     });
 
