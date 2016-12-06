@@ -1,5 +1,5 @@
 var Objects = require('../json/Objects.json');
-var basePage = require('./base_page.js');
+var basePage =require('../Pages/base_page.js');
 var EC = protractor.ExpectedConditions;
 var SelectWrapper = require('../util/select-wrapper.js');
 var taskBtn = element(by.linkText(Objects.taskpage.locators.taskButton));
