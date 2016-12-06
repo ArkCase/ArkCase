@@ -20,10 +20,7 @@ public class AcmUserTaskEventHandler implements ApplicationEventPublisherAware
 
     public void handleTaskEvent(String eventName, Task task)
     {
-        if (log.isDebugEnabled())
-        {
-            log.debug("Got a task event '{}'; execution of type '{}'", eventName, task.getClass().getName());
-        }
+        log.debug("Got a task event '{}'; execution of type '{}'", eventName, task.getClass().getName());
 
         Map<String, Object> processVariables = getRuntimeService().getVariables(task.getProcessInstanceId());
         log.debug("process variables from runtime: {}", processVariables.size());

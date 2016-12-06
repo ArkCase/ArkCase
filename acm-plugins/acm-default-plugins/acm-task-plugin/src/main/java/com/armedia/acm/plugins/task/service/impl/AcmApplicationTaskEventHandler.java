@@ -1,6 +1,8 @@
 package com.armedia.acm.plugins.task.service.impl;
 
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
+import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.TaskDao;
@@ -8,6 +10,8 @@ import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.SendDocumentsToSolr;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 
 import java.util.Arrays;
@@ -25,6 +29,7 @@ public class AcmApplicationTaskEventHandler implements ApplicationListener<AcmAp
     private SendDocumentsToSolr sendDocumentsToSolr;
     private TaskToSolrTransformer taskToSolrTransformer;
     private List<String> eventList;
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     public void onApplicationEvent(AcmApplicationTaskEvent event)
@@ -33,6 +38,18 @@ public class AcmApplicationTaskEventHandler implements ApplicationListener<AcmAp
         if (getEventList().contains(event.getTaskEvent()))
         {
             AcmTask acmTask = (AcmTask) event.getSource();
+
+            if (event.getTaskEvent().equals("create"))
+            {
+                getAuditPropertyEntityAdapter().setUserId(event.getUserId());
+                try
+                {
+                    getTaskDao().createFolderForTaskEvent(acmTask);
+                } catch (AcmTaskException | AcmCreateObjectFailedException e)
+                {
+                    log.error("Failed to create task container folder!", e.getMessage(), e);
+                }
+            }
 
             SolrAdvancedSearchDocument advancedDocument = getTaskToSolrTransformer().toSolrAdvancedSearch(acmTask);
             SolrDocument quickDocument = getTaskToSolrTransformer().toSolrQuickSearch(acmTask);
