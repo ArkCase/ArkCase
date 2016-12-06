@@ -172,7 +172,7 @@ var logoutLink = element(by.linkText(Objects.basepage.locators.logoutLink));
 var checkOut = element(by.xpath(Objects.basepage.locators.checkout));
 var checkIn = element(by.xpath(Objects.basepage.locators.checkin));
 var cancelEditing = element(by.xpath(Objects.basepage.locators.cancelEditing));
-var logoutSucesfullMessage = element(by.xpath(Objects.basepage.locators.logoutSucesfullMessage));
+var logoutSucesfullMessage = element(by.css(Objects.basepage.locators.logoutSucesfullMessage));
 var checkoutDisabled = element(by.xpath(Objects.basepage.locators.checkoutDisabled));
 var checkinDisabled = element(by.xpath(Objects.basepage.locators.checkinDisabled));
 var cancelEditingDisabled = element(by.xpath(Objects.basepage.locators.cancelEditingDisabled));
@@ -1421,7 +1421,9 @@ var BasePage = function() {
 		browser.wait(EC.visibilityOf(element(by.linkText("Logout"))), 30000).then(function () {
 			logoutLink.click().then(function () {
 				browser.ignoresynchronization = true;
-				expect(logoutSucesfullMessage.getText()).toEqual('You have been logged out successfully.');
+				browser.driver.wait(EC.visibilityOf(element(by.css(".alert.alert-success"))), 30000).then(function () {
+                    expect(logoutSucesfullMessage.getText()).toEqual('You have been logged out successfully.');
+                });
 			})
 		});
 		return this;

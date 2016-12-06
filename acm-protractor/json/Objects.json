@@ -45,7 +45,7 @@
             "checkout": ".//li[@data-command='checkout']",
             "checkin" : ".//li[@data-command='checkin']",
             "cancelEditing": ".//li[@data-command='cancelEditing']",
-            "logoutSucesfullMessage": ".//*[@class='alert alert-success']",
+            "logoutSucesfullMessage": ".alert.alert-success",
             "checkoutDisabled": ".//li[@data-command='checkout'][@aria-disabled='true']",
             "checkinDisabled": ".//li[@data-command='checkin'][@aria-disabled='true']",
             "cancelEditingDisabled": ".//li[@data-command='cancelEditing'][@aria-disabled='true']",
@@ -523,7 +523,7 @@
             "cancelBtn": "[ng-click='onClickCancel()']",
             "newTimesheetLink": "Timesheet",
             "timesheetLinkBtn": ".//*[@class='fa fa-clock-o']",
-            "dueDate": "[editable-bsdate='dateInfo.dueDate']",
+            "dueDate": "//a[@editable-bsdate='dateInfo.dueDate']",
             "dueDateInput": "[init-date='dateInfo.dueDate']",
             "dueDateTodayBtn": "Today",
             "confirmDueDateBtn": ".//*[@class='editable-controls form-group']/..//button[1]",
@@ -533,9 +533,8 @@
             "historyTableRow": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
             "timesheetTableRow": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
             "costSheetLinkBtn": ".//*[@class='fa fa-money']",
-            "caseTitleStatus": ".//*[@class='ng-binding']"
-
-
+            "caseTitleStatus": ".//*[@class='ng-binding']",
+            "owningGroup": ".//a[@editable-select='owningGroup']"
 
 
         },
@@ -590,7 +589,6 @@
             "aliasValue": "Alias",
             "editAlias": "editAlias",
             "statusClosed": "Closed",
-            "automatedTaskTitle": "Review Request to Change Case Status",
             "tagname": "tag1",
             "unsubscribeBtn": "Unsubscribe",
             "subscribeBtn": "Subscribe",
@@ -601,7 +599,8 @@
             "historyEvent": "Case File Created",
             "timeSheet": "Timesheet",
             "totalHours": "56",
-            "statusDraft": "DRAFT"
+            "statusDraft": "DRAFT",
+            "owningGroup": "ACM_INVESTIGATOR_DEV"
         }
 
     },
