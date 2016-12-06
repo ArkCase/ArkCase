@@ -31,26 +31,15 @@
                         class="form-control input-md"
                         ng-keyup="keyUp($event)"
                         ng-model="searchQuery"
-                        typeahead="result for result in queryTypeahead($viewValue)"
+                        contenteditable="true"
+                        typeahead="result for result in queryTypeahead($viewValue) | limitTo:10 "
                         placeholder="{{searchPlaceholder}}"
-                        typeahead-wait-ms="10"
+                        typeahead-on-select="onSelect($item, $model, $label)"
                         typeahead-loading="loadingResults"
                         typeahead-no-results="noResults"
-
+                        typeahead-focus-first="false"
+                        typeahead-min-length="2"
                 >
-                <tags-input
-                        ng-if="isMultiFilter"
-                        ng-model="searchQuery"
-                        placeholder="{{searchPlaceholder}}"
-                        display-property="title_parseable"
-                        key-property="id"
-                        on-tag-adding="checkTag($tag)"
-                        on-tag-removed="onTagRemoved($tag)"
-                        replace-spaces-with-dashes="false"
-                        add-from-autocomplete-only="true"
-                >
-                    <auto-complete min-length="2" max-results-to-show="10" source="loadTags($query)"></auto-complete>
-                </tags-input>
                 <span class="input-group-btn">
                     <button class="btn btn-md btn-primary" type="button"
                             ng-click="queryExistingItems()">{{searchBtn}}</button>

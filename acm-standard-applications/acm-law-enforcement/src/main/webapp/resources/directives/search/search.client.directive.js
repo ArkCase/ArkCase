@@ -88,6 +88,11 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                     scope.emptySearch = scope.config.emptySearch;
                 }
 
+                var isSelected = false;
+                scope.onSelect = function ($item, $model, $label) {
+                    isSelected = true;
+                };
+
                 scope.queryExistingItems = function (start) {
                     scope.start = Util.goodNumber(start, 0);
                     if (!scope.searchQuery || scope.searchQuery.length === 0) {
@@ -111,7 +116,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                             }
                         }
 
-                        if (scope.isAutoSuggestActive && scope.searchQuery !== "") {
+                        if (scope.isAutoSuggestActive && scope.searchQuery !== "" && isSelected) {
                             var query = SearchQueryBuilder.buildFacetedSearchQuery("\"" + scope.searchQuery + "\"", scope.filters, scope.pageSize, scope.start);
                         } else {
                             var query = SearchQueryBuilder.buildFacetedSearchQuery((scope.multiFilter ? "*" : scope.searchQuery + "*"), scope.filters, scope.pageSize, scope.start);
