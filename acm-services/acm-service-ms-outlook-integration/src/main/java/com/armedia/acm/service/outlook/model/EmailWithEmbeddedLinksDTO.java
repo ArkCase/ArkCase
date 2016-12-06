@@ -2,7 +2,7 @@ package com.armedia.acm.service.outlook.model;
 
 import java.util.List;
 
-public class EmailWithEmbeddedLinksDTO
+public class EmailWithEmbeddedLinksDTO extends EmailTemplateFactory
 {
 
     private String subject;
@@ -18,6 +18,11 @@ public class EmailWithEmbeddedLinksDTO
     private List<Long> fileIds;
 
     private String baseUrl;
+
+    public String buildMessageBodyFromTemplate(String body)
+    {
+        return buildMessageBodyFromTemplate(body, getHeader(), getFooter());
+    }
 
     public String getSubject()
     {
