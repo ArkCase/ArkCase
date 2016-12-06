@@ -19,13 +19,13 @@ angular.module('preference').controller('Preference.WidgetsListController', ['$s
         $scope.$on('show-widgets', showWidgets);
 
         function toggleDefaultView() {
-           var collapsed = ($scope.defaultViewExpand === 'true');
+           var isExpanded = ($scope.defaultViewExpand === 'true');
 
             DashboardService.getConfig({moduleName: $scope.moduleName}, function (config) {
                 DashboardService.saveConfig({
                     dashboardConfig: config.dashboardConfig,
                     module: $scope.moduleName,
-                    collapsed: collapsed
+                    collapsed: isExpanded
                 });
             });
         }
