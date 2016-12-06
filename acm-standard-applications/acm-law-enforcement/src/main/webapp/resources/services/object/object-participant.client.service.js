@@ -231,6 +231,40 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
 
         /**
          * @ngdoc method
+         * @name validateAssignee
+         * @methodOf services:Object.ParticipantService
+         *
+         * @description
+         * Check if there is one and only one assignee in the participant array
+         *
+         * @param {Object} data Array of participants to be validated
+         *
+         * @return {Object} Promise
+         */
+        Service.validateAssignee = function (data) {
+            if (_.filter(data, function (pa) {
+                    return Util.compare("assignee", pa.participantType);
+                }).length != 1) {
+                return false;
+            }
+            return true;
+        };
+
+        /**
+         * @ngdoc method
+         * @name validateType
+         * @methodOf services:Object.ParticipantService
+         * @description Check if the type of participant is consistent with the given USER or GROUP type
+         * @param {Object} data Participant object to be validated
+         * @param {Object} type Given type
+         * @returns {boolean} Promise
+         */
+        Service.validateType = function (data, type) {
+            return data.participantType == "owning group" ? (type == "GROUP") : (type == "USER");
+        };
+
+        /**
+         * @ngdoc method
          * @name validateParticipants
          * @methodOf services:Object.ParticipantService
          *
