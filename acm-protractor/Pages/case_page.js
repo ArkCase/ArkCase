@@ -3,7 +3,7 @@ var waitHelper = require('../util/waitHelper.js');
 var util = require('../util/utils.js');
 var Objects = require('../json/Objects.json');
 var taskPage = require('../Pages/task_page.js');
-var basePage = require('./base_page.js');
+var basePage = require('../Pages/base_page.js');
 var EC = protractor.ExpectedConditions;
 var newBtn = element(by.linkText(Objects.casepage.locators.newButton));
 var newCaseBtn = element(by.linkText(Objects.casepage.locators.newCaseBtn));
@@ -55,8 +55,6 @@ var caseID = element(by.xpath(Objects.casepage.locators.caseID));
 var reinvestigateBtn = element(by.css(Objects.casepage.locators.reinvestigateBtn));
 var casesTitleStatus = element.all(by.xpath(Objects.casepage.locators.caseTitleStatus)).get(0);
 
-
-
 var CasePage = function() {
 
     browser.ignoreSynchronization = true;
@@ -98,17 +96,6 @@ var CasePage = function() {
 
     this.initiatorInformation = function(firstname, lastname) {
 
-        browser.wait(EC.visibilityOf(element(by.name(Objects.casepage.locators.firstName))), 30000);
-        firstName.click().then(function() {
-            firstName.sendKeys(firstname);
-        });
-        lastName.click().then(function() {
-            lastName.sendKeys(lastname);
-        });
-    }
-
-    this.initiatorInformation = function(firstname, lastname) {
-
         browser.wait(EC.visibilityOf(element(by.name(Objects.casepage.locators.firstName))), 10000);
         firstName.click().then(function() {
             firstName.sendKeys(firstname).then(function() {
@@ -121,10 +108,9 @@ var CasePage = function() {
         return this;
     }
 
-
     this.waitForCaseType = function() {
 
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesType))), 30000);
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesType))), 30000, "Case type is not displayed");
     }
 
     this.waitForCaseTitle = function() {
@@ -133,8 +119,9 @@ var CasePage = function() {
     }
 
     this.clickSubmitBtn = function() {
-
-        submitBtn.click();
+        browser.sleep(3000);
+        browser.executeScript('arguments[0].click()', submitBtn);
+        // submitBtn.click();
         return this;
     }
 
