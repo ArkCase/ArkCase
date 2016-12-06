@@ -2,7 +2,7 @@ package com.armedia.acm.services.notification.service;
 
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.service.outlook.model.EmailTemplateFactory;
+import com.armedia.acm.service.outlook.model.MessageBodyFactory;
 import com.armedia.acm.service.outlook.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksResultDTO;
@@ -66,7 +66,7 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
             String messageBody = notificationLink != null ? String.format("%s Link: %s", notification.getNote(), notificationLink)
                     : notification.getNote();
 
-            messageBody = new EmailTemplateFactory(notificationTemplate).buildMessageBodyFromTemplate(messageBody, "", "");
+            messageBody = new MessageBodyFactory(notificationTemplate).buildMessageBodyFromTemplate(messageBody, "", "");
             MuleMessage received = getMuleContextManager().send(flow, messageBody, messageProps);
 
             exception = received.getInboundProperty("sendEmailException");
@@ -93,6 +93,8 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
     @Override
     public void sendEmailWithAttachments(EmailWithAttachmentsDTO in, Authentication authentication, AcmUser user) throws Exception
     {
+        
+        in.setTemplate(notificationTemplate);
         Exception exception = null;
         Map<String, Object> messageProps = loadSmtpAndOriginatingProperties();
         messageProps.put("subject", in.getSubject());
@@ -153,6 +155,7 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
     public List<EmailWithEmbeddedLinksResultDTO> sendEmailWithEmbeddedLinks(EmailWithEmbeddedLinksDTO in, Authentication authentication,
             AcmUser user) throws Exception
     {
+        in.setTemplate(notificationTemplate);
         List<EmailWithEmbeddedLinksResultDTO> emailResultList = new ArrayList<>();
         Exception exception = null;
 

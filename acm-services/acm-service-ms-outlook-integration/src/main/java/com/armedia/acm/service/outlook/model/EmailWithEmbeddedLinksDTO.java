@@ -2,7 +2,7 @@ package com.armedia.acm.service.outlook.model;
 
 import java.util.List;
 
-public class EmailWithEmbeddedLinksDTO extends EmailTemplateFactory
+public class EmailWithEmbeddedLinksDTO extends MessageBodyFactory
 {
 
     private String subject;
