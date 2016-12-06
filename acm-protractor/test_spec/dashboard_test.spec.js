@@ -88,5 +88,5 @@ describe('dashboard page test', function() {
         loginPage.Logout();
 
     });
-  });
+
 });
