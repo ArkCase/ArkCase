@@ -102,6 +102,7 @@
         <property name="authenticationTokenDao" ref="authenticationTokenDao"/>
         <property name="ecmFileService" ref="ecmFileService" />
         <property name="notificationUtils" ref="notificationUtils"/>
+        <property name="notificationTemplate" value="file:${notification.email.template.path}"/>
     </bean>
 
     <bean id="microsoftExchangeNotificationSender" class="com.armedia.acm.services.notification.service.MicrosoftExchangeNotificationSender">
@@ -113,13 +114,12 @@
         <property name="authenticationTokenDao" ref="authenticationTokenDao"/>
         <property name="outlookService" ref="outlookService"/>
         <property name="notificationUtils" ref="notificationUtils"/>
+        <property name="notificationTemplate" value="file:${notification.email.template.path}"/>
     </bean>
 
     <bean id="notificationSenderFactory" class="com.armedia.acm.services.notification.service.NotificationSenderFactory">
         <property name="propertyFileManager" ref="propertyFileManager" />
         <property name="notificationPropertyFileLocation" ref="notificationPropertyFileLocation"/>
-        <property name="smtpNotificationSender" ref="smtpNotificationSender"/>
-        <property name="microsoftExchangeNotificationSender" ref="microsoftExchangeNotificationSender"/>
         <property name="notificationSenderMap">
             <map>
                 <entry key="smtp" value-ref="smtpNotificationSender"></entry>

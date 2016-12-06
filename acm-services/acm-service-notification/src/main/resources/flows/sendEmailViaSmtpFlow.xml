@@ -14,6 +14,9 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 http://www.mulesoft.org/schema/mule/smtp http://www.mulesoft.org/schema/mule/smtp/current/mule-smtp.xsd
 http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
 
+	<smtp:connector name="smtpConnector" 
+	    validateConnections="true" contentType="text/html"/>
+
     <flow name="sendEmailViaSmtp" doc:name="Send notification to the user by email using Smtp protocol.">
 
         <vm:inbound-endpoint
@@ -23,6 +26,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
         </vm:inbound-endpoint>
 
         <smtp:outbound-endpoint
+        	connector-ref="smtpConnector"
             host="#[message.inboundProperties.host]" 
             port="#[message.inboundProperties.port]" 
             user="#[message.inboundProperties.user]" 
@@ -30,6 +34,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
             from="#[message.inboundProperties.from]" 
             to="#[message.inboundProperties.to]" 
             subject="#[message.inboundProperties.subject]" 
+            mimeType="text/html"
             responseTimeout="30000"/>
 
         <catch-exception-strategy>
