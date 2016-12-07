@@ -135,11 +135,20 @@ angular.module('tasks').factory('Task.WorkflowService', ['$resource', '$translat
             }
             taskInfo.taskOutcome = found;
 
+            var originalReadOnly = null;
+            if (taskInfo.hasOwnProperty("isReadOnly")) {
+                originalReadOnly = taskInfo.isReadOnly;
+                delete taskInfo['isReadOnly'];
+            }
+
             return Util.serviceCall({
                 service: Service._completeTaskWithOutcome
                 , data: taskInfo
                 , onSuccess: function (data) {
                     if (TaskInfoService.validateTaskInfo(data)) {
+                        if (originalReadOnly != null) {
+                            data.isReadOnly = originalReadOnly;
+                        }
                         return data;
                     }
                 }

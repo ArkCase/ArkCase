@@ -1,5 +1,6 @@
 package com.armedia.acm.audit.listeners;
 
+import com.armedia.acm.activiti.model.SpringActivitiEntityEvent;
 import com.armedia.acm.audit.model.AuditConstants;
 import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.audit.service.AuditService;
@@ -7,13 +8,12 @@ import com.armedia.acm.objectonverter.AcmMarshaller;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.web.api.AsyncApplicationListener;
 import com.armedia.acm.web.api.MDCConstants;
-
 import org.activiti.engine.delegate.event.ActivitiEntityEvent;
 import org.activiti.engine.delegate.event.ActivitiEvent;
-import org.activiti.engine.delegate.event.BaseEntityEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.context.ApplicationListener;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  * Created by Bojan Milenkoski on 21.1.2016.
  */
 @AsyncApplicationListener
-public class AcmActivitiEntityEventListener extends BaseEntityEventListener
+public class AcmActivitiEntityEventListener implements ApplicationListener<SpringActivitiEntityEvent>
 {
     private static final String EVENT_TYPE = "com.armedia.acm.audit.activiti.entity.event";
 
@@ -40,6 +40,27 @@ public class AcmActivitiEntityEventListener extends BaseEntityEventListener
     private static AcmMarshaller converter = ObjectConverter.createJSONMarshaller();
 
     @Override
+    public void onApplicationEvent(SpringActivitiEntityEvent springActivitiEntityEvent)
+    {
+        ActivitiEvent event = (ActivitiEvent) springActivitiEntityEvent.getSource();
+
+        switch (springActivitiEntityEvent.getEventType())
+        {
+            case "create":
+                onCreate(event);
+                break;
+            case "update":
+                onUpdate(event);
+                break;
+            case "delete":
+                onDelete(event);
+                break;
+            default:
+                break;
+        }
+
+    }
+
     protected void onCreate(ActivitiEvent event)
     {
         log.debug("Activiti entity created event handling");
@@ -47,7 +68,6 @@ public class AcmActivitiEntityEventListener extends BaseEntityEventListener
         audit(event, AuditConstants.EVENT_STATUS_ACTIVITI_ENTITY_CREATED);
     }
 
-    @Override
     protected void onDelete(ActivitiEvent event)
     {
         log.debug("Activiti entity deleted event handling");
@@ -55,7 +75,6 @@ public class AcmActivitiEntityEventListener extends BaseEntityEventListener
         audit(event, AuditConstants.EVENT_STATUS_ACTIVITI_ENTITY_DELETED);
     }
 
-    @Override
     protected void onUpdate(ActivitiEvent event)
     {
         log.debug("Activiti entity update event handling");
@@ -169,4 +188,6 @@ public class AcmActivitiEntityEventListener extends BaseEntityEventListener
     {
         this.activitiEventsLoggingEntityEventsObjectEnabled = activitiEventsLoggingEntityEventsObjectEnabled;
     }
+
+
 }
