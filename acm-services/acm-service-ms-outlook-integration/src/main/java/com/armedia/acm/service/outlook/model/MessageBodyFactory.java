@@ -59,17 +59,17 @@ public class MessageBodyFactory
     public String buildMessageBodyFromTemplate(Map<String, Object> model)
     {
 
-        if (!model.containsKey("${model.header}"))
+        if (!model.containsKey("header"))
         {
-            model.put("${model.header}", "");
+            model.put("header", "");
         }
-        if (!model.containsKey("${model.body}"))
+        if (!model.containsKey("body"))
         {
-            model.put("${model.body}", "");
+            model.put("body", "");
         }
-        if (!model.containsKey("${model.footer}"))
+        if (!model.containsKey("footer"))
         {
-            model.put("${model.footer}", "");
+            model.put("footer", "");
         }
 
         String template = new String(getTemplate());
