@@ -29,6 +29,7 @@ angular.module('cases').controller('CasesListController', ['$scope', '$state', '
         $scope.$bus.subscribe(eventName, function (data) {
             if (data.objectType === ObjectService.ObjectTypes.CASE_FILE) {
                 var frevvoRequest = ServCommService.popRequest("frevvo", "new-case");
+                var objectTypeString = $translate.instant('common.objectTypes.' + data.objectType);
                 if (frevvoRequest) {
                     ObjectService.gotoUrl(ObjectService.ObjectTypes.CASE_FILE, data.objectId);
                 }
