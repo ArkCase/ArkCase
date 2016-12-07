@@ -127,15 +127,12 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
                                 participant.className = scope.config.className;
                                 scope.objectInfo.participants.push(participant);
                             }
-                            if (ObjectParticipantService.validateAssignee(scope.objectInfo.participants)) {
+                            if (ObjectParticipantService.validateParticipants(scope.objectInfo.participants)) {
                                 saveObjectInfoAndRefresh();
                             }
                             else {
-                                alert("Participants not valid");
+                                refresh();
                             }
-                        }
-                        else {
-                            alert('Participants not valid');
                         }
                     });
                 };
