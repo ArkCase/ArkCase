@@ -1552,7 +1552,7 @@ var BasePage = function() {
             });
         })
 
-    }
+    };
 
 
 };
