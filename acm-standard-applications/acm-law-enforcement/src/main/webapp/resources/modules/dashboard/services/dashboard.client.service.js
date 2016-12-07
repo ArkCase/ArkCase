@@ -28,29 +28,34 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
 
             queryNewComplaints: {
                 method: 'GET',
-                url: 'api/v1/plugin/complaint/list/lastMonth',
-                isArray: true,
+                url: 'api/v1/plugin/search/advancedSearch?q=object_type_s\\:COMPLAINT+' +
+                'AND+create_date_tdt\\:[NOW-1MONTH TO NOW]',
+                isArray: false,
                 data: ''
             },
 
             queryNewCases: {
                 method: 'GET',
                 url: 'api/v1/plugin/search/advancedSearch?q=object_type_s\\:CASE_FILE+' +
-                'AND create_date_tdt\\:[NOW-1MONTH TO NOW]',
+                'AND+NOT+status_lcs\\:DELETED+AND+create_date_tdt\\:[NOW-1MONTH TO NOW]',
                 isArray: false
             },
 
             queryMyTasks: {
                 method: 'GET',
-                url: 'api/v1/plugin/task/forUser/:userId',
-                isArray: true,
+                url: 'api/v1/plugin/search/advancedSearch?q=assignee_id_lcs\\::userId+' +
+                'AND+object_type_s\\:TASK+' +
+                'AND+status_lcs\\:ACTIVE&start=:startWith&n=:pageSize&s=:sortBy :sortDir',
+                isArray: false,
                 data: ''
             },
 
             queryMyComplaints: {
                 method: 'GET',
-                url: 'api/v1/plugin/complaint/forUser/:userId',
-                isArray: true,
+                url: 'api/v1/plugin/search/advancedSearch?q=assignee_id_lcs\\::userId+' +
+                'AND+object_type_s\\:COMPLAINT+' +
+                'AND+NOT+status_lcs\\:CLOSED&start=:startWith&n=:pageSize&s=:sortBy :sortDir',
+                isArray: false,
                 data: ''
             },
 
@@ -65,11 +70,11 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
 
             queryTeamWorkload: {
                 method: 'GET',
-                url: 'api/v1/plugin/task/list/:due',
+                url: 'api/v1/plugin/task/getListByDueDate/:due',
                 isArray: true,
                 data: ''
             },
-
+            
             getWidgetsPerRoles: {
                 method: 'GET',
                 url: 'api/latest/plugin/dashboard/widgets/get',

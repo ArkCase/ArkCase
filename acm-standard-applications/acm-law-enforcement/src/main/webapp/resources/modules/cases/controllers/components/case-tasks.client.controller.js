@@ -24,7 +24,6 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
-        var promiseMyTasks = ObjectTaskService.queryCurrentUserTasks();
 
         var onConfigRetrieved = function (config) {
             gridHelper.setColumnDefs(config);
@@ -33,24 +32,17 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
             gridHelper.setExternalPaging(config, retrieveGridData);
             gridHelper.setUserNameFilter(promiseUsers);
 
-            $q.all([promiseMyTasks]).then(function (data) {
-                for (var i = 0; i < $scope.config.columnDefs.length; i++) {
-                    //if ("taskId" == $scope.config.columnDefs[i].name) {
-                    //    $scope.gridOptions.columnDefs[i].cellTemplate = "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.object_id_s}}</a>";
-                    //    //$scope.gridOptions.columnDefs[i].cellTemplate = "<a ui-sref='tasks.id({type: \"TASK\", id: row.entity.object_id_s})'>{{row.entity.object_id_s}}</a>";
-                    //
-                    //} else
-                    if (HelperUiGridService.Lookups.TASK_OUTCOMES == $scope.config.columnDefs[i].lookup) {
-                        $scope.gridOptions.columnDefs[i].cellTemplate = '<span ng-hide="row.entity.acm$_taskActionDone"><select'
-                            + ' ng-options="option.value for option in row.entity.acm$_taskOutcomes track by option.id"'
-                            + ' ng-model="row.entity.acm$_taskOutcome">'
-                            + ' </select>'
-                            + ' <span ng-hide="\'noop\'==row.entity.acm$_taskOutcome.id"><i class="fa fa-gear fa-lg" ng-click="grid.appScope.action(row.entity)"></i></span></span>';
-                    }
+            for (var i = 0; i < $scope.config.columnDefs.length; i++) {
+                if (HelperUiGridService.Lookups.TASK_OUTCOMES == $scope.config.columnDefs[i].lookup) {
+                    $scope.gridOptions.columnDefs[i].cellTemplate = '<span ng-hide="row.entity.acm$_taskActionDone"><select'
+                        + ' ng-options="option.value for option in row.entity.acm$_taskOutcomes track by option.id"'
+                        + ' ng-model="row.entity.acm$_taskOutcome">'
+                        + ' </select>'
+                        + ' <span ng-hide="\'noop\'==row.entity.acm$_taskOutcome.id"><i class="fa fa-gear fa-lg" ng-click="grid.appScope.action(row.entity)"></i></span></span>';
                 }
+            }
 
-                componentHelper.doneConfig(config);
-            });
+            componentHelper.doneConfig(config);
 
             return false;
         };
@@ -75,51 +67,45 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
                     , Util.goodValue($scope.pageSize, 10)
                     , Util.goodValue($scope.sort.by)
                     , Util.goodValue($scope.sort.dir)
-                ).then(
-                    function (data) {
-                        $q.all([promiseMyTasks]).then(function () {
-                            var tasks = data.response.docs;
-                            $scope.gridOptions = $scope.gridOptions || {};
-                            $scope.gridOptions.data = tasks;
-                            $scope.gridOptions.totalItems = data.response.numFound;
+                ).then(function (data) {
+                    var tasks = data.response.docs;
+                    $scope.gridOptions = $scope.gridOptions || {};
+                    $scope.gridOptions.data = tasks;
+                    $scope.gridOptions.totalItems = data.response.numFound;
 
-                            for (var i = 0; i < tasks.length; i++) {
-                                var task = tasks[i];
-                                task.acm$_taskOutcomes = [{
-                                    id: "noop",
-                                    value: $translate.instant("common.select.option.none")
-                                }];
-                                task.acm$_taskOutcome = {
-                                    id: "noop",
-                                    value: $translate.instant("common.select.option.none")
-                                };
-                                task.acm$_taskActionDone = true;
+                    for (var i = 0; i < tasks.length; i++) {
+                        var task = tasks[i];
+                        task.acm$_taskOutcomes = [{
+                            id: "noop",
+                            value: $translate.instant("common.select.option.none")
+                        }];
+                        task.acm$_taskOutcome = {
+                                id: "noop",
+                                value: $translate.instant("common.select.option.none")
+                        };
+                        task.acm$_taskActionDone = true;
 
-                                var found = _.find($scope.myTasks, {taskId: tasks[i].id});
-                                if (found) {
-                                    if (!found.completed && found.adhocTask) {
-                                        task.acm$_taskOutcomes.push({id: "complete", value: "Complete"});
-                                        task.acm$_taskOutcomes.push({id: "delete", value: "Delete"});
-                                        task.acm$_taskActionDone = false;
-
-                                    } else if (!found.completed && !found.adhocTask && !Util.isArrayEmpty(found.availableOutcomes)) {
-                                        var availableOutcomes = Util.goodArray(found.availableOutcomes);
-                                        for (var j = 0; j < availableOutcomes.length; j++) {
-                                            var outcome = {
-                                                id: Util.goodValue(availableOutcomes[j].description),
-                                                value: Util.goodValue(availableOutcomes[j].description)
-                                            };
-                                            task.acm$_taskOutcomes.push(outcome);
-                                        }
-                                        task.acm$_taskActionDone = (1 >= availableOutcomes.length); //1 for '(Select One)'
-                                    }
+                        if (task.status_s === "ACTIVE" && task.adhocTask_b) {
+                            task.acm$_taskOutcomes.push({id: "complete", value: "Complete"});
+                            task.acm$_taskOutcomes.push({id: "delete", value: "Delete"});
+                            task.acm$_taskActionDone = false;
+                        }
+                        else if (task.status_s === "ACTIVE" && !task.adhocTask_b && !Util.isArrayEmpty(task.outcome_value_ss)) {
+                            var availableOutcomes = Util.goodArray(task.outcome_value_ss);
+                            if (availableOutcomes !== undefined && availableOutcomes.length > 0) {
+                                for (var j = 0; j < availableOutcomes.length; j++) {
+                                    var outcome = {
+                                            id: Util.goodValue(availableOutcomes[j]),
+                                            value: Util.goodValue(availableOutcomes[j])
+                                    };
+                                    task.acm$_taskOutcomes.push(outcome);
                                 }
                             }
-                        }); //end $q
-
-                        return data;
+                            task.acm$_taskActionDone = (1 >= availableOutcomes.length); //1 for '(Select One)'
+                        }
                     }
-                );
+                    return data;
+                });
             }
         };
 

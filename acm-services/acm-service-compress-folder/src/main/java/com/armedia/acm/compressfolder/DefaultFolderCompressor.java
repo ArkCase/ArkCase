@@ -110,11 +110,7 @@ public class DefaultFolderCompressor implements FolderCompressor
 
         AcmFolder folder = Optional.ofNullable(folderService.findById(folderId)).orElseThrow(() -> new FolderCompressorException(folderId));
 
-        String tmpDir = System.getProperty("java.io.tmpdir");
-        String pathSeparator = System.getProperty("file.separator");
-
-        String filename = String.format(compressedFileNameFormat,
-                tmpDir.endsWith(pathSeparator) ? tmpDir : concatStrings(tmpDir, pathSeparator), folderId, folder.getName());
+        String filename = getCompressedFolderFilePath(folder);
         log.debug("ZIP creation: using [{}] as temporary file name", filename);
         File file = new File(filename);
 
@@ -169,6 +165,19 @@ public class DefaultFolderCompressor implements FolderCompressor
             zos.closeEntry();
         }
 
+    }
+    
+    /**
+     * Returns path of compressed folder file
+     */
+    public String getCompressedFolderFilePath(AcmFolder folder) 
+    {
+        String tmpDir = System.getProperty("java.io.tmpdir");
+        String pathSeparator = System.getProperty("file.separator");
+
+        String filename = String.format(compressedFileNameFormat,
+                tmpDir.endsWith(pathSeparator) ? tmpDir : concatStrings(tmpDir, pathSeparator), folder.getId(), folder.getName());
+        return filename;
     }
 
     /**

@@ -58,6 +58,7 @@ angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'Ac
                 cache: false,
                 isArray: true
             }
+
         });
 
         Service.SessionCacheNames = {};
@@ -127,7 +128,7 @@ angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'Ac
             var cacheChildTaskData = new Store.CacheFifo(Service.CacheNames.CHILD_TASK_DATA);
             var cacheKey = parentType + "." + parentId + "." + start + "." + n + "." + sortBy + "." + sortDir;
             var taskData = cacheChildTaskData.get(cacheKey);
-
+            
             var sort = "";
             if (!Util.isEmpty(sortBy)) {
                 sort = sortBy + " " + Util.goodValue(sortDir, "asc");
@@ -221,26 +222,6 @@ angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'Ac
 
         /**
          * @ngdoc method
-         * @name validateMyTasks
-         * @methodOf services:Object.TaskService
-         *
-         * @description
-         * Validate task array for a user
-         *
-         * @param {Object} data  Data to be validated
-         *
-         * @returns {Boolean} Return true if data is valid
-         */
-        Service.validateMyTasks = function (data) {
-            if (!Util.isArray(data)) {
-                return false;
-            }
-            return true;
-        };
-
-
-        /**
-         * @ngdoc method
          * @name queryCurrentUserTasks
          * @methodOf services:Object.TaskService
          *
@@ -271,6 +252,25 @@ angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'Ac
                 }
             );
             return dfd.promise;
+        };
+
+        /**
+         * @ngdoc method
+         * @name validateMyTasks
+         * @methodOf services:Object.TaskService
+         *
+         * @description
+         * Validate task array for a user
+         *
+         * @param {Object} data  Data to be validated
+         *
+         * @returns {Boolean} Return true if data is valid
+         */
+        Service.validateMyTasks = function (data) {
+            if (!Util.isArray(data)) {
+                return false;
+            }
+            return true;
         };
 
         return Service;
