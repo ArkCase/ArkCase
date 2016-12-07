@@ -12,15 +12,18 @@ angular.module('complaints').controller('ComplaintsListController', ['$scope', '
         $scope.$bus.subscribe(eventName, function (data) {
             if (data.objectType === ObjectService.ObjectTypes.COMPLAINT) {
                 var frevvoRequest = ServCommService.popRequest("frevvo", "new-complaint");
+                var objectTypeString = $translate.instant('common.objectTypes.' + data.objectType);
                 if (frevvoRequest) {
-                    MessageService.info(data.objectType + " with ID " + data.objectId + " was created. Please refresh complaints list to load it.");
-                    //   ObjectService.gotoState(ObjectService.ObjectTypes.COMPLAINT, data.objectId);
+                    ObjectService.gotoUrl(ObjectService.ObjectTypes.COMPLAINT, data.objectId);
+                    MessageService.info(objectTypeString + " with ID " + data.objectId + " was created.");
                 }
                 else {
-                    MessageService.info(data.objectType + " with ID " + data.objectId + " was created");
+                    if (!objectTypeString) {
+                        objectTypeString = data.objectType;
+                    }
+                    MessageService.info(objectTypeString + " with ID " + data.objectId + " was created.");
                 }
             }
-
         });
 
         //"treeConfig", "treeData", "onLoad", and "onSelect" will be set by Tree Helper
