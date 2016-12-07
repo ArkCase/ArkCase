@@ -12,6 +12,7 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,7 +39,7 @@ public class AssociateTagAPIController
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    //    @PreAuthorize("hasPermission(#objectId, #objectType, 'addTag')")
+    @PreAuthorize("hasPermission(#objectId, #objectType, 'addTag')")
     @RequestMapping(value = "{objectId}/{objectType}/{tagId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmAssociatedTag associateTag(@PathVariable("objectId") Long objectId, @PathVariable("objectType") String objectType,
