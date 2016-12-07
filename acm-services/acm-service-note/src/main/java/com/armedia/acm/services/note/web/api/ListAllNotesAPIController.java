@@ -38,7 +38,7 @@ public class ListAllNotesAPIController
     ) throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmListObjectsFailedException
     {
         log.info("Finding all notes");
-        if (type != null && parentId != null && parentType != null)
+        if (parentId != null && parentType != null)
         {
             try
             {
@@ -55,20 +55,24 @@ public class ListAllNotesAPIController
 
     @RequestMapping(value = "/{parentType}/{parentId}/page", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public QueryResultPageWithTotalCount<Note> findPageNotesInParentObject(
+        public QueryResultPageWithTotalCount<Note> findPageNotesInParentObject(
             @PathVariable("parentType") String parentType,
             @PathVariable("parentId") Long parentId,
             @RequestParam(value = "type", required = false, defaultValue = "GENERAL") String type,
-            @RequestParam(value = "start", required = false, defaultValue = "0") int start,
-            @RequestParam(value = "n", required = false, defaultValue = "10") int n,
-            @RequestParam(value = "s", required = false) String s
+        @RequestParam(value = "start", required = false, defaultValue = "0") int start,
+        @RequestParam(value = "n", required = false, defaultValue = "10") int n,
+        @RequestParam(value = "s", required = false) String s
     ) throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmListObjectsFailedException
-    {
+        {
         log.info("Finding all notes paged");
-        if (type != null && parentId != null && parentType != null)
+        if (parentId != null && parentType != null)
         {
             try
             {
+                if(type.toUpperCase().equals("ALL")){
+                    //we will not filter by type
+                    type = null;
+                }
                 List<Note> noteList = getNoteDao().listNotesPage(type, parentId, parentType, start, n, s);
                 log.debug("noteList size:{}", noteList.size());
                 int totalCount = getNoteDao().countAll(type, parentId, parentType);
