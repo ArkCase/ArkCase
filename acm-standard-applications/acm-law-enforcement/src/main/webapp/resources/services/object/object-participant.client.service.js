@@ -10,8 +10,8 @@
 
  * Object.ParticipantService includes group of REST calls related to participants.
  */
-angular.module('services').factory('Object.ParticipantService', ['$resource', '$translate', 'UtilService',
-    function ($resource, $translate, Util) {
+angular.module('services').factory('Object.ParticipantService', ['$resource', '$translate', 'UtilService', 'MessageService',
+    function ($resource, $translate, Util, MessageService) {
         var Service = $resource('api/v1/service', {}, {
 
             /**
@@ -240,11 +240,11 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
          */
         Service.validateType = function (data, type) {
             if (data.participantType == "owning group" && type != "GROUP") {
-                alert("The owning group cannot be a person.");
+                MessageService.error("The owning group cannot be a person.");
                 return false;
             }
             if (data.participantType != "owning group" && type != "USER") {
-                alert("The " + data.participantType + " cannot be a group.");
+                MessageService.error("The " + data.participantType + " cannot be a group.");
                 return false;
             }
             return true;
@@ -271,14 +271,14 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
             }
             if (_.filter(data, function (pa) {
                     return Util.compare("assignee", pa.participantType);
-                }).length != 1) {
-                alert("One and only one assignee is allowed.");
+                }).length > 1) {
+                MessageService.error("Only one assignee is allowed.");
                 return false;
             }
             if (_.filter(data, function (pa) {
                     return Util.compare("owning group", pa.participantType);
-                }).length != 1) {
-                alert("One and only one owning group is allowed.");
+                }).length > 1) {
+                MessageService.error("Only one owning group is allowed.");
                 return false;
             }
             return true;
