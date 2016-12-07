@@ -150,7 +150,7 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'Acm.Stor
          *
          * @returns {Object} Promise
          */
-        Service.queryNotes = function (objetcType, objectId, noteType) {
+        Service.queryNotes = function (objectType, objectId, noteType) {
             noteType = noteType || "GENERAL";
             var cacheNotes = new Store.CacheFifo(Service.CacheNames.NOTES);
             var cacheKey = objectType + "." + objectId + "." + noteType;
