@@ -202,7 +202,13 @@
     "modal.btnOk.text": "Save",
     "modal.btnCancel.text": "Cancel",
     "modal.dialogUserPicker.header": "Search User",
-    "modal.dialogGroupPicker.header": "Search Group"
+    "modal.dialogGroupPicker.header": "Search Group",
+    "message": {
+      "error.groupType": "The owning group cannot be a person.",
+      "error.userType": " User type cannot be a group.",
+      "error.assigneeUnique": "Only one assignee is allowed.",
+      "error.owninggroupUnique": "Only one owning group is allowed."
+    }
   },
   "common.comp.acmLogin": {
     "confirmLogout": "For your protection, application is about to logout. Click Cancel to stay logged in."
