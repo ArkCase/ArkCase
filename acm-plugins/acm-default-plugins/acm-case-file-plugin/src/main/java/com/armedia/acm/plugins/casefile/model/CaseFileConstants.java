@@ -22,4 +22,8 @@ public interface CaseFileConstants
     String EVENT_TYPE_UPDATED = "com.armedia.acm.casefile.updated";
 
     String EVENT_TYPE_VIEWED = "com.armedia.acm.casefile.viewed";
+
+    String OWNING_GROUP = "owning group";
+
+    String ASSIGNEE = "assignee";
 }
