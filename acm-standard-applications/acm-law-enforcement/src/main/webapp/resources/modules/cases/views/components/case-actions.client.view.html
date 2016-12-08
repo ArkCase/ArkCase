@@ -44,6 +44,18 @@
                 <i class="fa fa-code-fork"></i>
                 <span translate>cases.comp.actions.split.button</span>
             </button>
+            <button class="btn btn-sm btn-default"
+                    ng-if="assignee.length == 0 && currentUserProfile.groups.indexOf(owningGroup) > -1"
+                    ng-click="claim(objectInfo)">
+                <i class="fa fa-edit"></i>
+                <span translate>cases.comp.actions.claim.button</span>
+            </button>
+            <button class="btn btn-sm btn-default"
+                    ng-if="assignee.length > 0 && currentUserProfile.userId == assignee"
+                    ng-click="unclaim(objectInfo)">
+                <i class="fa fa-edit"></i>
+                <span translate>cases.comp.actions.unclaim.button</span>
+            </button>
             <button class="btn btn-sm btn-default" ng-click="refresh()">
                 <i class="fa fa-refresh"></i>
             </button>
