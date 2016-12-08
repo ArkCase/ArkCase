@@ -240,11 +240,11 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
          */
         Service.validateType = function (data, type) {
             if (data.participantType == "owning group" && type != "GROUP") {
-                MessageService.error("The owning group cannot be a person.");
+                MessageService.error($translate.instant("common.directive.coreParticipants.message.error.groupType"));
                 return false;
             }
             if (data.participantType != "owning group" && type != "USER") {
-                MessageService.error("The " + data.participantType + " cannot be a group.");
+                MessageService.error($translate.instant("common.directive.coreParticipants.message.error.userType"));
                 return false;
             }
             return true;
@@ -272,13 +272,13 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
             if (_.filter(data, function (pa) {
                     return Util.compare("assignee", pa.participantType);
                 }).length > 1) {
-                MessageService.error("Only one assignee is allowed.");
+                MessageService.error($translate.instant("common.directive.coreParticipants.message.error.assigneeUnique"));
                 return false;
             }
             if (_.filter(data, function (pa) {
                     return Util.compare("owning group", pa.participantType);
                 }).length > 1) {
-                MessageService.error("Only one owning group is allowed.");
+                MessageService.error($translate.instant("common.directive.coreParticipants.message.error.owninggroupUnique"));
                 return false;
             }
             return true;
