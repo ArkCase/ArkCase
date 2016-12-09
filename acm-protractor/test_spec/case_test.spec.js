@@ -892,4 +892,54 @@ describe('case page tests', function() {
         expect(casePage.returnParticipantNameFifthRow()).toEqual("Samuel Supervisor");
     });
 
+    it('should create new case and verify if assignee can be deleted', function() {
+
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
+        casePage.clickNextBtn();
+        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
+        casePage.switchToDefaultContent();
+        casePage.participantTable();
+        casePage.clickSpecialTypeDeleteBtn();
+        casePage.clickRefreshBtn();
+        casePage.verifyIfAssigneeCanBeDeleted();
+
+    });
+
+    it('should create new case and verify if special Type can be deleted', function() {
+
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
+        casePage.clickNextBtn();
+        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
+        casePage.switchToDefaultContent();
+        casePage.participantTable();
+        casePage.clickDeleteAsigneeBtn();
+        casePage.clickRefreshBtn();
+        casePage.verifyIfSpecialTypeCaneBeDeleted();
+
+    });
+
+    it('should create new case and verify if owning  can be deleted', function() {
+
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
+        casePage.clickNextBtn();
+        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
+        casePage.switchToDefaultContent();
+        casePage.participantTable();
+        casePage.clickOwningGroupDeleteBtn();
+        casePage.clickRefreshBtn();
+        casePage.verifyIfOwningGroupCanBeDeleted();
+    });
+
+    it('should create new case and verify if owning  can be deleted', function() {
+
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
+        casePage.clickNextBtn();
+        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
+        casePage.switchToDefaultContent();
+        casePage.participantTable();
+        casePage.clickReaderDeleteBtn();
+        casePage.clickRefreshBtn();
+        casePage.verifyIfReaderCanBeDeleted();
+    });
+
 });

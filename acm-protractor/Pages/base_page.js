@@ -200,6 +200,18 @@ var participantTypeFifthRow = element.all(by.xpath(Objects.casepage.locators.par
 var participantNameFifthRow = element.all(by.xpath(Objects.casepage.locators.participantTableRow)).get(9);
 var participantsLinkBtn = element(by.xpath(Objects.casepage.locators.participantLinkBtn));
 var priorityType = element.all(by.xpath(Objects.casepage.locators.priorityType)).get(0);
+var editAssigneeBtn = element.all(by.css(Objects.casepage.locators.participantEditBtn)).get(1);
+var modalParticipantType = element(by.model(Objects.casepage.locators.modalParticipantType));
+var modalParticipantName = element(by.model(Objects.casepage.locators.modalParticipantName));
+var saveParticipantBtn = element(by.buttonText(Objects.casepage.locators.saveParticipantBtn));
+var assigneeDeleteBtn = element.all(by.css(Objects.casepage.locators.participantDeleteBtn)).get(1);
+var specialTypeDeleteBtn = element.all(by.css(Objects.casepage.locators.participantDeleteBtn)).get(0);
+var owningGroupDeleteBtn = element.all(by.css(Objects.casepage.locators.participantDeleteBtn)).get(2);
+var readerDeleteBtn = element.all(by.css(Objects.casepage.locators.participantDeleteBtn)).get(3);
+
+
+
+
 
 var BasePage = function() {
 
@@ -1568,6 +1580,47 @@ var BasePage = function() {
         });
         return this;
     };
+
+
+    this.clickEditAssigneeBtn = function() {
+
+        browser.wait(EC.textToBePresentInElement((participantTypeSecondRow), "assignee"), 10000).then(function() {
+            editAssigneeBtn.click();
+        });
+    }
+
+    this.clickDeleteAsigneeBtn = function() {
+
+        assigneeDeleteBtn.click();
+    }
+    this.verifyIfAssigneeCanBeDeleted = function() {
+        browser.wait(EC.textToBePresentInElement((participantTypeSecondRow), "assignee"), 10000, "Assignee should not be enable to be deleted");
+    }
+
+    this.clickSpecialTypeDeleteBtn = function() {
+        specialTypeDeleteBtn.click();
+    }
+    this.verifyIfSpecialTypeCaneBeDeleted = function() {
+
+        browser.wait(EC.textToBePresentInElement((participantNameFirstRow), "*"), 10000, "Special Type should not be enable to be deleted");
+    }
+
+    this.clickOwningGroupDeleteBtn = function() {
+        owningGroupDeleteBtn.click();
+    };
+
+    this.verifyIfOwningGroupCanBeDeleted = function() {
+        browser.wait(EC.textToBePresentInElement((participantTypeThirdRow), "owning group"), 10000, "Owning Group should not be enable to be deleted");
+    }
+
+    this.clickReaderDeleteBtn = function() {
+        readerDeleteBtn.click();
+    }
+    this.verifyIfReaderCanBeDeleted = function() {
+        browser.wait(EC.textToBePresentInElement((participantTypeForthRow), "reader"), 10000, "reader should not be enable to be deleted");
+    }
+
 };
+
 
 module.exports = new BasePage();

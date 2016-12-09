@@ -530,14 +530,20 @@
             "participantsTab": "[extid='participantsTab']",
             "selectParticipantType": ".//*[@class='f-table-row s-expanded s-linked s-untyped s-valid']/..//td[5]",
             "selectParticipant": "participantName",
-            "searchForUserInput": "/html/body/div[5]/div/div/div/search-modal/div[2]/div/div[1]/div/input",
+            "searchForUserInput": "//*[@class='modal-search-header']/..//input",
             "searchUserBtn": "Search",
             "OkBtn": "OK",
             "searchedUserName": ".//*[@class='ui-grid-cell-contents ng-binding ng-scope']",
             "participantLinkBtn": ".//*[@class='fa fa-users']",
             "participantTableRow":".//*[@class='ui-grid-cell-contents ng-binding ng-scope']",
             "participantTable": ".//*[@class='panel panel-success panel-grid']",
-            "priorityType": ".//*[@class='ui-grid-cell-contents ui-grid-header-cell-primary-focus']"
+            "priorityType": ".//*[@class='ui-grid-cell-contents ui-grid-header-cell-primary-focus']",
+            "participantEditBtn":"[ng-click='grid.appScope.editRow(row.entity)']",
+            "modalParticipantType": "participant.participantType" ,
+            "modalParticipantName": "participant.participantLdapId",
+            "saveParticipantBtn": "Save",
+            "participantDeleteBtn": "[ng-click='grid.appScope.deleteRow(row.entity)']"
+
 
 
 
