@@ -55,6 +55,7 @@ var caseID = element(by.xpath(Objects.casepage.locators.caseID));
 var reinvestigateBtn = element(by.css(Objects.casepage.locators.reinvestigateBtn));
 var casesTitleStatus = element.all(by.xpath(Objects.casepage.locators.caseTitleStatus)).get(0);
 
+
 var CasePage = function() {
 
     browser.ignoreSynchronization = true;
