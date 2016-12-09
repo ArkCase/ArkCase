@@ -125,12 +125,14 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
 
                     // Check ANY authorities
                     if (isEnabled && _.isArray(userProfile.authorities) && action.userRolesAny) {
-                        var anyEnabled = false;
-                        _.forEach(action.userRolesAny, function (role) {
-                            var processedRole = processRole(role, objectProperties);
-                            anyEnabled = anyEnabled || (_.indexOf(userProfile.authorities, processedRole) != -1);
-                        });
-                        isEnabled = anyEnabled;
+                        if (action.userRolesAny.length > 0) {
+                            var anyEnabled = false;
+                            _.forEach(action.userRolesAny, function (role) {
+                                var processedRole = processRole(role, objectProperties);
+                                anyEnabled = anyEnabled || (_.indexOf(userProfile.authorities, processedRole) != -1);
+                            });
+                            isEnabled = anyEnabled;
+                        }
                     }
 
                     // Check objectProperties
