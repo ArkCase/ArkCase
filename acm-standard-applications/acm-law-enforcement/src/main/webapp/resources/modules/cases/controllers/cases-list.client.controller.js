@@ -32,9 +32,9 @@ angular.module('cases').controller('CasesListController', ['$scope', '$state', '
                 var objectTypeString = $translate.instant('common.objectTypes.' + data.objectType);
                 if (frevvoRequest) {
                     ObjectService.gotoUrl(ObjectService.ObjectTypes.CASE_FILE, data.objectId);
+                    MessageService.info(objectTypeString + " with ID " + data.objectId + " was created.");
                 }
                 else {
-                    var objectTypeString = $translate.instant('common.objectTypes.' + data.objectType);
                     if (!objectTypeString) {
                         objectTypeString = data.objectType;
                     }
