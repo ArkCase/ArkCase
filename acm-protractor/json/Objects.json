@@ -534,9 +534,23 @@
             "timesheetTableRow": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
             "costSheetLinkBtn": ".//*[@class='fa fa-money']",
             "caseTitleStatus": ".//*[@class='ng-binding']",
+            "participantsTab": "[extid='participantsTab']",
+            "selectParticipantType": ".//*[@class='f-table-row s-expanded s-linked s-untyped s-valid']/..//td[5]",
+            "selectParticipant": "participantName",
+            "searchForUserInput": "//*[@class='modal-search-header']/..//input",
+            "searchUserBtn": "Search",
+            "OkBtn": "OK",
+            "searchedUserName": ".//*[@class='ui-grid-cell-contents ng-binding ng-scope']",
+            "participantLinkBtn": ".//*[@class='fa fa-users']",
+            "participantTableRow":".//*[@class='ui-grid-cell-contents ng-binding ng-scope']",
+            "participantTable": ".//*[@class='panel panel-success panel-grid']",
+            "priorityType": ".//*[@class='ui-grid-cell-contents ui-grid-header-cell-primary-focus']",
+            "participantEditBtn":"[ng-click='grid.appScope.editRow(row.entity)']",
+            "modalParticipantType": "participant.participantType" ,
+            "modalParticipantName": "participant.participantLdapId",
+            "saveParticipantBtn": "Save",
+            "participantDeleteBtn": "[ng-click='grid.appScope.deleteRow(row.entity)']",
             "owningGroup": ".//a[@editable-select='owningGroup']"
-
-
         },
 
         "data": {
