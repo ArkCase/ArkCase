@@ -1,8 +1,5 @@
 package com.armedia.acm.services.notification.service;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
-
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
@@ -14,7 +11,6 @@ import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationRule;
 import com.armedia.acm.services.notification.model.QueryType;
 import com.armedia.acm.spring.SpringContextHolder;
-
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
@@ -27,6 +23,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.assertEquals;
 
 
 public class NotificationServiceTest extends EasyMockSupport
@@ -143,7 +142,7 @@ public class NotificationServiceTest extends EasyMockSupport
 
         NotificationSenderFactory notificationSenderFactory = new NotificationSenderFactory();
         notificationSenderFactory.setPropertyFileManager(mockPropertyFileManager);
-        Map<String, NotificationSender> notificationSenderMap = new HashMap<String, NotificationSender>();
+        Map<String, NotificationSender> notificationSenderMap = new HashMap<>();
         SmtpNotificationSender smtpNotificationServer = new SmtpNotificationSender();
         smtpNotificationServer.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
         smtpNotificationServer.setMuleContextManager(mockMuleContextManager);
@@ -188,7 +187,7 @@ public class NotificationServiceTest extends EasyMockSupport
         try
         {
             Capture<Map<String, Object>> messagePropsCapture = EasyMock.newCapture();
-            expect(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), eq("note"), capture(messagePropsCapture)))
+            expect(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), contains("note"), capture(messagePropsCapture)))
                     .andReturn(mockMuleMessage).anyTimes();
         } catch (MuleException e)
         {
@@ -287,7 +286,7 @@ public class NotificationServiceTest extends EasyMockSupport
 
         NotificationSenderFactory notificationSenderFactory = new NotificationSenderFactory();
         notificationSenderFactory.setPropertyFileManager(mockPropertyFileManager);
-        Map<String, NotificationSender> notificationSenderMap = new HashMap<String, NotificationSender>();
+        Map<String, NotificationSender> notificationSenderMap = new HashMap<>();
 
         SmtpNotificationSender smtpNotificationServer = new SmtpNotificationSender();
         smtpNotificationServer.setNotificationUtils(mockNotificationUtils);
@@ -338,7 +337,7 @@ public class NotificationServiceTest extends EasyMockSupport
         try
         {
             Capture<Map<String, Object>> messagePropsCapture = EasyMock.newCapture();
-            expect(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), eq("note"), capture(messagePropsCapture)))
+            expect(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), contains("note"), capture(messagePropsCapture)))
                     .andReturn(mockMuleMessage).anyTimes();
         } catch (MuleException e)
         {

@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Created by manoj.dhungana on 7/28/2015.
  */
-public class EmailWithAttachmentsDTO
+public class EmailWithAttachmentsDTO extends MessageBodyFactory
 {
 
     private List<Long> attachmentIds;
@@ -106,6 +106,11 @@ public class EmailWithAttachmentsDTO
     public void setFooter(String footer)
     {
         this.footer = footer;
+    }
+
+    public String getMessageBody()
+    {
+        return buildMessageBodyFromTemplate(getBody(), getHeader(), getFooter());
     }
 
 }
