@@ -942,4 +942,24 @@ describe('case page tests', function() {
         casePage.verifyIfReaderCanBeDeleted();
     });
 
+    it('should verify adding note in document viewer in cases', function() {
+
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson").clickNextBtn().initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
+        casePage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Documents");
+        casePage.clickDocTreeExpand().rightClickFileTitle().clickDocAction("Open");
+        casePage.moveToTab().clickDocViewNotesLink().submitNote(Objects.basepage.data.note);
+        expect(casePage.returnSavedNoteInGrid()).toEqual(Objects.basepage.data.note);
+
+    });
+
+    it('should create new case and verify assigned to, owning group and due date', function() {
+
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson").clickNextBtn().initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
+        casePage.switchToDefaultContent().waitForCaseTitle();
+        expect(casePage.returnDueDate()).toEqual(utils.returnDate("/", 180));
+        expect(casePage.returnAssignee()).toEqual(Objects.taskspage.data.administrator);
+        expect(casePage.returnOwningGroup()).toEqual(Objects.casepage.data.owningGroup);
+
+
+    });
 });

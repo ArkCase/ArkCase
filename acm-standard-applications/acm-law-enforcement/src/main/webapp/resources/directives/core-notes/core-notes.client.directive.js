@@ -19,6 +19,7 @@
  * @param {string} notesInit.objectType string for the type of the object
  * @param {string} notesInit.noteType string for the type of the note object, can be optional
  * @param {string} notesInit.noteTitle string for the title of notes directive, can be optional
+ * @param {boolean} notesInit.showAllNotes boolean to show all note types not just one (GENERAL), can be optional
  *
  * @example
  <example>
@@ -98,6 +99,7 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                         gridHelper.setBasicOptions(config);
                         gridHelper.disableGridScrolling(config);
                         gridHelper.setExternalPaging(config, scope.retrieveGridData);
+
                         gridHelper.setUserNameFilter(promiseUsers);
                         scope.retrieveGridData();
                     }
@@ -119,10 +121,11 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
 
                 scope.retrieveGridData = function () {
                     var info = scope.notesInit;
+
                     var promiseQueryNotes = ObjectNoteService.queryNotesPage(
                         info.objectType
                         , info.currentObjectId
-                        , info.noteType
+                        , info.showAllNotes ? 'ALL' : info.noteType
                         , Util.goodValue(scope.start, 0)
                         , Util.goodValue(scope.pageSize, 10)
                         , Util.goodMapValue(scope.sort, "by")
@@ -149,10 +152,14 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                 };
                 scope.deleteRow = function (rowEntity) {
                     gridHelper.deleteRow(rowEntity);
-
+                    //because we are using external paging we should set totalItems too
+                    scope.gridOptions.totalItems--;
                     var id = Util.goodMapValue(rowEntity, "id", 0);
                     if (0 < id) {    //do not need to call service when deleting a new row with id==0
-                        ObjectNoteService.deleteNote(id);
+                        var info = scope.notesInit;
+                        ObjectNoteService.deleteNote(id, info.currentObjectId, info.objectType).then(function(){
+                            scope.retrieveGridData();
+                        });
                     }
                 };
                 function showModal(note, isEdit) {

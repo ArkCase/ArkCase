@@ -54,7 +54,8 @@ var firstCaseInCasesList = element(by.xpath(Objects.casepage.locators.firstCaseI
 var caseID = element(by.xpath(Objects.casepage.locators.caseID));
 var reinvestigateBtn = element(by.css(Objects.casepage.locators.reinvestigateBtn));
 var casesTitleStatus = element.all(by.xpath(Objects.casepage.locators.caseTitleStatus)).get(0);
-
+var dueDate = element(by.xpath(Objects.casepage.locators.dueDate));
+var owningGroup = element(by.xpath(Objects.casepage.locators.owningGroup));
 
 var CasePage = function() {
 
@@ -284,6 +285,12 @@ var CasePage = function() {
         browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.reinvestigateBtn))), 30000, "Reinvestigate button is not displayed").then(function() {
             reinvestigateBtn.click();
         });
+    };
+    this.returnDueDate = function () {
+        return dueDate.getText();
+    };
+    this.returnOwningGroup = function () {
+        return owningGroup.getText();
     }
 };
 

@@ -45,6 +45,11 @@
             <artifactId>acm-mule-module-cmis</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-activiti-spring-configuration</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
         
         <!-- spring -->
         <dependency>
@@ -80,12 +85,6 @@
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-scripting</artifactId>
             <scope>compile</scope>
-        </dependency>
-
-        <!-- activiti -->
-        <dependency>
-            <groupId>org.activiti</groupId>
-            <artifactId>activiti-engine</artifactId>
         </dependency>
 
         <!-- logging -->

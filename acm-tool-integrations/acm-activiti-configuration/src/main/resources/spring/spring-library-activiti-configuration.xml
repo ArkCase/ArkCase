@@ -81,6 +81,9 @@
     <!-- this bean will tell Activiti to run schema (i.e., DDL) commands within a transaction -->
     <bean id="schemaCommandConfig" factory-bean="commandConfigFactory" factory-method="transactionRequired"/>
 
+    <bean id="acmActivitiEventListener" class="com.armedia.acm.activiti.AcmActivitiEventBridge"/>
+    <bean id="acmActivitiEntityEventListener" class="com.armedia.acm.activiti.AcmActivitiEntityEventBridge"/>
+
     <bean id="activitiProcessEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration"
           depends-on="liquibase">
         <property name="dataSource" ref="acmDataSource"/>
