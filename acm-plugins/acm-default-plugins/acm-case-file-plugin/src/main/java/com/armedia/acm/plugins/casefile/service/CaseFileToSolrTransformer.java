@@ -87,6 +87,8 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
         String participantsListJson = ParticipantUtils.createParticipantsListJson(in.getParticipants());
         solr.setAdditionalProperty("acm_participants_lcs", participantsListJson);
 
+        solr.setAdditionalProperty("assignee_group_id_lcs", in.getAssigneeGroup());
+
         return solr;
     }
 

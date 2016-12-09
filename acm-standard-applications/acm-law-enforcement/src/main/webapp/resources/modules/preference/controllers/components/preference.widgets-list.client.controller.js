@@ -19,17 +19,13 @@ angular.module('preference').controller('Preference.WidgetsListController', ['$s
         $scope.$on('show-widgets', showWidgets);
 
         function toggleDefaultView() {
-
-            var collapsed = ($scope.defaultViewExpand === 'false');
-            _.forEach($scope.widgets, function (widget) {
-                widget.isCollapsed = collapsed;
-            });
+           var isExpanded = ($scope.defaultViewExpand === 'true');
 
             DashboardService.getConfig({moduleName: $scope.moduleName}, function (config) {
                 DashboardService.saveConfig({
                     dashboardConfig: config.dashboardConfig,
                     module: $scope.moduleName,
-                    collapsed: collapsed
+                    collapsed: isExpanded
                 });
             });
         }
@@ -137,9 +133,8 @@ angular.module('preference').controller('Preference.WidgetsListController', ['$s
 
             PreferenceService.getPreferredWidgets({moduleName: $scope.moduleName}, function (preferredWidgets) {
                 preferredWidgets.preferredWidgets = removeNonObjectWidgets(preferredWidgets.preferredWidgets);
-                var collapsed = ($scope.defaultViewExpand === 'false');
                 _.forEach(widgets, function (widget) {
-                    widget.isCollapsed = collapsed;
+                    widget.isCollapsed = true;
                     widget.enabled = _.includes(preferredWidgets.preferredWidgets, widget.commonName);
                 });
                 $scope.widgets = widgets;
@@ -157,5 +152,4 @@ angular.module('preference').controller('Preference.WidgetsListController', ['$s
             $scope.$emit('req-widget-selected', newActive);
         }
     }
-])
-;
+]);

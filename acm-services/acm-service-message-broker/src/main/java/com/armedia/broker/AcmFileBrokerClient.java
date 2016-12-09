@@ -26,7 +26,7 @@ import java.util.UUID;
  * @author dame.gjorgjievski
  *
  */
-public class AcmFileBrokerClient
+public class AcmFileBrokerClient implements IAcmFileBrokerClient
 {
     private final ActiveMQConnectionFactory connectionFactory;
     private final String outboundQueue;
@@ -67,6 +67,7 @@ public class AcmFileBrokerClient
      * @throws JMSException
      * @throws IOException
      */
+    @Override
     public void sendFile(File file, Map<String, Object> properties) throws JMSException, IOException
     {
         if (outboundQueue == null)
@@ -85,33 +86,32 @@ public class AcmFileBrokerClient
      * @throws JMSException
      * @throws IOException
      */
+    @Override
     public void sendFile(File file, String queueName, Map<String, Object> properties) throws JMSException, IOException
     {
-        new AcmFileBrokerClientExecutor<Void>()
+        AcmFileBrokerClientExecutor<Void> executor = (ActiveMQSession session) -> 
         {
-            @Override
-            protected Void execute() throws JMSException
+            Queue queue = session.createQueue(queueName);
+            MessageProducer producer = session.createProducer(queue);
+            BlobMessage message = session.createBlobMessage(file);
+            message.setStringProperty(PROP_FILE_NAME, file.getName());
+            if (fileUploadUrl != null)
             {
-                Queue queue = session.createQueue(queueName);
-                MessageProducer producer = session.createProducer(queue);
-                BlobMessage message = session.createBlobMessage(file);
-                message.setStringProperty(PROP_FILE_NAME, file.getName());
-                if (fileUploadUrl != null)
-                {
-                    message.setStringProperty(PROP_FILE_UPLOAD_URL, fileUploadUrl);
-                }
-                if (properties != null)
-                {
-                    for (Map.Entry<String, Object> prop : properties.entrySet())
-                    {
-                        message.setObjectProperty(prop.getKey(), prop.getValue());
-                    }
-                }
-                producer.send(message);
-
-                return null;
+                message.setStringProperty(PROP_FILE_UPLOAD_URL, fileUploadUrl);
             }
-        }.execute(connectionFactory.createConnection());
+            if (properties != null)
+            {
+                for (Map.Entry<String, Object> prop : properties.entrySet())
+                {
+                    message.setObjectProperty(prop.getKey(), prop.getValue());
+                }
+            }
+            producer.send(message);
+
+            return null;
+        };
+
+        execute(executor, connectionFactory.createConnection());
 
     }
 
@@ -122,6 +122,7 @@ public class AcmFileBrokerClient
      * @throws JMSException
      * @throws IOException
      */
+    @Override
     public File receiveFile() throws JMSException, IOException
     {
         if (inboundQueue == null)
@@ -138,46 +139,45 @@ public class AcmFileBrokerClient
      * @throws JMSException
      * @throws IOException
      */
+    @Override
     public File receiveFile(String queueName) throws JMSException, IOException
     {
-        return new AcmFileBrokerClientExecutor<File>()
+        AcmFileBrokerClientExecutor<File> executor = (ActiveMQSession session) -> 
         {
-            @Override
-            protected File execute() throws JMSException, IOException
+            File file = null;
+            Queue queue = session.createQueue(queueName);
+            MessageConsumer consumer = session.createConsumer(queue);
+            BlobMessage message = (BlobMessage) consumer.receive(2000);
+            message.acknowledge();
+
+            String fileName = message.getStringProperty(PROP_FILE_NAME);
+            if (fileName == null)
             {
-                File file = null;
-                Queue queue = session.createQueue(queueName);
-                MessageConsumer consumer = session.createConsumer(queue);
-                BlobMessage message = (BlobMessage) consumer.receive(2000);
-                message.acknowledge();
-
-                String fileName = message.getStringProperty(PROP_FILE_NAME);
-                if (fileName == null)
-                {
-                    fileName = UUID.randomUUID().toString();
-                }
-                String[] fileNameParts = getFileNameParts(fileName);
-                file = File.createTempFile(fileNameParts[0], fileNameParts[1]);
-                file.setWritable(true);
-                file.deleteOnExit();
-                try (FileOutputStream fos = new FileOutputStream(file))
-                {
-                    InputStream in = message.getInputStream();
-                    byte[] buffer = new byte[1024];
-                    while (true)
-                    {
-                        int bytesRead = in.read(buffer);
-                        if (bytesRead == -1)
-                        {
-                            break;
-                        }
-                        fos.write(buffer, 0, bytesRead);
-                    }
-                }
-
-                return file;
+                fileName = UUID.randomUUID().toString();
             }
-        }.execute(connectionFactory.createConnection());
+            String[] fileNameParts = getFileNameParts(fileName);
+            file = File.createTempFile(fileNameParts[0], fileNameParts[1]);
+            file.setWritable(true);
+            file.deleteOnExit();
+            try (FileOutputStream fos = new FileOutputStream(file))
+            {
+                InputStream in = message.getInputStream();
+                byte[] buffer = new byte[1024];
+                while (true)
+                {
+                    int bytesRead = in.read(buffer);
+                    if (bytesRead == -1)
+                    {
+                        break;
+                    }
+                    fos.write(buffer, 0, bytesRead);
+                }
+            }
+
+            return file;
+        };
+
+        return execute(executor, connectionFactory.createConnection());
 
     }
 
@@ -218,42 +218,49 @@ public class AcmFileBrokerClient
     }
 
     /**
-     * Session executor wrapper
+     * Wraps client executor interface call
+     * 
+     * @param executor
+     * @param connection
+     * @return
+     * @throws JMSException
+     * @throws IOException
+     */
+    private <E> E execute(AcmFileBrokerClientExecutor<E> executor, Connection connection) throws JMSException, IOException
+    {
+        ActiveMQSession session = null;
+        try
+        {
+            E result = null;
+            connection.start();
+            session = (ActiveMQSession) connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            result = executor.run(session);
+            session.close();
+            connection.close();
+            return result;
+        } catch (Exception e)
+        {
+            if (session != null)
+            {
+                session.close();
+            }
+            if (connection != null)
+            {
+                connection.close();
+            }
+            throw e;
+        }
+    }
+
+    /**
+     * Session executor interface
      * 
      * @author dame.gjorgjievski
      *
      * @param <E>
      */
-    public abstract class AcmFileBrokerClientExecutor<E>
+    private interface AcmFileBrokerClientExecutor<E>
     {
-        protected ActiveMQSession session;
-
-        protected abstract E execute() throws JMSException, IOException;
-
-        public E execute(Connection connection) throws JMSException, IOException
-        {
-            try
-            {
-                E result = null;
-                connection.start();
-                session = (ActiveMQSession) connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-                result = execute();
-                session.close();
-                connection.close();
-                return result;
-            } catch (Exception e)
-            {
-                if (session != null)
-                {
-                    session.close();
-                }
-                if (connection != null)
-                {
-                    connection.close();
-                }
-                throw e;
-            }
-        }
-
+        public E run(ActiveMQSession session) throws JMSException, IOException;
     }
 }
