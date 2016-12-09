@@ -1,14 +1,17 @@
 package com.armedia.acm.plugins.casefile.dao;
 
 import com.armedia.acm.core.AcmNotifiableEntity;
+import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.data.AcmNameDao;
 import com.armedia.acm.data.AcmNotificationDao;
 import com.armedia.acm.plugins.casefile.model.CaseByStatusDto;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 import com.armedia.acm.plugins.casefile.model.TimePeriod;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
+
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +20,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -26,7 +30,7 @@ import java.util.List;
  * Created by armdev on 8/26/14.
  */
 @Transactional
-public class CaseFileDao extends AcmAbstractDao<CaseFile> implements AcmNotificationDao
+public class CaseFileDao extends AcmAbstractDao<CaseFile> implements AcmNotificationDao, AcmNameDao
 {
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
@@ -93,8 +97,10 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile> implements AcmNotifica
 
     public List<CaseFile> getNotClosedCaseFilesByUser(String user) throws AcmObjectNotFoundException
     {
-        String queryText = "SELECT cf " + "FROM CaseFile cf, " + "     AcmParticipant ap " + "WHERE " + "     cf.id = ap.objectId " + "AND  ap.objectType = '" + CaseFileConstants.OBJECT_TYPE + "' "
-                + "AND  ap.participantType = '" + ParticipantTypes.ASSIGNEE + "' " + "AND  ap.participantLdapId = :user " + "AND  cf.status <> :statusName " + "ORDER BY " + "     cf.dueDate ASC";
+        String queryText = "SELECT cf " + "FROM CaseFile cf, " + "     AcmParticipant ap " + "WHERE " + "     cf.id = ap.objectId "
+                + "AND  ap.objectType = '" + CaseFileConstants.OBJECT_TYPE + "' " + "AND  ap.participantType = '"
+                + ParticipantTypes.ASSIGNEE + "' " + "AND  ap.participantLdapId = :user " + "AND  cf.status <> :statusName " + "ORDER BY "
+                + "     cf.dueDate ASC";
         Query casesByUser = getEm().createQuery(queryText);
         casesByUser.setParameter("user", user);
         casesByUser.setParameter("statusName", "CLOSED");
@@ -158,7 +164,8 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile> implements AcmNotifica
     @Transactional
     public int updateComplaintStatus(Long caseId, String newStatus, String modifier, Date date)
     {
-        Query updateStatusQuery = getEm().createQuery("UPDATE CaseFile " + "SET status = :newStatus, " + "modified = :modified, " + "modifier = :modifier " + "WHERE caseId = :caseId");
+        Query updateStatusQuery = getEm().createQuery("UPDATE CaseFile " + "SET status = :newStatus, " + "modified = :modified, "
+                + "modifier = :modifier " + "WHERE caseId = :caseId");
         updateStatusQuery.setParameter("newStatus", newStatus);
         updateStatusQuery.setParameter("modified", date);
         updateStatusQuery.setParameter("modifier", modifier);
@@ -194,5 +201,11 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile> implements AcmNotifica
     public String getSupportedNotifiableObjectType()
     {
         return CaseFileConstants.OBJECT_TYPE;
+    }
+
+    @Override
+    public AcmObject findByName(String name)
+    {
+        return findByCaseNumber(name);
     }
 }

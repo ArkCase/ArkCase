@@ -1,9 +1,5 @@
 package com.armedia.acm.services.notification.service;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
@@ -17,7 +13,6 @@ import com.armedia.acm.service.outlook.service.OutlookService;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.model.AcmUser;
-
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
@@ -29,6 +24,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
 {
@@ -130,7 +129,7 @@ public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
     public void testSendEmailWithEmbeddedLinks() throws MuleException, AcmEncryptionException, Exception
     {
         EmailWithEmbeddedLinksResultDTO emailWithEmbeddedLinksResultDTO = new EmailWithEmbeddedLinksResultDTO("user@armedia.com", true);
-        List<EmailWithEmbeddedLinksResultDTO> emailWithEmbeddedLinksResultDTOList = new ArrayList<EmailWithEmbeddedLinksResultDTO>();
+        List<EmailWithEmbeddedLinksResultDTO> emailWithEmbeddedLinksResultDTOList = new ArrayList<>();
         emailWithEmbeddedLinksResultDTOList.add(emailWithEmbeddedLinksResultDTO);
 
         OutlookDTO outlookDTO = new OutlookDTO();
@@ -139,6 +138,8 @@ public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
 
         expect(mockAuthentication.getName()).andReturn("user");
         expect(mockAcmUser.getMail()).andReturn("user@armedia.com").anyTimes();
+
+        mockEmailWithEmbeddedLinksDTO.setTemplate(null);
 
         Capture<EmailWithEmbeddedLinksDTO> emailWithEmbeddedLinksCapture = EasyMock.newCapture();
         Capture<AcmOutlookUser> outlookUserCapture = EasyMock.newCapture();
@@ -168,6 +169,7 @@ public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
         Capture<AcmOutlookUser> outlookUserCapture = EasyMock.newCapture();
         mockOutlookService.sendEmailWithAttachments(capture(emailWithAttachmentsDTOCapture), capture(outlookUserCapture),
                 eq(mockAuthentication));
+        mockEmailWithAttachmentsDTO.setTemplate(null);
         replayAll();
         microsoftExchangeNotificationSender.sendEmailWithAttachments(mockEmailWithAttachmentsDTO, mockAuthentication, mockAcmUser);
         verifyAll();

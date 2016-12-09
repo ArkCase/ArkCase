@@ -22,6 +22,8 @@
     "subscribe.button": "Subscribe",
     "unsubscribe.button": "Unsubscribe",
     "merge.button": "Merge",
+    "claim.button": "Claim",
+    "unclaim.button": "Unclaim",
     "split.button": "Split"
   },
   "cases.comp.details": {
