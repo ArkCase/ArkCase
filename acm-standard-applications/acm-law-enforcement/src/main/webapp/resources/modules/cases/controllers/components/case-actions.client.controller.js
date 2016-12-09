@@ -44,9 +44,6 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
                     });
                     $scope.showBtnSubscribe = Util.isEmpty(found);
                     $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
-                    ObjectModelService.checkIfUserCanRestrict($scope.userId, objectInfo).then(function (result) {
-                        $scope.isUserAbleToRestrict = result;
-                    });
                 });
             });
 
@@ -72,7 +69,7 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
         };
 
         $scope.onClickRestrict = function ($event) {
-            if ($scope.isUserAbleToRestrict && $scope.restricted != $scope.objectInfo.restricted) {
+            if ($scope.restricted != $scope.objectInfo.restricted) {
                 $scope.objectInfo.restricted = $scope.restricted;
 
                 var caseInfo = Util.omitNg($scope.objectInfo);

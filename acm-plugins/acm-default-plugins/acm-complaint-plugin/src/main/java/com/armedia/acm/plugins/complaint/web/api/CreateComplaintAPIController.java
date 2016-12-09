@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.complaint.web.api;
 
+import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
 import com.armedia.acm.plugins.complaint.model.Complaint;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Date;
 
 
 @Controller
@@ -41,6 +44,11 @@ public class CreateComplaintAPIController
         log.trace("complaint type: {}", in.getComplaintType());
 
         boolean isInsert = in.getComplaintId() == null;
+
+        // explicitly set modifier and modified to trigger transformer to reindex data
+        // fixes problem when some child objects are changed (e.g participants) and solr document is not updated
+        in.setModifier(AuthenticationUtils.getUsername());
+        in.setModified(new Date());
 
         try
         {
