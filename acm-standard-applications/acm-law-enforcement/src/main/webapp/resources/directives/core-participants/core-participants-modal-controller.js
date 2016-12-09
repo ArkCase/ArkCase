@@ -5,7 +5,11 @@ angular.module('directives').controller('Directives.CoreParticipantsModalControl
     function ($scope, $modal, $modalInstance, $translate, Util) {
 
         $scope.onClickOk = function () {
-            $modalInstance.close({participant: $scope.participant, isEdit: $scope.isEdit});
+            $modalInstance.close({
+                participant: $scope.participant,
+                isEdit: $scope.isEdit,
+                selectedType: $scope.selectedType
+            });
         };
         $scope.onClickCancel = function () {
             $modalInstance.dismiss('cancel');
@@ -44,6 +48,7 @@ angular.module('directives').controller('Directives.CoreParticipantsModalControl
             modalInstance.result.then(function (selected) {
                 if (!Util.isEmpty(selected)) {
                     $scope.participant.participantLdapId = selected.object_id_s;
+                    $scope.selectedType = selected.object_type_s;
                 }
             });
         };
