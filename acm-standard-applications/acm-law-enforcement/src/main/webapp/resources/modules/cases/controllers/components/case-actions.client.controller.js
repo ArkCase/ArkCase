@@ -3,11 +3,11 @@
 angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state', '$stateParams', '$q', '$modal'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Case.LookupService'
     , 'Object.SubscriptionService', 'Object.ModelService', 'Case.InfoService', 'Case.MergeSplitService'
-    , 'Helper.ObjectBrowserService'
+    , 'Helper.ObjectBrowserService', 'Profile.UserInfoService'
     , function ($scope, $state, $stateParams, $q, $modal
         , Util, ConfigService, ObjectService, Authentication, CaseLookupService
         , ObjectSubscriptionService, ObjectModelService, CaseInfoService, MergeSplitService
-        , HelperObjectBrowserService) {
+        , HelperObjectBrowserService, UserInfoService) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -29,6 +29,11 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.restricted = objectInfo.restricted;
 
+            var group = ObjectModelService.getGroup(objectInfo);
+            $scope.owningGroup = group;
+            var assignee = ObjectModelService.getAssignee(objectInfo);
+            $scope.assignee = assignee;
+
             Authentication.queryUserInfo().then(function (userInfo) {
                 $scope.userId = userInfo.userId;
                 ObjectSubscriptionService.getSubscriptions(userInfo.userId, ObjectService.ObjectTypes.CASE_FILE, $scope.objectInfo.id).then(function (subscriptions) {
@@ -39,9 +44,6 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
                     });
                     $scope.showBtnSubscribe = Util.isEmpty(found);
                     $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
-                    ObjectModelService.checkIfUserCanRestrict($scope.userId, objectInfo).then(function (result) {
-                        $scope.isUserAbleToRestrict = result;
-                    });
                 });
             });
 
@@ -67,7 +69,7 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
         };
 
         $scope.onClickRestrict = function ($event) {
-            if ($scope.isUserAbleToRestrict && $scope.restricted != $scope.objectInfo.restricted) {
+            if ($scope.restricted != $scope.objectInfo.restricted) {
                 $scope.objectInfo.restricted = $scope.restricted;
 
                 var caseInfo = Util.omitNg($scope.objectInfo);
@@ -139,12 +141,32 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
                 }
             });
         };
+        UserInfoService.getUserInfo().then(function (infoData) {
+            $scope.currentUserProfile = infoData;
+        });
 
         $scope.refresh = function () {
             $scope.$emit('report-object-refreshed', $stateParams.id);
         };
-    }
 
+        $scope.claim = function (objectInfo) {
+            ObjectModelService.setAssignee(objectInfo, $scope.currentUserProfile.userId);
+            objectInfo.modified = null;//this is because we need to trigger update on case file
+            CaseInfoService.saveCaseInfo(objectInfo).then(function (response) {
+                //success
+                $scope.refresh();
+            });
+        };
+
+        $scope.unclaim = function (objectInfo) {
+            ObjectModelService.setAssignee(objectInfo, "");
+            objectInfo.modified = null;//this is because we need to trigger update on case file
+            CaseInfoService.saveCaseInfo(objectInfo).then(function (response) {
+                //success
+                $scope.refresh();
+            });
+        };
+    }
 ]);
 
 

@@ -48,7 +48,7 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
             $scope.objectInfo = objectInfo;
             $scope.objectId = objectInfo.taskId;
             PermissionsService.getActionPermission('editAttachments', objectInfo).then(function (result) {
-                objectInfo.isReadOnly = !result;
+                $scope.isReadOnly = !result;
             });
         };
 
@@ -75,7 +75,7 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
                     if (0 != len) {
                         return 'disable';
                     } else {
-                        return $scope.objectInfo.isReadOnly ? 'disable' : '';
+                        return $scope.isReadOnly ? 'disable' : '';
                     }
                 }
             });

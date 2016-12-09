@@ -14,6 +14,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ public class NoteDao extends AcmAbstractDao<Note>
 
     public List<Note> listNotes(String type, Long parentId, String parentType)
     {
-        Preconditions.checkNotNull(type, "Note type cannot be null");
+        //Preconditions.checkNotNull(type, "Note type cannot be null");
         Preconditions.checkNotNull(parentId, "Parent Id cannot be null");
         Preconditions.checkNotNull(parentType, "Parent type cannot be null");
 
@@ -59,7 +60,7 @@ public class NoteDao extends AcmAbstractDao<Note>
 
     public List<Note> listNotesPage(String type, Long parentId, String parentType, int start, int n, String sortParam)
     {
-        Preconditions.checkNotNull(type, "Note type cannot be null");
+        //Preconditions.checkNotNull(type, "Note type cannot be null");
         Preconditions.checkNotNull(parentId, "Parent Id cannot be null");
         Preconditions.checkNotNull(parentType, "Parent type cannot be null");
         Preconditions.checkNotNull(start, "Start cannot be null");
@@ -82,8 +83,14 @@ public class NoteDao extends AcmAbstractDao<Note>
         CriteriaQuery<Note> query = cb.createQuery(Note.class);
         Root<Note> note = query.from(Note.class);
         query.select(note);
-        query.where(cb.and(cb.equal(note.get("parentId"), parentId)), cb.and(cb.equal(note.get("parentType"),
-                parentType), cb.and(cb.equal(note.get("type"), type))));
+        Predicate predicate = cb.and(cb.equal(note.get("parentId"), parentId), cb.equal(note.get("parentType"),
+                parentType));
+        if(type != null)
+        {
+            predicate = cb.and(predicate, cb.equal(note.get("type"), type));
+        }
+
+        query.where(predicate);
         if (sortDirection.equalsIgnoreCase("ASC"))
         {
             query.orderBy(cb.asc(note.get(sortField)));
@@ -109,12 +116,17 @@ public class NoteDao extends AcmAbstractDao<Note>
     {
         String queryText = "SELECT COUNT(note) " +
                 "FROM Note note " +
-                "WHERE note.parentId = :parentId AND " +
-                "note.parentType  = :parentType AND " +
-                "note.type = :type";
+                "WHERE note.parentId = :parentId AND note.parentType  = :parentType";
+
+        if(type != null){
+            queryText +=  " AND note.type = :type";
+        }
 
         TypedQuery<Long> query = getEm().createQuery(queryText, Long.class);
-        query.setParameter("type", type);
+
+        if(type != null) {
+            query.setParameter("type", type);
+        }
         query.setParameter("parentType", parentType.toUpperCase());
         query.setParameter("parentId", parentId);
 

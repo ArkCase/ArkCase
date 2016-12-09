@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.casefile.web.api;
 
+import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.SaveCaseService;
@@ -38,21 +39,20 @@ public class SaveCaseFileAPIController
     @ResponseBody
     public CaseFile createCaseFile(@RequestBody CaseFile in, HttpSession session, Authentication auth) throws AcmCreateObjectFailedException
     {
-        if (log.isTraceEnabled())
-        {
-            log.trace("Got a case file: [{}] ; case ID: [{}]", in, in.getId());
-        }
+        log.trace("Got a case file: [{}] ; case ID: [{}]", in, in.getId());
         String ipAddress = (String) session.getAttribute("acm_ip_address");
 
         userTrackerService.trackUser(ipAddress);
 
         try
         {
-            boolean isNew = false;
-            if (in.getId() == null)
-            {
-                isNew = true;
-            }
+            boolean isNew = in.getId() == null;
+
+            // explicitly set modifier and modified to trigger transformer to reindex data
+            // fixes problem when some child objects are changed (e.g participants) and solr document is not updated
+            in.setModifier(AuthenticationUtils.getUsername());
+            in.setModified(new Date());
+
             CaseFile saved = getSaveCaseService().saveCase(in, auth, ipAddress);
 
             // since the approver list is not persisted to the database, we want to send them back to the caller...

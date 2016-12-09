@@ -10,8 +10,6 @@ public class NotificationSenderFactory
 {
     private PropertyFileManager propertyFileManager;
     private String notificationPropertyFileLocation;
-    private NotificationSender smtpNotificationSender;
-    private NotificationSender microsoftExchangeNotificationSender;
     private Map<String, NotificationSender> notificationSenderMap;
 
     public NotificationSender getNotificationSender()
@@ -44,26 +42,6 @@ public class NotificationSenderFactory
     public void setNotificationPropertyFileLocation(String notificationPropertyFileLocation)
     {
         this.notificationPropertyFileLocation = notificationPropertyFileLocation;
-    }
-
-    public NotificationSender getSmtpNotificationSender()
-    {
-        return smtpNotificationSender;
-    }
-
-    public void setSmtpNotificationSender(SmtpNotificationSender smtpNotificationSender)
-    {
-        this.smtpNotificationSender = smtpNotificationSender;
-    }
-
-    public NotificationSender getMicrosoftExchangeNotificationSender()
-    {
-        return microsoftExchangeNotificationSender;
-    }
-
-    public void setMicrosoftExchangeNotificationSender(MicrosoftExchangeNotificationSender microsoftExchangeNotificationSender)
-    {
-        this.microsoftExchangeNotificationSender = microsoftExchangeNotificationSender;
     }
 
     public Map<String, NotificationSender> getNotificationSenderMap()
