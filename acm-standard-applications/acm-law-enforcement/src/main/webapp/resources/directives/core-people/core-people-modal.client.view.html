@@ -13,7 +13,8 @@
         <div>
             <label for="personTypes_{{::$id}}" translate>common.directive.corePeople.people.modal.personTypes.label</label>
         </div>
-        <select id="personTypes_{{::$id}}"
+        <select ng-hide="isInitiator"
+                id="personTypes_{{::$id}}"
                 ng-model="person.personType"
                 ng-options="item.type as item.name for item in person.personTypes"></select>
 

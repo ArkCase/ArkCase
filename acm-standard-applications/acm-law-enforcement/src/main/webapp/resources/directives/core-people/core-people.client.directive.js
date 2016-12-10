@@ -272,12 +272,12 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                     showModalPeople(person, true);
                 };
                 scope.deleteRow = function (rowEntity) {
-                    gridHelper.deleteRow(rowEntity);
-
-                    var id = Util.goodMapValue(rowEntity, "id", 0);
-                    if (0 < id) {    //do not need to save for deleting a new row
+                    if (rowEntity.personType != "Initiator") {
+                        var id = Util.goodMapValue(rowEntity, "id", 0);
+                        if (0 < id) {    //do not need to save for deleting a new row
                         ObjectPersonService.deletePersonAssociation(id).then(
                             function (personAssociationDeleted) {
+                                gridHelper.deleteRow(rowEntity);
                                 refresh();
                                 return personAssociationDeleted;
                             }
@@ -285,6 +285,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                                 return error;
                             }
                         );
+                        }
                     }
 
                 };
@@ -487,6 +488,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                     var modalScope = scope.$new();
                     modalScope.person = person || {};
                     modalScope.isEdit = isEdit || false;
+                    modalScope.isInitiator = person.personType == "Initiator";
                     var modalInstance = $modal.open({
                         scope: modalScope,
                         animation: true,
