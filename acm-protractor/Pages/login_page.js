@@ -17,6 +17,7 @@ var LoginPage = function() {
         return this;
     };
     this.Login = function (username, password) {
+        browser.driver.get('https://core.arkcase.dev.armedia.com/arkcase/login');
         browser.ignoresynchronization = true;
         browser.executeScript('window.sessionStorage.clear();');
         browser.executeScript('window.localStorage.clear();');
