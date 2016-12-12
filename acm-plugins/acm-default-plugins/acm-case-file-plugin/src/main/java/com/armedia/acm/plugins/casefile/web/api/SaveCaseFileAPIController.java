@@ -1,12 +1,12 @@
 package com.armedia.acm.plugins.casefile.web.api;
 
+import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.SaveCaseService;
 import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.users.service.tracker.UserTrackerService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -20,11 +20,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
-
 import java.util.Date;
 
 @Controller
-@RequestMapping({ "/api/v1/plugin/casefile", "/api/latest/plugin/casefile" })
+@RequestMapping({"/api/v1/plugin/casefile", "/api/latest/plugin/casefile"})
 public class SaveCaseFileAPIController
 {
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -36,25 +35,24 @@ public class SaveCaseFileAPIController
     private UserTrackerService userTrackerService;
 
     @PreAuthorize("#in.id == null or hasPermission(#in.id, 'CASE_FILE', 'saveCase')")
-    @RequestMapping(method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_XML_VALUE })
+    @RequestMapping(method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_XML_VALUE})
     @ResponseBody
     public CaseFile createCaseFile(@RequestBody CaseFile in, HttpSession session, Authentication auth) throws AcmCreateObjectFailedException
     {
-        if (log.isTraceEnabled())
-        {
-            log.trace("Got a case file: [{}] ; case ID: [{}]", in, in.getId());
-        }
+        log.trace("Got a case file: [{}] ; case ID: [{}]", in, in.getId());
         String ipAddress = (String) session.getAttribute("acm_ip_address");
 
         userTrackerService.trackUser(ipAddress);
 
         try
         {
-            boolean isNew = false;
-            if (in.getId() == null)
-            {
-                isNew = true;
-            }
+            boolean isNew = in.getId() == null;
+
+            // explicitly set modifier and modified to trigger transformer to reindex data
+            // fixes problem when some child objects are changed (e.g participants) and solr document is not updated
+            in.setModifier(AuthenticationUtils.getUsername());
+            in.setModified(new Date());
+
             CaseFile saved = getSaveCaseService().saveCase(in, auth, ipAddress);
 
             // since the approver list is not persisted to the database, we want to send them back to the caller...

@@ -337,9 +337,8 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         ExchangeService service = connect(user);
         EmailMessage emailMessage = new EmailMessage(service);
         emailMessage.setSubject(emailWithAttachmentsDTO.getSubject());
-        emailMessage.setBody(MessageBody.getMessageBodyFromText(emailWithAttachmentsDTO.getHeader() + "\r\r"
-                + emailWithAttachmentsDTO.getBody() + "\r\r\r" + emailWithAttachmentsDTO.getFooter()));
-        emailMessage.getBody().setBodyType(BodyType.Text);
+        emailMessage.setBody(MessageBody.getMessageBodyFromText(emailWithAttachmentsDTO.getMessageBody()));
+        emailMessage.getBody().setBodyType(BodyType.HTML);
         emailMessage.getToRecipients().add(systemUserEmail);
 
         if (emailWithAttachmentsDTO.getEmailAddresses() != null && !emailWithAttachmentsDTO.getEmailAddresses().isEmpty())
@@ -406,7 +405,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
                     emailMessage.getToRecipients().add(emailAddress);
                     emailMessage.setSubject(emailDTO.getSubject());
                     emailMessage.setBody(MessageBody.getMessageBodyFromText(generateBody(emailDTO, emailAddress, authentication)));
-                    emailMessage.getBody().setBodyType(BodyType.Text);
+                    emailMessage.getBody().setBodyType(BodyType.HTML);
 
                     emailMessage.sendAndSaveCopy();
 
@@ -427,15 +426,15 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
     private String generateBody(EmailWithEmbeddedLinksDTO emailDTO, String emailAddress, Authentication authentication)
     {
-        StringBuilder generatedBody = new StringBuilder(emailDTO.getHeader()).append("\r\r");
+        StringBuilder body = new StringBuilder();
 
         for (Long fileId : emailDTO.getFileIds())
         {
             String token = generateAndSaveAuthenticationToken(fileId, emailAddress, emailDTO, authentication);
-            generatedBody.append(emailDTO.getBaseUrl()).append(fileId).append("&acm_email_ticket=").append(token).append("\r\r");
+            body.append(emailDTO.getBaseUrl()).append(fileId).append("&acm_email_ticket=").append(token).append("\r\r");
         }
 
-        return generatedBody.append("\r\r").append(emailDTO.getFooter()).toString();
+        return emailDTO.buildMessageBodyFromTemplate(body.toString());
     }
 
     private String generateAndSaveAuthenticationToken(Long fileId, String emailAddress, EmailWithEmbeddedLinksDTO emailDTO,

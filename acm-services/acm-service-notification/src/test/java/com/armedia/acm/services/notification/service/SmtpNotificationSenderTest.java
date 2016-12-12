@@ -1,11 +1,5 @@
 package com.armedia.acm.services.notification.service;
 
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.eq;
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
@@ -23,7 +17,6 @@ import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.model.SmtpEventSentEvent;
 import com.armedia.acm.services.users.model.AcmUser;
-
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
@@ -35,11 +28,14 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.Authentication;
 
 import javax.activation.DataHandler;
-
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
+
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 
 public class SmtpNotificationSenderTest extends EasyMockSupport
 {
@@ -103,7 +99,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
 
         smtpNotificationSender.getAuditPropertyEntityAdapter().setUserId(NotificationConstants.SYSTEM_USER);
         Capture<Map<String, Object>> messagePropsCapture = EasyMock.newCapture();
-        expect(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), eq("the_note"), capture(messagePropsCapture)))
+        expect(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), matches("\\s*the_note\\s*"), capture(messagePropsCapture)))
                 .andThrow(mockMuleException);
         expect(mockMuleException.getLocalizedMessage()).andReturn(null);
         expect(mockMuleException.getStackTrace()).andReturn(new StackTraceElement[1]);
@@ -131,7 +127,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
 
         smtpNotificationSender.getAuditPropertyEntityAdapter().setUserId(NotificationConstants.SYSTEM_USER);
         Capture<Map<String, Object>> messagePropsCapture = EasyMock.newCapture();
-        expect(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), eq("the_note"), capture(messagePropsCapture)))
+        expect(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), contains("the_note"), capture(messagePropsCapture)))
                 .andReturn(mockMuleMessage);
         setSendExpectations();
         expect(mockMuleMessage.getInboundProperty("sendEmailException")).andReturn(null);
@@ -154,7 +150,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         final String footer = "footer";
         final long fileId = 1234;
         final String token = "token";
-        final String note = header + " http://" + baseUrl + fileId + "&acm_email_ticket=" + token + "\n" + footer;
+        final String note = header + "\\s* http://" + baseUrl + fileId + "&acm_email_ticket=" + token + "\\s*" + footer;
 
         List<String> addresses = new ArrayList<>();
         addresses.add(email);
@@ -169,7 +165,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         emailWithEmbeddedLinksDTO.setFooter(footer);
 
         Capture<Map<String, Object>> messagePropsCapture = EasyMock.newCapture();
-        expect(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), eq(note), capture(messagePropsCapture)))
+        expect(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), matches(note), capture(messagePropsCapture)))
                 .andReturn(mockMuleMessage);
 
         setSendExpectations();
@@ -208,7 +204,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         final String header = "header";
         final String body = "body";
         final String footer = "footer";
-        final String note = header + "\r\r" + body + "\r\r\r" + footer;
+        final String note = header + "\\s*" + body + "\\s*" + footer;
 
         List<String> addresses = new ArrayList<>();
         addresses.add(email);
@@ -257,7 +253,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         // then
         verifyAll();
 
-        assertEquals(note, capturedNote.getValue());
+        assertTrue(Pattern.compile(note).matcher(capturedNote.getValue()).matches());
 
         assertNotNull(capturedAttachments.getValue());
         assertEquals(1, capturedAttachments.getValue().size());
