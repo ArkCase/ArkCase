@@ -70,7 +70,7 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile> implements AcmNotifica
 
         List<Object[]> caseGroupedByS = caseGroupedByStatus.getResultList();
 
-        List<CaseByStatusDto> result = new ArrayList<CaseByStatusDto>();
+        List<CaseByStatusDto> result = new ArrayList<>();
 
         for (Object[] caseStatus : caseGroupedByS)
         {
@@ -84,7 +84,7 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile> implements AcmNotifica
 
     public List<CaseFile> getCaseFilesByUser(String user) throws AcmObjectNotFoundException
     {
-        String queryText = "SELECT cf FROM CaseFile cf " + "WHERE cf.creator = :user";
+        String queryText = "SELECT cf FROM CaseFile cf WHERE cf.creator = :user";
         Query casesByUser = getEm().createQuery(queryText);
         casesByUser.setParameter("user", user);
         List<CaseFile> retval = casesByUser.getResultList();
@@ -121,7 +121,7 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile> implements AcmNotifica
 
         List<Object[]> caseGroupedByS = caseGroupedByStatus.getResultList();
 
-        List<CaseByStatusDto> result = new ArrayList<CaseByStatusDto>();
+        List<CaseByStatusDto> result = new ArrayList<>();
 
         for (Object[] caseStatus : caseGroupedByS)
         {
