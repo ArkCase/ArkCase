@@ -32,16 +32,6 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
             gridHelper.setExternalPaging(config, retrieveGridData);
             gridHelper.setUserNameFilter(promiseUsers);
 
-            for (var i = 0; i < $scope.config.columnDefs.length; i++) {
-                if (HelperUiGridService.Lookups.TASK_OUTCOMES == $scope.config.columnDefs[i].lookup) {
-                    $scope.gridOptions.columnDefs[i].cellTemplate = '<span ng-hide="row.entity.acm$_taskActionDone"><select'
-                        + ' ng-options="option.value for option in row.entity.acm$_taskOutcomes track by option.id"'
-                        + ' ng-model="row.entity.acm$_taskOutcome">'
-                        + ' </select>'
-                        + ' <span ng-hide="\'noop\'==row.entity.acm$_taskOutcome.id"><i class="fa fa-gear fa-lg" ng-click="grid.appScope.action(row.entity)"></i></span></span>';
-                }
-            }
-
             componentHelper.doneConfig(config);
 
             return false;
@@ -80,8 +70,8 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
                             value: $translate.instant("common.select.option.none")
                         }];
                         task.acm$_taskOutcome = {
-                                id: "noop",
-                                value: $translate.instant("common.select.option.none")
+                            id: "noop",
+                            value: $translate.instant("common.select.option.none")
                         };
                         task.acm$_taskActionDone = true;
 
@@ -95,8 +85,8 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
                             if (availableOutcomes !== undefined && availableOutcomes.length > 0) {
                                 for (var j = 0; j < availableOutcomes.length; j++) {
                                     var outcome = {
-                                            id: Util.goodValue(availableOutcomes[j]),
-                                            value: Util.goodValue(availableOutcomes[j])
+                                        id: Util.goodValue(availableOutcomes[j]),
+                                        value: Util.goodValue(availableOutcomes[j])
                                     };
                                     task.acm$_taskOutcomes.push(outcome);
                                 }
@@ -115,52 +105,6 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
                 parentObject: $scope.objectInfo.caseNumber,
                 parentTitle: $scope.objectInfo.title
             });
-        };
-
-        var completeTask = function (rowEntity) {
-            TaskWorkflowService.completeTask(rowEntity.id).then(
-                function (taskInfo) {
-                    rowEntity.acm$_taskActionDone = true;
-                    rowEntity.status_s = TaskWorkflowService.WorkflowStatus.COMPLETE;
-                    return taskInfo;
-                }
-            );
-        };
-        var deleteTask = function (rowEntity) {
-            TaskWorkflowService.deleteTask(rowEntity.id).then(
-                function (taskInfo) {
-                    rowEntity.acm$_taskActionDone = true;
-                    var tasks = Util.goodArray($scope.gridOptions.data);
-                    for (var i = 0; i < tasks.length; i++) {
-                        if (tasks[i].id == rowEntity.id) {
-                            tasks.splice(i, 1);
-                            break;
-                        }
-                    }
-                    return taskInfo;
-                }
-            );
-        };
-        var completeTaskWithOutcome = function (rowEntity) {
-            var task = Util.omitNg(rowEntity);       //todo: need to convert taskSolr to taskInfo
-            var outcome = "fixme";
-            TaskWorkflowService.completeTaskWithOutcome(task, outcome).then(
-                function (successData) {
-                    rowEntity.acm$_taskActionDone = true;
-                    rowEntity.status_s = TaskWorkflowService.WorkflowStatus.COMPLETE;
-                    return successData;
-                }
-            );
-        };
-        $scope.action = function (rowEntity) {
-            console.log("act, rowEntity.id=" + rowEntity.id + ", action=" + rowEntity.acm$_taskOutcome.id);
-            if ("complete" == rowEntity.acm$_taskOutcome.id) {
-                completeTask(rowEntity);
-            } else if ("delete" == rowEntity.acm$_taskOutcome.id) {
-                deleteTask(rowEntity);
-            } else {
-                completeTaskWithOutcome(rowEntity);
-            }
         };
 
         $scope.onClickObjLink = function (event, rowEntity) {
