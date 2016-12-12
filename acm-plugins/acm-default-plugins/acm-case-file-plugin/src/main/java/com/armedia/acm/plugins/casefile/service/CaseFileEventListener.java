@@ -72,6 +72,24 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                         getCaseFileEventUtility().raiseCaseFileModifiedEvent(updatedCaseFile, event.getIpAddress(), "details.changed");
                     }
 
+                    String title = existing.getTitle();
+                    String updatedTitle = updatedCaseFile.getTitle();
+                    if (!Objects.equals(title, updatedTitle))
+                    {
+                        getCaseFileEventUtility().raiseCaseFileModifiedEvent(updatedCaseFile, event.getIpAddress(), "title.changed",
+                                "Case File Title changed from " + title + " to " + updatedTitle);
+                    }
+
+
+                    String owningGroup = ParticipantUtils.getOwningGroupIdFromParticipants(existing.getParticipants());
+                    String updatedOwningGroup = ParticipantUtils.getOwningGroupIdFromParticipants(updatedCaseFile.getParticipants());
+                    if (!Objects.equals(owningGroup, updatedOwningGroup))
+                    {
+                        AcmParticipant updatedParticipant = updatedCaseFile.getParticipants().stream().filter(p -> "owning group".equals(p.getParticipantType())).findFirst().orElse(null);
+                        getCaseFileEventUtility().raiseParticipantsModifiedInCaseFile(updatedParticipant, updatedCaseFile, event.getIpAddress(), "changed",
+                                "Owning Group Changed from " + owningGroup + " to " + updatedOwningGroup);
+                    }
+
                     checkParticipants(existing, updatedCaseFile, event.getIpAddress());
 
                     if (isStatusChanged(existing, updatedCaseFile))
@@ -92,10 +110,10 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                 if (isAssigneeChanged(acmAssignment))
                 {
                     // Save assignment change in the database
-                    getAcmAssignmentDao().save(acmAssignment);
+                    AcmAssignment assignmentSaved = getAcmAssignmentDao().save(acmAssignment);
 
                     // Raise an event
-                    getAcmObjectHistoryEventPublisher().publishAssigneeChangeEvent(acmAssignment, event.getUserId(), event.getIpAddress());
+                    getAcmObjectHistoryEventPublisher().publishAssigneeChangeEvent(assignmentSaved, event.getUserId(), event.getIpAddress());
                 }
             }
         }

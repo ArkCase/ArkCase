@@ -4,6 +4,7 @@ import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
@@ -82,6 +83,12 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
         solr.setAdditionalProperty("security_field_lcs", in.getSecurityField());
 
         solr.setTitle_parseable_lcs(in.getTitle());
+
+        String participantsListJson = ParticipantUtils.createParticipantsListJson(in.getParticipants());
+        solr.setAdditionalProperty("acm_participants_lcs", participantsListJson);
+
+        solr.setAdditionalProperty("assignee_group_id_lcs", in.getAssigneeGroup());
+
         return solr;
     }
 

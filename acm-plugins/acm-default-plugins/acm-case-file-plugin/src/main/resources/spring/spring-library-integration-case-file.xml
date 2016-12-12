@@ -5,22 +5,21 @@
 		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd"
        xmlns:int="http://www.springframework.org/schema/integration">
 
-
     <int:channel id="caseFileFilteredMailChannel"/>
 
-    <bean id="caseFileMailFilter" class="com.armedia.acm.plugins.casefile.filter.CaseFileMailFilter">
-        <property name="caseNumberRegexPattern" value="${casefile.email.regex.case_number}"/>
-        <property name="caseObjectTypeRegexPattern" value="${casefile.email.regex.object_type}"/>
+    <bean id="caseFileMailFilter" class="com.armedia.acm.services.email.filter.AcmObjectPatternMailFilter">
+        <constructor-arg index="0" value="${casefile.email.regex.case_number}"/>
+        <constructor-arg index="1" value="${casefile.email.regex.object_type}"/>
     </bean>
 
-    <bean id="caseFileMailHandler" class="com.armedia.acm.plugins.casefile.handler.CaseFileMailHandler">
-        <property name="caseFileDao" ref="caseFileDao"/>
+    <bean id="caseFileMailHandler" class="com.armedia.acm.services.email.handler.AcmObjectMailHandler">
+    	<constructor-arg index="0" ref="caseFileDao" />
         <property name="mailDirectory" value="${casefile.email.folder.relative.path}"/>
         <property name="enabled" value="${casefile.email.handler.enabled}"/>
+        <property name="objectIdRegexPattern" value="${casefile.email.regex.case_number}"/>
         <property name="acmFolderService" ref="acmFolderService"/>
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
-        <property name="caseNumberRegexPattern" value="${casefile.email.regex.case_number}"/>
     </bean>
 
     <int:service-activator input-channel="caseFileFilteredMailChannel" ref="caseFileMailHandler" method="handle"/>

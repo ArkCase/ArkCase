@@ -249,7 +249,7 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'Acm.Stor
                     if (Service.validateNote(data)) {
                         var noteInfo = data;                       
                         
-                        Service.clearCache(noteInfo.parentType, noteInfo.parentId, noteInfo.type);
+                        Service.clearCache(noteInfo.parentType, noteInfo.parentId);
                        
                         return noteInfo;
                     }
@@ -267,16 +267,19 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'Acm.Stor
          * Delete a note
          *
          * @param {Number} noteId  Note ID
+         * @param {Number} parentId  Parent Object ID
+         * @param {Number} parentType  Parent Object Type
          *
          * @returns {Object} Promise
          */
-        Service.deleteNote = function (noteId) {
+        Service.deleteNote = function (noteId, parentId, parentType) {
             return Util.serviceCall({
                 service: Service._deleteNote
                 , param: {noteId: noteId}
                 , data: {}
                 , onSuccess: function (data) {
                     if (Service.validateDeletedNote(data)) {
+                        Service.clearCache(parentType, parentId);
                         return data;
                     }
                 }
@@ -395,15 +398,13 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'Acm.Stor
          *
          * @param {String} objectType  Object type
          * @param {Number} objectId  Object ID  
-         * @param {String} noteType  Type of note (GENERAL default ) 
          *
          * @returns [Undefined] don't return anything.
          */
-        Service.clearCache = function (objectType, objectId, noteType){        	
-            noteType = noteType || "GENERAL";
+        Service.clearCache = function (objectType, objectId){
         	var cacheNotes = new Store.CacheFifo(Service.CacheNames.NOTES);
-        	var cacheSubKey = objectType + "." + objectId + "." + noteType;
-    		var cacheKeys = cacheNotes.keys();
+        	var cacheSubKey = objectType + "." + objectId;
+            var cacheKeys = cacheNotes.keys();
             _.each(cacheKeys, function (key){
                 if(key == null) {
                     return;

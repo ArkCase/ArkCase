@@ -10,8 +10,8 @@
 
  * Object.ParticipantService includes group of REST calls related to participants.
  */
-angular.module('services').factory('Object.ParticipantService', ['$resource', '$translate', 'UtilService',
-    function ($resource, $translate, Util) {
+angular.module('services').factory('Object.ParticipantService', ['$resource', '$translate', 'UtilService', 'MessageService',
+    function ($resource, $translate, Util, MessageService) {
         var Service = $resource('api/v1/service', {}, {
 
             /**
@@ -231,6 +231,27 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
 
         /**
          * @ngdoc method
+         * @name validateType
+         * @methodOf services:Object.ParticipantService
+         * @description Check if the type of participant is consistent with the given USER or GROUP type
+         * @param {Object} data Participant object to be validated
+         * @param {Object} type Given type
+         * @returns {boolean} Promise
+         */
+        Service.validateType = function (data, type) {
+            if (data.participantType == "owning group" && type != "GROUP") {
+                MessageService.error($translate.instant("common.directive.coreParticipants.message.error.groupType"));
+                return false;
+            }
+            if (data.participantType != "owning group" && type != "USER") {
+                MessageService.error($translate.instant("common.directive.coreParticipants.message.error.userType"));
+                return false;
+            }
+            return true;
+        };
+
+        /**
+         * @ngdoc method
          * @name validateParticipants
          * @methodOf services:Object.ParticipantService
          *
@@ -246,6 +267,18 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
                 return false;
             }
             if (!Util.isArray(data)) {
+                return false;
+            }
+            if (_.filter(data, function (pa) {
+                    return Util.compare("assignee", pa.participantType);
+                }).length > 1) {
+                MessageService.error($translate.instant("common.directive.coreParticipants.message.error.assigneeUnique"));
+                return false;
+            }
+            if (_.filter(data, function (pa) {
+                    return Util.compare("owning group", pa.participantType);
+                }).length > 1) {
+                MessageService.error($translate.instant("common.directive.coreParticipants.message.error.owninggroupUnique"));
                 return false;
             }
             return true;

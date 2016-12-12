@@ -3,6 +3,8 @@
  */
 package com.armedia.acm.compressfolder;
 
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
+
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Sep 20, 2016
  *
@@ -38,5 +40,12 @@ public interface FolderCompressor
      *             IO exception during retrieving, writing or compressing the folder.
      */
     String compressFolder(Long folderId, long size, SizeUnit sizeUnit) throws FolderCompressorException;
+    
+    /**
+     * Returns path for the compressed folder file
+     * @param folder
+     * @return the path of the compressed folder file
+     */
+    String getCompressedFolderFilePath(AcmFolder folder);
 
 }

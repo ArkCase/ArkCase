@@ -9,9 +9,9 @@
  *
  * The Permissions service. Performs checking user permissions for action depends on user roles, and objectProperties, like orderInfo, queueInfo
  */
-angular.module('services').factory('PermissionsService', ['$q', '$http', '$log', '$interpolate', 'Authentication',
-    function ($q, $http, $log, $interpolate, Authentication) {
-        // Iniital rules loading
+angular.module('services').factory('PermissionsService', ['$q', '$http', '$log', '$interpolate', 'Authentication', 'Object.ModelService',
+    function ($q, $http, $log, $interpolate, Authentication, ObjectModelService) {
+        // Initial rules loading
         var rules = queryRules();
         var userProfile = Authentication.queryUserInfo();
 
@@ -38,7 +38,6 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
                     return $q.resolve(processAction(actionName, objectProperties));
                 } else {
                     var deferred = $q.defer();
-                    var rulesPromise = queryRules();
                     var userProfilePromise = Authentication.queryUserInfo();
 
                     $q.all([rules, userProfilePromise])
@@ -79,7 +78,6 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
                     return $q.resolve(processActionsByRoles(actionName, roles));
                 } else {
                     var deferred = $q.defer();
-                    var rulesPromise = queryRules();
                     var userProfilePromise = Authentication.queryUserInfo();
 
                     $q.all([rules, userProfilePromise])
@@ -127,12 +125,14 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
 
                     // Check ANY authorities
                     if (isEnabled && _.isArray(userProfile.authorities) && action.userRolesAny) {
-                        var anyEnabled = false;
-                        _.forEach(action.userRolesAny, function (role) {
-                            var processedRole = processRole(role, objectProperties);
-                            anyEnabled = anyEnabled || (_.indexOf(userProfile.authorities, processedRole) != -1);
-                        });
-                        isEnabled = anyEnabled;
+                        if (action.userRolesAny.length > 0) {
+                            var anyEnabled = false;
+                            _.forEach(action.userRolesAny, function (role) {
+                                var processedRole = processRole(role, objectProperties);
+                                anyEnabled = anyEnabled || (_.indexOf(userProfile.authorities, processedRole) != -1);
+                            });
+                            isEnabled = anyEnabled;
+                        }
                     }
 
                     // Check objectProperties
@@ -142,6 +142,22 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
                             // exit from loop if properties are not equal
                             return isEnabled;
                         });
+                    }
+
+                    // Check userIsParticipantTypeAny
+                    if (isEnabled && action.userIsParticipantTypeAny) {
+                        var isUserParticipant = false;
+                        _.forEach(action.userIsParticipantTypeAny, function (value) {
+                            var participant = ObjectModelService.getParticipantByType(objectProperties, value);
+                            if (participant) {
+                                isUserParticipant = (participant == userProfile.userId) || (_.includes(userProfile.authorities, participant));
+                                if (isUserParticipant) {
+                                    // user found in participant's types
+                                    return false;
+                                }
+                            }
+                        });
+                        isEnabled = isEnabled && isUserParticipant;
                     }
                     // Return if action object passed
                     if (isEnabled) {
@@ -220,7 +236,7 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
         }
 
         /**
-         * Inerpolate ROLE name if required
+         * Interpolate ROLE name if required
          * @param role
          * @param objectProperties
          * @returns {*}
