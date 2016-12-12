@@ -159,6 +159,7 @@ var secondElementInList = element(by.xpath(Objects.casepage.locators.secondCaseI
 var newDocument = element(by.xpath(Objects.basepage.locators.newDocument));
 var detailsTextArea = element(by.xpath(Objects.taskspage.locators.detailsTextArea));
 var detailsSaveBtn = element(by.xpath(Objects.taskspage.locators.detailsSaveBtn));
+var refreshBtn = element(by.xpath(Objects.taskspage.locators.refreshBtn));
 var detailsLinkBtn = element(by.xpath(Objects.taskspage.locators.detailsLinkBtn));
 var insertLinkTitle = element(by.xpath(Objects.taskspage.locators.insertLinkTitle));
 var insertLinkText = element(by.xpath(Objects.taskspage.locators.insertLinkText));
@@ -180,6 +181,33 @@ var lockIcon = element(by.xpath(Objects.basepage.locators.lockIcon));
 var tasksLink = element(by.xpath(Objects.basepage.locators.tasksLink));
 var reportTitle = element(by.name(Objects.basepage.locators.reportTitle));
 var submitButton = element(by.xpath(Objects.complaintPage.locators.submitButton));
+var participantTab = element(by.css(Objects.casepage.locators.participantsTab));
+var selectParticipantType = element(by.xpath(Objects.casepage.locators.selectParticipantType));
+var selectparticipant = element(by.name(Objects.casepage.locators.selectParticipant));
+var searchForUserInput = element(by.xpath(Objects.casepage.locators.searchForUserInput));
+var searchForUserBtn = element(by.buttonText(Objects.casepage.locators.searchUserBtn));
+var searchedUser = element(by.xpath(Objects.casepage.locators.searchedUserName));
+var okBtn = element(by.buttonText(Objects.casepage.locators.OkBtn));
+var participantTypeFirstRow = element.all(by.xpath(Objects.casepage.locators.participantTableRow)).get(0);
+var participantNameFirstRow = element.all(by.xpath(Objects.casepage.locators.participantTableRow)).get(1);
+var participantTypeSecondRow = element.all(by.xpath(Objects.casepage.locators.participantTableRow)).get(2);
+var participantNameSecondRow = element.all(by.xpath(Objects.casepage.locators.participantTableRow)).get(3);
+var participantTypeThirdRow = element.all(by.xpath(Objects.casepage.locators.participantTableRow)).get(4);
+var participantNameThirdRow = element.all(by.xpath(Objects.casepage.locators.participantTableRow)).get(5);
+var participantTypeForthRow = element.all(by.xpath(Objects.casepage.locators.participantTableRow)).get(6);
+var participantNameForthRow = element.all(by.xpath(Objects.casepage.locators.participantTableRow)).get(7);
+var participantTypeFifthRow = element.all(by.xpath(Objects.casepage.locators.participantTableRow)).get(8);
+var participantNameFifthRow = element.all(by.xpath(Objects.casepage.locators.participantTableRow)).get(9);
+var participantsLinkBtn = element(by.xpath(Objects.casepage.locators.participantLinkBtn));
+var priorityType = element.all(by.xpath(Objects.casepage.locators.priorityType)).get(0);
+var editAssigneeBtn = element.all(by.css(Objects.casepage.locators.participantEditBtn)).get(1);
+var modalParticipantType = element(by.model(Objects.casepage.locators.modalParticipantType));
+var modalParticipantName = element(by.model(Objects.casepage.locators.modalParticipantName));
+var saveParticipantBtn = element(by.buttonText(Objects.casepage.locators.saveParticipantBtn));
+var assigneeDeleteBtn = element.all(by.css(Objects.casepage.locators.participantDeleteBtn)).get(1);
+var specialTypeDeleteBtn = element.all(by.css(Objects.casepage.locators.participantDeleteBtn)).get(0);
+var owningGroupDeleteBtn = element.all(by.css(Objects.casepage.locators.participantDeleteBtn)).get(2);
+var readerDeleteBtn = element.all(by.css(Objects.casepage.locators.participantDeleteBtn)).get(3);
 var docTreeExpand = element(by.xpath(Objects.basepage.locators.docTreeExpand));
 var fileTitle = element(by.xpath(Objects.basepage.locators.fileTitle));
 var docViewNotesLink = element(by.linkText(Objects.basepage.locators.docViewNotesLink));
@@ -338,8 +366,7 @@ var BasePage = function() {
                     }
 
                     var el = element(by.xpath(completexPath));
-                    //browser.wait(EC.visibilityOf(element(by.xpath(completexPath))), 30000).then(function () {
-                        el.click();
+                    el.click();
 
                 });
 
@@ -578,16 +605,16 @@ var BasePage = function() {
     }
 
     this.selectApprover = function(approverSamuel) {
-        browser.wait(EC.presenceOf(element(by.name(Objects.casepage.locators.selectApprover))), 30000).then(function () {
-            browser.wait(EC.visibilityOf(element(by.name(Objects.casepage.locators.selectApprover))), 30000).then(function () {
-                browser.wait(EC.elementToBeClickable(element(by.name(Objects.casepage.locators.selectApprover))), 30000).then(function () {
-                    selectApprover.click().then(function () {
+        browser.wait(EC.presenceOf(element(by.name(Objects.casepage.locators.selectApprover))), 30000).then(function() {
+            browser.wait(EC.visibilityOf(element(by.name(Objects.casepage.locators.selectApprover))), 30000).then(function() {
+                browser.wait(EC.elementToBeClickable(element(by.name(Objects.casepage.locators.selectApprover))), 30000).then(function() {
+                    selectApprover.click().then(function() {
                         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.addUser))), 10000);
                         searchForUser.click();
                         searchForUser.sendKeys(approverSamuel);
-                        goBtn.click().then(function () {
+                        goBtn.click().then(function() {
                             browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchedUser))), 3000);
-                            searchedUser.click().then(function () {
+                            searchedUser.click().then(function() {
                                 browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.addBtn))), 3000);
                                 addBtn.click();
                             });
@@ -1241,111 +1268,123 @@ var BasePage = function() {
         return this;
     }
 
-	this.clickAddTaskButton = function() {
-		browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.addNewTaskBtn))), 30000).then(function() {
-			addNewTaskBtn.click().then(function() {
-				browser.wait(EC.visibilityOf(element(by.id(Objects.taskpage.locators.subject))), 30000);
-			});
-		});
+    this.clickAddTaskButton = function() {
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.addNewTaskBtn))), 30000).then(function() {
+            addNewTaskBtn.click().then(function() {
+                browser.wait(EC.visibilityOf(element(by.id(Objects.taskpage.locators.subject))), 30000);
+            });
+        });
 
-		return this;
-	};
-	this.clickTasksLinkBtn = function() {
+        return this;
+    };
+    this.clickTasksLinkBtn = function() {
 
-		browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.tasksLink))), 20000).then(function() {
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.tasksLink))), 20000).then(function() {
 
-			tasksLinkBtn.click();
-		});
+            tasksLinkBtn.click();
+        });
 
-		return this;
+        return this;
 
-	};
-	this.waitForTasksTable = function() {
+    };
+    this.waitForTasksTable = function() {
 
-		browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.tasksTable))), 30000).then(function() {
-			refreshBtn.click().then(function() {
-				browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.taskTitle))), 30000, "After 30 second task is not shown in the task table");
-			});
-		});
-		return this;
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.tasksTable))), 30000).then(function() {
+            refreshBtn.click().then(function() {
+                browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.taskTitle))), 30000, "After 30 second task is not shown in the task table");
+            });
+        });
+        return this;
 
-	};
-	this.returnTaskTitle = function() {
-		return taskTitle.getText();
-	};
-	this.returnTaskTableAssignee = function() {
-		return taskAssighnee.getText();
-	};
-	this.returnTaskTableCreatedDate = function() {
-		return taskCreated.getText();
-	};
-	this.returnTaskTablePriority = function() {
-		return taskPriority.getText();
-	};
+    };
+    this.returnTaskTitle = function() {
+        return taskTitle.getText();
+    };
+    this.returnTaskTableAssignee = function() {
+        return taskAssighnee.getText();
+    };
+    this.returnTaskTableCreatedDate = function() {
+        return taskCreated.getText();
+    };
+    this.returnTaskTablePriority = function() {
+        return taskPriority.getText();
+    };
 
-	this.returnTaskTableDueDate = function() {
-		return taskDueDate.getText();
-	};
+    this.returnTaskTableDueDate = function() {
+        return taskDueDate.getText();
+    };
 
-	this.returnTaskTableStatus = function() {
-		return taskStatus.getText();
-	};
+    this.returnTaskTableStatus = function() {
+        return taskStatus.getText();
+    };
 
-	this.clickNewDocument = function() {
-		browser.wait(EC.presenceOf(element(by.xpath(Objects.basepage.locators.newDocument))), 30000).then(function () {
-			browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.newDocument))), 30000).then(function () {
-				browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.basepage.locators.newDocument))), 30000).then(function () {
-					newDocument.click();
-				});
-			});
-		});
-		return this;
-	};
+    this.clickNewDocument = function() {
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.basepage.locators.newDocument))), 30000).then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.newDocument))), 30000).then(function() {
+                browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.basepage.locators.newDocument))), 30000).then(function() {
+                    newDocument.click();
+                });
+            });
+        });
+        return this;
+    };
 
-	this.selectDocument = function (docType) {
-		xPathStr = ".//li[@data-command='file/";
+    this.selectDocument = function(docType) {
+        xPathStr = ".//li[@data-command='file/";
         xPathStrForm = " .//li[@data-command='form/"
-		var completexPath;
-		switch (docType) {
-			case "Medical Release":
-				completexPath = xPathStr + "mr']";
-				break;
-			case "General Release":
-				completexPath = xPathStr + "gr']";
-				break;
-			case "eDelivery":
-				completexPath = xPathStr + "ev']";
-				break;
-			case "SF86 Signature":
-				completexPath = xPathStr + "sig']";
-				break;
-			case "Notice of Investigation":
-				completexPath = xPathStr + "noi']";
-				break;
-			case "Witness Interview Request":
-				completexPath = xPathStr + "wir']";
-				break;
-			case "Report of Investigation":
-				completexPath = xPathStrForm + "roi']";
-				break;
-			case "Other":
-				completexPath = xPathStr + "Other']";
-				break;
-			default:
-				completexPath = xPathStr + "Other']";
-				break;
-		}
+        var completexPath;
+        switch (docType) {
+            case "Medical Release":
+                completexPath = xPathStr + "mr']";
+                break;
+            case "General Release":
+                completexPath = xPathStr + "gr']";
+                break;
+            case "eDelivery":
+                completexPath = xPathStr + "ev']";
+                break;
+            case "SF86 Signature":
+                completexPath = xPathStr + "sig']";
+                break;
+            case "Notice of Investigation":
+                completexPath = xPathStr + "noi']";
+                break;
+            case "Witness Interview Request":
+                completexPath = xPathStr + "wir']";
+                break;
+            case "Report of Investigation":
+                completexPath = xPathStrForm + "roi']";
+                break;
+            case "Other":
+                completexPath = xPathStr + "Other']";
+                break;
+            default:
+                completexPath = xPathStr + "Other']";
+                break;
+        }
 
-		var el = element(by.xpath(completexPath));
-		el.click();
-		return this;
+        var el = element(by.xpath(completexPath));
+        el.click();
+        return this;
 
-	};
-	this.addDocument = function (doctype) {
+    };
+    this.addDocument = function(doctype) {
         this.clickNewDocument();
         this.selectDocument(doctype);
         return this;
     };
+
+
+    this.navigateToPage = function(link){
+        xPathStr = ".//a[@title='";
+        var completexPath = xPathStr + link + "']";
+        var el = element(by.xpath(completexPath));
+        browser.wait(EC.visibilityOf(element(by.xpath(completexPath))), 30000).then(function () {
+            el.click();
+        });
+        return this;
+    };
+
 	this.insertDetailsTextAreaText = function(details) {
 		browser.wait(EC.presenceOf(element(by.xpath(Objects.taskspage.locators.detailsTextArea))), 30000).then(function() {
 			browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.detailsTextArea))), 30000).then(function() {
@@ -1400,15 +1439,7 @@ var BasePage = function() {
 		return detailsUploadedImage.isDisabled();
 	};
 
-	this.navigateToPage = function(link){
-		xPathStr = ".//a[@title='";
-		var completexPath = xPathStr + link + "']";
-		var el = element(by.xpath(completexPath));
-		browser.wait(EC.visibilityOf(element(by.xpath(completexPath))), 30000).then(function () {
-            el.click();
-        });
-		return this;
-	}
+
 	this.clickFullNameLink = function () {
 		browser.wait(EC.visibilityOf(element(by.css('.fullname'))), 30000).then(function () {
 			browser.wait(EC.elementToBeClickable(element(by.css('.fullname'))), 30000).then(function () {
@@ -1469,17 +1500,17 @@ var BasePage = function() {
     };
 	this.validateChekoutEnabled= function () {
         return !checkoutDisabled.isPresent();
-	};
-	this.validateCheckinEnabled = function () {
-		return !checkinDisabled.isPresent();
-	};
-	this.validateCancelEditingEnabled = function () {
-		return !cancelEditingDisabled.isPresent();
-	};
-	this.lockIconIsPresent = function () {
-		return lockIcon.isPresent();
-	};
-	this.clickTasksLink = function () {
+    };
+    this.validateCheckinEnabled = function() {
+        return !checkinDisabled.isPresent();
+    };
+    this.validateCancelEditingEnabled = function() {
+        return !cancelEditingDisabled.isPresent();
+    };
+    this.lockIconIsPresent = function() {
+        return lockIcon.isPresent();
+    };
+    this.clickTasksLink = function() {
         tasksLink.click();
         return this;
     };
@@ -1491,16 +1522,89 @@ var BasePage = function() {
                 });
             });
         });
+    }
+
+    this.selectParticipant = function(type, participant) {
+
+        var participantType = element(by.linkText(type));
+        participantTab.click().then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.selectParticipantType))), 10000).then(function() {
+                selectParticipantType.click().then(function() {
+                    participantType.click().then(function() {
+                        selectparticipant.click().then(function() {
+                            browser.driver.switchTo().defaultContent();
+                            browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchForUserInput))), 10000, "Search for user input is not displayed").then(function() {
+                                searchForUserInput.sendKeys(participant).then(function() {
+                                    searchForUserBtn.click().then(function() {
+                                        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchedUserName))), 30000, "Searched user is not displayed").then(function() {
+                                            searchedUser.click().then(function() {
+                                                okBtn.click();
+                                            });
+                                        });
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+
         return this;
     };
-	this.clickSubmitButton = function () {
-	    submitButton.click();
-	    return this;
+    this.clickSubmitButton = function() {
+        submitButton.click();
+        return this;
     };
-	this.submitReportOfInvestigation = function (reporttitle, approver) {
-	    this.insertReportTitle(reporttitle);
-	    this.selectApprover(approver);
-	    this.clickSubmitButton();
+    this.submitReportOfInvestigation = function(reporttitle, approver) {
+        this.insertReportTitle(reporttitle);
+        this.selectApprover(approver);
+        this.clickSubmitButton();
+    }
+
+    this.returnParticipantTypeFirstRow = function() {
+        return participantTypeFirstRow.getText();
+    }
+    this.returnParticipantNameFirstRow = function() {
+        return participantNameFirstRow.getText();
+    }
+    this.returnParticipantTypeSecondRow = function() {
+        return participantTypeSecondRow.getText();
+    }
+    this.returnParticipantNameSecondRow = function() {
+        return participantNameSecondRow.getText();
+    }
+    this.returnParticipantTypeThirdRow = function() {
+        return participantTypeThirdRow.getText();
+    }
+    this.returnParticipantNameThirdRow = function() {
+        return participantNameThirdRow.getText();
+    }
+    this.returnParticipantTypeForthRow = function() {
+        return participantTypeForthRow.getText();
+    }
+    this.returnParticipantNameForthRow = function() {
+        return participantNameForthRow.getText();
+    }
+    this.returnParticipantTypeFifthRow = function() {
+        return participantTypeFifthRow.getText();
+    }
+    this.returnParticipantNameFifthRow = function() {
+        return participantNameFifthRow.getText();
+    }
+
+    this.participantTable = function() {
+
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.participantLinkBtn))), 30000, "Partipants link button is not displayed").then(function() {
+            participantsLinkBtn.click().then(function() {
+                browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.participantTable))), 30000, "Partipants Tabe is not displayed")
+                browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.participantTableRow))), 30000).then(function() {
+                    priorityType.click();
+                    browser.sleep(3000);
+                });
+            });
+        });
+        return this;
     };
 	this.moveToTab = function () {
         browser.getAllWindowHandles().then(function (handles) {
@@ -1551,10 +1655,46 @@ var BasePage = function() {
                 return noteColumnValue.getText();
             });
         })
-
     };
 
+    this.clickEditAssigneeBtn = function() {
+
+        browser.wait(EC.textToBePresentInElement((participantTypeSecondRow), "assignee"), 10000).then(function() {
+            editAssigneeBtn.click();
+        });
+    }
+
+    this.clickDeleteAsigneeBtn = function() {
+
+        assigneeDeleteBtn.click();
+    }
+    this.verifyIfAssigneeCanBeDeleted = function() {
+        browser.wait(EC.textToBePresentInElement((participantTypeSecondRow), "assignee"), 10000, "Assignee should not be enable to be deleted");
+    }
+
+    this.clickSpecialTypeDeleteBtn = function() {
+        specialTypeDeleteBtn.click();
+    }
+    this.verifyIfSpecialTypeCaneBeDeleted = function() {
+        browser.wait(EC.textToBePresentInElement((participantNameFirstRow), "*"), 10000, "Special Type should not be enable to be deleted");
+    }
+
+    this.clickOwningGroupDeleteBtn = function() {
+        owningGroupDeleteBtn.click();
+    };
+
+    this.verifyIfOwningGroupCanBeDeleted = function() {
+        browser.wait(EC.textToBePresentInElement((participantTypeThirdRow), "owning group"), 10000, "Owning Group should not be enable to be deleted");
+    }
+
+    this.clickReaderDeleteBtn = function() {
+        readerDeleteBtn.click();
+    }
+    this.verifyIfReaderCanBeDeleted = function() {
+        browser.wait(EC.textToBePresentInElement((participantTypeForthRow), "reader"), 10000, "reader should not be enable to be deleted");
+    }
 
 };
+
 
 module.exports = new BasePage();
