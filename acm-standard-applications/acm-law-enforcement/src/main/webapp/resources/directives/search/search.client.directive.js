@@ -60,9 +60,9 @@
  </example>
  */
 angular.module('directives').directive('search', ['SearchService', 'Search.QueryBuilderService', '$q', 'UtilService'
-    , 'Object.LookupService', '$window', 'uiGridExporterConstants', '$translate', 'Tags.TagsService', 'ObjectService'
+    , 'Object.LookupService', '$window', 'uiGridExporterConstants', '$translate', 'Tags.TagsService', 'ObjectService', 'Search.AutoSuggestService'
     , function (SearchService, SearchQueryBuilder, $q, Util
-        , ObjectLookupService, $window, uiGridExporterConstants, $translate, TagsService, ObjectService) {
+        , ObjectLookupService, $window, uiGridExporterConstants, $translate, TagsService, ObjectService, AutoSuggestService) {
         return {
             restrict: 'E',              //match only element name
             scope: {
@@ -152,34 +152,10 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                 scope.loadTags = function loadTags(query) {
                     var deferred = $q.defer();
                     var autoSuggestObjectType = scope.objectType;
-                    autoSuggest(query, "QUICK", autoSuggestObjectType).then(function (tags) {
+                    AutoSuggestService.autoSuggest(query, "QUICK", autoSuggestObjectType).then(function (tags) {
                         deferred.resolve(tags);
                     });
                     return deferred.promise;
-                }
-
-                function autoSuggest(autoSuggestQuery, core, autoSuggestObjectType) {
-                    var deferred = $q.defer();
-                    if (autoSuggestObjectType != null) {
-                        SearchService.queryAutoSuggestSearch({
-                                query: autoSuggestQuery,
-                                filter: "object_type_s:" + autoSuggestObjectType,
-                                core: core
-                            },
-                            function (res) {
-                                deferred.resolve(res.response.docs);
-                            });
-                        return deferred.promise;
-                    } else {
-                        SearchService.queryAutoSuggestSearchNoFilters({
-                                query: autoSuggestQuery,
-                                core: core
-                            },
-                            function (res) {
-                                deferred.resolve(res.response.docs);
-                            });
-                        return deferred.promise;
-                    }
                 }
 
                 scope.queryTypeahead = function (typeaheadQuery) {
@@ -191,13 +167,13 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                             if (typeaheadQuery.length >= 2) {
                                 var deferred = $q.defer();
                                 if (scope.objectType !== 'undefined') {
-                                    autoSuggest(typeaheadQuery, "QUICK", scope.objectType).then(function (res) {
+                                    AutoSuggestService.autoSuggest(typeaheadQuery, "QUICK", scope.objectType).then(function (res) {
                                         var results = _.pluck(res, scope.typeAheadColumn);
                                         deferred.resolve(results);
                                     });
                                     return deferred.promise;
                                 } else {
-                                    autoSuggest(typeaheadQuery, "QUICK", null).then(function (res) {
+                                    AutoSuggestService.autoSuggest(typeaheadQuery, "QUICK", null).then(function (res) {
                                         var results = _.pluck(res, scope.typeAheadColumn);
                                         deferred.resolve(results);
                                     });
