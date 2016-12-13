@@ -63,37 +63,6 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
                     $scope.gridOptions.data = tasks;
                     $scope.gridOptions.totalItems = data.response.numFound;
 
-                    for (var i = 0; i < tasks.length; i++) {
-                        var task = tasks[i];
-                        task.acm$_taskOutcomes = [{
-                            id: "noop",
-                            value: $translate.instant("common.select.option.none")
-                        }];
-                        task.acm$_taskOutcome = {
-                            id: "noop",
-                            value: $translate.instant("common.select.option.none")
-                        };
-                        task.acm$_taskActionDone = true;
-
-                        if (task.status_s === "ACTIVE" && task.adhocTask_b) {
-                            task.acm$_taskOutcomes.push({id: "complete", value: "Complete"});
-                            task.acm$_taskOutcomes.push({id: "delete", value: "Delete"});
-                            task.acm$_taskActionDone = false;
-                        }
-                        else if (task.status_s === "ACTIVE" && !task.adhocTask_b && !Util.isArrayEmpty(task.outcome_value_ss)) {
-                            var availableOutcomes = Util.goodArray(task.outcome_value_ss);
-                            if (availableOutcomes !== undefined && availableOutcomes.length > 0) {
-                                for (var j = 0; j < availableOutcomes.length; j++) {
-                                    var outcome = {
-                                        id: Util.goodValue(availableOutcomes[j]),
-                                        value: Util.goodValue(availableOutcomes[j])
-                                    };
-                                    task.acm$_taskOutcomes.push(outcome);
-                                }
-                            }
-                            task.acm$_taskActionDone = (1 >= availableOutcomes.length); //1 for '(Select One)'
-                        }
-                    }
                     return data;
                 });
             }
