@@ -14,7 +14,16 @@
             "adminuser": {
                 "username": "ann-acm",
                 "password": "AcMd3v$"
+            },
+            "notSupervisorNotInOwningGroup": {
+                "username": "sally-acm",
+                "password": "AcMd3v$"
+            },
+            "notSupervisorInOwningGroup" : {
+                "username": "ian-acm",
+                "password": "AcMd3v$"
             }
+
         }
     },
     "basepage": {
@@ -57,7 +66,9 @@
             "docViewNotesLink": "Notes",
             "docViewAddNoteButton":".//button[@ng-disabled='notesInit.isReadOnly']",
             "saveButton": "Save",
-            "noteColumnValue": ".ui-grid-cell-contents.ng-binding.ng-scope"
+            "noteColumnValue": ".ui-grid-cell-contents.ng-binding.ng-scope",
+            "restrictCheckbox": "restricted",
+            "restrictCheckboxDisabled": ".//input[@ng-model='restricted'][@disabled='disabled']"
 
         },
         "data": {
@@ -393,7 +404,8 @@
             "closeComplaintButton": ".//a[@ui-sref='frevvo.close-complaint(closeParams)']",
             "complaintDispositionDDListBox": ".//div[@cname='disposition']/div/input[1]",
             "closeComplaintDescription": ".note-editable",
-            "fadeElementComplaint":".//div[@class='modal-backdrop fade in']"
+            "fadeElementComplaint":".//div[@class='modal-backdrop fade in']",
+            "complaintTitleLink": ".//a[@editable-text='objectInfo.complaintTitle']"
         },
         "data": {
             "firstName": "ComplaintFirstName",
@@ -680,6 +692,15 @@
         }
 
 
+    },
+    "notificationPage": {
+        "locators": {
+            "notificationCol" : "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid"
+
+        },
+        "data":{
+
+        }
     }
 }
 

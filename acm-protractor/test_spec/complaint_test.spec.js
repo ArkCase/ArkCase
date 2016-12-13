@@ -2,7 +2,6 @@ var logger = require('../log');
 var utils = require('../util/utils.js');
 var complaintPage = require('../Pages/complaint_page.js');
 var userPage = require('../Pages/user_profile_page.js');
-var authentication = require('../authentication.js');
 var taskPage = require('../Pages/task_page.js');
 var Objects = require('../json/Objects.json');
 var loginPage = require('../Pages/login_page.js');
@@ -171,8 +170,12 @@ describe('Create new complaint ', function() {
 
 
     });
+});
 
 
-})
+
+
+
+
 
 

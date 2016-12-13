@@ -366,8 +366,7 @@ var BasePage = function() {
                     }
 
                     var el = element(by.xpath(completexPath));
-                    //browser.wait(EC.visibilityOf(element(by.xpath(completexPath))), 30000).then(function () {
-                        el.click();
+                    el.click();
 
                 });
 
@@ -1374,156 +1373,18 @@ var BasePage = function() {
         this.selectDocument(doctype);
         return this;
     };
-<<<<<<< HEAD
-    this.insertDetailsTextAreaText = function(details) {
-        browser.wait(EC.presenceOf(element(by.xpath(Objects.taskspage.locators.detailsTextArea))), 30000).then(function() {
-            browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.detailsTextArea))), 30000).then(function() {
-                browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.taskspage.locators.detailsTextArea))), 30000).then(function() {
-                    detailsTextArea.clear();
-                    detailsTextArea.sendKeys(details);
-                    return this;
-                });
-            });
-        });
-    };
-    this.clickSaveDetailsButton = function() {
-        detailsSaveBtn.click();
-        return this;
-    };
-    this.clickRefreshButton = function() {
-        refreshBtn.click();
-        return this;
-    };
-    this.returnDetailsTextArea = function() {
-        return detailsTextArea.getText();
-    };
-    this.clickInsertLinkInDetails = function() {
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.detailsLinkBtn))), 30000).then(function() {
-            detailsLinkBtn.click();
-            return this;
-        });
-    };
-    this.returnInsertLinkTitle = function() {
-        return insertLinkTitle.getText();
-    };
-    this.insertDetailsTextAreaLink = function(text, url) {
-        insertLinkText.click();
-        insertLinkText.sendKeys(text);
-        insertLinkUrl.clear();
-        insertLinkUrl.sendKeys(url);
-        insertLinkBtn.click();
-    };
-    this.clickDetailsAddPicture = function() {
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.detailsPicture))), 30000).then(function() {
-            detailsPicture.click();
-            return this;
-        })
-    };
-    this.uploadPicture = function() {
-        browseButton.click().then(function() {
-            util.uploadPng();
-        });
-        return this;
-    };
-    this.returnDetailsUploadedImage = function() {
-        return detailsUploadedImage.isDisabled();
-    };
 
-    this.navigateToPage = function(link) {
+
+    this.navigateToPage = function(link){
         xPathStr = ".//a[@title='";
         var completexPath = xPathStr + link + "']";
         var el = element(by.xpath(completexPath));
-        el.click();
-        return this;
-    }
-    this.clickFullNameLink = function() {
-        browser.wait(EC.visibilityOf(element(by.css('.fullname'))), 30000).then(function() {
-            browser.wait(EC.elementToBeClickable(element(by.css('.fullname'))), 30000).then(function() {
-                fullnameLink.click();
-            });
+        browser.wait(EC.visibilityOf(element(by.xpath(completexPath))), 30000).then(function () {
+            el.click();
         });
         return this;
-    };
-    this.clickLogout = function() {
-        browser.wait(EC.visibilityOf(element(by.linkText("Logout"))), 30000).then(function() {
-            logoutLink.click().then(function() {
-                browser.ignoresynchronization = true;
-                expect(logoutSucesfullMessage.getText()).toEqual('You have been logged out successfully.');
-            })
-        });
-        return this;
-    };
-    this.Logout = function() {
-        this.clickFullNameLink();
-        this.clickLogout();
-        return this;
-    };
-    this.clickCheckin = function() {
-        checkIn.click();
-        return this;
-    };
-    this.clickCheckOut = function() {
-        checkOut.click();
-        return this;
-    };
-    this.clickCancelEditing = function() {
-        cancelEditing.click();
-        return this;
-    };
-    this.rightClickDocument = function() {
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.docTitle))), 30000).then(function() {
-            docTitle.click();
-            browser.actions().click(protractor.Button.RIGHT).perform();
-        });
-        return this;
-
     };
 
-    this.clickFullNameLink = function() {
-        browser.wait(EC.visibilityOf(element(by.css('.fullname'))), 30000).then(function() {
-            browser.wait(EC.elementToBeClickable(element(by.css('.fullname'))), 30000).then(function() {
-                fullnameLink.click();
-            });
-        });
-        return this;
-    };
-    this.clickLogout = function() {
-        browser.wait(EC.visibilityOf(element(by.linkText("Logout"))), 30000).then(function() {
-            logoutLink.click().then(function() {
-                browser.ignoresynchronization = true;
-                browser.sleep(10000);
-                expect(logoutSucesfullMessage.getText()).toEqual('You have been logged out successfully.');
-            })
-        });
-        return this;
-    };
-    this.Logout = function() {
-        this.clickFullNameLink();
-        this.clickLogout();
-        return this;
-    };
-    this.clickCheckin = function() {
-        checkIn.click();
-        return this;
-    };
-    this.clickCheckOut = function() {
-        checkOut.click();
-        return this;
-    };
-    this.clickCancelEditing = function() {
-        cancelEditing.click();
-        return this;
-    };
-    this.rightClickDocument = function() {
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.docTitle))), 30000).then(function() {
-            docTitle.click();
-            browser.actions().click(protractor.Button.RIGHT).perform();
-        });
-        return this;
-
-    };
-    this.validateChekoutEnabled = function() {
-=======
 	this.insertDetailsTextAreaText = function(details) {
 		browser.wait(EC.presenceOf(element(by.xpath(Objects.taskspage.locators.detailsTextArea))), 30000).then(function() {
 			browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.detailsTextArea))), 30000).then(function() {
@@ -1578,15 +1439,7 @@ var BasePage = function() {
 		return detailsUploadedImage.isDisabled();
 	};
 
-	this.navigateToPage = function(link){
-		xPathStr = ".//a[@title='";
-		var completexPath = xPathStr + link + "']";
-		var el = element(by.xpath(completexPath));
-		browser.wait(EC.visibilityOf(element(by.xpath(completexPath))), 30000).then(function () {
-            el.click();
-        });
-		return this;
-	}
+
 	this.clickFullNameLink = function () {
 		browser.wait(EC.visibilityOf(element(by.css('.fullname'))), 30000).then(function () {
 			browser.wait(EC.elementToBeClickable(element(by.css('.fullname'))), 30000).then(function () {
@@ -1599,9 +1452,8 @@ var BasePage = function() {
 		browser.wait(EC.visibilityOf(element(by.linkText("Logout"))), 30000).then(function () {
 			logoutLink.click().then(function () {
 				browser.ignoresynchronization = true;
-				browser.driver.wait(EC.visibilityOf(element(by.css(".alert.alert-success"))), 30000).then(function () {
                     expect(logoutSucesfullMessage.getText()).toEqual('You have been logged out successfully.');
-                });
+
 			})
 		});
 		return this;
@@ -1802,6 +1654,7 @@ var BasePage = function() {
                 return noteColumnValue.getText();
             });
         })
+    };
 
     this.clickEditAssigneeBtn = function() {
 
