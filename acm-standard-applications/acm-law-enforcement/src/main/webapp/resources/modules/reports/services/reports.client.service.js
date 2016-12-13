@@ -44,13 +44,7 @@ angular.module('reports').factory('Reports.BuildUrl', ['$sce', 'Util.DateService
                     + "&userid=" + params.reportsUser
                     + "&password=" + params.reportsPassword;
                 if (params.stateSelected) {
-                    if (params.reportSelected) {
-                        if (params.reportSelected.includes("COMPLAINT")) {
-                            reportUrl += "&complaintStatus=" + params.stateSelected;
-                        } else if (params.reportSelected.includes("CASE")) {
-                            reportUrl += "&caseStatus=" + params.stateSelected;
-                        }
-                    }
+                    reportUrl += "&status=" + params.stateSelected;
                 }
                 return $sce.trustAsResourceUrl(reportUrl);
             },
