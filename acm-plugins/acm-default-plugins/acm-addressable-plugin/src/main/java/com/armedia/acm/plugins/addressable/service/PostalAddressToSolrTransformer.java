@@ -60,6 +60,8 @@ public class PostalAddressToSolrTransformer implements AcmObjectToSolrDocTransfo
 
         addrDoc.setName(name.toString());
 
+        addrDoc.setTitle_parseable(name.toString());
+
         /** Additional properties for full names instead of ID's */
         AcmUser creator = getUserDao().quietFindByUserId(address.getCreator());
         if (creator != null)
