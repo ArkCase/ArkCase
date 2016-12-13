@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$stateParams', '$sce', '$q', '$modal', 'ConfigService'
+angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state', '$stateParams', '$sce', '$q', '$modal', 'ConfigService'
     , 'UtilService', 'TicketService', 'LookupService', 'Frevvo.FormService', 'Task.NewTaskService', 'Authentication', 'Util.DateService', 'Dialog.BootboxService'
-    , function ($scope, $stateParams, $sce, $q, $modal, ConfigService, Util, TicketService
+    , function ($scope, $state, $stateParams, $sce, $q, $modal, ConfigService, Util, TicketService
         , LookupService, FrevvoFormService, TaskNewTaskService, Authentication, UtilDateService, DialogService) {
 
         $scope.config = null;
@@ -17,7 +17,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
 
         Authentication.queryUserInfo().then(
             function (userInfo) {
-            	
+
                 $scope.userFullName = userInfo.fullName;
                 $scope.userId = userInfo.userId;
                 return userInfo;
@@ -32,8 +32,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             $scope.userName = $scope.userFullName;
             $scope.config.data.assignee = $scope.userId;
             $scope.config.data.taskStartDate = new Date();
-            var defaultPriority = $scope.config.priority[1].id;
-            $scope.config.data.priority = defaultPriority;
+            $scope.config.data.priority = $scope.config.priority[1].id;
             $scope.config.data.percentComplete = 0;
 
 
@@ -53,29 +52,31 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
         $scope.saved = false;
 
         $scope.saveNewTask = function () {
-            TaskNewTaskService.saveAdHocTask($scope.config.data).then(function(data){
-            	$scope.config.data.dueDate = UtilDateService.dateToIso($scope.config.data.dueDate);
-            	$scope.saved = true;
-            }, function(err) {
-            	if(!Util.isEmpty(err)){
-    				var statusCode = Util.goodMapValue(err, "status");
-    				var message = Util.goodMapValue(err, "data.message"); 			
-    				
-    				if(statusCode == 400){
-    					DialogService.alert(message);
-    				}
-    			}
+            $scope.saved = true;
+            $scope.config.data.dueDate = UtilDateService.dateToIso($scope.config.data.dueDate);
+            TaskNewTaskService.saveAdHocTask($scope.config.data).then(function (data) {
+                $scope.saved = false;
+                if ($stateParams.returnState != null && $stateParams.returnState != ":returnState") {
+                    $state.go($stateParams.returnState, {type: $stateParams.parentType, id: $stateParams.parentId});
+                } else {
+                    $state.go('tasks.main', {type: 'ADHOC', id: data.taskId});
+                }
+            }, function (err) {
+                $scope.saved = false;
+                if (!Util.isEmpty(err)) {
+                    var statusCode = Util.goodMapValue(err, "status");
+                    var message = Util.goodMapValue(err, "data.message");
+
+                    if (statusCode == 400) {
+                        DialogService.alert(message);
+                    }
+                }
             });
         };
-        
-        $scope.updateAssocParentType = function() {
-    	   if ($scope.config.data.attachedToObjectType !== 'null') {
-    		   $scope.isAssocType = true;
-    	   }
-    	   else {
-    		   $scope.isAssocType = false;
-    	   }
-    	}
+
+        $scope.updateAssocParentType = function () {
+            $scope.isAssocType = $scope.config.data.attachedToObjectType !== 'null';
+        };
 
         $scope.userSearch = function () {
             var modalInstance = $modal.open({
