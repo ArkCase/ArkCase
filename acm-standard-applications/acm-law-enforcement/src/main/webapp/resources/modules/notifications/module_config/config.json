@@ -63,6 +63,8 @@
       "filter": "\"Object Type\": NOTIFICATION & \"Owner\": userId",
       "filterName": "Object Type",
       "reportFileName": "notifications",
+      "autoSuggestObjectType": "NOTIFICATION",
+      "isAutoSuggestActive": true,
       "hiddenFacets": [
         "Owner"
       ]

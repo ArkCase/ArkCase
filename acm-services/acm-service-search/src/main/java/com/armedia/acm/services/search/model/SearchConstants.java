@@ -7,13 +7,14 @@ public interface SearchConstants
 {
     String CATCH_ALL_QUERY = "catch_all:";
 
+    String CORE_QUICK = "QUICK";
+    String CORE_ADVANCED = "ADVANCED";
+
     String DATE_FACET_PRE_KEY = "facet.date.";
     String FACET_PRE_KEY = "facet.";
 
     String FACET_FILED = "facet.field=";
-    String FACET_FILED_WITH_AND_AS_A_PREFIX = "&facet.field=";
     String FACET_QUERY = "facet.query=";
-    String FACET_QUERY_WITH_AND_AS_A_PREFIX = "&facet.query=";
 
     String SOLR_FILTER_QUERY_ATTRIBUTE_NAME = "&fq=";
     String SOLR_FACET_NAME_CHANGE_COMMAND = "!key=";
@@ -69,7 +70,6 @@ public interface SearchConstants
      */
     String ISO_DATE_FORMAT = "yyyy-MM-dd";
 
-    String SORT_ASC = "ASC";
     String SORT_DESC = "DESC";
 
     /**
@@ -97,8 +97,6 @@ public interface SearchConstants
     String EXPORT_FIELDS = "export.fields";
 
     String SEPARATOR_COMMA = ",";
-
-    String SEPARATOR_SPACE = " ";
 
     Integer MAX_RESULT_ROWS = 100000;
 }
