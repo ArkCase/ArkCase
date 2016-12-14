@@ -1,63 +1,60 @@
 'use strict';
 
-angular.module('cases').controller('Tasks.TagsModalController', ['$scope', '$q', '$modalInstance', 'ConfigService', 'Object.TagsService', 'Tags.TagsService', 'MessageService', '$translate',
-    function ($scope, $q, $modalInstance, ConfigService, ObjectTagsService, TagsService, messageService, $translate) {
+angular.module('cases').controller('Tasks.TagsModalController', ['$scope', '$q', '$modalInstance', 'ConfigService', 'Object.TagsService', 'Tags.TagsService', 'MessageService', '$translate', 'Search.AutoSuggestService',
+    function ($scope, $q, $modalInstance, ConfigService, ObjectTagsService, TagsService, messageService, $translate, AutoSuggestService) {
 
-	    $scope.tags = [];
-		$scope.modalInstance = $modalInstance;   
-		$scope.checkTag = checkTag;
+        $scope.tags = [];
+        $scope.modalInstance = $modalInstance;
+        $scope.checkTag = checkTag;
         $scope.loadTags = loadTags;
 
-		ConfigService.getComponentConfig("tasks", "tags").then(function (componentConfig) {
-	        $scope.config = componentConfig;
-	        return componentConfig;
-	    });
-		
-		var promiseTypes = ObjectTagsService.getTags().then(
-	            function (tags) {
-	                $scope.createdTags = tags;
-	                return tags;
-	            }
-	        );
+        ConfigService.getComponentConfig("tasks", "tags").then(function (componentConfig) {
+            $scope.config = componentConfig;
+            return componentConfig;
+        });
+
+        var promiseTypes = ObjectTagsService.getTags().then(
+            function (tags) {
+                $scope.createdTags = tags;
+                return tags;
+            }
+        );
 
         function checkTag(selectedTag) {
-        	// Check if tag is created. If not, create new tag
-        	if(!selectedTag.object_id_s) {
-        		var tagsCreated = _.filter($scope.createdTags, function (tag) {
-                    return tag.tagName == selectedTag.tags_s || tag.tagDescription == selectedTag.tags_s
-                        || tag.tagText == selectedTag.tags_s;
+            // Check if tag is created. If not, create new tag
+            if (!selectedTag.id) {
+                var tagsCreated = _.filter($scope.createdTags, function (tag) {
+                    return tag.tagName == selectedTag.title_parseable || tag.tagDescription == selectedTag.title_parseable
+                        || tag.tagText == selectedTag.title_parseable;
                 });
-        		if (tagsCreated.length == 0) {
-        		ObjectTagsService.createTag(selectedTag.tags_s, selectedTag.tags_s, selectedTag.tags_s).then(
+                if (tagsCreated.length == 0) {
+                    ObjectTagsService.createTag(selectedTag.title_parseable, selectedTag.title_parseable, selectedTag.title_parseable).then(
                         function (tagCreated) {
                             //add newly created tag 
-                        	_.remove($scope.tags, function(tag){
-                				return selectedTag.tags_s == tag.tags_s;
-                			});
-                        	var tagToAdd = angular.copy(tagCreated);
-							tagToAdd.tags_s = selectedTag.tags_s;
-							$scope.tags.push(tagToAdd);
+                            _.remove($scope.tags, function (tag) {
+                                return selectedTag.title_parseable == tag.title_parseable;
+                            });
+                            var tagToAdd = angular.copy(tagCreated);
+                            tagToAdd.title_parseable = selectedTag.title_parseable;
+                            $scope.tags.push(tagToAdd);
                         }
                     )
-        		}
-        		else {
-        			messageService.info($translate.instant('tasks.comp.tags.message.tagExists'));
-        			_.remove(tagsCreated, function(){
-        				return selectedTag;
-        			});
-        			return false;
-        		}
-        	}
-				return true;
-        }     
+                }
+                else {
+                    messageService.info($translate.instant('tasks.comp.tags.message.tagExists'));
+                    _.remove(tagsCreated, function () {
+                        return selectedTag;
+                    });
+                    return false;
+                }
+            }
+            return true;
+        }
 
         // Load tags information
         function loadTags(query) {
-        	var deferred = $q.defer();
-            TagsService.searchTags({
-                query: query,
-                filter: 'fq=' + $scope.config.filters
-            }).then(function (tags) {
+            var deferred = $q.defer();
+            AutoSuggestService.autoSuggest(query, "QUICK", $scope.config.autoSuggestObjectType).then(function (tags) {
                 deferred.resolve(tags);
             });
             return deferred.promise;

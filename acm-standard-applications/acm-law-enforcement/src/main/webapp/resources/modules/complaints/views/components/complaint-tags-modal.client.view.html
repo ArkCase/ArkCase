@@ -6,15 +6,15 @@
 </div>
 
 <div class="modal-body">
-    	<label translate>complaints.comp.tags.modal.search</label>
-        <tags-input
-                ng-model="tags"
-                display-property="tags_s"
-                key-property="id"
-                replace-spaces-with-dashes="false"
-                on-tag-adding="checkTag($tag)">
-            <auto-complete min-length="1" max-results-to-show="10" source="loadTags($query)"></auto-complete>
-		</tags-input>
+    <label translate>complaints.comp.tags.modal.search</label>
+    <tags-input
+            ng-model="tags"
+            display-property="title_parseable"
+            key-property="id"
+            replace-spaces-with-dashes="false"
+            on-tag-adding="checkTag($tag)">
+        <auto-complete min-length="2" max-results-to-show="10" source="loadTags($query)"></auto-complete>
+    </tags-input>
 </div>
 <div class="modal-footer">
     <button class="btn btn-secondary" ng-click="onClickCancel()">
