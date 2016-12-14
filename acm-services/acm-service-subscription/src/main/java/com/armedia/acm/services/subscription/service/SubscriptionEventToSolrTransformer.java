@@ -49,10 +49,10 @@ public class SubscriptionEventToSolrTransformer implements AcmObjectToSolrDocTra
             title = (String) getSubscriptionEventPlugin().getPluginProperties().get(in.getEventType());
         } else if (in.getEventType() != null)
         {
-            title = in.getEventType();
+            title = "Subscription on " + in.getEventObjectType() + ":" + in.getEventObjectId() + " - " + in.getEventObjectName();
         } else
         {
-            title = "";
+            title = "Subscription on " + in.getEventObjectType() + ":" + in.getEventObjectId() + " - " + in.getEventObjectName();
         }
         solr.setTitle_parseable(title);
 
@@ -117,7 +117,7 @@ public class SubscriptionEventToSolrTransformer implements AcmObjectToSolrDocTra
             title = (String) getSubscriptionEventPlugin().getPluginProperties().get(in.getEventType());
         } else if (in.getEventType() != null)
         {
-            title = in.getEventType();
+            title = "Subscription on " + in.getEventObjectType() + ":" + in.getEventObjectId() + " - " + in.getEventObjectName();
         } else
         {
             title = "";

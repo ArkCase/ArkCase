@@ -1,6 +1,5 @@
 var logger = require('../log');
 var userPage = require('../Pages/user_profile_page.js');
-var authentication = require('../authentication.js');
 var loginPage = require('../Pages/login_page.js');
 var robot = require(process.env['USERPROFILE'] + '/node_modules/robotjs');
 var utils = require('../util/utils.js');

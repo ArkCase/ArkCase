@@ -24,7 +24,7 @@ var searchForUser = element(by.xpath(Objects.casepage.locators.searchForUser));
 var goBtn = element(by.xpath(Objects.casepage.locators.goBtn));
 var addBtn = element(by.xpath(Objects.casepage.locators.addBtn));
 var searchedUser = element(by.xpath(Objects.casepage.locators.searchedUser));
-var newBtn = element(by.xpath(Objects.basepage.locators.newButton));
+
 
 var ComplaintPage = function() {
 
@@ -201,6 +201,24 @@ var ComplaintPage = function() {
         });
         return this;
     };
+    this.waitForComplaintTitle = function () {
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.complaintPage.locators.complaintTitleLink))), 30000).then(function () {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.complaintTitleLink))), 30000);
+        })
+    };
+    this.editAssignee = function(assignee) {
+
+        assigneeLink.click().then(function() {
+            browser.wait(EC.presenceOf(element(by.xpath("//*[@class='clearfix']/div[3]/div[1]/div/form/div/select/option[8]"))), 5000).then(function() {
+                assigneeDropDown.$('[value="string:' + assignee + '"]').click().then(function() {
+                    assigneeBtn.click();
+                });
+
+            });
+        });
+        return this;
+    }
+
 
 };
 ComplaintPage.prototype = basePage;

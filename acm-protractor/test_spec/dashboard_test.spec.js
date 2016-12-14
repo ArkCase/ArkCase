@@ -1,6 +1,5 @@
 var logger = require('../log');
 var dashPage = require('../Pages/dashboard_page.js');
-var authentication = require('../authentication.js');
 var loginPage = require('../Pages/login_page.js');
 var Objects = require('../json/Objects.json');
 var flag = false;
