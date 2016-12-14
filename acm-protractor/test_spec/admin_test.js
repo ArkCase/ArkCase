@@ -3,6 +3,7 @@ var utils = require('../util/utils.js');
 var adminPage = require('../Pages/admin_page.js');
 var Objects = require('../json/Objects.json');
 var loginPage = require('../Pages/login_page.js');
+var Users = require('../json/Users.json');
 var flag = false;
 
 function testAsync(done) {
@@ -32,19 +33,31 @@ describe('Validate that group in which is logged in user is in authorized group'
     });
 
     it('should validate that logged in user group is in authorized groups in case summary report configuration', function () {
-        adminPage.navigateToPage("Admin").clickSubLink("Reports Configuration").ChooseReport("Case Summary Report");
-        expect(adminPage.returnAuthorized()).toContain("ACM_INVESTIGATOR_DEV");
+        var groups = utils.readGroupsFromJson("samuel-acm");
+        for (var i in groups)
+        {
+            expect(adminPage.returnAuthorized()).toContain(groups[i]);
+        }
     });
 
     it('should validate that logged in user group is in authorized groups in complaint disposition count report configuration', function () {
         adminPage.navigateToPage("Admin").clickSubLink("Reports Configuration").ChooseReport("ComplaintDispositionCount");
-        expect(adminPage.returnAuthorized()).toContain("ACM_INVESTIGATOR_DEV");
+        var groups = utils.readGroupsFromJson("samuel-acm");
+        for (var i in groups)
+        {
+            expect(adminPage.returnAuthorized()).toContain(groups[i]);
+        }
     });
 
     it('should validate that logged in user group is in authorized groups in complaint report configuration', function () {
         adminPage.navigateToPage("Admin").clickSubLink("Reports Configuration").ChooseReport("Complaint Report");
-        expect(adminPage.returnAuthorized()).toContain("ACM_INVESTIGATOR_DEV");
+        var groups = utils.readGroupsFromJson("samuel-acm");
+        for (var i in groups)
+        {
+           expect(adminPage.returnAuthorized()).toContain(groups[i]);
+        }
     });
+
 
 });
 

@@ -3,6 +3,7 @@ var basePage = require('./base_page.js');
 var EC = protractor.ExpectedConditions;
 var SelectWrapper = require('../util/select-wrapper.js');
 var waitHelper = require('../util/waitHelper.js');
+var util = require('../util/utils.js');
 var chooseReportListBox = new SelectWrapper(by.model(Objects.adminPage.locators.chooseReportListBox));
 var notAuthorizedListBox = new SelectWrapper(by.model(Objects.adminPage.locators.notAuthorizedListBox));
 var authorizedListBox = element(by.model(Objects.adminPage.locators.authorizedListBox));
@@ -26,8 +27,7 @@ var AdminPage = function() {
     };
     this.returnAuthorized = function () {
         return values = authorizedListBox.all(by.tagName('option')).getAttribute('label');
-    }
-
+    };
 };
 AdminPage.prototype = basePage;
 module.exports = new AdminPage();
