@@ -28,6 +28,7 @@ public class TimeForm extends FrevvoForm {
 	private String user;
 	private List<String> userOptions;	
 	private Date period;
+	private Date periodHidden;
 	private List<TimeItem> items;
 	private String status;
 	private List<String> statusOptions;
@@ -72,7 +73,19 @@ public class TimeForm extends FrevvoForm {
 		this.period = period;
 	}
 	
-	@XmlElement(name="timeTableItem")
+	@XmlElement(name="periodHidden")
+    @XmlJavaTypeAdapter(value=DateFrevvoAdapter.class)
+	public Date getPeriodHidden()
+    {
+        return periodHidden;
+    }
+
+    public void setPeriodHidden(Date periodHidden)
+    {
+        this.periodHidden = periodHidden;
+    }
+
+    @XmlElement(name="timeTableItem")
 	public List<TimeItem> getItems() {
 		return items;
 	}
