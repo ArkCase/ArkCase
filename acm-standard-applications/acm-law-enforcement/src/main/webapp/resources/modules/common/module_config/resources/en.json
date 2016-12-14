@@ -222,5 +222,9 @@
       "title": "Title",
       "id": "Username"
     }
+  },
+  "common.string": {
+    "withId": "with ID",
+    "wasCreated": "was created."
   }
 }
