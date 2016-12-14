@@ -114,6 +114,7 @@ public class TimeService extends FrevvoFormChargeAbstractService
         }
 
         form.setPeriod(periodDate);
+        form.setPeriodHidden(periodDate);
         form.setUser(userId);
         form.setTotals(Arrays.asList(new String()));
 
