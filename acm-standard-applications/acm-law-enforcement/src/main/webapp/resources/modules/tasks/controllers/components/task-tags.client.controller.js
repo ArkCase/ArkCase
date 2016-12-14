@@ -37,6 +37,8 @@ angular.module('tasks').controller('Tasks.TagsController', ['$scope', '$q', '$st
 
             modalInstance.result.then(function (tags) {
                 _.forEach(tags, function (tag) {
+                    tag.object_id_s = tag.id.split("-")[0];
+                    tag.tags_s = tag.title_parseable;
                     if (tag.id) {
                         if (tag.object_id_s) {
                             var tagsFound = _.filter($scope.tags, function (tagAss) {
@@ -96,6 +98,13 @@ angular.module('tasks').controller('Tasks.TagsController', ['$scope', '$q', '$st
             if (Util.goodPositive(currentObjectId, false)) {
                 var promiseQueryTags = ObjectTagsService.getAssociateTags(currentObjectId, ObjectService.ObjectTypes.TASK);
                 $q.all([promiseQueryTags]).then(function (data) {
+
+                    _.forEach(data[0], function (tag) {
+                        var tmp = tag.tagName;
+                        tag.tagName = tag.tagText;
+                        tag.tagText = tmp;
+                    });
+
                     $scope.tags = data[0];
                     $scope.gridOptions = $scope.gridOptions || {};
                     $scope.gridOptions.data = $scope.tags;

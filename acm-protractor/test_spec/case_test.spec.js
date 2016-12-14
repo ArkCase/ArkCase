@@ -1,7 +1,6 @@
 var logger = require('../log');
 var casePage = require('../Pages/case_page.js');
 var userPage = require('../Pages/user_profile_page.js');
-var authentication = require('../authentication.js');
 var Objects = require('../json/Objects.json');
 var taskPage = require('../Pages/task_page.js');
 var utils = require('../util/utils.js');

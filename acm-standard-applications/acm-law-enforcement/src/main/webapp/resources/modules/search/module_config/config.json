@@ -19,7 +19,8 @@
       "type": "grid",
       "enableFiltering": false,
       "emptySearch": false,
-      "hideTypeahead": true,
+      "typeAheadColumn": "title_parseable",
+      "hideTypeahead": false,
       "columnDefs": [
         {
           "name": "object_id_s",
@@ -73,7 +74,8 @@
       "start": 0,
       "filter": "",
       "filterName": "",
-      "reportFileName": "search"
+      "reportFileName": "search",
+      "isAutoSuggestActive": true
     }
   ]
 }

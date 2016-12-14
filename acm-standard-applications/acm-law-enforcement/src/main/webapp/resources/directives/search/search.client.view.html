@@ -9,7 +9,8 @@
                     <ul class="list-unstyled">
                         <li ng-repeat="field in facet.fields">
                             <div class="checkbox" ng-if="field.count > 0">
-                                <label><input type="checkbox" ng-model="currentFacetSelection[field.name.nameValue + '|' + facet.name]"
+                                <label><input type="checkbox"
+                                              ng-model="currentFacetSelection[field.name.nameValue + '|' + facet.name]"
                                               ng-click="selectFacet($event.target.checked, facet.name, field.name.nameValue)"/>
                                     {{field.name.nameFiltered | mapKeyValue: customization.labels}}
                                     <span class="pull-right label label-info">{{field.count}}</span></label>
@@ -24,56 +25,46 @@
         <div class="module-header">
             <div class="input-group">
                 <input
-                	ng-hide= "isMultiFilter"
-                	type="text"
-                    autofocus
-                    class="form-control input-md"
-                    ng-keyup="keyUp($event)"
-                    ng-model="searchQuery"
-                    typeahead="result for result in queryTypeahead($viewValue)"
-                    placeholder="{{searchPlaceholder}}"
-                    typeahead-wait-ms="200"
-                    typeahead-loading="loadingResults"
-                    typeahead-no-results="noResults"
+                        type="text"
+                        autofocus
+                        class="form-control input-md"
+                        ng-keyup="keyUp($event)"
+                        ng-model="searchQuery"
+                        contenteditable="true"
+                        typeahead="result for result in queryTypeahead($viewValue) | limitTo:10 "
+                        placeholder="{{searchPlaceholder}}"
+                        typeahead-on-select="onSelect($item, $model, $label)"
+                        typeahead-loading="loadingResults"
+                        typeahead-no-results="noResults"
+                        typeahead-focus-first="false"
+                        typeahead-min-length="2"
                 >
-                <tags-input
-                	ng-if= "isMultiFilter"
-                    ng-model="searchQuery"
-                    placeholder="{{searchPlaceholder}}"
-                    display-property="tag_token_lcs"
-                    key-property="id"
-                    on-tag-adding="checkTag($tag)"
-                    on-tag-removed="onTagRemoved($tag)"
-                    replace-spaces-with-dashes="false"
-                    add-from-autocomplete-only="true"
-                >
-                <auto-complete min-length="1" max-results-to-show="10" source="loadTags($query)"></auto-complete>
-                </tags-input>
                 <span class="input-group-btn">
-                    <button class="btn btn-md btn-primary" type="button" ng-click="queryExistingItems()">{{searchBtn}}</button>
+                    <button class="btn btn-md btn-primary" type="button"
+                            ng-click="queryExistingItems()">{{searchBtn}}</button>
                 </span>
             </div>
         </div>
         <div class="well-sm">
-        <div class="panel panel-success panel-grid" ng-if="gridOptions.data">
-            <div class="panel-heading">
-                <div class="panel-title">{{gridOptions.data.length > 0 ? 'Results' : 'No Results'}}
-                    <div class="pull-right" ng-if="gridOptions.data.length > 0">
-                        <a class="btn btn-xs btn-default" type="button" ng-href="{{exportUrl}}">{{ exportBtn }}</a>
+            <div class="panel panel-success panel-grid" ng-if="gridOptions.data">
+                <div class="panel-heading">
+                    <div class="panel-title">{{gridOptions.data.length > 0 ? 'Results' : 'No Results'}}
+                        <div class="pull-right" ng-if="gridOptions.data.length > 0">
+                            <a class="btn btn-xs btn-default" type="button" ng-href="{{exportUrl}}">{{ exportBtn }}</a>
+                        </div>
                     </div>
                 </div>
+                <div ui-grid="gridOptions"
+                     ng-if="gridOptions.data.length"
+                     adjust-table-height="gridOptions.data.length"
+                     ui-grid-resize-columns
+                     ui-grid-pagination
+                     ui-grid-selection
+                     ui-grid-auto-resize
+                     ui-grid-exporter
+                     class="grid">
+                </div>
             </div>
-            <div ui-grid="gridOptions"
-                 ng-if="gridOptions.data.length"
-                 adjust-table-height="gridOptions.data.length"
-                 ui-grid-resize-columns
-                 ui-grid-pagination
-                 ui-grid-selection
-                 ui-grid-auto-resize
-                 ui-grid-exporter
-                 class="grid">
-            </div>
-        </div>
         </div>
     </div>
 </div>

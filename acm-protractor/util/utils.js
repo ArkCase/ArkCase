@@ -6,6 +6,7 @@ var helpers = function helpers() {
     var uplaodPathDocx = home + '\\.arkcase\\seleniumTests\\filesForUpload\\ArkCaseTesting.docx';
     var uploadPathPdf = home + '\\.arkcase\\seleniumTests\\filesForUpload\\caseSummary.pdf';
     var uplaodPathXlsx = home + '\\.arkcase\\seleniumTests\\filesForUpload\\caseSummary.xlsx';
+    var Users = require('../json/Users.json');
 
     this.uploadPng = function() {
 
@@ -62,6 +63,30 @@ var helpers = function helpers() {
            var day = ("0" + dueDate.getDate()).slice(-2);
            var month = ("0" + (dueDate.getMonth() + 1)).slice(-2);
            return dueDateOut = (month) + sign + (day) + sign + dueDate.getFullYear();
+       }
+       this.readGroupsFromJson = function (user) {
+            var dictionarydoc = Users.response.docs;
+            for (var i in dictionarydoc)
+            {
+              var userName = dictionarydoc[i].object_id_s;
+              if (userName == user)
+              {
+                 return  dictionarydoc[i].groups_id_ss;
+              }
+
+            }
+       }
+       this.returnNumberOfGroupsFromJson = function (user) {
+           var dictionarydoc = Users.response.docs;
+           for (var i in dictionarydoc)
+           {
+               var userName = dictionarydoc[i].object_id_s;
+               if (userName == user)
+               {
+                   return  dictionarydoc[i].groups_id_ss.length;
+               }
+
+           }
        }
 
 

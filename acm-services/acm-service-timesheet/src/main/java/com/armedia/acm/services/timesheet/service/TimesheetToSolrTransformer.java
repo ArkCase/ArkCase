@@ -15,7 +15,6 @@ import java.util.List;
 
 /**
  * @author riste.tutureski
- *
  */
 public class TimesheetToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmTimesheet>
 {
@@ -43,6 +42,7 @@ public class TimesheetToSolrTransformer implements AcmObjectToSolrDocTransformer
 
         solr.setId(in.getId() + "-" + TimesheetConstants.OBJECT_TYPE);
         solr.setName(in.getTitle());
+        solr.setTitle_parseable(in.getTitle());
         solr.setObject_id_s(Long.toString(in.getId()));
         solr.setObject_type_s(TimesheetConstants.OBJECT_TYPE);
         solr.setAuthor_s(in.getUser().getUserId());

@@ -9,7 +9,6 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,6 +54,8 @@ public class PersonContactToSolrTransformer implements AcmObjectToSolrDocTransfo
 
         solrDoc.setFirst_name_lcs(personContact.getFirstName());
         solrDoc.setLast_name_lcs(personContact.getLastName());
+
+        solrDoc.setTitle_parseable(personContact.getFirstName() + " " + personContact.getLastName());
 
         addContactMethods(personContact, solrDoc);
 

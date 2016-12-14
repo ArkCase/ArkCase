@@ -40,6 +40,7 @@ public class SubscriptionToSolrTransformer implements AcmObjectToSolrDocTransfor
         doc.setParent_id_s(Long.toString(in.getObjectId()));
         doc.setParent_type_s(in.getSubscriptionObjectType());
         doc.setOwner_lcs(in.getUserId());
+
         return doc;
     }
 
