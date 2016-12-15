@@ -115,6 +115,10 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                     configGridMain(config);
                 };
 
+                scope.isInitiator = function (data) {
+                    return data.personType == "Initiator";
+                };
+
                 var configGridMain = function (config) {
                     gridAddEntityButtons(config.columnDefs);
                     //gridHelper.addEditButton(config.columnDefs, "grid.appScope.editRow(row.entity)");
@@ -122,7 +126,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
 
 
                     gridHelper.addButton(config, "edit");
-                    gridHelper.addButton(config, "delete");
+                    gridHelper.addButton(config, "delete", null, null, "isInitiator");
 
                     gridHelper.setColumnDefs(config);
                     gridHelper.setBasicOptions(config);
@@ -273,9 +277,8 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                 };
                 scope.deleteRow = function (rowEntity) {
                     gridHelper.deleteRow(rowEntity);
-
                     var id = Util.goodMapValue(rowEntity, "id", 0);
-                    if (0 < id) {    //do not need to save for deleting a new row
+                        if (0 < id) {    //do not need to save for deleting a new row
                         ObjectPersonService.deletePersonAssociation(id).then(
                             function (personAssociationDeleted) {
                                 refresh();
@@ -285,7 +288,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                                 return error;
                             }
                         );
-                    }
+                        }
 
                 };
 
@@ -487,6 +490,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                     var modalScope = scope.$new();
                     modalScope.person = person || {};
                     modalScope.isEdit = isEdit || false;
+                    modalScope.isInitiator = person.personType == "Initiator";
                     var modalInstance = $modal.open({
                         scope: modalScope,
                         animation: true,

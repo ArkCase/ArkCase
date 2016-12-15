@@ -158,8 +158,7 @@
       "created": "Created",
       "priority": "Priority",
       "due": "Due",
-      "status": "Status",
-      "action": "Action"
+      "status": "Status"
     }
   },
   "complaints.comp.references": {
