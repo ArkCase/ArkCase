@@ -226,5 +226,6 @@
   "common.string": {
     "withId": "with ID",
     "wasCreated": "was created."
-  }
+  },
+  "common.objects.objectWasCreatedMessage": "{{objectTypeString}} with id {{objectId}} was created."
 }
