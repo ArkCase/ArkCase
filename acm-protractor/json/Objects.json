@@ -701,6 +701,14 @@
         "data":{
 
         }
+    },
+    "adminPage":{
+        "locators": {
+            "chooseReportListBox": "selectedObject",
+            "notAuthorizedListBox": "selectedNotAuthorized",
+            "authorizedListBox": "selectedAuthorized"
+
+        }
     }
 }
 

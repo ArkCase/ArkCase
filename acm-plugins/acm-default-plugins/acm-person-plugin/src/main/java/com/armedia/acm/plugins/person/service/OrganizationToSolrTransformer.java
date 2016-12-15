@@ -43,6 +43,7 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
         orgDoc.setValue_parseable(org.getOrganizationValue());
 
         orgDoc.setName(org.getOrganizationValue());
+        orgDoc.setTitle_parseable(org.getOrganizationValue());
 
         /** Additional properties for full names instead of ID's */
         AcmUser creator = getUserDao().quietFindByUserId(org.getCreator());
