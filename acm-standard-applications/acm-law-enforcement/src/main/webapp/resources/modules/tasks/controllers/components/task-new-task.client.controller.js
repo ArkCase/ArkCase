@@ -1,9 +1,10 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state', '$stateParams', '$sce', '$q', '$modal', 'ConfigService'
-    , 'UtilService', 'TicketService', 'LookupService', 'Frevvo.FormService', 'Task.NewTaskService', 'Authentication', 'Util.DateService', 'Dialog.BootboxService'
-    , function ($scope, $state, $stateParams, $sce, $q, $modal, ConfigService, Util, TicketService
-        , LookupService, FrevvoFormService, TaskNewTaskService, Authentication, UtilDateService, DialogService) {
+angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state', '$stateParams', '$sce', '$q', '$modal'
+    , 'ConfigService', 'UtilService', 'TicketService', 'LookupService', 'Frevvo.FormService', 'Task.NewTaskService'
+    , 'Authentication', 'Util.DateService', 'Dialog.BootboxService', 'ObjectService'
+    , function ($scope, $state, $stateParams, $sce, $q, $modal, ConfigService, Util, TicketService, LookupService
+        , FrevvoFormService, TaskNewTaskService, Authentication, UtilDateService, DialogService, ObjectService) {
 
         $scope.config = null;
         $scope.userSearchConfig = null;
@@ -59,7 +60,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
                 if ($stateParams.returnState != null && $stateParams.returnState != ":returnState") {
                     $state.go($stateParams.returnState, {type: $stateParams.parentType, id: $stateParams.parentId});
                 } else {
-                    $state.go('tasks.main', {type: 'ADHOC', id: data.taskId});
+                    ObjectService.showObject(ObjectService.ObjectTypes.ADHOC_TASK, data.taskId);
                 }
             }, function (err) {
                 $scope.saved = false;
@@ -75,7 +76,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
         };
 
         $scope.updateAssocParentType = function () {
-            $scope.isAssocType = $scope.config.data.attachedToObjectType !== 'null';
+            $scope.isAssocType = $scope.config.data.attachedToObjectType !== '';
         };
 
         $scope.userSearch = function () {
