@@ -70,6 +70,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                 searchBtn: '@',
                 exportBtn: '@',
                 searchQuery: '@',
+                isSelected: '=',
                 searchPlaceholder: '@',
                 filter: '@',
                 multiFilter: '@',
@@ -88,7 +89,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                     scope.emptySearch = scope.config.emptySearch;
                 }
 
-                var isSelected = false;
+                var isSelected = scope.isSelected;
                 scope.onSelect = function ($item, $model, $label) {
                     isSelected = true;
                 };
