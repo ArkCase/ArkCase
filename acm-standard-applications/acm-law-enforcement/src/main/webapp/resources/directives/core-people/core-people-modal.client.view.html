@@ -11,7 +11,7 @@
 <div class="modal-body">
     <form name="peopleForm">
         <div>
-            <label for="personTypes_{{::$id}}" translate>common.directive.corePeople.people.modal.personTypes.label</label>
+            <label ng-hide="isInitiator" for="personTypes_{{::$id}}" translate>common.directive.corePeople.people.modal.personTypes.label</label>
         </div>
         <select ng-hide="isInitiator"
                 id="personTypes_{{::$id}}"
