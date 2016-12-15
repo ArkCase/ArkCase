@@ -115,6 +115,10 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                     configGridMain(config);
                 };
 
+                scope.isInitiator = function (data) {
+                    return data.personType == "Initiator";
+                };
+
                 var configGridMain = function (config) {
                     gridAddEntityButtons(config.columnDefs);
                     //gridHelper.addEditButton(config.columnDefs, "grid.appScope.editRow(row.entity)");
@@ -122,7 +126,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
 
 
                     gridHelper.addButton(config, "edit");
-                    gridHelper.addButton(config, "delete");
+                    gridHelper.addButton(config, "delete", null, null, "isInitiator");
 
                     gridHelper.setColumnDefs(config);
                     gridHelper.setBasicOptions(config);
@@ -272,12 +276,11 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                     showModalPeople(person, true);
                 };
                 scope.deleteRow = function (rowEntity) {
-                    if (rowEntity.personType != "Initiator") {
-                        var id = Util.goodMapValue(rowEntity, "id", 0);
+                    gridHelper.deleteRow(rowEntity);
+                    var id = Util.goodMapValue(rowEntity, "id", 0);
                         if (0 < id) {    //do not need to save for deleting a new row
                         ObjectPersonService.deletePersonAssociation(id).then(
                             function (personAssociationDeleted) {
-                                gridHelper.deleteRow(rowEntity);
                                 refresh();
                                 return personAssociationDeleted;
                             }
@@ -286,7 +289,6 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                             }
                         );
                         }
-                    }
 
                 };
 
