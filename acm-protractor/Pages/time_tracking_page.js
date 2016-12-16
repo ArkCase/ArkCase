@@ -84,6 +84,7 @@ var timeTrackingPage = function() {
     this.clickSaveBtn = function() {
         browser.executeScript('arguments[0].click()', saveBtn);
           browser.driver.switchTo().defaultContent();
+          browser.sleep(15000);
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.timetrackingPage.locators.timesheetsPageTitle))), 30000, "Timesheets page title is not displayed");
         return this;
 }

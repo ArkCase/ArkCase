@@ -39,6 +39,7 @@ exports.config = {
     // }],
 
     specs: [
+    
            '../test_spec/dashboard_test.spec.js',
            '../test_spec/task_test.spec.js',
            '../test_spec/case_test.spec.js',
