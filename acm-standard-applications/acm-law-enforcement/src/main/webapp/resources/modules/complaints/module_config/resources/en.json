@@ -160,7 +160,9 @@
       "due": "Due",
       "status": "Status",
       "action": "Action"
-    }
+    },
+    "table.overdue.tooltip": "Task is Overdue",
+    "table.deadline.tooltip": "Deadline is Approaching"
   },
   "complaints.comp.references": {
     "title": "References",

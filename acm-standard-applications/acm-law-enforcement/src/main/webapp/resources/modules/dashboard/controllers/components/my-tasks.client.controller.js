@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('dashboard.my-tasks')
-    .controller('Dashboard.MyTasksController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService', 'ObjectService', '$state', 'Task.AlertsService','UtilService','Util.DateService',
-        function ($scope, $translate, Authentication, DashboardService, ObjectService, $state,TaskAlertsService, Util, UtilDateService) {
+    .controller('Dashboard.MyTasksController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService', 'ObjectService', '$state', 'Task.AlertsService', 'UtilService', 'Util.DateService',
+        function ($scope, $translate, Authentication, DashboardService, ObjectService, $state, TaskAlertsService, Util, UtilDateService) {
 
             var vm = this;
 
@@ -58,7 +58,7 @@ angular.module('dashboard.my-tasks')
                     vm.gridOptions.paginationPageSize = config.paginationPageSize;
                     paginationOptions.pageSize = config.paginationPageSize;
 
-                     Authentication.queryUserInfo().then(function (responseUserInfo) {
+                    Authentication.queryUserInfo().then(function (responseUserInfo) {
                         userInfo = responseUserInfo;
                         getPage();
                         return userInfo;
@@ -94,8 +94,9 @@ angular.module('dashboard.my-tasks')
                     }
                 );
             }
+
             vm.onClickCaseComplaintId = function (objectType, objectId) {
-                    ObjectService.gotoUrl(objectType, objectId);
+                ObjectService.gotoUrl(objectType, objectId);
             };
         }
     ]);

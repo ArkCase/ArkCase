@@ -2,10 +2,10 @@
 
 angular.module('complaints').controller('Complaints.TasksController', ['$scope', '$state', '$stateParams', '$q', '$translate'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Object.TaskService', 'Task.WorkflowService'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Complaint.InfoService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Complaint.InfoService', 'Task.AlertsService'
     , function ($scope, $state, $stateParams, $q, $translate
         , Util, ConfigService, ObjectService, ObjectTaskService, TaskWorkflowService
-        , HelperUiGridService, HelperObjectBrowserService, ComplaintInfoService) {
+        , HelperUiGridService, HelperObjectBrowserService, ComplaintInfoService, TaskAlertsService) {
 
         var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
@@ -96,6 +96,10 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
                             }
                             task.acm$_taskActionDone = (1 >= availableOutcomes.length); //1 for '(Select One)'
                         }
+
+                        //calculate to show alert icons if task is in overdue or deadline is approaching
+                        task.isOverdue = TaskAlertsService.calculateOverdue(new Date(task.due_tdt));
+                        task.isDeadline = TaskAlertsService.calculateDeadline(new Date(task.due_tdt));
                     }
                     return data;
                 }); //end then
