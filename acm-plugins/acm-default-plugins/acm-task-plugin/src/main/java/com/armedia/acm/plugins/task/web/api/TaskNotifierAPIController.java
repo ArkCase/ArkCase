@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  *
  */
 @Controller
-@RequestMapping({"/api/v1/plugin/service/notification", "/api/latest/plugin/service/notification"})
+@RequestMapping({"/api/v1/plugin/task", "/api/latest/plugin/task"})
 public class TaskNotifierAPIController
 {
 
@@ -45,7 +45,7 @@ public class TaskNotifierAPIController
         this.overdueTasksNotifier = overdueTasksNotifier;
     }
 
-    @RequestMapping(value = "/jsapn/sendDueTaskEmailNotification", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/task/sendDueTaskEmailNotification", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Map<String, List<AcmTask>> queryTasks()
     {
