@@ -228,5 +228,6 @@
       "title": "Title",
       "id": "Username"
     }
-  }
+  },
+  "common.objects.objectWasCreatedMessage": "{{objectTypeString}} with id {{objectId}} was created."
 }
