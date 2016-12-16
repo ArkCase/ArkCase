@@ -158,8 +158,7 @@
       "created": "Created",
       "priority": "Priority",
       "due": "Due",
-      "status": "Status",
-      "action": "Action"
+      "status": "Status"
     },
     "table.overdue.tooltip": "Task is Overdue",
     "table.deadline.tooltip": "Deadline is Approaching"

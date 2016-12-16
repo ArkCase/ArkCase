@@ -887,12 +887,6 @@
           "field": "status_s",
           "displayName": "cases.comp.tasks.table.columns.status",
           "headerCellFilter": "translate"
-        },
-        {
-          "name": "action",
-          "displayName": "cases.comp.tasks.table.columns.action",
-          "headerCellFilter": "translate",
-          "lookup": "taskOutcomes"
         }
       ]
     },
