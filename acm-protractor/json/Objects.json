@@ -405,7 +405,21 @@
             "complaintDispositionDDListBox": ".//div[@cname='disposition']/div/input[1]",
             "closeComplaintDescription": ".note-editable",
             "fadeElementComplaint":".//div[@class='modal-backdrop fade in']",
-            "complaintTitleLink": ".//a[@editable-text='objectInfo.complaintTitle']"
+            "complaintTitleLink": ".//a[@editable-text='objectInfo.complaintTitle']",
+            "locationsLinkBtn": ".//*[@class='fa fa-location-arrow']",
+            "addLocationBtn": "[ng-click='addNew()']",
+            "locationTypeDropDown":"location.type",
+            "locationStreetInput":".//*[@id='location.streetAddress']",
+            "locationCityInput": ".//*[@id='location.city']",
+            "locationStateInput":".//*[@id='location.state']",
+            "locationZipInput": ".//*[@id='location.zip']",
+            "saveLocationBtn": "[ng-click = 'onClickOk()']",
+            "addedLocations":  "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
+            "deleteLocationBtn": "[ng-click ='grid.appScope.deleteRow(row.entity)']",
+            "editLocationBtn": "[ng-click='grid.appScope.editRow(row.entity)']",
+            "newComplaintBtn": "[ui-sref='frevvo.new-complaint()']",
+            "complaintsTitle":".//a[@editable-text='objectInfo.complaintTitle']"
+             
         },
         "data": {
             "firstName": "ComplaintFirstName",
@@ -413,7 +427,8 @@
             "category": "Agricultural",
             "title": "ComplaintTitle",
             "description": "Description",
-            "approver": "samuel"
+            "approver": "samuel",
+            "titleComplaint": "NewComplaint"
         }
     },
     "casepage": {
@@ -454,7 +469,7 @@
             "statusClosed": ".//*[@class='input _frevvo-disable-backspace']/..//li[4]",
             "selectApprover": "approverName",
             "addUser": ".//*[@id='labPoTitle']",
-            "searchForUser": ".//*[@id='edtPoSearch']",
+            "searchForUser": ".//*[@class='input-group']/..//input",
             "goBtn": ".//*[@class='input-group']/..//span/button",
             "addBtn": ".//*[@id='dlgObjectPicker']/div/div/div[3]/button[2]",
             "searchedUser": "//*[@id='divPoResults']/div/table/tbody/tr/td[3]",
@@ -546,13 +561,13 @@
             "timesheetTableRow": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
             "costSheetLinkBtn": ".//*[@class='fa fa-money']",
             "caseTitleStatus": ".//*[@class='ng-binding']",
-            "participantsTab": "[extid='participantsTab']",
-            "selectParticipantType": ".//*[@class='f-table-row s-expanded s-linked s-untyped s-valid']/..//td[5]",
+            "participantsTab": "[extid='participantsTab']" ,
+            "selectParticipantType": ".//*[@class='f-table-row s-expanded s-linked s-untyped s-valid']/..//div",
             "selectParticipant": "participantName",
             "searchForUserInput": "//*[@class='modal-search-header']/..//input",
             "searchUserBtn": "Search",
             "OkBtn": "OK",
-            "searchedUserName": ".//*[@class='ui-grid-cell-contents ng-binding ng-scope']",
+            "searchedUserName": "//div[text()='samuel-acm']",
             "participantLinkBtn": ".//*[@class='fa fa-users']",
             "participantTableRow":".//*[@class='ui-grid-cell-contents ng-binding ng-scope']",
             "participantTable": ".//*[@class='panel panel-success panel-grid']",
@@ -563,6 +578,7 @@
             "saveParticipantBtn": "Save",
             "participantDeleteBtn": "[ng-click='grid.appScope.deleteRow(row.entity)']",
             "owningGroup": ".//a[@editable-select='owningGroup']"
+           
         },
 
         "data": {
@@ -649,6 +665,7 @@
             "newTimesheetBtn": "New Timesheet",
             "editTimesheetBtn": "Edit Timesheet",
             "caseFileModule": "a[href*='#!/cases//main']",
+            "complaintsModule":"a[href*='#!/complaints//main']",
             "timesheetsPageTitle": ".//*[@class='module-header']/..//h3/span",
             "nextWeekBtn": "Next Week",
             "periodInput": "period"
@@ -658,7 +675,7 @@
         },
         "data": {
 
-            "date": "00"
+            "date": "1"
         }
     },
 

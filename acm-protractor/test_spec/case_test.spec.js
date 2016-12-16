@@ -17,7 +17,7 @@ function testAsync(done) {
     setTimeout(function() {
         flag = true;
         done();
-    }, 60000);
+    }, 40000);
 
 }
 
@@ -348,7 +348,7 @@ describe('case page tests', function() {
         casePage.deleteAddress();
     });
 
-    it('should create new case and add/edit', function() {
+    it('should create new case and add/edit address', function() {
 
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
         casePage.clickNextBtn();
@@ -633,6 +633,7 @@ describe('case page tests', function() {
         casePage.clickNextBtn();
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
         casePage.switchToDefaultContent();
+        casePage.waitForChangeCaseButton();
         element(by.xpath(Objects.casepage.locators.caseID)).getText().then(function(text) {
             console.log(text);
             casePage.clickNewButton();
@@ -689,6 +690,7 @@ describe('case page tests', function() {
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
         casePage.clickNextBtn();
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
+        casePage.clickParticipantTab();
         casePage.selectParticipant("Owner", Objects.casepage.data.approverSamuel);
         casePage.switchToIframes();
         casePage.clickSubmitBtn();
@@ -727,6 +729,7 @@ describe('case page tests', function() {
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
         casePage.clickNextBtn();
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
+        casePage.clickParticipantTab();
         casePage.selectParticipant("Collaborator", "Sally");
         casePage.switchToIframes();
         casePage.clickSubmitBtn();
@@ -750,6 +753,7 @@ describe('case page tests', function() {
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
         casePage.clickNextBtn();
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
+        casePage.clickParticipantTab();
         casePage.selectParticipant("Follower", "Sally");
         casePage.switchToIframes();
         casePage.clickSubmitBtn();
@@ -773,6 +777,7 @@ describe('case page tests', function() {
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
         casePage.clickNextBtn();
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
+        casePage.clickParticipantTab();
         casePage.selectParticipant("Reader", "Sally");
         casePage.switchToIframes();
         casePage.clickSubmitBtn();
@@ -796,6 +801,7 @@ describe('case page tests', function() {
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
         casePage.clickNextBtn();
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
+        casePage.clickParticipantTab();
         casePage.selectParticipant("Co-Owner", "Samuel");
         casePage.switchToIframes();
         casePage.clickSubmitBtn();
@@ -819,6 +825,7 @@ describe('case page tests', function() {
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
         casePage.clickNextBtn();
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
+        casePage.clickParticipantTab();
         casePage.selectParticipant("Supervisor", "Samuel");
         casePage.switchToIframes();
         casePage.clickSubmitBtn();
@@ -842,6 +849,7 @@ describe('case page tests', function() {
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
         casePage.clickNextBtn();
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
+        casePage.clickParticipantTab();
         casePage.selectParticipant("No Access", "Ann");
         casePage.switchToIframes();
         casePage.clickSubmitBtn();
@@ -874,6 +882,7 @@ describe('case page tests', function() {
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
         casePage.clickNextBtn();
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
+        casePage.clickParticipantTab();
         casePage.selectParticipant("Approver", "Ann");
         casePage.switchToIframes();
         casePage.clickSubmitBtn();
@@ -891,7 +900,7 @@ describe('case page tests', function() {
         expect(casePage.returnParticipantNameFifthRow()).toEqual("Samuel Supervisor");
     });
 
-    it('should create new case and verify if assignee can be deleted', function() {
+    it('should create new case and verify if special type can be deleted', function() {
 
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
         casePage.clickNextBtn();
@@ -904,7 +913,7 @@ describe('case page tests', function() {
 
     });
 
-    it('should create new case and verify if special Type can be deleted', function() {
+    it('should create new case and verify if assignee can be deleted', function() {
 
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
         casePage.clickNextBtn();
@@ -959,6 +968,18 @@ describe('case page tests', function() {
         expect(casePage.returnAssignee()).toEqual(Objects.taskspage.data.administrator);
         expect(casePage.returnOwningGroup()).toEqual(Objects.casepage.data.owningGroup);
 
+    });
+
+    it('should create new case and edit assignee from participant table', function() {
+
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
+        casePage.clickNextBtn();
+        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
+        casePage.switchToDefaultContent();
+        casePage.participantTable();
+        casePage.clickEditAssigneeBtn();
+        casePage.editAssigneeInParticipantTable("Samuel Supervisor");
+        expect(casePage.returnParticipantNameSecondRow()).toEqual("Samuel Supervisor");
 
     });
 });
