@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.armedia.mule.cmis.basic.auth.BasicAuthenticationHttpInvoker;
 import com.armedia.mule.cmis.kerberos.KerberosAuthenticationProvider;
 import com.armedia.mule.cmis.kerberos.KerberosHttpInvoker;
 
@@ -1076,6 +1077,7 @@ public class ChemistryCMISFacade implements CMISFacade
         }
         else
         {
+            parameters.put(SessionParameter.HTTP_INVOKER_CLASS, BasicAuthenticationHttpInvoker.class.getName());
             parameters.put(SessionParameter.USER, username.trim());
         }
 

@@ -97,9 +97,8 @@ public class MuleContextManager implements ApplicationContextAware
     }
 
     /**
-     * Set {@link MDC} thread local variables as {@link MuleMessage} outbound properties. These are later set as
-     * {@link MDC} thread local variables in the the threads that Mule controls. See
-     * {@link com.armedia.acm.audit.listeners.AcmMessageProcessorNotificationListener}.
+     * Set {@link MDC} thread local variables as {@link MuleMessage} outbound properties. These are later set as {@link MDC} thread local
+     * variables in the the threads that Mule controls. See {@link com.armedia.acm.audit.listeners.AcmMessageProcessorNotificationListener}.
      *
      * @param message
      *            the {@link MuleMessage} to set the MDC variables as outbound properties
@@ -113,7 +112,7 @@ public class MuleContextManager implements ApplicationContextAware
             message.setOutboundProperty(MDCConstants.EVENT_MDC_REQUEST_REMOTE_ADDRESS_KEY,
                     MDC.get(MDCConstants.EVENT_MDC_REQUEST_REMOTE_ADDRESS_KEY), DataType.STRING_DATA_TYPE);
             message.setOutboundProperty(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY,
-                    MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY) == null ? "anonymous"
+                    MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY) == null ? MDCConstants.ANONYMOUS_USER
                             : MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY),
                     DataType.STRING_DATA_TYPE);
         }
@@ -151,7 +150,8 @@ public class MuleContextManager implements ApplicationContextAware
             ServerNotificationListener<MessageProcessorNotification> auditListener = applicationContext
                     .getBean("muleAuditMessageProcessorNotificationListener", ServerNotificationListener.class);
             muleContext.getNotificationManager().addListener(auditListener);
-        } catch (NoSuchBeanDefinitionException e)
+        }
+        catch (NoSuchBeanDefinitionException e)
         {
             log.info("No auditor listener available, hopefully this is a test method.");
         }
@@ -180,10 +180,12 @@ public class MuleContextManager implements ApplicationContextAware
         if (getMuleConfigFilePattern() != null)
         {
             return loadConfigFromPattern();
-        } else if (getSpecificConfigFiles() != null)
+        }
+        else if (getSpecificConfigFiles() != null)
         {
             return loadSpecificConfigFiles();
-        } else
+        }
+        else
         {
             throw new IllegalStateException("Either a muleConfigFilePattern or specificConfigFiles must be specified");
         }
@@ -234,7 +236,8 @@ public class MuleContextManager implements ApplicationContextAware
                 getMuleContext().stop();
                 getMuleContext().dispose();
             }
-        } catch (MuleException e)
+        }
+        catch (MuleException e)
         {
             log.error("Could not stop Mule context: " + e.getMessage(), e);
         }
@@ -258,7 +261,8 @@ public class MuleContextManager implements ApplicationContextAware
             try
             {
                 startMuleContext(applicationContext);
-            } catch (MuleException | IOException e)
+            }
+            catch (MuleException | IOException e)
             {
                 log.error("Could not start Mule context: " + e.getMessage(), e);
                 throw new IllegalStateException(e);
