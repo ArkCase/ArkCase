@@ -48,15 +48,16 @@ public class AcmPluginRoleBasedAccessInterceptor extends HandlerInterceptorAdapt
             // anomalous situation. Better return HTTP 403.
             // throw new AcmNotAuthorizedException(request.getServletPath());
             response.setStatus(response.SC_FORBIDDEN);
-        }
-
-        List<AcmPluginUrlPrivilege> urlPrivileges = getAcmPluginManager().getUrlPrivileges();
-        boolean hasPrivilege = determinePrivilege(method, url, userPrivileges, urlPrivileges);
-
-        if (!hasPrivilege)
+        } else
         {
-            // throw new AcmNotAuthorizedException(request.getServletPath());
-            response.setStatus(response.SC_FORBIDDEN);
+            List<AcmPluginUrlPrivilege> urlPrivileges = getAcmPluginManager().getUrlPrivileges();
+            boolean hasPrivilege = determinePrivilege(method, url, userPrivileges, urlPrivileges);
+
+            if (!hasPrivilege)
+            {
+                // throw new AcmNotAuthorizedException(request.getServletPath());
+                response.setStatus(response.SC_FORBIDDEN);
+            }
         }
 
         return true;
