@@ -30,10 +30,7 @@ public class AcmPluginRoleBasedAccessInterceptor extends HandlerInterceptorAdapt
         String method = request.getMethod();
         String url = request.getServletPath();
 
-        if (log.isDebugEnabled())
-        {
-            log.debug("Checking user privilege for url: " + method + " " + url);
-        }
+        log.debug("Checking user privilege for url: {} {}", method, url);
 
         HttpSession session = request.getSession(false);
 
@@ -74,11 +71,8 @@ public class AcmPluginRoleBasedAccessInterceptor extends HandlerInterceptorAdapt
             if (urlPrivilege.matches(url, method))
             {
                 String requiredPrivilege = urlPrivilege.getRequiredPrivilege().getPrivilegeName();
-                if (log.isDebugEnabled())
-                {
-                    log.debug("Required privilege for " + method + " " + url + ": " + requiredPrivilege + "; user has privilege: "
-                            + userPrivileges.containsKey(requiredPrivilege));
-                }
+                log.debug("Required privilege for {} {}: {}; user has privilege: {}", method, url, requiredPrivilege,
+                        userPrivileges.containsKey(requiredPrivilege));
                 hasPrivilege = userPrivileges.containsKey(requiredPrivilege) ? userPrivileges.get(requiredPrivilege) : false;
             }
         }
