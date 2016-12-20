@@ -115,9 +115,6 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             $scope.objectInfo.dueDate = UtilDateService.dateToIso($scope.dateInfo.dueDate);
             saveComplaint();
         };
-        $scope.$on('accessDenied', function(event, message){
-            MessageService.info(message);
-        });
 
     }
 ]);
