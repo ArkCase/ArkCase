@@ -19,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class MicrosoftExchangeNotificationSender extends NotificationSender
 {
@@ -84,6 +85,13 @@ public class MicrosoftExchangeNotificationSender extends NotificationSender
         }
 
         return notification;
+    }
+
+    @Override
+    public <T> void sendPlainEmail(Stream<T> emailsDataStream, EmailBuilder<T> emailBuilder, EmailBodyBuilder<T> emailBodyBuilder)
+            throws Exception
+    {
+        throw new UnsupportedOperationException("Not supported.");
     }
 
     @Override

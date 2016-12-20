@@ -63,4 +63,10 @@
         <property name="taskService" ref="acmTaskService"/>
     </bean>
 
+    <bean id="taskNotifierAPIController"
+          class="com.armedia.acm.plugins.task.web.api.TaskNotifierAPIController">
+        <property name="upcomingTasksNotifier" ref="upcomingTasksNotifier"/>
+        <property name="overdueTasksNotifier" ref="overdueTasksNotifier"/>
+    </bean>
+
 </beans>

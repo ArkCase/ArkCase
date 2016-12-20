@@ -350,6 +350,14 @@
           "model": "taskCount",
           "columnDefs": [
             {
+              "field": "alerts",
+              "displayName": "",
+              "cellTemplate": "<div><a ng-if=\"row.entity.isOverdue\" tooltip=\"{{'complaints.comp.tasks.table.overdue.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-overdue\"><i class=\"fa fa-exclamation-circle icon-overdue\"></i></a><a ng-if=\"row.entity.isDeadline\" tooltip=\"{{'complaints.comp.tasks.table.deadline.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-due-soon\"><i class=\"fa fa-exclamation-triangle icon-due-soon\"></i></a></div>",
+              "width": 40,
+              "enableSorting": false,
+              "enableColumnMenu": false
+            },
+            {
               "name": "title",
               "field": "title_parseable",
               "sortField": "title_parseable_lcs",
@@ -924,6 +932,14 @@
       "paginationPageSize": 5,
       "columnDefs": [
         {
+          "field": "alerts",
+          "displayName": "",
+          "cellTemplate": "<div><a ng-if=\"row.entity.isOverdue\" tooltip=\"{{'complaints.comp.tasks.table.overdue.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-overdue\"><i class=\"fa fa-exclamation-circle icon-overdue\"></i></a><a ng-if=\"row.entity.isDeadline\" tooltip=\"{{'complaints.comp.tasks.table.deadline.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-due-soon\"><i class=\"fa fa-exclamation-triangle icon-due-soon\"></i></a></div>",
+          "width": 40,
+          "enableSorting": false,
+          "enableColumnMenu": false
+        },
+        {
           "name": "title",
           "field": "title_parseable",
           "sortField": "title_parseable_lcs",
@@ -963,12 +979,6 @@
           "field": "status_s",
           "displayName": "complaints.comp.tasks.table.columns.status",
           "headerCellFilter": "translate"
-        },
-        {
-          "name": "action",
-          "displayName": "complaints.comp.tasks.table.columns.action",
-          "headerCellFilter": "translate",
-          "lookup": "taskOutcomes"
         }
       ]
     },
