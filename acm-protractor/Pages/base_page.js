@@ -2,6 +2,7 @@ var EC = protractor.ExpectedConditions;
 var Objects = require('../json/Objects.json');
 var util = require('../util/utils.js');
 var logger = require('../log');
+var SelectWrapper = require('../util/select-wrapper.js');
 var newBtn = element(by.xpath(Objects.basepage.locators.newButton));
 var root = element(by.xpath(Objects.basepage.locators.root));
 var newCorrespondence = element(by.xpath(Objects.basepage.locators.newCorrespondence));
@@ -27,11 +28,12 @@ var editNoteBtn = element.all(by.repeater(Objects.casepage.locators.editNoteBtn)
 var addNewTaskBtn = element(by.xpath(Objects.casepage.locators.addNewTaskBtn));
 var tasksLinkBtn = element(by.xpath(Objects.casepage.locators.tasksLink));
 var taskTitle = element(by.xpath(Objects.casepage.locators.taskTitle));
-var taskAssighnee = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(1);
-var taskCreated = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(2);
-var taskPriority = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(3);
-var taskDueDate = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(4);
-var taskStatus = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(5);
+var createdTaskTitle = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(1)
+var taskAssighnee = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(2);
+var taskCreated = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(3);
+var taskPriority = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(4);
+var taskDueDate = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(5);
+var taskStatus = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(6);
 var tagsLinkBtn = element(by.xpath(Objects.casepage.locators.tagsLinkBtn));
 var addNewTagBtn = element(by.css(Objects.casepage.locators.addNewTagBtn));
 var addTagInput = element(by.model(Objects.casepage.locators.addTagInput));
@@ -52,7 +54,7 @@ var peopleFirstNameColumn = element.all(by.repeater(Objects.casepage.locators.pe
 var peopleLastNameColumn = element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(3);
 var peopleTable = element(by.xpath(Objects.casepage.locators.peopleTable));
 var addPeopleBtn = element(by.xpath(Objects.casepage.locators.addPeopleBtn));
-var personsTypeDropDown = element(by.model(Objects.casepage.locators.personsTypeDropDown));
+var personsTypeDropDown = new SelectWrapper(by.model(Objects.casepage.locators.personsTypeDropDown));
 var personFirstNameInput = element(by.model(Objects.casepage.locators.personFirstNameInput));
 var personLastNameInput = element(by.model(Objects.casepage.locators.personLastNameInput));
 var savePersonBtn = element(by.xpath(Objects.casepage.locators.savePersonBtn));
@@ -76,7 +78,7 @@ var emptyContactMethodTable = element(by.css(Objects.casepage.locators.emptyCont
 var editContactMethodBtn = element(by.css(Objects.casepage.locators.editContactMethodBtn));
 var organizationsLinkBtn = element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(0).all(by.tagName(Objects.casepage.locators.tag)).get(1);
 var addOrganizationBtn = element(by.css(Objects.casepage.locators.addOgranizationBtn));
-var organizationTypeDropdown = element(by.model(Objects.casepage.locators.organizationTypeDropDown));
+var organizationTypeDropdown = new SelectWrapper(by.model(Objects.casepage.locators.organizationTypeDropDown));
 var organizationValueInput = element(by.model(Objects.casepage.locators.organizationValueInput));
 var saveOrganizationBtn = element(by.css(Objects.casepage.locators.saveOrganizationBtn));
 var organizationTypeFirstRow = element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(5);
@@ -87,7 +89,7 @@ var organizationDeleteBtn = element(by.css(Objects.casepage.locators.organizatio
 var organizationEditBtn = element(by.css(Objects.casepage.locators.organizationEditBtn));
 var addressLinkBtn = element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(0).all(by.tagName(Objects.casepage.locators.tag)).get(2);
 var addAddressBtn = element(by.css(Objects.casepage.locators.addAddressBtn));
-var addressTypeDropDow = element(by.model(Objects.casepage.locators.addressTypeDropDow));
+var addressTypeDropDow = new SelectWrapper(by.model(Objects.casepage.locators.addressTypeDropDow));
 var streetAddress = element(by.model(Objects.casepage.locators.streetAddress));
 var addressCity = element(by.model(Objects.casepage.locators.addressCity));
 var addressState = element(by.model(Objects.casepage.locators.addressState));
@@ -106,7 +108,7 @@ var deleteAddressBtn = element(by.css(Objects.casepage.locators.deleteAddressBtn
 var editAddressBtn = element(by.css(Objects.casepage.locators.editAddressBtn));
 var aliassesLinkBtn = element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(0).all(by.tagName(Objects.casepage.locators.tag)).get(3);
 var addAliasesBtn = element(by.css(Objects.casepage.locators.addAliasesBtn));
-var aliasesDropdown = element(by.model(Objects.casepage.locators.aliasesDropdown));
+var aliasesDropdown = new SelectWrapper(by.model(Objects.casepage.locators.aliasesDropdown));
 var aliasesInputValue = element(by.model(Objects.casepage.locators.aliasesValue));
 var saveAliasBtn = element(by.css(Objects.casepage.locators.saveAliasesBtn));
 var aliasesTypeValue = element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(5);
@@ -187,7 +189,7 @@ var selectParticipantType = element(by.xpath(Objects.casepage.locators.selectPar
 var selectparticipant = element(by.name(Objects.casepage.locators.selectParticipant));
 var searchForUserInput = element(by.xpath(Objects.casepage.locators.searchForUser));
 var searchForUserBtn = element(by.buttonText(Objects.casepage.locators.searchUserBtn));
-var searchedUser = element(by.xpath(Objects.casepage.locators.searchedUserName));
+var searchedUser = element.all(by.repeater(Objects.casepage.locators.searchedUserName)).get(0);
 var okBtn = element(by.buttonText(Objects.casepage.locators.OkBtn));
 var participantTypeFirstRow = element.all(by.xpath(Objects.casepage.locators.participantTableRow)).get(0);
 var participantNameFirstRow = element.all(by.xpath(Objects.casepage.locators.participantTableRow)).get(1);
@@ -217,10 +219,10 @@ var noteText = element(by.model(Objects.taskspage.locators.notesTextArea));
 var saveButton = element(by.buttonText(Objects.basepage.locators.saveButton));
 var noteColumnValue = element(by.css(Objects.basepage.locators.noteColumnValue));
 var priorityLink = element(by.xpath(Objects.casepage.locators.priority));
-var priorityDropDownEdit = element(by.xpath(Objects.casepage.locators.priorityDropDown));
+var priorityDropDownEdit = new SelectWrapper(by.xpath(Objects.casepage.locators.priorityDropDown));
 var priorityBtn = element(by.xpath(Objects.casepage.locators.priorityBtn));
 var assigneeLink = element(by.xpath(Objects.casepage.locators.assignee));
-var assigneeDropDown = element(by.xpath(Objects.casepage.locators.assigneeDropDown));
+var assigneeDropDown = new SelectWrapper(by.xpath(Objects.casepage.locators.assigneeDropDown));
 var assigneeBtn = element(by.xpath(Objects.casepage.locators.assigneeBtn));
 var submitBtn = element(by.xpath(Objects.casepage.locators.submitBtn));
 var complaintParticipantsTab = element(By.xpath(Objects.complaintPage.locators.participantsTab));
@@ -515,6 +517,7 @@ var BasePage = function() {
 
     this.clickExpandFancyTreeTopElementAndSubLink = function(link) {
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.fancyTreeExpandTop))), 30000).then(function() {
+            browser.sleep(5000);
             fancyTreeExpandTop.click().then(function() {
                 var xPathStr = "//span[contains(text(),'";
                 var completexPath;
@@ -677,7 +680,7 @@ var BasePage = function() {
                         searchForUserInput.click();
                         searchForUserInput.sendKeys(approverSamuel);
                         searchForUserBtn.click().then(function() {
-                            browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchedUserName))), 3000);
+                            browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.casepage.locators.searchedUserName)).get(0)), 3000);
                             searchedUser.click().then(function() {
                                 browser.wait(EC.visibilityOf(element(by.buttonText(Objects.casepage.locators.OkBtn))), 3000);
                                 okBtn.click();
@@ -747,6 +750,7 @@ var BasePage = function() {
 
     this.clickPeopleLinkBtn = function() {
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.peopleLinkBtn))), 30000).then(function() {
+            browser.sleep(5000);
             poeopleLinkBtn.click().then(function() {
                 browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.peopleTable))), 15000).then(function() {
                     browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(1)), 15000);
@@ -770,7 +774,7 @@ var BasePage = function() {
 
         addPeopleBtn.click().then(function() {
             browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.personsTypeDropDown))), 15000, "Add people pop up is not shown").then(function() {
-                personsTypeDropDown.$('[value="string:' + personType + '"]').click().then(function() {
+                personsTypeDropDown.selectByText(personType).then(function() {
                     personFirstNameInput.click().then(function() {
                         personFirstNameInput.sendKeys(firstName).then(function() {
                             personLastNameInput.click().then(function() {
@@ -815,7 +819,7 @@ var BasePage = function() {
         browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(4).all(by.tagName(Objects.casepage.locators.tag)).get(0))).then(function() {
             editPersonBtn.click().then(function() {
                 browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.personsTypeDropDown))), 15000, "Add people pop up is not shown").then(function() {
-                    personsTypeDropDown.$('[value="string:' + personType + '"]').click().then(function() {
+                    personsTypeDropDown.selectByText(personType).then(function() {
                         personFirstNameInput.clear().then(function() {
                             personFirstNameInput.sendKeys(firstName).then(function() {
                                 personLastNameInput.clear().then(function() {
@@ -833,6 +837,30 @@ var BasePage = function() {
         });
 
         return this;
+    }
+
+    this.editInitiator = function(firstName, LastName) {
+
+        browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(4).all(by.tagName(Objects.casepage.locators.tag)).get(0))).then(function() {
+            editPersonBtn.click().then(function() {
+                browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.personFirstNameInput))), 10000, "Person input is not displayed").then(function() {
+                    personFirstNameInput.clear().then(function() {
+                        personFirstNameInput.sendKeys(firstName).then(function() {
+                            personLastNameInput.clear().then(function() {
+                                personLastNameInput.sendKeys(LastName).then(function() {
+                                    savePersonBtn.click().then(function() {
+                                        browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(1)), 15000);
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+        return this;
+
+
     }
 
     this.addContactMethod = function(contactMethodType, contactvalue) {
@@ -918,7 +946,7 @@ var BasePage = function() {
             browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.addOgranizationBtn))), 10000).then(function() {
                 addOrganizationBtn.click().then(function() {
                     browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.organizationTypeDropDown))), 10000).then(function() {
-                        organizationTypeDropdown.$('[value="string:' + organizationType + '"]').click().then(function() {
+                        organizationTypeDropdown.selectByText(organizationType).then(function() {
                             organizationValueInput.sendKeys(organizationvalue).then(function() {
                                 saveOrganizationBtn.click().then(function() {
                                     browser.sleep(8000);
@@ -963,7 +991,7 @@ var BasePage = function() {
 
         organizationEditBtn.click().then(function() {
             browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.organizationTypeDropDown))), 10000).then(function() {
-                organizationTypeDropdown.$('[value="string:' + organizationType + '"]').click().then(function() {
+                organizationTypeDropdown.selectByText(organizationType).then(function() {
                     organizationValueInput.clear().then(function() {
                         organizationValueInput.sendKeys(organizationvalue).then(function() {
                             saveOrganizationBtn.click().then(function() {
@@ -987,7 +1015,7 @@ var BasePage = function() {
             browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.addAddressBtn))), 10000).then(function() {
                 addAddressBtn.click().then(function() {
                     browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.addressTypeDropDow))), 10000).then(function() {
-                        addressTypeDropDow.$('[value="string:' + addressType + '"]').click().then(function() {
+                        addressTypeDropDow.selectByText(addressType).then(function() {
                             streetAddress.sendKeys(street).then(function() {
                                 addressCity.sendKeys(city).then(function() {
                                     addressState.sendKeys(state).then(function() {
@@ -1064,7 +1092,7 @@ var BasePage = function() {
 
         editAddressBtn.click().then(function() {
             browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.addressTypeDropDow))), 10000).then(function() {
-                addressTypeDropDow.$('[value="string:' + addressType + '"]').click().then(function() {
+                addressTypeDropDow.selectByText(addressType).then(function() {
                     streetAddress.clear().then(function() {
                         streetAddress.sendKeys(street).then(function() {
                             addressCity.clear().then(function() {
@@ -1115,7 +1143,7 @@ var BasePage = function() {
             browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.addAliasesBtn))), 10000).then(function() {
                 addAliasesBtn.click().then(function() {
                     browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.aliasesDropdown))), 10000).then(function() {
-                        aliasesDropdown.$('[value="string:' + aliasType + '"]').click().then(function() {
+                        aliasesDropdown.selectByText(aliasType).then(function() {
                             aliasesInputValue.sendKeys(aliasValue).then(function() {
                                 saveAliasBtn.click().then(function() {
                                     browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(6)), 10000).then(function() {
@@ -1152,7 +1180,7 @@ var BasePage = function() {
     this.editAlias = function(aliasType, aliasValue) {
         editAliasBtn.click().then(function() {
             browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.aliasesDropdown))), 10000).then(function() {
-                aliasesDropdown.$('[value="string:' + aliasType + '"]').click().then(function() {
+                aliasesDropdown.selectByText(aliasType).then(function() {
                     aliasesInputValue.clear().then(function() {
                         aliasesInputValue.sendKeys(aliasValue).then(function() {
                             saveAliasBtn.click().then(function() {
@@ -1369,6 +1397,10 @@ var BasePage = function() {
     this.returnTaskTitle = function() {
         return taskTitle.getText();
     };
+
+    this.returnTaskTableTitle = function() {
+        return createdTaskTitle.getText();
+    }
     this.returnTaskTableAssignee = function() {
         return taskAssighnee.getText();
     };
@@ -1493,7 +1525,7 @@ var BasePage = function() {
         return this;
     };
     this.returnDetailsUploadedImage = function() {
-        return detailsUploadedImage.isDisabled();
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.basepage.locators.detailsUploadedImage))), 10000, "The image is not uploaded");
     };
 
     this.navigateToPage = function(link) {
@@ -1556,10 +1588,6 @@ var BasePage = function() {
         });
         return this;
     };
-    this.returnDetailsUploadedImage = function() {
-        return detailsUploadedImage.isDisabled();
-    };
-
 
     this.clickFullNameLink = function() {
         browser.wait(EC.visibilityOf(element(by.css('.fullname'))), 30000).then(function() {
@@ -1706,9 +1734,6 @@ var BasePage = function() {
         });
         return this;
     };
-    this.returnDetailsUploadedImage = function() {
-        return detailsUploadedImage.isDisabled();
-    };
 
     this.navigateToPage = function(link) {
         xPathStr = ".//a[@title='";
@@ -1819,7 +1844,7 @@ var BasePage = function() {
                         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchForUserInput))), 10000, "Search for user input is not displayed").then(function() {
                             searchForUserInput.sendKeys(participant).then(function() {
                                 searchForUserBtn.click().then(function() {
-                                    browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchedUserName))), 30000, "Searched user is not displayed").then(function() {
+                                    browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.casepage.locators.searchedUserName)).get(0)), 30000, "Searched user is not displayed").then(function() {
                                         searchedUser.click().then(function() {
                                             okBtn.click();
                                         });
@@ -1955,7 +1980,7 @@ var BasePage = function() {
                 browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchForUserInput))), 10000, "Search for user input is not displayed").then(function() {
                     searchForUserInput.sendKeys(participant).then(function() {
                         searchForUserBtn.click().then(function() {
-                            browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.searchedUserName))), 30000, "Searched user is not displayed").then(function() {
+                            browser.wait(EC.presenceOf(element.all(by.repeater(Objects.casepage.locators.searchedUserName)).get(0)), 30000, "Searched user is not displayed").then(function() {
                                 searchedUser.click().then(function() {
                                     browser.sleep(3000);
                                     okBtn.click().then(function() {
@@ -2012,7 +2037,7 @@ var BasePage = function() {
     this.editPriority = function(priority) {
 
         priorityLink.click().then(function() {
-            priorityDropDownEdit.$('[value="string:' + priority + '"]').click().then(function() {
+            priorityDropDownEdit.selectByText(priority).then(function() {
                 priorityBtn.click();
             });
         });
@@ -2024,8 +2049,8 @@ var BasePage = function() {
     this.editAssignee = function(assignee) {
 
         assigneeLink.click().then(function() {
-            browser.wait(EC.presenceOf(element(by.xpath("//*[@class='clearfix']/div[3]/div[1]/div/form/div/select/option[8]"))), 5000).then(function() {
-                assigneeDropDown.$('[value="string:' + assignee + '"]').click().then(function() {
+            browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.assigneeDropDown))), 5000).then(function() {
+                assigneeDropDown.selectByText(assignee).then(function() {
                     assigneeBtn.click();
                 });
 

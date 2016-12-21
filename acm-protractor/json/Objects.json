@@ -216,7 +216,8 @@
             "documentTitleInput": ".//*[@class='panel-body']/doc-tree/table[2]/tbody/tr[2]/td[3]/span/span[3]/input",
             "tag": "a",
             "approveBtn": ".//*[@class='btn btn-sm btn-default ng-binding ng-scope']/..//button[7]",
-            "caseTitleInTasks": ".//*[@class='ng-binding']/..//h4/a",
+            "caseTitleInTasks": ".//*[@class='module-header']/..//div[1]/div[1]/h4/a",
+            "complaintTitleInTasks": ".//*[@class='module-header']/..//div[2]/div[1]/div[1]/h4/a",
             "notificationMessage": ".//*[@ng-show='!$messageTemplate']"
 
 
@@ -562,12 +563,12 @@
             "costSheetLinkBtn": ".//*[@class='fa fa-money']",
             "caseTitleStatus": ".//*[@class='ng-binding']",
             "participantsTab": "[extid='participantsTab']" ,
-            "selectParticipantType": ".//*[@class='f-table-row s-expanded s-linked s-untyped s-valid']/..//div",
+            "selectParticipantType": ".//*[@class='c-table clearfix']/..//tbody/tr/td[5]",
             "selectParticipant": "participantName",
             "searchForUserInput": "//*[@class='modal-search-header']/..//input",
             "searchUserBtn": "Search",
             "OkBtn": "OK",
-            "searchedUserName": "//div[text()='samuel-acm']",
+            "searchedUserName": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
             "participantLinkBtn": ".//*[@class='fa fa-users']",
             "participantTableRow":".//*[@class='ui-grid-cell-contents ng-binding ng-scope']",
             "participantTable": ".//*[@class='panel panel-success panel-grid']",
@@ -661,7 +662,7 @@
             "fridayInput": "friday",
             "saturdayInput": "saturday",
             "timetrackingTitle": ".//*[@class='f-message decorator']/..//div/b",
-            "saveBtn": "Save",
+            "saveBtn": "//input[@name='actionType'][@value='Save']",
             "newTimesheetBtn": "New Timesheet",
             "editTimesheetBtn": "Edit Timesheet",
             "caseFileModule": "a[href*='#!/cases//main']",
