@@ -25,7 +25,7 @@ public class AcmPluginRoleBasedAccessInterceptor extends HandlerInterceptorAdapt
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
     {
         String method = request.getMethod();
         String url = request.getServletPath();
@@ -46,7 +46,6 @@ public class AcmPluginRoleBasedAccessInterceptor extends HandlerInterceptorAdapt
             // no user privileges. somehow the user is logged in and is calling a plugin URL, but does not have
             // privileges in the user session. Somehow the login success handler did not run. This is an
             // anomalous situation. Better return HTTP 403.
-            // throw new AcmNotAuthorizedException(request.getServletPath());
             response.setStatus(response.SC_FORBIDDEN);
         } else
         {
@@ -55,7 +54,6 @@ public class AcmPluginRoleBasedAccessInterceptor extends HandlerInterceptorAdapt
 
             if (!hasPrivilege)
             {
-                // throw new AcmNotAuthorizedException(request.getServletPath());
                 response.setStatus(response.SC_FORBIDDEN);
             }
         }
