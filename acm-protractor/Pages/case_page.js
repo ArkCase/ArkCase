@@ -4,6 +4,7 @@ var util = require('../util/utils.js');
 var Objects = require('../json/Objects.json');
 var taskPage = require('../Pages/task_page.js');
 var basePage = require('../Pages/base_page.js');
+var SelectWrapper = require('../util/select-wrapper.js');
 var EC = protractor.ExpectedConditions;
 var newBtn = element(by.linkText(Objects.casepage.locators.newButton));
 var newCaseBtn = element(by.linkText(Objects.casepage.locators.newCaseBtn));
@@ -37,17 +38,13 @@ var editNoteBtn = element.all(by.repeater(Objects.casepage.locators.editNoteBtn)
 var emptyNoteTable = element(by.xpath(Objects.casepage.locators.emptyNoteTable));
 var showLinksBtn = element(by.xpath(Objects.casepage.locatorsshowLinksBtn));
 var addNewTaskBtn = element(by.xpath(Objects.casepage.locators.addNewTaskBtn));
-var taskAssighnee = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(1);
-var taskCreated = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(2);
-var taskPriority = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(3);
-var taskDueDate = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(4);
-var taskStatus = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(5);
 var refreshCasesList = element(by.css(Objects.casepage.locators.refreshCasesList));
 var firstCaseInCasesList = element(by.xpath(Objects.casepage.locators.firstCaseInCasesList));
 var caseID = element(by.xpath(Objects.casepage.locators.caseID));
 var reinvestigateBtn = element(by.css(Objects.casepage.locators.reinvestigateBtn));
 var casesTitleStatus = element.all(by.xpath(Objects.casepage.locators.caseTitleStatus)).get(0);
 var owningGroup = element(by.xpath(Objects.casepage.locators.owningGroup));
+var submitBtn = element(by.xpath(Objects.casepage.locators.submitBtn));
 
 
 var CasePage = function() {
@@ -154,7 +151,6 @@ var CasePage = function() {
 
     this.returnCaseType = function() {
 
-
         return casesType.getText();
 
     };
@@ -164,7 +160,6 @@ var CasePage = function() {
         browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.changeCaseStatusBtn))), 30000);
 
     };
-
 
     this.clickChangeCaseBtn = function() {
 

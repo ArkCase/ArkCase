@@ -63,6 +63,7 @@ describe('case page tests', function() {
         casePage.waitForCaseType();
         expect(casePage.returnCaseType()).toEqual(Objects.casepage.data.casesType);
     });
+
     it('should create new case and change case status to closed, verify the automated task in tasks table and approve', function() {
 
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
@@ -155,7 +156,8 @@ describe('case page tests', function() {
         casePage.addNote(Objects.casepage.data.note);
         casePage.deleteNote();
     });
-    it('should create new case add new note and verify added note', function() {
+
+    it('should create new case add/edit note', function() {
 
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
         casePage.clickNextBtn();
@@ -178,11 +180,12 @@ describe('case page tests', function() {
         taskPage.insertSubject(Objects.taskpage.data.Subject).insertDueDateToday().clickSave();
         taskPage.clickCaseTitleInTasks();
         casePage.clickTasksLinkBtn().waitForTasksTable();
-        expect(casePage.returnTaskTitle()).toContain(Objects.taskpage.data.Subject);
+        expect(casePage.returnTaskTableTitle()).toContain(Objects.taskpage.data.Subject);
         expect(casePage.returnTaskTableAssignee()).toEqual(Objects.casepage.data.assigneeSamuel);
         expect(casePage.returnTaskTableCreatedDate()).toEqual(utils.returnToday("/"));
         expect(casePage.returnTaskTablePriority()).toEqual(Objects.casepage.data.priorityMedium);
-        expect(casePage.returnTaskTableDueDate()).toEqual(Objects.taskspage.datataskStateActive);
+        expect(casePage.returnTaskTableDueDate()).toEqual(utils.returnToday("/"));
+        expect(casePage.returnTaskTableStatus()).toEqual("ACTIVE");
     });
 
     it('should create new case and verify the people initiator', function() {
@@ -211,15 +214,6 @@ describe('case page tests', function() {
 
     });
 
-    it('should create new case and  delete initiator', function() {
-
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.clickPeopleLinkBtn();
-        casePage.deletePerson();
-    });
 
     it('should create new case and edit person initiator', function() {
 
@@ -228,8 +222,8 @@ describe('case page tests', function() {
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
         casePage.switchToDefaultContent();
         casePage.clickPeopleLinkBtn();
-        casePage.editPerson(Objects.casepage.data.peopleTypeWitness, Objects.casepage.data.peopleFirstNameEdit, Objects.casepage.data.peopleLastNameedit);
-        expect(casePage.returnPeopleType()).toEqual(Objects.casepage.data.peopleTypeWitness);
+        casePage.editInitiator(Objects.casepage.data.peopleFirstNameEdit, Objects.casepage.data.peopleLastNameedit);
+        expect(casePage.returnPeopleType()).toEqual(Objects.casepage.data.peopleTypeInitiaor);
         expect(casePage.returnPeopleFirstName()).toEqual(Objects.casepage.data.peopleFirstNameEdit);
         expect(casePage.returnPeopleLastName()).toEqual(Objects.casepage.data.peopleLastNameedit);
 
@@ -616,6 +610,7 @@ describe('case page tests', function() {
             casePage.switchToIframes();
             timeTrackingPage.submitTimesheetTable("Case", text, "8");
             casePage.selectApprover(Objects.casepage.data.approverSamuel);
+            casePage.switchToIframes();
             timeTrackingPage.clickSaveBtn();
             casePage.clickModuleCasesFiles();
             casePage.TimeTable();
@@ -662,7 +657,8 @@ describe('case page tests', function() {
             console.log(text);
             casePage.clickChangeCaseBtn();
             casePage.switchToIframes().selectCaseStatus("Closed");
-            casePage.selectApprover(Objects.casepage.data.approverSamuel).chnageCaseSubmit();
+            casePage.selectApprover(Objects.casepage.data.approverSamuel);
+            casePage.chnageCaseSubmit();
             casePage.clickTasksLinkBtn().waitForTasksTable();
             expect(casePage.returnAutomatedTask()).toContain(Objects.casepage.data.automatedTaskTitle);
             casePage.clickTaskTitle();
@@ -980,6 +976,5 @@ describe('case page tests', function() {
         casePage.clickEditAssigneeBtn();
         casePage.editAssigneeInParticipantTable("Samuel Supervisor");
         expect(casePage.returnParticipantNameSecondRow()).toEqual("Samuel Supervisor");
-
     });
 });
