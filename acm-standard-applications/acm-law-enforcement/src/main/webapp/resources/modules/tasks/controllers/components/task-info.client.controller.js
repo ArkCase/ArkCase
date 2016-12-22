@@ -2,10 +2,10 @@
 
 angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$stateParams', '$translate', '$timeout'
     , 'UtilService', 'Util.DateService', 'ConfigService', 'LookupService', 'Object.LookupService', 'Task.InfoService', 'Object.ModelService'
-    , 'Helper.ObjectBrowserService', 'MessageService', 'Task.AlertsService'
+    , 'Helper.ObjectBrowserService', 'Task.AlertsService'
     , function ($scope, $stateParams, $translate, $timeout
         , Util, UtilDateService, ConfigService, LookupService, ObjectLookupService, TaskInfoService, ObjectModelService
-        , HelperObjectBrowserService, MessageService, TaskAlertsService) {
+        , HelperObjectBrowserService, TaskAlertsService) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
