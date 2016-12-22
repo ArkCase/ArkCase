@@ -26,7 +26,7 @@ import javax.jms.TextMessage;
  *
  * @param <E>
  */
-public abstract class AcmObjectBrokerClient<E> extends DefaultMessageListenerContainer
+public class AcmObjectBrokerClient<E> extends DefaultMessageListenerContainer
 {
     private static final Logger LOG = LogManager.getLogger(AcmObjectBrokerClient.class);
 

@@ -62,8 +62,8 @@ angular.module('services').factory('ObjectService', ['$state', '$window', '$log'
                         var objType = Util.goodMapValue(found, "type");
 
                         if (Util.goodMapValue(found, "state", false)) {
-                            var params = { id : objId, type : objType };
-                            $state.go(found.state, params);
+                            var params = {id: objId, type: objType};
+                            $state.transitionTo(found.state, params, {reload: true, notify: true});
 
                         } else if (Util.goodMapValue(found, "url", false)) {
                             var url = found.url;
@@ -74,7 +74,7 @@ angular.module('services').factory('ObjectService', ['$state', '$window', '$log'
                             } else {
                                 $window.location.href = url;
                             }
-                            
+
                         } else {
                             $log.warn("No state or url specified in object type lookup");
                         }

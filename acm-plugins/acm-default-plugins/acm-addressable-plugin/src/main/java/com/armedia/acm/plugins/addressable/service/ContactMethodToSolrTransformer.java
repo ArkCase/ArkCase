@@ -40,6 +40,7 @@ public class ContactMethodToSolrTransformer implements AcmObjectToSolrDocTransfo
         cmDoc.setModifier_lcs(cm.getModifier());
 
         cmDoc.setName(cm.getValue());
+        cmDoc.setTitle_parseable(cm.getValue());
 
         /** Additional properties for full names instead of ID's */
         AcmUser creator = getUserDao().quietFindByUserId(cm.getCreator());

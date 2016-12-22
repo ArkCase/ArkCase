@@ -35,6 +35,7 @@ public class NoteToSolrTransformer implements AcmObjectToSolrDocTransformer<Note
         solr.setObject_type_s(NoteConstants.OBJECT_TYPE);
 
         solr.setDescription_parseable(in.getNote());
+        solr.setTitle_parseable(in.getNote());
         solr.setName(String.format("%s_%d", NoteConstants.OBJECT_TYPE, in.getId()));
 
         solr.setCreate_date_tdt(in.getCreated());
@@ -77,7 +78,7 @@ public class NoteToSolrTransformer implements AcmObjectToSolrDocTransformer<Note
         solrDoc.setAdditionalProperty("parent_object_type_s", in.getParentType());
         solrDoc.setAdditionalProperty("parent_object_id_i", in.getParentId());
         solrDoc.setParent_ref_s(String.format("%d-%s", in.getParentId(), in.getParentType()));
-
+        solrDoc.setTitle_parseable(in.getNote());
         return solrDoc;
     }
 

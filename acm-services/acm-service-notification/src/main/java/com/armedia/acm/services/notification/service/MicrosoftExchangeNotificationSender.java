@@ -1,21 +1,17 @@
 package com.armedia.acm.services.notification.service;
 
-import com.armedia.acm.data.AuditPropertyEntityAdapter;
-import com.armedia.acm.files.propertymanager.PropertyFileManager;
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
-import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.service.outlook.dao.impl.ExchangeWebServicesOutlookDao;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksResultDTO;
+import com.armedia.acm.service.outlook.model.MessageBodyFactory;
 import com.armedia.acm.service.outlook.model.OutlookDTO;
 import com.armedia.acm.service.outlook.service.OutlookService;
-import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
-import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -23,22 +19,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
-public class MicrosoftExchangeNotificationSender implements NotificationSender
+public class MicrosoftExchangeNotificationSender extends NotificationSender
 {
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
-    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
-    private PropertyFileManager propertyFileManager;
-    private String notificationPropertyFileLocation;
-    private MuleContextManager muleContextManager;
-    private AuthenticationTokenService authenticationTokenService;
-    private AuthenticationTokenDao authenticationTokenDao;
     private OutlookService outlookService;
     private ExchangeWebServicesOutlookDao dao;
-    private EcmFileService ecmFileService;
-    private NotificationUtils notificationUtils;
 
     @Override
     public Notification send(Notification notification)
@@ -57,14 +46,15 @@ public class MicrosoftExchangeNotificationSender implements NotificationSender
             EmailWithAttachmentsDTO in = new EmailWithAttachmentsDTO();
             in.setHeader("");
             in.setFooter("");
+            in.setTemplate(notificationTemplate);
 
             String notificationLink = getNotificationUtils().buildNotificationLink(notification.getParentType(), notification.getParentId(),
                     notification.getRelatedObjectType(), notification.getRelatedObjectId());
 
-            String messageBody = notificationLink != null ? String.format("%s Link: %s", notification.getNote(),
-                    notificationLink) : notification.getNote();
+            String messageBody = notificationLink != null ? String.format("%s Link: %s", notification.getNote(), notificationLink)
+                    : notification.getNote();
 
-            in.setBody(messageBody);
+            in.setBody(new MessageBodyFactory().buildMessageBodyFromTemplate(messageBody, "", ""));
             in.setSubject(notification.getTitle());
             in.setEmailAddresses(Arrays.asList(notification.getUserEmail()));
 
@@ -98,8 +88,16 @@ public class MicrosoftExchangeNotificationSender implements NotificationSender
     }
 
     @Override
+    public <T> void sendPlainEmail(Stream<T> emailsDataStream, EmailBuilder<T> emailBuilder, EmailBodyBuilder<T> emailBodyBuilder)
+            throws Exception
+    {
+        throw new UnsupportedOperationException("Not supported.");
+    }
+
+    @Override
     public void sendEmailWithAttachments(EmailWithAttachmentsDTO in, Authentication authentication, AcmUser user) throws Exception
     {
+        in.setTemplate(notificationTemplate);
         OutlookDTO outlookDTO = getOutlookService().retrieveOutlookPassword(authentication);
         AcmOutlookUser outlookUser = new AcmOutlookUser(authentication.getName(), user.getMail(), outlookDTO.getOutlookPassword());
         getOutlookService().sendEmailWithAttachments(in, outlookUser, authentication);
@@ -107,71 +105,12 @@ public class MicrosoftExchangeNotificationSender implements NotificationSender
 
     @Override
     public List<EmailWithEmbeddedLinksResultDTO> sendEmailWithEmbeddedLinks(EmailWithEmbeddedLinksDTO in, Authentication authentication,
-                                                                            AcmUser user) throws Exception
+            AcmUser user) throws Exception
     {
+        in.setTemplate(notificationTemplate);
         OutlookDTO outlookDTO = getOutlookService().retrieveOutlookPassword(authentication);
         AcmOutlookUser outlookUser = new AcmOutlookUser(authentication.getName(), user.getMail(), outlookDTO.getOutlookPassword());
         return getOutlookService().sendEmailWithEmbeddedLinks(in, outlookUser, authentication);
-    }
-
-    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
-    {
-        return auditPropertyEntityAdapter;
-    }
-
-    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
-    {
-        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
-    }
-
-    public PropertyFileManager getPropertyFileManager()
-    {
-        return propertyFileManager;
-    }
-
-    public void setPropertyFileManager(PropertyFileManager propertyFileManager)
-    {
-        this.propertyFileManager = propertyFileManager;
-    }
-
-    public String getNotificationPropertyFileLocation()
-    {
-        return notificationPropertyFileLocation;
-    }
-
-    public void setNotificationPropertyFileLocation(String notificationPropertyFileLocation)
-    {
-        this.notificationPropertyFileLocation = notificationPropertyFileLocation;
-    }
-
-    public MuleContextManager getMuleContextManager()
-    {
-        return muleContextManager;
-    }
-
-    public void setMuleContextManager(MuleContextManager muleContextManager)
-    {
-        this.muleContextManager = muleContextManager;
-    }
-
-    public AuthenticationTokenService getAuthenticationTokenService()
-    {
-        return authenticationTokenService;
-    }
-
-    public void setAuthenticationTokenService(AuthenticationTokenService authenticationTokenService)
-    {
-        this.authenticationTokenService = authenticationTokenService;
-    }
-
-    public AuthenticationTokenDao getAuthenticationTokenDao()
-    {
-        return authenticationTokenDao;
-    }
-
-    public void setAuthenticationTokenDao(AuthenticationTokenDao authenticationTokenDao)
-    {
-        this.authenticationTokenDao = authenticationTokenDao;
     }
 
     public OutlookService getOutlookService()
@@ -194,23 +133,4 @@ public class MicrosoftExchangeNotificationSender implements NotificationSender
         this.dao = dao;
     }
 
-    public EcmFileService getEcmFileService()
-    {
-        return ecmFileService;
-    }
-
-    public void setEcmFileService(EcmFileService ecmFileService)
-    {
-        this.ecmFileService = ecmFileService;
-    }
-
-    public NotificationUtils getNotificationUtils()
-    {
-        return notificationUtils;
-    }
-
-    public void setNotificationUtils(NotificationUtils notificationUtils)
-    {
-        this.notificationUtils = notificationUtils;
-    }
 }

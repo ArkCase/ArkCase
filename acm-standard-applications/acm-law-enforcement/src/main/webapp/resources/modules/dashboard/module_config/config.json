@@ -80,44 +80,52 @@
       "paginationPageSize": 5,
       "columnDefs": [
         {
-          "name": "taskId",
+          "field": "alerts",
+          "displayName": "",
+          "cellTemplate": "<div><a ng-if=\"row.entity.isOverdue\" tooltip=\"{{'dashboard.widgets.myTasks.table.overdue.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-overdue\"><i class=\"fa fa-exclamation-circle icon-overdue\"></i></a><a ng-if=\"row.entity.isDeadline\" tooltip=\"{{'dashboard.widgets.myTasks.table.deadline.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-due-soon\"><i class=\"fa fa-exclamation-triangle icon-due-soon\"></i></a></div>",
+          "width": 40,
+          "enableSorting": false,
+          "enableColumnMenu": false
+        },
+        {
+          "name": "object_id_s",
           "displayName": "dashboard.widgets.myTasks.table.header.taskId",
           "headerCellFilter": "translate",
           "enableSorting": true,
           "type": "number",
-          "cellTemplate": "<a data-ui-sref=\"tasks.main({id: row.entity.taskId})\">{{COL_FIELD}}<\/a>",
+          "cellTemplate": "<a data-ui-sref=\"tasks.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>",
           "width": 75
         },
         {
-          "name": "title",
+          "name": "title_parseable",
           "displayName": "dashboard.widgets.myTasks.table.header.title",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a data-ui-sref=\"tasks.main({id: row.entity.taskId})\">{{COL_FIELD}}<\/a>"
+          "cellTemplate": "<a data-ui-sref=\"tasks.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>"
         },
         {
-          "name": "priority",
+          "name": "priority_lcs",
           "displayName": "dashboard.widgets.myTasks.table.header.priority",
           "headerCellFilter": "translate",
           "width": 75
         },
         {
-          "name": "dueDate",
+          "name": "dueDate_tdt",
           "displayName": "dashboard.widgets.myTasks.table.header.dueDate",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.dueDate | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>",
           "width": 70
         },
         {
-          "name": "status",
+          "name": "status_lcs",
           "displayName": "dashboard.widgets.myTasks.table.header.status",
           "headerCellFilter": "translate",
           "width": 100
         },
         {
-          "name": "parentObjectId",
+          "name": "parent_id_s",
           "displayName": "dashboard.widgets.myTasks.table.header.objectId",
           "headerCellFilter": "translate",
-          "cellTemplate": "<button class='btn-link' ng-click='grid.appScope.myTasks.onClickCaseComplaintId(row.entity.parentObjectType,row.entity.parentObjectId)'>{{COL_FIELD}}</button>",
+          "cellTemplate": "<button class='btn-link' ng-click='grid.appScope.myTasks.onClickCaseComplaintId(row.entity.parent_type_s,row.entity.parent_id_s)'>{{COL_FIELD}}</button>",
           "width": 100
         }
       ]
@@ -134,33 +142,33 @@
       "paginationPageSize": 5,
       "columnDefs": [
         {
-          "name": "complaintNumber",
+          "name": "name",
           "displayName": "dashboard.widgets.myComplaints.table.header.number",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.complaintId})\">{{COL_FIELD}}<\/a>",
+          "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>",
           "width": 175
         },
         {
-          "name": "complaintTitle",
+          "name": "title_parseable",
           "displayName": "dashboard.widgets.myComplaints.table.header.title",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.complaintId})\">{{COL_FIELD}}<\/a>"
+          "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>"
         },
         {
-          "name": "priority",
+          "name": "priority_lcs",
           "displayName": "dashboard.widgets.myComplaints.table.header.priority",
           "headerCellFilter": "translate",
           "width": 75
         },
         {
-          "name": "created",
+          "name": "create_date_tdt",
           "displayName": "dashboard.widgets.myComplaints.table.header.created",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div>{{ row.entity.create_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>",
           "width": 70
         },
         {
-          "name": "status",
+          "name": "status_lcs",
           "displayName": "dashboard.widgets.myComplaints.table.header.status",
           "headerCellFilter": "translate",
           "width": 100
