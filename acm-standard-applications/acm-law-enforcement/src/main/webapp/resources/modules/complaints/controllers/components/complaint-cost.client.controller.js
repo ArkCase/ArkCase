@@ -1,9 +1,9 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.CostController', ['$scope', '$stateParams', '$translate'
+angular.module('complaints').controller('Complaints.CostController', ['$scope', '$stateParams', '$translate', '$state'
     , 'UtilService', 'ObjectService', 'ConfigService', 'Object.CostService', 'Complaint.InfoService'
     , 'Helper.UiGridService', 'Helper.ObjectBrowserService'
-    , function ($scope, $stateParams, $translate
+    , function ($scope, $stateParams, $translate, $state
         , Util, ObjectService, ConfigService, ObjectCostService, ComplaintInfoService
         , HelperUiGridService, HelperObjectBrowserService) {
 
@@ -26,6 +26,7 @@ angular.module('complaints').controller('Complaints.CostController', ['$scope', 
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
+            gridHelper.addButton(config, "edit");
 
             for (var i = 0; i < $scope.config.columnDefs.length; i++) {
                 if ("name" == $scope.config.columnDefs[i].name) {
@@ -37,7 +38,11 @@ angular.module('complaints').controller('Complaints.CostController', ['$scope', 
         };
 
         if (Util.goodPositive(componentHelper.currentObjectId, false)) {
-            ObjectCostService.queryCostsheets(ObjectService.ObjectTypes.COMPLAINT, componentHelper.currentObjectId).then(
+        	$scope.newCostsheetParamsFromObject = {
+        		objectId: componentHelper.currentObjectId,
+                type: ObjectService.ObjectTypes.COMPLAINT
+            }
+        	ObjectCostService.queryCostsheets(ObjectService.ObjectTypes.COMPLAINT, componentHelper.currentObjectId).then(
                 function (costsheets) {
                     componentHelper.promiseConfig.then(function (config) {
                         for (var i = 0; i < costsheets.length; i++) {
@@ -55,6 +60,10 @@ angular.module('complaints').controller('Complaints.CostController', ['$scope', 
                     return costsheets;
                 }
             );
+        }
+        
+        $scope.editRow = function(rowEntity){
+        	$state.go('frevvo.edit-costsheet',{id: rowEntity.id});
         }
     }
 ]);

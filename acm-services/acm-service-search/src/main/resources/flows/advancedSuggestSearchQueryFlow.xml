@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:https="http://www.mulesoft.org/schema/mule/https"
+      xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+      xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
+      version="CE-3.7.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/https/current/mule-https.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
+
+    <https:endpoint name="advancedSuggestQuerySolrEndpoint"
+                    address="https://${solr.host}:${solr.port}/${solr.contextRoot}/${solr.advancedsearch.core}/${solr.suggestHandler}"
+                    contentType="application/x-www-form-urlencoded; charset=UTF-8"
+                    mimeType="application/json"
+                    encoding="UTF-8"
+                    method="POST"
+                    exchange-pattern="request-response"
+                    doc:name="Issue an advanced search request to SOLR">
+    </https:endpoint>
+
+
+    <flow name="advancedSuggestQuery" doc:name="Advanced Suggester Search Query Flow">
+        <vm:inbound-endpoint
+                address="vm://advancedSuggesterQuery.in"
+                exchange-pattern="request-response"
+                doc:name="VM"/>
+        <logger category="com.armedia.acm.plugins.search" level="DEBUG"/>
+
+        <timer-interceptor/>
+
+        <!-- NOTE: Intellij IDEA incorrectly claims scripting:transformer is not allowed here. This XML is valid. -->
+        <scripting:transformer name="advancedSuggestDataAccessControlFilters">
+            <scripting:script engine="groovy" file="scripts/dataAccessFilter.groovy"/>
+        </scripting:transformer>
+
+        <set-payload
+                value="df=suggest_ngram&amp;q=#[message.inboundProperties['query']]&amp;fq=#[message.inboundProperties['dataAccessFilter']]&amp;fq=#[message.inboundProperties['denyAccessFilter']]&amp;fq=#[message.inboundProperties['childObjectFilterQuery']]&amp;topLevel=#[message.inboundProperties['isTopLevelObjectFilter']]&amp;dac=#[message.inboundProperties['childObjectDacFilter']]&amp;fq=#[message.inboundProperties['isSubscribed']]&amp;start=#[message.inboundProperties['firstRow']]&amp;rows=#[message.inboundProperties['maxRows']]&amp;wt=json&amp;sort=#[message.inboundProperties['sort']]&amp;#[message.inboundProperties['rowQueryParametars']]"/>
+
+        <!--<set-payload-->
+        <!--value="df=suggest_ngram&amp;q=#[message.inboundProperties['query']]&amp;start=#[message.inboundProperties['firstRow']]&amp;rows=#[message.inboundProperties['maxRows']]&amp;wt=json&amp;sort=#[message.inboundProperties['sort']]"/>-->
+
+        <logger category="com.armedia.acm.plugins.search" level="DEBUG"/>
+
+        <https:outbound-endpoint ref="advancedSuggestQuerySolrEndpoint">
+            <response>
+                <object-to-string-transformer/>
+            </response>
+
+        </https:outbound-endpoint>
+
+    </flow>
+
+</mule>

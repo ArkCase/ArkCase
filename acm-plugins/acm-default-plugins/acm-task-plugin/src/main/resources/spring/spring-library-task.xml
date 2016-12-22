@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+             http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 
     <bean id="taskPluginProperties"
           class="org.springframework.beans.factory.config.PropertiesFactoryBean">
@@ -14,159 +16,6 @@
         <property name="properties">
             <props/>
         </property>
-    </bean>
-
-    <!-- actions -->
-    <bean id="sendTasksSolrAction" class="com.armedia.acm.event.AcmAction">
-        <property name="actionId" value="SEND_TASKS_TO_SOLR"/>
-        <property name="actionName" value="Send Tasks to SOLR"/>
-        <property name="targetMuleEndpoint" value="jms://taskToSolr.in"/>
-        <property name="parameters">
-            <list/>
-        </property>
-    </bean>
-    <bean id="sendActivitiTasksToSolrAction" class="com.armedia.acm.event.AcmAction">
-        <property name="actionId" value="SEND_ACTIVITI_TASKS_TO_SOLR"/>
-        <property name="actionName" value="Send Activiti Tasks to SOLR"/>
-        <property name="targetMuleEndpoint" value="jms://activitiTaskToSolr.in"/>
-        <property name="parameters">
-            <list/>
-        </property>
-    </bean>
-
-    <bean id="createTaskContainerFolder" class="com.armedia.acm.event.AcmAction">
-        <property name="actionId" value="CREATE_TASK_CONTAINER_FOLDER"/>
-        <property name="actionName" value="Create Task Container Folder"/>
-        <property name="targetMuleEndpoint" value="jms://createTaskContainerFolder.in"/>
-        <property name="parameters">
-            <list/>
-        </property>
-    </bean>
-
-    <!-- event handlers -->
-
-    <!-- container folder handlers -->
-    <bean id="activitiTaskCreatedFolderHandler" class="com.armedia.acm.event.EventResponse">
-        <property name="eventName" value="com.armedia.acm.activiti.task.create"/>
-        <property name="action" ref="createTaskContainerFolder"/>
-        <property name="enabled" value="true"/>
-        <property name="parameters">
-            <map/>
-        </property>
-        <property name="respondPredicate" ref="eventSucceededPredicate"/>
-    </bean>
-
-    <bean id="adHocTaskCreatedFolderHandler" class="com.armedia.acm.event.EventResponse">
-        <property name="eventName" value="com.armedia.acm.app.task.create"/>
-        <property name="action" ref="createTaskContainerFolder"/>
-        <property name="enabled" value="true"/>
-        <property name="parameters">
-            <map/>
-        </property>
-        <property name="respondPredicate" ref="eventSucceededPredicate"/>
-    </bean>
-
-    <!-- event handlers quick search-->
-
-    <bean id="sendAdHocTaskCreateToSolrAction" class="com.armedia.acm.event.EventResponse">
-        <property name="eventName" value="com.armedia.acm.app.task.create"/>
-        <property name="action" ref="sendTasksSolrAction"/>
-        <property name="enabled" value="true"/>
-        <property name="parameters">
-            <map/>
-        </property>
-        <property name="respondPredicate" ref="eventSucceededPredicate"/>
-    </bean>
-
-    <bean id="sendAdHocTaskCompleteToSolrAction" class="com.armedia.acm.event.EventResponse">
-        <property name="eventName" value="com.armedia.acm.app.task.complete"/>
-        <property name="action" ref="sendTasksSolrAction"/>
-        <property name="enabled" value="true"/>
-        <property name="parameters">
-            <map/>
-        </property>
-        <property name="respondPredicate" ref="eventSucceededPredicate"/>
-    </bean>
-
-    <bean id="sendAdHocTaskDeleteToSolrAction" class="com.armedia.acm.event.EventResponse">
-        <property name="eventName" value="com.armedia.acm.app.task.delete"/>
-        <property name="action" ref="sendTasksSolrAction"/>
-        <property name="enabled" value="true"/>
-        <property name="parameters">
-            <map/>
-        </property>
-        <property name="respondPredicate" ref="eventSucceededPredicate"/>
-    </bean>
-
-    <bean id="sendAdHocTaskSaveToSolrAction" class="com.armedia.acm.event.EventResponse">
-        <property name="eventName" value="com.armedia.acm.app.task.save"/>
-        <property name="action" ref="sendTasksSolrAction"/>
-        <property name="enabled" value="true"/>
-        <property name="parameters">
-            <map/>
-        </property>
-        <property name="respondPredicate" ref="eventSucceededPredicate"/>
-    </bean>
-
-
-    <bean id="sendAdHocTaskTerminateToSolrAction" class="com.armedia.acm.event.EventResponse">
-        <property name="eventName" value="com.armedia.acm.app.task.terminate"/>
-        <property name="action" ref="sendTasksSolrAction"/>
-        <property name="enabled" value="true"/>
-        <property name="parameters">
-            <map/>
-        </property>
-        <property name="respondPredicate" ref="eventSucceededPredicate"/>
-    </bean>
-
-    <bean id="sendActivitiTaskCreateToSolrAction" class="com.armedia.acm.event.EventResponse">
-        <property name="eventName" value="com.armedia.acm.activiti.task.create"/>
-        <property name="action" ref="sendActivitiTasksToSolrAction"/>
-        <property name="enabled" value="true"/>
-        <property name="parameters">
-            <map/>
-        </property>
-        <property name="respondPredicate" ref="eventSucceededPredicate"/>
-    </bean>
-
-    <bean id="sendActivitiTaskCompleteToSolrAction" class="com.armedia.acm.event.EventResponse">
-        <property name="eventName" value="com.armedia.acm.activiti.task.complete"/>
-        <property name="action" ref="sendActivitiTasksToSolrAction"/>
-        <property name="enabled" value="true"/>
-        <property name="parameters">
-            <map/>
-        </property>
-        <property name="respondPredicate" ref="eventSucceededPredicate"/>
-    </bean>
-
-    <bean id="sendActivitiTaskDeleteToSolrAction" class="com.armedia.acm.event.EventResponse">
-        <property name="eventName" value="com.armedia.acm.activiti.task.delete"/>
-        <property name="action" ref="sendActivitiTasksToSolrAction"/>
-        <property name="enabled" value="true"/>
-        <property name="parameters">
-            <map/>
-        </property>
-        <property name="respondPredicate" ref="eventSucceededPredicate"/>
-    </bean>
-
-    <bean id="sendActivitiTaskSaveToSolrAction" class="com.armedia.acm.event.EventResponse">
-        <property name="eventName" value="com.armedia.acm.activiti.task.save"/>
-        <property name="action" ref="sendActivitiTasksToSolrAction"/>
-        <property name="enabled" value="true"/>
-        <property name="parameters">
-            <map/>
-        </property>
-        <property name="respondPredicate" ref="eventSucceededPredicate"/>
-    </bean>
-
-    <bean id="sendActivitiTaskAssignmentToSolrAction" class="com.armedia.acm.event.EventResponse">
-        <property name="eventName" value="com.armedia.acm.activiti.task.assignment"/>
-        <property name="action" ref="sendActivitiTasksToSolrAction"/>
-        <property name="enabled" value="true"/>
-        <property name="parameters">
-            <map/>
-        </property>
-        <property name="respondPredicate" ref="eventSucceededPredicate"/>
     </bean>
 
     <!-- lookup tables -->
@@ -208,7 +57,6 @@
         <property name="fileService" ref="ecmFileService"/>
         <property name="fileDao" ref="ecmFileDao"/>
         <property name="taskBusinessRule" ref="taskBusinessRule"/>
-        <property name="taskExtractor" ref="extractAcmTaskFromEvent"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="priorityLevelToNumberMap" ref="priorityLevelToNumberMap"/>
         <property name="taskEventPublisher" ref="taskEventPublisher"/>
@@ -240,11 +88,6 @@
         <property name="acmObjectHistoryEventPublisher" ref="acmObjectHistoryEventPublisher"/>
         <property name="taskEventPublisher" ref="taskEventPublisher"/>
         <property name="acmAssignmentDao" ref="acmAssignmentDao"/>
-    </bean>
-
-    <bean id="extractAcmTaskFromEvent" class="com.armedia.acm.plugins.task.service.impl.ExtractAcmTaskFromEvent">
-        <property name="dao" ref="acmTaskDao"/>
-        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
 
     <bean id="taskToSolrTransformer" class="com.armedia.acm.plugins.task.service.impl.TaskToSolrTransformer">
@@ -288,4 +131,65 @@
         <property name="objectAssociationService" ref="objectAssociationService"/>
         <property name="objectAssociationEventPublisher" ref="objectAssociationEventPublisher"/>
     </bean>
+    
+    <bean id="acmApplicationTaskEventHandler" class="com.armedia.acm.plugins.task.service.impl.AcmApplicationTaskEventHandler">
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="taskDao" ref="acmTaskDao"/>
+        <property name="sendDocumentsToSolr" ref="sendDocumentsToSolr"/>
+        <property name="taskToSolrTransformer" ref="taskToSolrTransformer"/>
+        <property name="eventList">
+             <list value-type="java.lang.String">
+                 <value>create</value>
+                 <value>complete</value>
+                 <value>delete</value>
+                 <value>save</value>
+                 <value>assignment</value>
+             </list>
+         </property>
+    </bean>
+    
+    <bean id="acmTaskActivitiEventHandler" class="com.armedia.acm.plugins.task.service.impl.AcmTaskActivitiEventHandler">
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="taskDao" ref="acmTaskDao"/>
+        <property name="dataAccessPrivilegeListener" ref="dataAccessPrivilegeListener"/>
+        <property name="acmParticipantDao" ref="acmParticipantDao"/>
+        <property name="sendDocumentsToSolr" ref="sendDocumentsToSolr"/>
+        <property name="taskToSolrTransformer" ref="taskToSolrTransformer"/>
+        <property name="eventList">
+             <list value-type="java.lang.String">
+                 <value>create</value>
+                 <value>complete</value>
+                 <value>delete</value>
+                 <value>save</value>
+                 <value>terminate</value>
+             </list>
+         </property>
+    </bean>
+
+    <bean id="upcomingTasksNotifier" class="com.armedia.acm.plugins.task.service.impl.UpcomingTasksNotifier">
+        <property name="activitiTaskService" ref="activitiTaskService"/>
+        <property name="activitiTaskDao" ref="acmTaskDao"/>
+        <property name="smtpNotificationSender" ref="smtpNotificationSender"/>
+        <property name="messageSubject" value="${upcoming.tasks.notification.subject}"/>
+        <property name="messageBodyTemplate" value="${upcoming.tasks.notification.body.template}"/>
+    </bean>
+
+    <bean id="overdueTasksNotifier" class="com.armedia.acm.plugins.task.service.impl.OverdueTasksNotifier">
+        <property name="activitiTaskService" ref="activitiTaskService"/>
+        <property name="activitiTaskDao" ref="acmTaskDao"/>
+        <property name="smtpNotificationSender" ref="smtpNotificationSender"/>
+        <property name="messageSubject" value="${overdue.tasks.notification.subject}"/>
+        <property name="messageBodyTemplate" value="${overdue.tasks.notification.body.template}"/>
+    </bean>
+
+    <task:scheduler id="dueTasksNotifierScheduler" pool-size="1"/>
+    <task:scheduled-tasks scheduler="dueTasksNotifierScheduler">
+        <!-- checks for upcoming tasks every day at 00:00 AM-->
+        <task:scheduled ref="upcomingTasksNotifier" method="notifyTaskAssignees" cron="0 0 0 * * *"/>
+        <!-- <task:scheduled ref="upcomingTasksNotifier" method="notifyTaskAssignees" initial-delay="60000" fixed-rate="60000"/> -->
+        <!-- checks for overdue tasks every day at 00:00 AM-->
+        <task:scheduled ref="overdueTasksNotifier" method="notifyTaskAssignees" cron="0 0 0 * * *"/>
+        <!-- <task:scheduled ref="overdueTasksNotifier" method="notifyTaskAssignees" initial-delay="60000" fixed-rate="60000"/> -->
+    </task:scheduled-tasks>
+
 </beans>

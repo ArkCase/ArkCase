@@ -1,9 +1,9 @@
 'use strict';
 
-angular.module('cases').controller('Cases.CostController', ['$scope', '$stateParams', '$translate'
+angular.module('cases').controller('Cases.CostController', ['$scope', '$stateParams', '$translate', '$state'
     , 'UtilService', 'ObjectService', 'ConfigService', 'Object.CostService', 'Case.InfoService'
     , 'Helper.UiGridService', 'Helper.ObjectBrowserService'
-    , function ($scope, $stateParams, $translate
+    , function ($scope, $stateParams, $translate, $state
         , Util, ObjectService, ConfigService, ObjectCostService, CaseInfoService
         , HelperUiGridService, HelperObjectBrowserService) {
 
@@ -28,6 +28,7 @@ angular.module('cases').controller('Cases.CostController', ['$scope', '$statePar
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
+            gridHelper.addButton(config,"edit");
 
             for (var i = 0; i < $scope.config.columnDefs.length; i++) {
                 if ("name" == $scope.config.columnDefs[i].name) {
@@ -41,6 +42,10 @@ angular.module('cases').controller('Cases.CostController', ['$scope', '$statePar
         var onObjectInfoRetrieved = function (objectInfo) {
             var currentObjectId = Util.goodMapValue(objectInfo, "id");
             if (Util.goodPositive(currentObjectId, false)) {
+            	$scope.newCostsheetParamsFromObject = {
+            		objectId: objectInfo.id,
+                    type: ObjectService.ObjectTypes.CASE_FILE
+                }
                 ObjectCostService.queryCostsheets(ObjectService.ObjectTypes.CASE_FILE, currentObjectId).then(
                     function (costsheets) {
                         for (var i = 0; i < costsheets.length; i++) {
@@ -59,5 +64,8 @@ angular.module('cases').controller('Cases.CostController', ['$scope', '$statePar
                 );
             }
         };
+        $scope.editRow = function(rowEntity){
+        	$state.go('frevvo.edit-costsheet',{id: rowEntity.id});
+        }
     }
 ]);

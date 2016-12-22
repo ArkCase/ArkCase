@@ -1,15 +1,15 @@
 package com.armedia.acm.audit.listeners;
 
+import com.armedia.acm.activiti.model.SpringActivitiEvent;
 import com.armedia.acm.audit.model.AuditConstants;
 import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.audit.service.AuditService;
 import com.armedia.acm.web.api.MDCConstants;
-
 import org.activiti.engine.delegate.event.ActivitiEvent;
-import org.activiti.engine.delegate.event.ActivitiEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.context.ApplicationListener;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  * <p>
  * Created by Bojan Milenkoski on 21.1.2016.
  */
-public class AcmActivitiEventListener implements ActivitiEventListener
+public class AcmActivitiEventListener implements ApplicationListener<SpringActivitiEvent>
 {
     private static final String EVENT_TYPE = "com.armedia.acm.audit.activiti.event";
 
@@ -32,9 +32,12 @@ public class AcmActivitiEventListener implements ActivitiEventListener
     private boolean activitiEventsLoggingEnabled;
 
     @Override
-    public void onEvent(ActivitiEvent event)
+    public void onApplicationEvent(SpringActivitiEvent springActivitiEvent)
     {
-        log.debug("Activiti event handling");
+
+        ActivitiEvent event = (ActivitiEvent) springActivitiEvent.getSource();
+
+        log.debug("Activiti event handling, event type {}", event.getType());
 
         switch (event.getType())
         {
@@ -88,22 +91,13 @@ public class AcmActivitiEventListener implements ActivitiEventListener
                 eventProperties.putAll(
                         processVariables.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().toString())));
             }
-
             auditEvent.setEventProperties(eventProperties);
 
-            if (log.isTraceEnabled())
-            {
-                log.trace("Activiti AuditEvent: " + auditEvent.toString());
-            }
+            log.trace("Activiti AuditEvent: {}", auditEvent);
+
 
             getAuditService().audit(auditEvent);
         }
-    }
-
-    @Override
-    public boolean isFailOnException()
-    {
-        return false;
     }
 
     public AuditService getAuditService()

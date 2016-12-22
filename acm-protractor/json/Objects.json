@@ -13,12 +13,22 @@
             },
             "adminuser": {
                 "username": "ann-acm",
-                "password": "Armedia#1"
+                "password": "AcMd3v$"
+            },
+            "notSupervisorNotInOwningGroup": {
+                "username": "sally-acm",
+                "password": "AcMd3v$"
+            },
+            "notSupervisorInOwningGroup" : {
+                "username": "ian-acm",
+                "password": "AcMd3v$"
             }
+
         }
     },
-    "basepage":{
-        "locators":{
+    "basepage": {
+
+        "locators": {
             "newButton": ".//a[@class='dropdown-toggle']/i",
             "root": ".//span[@title='root']",
             "newCorrespondence": ".//li[@data-command='subMenuCorrespondenceForms']",
@@ -34,10 +44,36 @@
             "deleteDoc": ".//li[@data-command='remove']",
             "downloadDoc": ".//li[@data-command='download']",
             "fadeElementDeleteNote": "//*[@modal-animation-class='fade']",
-            "fadeElementEditNote": "//*[@ng-click='close($event)'"
+            "fadeElementEditNote": "//*[@ng-click='close($event)'",
+            "detailsPicture": ".//button[@data-original-title='Picture']",
+            "browseButton": "files",
+            "detailsUploadedImage": ".//*[@class='note-editable panel-body']/p/img",
+            "fullnameLink": ".fullname",
+            "logoutLink": "Logout",
+            "newDocument": ".//li[@data-command='subMenuFileTypes']",
+            "checkout": ".//li[@data-command='checkout']",
+            "checkin" : ".//li[@data-command='checkin']",
+            "cancelEditing": ".//li[@data-command='cancelEditing']",
+            "logoutSucesfullMessage": ".alert.alert-success",
+            "checkoutDisabled": ".//li[@data-command='checkout'][@aria-disabled='true']",
+            "checkinDisabled": ".//li[@data-command='checkin'][@aria-disabled='true']",
+            "cancelEditingDisabled": ".//li[@data-command='cancelEditing'][@aria-disabled='true']",
+            "lockIcon": "//table/tbody/tr[2]/td[2]/span",
+            "tasksLink": "Tasks",
+            "reportTitle": "title",
+            "docTreeExpand": "//doc-tree/table[2]/tbody/tr/td[3]/span/span[1]",
+            "fileTitle": "//table/tbody/tr[2]/td[3]/span/span[3]",
+            "docViewNotesLink": "Notes",
+            "docViewAddNoteButton":".//button[@ng-disabled='notesInit.isReadOnly']",
+            "saveButton": "Save",
+            "noteColumnValue": ".ui-grid-cell-contents.ng-binding.ng-scope",
+            "restrictCheckbox": "restricted",
+            "restrictCheckboxDisabled": ".//input[@ng-model='restricted'][@disabled='disabled']"
 
         },
-        "data":{
+        "data": {
+            "reportTitle": "Report of Investigation Title",
+            "note": "NoteText"
 
         }
 
@@ -125,7 +161,7 @@
             "percentCompletitionBtn": ".//*[@class='clearfix']/div[2]/div[1]/div/form/div/span/button[1]",
             "completeBtn": "Complete",
             "deleteBtn": "Delete",
-            "refreshBtn": "ng-click='refresh()']",
+            "refreshBtn": ".//button[@ng-click='refresh()']",
             "detailsLink": "link in componentLinks",
             "detailsTextArea": ".//*[@class='note-editable panel-body']",
             "detailsSaveBtn": ".//*[@class='panel-title']/div/button/i",
@@ -363,14 +399,21 @@
             "lastName": "initiatorLastName",
             "incidentCategoryDDListBox": ".//div[@cname='category']/div/input[1]",
             "complaintTitle": "complaintTitle",
-            "submitButton": "Submit",
-            "radioButtonNewInitiator": ".//*[@value='newInitiator']"
+            "submitButton": "//input[@name='actionType'][@value='Submit']",
+            "radioButtonNewInitiator": ".//*[@value='newInitiator']",
+            "closeComplaintButton": ".//a[@ui-sref='frevvo.close-complaint(closeParams)']",
+            "complaintDispositionDDListBox": ".//div[@cname='disposition']/div/input[1]",
+            "closeComplaintDescription": ".note-editable",
+            "fadeElementComplaint":".//div[@class='modal-backdrop fade in']",
+            "complaintTitleLink": ".//a[@editable-text='objectInfo.complaintTitle']"
         },
         "data": {
             "firstName": "ComplaintFirstName",
             "lastName": "ComplaintLastName",
             "category": "Agricultural",
-            "title": "ComplaintTitle"
+            "title": "ComplaintTitle",
+            "description": "Description",
+            "approver": "samuel"
         }
     },
     "casepage": {
@@ -397,26 +440,28 @@
             "assigneeBtn": ".//*[@class='editable-controls form-group']/..//button[1]",
             "createdDate": ".//*[@class='h4 font-bold ng-binding']/..//div",
             "casesType": ".//a[@editable-select='objectInfo.caseType']",
-            "changeCaseStatusBtn": ".//*[@class='pull-right']/..//div/a[3]",
-            "newCasesBtn": ".//*[@class='pull-right']/..//div/a[1]",
-            "editBtn": ".//*[@class='pull-right']/..//div/a[2]",
-            "subscribeBtn": ".//*[@class='pull-right']/..//div/button[2]",
+            "changeCaseStatusBtn": "[ui-sref='frevvo.change-case-status(changeCaseStatusParams)']",
+            "newCasesButton": "[ui-sref='frevvo.new-case()']",
+            "editBtn": "[ui-sref='frevvo.edit-case(editParams)']",
+            "subscribeButton": "Subscribe",
+            "unsubscribeButton": "Unsubscribe",
             "mergeBtn": ".//*[@class='pull-right']/..//div/button[3]",
             "splitBtn": ".//*[@class='pull-right']/..//div/button[4]",
             "refreshBtn": ".//*[@class='btn-group']/..//button[5]",
             "changeCaseStatusTitle": "facade",
+            "reinvestigateBtn":"[ui-sref='frevvo.reinvestigate(reinvestigateParams)']", 
             "changeStatusDropDown": "input _frevvo-disable-backspace",
             "statusClosed": ".//*[@class='input _frevvo-disable-backspace']/..//li[4]",
-            "selectApprover": ".//*[@class='f-table-row s-expanded s-linked s-untyped s-invalid']/..//td[5]",
+            "selectApprover": "approverName",
             "addUser": ".//*[@id='labPoTitle']",
             "searchForUser": ".//*[@id='edtPoSearch']",
             "goBtn": ".//*[@class='input-group']/..//span/button",
             "addBtn": ".//*[@id='dlgObjectPicker']/div/div/div[3]/button[2]",
             "searchedUser": "//*[@id='divPoResults']/div/table/tbody/tr/td[3]",
-            "tasksLink": ".//*[@class='tabbed-footer']/..//ul/li[7]/a",
+            "tasksLink": ".//*[@class='fa fa-check-circle']",
             "tasksTable": ".//*[@class='panel panel-success panel-grid']",
             "taskTitle": ".//*[@class='ng-binding ng-scope']",
-            "notesLink": ".//*[@class='tabbed-footer']/..//ul/li[6]/a",
+            "notesLink": ".//*[@class='fa fa-comments']",
             "addNoteBtn": ".//*[@class='panel-title']/..//button",
             "noteTextArea": "note.note",
             "saveNoteBtn": ".//*[@class='modal-footer ng-scope']/..//button[2]",
@@ -424,15 +469,15 @@
             "deleteNoteBtn": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
             "editNoteBtn": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
             "tag": "a",
-            "emptyNoteTable": "ui-grid-viewport ng-isolate-scope",
+            "emptyNoteTable": ".//*[@class='ui-grid-viewport ng-isolate-scope']",
             "addNewTaskBtn": ".//*[@class='panel-title']/..//button/i",
             "taskTableRows": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
-            "peopleLinkBtn": ".//*[@class='tabbed-footer']/..//ul/li[3]/a",
+            "peopleLinkBtn": ".//*[@class='fa fa-user']",
             "peopleTableColumns": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
             "peopleTable": ".//*[@class='panel panel-success panel-grid']",
             "addPeopleBtn": ".//*[@class='panel-title']/..//button",
             "personsTypeDropDown": "person.personType",
-            "personFirstNameInput":"person.givenName",
+            "personFirstNameInput": "person.givenName",
             "personLastNameInput": "person.familyName",
             "savePersonBtn": ".//*[@class='modal-footer ng-scope']/..//button[2]",
             "addContactMethodBtn": "[ng-click = 'grid.appScope.addNewContactMethods(row)']",
@@ -440,13 +485,13 @@
             "contactValue": "contact.value",
             "saveContactBtn": "[ng-click = 'onClickOk()']",
             "deleteContactMethodBtn": "[ng-click = 'grid.appScope.deleteRowContactMethods(row.entity)']",
-            "emptyContactMethodTable": "[ng-style='colContainer.getViewportStyle()']" ,
+            "emptyContactMethodTable": "[ng-style='colContainer.getViewportStyle()']",
             "editContactMethodBtn": "[ng-click='grid.appScope.editRowContactMethods(row.entity)']",
             "addOgranizationBtn": "[ng-click='grid.appScope.addNewOrganizations(row)']",
-            "organizationTypeDropDown":"organization.organizationType",
+            "organizationTypeDropDown": "organization.organizationType",
             "organizationValueInput": "organization.organizationValue",
-            "saveOrganizationBtn":"[ng-click = 'onClickOk()']",
-            "organizationDeleteBtn":"[ng-click='grid.appScope.deleteRowOrganizations(row.entity)']",
+            "saveOrganizationBtn": "[ng-click = 'onClickOk()']",
+            "organizationDeleteBtn": "[ng-click='grid.appScope.deleteRowOrganizations(row.entity)']",
             "emptyOrganizationTable": "[ng-style='colContainer.getViewportStyle()']",
             "organizationEditBtn": " [ng-click='grid.appScope.editRowOrganizations(row.entity)']",
             "addAddressBtn": "[ng-click = 'grid.appScope.addNewAddresses(row)']",
@@ -462,14 +507,62 @@
             "addAliasesBtn": "[ng-click='grid.appScope.addNewAliases(row)']",
             "aliasesDropdown": "alias.aliasType",
             "aliasesValue": "alias.aliasValue",
-            "saveAliasesBtn":"[ng-click = 'onClickOk()']",
+            "saveAliasesBtn": "[ng-click = 'onClickOk()']",
             "deleteAliasBtn": "[ng-click='grid.appScope.deleteRowAliases(row.entity)']",
             "editAliasBtn": "[ng-click='grid.appScope.editRowAliases(row.entity)']",
             "caseTypeListBox": ".//ul[@role='listbox']/li",
             "documentsLink": "//span[contains(text(),'Documents')]",
             "expandLinksButton": ".//a[@title='Show links']",
-            "fancyTreeExpandTop": "html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/object-tree/section/div/div/div/ul/li[1]/span/span[1]"
-
+            "fancyTreeExpandTop": "//object-tree/section/div/div/div/ul/li[1]/span/span[1]",
+            "tagsLinkBtn": ".//*[@class='fa fa-tags']",
+            "addNewTagBtn": "[ng-click='addNew()']",
+            "addTagInput": "newTag.text",
+            "tagPopUpTitle": ".//*[@class='modal-header ng-scope']/..//h3/span",
+            "addTagBtn": "[ng-click='onClickOk()']",
+            "tagTableColumns": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
+            "deleteTagBtn": "[ng-click='grid.appScope.deleteRow(row.entity)']",
+            "refreshCasesList": "[ng-click='onClickRefresh()']",
+            "firstCaseInCasesList": ".//*[@class='tree']/..//ul/li[1]",
+            "secondCaseInCasesList": ".//*[@class='tree']/..//ul/li[2]",
+            "referenceLink": ".//*[@class='fa fa-exchange']",
+            "addReferenceBtn": "[ng-click='addReference()']",
+            "searchForReferenceInput": "searchQuery",
+            "searchReferenceBtn": "[ng-click='queryExistingItems()']",
+            "searchedReferenceResult": "(rowRenderIndex, row) in rowContainer.renderedRows track by $index",
+            "caseID": ".//*[@class='col-xs-6  text-right']/..//div[2]/h4",
+            "addedReferenceRow": "(rowRenderIndex, row) in rowContainer.renderedRows track by $index",
+            "referenceRow": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
+            "cancelBtn": "[ng-click='onClickCancel()']",
+            "newTimesheetLink": "Timesheet",
+            "timesheetLinkBtn": ".//*[@class='fa fa-clock-o']",
+            "dueDate": "//a[@editable-bsdate='dateInfo.dueDate']",
+            "dueDateInput": "[init-date='dateInfo.dueDate']",
+            "dueDateTodayBtn": "Today",
+            "confirmDueDateBtn": ".//*[@class='editable-controls form-group']/..//button[1]",
+            "newCostsheetLink=": "Costsheet",
+            "hitstoryLink": ".//*[@class='fa fa-bell-o']",
+            "historyTable": ".//*[@class='panel panel-success panel-grid']",
+            "historyTableRow": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
+            "timesheetTableRow": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
+            "costSheetLinkBtn": ".//*[@class='fa fa-money']",
+            "caseTitleStatus": ".//*[@class='ng-binding']",
+            "participantsTab": "[extid='participantsTab']",
+            "selectParticipantType": ".//*[@class='f-table-row s-expanded s-linked s-untyped s-valid']/..//td[5]",
+            "selectParticipant": "participantName",
+            "searchForUserInput": "//*[@class='modal-search-header']/..//input",
+            "searchUserBtn": "Search",
+            "OkBtn": "OK",
+            "searchedUserName": ".//*[@class='ui-grid-cell-contents ng-binding ng-scope']",
+            "participantLinkBtn": ".//*[@class='fa fa-users']",
+            "participantTableRow":".//*[@class='ui-grid-cell-contents ng-binding ng-scope']",
+            "participantTable": ".//*[@class='panel panel-success panel-grid']",
+            "priorityType": ".//*[@class='ui-grid-cell-contents ui-grid-header-cell-primary-focus']",
+            "participantEditBtn":"[ng-click='grid.appScope.editRow(row.entity)']",
+            "modalParticipantType": "participant.participantType" ,
+            "modalParticipantName": "participant.participantLdapId",
+            "saveParticipantBtn": "Save",
+            "participantDeleteBtn": "[ng-click='grid.appScope.deleteRow(row.entity)']",
+            "owningGroup": ".//a[@editable-select='owningGroup']"
         },
 
         "data": {
@@ -490,7 +583,7 @@
             "peopleFirstName": "Milan",
             "peopleLastName": "Jovanovski",
             "peopleFirstNameEdit": "Milan1",
-            "peopleLastNameedit":"Jovanovski1",
+            "peopleLastNameedit": "Jovanovski1",
             "peopleTypeDefendant": "Defendant",
             "peopleTypeWitness": "Witness",
             "peopleTypeWASOfficer": "WAS Officer",
@@ -502,17 +595,17 @@
             "contactMethodMobile": "Mobile",
             "contactMethodEmail": "Email",
             "contactMethodFacebook": "Facebook",
-            "organizationTypeNonProfit":"Non-Profit",
-            "organizationTypeGoverment":"Government",
-            "organizationTypeCorporation":"Corporation",
+            "organizationTypeNonProfit": "Non-Profit",
+            "organizationTypeGoverment": "Government",
+            "organizationTypeCorporation": "Corporation",
             "addressTypeBusiness": "Business",
             "addressTypeHome": "Home",
             "street": "First street",
             "city": "city",
             "state": "state",
-            "zip":"1000",
+            "zip": "1000",
             "country": "Arizona",
-            "editStreet":"Second street",
+            "editStreet": "Second street",
             "editCity": "edit city",
             "editState": "Washington",
             "editZip": "9000",
@@ -521,12 +614,105 @@
             "aliasMarried": "Married",
             "aliasValue": "Alias",
             "editAlias": "editAlias",
-            "statusClosed":"Closed",
-            "automatedTaskTitle": "Review Request to Change Case Status"
+            "statusClosed": "Closed",
+            "tagname": "tag1",
+            "unsubscribeBtn": "Unsubscribe",
+            "subscribeBtn": "Subscribe",
+            "caseName": "NewCaseNew",
+            "referenceCaseName": "Reference case",
+            "referenceType": "CASE_FILE",
+            "referenceStatusDraft": "DRAFT",
+            "historyEvent": "Case File Created",
+            "timeSheet": "Timesheet",
+            "totalHours": "56",
+            "statusDraft": "DRAFT",
+            "owningGroup": "ACM_INVESTIGATOR_DEV"
+        }
+
+    },
+
+    "timetrackingPage": {
+
+        "locators": {
+
+            "newTimesheetLink": "Timesheet",
+            "timesheetDropDown": ".//*[@class='input _frevvo-disable-backspace']",
+            "sundayInput": "sunday",
+            "mondayInput": "monday",
+            "tuesdayInput": "tuesday",
+            "wednsdayInput": "wednesday",
+            "thursdayInput": "thursday",
+            "fridayInput": "friday",
+            "saturdayInput": "saturday",
+            "timetrackingTitle": ".//*[@class='f-message decorator']/..//div/b",
+            "saveBtn": "Save",
+            "newTimesheetBtn": "New Timesheet",
+            "editTimesheetBtn": "Edit Timesheet",
+            "caseFileModule": "a[href*='#!/cases//main']",
+            "timesheetsPageTitle": ".//*[@class='module-header']/..//h3/span",
+            "nextWeekBtn": "Next Week",
+            "periodInput": "period"
+
+
+
+        },
+        "data": {
+
+            "date": "00"
+        }
+    },
+
+    "costsheetPage": {
+
+        "locators": {
+
+            "costsheetLink": "Costsheet",
+            "typeDropDown": "type",
+            "codeDropDown": "objectId",
+            "dateInput": "date",
+            "titleInput": "title",
+            "descriptionInput": ".//*[@class='f-control Twelve columns  f-input  s-valid  s-linked Text  s-untyped']",
+            "amountInput": "amount",
+            "saveBtn": "Save",
+            "expensesDropDown": ".//*[@class='input _frevvo-disable-backspace']",
+            "costsheetPageTitle": ".//*[@class='module-header']/..//h3/span"
+
+
+        },
+
+        "data": {
+
+            "Taxi": "Taxi",
+            "Hotel": "Hotel",
+            "Overtime": "Overtime",
+            "Food": "Food",
+            "Ammount": "300",
+            "verifyAmmount":"$300.00" 
+
         }
 
 
+    },
+    "notificationPage": {
+        "locators": {
+            "notificationCol" : "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid"
 
+        },
+        "data":{
+
+        }
+    },
+    "adminPage":{
+        "locators": {
+            "chooseReportListBox": "selectedObject",
+            "notAuthorizedListBox": "selectedNotAuthorized",
+            "authorizedListBox": "selectedAuthorized"
+
+        }
     }
-
 }
+
+
+
+
+

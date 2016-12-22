@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('dashboard.my-tasks')
-    .controller('Dashboard.MyTasksController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService', 'ObjectService', '$state',
-        function ($scope, $translate, Authentication, DashboardService, ObjectService, $state) {
+    .controller('Dashboard.MyTasksController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService', 'ObjectService', '$state', 'Task.AlertsService', 'UtilService', 'Util.DateService',
+        function ($scope, $translate, Authentication, DashboardService, ObjectService, $state, TaskAlertsService, Util, UtilDateService) {
 
             var vm = this;
 
@@ -15,7 +15,7 @@ angular.module('dashboard.my-tasks')
             var paginationOptions = {
                 pageNumber: 1,
                 pageSize: 5,
-                sortBy: 'taskId',
+                sortBy: 'id',
                 sortDir: 'desc'
             };
 
@@ -24,9 +24,29 @@ angular.module('dashboard.my-tasks')
                 enableRowSelection: true,
                 enableSelectAll: false,
                 enableRowHeaderSelection: false,
+                useExternalPagination: true,
+                useExternalSorting: true,
                 multiSelect: false,
                 noUnselect: false,
-                columnDefs: []
+                columnDefs: [],
+                onRegisterApi: function (gridApi) {
+                    vm.gridApi = gridApi;
+
+                    gridApi.core.on.sortChanged($scope, function (grid, sortColumns) {
+                        if (sortColumns.length == 0) {
+                            paginationOptions.sort = null;
+                        } else {
+                            paginationOptions.sortBy = sortColumns[0].name;
+                            paginationOptions.sortDir = sortColumns[0].sort.direction;
+                        }
+                        getPage();
+                    });
+                    gridApi.pagination.on.paginationChanged($scope, function (newPage, pageSize) {
+                        paginationOptions.pageNumber = newPage;
+                        paginationOptions.pageSize = pageSize;
+                        getPage();
+                    });
+                }
             };
 
             function applyConfig(e, componentId, config) {
@@ -38,7 +58,7 @@ angular.module('dashboard.my-tasks')
                     vm.gridOptions.paginationPageSize = config.paginationPageSize;
                     paginationOptions.pageSize = config.paginationPageSize;
 
-                     Authentication.queryUserInfo().then(function (responseUserInfo) {
+                    Authentication.queryUserInfo().then(function (responseUserInfo) {
                         userInfo = responseUserInfo;
                         getPage();
                         return userInfo;
@@ -55,13 +75,28 @@ angular.module('dashboard.my-tasks')
                         pageSize: paginationOptions.pageSize
                     },
                     function (data) {
-                        vm.gridOptions.data = data;
-                        vm.gridOptions.totalItems = data.length;
+                        vm.gridOptions.data = [];
+                        vm.gridOptions.totalItems = data.response.numFound;
+
+                        _.forEach(data.response.docs, function (value) {
+                            value.status_lcs = value.status_lcs.toUpperCase();
+
+                            if (Util.goodValue(value.dueDate_tdt)) {
+                                value.dueDate_tdt = UtilDateService.isoToDate(value.dueDate_tdt);
+                            }
+
+                            //calculate to show alert icons if task is in overdue or deadline is approaching
+                            value.isOverdue = TaskAlertsService.calculateOverdue(value.dueDate_tdt);
+                            value.isDeadline = TaskAlertsService.calculateDeadline(value.dueDate_tdt);
+
+                            vm.gridOptions.data.push(value);
+                        });
                     }
                 );
             }
+
             vm.onClickCaseComplaintId = function (objectType, objectId) {
-                    ObjectService.gotoUrl(objectType, objectId);
+                ObjectService.gotoUrl(objectType, objectId);
             };
         }
     ]);
