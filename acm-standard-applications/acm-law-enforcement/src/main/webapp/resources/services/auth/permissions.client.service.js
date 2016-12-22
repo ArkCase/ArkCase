@@ -145,7 +145,8 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
                     }
 
                     // Check userIsParticipantTypeAny
-                    if (isEnabled && action.userIsParticipantTypeAny) {
+                    if (isEnabled && action.userIsParticipantTypeAny
+                        && action.userIsParticipantTypeAny.length > 0) {
                         var isUserParticipant = false;
                         _.forEach(action.userIsParticipantTypeAny, function (value) {
                             var participant = ObjectModelService.getParticipantByType(objectProperties, value);
