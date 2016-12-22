@@ -2,10 +2,10 @@
 
 angular.module('cases').controller('Cases.InfoController', ['$scope', '$stateParams', '$translate', '$timeout'
     , 'UtilService', 'Util.DateService', 'ConfigService', 'Object.LookupService', 'Case.LookupService', 'Case.InfoService'
-    , 'Object.ModelService', 'Helper.ObjectBrowserService', 'MessageService'
+    , 'Object.ModelService', 'Helper.ObjectBrowserService'
     , function ($scope, $stateParams, $translate, $timeout
         , Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService
-        , ObjectModelService, HelperObjectBrowserService, MessageService) {
+        , ObjectModelService, HelperObjectBrowserService) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope

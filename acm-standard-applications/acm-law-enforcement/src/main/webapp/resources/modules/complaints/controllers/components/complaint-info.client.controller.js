@@ -2,10 +2,10 @@
 
 angular.module('complaints').controller('Complaints.InfoController', ['$scope', '$stateParams', '$translate', '$timeout'
     , 'UtilService', 'Util.DateService', 'ConfigService', 'Object.LookupService', 'Complaint.LookupService', 'Complaint.InfoService'
-    , 'Object.ModelService', 'Helper.ObjectBrowserService', 'MessageService'
+    , 'Object.ModelService', 'Helper.ObjectBrowserService'
     , function ($scope, $stateParams, $translate, $timeout
         , Util, UtilDateService, ConfigService, ObjectLookupService, ComplaintLookupService, ComplaintInfoService
-        , ObjectModelService, HelperObjectBrowserService, MessageService) {
+        , ObjectModelService, HelperObjectBrowserService) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
