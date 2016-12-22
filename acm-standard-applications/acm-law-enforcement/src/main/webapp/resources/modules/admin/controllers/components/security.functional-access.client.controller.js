@@ -1,11 +1,12 @@
 'use strict';
 
-angular.module('admin').controller('Admin.FunctionalAccessController', ['$scope', 'Admin.FunctionalAccessControlService', '$q',
-    function ($scope, functionalAccessControlService, $q) {
+angular.module('admin').controller('Admin.FunctionalAccessController', ['$scope', 'Admin.FunctionalAccessControlService', '$q', 'MessageService', '$translate',
+    function ($scope, functionalAccessControlService, $q, messageService, $translate) {
         var tempAppRolesPromise = functionalAccessControlService.getAppRoles();
         var tempUserGroupsPromise = functionalAccessControlService.getUserGroups();
         var tempAppRolesUserGroupsPromise = functionalAccessControlService.getAppUserToGroups();
-
+        var deferred = $q.defer();
+        
         $scope.appRoles = [];
         $scope.userGroupsAll = [];
 
@@ -55,12 +56,19 @@ angular.module('admin').controller('Admin.FunctionalAccessController', ['$scope'
 
         //callback function when groups are moved
         $scope.onAuthRoleSelected = function (selectedObject, authorized, notAuthorized) {
+        	
             //get authorized user groups for selected app role and save all app roles user groups
             $scope.appRolesUserGroups[selectedObject.key] = [];
             angular.forEach(authorized, function (element) {
                 $scope.appRolesUserGroups[selectedObject.key].push(element.key);
             });
-            functionalAccessControlService.saveAppRolesToGroups($scope.appRolesUserGroups);
+            functionalAccessControlService.saveAppRolesToGroups($scope.appRolesUserGroups).then(function() {
+            	deferred.resolve();
+            }, function(){
+            	deferred.reject();
+            });
+
+            return deferred.promise;
         };
     }
 ]);

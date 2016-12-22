@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$q', 'Admin.LabelsConfigService',
-    function ($scope, $q, LabelsConfigService) {
+angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$q', 'Admin.LabelsConfigService', '$translate', 'MessageService',
+    function ($scope, $q, LabelsConfigService, $translate, messageService) {
 
         $scope.settings = {};
         $scope.disabledInputs = false;
@@ -56,10 +56,12 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
                         ns: $scope.selectedNamespace.id
                     },
                     function (data) {
-                        $scope.gridOptions.data = data;
+                    	//success
+                    	$scope.gridOptions.data = data;
                         $scope.disabledInputs = false;
                     },
                     function () {
+                    	//error
                         $scope.disabledInputs = false;
                     });
             }
@@ -82,9 +84,13 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
                 lng: [$scope.selectedLanguage],
                 ns: [$scope.selectedNamespace.id]
             }, function () {
-                reloadGrid();
+            	//success
+            	reloadGrid();
+                messageService.info($translate.instant('admin.successfulActionMessage.successMsg'));
             }, function () {
-                $scope.disabledInputs = false;
+            	//error
+            	$scope.disabledInputs = false;
+            	messageService.info($translate.instant('admin.successfulActionMessage.errorMsg'));
             });
         };
 
@@ -96,9 +102,13 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
                 lng: [$scope.selectedLanguage],
                 ns: allNamespaces
             }, function () {
-                reloadGrid();
+            	//success
+            	reloadGrid();
+                messageService.info($translate.instant('admin.successfulActionMessage.successMsg'));
             }, function () {
-                $scope.disabledInputs = false;
+            	//error
+            	$scope.disabledInputs = false;
+                messageService.info($translate.instant('admin.successfulActionMessage.errorMsg'));
             });
         };
 
@@ -109,9 +119,13 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
                 lng: [$scope.selectedLanguage],
                 ns: allNamespaces
             }, function () {
-                reloadGrid();
+            	//success
+            	reloadGrid();
+                messageService.info($translate.instant('admin.successfulActionMessage.successMsg'));
             }, function () {
-                $scope.disabledInputs = false;
+            	//error
+            	$scope.disabledInputs = false;
+                messageService.info($translate.instant('admin.successfulActionMessage.errorMsg'));
             });
         };
 

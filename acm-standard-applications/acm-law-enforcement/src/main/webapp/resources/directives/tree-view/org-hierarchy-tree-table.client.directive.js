@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('directives').directive('treeTableView', ['$q', '$compile',
-    function ($q, $compile) {
+angular.module('directives').directive('treeTableView', ['$q', '$compile', 'MessageService', '$translate',
+    function ($q, $compile, messageService, $translate) {
         return {
             restrict: 'E',
             scope: {
@@ -111,41 +111,65 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile',
                 scope.pickUsersBtn = function (event) {
                     var node = $.ui.fancytree.getNode(event);
                     scope.onAddMembers(node.data).then(function (members) {
-                        angular.forEach(members, function (member) {
+                    	//success
+                    	angular.forEach(members, function (member) {
                             node.addChildren(member);
                         });
                         node.setExpanded();
+                        messageService.info($translate.instant('admin.successfulActionMessage.successMsg'));
+                    }, function () {
+                        //error
+                    	messageService.info($translate.instant('admin.successfulActionMessage.errorMsg'));
                     });
                 };
 
                 scope.addSubgroup = function (event) {
                     var node = $.ui.fancytree.getNode(event);
                     scope.onAddSubGroup(node.data).then(function (subGroup) {
-                        node.addNode(subGroup, 'firstChild');
+                    	//success
+                    	node.addNode(subGroup, 'firstChild');
                         node.setExpanded();
+                    	messageService.info($translate.instant('admin.successfulActionMessage.successMsg'));
+                    }, function () {
+                        //error
+                    	messageService.info($translate.instant('admin.successfulActionMessage.errorMsg'));
                     });
                 };
 
                 scope.addSupervisor = function (event) {
                     var node = $.ui.fancytree.getNode(event);
                     scope.onSetSupervisor(node.data).then(function (payload) {
-                        node.data.supervisor = payload.supervisor.fullName;
+                    	//success
+                    	node.data.supervisor = payload.supervisor.fullName;
                         node.renderTitle();
+                        messageService.info($translate.instant('admin.successfulActionMessage.successMsg'));
+                    }, function () {
+                        //error
+                    	messageService.info($translate.instant('admin.successfulActionMessage.errorMsg'));
                     });
                 };
 
                 scope.removeUserBtn = function (event) {
                     var node = $.ui.fancytree.getNode(event);
                     scope.onDeleteMembers(node.parent.data, node.data).then(function () {
-                        node.remove();
+                    	//success
+                    	node.remove();
+                        messageService.info($translate.instant('admin.successfulActionMessage.successMsg'));
+                    }, function () {
+                        //error
+                    	messageService.info($translate.instant('admin.successfulActionMessage.errorMsg'));
                     });
-
                 };
 
                 scope.removeGroupBtn = function (event) {
                     var node = $.ui.fancytree.getNode(event);
                     scope.onDeleteGroup(node.data).then(function () {
-                        node.remove();
+                    	//success
+                    	node.remove();
+                        messageService.info($translate.instant('admin.successfulActionMessage.successMsg'));
+                    }, function () {
+                        //error
+                    	messageService.info($translate.instant('admin.successfulActionMessage.errorMsg'));
                     });
                 };
 
