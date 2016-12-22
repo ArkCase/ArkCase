@@ -2,10 +2,10 @@
 
 angular.module('cases').controller('Cases.TasksController', ['$scope', '$state', '$stateParams', '$q', '$translate'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Object.TaskService', 'Task.WorkflowService'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Case.InfoService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Case.InfoService', 'Task.AlertsService'
     , function ($scope, $state, $stateParams, $q, $translate
         , Util, ConfigService, ObjectService, ObjectTaskService, TaskWorkflowService
-        , HelperUiGridService, HelperObjectBrowserService, CaseInfoService) {
+        , HelperUiGridService, HelperObjectBrowserService, CaseInfoService, TaskAlertsService) {
 
         var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
@@ -59,6 +59,11 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
                     , Util.goodValue($scope.sort.dir)
                 ).then(function (data) {
                     var tasks = data.response.docs;
+                    angular.forEach(tasks,function (task) {
+                        //calculate to show alert icons if task is in overdue or deadline is approaching
+                        task.isOverdue = TaskAlertsService.calculateOverdue(new Date(task.due_tdt));
+                        task.isDeadline = TaskAlertsService.calculateDeadline(new Date(task.due_tdt));
+                    });
                     $scope.gridOptions = $scope.gridOptions || {};
                     $scope.gridOptions.data = tasks;
                     $scope.gridOptions.totalItems = data.response.numFound;

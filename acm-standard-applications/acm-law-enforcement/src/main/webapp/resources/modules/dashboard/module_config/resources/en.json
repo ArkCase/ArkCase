@@ -61,7 +61,9 @@
             "dueDate": "Due",
             "status": "Status",
             "objectId": "Object ID"
-          }
+          },
+          "overdue.tooltip": "Task is Overdue",
+          "deadline.tooltip": "Deadline is Approaching"
         },
         "noDataMessage": "Currently there are no tasks info"
       },

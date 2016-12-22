@@ -62,6 +62,12 @@
                        permission="editTask" permission-properties="objectInfo" permission-action="disable">
                         {{ (dateInfo.dueDate | date: ('common.defaultDateUIFormat' | translate)) || 'Unknown' }}</a>
                     <!-- <span permission="editTask" permission-properties="objectInfo" permission-action="show">{{ (dateInfo.dueDate | date: ('common.defaultDateUIFormat' | translate)) || 'Unknown' }}</span> -->
+                    <a ng-if="dateInfo.isOverdue" tooltip="{{'tasks.comp.info.overdue.tooltip' | translate}}" tooltip-append-to-body="true" tooltip-class="tooltip-overdue">
+                        <i class="fa fa-exclamation-circle icon-overdue"></i>
+                    </a>
+                    <a ng-if="dateInfo.isDeadline" tooltip="{{'tasks.comp.info.deadline.tooltip' | translate}}" tooltip-append-to-body="true" tooltip-class="tooltip-due-soon">
+                        <i class="fa fa-exclamation-triangle icon-due-soon"></i>
+                    </a>
                 </div>
                 <small class="text-muted">Due Date</small>
             </div>

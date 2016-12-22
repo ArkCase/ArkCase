@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public class SmtpNotificationSender extends NotificationSender implements ApplicationEventPublisherAware
 {
@@ -91,9 +92,38 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
     }
 
     @Override
+    public <T> void sendPlainEmail(Stream<T> emailsDataStream, EmailBuilder<T> emailBuilder, EmailBodyBuilder<T> emailBodyBuilder)
+            throws AcmEncryptionException
+    {
+
+        Map<String, Object> messageProps = loadSmtpAndOriginatingProperties();
+
+        emailsDataStream.forEach(emailData ->
+        {
+            emailBuilder.buildEmail(emailData, messageProps);
+            Exception exception = null;
+            try
+            {
+                MuleMessage received = getMuleContextManager().send(flow, emailBodyBuilder.buildEmailBody(emailData), messageProps);
+                exception = received.getInboundProperty("sendEmailException");
+            } catch (Exception e)
+            {
+                exception = e;
+            }
+
+            if (exception != null)
+            {
+                LOG.error("Email message not sent ...", exception);
+            }
+
+        });
+
+    }
+
+    @Override
     public void sendEmailWithAttachments(EmailWithAttachmentsDTO in, Authentication authentication, AcmUser user) throws Exception
     {
-        
+
         in.setTemplate(notificationTemplate);
         Exception exception = null;
         Map<String, Object> messageProps = loadSmtpAndOriginatingProperties();
@@ -106,7 +136,7 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
             try
             {
                 messageProps.put("to", emailAddress);
-                Map<String, DataHandler> attachments = new HashMap<String, DataHandler>();
+                Map<String, DataHandler> attachments = new HashMap<>();
                 for (Long attachmentId : in.getAttachmentIds())
                 {
                     InputStream contents = getEcmFileService().downloadAsInputStream(attachmentId);
