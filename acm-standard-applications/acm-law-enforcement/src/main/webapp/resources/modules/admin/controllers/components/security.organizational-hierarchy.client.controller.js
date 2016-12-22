@@ -152,10 +152,8 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                 //ok btn
                 organizationalHierarchyService.removeGroup(group).then(function (payload) {
                     deffered.resolve(payload);
-                    messageService.info($translate.instant('admin.security.organizationalHierarchy.messages.delete.group.success'));
                 }, function (payload) {
                     deffered.reject(payload);
-                    messageService.error($translate.instant('admin.security.organizationalHierarchy.messages.delete.group.error'));
                 });
             }, function () {
                 //cancel btn
@@ -178,10 +176,8 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                 //ok btn
                 organizationalHierarchyService.removeMembers(group, members).then(function (payload) {
                     deffered.resolve(payload);
-                    messageService.info($translate.instant('admin.security.organizationalHierarchy.messages.delete.member.success'));
                 }, function (payload) {
                     deffered.reject(payload);
-                    messageService.error($translate.instant('admin.security.organizationalHierarchy.messages.delete.member.error'));
                 });
             }, function () {
                 //cancel btn
@@ -383,10 +379,10 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
 
                     groupsMap[payload.data.name] = newGroup;
                     addToTree(newGroup, true);
-
+                    messageService.info($translate.instant('admin.successfulActionMessage.successMsg'));
                 }, function () {
                     //error adding group
-
+                	messageService.info($translate.instant('admin.successfulActionMessage.errorMsg'));
                 });
             }, function (result) {
                 //button cancel, nothing to do.
