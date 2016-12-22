@@ -29,15 +29,18 @@ angular.module('cases').controller('CasesListController', ['$scope', '$state', '
         $scope.$bus.subscribe(eventName, function (data) {
             if (data.objectType === ObjectService.ObjectTypes.CASE_FILE) {
                 var frevvoRequest = ServCommService.popRequest("frevvo", "new-case");
+
+                var objectTypeString = $translate.instant('common.objectTypes.' + data.objectType);
+                var objectWasCreatedMessage = $translate.instant('common.objects.objectWasCreatedMessage ', {
+                    objectTypeString: objectTypeString,
+                    objectId: data.objectId
+                });
                 if (frevvoRequest) {
                     ObjectService.gotoUrl(ObjectService.ObjectTypes.CASE_FILE, data.objectId);
+                    MessageService.info(objectWasCreatedMessage);
                 }
                 else {
-                    var objectTypeString = $translate.instant('common.objectTypes.' + data.objectType);
-                    if (!objectTypeString) {
-                        objectTypeString = data.objectType;
-                    }
-                    MessageService.info(objectTypeString + " with ID " + data.objectId + " was created.");
+                    MessageService.info(objectWasCreatedMessage);
                 }
             }
         });

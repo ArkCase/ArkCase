@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('dashboard.my-tasks')
-    .controller('Dashboard.MyTasksController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService', 'ObjectService', '$state',
-        function ($scope, $translate, Authentication, DashboardService, ObjectService, $state) {
+    .controller('Dashboard.MyTasksController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService', 'ObjectService', '$state', 'Task.AlertsService', 'UtilService', 'Util.DateService',
+        function ($scope, $translate, Authentication, DashboardService, ObjectService, $state, TaskAlertsService, Util, UtilDateService) {
 
             var vm = this;
 
@@ -58,7 +58,7 @@ angular.module('dashboard.my-tasks')
                     vm.gridOptions.paginationPageSize = config.paginationPageSize;
                     paginationOptions.pageSize = config.paginationPageSize;
 
-                     Authentication.queryUserInfo().then(function (responseUserInfo) {
+                    Authentication.queryUserInfo().then(function (responseUserInfo) {
                         userInfo = responseUserInfo;
                         getPage();
                         return userInfo;
@@ -75,13 +75,28 @@ angular.module('dashboard.my-tasks')
                         pageSize: paginationOptions.pageSize
                     },
                     function (data) {
-                        vm.gridOptions.data = data.response.docs;
+                        vm.gridOptions.data = [];
                         vm.gridOptions.totalItems = data.response.numFound;
+
+                        _.forEach(data.response.docs, function (value) {
+                            value.status_lcs = value.status_lcs.toUpperCase();
+
+                            if (Util.goodValue(value.dueDate_tdt)) {
+                                value.dueDate_tdt = UtilDateService.isoToDate(value.dueDate_tdt);
+                            }
+
+                            //calculate to show alert icons if task is in overdue or deadline is approaching
+                            value.isOverdue = TaskAlertsService.calculateOverdue(value.dueDate_tdt);
+                            value.isDeadline = TaskAlertsService.calculateDeadline(value.dueDate_tdt);
+
+                            vm.gridOptions.data.push(value);
+                        });
                     }
                 );
             }
+
             vm.onClickCaseComplaintId = function (objectType, objectId) {
-                    ObjectService.gotoUrl(objectType, objectId);
+                ObjectService.gotoUrl(objectType, objectId);
             };
         }
     ]);
