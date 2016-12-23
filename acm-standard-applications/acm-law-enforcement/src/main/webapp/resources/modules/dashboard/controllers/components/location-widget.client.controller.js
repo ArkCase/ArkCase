@@ -22,7 +22,8 @@ angular.module('dashboard.locations', ['adf.provider'])
                 {
                     name: "COMPLAINT",
                     configName: "complaints",
-                    getInfo: ComplaintInfoService.getComplaintInfo
+                    getInfo: ComplaintInfoService.getComplaintInfo,
+                    validateInfo: ComplaintInfoService.validateComplaintInfo
                 }
             ];
 
