@@ -22,12 +22,14 @@ angular.module('dashboard.workflow', ['adf.provider'])
                     name: "TASK",
                     configName: "tasks",
                     getInfo: TaskInfoService.getTaskInfo,
+                    validateInfo: TaskInfoService.validateTaskInfo,
                     getHistory: TaskHistoryService.queryTaskHistory
                 }
                 , {
                     name: "ADHOC",
                     configName: "tasks",
                     getInfo: TaskInfoService.getTaskInfo,
+                    validateInfo: TaskInfoService.validateTaskInfo,
                     getHistory: TaskHistoryService.queryTaskHistory
                 }
             ];
