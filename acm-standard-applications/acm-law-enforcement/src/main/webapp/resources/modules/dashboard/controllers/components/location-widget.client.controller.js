@@ -13,15 +13,17 @@ angular.module('dashboard.locations', ['adf.provider'])
                 }
             );
     })
-    .controller('Dashboard.LocationsController', ['$scope', '$translate', '$stateParams', '$q', 'UtilService'
-        , 'Complaint.InfoService', 'Authentication', 'Dashboard.DashboardService', 'ConfigService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
-        function ($scope, $translate, $stateParams, $q, Util, ComplaintInfoService, Authentication, DashboardService, ConfigService
-        , HelperObjectBrowserService, HelperUiGridService) {
+    .controller('Dashboard.LocationsController', ['$scope', '$stateParams'
+        , 'Complaint.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService'
+        , function ($scope, $stateParams, ComplaintInfoService
+            , HelperObjectBrowserService, HelperUiGridService) {
 
-            var promiseConfig;
-            var promiseInfo;
             var modules = [
-                {name: "COMPLAINT", configName: "complaints", getInfo: ComplaintInfoService.getComplaintInfo}
+                {
+                    name: "COMPLAINT",
+                    configName: "complaints",
+                    getInfo: ComplaintInfoService.getComplaintInfo
+                }
             ];
 
             var module = _.find(modules, function (module) {
@@ -33,38 +35,42 @@ angular.module('dashboard.locations', ['adf.provider'])
                 columnDefs: []
             };
 
-            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-            if (module && Util.goodPositive(currentObjectId, false)) {
-                promiseConfig = ConfigService.getModuleConfig(module.configName);
-                promiseInfo = module.getInfo(currentObjectId);
-                var gridHelper = new HelperUiGridService.Grid({scope: $scope});
-                var promiseUsers = gridHelper.getUsers();
+            var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+            var promiseUsers = gridHelper.getUsers();
 
-                $q.all([promiseConfig, promiseInfo, promiseUsers]).then(function (data) {
-                        var config = _.find(data[0].components, {id: "main"});
-                        var info = data[1];
-                        var widgetInfo = _.find(config.widgets, function (widget) {
-                            return widget.id === "locations";
-                        });
-                        gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
-                        $scope.config = config;
-                        $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
+            new HelperObjectBrowserService.Component({
+                scope: $scope
+                , stateParams: $stateParams
+                , moduleId: module.configName
+                , componentId: "main"
+                , retrieveObjectInfo: module.getInfo
+                , validateObjectInfo: module.validateInfo
+                , onObjectInfoRetrieved: function (objectInfo) {
+                    onObjectInfoRetrieved(objectInfo);
+                }
+                , onConfigRetrieved: function (componentConfig) {
+                    onConfigRetrieved(componentConfig);
+                }
+            });
 
-                        $scope.gridOptions.data = [info];
-                        if($scope.gridOptions.data[0].location) {
-                            var fullAddress = createFullAddress(info.location);
-                            $scope.gridOptions.data[0].location.fullAddress = fullAddress ? fullAddress : "Error creating full address";
-                            $scope.gridOptions.totalItems = 1;
-                        } else {
-                            //No location data to show
-                            $scope.gridOptions.totalItems = 0;
-                        }
-                    },
-                    function (err) {
+            var onObjectInfoRetrieved = function (objectInfo) {
+                if (objectInfo.location) {
+                    $scope.gridOptions.data = [objectInfo];
+                    var fullAddress = createFullAddress(objectInfo.location);
+                    $scope.gridOptions.data[0].location.fullAddress = fullAddress ? fullAddress : "Error creating full address";
+                } else {
+                    $scope.gridOptions.data = [];
+                }
+                $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
+            };
 
-                    }
-                );
-            }
+            var onConfigRetrieved = function (componentConfig) {
+                var widgetInfo = _.find(componentConfig.widgets, function (widget) {
+                    return widget.id === "locations";
+                });
+                gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
+                $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
+            };
 
             var createFullAddress = function (location) {
                 if (location) {

@@ -13,17 +13,23 @@ angular.module('dashboard.people', ['adf.provider'])
                 }
             );
     })
-    .controller('Dashboard.PeopleController', ['$scope', '$translate', '$stateParams', '$q', 'UtilService'
-        , 'Case.InfoService', 'Complaint.InfoService', 'Authentication', 'Dashboard.DashboardService', 'ConfigService'
-        , 'Helper.ObjectBrowserService',
-        function ($scope, $translate, $stateParams, $q, Util, CaseInfoService, ComplaintInfoService, Authentication
-            , DashboardService, ConfigService, HelperObjectBrowserService) {
+    .controller('Dashboard.PeopleController', ['$scope', '$stateParams', 'Case.InfoService'
+        , 'Complaint.InfoService', 'Helper.ObjectBrowserService'
+        , function ($scope, $stateParams, CaseInfoService, ComplaintInfoService, HelperObjectBrowserService) {
 
-            var promiseConfig;
-            var promiseInfo;
             var modules = [
-                {name: "CASE_FILE", configName: "cases", getInfo: CaseInfoService.getCaseInfo}
-                , {name: "COMPLAINT", configName: "complaints", getInfo: ComplaintInfoService.getComplaintInfo}
+                {
+                    name: "CASE_FILE",
+                    configName: "cases",
+                    getInfo: CaseInfoService.getCaseInfo,
+                    validateInfo: CaseInfoService.validateCaseInfo
+                }
+                , {
+                    name: "COMPLAINT",
+                    configName: "complaints",
+                    getInfo: ComplaintInfoService.getComplaintInfo,
+                    validateInfo: ComplaintInfoService.validateComplaintInfo
+                }
             ];
 
             var module = _.find(modules, function (module) {
@@ -35,27 +41,31 @@ angular.module('dashboard.people', ['adf.provider'])
                 columnDefs: []
             };
 
-            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-            if (module && Util.goodPositive(currentObjectId, false)) {
-                promiseConfig = ConfigService.getModuleConfig(module.configName);
-                promiseInfo = module.getInfo(currentObjectId);
+            new HelperObjectBrowserService.Component({
+                scope: $scope
+                , stateParams: $stateParams
+                , moduleId: module.configName
+                , componentId: "main"
+                , retrieveObjectInfo: module.getInfo
+                , validateObjectInfo: module.validateInfo
+                , onObjectInfoRetrieved: function (objectInfo) {
+                    onObjectInfoRetrieved(objectInfo);
+                }
+                , onConfigRetrieved: function (componentConfig) {
+                    onConfigRetrieved(componentConfig);
+                }
+            });
 
-                $q.all([promiseConfig, promiseInfo]).then(function (data) {
-                        var config = _.find(data[0].components, {id: "main"});
-                        var info = data[1];
-                        var widgetInfo = _.find(config.widgets, function (widget) {
-                            return widget.id === "people";
-                        });
-                        $scope.config = config;
-                        $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
+            var onObjectInfoRetrieved = function (objectInfo) {
+                $scope.gridOptions.data = objectInfo.personAssociations ? objectInfo.personAssociations : [];
+                $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
+            };
 
-                        $scope.gridOptions.data = info.personAssociations;
-                        $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
-                    },
-                    function (err) {
-
-                    }
-                );
-            }
+            var onConfigRetrieved = function (componentConfig) {
+                var widgetInfo = _.find(componentConfig.widgets, function (widget) {
+                    return widget.id === "people";
+                });
+                $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
+            };
         }
     ]);
