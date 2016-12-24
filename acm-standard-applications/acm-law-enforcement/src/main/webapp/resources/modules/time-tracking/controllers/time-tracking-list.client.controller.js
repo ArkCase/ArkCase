@@ -3,10 +3,10 @@
 
 angular.module('time-tracking').controller('TimeTrackingListController', ['$scope', '$state', '$stateParams', '$q', '$translate'
     , 'Authentication', 'UtilService', 'ObjectService', 'Helper.ObjectBrowserService'
-    , 'TimeTracking.ListService', 'TimeTracking.InfoService', 'ServCommService', 'Object.TimeService'
+    , 'TimeTracking.ListService', 'TimeTracking.InfoService', 'ServCommService'
     , function ($scope, $state, $stateParams, $q, $translate
         , Authentication, Util, ObjectService, HelperObjectBrowserService
-        , TimeTrackingListService, TimeTrackingInfoService, ServCommService, ObjectTimeService) {
+        , TimeTrackingListService, TimeTrackingInfoService, ServCommService) {
 
         /*//
          // Check to see if complaint page is shown as a result returned by Frevvo
@@ -32,23 +32,9 @@ angular.module('time-tracking').controller('TimeTrackingListController', ['$scop
                 else {
                     MessageService.info(data.objectType + " with ID " + data.objectId + " was created.");
                 }
-                updateCache(data);
             }
 
         });
-
-        // Clear complaint/case timesheets cache
-        var updateCache = function (data) {
-            TimeTrackingInfoService.getTimesheetInfo(data.objectId).then(
-                function (timesheetInfo) {
-                    var parentObjectsTypeId = _.map(timesheetInfo.times, function (data) {
-                        return data.type + '.' + data.objectId;
-                    });
-                    _.each(_.uniq(parentObjectsTypeId), function (data) {
-                        ObjectTimeService.clearCache(data);
-                    });
-                });
-        };
 
 
         //"treeConfig", "treeData", "onLoad", and "onSelect" will be set by Tree Helper
