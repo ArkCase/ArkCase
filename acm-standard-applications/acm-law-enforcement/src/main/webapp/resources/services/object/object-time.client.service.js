@@ -97,23 +97,6 @@ angular.module('services').factory('Object.TimeService', ['$resource', '$q', 'Ac
             return true;
         };
 
-        /**
-         * @ngdoc method
-         * @name clearCache
-         * @methodOf services:Object.TimeService
-         *
-         * @description
-         * Clear cache for timesheets
-         *
-         * @param {String} cacheKey  CacheKey for TIME_SHEETS
-         *
-         * @returns [Undefined] don't return anything.
-         */
-        Service.clearCache = function (cacheKey) {
-            var cacheTimesheets = new Store.CacheFifo(Service.CacheNames.TIME_SHEETS);
-            cacheTimesheets.put(cacheKey, null);
-        };
-
         return Service;
     }
 ]);
