@@ -379,10 +379,10 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
 
                     groupsMap[payload.data.name] = newGroup;
                     addToTree(newGroup, true);
-                    messageService.info($translate.instant('admin.successfulActionMessage.successMsg'));
+                    messageService.succsessActionMsg();
                 }, function () {
                     //error adding group
-                	messageService.info($translate.instant('admin.successfulActionMessage.errorMsg'));
+                	messageService.errorActionMsg();
                 });
             }, function (result) {
                 //button cancel, nothing to do.

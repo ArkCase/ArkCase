@@ -1,10 +1,6 @@
 {
   "admin": {
     "title": "Admin",
-    "successfulActionMessage": {
-    	"successMsg": "Action was successful",
-    	"errorMsg": "Action error"
-    },
     "security.title": "Security",
     "security.functionalAccessControl": "Functional Access Control",
     "security.functionalAccessControl.applicationRole": "Application Role",

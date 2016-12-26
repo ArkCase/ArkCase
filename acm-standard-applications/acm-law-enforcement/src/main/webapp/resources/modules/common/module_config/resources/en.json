@@ -6,7 +6,11 @@
     "defaultDateTimeFormat": "MM/DD/YYYY hh:mm",
     "defaultDatePickerFormat": "MM/dd/yyyy",
     "defaultDateUIFormat": "MM/dd/yyyy",
-    "defaultDateTimeUIFormat": "MM/dd/yyyy HH:mm"
+    "defaultDateTimeUIFormat": "MM/dd/yyyy HH:mm",
+    "actionMessages": {
+    	"successMsg": "Action was successful",
+    	"errorMsg": "Action error"
+  	}
   },
   "common.service": {
     "error.invalidData": "Invalid data"

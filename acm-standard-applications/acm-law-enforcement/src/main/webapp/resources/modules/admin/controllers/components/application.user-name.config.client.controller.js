@@ -24,7 +24,7 @@ angular.module('admin').controller('Admin.UserNameConfigController', ['$scope', 
                 
                 modalInstance.result.then(function () {   
                 }, function () {
-                	messageService.info($translate.instant('admin.successfulActionMessage.successMsg'));
+                	messageService.succsessActionMsg();
                 });
                 
                 oldPropertyValue = $scope.nameProperty;
