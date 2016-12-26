@@ -81,7 +81,7 @@
         <property name="properties">
             <props>
                 <prop key="acm.object.changed.notification.filter.include.classNames">
-                    com.armedia.acm.plugins.casefile.model.CaseFile,com.armedia.acm.plugins.complaint.model.Complaint,com.armedia.acm.plugins.task.model.AcmTask,com.armedia.acm.plugins.ecm.model.EcmFile,com.armedia.acm.plugins.casefile.model.ChangeCaseStatus,com.armedia.acm.plugins.complaint.model.CloseComplaintRequest,com.armedia.acm.services.costsheet.model.AcmCostsheet
+                    com.armedia.acm.plugins.casefile.model.CaseFile,com.armedia.acm.plugins.complaint.model.Complaint,com.armedia.acm.plugins.task.model.AcmTask,com.armedia.acm.plugins.ecm.model.EcmFile,com.armedia.acm.plugins.casefile.model.ChangeCaseStatus,com.armedia.acm.plugins.complaint.model.CloseComplaintRequest,com.armedia.acm.services.costsheet.model.AcmCostsheet,com.armedia.acm.services.timesheet.model.AcmTimesheet
                 </prop>
                 <prop key="acm.object.changed.notification.filter.include.object_types">CASE_FILE,COMPLAINT,TASK,FILE
                 </prop>
