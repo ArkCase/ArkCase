@@ -70,7 +70,7 @@ angular.module('dashboard.reworkDetails', ['adf.provider'])
                     return widget.id === "reworkDetails";
                 });
 
-                $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
+                $scope.gridOptions.columnDefs = widgetInfo ? widgetInfo.columnDefs : [];
             };
         }
     ]);

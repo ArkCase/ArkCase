@@ -71,6 +71,7 @@ angular.module('dashboard.person', ['adf.provider'])
                     return widget.id === "person";
                 });
 
+                $scope.gridOptions.columnDefs = widgetInfo ? widgetInfo.columnDefs : [];
                 gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
             };
         }

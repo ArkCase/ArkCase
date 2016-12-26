@@ -85,7 +85,7 @@ angular.module('dashboard.references', ['adf.provider'])
                 var widgetInfo = _.find(componentConfig.widgets, function (widget) {
                     return widget.id === "references";
                 });
-                $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
+                $scope.gridOptions.columnDefs = widgetInfo ? widgetInfo.columnDefs : [];
                 gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
             };
 
