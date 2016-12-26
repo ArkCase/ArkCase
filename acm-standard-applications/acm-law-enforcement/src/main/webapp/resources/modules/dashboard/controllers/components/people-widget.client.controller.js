@@ -65,7 +65,7 @@ angular.module('dashboard.people', ['adf.provider'])
                 var widgetInfo = _.find(componentConfig.widgets, function (widget) {
                     return widget.id === "people";
                 });
-                $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
+                $scope.gridOptions.columnDefs = widgetInfo ? widgetInfo.columnDefs : [];
             };
         }
     ]);

@@ -70,7 +70,7 @@ angular.module('dashboard.workflow', ['adf.provider'])
                 var widgetInfo = _.find(componentConfig.widgets, function (widget) {
                     return widget.id === "workflow";
                 });
-                $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
+                $scope.gridOptions.columnDefs = widgetInfo ? widgetInfo.columnDefs : [];
             };
         }
     ]);

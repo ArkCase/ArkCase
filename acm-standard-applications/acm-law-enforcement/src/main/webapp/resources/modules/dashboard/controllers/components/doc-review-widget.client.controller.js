@@ -65,7 +65,7 @@ angular.module('dashboard.docReview', ['adf.provider'])
                     return widget.id === "docsReview";
                 });
 
-                $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
+                $scope.gridOptions.columnDefs = widgetInfo ? widgetInfo.columnDefs : [];
             };
         }
     ]);
