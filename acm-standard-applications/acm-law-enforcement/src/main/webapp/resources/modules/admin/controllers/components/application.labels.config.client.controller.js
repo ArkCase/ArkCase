@@ -86,11 +86,11 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
             }, function () {
             	//success
             	reloadGrid();
-                messageService.info($translate.instant('admin.successfulActionMessage.successMsg'));
+                messageService.succsessActionMsg();
             }, function () {
             	//error
             	$scope.disabledInputs = false;
-            	messageService.info($translate.instant('admin.successfulActionMessage.errorMsg'));
+            	messageService.errorActionMsg();
             });
         };
 
@@ -104,11 +104,11 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
             }, function () {
             	//success
             	reloadGrid();
-                messageService.info($translate.instant('admin.successfulActionMessage.successMsg'));
+                messageService.succsessActionMsg();
             }, function () {
             	//error
             	$scope.disabledInputs = false;
-                messageService.info($translate.instant('admin.successfulActionMessage.errorMsg'));
+                messageService.errorActionMsg();
             });
         };
 
@@ -121,11 +121,11 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
             }, function () {
             	//success
             	reloadGrid();
-                messageService.info($translate.instant('admin.successfulActionMessage.successMsg'));
+                messageService.succsessActionMsg();
             }, function () {
             	//error
             	$scope.disabledInputs = false;
-                messageService.info($translate.instant('admin.successfulActionMessage.errorMsg'));
+                messageService.errorActionMsg();
             });
         };
 

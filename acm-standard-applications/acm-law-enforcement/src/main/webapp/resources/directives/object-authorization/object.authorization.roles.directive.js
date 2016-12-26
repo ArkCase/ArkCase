@@ -124,10 +124,10 @@ angular.module('directives').directive('objectAuthorizationRoles', ['$translate'
                 scope.authRoleChange = function () {
                     scope.onAuthRoleChange(scope.selectedObject, scope.authorized, scope.notAuthorized).then(function () {
                         //success save
-                    	messageService.info($translate.instant('admin.successfulActionMessage.successMsg'));    	
+                    	messageService.succsessActionMsg();    	
                     }, function () {
                         //error save
-                    	messageService.info($translate.instant('admin.successfulActionMessage.errorMsg'));	
+                    	messageService.errorActionMsg();
                     });
                     
                     var allMenuObj = [];

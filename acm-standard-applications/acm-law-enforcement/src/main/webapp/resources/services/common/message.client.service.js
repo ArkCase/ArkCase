@@ -100,9 +100,7 @@ angular.module('services').factory('MessageService', ['$injector', '$translate',
                 if (response && response.config) {
                     var msg = '';
                     if (response.status == 503) {
-                        // TODO find way to preload common resources
-                        //msg = $translate.instant('common.service.messageService.authorizationError');
-                        msg = 'You are not authorized to take this action';
+                        msg = $translate.instant('common.service.messageService.authorizationError');
                     } else {
                         // TODO: Use templates for different types of errors
                         msg = [
@@ -130,7 +128,31 @@ angular.module('services').factory('MessageService', ['$injector', '$translate',
             info: function (message) {
                 // TODO: create templates for info and error notify windows
                 showMessage(message, {position: 'left'});
-            }
+            },
+            
+            /**
+             * @ngdoc method
+             * @name succsessAction
+             * @methodOf services.service:MessageService
+             *
+             * @description
+             * This method displays succcess action message in notify popup window.
+             */
+            succsessActionMsg: function(){
+            	showMessage($translate.instant('common.actionMessages.successMsg'), {position: 'left'});
+            },
+            
+            /**
+             * @ngdoc method
+             * @name errorAction
+             * @methodOf services.service:MessageService
+             *
+             * @description
+             * This method displays error action message in notify popup window.
+             */
+            errorActionMsg: function(){
+            	showMessage($translate.instant('common.actionMessages.errorMsg'), {position: 'left'});
+            },
         };
     }
 ]);
