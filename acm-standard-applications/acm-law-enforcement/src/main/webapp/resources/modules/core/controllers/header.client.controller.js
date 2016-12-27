@@ -72,6 +72,7 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
                     isSelected: $scope.isSelected
                 });
             }
+            isSelected = false;
         };
     }
 ]);
