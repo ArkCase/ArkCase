@@ -22,7 +22,7 @@ angular.module('admin').controller('Admin.AuditHistoryController', ['$scope', '$
                 // Replace with "successfully saved" message.
                 DialogService.alert($translate.instant("admin.application.auditHistory.config.inform")).then(function () {
                     //success
-                    messageService.succsessActionMsg();
+                    messageService.succsessAction();
                 });
             }
         }

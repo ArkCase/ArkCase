@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$q', 'Admin.LabelsConfigService', '$translate', 'MessageService',
-    function ($scope, $q, LabelsConfigService, $translate, messageService) {
+angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$q', 'Admin.LabelsConfigService', 'MessageService',
+    function ($scope, $q, LabelsConfigService, messageService) {
 
         $scope.settings = {};
         $scope.disabledInputs = false;
@@ -86,11 +86,11 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
             }, function () {
             	//success
             	reloadGrid();
-                messageService.succsessActionMsg();
+                messageService.succsessAction();
             }, function () {
             	//error
             	$scope.disabledInputs = false;
-            	messageService.errorActionMsg();
+            	messageService.errorAction();
             });
         };
 
@@ -104,11 +104,11 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
             }, function () {
             	//success
             	reloadGrid();
-                messageService.succsessActionMsg();
+                messageService.succsessAction();
             }, function () {
             	//error
             	$scope.disabledInputs = false;
-                messageService.errorActionMsg();
+                messageService.errorAction();
             });
         };
 
@@ -121,11 +121,11 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
             }, function () {
             	//success
             	reloadGrid();
-                messageService.succsessActionMsg();
+                messageService.succsessAction();
             }, function () {
             	//error
             	$scope.disabledInputs = false;
-                messageService.errorActionMsg();
+                messageService.errorAction();
             });
         };
 

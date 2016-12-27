@@ -59,8 +59,8 @@
  </file>
  </example>
  */
-angular.module('directives').directive('objectAuthorizationRoles', ['$translate', 'Menus', 'MessageService',
-    function ($translate, Menus, messageService) {
+angular.module('directives').directive('objectAuthorizationRoles', ['Menus', 'MessageService',
+    function (Menus, messageService) {
         return {
             restrict: 'E',
             scope: {
@@ -124,10 +124,10 @@ angular.module('directives').directive('objectAuthorizationRoles', ['$translate'
                 scope.authRoleChange = function () {
                     scope.onAuthRoleChange(scope.selectedObject, scope.authorized, scope.notAuthorized).then(function () {
                         //success save
-                    	messageService.succsessActionMsg();    	
+                    	messageService.succsessAction();    	
                     }, function () {
                         //error save
-                    	messageService.errorActionMsg();
+                    	messageService.errorAction();
                     });
                     
                     var allMenuObj = [];

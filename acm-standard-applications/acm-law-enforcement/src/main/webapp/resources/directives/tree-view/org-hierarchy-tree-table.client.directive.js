@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('directives').directive('treeTableView', ['$q', '$compile', 'MessageService', '$translate',
-    function ($q, $compile, messageService, $translate) {
+angular.module('directives').directive('treeTableView', ['$q', '$compile', 'MessageService',
+    function ($q, $compile, messageService) {
         return {
             restrict: 'E',
             scope: {
@@ -116,10 +116,10 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile', 'Mess
                             node.addChildren(member);
                         });
                         node.setExpanded();
-                        messageService.succsessActionMsg();
+                        messageService.succsessAction();
                     }, function () {
                         //error
-                    	messageService.errorActionMsg();
+                    	messageService.errorAction();
                     });
                 };
 
@@ -129,10 +129,10 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile', 'Mess
                     	//success
                     	node.addNode(subGroup, 'firstChild');
                         node.setExpanded();
-                    	messageService.succsessActionMsg();
+                    	messageService.succsessAction();
                     }, function () {
                         //error
-                    	messageService.errorActionMsg();
+                    	messageService.errorAction();
                     });
                 };
 
@@ -142,10 +142,10 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile', 'Mess
                     	//success
                     	node.data.supervisor = payload.supervisor.fullName;
                         node.renderTitle();
-                        messageService.succsessActionMsg();
+                        messageService.succsessAction();
                     }, function () {
                         //error
-                    	messageService.errorActionMsg();
+                    	messageService.errorAction();
                     });
                 };
 
@@ -154,10 +154,10 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile', 'Mess
                     scope.onDeleteMembers(node.parent.data, node.data).then(function () {
                     	//success
                     	node.remove();
-                        messageService.succsessActionMsg();
+                        messageService.succsessAction();
                     }, function () {
                         //error
-                    	messageService.errorActionMsg();
+                    	messageService.errorAction();
                     });
                 };
 
@@ -166,10 +166,10 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile', 'Mess
                     scope.onDeleteGroup(node.data).then(function () {
                     	//success
                     	node.remove();
-                        messageService.succsessActionMsg();
+                        messageService.succsessAction();
                     }, function () {
                         //error
-                    	messageService.errorActionMsg();
+                    	messageService.errorAction();
                     });
                 };
 

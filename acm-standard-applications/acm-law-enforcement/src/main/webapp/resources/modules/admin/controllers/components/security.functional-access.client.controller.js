@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('admin').controller('Admin.FunctionalAccessController', ['$scope', 'Admin.FunctionalAccessControlService', '$q', 'MessageService', '$translate',
-    function ($scope, functionalAccessControlService, $q, messageService, $translate) {
+angular.module('admin').controller('Admin.FunctionalAccessController', ['$scope', 'Admin.FunctionalAccessControlService', '$q',
+    function ($scope, functionalAccessControlService, $q) {
         var tempAppRolesPromise = functionalAccessControlService.getAppRoles();
         var tempUserGroupsPromise = functionalAccessControlService.getUserGroups();
         var tempAppRolesUserGroupsPromise = functionalAccessControlService.getAppUserToGroups();

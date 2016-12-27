@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('admin').controller('Admin.UserNameConfigController', ['$scope', '$q', '$modal', 'Admin.ApplicationSettingsService'
-    , '$translate', 'MessageService',
-    function ($scope, $q, $modal, ApplicationSettingsService, $translate, messageService) {
+    , 'MessageService',
+    function ($scope, $q, $modal, ApplicationSettingsService, messageService) {
         var oldPropertyValue;
         ApplicationSettingsService.getProperty(ApplicationSettingsService.PROPERTIES.DISPLAY_USERNAME).then(function (response) {
             $scope.nameProperty = response.data[ApplicationSettingsService.PROPERTIES.DISPLAY_USERNAME];
@@ -24,7 +24,7 @@ angular.module('admin').controller('Admin.UserNameConfigController', ['$scope', 
                 
                 modalInstance.result.then(function () {   
                 }, function () {
-                	messageService.succsessActionMsg();
+                	messageService.succsessAction();
                 });
                 
                 oldPropertyValue = $scope.nameProperty;
@@ -34,7 +34,7 @@ angular.module('admin').controller('Admin.UserNameConfigController', ['$scope', 
 ]);
 
 angular.module('admin').controller('AdminUserInfoModalController', ['$scope', '$modalInstance', '$modal', 
-    function($scope, $modalInstance, $modal, $translate, messageService) {
+    function($scope, $modalInstance, $modal) {
         $scope.close = function() {
             $modalInstance.dismiss('cancel');
         };
