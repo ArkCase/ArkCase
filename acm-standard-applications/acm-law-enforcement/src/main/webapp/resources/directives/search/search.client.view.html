@@ -30,7 +30,6 @@
                         class="form-control input-md"
                         ng-keyup="keyUp($event)"
                         ng-model="searchQuery"
-                        is-selected="isSelected"
                         contenteditable="true"
                         typeahead="result for result in queryTypeahead($viewValue) | limitTo:10 "
                         placeholder="{{searchPlaceholder}}"
