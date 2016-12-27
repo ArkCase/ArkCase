@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('admin').controller('Admin.SelectPrivilegesController', ['$scope', 'Admin.SelectPrivilegesService', '$q', '$modal', '$translate', 'MessageService',
-    function ($scope, selectPrivilegesService, $q, $modal, $translate, messageService) {
+angular.module('admin').controller('Admin.SelectPrivilegesController', ['$scope', 'Admin.SelectPrivilegesService', '$q', '$modal', '$translate',
+    function ($scope, selectPrivilegesService, $q, $modal, $translate) {
         var tempAppRolesPromise = selectPrivilegesService.getAppRoles();
         var tempAllPrivilegesPromise = selectPrivilegesService.getAllPrivileges();
 

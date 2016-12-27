@@ -29,7 +29,7 @@ angular.module('admin').controller('Admin.LoginConfigController', ['$scope', '$q
 
                 DialogService.alert($translate.instant("admin.application.login.config.inform")).then(function () {
                     //success
-                    messageService.succsessActionMsg();
+                    messageService.succsessAction();
                 });
             }
         }

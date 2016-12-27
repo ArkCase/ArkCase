@@ -6,11 +6,7 @@
     "defaultDateTimeFormat": "MM/DD/YYYY hh:mm",
     "defaultDatePickerFormat": "MM/dd/yyyy",
     "defaultDateUIFormat": "MM/dd/yyyy",
-    "defaultDateTimeUIFormat": "MM/dd/yyyy HH:mm",
-    "actionMessages": {
-    	"successMsg": "Action was successful",
-    	"errorMsg": "Action error"
-  	}
+    "defaultDateTimeUIFormat": "MM/dd/yyyy HH:mm"
   },
   "common.service": {
     "error.invalidData": "Invalid data"
@@ -24,7 +20,11 @@
     "defaultDateFormat": "YYYY-MM-DD"
   },
   "common.service.messageService": {
-    "authorizationError": "You are not authorized to take this action"
+    "authorizationError": "You are not authorized to take this action",
+    "actionMessages": {
+    	"success": "Action was successful",
+    	"error": "Action error"
+  	}
   },
   "common.directive.docTree": {
     "btnRefresh": "Refresh",

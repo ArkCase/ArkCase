@@ -138,8 +138,8 @@ angular.module('services').factory('MessageService', ['$injector', '$translate',
              * @description
              * This method displays succcess action message in notify popup window.
              */
-            succsessActionMsg: function(){
-            	showMessage($translate.instant('common.actionMessages.successMsg'), {position: 'left'});
+            succsessAction: function(){
+            	showMessage($translate.instant('common.service.messageService.actionMessages.success'), {position: 'left'});
             },
             
             /**
@@ -150,8 +150,8 @@ angular.module('services').factory('MessageService', ['$injector', '$translate',
              * @description
              * This method displays error action message in notify popup window.
              */
-            errorActionMsg: function(){
-            	showMessage($translate.instant('common.actionMessages.errorMsg'), {position: 'left'});
+            errorAction: function(){
+            	showMessage($translate.instant('common.service.messageService.actionMessages.error'), {position: 'left'});
             },
         };
     }
