@@ -39,7 +39,7 @@ public class CustomPagedLdapDao implements SpringLdapDao
                     syncConfig.getUserIdAttributeName(), syncConfig.getMailAttributeName());
             searchControls.setReturningAttributes(allAttributes);
         }
-        AggregateDirContextProcessor sortedAndPaged = buildSortedAndPagesProcessor(syncConfig, syncConfig.getUserIdAttributeName());
+        AggregateDirContextProcessor sortedAndPaged = buildSortedAndPagesProcessor(syncConfig, syncConfig.getUidNumberAttribute());
 
         AcmUserGroupsContextMapper userGroupsContextMapper = new AcmUserGroupsContextMapper();
         userGroupsContextMapper.setUserIdAttributeName(syncConfig.getUserIdAttributeName());
@@ -78,7 +78,7 @@ public class CustomPagedLdapDao implements SpringLdapDao
 
                     // A change to the search filter requires us to rebuild the search controls... even though
                     // the controls will have the same values as before.
-                    sortedAndPaged = buildSortedAndPagesProcessor(syncConfig, syncConfig.getUserIdAttributeName());
+                    sortedAndPaged = buildSortedAndPagesProcessor(syncConfig, syncConfig.getUidNumberAttribute());
                     log.debug("Search filter now: {}", searchFilter);
                 }
             }
@@ -117,7 +117,7 @@ public class CustomPagedLdapDao implements SpringLdapDao
         searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
         searchControls.setReturningAttributes(new String[]{"cn", "memberOf"});
 
-        AggregateDirContextProcessor sortedAndPaged = buildSortedAndPagesProcessor(config, "cn");
+        AggregateDirContextProcessor sortedAndPaged = buildSortedAndPagesProcessor(config, "gidNumber");
         AcmGroupContextMapper acmGroupContextMapper = new AcmGroupContextMapper();
 
         boolean searchGroups = true;
@@ -153,7 +153,7 @@ public class CustomPagedLdapDao implements SpringLdapDao
 
                 // A change to the search filter requires us to rebuild the search controls... even though
                 // the controls will have the same values as before.
-                sortedAndPaged = buildSortedAndPagesProcessor(config, "cn");
+                sortedAndPaged = buildSortedAndPagesProcessor(config, "gidNumber");
                 log.trace("Search filter now: {}", searchFilter);
             }
         }
