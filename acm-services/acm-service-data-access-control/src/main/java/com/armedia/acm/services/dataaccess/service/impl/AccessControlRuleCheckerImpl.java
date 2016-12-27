@@ -163,7 +163,7 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
      */
     private boolean checkParticipantTypes(List<String> userIsParticipantTypeAny, Authentication authentication, JSONObject solrJsonResult)
     {
-        if (userIsParticipantTypeAny != null)
+        if (userIsParticipantTypeAny != null && !userIsParticipantTypeAny.isEmpty())
         {
             // if participants defined
             if (solrJsonResult.has("acm_participants_lcs"))
