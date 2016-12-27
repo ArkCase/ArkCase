@@ -39,13 +39,16 @@ exports.config = {
     // }],
 
     specs: [
+
            '../test_spec/dashboard_test.spec.js',
            '../test_spec/task_test.spec.js',
            '../test_spec/case_test.spec.js',
            '../test_spec/complaint_test.spec.js',
            '../test_spec/user_test.spec.js',
            '../test_spec/notification_test.js',
-           '../test_spec/admin_test.js'
+           '../test_spec/admin_test.js',
+           '../test_spec/report_test.spec.js'
+
     ],
 
     jasmineNodeOpts: {

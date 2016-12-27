@@ -168,12 +168,9 @@ var insertLinkBtn = element(by.buttonText(Objects.taskspage.locators.insertLinkB
 var detailsPicture = element(by.xpath(Objects.basepage.locators.detailsPicture));
 var browseButton = element(by.name(Objects.basepage.locators.browseButton));
 var detailsUploadedImage = element(by.xpath(Objects.basepage.locators.detailsUploadedImage));
-var fullnameLink = element(by.css(Objects.basepage.locators.fullnameLink));
-var logoutLink = element(by.linkText(Objects.basepage.locators.logoutLink));
 var checkOut = element(by.xpath(Objects.basepage.locators.checkout));
 var checkIn = element(by.xpath(Objects.basepage.locators.checkin));
 var cancelEditing = element(by.xpath(Objects.basepage.locators.cancelEditing));
-var logoutSucesfullMessage = element(by.css(Objects.basepage.locators.logoutSucesfullMessage));
 var checkoutDisabled = element(by.xpath(Objects.basepage.locators.checkoutDisabled));
 var checkinDisabled = element(by.xpath(Objects.basepage.locators.checkinDisabled));
 var cancelEditingDisabled = element(by.xpath(Objects.basepage.locators.cancelEditingDisabled));
@@ -461,11 +458,12 @@ var BasePage = function() {
                     var el = element(by.xpath(completexPath));
                     el.click();
                 });
-                return this;
             });
         });
+        return this;
 
     };
+
     this.clickNotesLink = function() {
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.notesLink))), 30000, "Notes link button is not displayed");
         notesLink.click().then(function() {
@@ -1438,8 +1436,6 @@ var BasePage = function() {
 	this.returnDetailsUploadedImage = function () {
 		return detailsUploadedImage.isDisabled();
 	};
-
-
 	this.clickFullNameLink = function () {
 		browser.wait(EC.visibilityOf(element(by.css('.fullname'))), 30000).then(function () {
 			browser.wait(EC.elementToBeClickable(element(by.css('.fullname'))), 30000).then(function () {
@@ -1463,6 +1459,17 @@ var BasePage = function() {
 		this.clickLogout();
 		return this;
 	};
+
+	this.navigateToPage = function(link){
+		xPathStr = ".//a[@title='";
+		var completexPath = xPathStr + link + "']";
+		var el = element(by.xpath(completexPath));
+		browser.wait(EC.visibilityOf(element(by.xpath(completexPath))), 30000).then(function () {
+            el.click();
+        });
+		return this;
+	};
+
 	this.clickCheckin = function () {
 		checkIn.click();
 		return this;

@@ -56,6 +56,7 @@ var reinvestigateBtn = element(by.css(Objects.casepage.locators.reinvestigateBtn
 var casesTitleStatus = element.all(by.xpath(Objects.casepage.locators.caseTitleStatus)).get(0);
 var dueDate = element(by.xpath(Objects.casepage.locators.dueDate));
 var owningGroup = element(by.xpath(Objects.casepage.locators.owningGroup));
+var caseTitleWithStatus = element(by.xpath(Objects.casepage.locators.caseTitleWithStatus));
 
 var CasePage = function() {
 
@@ -291,7 +292,8 @@ var CasePage = function() {
     };
     this.returnOwningGroup = function () {
         return owningGroup.getText();
-    }
+    };
+
 };
 
 
