@@ -2,6 +2,7 @@ package com.armedia.acm.services.search.web.api;
 
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
+
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -22,8 +24,9 @@ import java.net.URLEncoder;
  */
 
 @Controller
-@RequestMapping( { "/api/v1/plugin/search", "/api/latest/plugin/search"} )
-public class CaseFilesSearchByCreatorAPIController {
+@RequestMapping({ "/api/v1/plugin/search", "/api/latest/plugin/search" })
+public class CaseFilesSearchByCreatorAPIController
+{
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -31,17 +34,13 @@ public class CaseFilesSearchByCreatorAPIController {
 
     @RequestMapping(value = "/caseFilesSearch", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String caseFiles(
-            @RequestParam(value = "user", required = true) String userId,
+    public String caseFiles(@RequestParam(value = "user", required = true) String userId,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-            @RequestParam(value = "n", required = false, defaultValue = "5") int maxRows,
-            Authentication authentication,
-            HttpServletResponse httpResponse
-    ) throws MuleException, UnsupportedEncodingException {
+            @RequestParam(value = "n", required = false, defaultValue = "5") int maxRows, Authentication authentication,
+            HttpServletResponse httpResponse) throws MuleException, UnsupportedEncodingException
+    {
 
-        if ( log.isDebugEnabled() ) {
-            log.debug("User '" + authentication.getName() + "' is searching for caseFiles created by:'" + userId + "' ");
-        }
+        log.debug("User '{}' is searching for caseFiles created by:'{}' ", authentication.getName(), userId);
 
         String query = "object_type_s:CASE_FILE AND creator_lcs:" + URLEncoder.encode(userId, "UTF-8");
         String sort = "dueDate_tdt ASC";
@@ -49,8 +48,10 @@ public class CaseFilesSearchByCreatorAPIController {
         query = query.replaceAll(" ", "+");
         sort = sort.replaceAll(" ", "+");
 
-        String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH,
-                query, startRow, maxRows, sort);
+        String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, startRow,
+                maxRows, sort);
+
+        results = results.replaceAll("\\n", "");
 
         httpResponse.addHeader("X-JSON", results);
 
