@@ -27,7 +27,7 @@ function waitUrl(myUrl) {
 }
 
 
-describe('case page tests', function() {
+describe('audit tests', function() {
 
     beforeEach(function(done) {
 
