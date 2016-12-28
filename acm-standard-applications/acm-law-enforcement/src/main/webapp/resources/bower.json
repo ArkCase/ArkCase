@@ -42,7 +42,8 @@
     "fullcalendar": "latest",
     "angular-chart.js": "~0.8.8",
     "sockjs-client": "1.0.3",
-    "stomp-websocket": "2.3.4"
+    "stomp-websocket": "2.3.4",
+    "angular-hotkeys": "chieffancypants/angular-hotkeys#^1.7.0"
   },
   "resolutions": {
     "angular": "~1.4.7",
