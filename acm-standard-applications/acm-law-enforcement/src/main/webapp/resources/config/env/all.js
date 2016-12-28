@@ -90,7 +90,8 @@ module.exports = {
                 'lib/Chart.js/Chart.min.js',
                 'lib/angular-chart.js/dist/angular-chart.min.js',
                 'lib/sockjs-client/dist/sockjs.min.js',
-                'lib/stomp-websocket/lib/stomp.min.js'
+                'lib/stomp-websocket/lib/stomp.min.js',
+                'lib/angular-hotkeys/build/hotkeys.js'
             ]
         },
         css: [
