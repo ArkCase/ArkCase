@@ -1,22 +1,23 @@
 {
-    "id": "core",
-    "title": "Core",
-    "components": [
-        {
-            "id": "header",
-            "title": "Header",
-            "enabled": true,
-            "searchProperties": {
-                "start": 0,
-                "n": 10
-            }
-        },
-        {
-            "id": "acmLogin",
-            "title": "",
-            "idleLimit": 600000,
-            "idlePull": 5000,
-            "idleConfirm": 15000
-        }
-    ]
+  "id": "core",
+  "title": "Core",
+  "components": [
+    {
+      "id": "header",
+      "title": "Header",
+      "enabled": true,
+      "typeAheadColumn": "title_parseable",
+      "searchProperties": {
+        "start": 0,
+        "n": 10
+      }
+    },
+    {
+      "id": "acmLogin",
+      "title": "",
+      "idleLimit": 600000,
+      "idlePull": 5000,
+      "idleConfirm": 15000
+    }
+  ]
 }

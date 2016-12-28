@@ -101,7 +101,7 @@ body {
 }
 
 .navbar-arkcase .dropdown-menu {
-    text-align: center;
+    text-align: left;
     width: 275px;
     z-index: 3001 !important;
 }
@@ -250,16 +250,15 @@ body {
     z-index: 2;
 }
 
-
 .leftnav-menu footer::before {
-	content: "Powered by ArkCase.com";
-	color: #ccc;
-	font-size: 10px;
-	text-align: center;
-	position: fixed;
-	bottom: 0px;
-	left: 0px;
-	width: 150px;
+    content: "Powered by ArkCase.com";
+    color: #ccc;
+    font-size: 10px;
+    text-align: center;
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    width: 150px;
 }
 
 .leftnav-menu footer .btn-icon {
@@ -318,9 +317,8 @@ body {
 }
 
 .page-wrapper.collapsed .leftnav-menu footer::before {
-	display: none ;
+    display: none;
 }
-
 
 /* Page Content (Right Column) */
 
@@ -419,18 +417,18 @@ body {
 }
 
 .module-content .right-sidebar footer {
-	position: fixed;
-	bottom: -16px;
-	right: 0;
-	padding: 0;
-	margin: 0;
-	width: 480px;
-	min-height: 60px;
-	margin-left: 10px;
-	margin-right: 10px;
-	z-index: 1001;
-	border: 1px solid #ddd;
-	border-bottom: 0px;
+    position: fixed;
+    bottom: -16px;
+    right: 0;
+    padding: 0;
+    margin: 0;
+    width: 480px;
+    min-height: 60px;
+    margin-left: 10px;
+    margin-right: 10px;
+    z-index: 1001;
+    border: 1px solid #ddd;
+    border-bottom: 0px;
 }
 
 body.fullscreen header.navbar-arkcase {
