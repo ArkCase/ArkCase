@@ -47,7 +47,8 @@ exports.config = {
            '../test_spec/user_test.spec.js',
            '../test_spec/notification_test.js',
            '../test_spec/admin_test.js',
-           '../test_spec/report_test.spec.js'
+           '../test_spec/report_test.spec.js',
+           '../test_spec/audit_test.spec.js'
 
     ],
 

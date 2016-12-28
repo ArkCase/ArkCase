@@ -8,7 +8,8 @@
         },
         "data": {
             "supervisoruser": {
-                "username": "samuel-acm",
+
+                "username": "sally-acm",
                 "password": "AcMd3v$"
             },
             "adminuser": {
@@ -785,6 +786,38 @@
             "CDCSecondRowTitle": "No Further Action",
             "CDCThirdRowTitle": "Open Investigation",
             "CDCForthRowTitle": "Refer External"
+        }
+    },
+    "auditPage":{
+        "locators":{
+            "reportName": "reportNameAudit",
+            "id": "selectIDAudit",
+            "dateFromAudit": "dateFromAudit",
+            "dateToAudit": "dateToAudit",
+            "generateAuditReportButton": "Generate Audit Report",
+            "auditReportColumn1Title": "//table/tbody/tr[2]/td[2]",
+            "auditReportColumn2Title": "//table/tbody/tr[2]/td[3]",
+            "auditReportColumn3Title": "//table/tbody/tr[2]/td[4]",
+            "auditReportColumn4Title": "//table/tbody/tr[2]/td[5]",
+            "auditReportColumn5Title": "//table/tbody/tr[2]/td[6]",
+            "auditReportColumn6Title": "//table/tbody/tr[2]/td[7]",
+            "auditReportColumn7Title": "//table/tbody/tr[2]/td[8]",
+            "dateValue": "//table/tbody/tr[4]/td[2]",
+            "userValue": "//table/tbody/tr[4]/td[3]",
+            "nameValue": "//table/tbody/tr[4]/td[4]",
+            "resultValue": "//table/tbody/tr[4]/td[5]",
+            "ipAddressValue": "//table/tbody/tr[4]/td[6]",
+            "objectIdValue": "//table/tbody/tr[4]/td[7]",
+            "objectTypeValue": "//table/tbody/tr[4]/td[8]"
+        },
+        "data":{
+            "auditReportColumn1Title": "Date",
+            "auditReportColumn2Title": "User",
+            "auditReportColumn3Title": "Name",
+            "auditReportColumn4Title": "Result",
+            "auditReportColumn5Title": "IP Address",
+            "auditReportColumn6Title": "Object ID",
+            "auditReportColumn7Title": "Object Type"
         }
     }
 }
