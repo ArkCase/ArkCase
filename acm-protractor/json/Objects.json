@@ -1,5 +1,5 @@
 {
-    "siteurl": "http://cloud.arkcase.com",
+    "siteurl": "http://core.arkcase.dev.armedia.com/arkcase/login",
     "loginpage": {
         "locators": {
             "username": "j_username",
@@ -290,7 +290,8 @@
             "reloadWidgetContentBtn": ".//*[@class='panel-title ng-binding ng-scope']/span/a[1]/i",
             "chnageWidgetLocationBtn": ".//*[@class='panel-title ng-binding ng-scope']/span/a[2]/i",
             "editWidgetConfigurationBtn": ".//*[@class='panel-title ng-binding ng-scope']/span/a[5]/i",
-            "removeWidgetBtn": ".//*[@class='panel-title ng-binding ng-scope']/span/a[7]"
+            "removeWidgetBtn": ".//*[@class='panel-title ng-binding ng-scope']/span/a[7]",
+            "myTasks": "My Tasks"
 
         },
 
@@ -301,7 +302,8 @@
             "widgetTitleNewComplaints": "New Complaints",
             "widgetTitleTeamWorkload": "Team Workload",
             "widgetTitleWeather": "Weather",
-            "widgetTitleNews": "News"
+            "widgetTitleNews": "News",
+            "widgetTitleMyTasks": "My Tasks"
         }
     },
 
@@ -711,9 +713,14 @@
     },
     "adminPage": {
         "locators": {
-            "chooseReportListBox": "selectedObject",
+            "ListBox": "selectedObject",
             "notAuthorizedListBox": "selectedNotAuthorized",
-            "authorizedListBox": "selectedAuthorized"
+            "authorizedListBox": "selectedAuthorized",
+            "LDAPCol" : "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid"
+        },
+        "data":{
+            "ArmediaDirectoryName": "armedia",
+            "ArmediaLDAPUrl": "ldaps://arm-pr-w8x-ad03.armedia.com:636"
         }
     },
     "reportPage": {
