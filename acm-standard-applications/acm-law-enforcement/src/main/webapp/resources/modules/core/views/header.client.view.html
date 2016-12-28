@@ -1,40 +1,40 @@
-<div  ng-controller="HeaderController">
-	<!-- Header -->
-	<div class="navbar-header">
-		<button class="navbar-toggle" type="button" ng-click="toggleCollapsibleMenu()">
-			<span class="sr-only" translate>core.topBar.toggle.btn</span>
-			<span class="icon-bar"></span>
-			<span class="icon-bar"></span>
-			<span class="icon-bar"></span>
-		</button>
-		<a ui-sref="dashboard" class="navbar-brand"/>
-	</div>
+<div ng-controller="HeaderController">
+    <!-- Header -->
+    <div class="navbar-header">
+        <button class="navbar-toggle" type="button" ng-click="toggleCollapsibleMenu()">
+            <span class="sr-only" translate>core.topBar.toggle.btn</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a ui-sref="dashboard" class="navbar-brand"/>
+    </div>
 
-	<nav ng-if="menu.items.length > 0" class="collapse navbar-collapse" collapse="!isCollapsed" role="navigation">
-		<ul class="nav navbar-nav">
-			<li dropdown class="dropdown">
-				<a href="#" dropdown-toggle>
-					<i class="fa fa-plus-circle"></i> <span translate>core.topBar.new</span>
-				</a>
-				<div class="dropdown-menu">
-					<div class="col-xs-4" ng-repeat="item in menu.items | orderBy: 'position' " >
-						<div class="well-sm">
+    <nav ng-if="menu.items.length > 0" class="collapse navbar-collapse" collapse="!isCollapsed" role="navigation">
+        <ul class="nav navbar-nav">
+            <li dropdown class="dropdown">
+                <a href="#" dropdown-toggle>
+                    <i class="fa fa-plus-circle"></i> <span translate>core.topBar.new</span>
+                </a>
+                <div class="dropdown-menu">
+                    <div class="col-xs-4" ng-repeat="item in menu.items | orderBy: 'position' ">
+                        <div class="well-sm">
 
-							<a data-ui-sref="{{item.link}}"
+                            <a data-ui-sref="{{item.link}}"
                                title="{{item.title | translate}}"
                                permission="{{item.permissionAction}}"
                                permission-action="hide">
-								<i ng-if="item.iconClass" class="navigation-icon {{item.iconClass}}"> </i>
-								<span class="text-muted" translate>{{item.title}}</span>
-							</a>
-						</div>
-					</div>
-				</div>
-			</li>
-		</ul>
+                                <i ng-if="item.iconClass" class="navigation-icon {{item.iconClass}}"> </i>
+                                <span class="text-muted" translate>{{item.title}}</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
 
-		<ul class="nav navbar-nav" ng-if="menu.shouldRender(authentication.user);">
-			<li ng-repeat="item in menu.items | orderBy: 'position'"
+        <ul class="nav navbar-nav" ng-if="menu.shouldRender(authentication.user);">
+            <li ng-repeat="item in menu.items | orderBy: 'position'"
                 ng-if="item.shouldRender(authentication.user);"
                 ng-switch="item.menuItemType"
                 ui-route="{{item.uiRoute}}"
@@ -42,34 +42,44 @@
                 ng-class="{active: ($uiRoute)}"
                 dropdown="item.menuItemType === 'dropdown'"
             >
-				<a ng-switch-when="dropdown" class="dropdown-toggle">
-					<span ng-bind="item.title"></span>
-					<b class="caret"></b>
-				</a>
-				<ul ng-switch-when="dropdown" class="dropdown-menu">
-					<li ng-repeat="subitem in item.items | orderBy: 'position'" ng-if="subitem.shouldRender(authentication.user);" ui-route="{{subitem.uiRoute}}" ng-class="{active: $uiRoute}">
-						<a href="/#!/{{subitem.link}}" ng-bind="subitem.title"></a>
-					</li>
-				</ul>
-				<a ng-switch-default href="/#!/{{item.link}}" ng-bind="item.title"></a>
-			</li>
-		</ul>
+                <a ng-switch-when="dropdown" class="dropdown-toggle">
+                    <span ng-bind="item.title"></span>
+                    <b class="caret"></b>
+                </a>
+                <ul ng-switch-when="dropdown" class="dropdown-menu">
+                    <li ng-repeat="subitem in item.items | orderBy: 'position'"
+                        ng-if="subitem.shouldRender(authentication.user);" ui-route="{{subitem.uiRoute}}"
+                        ng-class="{active: $uiRoute}">
+                        <a href="/#!/{{subitem.link}}" ng-bind="subitem.title"></a>
+                    </li>
+                </ul>
+                <a ng-switch-default href="/#!/{{item.link}}" ng-bind="item.title"></a>
+            </li>
+        </ul>
 
-		<form class="navbar-form navbar-right" role="search">
-			<div class="form-group">
-				<div class="input-group input-group-sm">
+        <form class="navbar-form navbar-right" role="search">
+            <div class="form-group">
+                <div class="input-group input-group-sm">
 					<span class="input-group-btn">
 						<button class="btn btn-default" ng-click="search()">
 							<span class="fa fa-search"></span>
 						</button>
 					</span>
-					<input type="text" class="form-control input-sm"
-						   ng-keydown="keyDown($event)"
-						   ng-model="data.inputQuery"
-						   placeholder="{{'core.topBar.search.placeholder' | translate}}">
-				</div>
-			</div>
-		</form>
+                    <input type="text"
+                           class="form-control input-sm"
+                           ng-keydown="keyDown($event)"
+                           ng-model="data.inputQuery"
+                           placeholder=" {{'core.topBar.search.placeholder' | translate}}"
+                           typeahead="result for result in queryTypeahead($viewValue) | limitTo:10 "
+                           typeahead-on-select="onSelect($item, $model, $label)"
+                           typeahead-loading="loadingResults"
+                           typeahead-no-results="noResults"
+                           typeahead-focus-first="false"
+                           typeahead-min-length="2"
+                    >
+                </div>
+            </div>
+        </form>
 
-	</nav>
+    </nav>
 </div>
