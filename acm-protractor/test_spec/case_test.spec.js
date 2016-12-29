@@ -10,7 +10,7 @@ var flag = false;
 var EC = protractor.ExpectedConditions;
 var timeTrackingPage = require('../Pages/time_tracking_page.js');
 var costTrackingPage = require('../Pages/cost_tracking_page.js');
-
+var using = require(process.env['USERPROFILE'] + '/node_modules/jasmine-data-provider');
 
 function testAsync(done) {
 
@@ -101,37 +101,17 @@ describe('case page tests', function() {
 
     });
 
-    it('should create new case and edit the priority to High', function() {
+    using([{priority: "High", prioritySaved: Objects.casepage.data.priorityHigh}, {priority: "Medium", prioritySaved: Objects.casepage.data.priorityMedium}, {priority: "Expedite", prioritySaved: Objects.casepage.data.priorityExpedite}], function(data) {
+        it('should create new case and edit the priority to '+ data.priority, function () {
 
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.waitForPriority();
-        casePage.editPriority('High');
-        expect(casePage.returnPriority()).toEqual(Objects.casepage.data.priorityHigh);
-    });
-
-    it('should create new case and edit the priority to Medium', function() {
-
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.waitForPriority();
-        casePage.editPriority('Medium');
-        expect(casePage.returnPriority()).toEqual(Objects.casepage.data.priorityMedium);
-    });
-
-    it('should create new case and edit the priority to Medium', function() {
-
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.waitForPriority();
-        casePage.editPriority('Expedite');
-        expect(casePage.returnPriority()).toEqual(Objects.casepage.data.priorityExpedite);
+            casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
+            casePage.clickNextBtn();
+            casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
+            casePage.switchToDefaultContent();
+            casePage.waitForPriority();
+            casePage.editPriority(data.priority);
+            expect(casePage.returnPriority()).toEqual(data.prioritySaved);
+        });
     });
 
     it('should create new case and edit the assignee from ann to samuel', function() {
@@ -457,55 +437,23 @@ describe('case page tests', function() {
 
     });
 
-    it('should create new case and change case status to active, verify the automated task in tasks table and approve', function() {
+    using([{status: "Active"}, {status: "Inactive"}, {status: "Deleted"}], function(data) {
+        it('should create new case and change case status to ' + data.status +', verify the automated task in tasks table and approve', function () {
 
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.waitForChangeCaseButton();
-        casePage.clickChangeCaseBtn();
-        casePage.switchToIframes().selectCaseStatus("Active");
-        casePage.selectApprover(Objects.casepage.data.approverSamuel).chnageCaseSubmit();
-        casePage.clickTasksLinkBtn().waitForTasksTable();
-        expect(casePage.returnAutomatedTask()).toContain(Objects.casepage.data.automatedTaskTitle);
-        casePage.clickTaskTitle();
-        taskPage.clickApproveBtn();
-        expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateClosed, 'The task state should be CLOSED');
-    });
-
-    it('should create new case and change case status to Inactive, verify the automated task in tasks table and approve', function() {
-
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.waitForChangeCaseButton();
-        casePage.clickChangeCaseBtn();
-        casePage.switchToIframes().selectCaseStatus("Inactive");
-        casePage.selectApprover(Objects.casepage.data.approverSamuel).chnageCaseSubmit();
-        casePage.clickTasksLinkBtn().waitForTasksTable();
-        expect(casePage.returnAutomatedTask()).toContain(Objects.casepage.data.automatedTaskTitle);
-        casePage.clickTaskTitle();
-        taskPage.clickApproveBtn();
-        expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateClosed, 'The task state should be CLOSED');
-    });
-
-    it('should create new case and change case status to active, verify the automated task in tasks table and approve', function() {
-
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.waitForChangeCaseButton();
-        casePage.clickChangeCaseBtn();
-        casePage.switchToIframes().selectCaseStatus("Deleted");
-        casePage.selectApprover(Objects.casepage.data.approverSamuel).chnageCaseSubmit();
-        casePage.clickTasksLinkBtn().waitForTasksTable();
-        expect(casePage.returnAutomatedTask()).toContain(Objects.casepage.data.automatedTaskTitle);
-        casePage.clickTaskTitle();
-        taskPage.clickApproveBtn();
-        expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateClosed, 'The task state should be CLOSED');
+            casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
+            casePage.clickNextBtn();
+            casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
+            casePage.switchToDefaultContent();
+            casePage.waitForChangeCaseButton();
+            casePage.clickChangeCaseBtn();
+            casePage.switchToIframes().selectCaseStatus(data.status);
+            casePage.selectApprover(Objects.casepage.data.approverSamuel).chnageCaseSubmit();
+            casePage.clickTasksLinkBtn().waitForTasksTable();
+            expect(casePage.returnAutomatedTask()).toContain(Objects.casepage.data.automatedTaskTitle);
+            casePage.clickTaskTitle();
+            taskPage.clickApproveBtn();
+            expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateClosed, 'The task state should be CLOSED');
+        });
     });
 
     it('should create new case and and create new case from new case button', function() {
@@ -722,141 +670,29 @@ describe('case page tests', function() {
         expect(casePage.returnParticipantNameForthRow()).toEqual("Samuel Supervisor");
     });
 
-    it('should create new case  select collaborator from paricipant tab and verify it in the paricipants table', function() {
+    using([{participant: "Collaborator", participantSaved: "collaborator"}, {participant: "Follower", participantSaved: "follower"}, {participant: "Reader", participantSaved: "reader"}, {participant: "Co-Owner", participantSaved: "co-owner"}, {participant: "Supervisor", participantSaved: "supervisor"}, {participant: "No Access", participantSaved: "no access"}, {participant: "Approver", participantSaved: "approver"}], function(data) {
+        it('should create new case  select ' + data.participant + ' from paricipant tab and verify it in the paricipants table', function () {
 
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
-        casePage.selectParticipant("Collaborator", "Sally");
-        casePage.switchToIframes();
-        casePage.clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.participantTable();
-        expect(casePage.returnParticipantTypeFirstRow()).toEqual("*");
-        expect(casePage.returnParticipantNameFirstRow()).toEqual("*");
-        expect(casePage.returnParticipantTypeSecondRow()).toEqual("assignee");
-        expect(casePage.returnParticipantNameSecondRow()).toEqual("Ann Administrator");
-        expect(casePage.returnParticipantTypeThirdRow()).toEqual("collaborator");
-        expect(casePage.returnParticipantNameThirdRow()).toEqual("Sally Supervisor");
-        expect(casePage.returnParticipantTypeForthRow()).toEqual("owning group");
-        expect(casePage.returnParticipantNameForthRow()).toEqual("ACM_INVESTIGATOR_DEV");
-        expect(casePage.returnParticipantTypeFifthRow()).toEqual("reader");
-        expect(casePage.returnParticipantNameFifthRow()).toEqual("Samuel Supervisor");
+            casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
+            casePage.clickNextBtn();
+            casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
+            casePage.selectParticipant(data.participant, "Sally");
+            casePage.switchToIframes();
+            casePage.clickSubmitBtn();
+            casePage.switchToDefaultContent();
+            casePage.participantTable();
+            expect(casePage.returnParticipantTypeFirstRow()).toEqual("*");
+            expect(casePage.returnParticipantNameFirstRow()).toEqual("*");
+            expect(casePage.returnParticipantTypeSecondRow()).toEqual("assignee");
+            expect(casePage.returnParticipantNameSecondRow()).toEqual("Ann Administrator");
+            expect(casePage.returnParticipantTypeThirdRow()).toEqual(data.participantSaved);
+            expect(casePage.returnParticipantNameThirdRow()).toEqual("Sally Supervisor");
+            expect(casePage.returnParticipantTypeForthRow()).toEqual("owning group");
+            expect(casePage.returnParticipantNameForthRow()).toEqual("ACM_INVESTIGATOR_DEV");
+            expect(casePage.returnParticipantTypeFifthRow()).toEqual("reader");
+            expect(casePage.returnParticipantNameFifthRow()).toEqual("Samuel Supervisor");
 
-    });
-
-    it('should create new case  select follower from paricipant tab and verify it in the paricipants table', function() {
-
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
-        casePage.selectParticipant("Follower", "Sally");
-        casePage.switchToIframes();
-        casePage.clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.participantTable();
-        expect(casePage.returnParticipantTypeFirstRow()).toEqual("*");
-        expect(casePage.returnParticipantNameFirstRow()).toEqual("*");
-        expect(casePage.returnParticipantTypeSecondRow()).toEqual("assignee");
-        expect(casePage.returnParticipantNameSecondRow()).toEqual("Ann Administrator");
-        expect(casePage.returnParticipantTypeThirdRow()).toEqual("follower");
-        expect(casePage.returnParticipantNameThirdRow()).toEqual("Sally Supervisor");
-        expect(casePage.returnParticipantTypeForthRow()).toEqual("owning group");
-        expect(casePage.returnParticipantNameForthRow()).toEqual("ACM_INVESTIGATOR_DEV");
-        expect(casePage.returnParticipantTypeFifthRow()).toEqual("reader");
-        expect(casePage.returnParticipantNameFifthRow()).toEqual("Samuel Supervisor");
-
-    });
-
-    it('should create new case and select reader from participant tab and verify it in the paricipant table', function() {
-
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
-        casePage.selectParticipant("Reader", "Sally");
-        casePage.switchToIframes();
-        casePage.clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.participantTable();
-        expect(casePage.returnParticipantTypeFirstRow()).toEqual("*");
-        expect(casePage.returnParticipantNameFirstRow()).toEqual("*");
-        expect(casePage.returnParticipantTypeSecondRow()).toEqual("assignee");
-        expect(casePage.returnParticipantNameSecondRow()).toEqual("Ann Administrator");
-        expect(casePage.returnParticipantTypeThirdRow()).toEqual("owning group");
-        expect(casePage.returnParticipantNameThirdRow()).toEqual("ACM_INVESTIGATOR_DEV");
-        expect(casePage.returnParticipantTypeForthRow()).toEqual("reader");
-        expect(casePage.returnParticipantNameForthRow()).toEqual("Samuel Supervisor");
-        expect(casePage.returnParticipantTypeFifthRow()).toEqual("reader");
-        expect(casePage.returnParticipantNameFifthRow()).toEqual("Sally Supervisor");
-
-    });
-
-    it('should create new case and select co-owner from paricipant tab and verify it in the participant table', function() {
-
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
-        casePage.selectParticipant("Co-Owner", "Samuel");
-        casePage.switchToIframes();
-        casePage.clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.participantTable();
-        expect(casePage.returnParticipantTypeFirstRow()).toEqual("*");
-        expect(casePage.returnParticipantNameFirstRow()).toEqual("*");
-        expect(casePage.returnParticipantTypeSecondRow()).toEqual("assignee");
-        expect(casePage.returnParticipantNameSecondRow()).toEqual("Ann Administrator");
-        expect(casePage.returnParticipantTypeThirdRow()).toEqual("co-owner");
-        expect(casePage.returnParticipantNameThirdRow()).toEqual("Samuel Supervisor");
-        expect(casePage.returnParticipantTypeForthRow()).toEqual("owning group");
-        expect(casePage.returnParticipantNameForthRow()).toEqual("ACM_INVESTIGATOR_DEV");
-        expect(casePage.returnParticipantTypeFifthRow()).toEqual("reader");
-        expect(casePage.returnParticipantNameFifthRow()).toEqual("Samuel Supervisor");
-
-    });
-
-    it('should create new case and select supervisor from participant tab and verify it in the participant table', function() {
-
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
-        casePage.selectParticipant("Supervisor", "Samuel");
-        casePage.switchToIframes();
-        casePage.clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.participantTable();
-        expect(casePage.returnParticipantTypeFirstRow()).toEqual("*");
-        expect(casePage.returnParticipantNameFirstRow()).toEqual("*");
-        expect(casePage.returnParticipantTypeSecondRow()).toEqual("assignee");
-        expect(casePage.returnParticipantNameSecondRow()).toEqual("Ann Administrator");
-        expect(casePage.returnParticipantTypeThirdRow()).toEqual("owning group");
-        expect(casePage.returnParticipantNameThirdRow()).toEqual("ACM_INVESTIGATOR_DEV");
-        expect(casePage.returnParticipantTypeForthRow()).toEqual("reader");
-        expect(casePage.returnParticipantNameForthRow()).toEqual("Samuel Supervisor");
-        expect(casePage.returnParticipantTypeFifthRow()).toEqual("supervisor");
-        expect(casePage.returnParticipantNameFifthRow()).toEqual("Samuel Supervisor");
-
-    });
-
-    it('should create new case and select No Access from participant tab and verify it in the paricipant table', function() {
-
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
-        casePage.selectParticipant("No Access", "Ann");
-        casePage.switchToIframes();
-        casePage.clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.participantTable();
-        expect(casePage.returnParticipantTypeFirstRow()).toEqual("*");
-        expect(casePage.returnParticipantNameFirstRow()).toEqual("*");
-        expect(casePage.returnParticipantTypeSecondRow()).toEqual("assignee");
-        expect(casePage.returnParticipantNameSecondRow()).toEqual("Ann Administrator");
-        expect(casePage.returnParticipantTypeThirdRow()).toEqual("no access");
-        expect(casePage.returnParticipantNameThirdRow()).toEqual("Ann Administrator'");
-        expect(casePage.returnParticipantTypeForthRow()).toEqual("owning group");
-        expect(casePage.returnParticipantNameForthRow()).toEqual("ACM_INVESTIGATOR_DEV");
-        expect(casePage.returnParticipantTypeFifthRow()).toEqual("reader");
-        expect(casePage.returnParticipantNameFifthRow()).toEqual("Samuel Supervisor");
+        });
     });
 
     it('should create new case and verify adding new Report of Investigation document', function() {
@@ -867,28 +703,6 @@ describe('case page tests', function() {
         casePage.switchToIframes().submitReportOfInvestigation(Objects.basepage.data.reportTitle, Objects.taskspage.data.assigneeSamuel);
         casePage.switchToDefaultContent().validateDocGridData(true, "Report of Investigation", ".pdf", "Report of Investigation", utils.returnToday("/"), utils.returnToday("/"), userPage.returnUserNavigationProfile(), "1.0", "ACTIVE");
 
-    });
-
-    it('should create new case and select Approver from participant tab and verify it in the paricipant table', function() {
-
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
-        casePage.selectParticipant("Approver", "Ann");
-        casePage.switchToIframes();
-        casePage.clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.participantTable();
-        expect(casePage.returnParticipantTypeFirstRow()).toEqual("*");
-        expect(casePage.returnParticipantNameFirstRow()).toEqual("*");
-        expect(casePage.returnParticipantTypeSecondRow()).toEqual("approver");
-        expect(casePage.returnParticipantNameSecondRow()).toEqual("Ann Administrator");
-        expect(casePage.returnParticipantTypeThirdRow()).toEqual("assignee");
-        expect(casePage.returnParticipantNameThirdRow()).toEqual("Ann Administrator");
-        expect(casePage.returnParticipantTypeForthRow()).toEqual("owning group");
-        expect(casePage.returnParticipantNameForthRow()).toEqual("ACM_INVESTIGATOR_DEV");
-        expect(casePage.returnParticipantTypeFifthRow()).toEqual("reader");
-        expect(casePage.returnParticipantNameFifthRow()).toEqual("Samuel Supervisor");
     });
 
     it('should create new case and verify if assignee can be deleted', function() {

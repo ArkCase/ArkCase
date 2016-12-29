@@ -4,6 +4,7 @@ var taskPage = require('../Pages/task_page.js');
 var userPage = require('../Pages/user_profile_page.js');
 var loginPage = require('../Pages/login_page.js');
 var Objects = require('../json/Objects.json');
+var using = require(process.env['USERPROFILE'] + '/node_modules/jasmine-data-provider');
 var flag = false;
 
 function testAsync(done) {
@@ -46,25 +47,13 @@ describe('Create new task ', function() {
 
     });
 
-
-    it('should create new task with priority low', function() {
-        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea);
-        expect(taskPage.returnDueDateText()).not.toBeTruthy();
-        taskPage.clickSave();
-        expect(taskPage.returnPriority()).toEqual(Objects.taskspage.data.priorityLow);
-    });
-
-    it('should create new task with priority High', function() {
-        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "High", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea);
-        expect(taskPage.returnDueDateText()).not.toBeTruthy();
-        taskPage.clickSave();
-        expect(taskPage.returnPriority()).toEqual(Objects.taskspage.data.priorityHigh);
-    });
-    it('should create new task with priority Expedite', function() {
-        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Expedite", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea);
-        expect(taskPage.returnDueDateText()).not.toBeTruthy();
-        taskPage.clickSave();
-        expect(taskPage.returnPriority()).toEqual(Objects.taskspage.data.priorityExpedite);
+    using([{priority: "High", prioritySaved: Objects.taskspage.data.priorityHigh}, {priority: "Low", prioritySaved: Objects.taskspage.data.priorityLow}, {priority: "Expedite", prioritySaved: Objects.taskspage.data.priorityExpedite}], function(data) {
+        it('should create new task with priority ' + data.priority, function () {
+            taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), data.priority, Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea);
+            expect(taskPage.returnDueDateText()).not.toBeTruthy();
+            taskPage.clickSave();
+            expect(taskPage.returnPriority()).toEqual(data.prioritySaved);
+        });
     });
 
     it('should verify save button is disabled when subject is empty and due date', function() {
@@ -181,20 +170,17 @@ describe('Create new task ', function() {
 
 
     });
-    it('should create new task and edit priority to high', function() {
 
-    	taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
-    	taskPage.editPriority("High");
-        expect(taskPage.returnPriority()).toEqual(Objects.taskspage.data.priorityHigh, "Priority is not updated");
+    using([{priority: "High", prioritySaved: Objects.taskspage.data.priorityHigh}, {priority: "Expedite", prioritySaved: Objects.taskspage.data.priorityExpedite}], function(data) {
+        it('should create new task and edit priority to ' + data.priority, function () {
 
+            taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+            taskPage.editPriority(data.priority);
+            expect(taskPage.returnPriority()).toEqual(data.prioritySaved, "Priority is not updated");
 
+        });
     });
-    it('should create new task and edit priority to Expedite', function() {
 
-    	taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "High", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
-    	taskPage.editPriority("Expedite");
-        expect(taskPage.returnPriority()).toEqual(Objects.taskspage.data.priorityExpedite, "Priority is not updated");
-    });
     it('should create new task and edit percent of completition', function() {
 
     	taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Expedite", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
@@ -426,11 +412,6 @@ describe('Create new task ', function() {
         expect(taskPage.validateCancelEditingEnabled()).not.toBeTruthy();
 
     });
-
-
-
-
-    
 
 });
 
