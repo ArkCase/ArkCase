@@ -12,6 +12,7 @@ angular.module('cases').config(['$stateProvider',
                 resolve: {
                     translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
                         $translatePartialLoader.addPart('common');
+                        $translatePartialLoader.addPart('dashboard');
                         $translatePartialLoader.addPart('cases');
                         return $translate.refresh();
                     }]
