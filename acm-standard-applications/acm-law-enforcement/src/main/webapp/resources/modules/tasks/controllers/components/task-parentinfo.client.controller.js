@@ -105,6 +105,7 @@ angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$st
             }
             $scope.$bus.subscribe(eventName, function (data) {
                 MessageService.info(objectTypeString + " with ID " + parentObjectId + " was updated.");
+                $scope.$emit('report-object-refreshed', $stateParams.id);
             });
         };
     }
