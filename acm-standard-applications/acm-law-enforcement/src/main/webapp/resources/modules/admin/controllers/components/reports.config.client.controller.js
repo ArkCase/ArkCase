@@ -3,7 +3,8 @@
 angular.module('admin').controller('Admin.ReportsConfigController', ['$scope', 'Admin.ReportsConfigService', '$q',
 
     function ($scope, reportsConfigService, $q) {
-        var tempReportsPromise = reportsConfigService.getReports();
+		var deferred = $q.defer();
+		var tempReportsPromise = reportsConfigService.getReports();
         var tempUserGroupsPromise = reportsConfigService.getUserGroups();
         var tempReportsUserGroupsPromise = reportsConfigService.getReportsUserGroups();
         $scope.reports = [];
@@ -74,7 +75,13 @@ angular.module('admin').controller('Admin.ReportsConfigController', ['$scope', '
 
                 reports.push($scope.reportsMap[key]);
             }
-            reportsConfigService.saveReports(reports);
+            reportsConfigService.saveReports(reports).then(function() {
+                deferred.resolve();
+            }, function(){
+                deferred.reject();
+            });
+            
+            return deferred.promise;
         };
     }
 ]);
