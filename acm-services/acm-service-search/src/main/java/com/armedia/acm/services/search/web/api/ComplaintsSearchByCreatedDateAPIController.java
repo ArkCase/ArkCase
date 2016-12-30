@@ -69,9 +69,7 @@ public class ComplaintsSearchByCreatedDateAPIController
         sort = sort.replaceAll(" ", "+");
 
         String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, startRow,
-                maxRows, sort);
-
-        results = results.replaceAll("\\n", "");
+                maxRows, sort, false);
 
         httpResponse.addHeader("X-JSON", results);
 

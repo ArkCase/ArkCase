@@ -38,7 +38,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
         </scripting:transformer>
 
         <set-payload
-                value="q=#[message.inboundProperties['query']]&amp;fq=#[message.inboundProperties['dataAccessFilter']]&amp;fq=#[message.inboundProperties['denyAccessFilter']]&amp;fq=#[message.inboundProperties['childObjectFilterQuery']]&amp;topLevel=#[message.inboundProperties['isTopLevelObjectFilter']]&amp;dac=#[message.inboundProperties['childObjectDacFilter']]&amp;fq=#[message.inboundProperties['isSubscribed']]&amp;start=#[message.inboundProperties['firstRow']]&amp;rows=#[message.inboundProperties['maxRows']]&amp;wt=json&amp;sort=#[message.inboundProperties['sort']]&amp;indent=true&amp;facet=true&amp;#[message.inboundProperties['rowQueryParametars']]"/>
+                value="q=#[message.inboundProperties['query']]&amp;fq=#[message.inboundProperties['dataAccessFilter']]&amp;fq=#[message.inboundProperties['denyAccessFilter']]&amp;fq=#[message.inboundProperties['childObjectFilterQuery']]&amp;topLevel=#[message.inboundProperties['isTopLevelObjectFilter']]&amp;dac=#[message.inboundProperties['childObjectDacFilter']]&amp;fq=#[message.inboundProperties['isSubscribed']]&amp;start=#[message.inboundProperties['firstRow']]&amp;rows=#[message.inboundProperties['maxRows']]&amp;wt=json&amp;sort=#[message.inboundProperties['sort']]&amp;facet=true&amp;#[message.inboundProperties['rowQueryParametars']]&amp;indent=#[message.inboundProperties['indent']]"/>
 
         <logger category="com.armedia.acm.plugins.search" level="DEBUG"/>
 
