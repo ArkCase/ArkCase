@@ -4,6 +4,7 @@ var util = require('../util/utils.js');
 var Objects = require('../json/Objects.json');
 var taskPage = require('../Pages/task_page.js');
 var basePage = require('../Pages/base_page.js');
+var SelectWrapper = require('../util/select-wrapper.js');
 var EC = protractor.ExpectedConditions;
 var newBtn = element(by.linkText(Objects.casepage.locators.newButton));
 var newCaseBtn = element(by.linkText(Objects.casepage.locators.newCaseBtn));
@@ -16,7 +17,6 @@ var caseTypeDropDown = element(by.className(Objects.casepage.locators.caseType))
 var nextBtn = element(by.xpath(Objects.casepage.locators.nextBtn));
 var firstName = element(by.name(Objects.casepage.locators.firstName));
 var lastName = element(by.name(Objects.casepage.locators.lastName));
-var submitBtn = element(by.xpath(Objects.casepage.locators.submitBtn));
 var changeCaseStatusBtn = element(by.css(Objects.casepage.locators.changeCaseStatusBtn));
 var newCaseButton = element(by.css(Objects.casepage.locators.newCasesButton));
 var editBtn = element(by.css(Objects.casepage.locators.editBtn));
@@ -26,13 +26,7 @@ var changeCaseStatusTitle = element(by.className(Objects.casepage.locators.chang
 var changeStatusDropDown = element(by.className(Objects.casepage.locators.changeStatusDropDown));
 var statusClosed = element(by.xpath(Objects.casepage.locators.statusClosed));
 var taskTitle = element(by.xpath(Objects.casepage.locators.taskTitle));
-var priorityLink = element(by.xpath(Objects.casepage.locators.priority));
-var priorityDropDownEdit = element(by.xpath(Objects.casepage.locators.priorityDropDown));
-var priorityBtn = element(by.xpath(Objects.casepage.locators.priorityBtn));
 var createdDate = element(by.xpath(Objects.casepage.locators.createdDate));
-var assigneeLink = element(by.xpath(Objects.casepage.locators.assignee));
-var assigneeDropDown = element(by.xpath(Objects.casepage.locators.assigneeDropDown));
-var assigneeBtn = element(by.xpath(Objects.casepage.locators.assigneeBtn));
 var expandLinksButton = element(by.xpath(Objects.casepage.locators.expandLinksButton));
 var notesLink = element(by.xpath(Objects.casepage.locators.notesLink));
 var addNoteBtn = element(by.xpath(Objects.casepage.locators.addNoteBtn));
@@ -44,18 +38,14 @@ var editNoteBtn = element.all(by.repeater(Objects.casepage.locators.editNoteBtn)
 var emptyNoteTable = element(by.xpath(Objects.casepage.locators.emptyNoteTable));
 var showLinksBtn = element(by.xpath(Objects.casepage.locatorsshowLinksBtn));
 var addNewTaskBtn = element(by.xpath(Objects.casepage.locators.addNewTaskBtn));
-var taskAssighnee = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(1);
-var taskCreated = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(2);
-var taskPriority = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(3);
-var taskDueDate = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(4);
-var taskStatus = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(5);
 var refreshCasesList = element(by.css(Objects.casepage.locators.refreshCasesList));
 var firstCaseInCasesList = element(by.xpath(Objects.casepage.locators.firstCaseInCasesList));
 var caseID = element(by.xpath(Objects.casepage.locators.caseID));
 var reinvestigateBtn = element(by.css(Objects.casepage.locators.reinvestigateBtn));
 var casesTitleStatus = element.all(by.xpath(Objects.casepage.locators.caseTitleStatus)).get(0);
-var dueDate = element(by.xpath(Objects.casepage.locators.dueDate));
 var owningGroup = element(by.xpath(Objects.casepage.locators.owningGroup));
+var submitBtn = element(by.xpath(Objects.casepage.locators.submitBtn));
+
 
 var CasePage = function() {
 
@@ -120,12 +110,6 @@ var CasePage = function() {
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesTitle))), 30000);
     }
 
-    this.clickSubmitBtn = function() {
-        browser.sleep(3000);
-        browser.executeScript('arguments[0].click()', submitBtn);
-        // submitBtn.click();
-        return this;
-    }
 
     this.switchToDefaultContent = function() {
 
@@ -167,7 +151,6 @@ var CasePage = function() {
 
     this.returnCaseType = function() {
 
-
         return casesType.getText();
 
     };
@@ -177,7 +160,6 @@ var CasePage = function() {
         browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.changeCaseStatusBtn))), 30000);
 
     };
-
 
     this.clickChangeCaseBtn = function() {
 
@@ -204,13 +186,6 @@ var CasePage = function() {
         browser.executeScript('arguments[0].click()', submitBtn);
     };
 
-    this.waitForPriority = function() {
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.priority))), 20000);
-    };
-
-    this.returnPriority = function() {
-        return priorityLink.getText();
-    };
 
     this.waitForCreatedDate = function() {
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.createdDate))), 20000);
@@ -220,36 +195,6 @@ var CasePage = function() {
         return createdDate.getText();
     };
 
-    this.editPriority = function(priority) {
-
-        priorityLink.click().then(function() {
-            priorityDropDownEdit.$('[value="string:' + priority + '"]').click().then(function() {
-                priorityBtn.click();
-            });
-        });
-        return this;
-    };
-
-    this.editAssignee = function(assignee) {
-
-        assigneeLink.click().then(function() {
-            browser.wait(EC.presenceOf(element(by.xpath("//*[@class='clearfix']/div[3]/div[1]/div/form/div/select/option[8]"))), 5000).then(function() {
-                assigneeDropDown.$('[value="string:' + assignee + '"]').click().then(function() {
-                    assigneeBtn.click();
-                });
-
-            });
-        });
-        return this;
-    }
-
-    this.waitForAssignee = function() {
-        browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.assignee))), 20000);
-    };
-
-    this.returnAssignee = function() {
-        return assigneeLink.getText();
-    };
 
     this.clickExpandLinks = function() {
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.changeCaseStatusBtn))), 30000);
@@ -286,9 +231,7 @@ var CasePage = function() {
             reinvestigateBtn.click();
         });
     };
-    this.returnDueDate = function () {
-        return dueDate.getText();
-    };
+   
     this.returnOwningGroup = function () {
         return owningGroup.getText();
     }
