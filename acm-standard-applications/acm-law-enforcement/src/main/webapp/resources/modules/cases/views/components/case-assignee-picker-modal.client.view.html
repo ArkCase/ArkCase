@@ -1,0 +1,31 @@
+<div class="modal-header">
+    <h3 ng-hide="isEdit">
+        <span translate>cases.comp.assigneePickerModal.title</span>
+    </h3>
+
+    <h3 ng-show="isEdit">
+        <span translate>cases.comp.assigneePickerModal.title</span>
+    </h3>
+
+</div>
+<div class="modal-body">
+    <form name="assigneePickerForm">
+        <div>
+            <label for="assigneeName_{{::$id}}"><span translate>cases.comp.assigneePickerModal.assigneeNamelabel</span>
+                <span class="required-asterisk">*</span></label>
+            <input id="assigneeName_{{::$id}}" class="form-control" type="text"
+                   ng-model="participant.selectedAssigneeName"
+                   ng-click="pickAssignee()" required>
+
+            </input>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-secondary" ng-click="onClickCancel()">
+        <span translate>cases.comp.assigneePickerModal.btnCancelText</span>
+    </button>
+    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="assigneePickerForm.$invalid">
+        <span translate>cases.comp.assigneePickerModal.btnSaveText</span>
+    </button>
+</div>

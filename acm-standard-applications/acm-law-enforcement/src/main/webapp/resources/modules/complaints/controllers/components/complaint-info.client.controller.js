@@ -2,10 +2,11 @@
 
 angular.module('complaints').controller('Complaints.InfoController', ['$scope', '$stateParams', '$translate', '$timeout'
     , 'UtilService', 'Util.DateService', 'ConfigService', 'Object.LookupService', 'Complaint.LookupService', 'Complaint.InfoService'
-    , 'Object.ModelService', 'Helper.ObjectBrowserService', 'MessageService'
+    , 'Object.ModelService', 'Helper.ObjectBrowserService', 'MessageService', 'ObjectService', 'Helper.UiGridService', '$modal'
+    , 'Object.ParticipantService', '$q'
     , function ($scope, $stateParams, $translate, $timeout
         , Util, UtilDateService, ConfigService, ObjectLookupService, ComplaintLookupService, ComplaintInfoService
-        , ObjectModelService, HelperObjectBrowserService, MessageService) {
+        , ObjectModelService, HelperObjectBrowserService, MessageService, ObjectService, HelperUiGridService, $modal, ObjectParticipantService, $q) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -14,11 +15,38 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             , componentId: "info"
             , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
             , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
+            , onConfigRetrieved: function (componentConfig) {
+                return onConfigRetrieved(componentConfig);
+            }
             , onObjectInfoRetrieved: function (objectInfo) {
                 onObjectInfoRetrieved(objectInfo);
             }
         });
 
+        var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+        var promiseUsers = gridHelper.getUsers();
+        var promiseConfig = ConfigService.getModuleConfig("complaints");
+
+        $q.all([promiseConfig]).then(function (data) {
+            $scope.config = data[0].components[7];
+        });
+
+        $scope.participantsInit = {
+            moduleId: 'complaints',
+            componentId: 'participants',
+            retrieveObjectInfo: ComplaintInfoService.getComplaintInfo,
+            validateObjectInfo: ComplaintInfoService.validateComplaintInfo,
+            saveObjectInfo: ComplaintInfoService.saveComplaintInfo,
+            objectType: ObjectService.ObjectTypes.COMPLAINT,
+            participantsTitle: $translate.instant("complaints.comp.participants.title")
+        }
+
+        ObjectLookupService.getParticipantTypes().then(
+            function (participantTypes) {
+                $scope.participantTypes = participantTypes;
+                return participantTypes;
+            }
+        );
 
         ObjectLookupService.getPriorities().then(
             function (priorities) {
@@ -57,6 +85,69 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
         $scope.picker = {opened: false};
         $scope.onPickerClick = function () {
         	$scope.picker.opened = true;
+        };
+
+        var onConfigRetrieved = function (config) {
+            if (!$scope.participantsInit.participantsTitle)
+                $scope.participantsInit.participantsTitle = $translate.instant("common.directive.coreParticipants.title");
+            $scope.config = config;
+            gridHelper.addButton(config, "edit");
+            gridHelper.addButton(config, "delete");
+            gridHelper.setColumnDefs(config);
+            gridHelper.setBasicOptions(config);
+            gridHelper.disableGridScrolling(config);
+            gridHelper.setUserNameFilter(promiseUsers);
+        };
+
+        $scope.openModal = function () {
+            var participant = {
+                        id: '',
+                        participantType: $scope.participantTypes[0].type,
+                        participantLdapId: '',
+                        participantTypes: $scope.participantTypes,
+                        config: $scope.config
+                    };
+            showModal(participant, false);
+        };
+
+        var showModal = function (participant, isEdit) {
+            var modalScope = $scope.$new();
+            modalScope.participant = participant || {};
+            modalScope.isEdit = isEdit || false;
+            modalScope.selectedType = ""; 
+
+            var modalInstance = $modal.open({
+                scope: modalScope,
+                animation: true,
+                templateUrl: "modules/complaints/views/components/complaint-assignee-picker-modal.client.view.html",
+                controller: "Complaints.AssigneePickerController",
+                size: 'md',
+                backdrop: 'static',
+                resolve: {
+                    owningGroup: function () {
+                        return $scope.owningGroup;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (data) {
+                $scope.participant = {};
+                if (ObjectParticipantService.validateType(data.participant, data.selectedType)) {
+                    $scope.participant.id = data.participant.id;
+                    $scope.participant.participantLdapId = data.participant.participantLdapId;
+                    $scope.participant.participantType = data.participant.participantType;
+
+                    var participant = {};
+                    participant.participantLdapId = data.participant.participantLdapId;
+                    participant.participantType = data.participant.participantType;
+                    participant.className = $scope.config.className;
+                    $scope.objectInfo.participants.push(participant);
+
+                    $scope.assignee = data.participant.participantLdapId;
+                    $scope.updateAssignee();
+                }
+            }, function(error) {    
+            });
         };
 
         var onObjectInfoRetrieved = function (objectInfo) {
