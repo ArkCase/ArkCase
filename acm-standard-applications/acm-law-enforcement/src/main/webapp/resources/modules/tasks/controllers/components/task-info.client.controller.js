@@ -2,10 +2,11 @@
 
 angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$stateParams', '$translate', '$timeout'
     , 'UtilService', 'Util.DateService', 'ConfigService', 'LookupService', 'Object.LookupService', 'Task.InfoService', 'Object.ModelService'
-    , 'Helper.ObjectBrowserService', 'MessageService', 'Task.AlertsService'
+    , 'Helper.ObjectBrowserService', 'MessageService', 'Task.AlertsService', 'ObjectService', 'Helper.UiGridService', '$modal'
+    , 'Object.ParticipantService', '$q'
     , function ($scope, $stateParams, $translate, $timeout
         , Util, UtilDateService, ConfigService, LookupService, ObjectLookupService, TaskInfoService, ObjectModelService
-        , HelperObjectBrowserService, MessageService, TaskAlertsService) {
+        , HelperObjectBrowserService, MessageService, TaskAlertsService, ObjectService, HelperUiGridService, $modal, ObjectParticipantService, $q) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -17,8 +18,29 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             , onObjectInfoRetrieved: function (objectInfo) {
                 onObjectInfoRetrieved(objectInfo);
             }
+            , onConfigRetrieved: function (componentConfig) {
+                return onConfigRetrieved(componentConfig);
+            }
         });
 
+        var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+        var promiseUsers = gridHelper.getUsers();
+        var promiseConfig = ConfigService.getModuleConfig("tasks");
+
+        $q.all([promiseConfig]).then(function (data) {
+            console.log(data[0]);
+            $scope.config = data[0].components[15];
+        })
+
+        $scope.participantsInit = {
+            moduleId: 'tasks',
+            componentId: 'participants',
+            retrieveObjectInfo: TaskInfoService.getTaskInfo,
+            validateObjectInfo: TaskInfoService.validateTaskInfo,
+            saveObjectInfo: TaskInfoService.saveTaskInfo,
+            objectType: ObjectService.ObjectTypes.TASK,
+            participantsTitle: $translate.instant("tasks.comp.participants.title")
+        }
 
         LookupService.getUsers().then(
             function (users) {
@@ -41,6 +63,76 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
                 return priorities;
             }
         );
+
+        ObjectLookupService.getParticipantTypes().then(
+            function (participantTypes) {
+                $scope.participantTypes = participantTypes;
+                return participantTypes;
+            }
+        );
+
+        var onConfigRetrieved = function (config) {
+            if (!$scope.participantsInit.participantsTitle)
+                $scope.participantsInit.participantsTitle = $translate.instant("common.directive.coreParticipants.title");
+            $scope.config = config;
+            gridHelper.addButton(config, "edit");
+            gridHelper.addButton(config, "delete");
+            gridHelper.setColumnDefs(config);
+            gridHelper.setBasicOptions(config);
+            gridHelper.disableGridScrolling(config);
+            gridHelper.setUserNameFilter(promiseUsers);
+        };
+
+        $scope.openModal = function () {
+            var participant = {
+                        id: '',
+                        participantType: $scope.participantTypes[0].type,
+                        participantLdapId: '',
+                        participantTypes: $scope.participantTypes,
+                        config: $scope.config
+                    };
+            showModal(participant, false);
+        };
+
+        var showModal = function (participant, isEdit) {
+            var modalScope = $scope.$new();
+            modalScope.participant = participant || {};
+            modalScope.isEdit = isEdit || false;
+            modalScope.selectedType = ""; 
+
+            var modalInstance = $modal.open({
+                scope: modalScope,
+                animation: true,
+                templateUrl: "modules/tasks/views/components/task-assignee-picker-modal.client.view.html",
+                controller: "Tasks.AssigneePickerController",
+                size: 'md',
+                backdrop: 'static',
+                resolve: {
+                    owningGroup: function () {
+                        return $scope.owningGroup;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (data) {
+                $scope.participant = {};
+                if (ObjectParticipantService.validateType(data.participant, data.selectedType)) {
+                    $scope.participant.id = data.participant.id;
+                    $scope.participant.participantLdapId = data.participant.participantLdapId;
+                    $scope.participant.participantType = data.participant.participantType;
+
+                    var participant = {};
+                    participant.participantLdapId = data.participant.participantLdapId;
+                    participant.participantType = data.participant.participantType;
+                    participant.className = $scope.config.className;
+                    $scope.objectInfo.participants.push(participant);
+
+                    $scope.assignee = data.participant.participantLdapId;
+                    $scope.updateAssignee($scope.assignee);
+                }
+            }, function(error) {    
+            });
+        };
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;

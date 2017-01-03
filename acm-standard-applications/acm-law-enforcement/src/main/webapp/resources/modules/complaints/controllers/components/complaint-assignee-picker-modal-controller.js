@@ -1,0 +1,59 @@
+'use strict';
+
+angular.module('complaints').controller('Complaints.AssigneePickerController', ['$scope', '$modal', '$modalInstance',
+    '$translate', 'UtilService', 'ConfigService', '$q', 'owningGroup',
+    function ($scope, $modal, $modalInstance, $translate, Util, ConfigService, $q, owningGroup) {
+
+        var promiseConfig = ConfigService.getModuleConfig("complaints");
+
+        $q.all([promiseConfig]).then(function (data) {
+            $scope.config = data[0].components[7];
+        });
+
+        $scope.onClickOk = function () {
+            $modalInstance.close({
+                participant: $scope.participant,
+                isEdit: $scope.isEdit,
+                selectedType: $scope.selectedType
+            });
+        };
+        $scope.onClickCancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+        $scope.pickAssignee = function () {
+
+            var params = {};
+            $scope.owningGroup = owningGroup;
+
+            params.header = $translate.instant("complaints.comp.assigneePickerModal.searchAssigneeHeader");
+            params.filter = '"Object Type": USER' + '&fq="Group": ' + $scope.owningGroup;
+            params.config = Util.goodMapValue($scope.config, "dialogUserPicker");
+
+            var modalInstance = $modal.open({
+                templateUrl: "modules/complaints/views/components/complaint-assignee-picker-search-modal.client.view.html",
+                controller: ['$scope', '$modalInstance', 'params', function ($scope, $modalInstance, params) {
+                    $scope.modalInstance = $modalInstance;
+                    $scope.header = params.header;
+                    $scope.filter = params.filter;
+                    $scope.config = params.config;
+                }],
+                animation: true,
+                size: 'lg',
+                backdrop: 'static',
+                resolve: {
+                    params: function () {
+                        return params;
+                    }
+                }
+            });
+            modalInstance.result.then(function (selected) {
+                if (!Util.isEmpty(selected)) {
+                    $scope.participant.participantLdapId = selected.object_id_s;
+                    $scope.participant.id = selected.id;
+                    $scope.selectedType = selected.object_type_s;
+                    $scope.participant.selectedAssigneeName = selected.name;
+                }
+            });
+        };
+    }
+]);

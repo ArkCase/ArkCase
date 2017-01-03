@@ -2,10 +2,11 @@
 
 angular.module('cases').controller('Cases.InfoController', ['$scope', '$stateParams', '$translate', '$timeout'
     , 'UtilService', 'Util.DateService', 'ConfigService', 'Object.LookupService', 'Case.LookupService', 'Case.InfoService'
-    , 'Object.ModelService', 'Helper.ObjectBrowserService', 'MessageService'
+    , 'Object.ModelService', 'Helper.ObjectBrowserService', 'MessageService', 'ObjectService', 'Helper.UiGridService', '$modal'
+    , 'Object.ParticipantService', '$q'
     , function ($scope, $stateParams, $translate, $timeout
         , Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService
-        , ObjectModelService, HelperObjectBrowserService, MessageService) {
+        , ObjectModelService, HelperObjectBrowserService, MessageService, ObjectService, HelperUiGridService, $modal, ObjectParticipantService, $q) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -17,8 +18,28 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             , onObjectInfoRetrieved: function (objectInfo) {
                 onObjectInfoRetrieved(objectInfo);
             }
+            , onConfigRetrieved: function (componentConfig) {
+                return onConfigRetrieved(componentConfig);
+            }
         });
 
+        var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+        var promiseUsers = gridHelper.getUsers();
+        var promiseConfig = ConfigService.getModuleConfig("cases");
+
+        $q.all([promiseConfig]).then(function (data) {
+            $scope.config = data[0].components[6];
+        });
+
+        $scope.participantsInit = {
+            moduleId: 'cases',
+            componentId: 'participants',
+            retrieveObjectInfo: CaseInfoService.getCaseInfo,
+            validateObjectInfo: CaseInfoService.validateCaseInfo,
+            saveObjectInfo: CaseInfoService.saveCaseInfo,
+            objectType: ObjectService.ObjectTypes.CASE_FILE,
+            participantsTitle: $translate.instant("cases.comp.participants.title")
+        }
 
         ObjectLookupService.getPriorities().then(
             function (priorities) {
@@ -52,6 +73,76 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
                 return caseTypes;
             }
         );
+
+        ObjectLookupService.getParticipantTypes().then(
+            function (participantTypes) {
+                $scope.participantTypes = participantTypes;
+                return participantTypes;
+            }
+        );
+
+        var onConfigRetrieved = function (config) {
+            if (!$scope.participantsInit.participantsTitle)
+                $scope.participantsInit.participantsTitle = $translate.instant("common.directive.coreParticipants.title");
+            $scope.config = config;
+            gridHelper.addButton(config, "edit");
+            gridHelper.addButton(config, "delete");
+            gridHelper.setColumnDefs(config);
+            gridHelper.setBasicOptions(config);
+            gridHelper.disableGridScrolling(config);
+            gridHelper.setUserNameFilter(promiseUsers);
+        };
+
+        $scope.openModal = function () {
+            var participant = {
+                        id: '',
+                        participantType: $scope.participantTypes[0].type,
+                        participantLdapId: '',
+                        participantTypes: $scope.participantTypes,
+                        config: $scope.config
+                    };
+            showModal(participant, false);
+        };
+
+        var showModal = function (participant, isEdit) {
+            var modalScope = $scope.$new();
+            modalScope.participant = participant || {};
+            modalScope.isEdit = isEdit || false;
+            modalScope.selectedType = ""; 
+
+            var modalInstance = $modal.open({
+                scope: modalScope,
+                animation: true,
+                templateUrl: "modules/cases/views/components/case-assignee-picker-modal.client.view.html",
+                controller: "Cases.AssigneePickerController",
+                size: 'md',
+                backdrop: 'static',
+                resolve: {
+                    owningGroup: function () {
+                        return $scope.owningGroup;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (data) {
+                $scope.participant = {};
+                if (ObjectParticipantService.validateType(data.participant, data.selectedType)) {
+                    $scope.participant.id = data.participant.id;
+                    $scope.participant.participantLdapId = data.participant.participantLdapId;
+                    $scope.participant.participantType = data.participant.participantType;
+
+                    var participant = {};
+                    participant.participantLdapId = data.participant.participantLdapId;
+                    participant.participantType = data.participant.participantType;
+                    participant.className = $scope.config.className;
+                    $scope.objectInfo.participants.push(participant);
+
+                    $scope.assignee = data.participant.participantLdapId;
+                    $scope.updateAssignee();
+                }
+            }, function(error) {    
+            });
+        };
 
         //$scope.dueDate = null;
         var onObjectInfoRetrieved = function (data) {
