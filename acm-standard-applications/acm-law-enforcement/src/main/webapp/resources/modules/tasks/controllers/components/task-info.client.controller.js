@@ -3,10 +3,11 @@
 angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$stateParams', '$translate', '$timeout'
     , 'UtilService', 'Util.DateService', 'ConfigService', 'LookupService', 'Object.LookupService', 'Task.InfoService', 'Object.ModelService'
     , 'Helper.ObjectBrowserService', 'MessageService', 'Task.AlertsService', 'ObjectService', 'Helper.UiGridService', '$modal'
-    , 'Object.ParticipantService', '$q'
+    , 'Object.ParticipantService', '$q', 'Case.InfoService', 'Complaint.InfoService'
     , function ($scope, $stateParams, $translate, $timeout
         , Util, UtilDateService, ConfigService, LookupService, ObjectLookupService, TaskInfoService, ObjectModelService
-        , HelperObjectBrowserService, MessageService, TaskAlertsService, ObjectService, HelperUiGridService, $modal, ObjectParticipantService, $q) {
+        , HelperObjectBrowserService, MessageService, TaskAlertsService, ObjectService, HelperUiGridService, $modal, ObjectParticipantService, $q
+        , CaseInfoService, ComplaintInfoService) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -28,8 +29,7 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
         var promiseConfig = ConfigService.getModuleConfig("tasks");
 
         $q.all([promiseConfig]).then(function (data) {
-            console.log(data[0]);
-            $scope.config = data[0].components[15];
+            $scope.config = data[0].components[14];
         })
 
         $scope.participantsInit = {
@@ -117,16 +117,7 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             modalInstance.result.then(function (data) {
                 $scope.participant = {};
                 if (ObjectParticipantService.validateType(data.participant, data.selectedType)) {
-                    $scope.participant.id = data.participant.id;
                     $scope.participant.participantLdapId = data.participant.participantLdapId;
-                    $scope.participant.participantType = data.participant.participantType;
-
-                    var participant = {};
-                    participant.participantLdapId = data.participant.participantLdapId;
-                    participant.participantType = data.participant.participantType;
-                    participant.className = $scope.config.className;
-                    $scope.objectInfo.participants.push(participant);
-
                     $scope.assignee = data.participant.participantLdapId;
                     $scope.updateAssignee($scope.assignee);
                 }
@@ -141,7 +132,21 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             $scope.dateInfo.taskStartDate = UtilDateService.isoToDate($scope.objectInfo.taskStartDate);
             $scope.dateInfo.isOverdue = TaskAlertsService.calculateOverdue($scope.dateInfo.dueDate);
             $scope.dateInfo.isDeadline = TaskAlertsService.calculateDeadline($scope.dateInfo.dueDate);
-            $scope.assignee = ObjectModelService.getAssignee($scope.objectInfo); 
+            $scope.assignee = ObjectModelService.getAssignee($scope.objectInfo);
+            
+            if (ObjectService.ObjectTypes.CASE_FILE == $scope.objectInfo.parentObjectType) {
+                CaseInfoService.getCaseInfo($scope.objectInfo.parentObjectId).then(
+                    function (caseInfo) {
+                        $scope.owningGroup = ObjectModelService.getGroup(caseInfo);
+                    }
+                );
+            } else if (ObjectService.ObjectTypes.COMPLAINT == $scope.objectInfo.parentObjectType) {
+                ComplaintInfoService.getComplaintInfo($scope.objectInfo.parentObjectId).then(
+                    function (complaintInfo) {
+                        $scope.owningGroup = ObjectModelService.getGroup(complaintInfo);
+                    }
+                );
+            }
         };
 
         $scope.defaultDatePickerFormat = UtilDateService.defaultDatePickerFormat;
