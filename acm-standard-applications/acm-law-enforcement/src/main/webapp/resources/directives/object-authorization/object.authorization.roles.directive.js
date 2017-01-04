@@ -59,8 +59,8 @@
  </file>
  </example>
  */
-angular.module('directives').directive('objectAuthorizationRoles', ['$translate', 'Menus',
-    function ($translate, Menus) {
+angular.module('directives').directive('objectAuthorizationRoles', ['Menus', 'MessageService',
+    function (Menus, messageService) {
         return {
             restrict: 'E',
             scope: {
@@ -85,7 +85,7 @@ angular.module('directives').directive('objectAuthorizationRoles', ['$translate'
                 scope.selectedAuthorized = "";
                 scope.authorized = [];
                 scope.notAuthorized = [];
-
+                
                 //authorize button is clicked
                 scope.authorize = function () {
                     //don't do anything if array null or empty
@@ -122,7 +122,14 @@ angular.module('directives').directive('objectAuthorizationRoles', ['$translate'
 
                 //roles has been changed, call callback function with changed values
                 scope.authRoleChange = function () {
-                    scope.onAuthRoleChange(scope.selectedObject, scope.authorized, scope.notAuthorized);
+                    scope.onAuthRoleChange(scope.selectedObject, scope.authorized, scope.notAuthorized).then(function () {
+                        //success save
+                    	messageService.succsessAction();    	
+                    }, function () {
+                        //error save
+                    	messageService.errorAction();
+                    });
+                    
                     var allMenuObj = [];
                     angular.forEach(Menus.allMenuObjects, function (menuO) {
                         allMenuObj.push(menuO);

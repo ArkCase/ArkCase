@@ -13,19 +13,25 @@ angular.module('dashboard.workflow', ['adf.provider'])
                 }
             );
     })
-    .controller('Dashboard.WorkflowOverviewController', ['$scope', '$translate', '$stateParams', '$q', 'UtilService'
-        , 'Task.InfoService', 'Task.HistoryService', 'Authentication', 'Dashboard.DashboardService', 'ConfigService'
-        , 'Helper.ObjectBrowserService',
-        function ($scope, $translate, $stateParams, $q, Util, TaskInfoService, TaskHistoryService, Authentication
-            , DashboardService, ConfigService, HelperObjectBrowserService) {
-
-            var promiseConfig;
-            var promiseTaskInfo;
-            var promiseQueryTaskHistory;
+    .controller('Dashboard.WorkflowOverviewController', ['$scope', '$stateParams'
+        , 'Task.InfoService', 'Task.HistoryService', 'Helper.ObjectBrowserService'
+        , function ($scope, $stateParams, TaskInfoService, TaskHistoryService, HelperObjectBrowserService) {
 
             var modules = [
-                {name: "TASK", configName: "tasks", getInfo: TaskInfoService.getTaskInfo, getHistory : TaskHistoryService.queryTaskHistory}
-                , {name: "ADHOC", configName: "tasks", getInfo: TaskInfoService.getTaskInfo, getHistory : TaskHistoryService.queryTaskHistory}
+                {
+                    name: "TASK",
+                    configName: "tasks",
+                    getInfo: TaskInfoService.getTaskInfo,
+                    validateInfo: TaskInfoService.validateTaskInfo,
+                    getHistory: TaskHistoryService.queryTaskHistory
+                }
+                , {
+                    name: "ADHOC",
+                    configName: "tasks",
+                    getInfo: TaskInfoService.getTaskInfo,
+                    validateInfo: TaskInfoService.validateTaskInfo,
+                    getHistory: TaskHistoryService.queryTaskHistory
+                }
             ];
 
             var module = _.find(modules, function (module) {
@@ -37,32 +43,34 @@ angular.module('dashboard.workflow', ['adf.provider'])
                 columnDefs: []
             };
 
-            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-            if (module && Util.goodPositive(currentObjectId, false)) {
-                promiseConfig = ConfigService.getModuleConfig(module.configName);
-                promiseTaskInfo = module.getInfo(currentObjectId);
+            new HelperObjectBrowserService.Component({
+                scope: $scope
+                , stateParams: $stateParams
+                , moduleId: module.configName
+                , componentId: "main"
+                , retrieveObjectInfo: module.getInfo
+                , validateObjectInfo: module.validateInfo
+                , onObjectInfoRetrieved: function (objectInfo) {
+                    onObjectInfoRetrieved(objectInfo);
+                }
+                , onConfigRetrieved: function (componentConfig) {
+                    onConfigRetrieved(componentConfig);
+                }
+            });
 
+            var onObjectInfoRetrieved = function (objectInfo) {
+                module.getHistory(objectInfo).then(function (taskHistoryInfo) {
+                    var taskHistory = taskHistoryInfo[0];
+                    $scope.gridOptions.data = taskHistory ? [taskHistory] : [];
+                    $scope.gridOptions.totalItems = taskHistoryInfo.length;
+                });
+            };
 
-                $q.all([promiseConfig, promiseTaskInfo]).then(function (data) {
-                        var config = _.find(data[0].components, {id: "main"});
-                        var info = data[1];
-                        var widgetInfo = _.find(config.widgets, function (widget) {
-                            return widget.id === "workflow";
-                        });
-
-                        $scope.config = config;
-                        $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
-
-                        promiseQueryTaskHistory = module.getHistory(info).then( function (taskHistoryInfo){
-                            var taskHistory = taskHistoryInfo[0];
-                            $scope.gridOptions.data = [taskHistory];
-                            $scope.gridOptions.totalItems = taskHistoryInfo.length;
-                        });
-                    },
-                    function (err) {
-
-                    }
-                );
-            }
+            var onConfigRetrieved = function (componentConfig) {
+                var widgetInfo = _.find(componentConfig.widgets, function (widget) {
+                    return widget.id === "workflow";
+                });
+                $scope.gridOptions.columnDefs = widgetInfo ? widgetInfo.columnDefs : [];
+            };
         }
     ]);

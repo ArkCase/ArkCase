@@ -178,9 +178,6 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             $scope.objectInfo.dueDate = UtilDateService.dateToIso($scope.dateInfo.dueDate);
             saveTask();
         };
-        $scope.$on('accessDenied', function(event, message){
-            MessageService.info(message);
-        });
 
         function saveTask() {
             var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));

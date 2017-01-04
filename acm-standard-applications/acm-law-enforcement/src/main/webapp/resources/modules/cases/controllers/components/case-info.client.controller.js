@@ -212,9 +212,5 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             saveCase();
         };
 
-        $scope.$on('accessDenied', function(event, message){
-            MessageService.info(message);
-        });
-
     }
 ]);
