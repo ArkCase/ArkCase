@@ -107,6 +107,34 @@ angular.module('services').factory('TimeTracking.InfoService', ['$resource', '$t
 
         /**
          * @ngdoc method
+         * @name getTimesheetParentObjectsTypeId
+         * @methodOf service:TimeTracking.InfoService
+         *
+         * @description
+         * Query Objects(complaint/case) related to timesheet data
+         *
+         * @param {Number} id  Timesheet ID
+         *
+         * @returns {Object} Promise
+         */
+        Service.getTimesheetParentObjectsTypeId = function (id) {
+            return Util.serviceCall({
+                service: Service.get
+                , param: {id: id}
+                , onSuccess: function (timesheetInfo) {
+                    if (Service.validateTimesheet(timesheetInfo)) {
+                        return _.map(_.uniq(timesheetInfo.times, function (data) {
+                            return data.type + data.objectId;
+                        }), function (data) {
+                            return {type: data.type, objectId: data.objectId};
+                        });
+                    }
+                }
+            });
+        };
+
+        /**
+         * @ngdoc method
          * @name saveTimesheetInfo
          * @methodOf service:TimeTracking.InfoService
          *

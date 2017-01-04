@@ -1,7 +1,14 @@
 package com.armedia.acm.services.search.web.api;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,17 +28,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 
 import java.net.URLEncoder;
 
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {
-        "classpath:/spring/spring-web-acm-web.xml",
-        "classpath:/spring/spring-library-search-web-api-test.xml"
-})
+@ContextConfiguration(locations = { "classpath:/spring/spring-web-acm-web.xml",
+        "classpath:/spring/spring-library-search-web-api-test.xml" })
 public class PersonSearchByNameAndContactMethodAPIControllerTest extends EasyMockSupport
 {
     private MockMvc mockMvc;
@@ -68,8 +67,8 @@ public class PersonSearchByNameAndContactMethodAPIControllerTest extends EasyMoc
         String solrResponse = "{ \"solrResponse\": \"this is a test response.\" }";
 
         final String encodedContactMethodJoin = URLEncoder.encode("{!join from=id to=contact_method_ss}");
-        String query = "object_type_s:PERSON AND name:" + URLEncoder.encode(name) + " AND " +
-                encodedContactMethodJoin + "value_parseable:" + URLEncoder.encode(contactMethod + "*");
+        String query = "object_type_s:PERSON AND name:" + URLEncoder.encode(name) + " AND " + encodedContactMethodJoin + "value_parseable:"
+                + URLEncoder.encode(contactMethod + "*");
         String sort = "last_name_lcs ASC, first_name_lcs ASC";
 
         query = query.replaceAll(" ", "+");
@@ -78,17 +77,14 @@ public class PersonSearchByNameAndContactMethodAPIControllerTest extends EasyMoc
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
 
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.ADVANCED_SEARCH, query,
-                0, 10, sort)).andReturn(solrResponse);
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.ADVANCED_SEARCH, query, 0, 10, sort, false))
+                .andReturn(solrResponse);
 
         replayAll();
 
-        MvcResult result = mockMvc.perform(
-                get("/api/v1/plugin/search/personSearch?name=" + name + "&cm=" + contactMethod)
-                        .principal(mockAuthentication))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andReturn();
+        MvcResult result = mockMvc
+                .perform(get("/api/v1/plugin/search/personSearch?name=" + name + "&cm=" + contactMethod).principal(mockAuthentication))
+                .andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON)).andReturn();
 
         verifyAll();
 
@@ -97,7 +93,6 @@ public class PersonSearchByNameAndContactMethodAPIControllerTest extends EasyMoc
         log.debug("Got JSON: " + jsonString);
 
         assertEquals(solrResponse, jsonString);
-
 
     }
 
@@ -109,8 +104,8 @@ public class PersonSearchByNameAndContactMethodAPIControllerTest extends EasyMoc
         String contactMethod = "contact method";
 
         final String encodedContactMethodJoin = URLEncoder.encode("{!join from=id to=contact_method_ss}");
-        String query = "object_type_s:PERSON AND name:" + URLEncoder.encode(name) + " AND " +
-                encodedContactMethodJoin + "value_parseable:" + URLEncoder.encode(contactMethod + "*");
+        String query = "object_type_s:PERSON AND name:" + URLEncoder.encode(name) + " AND " + encodedContactMethodJoin + "value_parseable:"
+                + URLEncoder.encode(contactMethod + "*");
         String sort = "last_name_lcs ASC, first_name_lcs ASC";
         query = query.replaceAll(" ", "+");
         sort = sort.replaceAll(" ", "+");
@@ -118,17 +113,14 @@ public class PersonSearchByNameAndContactMethodAPIControllerTest extends EasyMoc
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
 
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.ADVANCED_SEARCH, query, 0, 10, sort)).
-                andThrow(new DefaultMuleException("test Exception"));
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.ADVANCED_SEARCH, query, 0, 10, sort, false))
+                .andThrow(new DefaultMuleException("test Exception"));
 
         replayAll();
 
-        MvcResult result = mockMvc.perform(
-                get("/api/v1/plugin/search/personSearch?name=" + name + "&cm=" + contactMethod)
-                        .principal(mockAuthentication))
-                .andExpect(status().isInternalServerError())
-                .andExpect(content().contentType(MediaType.TEXT_PLAIN))
-                .andReturn();
+        MvcResult result = mockMvc
+                .perform(get("/api/v1/plugin/search/personSearch?name=" + name + "&cm=" + contactMethod).principal(mockAuthentication))
+                .andExpect(status().isInternalServerError()).andExpect(content().contentType(MediaType.TEXT_PLAIN)).andReturn();
 
         verifyAll();
 

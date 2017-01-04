@@ -10,8 +10,8 @@
  *
  * The BuildUrl is used for building report url with given parameters.
  */
-angular.module('reports').factory('Reports.BuildUrl', ['$sce', 'Util.DateService', '$http',
-    function ($sce, UtilDateService, $http) {
+angular.module('reports').factory('Reports.BuildUrl', ['$sce', 'Util.DateService', '$http', '$browser', '$location',
+    function ($sce, UtilDateService, $http, $browser, $location) {
         return {
 
             /**
@@ -44,8 +44,12 @@ angular.module('reports').factory('Reports.BuildUrl', ['$sce', 'Util.DateService
                     + "&userid=" + params.reportsUser
                     + "&password=" + params.reportsPassword;
                 if (params.stateSelected) {
-                    reportUrl += "&caseStatus=" + params.stateSelected;
+                    reportUrl += "&status=" + params.stateSelected;
                 }
+                var absUrl = $location.absUrl();
+                var baseHref = $browser.baseHref();
+                var appUrl = absUrl.substring(0, absUrl.indexOf(baseHref) + baseHref.length);
+                reportUrl += "&baseUrl=" + encodeURIComponent(appUrl);
                 return $sce.trustAsResourceUrl(reportUrl);
             },
 

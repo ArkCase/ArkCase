@@ -31,7 +31,8 @@ var ApplicationConfiguration = (function () {
         'ngBootbox',
         'ngHandsontable',
         'ngTagsInput',
-        'ui.ace'
+        'ui.ace',
+        'cfp.hotkeys'
     ];
 
     // Init list of errors that should not be shown to the end user

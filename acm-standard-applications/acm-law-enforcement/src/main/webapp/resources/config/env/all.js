@@ -33,7 +33,7 @@ module.exports = {
                 'lib/components-font-awesome/css/font-awesome.css',
                 'lib/fancytree/dist/skin-win8/ui.fancytree.css',
                 'lib/angular-xeditable/dist/css/xeditable.css',
-                'lib/angular-dashboard-framework-armedia/dist/angular-dashboard-framework.css',
+                'lib/angular-dashboard-framework-armedia/dist/angular-dashboard-framework.min.css',
                 'lib/summernote/dist/summernote.css',
                 'lib/angular-notify/dist/angular-notify.css',
                 'lib/handsontable/dist/handsontable.full.css',
@@ -66,7 +66,7 @@ module.exports = {
                 'lib/angular-translate/angular-translate.min.js',
                 'lib/angular-translate-loader-partial/angular-translate-loader-partial.min.js',
                 'lib/angular-xeditable/dist/js/xeditable.min.js',
-                'lib/angular-dashboard-framework-armedia/dist/angular-dashboard-framework.js',
+                'lib/angular-dashboard-framework-armedia/dist/angular-dashboard-framework.min.js',
                 'lib/Sortable/Sortable.min.js',
                 'lib/fancytree/dist/jquery.fancytree.min.js',
                 'lib/fancytree/dist/src/jquery.fancytree.table.js',
@@ -90,7 +90,8 @@ module.exports = {
                 'lib/Chart.js/Chart.min.js',
                 'lib/angular-chart.js/dist/angular-chart.min.js',
                 'lib/sockjs-client/dist/sockjs.min.js',
-                'lib/stomp-websocket/lib/stomp.min.js'
+                'lib/stomp-websocket/lib/stomp.min.js',
+                'lib/angular-hotkeys/build/hotkeys.js'
             ]
         },
         css: [
