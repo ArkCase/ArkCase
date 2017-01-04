@@ -7,8 +7,7 @@ angular.module('tasks').controller('Tasks.AssigneePickerController', ['$scope', 
         var promiseConfig = ConfigService.getModuleConfig("tasks");
 
         $q.all([promiseConfig]).then(function (data) {
-            console.log(data[0]);
-            $scope.config = data[0].components[15];
+            $scope.config = data[0].components[14];
         });
 
         $scope.onClickOk = function () {

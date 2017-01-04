@@ -127,16 +127,7 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             modalInstance.result.then(function (data) {
                 $scope.participant = {};
                 if (ObjectParticipantService.validateType(data.participant, data.selectedType)) {
-                    $scope.participant.id = data.participant.id;
                     $scope.participant.participantLdapId = data.participant.participantLdapId;
-                    $scope.participant.participantType = data.participant.participantType;
-
-                    var participant = {};
-                    participant.participantLdapId = data.participant.participantLdapId;
-                    participant.participantType = data.participant.participantType;
-                    participant.className = $scope.config.className;
-                    $scope.objectInfo.participants.push(participant);
-
                     $scope.assignee = data.participant.participantLdapId;
                     $scope.updateAssignee();
                 }
