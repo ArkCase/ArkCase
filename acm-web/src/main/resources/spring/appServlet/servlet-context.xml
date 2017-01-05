@@ -109,6 +109,7 @@
         <mvc:interceptor>
             <mvc:mapping path="/plugin/**"/>
             <mvc:mapping path="/api/*/plugin/**"/>
+            <mvc:mapping path="/modules/*/views/**.html"/>
             <ref bean="acmPluginRoleBasedAccessInterceptor"/>
         </mvc:interceptor>
         <mvc:interceptor>
