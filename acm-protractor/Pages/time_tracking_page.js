@@ -89,5 +89,5 @@ var timeTrackingPage = function() {
         return this;
 }
 };
-
+timeTrackingPage.prototype = basePage;
 module.exports = new timeTrackingPage();

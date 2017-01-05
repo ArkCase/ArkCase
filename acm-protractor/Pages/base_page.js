@@ -227,6 +227,11 @@ var assigneeBtn = element(by.xpath(Objects.casepage.locators.assigneeBtn));
 var submitBtn = element(by.xpath(Objects.casepage.locators.submitBtn));
 var complaintParticipantsTab = element(By.xpath(Objects.complaintPage.locators.participantsTab));
 //var dueDate = element(by.xpath(Objects.casepage.locators.dueDate));
+var preferenceLink = element(by.linkText(Objects.preferencesPage.locators.preferenceLink));
+var overviewLink = element(by.xpath(Objects.casepage.locators.overviewLink));
+var tasksModule = element(by.css(Objects.taskspage.locators.TasksModule));
+var timeTrackingModule = element(by.css(Objects.timetrackingPage.locators.timeTrackingModule));
+var costTrackingModule = element(by.css(Objects.costsheetPage.locators.costTrackingModule));
 
 var BasePage = function() {
 
@@ -1363,7 +1368,18 @@ var BasePage = function() {
 
         browser.executeScript('arguments[0].click()', complaintsModule);
     }
+    this.clickModuleTasks = function() {
+        browser.executeScript('arguments[0].click()', tasksModule);
+    }
+    this.clickModuleTimeTracking = function() {
 
+        browser.executeScript('arguments[0].click()', timeTrackingModule);
+
+    }
+    this.clickModuleCostTracking = function() {
+
+        browser.executeScript('arguments[0].click()', costTrackingModule);
+    }
 
     this.clickAddTaskButton = function() {
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.addNewTaskBtn))), 30000).then(function() {
@@ -1756,10 +1772,11 @@ var BasePage = function() {
         browser.wait(EC.visibilityOf(element(by.linkText("Logout"))), 30000).then(function() {
             logoutLink.click().then(function() {
                 browser.ignoresynchronization = true;
-                // browser.driver.wait(EC.visibilityOf(element(by.css(".alert.alert-success"))), 30000).then(function() {
-                // expect(logoutSucesfullMessage.getText()).toEqual('You have been logged out successfully.');
-                //});
-            })
+                browser.driver.sleep(5000);
+                 browser.driver.wait(EC.visibilityOf(element(by.css(".alert.alert-success"))), 30000).then(function() {
+                expect(logoutSucesfullMessage.getText()).toEqual('You have been logged out successfully.');
+                });
+            });
         });
         return this;
     };
@@ -2075,7 +2092,40 @@ var BasePage = function() {
         browser.executeScript('arguments[0].click()', submitBtn);
         return this;
     }
-};
+
+    this.clickPreferenceLink = function() {
+        browser.wait(EC.visibilityOf(element(by.linkText(Objects.preferencesPage.locators.preferenceLink))), 10000, "Preference link is not displayed").then(function() {
+            preferenceLink.click();
+        });
+    }
+
+    this.navigateToPreferencePage = function() {
+        this.clickFullNameLink();
+        this.clickPreferenceLink();
+    }
+
+    this.waitForOverView = function() {
+
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.overviewLink))), 20000, "Owerview Link is nor displayed");
+    }
+
+    this.verifyIfWidgetIsDisplayed = function(widget, title) {
+
+        element.all(by.css('[adf-widget-type=' + widget + ']')).then(function(items) {
+            expect(items.length).toBe(1, "The" + " " + title + " " + "widget is enabled and not displayed");
+            expect(element(by.css('[adf-widget-type=' + widget + ']')).element(by.css('.ng-scope')).getText()).toEqual(title);
+        });
+    }
+
+    this.verifyIfWidgetIsNotDisplayed = function(widget, title) {
+
+        element.all(by.css('[adf-widget-type=' + widget + ']')).then(function(items) {
+            expect(items.length).toBe(0, "The" + " " + title + " " + "widget is disabled it should not be displayed");
+        });
+
+    }
+
+}
 
 
 module.exports = new BasePage();

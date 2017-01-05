@@ -10,6 +10,7 @@ var flag = false;
 var EC = protractor.ExpectedConditions;
 var timeTrackingPage = require('../Pages/time_tracking_page.js');
 var costTrackingPage = require('../Pages/cost_tracking_page.js');
+var preferencesPage = require('../Pages/preference_page.js');
 
 
 function testAsync(done) {
@@ -17,7 +18,7 @@ function testAsync(done) {
     setTimeout(function() {
         flag = true;
         done();
-    }, 40000);
+    }, 30000);
 
 }
 
@@ -977,4 +978,5 @@ describe('case page tests', function() {
         casePage.editAssigneeInParticipantTable("Samuel Supervisor");
         expect(casePage.returnParticipantNameSecondRow()).toEqual("Samuel Supervisor");
     });
+
 });
