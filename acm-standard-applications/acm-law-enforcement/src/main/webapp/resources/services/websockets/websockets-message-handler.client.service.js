@@ -36,8 +36,9 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
                 handleSubCacheLists(message.parentObjectType, message.parentObjectId);
             }
             // A timesheet does not have parent id/type field, but could have multiple complaint/case "parent" objects
-            if (message.objectType == 'TIMESHEET') {
-                TimeTrackingInfoService.getTimesheetParentObjectsTypeId(message.objectId).then(function (parentObjectsTypeId) {
+            if (message.objectType == 'TIMESHEET' || message.parentObjectType == 'TIMESHEET') {
+                var timesheetId = message.objectType == 'TIMESHEET' ? message.objectId : message.parentObjectId;
+                TimeTrackingInfoService.getTimesheetParentObjectsTypeId(timesheetId).then(function (parentObjectsTypeId) {
                     angular.forEach(parentObjectsTypeId, function (data) {
                         handleCacheObject(data.type, data.objectId);
                         handleCacheLists(data.type, data.objectId);
