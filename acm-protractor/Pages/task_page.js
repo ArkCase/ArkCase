@@ -95,6 +95,7 @@ var approveBtn = element(by.xpath(Objects.taskspage.locators.approveBtn));
 var caseTitleInTasks = element(by.xpath(Objects.taskspage.locators.caseTitleInTasks));
 var complaintTitleInTasks=element(by.xpath(Objects.taskspage.locators.complaintTitleInTasks));
 
+
 var TaskPage = function() {
     this.clickTaskButton = function() {
         taskBtn.click();

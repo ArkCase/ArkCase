@@ -1,5 +1,6 @@
 var Objects = require('../json/Objects.json');
 var utils = require('../util/utils.js');
+var basePage = require('./base_page.js');
 var EC = protractor.ExpectedConditions;
 var util = require('../util/utils.js');
 var newCostSheetLinkBtn = element(by.linkText(Objects.costsheetPage.locators.costsheetLink));
@@ -62,6 +63,7 @@ var costTrackingPage = function() {
         browser.sleep(10000);
         return this;
     }
-
 };
+
+costTrackingPage.prototype = basePage;
 module.exports = new costTrackingPage();
