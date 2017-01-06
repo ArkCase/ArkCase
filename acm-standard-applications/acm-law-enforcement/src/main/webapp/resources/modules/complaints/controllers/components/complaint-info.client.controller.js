@@ -15,9 +15,6 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             , componentId: "info"
             , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
             , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
-            , onConfigRetrieved: function (componentConfig) {
-                return onConfigRetrieved(componentConfig);
-            }
             , onObjectInfoRetrieved: function (objectInfo) {
                 onObjectInfoRetrieved(objectInfo);
             }
@@ -28,7 +25,8 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
         var promiseConfig = ConfigService.getModuleConfig("complaints");
 
         $q.all([promiseConfig]).then(function (data) {
-            $scope.config = data[0].components[7];
+            var foundComponent = data[0].components.filter(function(component) { return component.title === 'Participants'; });
+            $scope.config = foundComponent[0];
         });
 
         $scope.participantsInit = {
@@ -87,19 +85,7 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
         	$scope.picker.opened = true;
         };
 
-        var onConfigRetrieved = function (config) {
-            if (!$scope.participantsInit.participantsTitle)
-                $scope.participantsInit.participantsTitle = $translate.instant("common.directive.coreParticipants.title");
-            $scope.config = config;
-            gridHelper.addButton(config, "edit");
-            gridHelper.addButton(config, "delete");
-            gridHelper.setColumnDefs(config);
-            gridHelper.setBasicOptions(config);
-            gridHelper.disableGridScrolling(config);
-            gridHelper.setUserNameFilter(promiseUsers);
-        };
-
-        $scope.openModal = function () {
+        $scope.openAssigneePickerModal = function () {
             var participant = {
                         id: '',
                         participantType: $scope.participantTypes[0].type,

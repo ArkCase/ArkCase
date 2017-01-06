@@ -19,9 +19,6 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             , onObjectInfoRetrieved: function (objectInfo) {
                 onObjectInfoRetrieved(objectInfo);
             }
-            , onConfigRetrieved: function (componentConfig) {
-                return onConfigRetrieved(componentConfig);
-            }
         });
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
@@ -29,7 +26,8 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
         var promiseConfig = ConfigService.getModuleConfig("tasks");
 
         $q.all([promiseConfig]).then(function (data) {
-            $scope.config = data[0].components[14];
+            var foundComponent = data[0].components.filter(function(component) { return component.title === 'Info'; });
+            $scope.config = foundComponent[0];
         })
 
         $scope.participantsInit = {
@@ -71,19 +69,7 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             }
         );
 
-        var onConfigRetrieved = function (config) {
-            if (!$scope.participantsInit.participantsTitle)
-                $scope.participantsInit.participantsTitle = $translate.instant("common.directive.coreParticipants.title");
-            $scope.config = config;
-            gridHelper.addButton(config, "edit");
-            gridHelper.addButton(config, "delete");
-            gridHelper.setColumnDefs(config);
-            gridHelper.setBasicOptions(config);
-            gridHelper.disableGridScrolling(config);
-            gridHelper.setUserNameFilter(promiseUsers);
-        };
-
-        $scope.openModal = function () {
+        $scope.openAssigneePickerModal = function () {
             var participant = {
                         id: '',
                         participantType: $scope.participantTypes[0].type,

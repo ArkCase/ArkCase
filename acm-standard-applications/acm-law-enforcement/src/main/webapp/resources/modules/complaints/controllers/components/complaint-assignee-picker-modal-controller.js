@@ -7,7 +7,8 @@ angular.module('complaints').controller('Complaints.AssigneePickerController', [
         var promiseConfig = ConfigService.getModuleConfig("complaints");
 
         $q.all([promiseConfig]).then(function (data) {
-            $scope.config = data[0].components[7];
+            var foundComponent = data[0].components.filter(function(component) { return component.title === 'Participants'; });
+            $scope.config = foundComponent[0];
         });
 
         $scope.onClickOk = function () {
