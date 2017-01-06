@@ -116,7 +116,6 @@
           "workflow",
           "history",
           "signatures",
-          "participants",
           "tags"
         ]
       },
@@ -193,14 +192,6 @@
         ]
       },
       {
-        "type": "p/TASK/par",
-        "label": "Participants",
-        "icon": "fa fa-users",
-        "components": [
-          "participants"
-        ]
-      },
-      {
         "type": "p/TASK/tags",
         "label": "Tags",
         "icon": "fa fa-tags",
@@ -220,7 +211,6 @@
           "workflow",
           "history",
           "signatures",
-          "participants",
           "tags"
         ]
       },
@@ -286,14 +276,6 @@
         "icon": "fa fa-certificate",
         "components": [
           "signatures"
-        ]
-      },
-      {
-        "type": "p/ADHOC/par",
-        "label": "Participants",
-        "icon": "fa fa-users",
-        "components": [
-          "participants"
         ]
       },
       {
@@ -651,24 +633,6 @@
           ]
         },
         {
-          "id": "participants",
-          "type": "component",
-          "columnDefs": [
-            {
-              "name": "participantType",
-              "displayName": "tasks.comp.participants.table.columns.type",
-              "headerCellFilter": "translate",
-              "lookup": "participantTypes"
-            },
-            {
-              "name": "participantLdapId",
-              "displayName": "tasks.comp.participants.table.columns.name",
-              "headerCellFilter": "translate",
-              "lookup": "participantNames"
-            }
-          ]
-        },
-        {
           "id": "tags",
           "type": "component"
         }
@@ -677,9 +641,67 @@
     {
       "id": "info",
       "title": "Info",
-      "enabled": false,
-      "type": "empty",
-      "editable": false
+      "icon": "fa fa-users",
+      "className": "com.armedia.acm.services.participants.model.AcmParticipant",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 5,
+      "columnDefs": [
+        {
+          "name": "participantType",
+          "displayName": "tasks.comp.participants.table.columns.type",
+          "headerCellFilter": "translate",
+          "lookup": "participantTypes"
+        },
+        {
+          "name": "participantLdapId",
+          "displayName": "tasks.comp.participants.table.columns.name",
+          "headerCellFilter": "translate",
+          "lookup": "participantNames"
+        }
+      ],
+      "dialogUserPicker": {
+        "enableFiltering": false,
+        "multiSelect": false,
+        "showFacets": false,
+        "columnDefs": [
+          {
+            "name": "name",
+            "displayName": "tasks.comp.participants.dialogUserPicker.table.columns.name",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "object_type_s",
+            "displayName": "tasks.comp.participants.dialogUserPicker.table.columns.type",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "title",
+            "displayName": "tasks.comp.participants.dialogUserPicker.table.columns.title",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "object_id_s",
+            "displayName": "tasks.comp.participants.dialogUserPicker.table.columns.id",
+            "headerCellFilter": "translate"
+          }
+        ],
+        "paginationPageSizes": [
+          5,
+          10,
+          20,
+          50
+        ],
+        "paginationPageSize": 10,
+        "start": 0
+      }
     },
     {
       "id": "parentinfo",
@@ -1006,91 +1028,6 @@
           "lookup": "userFullNames"
         }
       ]
-    },
-    {
-      "id": "participants",
-      "title": "Participants",
-      "icon": "fa fa-users",
-      "className": "com.armedia.acm.services.participants.model.AcmParticipant",
-      "enabled": true,
-      "type": "grid",
-      "enableFiltering": true,
-      "paginationPageSizes": [
-        5,
-        10,
-        20,
-        50
-      ],
-      "paginationPageSize": 5,
-      "columnDefs": [
-        {
-          "name": "participantType",
-          "displayName": "tasks.comp.participants.table.columns.type",
-          "headerCellFilter": "translate",
-          "lookup": "participantTypes"
-        },
-        {
-          "name": "participantLdapId",
-          "displayName": "tasks.comp.participants.table.columns.name",
-          "headerCellFilter": "translate",
-          "lookup": "participantNames"
-        }
-      ],
-      "dialogUserPicker": {
-        "enableFiltering": false,
-        "multiSelect": false,
-        "showFacets": false,
-        "columnDefs": [
-          {
-            "name": "name",
-            "displayName": "tasks.comp.participants.dialogUserPicker.table.columns.name",
-            "headerCellFilter": "translate"
-          },
-          {
-            "name": "object_type_s",
-            "displayName": "tasks.comp.participants.dialogUserPicker.table.columns.type",
-            "headerCellFilter": "translate"
-          },
-          {
-            "name": "title",
-            "displayName": "tasks.comp.participants.dialogUserPicker.table.columns.title",
-            "headerCellFilter": "translate"
-          },
-          {
-            "name": "object_id_s",
-            "displayName": "tasks.comp.participants.dialogUserPicker.table.columns.id",
-            "headerCellFilter": "translate"
-          }
-        ],
-        "paginationPageSizes": [
-          5,
-          10,
-          20,
-          50
-        ],
-        "paginationPageSize": 10,
-        "start": 0
-      },
-      "dialogGroupPicker": {
-        "enableFiltering": false,
-        "multiSelect": false,
-        "showFacets": false,
-        "columnDefs": [
-          {
-            "name": "name",
-            "displayName": "tasks.comp.participants.dialogGroupPicker.table.columns.name",
-            "headerCellFilter": "translate"
-          }
-        ],
-        "paginationPageSizes": [
-          5,
-          10,
-          20,
-          50
-        ],
-        "paginationPageSize": 10,
-        "start": 0
-      }
     },
     {
       "id": "tags",
