@@ -12,6 +12,7 @@ angular.module('tasks').config(['$stateProvider',
                 resolve: {
                     translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
                         $translatePartialLoader.addPart('common');
+                        $translatePartialLoader.addPart('dashboard');
                         $translatePartialLoader.addPart('tasks');
                         return $translate.refresh();
                     }]
@@ -54,7 +55,9 @@ angular.module('tasks').config(['$stateProvider',
                     }]
                 },
                 params: {
-                    "parentTitle": ":parentTitle"
+                    "parentTitle": ":parentTitle",
+                    "parentId": ":parentId",
+                    "returnState": ":returnState"
                 }
             })
 
@@ -87,7 +90,7 @@ angular.module('tasks').config(['$stateProvider',
                 url: '/:type/:id/notes',
                 templateUrl: 'modules/tasks/views/components/task-notes.client.view.html'
             })
-            
+
             .state('tasks.references', {
                 url: '/:type/:id/references',
                 templateUrl: 'modules/tasks/views/components/task-references.client.view.html'

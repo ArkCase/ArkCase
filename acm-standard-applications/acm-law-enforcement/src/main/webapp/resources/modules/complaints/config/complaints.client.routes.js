@@ -12,6 +12,7 @@ angular.module('complaints').config(['$stateProvider',
                 resolve: {
                     translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
                         $translatePartialLoader.addPart('common');
+                        $translatePartialLoader.addPart('dashboard');
                         $translatePartialLoader.addPart('complaints');
                         return $translate.refresh();
                     }]

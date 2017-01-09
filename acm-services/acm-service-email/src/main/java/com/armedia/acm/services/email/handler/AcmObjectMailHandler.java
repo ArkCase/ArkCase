@@ -79,14 +79,21 @@ public class AcmObjectMailHandler
         String messageFileName = System.currentTimeMillis() + "_" + entityId + ".eml";
         File messageFile = new File(tempDir + File.separator + messageFileName);
 
-        try (OutputStream os = new FileOutputStream(messageFile))
+        try
         {
-            message.writeTo(os);
+            try (OutputStream os = new FileOutputStream(messageFile))
+            {
+                message.writeTo(os);
+            }
+
             AcmFolder folder = acmFolderService.addNewFolderByPath(entity.getObjectType(), entity.getId(), mailDirectory);
-            InputStream is = new FileInputStream(messageFile);
-            Authentication auth = new UsernamePasswordAuthenticationToken(userId, "");
-            ecmFileService.upload(messageFileName, "mail", "Document", is, "message/rfc822", messageFileName, auth,
-                    folder.getCmisFolderId(), entity.getObjectType(), entity.getId());
+            try (InputStream is = new FileInputStream(messageFile))
+            {
+                Authentication auth = new UsernamePasswordAuthenticationToken(userId, "");
+                ecmFileService.upload(messageFileName, "mail", "Document", is, "message/rfc822", messageFileName, auth,
+                        folder.getCmisFolderId(), entity.getObjectType(), entity.getId());
+            }
+
         } catch (Exception e)
         {
             log.error("Error processing complaint with number '{}'. Exception msg: '{}' ", entityId, e.getMessage());

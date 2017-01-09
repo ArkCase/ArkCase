@@ -51,8 +51,8 @@
       "table.columns": {
         "type": "Type",
         "value": "Value",
-        "created":"Date Added",
-        "creator":"Added By",
+        "created": "Date Added",
+        "creator": "Added By",
         "modified": "Last Modified",
         "modifier": "Modified By"
       }
@@ -62,8 +62,8 @@
       "table.columns": {
         "type": "Type",
         "value": "Value",
-        "created":"Date Added",
-        "creator":"Added By",
+        "created": "Date Added",
+        "creator": "Added By",
         "modified": "Last Modified",
         "modifier": "Modified By"
       }
@@ -77,8 +77,8 @@
         "state": "State",
         "zip": "Zip",
         "country": "Country",
-        "created":"Date Added",
-        "creator":"Added By",
+        "created": "Date Added",
+        "creator": "Added By",
         "modified": "Last Modified",
         "modifier": "Modified By"
       }
@@ -88,8 +88,8 @@
       "table.columns": {
         "type": "Type",
         "value": "Value",
-        "created":"Date Added",
-        "creator":"Added By",
+        "created": "Date Added",
+        "creator": "Added By",
         "modified": "Last Modified",
         "modifier": "Modified By"
       }
@@ -99,8 +99,8 @@
       "table.columns": {
         "type": "Type",
         "value": "Value",
-        "created":"Date Added",
-        "creator":"Added By",
+        "created": "Date Added",
+        "creator": "Added By",
         "modified": "Last Modified",
         "modifier": "Modified By"
       }
@@ -144,9 +144,10 @@
       "created": "Created",
       "priority": "Priority",
       "due": "Due",
-      "status": "Status",
-      "action": "Action"
-    }
+      "status": "Status"
+    },
+    "table.overdue.tooltip": "Task is Overdue",
+    "table.deadline.tooltip": "Deadline is Approaching"
   },
   "cases.comp.references": {
     "title": "References",
@@ -196,12 +197,12 @@
       "createdBy": "Created By"
     },
     "modal": {
-    "title": "Tag",
-    "search": "Search for Tag",
-    "buttons": {
-          "cancel": "Cancel",
-          "ok": "Add Tag"
-     }
+      "title": "Tag",
+      "search": "Search for Tag",
+      "buttons": {
+        "cancel": "Cancel",
+        "ok": "Add Tag"
+      }
     },
     "message": {
       "tagExists": "Tag with that name or description or text already exists",
@@ -215,7 +216,7 @@
   "cases.comp.calendar": {
     "title": "Calendar"
   },
-"cases.comp.merge": {
+  "cases.comp.merge": {
     "id": "merge",
     "title": "Merge",
     "cancel.btn": "Cancel",
@@ -224,18 +225,18 @@
     "search.btn": "Search",
     "enabled": true,
     "table.columns": {
-            "incident": "Type",
-            "name": "Name",
-            "assignee": "Assignee",
-            "title": "Title",
-            "parent": "Parent",
-            "modified": "Modified"
-     }
+      "incident": "Type",
+      "name": "Name",
+      "assignee": "Assignee",
+      "title": "Title",
+      "parent": "Parent",
+      "modified": "Modified"
+    }
   },
-  "cases.comp.split":{
-      "title": "Split",
-      "cancel": "Cancel",
-      "split": "Split"
+  "cases.comp.split": {
+    "title": "Split",
+    "cancel": "Cancel",
+    "split": "Split"
   },
   "cases.comp.addreference": {
     "title": "Add Reference",
@@ -256,5 +257,5 @@
         "modified": "Modified"
       }
     }
-  }    
+  }
 }
