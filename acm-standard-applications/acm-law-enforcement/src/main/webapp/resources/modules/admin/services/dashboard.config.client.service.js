@@ -45,7 +45,7 @@ angular.module('admin').service('Admin.DashboardConfigService', function ($http)
      * @param {String} query Query to send to the server
      */
     function authorizeRolesForWidget(widget) {
-        $http({
+        return $http({
             method: "POST",
             url: "api/latest/plugin/dashboard/widgets/set",
             data: angular.toJson(widget),

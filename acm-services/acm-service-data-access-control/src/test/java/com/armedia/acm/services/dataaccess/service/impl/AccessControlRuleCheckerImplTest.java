@@ -438,6 +438,22 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         verifyAll();
     }
 
+    @Test
+    public void testCheckParticipantTypesWhenUserIsParticipantTypeAnyListIsEmpty()
+    {
+        AccessControlRule accessControlRule = getAccessControlRuleForParticipantTypesTest();
+        accessControlRule.setUserIsParticipantTypeAny(new ArrayList<>());
+
+        Collection grantedAuthorities = getGrantedAuthoritiesMockList();
+
+        mockExpectsWhenParticipantTypesTest(accessControlRule, grantedAuthorities);
+
+        boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
+                "restrictCase", solrDocument);
+        assertTrue(granted);
+        verifyAll();
+    }
+
     public void mockExpectsWhenParticipantTypesTest(AccessControlRule accessControlRule, Collection grantedAuthorities){
         // mock the behavior
         EasyMock.expect(accessControlRulesMock.getAccessControlRuleList()).andReturn(Arrays.asList(accessControlRule)).anyTimes();
