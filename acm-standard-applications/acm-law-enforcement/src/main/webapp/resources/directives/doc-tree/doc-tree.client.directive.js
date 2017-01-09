@@ -2250,12 +2250,15 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                         if (Validator.validateFolderList(folderList)) {
                                             var replaced = DocTree.findFolderItemIdx(fileId, folderList);
                                             if (0 <= replaced) {
+                                                folderList.children[replaced].ext = Util.goodValue(replaceInfo.fileActiveVersionNameExtension);
+                                                folderList.children[replaced].modified = Util.goodValue(replaceInfo.modified);
                                                 folderList.children[replaced].version = Util.goodValue(replaceInfo.activeVersionTag);
 
                                                 folderList.children[replaced].versionList = [];
                                                 if (Util.isArray(replaceInfo.versions)) {
                                                     for (var i = 0; i < replaceInfo.versions.length; i++) {
                                                         var ver = {};
+                                                        ver.ext = replaceInfo.versions[i].versionFileNameExtension;
                                                         ver.versionTag = replaceInfo.versions[i].versionTag;
                                                         ver.created = replaceInfo.versions[i].created;
                                                         ver.modified = replaceInfo.versions[i].modified;
@@ -2273,6 +2276,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         }).then(
                             function (replacedFile) {
                                 if (replacedFile && fileNode) {
+                                    fileNode.data.ext = replacedFile.ext;
+                                    fileNode.data.modified = replacedFile.modified;
                                     fileNode.data.version = replacedFile.version;
                                     fileNode.data.versionList = replacedFile.versionList;
                                     fileNode.renderTitle();
