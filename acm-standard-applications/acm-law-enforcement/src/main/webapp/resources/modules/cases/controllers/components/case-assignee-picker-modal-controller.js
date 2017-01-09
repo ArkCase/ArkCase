@@ -13,9 +13,7 @@ angular.module('cases').controller('Cases.AssigneePickerController', ['$scope', 
 
         $scope.onClickOk = function () {
             $modalInstance.close({
-                participant: $scope.participant,
-                isEdit: $scope.isEdit,
-                selectedType: $scope.selectedType
+                participant: $scope.participant
             });
         };
         $scope.onClickCancel = function () {
@@ -51,7 +49,6 @@ angular.module('cases').controller('Cases.AssigneePickerController', ['$scope', 
                 if (!Util.isEmpty(selected)) {
                     $scope.participant.participantLdapId = selected.object_id_s;
                     $scope.participant.id = selected.id;
-                    $scope.selectedType = selected.object_type_s;
                     $scope.participant.selectedAssigneeName = selected.name;
                 }
             });
