@@ -18,7 +18,7 @@ var preferencesPage = function() {
             var enableWidget = element(by.cssContainingText(Objects.preferencesPage.locators.preferenceWidgetTitle, widgetLink)).element(by.css('.pull-right'));
             preference.click().then(function() {
                 browser.sleep(5000);
-                browser.wait(EC.visibilityOf(element(by.linkText(widgetLink))), 10000).then(function() {
+                browser.wait(EC.visibilityOf(element(by.linkText(widgetLink))), 10000,widgetLink + " "+ "Is not displayed").then(function() {
                     widget.click().then(function() {
                         browser.sleep(5000);
                         element(by.cssContainingText(Objects.preferencesPage.locators.preferenceWidgetTitle, widgetLink)).element(by.css(Objects.preferencesPage.locators.preferenceWidgetLabel)).getText().then(function(result) {
@@ -54,7 +54,7 @@ var preferencesPage = function() {
             var enableWidget = element(by.cssContainingText(Objects.preferencesPage.locators.preferenceWidgetTitle, widgetLink)).element(by.css(Objects.preferencesPage.locators.preferenceWidgetLabel));
             preference.click().then(function() {
                 browser.sleep(5000);
-                browser.wait(EC.visibilityOf(element(by.linkText(widgetLink))), 10000).then(function() {
+                browser.wait(EC.visibilityOf(element(by.linkText(widgetLink))), 10000, widgetLink + " "+ "Is not displayed").then(function() {
                     widget.click().then(function() {
                         browser.sleep(5000);
                         element(by.cssContainingText(Objects.preferencesPage.locators.preferenceWidgetTitle, widgetLink)).element(by.css(Objects.preferencesPage.locators.preferenceWidgetLabel)).getText().then(function(result) {

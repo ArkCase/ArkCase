@@ -1773,8 +1773,8 @@ var BasePage = function() {
             logoutLink.click().then(function() {
                 browser.ignoresynchronization = true;
                 browser.driver.sleep(5000);
-                 browser.driver.wait(EC.visibilityOf(element(by.css(".alert.alert-success"))), 30000).then(function() {
-                expect(logoutSucesfullMessage.getText()).toEqual('You have been logged out successfully.');
+                browser.driver.wait(EC.visibilityOf(element(by.css(".alert.alert-success"))), 30000).then(function() {
+                    expect(logoutSucesfullMessage.getText()).toEqual('You have been logged out successfully.');
                 });
             });
         });
@@ -2106,7 +2106,9 @@ var BasePage = function() {
 
     this.waitForOverView = function() {
 
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.overviewLink))), 20000, "Owerview Link is nor displayed");
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.overviewLink))), 20000, "Owerview Link is nor displayed").then(function() {
+            browser.sleep(5000);
+        });
     }
 
     this.verifyIfWidgetIsDisplayed = function(widget, title) {
