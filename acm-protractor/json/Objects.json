@@ -216,7 +216,8 @@
             "documentTitleInput": ".//*[@class='panel-body']/doc-tree/table[2]/tbody/tr[2]/td[3]/span/span[3]/input",
             "tag": "a",
             "approveBtn": ".//*[@class='btn btn-sm btn-default ng-binding ng-scope']/..//button[7]",
-            "caseTitleInTasks": ".//*[@class='ng-binding']/..//h4/a",
+            "caseTitleInTasks": ".//*[@class='module-header']/..//div[1]/div[1]/h4/a",
+            "complaintTitleInTasks": ".//*[@class='module-header']/..//div[2]/div[1]/div[1]/h4/a",
             "notificationMessage": ".//*[@ng-show='!$messageTemplate']"
 
 
@@ -405,7 +406,21 @@
             "complaintDispositionDDListBox": ".//div[@cname='disposition']/div/input[1]",
             "closeComplaintDescription": ".note-editable",
             "fadeElementComplaint":".//div[@class='modal-backdrop fade in']",
-            "complaintTitleLink": ".//a[@editable-text='objectInfo.complaintTitle']"
+            "complaintTitleLink": ".//a[@editable-text='objectInfo.complaintTitle']",
+            "locationsLinkBtn": ".//*[@class='fa fa-location-arrow']",
+            "addLocationBtn": "[ng-click='addNew()']",
+            "locationTypeDropDown":"location.type",
+            "locationStreetInput":".//*[@id='location.streetAddress']",
+            "locationCityInput": ".//*[@id='location.city']",
+            "locationStateInput":".//*[@id='location.state']",
+            "locationZipInput": ".//*[@id='location.zip']",
+            "saveLocationBtn": "[ng-click = 'onClickOk()']",
+            "addedLocations":  "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
+            "deleteLocationBtn": "[ng-click ='grid.appScope.deleteRow(row.entity)']",
+            "editLocationBtn": "[ng-click='grid.appScope.editRow(row.entity)']",
+            "newComplaintBtn": "[ui-sref='frevvo.new-complaint()']",
+            "complaintsTitle":".//a[@editable-text='objectInfo.complaintTitle']"
+             
         },
         "data": {
             "firstName": "ComplaintFirstName",
@@ -413,7 +428,8 @@
             "category": "Agricultural",
             "title": "ComplaintTitle",
             "description": "Description",
-            "approver": "samuel"
+            "approver": "samuel",
+            "titleComplaint": "NewComplaint"
         }
     },
     "casepage": {
@@ -454,7 +470,7 @@
             "statusClosed": ".//*[@class='input _frevvo-disable-backspace']/..//li[4]",
             "selectApprover": "approverName",
             "addUser": ".//*[@id='labPoTitle']",
-            "searchForUser": ".//*[@id='edtPoSearch']",
+            "searchForUser": ".//*[@class='input-group']/..//input",
             "goBtn": ".//*[@class='input-group']/..//span/button",
             "addBtn": ".//*[@id='dlgObjectPicker']/div/div/div[3]/button[2]",
             "searchedUser": "//*[@id='divPoResults']/div/table/tbody/tr/td[3]",
@@ -546,13 +562,13 @@
             "timesheetTableRow": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
             "costSheetLinkBtn": ".//*[@class='fa fa-money']",
             "caseTitleStatus": ".//*[@class='ng-binding']",
-            "participantsTab": "[extid='participantsTab']",
-            "selectParticipantType": ".//*[@class='f-table-row s-expanded s-linked s-untyped s-valid']/..//td[5]",
+            "participantsTab": "[extid='participantsTab']" ,
+            "selectParticipantType": ".//*[@class='c-table clearfix']/..//tbody/tr/td[5]",
             "selectParticipant": "participantName",
             "searchForUserInput": "//*[@class='modal-search-header']/..//input",
             "searchUserBtn": "Search",
             "OkBtn": "OK",
-            "searchedUserName": ".//*[@class='ui-grid-cell-contents ng-binding ng-scope']",
+            "searchedUserName": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
             "participantLinkBtn": ".//*[@class='fa fa-users']",
             "participantTableRow":".//*[@class='ui-grid-cell-contents ng-binding ng-scope']",
             "participantTable": ".//*[@class='panel panel-success panel-grid']",
@@ -563,6 +579,7 @@
             "saveParticipantBtn": "Save",
             "participantDeleteBtn": "[ng-click='grid.appScope.deleteRow(row.entity)']",
             "owningGroup": ".//a[@editable-select='owningGroup']"
+           
         },
 
         "data": {
@@ -645,10 +662,11 @@
             "fridayInput": "friday",
             "saturdayInput": "saturday",
             "timetrackingTitle": ".//*[@class='f-message decorator']/..//div/b",
-            "saveBtn": "Save",
+            "saveBtn": "//input[@name='actionType'][@value='Save']",
             "newTimesheetBtn": "New Timesheet",
             "editTimesheetBtn": "Edit Timesheet",
             "caseFileModule": "a[href*='#!/cases//main']",
+            "complaintsModule":"a[href*='#!/complaints//main']",
             "timesheetsPageTitle": ".//*[@class='module-header']/..//h3/span",
             "nextWeekBtn": "Next Week",
             "periodInput": "period"
@@ -658,7 +676,7 @@
         },
         "data": {
 
-            "date": "00"
+            "date": "1"
         }
     },
 

@@ -88,7 +88,7 @@ angular
                         if (response.status === 403) {
                             // user is authenticated but tries to modify some entity
                             // with no granted permission
-                            $rootScope.$broadcast('accessDenied', 'User has no granted permission for this action');
+                            MessageService.error('User has no granted permission for this action');
                         }
 
                         // Send error message to MessageService if
