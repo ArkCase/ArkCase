@@ -72,29 +72,18 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             }
         );
 
-        ObjectLookupService.getParticipantTypes().then(
-            function (participantTypes) {
-                $scope.participantTypes = participantTypes;
-                return participantTypes;
-            }
-        );
-
         $scope.openAssigneePickerModal = function () {
             var participant = {
                         id: '',
-                        participantType: $scope.participantTypes[0].type,
                         participantLdapId: '',
-                        participantTypes: $scope.participantTypes,
                         config: $scope.config
                     };
-            showModal(participant, false);
+            showModal(participant);
         };
 
-        var showModal = function (participant, isEdit) {
+        var showModal = function (participant) {
             var modalScope = $scope.$new();
             modalScope.participant = participant || {};
-            modalScope.isEdit = isEdit || false;
-            modalScope.selectedType = ""; 
 
             var modalInstance = $modal.open({
                 scope: modalScope,
@@ -112,7 +101,7 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
 
             modalInstance.result.then(function (data) {
                 $scope.participant = {};
-                if (ObjectParticipantService.validateType(data.participant, data.selectedType)) {
+                if (data.participant.participantLdapId != '' && data.participant.participantLdapId != null) {
                     $scope.participant.participantLdapId = data.participant.participantLdapId;
                     $scope.assignee = data.participant.participantLdapId;
                     $scope.updateAssignee();

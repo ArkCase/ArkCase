@@ -641,32 +641,6 @@
     {
       "id": "info",
       "title": "Info",
-      "icon": "fa fa-users",
-      "className": "com.armedia.acm.services.participants.model.AcmParticipant",
-      "enabled": true,
-      "type": "grid",
-      "enableFiltering": true,
-      "paginationPageSizes": [
-        5,
-        10,
-        20,
-        50
-      ],
-      "paginationPageSize": 5,
-      "columnDefs": [
-        {
-          "name": "participantType",
-          "displayName": "tasks.comp.participants.table.columns.type",
-          "headerCellFilter": "translate",
-          "lookup": "participantTypes"
-        },
-        {
-          "name": "participantLdapId",
-          "displayName": "tasks.comp.participants.table.columns.name",
-          "headerCellFilter": "translate",
-          "lookup": "participantNames"
-        }
-      ],
       "dialogUserPicker": {
         "enableFiltering": false,
         "multiSelect": false,
