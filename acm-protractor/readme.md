@@ -72,3 +72,8 @@ then use logging in the test, next row will log Info message with text "Username
 > logger.log('info', 'Username inserted');
 
 ```
+Install ```jasmine-data-provider``` simple data provider for jasmine
+````
+> npm install jasmine-data-provider
+
+````
