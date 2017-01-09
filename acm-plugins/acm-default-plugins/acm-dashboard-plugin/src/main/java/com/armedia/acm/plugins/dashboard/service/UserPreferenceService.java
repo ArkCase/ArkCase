@@ -39,11 +39,6 @@ public class UserPreferenceService
         List<UserPreference> upList = null;
         Module module;
         AcmUser user;
-        if (widgetList.isEmpty())
-        {
-            log.warn("No widgets are found!");
-            throw new AcmObjectNotFoundException("User Preference", null, "Widgets not found", null);
-        }
         try
         {
             module = getModule(preferredWidgets.getModuleName());
