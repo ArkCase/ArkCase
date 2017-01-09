@@ -60,9 +60,9 @@
  </example>
  */
 angular.module('directives').directive('search', ['SearchService', 'Search.QueryBuilderService', '$q', 'UtilService'
-    , 'Object.LookupService', '$window', 'uiGridExporterConstants', '$translate', 'Tags.TagsService', 'ObjectService'
+    , 'Object.LookupService', '$window', 'uiGridExporterConstants', '$translate', 'Tags.TagsService', 'ObjectService', 'Search.AutoSuggestService'
     , function (SearchService, SearchQueryBuilder, $q, Util
-        , ObjectLookupService, $window, uiGridExporterConstants, $translate, TagsService, ObjectService) {
+        , ObjectLookupService, $window, uiGridExporterConstants, $translate, TagsService, ObjectService, AutoSuggestService) {
         return {
             restrict: 'E',              //match only element name
             scope: {
@@ -88,8 +88,24 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                     scope.emptySearch = scope.config.emptySearch;
                 }
 
+                var searchObject = new Object();
+                try {
+                    searchObject = JSON.parse(scope.searchQuery);
+                } catch (e) {
+                    searchObject.searchQuery = scope.searchQuery;
+                    searchObject.isSelected = false;
+                }
+
+
+                var isSelected = searchObject.isSelected;
+                scope.searchQuery = searchObject.searchQuery;
+                scope.onSelect = function ($item, $model, $label) {
+                    isSelected = true;
+                };
+
                 scope.queryExistingItems = function (start) {
                     scope.start = Util.goodNumber(start, 0);
+                    scope.searchQuery = searchObject.searchQuery;
                     if (!scope.searchQuery || scope.searchQuery.length === 0) {
                         if (!scope.emptySearch) {
                             scope.searchQuery = "";
@@ -100,7 +116,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                         }
                     }
                     if (scope.pageSize >= 0 && scope.start >= 0) {
-                        if (scope.multiFilter) {
+                        if (scope.multiFilter && !scope.isAutoSuggestActive) {
                             if (scope.searchQuery) {
                                 if (scope.filters.indexOf("Tag Token") <= 0) {
                                     scope.filters += "&fq" + scope.multiFilter;
@@ -110,7 +126,15 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                                 });
                             }
                         }
-                        var query = SearchQueryBuilder.buildFacetedSearchQuery((scope.multiFilter ? "*" : scope.searchQuery + "*"), scope.filters, scope.pageSize, scope.start);
+
+                        if (scope.isAutoSuggestActive && scope.searchQuery !== "" && isSelected) {
+                            scope.searchQuery = searchObject.searchQuery;
+                            var query = SearchQueryBuilder.buildFacetedSearchQuery("\"" + scope.searchQuery + "\"", scope.filters, scope.pageSize, scope.start);
+                            isSelected = false;
+                        } else {
+                            scope.searchQuery = searchObject.searchQuery;
+                            var query = SearchQueryBuilder.buildFacetedSearchQuery((scope.multiFilter ? "*" : scope.searchQuery + "*"), scope.filters, scope.pageSize, scope.start);
+                        }
                         if (query) {
                             setExportUrl(query);
                             SearchService.queryFilteredSearch({
@@ -131,7 +155,9 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                 };
 
                 scope.checkTag = function (tagSelected) {
-                    if (!tagSelected.tag_token_lcs) {
+                    scope.searchQuery = tagSelected.title_parseable;
+                    scope.queryExistingItems();
+                    if (!tagSelected.title_parseable) {
                         return false;
                     }
                     return true;
@@ -139,33 +165,35 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
 
                 scope.loadTags = function loadTags(query) {
                     var deferred = $q.defer();
-                    TagsService.searchTags({
-                        query: query,
-                        filter: 'fq=' + scope.filter
-                    }).then(function (tags) {
+                    var autoSuggestObjectType = scope.objectType;
+                    AutoSuggestService.autoSuggest(query, "QUICK", autoSuggestObjectType).then(function (tags) {
                         deferred.resolve(tags);
                     });
                     return deferred.promise;
                 }
 
                 scope.queryTypeahead = function (typeaheadQuery) {
-                    typeaheadQuery = typeaheadQuery.replace('*', '');
-                    typeaheadQuery = '/' + typeaheadQuery + '.*/';
                     if (!scope.hideTypeahead) {
                         if (scope.filters && scope.filters.indexOf("USER") >= 0) {
                             return scope.queryTypeaheadForUser(typeaheadQuery);
                         } else {
-                            var query = SearchQueryBuilder.buildFacetedSearchQuery(typeaheadQuery, scope.filters, 10, 0);
                             var deferred = $q.defer();
-                            if (query) {
-                                SearchService.queryFilteredSearch({
-                                    query: query
-                                }, function (res) {
-                                    var result = _.pluck(res.response.docs, scope.typeAheadColumn);
-                                    deferred.resolve(result);
-                                });
+                            if (typeaheadQuery.length >= 2) {
+                                var deferred = $q.defer();
+                                if (scope.objectType !== 'undefined') {
+                                    AutoSuggestService.autoSuggest(typeaheadQuery, "QUICK", scope.objectType).then(function (res) {
+                                        var results = _.pluck(res, scope.typeAheadColumn);
+                                        deferred.resolve(results);
+                                    });
+                                    return deferred.promise;
+                                } else {
+                                    AutoSuggestService.autoSuggest(typeaheadQuery, "QUICK", null).then(function (res) {
+                                        var results = _.pluck(res, scope.typeAheadColumn);
+                                        deferred.resolve(results);
+                                    });
+                                    return deferred.promise;
+                                }
                             }
-                            return deferred.promise;
                         }
                     }
                 };
@@ -289,10 +317,13 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
 
                 scope.keyUp = function (event) {
                     scope.searchQuery = scope.searchQuery.replace('*', '');
+                    searchObject.searchQuery = scope.searchQuery;
+
                     if (event.keyCode == 13 && scope.searchQuery) {
                         scope.queryExistingItems();
                     }
                 };
+
 
                 scope.downloadCSV = function () {
                     if (scope.gridApi && scope.gridApi.exporter) {
@@ -315,6 +346,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                         scope.filterName = config.filterName;
                         scope.pageSize = config.paginationPageSize;
                         scope.start = config.start;
+                        scope.objectType = config.autoSuggestObjectType;
                         scope.gridOptions = {
                             enableColumnResizing: true,
                             enableRowSelection: true,
@@ -363,7 +395,15 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                             if (scope.filter) {
                                 scope.filters = 'fq=' + scope.filter;
                             }
+
+                            scope.isAutoSuggestActive = false;
+                            if (config.isAutoSuggestActive) {
+                                scope.isAutoSuggestActive = config.isAutoSuggestActive;
+
+                            }
+
                             scope.queryExistingItems(scope.start);
+
                         }
                     }, true);
                 });

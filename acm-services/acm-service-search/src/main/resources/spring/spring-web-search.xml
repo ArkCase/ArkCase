@@ -63,5 +63,10 @@
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
 
+    <bean id="suggesterAPIController" class="com.armedia.acm.services.search.web.api.SuggesterAPIController">
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
+        <property name="facetedSearchService" ref="facetedSearchService"/>
+    </bean>
+
 </beans>
 

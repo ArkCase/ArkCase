@@ -12,7 +12,9 @@
     "Priority.label": "Priority",
     "startDate.label": "Start Date",
     "dueDate.label": "Due Date",
-    "state.label": "State"
+    "state.label": "State",
+    "overdue.tooltip": "Task is Overdue",
+    "deadline.tooltip": "Deadline is Approaching"
   },
   "tasks.comp.parentinfo": {
     "taskId": "Task id:",
@@ -177,7 +179,9 @@
     "datepicker.close": "Done",
     "percentComplete.label": "% Complete",
     "notes.label": "Notes",
-    "saveButton": "Save"
+    "saveButton": "Save",
+    "overdue.tooltip": "Task is Overdue",
+    "deadline.tooltip": "Deadline is Approaching"
   },
   "tasks.userSearch": {
     "id": "userSearch",

@@ -15,7 +15,6 @@ import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenS
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.model.AcmUser;
-
 import org.springframework.core.io.Resource;
 import org.springframework.security.core.Authentication;
 
@@ -23,6 +22,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * @author riste.tutureski
@@ -50,6 +50,9 @@ public abstract class NotificationSender
      * @return the notification with state set
      */
     public abstract Notification send(Notification notification);
+
+    public abstract <T> void sendPlainEmail(Stream<T> emailsDataStream, EmailBuilder<T> emailBuilder, EmailBodyBuilder<T> emailBodyBuilder)
+            throws Exception;
 
     public abstract void sendEmailWithAttachments(EmailWithAttachmentsDTO in, Authentication authentication, AcmUser user) throws Exception;
 

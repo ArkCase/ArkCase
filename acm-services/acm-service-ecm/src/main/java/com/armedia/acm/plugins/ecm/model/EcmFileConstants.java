@@ -33,16 +33,15 @@ public interface EcmFileConstants
 
     String USER_ACTION_DOWNLOAD_FILE_AS_INPUTSTREAM = " DOWNLOAD FILE AS INPUTSTREAM";
 
-
     String FOLDER_LIST_DEFAULT_SORT_PARAM = "name_lcs";
 
     String SUCCESS_DELETE_MSG = "File deleted successfully: ";
 
     String SUCCESS_CHANGE_STATUS_TO_RECORD_MSG = "DECLARED AS RECORD";
 
+    String FIND_CONTAINER_QUERY = "SELECT e FROM AcmContainer e WHERE e.containerObjectId = :objectId AND e.containerObjectType = :objectType";
 
-    String FIND_CONTAINER_QUERY =
-            "SELECT e FROM AcmContainer e WHERE e.containerObjectId = :objectId AND e.containerObjectType = :objectType";
+    String FIND_CONTAINERS_QUERY = "SELECT e FROM AcmContainer e WHERE e.containerObjectId IN :objectIds AND e.containerObjectType = :objectType";
 
     String PROPERTY_KEY_DEFAULT_FOLDER_BASE_PATH = "ecm.defaultBasePath";
     String PROPERTY_PREFIX_FOLDER_PATH_BY_TYPE = "ecm.defaultPath.";

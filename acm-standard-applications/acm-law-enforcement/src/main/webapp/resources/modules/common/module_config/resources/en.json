@@ -20,7 +20,11 @@
     "defaultDateFormat": "YYYY-MM-DD"
   },
   "common.service.messageService": {
-    "authorizationError": "You are not authorized to take this action"
+    "authorizationError": "You are not authorized to take this action",
+    "actionMessages": {
+    	"success": "Action was successful",
+    	"error": "Action error"
+  	}
   },
   "common.directive.docTree": {
     "btnRefresh": "Refresh",
@@ -228,5 +232,6 @@
       "title": "Title",
       "id": "Username"
     }
-  }
+  },
+  "common.objects.objectWasCreatedMessage": "{{objectTypeString}} with id {{objectId}} was created."
 }
