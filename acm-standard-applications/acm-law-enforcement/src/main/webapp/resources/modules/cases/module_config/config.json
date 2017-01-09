@@ -696,6 +696,31 @@
             "fullNameField": "creator_full_name_lcs"
           }
         ]
+      },
+      "dialogOrganizationPicker": {
+        "enableFiltering": false,
+        "multiSelect": false,
+        "showFacets": false,
+        "columnDefs": [
+          {
+            "name": "type_lcs",
+            "displayName": "common.directive.corePeople.organizations.modal.dialogOrganizationPicker.table.columns.type",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "name",
+            "displayName": "common.directive.corePeople.organizations.modal.dialogOrganizationPicker.table.columns.name",
+            "headerCellFilter": "translate"
+          }
+        ],
+        "paginationPageSizes": [
+          5,
+          10,
+          20,
+          50
+        ],
+        "paginationPageSize": 10,
+        "start": 0
       }
     },
     {
