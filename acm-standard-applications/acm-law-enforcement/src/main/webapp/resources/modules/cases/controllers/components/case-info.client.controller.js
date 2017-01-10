@@ -29,16 +29,6 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             $scope.config = foundComponent[0];
         });
 
-        $scope.participantsInit = {
-            moduleId: 'cases',
-            componentId: 'participants',
-            retrieveObjectInfo: CaseInfoService.getCaseInfo,
-            validateObjectInfo: CaseInfoService.validateCaseInfo,
-            saveObjectInfo: CaseInfoService.saveCaseInfo,
-            objectType: ObjectService.ObjectTypes.CASE_FILE,
-            participantsTitle: $translate.instant("cases.comp.participants.title")
-        }
-
         ObjectLookupService.getPriorities().then(
             function (priorities) {
                 var options = [];
