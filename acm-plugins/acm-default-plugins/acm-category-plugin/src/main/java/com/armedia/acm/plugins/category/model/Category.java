@@ -35,7 +35,7 @@ public class Category implements Serializable, AcmObject, AcmEntity
 
     @Id
     @TableGenerator(name = "category_gen", table = "acm_category_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_category", initialValue = 100, allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "case_file_gen")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "category_gen")
     @Column(name = "cm_category_id")
     private Long id;
 
