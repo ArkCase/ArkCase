@@ -29,16 +29,6 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             $scope.config = foundComponent[0];
         });
 
-        $scope.participantsInit = {
-            moduleId: 'complaints',
-            componentId: 'participants',
-            retrieveObjectInfo: ComplaintInfoService.getComplaintInfo,
-            validateObjectInfo: ComplaintInfoService.validateComplaintInfo,
-            saveObjectInfo: ComplaintInfoService.saveComplaintInfo,
-            objectType: ObjectService.ObjectTypes.COMPLAINT,
-            participantsTitle: $translate.instant("complaints.comp.participants.title")
-        }
-
         ObjectLookupService.getPriorities().then(
             function (priorities) {
                 var options = [];

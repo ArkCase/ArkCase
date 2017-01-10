@@ -28,17 +28,7 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
         $q.all([promiseConfig]).then(function (data) {
             var foundComponent = data[0].components.filter(function(component) { return component.title === 'Info'; });
             $scope.config = foundComponent[0];
-        })
-
-        $scope.participantsInit = {
-            moduleId: 'tasks',
-            componentId: 'participants',
-            retrieveObjectInfo: TaskInfoService.getTaskInfo,
-            validateObjectInfo: TaskInfoService.validateTaskInfo,
-            saveObjectInfo: TaskInfoService.saveTaskInfo,
-            objectType: ObjectService.ObjectTypes.TASK,
-            participantsTitle: $translate.instant("tasks.comp.participants.title")
-        }
+        });
 
         LookupService.getUsers().then(
             function (users) {
