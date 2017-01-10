@@ -109,14 +109,7 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
 
 
                     modalInstance.result.then(function (data) {
-
-
-                            /*var participants = scope.objectInfo.participants;
-                             var assignee = function (participants) {
-                             return _.result(_.find(participants, {participantType: "assignee"}), "participantLdapId");
-                             };*/
-
-
+                        
                             if (ObjectParticipantService.validateType(data.participant, data.selectedType)) {
                                 scope.participant.id = data.participant.id;
                                 scope.participant.participantLdapId = data.participant.participantLdapId;
