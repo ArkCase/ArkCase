@@ -68,7 +68,9 @@
             "saveButton": "Save",
             "noteColumnValue": ".ui-grid-cell-contents.ng-binding.ng-scope",
             "restrictCheckbox": "restricted",
-            "restrictCheckboxDisabled": ".//input[@ng-model='restricted'][@disabled='disabled']"
+            "restrictCheckboxDisabled": ".//input[@ng-model='restricted'][@disabled='disabled']",
+            "notificationMessage": "[ng-show='!$messageTemplate']"
+
 
         },
         "data": {
@@ -476,7 +478,7 @@
             "priorityHigh": ".//*[.='High']",
             "priorityExpedite": ".//*[.='Expedite']",
             "priorityBtn": ".//*[@class='clearfix']//div/span/button[1]",
-            "assignee": ".//a[@editable-select='assignee']",
+            "assignee": "[ng-click='openAssigneePickerModal()']",
             "assigneeDropDown": "//*[@class='clearfix']/div[3]/div[1]/div/form/div/select",
             "assigneeBtn": ".//*[@class='editable-controls form-group']/..//button[1]",
             "createdDate": ".//*[@class='h4 font-bold ng-binding']/..//div",
@@ -604,7 +606,10 @@
             "modalParticipantName": "participant.participantLdapId",
             "saveParticipantBtn": "Save",
             "participantDeleteBtn": "[ng-click='grid.appScope.deleteRow(row.entity)']",
-            "owningGroup": ".//a[@editable-select='owningGroup']"
+            "owningGroup": ".//a[@editable-select='owningGroup']",
+            "initiatorDeleteBtn": "//*[@class='fa fa-trash-o fa-lg']",
+            "claimButton": "[ng-click='claim(objectInfo)']",
+            "unclaimButton": "[ng-click='unclaim(objectInfo)']"
 
         },
 
@@ -695,7 +700,7 @@
             "complaintsModule": "a[href*='#!/complaints//main']",
             "timesheetsPageTitle": ".//*[@class='module-header']/..//h3/span",
             "nextWeekBtn": "Next Week",
-            "periodInput": "period",
+            "periodInput": "periodUI",
             "timeTrackingModule": "a[href*='#!/time-tracking//main']"
 
 
