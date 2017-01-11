@@ -235,7 +235,7 @@
     "cancelButton": "Cancel",
     "confirmButton": "Add",
     "search": {
-      "placeholder": "Search for case or complaint",
+      "placeholder": "Search for case, complaint, file, task",
       "btn": "Search"
     },
     "grid": {
