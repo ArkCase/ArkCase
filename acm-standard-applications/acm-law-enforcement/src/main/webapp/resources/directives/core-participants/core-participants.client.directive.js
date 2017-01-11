@@ -43,10 +43,10 @@
  */
 angular.module('directives').directive('coreParticipants', ['$stateParams', '$q', '$translate', '$modal',
     'Acm.StoreService', 'UtilService', 'ConfigService', 'Case.InfoService', 'LookupService', 'Object.LookupService',
-    'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.ParticipantService', 'Object.ModelService', 'MessageService',
+    'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.ParticipantService', 'MessageService',
     function ($stateParams, $q, $translate, $modal
         , Store, Util, ConfigService, CaseInfoService, LookupService, ObjectLookupService
-        , HelperUiGridService, HelperObjectBrowserService, ObjectParticipantService, ObjectModelService, MessageService) {
+        , HelperUiGridService, HelperObjectBrowserService, ObjectParticipantService, MessageService) {
         return {
             restrict: 'E',
             scope: {
@@ -109,7 +109,7 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
 
 
                     modalInstance.result.then(function (data) {
-                        
+
                             if (ObjectParticipantService.validateType(data.participant, data.selectedType)) {
                                 scope.participant.id = data.participant.id;
                                 scope.participant.participantLdapId = data.participant.participantLdapId;
