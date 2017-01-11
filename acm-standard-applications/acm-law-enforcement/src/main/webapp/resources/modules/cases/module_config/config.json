@@ -75,7 +75,7 @@
         "value": "object_id_s ASC"
       },
       {
-        "desc": "Sort Case ID Dece",
+        "desc": "Sort Case ID Desc",
         "name": "sort-case-id-desc",
         "value": "object_id_s DESC"
       },
