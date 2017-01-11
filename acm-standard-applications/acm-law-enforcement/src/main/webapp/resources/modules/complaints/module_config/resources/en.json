@@ -249,5 +249,12 @@
         "modified": "Modified"
       }
     }
+  },
+  "complaints.comp.assigneePickerModal": {
+    "title": "Change Assignee",
+    "assigneeNamelabel": "Assignee Name",
+    "btnCancelText": "Cancel",
+    "btnSaveText": "Save",
+    "searchAssigneeHeader": "Search Assignee"
   }
 }

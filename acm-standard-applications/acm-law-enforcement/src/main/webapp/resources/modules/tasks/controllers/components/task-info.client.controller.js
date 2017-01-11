@@ -2,10 +2,12 @@
 
 angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$stateParams', '$translate', '$timeout'
     , 'UtilService', 'Util.DateService', 'ConfigService', 'LookupService', 'Object.LookupService', 'Task.InfoService', 'Object.ModelService'
-    , 'Helper.ObjectBrowserService', 'Task.AlertsService'
+    , 'Helper.ObjectBrowserService', 'MessageService', 'Task.AlertsService', 'ObjectService', 'Helper.UiGridService', '$modal'
+    , 'Object.ParticipantService', '$q', 'Case.InfoService', 'Complaint.InfoService'
     , function ($scope, $stateParams, $translate, $timeout
         , Util, UtilDateService, ConfigService, LookupService, ObjectLookupService, TaskInfoService, ObjectModelService
-        , HelperObjectBrowserService, TaskAlertsService) {
+        , HelperObjectBrowserService, MessageService, TaskAlertsService, ObjectService, HelperUiGridService, $modal, ObjectParticipantService, $q
+        , CaseInfoService, ComplaintInfoService) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -19,6 +21,14 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             }
         });
 
+        var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+        var promiseUsers = gridHelper.getUsers();
+        var promiseConfig = ConfigService.getModuleConfig("tasks");
+
+        $q.all([promiseConfig]).then(function (data) {
+            var foundComponent = data[0].components.filter(function(component) { return component.title === 'Info'; });
+            $scope.config = foundComponent[0];
+        });
 
         LookupService.getUsers().then(
             function (users) {
@@ -42,6 +52,44 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             }
         );
 
+        $scope.openAssigneePickerModal = function () {
+            var participant = {
+                        id: '',
+                        participantLdapId: '',
+                        config: $scope.config
+                    };
+            showModal(participant, false);
+        };
+
+        var showModal = function (participant, isEdit) {
+            var modalScope = $scope.$new();
+            modalScope.participant = participant || {};
+
+            var modalInstance = $modal.open({
+                scope: modalScope,
+                animation: true,
+                templateUrl: "modules/tasks/views/components/task-assignee-picker-modal.client.view.html",
+                controller: "Tasks.AssigneePickerController",
+                size: 'md',
+                backdrop: 'static',
+                resolve: {
+                    owningGroup: function () {
+                        return $scope.owningGroup;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (data) {
+                $scope.participant = {};
+                if (data.participant.participantLdapId != '' && data.participant.participantLdapId != null) {
+                    $scope.participant.participantLdapId = data.participant.participantLdapId;
+                    $scope.assignee = data.participant.participantLdapId;
+                    $scope.updateAssignee($scope.assignee);
+                }
+            }, function(error) {    
+            });
+        };
+
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
             $scope.dateInfo = $scope.dateInfo || {};
@@ -49,7 +97,21 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             $scope.dateInfo.taskStartDate = UtilDateService.isoToDate($scope.objectInfo.taskStartDate);
             $scope.dateInfo.isOverdue = TaskAlertsService.calculateOverdue($scope.dateInfo.dueDate);
             $scope.dateInfo.isDeadline = TaskAlertsService.calculateDeadline($scope.dateInfo.dueDate);
-            $scope.assignee = ObjectModelService.getAssignee($scope.objectInfo); 
+            $scope.assignee = ObjectModelService.getAssignee($scope.objectInfo);
+            
+            if (ObjectService.ObjectTypes.CASE_FILE == $scope.objectInfo.parentObjectType) {
+                CaseInfoService.getCaseInfo($scope.objectInfo.parentObjectId).then(
+                    function (caseInfo) {
+                        $scope.owningGroup = ObjectModelService.getGroup(caseInfo);
+                    }
+                );
+            } else if (ObjectService.ObjectTypes.COMPLAINT == $scope.objectInfo.parentObjectType) {
+                ComplaintInfoService.getComplaintInfo($scope.objectInfo.parentObjectId).then(
+                    function (complaintInfo) {
+                        $scope.owningGroup = ObjectModelService.getGroup(complaintInfo);
+                    }
+                );
+            }
         };
 
         $scope.defaultDatePickerFormat = UtilDateService.defaultDatePickerFormat;
