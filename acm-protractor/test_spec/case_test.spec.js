@@ -979,4 +979,59 @@ describe('case page tests', function() {
         expect(casePage.returnParticipantNameSecondRow()).toEqual("Samuel Supervisor");
     });
 
+    it('should verify if the people intiator delete button is displayed', function() {
+
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
+        casePage.clickNextBtn();
+        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
+        casePage.switchToDefaultContent();
+        casePage.clickPeopleLinkBtn();
+        casePage.verifyIfInitiatorCanBeDeleted();
+    });
+
+
+    it('should create new case and add task from tasks table verify the task and verify the task table column number', function() {
+
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
+        casePage.clickNextBtn();
+        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
+        casePage.switchToDefaultContent();
+        casePage.clickTasksLinkBtn();
+        casePage.clickAddTaskButton();
+        taskPage.insertSubject(Objects.taskpage.data.Subject).insertDueDateToday().clickSave();
+        taskPage.clickCaseTitleInTasks();
+        casePage.clickTasksLinkBtn().waitForTasksTable();
+        casePage.verifyTasksTableColumnsNumber();
+    });
+
+    it('should create new case and verify the alert message for created case', function() {
+
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
+        casePage.clickNextBtn();
+        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
+        casePage.verifyTheNotificationMessage("Case File ");
+    });
+
+    it('should create new case by default assignee, claim it and verify the assignee', function() {
+
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
+        casePage.clickNextBtn();
+        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
+        casePage.switchToDefaultContent();
+        casePage.clickClaimButton();
+        expect(casePage.returnAssignee()).toEqual(Objects.casepage.data.assigneeSamuel);
+    });
+
+    it('should create new case by default assignee, claim it verify the assignee then uncalaim it and verify if the assignee is removed ', function() {
+
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
+        casePage.clickNextBtn();
+        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
+        casePage.switchToDefaultContent();
+        casePage.clickClaimButton();
+        expect(casePage.returnAssignee()).toEqual(Objects.casepage.data.assigneeSamuel);
+        casePage.clickUnclaimButton();
+        expect(casePage.returnAssignee()).toEqual("", "The assignee name is displayed");
+    });
+
 });

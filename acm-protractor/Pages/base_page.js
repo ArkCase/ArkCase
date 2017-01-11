@@ -221,7 +221,7 @@ var noteColumnValue = element(by.css(Objects.basepage.locators.noteColumnValue))
 var priorityLink = element(by.xpath(Objects.casepage.locators.priority));
 var priorityDropDownEdit = new SelectWrapper(by.xpath(Objects.casepage.locators.priorityDropDown));
 var priorityBtn = element(by.xpath(Objects.casepage.locators.priorityBtn));
-var assigneeLink = element(by.xpath(Objects.casepage.locators.assignee));
+var assigneeLink = element(by.css(Objects.casepage.locators.assignee));
 var assigneeDropDown = new SelectWrapper(by.xpath(Objects.casepage.locators.assigneeDropDown));
 var assigneeBtn = element(by.xpath(Objects.casepage.locators.assigneeBtn));
 var submitBtn = element(by.xpath(Objects.casepage.locators.submitBtn));
@@ -232,6 +232,8 @@ var overviewLink = element(by.xpath(Objects.casepage.locators.overviewLink));
 var tasksModule = element(by.css(Objects.taskspage.locators.TasksModule));
 var timeTrackingModule = element(by.css(Objects.timetrackingPage.locators.timeTrackingModule));
 var costTrackingModule = element(by.css(Objects.costsheetPage.locators.costTrackingModule));
+var initiatorDeleteBtn = element(by.xpath(Objects.casepage.locators.initiatorDeleteBtn));
+var notificationMessage = element(by.css(Objects.basepage.locators.notificationMessage));
 
 var BasePage = function() {
 
@@ -864,8 +866,16 @@ var BasePage = function() {
             });
         });
         return this;
+    }
 
+    this.verifyIfInitiatorCanBeDeleted = function() {
 
+        browser.wait(EC.visibilityOf(element(by.repeater(Objects.casepage.locators.peopleTableColumns))), 10000, "People table columns are not displayed").then(function() {
+            element.all(by.xpath(Objects.casepage.locators.initiatorDeleteBtn)).then(function(items) {
+                expect(items.length).toBe(0, "The delete button for the initiator should not be displayed");
+            });
+        });
+        return this;
     }
 
     this.addContactMethod = function(contactMethodType, contactvalue) {
@@ -1017,41 +1027,33 @@ var BasePage = function() {
     this.addAddress = function(addressType, street, city, state, zip, country) {
 
         addressLinkBtn.click().then(function() {
-            browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.addAddressBtn))), 10000).then(function() {
-                addAddressBtn.click().then(function() {
-                    browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.addressTypeDropDow))), 10000).then(function() {
-                        addressTypeDropDow.selectByText(addressType).then(function() {
-                            streetAddress.sendKeys(street).then(function() {
-                                addressCity.sendKeys(city).then(function() {
-                                    addressState.sendKeys(state).then(function() {
-                                        addressZip.sendKeys(zip).then(function() {
-                                            addressCountry.sendKeys(country).then(function() {
-                                                saveAddressBtn.click().then(function() {
-                                                    browser.sleep(8000);
-                                                    addressLinkBtn.click();
-                                                });
-                                            });
-
-                                        });
-
-                                    });
-
-                                });
-
-                            });
-
-                        });
-                    });
-
-                });
-
+            browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.addAddressBtn))), 10000);
+        }).then(function() {
+            addAddressBtn.click();
+        }).then(function() {
+            browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.addressTypeDropDow))), 10000).then(function() {
+                addressTypeDropDow.selectByText(addressType);
+            }).then(function() {
+                streetAddress.sendKeys(street);
+            }).then(function() {
+                addressCity.sendKeys(city);
+            }).then(function() {
+                addressState.sendKeys(state);
+            }).then(function() {
+                addressZip.sendKeys(zip);
+            }).then(function() {
+                addressCountry.sendKeys(country);
+            }).then(function() {
+                saveAddressBtn.click();
+            }).then(function() {
+                browser.sleep(8000);
+                addressLinkBtn.click();
             });
-
         });
-
 
         return this;
     }
+
     this.returnAddressType = function() {
         return addressTypeValue.getText();
     }
@@ -1096,39 +1098,38 @@ var BasePage = function() {
     this.editAddress = function(addressType, street, city, state, zip, country) {
 
         editAddressBtn.click().then(function() {
-            browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.addressTypeDropDow))), 10000).then(function() {
-                addressTypeDropDow.selectByText(addressType).then(function() {
-                    streetAddress.clear().then(function() {
-                        streetAddress.sendKeys(street).then(function() {
-                            addressCity.clear().then(function() {
-                                addressCity.sendKeys(city).then(function() {
-                                    addressState.clear().then(function() {
-                                        addressState.sendKeys(state).then(function() {
-                                            addressZip.clear().then(function() {
-                                                addressZip.sendKeys(zip).then(function() {
-                                                    addressCountry.clear().then(function() {
-                                                        addressCountry.sendKeys(country).then(function() {
-                                                            saveAddressBtn.click();
-                                                            browser.sleep(8000);
-                                                            addressLinkBtn.click();
-                                                        });
-                                                    });
-                                                });
-
-                                            });
-                                        });
-                                    });
-
-                                });
-                            });
-                        });
-                    });
-                });
-            });
-
+            browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.addressTypeDropDow))), 10000);
+        }).then(function() {
+            addressTypeDropDow.selectByText(addressType);
+        }).then(function() {
+            streetAddress.clear();
+        }).then(function() {
+            streetAddress.sendKeys(street);
+        }).then(function() {
+            addressCity.clear();
+        }).then(function() {
+            addressCity.sendKeys(city);
+        }).then(function() {
+            addressState.clear();
+        }).then(function() {
+            addressState.sendKeys(state);
+        }).then(function() {
+            addressZip.clear();
+        }).then(function() {
+            addressZip.sendKeys(zip);
+        }).then(function() {
+            addressCountry.clear();
+        }).then(function() {
+            addressCountry.sendKeys(country);
+        }).then(function() {
+            saveAddressBtn.click();
+            browser.sleep(8000);
+            addressLinkBtn.click();
         });
+
         return this;
     }
+
     this.returnAliasesType = function() {
         return aliasesTypeValue.getText();
     }
@@ -1146,24 +1147,20 @@ var BasePage = function() {
 
         aliassesLinkBtn.click().then(function() {
             browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.addAliasesBtn))), 10000).then(function() {
-                addAliasesBtn.click().then(function() {
-                    browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.aliasesDropdown))), 10000).then(function() {
-                        aliasesDropdown.selectByText(aliasType).then(function() {
-                            aliasesInputValue.sendKeys(aliasValue).then(function() {
-                                saveAliasBtn.click().then(function() {
-                                    browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(6)), 10000).then(function() {
-                                        browser.sleep(8000);
-                                        aliassesLinkBtn.click();
-
-                                    });
-                                });
-
-                            });
-
-                        });
+                addAliasesBtn.click();
+            }).then(function() {
+                browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.aliasesDropdown))), 10000).then(function() {
+                    aliasesDropdown.selectByText(aliasType);
+                }).then(function() {
+                    aliasesInputValue.sendKeys(aliasValue);
+                }).then(function() {
+                    saveAliasBtn.click();
+                }).then(function() {
+                    browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(6)), 10000).then(function() {
+                        browser.sleep(8000);
+                        aliassesLinkBtn.click();
 
                     });
-
                 });
             });
         });
@@ -2077,10 +2074,11 @@ var BasePage = function() {
     }
 
     this.waitForAssignee = function() {
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.assignee))), 30000, "Assignee is not visible");
+        browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.assignee))), 30000, "Assignee is not visible");
     };
 
     this.returnAssignee = function() {
+
         return assigneeLink.getText();
     };
 
@@ -2124,8 +2122,24 @@ var BasePage = function() {
         element.all(by.css('[adf-widget-type=' + widget + ']')).then(function(items) {
             expect(items.length).toBe(0, "The" + " " + title + " " + "widget is disabled it should not be displayed");
         });
-
     }
+
+    this.verifyTasksTableColumnsNumber = function() {
+
+        element.all(by.repeater(Objects.casepage.locators.taskTableRows)).then(function(items) {
+            expect(items.length).toBe(7, "The column number in the task table is changed");
+        });
+    }
+
+
+    this.verifyTheNotificationMessage = function(objectEvent) {
+        browser.driver.switchTo().defaultContent();
+        browser.wait(EC.visibilityOf(element(by.css(Objects.basepage.locators.notificationMessage))), 30000, "Notification Message is not displayed").then(function() {
+            expect(notificationMessage.getText()).toContain(objectEvent);
+
+        });
+    }
+
 
 }
 
