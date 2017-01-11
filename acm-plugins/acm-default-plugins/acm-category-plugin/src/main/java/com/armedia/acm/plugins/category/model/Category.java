@@ -6,6 +6,8 @@ import com.armedia.acm.data.AcmEntity;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,6 +16,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -39,7 +43,7 @@ public class Category implements Serializable, AcmObject, AcmEntity
     @Column(name = "cm_category_id")
     private Long id;
 
-    @Column(name = "cm_category_name")
+    @Column(name = "cm_category_name", nullable = false)
     private String name;
 
     @Column(name = "cm_category_description")
@@ -52,20 +56,23 @@ public class Category implements Serializable, AcmObject, AcmEntity
     @OneToMany(mappedBy = "parent")
     private List<Category> children;
 
-    @Column(name = "cm_category_creator")
+    @Column(name = "cm_category_creator", nullable = false, updatable = false)
     private String creator;
 
-    @Column(name = "cm_category_created")
+    @Column(name = "cm_category_created", nullable = false, updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
-    @Column(name = "cm_category_modifier")
+    @Column(name = "cm_category_modifier", nullable = false)
     private String modifier;
 
-    @Column(name = "cm_category_modified")
+    @Column(name = "cm_category_modified", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date modified;
 
-    @Column(name = "cm_category_status")
-    private String status;
+    @Column(name = "cm_category_status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private CategoryStatus status;
 
     /**
      * @return the id
@@ -229,7 +236,7 @@ public class Category implements Serializable, AcmObject, AcmEntity
     /**
      * @return the status
      */
-    public String getStatus()
+    public CategoryStatus getStatus()
     {
         return status;
     }
@@ -237,7 +244,7 @@ public class Category implements Serializable, AcmObject, AcmEntity
     /**
      * @param status the status to set
      */
-    public void setStatus(String status)
+    public void setStatus(CategoryStatus status)
     {
         this.status = status;
     }
