@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.category.model;
 
+import static com.armedia.acm.plugins.category.model.Category.FIND_CHILDREN;
 import static com.armedia.acm.plugins.category.model.Category.FIND_ROOT_CATEGORIES;
 
 import com.armedia.acm.core.AcmObject;
@@ -34,11 +35,14 @@ import java.util.List;
  */
 @Entity
 @Table(name = "acm_category")
-@NamedQueries({@NamedQuery(name = FIND_ROOT_CATEGORIES, query = "Select c FROM Category c WHERE c.parent IS NULL")})
+@NamedQueries({@NamedQuery(name = FIND_ROOT_CATEGORIES, query = "SELECT c FROM Category c WHERE c.parent IS NULL"),
+        @NamedQuery(name = FIND_CHILDREN, query = "SELECT c FROM Category c WHERE c.parent = :parentId")})
 public class Category implements Serializable, AcmObject, AcmEntity
 {
 
     public static final String FIND_ROOT_CATEGORIES = "Category.findRootCategories";
+
+    public static final String FIND_CHILDREN = "Category.findChildren";
 
     private static final long serialVersionUID = -2857432909290052195L;
 

@@ -1,11 +1,14 @@
 package com.armedia.acm.plugins.category.dao;
 
+import static com.armedia.acm.plugins.category.model.Category.FIND_CHILDREN;
 import static com.armedia.acm.plugins.category.model.Category.FIND_ROOT_CATEGORIES;
 
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.category.model.Category;
 
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
 
 import java.util.List;
 
@@ -31,6 +34,25 @@ public class CategoryDao extends AcmAbstractDao<Category>
     protected Class<Category> getPersistenceClass()
     {
         return Category.class;
+    }
+
+    /**
+     * @param category
+     */
+    public void deleteCategory(Category category)
+    {
+        EntityManager em = getEm();
+        Category merged = em.merge(category);
+        em.remove(merged);
+    }
+
+    /**
+     * @param id
+     * @return
+     */
+    public List<Category> getChildren(Long id)
+    {
+        return getEm().createNamedQuery(FIND_CHILDREN, Category.class).setParameter("parentId", id).getResultList();
     }
 
 }
