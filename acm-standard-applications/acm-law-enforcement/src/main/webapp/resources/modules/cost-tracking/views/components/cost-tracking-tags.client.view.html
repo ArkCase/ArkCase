@@ -4,7 +4,9 @@
             <div class="panel-title">
                 <span translate>costTracking.comp.tags.title</span>
                 <div class="pull-right">
-                    <button class="btn btn-default btn-xs" ng-hide="isReadOnly(objectInfo)" ng-click="addNew()"><i class="fa fa-lg fa-plus"></i></button>
+                    <button class="btn btn-default btn-xs" ng-hide="isReadOnly(objectInfo)" ng-click="addNew()"
+                            permission="addTag" permission-properties="objectInfo" permission-action="disable"><i
+                            class="fa fa-lg fa-plus"></i></button>
                 </div>
             </div>
         </div>
