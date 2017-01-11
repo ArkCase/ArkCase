@@ -43,10 +43,10 @@
  */
 angular.module('directives').directive('coreParticipants', ['$stateParams', '$q', '$translate', '$modal',
     'Acm.StoreService', 'UtilService', 'ConfigService', 'Case.InfoService', 'LookupService', 'Object.LookupService',
-    'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.ParticipantService', 'MessageService',
+    'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.ParticipantService', 'Object.ModelService', 'MessageService',
     function ($stateParams, $q, $translate, $modal
         , Store, Util, ConfigService, CaseInfoService, LookupService, ObjectLookupService
-        , HelperUiGridService, HelperObjectBrowserService, ObjectParticipantService, MessageService) {
+        , HelperUiGridService, HelperObjectBrowserService, ObjectParticipantService, ObjectModelService, MessageService) {
         return {
             restrict: 'E',
             scope: {
@@ -115,20 +115,9 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
                                 scope.participant.participantLdapId = data.participant.participantLdapId;
                                 scope.participant.participantType = data.participant.participantType;
 
-                                var participants = scope.objectInfo.participants;
-                                var getAssignee = function (participants) {
-                                    var assignee = "";
-                                    if (Util.isArray(participants)) {
-                                        for (var i = 0; i < participants.length; i++) {
-                                            var participant = participants[i];
-                                            if (participant.participantType == "assignee") {
-                                                assignee = participant.participantLdapId;
-                                                break;
-                                            }
-                                        }
-                                    }
-                                    return assignee;
-                                }
+                                var participants = scope.objectInfo;
+                                var assignee = ObjectModelService.getParticipantByType(participants, "assignee");
+
 
                                 if (data.isEdit) {
                                     var participant = _.find(scope.objectInfo.participants, function (pa) {
@@ -136,7 +125,7 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
                                     });
                                     participant.participantLdapId = data.participant.participantLdapId;
 
-                                    if (data.participant.participantType == 'No Access' && getAssignee(participants) == data.participant.participantLdapId) {
+                                    if (data.participant.participantType == 'No Access' && assignee == data.participant.participantLdapId) {
                                         MessageService.error($translate.instant("common.directive.coreParticipants.message.error.noAccessCombo"));
                                     }
                                     else {
@@ -148,7 +137,7 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
                                     var participant = {};
                                     participant.participantLdapId = data.participant.participantLdapId;
 
-                                    if (data.participant.participantType == 'No Access' && getAssignee(participants) == data.participant.participantLdapId) {
+                                    if (data.participant.participantType == 'No Access' && assignee == data.participant.participantLdapId) {
                                         MessageService.error($translate.instant("common.directive.coreParticipants.message.error.noAccessCombo"));
                                     }
                                     else {
