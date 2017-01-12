@@ -83,7 +83,6 @@ public class CreateContactItemAPIControllerTest extends EasyMockSupport
         contactItem.setCompleteName("John Doe");
 
         ObjectMapper objectMapper = new ObjectMapper();
-        //objectMapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         String content = objectMapper.writeValueAsString(contactItem);
 
