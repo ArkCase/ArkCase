@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>com.armedia.acm</groupId>
         <artifactId>acm-forms</artifactId>
@@ -13,25 +14,25 @@
     <description>eBrief Form</description>
 
     <dependencies>
-		<!-- acm -->
+        <!-- acm -->
         <dependency>
             <groupId>com.armedia.acm.acm-form</groupId>
             <artifactId>acm-form-case-file</artifactId>
             <version>${acm.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-notification</artifactId>
             <version>${acm.version}</version>
         </dependency>
-        
+
         <!-- jpa -->
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>javax.persistence</artifactId>
         </dependency>
-        
+
         <!-- logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -55,17 +56,12 @@
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
         </dependency>
-        
-        <!-- JSON --> 
+
+        <!-- JSON -->
         <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
         </dependency>
-        
-        <dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-		</dependency>
     </dependencies>
 
 
