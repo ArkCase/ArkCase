@@ -20,7 +20,8 @@ angular.module('dashboard').controller('DashboardController', ['$scope', '$trans
             maximizable: false,
             model: {
                 titleTemplateUrl: 'modules/dashboard/views/dashboard-title.client.view.html',
-                editTemplateUrl: 'modules/dashboard/views/dashboard-edit.client.view.html'
+                editTemplateUrl: 'modules/dashboard/views/dashboard-edit.client.view.html',
+                title: ' '
             }
         };
 
@@ -54,6 +55,7 @@ angular.module('dashboard').controller('DashboardController', ['$scope', '$trans
                 dashboardConfig: angular.toJson(model),
                 module: "DASHBOARD"
             });
+            $scope.dashboard.model = model;
         });
 
         /**
