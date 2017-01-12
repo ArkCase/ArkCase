@@ -8,8 +8,6 @@ import com.armedia.acm.plugins.category.model.Category;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-
 import java.util.List;
 
 /**
@@ -34,16 +32,6 @@ public class CategoryDao extends AcmAbstractDao<Category>
     protected Class<Category> getPersistenceClass()
     {
         return Category.class;
-    }
-
-    /**
-     * @param category
-     */
-    public void deleteCategory(Category category)
-    {
-        EntityManager em = getEm();
-        Category merged = em.merge(category);
-        em.remove(merged);
     }
 
     /**

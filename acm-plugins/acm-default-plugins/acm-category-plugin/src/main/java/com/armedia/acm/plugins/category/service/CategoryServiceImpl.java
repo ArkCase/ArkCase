@@ -1,7 +1,7 @@
 package com.armedia.acm.plugins.category.service;
 
 import static com.armedia.acm.plugins.category.model.CategoryStatus.ACTIVATED;
-import static com.armedia.acm.plugins.category.model.CategoryStatus.DEACTIVATED;
+import static com.armedia.acm.plugins.category.model.CategoryStatus.DEACTIVATED;import static com.armedia.acm.plugins.category.model.CategoryStatus.DELETED;;
 
 import com.armedia.acm.plugins.category.dao.CategoryDao;
 import com.armedia.acm.plugins.category.model.Category;
@@ -67,7 +67,10 @@ public class CategoryServiceImpl implements CategoryService
         Category category = categoryDao.find(id);
         if (category != null)
         {
-            categoryDao.deleteCategory(category);
+            // throw an exception if category doesn't exist?
+            category.setStatus(DELETED);
+            update(category);
+            setChildrenStatus(category, DELETED);
         }
         return category;
     }
@@ -94,20 +97,6 @@ public class CategoryServiceImpl implements CategoryService
             update(category);
             setChildrenStatus(category, ACTIVATED);
             activateAncestors(category);
-        }
-    }
-
-    /**
-     * @param category
-     */
-    private void activateAncestors(Category category)
-    {
-        Category parent = category.getParent();
-        if (parent != null)
-        {
-            parent.setStatus(ACTIVATED);
-            parent = update(parent);
-            activateAncestors(parent);
         }
     }
 
@@ -183,6 +172,20 @@ public class CategoryServiceImpl implements CategoryService
             child.setStatus(status);
             child = update(child);
             setChildrenStatus(child, status);
+        }
+    }
+
+    /**
+     * @param category
+     */
+    private void activateAncestors(Category category)
+    {
+        Category parent = category.getParent();
+        if (parent != null)
+        {
+            parent.setStatus(ACTIVATED);
+            parent = update(parent);
+            activateAncestors(parent);
         }
     }
 
