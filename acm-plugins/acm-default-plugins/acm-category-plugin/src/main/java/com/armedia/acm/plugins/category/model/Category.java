@@ -65,7 +65,7 @@ public class Category implements Serializable, AcmObject, AcmEntity
     private Category parent;
 
     @OneToMany(mappedBy = "parent")
-    private List<Category> children;
+    private List<Category> children = new ArrayList<>();
 
     @Column(name = "cm_category_creator", nullable = false, updatable = false)
     private String creator;
@@ -169,7 +169,13 @@ public class Category implements Serializable, AcmObject, AcmEntity
      */
     public void setChildren(List<Category> children)
     {
-        this.children = new ArrayList<>(children);
+        if (children == null || children.isEmpty())
+        {
+            this.children.clear();
+        } else
+        {
+            this.children = new ArrayList<>(children);
+        }
     }
 
     /**
