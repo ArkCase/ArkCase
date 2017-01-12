@@ -190,9 +190,14 @@ public class CategoryServiceImpl implements CategoryService
     @Override
     public List<Category> getChildren(Long id)
     {
+        Category parent = get(id);
         // throw an exception if category for the given id does not exist?
-        // do we retrieve only the first generation of children, or the children's children as well?
-        return categoryDao.getChildren(id);
+        if (parent != null)
+        {
+            return parent.getChildren();
+        }
+        // in case we don't throw an error, shell we return null or empty list?
+        return null;
     }
 
     /**

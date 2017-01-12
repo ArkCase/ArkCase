@@ -61,7 +61,7 @@ public class Category implements Serializable, AcmObject, AcmEntity
     private String description;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "parent_id")
+    @JoinColumn(name = "cm_category_parent_id")
     private Category parent;
 
     @OneToMany(mappedBy = "parent")
