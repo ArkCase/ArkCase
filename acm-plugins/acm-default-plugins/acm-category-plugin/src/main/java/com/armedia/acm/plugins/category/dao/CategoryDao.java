@@ -6,15 +6,12 @@ import static com.armedia.acm.plugins.category.model.Category.FIND_ROOT_CATEGORI
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.category.model.Category;
 
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jan 11, 2017
  *
  */
-@Transactional
 public class CategoryDao extends AcmAbstractDao<Category>
 {
 

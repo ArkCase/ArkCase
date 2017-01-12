@@ -5,7 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import java.util.Date;
 import java.util.List;
@@ -38,7 +38,7 @@ public abstract class AcmAbstractDao<T>
     @Transactional(propagation = Propagation.REQUIRED)
     public List<T> findAll()
     {
-        Query allRecords = em.createQuery("SELECT e FROM " + getPersistenceClass().getSimpleName() + " e");
+        TypedQuery<T> allRecords = em.createQuery("SELECT e FROM " + getPersistenceClass().getSimpleName() + " e", getPersistenceClass());
         List<T> retval = allRecords.getResultList();
         if (retval != null)
         {
@@ -54,14 +54,14 @@ public abstract class AcmAbstractDao<T>
     /**
      * Retrieve all entities of a given type, sorted by particular column
      *
-     * @param column
-     *            column name (entity field name) to sort by
+     * @param column column name (entity field name) to sort by
      * @return list of entities, sorted
      */
     @Transactional(propagation = Propagation.REQUIRED)
     public List<T> findAllOrderBy(String column)
     {
-        Query allRecords = em.createQuery("SELECT e FROM " + getPersistenceClass().getSimpleName() + " e order by e." + column);
+        TypedQuery<T> allRecords = em.createQuery("SELECT e FROM " + getPersistenceClass().getSimpleName() + " e order by e." + column,
+                getPersistenceClass());
         List<T> retval = allRecords.getResultList();
         if (retval != null)
         {
@@ -77,8 +77,8 @@ public abstract class AcmAbstractDao<T>
     @Transactional(propagation = Propagation.REQUIRED)
     public List<T> findModifiedSince(Date lastModified, int startRow, int pageSize)
     {
-        Query sinceWhen = getEm().createQuery("SELECT e " + "FROM " + getPersistenceClass().getSimpleName() + " e "
-                + "WHERE e.modified >= :lastModified " + "ORDER BY e.created");
+        TypedQuery<T> sinceWhen = getEm().createQuery("SELECT e " + "FROM " + getPersistenceClass().getSimpleName() + " e "
+                + "WHERE e.modified >= :lastModified " + "ORDER BY e.created", getPersistenceClass());
         sinceWhen.setParameter("lastModified", lastModified);
         sinceWhen.setFirstResult(startRow);
         sinceWhen.setMaxResults(pageSize);
