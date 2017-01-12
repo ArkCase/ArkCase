@@ -66,7 +66,7 @@ public class AcmLoginSuccessOperations
         }
 
         // after successful login set the MDC variable (needed for API calls)
-        MDC.put(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY, (String) request.getSession().getAttribute("acm_username"));
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY, userId);
     }
 
     protected void addIpAddressToSession(HttpServletRequest request, Authentication authentication)
