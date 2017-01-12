@@ -31,6 +31,9 @@ public class CategoryDao extends AcmAbstractDao<Category>
         return Category.class;
     }
 
+    // we might remove this method if Category.getChildren() method returns properly regardless of the fact that
+    // Category instance is detached from
+    // the EntityMeanger due to the way the AcmAbstractDao.find(Long id) method is implemented.
     /**
      * @param id
      * @return
