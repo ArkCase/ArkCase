@@ -115,11 +115,7 @@ public class CategoryServiceImpl implements CategoryService
         }
 
         Category category = get(id);
-
-        category.setStatus(DELETED);
-        log.debug("Deleting [{}] Category with id [{}].", category.getName(), category.getId());
-        setChildrenStatus(category, DELETED);
-        update(category);
+        setCategoryStatus(category, DELETED);
 
         return category;
     }
@@ -140,10 +136,7 @@ public class CategoryServiceImpl implements CategoryService
         }
 
         category = get(category.getId());
-        category.setStatus(ACTIVATED);
-        log.debug("Activating [{}] Category with id [{}].", category.getName(), category.getId());
-        setChildrenStatus(category, ACTIVATED);
-        update(category);
+        setCategoryStatus(category, ACTIVATED);
         activateAncestors(category);
 
     }
@@ -164,9 +157,14 @@ public class CategoryServiceImpl implements CategoryService
         }
 
         category = get(category.getId());
-        category.setStatus(DEACTIVATED);
-        log.debug("Deactivating [{}] Category with id [{}].", category.getName(), category.getId());
-        setChildrenStatus(category, DEACTIVATED);
+        setCategoryStatus(category, DEACTIVATED);
+    }
+
+    private void setCategoryStatus(Category category, CategoryStatus status) throws AcmObjectNotFoundException
+    {
+        category.setStatus(status);
+        log.debug("{} [{}] Category with id [{}].", getStatusVerb(status), category.getName(), category.getId());
+        setChildrenStatus(category, status);
         update(category);
 
     }
