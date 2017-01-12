@@ -1088,7 +1088,7 @@
       "emptySearch": false,
       "hideTypeahead": true,
       "showFacets": false,
-      "searchFilter": "\"Object Type\": COMPLAINT|CASE_FILE",
+      "searchFilter": "\"Object Type\": COMPLAINT|CASE_FILE|TASK|FILE",
       "columnDefs": [
         {
           "name": "object_id_s",
