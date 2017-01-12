@@ -64,7 +64,7 @@ angular.module('services').factory('TimeTracking.InfoService', ['$resource', '$t
 
         /**
          * @ngdoc method
-         * @name resetTimeTrackingInfo
+         * @name resetTimesheetInfo
          * @methodOf services:TimeTracking.InfoService
          *
          * @description
@@ -72,7 +72,7 @@ angular.module('services').factory('TimeTracking.InfoService', ['$resource', '$t
          *
          * @returns None
          */
-        Service.resetTimeTrackingInfo = function () {
+        Service.resetTimesheetInfo = function () {
             var cacheInfo = new Store.CacheFifo(Service.CacheNames.TIMESHEET_INFO);
             cacheInfo.reset();
         };
