@@ -85,7 +85,6 @@ public class CreateTaskItemAPIControllerTest extends EasyMockSupport
         assertNull(taskItem.getId());
 
         ObjectMapper objectMapper = new ObjectMapper();
-        //objectMapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         String content = objectMapper.writeValueAsString(taskItem);
 

@@ -87,7 +87,6 @@ public class CreateCalendarAppointmentAPIControllerTest extends EasyMockSupport
         appointmentItem.setRecurringEndDate(new Date(tomorrow + 1000 * 60 * 60 * 48));// ends after 2 days
 
         ObjectMapper objectMapper = new ObjectMapper();
-        //objectMapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         String content = objectMapper.writeValueAsString(appointmentItem);
 
