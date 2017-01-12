@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.category.service;
 
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.category.model.Category;
 
 import java.util.List;
@@ -11,22 +12,22 @@ import java.util.List;
 public interface CategoryService
 {
 
-    Category get(Long id);
+    Category get(Long id) throws AcmObjectNotFoundException;
 
     Category create(Category category);
 
-    Category update(Category category);
+    Category update(Category category) throws AcmObjectNotFoundException;
 
-    Category delete(Long id);
+    Category delete(Long id) throws AcmObjectNotFoundException;
 
-    void activate(Category category);
+    void activate(Category category) throws AcmObjectNotFoundException;
 
-    void deactivate(Category category);
+    void deactivate(Category category) throws AcmObjectNotFoundException;
 
     List<Category> getRoot();
 
-    Category getParent(Long id);
+    Category getParent(Long id) throws AcmObjectNotFoundException;
 
-    List<Category> getChildren(Long id);
+    List<Category> getChildren(Long id) throws AcmObjectNotFoundException;
 
 }
