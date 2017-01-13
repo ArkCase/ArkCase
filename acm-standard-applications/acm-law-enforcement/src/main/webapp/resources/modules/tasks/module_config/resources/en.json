@@ -35,7 +35,7 @@
     "costsheet": {
       "approver.label": "Approver"
     },
-    "timesheet":{
+    "timesheet": {
       "approver.label": "Approver"
     },
     "_xxx_courtRoomName": "Court Room Name:"
@@ -49,6 +49,8 @@
     "complete.button": "Complete",
     "approve.button": "Approve Document",
     "rework.button": "Send for Rework",
+    "claim.button": "Claim",
+    "unclaim.button": "Unclaim",
     "error.outcomeFieldMissing": "Cannot complete task because of missing required value",
     "modal": {
       "errorHeaderText": "Error",
@@ -84,7 +86,7 @@
       "creator": "Author"
     }
   },
-   "tasks.comp.references": {
+  "tasks.comp.references": {
     "title": "References",
     "table.columns": {
       "targetName": "Number",
@@ -181,7 +183,9 @@
     "notes.label": "Notes",
     "saveButton": "Save",
     "overdue.tooltip": "Task is Overdue",
-    "deadline.tooltip": "Deadline is Approaching"
+    "deadline.tooltip": "Deadline is Approaching",
+    "groupToggle.label": "Group Task?",
+    "group.placeholder": "Please select a group."
   },
   "tasks.userSearch": {
     "id": "userSearch",
@@ -201,7 +205,7 @@
       "username": "Username"
     }
   },
-    "tasks.comp.addreference": {
+  "tasks.comp.addreference": {
     "title": "Add Reference",
     "cancelButton": "Cancel",
     "confirmButton": "Add",
@@ -220,5 +224,5 @@
         "modified": "Modified"
       }
     }
-  }   
+  }
 }

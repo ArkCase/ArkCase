@@ -11,6 +11,8 @@ angular.module('dashboard.my-tasks')
 
             vm.config = null;
             var userInfo = null;
+            var userGroups = null;
+            var userGroupList = null;
 
             var paginationOptions = {
                 pageNumber: 1,
@@ -60,6 +62,12 @@ angular.module('dashboard.my-tasks')
 
                     Authentication.queryUserInfo().then(function (responseUserInfo) {
                         userInfo = responseUserInfo;
+                        userGroups = responseUserInfo.authorities;
+                        userGroupList = responseUserInfo.authorities[0];
+                        _.forEach(userGroups, function (group) {
+                            userGroupList = userGroupList + " OR " + group;
+                        })
+                        userGroupList = "(" + userGroupList + ")";
                         getPage();
                         return userInfo;
                     });
@@ -69,6 +77,7 @@ angular.module('dashboard.my-tasks')
             function getPage() {
                 DashboardService.queryMyTasks({
                         userId: userInfo.userId,
+                        userGroupList: userGroupList,
                         sortBy: paginationOptions.sortBy,
                         sortDir: paginationOptions.sortDir,
                         startWith: (paginationOptions.pageNumber - 1) * paginationOptions.pageSize,

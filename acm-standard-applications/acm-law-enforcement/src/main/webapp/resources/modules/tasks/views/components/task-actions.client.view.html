@@ -35,10 +35,17 @@
                     ng-repeat="outcome in objectInfo.availableOutcomes" ng-show="showBtnOutcomes">
                 {{outcome.description}}
             </button>
+            <button class="btn btn-sm btn-default" ng-click="claimTask()" ng-show="showClaimBtn()">
+                <i class="fa fa-hand-paper-o"></i>
+                <span translate>tasks.comp.actions.claim.button</span>
+            </button>
+            <button class="btn btn-sm btn-default" ng-click="unclaimTask()" ng-show="showUnclaimBtn()">
+                <i class="fa-calendar-times-o"></i>
+                <span translate>tasks.comp.actions.unclaim.button</span>
+            </button>
             <button class="btn btn-sm btn-default" ng-click="refresh()">
                 <i class="fa fa-refresh"></i>
             </button>
-
         </div>
     </div>
 </div>
