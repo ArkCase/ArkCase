@@ -1277,3 +1277,8 @@ tags-input .tags {
 .icon-due-soon {
     color: darkorange;
 }
+
+/* Making normal link work like xeditable link by removing outline */
+a.no-outline:hover, a.no-outline:focus {
+    outline: none;
+}

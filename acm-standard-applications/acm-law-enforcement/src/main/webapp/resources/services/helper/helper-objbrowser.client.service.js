@@ -406,8 +406,13 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                                 MessageService.info(objectTypeString + " with ID " + objectId + " was updated.");
 
                                 var frevvoRequest = null;
-                                if(objectType == ObjectService.ObjectTypes.COMPLAINT){
-                                    frevvoRequest = ServCommService.popRequest("frevvo", "close-complaint");
+                                switch (objectType) {
+                                    case ObjectService.ObjectTypes.COMPLAINT:
+                                        frevvoRequest = ServCommService.popRequest("frevvo", "close-complaint");
+                                        break;
+                                    case ObjectService.ObjectTypes.TIMESHEET:
+                                        frevvoRequest = ServCommService.popRequest("frevvo", "edit-timesheet") || ServCommService.popRequest("frevvo", "new-timesheet");
+                                        break;
                                 }
                                 
                                 if (frevvoRequest) {

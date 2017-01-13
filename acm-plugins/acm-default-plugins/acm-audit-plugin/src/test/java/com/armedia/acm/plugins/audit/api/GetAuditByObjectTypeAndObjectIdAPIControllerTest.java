@@ -6,7 +6,7 @@ import com.armedia.acm.core.query.QueryResultPageWithTotalCount;
 import com.armedia.acm.plugins.audit.model.AuditConstants;
 import com.armedia.acm.plugins.audit.service.ReplaceEventTypeNames;
 import com.armedia.acm.plugins.audit.web.api.GetAuditByObjectTypeAndObjectIdAPIController;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
