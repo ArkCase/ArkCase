@@ -2124,11 +2124,15 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                         var cacheKey = DocTree.getCacheKeyByNode(parent);
                         var parentId = parent.data.objectId;
+                        var containerObjId = parent.data.containerObjectId;
+                        var containerObjType = parent.data.containerObjectType;
                         Util.serviceCall({
                             service: Ecm.createFolder
                             , param: {
                                 parentId: parentId
                                 , folderName: folderName
+                                , containerObjId: containerObjId
+                                , containerObjType: containerObjType
                             }
                             , data: {}
                             , onSuccess: function (data) {
@@ -2763,10 +2767,14 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             }
 
                             var fileId = node.data.objectId;
+                            var containerObjId = parent.data.containerObjectId;
+                            var containerObjType = parent.data.containerObjectType;
                             Util.serviceCall({
                                 service: Ecm.deleteFile
                                 , param: {
-                                    fileId: fileId
+                                    fileId: fileId,
+                                    containerObjId: containerObjId,
+                                    containerObjType: containerObjType
                                 }
                                 , data: {}
                                 , onSuccess: function (data) {
