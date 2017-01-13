@@ -22,7 +22,7 @@ angular.module('services').factory('EcmService', ['$resource', 'Acm.StoreService
             }
             , createFolder: {
                 method: 'PUT',
-                url: 'api/latest/service/ecm/folder/:parentId/:folderName'
+                url: 'api/latest/service/ecm/folder/:parentId/:folderName?objType=:containerObjType&objId=:containerObjId'
             }
             , deleteFolder: {
                 method: 'DELETE',
@@ -41,7 +41,7 @@ angular.module('services').factory('EcmService', ['$resource', 'Acm.StoreService
             }
             , deleteFile: {
                 method: 'DELETE',
-                url: 'api/latest/service/ecm/id/:fileId'
+                url: 'api/latest/service/ecm/id/:fileId?objType=:containerObjType&objId=:containerObjId'
             }
             , renameFolder: {
                 method: 'POST',

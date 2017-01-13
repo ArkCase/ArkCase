@@ -10,11 +10,13 @@ import com.armedia.acm.plugins.ecm.service.FolderEventPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
@@ -32,12 +34,14 @@ public class AddNewFolderAPIController {
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    //@PreAuthorize("hasPermission(#parentId, #parentType, 'editAttachments')")
+    @PreAuthorize("hasPermission(#parentId, #parentType, 'editAttachments')")
     @RequestMapping(value = "/folder/{parentFolderId}/{newFolderName}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmFolder addNewFolder(
             @PathVariable("parentFolderId") Long parentFolderId,
             @PathVariable("newFolderName")  String newFolderName,
+            @RequestParam("objType") String parentType,
+            @RequestParam("objId") Long parentId,
             Authentication authentication,
             HttpSession session) throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException {
         /**
