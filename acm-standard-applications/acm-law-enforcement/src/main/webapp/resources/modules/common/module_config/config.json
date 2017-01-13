@@ -542,7 +542,8 @@
     },
     "emailDialog": {
       "enableFiltering": false,
-      "multiSelect": true,
+      "multiSelect": false,
+      "showFacets": false,
       "columnDefs": [
         {
           "name": "name",
