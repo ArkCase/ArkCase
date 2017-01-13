@@ -117,6 +117,7 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
 
                                 var participants = scope.objectInfo;
                                 var assignee = ObjectModelService.getParticipantByType(participants, "assignee");
+                                var typeNoAccess = 'No Access';
 
 
                                 if (data.isEdit) {
@@ -124,8 +125,11 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
                                         return Util.compare(pa.id, data.participant.id);
                                     });
                                     participant.participantLdapId = data.participant.participantLdapId;
+                                    if (scope.config.typeNoAccess) {
+                                        typeNoAccess = scope.config.typeNoAccess;
+                                    }
 
-                                    if (data.participant.participantType == 'No Access' && assignee == data.participant.participantLdapId) {
+                                    if (data.participant.participantType == typeNoAccess && assignee == data.participant.participantLdapId) {
                                         MessageService.error($translate.instant("common.directive.coreParticipants.message.error.noAccessCombo"));
                                     }
                                     else {
@@ -136,8 +140,11 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
                                 else {
                                     var participant = {};
                                     participant.participantLdapId = data.participant.participantLdapId;
+                                    if (scope.config.typeNoAccess) {
+                                        typeNoAccess = scope.config.typeNoAccess;
+                                    }
 
-                                    if (data.participant.participantType == 'No Access' && assignee == data.participant.participantLdapId) {
+                                    if (data.participant.participantType == typeNoAccess && assignee == data.participant.participantLdapId) {
                                         MessageService.error($translate.instant("common.directive.coreParticipants.message.error.noAccessCombo"));
                                     }
                                     else {
