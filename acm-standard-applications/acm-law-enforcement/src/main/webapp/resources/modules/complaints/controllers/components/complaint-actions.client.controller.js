@@ -2,10 +2,10 @@
 
 angular.module('complaints').controller('Complaints.ActionsController', ['$scope', '$state', '$stateParams', '$q'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Object.LookupService', 'Complaint.LookupService'
-    , 'Object.SubscriptionService', 'Complaint.InfoService', 'Helper.ObjectBrowserService'
+    , 'Object.SubscriptionService', 'Complaint.InfoService', 'Helper.ObjectBrowserService', 'Object.ModelService', 'Profile.UserInfoService'
     , function ($scope, $state, $stateParams, $q
         , Util, ConfigService, ObjectService, Authentication, ObjectLookupService, ComplaintLookupService
-        , ObjectSubscriptionService, ComplaintInfoService, HelperObjectBrowserService) {
+        , ObjectSubscriptionService, ComplaintInfoService, HelperObjectBrowserService, ObjectModelService, UserInfoService) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -23,6 +23,10 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
             $scope.objectInfo = objectInfo;
             $scope.restricted = objectInfo.restricted;
             $scope.showCreateAndClose = ($scope.objectInfo.status !== "CLOSED");
+            var group = ObjectModelService.getGroup(objectInfo);
+            $scope.owningGroup = group;
+            var assignee = ObjectModelService.getAssignee(objectInfo);
+            $scope.assignee = assignee;
 
             Authentication.queryUserInfo().then(function (userInfo) {
                 $scope.userId = userInfo.userId;
@@ -72,9 +76,30 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
             });
         };
 
+        UserInfoService.getUserInfo().then(function (infoData) {
+            $scope.currentUserProfile = infoData;
+        });
+
         $scope.refresh = function () {
             $scope.$emit('report-object-refreshed', $stateParams.id);
         };
 
+        $scope.claim = function (objectInfo) {
+            ObjectModelService.setAssignee(objectInfo, $scope.currentUserProfile.userId);
+            objectInfo.modified = null;//this is because we need to trigger update on case file
+            ComplaintInfoService.saveComplaintInfo(objectInfo).then(function (response) {
+                //success
+                $scope.refresh();
+            });
+        };
+
+        $scope.unclaim = function (objectInfo) {
+            ObjectModelService.setAssignee(objectInfo, "");
+            objectInfo.modified = null;//this is because we need to trigger update on case file
+            ComplaintInfoService.saveComplaintInfo(objectInfo).then(function (response) {
+                //success
+                $scope.refresh();
+            });
+        };
     }
 ]);
