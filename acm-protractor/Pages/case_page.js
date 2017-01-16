@@ -45,6 +45,9 @@ var reinvestigateBtn = element(by.css(Objects.casepage.locators.reinvestigateBtn
 var casesTitleStatus = element.all(by.xpath(Objects.casepage.locators.caseTitleStatus)).get(0);
 var owningGroup = element(by.xpath(Objects.casepage.locators.owningGroup));
 var submitBtn = element(by.xpath(Objects.casepage.locators.submitBtn));
+var claimButton = element(by.css(Objects.casepage.locators.claimButton));
+var unclaimButton = element(by.css(Objects.casepage.locators.unclaimButton));
+
 
 
 var CasePage = function() {
@@ -114,6 +117,7 @@ var CasePage = function() {
     this.switchToDefaultContent = function() {
 
         browser.driver.switchTo().defaultContent();
+        browser.waitForAngular();
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesTitle))), 60000).then(function() {
             browser.sleep(10000);
         });
@@ -183,6 +187,8 @@ var CasePage = function() {
     };
 
     this.chnageCaseSubmit = function() {
+
+        this.switchToIframes();
         browser.executeScript('arguments[0].click()', submitBtn);
     };
 
@@ -231,10 +237,37 @@ var CasePage = function() {
             reinvestigateBtn.click();
         });
     };
-   
-    this.returnOwningGroup = function () {
+
+    this.returnOwningGroup = function() {
         return owningGroup.getText();
     }
+
+    this.clickClaimButton = function() {
+
+        browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.claimButton))), 30000, "Claim button is not displayed").then(function() {
+            claimButton.click();
+        }).then(function() {
+            browser.sleep(5000);
+            element.all(by.css(Objects.casepage.locators.claimButton)).then(function(items) {
+                expect(items.length).toBe(0, "After is clicked the claim button is still displayed");
+                browser.sleep(5000);
+            });
+        });
+    }
+
+    this.clickUnclaimButton = function() {
+
+        browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.unclaimButton))), 30000, "Unclaim button is not displayed").then(function() {
+            unclaimButton.click();
+        }).then(function() {
+            browser.sleep(5000);
+            element.all(by.css(Objects.casepage.locators.unclaimButton)).then(function(items) {
+                expect(items.length).toBe(0, "After is clicked the unclaim button is still displayed");
+                browser.sleep(8000);
+            });
+        });
+}
+
 };
 
 

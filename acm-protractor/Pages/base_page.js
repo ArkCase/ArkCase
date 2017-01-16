@@ -187,9 +187,9 @@ var submitButton = element(by.xpath(Objects.complaintPage.locators.submitButton)
 var participantTab = element(by.css(Objects.casepage.locators.participantsTab));
 var selectParticipantType = element(by.xpath(Objects.casepage.locators.selectParticipantType));
 var selectparticipant = element(by.name(Objects.casepage.locators.selectParticipant));
-var searchForUserInput = element(by.xpath(Objects.casepage.locators.searchForUser));
+var searchForUserInput = element(by.xpath(Objects.casepage.locators.searchForUserInput));
 var searchForUserBtn = element(by.buttonText(Objects.casepage.locators.searchUserBtn));
-var searchedUser = element.all(by.repeater(Objects.casepage.locators.searchedUserName)).get(0);
+var searchedUser = element(by.xpath(Objects.casepage.locators.searchedUserName));
 var okBtn = element(by.buttonText(Objects.casepage.locators.OkBtn));
 var participantTypeFirstRow = element.all(by.xpath(Objects.casepage.locators.participantTableRow)).get(0);
 var participantNameFirstRow = element.all(by.xpath(Objects.casepage.locators.participantTableRow)).get(1);
@@ -202,9 +202,10 @@ var participantNameForthRow = element.all(by.xpath(Objects.casepage.locators.par
 var participantTypeFifthRow = element.all(by.xpath(Objects.casepage.locators.participantTableRow)).get(8);
 var participantNameFifthRow = element.all(by.xpath(Objects.casepage.locators.participantTableRow)).get(9);
 var participantsLinkBtn = element(by.xpath(Objects.casepage.locators.participantLinkBtn));
+var addParticipantBtn = element(by.css(Objects.casepage.locators.addParticipantBtn));
 var priorityType = element.all(by.xpath(Objects.casepage.locators.priorityType)).get(0);
 var editAssigneeBtn = element.all(by.css(Objects.casepage.locators.participantEditBtn)).get(1);
-var modalParticipantType = element(by.model(Objects.casepage.locators.modalParticipantType));
+var modalParticipantType = new SelectWrapper(by.xpath(Objects.casepage.locators.modalParticipantType));
 var modalParticipantName = element(by.model(Objects.casepage.locators.modalParticipantName));
 var saveParticipantBtn = element(by.buttonText(Objects.casepage.locators.saveParticipantBtn));
 var assigneeDeleteBtn = element.all(by.css(Objects.casepage.locators.participantDeleteBtn)).get(1);
@@ -221,12 +222,19 @@ var noteColumnValue = element(by.css(Objects.basepage.locators.noteColumnValue))
 var priorityLink = element(by.xpath(Objects.casepage.locators.priority));
 var priorityDropDownEdit = new SelectWrapper(by.xpath(Objects.casepage.locators.priorityDropDown));
 var priorityBtn = element(by.xpath(Objects.casepage.locators.priorityBtn));
-var assigneeLink = element(by.xpath(Objects.casepage.locators.assignee));
+var assigneeLink = element(by.css(Objects.casepage.locators.assignee));
 var assigneeDropDown = new SelectWrapper(by.xpath(Objects.casepage.locators.assigneeDropDown));
 var assigneeBtn = element(by.xpath(Objects.casepage.locators.assigneeBtn));
 var submitBtn = element(by.xpath(Objects.casepage.locators.submitBtn));
 var complaintParticipantsTab = element(By.xpath(Objects.complaintPage.locators.participantsTab));
 //var dueDate = element(by.xpath(Objects.casepage.locators.dueDate));
+var preferenceLink = element(by.linkText(Objects.preferencesPage.locators.preferenceLink));
+var overviewLink = element(by.xpath(Objects.casepage.locators.overviewLink));
+var tasksModule = element(by.css(Objects.taskspage.locators.TasksModule));
+var timeTrackingModule = element(by.css(Objects.timetrackingPage.locators.timeTrackingModule));
+var costTrackingModule = element(by.css(Objects.costsheetPage.locators.costTrackingModule));
+var initiatorDeleteBtn = element(by.xpath(Objects.casepage.locators.initiatorDeleteBtn));
+var notificationMessage = element(by.css(Objects.basepage.locators.notificationMessage));
 
 var BasePage = function() {
 
@@ -680,7 +688,7 @@ var BasePage = function() {
                         searchForUserInput.click();
                         searchForUserInput.sendKeys(approverSamuel);
                         searchForUserBtn.click().then(function() {
-                            browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.casepage.locators.searchedUserName)).get(0)), 3000);
+                            browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchedUserName))), 3000);
                             searchedUser.click().then(function() {
                                 browser.wait(EC.visibilityOf(element(by.buttonText(Objects.casepage.locators.OkBtn))), 3000);
                                 okBtn.click();
@@ -859,8 +867,16 @@ var BasePage = function() {
             });
         });
         return this;
+    }
 
+    this.verifyIfInitiatorCanBeDeleted = function() {
 
+        browser.wait(EC.visibilityOf(element(by.repeater(Objects.casepage.locators.peopleTableColumns))), 10000, "People table columns are not displayed").then(function() {
+            element.all(by.xpath(Objects.casepage.locators.initiatorDeleteBtn)).then(function(items) {
+                expect(items.length).toBe(0, "The delete button for the initiator should not be displayed");
+            });
+        });
+        return this;
     }
 
     this.addContactMethod = function(contactMethodType, contactvalue) {
@@ -1012,41 +1028,33 @@ var BasePage = function() {
     this.addAddress = function(addressType, street, city, state, zip, country) {
 
         addressLinkBtn.click().then(function() {
-            browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.addAddressBtn))), 10000).then(function() {
-                addAddressBtn.click().then(function() {
-                    browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.addressTypeDropDow))), 10000).then(function() {
-                        addressTypeDropDow.selectByText(addressType).then(function() {
-                            streetAddress.sendKeys(street).then(function() {
-                                addressCity.sendKeys(city).then(function() {
-                                    addressState.sendKeys(state).then(function() {
-                                        addressZip.sendKeys(zip).then(function() {
-                                            addressCountry.sendKeys(country).then(function() {
-                                                saveAddressBtn.click().then(function() {
-                                                    browser.sleep(8000);
-                                                    addressLinkBtn.click();
-                                                });
-                                            });
-
-                                        });
-
-                                    });
-
-                                });
-
-                            });
-
-                        });
-                    });
-
-                });
-
+            browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.addAddressBtn))), 10000);
+        }).then(function() {
+            addAddressBtn.click();
+        }).then(function() {
+            browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.addressTypeDropDow))), 10000).then(function() {
+                addressTypeDropDow.selectByText(addressType);
+            }).then(function() {
+                streetAddress.sendKeys(street);
+            }).then(function() {
+                addressCity.sendKeys(city);
+            }).then(function() {
+                addressState.sendKeys(state);
+            }).then(function() {
+                addressZip.sendKeys(zip);
+            }).then(function() {
+                addressCountry.sendKeys(country);
+            }).then(function() {
+                saveAddressBtn.click();
+            }).then(function() {
+                browser.sleep(8000);
+                addressLinkBtn.click();
             });
-
         });
-
 
         return this;
     }
+
     this.returnAddressType = function() {
         return addressTypeValue.getText();
     }
@@ -1091,39 +1099,38 @@ var BasePage = function() {
     this.editAddress = function(addressType, street, city, state, zip, country) {
 
         editAddressBtn.click().then(function() {
-            browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.addressTypeDropDow))), 10000).then(function() {
-                addressTypeDropDow.selectByText(addressType).then(function() {
-                    streetAddress.clear().then(function() {
-                        streetAddress.sendKeys(street).then(function() {
-                            addressCity.clear().then(function() {
-                                addressCity.sendKeys(city).then(function() {
-                                    addressState.clear().then(function() {
-                                        addressState.sendKeys(state).then(function() {
-                                            addressZip.clear().then(function() {
-                                                addressZip.sendKeys(zip).then(function() {
-                                                    addressCountry.clear().then(function() {
-                                                        addressCountry.sendKeys(country).then(function() {
-                                                            saveAddressBtn.click();
-                                                            browser.sleep(8000);
-                                                            addressLinkBtn.click();
-                                                        });
-                                                    });
-                                                });
-
-                                            });
-                                        });
-                                    });
-
-                                });
-                            });
-                        });
-                    });
-                });
-            });
-
+            browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.addressTypeDropDow))), 10000);
+        }).then(function() {
+            addressTypeDropDow.selectByText(addressType);
+        }).then(function() {
+            streetAddress.clear();
+        }).then(function() {
+            streetAddress.sendKeys(street);
+        }).then(function() {
+            addressCity.clear();
+        }).then(function() {
+            addressCity.sendKeys(city);
+        }).then(function() {
+            addressState.clear();
+        }).then(function() {
+            addressState.sendKeys(state);
+        }).then(function() {
+            addressZip.clear();
+        }).then(function() {
+            addressZip.sendKeys(zip);
+        }).then(function() {
+            addressCountry.clear();
+        }).then(function() {
+            addressCountry.sendKeys(country);
+        }).then(function() {
+            saveAddressBtn.click();
+            browser.sleep(8000);
+            addressLinkBtn.click();
         });
+
         return this;
     }
+
     this.returnAliasesType = function() {
         return aliasesTypeValue.getText();
     }
@@ -1141,24 +1148,20 @@ var BasePage = function() {
 
         aliassesLinkBtn.click().then(function() {
             browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.addAliasesBtn))), 10000).then(function() {
-                addAliasesBtn.click().then(function() {
-                    browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.aliasesDropdown))), 10000).then(function() {
-                        aliasesDropdown.selectByText(aliasType).then(function() {
-                            aliasesInputValue.sendKeys(aliasValue).then(function() {
-                                saveAliasBtn.click().then(function() {
-                                    browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(6)), 10000).then(function() {
-                                        browser.sleep(8000);
-                                        aliassesLinkBtn.click();
-
-                                    });
-                                });
-
-                            });
-
-                        });
+                addAliasesBtn.click();
+            }).then(function() {
+                browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.aliasesDropdown))), 10000).then(function() {
+                    aliasesDropdown.selectByText(aliasType);
+                }).then(function() {
+                    aliasesInputValue.sendKeys(aliasValue);
+                }).then(function() {
+                    saveAliasBtn.click();
+                }).then(function() {
+                    browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(6)), 10000).then(function() {
+                        browser.sleep(8000);
+                        aliassesLinkBtn.click();
 
                     });
-
                 });
             });
         });
@@ -1363,7 +1366,18 @@ var BasePage = function() {
 
         browser.executeScript('arguments[0].click()', complaintsModule);
     }
+    this.clickModuleTasks = function() {
+        browser.executeScript('arguments[0].click()', tasksModule);
+    }
+    this.clickModuleTimeTracking = function() {
 
+        browser.executeScript('arguments[0].click()', timeTrackingModule);
+
+    }
+    this.clickModuleCostTracking = function() {
+
+        browser.executeScript('arguments[0].click()', costTrackingModule);
+    }
 
     this.clickAddTaskButton = function() {
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.addNewTaskBtn))), 30000).then(function() {
@@ -1756,10 +1770,11 @@ var BasePage = function() {
         browser.wait(EC.visibilityOf(element(by.linkText("Logout"))), 30000).then(function() {
             logoutLink.click().then(function() {
                 browser.ignoresynchronization = true;
-                // browser.driver.wait(EC.visibilityOf(element(by.css(".alert.alert-success"))), 30000).then(function() {
-                // expect(logoutSucesfullMessage.getText()).toEqual('You have been logged out successfully.');
-                //});
-            })
+                browser.driver.sleep(5000);
+                browser.driver.wait(EC.visibilityOf(element(by.css(".alert.alert-success"))), 30000).then(function() {
+                    expect(logoutSucesfullMessage.getText()).toEqual('You have been logged out successfully.');
+                });
+            });
         });
         return this;
     };
@@ -1844,7 +1859,7 @@ var BasePage = function() {
                         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchForUserInput))), 10000, "Search for user input is not displayed").then(function() {
                             searchForUserInput.sendKeys(participant).then(function() {
                                 searchForUserBtn.click().then(function() {
-                                    browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.casepage.locators.searchedUserName)).get(0)), 30000, "Searched user is not displayed").then(function() {
+                                    browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchedUserName))), 30000, "Searched user is not displayed").then(function() {
                                         searchedUser.click().then(function() {
                                             okBtn.click();
                                         });
@@ -1980,7 +1995,7 @@ var BasePage = function() {
                 browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchForUserInput))), 10000, "Search for user input is not displayed").then(function() {
                     searchForUserInput.sendKeys(participant).then(function() {
                         searchForUserBtn.click().then(function() {
-                            browser.wait(EC.presenceOf(element.all(by.repeater(Objects.casepage.locators.searchedUserName)).get(0)), 30000, "Searched user is not displayed").then(function() {
+                            browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.searchedUserName))), 30000, "Searched user is not displayed").then(function() {
                                 searchedUser.click().then(function() {
                                     browser.sleep(3000);
                                     okBtn.click().then(function() {
@@ -2001,6 +2016,41 @@ var BasePage = function() {
         });
         return this;
     }
+
+
+    this.addParticipantFromParticipantTable = function(type, participant) {
+
+
+        addParticipantBtn.click().then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.modalParticipantType))), 30000).then(function() {
+                modalParticipantType.selectByText(type).then(function() {
+                    modalParticipantName.click().then(function() {
+                        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchForUserInput))), 10000, "Search for user input is not displayed").then(function() {
+                            searchForUserInput.sendKeys(participant).then(function() {
+                                searchForUserBtn.click().then(function() {
+                                    browser.sleep(3000);
+                                    browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.searchedUserName))), 30000, "Searched user is not displayed").then(function() {
+                                        searchedUser.click().then(function() {
+                                            browser.sleep(3000);
+                                            okBtn.click().then(function() {
+                                                browser.sleep(3000);
+                                                saveParticipantBtn.click();
+                                                browser.sleep(5000);
+                                            });
+                                        });
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+
+        return this;
+    }
+
+
 
     this.clickDeleteAsigneeBtn = function() {
 
@@ -2060,10 +2110,11 @@ var BasePage = function() {
     }
 
     this.waitForAssignee = function() {
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.assignee))), 30000, "Assignee is not visible");
+        browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.assignee))), 30000, "Assignee is not visible");
     };
 
     this.returnAssignee = function() {
+
         return assigneeLink.getText();
     };
 
@@ -2075,7 +2126,58 @@ var BasePage = function() {
         browser.executeScript('arguments[0].click()', submitBtn);
         return this;
     }
-};
+
+    this.clickPreferenceLink = function() {
+        browser.wait(EC.visibilityOf(element(by.linkText(Objects.preferencesPage.locators.preferenceLink))), 10000, "Preference link is not displayed").then(function() {
+            preferenceLink.click();
+        });
+    }
+
+    this.navigateToPreferencePage = function() {
+        this.clickFullNameLink();
+        this.clickPreferenceLink();
+    }
+
+    this.waitForOverView = function() {
+
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.overviewLink))), 20000, "Owerview Link is nor displayed").then(function() {
+            browser.sleep(5000);
+        });
+    }
+
+    this.verifyIfWidgetIsDisplayed = function(widget, title) {
+
+        element.all(by.css('[adf-widget-type=' + widget + ']')).then(function(items) {
+            expect(items.length).toBe(1, "The" + " " + title + " " + "widget is enabled and not displayed");
+            expect(element(by.css('[adf-widget-type=' + widget + ']')).element(by.css('.ng-scope')).getText()).toEqual(title);
+        });
+    }
+
+    this.verifyIfWidgetIsNotDisplayed = function(widget, title) {
+
+        element.all(by.css('[adf-widget-type=' + widget + ']')).then(function(items) {
+            expect(items.length).toBe(0, "The" + " " + title + " " + "widget is disabled it should not be displayed");
+        });
+    }
+
+    this.verifyTasksTableColumnsNumber = function() {
+
+        element.all(by.repeater(Objects.casepage.locators.taskTableRows)).then(function(items) {
+            expect(items.length).toBe(7, "The column number in the task table is changed");
+        });
+    }
+
+
+    this.verifyTheNotificationMessage = function(objectEvent) {
+        browser.driver.switchTo().defaultContent();
+        browser.wait(EC.visibilityOf(element(by.css(Objects.basepage.locators.notificationMessage))), 30000, "Notification Message is not displayed").then(function() {
+            expect(notificationMessage.getText()).toContain(objectEvent);
+
+        });
+    }
+
+
+}
 
 
 module.exports = new BasePage();
