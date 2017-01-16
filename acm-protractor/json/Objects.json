@@ -20,7 +20,7 @@
                 "username": "sally-acm",
                 "password": "AcMd3v$"
             },
-            "notSupervisorInOwningGroup" : {
+            "notSupervisorInOwningGroup": {
                 "username": "ian-acm",
                 "password": "AcMd3v$"
             }
@@ -53,7 +53,7 @@
             "logoutLink": "Logout",
             "newDocument": ".//li[@data-command='subMenuFileTypes']",
             "checkout": ".//li[@data-command='checkout']",
-            "checkin" : ".//li[@data-command='checkin']",
+            "checkin": ".//li[@data-command='checkin']",
             "cancelEditing": ".//li[@data-command='cancelEditing']",
             "logoutSucesfullMessage": ".alert.alert-success",
             "checkoutDisabled": ".//li[@data-command='checkout'][@aria-disabled='true']",
@@ -65,11 +65,13 @@
             "docTreeExpand": "//doc-tree/table[2]/tbody/tr/td[3]/span/span[1]",
             "fileTitle": "//table/tbody/tr[2]/td[3]/span/span[3]",
             "docViewNotesLink": "Notes",
-            "docViewAddNoteButton":".//button[@ng-disabled='notesInit.isReadOnly']",
+            "docViewAddNoteButton": ".//button[@ng-disabled='notesInit.isReadOnly']",
             "saveButton": "Save",
             "noteColumnValue": ".ui-grid-cell-contents.ng-binding.ng-scope",
             "restrictCheckbox": "restricted",
-            "restrictCheckboxDisabled": ".//input[@ng-model='restricted'][@disabled='disabled']"
+            "restrictCheckboxDisabled": ".//input[@ng-model='restricted'][@disabled='disabled']",
+            "notificationMessage": "[ng-show='!$messageTemplate']"
+
 
         },
         "data": {
@@ -219,7 +221,8 @@
             "approveBtn": ".//*[@class='btn btn-sm btn-default ng-binding ng-scope']/..//button[7]",
             "caseTitleInTasks": ".//*[@class='module-header']/..//div[1]/div[1]/h4/a",
             "complaintTitleInTasks": ".//*[@class='module-header']/..//div[2]/div[1]/div[1]/h4/a",
-            "notificationMessage": ".//*[@ng-show='!$messageTemplate']"
+            "notificationMessage": ".//*[@ng-show='!$messageTemplate']",
+            "TasksModule": "a[href*='#!/tasks/TASK//main']"
 
 
         },
@@ -389,6 +392,30 @@
 
     },
 
+
+
+    "preferencesPage": {
+
+        "locators": {
+
+            "preferenceLink": "Preferences",
+            "preference": "module in modules",
+            "preferencePageTitle": ".//*[@class='module-header']/h3/span",
+            "disabledLabel": "[ng-click='enableWidget($event, widget, true)']",
+            "enabledLabel": ".//*[@class='pull-right']",
+            "widgetPanel": "//*[@class='panel-heading']",
+            "preferenceModule": "[ng-click='selectModule(module)']",
+            "preferenceWidgetTitle":".panel-title",
+            "preferenceWidgetLabel": ".pull-right"
+            
+            
+
+        }
+    },
+
+
+
+
     "complaintPage": {
         "locators": {
             "complaintButton": "Complaint",
@@ -408,20 +435,20 @@
             "closeComplaintButton": ".//a[@ui-sref='frevvo.close-complaint(closeParams)']",
             "complaintDispositionDDListBox": ".//div[@cname='disposition']/div/input[1]",
             "closeComplaintDescription": ".note-editable",
-            "fadeElementComplaint":".//div[@class='modal-backdrop fade in']",
+            "fadeElementComplaint": ".//div[@class='modal-backdrop fade in']",
             "complaintTitleLink": ".//a[@editable-text='objectInfo.complaintTitle']",
             "complaintType": ".//a[@editable-select='objectInfo.complaintType']",
             "complaintPriority": ".//a[@editable-select='objectInfo.priority']",
             "complaintTitle": ".//a[@editable-text='objectInfo.complaintTitle']",
             "locationsLinkBtn": ".//*[@class='fa fa-location-arrow']",
             "addLocationBtn": "[ng-click='addNew()']",
-            "locationTypeDropDown":"location.type",
-            "locationStreetInput":".//*[@id='location.streetAddress']",
+            "locationTypeDropDown": "location.type",
+            "locationStreetInput": ".//*[@id='location.streetAddress']",
             "locationCityInput": ".//*[@id='location.city']",
-            "locationStateInput":".//*[@id='location.state']",
+            "locationStateInput": ".//*[@id='location.state']",
             "locationZipInput": ".//*[@id='location.zip']",
             "saveLocationBtn": "[ng-click = 'onClickOk()']",
-            "addedLocations":  "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
+            "addedLocations": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
             "deleteLocationBtn": "[ng-click ='grid.appScope.deleteRow(row.entity)']",
             "editLocationBtn": "[ng-click='grid.appScope.editRow(row.entity)']",
             "newComplaintBtn": "[ui-sref='frevvo.new-complaint()']",
@@ -456,7 +483,7 @@
             "priorityHigh": ".//*[.='High']",
             "priorityExpedite": ".//*[.='Expedite']",
             "priorityBtn": ".//*[@class='clearfix']//div/span/button[1]",
-            "assignee": ".//a[@editable-select='assignee']",
+            "assignee": "[ng-click='openAssigneePickerModal()']",
             "assigneeDropDown": "//*[@class='clearfix']/div[3]/div[1]/div/form/div/select",
             "assigneeBtn": ".//*[@class='editable-controls form-group']/..//button[1]",
             "createdDate": ".//*[@class='h4 font-bold ng-binding']/..//div",
@@ -470,7 +497,7 @@
             "splitBtn": ".//*[@class='pull-right']/..//div/button[4]",
             "refreshBtn": ".//*[@class='btn-group']/..//button[5]",
             "changeCaseStatusTitle": "facade",
-            "reinvestigateBtn":"[ui-sref='frevvo.reinvestigate(reinvestigateParams)']", 
+            "reinvestigateBtn": "[ui-sref='frevvo.reinvestigate(reinvestigateParams)']",
             "changeStatusDropDown": "input _frevvo-disable-backspace",
             "statusClosed": ".//*[@class='input _frevvo-disable-backspace']/..//li[4]",
             "selectApprover": "approverName",
@@ -483,6 +510,7 @@
             "tasksTable": ".//*[@class='panel panel-success panel-grid']",
             "taskTitle": ".//*[@class='ng-binding ng-scope']",
             "notesLink": ".//*[@class='fa fa-comments']",
+            "overviewLink": ".//*[@class='fa fa-tachometer']",
             "addNoteBtn": ".//*[@class='panel-title']/..//button",
             "noteTextArea": "note.note",
             "saveNoteBtn": ".//*[@class='modal-footer ng-scope']/..//button[2]",
@@ -567,24 +595,29 @@
             "timesheetTableRow": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
             "costSheetLinkBtn": ".//*[@class='fa fa-money']",
             "caseTitleStatus": ".//*[@class='ng-binding']",
-            "participantsTab": "[extid='participantsTab']" ,
+            "participantsTab": "[extid='participantsTab']",
             "selectParticipantType": ".//*[@class='c-table clearfix']/..//tbody/tr/td[5]",
             "selectParticipant": "participantName",
             "searchForUserInput": "//*[@class='modal-search-header']/..//input",
             "searchUserBtn": "Search",
             "OkBtn": "OK",
-            "searchedUserName": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
+            "searchedUserName":".//*[@class='ui-grid-canvas']/div/div[1]/div[4]",
             "participantLinkBtn": ".//*[@class='fa fa-users']",
-            "participantTableRow":".//*[@class='ui-grid-cell-contents ng-binding ng-scope']",
+            "participantTableRow": ".//*[@class='ui-grid-cell-contents ng-binding ng-scope']",
             "participantTable": ".//*[@class='panel panel-success panel-grid']",
             "priorityType": ".//*[@class='ui-grid-cell-contents ui-grid-header-cell-primary-focus']",
-            "participantEditBtn":"[ng-click='grid.appScope.editRow(row.entity)']",
-            "modalParticipantType": "participant.participantType" ,
+            "participantEditBtn": "[ng-click='grid.appScope.editRow(row.entity)']",
+            "modalParticipantType": ".//*[@ng-model='participant.participantType']",
             "modalParticipantName": "participant.participantLdapId",
             "saveParticipantBtn": "Save",
             "participantDeleteBtn": "[ng-click='grid.appScope.deleteRow(row.entity)']",
             "owningGroup": ".//a[@editable-select='owningGroup']",
-            "caseTitleWithStatus" : ".//*[@class='col-xs-6']/h4"
+            "caseTitleWithStatus" : ".//*[@class='col-xs-6']/h4",
+            "initiatorDeleteBtn": "//*[@class='fa fa-trash-o fa-lg']",
+            "claimButton": "[ng-click='claim(objectInfo)']",
+            "unclaimButton": "[ng-click='unclaim(objectInfo)']",
+            "addParticipantBtn": "[ng-click='addNew()']"
+
         },
 
         "data": {
@@ -671,10 +704,11 @@
             "newTimesheetBtn": "New Timesheet",
             "editTimesheetBtn": "Edit Timesheet",
             "caseFileModule": "a[href*='#!/cases//main']",
-            "complaintsModule":"a[href*='#!/complaints//main']",
+            "complaintsModule": "a[href*='#!/complaints//main']",
             "timesheetsPageTitle": ".//*[@class='module-header']/..//h3/span",
             "nextWeekBtn": "Next Week",
-            "periodInput": "period"
+            "periodInput": "periodUI",
+            "timeTrackingModule": "a[href*='#!/time-tracking//main']"
 
 
 
@@ -698,7 +732,8 @@
             "amountInput": "amount",
             "saveBtn": "Save",
             "expensesDropDown": ".//*[@class='input _frevvo-disable-backspace']",
-            "costsheetPageTitle": ".//*[@class='module-header']/..//h3/span"
+            "costsheetPageTitle": ".//*[@class='module-header']/..//h3/span",
+            "costTrackingModule": "a[href='#!/cost-tracking//main']"
 
 
         },
@@ -710,7 +745,7 @@
             "Overtime": "Overtime",
             "Food": "Food",
             "Ammount": "300",
-            "verifyAmmount":"$300.00" 
+            "verifyAmmount": "$300.00"
 
         }
 
@@ -718,10 +753,10 @@
     },
     "notificationPage": {
         "locators": {
-            "notificationCol" : "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid"
+            "notificationCol": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid"
 
         },
-        "data":{
+        "data": {
 
         }
     },
@@ -840,10 +875,23 @@
             "auditReportColumn6Title": "Object ID",
             "auditReportColumn7Title": "Object Type"
         }
+    },
+
+    "subscriptionsPage": {
+     "locators": {
+
+     "subscriptionsModule": "a[href='#!/subscriptions']",
+     "subscriptionsInput": "searchQuery",
+     "subscriptionsTitle": ".//*[@class='module-header']",
+     "searchBtn": "[ng-click='queryExistingItems()']"
+
+    
+
+
+
+     }
+
+
     }
+
 }
-
-
-
-
-

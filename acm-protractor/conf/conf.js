@@ -41,6 +41,7 @@ exports.config = {
 
     specs: [
 
+           '../test_spec/verification_test.spec.js',
            '../test_spec/dashboard_test.spec.js',
            '../test_spec/task_test.spec.js',
            '../test_spec/case_test.spec.js',
@@ -49,7 +50,8 @@ exports.config = {
            '../test_spec/notification_test.js',
            '../test_spec/admin_test.js',
            '../test_spec/report_test.spec.js',
-           '../test_spec/audit_test.spec.js'
+           '../test_spec/audit_test.spec.js',
+           '../test_spec/preference_test.spec.js'
 
     ],
 
