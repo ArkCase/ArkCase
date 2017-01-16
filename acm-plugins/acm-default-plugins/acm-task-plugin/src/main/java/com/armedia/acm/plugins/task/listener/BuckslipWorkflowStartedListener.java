@@ -21,6 +21,14 @@ public class BuckslipWorkflowStartedListener implements ExecutionListener
     {
         delegateExecution.setVariable("isBuckslipWorkflow", Boolean.TRUE);
 
+        // in case we have "approvers" but not "futureApprovers", copy the approvers to the future approvers
+        List<String> approvers = (List<String>) delegateExecution.getVariable("approvers");
+        List<String> future = (List<String>) delegateExecution.getVariable(TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_APPROVERS);
+        if (approvers != null && !approvers.isEmpty() && (future == null || future.isEmpty()))
+        {
+            delegateExecution.setVariable(TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_APPROVERS, approvers);
+        }
+
         // in case we were started with future approvers, but no current approver, set the current approver to the
         // first future approver, and remove the first element from future approvers
         String currentApprover = (String) delegateExecution.getVariable("currentApprover");

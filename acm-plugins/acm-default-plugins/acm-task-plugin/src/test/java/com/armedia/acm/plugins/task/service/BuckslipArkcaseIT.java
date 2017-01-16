@@ -3,7 +3,6 @@ package com.armedia.acm.plugins.task.service;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.task.model.AcmTask;
-import com.armedia.acm.plugins.task.model.TaskConstants;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
@@ -117,7 +116,8 @@ public class BuckslipArkcaseIT
         processVariables.put("OBJECT_TYPE", objectType);
         processVariables.put("OBJECT_NAME", objectNumber);
         processVariables.put("documentType", documentType);
-        processVariables.put(TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_APPROVERS, futureApprovers);
+        // the process should work with either "approvers" or "futureApprovers"
+        processVariables.put("approvers", futureApprovers);
         processVariables.put("pastApprovers", completedApprovals);
         processVariables.put("moreApprovers", moreApprovers);
 

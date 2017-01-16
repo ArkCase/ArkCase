@@ -79,7 +79,8 @@ public class BuckslipActivitiIT
         processVariables.put("OBJECT_TYPE", objectType);
         processVariables.put("isBuckslipWorkflow", isBuckslipWorkflow);
         processVariables.put("documentType", documentType);
-        processVariables.put("futureApprovers", futureApprovers);
+        // the process should work with either "approvers" or "futureApprovers"
+        processVariables.put("approvers", futureApprovers);
         processVariables.put(completedApprovalsKey, completedApprovals);
         processVariables.put("moreApprovers", moreApprovers);
 
@@ -149,6 +150,7 @@ public class BuckslipActivitiIT
         processVariables.put("OBJECT_TYPE", objectType);
         processVariables.put("isBuckslipWorkflow", isBuckslipWorkflow);
         processVariables.put("documentType", documentType);
+        // the process should work with either "approvers" or "futureApprovers"
         processVariables.put("futureApprovers", futureApprovers);
         processVariables.put(completedApprovalsKey, completedApprovals);
         processVariables.put("moreApprovers", moreApprovers);
@@ -220,6 +222,7 @@ public class BuckslipActivitiIT
         processVariables.put("OBJECT_TYPE", objectType);
         processVariables.put("isBuckslipWorkflow", isBuckslipWorkflow);
         processVariables.put("documentType", documentType);
+        // the process should work with either "approvers" or "futureApprovers"
         processVariables.put("futureApprovers", futureApprovers);
         processVariables.put(completedApprovalsKey, completedApprovals);
         processVariables.put("moreApprovers", moreApprovers);
