@@ -117,6 +117,7 @@ var CasePage = function() {
     this.switchToDefaultContent = function() {
 
         browser.driver.switchTo().defaultContent();
+        browser.waitForAngular();
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesTitle))), 60000).then(function() {
             browser.sleep(10000);
         });
