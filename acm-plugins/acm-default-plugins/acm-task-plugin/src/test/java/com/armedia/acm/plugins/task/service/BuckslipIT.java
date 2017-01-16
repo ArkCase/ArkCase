@@ -1,4 +1,4 @@
-package com.armedia.acm.services.buckslip;
+package com.armedia.acm.plugins.task.service;
 
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.ProcessEngine;
@@ -27,7 +27,7 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/spring/spring-library-buckslip-workflow-test.xml"})
+@ContextConfiguration(locations = {"/spring/spring-library-task-activiti-test.xml"})
 public class BuckslipIT
 {
     @Autowired
