@@ -28,7 +28,7 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/spring/spring-library-task-activiti-test.xml"})
-public class BuckslipIT
+public class BuckslipActivitiIT
 {
     @Autowired
     private ProcessEngine pe;
