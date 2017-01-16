@@ -25,10 +25,13 @@ public class TaskCompletedListener implements TaskListener
     {
         DelegateExecution execution = delegateTask.getExecution();
 
+        String outcome = (String) delegateTask.getVariable("buckslipOutcome");
+        log.debug("Task id {} has outcome {}", delegateTask.getId(), outcome);
+
         // first, add the assignee of this task to the past approvers list
         String pastApprovers = (String) execution.getVariable("pastApprovers");
         String approver = delegateTask.getAssignee();
-        String updatedApprovers = addApprover(pastApprovers, approver);
+        String updatedApprovers = addApprover(pastApprovers, approver, outcome);
         execution.setVariable("pastApprovers", updatedApprovers);
         log.debug("Task ID: {}, past approvers {}", delegateTask.getId(), updatedApprovers);
 
@@ -63,15 +66,20 @@ public class TaskCompletedListener implements TaskListener
         }
     }
 
-    private String addApprover(String approvalsSoFar, String approverId)
+    private String addApprover(String approvalsSoFar, String approverId, String outcome)
     {
         JSONArray jsonApprovers = new JSONArray(approvalsSoFar);
         JSONObject newApprover = new JSONObject();
+
         newApprover.put("approverId", approverId);
+
         ZonedDateTime date = ZonedDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
         String approvalDate = formatter.format(date);
         newApprover.put("approvalDate", approvalDate);
+
+        newApprover.put("approverDecision", outcome);
+
         jsonApprovers.put(newApprover);
         return jsonApprovers.toString();
     }

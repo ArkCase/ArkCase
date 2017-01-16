@@ -40,7 +40,7 @@
             <extensionElements>
                 <activiti:taskListener event="complete"
                                        class="com.armedia.acm.plugins.task.listener.TaskCompletedListener"></activiti:taskListener>
-                <activiti:formProperty id="reworkOutcome" name="Rework Outcome" type="enum" required="true">
+                <activiti:formProperty id="buckslipOutcome" name="Buckslip Outcome" type="enum" required="true">
                     <activiti:value id="CONCUR" name="Concur"></activiti:value>
                     <activiti:value id="NON_CONCUR" name="Non-Concur"></activiti:value>
                 </activiti:formProperty>
