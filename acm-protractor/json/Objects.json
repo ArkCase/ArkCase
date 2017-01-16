@@ -1,5 +1,5 @@
 {
-    "siteurl": "http://cloud.arkcase.com",
+    "siteurl": "http://core.arkcase.dev.armedia.com/arkcase/login",
     "loginpage": {
         "locators": {
             "username": "j_username",
@@ -8,6 +8,7 @@
         },
         "data": {
             "supervisoruser": {
+
                 "username": "samuel-acm",
                 "password": "AcMd3v$"
             },
@@ -293,7 +294,8 @@
             "reloadWidgetContentBtn": ".//*[@class='panel-title ng-binding ng-scope']/span/a[1]/i",
             "chnageWidgetLocationBtn": ".//*[@class='panel-title ng-binding ng-scope']/span/a[2]/i",
             "editWidgetConfigurationBtn": ".//*[@class='panel-title ng-binding ng-scope']/span/a[5]/i",
-            "removeWidgetBtn": ".//*[@class='panel-title ng-binding ng-scope']/span/a[7]"
+            "removeWidgetBtn": ".//*[@class='panel-title ng-binding ng-scope']/span/a[7]",
+            "myTasks": "My Tasks"
 
         },
 
@@ -304,7 +306,8 @@
             "widgetTitleNewComplaints": "New Complaints",
             "widgetTitleTeamWorkload": "Team Workload",
             "widgetTitleWeather": "Weather",
-            "widgetTitleNews": "News"
+            "widgetTitleNews": "News",
+            "widgetTitleMyTasks": "My Tasks"
         }
     },
 
@@ -434,6 +437,9 @@
             "closeComplaintDescription": ".note-editable",
             "fadeElementComplaint": ".//div[@class='modal-backdrop fade in']",
             "complaintTitleLink": ".//a[@editable-text='objectInfo.complaintTitle']",
+            "complaintType": ".//a[@editable-select='objectInfo.complaintType']",
+            "complaintPriority": ".//a[@editable-select='objectInfo.priority']",
+            "complaintTitle": ".//a[@editable-text='objectInfo.complaintTitle']",
             "locationsLinkBtn": ".//*[@class='fa fa-location-arrow']",
             "addLocationBtn": "[ng-click='addNew()']",
             "locationTypeDropDown": "location.type",
@@ -446,8 +452,7 @@
             "deleteLocationBtn": "[ng-click ='grid.appScope.deleteRow(row.entity)']",
             "editLocationBtn": "[ng-click='grid.appScope.editRow(row.entity)']",
             "newComplaintBtn": "[ui-sref='frevvo.new-complaint()']",
-            "complaintsTitle": ".//a[@editable-text='objectInfo.complaintTitle']"
-
+            "complaintsTitle":".//a[@editable-text='objectInfo.complaintTitle']"
         },
         "data": {
             "firstName": "ComplaintFirstName",
@@ -607,6 +612,7 @@
             "saveParticipantBtn": "Save",
             "participantDeleteBtn": "[ng-click='grid.appScope.deleteRow(row.entity)']",
             "owningGroup": ".//a[@editable-select='owningGroup']",
+            "caseTitleWithStatus" : ".//*[@class='col-xs-6']/h4",
             "initiatorDeleteBtn": "//*[@class='fa fa-trash-o fa-lg']",
             "claimButton": "[ng-click='claim(objectInfo)']",
             "unclaimButton": "[ng-click='unclaim(objectInfo)']",
@@ -756,10 +762,118 @@
     },
     "adminPage": {
         "locators": {
-            "chooseReportListBox": "selectedObject",
+            "ListBox": "selectedObject",
             "notAuthorizedListBox": "selectedNotAuthorized",
-            "authorizedListBox": "selectedAuthorized"
-
+            "authorizedListBox": "selectedAuthorized",
+            "LDAPCol" : "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid"
+        },
+        "data":{
+            "ArmediaDirectoryName": "armedia",
+            "ArmediaLDAPUrl": "ldaps://arm-pr-w8x-ad03.armedia.com:636"
+        }
+    },
+    "reportPage": {
+        "locators": {
+            "reportDropDownList" : "selectionReports",
+            "stateDropDownList" : "selectStateReports",
+            "dateFrom" : "dateFromReports",
+            "dateTo": "dateToReports",
+            "generateButton": "Generate report",
+            "summaryReportTitle": "//table/tbody/tr[1]/td[1]",
+            "caseNumberColumnTitle": "//table/tbody/tr[2]/td[3]",
+            "caseStatusColumnTitle": "//table/tbody/tr[2]/td[4]",
+            "caseTitleColumnTitle": "//table/tbody/tr[2]/td[5]",
+            "caseIncidentDateColumnTitle": "//table/tbody/tr[2]/td[6]",
+            "casePriorityColumnTitle": "//table/tbody/tr[2]/td[7]",
+            "caseDuedateColumnTitle": "//table/tbody/tr[2]/td[8]",
+            "caseTypeColumnTitle": "//table/tbody/tr[2]/td[9]",
+            "caseNumberValue": "//table/tbody/tr[3]/td[3]",
+            "caseStatusValue": "//table/tbody/tr[3]/td[4]",
+            "caseTitleValue": "//table/tbody/tr[3]/td[5]",
+            "caseIncidentDateValue": "//table/tbody/tr[3]/td[6]",
+            "casePriorityValue": "//table/tbody/tr[3]/td[7]",
+            "caseDuedateValue": "//table/tbody/tr[3]/td[8]",
+            "caseTypeValue": "//table/tbody/tr[3]/td[9]",
+            "complaintTitleColumnTitle": "//table/tbody/tr[2]/td[3]",
+            "complaintStatusColumnTitle": "//table/tbody/tr[2]/td[4]",
+            "complaintTypeColumnTitle": "//table/tbody/tr[2]/td[5]",
+            "complaintPriorityColumnTitle": "//table/tbody/tr[2]/td[6]",
+            "complaintCreateDateColumnTitle": "//table/tbody/tr[2]/td[7]",
+            "complaintIncidentDateColumnTitle": "//table/tbody/tr[2]/td[8]",
+            "complaintTitleValue": "//table/tbody/tr[3]/td[3]",
+            "complaintStatusValue": "//table/tbody/tr[3]/td[4]",
+            "complaintTypeValue": "//table/tbody/tr[3]/td[5]",
+            "complaintPriorityValue": "//table/tbody/tr[3]/td[6]",
+            "complaintCreatedDateValue": "//table/tbody/tr[3]/td[7]",
+            "complaintIncidentDateValue": "//table/tbody/tr[3]/td[8]",
+            "CDCDispositionTitle": "//table/tbody/tr[1]/td[2]",
+            "CDCCountTitle": "//table/tbody/tr[1]/td[3]",
+            "CDCAddToExistingCaseTitle": "//table/tbody/tr[3]/td[2]",
+            "CDCNoFurtherActionTitle": "//table/tbody/tr[5]/td[2]",
+            "CDCOpenInvestigationTitle": "//table/tbody/tr[7]/td[2]",
+            "CDCReferExternalTitle": "//table/tbody/tr[9]/td[2]",
+            "CDCAddToExistingCaseValue": "//table/tbody/tr[4]/td[3]",
+            "CDCNoFurtherActionValue": "//table/tbody/tr[6]/td[3]",
+            "CDCOpenInvestigationValue": "//table/tbody/tr[8]/td[3]",
+            "CDCReferExternalValue": "//table/tbody/tr[10]/td[3]",
+            "CDCImage": "//table/tbody/tr[11]/td/img",
+            "reportAreaIFrame": "reportContent",
+            "reportsIFrame": "reports-iframe"
+        },
+        "data":{
+            "CaseSummaryReportTitleName": "Case Summary Report",
+            "CaseSummaryColumn1Title": "Case Number",
+            "CaseSummaryColumn2Title": "Status",
+            "CaseSummaryColumn3Title": "Title",
+            "CaseSummaryColumn4Title": "Incident Date",
+            "CaseSummaryColumn5Title": "Priority",
+            "CaseSummaryColumn6Title": "Due Date",
+            "CaseSummaryColumn7Title": "Type",
+            "ComplaintReportTitleName": "Complaint Report",
+            "ComplaintReportColumn1Title": "Title",
+            "ComplaintReportColumn2Title": "Status",
+            "ComplaintReportColumn3Title": "Type",
+            "ComplaintReportColumn4Title": "Priority",
+            "ComplaintReportColumn5Title": "Create Date",
+            "ComplaintReportColumn6Title": "Incident Date",
+            "CDCReportDispositionTitle": "Disposition",
+            "CDCReportCountTitle": "Count",
+            "CDCFirstRowTitle": "Add to Existing Case",
+            "CDCSecondRowTitle": "No Further Action",
+            "CDCThirdRowTitle": "Open Investigation",
+            "CDCForthRowTitle": "Refer External"
+        }
+    },
+    "auditPage":{
+        "locators":{
+            "reportName": "reportNameAudit",
+            "id": "selectIDAudit",
+            "dateFromAudit": "dateFromAudit",
+            "dateToAudit": "dateToAudit",
+            "generateAuditReportButton": "Generate Audit Report",
+            "auditReportColumn1Title": "//table/tbody/tr[2]/td[2]",
+            "auditReportColumn2Title": "//table/tbody/tr[2]/td[3]",
+            "auditReportColumn3Title": "//table/tbody/tr[2]/td[4]",
+            "auditReportColumn4Title": "//table/tbody/tr[2]/td[5]",
+            "auditReportColumn5Title": "//table/tbody/tr[2]/td[6]",
+            "auditReportColumn6Title": "//table/tbody/tr[2]/td[7]",
+            "auditReportColumn7Title": "//table/tbody/tr[2]/td[8]",
+            "dateValue": "//table/tbody/tr[4]/td[2]",
+            "userValue": "//table/tbody/tr[4]/td[3]",
+            "nameValue": "//table/tbody/tr[4]/td[4]",
+            "resultValue": "//table/tbody/tr[4]/td[5]",
+            "ipAddressValue": "//table/tbody/tr[4]/td[6]",
+            "objectIdValue": "//table/tbody/tr[4]/td[7]",
+            "objectTypeValue": "//table/tbody/tr[4]/td[8]"
+        },
+        "data":{
+            "auditReportColumn1Title": "Date",
+            "auditReportColumn2Title": "User",
+            "auditReportColumn3Title": "Name",
+            "auditReportColumn4Title": "Result",
+            "auditReportColumn5Title": "IP Address",
+            "auditReportColumn6Title": "Object ID",
+            "auditReportColumn7Title": "Object Type"
         }
     },
 

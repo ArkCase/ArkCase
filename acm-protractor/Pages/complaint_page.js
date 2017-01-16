@@ -19,11 +19,16 @@ var radioButtonNewInitiator = element(by.xpath(Objects.complaintPage.locators.ra
 var closeComplaintButton = element(by.xpath(Objects.complaintPage.locators.closeComplaintButton));
 var complaintDispositionDDListBox = element(by.xpath(Objects.complaintPage.locators.complaintDispositionDDListBox));
 var closeComplaintDescription = element(by.css(Objects.complaintPage.locators.closeComplaintDescription));
-var selectApprover = element(by.xpath(Objects.casepage.locators.selectApprover));
-var searchForUser = element(by.xpath(Objects.casepage.locators.searchForUser));
+var selectApprover = element(by.name(Objects.casepage.locators.selectApprover));
+var searchForUser = element(by.model(Objects.casepage.locators.searchForUser));
 var goBtn = element(by.xpath(Objects.casepage.locators.goBtn));
 var addBtn = element(by.xpath(Objects.casepage.locators.addBtn));
 var searchedUser = element(by.xpath(Objects.casepage.locators.searchedUser));
+var complaintID = element(by.xpath(Objects.casepage.locators.caseID));
+var complaintType = element(by.xpath(Objects.complaintPage.locators.complaintType));
+var complaintPriority = element(by.xpath(Objects.complaintPage.locators.complaintPriority));
+var complaintCreateDate = element(by.xpath(Objects.casepage.locators.createdDate));
+var complaintTitleSaved = element(by.xpath(Objects.complaintPage.locators.complaintTitle));
 var newBtn = element(by.xpath(Objects.basepage.locators.newButton));
 var locationLinkBtn = element(by.xpath(Objects.complaintPage.locators.locationsLinkBtn));
 var addLocationBtn = element(by.css(Objects.complaintPage.locators.addLocationBtn));
@@ -42,8 +47,6 @@ var deleteLocationBtn = element(by.css(Objects.complaintPage.locators.deleteLoca
 var editLocationBtn = element(by.css(Objects.complaintPage.locators.editLocationBtn));
 var newComplaintBtn = element(by.css(Objects.complaintPage.locators.newComplaintBtn));
 var complaintsTitle = element(by.xpath(Objects.complaintPage.locators.complaintsTitle));
-
-
 
 var ComplaintPage = function() {
 
@@ -204,6 +207,33 @@ var ComplaintPage = function() {
         this.clickSubmitButton();
         return this;
     };
+    this.selectApprover = function(approver) {
+        browser.wait(EC.presenceOf(element(by.name(Objects.casepage.locators.selectApprover))), 30000).then(function () {
+            browser.wait(EC.visibilityOf(element(by.name(Objects.casepage.locators.selectApprover))), 30000).then(function () {
+                browser.wait(EC.elementToBeClickable(element(by.name(Objects.casepage.locators.selectApprover))), 30000).then(function () {
+                    selectApprover.click().then(function () {
+                        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.addUser))), 10000);
+                        searchForUser.click();
+                        searchForUser.sendKeys(approver);
+                        goBtn.click().then(function () {
+                            browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchedUser))), 3000);
+                            searchedUser.click().then(function () {
+                                browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.addBtn))), 3000);
+                                addBtn.click();
+                            });
+                        });
+                    });
+                })
+            });
+        });
+        return this;
+    }
+
+    this.waitForComplaintTitle = function () {
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.complaintPage.locators.complaintTitleLink))), 30000).then(function () {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.complaintTitleLink))), 30000);
+        })
+    };
 
     this.addLocation = function(type, street, city, state, zip) {
 
@@ -231,15 +261,8 @@ var ComplaintPage = function() {
                 });
             });
         });
-
 return this;
 };
-this.waitForComplaintTitle = function() {
-    browser.wait(EC.presenceOf(element(by.xpath(Objects.complaintPage.locators.complaintTitleLink))), 30000).then(function() {
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.complaintTitleLink))), 30000);
-    })
-};
-
 this.deleteLocation = function() {
 
     browser.wait(EC.visibilityOf(element(by.css(Objects.complaintPage.locators.deleteLocationBtn))), 30000).then(function() {
@@ -321,10 +344,30 @@ this.clickNewComplaintBtn = function() {
     });
 }
 
-this.returnComplaintsTitle = function() {
-    return complaintsTitle.getText();
-}
 
+    this.getComplaintId = function() {
+        return complaintID.getText();
+    };
+    this.waitForComplaintID = function() {
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.caseID))), 60000, "Case ID is not present").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.caseID))), 60000, "Case ID is not displayed");
+        });
+    };
+    this.returnComplaintType = function () {
+        return complaintType.getText();
+    };
+    this.returnComplaintPriority = function () {
+        return complaintPriority.getText();
+    };
+    this.returnCreatedDate = function () {
+        return complaintCreateDate.getText();
+    };
+    this.returnComplaintTitle = function () {
+        return complaintTitleSaved.getText();
+    };
+    this.returnComplaintsTitle = function() {
+        return complaintsTitle.getText();
+    };
 };
 ComplaintPage.prototype = basePage;
 module.exports = new ComplaintPage();

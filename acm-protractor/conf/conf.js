@@ -1,5 +1,6 @@
 var HtmlScreenshotReporter = require(process.env['USERPROFILE'] + '/node_modules/protractor-jasmine2-screenshot-reporter');
 var utils = require('../util/utils.js');
+var Objects = require('../json/Objects.json');
 var reporter = new HtmlScreenshotReporter({
     dest: 'target/screenshots_' + utils.returnToday("_"),
     filename: 'AutoTestRun-report.html'
@@ -39,17 +40,19 @@ exports.config = {
     // }],
 
     specs: [
-        '../test_spec/verification_test.spec.js'
-         '../test_spec/dashboard_test.spec.js',
-        '../test_spec/task_test.spec.js',
-        '../test_spec/case_test.spec.js',
-        '../test_spec/complaint_test.spec.js',
-        '../test_spec/user_test.spec.js',
-        '../test_spec/notification_test.js',
-        '../test_spec/admin_test.js',
-        '../test_spec/preference_test.spec.js'
-        
-        
+
+           '../test_spec/verification_test.spec.js',
+           '../test_spec/dashboard_test.spec.js',
+           '../test_spec/task_test.spec.js',
+           '../test_spec/case_test.spec.js',
+           '../test_spec/complaint_test.spec.js',
+           '../test_spec/user_test.spec.js',
+           '../test_spec/notification_test.js',
+           '../test_spec/admin_test.js',
+           '../test_spec/report_test.spec.js',
+           '../test_spec/audit_test.spec.js',
+           '../test_spec/preference_test.spec.js'
+
     ],
 
     jasmineNodeOpts: {
@@ -67,7 +70,7 @@ exports.config = {
         jasmine.getEnv().addReporter(reporter);
 
         browser.driver.manage().window().maximize();
-        browser.driver.get('https://core.arkcase.dev.armedia.com/arkcase/login');
+        browser.driver.get(Objects.siteurl);
         browser.manage().timeouts().setScriptTimeout(90000);
         browser.manage().timeouts().pageLoadTimeout(40000);
     },

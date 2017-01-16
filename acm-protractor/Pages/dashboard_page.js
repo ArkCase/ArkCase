@@ -19,6 +19,8 @@ var reloadWidgetContentBtn = element(by.xpath(Objects.dashboardpage.locators.rel
 var chnageWidgetLocationBtn = element(by.xpath(Objects.dashboardpage.locators.chnageWidgetLocationBtn));
 var editWidgetConfigurationBtn = element(by.xpath(Objects.dashboardpage.locators.editWidgetConfigurationBtn));
 var removeWidgetBtn = element.all(by.xpath(Objects.dashboardpage.locators.removeWidgetBtn)).get(0);
+var myTasks = element(by.linkText(Objects.dashboardpage.locators.myTasks));
+var EC = protractor.ExpectedConditions;
 var DashboardPage = function() { 
 	this.clickEditButton = function() {
 		editBtn.click();
@@ -32,8 +34,8 @@ var DashboardPage = function() {
     	return widgetTitle.getText();
     }
     this.removeWidgetButton = function(){
-    	removeWidgetBtn.click();
-    	return this;
+        removeWidgetBtn.click();
+        return this;
     }
     this.clickSaveChangesButton = function(){
     	saveChangesBtn.click();
@@ -62,13 +64,17 @@ var DashboardPage = function() {
 	    	return this;
 	    	break;
 		case "Weather":
-			weather.click();
-	    	return this;
+            weather.click();
+            return this;
 	    	break;
 		case "News":
 			news.click();
 	    	return this;
 	    	break;
+	    	case "MyTasks":
+				myTasks.click();
+				return this;
+
 		default:
 			casesByStatus.click();
 		    return this;
