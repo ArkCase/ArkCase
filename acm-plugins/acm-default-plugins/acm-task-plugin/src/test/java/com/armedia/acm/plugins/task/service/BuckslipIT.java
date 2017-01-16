@@ -95,7 +95,7 @@ public class BuckslipIT
         String approvalsSoFar = (String) task.getProcessVariables().get(completedApprovalsKey);
         assertEquals("[]", approvalsSoFar);
 
-        ts.complete(task.getId());
+        completeTask(task, "CONCUR");
 
         approvals = getTasks(pi);
 
@@ -106,7 +106,7 @@ public class BuckslipIT
 
         log.debug("Approvers in bob's task: {}", approvalsSoFar);
 
-        ts.complete(task.getId());
+        completeTask(task, "CONCUR");
 
         approvals = getTasks(pi);
 
@@ -117,7 +117,7 @@ public class BuckslipIT
 
         log.debug("Approvers in phil's task: {}", approvalsSoFar);
 
-        ts.complete(task.getId());
+        completeTask(task, "CONCUR");
 
         List<HistoricProcessInstance> hpiList =
                 hs.createHistoricProcessInstanceQuery().processInstanceId(pi.getId()).includeProcessVariables().list();
@@ -126,6 +126,12 @@ public class BuckslipIT
         // should not be a current process any more
         List<ProcessInstance> pis = rt.createProcessInstanceQuery().processInstanceId(pi.getId()).list();
         assertEquals(0, pis.size());
+    }
+
+    private void completeTask(Task task, String outcome)
+    {
+        ts.setVariable(task.getId(), "buckslipOutcome", outcome);
+        ts.complete(task.getId());
     }
 
     @Test
@@ -161,7 +167,7 @@ public class BuckslipIT
         String approvalsSoFar = (String) task.getProcessVariables().get(completedApprovalsKey);
         assertEquals("[]", approvalsSoFar);
 
-        ts.complete(task.getId());
+        completeTask(task, "CONCUR");
 
         approvals = getTasks(pi);
 
@@ -172,7 +178,7 @@ public class BuckslipIT
 
         log.debug("Approvers in bob's task: {}", approvalsSoFar);
 
-        ts.complete(task.getId());
+        completeTask(task, "CONCUR");
 
 
         approvals = getTasks(pi);
@@ -188,7 +194,7 @@ public class BuckslipIT
         futureApprovers = new ArrayList<>();
         ts.setVariable(task.getId(), "futureApprovers", futureApprovers);
 
-        ts.complete(task.getId());
+        completeTask(task, "CONCUR");
 
         List<HistoricProcessInstance> hpiList =
                 hs.createHistoricProcessInstanceQuery().processInstanceId(pi.getId()).includeProcessVariables().list();
@@ -234,7 +240,7 @@ public class BuckslipIT
         String approvalsSoFar = (String) task.getProcessVariables().get(completedApprovalsKey);
         assertEquals("[]", approvalsSoFar);
 
-        ts.complete(task.getId());
+        completeTask(task, "CONCUR");
 
         approvals = getTasks(pi);
 
@@ -251,7 +257,7 @@ public class BuckslipIT
         futureApprovers.add("bill");
         ts.setVariable(task.getId(), "futureApprovers", futureApprovers);
 
-        ts.complete(task.getId());
+        completeTask(task, "CONCUR");
 
         approvals = getTasks(pi);
 
@@ -261,7 +267,7 @@ public class BuckslipIT
         approvalsSoFar = (String) task.getProcessVariables().get(completedApprovalsKey);
         log.debug("Approvers in phil's task: {}", approvalsSoFar);
 
-        ts.complete(task.getId());
+        completeTask(task, "CONCUR");
 
         approvals = getTasks(pi);
 
@@ -275,7 +281,7 @@ public class BuckslipIT
         List<ProcessInstance> pis = rt.createProcessInstanceQuery().processInstanceId(pi.getId()).list();
         assertEquals(1, pis.size());
 
-        ts.complete(task.getId());
+        completeTask(task, "CONCUR");
 
         List<HistoricProcessInstance> hpiList =
                 hs.createHistoricProcessInstanceQuery().processInstanceId(pi.getId()).includeProcessVariables().list();
