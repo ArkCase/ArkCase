@@ -99,7 +99,9 @@
     "edtQuery.placeHolder": "Search",
     "btnQuery.text": "Go!",
     "errorNode.title": "(Error)",
-    "errorNode.toolTip": "(Error)"
+    "errorNode.toolTip": "(Error)",
+    "noAccessNode.title": "(No Access)",
+    "noAccessNode.toolTip": "(No Access)"
   },
   "common.directive.simplePager": {
     "rowCountLabel": "items per page",
