@@ -35,6 +35,33 @@
             <version>${acm.version}</version>
         </dependency>
 
+        <!-- testing -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-users</artifactId>
+            <version>${acm.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-object-lock</artifactId>
+            <version>${acm.version}</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
 </project>

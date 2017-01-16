@@ -1,6 +1,8 @@
 package com.armedia.acm.plugins.category.service;
 
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
 import com.armedia.acm.plugins.category.model.Category;
 
 import java.util.List;
@@ -14,9 +16,9 @@ public interface CategoryService
 
     Category get(Long id) throws AcmObjectNotFoundException;
 
-    Category create(Category category);
+    Category create(Category category) throws AcmCreateObjectFailedException;
 
-    Category update(Category category) throws AcmObjectNotFoundException;
+    Category update(Category category) throws AcmObjectNotFoundException, AcmUpdateObjectFailedException;
 
     Category delete(Long id) throws AcmObjectNotFoundException;
 
