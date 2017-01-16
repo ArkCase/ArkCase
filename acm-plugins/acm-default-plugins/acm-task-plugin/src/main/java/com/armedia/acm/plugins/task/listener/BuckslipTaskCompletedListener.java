@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by dmiller on 1/14/2017.
  */
-public class TaskCompletedListener implements TaskListener
+public class BuckslipTaskCompletedListener implements TaskListener
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
