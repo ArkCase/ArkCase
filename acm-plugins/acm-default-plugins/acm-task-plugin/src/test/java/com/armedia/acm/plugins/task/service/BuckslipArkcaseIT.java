@@ -99,7 +99,6 @@ public class BuckslipArkcaseIT
 
     private String startBuckslipProcess()
     {
-
         Long objectId = 500L;
         String objectType = "rockBand";
         String objectNumber = "20170116_101";
@@ -108,7 +107,6 @@ public class BuckslipArkcaseIT
         futureApprovers.add("jerry");
         futureApprovers.add("bob");
         futureApprovers.add("phil");
-        String moreApprovers = "true";
 
         Map<String, Object> processVariables = new HashMap<>();
         processVariables.put("OBJECT_ID", objectId);
@@ -117,7 +115,6 @@ public class BuckslipArkcaseIT
         processVariables.put("documentType", documentType);
         // the process should work with either "approvers" or "futureApprovers"
         processVariables.put("approvers", futureApprovers);
-        processVariables.put("moreApprovers", moreApprovers);
 
         ProcessInstance pi = rt.startProcessInstanceByKey(processName, processVariables);
 

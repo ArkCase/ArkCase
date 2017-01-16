@@ -28,6 +28,11 @@ public class BuckslipWorkflowStartedListener implements ExecutionListener
 
         moveFirstFutureApproverToCurrentApproverIfNeeded(delegateExecution);
 
+        // set moreApprovers true if we have a current approver
+        String currentApprover = (String) delegateExecution.getVariable("currentApprover");
+        String moreApprovers = currentApprover == null || currentApprover.trim().isEmpty() ? "false" : "true";
+        delegateExecution.setVariable("moreApprovers", moreApprovers);
+
 
     }
 

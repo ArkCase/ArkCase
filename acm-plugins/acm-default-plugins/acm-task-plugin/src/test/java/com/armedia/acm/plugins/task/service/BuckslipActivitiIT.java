@@ -69,18 +69,14 @@ public class BuckslipActivitiIT
         Long objectId = 500L;
         String objectType = "rockBand";
         String documentType = "Concert Contract";
-        Boolean isBuckslipWorkflow = Boolean.TRUE;
         List<String> futureApprovers = Arrays.asList("jerry", "bob", "phil");
-        String moreApprovers = "true";
 
         Map<String, Object> processVariables = new HashMap<>();
         processVariables.put("OBJECT_ID", objectId);
         processVariables.put("OBJECT_TYPE", objectType);
-        processVariables.put("isBuckslipWorkflow", isBuckslipWorkflow);
         processVariables.put("documentType", documentType);
         // the process should work with either "approvers" or "futureApprovers"
         processVariables.put("approvers", futureApprovers);
-        processVariables.put("moreApprovers", moreApprovers);
 
         ProcessInstance pi = rt.startProcessInstanceByKey("ArkCaseBuckslipProcess", processVariables);
 
@@ -138,18 +134,14 @@ public class BuckslipActivitiIT
         Long objectId = 500L;
         String objectType = "rockBand";
         String documentType = "Concert Contract";
-        Boolean isBuckslipWorkflow = Boolean.TRUE;
         List<String> futureApprovers = Arrays.asList("jerry", "bob", "phil", "bill");
-        String moreApprovers = "true";
 
         Map<String, Object> processVariables = new HashMap<>();
         processVariables.put("OBJECT_ID", objectId);
         processVariables.put("OBJECT_TYPE", objectType);
-        processVariables.put("isBuckslipWorkflow", isBuckslipWorkflow);
         processVariables.put("documentType", documentType);
         // the process should work with either "approvers" or "futureApprovers"
         processVariables.put("futureApprovers", futureApprovers);
-        processVariables.put("moreApprovers", moreApprovers);
 
         ProcessInstance pi = rt.startProcessInstanceByKey("ArkCaseBuckslipProcess", processVariables);
 
@@ -208,18 +200,14 @@ public class BuckslipActivitiIT
         Long objectId = 500L;
         String objectType = "rockBand";
         String documentType = "Concert Contract";
-        Boolean isBuckslipWorkflow = Boolean.TRUE;
         List<String> futureApprovers = Arrays.asList("jerry", "bob");
-        String moreApprovers = "true";
 
         Map<String, Object> processVariables = new HashMap<>();
         processVariables.put("OBJECT_ID", objectId);
         processVariables.put("OBJECT_TYPE", objectType);
-        processVariables.put("isBuckslipWorkflow", isBuckslipWorkflow);
         processVariables.put("documentType", documentType);
         // the process should work with either "approvers" or "futureApprovers"
         processVariables.put("futureApprovers", futureApprovers);
-        processVariables.put("moreApprovers", moreApprovers);
 
         ProcessInstance pi = rt.startProcessInstanceByKey("ArkCaseBuckslipProcess", processVariables);
 
