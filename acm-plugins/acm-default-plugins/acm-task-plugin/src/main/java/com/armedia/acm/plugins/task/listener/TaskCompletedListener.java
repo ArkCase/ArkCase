@@ -40,14 +40,15 @@ public class TaskCompletedListener implements TaskListener
 
     private void updateProcessVariables(List<String> futureApprovers, DelegateTask task, DelegateExecution execution)
     {
-        log.debug("task {} has {} more approvers", task.getId(), futureApprovers.size());
+        log.debug("task {} has {} more approvers", task.getId(), futureApprovers == null ? 0 : futureApprovers.size());
 
-        String moreApprovers;
-        String currentApprover;
-        if (!futureApprovers.isEmpty())
+        if (futureApprovers != null && !futureApprovers.isEmpty())
         {
-            moreApprovers = "true";
-            currentApprover = futureApprovers.get(0);
+            String moreApprovers = "true";
+            String currentApprover = futureApprovers.get(0);
+
+            // Activiti throws an exception if we send the subList itself, so we have to create a whole new
+            // list based on the subList.
             futureApprovers = new ArrayList<>(futureApprovers.subList(1, futureApprovers.size()));
 
             execution.setVariable("currentApprover", currentApprover);
