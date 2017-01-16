@@ -70,8 +70,7 @@ public class BuckslipActivitiIT
         String objectType = "rockBand";
         String documentType = "Concert Contract";
         Boolean isBuckslipWorkflow = Boolean.TRUE;
-        List<String> futureApprovers = Arrays.asList("bob", "phil");
-        String currentApprover = "jerry";
+        List<String> futureApprovers = Arrays.asList("jerry", "bob", "phil");
         String completedApprovals = "[]";
         String moreApprovers = "true";
 
@@ -82,7 +81,6 @@ public class BuckslipActivitiIT
         processVariables.put("documentType", documentType);
         processVariables.put("futureApprovers", futureApprovers);
         processVariables.put(completedApprovalsKey, completedApprovals);
-        processVariables.put("currentApprover", currentApprover);
         processVariables.put("moreApprovers", moreApprovers);
 
         ProcessInstance pi = rt.startProcessInstanceByKey("ArkCaseBuckslipProcess", processVariables);
@@ -142,8 +140,7 @@ public class BuckslipActivitiIT
         String objectType = "rockBand";
         String documentType = "Concert Contract";
         Boolean isBuckslipWorkflow = Boolean.TRUE;
-        List<String> futureApprovers = Arrays.asList("bob", "phil", "bill");
-        String currentApprover = "jerry";
+        List<String> futureApprovers = Arrays.asList("jerry", "bob", "phil", "bill");
         String completedApprovals = "[]";
         String moreApprovers = "true";
 
@@ -154,7 +151,6 @@ public class BuckslipActivitiIT
         processVariables.put("documentType", documentType);
         processVariables.put("futureApprovers", futureApprovers);
         processVariables.put(completedApprovalsKey, completedApprovals);
-        processVariables.put("currentApprover", currentApprover);
         processVariables.put("moreApprovers", moreApprovers);
 
         ProcessInstance pi = rt.startProcessInstanceByKey("ArkCaseBuckslipProcess", processVariables);
@@ -215,8 +211,7 @@ public class BuckslipActivitiIT
         String objectType = "rockBand";
         String documentType = "Concert Contract";
         Boolean isBuckslipWorkflow = Boolean.TRUE;
-        List<String> futureApprovers = Arrays.asList("bob");
-        String currentApprover = "jerry";
+        List<String> futureApprovers = Arrays.asList("jerry", "bob");
         String completedApprovals = "[]";
         String moreApprovers = "true";
 
@@ -227,7 +222,6 @@ public class BuckslipActivitiIT
         processVariables.put("documentType", documentType);
         processVariables.put("futureApprovers", futureApprovers);
         processVariables.put(completedApprovalsKey, completedApprovals);
-        processVariables.put("currentApprover", currentApprover);
         processVariables.put("moreApprovers", moreApprovers);
 
         ProcessInstance pi = rt.startProcessInstanceByKey("ArkCaseBuckslipProcess", processVariables);
