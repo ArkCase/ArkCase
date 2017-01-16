@@ -36,15 +36,15 @@ angular.module('dashboard.references', ['adf.provider'])
                 {
                     name: "TASK",
                     configName: "tasks",
-                    getInfo: ComplaintInfoService.getTaskInfo,
-                    validateInfo: ComplaintInfoService.validateTaskInfo
+                    getInfo: TaskInfoService.getTaskInfo,
+                    validateInfo: TaskInfoService.validateTaskInfo
                 }
                 ,
                 {
                     name: "ADHOC",
                     configName: "tasks",
-                    getInfo: ComplaintInfoService.getTaskInfo,
-                    validateInfo: ComplaintInfoService.validateTaskInfo
+                    getInfo: TaskInfoService.getTaskInfo,
+                    validateInfo: TaskInfoService.validateTaskInfo
                 }
             ];
 
