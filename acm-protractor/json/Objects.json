@@ -596,20 +596,21 @@
             "searchForUserInput": "//*[@class='modal-search-header']/..//input",
             "searchUserBtn": "Search",
             "OkBtn": "OK",
-            "searchedUserName": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
+            "searchedUserName":".//*[@class='ui-grid-canvas']/div/div[1]/div[4]",
             "participantLinkBtn": ".//*[@class='fa fa-users']",
             "participantTableRow": ".//*[@class='ui-grid-cell-contents ng-binding ng-scope']",
             "participantTable": ".//*[@class='panel panel-success panel-grid']",
             "priorityType": ".//*[@class='ui-grid-cell-contents ui-grid-header-cell-primary-focus']",
             "participantEditBtn": "[ng-click='grid.appScope.editRow(row.entity)']",
-            "modalParticipantType": "participant.participantType",
+            "modalParticipantType": ".//*[@ng-model='participant.participantType']",
             "modalParticipantName": "participant.participantLdapId",
             "saveParticipantBtn": "Save",
             "participantDeleteBtn": "[ng-click='grid.appScope.deleteRow(row.entity)']",
             "owningGroup": ".//a[@editable-select='owningGroup']",
             "initiatorDeleteBtn": "//*[@class='fa fa-trash-o fa-lg']",
             "claimButton": "[ng-click='claim(objectInfo)']",
-            "unclaimButton": "[ng-click='unclaim(objectInfo)']"
+            "unclaimButton": "[ng-click='unclaim(objectInfo)']",
+            "addParticipantBtn": "[ng-click='addNew()']"
 
         },
 
@@ -760,5 +761,23 @@
             "authorizedListBox": "selectedAuthorized"
 
         }
+    },
+
+    "subscriptionsPage": {
+     "locators": {
+
+     "subscriptionsModule": "a[href='#!/subscriptions']",
+     "subscriptionsInput": "searchQuery",
+     "subscriptionsTitle": ".//*[@class='module-header']",
+     "searchBtn": "[ng-click='queryExistingItems()']"
+
+    
+
+
+
+     }
+
+
     }
+
 }

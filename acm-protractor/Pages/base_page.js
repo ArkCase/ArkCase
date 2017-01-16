@@ -187,9 +187,9 @@ var submitButton = element(by.xpath(Objects.complaintPage.locators.submitButton)
 var participantTab = element(by.css(Objects.casepage.locators.participantsTab));
 var selectParticipantType = element(by.xpath(Objects.casepage.locators.selectParticipantType));
 var selectparticipant = element(by.name(Objects.casepage.locators.selectParticipant));
-var searchForUserInput = element(by.xpath(Objects.casepage.locators.searchForUser));
+var searchForUserInput = element(by.xpath(Objects.casepage.locators.searchForUserInput));
 var searchForUserBtn = element(by.buttonText(Objects.casepage.locators.searchUserBtn));
-var searchedUser = element.all(by.repeater(Objects.casepage.locators.searchedUserName)).get(0);
+var searchedUser = element(by.xpath(Objects.casepage.locators.searchedUserName));
 var okBtn = element(by.buttonText(Objects.casepage.locators.OkBtn));
 var participantTypeFirstRow = element.all(by.xpath(Objects.casepage.locators.participantTableRow)).get(0);
 var participantNameFirstRow = element.all(by.xpath(Objects.casepage.locators.participantTableRow)).get(1);
@@ -202,9 +202,10 @@ var participantNameForthRow = element.all(by.xpath(Objects.casepage.locators.par
 var participantTypeFifthRow = element.all(by.xpath(Objects.casepage.locators.participantTableRow)).get(8);
 var participantNameFifthRow = element.all(by.xpath(Objects.casepage.locators.participantTableRow)).get(9);
 var participantsLinkBtn = element(by.xpath(Objects.casepage.locators.participantLinkBtn));
+var addParticipantBtn = element(by.css(Objects.casepage.locators.addParticipantBtn));
 var priorityType = element.all(by.xpath(Objects.casepage.locators.priorityType)).get(0);
 var editAssigneeBtn = element.all(by.css(Objects.casepage.locators.participantEditBtn)).get(1);
-var modalParticipantType = element(by.model(Objects.casepage.locators.modalParticipantType));
+var modalParticipantType = new SelectWrapper(by.xpath(Objects.casepage.locators.modalParticipantType));
 var modalParticipantName = element(by.model(Objects.casepage.locators.modalParticipantName));
 var saveParticipantBtn = element(by.buttonText(Objects.casepage.locators.saveParticipantBtn));
 var assigneeDeleteBtn = element.all(by.css(Objects.casepage.locators.participantDeleteBtn)).get(1);
@@ -687,7 +688,7 @@ var BasePage = function() {
                         searchForUserInput.click();
                         searchForUserInput.sendKeys(approverSamuel);
                         searchForUserBtn.click().then(function() {
-                            browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.casepage.locators.searchedUserName)).get(0)), 3000);
+                            browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchedUserName))), 3000);
                             searchedUser.click().then(function() {
                                 browser.wait(EC.visibilityOf(element(by.buttonText(Objects.casepage.locators.OkBtn))), 3000);
                                 okBtn.click();
@@ -1858,7 +1859,7 @@ var BasePage = function() {
                         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchForUserInput))), 10000, "Search for user input is not displayed").then(function() {
                             searchForUserInput.sendKeys(participant).then(function() {
                                 searchForUserBtn.click().then(function() {
-                                    browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.casepage.locators.searchedUserName)).get(0)), 30000, "Searched user is not displayed").then(function() {
+                                    browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchedUserName))), 30000, "Searched user is not displayed").then(function() {
                                         searchedUser.click().then(function() {
                                             okBtn.click();
                                         });
@@ -1994,7 +1995,7 @@ var BasePage = function() {
                 browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchForUserInput))), 10000, "Search for user input is not displayed").then(function() {
                     searchForUserInput.sendKeys(participant).then(function() {
                         searchForUserBtn.click().then(function() {
-                            browser.wait(EC.presenceOf(element.all(by.repeater(Objects.casepage.locators.searchedUserName)).get(0)), 30000, "Searched user is not displayed").then(function() {
+                            browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.searchedUserName))), 30000, "Searched user is not displayed").then(function() {
                                 searchedUser.click().then(function() {
                                     browser.sleep(3000);
                                     okBtn.click().then(function() {
@@ -2015,6 +2016,41 @@ var BasePage = function() {
         });
         return this;
     }
+
+
+    this.addParticipantFromParticipantTable = function(type, participant) {
+
+
+        addParticipantBtn.click().then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.modalParticipantType))), 30000).then(function() {
+                modalParticipantType.selectByText(type).then(function() {
+                    modalParticipantName.click().then(function() {
+                        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchForUserInput))), 10000, "Search for user input is not displayed").then(function() {
+                            searchForUserInput.sendKeys(participant).then(function() {
+                                searchForUserBtn.click().then(function() {
+                                    browser.sleep(3000);
+                                    browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.searchedUserName))), 30000, "Searched user is not displayed").then(function() {
+                                        searchedUser.click().then(function() {
+                                            browser.sleep(3000);
+                                            okBtn.click().then(function() {
+                                                browser.sleep(3000);
+                                                saveParticipantBtn.click();
+                                                browser.sleep(5000);
+                                            });
+                                        });
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+
+        return this;
+    }
+
+
 
     this.clickDeleteAsigneeBtn = function() {
 
