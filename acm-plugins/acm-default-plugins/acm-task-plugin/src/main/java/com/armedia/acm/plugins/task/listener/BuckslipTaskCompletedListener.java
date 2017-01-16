@@ -1,5 +1,7 @@
 package com.armedia.acm.plugins.task.listener;
 
+import com.armedia.acm.plugins.task.model.TaskConstants;
+import com.armedia.acm.services.search.model.SearchConstants;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.DelegateTask;
 import org.activiti.engine.delegate.TaskListener;
@@ -8,6 +10,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -29,10 +32,10 @@ public class BuckslipTaskCompletedListener implements TaskListener
         log.debug("Task id {} has outcome {}", delegateTask.getId(), outcome);
 
         // first, add the assignee of this task to the past approvers list
-        String pastApprovers = (String) execution.getVariable("pastApprovers");
+        String pastApprovers = (String) execution.getVariable(TaskConstants.VARIABLE_NAME_PAST_APPROVERS);
         String approver = delegateTask.getAssignee();
         String updatedApprovers = addApprover(pastApprovers, approver, outcome);
-        execution.setVariable("pastApprovers", updatedApprovers);
+        execution.setVariable(TaskConstants.VARIABLE_NAME_PAST_APPROVERS, updatedApprovers);
         log.debug("Task ID: {}, past approvers {}", delegateTask.getId(), updatedApprovers);
 
         // next, set the future approver and current approver variables
@@ -56,13 +59,13 @@ public class BuckslipTaskCompletedListener implements TaskListener
 
             execution.setVariable("currentApprover", currentApprover);
             execution.setVariable("moreApprovers", moreApprovers);
-            execution.setVariable("futureApprovers", futureApprovers);
+            execution.setVariable(TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_APPROVERS, futureApprovers);
 
         } else
         {
             execution.setVariable("currentApprover", "");
             execution.setVariable("moreApprovers", "false");
-            execution.setVariable("futureApprovers", new ArrayList<String>());
+            execution.setVariable(TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_APPROVERS, new ArrayList<String>());
         }
     }
 
@@ -73,8 +76,8 @@ public class BuckslipTaskCompletedListener implements TaskListener
 
         newApprover.put("approverId", approverId);
 
-        ZonedDateTime date = ZonedDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+        ZonedDateTime date = ZonedDateTime.now(ZoneOffset.UTC);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(SearchConstants.SOLR_DATE_FORMAT);
         String approvalDate = formatter.format(date);
         newApprover.put("approvalDate", approvalDate);
 
