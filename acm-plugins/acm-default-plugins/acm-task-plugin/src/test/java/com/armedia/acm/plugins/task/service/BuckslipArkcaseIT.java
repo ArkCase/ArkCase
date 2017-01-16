@@ -106,9 +106,9 @@ public class BuckslipArkcaseIT
         String objectNumber = "20170116_101";
         String documentType = "Concert Contract";
         List<String> futureApprovers = new ArrayList<>();
+        futureApprovers.add("jerry");
         futureApprovers.add("bob");
         futureApprovers.add("phil");
-        String currentApprover = "jerry";
         String completedApprovals = "[]";
         String moreApprovers = "true";
 
@@ -119,7 +119,6 @@ public class BuckslipArkcaseIT
         processVariables.put("documentType", documentType);
         processVariables.put(TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_APPROVERS, futureApprovers);
         processVariables.put("pastApprovers", completedApprovals);
-        processVariables.put("currentApprover", currentApprover);
         processVariables.put("moreApprovers", moreApprovers);
 
         ProcessInstance pi = rt.startProcessInstanceByKey(processName, processVariables);
