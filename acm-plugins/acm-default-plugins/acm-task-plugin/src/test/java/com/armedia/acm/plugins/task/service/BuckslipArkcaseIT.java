@@ -108,7 +108,6 @@ public class BuckslipArkcaseIT
         futureApprovers.add("jerry");
         futureApprovers.add("bob");
         futureApprovers.add("phil");
-        String completedApprovals = "[]";
         String moreApprovers = "true";
 
         Map<String, Object> processVariables = new HashMap<>();
@@ -118,7 +117,6 @@ public class BuckslipArkcaseIT
         processVariables.put("documentType", documentType);
         // the process should work with either "approvers" or "futureApprovers"
         processVariables.put("approvers", futureApprovers);
-        processVariables.put("pastApprovers", completedApprovals);
         processVariables.put("moreApprovers", moreApprovers);
 
         ProcessInstance pi = rt.startProcessInstanceByKey(processName, processVariables);
