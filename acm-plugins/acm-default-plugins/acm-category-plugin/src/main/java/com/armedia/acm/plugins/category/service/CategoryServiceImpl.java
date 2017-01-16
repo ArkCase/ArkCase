@@ -1,17 +1,27 @@
 package com.armedia.acm.plugins.category.service;
 
+import static com.armedia.acm.plugins.category.model.CategoryEvent.CategoryEventType.ACTIVATE;
+import static com.armedia.acm.plugins.category.model.CategoryEvent.CategoryEventType.CREATE;
+import static com.armedia.acm.plugins.category.model.CategoryEvent.CategoryEventType.DEACTIVATE;
+import static com.armedia.acm.plugins.category.model.CategoryEvent.CategoryEventType.DELETE;
+import static com.armedia.acm.plugins.category.model.CategoryEvent.CategoryEventType.EDIT;
 import static com.armedia.acm.plugins.category.model.CategoryStatus.ACTIVATED;
 import static com.armedia.acm.plugins.category.model.CategoryStatus.DEACTIVATED;
 import static com.armedia.acm.plugins.category.model.CategoryStatus.DELETED;
 import static java.util.Objects.isNull;
 
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
 import com.armedia.acm.plugins.category.dao.CategoryDao;
 import com.armedia.acm.plugins.category.model.Category;
+import com.armedia.acm.plugins.category.model.CategoryEvent;
+import com.armedia.acm.plugins.category.model.CategoryEvent.CategoryEventType;
 import com.armedia.acm.plugins.category.model.CategoryStatus;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -26,6 +36,8 @@ public class CategoryServiceImpl implements CategoryService
 {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
+
+    private ApplicationEventPublisher eventPublisher;
 
     private CategoryDao categoryDao;
 
@@ -48,14 +60,21 @@ public class CategoryServiceImpl implements CategoryService
      * com.armedia.acm.plugins.category.service.CategoryService#create(com.armedia.acm.plugins.category.model.Category)
      */
     @Override
-    public Category create(Category category)
+    public Category create(Category category) throws AcmCreateObjectFailedException
     {
         // what happens if category with same name already exists?
         log.debug("Creating Category with name [{}].", category.getName());
         if (checkNameCollision(category))
         {
+            log.error("Name collision while trying to create [{}] Category.", category.getName());
             // throw an exception signaling category name collision.
+            throw new AcmCreateObjectFailedException("Category",
+                    "Category with [" + category.getName() + "] name already exists on this level.", null);
         }
+
+        log.debug("Created Category with name [{}].", category.getName());
+        eventPublisher.publishEvent(new CategoryEvent(category, CREATE, String.format("Category %s created.", category.getName())));
+
         return categoryDao.save(category);
     }
 
@@ -66,7 +85,7 @@ public class CategoryServiceImpl implements CategoryService
      * com.armedia.acm.plugins.category.service.CategoryService#update(com.armedia.acm.plugins.category.model.Category)
      */
     @Override
-    public Category update(Category category) throws AcmObjectNotFoundException
+    public Category update(Category category) throws AcmObjectNotFoundException, AcmUpdateObjectFailedException
     {
         if (category == null || category.getId() == null)
         {
@@ -81,9 +100,11 @@ public class CategoryServiceImpl implements CategoryService
         {
             if (checkNameCollision(category))
             {
-                log.warn("Name collision while trying to update [{}] Category with id [{}] to [{}].", existing.getName(), category.getId(),
+                log.error("Name collision while trying to update [{}] Category with id [{}] to [{}].", existing.getName(), category.getId(),
                         category.getName());
                 // throw an exception signaling category name collision.
+                throw new AcmUpdateObjectFailedException("Category",
+                        "Category with [" + category.getName() + "] name already exists on this level.", null);
             }
             log.debug("Updating 'name' property of [{}] Category with id [{}] to [{}].", existing.getName(), category.getId(),
                     category.getName());
@@ -96,7 +117,19 @@ public class CategoryServiceImpl implements CategoryService
             // audit edit category description changed
         }
 
-        return categoryDao.save(category);
+        Category persisted = categoryDao.save(category);
+
+        log.debug("Updated Category with id [{}].", category.getId());
+        if (!category.getName().equals(existing.getName()))
+        {
+            eventPublisher.publishEvent(new CategoryEvent(category, EDIT,
+                    String.format("Category name edited from %s to %s.", existing.getName(), category.getName())));
+        }
+        if (!category.getDescription().equals(existing.getDescription()))
+        {
+            eventPublisher.publishEvent(new CategoryEvent(category, EDIT, "Category description changed."));
+        }
+        return persisted;
 
     }
 
@@ -115,7 +148,7 @@ public class CategoryServiceImpl implements CategoryService
         }
 
         Category category = get(id);
-        setCategoryStatus(category, DELETED);
+        setCategoryStatus(category, DELETED, DELETE);
 
         return category;
     }
@@ -136,7 +169,8 @@ public class CategoryServiceImpl implements CategoryService
         }
 
         category = get(category.getId());
-        setCategoryStatus(category, ACTIVATED);
+        setCategoryStatus(category, ACTIVATED, ACTIVATE);
+
         activateAncestors(category);
 
     }
@@ -157,15 +191,25 @@ public class CategoryServiceImpl implements CategoryService
         }
 
         category = get(category.getId());
-        setCategoryStatus(category, DEACTIVATED);
+        setCategoryStatus(category, DEACTIVATED, DEACTIVATE);
+
+        eventPublisher.publishEvent(new CategoryEvent(category, DEACTIVATE, ""));
     }
 
-    private void setCategoryStatus(Category category, CategoryStatus status) throws AcmObjectNotFoundException
+    private void setCategoryStatus(Category category, CategoryStatus status, CategoryEventType eventType) throws AcmObjectNotFoundException
     {
         category.setStatus(status);
         log.debug("{} [{}] Category with id [{}].", getStatusVerb(status), category.getName(), category.getId());
         setChildrenStatus(category, status);
-        update(category);
+        try
+        {
+            update(category);
+            eventPublisher.publishEvent(new CategoryEvent(category, eventType, ""));
+        } catch (AcmUpdateObjectFailedException e)
+        {
+            log.warn("Failed to update status of Category with [{id}] to " + getStatusVerb(status)
+                    + ". Probably attempt to change name while changing status.");
+        }
 
     }
 
@@ -209,7 +253,7 @@ public class CategoryServiceImpl implements CategoryService
     private boolean checkNameCollision(Category category)
     {
         List<Category> categories = isNull(category.getParent()) ? getRoot() : category.getParent().getChildren();
-        return categories.stream().map(cat -> cat.getName()).noneMatch(name -> name.equalsIgnoreCase(category.getName()));
+        return categories.stream().anyMatch(cat -> cat.getName().equalsIgnoreCase(category.getName()));
     }
 
     /**
@@ -261,8 +305,23 @@ public class CategoryServiceImpl implements CategoryService
         } else
         {
             // test if cascade on update will update all children, otherwise update on every level will be needed.
-            update(category);
+            try
+            {
+                update(category);
+            } catch (AcmUpdateObjectFailedException e)
+            {
+                log.warn("Failed to update status of Category with [{id}] to " + getStatusVerb(CategoryStatus.ACTIVATED)
+                        + ". Probably attempt to change name while changing status.");
+            }
         }
+    }
+
+    /**
+     * @param eventPublisher the eventPublisher to set
+     */
+    public void setEventPublisher(ApplicationEventPublisher eventPublisher)
+    {
+        this.eventPublisher = eventPublisher;
     }
 
     /**
