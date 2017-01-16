@@ -6,6 +6,7 @@ import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.AcmLegacySystemEntity;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
+import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 import com.armedia.acm.plugins.casefile.model.Disposition;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
@@ -616,5 +617,20 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     public String getNotifiableEntityTitle()
     {
         return complaintNumber;
+    }
+
+    @JsonIgnore
+    public String getAssigneeGroup()
+    {
+        String groupName = null;
+        AcmParticipant owningGroup = getParticipants().stream()
+                .filter(p -> ComplaintConstants.OWNING_GROUP.equals(p.getParticipantType())).findFirst().orElse(null);
+        AcmParticipant assignee = getParticipants().stream().filter(p -> ComplaintConstants.ASSIGNEE.equals(p.getParticipantType()))
+                .findFirst().orElse(null);
+        if (owningGroup != null && assignee != null && assignee.getParticipantLdapId().isEmpty())
+        {
+            groupName = owningGroup.getParticipantLdapId();
+        }
+        return groupName;
     }
 }

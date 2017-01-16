@@ -97,6 +97,10 @@ angular.module('services').factory('Case.InfoService', ['$resource', '$translate
             if (!Service.validateCaseInfo(caseInfo)) {
                 return Util.errorPromise($translate.instant("common.service.error.invalidData"));
             }
+            //we need to make one of the fields is changed in order to be sure that update will be executed
+            //if we change modified won't make any differences since is updated before update to database
+            //but update will be trigger
+            caseInfo.modified = null;
             return Util.serviceCall({
                 service: ObjectInfoService.save
                 , param: {type: "casefile"}
