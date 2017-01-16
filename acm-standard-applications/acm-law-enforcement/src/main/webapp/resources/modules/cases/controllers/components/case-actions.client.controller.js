@@ -151,7 +151,6 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
 
         $scope.claim = function (objectInfo) {
             ObjectModelService.setAssignee(objectInfo, $scope.currentUserProfile.userId);
-            objectInfo.modified = null;//this is because we need to trigger update on case file
             CaseInfoService.saveCaseInfo(objectInfo).then(function (response) {
                 //success
                 $scope.refresh();
@@ -160,7 +159,6 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
 
         $scope.unclaim = function (objectInfo) {
             ObjectModelService.setAssignee(objectInfo, "");
-            objectInfo.modified = null;//this is because we need to trigger update on case file
             CaseInfoService.saveCaseInfo(objectInfo).then(function (response) {
                 //success
                 $scope.refresh();
