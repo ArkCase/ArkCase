@@ -13,8 +13,8 @@
  * Tree helper uses 'object-tree' directive. Content helper includes component links and data loading. Component helper includes common object info handling
  */
 angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resource', '$translate', '$timeout'
-    , 'Acm.StoreService', 'UtilService', 'ConfigService', 'ServCommService', 'MessageService'
-    , function ($q, $resource, $translate, $timeout, Store, Util, ConfigService, ServCommService, MessageService) {
+    , 'Acm.StoreService', 'UtilService', 'ConfigService', 'ServCommService', 'MessageService', 'ObjectService'
+    , function ($q, $resource, $translate, $timeout, Store, Util, ConfigService, ServCommService, MessageService, ObjectService) {
 
         var SyncDataLoader = {
             data: {},
@@ -404,6 +404,20 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                                     objectTypeString = objectType;
                                 }
                                 MessageService.info(objectTypeString + " with ID " + objectId + " was updated.");
+
+                                var frevvoRequest = null;
+                                switch (objectType) {
+                                    case ObjectService.ObjectTypes.COMPLAINT:
+                                        frevvoRequest = ServCommService.popRequest("frevvo", "close-complaint");
+                                        break;
+                                    case ObjectService.ObjectTypes.TIMESHEET:
+                                        frevvoRequest = ServCommService.popRequest("frevvo", "edit-timesheet") || ServCommService.popRequest("frevvo", "new-timesheet");
+                                        break;
+                                }
+                                
+                                if (frevvoRequest) {
+                                    that.scope.$emit('report-object-refreshed', objectId);
+                                }                                
                             });
 
                             return objectInfo;

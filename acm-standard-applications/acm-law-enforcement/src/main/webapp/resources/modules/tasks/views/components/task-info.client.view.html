@@ -21,10 +21,8 @@
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    <a href="#" editable-select="assignee" onaftersave="updateAssignee(assignee)"
-                       e-ng-options="a.object_id_s as a.name for a in assignableUsers" permission="editTask" permission-properties="objectInfo" permission-action="disable">
+                    <a href="javascript:;" class="editable-click no-outline" ng-click="openAssigneePickerModal()" permission="editTask" permission-properties="objectInfo" permission-action="disable">
                         {{assignee | mapKeyValue: assignableUsers:'object_id_s':'name' || 'Unknown'}}</a>
-                    <!-- <span permission="editTask" permission-properties="objectInfo" permission-action="show">{{assignee | mapKeyValue: assignableUsers:'object_id_s':'name' || "Unknown"}}</span> -->
                 </div>
                 <small class="text-muted">Assignee</small>
             </div>

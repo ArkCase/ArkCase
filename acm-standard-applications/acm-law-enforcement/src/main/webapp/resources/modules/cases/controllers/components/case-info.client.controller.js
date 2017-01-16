@@ -2,10 +2,11 @@
 
 angular.module('cases').controller('Cases.InfoController', ['$scope', '$stateParams', '$translate', '$timeout'
     , 'UtilService', 'Util.DateService', 'ConfigService', 'Object.LookupService', 'Case.LookupService', 'Case.InfoService'
-    , 'Object.ModelService', 'Helper.ObjectBrowserService', 'MessageService'
+    , 'Object.ModelService', 'Helper.ObjectBrowserService', 'MessageService', 'ObjectService', 'Helper.UiGridService', '$modal'
+    , 'Object.ParticipantService', '$q'
     , function ($scope, $stateParams, $translate, $timeout
         , Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService
-        , ObjectModelService, HelperObjectBrowserService, MessageService) {
+        , ObjectModelService, HelperObjectBrowserService, MessageService, ObjectService, HelperUiGridService, $modal, ObjectParticipantService, $q) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -19,6 +20,14 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             }
         });
 
+        var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+        var promiseUsers = gridHelper.getUsers();
+        var promiseConfig = ConfigService.getModuleConfig("cases");
+
+        $q.all([promiseConfig]).then(function (data) {
+            var foundComponent = data[0].components.filter(function(component) { return component.title === 'Participants'; });
+            $scope.config = foundComponent[0];
+        });
 
         ObjectLookupService.getPriorities().then(
             function (priorities) {
@@ -52,6 +61,44 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
                 return caseTypes;
             }
         );
+
+        $scope.openAssigneePickerModal = function () {
+            var participant = {
+                        id: '',
+                        participantLdapId: '',
+                        config: $scope.config
+                    };
+            showModal(participant);
+        };
+
+        var showModal = function (participant) {
+            var modalScope = $scope.$new();
+            modalScope.participant = participant || {};
+
+            var modalInstance = $modal.open({
+                scope: modalScope,
+                animation: true,
+                templateUrl: "modules/cases/views/components/case-assignee-picker-modal.client.view.html",
+                controller: "Cases.AssigneePickerController",
+                size: 'md',
+                backdrop: 'static',
+                resolve: {
+                    owningGroup: function () {
+                        return $scope.owningGroup;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (data) {
+                $scope.participant = {};
+                if (data.participant.participantLdapId != '' && data.participant.participantLdapId != null) {
+                    $scope.participant.participantLdapId = data.participant.participantLdapId;
+                    $scope.assignee = data.participant.participantLdapId;
+                    $scope.updateAssignee();
+                }
+            }, function(error) {    
+            });
+        };
 
         //$scope.dueDate = null;
         var onObjectInfoRetrieved = function (data) {
@@ -129,10 +176,6 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             $scope.objectInfo.dueDate = UtilDateService.dateToIso($scope.dateInfo.dueDate);
             saveCase();
         };
-
-        $scope.$on('accessDenied', function(event, message){
-            MessageService.info(message);
-        });
 
     }
 ]);

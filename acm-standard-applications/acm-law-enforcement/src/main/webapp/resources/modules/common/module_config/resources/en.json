@@ -20,7 +20,11 @@
     "defaultDateFormat": "YYYY-MM-DD"
   },
   "common.service.messageService": {
-    "authorizationError": "You are not authorized to take this action"
+    "authorizationError": "You are not authorized to take this action",
+    "actionMessages": {
+      "success": "Action was successful",
+      "error": "Action error"
+    }
   },
   "common.directive.docTree": {
     "btnRefresh": "Refresh",
@@ -144,9 +148,18 @@
         "addOrganization": "Add Organization",
         "editOrganization": "Edit Record",
         "organizationTypes.label": "Organization Types",
+        "selectExisting.label": "Select Existing",
+        "addNew.label": "Add New",
         "value.label": "Value",
         "btnCancel.text": "Cancel",
-        "btnOk.text": "Save"
+        "btnOk.text": "Save",
+        "dialogOrganizationPicker": {
+          "header": "Choose Organization",
+          "table.columns": {
+            "type": "Organization Type",
+            "name": "Value"
+          }
+        }
       }
     },
     "addresses": {
