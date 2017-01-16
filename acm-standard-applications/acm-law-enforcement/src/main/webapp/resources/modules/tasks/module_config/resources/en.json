@@ -206,7 +206,7 @@
     "cancelButton": "Cancel",
     "confirmButton": "Add",
     "search": {
-      "placeholder": "Search for case or complaint",
+      "placeholder": "Search for case, complaint, file, task",
       "btn": "Search"
     },
     "grid": {
@@ -220,5 +220,34 @@
         "modified": "Modified"
       }
     }
+  },
+  "tasks.comp.participants": {
+    "title": "Participants",
+    "table.columns": {
+      "type": "Type",
+      "name": "Name"
+    },
+    "dialogUserPicker": {
+      "header": "Choose User",
+      "table.columns": {
+        "name": "Name",
+        "type": "Type",
+        "title": "Title",
+        "id": "Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "Choose Group",
+      "table.columns": {
+        "name": "Name"
+      }
+    }
+  },
+  "tasks.comp.assigneePickerModal": {
+    "title": "Change Assignee",
+    "assigneeNamelabel": "Assignee Name",
+    "btnCancelText": "Cancel",
+    "btnSaveText": "Save",
+    "searchAssigneeHeader": "Search Assignee"
   }   
 }
