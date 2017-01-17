@@ -48,6 +48,7 @@ var caseTitleWithStatus = element(by.xpath(Objects.casepage.locators.caseTitleWi
 var submitBtn = element(by.xpath(Objects.casepage.locators.submitBtn));
 var claimButton = element(by.css(Objects.casepage.locators.claimButton));
 var unclaimButton = element(by.css(Objects.casepage.locators.unclaimButton));
+var priority = element(by.xpath(Objects.casepage.locators.priority));
 
 
 var CasePage = function() {
@@ -266,7 +267,11 @@ var CasePage = function() {
                 browser.sleep(8000);
             });
         });
-}
+    };
+
+    this.returnPriority = function () {
+        return priority.getText();
+    }
 
 };
 
