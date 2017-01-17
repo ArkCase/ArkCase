@@ -1,23 +1,16 @@
 package web.api;
 
-import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
-import com.armedia.acm.services.subscription.dao.SubscriptionDao;
 import com.armedia.acm.services.subscription.model.AcmSubscription;
 import com.armedia.acm.services.subscription.service.SubscriptionEventPublisher;
 import com.armedia.acm.services.subscription.service.SubscriptionService;
-import com.armedia.acm.services.subscription.service.impl.SubscriptionServiceImpl;
 import com.armedia.acm.services.subscription.web.api.CreateSubscriptionAPIController;
-import com.armedia.acm.services.subscription.web.api.RemovingSubscriptionAPIController;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.easymock.Capture;
-import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
-import org.json.JSONObject;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -34,16 +27,12 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 /**
@@ -54,7 +43,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         "classpath:/spring/spring-web-acm-web.xml",
         "classpath:/spring/spring-library-subscription-web-api-test.xml"
 })
-public class CreateSubscriptionAPIControllerTest extends EasyMockSupport {
+public class CreateSubscriptionAPIControllerTest extends EasyMockSupport
+{
 
     private MockMvc mockMvc;
     private Authentication mockAuthentication;
@@ -72,7 +62,8 @@ public class CreateSubscriptionAPIControllerTest extends EasyMockSupport {
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws Exception
+    {
         mockCreateSubscriptionAPIController = new CreateSubscriptionAPIController();
 
         mockSubscriptionService = createMock(SubscriptionService.class);
@@ -91,90 +82,97 @@ public class CreateSubscriptionAPIControllerTest extends EasyMockSupport {
     }
 
     @Test
-   public void createSubscription() throws Exception {
+    public void createSubscription() throws Exception
+    {
 
-       String userId="user-acm";
-       Long objectId=100L;
-       String objectType="NEW_OBJ_TYPE";
-       String ipAddress = "ipAddress";
-       String solrQuery = "q=id:100-NEW_OBJ_TYPE&fq=-status_s:COMPLETE&fq=-status_s:DELETE&fq=-status_s:CLOSED";
+        String userId = "user-acm";
+        Long objectId = 100L;
+        String objectType = "NEW_OBJ_TYPE";
+        String ipAddress = "ipAddress";
+        String solrQuery = "q=id:100-NEW_OBJ_TYPE&fq=-status_s:COMPLETE&fq=-status_s:DELETE&fq=-status_s:CLOSED";
 
-       AcmSubscription subscription= new AcmSubscription();
+        AcmSubscription subscription = new AcmSubscription();
         subscription.setSubscriptionId(500L);
         subscription.setSubscriptionObjectType(objectType);
         subscription.setUserId(userId);
         subscription.setObjectId(objectId);
 
-       Map<String,Object> prop =  new HashMap<>();
-       prop.put("subscription.get.object.byId","q=id:?&fq=-status_s:COMPLETE&fq=-status_s:DELETE&fq=-status_s:CLOSED");
+        Map<String, Object> prop = new HashMap<>();
+        prop.put("subscription.get.object.byId", "q=id:?&fq=-status_s:COMPLETE&fq=-status_s:DELETE&fq=-status_s:CLOSED");
 
-       mockHttpSession.setAttribute("acm_ip_address", ipAddress);
+        mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
-        String jsonString="{response:{docs:[{name:a,title_parseable:aa},{name:d,title_parseable:bb}]}}";
+        String jsonString = "{response:{docs:[{name:a,title_parseable:aa},{name:d,title_parseable:bb}]}}";
 
 
         Capture<AcmSubscription> subscriptionToSave = new Capture<>();
 
         expect(mockSubscriptionPlugin.getPluginProperties()).andReturn(prop).once();
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH,solrQuery,0, 1, "")).andReturn(jsonString).once();
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, solrQuery, 0, 1, "")).andReturn(jsonString).once();
         expect(mockSubscriptionService.saveSubscription(capture(subscriptionToSave))).andReturn(subscription).anyTimes();
 
-       mockSubscriptionEventPublisher.publishSubscriptionCreatedEvent(subscription, mockAuthentication, true);
+        mockSubscriptionEventPublisher.publishSubscriptionCreatedEvent(subscription, mockAuthentication, true);
 
 
-       // MVC test classes must call getName() somehow
-       expect(mockAuthentication.getName()).andReturn(userId).atLeastOnce();
+        // MVC test classes must call getName() somehow
+        expect(mockAuthentication.getName()).andReturn(userId).atLeastOnce();
 
-       replayAll();
+        replayAll();
 
-       MvcResult result = mockMvc.perform(
-               put("/api/latest/service/subscription/{userId}/{objType}/{objId}", userId, objectType, objectId)
-                       .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-                       .session(mockHttpSession)
-                       .principal(mockAuthentication))
-               .andReturn();
+        MvcResult result = mockMvc.perform(
+                put("/api/latest/service/subscription/{userId}/{objType}/{objId}", userId, objectType, objectId)
+                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+                        .session(mockHttpSession)
+                        .principal(mockAuthentication))
+                .andReturn();
 
-       verifyAll();
+        verifyAll();
 
-       assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
-       assertTrue(result.getResponse().getContentType().startsWith(MediaType.APPLICATION_JSON_VALUE));
+        assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
+        assertTrue(result.getResponse().getContentType().startsWith(MediaType.APPLICATION_JSON_VALUE));
 
-       String json = result.getResponse().getContentAsString();
+        String json = result.getResponse().getContentAsString();
 
-       log.info("results: " + json);
+        log.info("results: " + json);
 
-       ObjectMapper objectMapper = new ObjectMapper();
-       AcmSubscription foundSubscription = objectMapper.readValue(json, AcmSubscription.class);
+        ObjectMapper objectMapper = new ObjectMapper();
+        AcmSubscription foundSubscription = objectMapper.readValue(json, AcmSubscription.class);
 
-       assertNotNull(foundSubscription);
+        assertNotNull(foundSubscription);
 
-       assertEquals(subscription.getObjectId(), foundSubscription.getObjectId());
-       assertEquals(subscription.getObjectType(), foundSubscription.getObjectType());
-       assertEquals(subscription.getUserId(), foundSubscription.getUserId());
+        assertEquals(subscription.getObjectId(), foundSubscription.getObjectId());
+        assertEquals(subscription.getObjectType(), foundSubscription.getObjectType());
+        assertEquals(subscription.getUserId(), foundSubscription.getUserId());
 
-   }
+    }
 
-    public MockMvc getMockMvc() {
+    public MockMvc getMockMvc()
+    {
         return mockMvc;
     }
 
-    public void setMockMvc(MockMvc mockMvc) {
+    public void setMockMvc(MockMvc mockMvc)
+    {
         this.mockMvc = mockMvc;
     }
 
-    public Authentication getMockAuthentication() {
+    public Authentication getMockAuthentication()
+    {
         return mockAuthentication;
     }
 
-    public void setMockAuthentication(Authentication mockAuthentication) {
+    public void setMockAuthentication(Authentication mockAuthentication)
+    {
         this.mockAuthentication = mockAuthentication;
     }
 
-    public ExceptionHandlerExceptionResolver getExceptionResolver() {
+    public ExceptionHandlerExceptionResolver getExceptionResolver()
+    {
         return exceptionResolver;
     }
 
-    public void setExceptionResolver(ExceptionHandlerExceptionResolver exceptionResolver) {
+    public void setExceptionResolver(ExceptionHandlerExceptionResolver exceptionResolver)
+    {
         this.exceptionResolver = exceptionResolver;
     }
 }

@@ -669,21 +669,27 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                             return objectInfo;
                         }
                         , function (errorData) {
+                            
+                            var nodeType = errorData.status == 403 ? "NO_ACCESS" : "ERROR";
+
                             that.scope.treeControl.select({
                                 pageStart: start
-                                , nodeType: "ERROR"
+                                , nodeType: nodeType
                                 , nodeId: that.nodeId
                                 , subKey: that.subKey
                             });
 
-
                             var treeData = {docs: [], total: 0};
+                            var nodeTitle = errorData.status == 403 ? $translate.instant("common.directive.objectTree.noAccessNode.title") : $translate.instant("common.directive.objectTree.errorNode.title");
+                            var nodeToolTip = errorData.status == 403 ? $translate.instant("common.directive.objectTree.noAccessNode.toolTip") : $translate.instant("common.directive.objectTree.errorNode.toolTip");                          
+                            
                             var errorNode = {
                                 nodeId: that.nodeId
-                                , nodeType: "ERROR"
-                                , nodeTitle: $translate.instant("common.directive.objectTree.errorNode.title")
-                                , nodeToolTip: $translate.instant("common.directive.objectTree.errorNode.toolTip")
+                                , nodeType: nodeType
+                                , nodeTitle: nodeTitle
+                                , nodeToolTip: nodeToolTip
                             };
+                            
                             if (that.scope.treeData) {            //It must be set by CallTasksService.queryTasksTreeData()
                                 var found = that.findByNodeId(that.scope.treeData.docs, that.nodeId);
                                 if (!found) {
