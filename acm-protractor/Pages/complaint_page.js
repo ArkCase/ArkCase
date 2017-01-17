@@ -47,6 +47,11 @@ var deleteLocationBtn = element(by.css(Objects.complaintPage.locators.deleteLoca
 var editLocationBtn = element(by.css(Objects.complaintPage.locators.editLocationBtn));
 var newComplaintBtn = element(by.css(Objects.complaintPage.locators.newComplaintBtn));
 var complaintsTitle = element(by.xpath(Objects.complaintPage.locators.complaintsTitle));
+var caseNumber = element(by.name(Objects.complaintPage.locators.caseNumber));
+var searchButton = element(by.xpath(Objects.complaintPage.locators.searchButton));
+var caseTitle = element(by.name(Objects.complaintPage.locators.caseTitle));
+var caseCreatedDate = element(by.name(Objects.complaintPage.locators.caseCreatedDate));
+var casePriority = element(by.name(Objects.complaintPage.locators.casePriority));
 
 var ComplaintPage = function() {
 
@@ -187,8 +192,10 @@ var ComplaintPage = function() {
                 browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.complaintPage.locators.complaintDispositionDDListBox))), 30000).then(function() {
                     complaintDispositionDDListBox.click().then(function() {
                         browser.wait(EC.visibilityOf(element(by.linkText(disposition))), 30000).then(function() {
-                            var complaintDisposition = element(by.linkText(disposition));
-                            complaintDisposition.click();
+                            browser.wait(EC.elementToBeClickable(element(by.linkText(disposition))), 30000).then(function () {
+                                var complaintDisposition = element(by.linkText(disposition));
+                                complaintDisposition.click();
+                            });
                         });
                     });
                 });
@@ -368,6 +375,24 @@ this.clickNewComplaintBtn = function() {
     this.returnComplaintsTitle = function() {
         return complaintsTitle.getText();
     };
+    this.insertCaseNumber = function (caseid) {
+        caseNumber.click();
+        caseNumber.sendKeys(caseid);
+        return this;
+    };
+    this.clickSearchButton = function () {
+        searchButton.click();
+        return this;
+    };
+    this.returnCaseTitle = function () {
+        return caseTitle.getAttribute("value");
+    };
+    this.returnCaseCreatedDate = function () {
+        return caseCreatedDate.getAttribute("value");
+    };
+    this.returnCasePriority = function () {
+        return casePriority.getAttribute("value");
+    }
 };
 ComplaintPage.prototype = basePage;
 module.exports = new ComplaintPage();

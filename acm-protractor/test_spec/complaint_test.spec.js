@@ -1,6 +1,7 @@
 var logger = require('../log');
 var utils = require('../util/utils.js');
 var complaintPage = require('../Pages/complaint_page.js');
+var casePage = require('../Pages/case_page.js');
 var userPage = require('../Pages/user_profile_page.js');
 var taskPage = require('../Pages/task_page.js');
 var Objects = require('../json/Objects.json');
@@ -577,6 +578,20 @@ describe('Create new complaint ', function() {
         complaintPage.clickTasksLinkBtn().waitForTasksTable();
         complaintPage.verifyTasksTableColumnsNumber();
     });
+
+    it('should verify that searching of Case id during close complaint is retrieving the data in the fields', function () {
+        casePage.navigateToPage("Case Files").waitForCaseID();
+        var caseid = casePage.getCaseId();
+        var caseTitle = casePage.returnCaseTitle();
+        var caseCreateDate = casePage.returnCreatedDate();
+        var casePriority = casePage.returnPriority();
+        complaintPage.clickModuleComplaints();
+        complaintPage.clickCloseComplaint().switchToIframes().selectComplaintDisposition("Add to Existing Case").insertCaseNumber(caseid).clickSearchButton();
+        expect(complaintPage.returnCaseTitle()).toEqual(caseTitle);
+        expect(complaintPage.returnCaseCreatedDate()).toEqual(caseCreateDate);
+        expect(complaintPage.returnCasePriority()).toEqual(casePriority);
+        complaintPage.switchToDefaultContent();
+    })
 
 
 });
