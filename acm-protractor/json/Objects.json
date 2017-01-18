@@ -621,7 +621,8 @@
             "initiatorDeleteBtn": "//*[@class='fa fa-trash-o fa-lg']",
             "claimButton": "[ng-click='claim(objectInfo)']",
             "unclaimButton": "[ng-click='unclaim(objectInfo)']",
-            "addParticipantBtn": "[ng-click='addNew()']"
+            "addParticipantBtn": "[ng-click='addNew()']",
+            "searchField": "searchQuery"
 
         },
 

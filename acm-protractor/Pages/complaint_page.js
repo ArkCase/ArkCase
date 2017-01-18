@@ -20,7 +20,7 @@ var closeComplaintButton = element(by.xpath(Objects.complaintPage.locators.close
 var complaintDispositionDDListBox = element(by.xpath(Objects.complaintPage.locators.complaintDispositionDDListBox));
 var closeComplaintDescription = element(by.css(Objects.complaintPage.locators.closeComplaintDescription));
 var selectApprover = element(by.name(Objects.casepage.locators.selectApprover));
-var searchForUser = element(by.model(Objects.casepage.locators.searchForUser));
+var searchForUser = element(by.model(Objects.casepage.locators.searchField));
 var goBtn = element(by.xpath(Objects.casepage.locators.goBtn));
 var addBtn = element(by.xpath(Objects.casepage.locators.addBtn));
 var searchedUser = element(by.xpath(Objects.casepage.locators.searchedUser));
@@ -219,7 +219,7 @@ var ComplaintPage = function() {
             browser.wait(EC.visibilityOf(element(by.name(Objects.casepage.locators.selectApprover))), 30000).then(function () {
                 browser.wait(EC.elementToBeClickable(element(by.name(Objects.casepage.locators.selectApprover))), 30000).then(function () {
                     selectApprover.click().then(function () {
-                        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.addUser))), 10000);
+                        browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.searchField))), 10000);
                         searchForUser.click();
                         searchForUser.sendKeys(approver);
                         goBtn.click().then(function () {
