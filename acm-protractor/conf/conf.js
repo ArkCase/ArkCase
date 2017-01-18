@@ -52,7 +52,6 @@ exports.config = {
            '../test_spec/report_test.spec.js',
            '../test_spec/audit_test.spec.js',
            '../test_spec/preference_test.spec.js'
-
     ],
 
     jasmineNodeOpts: {

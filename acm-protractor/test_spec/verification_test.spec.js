@@ -38,8 +38,6 @@ describe('create new case', function() {
 
     });
 
-
-
     it('should create new case ', function() {
 
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
