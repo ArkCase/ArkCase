@@ -10,13 +10,11 @@ import org.activiti.engine.impl.util.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
@@ -34,15 +32,10 @@ public class DeleteFileAPIController
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PreAuthorize("hasPermission(#parentId, #parentType, 'editAttachments')")
-    // FIXME: no order id available
-    //@PreAuthorize("hasPermission(#orderid, 'CASE_FILE', 'uploadOrReplaceFile')")
     @RequestMapping(value = "/id/{fileId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String deleteFile(
             @PathVariable("fileId") Long objectId,
-            @RequestParam("objType") String parentType,
-            @RequestParam("objId") Long parentId,
             Authentication authentication,
             HttpSession session
     ) throws AcmUserActionFailedException
@@ -56,7 +49,7 @@ public class DeleteFileAPIController
         EcmFile source = getFileService().findById(objectId);
         try
         {
-            getFileService().deleteFile(objectId);
+            getFileService().deleteFile(objectId, source.getParentObjectId(), source.getParentObjectType());
             if (log.isInfoEnabled())
             {
                 log.info("File with id: " + objectId + " successfully deleted");
