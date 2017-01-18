@@ -4,6 +4,7 @@ import com.armedia.acm.plugins.alfrescorma.exception.AlfrescoServiceException;
 import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
 import com.armedia.acm.plugins.complaint.model.ComplaintConstants;
 import com.armedia.acm.plugins.complaint.model.ComplaintCreatedEvent;
+
 import org.apache.chemistry.opencmis.client.api.Folder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,14 +23,14 @@ public class AcmComplaintFolderListener implements ApplicationListener<Complaint
     {
         boolean proceed = getAlfrescoRecordsService().checkIntegrationEnabled(AlfrescoRmaPluginConstants.COMPLAINT_FOLDER_INTEGRATION_KEY);
 
-        if ( !proceed )
+        if (!proceed)
         {
             return;
         }
 
-        if ( ! complaintCreatedEvent.isSucceeded() )
+        if (!complaintCreatedEvent.isSucceeded())
         {
-            if ( log.isTraceEnabled() )
+            if (log.isTraceEnabled())
             {
                 log.trace("Returning - complaint creation was not successful");
             }
@@ -39,10 +40,10 @@ public class AcmComplaintFolderListener implements ApplicationListener<Complaint
 
         try
         {
-            String ticket = getAlfrescoRecordsService().getTicketService().service(null);
             Folder categoryFolder = getAlfrescoRecordsService().findFolder(ComplaintConstants.OBJECT_TYPE);
-            getAlfrescoRecordsService().createOrFindRecordFolder(complaintCreatedEvent.getComplaintNumber(), ticket, categoryFolder);
-        } catch (AlfrescoServiceException e)
+            getAlfrescoRecordsService().createOrFindRecordFolder(complaintCreatedEvent.getComplaintNumber(), categoryFolder);
+        }
+        catch (AlfrescoServiceException e)
         {
             log.error("Could not create record folder for complaint: {}", e.getMessage(), e);
         }

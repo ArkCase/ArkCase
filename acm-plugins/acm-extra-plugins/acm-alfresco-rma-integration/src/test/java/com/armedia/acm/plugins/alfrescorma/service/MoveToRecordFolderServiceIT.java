@@ -1,6 +1,10 @@
 package com.armedia.acm.plugins.alfrescorma.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
+
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.client.api.Folder;
@@ -19,9 +23,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "/spring/spring-alfresco-records-service-test.xml",
@@ -36,8 +37,7 @@ import static org.junit.Assert.assertNotNull;
         "/spring/spring-library-search.xml",
         "/spring/spring-library-user-service.xml",
         "/spring/spring-library-data-access-control.xml",
-        "/spring/spring-library-particpants.xml"
-})
+        "/spring/spring-library-particpants.xml" })
 public class MoveToRecordFolderServiceIT
 {
     @Autowired
@@ -63,10 +63,6 @@ public class MoveToRecordFolderServiceIT
     @Qualifier("moveToRecordFolderService")
     private AlfrescoService<String> service;
 
-    @Autowired
-    @Qualifier("alfrescoGetTicketService")
-    private AlfrescoService<String> ticketService;
-
     private String ecmFileId;
 
     private CmisFileWriter cmisFileWriter = new CmisFileWriter();
@@ -85,12 +81,9 @@ public class MoveToRecordFolderServiceIT
     {
         assertNotNull(declareRecordService);
 
-        String ticket = ticketService.service(null);
-
         Map<String, Object> declareRecordContext = new HashMap<>();
 
         declareRecordContext.put("ecmFileId", ecmFileId);
-        declareRecordContext.put("ticket", ticket);
 
         String actedOnId = declareRecordService.service(declareRecordContext);
 
@@ -98,7 +91,6 @@ public class MoveToRecordFolderServiceIT
 
         Map<String, Object> metadataContext = new HashMap<>();
         metadataContext.put("ecmFileId", ecmFileId);
-        metadataContext.put("ticket", ticket);
         metadataContext.put("publicationDate", new Date());
         metadataContext.put("originator", "Jerry Garcia");
         metadataContext.put("originatingOrganization", "Grateful Dead");
@@ -116,22 +108,18 @@ public class MoveToRecordFolderServiceIT
 
         // create a record folder
         Map<String, Object> recordFolderContext = new HashMap<>();
-        recordFolderContext.put("ticket", ticket);
         recordFolderContext.put("parentFolder", cmisObject);
         String folderName = UUID.randomUUID().toString();
         recordFolderContext.put("recordFolderName", folderName);
         String recordFolderId = findRecordFolderService.service(recordFolderContext);
 
-
         // now we can finally move our record
         Map<String, Object> context = new HashMap<>();
         context.put("ecmFileId", ecmFileId);
-        context.put("ticket", ticket);
         context.put("recordFolderId", recordFolderId);
         String movedId = service.service(context);
 
         assertEquals(ecmFileId, movedId);
-
 
     }
 }

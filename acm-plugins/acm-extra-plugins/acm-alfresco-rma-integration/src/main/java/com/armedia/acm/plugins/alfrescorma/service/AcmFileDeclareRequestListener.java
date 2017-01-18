@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.alfrescorma.service;
 import com.armedia.acm.plugins.alfrescorma.exception.AlfrescoServiceException;
 import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileDeclareRequestEvent;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
@@ -19,38 +20,33 @@ public class AcmFileDeclareRequestListener implements ApplicationListener<EcmFil
     @Override
     public void onApplicationEvent(EcmFileDeclareRequestEvent ecmFileDeclareRequestEvent)
     {
-        boolean proceed = getAlfrescoRecordsService().checkIntegrationEnabled(AlfrescoRmaPluginConstants.FILE_DECLARE_REQUEST_INTEGRATION_KEY);
+        boolean proceed = getAlfrescoRecordsService()
+                .checkIntegrationEnabled(AlfrescoRmaPluginConstants.FILE_DECLARE_REQUEST_INTEGRATION_KEY);
 
-        if ( !proceed )
+        if (!proceed)
         {
             return;
         }
 
-        if ( ! ecmFileDeclareRequestEvent.isSucceeded() )
+        if (!ecmFileDeclareRequestEvent.isSucceeded())
         {
             log.trace("Returning - file declaration request was not successful");
         }
 
         try
         {
-            String ticket = getAlfrescoRecordsService().getTicketService().service(null);
             getAlfrescoRecordsService().declareFileAsRecord(ecmFileDeclareRequestEvent.getSource().getContainer(),
-                    ecmFileDeclareRequestEvent.getEventDate(),
-                    ecmFileDeclareRequestEvent.getParentObjectName(),
+                    ecmFileDeclareRequestEvent.getEventDate(), ecmFileDeclareRequestEvent.getParentObjectName(),
                     getAlfrescoRecordsService().getAlfrescoRmaProperties().getProperty(AlfrescoRmaPluginConstants.PROPERTY_ORIGINATOR_ORG),
-                    ecmFileDeclareRequestEvent.getUserId(),
-                    ticket,
-                    ecmFileDeclareRequestEvent.getEcmFileId(),
-                    ecmFileDeclareRequestEvent.getSource().getStatus(),
-                    ecmFileDeclareRequestEvent.getObjectId());
+                    ecmFileDeclareRequestEvent.getUserId(), ecmFileDeclareRequestEvent.getEcmFileId(),
+                    ecmFileDeclareRequestEvent.getSource().getStatus(), ecmFileDeclareRequestEvent.getObjectId());
 
-        } catch (AlfrescoServiceException e)
+        }
+        catch (AlfrescoServiceException e)
         {
             log.error("Could not declare file as record: {}", e.getMessage(), e);
         }
     }
-
-
 
     public AlfrescoRecordsService getAlfrescoRecordsService()
     {
@@ -61,6 +57,5 @@ public class AcmFileDeclareRequestListener implements ApplicationListener<EcmFil
     {
         this.alfrescoRecordsService = alfrescoRecordsService;
     }
-
 
 }

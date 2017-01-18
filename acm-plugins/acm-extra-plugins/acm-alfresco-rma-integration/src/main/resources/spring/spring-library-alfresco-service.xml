@@ -10,12 +10,6 @@
         <property name="contextRoot" value="${alfresco_contextRoot}"/>
     </bean>
 
-    <bean id="alfrescoGetTicketService" class="com.armedia.acm.plugins.alfrescorma.service.GetTicketService"
-          parent="alfrescoService">
-        <property name="user" value="${alfresco_user}"/>
-        <property name="password" value="${alfresco_password}"/>
-    </bean>
-
     <bean id="declareRecordService" class="com.armedia.acm.plugins.alfrescorma.service.DeclareRecordService"
           parent="alfrescoService"/>
 

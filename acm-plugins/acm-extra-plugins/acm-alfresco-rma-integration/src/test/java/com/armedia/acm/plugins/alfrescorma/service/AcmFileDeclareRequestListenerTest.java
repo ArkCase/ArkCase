@@ -1,10 +1,14 @@
 package com.armedia.acm.plugins.alfrescorma.service;
 
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
 
 import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileDeclareRequestEvent;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,14 +17,11 @@ import org.springframework.security.core.Authentication;
 import java.util.Date;
 import java.util.Properties;
 
-import static org.easymock.EasyMock.*;
-
 public class AcmFileDeclareRequestListenerTest extends EasyMockSupport
 {
     private AcmFileDeclareRequestListener unit;
     private AlfrescoRecordsService mockService;
     private Authentication mockAuthentication;
-    private GetTicketService mockTicketService;
 
     @Before
     public void setUp()
@@ -29,7 +30,6 @@ public class AcmFileDeclareRequestListenerTest extends EasyMockSupport
         mockService = createMock(AlfrescoRecordsService.class);
         mockAuthentication = createMock(Authentication.class);
         unit.setAlfrescoRecordsService(mockService);
-        mockTicketService = createMock(GetTicketService.class);
     }
 
     @Test
@@ -38,7 +38,8 @@ public class AcmFileDeclareRequestListenerTest extends EasyMockSupport
         EcmFile file = new EcmFile();
         file.setContainer(new AcmContainer());
 
-        expect(mockService.checkIntegrationEnabled(AlfrescoRmaPluginConstants.FILE_DECLARE_REQUEST_INTEGRATION_KEY)).andReturn(Boolean.FALSE);
+        expect(mockService.checkIntegrationEnabled(AlfrescoRmaPluginConstants.FILE_DECLARE_REQUEST_INTEGRATION_KEY))
+                .andReturn(Boolean.FALSE);
         expect(mockAuthentication.getDetails()).andReturn("details").anyTimes();
 
         replayAll();
@@ -63,23 +64,13 @@ public class AcmFileDeclareRequestListenerTest extends EasyMockSupport
 
         expect(mockService.getAlfrescoRmaProperties()).andReturn(p);
 
-        expect(mockService.getTicketService()).andReturn(mockTicketService);
-        expect(mockTicketService.service(null)).andReturn("ticket");
-
         expect(mockAuthentication.getDetails()).andReturn("details").anyTimes();
 
-        expect(mockService.checkIntegrationEnabled(AlfrescoRmaPluginConstants.FILE_DECLARE_REQUEST_INTEGRATION_KEY)).andReturn(Boolean.TRUE);
+        expect(mockService.checkIntegrationEnabled(AlfrescoRmaPluginConstants.FILE_DECLARE_REQUEST_INTEGRATION_KEY))
+                .andReturn(Boolean.TRUE);
 
-        mockService.declareFileAsRecord(
-                eq(file.getContainer()),
-                anyObject(Date.class),
-                eq("parentObjectName"),
-                eq("Grateful Dead"),
-                eq("userId"),
-                eq("ticket"),
-                eq("cmisObjectId"),
-                eq(file.getStatus()),
-                eq(500L));
+        mockService.declareFileAsRecord(eq(file.getContainer()), anyObject(Date.class), eq("parentObjectName"), eq("Grateful Dead"),
+                eq("userId"), eq("cmisObjectId"), eq(file.getStatus()), eq(500L));
 
         replayAll();
 

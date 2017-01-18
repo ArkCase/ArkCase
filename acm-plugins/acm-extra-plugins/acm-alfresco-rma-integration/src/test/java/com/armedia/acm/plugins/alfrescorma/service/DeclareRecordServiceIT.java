@@ -1,6 +1,10 @@
 package com.armedia.acm.plugins.alfrescorma.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
+
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,16 +19,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "/spring/spring-alfresco-records-service-test.xml",
         "/spring/spring-library-alfresco-service.xml",
         "/spring/spring-library-acm-encryption.xml",
-        "/spring/spring-library-property-file-manager.xml"
-})
+        "/spring/spring-library-property-file-manager.xml" })
 public class DeclareRecordServiceIT
 {
     @Autowired
@@ -33,10 +33,6 @@ public class DeclareRecordServiceIT
     @Autowired
     @Qualifier("declareRecordService")
     private AlfrescoService<String> service;
-
-    @Autowired
-    @Qualifier("alfrescoGetTicketService")
-    private AlfrescoService<String> ticketService;
 
     private String ecmFileId;
 
@@ -56,17 +52,13 @@ public class DeclareRecordServiceIT
     {
         assertNotNull(service);
 
-        String ticket = ticketService.service(null);
-
         Map<String, Object> context = new HashMap<>();
 
         context.put("ecmFileId", ecmFileId);
-        context.put("ticket", ticket);
 
         String retval = service.service(context);
 
         assertEquals(ecmFileId, retval);
-
 
     }
 }

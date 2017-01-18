@@ -23,6 +23,9 @@ public class HttpInvokerUtil
     public static final String getExternalUserIdValue()
     {
         String userId = MDC.get(EVENT_MDC_REQUEST_USER_ID_KEY);
-        return ANONYMOUS_USER.equals(userId) ? null : userId;
+        if ((userId == null) || ANONYMOUS_USER.equals(userId)) {
+            return null;
+        }
+        return userId.indexOf("@") > 0 ? userId.substring(0, userId.indexOf("@")) : userId;
     }
 }

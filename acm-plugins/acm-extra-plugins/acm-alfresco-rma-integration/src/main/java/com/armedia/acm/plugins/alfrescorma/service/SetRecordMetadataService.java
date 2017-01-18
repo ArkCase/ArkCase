@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.alfrescorma.service;
 
 import com.armedia.acm.plugins.alfrescorma.exception.AlfrescoServiceException;
+
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +32,6 @@ public class SetRecordMetadataService extends AlfrescoService<String> implements
     private final RestTemplate restTemplate;
 
     private final String service = "/s/api/node";
-    private final String query = "alf_ticket={ticket}";
 
     private transient final Logger LOG = LoggerFactory.getLogger(getClass());
 
@@ -43,20 +43,18 @@ public class SetRecordMetadataService extends AlfrescoService<String> implements
     /**
      * The context must have:
      * <ul>
-     * <li>Key ecmFileId: String, CMIS Version Series ID (NOT the id, the versionSeriesId) of the document which will have its metadata set</li>
+     * <li>Key ecmFileId: String, CMIS Version Series ID (NOT the id, the versionSeriesId) of the document which will have its metadata
+     * set</li>
      * <li>Key publicationDate: Date</li>
      * <li>Key originator: Date</li>
      * <li>Key originatingOrganization: Date</li>
      * <li>Key dateReceived: Date</li>
-     * <li>Key ticket: String, Alfresco ticket</li>
      * </ul>
      */
     @Override
     public String doService(Map<String, Object> context) throws AlfrescoServiceException
     {
         validateContext(context);
-
-        String ticket = (String) context.get("ticket");
 
         String ecmFileId = (String) context.get("ecmFileId");
 
@@ -67,7 +65,7 @@ public class SetRecordMetadataService extends AlfrescoService<String> implements
 
         String fullService = service + "/" + namespace + "/" + id + "/formprocessor";
 
-        String url = baseUrl() + fullService + "?" + query;
+        String url = baseUrl() + fullService;
 
         LOG.debug("Full URL: {}", url);
 
@@ -78,7 +76,7 @@ public class SetRecordMetadataService extends AlfrescoService<String> implements
 
         try
         {
-            ResponseEntity<String> response = restTemplate.postForEntity(url, entity, String.class, ticket);
+            ResponseEntity<String> response = restTemplate.postForEntity(url, entity, String.class);
             LOG.debug("set metadata response: {}", response.getBody());
 
             if (HttpStatus.OK.equals(response.getStatusCode()))
@@ -88,11 +86,13 @@ public class SetRecordMetadataService extends AlfrescoService<String> implements
 
                 String persistedObject = jsonResponse.getString("persistedObject");
                 return persistedObject;
-            } else
+            }
+            else
             {
                 throw new AlfrescoServiceException("Could not set metadata: " + response.getStatusCode());
             }
-        } catch (RestClientException e)
+        }
+        catch (RestClientException e)
         {
             LOG.error("Exception setting metadata: {} {}", e.getMessage(), e);
             throw new AlfrescoServiceException(e.getMessage(), e);
@@ -151,12 +151,6 @@ public class SetRecordMetadataService extends AlfrescoService<String> implements
         {
             throw new IllegalArgumentException("Context must include a dateReceived of type Date");
         }
-
-
-        if (context.get("ticket") == null || !(context.get("ticket") instanceof String))
-        {
-            throw new IllegalArgumentException("Context must include a ticket of type String");
-        }
     }
 
     @Override
@@ -172,7 +166,8 @@ public class SetRecordMetadataService extends AlfrescoService<String> implements
             originatorField = "prop_dod_originator";
             originatingOrganizationField = "prop_dod_originatingOrganization";
             dateReceivedField = "prop_dod_dateReceived";
-        } else
+        }
+        else
         {
             publicationDateField = "prop_rma_publicationDate";
             originatorField = "prop_rma_originator";
