@@ -41,7 +41,8 @@
                                class="input-md form-control"
                                placeholder="{{ 'tasks.newTask.associateNumber.placeholder' | translate }}"
                                id="complaintId"
-                               ng-disabled="config.data.attachedToObjectType==='' ">      
+                               ng-disabled="config.data.attachedToObjectType==='' "
+                               ng-click="objectSearch()">      
                     </div>
                 </div>
                 <div class="row">
