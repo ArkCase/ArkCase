@@ -1,15 +1,13 @@
 package com.armedia.acm.plugins.ecm.service;
 
 import com.armedia.acm.core.AcmObject;
-import org.json.JSONArray;
-
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
-import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import org.json.JSONArray;
 import org.mule.api.MuleException;
 
 import java.util.List;
@@ -19,7 +17,7 @@ import java.util.List;
  */
 public interface AcmFolderService {
 
-    AcmFolder addNewFolder(Long parentFolderId, String folderName) throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException;
+    AcmFolder addNewFolder(Long parentFolderId, String folderName, Long parentId, String parentType) throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException;
 
     AcmFolder addNewFolder(AcmFolder parentFolder, String folderName) throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException;
 
@@ -58,4 +56,6 @@ public interface AcmFolderService {
     void copyDocumentStructure(Long documentId,
                                AcmContainer containerOfCopy,
                                AcmFolder rootFolderOfCopy) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException;
+
+    AcmContainer findContainerByFolderId(Long folderId) throws AcmObjectNotFoundException;
 }

@@ -23,7 +23,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertNotNull;
@@ -100,7 +99,7 @@ public class MergeCaseServiceImplTest extends EasyMockSupport {
                 , EasyMock.anyObject(AcmFolder.class))).andReturn(null);
 
         AcmFolder someFolder = new AcmFolder();
-        EasyMock.expect(acmFolderService.addNewFolder(1l, String.format("%s(%s)", "Source", "55435345435_2133"))).andReturn(someFolder);
+        EasyMock.expect(acmFolderService.addNewFolder(1l, String.format("%s(%s)", "Source", "55435345435_2133"), sourceId, "CASE_FILE")).andReturn(someFolder);
 
         EasyMock.expect(ecmFileDao.changeContainer(EasyMock.anyObject(AcmContainer.class), EasyMock.anyObject(AcmContainer.class), EasyMock.anyObject(List.class))).andReturn(1);
 

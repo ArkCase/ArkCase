@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.ecm.web.api;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
@@ -10,13 +11,11 @@ import com.armedia.acm.plugins.ecm.service.FolderEventPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
@@ -34,14 +33,11 @@ public class AddNewFolderAPIController {
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PreAuthorize("hasPermission(#parentId, #parentType, 'editAttachments')")
     @RequestMapping(value = "/folder/{parentFolderId}/{newFolderName}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmFolder addNewFolder(
             @PathVariable("parentFolderId") Long parentFolderId,
             @PathVariable("newFolderName")  String newFolderName,
-            @RequestParam("objType") String parentType,
-            @RequestParam("objId") Long parentId,
             Authentication authentication,
             HttpSession session) throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException {
         /**
@@ -55,7 +51,8 @@ public class AddNewFolderAPIController {
         }
 
         try {
-            AcmFolder newFolder = getFolderService().addNewFolder(parentFolderId, newFolderName);
+            AcmContainer container = getFolderService().findContainerByFolderId(parentFolderId);
+            AcmFolder newFolder = getFolderService().addNewFolder(parentFolderId, newFolderName, container.getContainerObjectId(), container.getContainerObjectType());
             if( log.isInfoEnabled() ) {
                 log.info("Created new folder " + newFolder.getId() + "with name: " + newFolderName);
             }

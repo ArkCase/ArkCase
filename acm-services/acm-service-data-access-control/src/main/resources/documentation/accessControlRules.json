@@ -4,7 +4,8 @@
     "object_type_s": "objectType",
     "object_sub_type_s": "objectSubType",
     "queue_name_s": "queue.name",
-    "name": "name"
+    "name": "name",
+    "status_lcs": "status"
   },
   "accessControlRuleList": [
     {
@@ -213,7 +214,7 @@
       "actionName": "editAttachments",
       "objectType": "TASK",
       "objectProperties": {
-        "completed": false
+        "status": "ACTIVE"
       },
       "userRolesAny": [
         "ROLE_INVESTIGATOR",
