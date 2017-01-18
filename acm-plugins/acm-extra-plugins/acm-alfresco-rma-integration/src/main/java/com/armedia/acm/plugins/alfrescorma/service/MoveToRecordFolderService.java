@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.alfrescorma.service;
 
 import com.armedia.acm.plugins.alfrescorma.exception.AlfrescoServiceException;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -9,7 +10,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 
@@ -19,31 +19,20 @@ import java.util.Map;
 public class MoveToRecordFolderService extends AlfrescoService<String>
 {
     private final String service = "/s/slingshot/doclib/action/move-to/node";
-    private final String query = "alf_ticket={ticket}";
-
-    private final RestTemplate restTemplate;
 
     private transient final Logger LOG = LoggerFactory.getLogger(getClass());
-
-    public MoveToRecordFolderService()
-    {
-        restTemplate = new RestTemplate();
-    }
 
     /**
      * The context must have:
      * <ul>
      * <li>Key ecmFileId: String, CMIS Version Series ID (NOT the id, the versionSeriesId) of the document which will be moved</li>
      * <li>Key recordFolderId: String, CMIS Object ID of the target folder</li>
-     * <li>Key ticket: String, Alfresco ticket</li>
      * </ul>
      */
     @Override
     public String doService(Map<String, Object> context) throws AlfrescoServiceException
     {
         validateContext(context);
-
-        String ticket = (String) context.get("ticket");
 
         JSONObject moveToRecordFolderPayload = buildPost(context);
 
@@ -52,13 +41,13 @@ public class MoveToRecordFolderService extends AlfrescoService<String>
 
         final String fullService = service + "/" + urlPathParameter;
 
-        final String url = baseUrl() + fullService + "?" + query;
+        final String url = baseUrl() + fullService;
 
         final HttpEntity<String> entity = buildRestEntity(moveToRecordFolderPayload);
 
         try
         {
-            ResponseEntity<String> response = restTemplate.postForEntity(url, entity, String.class, ticket);
+            ResponseEntity<String> response = getRestTemplate().postForEntity(url, entity, String.class);
             LOG.debug("move record response: {}", response.getBody());
 
             if (HttpStatus.OK.equals(response.getStatusCode()))
@@ -74,15 +63,18 @@ public class MoveToRecordFolderService extends AlfrescoService<String>
                     JSONObject result = results.getJSONObject(0);
                     String nodeRef = result.getString("nodeRef");
                     return nodeRef;
-                } else
+                }
+                else
                 {
                     throw new AlfrescoServiceException("Could not move record");
                 }
-            } else
+            }
+            else
             {
                 throw new AlfrescoServiceException("Could not move record: " + response.getStatusCode());
             }
-        } catch (RestClientException e)
+        }
+        catch (RestClientException e)
         {
             LOG.error("Exception moving record: {} {}", e.getMessage(), e);
             throw new AlfrescoServiceException(e.getMessage(), e);
@@ -116,11 +108,6 @@ public class MoveToRecordFolderService extends AlfrescoService<String>
         if (context.get("recordFolderId") == null || !(context.get("recordFolderId") instanceof String))
         {
             throw new IllegalArgumentException("Context must include a recordFolderId of type String");
-        }
-
-        if (context.get("ticket") == null || !(context.get("ticket") instanceof String))
-        {
-            throw new IllegalArgumentException("Context must include a ticket of type String");
         }
     }
 

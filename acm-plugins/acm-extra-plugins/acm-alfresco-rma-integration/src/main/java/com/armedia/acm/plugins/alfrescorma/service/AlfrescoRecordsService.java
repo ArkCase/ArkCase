@@ -45,7 +45,6 @@ public class AlfrescoRecordsService implements InitializingBean
         getEncryptablePropertyUtils().decryptProperties(alfrescoRmaPropertiesMap);
     }
 
-    private GetTicketService ticketService;
     private DeclareRecordService declareRecordService;
     private SetRecordMetadataService setRecordMetadataService;
     private FindFolderService findFolderService;
@@ -59,7 +58,6 @@ public class AlfrescoRecordsService implements InitializingBean
         {
             AcmCmisObjectList files = getEcmFileService().allFilesForContainer(auth, container);
             declareAsRecords(files, container, receiveDate, recordFolderName);
-
         }
         catch (AcmListObjectsFailedException e)
         {
@@ -79,15 +77,12 @@ public class AlfrescoRecordsService implements InitializingBean
         String originatorOrg = getAlfrescoRmaProperties().getProperty(AlfrescoRmaPluginConstants.PROPERTY_ORIGINATOR_ORG,
                 AlfrescoRmaPluginConstants.DEFAULT_ORIGINATOR_ORG);
 
-        // get the ticket once, to use for all files
         try
         {
-            String alfTicket = getTicketService().service(null);
-
             for (AcmCmisObject file : files.getChildren())
             {
-                declareFileAsRecord(container, receiveDate, recordFolderName, originatorOrg, file.getModifier(), alfTicket,
-                        file.getCmisObjectId(), file.getStatus(), file.getObjectId());
+                declareFileAsRecord(container, receiveDate, recordFolderName, originatorOrg, file.getModifier(), file.getCmisObjectId(),
+                        file.getStatus(), file.getObjectId());
             }
 
         }
@@ -98,51 +93,48 @@ public class AlfrescoRecordsService implements InitializingBean
     }
 
     protected void declareFileAsRecord(AcmContainer container, Date receiveDate, String recordFolderName, String originatorOrg,
-            String originator, String alfTicket, String cmisObjectId, String objectStatus, Long ecmFileId) throws AlfrescoServiceException
+            String originator, String cmisObjectId, String objectStatus, Long ecmFileId) throws AlfrescoServiceException
     {
         if (!((EcmFileConstants.RECORD).equals(objectStatus)))
         {
-            declareRecord(alfTicket, cmisObjectId);
+            declareRecord(cmisObjectId);
 
-            writeRecordMetadata(receiveDate, originatorOrg, alfTicket, cmisObjectId, originator);
+            writeRecordMetadata(receiveDate, originatorOrg, cmisObjectId, originator);
 
             Folder categoryFolder = findFolder(container.getObjectType());
 
-            String recordFolderId = createOrFindRecordFolder(recordFolderName, alfTicket, categoryFolder);
+            String recordFolderId = createOrFindRecordFolder(recordFolderName, categoryFolder);
 
             log.debug("recordFolderId: {}", recordFolderId);
 
-            moveToRecordFolder(recordFolderId, alfTicket, cmisObjectId);
+            moveToRecordFolder(recordFolderId, cmisObjectId);
 
-            completeRecord(alfTicket, cmisObjectId);
+            completeRecord(cmisObjectId);
 
             setFileStatusAsRecord(ecmFileId);
         }
     }
 
-    protected void completeRecord(String alfTicket, String cmisFileId) throws AlfrescoServiceException
+    protected void completeRecord(String cmisFileId) throws AlfrescoServiceException
     {
         Map<String, Object> completeRecordContext = new HashMap<>();
         completeRecordContext.put("ecmFileId", cmisFileId);
-        completeRecordContext.put("ticket", alfTicket);
         getCompleteRecordService().service(completeRecordContext);
     }
 
-    protected void moveToRecordFolder(String recordFolderId, String alfTicket, String cmisFileId) throws AlfrescoServiceException
+    protected void moveToRecordFolder(String recordFolderId, String cmisFileId) throws AlfrescoServiceException
     {
         Map<String, Object> moveToRecordFolderContext = new HashMap<>();
         moveToRecordFolderContext.put("ecmFileId", cmisFileId);
         moveToRecordFolderContext.put("recordFolderId", recordFolderId);
-        moveToRecordFolderContext.put("ticket", alfTicket);
         getMoveToRecordFolderService().service(moveToRecordFolderContext);
     }
 
-    protected String createOrFindRecordFolder(String recordFolderName, String alfTicket, Folder folder) throws AlfrescoServiceException
+    protected String createOrFindRecordFolder(String recordFolderName, Folder folder) throws AlfrescoServiceException
     {
         Map<String, Object> findRecordFolderContext = new HashMap<>();
         findRecordFolderContext.put("parentFolder", folder);
         findRecordFolderContext.put("recordFolderName", recordFolderName);
-        findRecordFolderContext.put("ticket", alfTicket);
         return getCreateOrFindRecordFolderService().service(findRecordFolderContext);
     }
 
@@ -155,12 +147,11 @@ public class AlfrescoRecordsService implements InitializingBean
         return folder;
     }
 
-    protected void writeRecordMetadata(Date receiveDate, String originatorOrg, String alfTicket, String cmisFileId, String originator)
+    protected void writeRecordMetadata(Date receiveDate, String originatorOrg, String cmisFileId, String originator)
             throws AlfrescoServiceException
     {
         Map<String, Object> metadataContext = new HashMap<>();
         metadataContext.put("ecmFileId", cmisFileId);
-        metadataContext.put("ticket", alfTicket);
         metadataContext.put("publicationDate", new Date());
         metadataContext.put("originator", originator);
         metadataContext.put("originatingOrganization", originatorOrg);
@@ -168,11 +159,10 @@ public class AlfrescoRecordsService implements InitializingBean
         getSetRecordMetadataService().service(metadataContext);
     }
 
-    protected void declareRecord(String alfTicket, String cmisFileId) throws AlfrescoServiceException
+    protected void declareRecord(String cmisFileId) throws AlfrescoServiceException
     {
         Map<String, Object> declareContext = new HashMap<>();
         declareContext.put("ecmFileId", cmisFileId);
-        declareContext.put("ticket", alfTicket);
         getDeclareRecordService().service(declareContext);
     }
 
@@ -194,11 +184,8 @@ public class AlfrescoRecordsService implements InitializingBean
                     log.debug("File with ID : " + ecmFile.getFileId() + " Status is changed to " + EcmFileConstants.RECORD);
                 }
             }
-
         }
-        catch (
-
-        AcmObjectNotFoundException e)
+        catch (AcmObjectNotFoundException e)
         {
             if (log.isErrorEnabled())
             {
@@ -263,16 +250,6 @@ public class AlfrescoRecordsService implements InitializingBean
     public void setEncryptablePropertyUtils(AcmEncryptablePropertyUtils encryptablePropertyUtils)
     {
         this.encryptablePropertyUtils = encryptablePropertyUtils;
-    }
-
-    public GetTicketService getTicketService()
-    {
-        return ticketService;
-    }
-
-    public void setTicketService(GetTicketService ticketService)
-    {
-        this.ticketService = ticketService;
     }
 
     public DeclareRecordService getDeclareRecordService()

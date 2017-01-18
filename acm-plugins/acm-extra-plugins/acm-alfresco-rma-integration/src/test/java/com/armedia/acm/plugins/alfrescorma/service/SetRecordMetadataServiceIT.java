@@ -1,6 +1,10 @@
 package com.armedia.acm.plugins.alfrescorma.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
+
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,16 +20,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "/spring/spring-alfresco-records-service-test.xml",
         "/spring/spring-library-alfresco-service.xml",
         "/spring/spring-library-acm-encryption.xml",
-        "/spring/spring-library-property-file-manager.xml"
-})
+        "/spring/spring-library-property-file-manager.xml" })
 public class SetRecordMetadataServiceIT
 {
     @Autowired
@@ -38,10 +38,6 @@ public class SetRecordMetadataServiceIT
     @Autowired
     @Qualifier("setRecordMetadataService")
     private AlfrescoService<String> service;
-
-    @Autowired
-    @Qualifier("alfrescoGetTicketService")
-    private AlfrescoService<String> ticketService;
 
     private String ecmFileId;
 
@@ -61,12 +57,9 @@ public class SetRecordMetadataServiceIT
     {
         assertNotNull(declareRecordService);
 
-        String ticket = ticketService.service(null);
-
         Map<String, Object> declareRecordContext = new HashMap<>();
 
         declareRecordContext.put("ecmFileId", ecmFileId);
-        declareRecordContext.put("ticket", ticket);
 
         String actedOnId = declareRecordService.service(declareRecordContext);
 
@@ -74,7 +67,6 @@ public class SetRecordMetadataServiceIT
 
         Map<String, Object> context = new HashMap<>();
         context.put("ecmFileId", ecmFileId);
-        context.put("ticket", ticket);
         context.put("publicationDate", new Date());
         context.put("originator", "Jerry Garcia");
         context.put("originatingOrganization", "Grateful Dead");
@@ -82,7 +74,6 @@ public class SetRecordMetadataServiceIT
 
         String metadataId = service.service(context);
         assertEquals(ecmFileId, metadataId);
-
 
     }
 }

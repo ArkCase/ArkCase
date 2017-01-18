@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.alfrescorma.service;
 
 import com.armedia.acm.plugins.alfrescorma.exception.AlfrescoServiceException;
+
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,7 +9,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 
@@ -18,22 +18,13 @@ import java.util.Map;
 public class DeclareRecordService extends AlfrescoService<String>
 {
     private final String service = "/s/api/actionQueue";
-    private final String query = "alf_ticket={ticket}";
-    private final RestTemplate restTemplate;
 
     private transient final Logger LOG = LoggerFactory.getLogger(getClass());
-
-    public DeclareRecordService()
-    {
-        restTemplate = new RestTemplate();
-    }
-
 
     /**
      * The context must have:
      * <ul>
-     *   <li>Key ecmFileId: String, versionSeriesId (NOT the document id) of the document to be declared as a record</li>
-     *   <li>Key ticket: String, Alfresco ticket</li>
+     * <li>Key ecmFileId: String, versionSeriesId (NOT the document id) of the document to be declared as a record</li>
      * </ul>
      */
     @Override
@@ -41,19 +32,17 @@ public class DeclareRecordService extends AlfrescoService<String>
     {
         validateContext(context);
 
-        String ticket = (String) context.get("ticket");
-
         JSONObject declareRecordPayload = buildPost(context);
 
         LOG.debug("Payload: [{}]", declareRecordPayload.toString());
 
-        String url = baseUrl() + "/" + service + "?" + query;
+        String url = baseUrl() + "/" + service;
 
         HttpEntity<String> entity = buildRestEntity(declareRecordPayload);
 
         try
         {
-            ResponseEntity<String> response = restTemplate.postForEntity(url, entity, String.class, ticket);
+            ResponseEntity<String> response = getRestTemplate().postForEntity(url, entity, String.class);
             LOG.debug("declare record response: {}", response.getBody());
 
             if (HttpStatus.OK.equals(response.getStatusCode()))
@@ -64,15 +53,18 @@ public class DeclareRecordService extends AlfrescoService<String>
                 {
                     String actedUponNode = data.getString("actionedUponNode");
                     return actedUponNode;
-                } else
+                }
+                else
                 {
                     throw new AlfrescoServiceException("Could not declare record: " + data.getString("status"));
                 }
-            } else
+            }
+            else
             {
                 throw new AlfrescoServiceException("Could not declare record: " + response.getStatusCode());
             }
-        } catch (RestClientException e)
+        }
+        catch (RestClientException e)
         {
             LOG.error("Exception declaring record: {} {}", e.getMessage(), e);
             throw new AlfrescoServiceException(e.getMessage(), e);
@@ -102,11 +94,6 @@ public class DeclareRecordService extends AlfrescoService<String>
         if (context.get("ecmFileId") == null || !(context.get("ecmFileId") instanceof String))
         {
             throw new IllegalArgumentException("Context must include an ecmFileId of type String");
-        }
-
-        if (context.get("ticket") == null || !(context.get("ticket") instanceof String))
-        {
-            throw new IllegalArgumentException("Context must include a ticket of type String");
         }
     }
 }

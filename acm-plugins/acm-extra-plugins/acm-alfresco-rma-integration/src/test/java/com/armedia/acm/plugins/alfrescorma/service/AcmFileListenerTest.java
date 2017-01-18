@@ -1,10 +1,14 @@
 package com.armedia.acm.plugins.alfrescorma.service;
 
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
 
 import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileAddedEvent;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,14 +17,11 @@ import org.springframework.security.core.Authentication;
 import java.util.Date;
 import java.util.Properties;
 
-import static org.easymock.EasyMock.*;
-
 public class AcmFileListenerTest extends EasyMockSupport
 {
     private AcmFileListener unit;
     private AlfrescoRecordsService mockService;
     private Authentication mockAuthentication;
-    private GetTicketService mockTicketService;
 
     @Before
     public void setUp()
@@ -28,7 +29,6 @@ public class AcmFileListenerTest extends EasyMockSupport
         unit = new AcmFileListener();
         mockService = createMock(AlfrescoRecordsService.class);
         mockAuthentication = createMock(Authentication.class);
-        mockTicketService = createMock(GetTicketService.class);
 
         unit.setAlfrescoRecordsService(mockService);
     }
@@ -60,33 +60,19 @@ public class AcmFileListenerTest extends EasyMockSupport
         file.setStatus("ACTIVE");
 
         Properties p = new Properties();
-        p.setProperty(
-                AlfrescoRmaPluginConstants.CATEGORY_FOLDER_PROPERTY_KEY_PREFIX + file.getContainer().getContainerObjectType(),
+        p.setProperty(AlfrescoRmaPluginConstants.CATEGORY_FOLDER_PROPERTY_KEY_PREFIX + file.getContainer().getContainerObjectType(),
                 categoryFolder);
         String originatorOrg = "originatorOrg";
         p.setProperty(AlfrescoRmaPluginConstants.PROPERTY_ORIGINATOR_ORG, originatorOrg);
-
 
         expect(mockAuthentication.getDetails()).andReturn("details").anyTimes();
 
         expect(mockService.checkIntegrationEnabled(AlfrescoRmaPluginConstants.FILE_INTEGRATION_KEY)).andReturn(Boolean.TRUE);
 
-        expect(mockService.getTicketService()).andReturn(mockTicketService);
-        expect(mockTicketService.service(null)).andReturn("ticket");
-
         expect(mockService.getAlfrescoRmaProperties()).andReturn(p).atLeastOnce();
 
-        mockService.declareFileAsRecord(
-                eq(file.getContainer()),
-                anyObject(Date.class),
-                eq("parentObjectName"),
-                eq(originatorOrg),
-                eq("userId"),
-                eq("ticket"),
-                eq("cmisObjectId"),
-                eq(file.getStatus()),
-                eq(500L));
-
+        mockService.declareFileAsRecord(eq(file.getContainer()), anyObject(Date.class), eq("parentObjectName"), eq(originatorOrg),
+                eq("userId"), eq("cmisObjectId"), eq(file.getStatus()), eq(500L));
 
         replayAll();
 

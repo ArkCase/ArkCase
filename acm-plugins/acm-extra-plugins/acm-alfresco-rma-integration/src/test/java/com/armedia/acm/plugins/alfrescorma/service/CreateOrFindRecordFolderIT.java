@@ -1,5 +1,8 @@
 package com.armedia.acm.plugins.alfrescorma.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import org.apache.chemistry.opencmis.client.api.Folder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,9 +16,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -31,8 +31,7 @@ import static org.junit.Assert.assertNotNull;
         "/spring/spring-library-search.xml",
         "/spring/spring-library-user-service.xml",
         "/spring/spring-library-data-access-control.xml",
-        "/spring/spring-library-particpants.xml"
-})
+        "/spring/spring-library-particpants.xml" })
 public class CreateOrFindRecordFolderIT
 {
     @Autowired
@@ -43,18 +42,12 @@ public class CreateOrFindRecordFolderIT
     @Qualifier("findFolderService")
     private AlfrescoService<Folder> findFolderService;
 
-    @Autowired
-    @Qualifier("alfrescoGetTicketService")
-    private AlfrescoService<String> ticketService;
-
     private transient final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Test
     public void createOrFindRecordFolder() throws Exception
     {
         assertNotNull(service);
-
-        String ticket = ticketService.service(null);
 
         Map<String, Object> findFolderContext = new HashMap<>();
 
@@ -65,7 +58,6 @@ public class CreateOrFindRecordFolderIT
         assertNotNull(categoryFolder);
 
         Map<String, Object> context = new HashMap<>();
-        context.put("ticket", ticket);
         context.put("parentFolder", categoryFolder);
 
         String folderName = UUID.randomUUID().toString();
