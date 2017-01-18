@@ -341,7 +341,9 @@ describe('Create new task ', function() {
     });
     it('should create new task and edit the start date', function() {
 
-        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, Objects.taskpage.data.StartDate, utils.returnToday("/"), "Expedite", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+        taskPage.clickModuleTasks();
+        //this line was added to verify that issue https://project.armedia.com/jira/browse/AFDP-2797 does not exist any more
+        taskPage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Attachments");
         taskPage.editStartDate(utils.returnToday("/"));
         expect(taskPage.returnStartDateInput()).toEqual(today);
 
@@ -412,4 +414,6 @@ describe('Create new task ', function() {
         expect(taskPage.validateCancelEditingEnabled()).not.toBeTruthy();
 
     });
+
+
 });
