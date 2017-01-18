@@ -10,16 +10,13 @@ import java.util.Date;
 public class SmtpEmailReceivedEvent extends AcmEvent {
     private static final String EVENT_TYPE = "com.armedia.acm.smtp.event.received";
 
-    public SmtpEmailReceivedEvent(Object source, String userId, Long objectId, String objectType)
-    {
+    public SmtpEmailReceivedEvent(Object source, String userId, Long objectId, String objectType) {
         super(source);
         setUserId(userId);
-        setEventDate(new Date());;
-        if (objectId != null && objectType != null)
-        {
-            setObjectId(objectId);
-            setObjectType(objectType);
-        }
+        setEventDate(new Date());
+        setObjectId(objectId);
+        setObjectType(objectType);
+
     }
 
     @Override
