@@ -8,6 +8,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
 
         $scope.config = null;
         $scope.userSearchConfig = null;
+        $scope.objectSearchConfig = null;
         $scope.isAssocType = false;
 
         $scope.options = {
@@ -29,6 +30,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             $scope.config = _.find(moduleConfig.components, {id: "newTask"});
 
             $scope.userSearchConfig = _.find(moduleConfig.components, {id: "userSearch"});
+            $scope.objectSearchConfig = _.find(moduleConfig.components, {id: "objectSearch"});
 
             $scope.userName = $scope.userFullName;
             $scope.config.data.assignee = $scope.userId;
@@ -99,6 +101,36 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
                 if (chosenUser) {
                     $scope.config.data.assignee = chosenUser.object_id_s;
                     $scope.userName = chosenUser.name;
+
+                    return;
+                }
+
+            }, function () {
+                // Cancel button was clicked.
+                return [];
+            });
+
+        };
+        
+        $scope.objectSearch = function () {
+            var modalInstance = $modal.open({
+                animation: $scope.animationsEnabled,
+                templateUrl: 'modules/tasks/views/components/task-object-search.client.view.html',
+                controller: 'Tasks.ObjectSearchController',
+                size: 'lg',
+                resolve: {
+                    $filter: function () {
+                        return $scope.config.objectSearch.objectFacetFilter + $scope.config.data.attachedToObjectType;
+                    },
+                    $config: function () {
+                        return $scope.objectSearchConfig;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (chosenObject) {
+                if (chosenObject) {
+                    $scope.config.data.attachedToObjectName = chosenObject.name;
 
                     return;
                 }

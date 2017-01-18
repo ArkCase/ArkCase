@@ -1079,6 +1079,43 @@
       "start": 0
     },
     {
+      "id": "objectSearch",
+      "title": "Select object",
+      "enableFiltering": false,
+      "multiSelect": false,
+      "showFacets": false,
+      "columnDefs": [
+        {
+          "name": "name",
+          "displayName": "tasks.objectSearch.objectGridColumns.name",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "object_type_s",
+          "displayName": "tasks.objectSearch.objectGridColumns.type",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "title_parseable",
+          "displayName": "tasks.objectSearch.objectGridColumns.title",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "reator_full_name_lcs",
+          "displayName": "tasks.objectSearch.objectGridColumns.username",
+          "headerCellFilter": "translate"
+        }
+      ],
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
+      "start": 0
+    },
+    {
       "id": "referenceSearchGrid",
       "title": "Reference Search",
       "enabled": "true",
@@ -1204,6 +1241,9 @@
       },
       "userSearch": {
         "userFacetFilter": "\"Object Type\": USER"
+      },
+       "objectSearch": {
+        "objectFacetFilter": "\"Object Type\": "
       }
     }
   ]
