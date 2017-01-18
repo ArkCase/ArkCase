@@ -80,6 +80,10 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
         $scope.updateAssocParentType = function () {
             $scope.isAssocType = $scope.config.data.attachedToObjectType !== '';
         };
+        
+        $scope.inputClear = function(){
+            $scope.config.data.attachedToObjectName = null;
+        }
 
         $scope.userSearch = function () {
             var modalInstance = $modal.open({
