@@ -19,7 +19,7 @@ public class SmtpEventSentEvent extends AcmEvent
     {
         super(source);
         setUserId(userId);
-        setEventDate(new Date());;
+        setEventDate(new Date());
         if (objectId != null && objectType != null)
         {
             setObjectId(objectId);
