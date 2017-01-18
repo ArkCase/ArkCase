@@ -19,7 +19,6 @@ function testAsync(done) {
 
 }
 
-
 describe('Create new complaint ', function() {
 
     beforeEach(function(done) {
@@ -576,6 +575,13 @@ describe('Create new complaint ', function() {
         taskPage.clickComplaintTitleInTasks();
         complaintPage.clickTasksLinkBtn().waitForTasksTable();
         complaintPage.verifyTasksTableColumnsNumber();
+    });
+
+     it('should verify if the people intiator delete button is displayed', function() {
+
+        complaintPage.clickModuleComplaints();
+        complaintPage.clickPeopleLinkBtn();
+        complaintPage.verifyIfInitiatorCanBeDeleted();
     });
 
 
