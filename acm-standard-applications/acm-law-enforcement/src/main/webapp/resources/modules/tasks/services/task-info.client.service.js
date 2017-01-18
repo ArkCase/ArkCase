@@ -79,6 +79,23 @@ angular.module('tasks').factory('Task.InfoService', ['$resource', '$translate', 
 
         /**
          * @ngdoc method
+         * @name resetTaskCacheById
+         * @methodOf tasks.service:Task.InfoService
+         *
+         * @description
+         * Reset cached info for a certain task.
+         *
+         * @param taskId id of task to clear cache for
+         */
+        Service.resetTaskCacheById = function (taskId) {
+            if (Util.goodValue(taskId) && Util.goodPositive(taskId)) {
+                var cacheInfo = new Store.CacheFifo(Service.CacheNames.TASK_INFO);
+                cacheInfo.put(taskId, null);
+            }
+        };
+
+        /**
+         * @ngdoc method
          * @name updateTaskInfo
          * @methodOf tasks.service:Task.InfoService
          *
