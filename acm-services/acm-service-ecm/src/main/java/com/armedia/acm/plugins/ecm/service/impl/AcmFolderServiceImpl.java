@@ -963,7 +963,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             {
                 folderId = folderDao.find(folderId).getParentFolderId();
             }
-            return getContainerDao().find(folderId);
+            return getContainerDao().findByFolderId(folderId);
         } catch (Exception e)
         {
             log.error("Couldn't find the container of the folder with ID {}", inputId);
