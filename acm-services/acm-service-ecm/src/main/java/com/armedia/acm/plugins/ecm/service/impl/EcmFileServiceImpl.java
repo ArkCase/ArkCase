@@ -953,6 +953,45 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    public void deleteFile(Long objectId) throws AcmUserActionFailedException, AcmObjectNotFoundException
+    {
+
+        EcmFile file = getEcmFileDao().find(objectId);
+
+        if (file == null)
+        {
+            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, objectId, "File not found", null);
+        }
+
+        Map<String, Object> props = new HashMap<>();
+        props.put(EcmFileConstants.ECM_FILE_ID, file.getVersionSeriesId());
+
+        try
+        {
+            getMuleContextManager().send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, file, props);
+
+            getEcmFileDao().deleteFile(objectId);
+        } catch (MuleException e)
+        {
+            if (log.isErrorEnabled())
+            {
+                log.error("Could not delete file " + e.getMessage(), e);
+            }
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DELETE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
+                    file.getId(), "Could not delete file", e);
+        } catch (PersistenceException e)
+        {
+            if (log.isErrorEnabled())
+            {
+                log.error("Could not delete file " + e.getMessage(), e);
+            }
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DELETE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
+                    file.getId(), "Could not delete file", e);
+
+        }
+    }
+
+    @Override
     @PreAuthorize("hasPermission(#parentId, #parentType, 'editAttachments')")
     public void deleteFile(Long objectId, Long parentId, String parentType) throws AcmUserActionFailedException, AcmObjectNotFoundException
     {

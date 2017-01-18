@@ -167,7 +167,7 @@ public class MergeCaseFileServiceIT
                 sourceSaved.getContainer().getContainerObjectId());
 
         //create folder and add document to this folder
-        AcmFolder folderInSourceCase = acmFolderService.addNewFolder(sourceSaved.getContainer().getFolder().getId(), "some_folder", sourceSaved.getContainer().getContainerObjectId(), sourceSaved.getContainer().getContainerObjectType());
+        AcmFolder folderInSourceCase = acmFolderService.addNewFolder(sourceSaved.getContainer().getFolder().getId(), "some_folder");
 
         ecmFileService.upload("dammyDocument.txt",
                 "attachment",

@@ -65,8 +65,17 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     private Properties ecmFileServiceProperties;
     private AcmParticipantDao participantDao;
 
-    @PreAuthorize("hasPermission(#parentId, #parentType, 'editAttachments')")
     @Override
+    public AcmFolder addNewFolder(Long parentFolderId, String newFolderName) throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
+    {
+
+        AcmFolder folder = getFolderDao().find(parentFolderId);
+
+        return addNewFolder(folder, newFolderName);
+    }
+
+    @Override
+    @PreAuthorize("hasPermission(#parentId, #parentType, 'editAttachments')")
     public AcmFolder addNewFolder(Long parentFolderId, String newFolderName, Long parentId, String parentType) throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
     {
 
