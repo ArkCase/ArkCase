@@ -34,4 +34,7 @@ public interface ComplaintConstants {
 
 	String ACTIVE_COMPLAINT_FORM_KEY = "active.complaint.form";
 	String ACTIVE_CLOSE_COMPLAINT_FORM_KEY = "active.close.complaint.form";
+
+	String OWNING_GROUP = "owning group";
+	String ASSIGNEE = "assignee";
 }
