@@ -9,7 +9,7 @@
         "data": {
             "supervisoruser": {
 
-                "username": "samuel-acm",
+                "username": "sally-acm",
                 "password": "AcMd3v$"
             },
             "adminuser": {
@@ -452,7 +452,12 @@
             "deleteLocationBtn": "[ng-click ='grid.appScope.deleteRow(row.entity)']",
             "editLocationBtn": "[ng-click='grid.appScope.editRow(row.entity)']",
             "newComplaintBtn": "[ui-sref='frevvo.new-complaint()']",
-            "complaintsTitle":".//a[@editable-text='objectInfo.complaintTitle']"
+            "complaintsTitle":".//a[@editable-text='objectInfo.complaintTitle']",
+            "caseNumber": "caseNumber",
+            "searchButton": ".//input[@value='Search']",
+            "caseTitle": "caseTitle",
+            "caseCreatedDate": "caseCreationDate",
+            "casePriority": "casePriority"
         },
         "data": {
             "firstName": "ComplaintFirstName",
@@ -616,7 +621,8 @@
             "initiatorDeleteBtn": "//*[@class='fa fa-trash-o fa-lg']",
             "claimButton": "[ng-click='claim(objectInfo)']",
             "unclaimButton": "[ng-click='unclaim(objectInfo)']",
-            "addParticipantBtn": "[ng-click='addNew()']"
+            "addParticipantBtn": "[ng-click='addNew()']",
+            "searchField": "searchQuery"
 
         },
 

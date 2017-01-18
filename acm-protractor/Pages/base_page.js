@@ -1567,29 +1567,7 @@ var BasePage = function() {
             browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.fileTitle))), 30000).then(function() {});
         });
     }
-    this.clickFullNameLink = function() {
-        browser.wait(EC.visibilityOf(element(by.css('.fullname'))), 30000).then(function() {
-            browser.wait(EC.elementToBeClickable(element(by.css('.fullname'))), 30000).then(function() {
-                fullnameLink.click();
-            });
-        });
-        return this;
-    };
-    this.clickLogout = function() {
-        browser.wait(EC.visibilityOf(element(by.linkText("Logout"))), 30000).then(function() {
-            logoutLink.click().then(function() {
-                browser.ignoresynchronization = true;
-                browser.sleep(10000);
-                expect(logoutSucesfullMessage.getText()).toEqual('You have been logged out successfully.');
-            })
-        });
-        return this;
-    };
-    this.Logout = function() {
-        this.clickFullNameLink();
-        this.clickLogout();
-        return this;
-    };
+
     this.clickCheckin = function() {
         checkIn.click();
         return this;
