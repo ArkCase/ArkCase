@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-default-plugins</artifactId>
         <groupId>com.armedia.acm.acm-plugins</groupId>
-        <version>3.1.5</version>
+        <version>3.1.6</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -13,8 +13,8 @@
     <description>This plugin adds the ability to store and track information about people.</description>
 
     <dependencies>
-    	<!-- acm -->
-    	<dependency>
+        <!-- acm -->
+        <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-object-converter</artifactId>
             <version>${acm.version}</version>
@@ -24,7 +24,7 @@
             <artifactId>acm-service-history</artifactId>
             <version>${acm.version}</version>
         </dependency>
-    
+
         <!-- liquibase (database com.armedia.acm.ddl maintenance) -->
         <dependency>
             <groupId>org.liquibase</groupId>
@@ -123,13 +123,13 @@
             <artifactId>acm-mule-module-cmis</artifactId>
             <version>${acm.version}</version>
         </dependency>
-        
+
         <!-- date time -->
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
         </dependency>
-         
+
         <!-- bean validation -->
         <dependency>
             <groupId>javax.validation</groupId>
@@ -172,32 +172,26 @@
             <artifactId>mule-module-scripting</artifactId>
             <scope>compile</scope>
         </dependency>
-        
+
         <!-- business rules -->
         <dependency>
             <groupId>org.drools</groupId>
             <artifactId>drools-decisiontables</artifactId>
         </dependency>
-        
+
         <!-- json -->
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
         </dependency>
-        
+
         <!-- servlet -->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
-        
+
         <!-- testing -->
         <dependency>
             <groupId>junit</groupId>
@@ -205,7 +199,7 @@
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>            
+            <artifactId>spring-test</artifactId>
         </dependency>
 
         <dependency>
@@ -213,7 +207,7 @@
             <artifactId>jdbc</artifactId>
             <scope>test</scope>
         </dependency>
-        
+
         <!-- spring -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -223,12 +217,12 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
         </dependency>
-             
+
         <dependency>
             <groupId>org.easymock</groupId>
-            <artifactId>easymock</artifactId>           
+            <artifactId>easymock</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>org.codehaus.castor</groupId>
             <artifactId>castor-xml</artifactId>
@@ -239,7 +233,7 @@
             <artifactId>spring-oxm</artifactId>
             <scope>test</scope>
         </dependency>
-        
+
     </dependencies>
 
 </project>

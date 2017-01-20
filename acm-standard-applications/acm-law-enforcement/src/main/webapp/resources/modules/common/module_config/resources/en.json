@@ -22,9 +22,9 @@
   "common.service.messageService": {
     "authorizationError": "You are not authorized to take this action",
     "actionMessages": {
-    	"success": "Action was successful",
-    	"error": "Action error"
-  	}
+      "success": "Action was successful",
+      "error": "Action error"
+    }
   },
   "common.directive.docTree": {
     "btnRefresh": "Refresh",
@@ -99,7 +99,9 @@
     "edtQuery.placeHolder": "Search",
     "btnQuery.text": "Go!",
     "errorNode.title": "(Error)",
-    "errorNode.toolTip": "(Error)"
+    "errorNode.toolTip": "(Error)",
+    "noAccessNode.title": "(No Access)",
+    "noAccessNode.toolTip": "(No Access)"
   },
   "common.directive.simplePager": {
     "rowCountLabel": "items per page",
@@ -148,9 +150,18 @@
         "addOrganization": "Add Organization",
         "editOrganization": "Edit Record",
         "organizationTypes.label": "Organization Types",
+        "selectExisting.label": "Select Existing",
+        "addNew.label": "Add New",
         "value.label": "Value",
         "btnCancel.text": "Cancel",
-        "btnOk.text": "Save"
+        "btnOk.text": "Save",
+        "dialogOrganizationPicker": {
+          "header": "Choose Organization",
+          "table.columns": {
+            "type": "Organization Type",
+            "name": "Value"
+          }
+        }
       }
     },
     "addresses": {
@@ -211,7 +222,8 @@
       "error.groupType": "The owning group cannot be a person.",
       "error.userType": " User type cannot be a group.",
       "error.assigneeUnique": "Only one assignee is allowed.",
-      "error.owninggroupUnique": "Only one owning group is allowed."
+      "error.owninggroupUnique": "Only one owning group is allowed.",
+      "error.noAccessCombo": "The combination of No Access and Assignee is not allowed."
     }
   },
   "common.comp.acmLogin": {

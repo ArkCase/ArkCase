@@ -4,7 +4,7 @@ import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.ApplicationNotificationEvent;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.NotificationEventPublisher;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -122,7 +122,7 @@ public class SaveNotificationAPIControllerTest extends EasyMockSupport
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
 
     }
-   
+
     @Test
     public void addNotification_exception() throws Exception
     {

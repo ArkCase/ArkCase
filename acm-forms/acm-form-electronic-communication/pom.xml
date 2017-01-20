@@ -1,27 +1,27 @@
 <?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  
-	<modelVersion>4.0.0</modelVersion>
-  
-	<parent>
-		<groupId>com.armedia.acm</groupId>
-		<artifactId>acm-forms</artifactId>
-		<version>3.1.5</version>
-	</parent>
-  	
-  	<groupId>com.armedia.acm.acm-form</groupId>
-  	<artifactId>acm-form-electronic-communication</artifactId>
-  	<name>ACM Forms: Electronic Communication</name>
-  	<description>Electronic Communication Form.</description>
-  	
-  	<dependencies>
-  		<!-- acm -->
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.armedia.acm</groupId>
+        <artifactId>acm-forms</artifactId>
+        <version>3.1.6</version>
+    </parent>
+
+    <groupId>com.armedia.acm.acm-form</groupId>
+    <artifactId>acm-form-electronic-communication</artifactId>
+    <name>ACM Forms: Electronic Communication</name>
+    <description>Electronic Communication Form.</description>
+
+    <dependencies>
+        <!-- acm -->
         <dependency>
             <groupId>com.armedia.acm.com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-form-configuration</artifactId>
             <version>${acm.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
             <artifactId>acm-complaint-plugin</artifactId>
@@ -75,20 +75,16 @@
             <artifactId>javax.servlet-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.oracle</groupId>
             <artifactId>jdbc</artifactId>
             <scope>test</scope>
         </dependency>
-        
+
         <dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>1.7.1</version>
-		</dependency>
-		
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>1.7.1</version>
+        </dependency>
+
     </dependencies>
 </project>

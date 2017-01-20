@@ -43,10 +43,10 @@
  */
 angular.module('directives').directive('coreParticipants', ['$stateParams', '$q', '$translate', '$modal',
     'Acm.StoreService', 'UtilService', 'ConfigService', 'Case.InfoService', 'LookupService', 'Object.LookupService',
-    'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.ParticipantService',
+    'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.ParticipantService', 'Object.ModelService', 'MessageService',
     function ($stateParams, $q, $translate, $modal
         , Store, Util, ConfigService, CaseInfoService, LookupService, ObjectLookupService
-        , HelperUiGridService, HelperObjectBrowserService, ObjectParticipantService) {
+        , HelperUiGridService, HelperObjectBrowserService, ObjectParticipantService, ObjectModelService, MessageService) {
         return {
             restrict: 'E',
             scope: {
@@ -71,7 +71,7 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
 
                 var gridHelper = new HelperUiGridService.Grid({scope: scope});
                 var promiseUsers = gridHelper.getUsers();
-                
+
                 var promiseTypes = ObjectLookupService.getParticipantTypes().then(
                     function (participantTypes) {
                         scope.participantTypes = participantTypes;
@@ -107,25 +107,45 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
                         backdrop: 'static'
                     });
 
+
                     modalInstance.result.then(function (data) {
                         if (ObjectParticipantService.validateType(data.participant, data.selectedType)) {
                             scope.participant.id = data.participant.id;
                             scope.participant.participantLdapId = data.participant.participantLdapId;
                             scope.participant.participantType = data.participant.participantType;
+
+                            var assignee = ObjectModelService.getParticipantByType(scope.objectInfo, "assignee");
+                            var typeNoAccess = 'No Access';
+                            if (scope.config.typeNoAccess) {
+                                typeNoAccess = scope.config.typeNoAccess;
+                            }
+
                             if (data.isEdit) {
                                 var participant = _.find(scope.objectInfo.participants, function (pa) {
                                     return Util.compare(pa.id, data.participant.id);
                                 });
                                 participant.participantLdapId = data.participant.participantLdapId;
-                                participant.participantType = data.participant.participantType;
                                 participant.id = data.participant.id;
+
+                                if (data.participant.participantType == typeNoAccess && assignee == data.participant.participantLdapId) {
+                                    MessageService.error($translate.instant("common.directive.coreParticipants.message.error.noAccessCombo"));
+                                }
+                                else {
+                                    participant.participantType = data.participant.participantType;
+                                }
                             }
                             else {
                                 var participant = {};
                                 participant.participantLdapId = data.participant.participantLdapId;
-                                participant.participantType = data.participant.participantType;
-                                participant.className = scope.config.className;
-                                scope.objectInfo.participants.push(participant);
+
+                                if (data.participant.participantType == typeNoAccess && assignee == data.participant.participantLdapId) {
+                                    MessageService.error($translate.instant("common.directive.coreParticipants.message.error.noAccessCombo"));
+                                }
+                                else {
+                                    participant.participantType = data.participant.participantType;
+                                    participant.className = scope.config.className;
+                                    scope.objectInfo.participants.push(participant);
+                                }
                             }
                             if (ObjectParticipantService.validateParticipants(scope.objectInfo.participants)) {
                                 saveObjectInfoAndRefresh();

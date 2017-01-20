@@ -1,0 +1,26 @@
+<div ng-controller="Tasks.ParentDocsController">
+    <div class="panel panel-success panel-grid">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <span translate>tasks.comp.parentdocs.title</span>
+
+                <div class="pull-right">
+                    <button class="btn btn-default btn-xs" ng-click="onClickRefresh()"><i
+                            class="fa fa-lg fa-refresh"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <doc-tree object-type="parentObjectType" object-id="parentObjectId" tree-control="treeControl"
+                      upload-form="uploadForm" tree-config="treeConfig"
+                      object-info="parentInfo" on-init-tree="onInitTree" ng-if="objectInfo && parentInfo && treeConfig"
+                      read-only="{{isReadOnly}}">
+            </doc-tree>
+            <div class="alert" ng-if="!parentInfo">
+                <p class="text-center">
+                    <span translate>tasks.comp.parentdocs.noParentDataMessage</span>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

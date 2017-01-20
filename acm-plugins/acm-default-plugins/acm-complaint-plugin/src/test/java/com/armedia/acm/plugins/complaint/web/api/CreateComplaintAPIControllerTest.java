@@ -9,8 +9,7 @@ import com.armedia.acm.plugins.complaint.service.ComplaintService;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
-
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -33,9 +32,10 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 import java.util.Arrays;
 
 import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -95,7 +95,7 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
         personAssoc.setPersonType("Originator");
 
         complaint.setOriginator(personAssoc);
-        
+
         complaint.setApprovers(Arrays.asList("user1", "user2"));
 
         Complaint saved = new Complaint();
@@ -120,11 +120,11 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
         replayAll();
 
         MvcResult result = mockMvc.perform(
-            post("/api/latest/plugin/complaint")
-                    .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .principal(mockAuthentication)
-                    .content(in))
+                post("/api/latest/plugin/complaint")
+                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .principal(mockAuthentication)
+                        .content(in))
                 .andReturn();
 
         log.info("results: " + result.getResponse().getContentAsString());
@@ -154,7 +154,7 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
         mockComplaintService.updateXML(capture(found), eq(mockAuthentication), eq(ComplaintForm.class));
         expectLastCall().anyTimes();
         expect(mockSaveTransaction.saveComplaint(capture(found), eq(mockAuthentication))).andThrow(new RuntimeException());
-        
+
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");
 
@@ -195,7 +195,7 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
         personAssoc.setPersonType("Originator");
 
         complaint.setOriginator(personAssoc);
-        
+
         complaint.setApprovers(Arrays.asList("user1", "user2"));
 
         ObjectMapper objectMapper = new ObjectMapper();

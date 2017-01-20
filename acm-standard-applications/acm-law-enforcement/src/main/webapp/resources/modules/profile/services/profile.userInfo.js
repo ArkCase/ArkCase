@@ -39,8 +39,8 @@
  </file>
  </example>
  */
-angular.module('profile').factory('Profile.UserInfoService', ['$resource', '$q', 'UtilService', 'Authentication',
-    function ($resource, $q, Util, Authentication) {
+angular.module('profile').factory('Profile.UserInfoService', ['$resource', '$q', 'UtilService', 'Authentication', '$translate',
+    function ($resource, $q, Util, Authentication, $translate) {
         var Service = $resource('api/latest/plugin/profile', {}, {
             /**
              * @ngdoc method

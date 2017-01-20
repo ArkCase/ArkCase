@@ -335,10 +335,9 @@
     {
       "id": "usersPicker",
       "title": "Select users",
-      "enabled": "true",
-      "multi": true,
-      "type": "grid",
       "enableFiltering": false,
+      "multiSelect": false,
+      "showFacets": false,
       "columnDefs": [
         {
           "name": "name",
