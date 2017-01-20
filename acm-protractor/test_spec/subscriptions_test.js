@@ -2,6 +2,7 @@ var Objects = require('../json/Objects.json');
 var loginPage = require('../Pages/login_page.js');
 var subscriptionPage = require('../Pages/subscriptions_page.js')
 var utils = require('../util/utils.js');
+var using = require(process.env['USERPROFILE'] + '/node_modules/jasmine-data-provider');
 
 
 
@@ -29,36 +30,21 @@ describe('Subscriptions page tests', function() {
 
     });
 
-    it('should select Case File parent type and verift it the result table ', function() {
+    using([{ parentType: "Task", expected: "TASK" }, { parentType: "Complaint", expected: "COMPLAINT" },
+        { parentType: "Case File", expected: "CASE_FILE" }
+    ], function(data) {
 
-        subscriptionPage.clickSubcriptionsModule();
-        subscriptionPage.selectSubscription("Case File");
-        expect(subscriptionPage.returnResultEvent()).toContain("Subscription on");
-        expect(subscriptionPage.returnResultParentType()).toEqual("CASE_FILE");
-        expect(subscriptionPage.returnResultParentName()).not.toEqual(0);
-        expect(subscriptionPage.returnResultModified()).not.toEqual(0);
+        it('should select Task as parent type and verift it the result table ', function() {
+
+            subscriptionPage.clickSubcriptionsModule();
+            subscriptionPage.selectSubscription(data.parentType);
+            subscriptionPage.clickParentTypeSort();
+            expect(subscriptionPage.returnResultParentType()).toEqual(data.expected);
+
+        });
+
     });
 
-
-    it('should select Complaint as  parent type and verift it the result table ', function() {
-
-        subscriptionPage.clickSubcriptionsModule();
-        subscriptionPage.selectSubscription("Complaint");
-        expect(subscriptionPage.returnResultEvent()).toContain("Subscription on");
-        expect(subscriptionPage.returnResultParentType()).toEqual("COMPLAINT");
-        expect(subscriptionPage.returnResultParentName()).not.toEqual(0);
-        expect(subscriptionPage.returnResultModified()).not.toEqual(0);
-    });
-
-    it('should select Task as parent type and verift it the result table ', function() {
-
-        subscriptionPage.clickSubcriptionsModule();
-        subscriptionPage.selectSubscription("Task");
-        expect(subscriptionPage.returnResultEvent()).toContain("Subscription on");
-        expect(subscriptionPage.returnResultParentType()).toEqual("TASK");
-        expect(subscriptionPage.returnResultParentName()).not.toEqual(0);
-        expect(subscriptionPage.returnResultModified()).not.toEqual(0);
-    });
 
     it('should search for case and  verify it in the result table', function() {
 
@@ -71,15 +57,16 @@ describe('Subscriptions page tests', function() {
 
         subscriptionPage.clickSubcriptionsModule();
         subscriptionPage.selectSubscription("Previous Week")
-        expect(subscriptionPage.returnResultModified()).toContain(utils.returnToday("/"))
-
+        subscriptionPage.clikmodifiedBySort();
+        subscriptionPage.returnModifiedByWeek();
     });
 
     it('should select previous month and verify the mdified date in result table', function() {
 
         subscriptionPage.clickSubcriptionsModule();
         subscriptionPage.selectSubscription("Previous Month")
-        expect(subscriptionPage.returnResultModified()).toContain(utils.returnToday("/"))
+        subscriptionPage.clikmodifiedBySort();
+        subscriptionPage.returnModifiedByMonth();
 
     });
 
@@ -87,9 +74,8 @@ describe('Subscriptions page tests', function() {
 
         subscriptionPage.clickSubcriptionsModule();
         subscriptionPage.selectSubscription("Previous Year")
-        expect(subscriptionPage.returnResultModified()).toContain(utils.returnToday("/"))
+        subscriptionPage.clikmodifiedBySort();
+        subscriptionPage.returnModifiedByYear();
 
     });
-
-
 });
