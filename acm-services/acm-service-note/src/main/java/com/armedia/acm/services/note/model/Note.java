@@ -57,6 +57,8 @@ public class Note implements Serializable, AcmObject, AcmEntity, AcmParentObject
     @Column(name = "cm_parent_object_type")
     private String parentType;
 
+    private transient String parentTitle;
+
     @Column(name = "cm_note_tag")
     private String tag;
 
@@ -209,4 +211,12 @@ public class Note implements Serializable, AcmObject, AcmEntity, AcmParentObject
         return parentType;
     }
 
+    @JsonIgnore
+    public String getParentTitle() {return parentTitle; }
+
+    @JsonIgnore
+    public void setParentTitle(String parentTitle)
+    {
+        this.parentTitle = parentTitle;
+    }
 }

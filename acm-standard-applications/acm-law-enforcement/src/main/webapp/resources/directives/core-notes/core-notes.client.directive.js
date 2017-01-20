@@ -142,7 +142,7 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
 
                 scope.addNew = function () {
                     var info = scope.notesInit;
-                    var note = noteHelper.createNote(info.currentObjectId, info.objectType, info.tag,
+                    var note = noteHelper.createNote(info.currentObjectId, info.objectType, info.parentTitle, info.tag,
                         scope.userId, info.noteType);
                     showModal(note, false);
                 };
