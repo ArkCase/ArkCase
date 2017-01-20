@@ -72,7 +72,9 @@ import static org.junit.Assert.*;
                 "/spring/spring-library-property-file-manager.xml",
                 "/spring/spring-library-search.xml",
                 "/spring/spring-library-task.xml",
-                "/spring/spring-library-user-service.xml"
+                "/spring/spring-library-user-service.xml",
+                "/spring/spring-library-notification.xml",
+                "/spring/spring-library-service-data.xml"
         })
 @TransactionConfiguration(defaultRollback = true)
 public class MergeCaseFileServiceIT

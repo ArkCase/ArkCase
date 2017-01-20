@@ -3,6 +3,7 @@ var dashPage = require('../Pages/dashboard_page.js');
 var loginPage = require('../Pages/login_page.js');
 var Objects = require('../json/Objects.json');
 var flag = false;
+var using = require(process.env['USERPROFILE'] + '/node_modules/jasmine-data-provider');
 
 function testAsync(done) {
 
@@ -32,54 +33,14 @@ describe('dashboard page test', function() {
     loginPage.Login(Objects.loginpage.data.supervisoruser.username, Objects.loginpage.data.supervisoruser.password);
     logger.log('Info', 'User succesfully logged in as supervisor');
 
-    it('should add/delete widget cases by status', function() {
-        dashPage.clickEditButton().clickAddWidgetButton().addWidget("CasesByStatus").clickSaveChangesButton();
-        expect(dashPage.returnWidgetTitle()).toEqual(Objects.dashboardpage.data.widgetTitleCasesByStatus);
-        dashPage.clickEditButton().removeWidgetButton().clickSaveChangesButton();
-    });
+    using([{widgetName: "News", widgetTitle: Objects.dashboardpage.data.widgetTitleNews}, {widgetName: "MyTasks", widgetTitle:Objects.dashboardpage.data.widgetTitleMyTasks}, {widgetName: "MyCases", widgetTitle: Objects.dashboardpage.data.widgetTitleMyCases}, {widgetName: "MyComplaints", widgetTitle: Objects.dashboardpage.data.widgetTitleMyComplaints}, {widgetName: "NewComplaints", widgetTitle: Objects.dashboardpage.data.widgetTitleNewComplaints}, {widgetName: "TeamWorkload", widgetTitle: Objects.dashboardpage.data.widgetTitleTeamWorkload}, {widgetName: "CasesByStatus", widgetTitle: Objects.dashboardpage.data.widgetTitleCasesByStatus} , {widgetName:"Weather", widgetTitle: Objects.dashboardpage.data.widgetTitleWeather}], function(data) {
+        it('should add/delete ' + data.widgetName, function () {
 
-    it('should add/delete widget my cases', function() {
+            dashPage.clickEditButton().clickAddWidgetButton().addWidget(data.widgetName).clickSaveChangesButton();
+            expect(dashPage.returnWidgetTitle()).toEqual(data.widgetTitle);
+            dashPage.clickEditButton().removeWidgetButton().clickSaveChangesButton();
 
-        dashPage.clickEditButton().clickAddWidgetButton().addWidget("MyCases").clickSaveChangesButton();
-        expect(dashPage.returnWidgetTitle()).toEqual(Objects.dashboardpage.data.widgetTitleMyCases);
-        dashPage.clickEditButton().removeWidgetButton().clickSaveChangesButton();
-
-    });
-
-    it('should add/delete widget my complaints', function() {
-        dashPage.clickEditButton().clickAddWidgetButton().addWidget("MyComplaints").clickSaveChangesButton();
-        expect(dashPage.returnWidgetTitle()).toEqual(Objects.dashboardpage.data.widgetTitleMyComplaints);
-        dashPage.clickEditButton().removeWidgetButton().clickSaveChangesButton();
-    });
-
-
-    it('should add/delete widget new complaints', function() {
-        dashPage.clickEditButton().clickAddWidgetButton().addWidget("NewComplaints").clickSaveChangesButton();
-        expect(dashPage.returnWidgetTitle()).toEqual(Objects.dashboardpage.data.widgetTitleNewComplaints);
-        dashPage.clickEditButton().removeWidgetButton().clickSaveChangesButton();
-
-    });
-
-
-    it('should add/delete widget team workload', function() {
-        dashPage.clickEditButton().clickAddWidgetButton().addWidget("TeamWorkload").clickSaveChangesButton();
-        expect(dashPage.returnWidgetTitle()).toEqual(Objects.dashboardpage.data.widgetTitleTeamWorkload);
-        dashPage.clickEditButton().removeWidgetButton().clickSaveChangesButton();
-
-    });
-
-    it('should add/delete widget weather', function() {
-        dashPage.clickEditButton().clickAddWidgetButton().addWidget("Weather").clickSaveChangesButton();
-        expect(dashPage.returnWidgetTitle()).toEqual(Objects.dashboardpage.data.widgetTitleWeather);
-        dashPage.clickEditButton().removeWidgetButton().clickSaveChangesButton();
-
-    });
-
-    it('should add/delete widget news', function() {
-
-        dashPage.clickEditButton().clickAddWidgetButton().addWidget("News").clickSaveChangesButton();
-        expect(dashPage.returnWidgetTitle()).toEqual(Objects.dashboardpage.data.widgetTitleNews);
-        dashPage.clickEditButton().removeWidgetButton().clickSaveChangesButton();
+        });
     });
 
     it('should logout', function() {
