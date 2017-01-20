@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-
 import java.util.Date;
 import java.util.List;
 
@@ -54,8 +53,7 @@ public abstract class AcmAbstractDao<T>
     /**
      * Retrieve all entities of a given type, sorted by particular column
      *
-     * @param column
-     *            column name (entity field name) to sort by
+     * @param column column name (entity field name) to sort by
      * @return list of entities, sorted
      */
     @Transactional(propagation = Propagation.REQUIRED)

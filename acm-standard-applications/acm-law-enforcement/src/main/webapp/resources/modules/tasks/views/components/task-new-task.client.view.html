@@ -7,6 +7,15 @@
             <div class="well-sm">
                 <div class="row">
                     <div class="well-sm">
+                        <div class="col-sm-4 pull-left">
+                            <div>
+                                <label for="groupToggle">
+                                    <span translate>tasks.newTask.groupToggle.label</span>
+                                </label>
+                                <input ng-model="groupTask" type="checkbox"
+                                       ng-change="groupTaskToggle()" id="groupToggle">
+                            </div>
+                        </div>
                         <div class="pull-right">
                             <div class="btn-group">
                                 <button type="submit" ng-disabled="task.$invalid || saved"
@@ -24,7 +33,16 @@
                         <label for="assignee" translate> tasks.newTask.assignee.label </label>
                         <input type="text" id="assignee" ng-model="userName" class="input-md form-control"
                                placeholder="{{ 'tasks.newTask.assignee.placeholder' | translate }}" id="assignee"
-                               style="background-color: white;" ng-click="userSearch()" readonly>
+                               style="background-color: white;" ng-click="userSearch()" readonly
+                               ng-required="!groupTask" ng-hide="groupTask">
+                        <select ng-model="chosenGroup"
+                                ng-hide="!groupTask"
+                                ng-options="option.text as option.value for option in assignableGroups"
+                                ng-change="groupChange()"
+                                ng-required="groupTask"
+                                class="form-control input-sm">
+                            <option translate disabled value="">tasks.newTask.group.placeholder</option>
+                        </select>
                     </div>
                     <div class="col-sm-2">
                         <label class="control-label">{{ 'tasks.newTask.associateType.label' | translate }}

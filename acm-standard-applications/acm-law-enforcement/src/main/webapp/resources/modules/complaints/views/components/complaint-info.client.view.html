@@ -36,8 +36,7 @@
         <div class="row">
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    <a href="#" editable-select="assignee" onaftersave="updateAssignee()"
-                       e-ng-options="a.id as a.name for a in assignees">{{assignee |
+                    <a href="javascript:;" class="editable-click no-outline" ng-click="openAssigneePickerModal()">{{assignee |
                         mapKeyValue: assignees:'id':'name' || 'Unknown'}}</a>
                 </div>
                 <small class="text-muted">Assigned To</small>

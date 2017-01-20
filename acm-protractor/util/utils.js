@@ -63,6 +63,7 @@ var helpers = function helpers() {
            var day = ("0" + dueDate.getDate()).slice(-2);
            var month = ("0" + (dueDate.getMonth() + 1)).slice(-2);
            return dueDateOut = (month) + sign + (day) + sign + dueDate.getFullYear();
+
        }
        this.readGroupsFromJson = function (user) {
             var dictionarydoc = Users.response.docs;
@@ -88,9 +89,6 @@ var helpers = function helpers() {
 
            }
        }
-
-
-
 };
 
 module.exports = new helpers();
