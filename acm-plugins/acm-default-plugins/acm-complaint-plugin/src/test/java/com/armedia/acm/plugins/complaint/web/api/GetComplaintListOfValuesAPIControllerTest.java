@@ -1,8 +1,6 @@
 package com.armedia.acm.plugins.complaint.web.api;
 
-import com.armedia.acm.configuration.ListOfValuesService;
-import com.armedia.acm.configuration.LookupTableDescriptor;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,13 +20,11 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
-
 import java.util.Properties;
 
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -50,7 +46,6 @@ public class GetComplaintListOfValuesAPIControllerTest extends EasyMockSupport
     private Properties complaintProperties = new Properties();
 
 
-
     @Before
     public void setUp() throws Exception
     {
@@ -70,7 +65,7 @@ public class GetComplaintListOfValuesAPIControllerTest extends EasyMockSupport
     @Test
     public void getComplaintTypes() throws Exception
     {
-        String[] typeList = { "A", "B", "C", "D" };
+        String[] typeList = {"A", "B", "C", "D"};
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");
@@ -79,8 +74,8 @@ public class GetComplaintListOfValuesAPIControllerTest extends EasyMockSupport
 
         MvcResult result = mockMvc.perform(
                 get("/api/latest/plugin/complaint/types")
-                .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-                .principal(mockAuthentication))
+                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+                        .principal(mockAuthentication))
                 .andReturn();
 
         verifyAll();
@@ -106,7 +101,7 @@ public class GetComplaintListOfValuesAPIControllerTest extends EasyMockSupport
     @Test
     public void getComplaintPriorities() throws Exception
     {
-        String[] priorityList = { "1", "2", "3", "4" };
+        String[] priorityList = {"1", "2", "3", "4"};
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");
@@ -115,8 +110,8 @@ public class GetComplaintListOfValuesAPIControllerTest extends EasyMockSupport
 
         MvcResult result = mockMvc.perform(
                 get("/api/latest/plugin/complaint/priorities")
-                .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-                .principal(mockAuthentication))
+                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+                        .principal(mockAuthentication))
                 .andReturn();
 
         verifyAll();
@@ -163,8 +158,8 @@ public class GetComplaintListOfValuesAPIControllerTest extends EasyMockSupport
 
         MvcResult result = mockMvc.perform(
                 get("/api/latest/plugin/complaint/priorities")
-                .accept(MediaType.parseMediaType("text/xml"))
-                .principal(mockAuthentication))
+                        .accept(MediaType.parseMediaType("text/xml"))
+                        .principal(mockAuthentication))
                 .andReturn();
 
         verifyAll();

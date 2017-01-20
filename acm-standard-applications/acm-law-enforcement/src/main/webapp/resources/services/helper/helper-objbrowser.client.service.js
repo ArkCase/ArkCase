@@ -406,8 +406,13 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                                 MessageService.info(objectTypeString + " with ID " + objectId + " was updated.");
 
                                 var frevvoRequest = null;
-                                if(objectType == ObjectService.ObjectTypes.COMPLAINT){
-                                    frevvoRequest = ServCommService.popRequest("frevvo", "close-complaint");
+                                switch (objectType) {
+                                    case ObjectService.ObjectTypes.COMPLAINT:
+                                        frevvoRequest = ServCommService.popRequest("frevvo", "close-complaint");
+                                        break;
+                                    case ObjectService.ObjectTypes.TIMESHEET:
+                                        frevvoRequest = ServCommService.popRequest("frevvo", "edit-timesheet") || ServCommService.popRequest("frevvo", "new-timesheet");
+                                        break;
                                 }
                                 
                                 if (frevvoRequest) {
@@ -664,21 +669,27 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                             return objectInfo;
                         }
                         , function (errorData) {
+                            
+                            var nodeType = errorData.status == 403 ? "NO_ACCESS" : "ERROR";
+
                             that.scope.treeControl.select({
                                 pageStart: start
-                                , nodeType: "ERROR"
+                                , nodeType: nodeType
                                 , nodeId: that.nodeId
                                 , subKey: that.subKey
                             });
 
-
                             var treeData = {docs: [], total: 0};
+                            var nodeTitle = errorData.status == 403 ? $translate.instant("common.directive.objectTree.noAccessNode.title") : $translate.instant("common.directive.objectTree.errorNode.title");
+                            var nodeToolTip = errorData.status == 403 ? $translate.instant("common.directive.objectTree.noAccessNode.toolTip") : $translate.instant("common.directive.objectTree.errorNode.toolTip");                          
+                            
                             var errorNode = {
                                 nodeId: that.nodeId
-                                , nodeType: "ERROR"
-                                , nodeTitle: $translate.instant("common.directive.objectTree.errorNode.title")
-                                , nodeToolTip: $translate.instant("common.directive.objectTree.errorNode.toolTip")
+                                , nodeType: nodeType
+                                , nodeTitle: nodeTitle
+                                , nodeToolTip: nodeToolTip
                             };
+                            
                             if (that.scope.treeData) {            //It must be set by CallTasksService.queryTasksTreeData()
                                 var found = that.findByNodeId(that.scope.treeData.docs, that.nodeId);
                                 if (!found) {

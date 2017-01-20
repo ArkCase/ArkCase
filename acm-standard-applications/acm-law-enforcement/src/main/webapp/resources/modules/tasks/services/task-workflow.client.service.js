@@ -73,6 +73,47 @@ angular.module('tasks').factory('Task.WorkflowService', ['$resource', '$translat
                 url: 'api/latest/plugin/task/deleteTask/:taskId',
                 cache: false
             }
+            /**
+             * @ngdoc method
+             * @name _claimTask
+             * @methodOf tasks.service:Task.WorkflowService
+             *
+             * @description
+             * Make REST call for claimTask() function to claim a task.
+             * It will make the caller the assignee of the task
+             * @param {String} taskId  Task ID
+             * @param {Function} onSuccess (Optional)Callback function of success query.
+             * @param {Function} onError (Optional) Callback function when fail.
+             *
+             * @returns {Object} Object returned by $resource
+             */
+            , _claimTask: {
+                method: 'POST',
+                url: 'api/latest/plugin/task/claim/:taskId',
+                cache: false
+            }
+
+            /**
+             * @ngdoc method
+             * @name _unclaimTask
+             * @methodOf tasks.service:Task.WorkflowService
+             *
+             * @description
+             * Make REST call for unclaimTask() function to unclaim a task.
+             * It will make the assignee of the task null and anyone with
+             * right access can claim it.
+             * @param {String} taskId  Task ID
+             * @param {Function} onSuccess (Optional)Callback function of success query.
+             * @param {Function} onError (Optional) Callback function when fail.
+             *
+             * @returns {Object} Object returned by $resource
+             */
+            , _unclaimTask: {
+                method: 'POST',
+                url: 'api/latest/plugin/task/unclaim/:taskId',
+                cache: false
+            }
+
 
         });
 
@@ -148,6 +189,57 @@ angular.module('tasks').factory('Task.WorkflowService', ['$resource', '$translat
 
         /**
          * @ngdoc method
+         * @name claimTask
+         * @methodOf tasks.service:Task.WorkflowService
+         *
+         * @description
+         * Claim a task
+         *
+         * @param {Number} taskId  Task ID
+         * @returns {Object} Promise
+         */
+        Service.claimTask = function (taskId) {
+            return Util.serviceCall({
+                service: Service._claimTask
+                , param: {taskId: taskId}
+                , data: {}
+                , onSuccess: function (data) {
+                    if (TaskInfoService.validateTaskInfo(data)) {
+                        return data;
+                    }
+                }
+                , onError: function (data) {
+                    return data;
+                }
+            });
+        };
+
+        /**
+         * @ngdoc method
+         * @name unclaimTask
+         * @methodOf tasks.service:Task.WorkflowService
+         *
+         * @description
+         * Unclaim a task
+         *
+         * @param {Number} taskId  Task ID
+         * @returns {Object} Promise
+         */
+        Service.unclaimTask = function (taskId) {
+            return Util.serviceCall({
+                service: Service._unclaimTask
+                , param: {taskId: taskId}
+                , data: {}
+                , onSuccess: function (data) {
+                    if (TaskInfoService.validateTaskInfo(data)) {
+                        return data;
+                    }
+                }
+            });
+        };
+
+        /**
+         * @ngdoc method
          * @name deleteTask
          * @methodOf tasks.service:Task.WorkflowService
          *
@@ -174,4 +266,6 @@ angular.module('tasks').factory('Task.WorkflowService', ['$resource', '$translat
 
         return Service;
     }
+
+
 ]);
