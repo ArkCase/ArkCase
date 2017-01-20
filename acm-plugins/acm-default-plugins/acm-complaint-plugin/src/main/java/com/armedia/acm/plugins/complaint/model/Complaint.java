@@ -617,4 +617,19 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     {
         return complaintNumber;
     }
+
+    @JsonIgnore
+    public String getAssigneeGroup()
+    {
+        String groupName = null;
+        AcmParticipant owningGroup = getParticipants().stream()
+                .filter(p -> ComplaintConstants.OWNING_GROUP.equals(p.getParticipantType())).findFirst().orElse(null);
+        AcmParticipant assignee = getParticipants().stream().filter(p -> ComplaintConstants.ASSIGNEE.equals(p.getParticipantType()))
+                .findFirst().orElse(null);
+        if (owningGroup != null && assignee != null && assignee.getParticipantLdapId().isEmpty())
+        {
+            groupName = owningGroup.getParticipantLdapId();
+        }
+        return groupName;
+    }
 }

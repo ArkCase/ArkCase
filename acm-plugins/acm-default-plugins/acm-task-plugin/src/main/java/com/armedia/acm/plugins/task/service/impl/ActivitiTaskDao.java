@@ -26,7 +26,6 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.FlowElement;
 import org.activiti.bpmn.model.FormProperty;
@@ -193,6 +192,12 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
                 }
                 getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_OUTCOME,
                         in.getTaskOutcome().getName());
+            }
+
+            if (in.isBuckslipTask())
+            {
+                getActivitiTaskService().setVariable(activitiTask.getId(), TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_APPROVERS,
+                        in.getBuckslipFutureApprovers());
             }
 
             in.setTaskId(Long.valueOf(activitiTask.getId()));
@@ -1302,6 +1307,21 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
             acmTask.setLegacySystemId((String) processVariables.get(TaskConstants.VARIABLE_NAME_LEGACY_SYSTEM_ID));
 
             acmTask.setPendingStatus((String) processVariables.get(TaskConstants.VARIABLE_NAME_PENDING_STATUS));
+
+            if (processVariables.containsKey(TaskConstants.VARIABLE_NAME_IS_BUCKSLIP_WORKFLOW))
+            {
+                Boolean isBuckslipWorkflow = (Boolean) processVariables.get(TaskConstants.VARIABLE_NAME_IS_BUCKSLIP_WORKFLOW);
+                acmTask.setBuckslipTask(isBuckslipWorkflow);
+
+                if (isBuckslipWorkflow != null && isBuckslipWorkflow.booleanValue())
+                {
+                    List<String> futureApprovers = (List<String>) processVariables.get(TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_APPROVERS);
+                    acmTask.setBuckslipFutureApprovers(futureApprovers);
+
+                    String pastApprovers = (String) processVariables.get(TaskConstants.VARIABLE_NAME_PAST_APPROVERS);
+                    acmTask.setBuckslipPastApprovers(pastApprovers);
+                }
+            }
         }
     }
 
