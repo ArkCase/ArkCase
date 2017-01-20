@@ -15,7 +15,9 @@
     "new.button": "New Complaint",
     "close.button": "Close Complaint",
     "subscribe.button": "Subscribe",
-    "unsubscribe.button": "Unsubscribe"
+    "unsubscribe.button": "Unsubscribe",
+    "claim.button": "Claim",
+    "unclaim.button": "Unclaim"
   },
   "complaints.comp.details": {
     "title": "Details",

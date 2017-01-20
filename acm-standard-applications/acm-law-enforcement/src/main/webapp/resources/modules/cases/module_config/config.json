@@ -738,6 +738,7 @@
         50
       ],
       "paginationPageSize": 5,
+      "typeNoAccess": "No Access",
       "columnDefs": [
         {
           "name": "participantType",
