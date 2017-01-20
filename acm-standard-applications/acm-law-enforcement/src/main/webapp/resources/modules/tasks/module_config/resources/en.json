@@ -75,6 +75,10 @@
       "modifier": "User Last Modified"
     }
   },
+  "tasks.comp.parentdocs": {
+    "title": "Parent Documents",
+    "noParentDataMessage": "No parent documents for standalone task"
+  },
   "tasks.comp.attachments": {
     "title": "Attachments"
   },
