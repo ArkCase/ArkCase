@@ -1568,6 +1568,23 @@ var BasePage = function() {
         });
     }
 
+    this.clickLogout = function() {
+        browser.wait(EC.visibilityOf(element(by.linkText("Logout"))), 30000).then(function() {
+            logoutLink.click().then(function() {
+                browser.ignoresynchronization = true;
+                browser.sleep(10000);
+                var logoutSucesfullMessage = browser.driver.findElement(by.css(Objects.basepage.locators.logoutSucesfullMessage));
+                expect(logoutSucesfullMessage.getText()).toEqual('You have been logged out successfully.', 'Logout was unsuccessfull');
+            });
+        });
+        return this;
+    };
+
+    this.Logout = function() {
+        this.clickFullNameLink();
+        this.clickLogout();
+        return this;
+    };
     this.clickCheckin = function() {
         checkIn.click();
         return this;
@@ -1657,23 +1674,7 @@ var BasePage = function() {
         });
         return this;
     };
-    this.clickLogout = function() {
-        browser.wait(EC.visibilityOf(element(by.linkText("Logout"))), 30000).then(function() {
-            logoutLink.click().then(function() {
-                browser.ignoresynchronization = true;
-                browser.driver.sleep(5000);
-                browser.driver.wait(EC.visibilityOf(element(by.css(".alert.alert-success"))), 30000).then(function() {
-                    expect(logoutSucesfullMessage.getText()).toEqual('You have been logged out successfully.');
-                });
-            });
-        });
-        return this;
-    };
-    this.Logout = function() {
-        this.clickFullNameLink();
-        this.clickLogout();
-        return this;
-    };
+
     this.clickCheckin = function() {
         checkIn.click();
         return this;
@@ -2063,7 +2064,6 @@ var BasePage = function() {
 
         });
     }
-
 
 }
 
