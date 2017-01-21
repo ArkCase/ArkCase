@@ -45,14 +45,6 @@ describe('case page tests', function() {
 
     });
 
-
-
-    it('should create new case and verify case title', function() {
-
-        casePage.clickModuleCasesFiles();
-        expect(casePage.returnCaseTitle()).toEqual(Objects.casepage.data.caseTitle);
-    });
-
     it('should create new case and verify case type', function() {
 
         casePage.clickModuleCasesFiles();
@@ -76,13 +68,13 @@ describe('case page tests', function() {
         expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateClosed, 'The task state should be CLOSED');
     });
 
-    it('should create new case and verify the priority filed', function() {
+    it('should verify the priority filed', function() {
 
         casePage.clickModuleCasesFiles();
         expect(casePage.returnPriority()).toEqual(Objects.casepage.data.priorityMedium);
     });
 
-    it('should create new case and verify the created date', function() {
+    it('should   verify the created date', function() {
 
         casePage.clickModuleCasesFiles();
         expect(casePage.returnCreatedDate()).toEqual(utils.returnToday("/"));
@@ -97,7 +89,6 @@ describe('case page tests', function() {
             expect(casePage.returnPriority()).toEqual(data.prioritySaved);
         });
 
-    });
 
     it('should create new case and edit the assignee from ann to samuel', function() {
 
@@ -110,7 +101,7 @@ describe('case page tests', function() {
         expect(casePage.returnAssignee()).toEqual(Objects.casepage.data.assigneeSamuel);
     });
 
-    it('should craete new case add/delete note', function() {
+    it('should  add/delete note', function() {
 
         casePage.clickModuleCasesFiles();
         casePage.clickNotesLink();
@@ -127,7 +118,7 @@ describe('case page tests', function() {
         expect(casePage.returnNoteName()).toEqual(Objects.casepage.data.editnote, "The note is not updated");
     });
 
-    it('should create new case and add task from tasks table verify the task', function() {
+    it('should  add task from tasks table verify the task', function() {
 
         casePage.clickModuleCasesFiles();
         casePage.clickTasksLinkBtn();
@@ -143,7 +134,7 @@ describe('case page tests', function() {
         expect(casePage.returnTaskTableStatus()).toEqual("ACTIVE");
     });
 
-    it('should create new case and verify the people initiator', function() {
+    it('should  verify the people initiator', function() {
 
         casePage.clickModuleCasesFiles();
         casePage.clickPeopleLinkBtn();
@@ -472,12 +463,9 @@ describe('case page tests', function() {
 
     });
 
-    it('should create new case and edit the due date', function() {
+    it('should  edit the due date', function() {
 
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
+        casePage.clickModuleCasesFiles();
         casePage.editDueDate();
         expect(casePage.returnDueDate()).toEqual(utils.returnToday("/"), "Due date is not updated");
     });
@@ -494,14 +482,14 @@ describe('case page tests', function() {
 
     it('should create new case and verify adding correspondence document', function() {
 
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson").initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
-        casePage.switchToDefaultContent().clickExpandFancyTreeTopElement();
+        casePage.clickModuleCasesFiles();
+        casePage.clickExpandFancyTreeTopElement();
         casePage.rightClickRootFolder().addCorrespondence("case", "Notice of Investigation");
         casePage.validateDocGridData(true, "Notice of Investigation", ".docx", "Notice of Investigation", utils.returnToday("/"), utils.returnToday("/"), userPage.returnUserNavigationProfile(), "1.0", "ACTIVE");
 
     });
 
-    it('should create new case add timesheet and verify in cases timesheet table', function() {
+    it('should  add timesheet and verify in cases timesheet table', function() {
 
         casePage.clickModuleCasesFiles();
         element(by.xpath(Objects.casepage.locators.caseID)).getText().then(function(text) {
@@ -523,7 +511,7 @@ describe('case page tests', function() {
         });
     });
 
-    it('should create new case add costsheet and verify in the cases costsheet table', function() {
+    it('should  costsheet and verify in the cases costsheet table', function() {
 
         casePage.clickModuleCasesFiles();
         element(by.xpath(Objects.casepage.locators.caseID)).getText().then(function(text) {
@@ -674,7 +662,7 @@ describe('case page tests', function() {
         expect(casePage.returnParticipantNameFifthRow()).toEqual("Samuel Supervisor");
     });
 
-    it('should create new case and verify if special type can be deleted', function() {
+    it('should  verify if special type can be deleted', function() {
 
         casePage.clickModuleCasesFiles();
         casePage.participantTable();
@@ -684,7 +672,7 @@ describe('case page tests', function() {
 
     });
 
-    it('should create new case and verify if assignee can be deleted', function() {
+    it('should  verify if assignee can be deleted', function() {
 
         casePage.clickModuleCasesFiles();
         casePage.participantTable();
@@ -694,7 +682,7 @@ describe('case page tests', function() {
 
     });
 
-    it('should create new case and verify if owning  can be deleted', function() {
+    it('should verify if owning  can be deleted', function() {
 
         casePage.clickModuleCasesFiles();
         casePage.participantTable();
@@ -703,7 +691,7 @@ describe('case page tests', function() {
         casePage.verifyIfOwningGroupCanBeDeleted();
     });
 
-    it('should create new case and verify if reader  can be deleted', function() {
+    it('should  verify if reader  can be deleted', function() {
 
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
         casePage.clickNextBtn();
@@ -725,7 +713,7 @@ describe('case page tests', function() {
 
     });
 
-    it('should create new case and verify assigned to, owning group and due date', function() {
+    it('should  verify assigned to, owning group and due date', function() {
 
         casePage.clickModuleCasesFiles();
         expect(casePage.returnDueDate()).toEqual(utils.returnDate("/", 180));
@@ -734,7 +722,7 @@ describe('case page tests', function() {
 
     });
 
-    it('should create new case and edit assignee from participant table', function() {
+    it('should edit assignee from participant table', function() {
 
         casePage.clickModuleCasesFiles();
         casePage.participantTable();

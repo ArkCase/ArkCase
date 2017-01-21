@@ -20,7 +20,6 @@ function testAsync(done) {
 
 }
 
-
 describe('Create new complaint ', function() {
 
     beforeEach(function(done) {
@@ -579,6 +578,13 @@ describe('Create new complaint ', function() {
         complaintPage.verifyTasksTableColumnsNumber();
     });
 
+     it('should verify if the people intiator delete button is displayed', function() {
+
+        complaintPage.clickModuleComplaints();
+        complaintPage.clickPeopleLinkBtn();
+        complaintPage.verifyIfInitiatorCanBeDeleted();
+    });
+
     it('should verify that searching of Case id during close complaint is retrieving the data in the fields', function () {
         casePage.navigateToPage("Case Files").waitForCaseID();
         var caseid = casePage.getCaseId();
@@ -592,6 +598,5 @@ describe('Create new complaint ', function() {
         expect(complaintPage.returnCasePriority()).toEqual(casePriority);
         complaintPage.switchToDefaultContent();
     })
-
 
 });

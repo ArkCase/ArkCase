@@ -759,7 +759,13 @@
     },
     "notificationPage": {
         "locators": {
-            "notificationCol": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid"
+            "notificationCol": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
+            "notificationModule": "[href='#!/notifications']",
+            "facets": "[ng-if='field.count > 0']",
+             "notificationsInput": "searchQuery",
+             "searchBtn": "[ng-click='queryExistingItems()']",
+              "sort": ".//*[@class='ng-scope sortable']"
+
 
         },
         "data": {
@@ -889,8 +895,10 @@
      "subscriptionsModule": "a[href='#!/subscriptions']",
      "subscriptionsInput": "searchQuery",
      "subscriptionsTitle": ".//*[@class='module-header']",
-     "searchBtn": "[ng-click='queryExistingItems()']"
-
+     "searchBtn": "[ng-click='queryExistingItems()']",
+     "facets": "[ng-if='field.count > 0']",
+     "resultTable": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
+     "sort": ".//*[@class='ng-scope sortable']"
     
 
 
