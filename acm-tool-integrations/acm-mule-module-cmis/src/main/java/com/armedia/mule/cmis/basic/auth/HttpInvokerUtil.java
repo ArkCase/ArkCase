@@ -1,5 +1,7 @@
 package com.armedia.mule.cmis.basic.auth;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 /**
@@ -9,6 +11,8 @@ import org.slf4j.MDC;
  */
 public class HttpInvokerUtil
 {
+    private static final Logger log = LoggerFactory.getLogger(HttpInvokerUtil.class);
+    
     public static final String EXTERNAL_AUTH_KEY = "X-Alfresco-Remote-User";
 
     private static final String ANONYMOUS_USER = "anonymous";
@@ -24,6 +28,8 @@ public class HttpInvokerUtil
     {
         String userId = MDC.get(EVENT_MDC_REQUEST_USER_ID_KEY);
         if ((userId == null) || ANONYMOUS_USER.equals(userId)) {
+            // should not happen
+            log.error("X-Alfresco-Remote-User is null!");
             return null;
         }
         return userId.indexOf("@") > 0 ? userId.substring(0, userId.indexOf("@")) : userId;
