@@ -792,4 +792,11 @@ describe('case page tests', function() {
 
     });
 
+    it('should verify replace of document and return to previous version', function () {
+
+        casePage.clickModuleCasesFiles();
+        casePage.clickExpandFancyTreeTopElementAndSubLink("Documents").doubleClickRootFolder().rightClickDocument().clickDocAction("Replace").uploadFile().replaceVersion("1.0");
+        expect(casePage.returnDocVersionGrid()).toEqual("1.0");
+    })
+
 });

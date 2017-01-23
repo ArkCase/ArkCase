@@ -133,14 +133,14 @@ describe('Create new complaint ', function() {
 
     });
 
-    it('should create new complaint and close complaint with Open Investigation, approve automatic generated task and validate created case', function() {
+    it('should navigate to complaints and close complaint with Open Investigation, approve automatic generated task and validate created case', function() {
 
         complaintPage.clickModuleComplaints();
         complaintPage.clickCloseComplaint().switchToIframes().closeComplaint("Open Investigation", Objects.complaintPage.data.description, Objects.complaintPage.data.approver);
-        complaintPage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Tasks")
+        complaintPage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Tasks");
         complaintPage.waitForTasksTable();
         complaintPage.clickRefreshButton();
-        expect(complaintPage.returnAutomatedTask()).toContain(Objects.casepage.data.automatedTaskTitle);
+        expect(complaintPage.returnAutomatedTask()).toContain(Objects.complaintPage.data.automaticTaskNameCloseComplaint);
         complaintPage.clickTaskTitle();
         taskPage.clickApproveBtn();
         expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateClosed, 'The task state should be CLOSED');
