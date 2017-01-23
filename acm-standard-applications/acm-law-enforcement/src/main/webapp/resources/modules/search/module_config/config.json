@@ -32,7 +32,7 @@
           "name": "name",
           "displayName": "search.comp.grid.columns.name",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)' data-toggle='tooltip' data-placement='bottom' title={{row.entity.name}}>{{row.entity.name}}</a>"
+          "cellTemplate": "<a arkcase-href object-data='row.entity' is-parent='false' data-toggle='tooltip' data-placement='bottom' title={{row.entity.name}}>{{row.entity.name}}<\/a>"
         },
         {
           "name": "object_type_s",
@@ -50,7 +50,7 @@
           "name": "parent_number_lcs",
           "displayName": "search.comp.grid.columns.parent",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickParentObjLink($event, row.entity)' data-toggle='tooltip' data-placement='bottom' title={{row.entity.parent_number_lcs}}>{{row.entity.parent_number_lcs}}</a>"
+          "cellTemplate": "<a arkcase-href object-data='row.entity' is-parent='true' data-toggle='tooltip' data-placement='bottom' title={{row.entity.parent_number_lcs}}>{{row.entity.parent_number_lcs}}</a>"
         },
         {
           "name": "assignee_full_name_lcs",
