@@ -20,7 +20,7 @@ var closeComplaintButton = element(by.xpath(Objects.complaintPage.locators.close
 var complaintDispositionDDListBox = element(by.xpath(Objects.complaintPage.locators.complaintDispositionDDListBox));
 var closeComplaintDescription = element(by.css(Objects.complaintPage.locators.closeComplaintDescription));
 var selectApprover = element(by.name(Objects.casepage.locators.selectApprover));
-var searchForUser = element(by.model(Objects.casepage.locators.searchField));
+var searchForUser = element(by.css(Objects.casepage.locators.searchField));
 var goBtn = element(by.xpath(Objects.casepage.locators.goBtn));
 var addBtn = element(by.xpath(Objects.casepage.locators.addBtn));
 var searchedUser = element(by.xpath(Objects.casepage.locators.searchedUser));
@@ -155,7 +155,13 @@ var ComplaintPage = function() {
         return this;
     };
     this.clickSubmitButton = function() {
-        submitButton.click();
+        browser.wait(EC.invisibilityOf(element(by.xpath(Objects.basepage.locators.fadeElementDeleteNote))), 30000).then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.submitButton))), 30000).then(function () {
+                browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.complaintPage.locators.submitButton))), 30000).then(function () {
+                    submitButton.click();
+                });
+            });
+        });
         return this;
     };
     this.clickRadioBtnNewInitiator = function() {
@@ -204,37 +210,35 @@ var ComplaintPage = function() {
         return this;
     };
     this.insertCloseComplaintDescription = function(description) {
-        closeComplaintDescription.sendKeys(description);
+        browser.wait(EC.presenceOf(element(by.css(Objects.complaintPage.locators.closeComplaintDescription))), 30000).then(function() {
+            closeComplaintDescription.click().then(function () {
+                closeComplaintDescription.sendKeys(description);
+            });
+        });
         return this;
     };
     this.closeComplaint = function(disposition, description, approver) {
         this.selectComplaintDisposition(disposition);
         this.selectApprover(approver);
-        this.insertCloseComplaintDescription(description);
+        //this.insertCloseComplaintDescription(description);
         this.clickSubmitButton();
         return this;
     };
-    this.selectApprover = function(approver) {
-        browser.wait(EC.presenceOf(element(by.name(Objects.casepage.locators.selectApprover))), 30000).then(function () {
-            browser.wait(EC.visibilityOf(element(by.name(Objects.casepage.locators.selectApprover))), 30000).then(function () {
-                browser.wait(EC.elementToBeClickable(element(by.name(Objects.casepage.locators.selectApprover))), 30000).then(function () {
-                    selectApprover.click().then(function () {
-                        browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.searchField))), 10000);
-                        searchForUser.click();
-                        searchForUser.sendKeys(approver);
-                        goBtn.click().then(function () {
-                            browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchedUser))), 3000);
-                            searchedUser.click().then(function () {
-                                browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.addBtn))), 3000);
-                                addBtn.click();
-                            });
-                        });
-                    });
-                })
-            });
+
+    this.switchToIframes = function() {
+        browser.ignoreSynchronization = true;
+        browser.wait(EC.visibilityOf(element(by.className("new-iframe ng-scope"))), 30000);
+        browser.switchTo().frame(browser.driver.findElement(by.className("new-iframe ng-scope"))).then(function() {
+            browser.switchTo().frame(browser.driver.findElement(By.className("frevvo-form")));
         });
         return this;
-    }
+    };
+    this.switchToDefaultContent = function() {
+
+        browser.driver.switchTo().defaultContent();
+        return this;
+
+    };
 
     this.waitForComplaintTitle = function () {
         browser.wait(EC.presenceOf(element(by.xpath(Objects.complaintPage.locators.complaintTitleLink))), 30000).then(function () {
