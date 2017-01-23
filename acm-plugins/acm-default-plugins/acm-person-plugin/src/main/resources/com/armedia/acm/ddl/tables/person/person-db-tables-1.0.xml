@@ -427,7 +427,7 @@
         </insert>
     </changeSet>
 
-    <changeSet id="30-rename-person-identification" author="nebojsha.davidovikj" dbms="${excludeMSSQL}">
+    <changeSet id="30-rename-person-identification" author="nebojsha.davidovikj" dbms="oracle,postgresql">
         <renameTable oldTableName="acm_person_identification" newTableName="acm_identification"/>
         <renameColumn tableName="acm_identification" oldColumnName="cm_person_identification_id"
                       newColumnName="cm_identification_id"/>
@@ -435,6 +435,41 @@
         <renameColumn tableName="acm_identification" oldColumnName="cm_person_id_creator" newColumnName="cm_creator"/>
         <renameColumn tableName="acm_identification" oldColumnName="cm_person_id_modified" newColumnName="cm_modified"/>
         <renameColumn tableName="acm_identification" oldColumnName="cm_person_id_modifier" newColumnName="cm_modifier"/>
+        <!--rename ID generator -->
+        <renameTable oldTableName="acm_person_identification_id" newTableName="acm_identification_id"/>
+        <!--change value of the id generator-->
+        <update tableName="acm_identification_id">
+            <column name="cm_seq_name" value="acm_identification"/>
+            <where>
+                cm_seq_name = 'acm_person_identification'
+            </where>
+        </update>
+        <!--create many to many relation table between person and identification, add primary key and unique constraints-->
+        <createTable tableName="acm_person_identification">
+            <column name="cm_person_id" type="${fkIdType}"/>
+            <column name="cm_identification_id" type="${fkIdType}"/>
+        </createTable>
+        <addPrimaryKey tableName="acm_person_identification" columnNames="cm_person_id, cm_identification_id"/>
+        <!-- copy all relations from acm_identification into relational table-->
+        <sql>INSERT INTO acm_person_identification (cm_person_id, cm_identification_id) SELECT cm_person,
+            cm_identification_id FROM acm_identification
+        </sql>
+        <!-- drop person column from acm_identification-->
+        <dropColumn tableName="acm_identification" columnName="cm_person"/>
+    </changeSet>
+
+    <changeSet id="30-rename-person-identification" author="nebojsha.davidovikj" dbms="mysql">
+        <renameTable oldTableName="acm_person_identification" newTableName="acm_identification"/>
+        <renameColumn tableName="acm_identification" oldColumnName="cm_person_identification_id"
+                      newColumnName="cm_identification_id" columnDataType="${fkIdType}"/>
+        <renameColumn tableName="acm_identification" oldColumnName="cm_person_id_created" newColumnName="cm_created"
+                      columnDataType="${timestampType}"/>
+        <renameColumn tableName="acm_identification" oldColumnName="cm_person_id_creator" newColumnName="cm_creator"
+                      columnDataType="VARCHAR(1024)"/>
+        <renameColumn tableName="acm_identification" oldColumnName="cm_person_id_modified" newColumnName="cm_modified"
+                      columnDataType="${timestampType}"/>
+        <renameColumn tableName="acm_identification" oldColumnName="cm_person_id_modifier" newColumnName="cm_modifier"
+                      columnDataType="VARCHAR(1024)"/>
         <!--rename ID generator -->
         <renameTable oldTableName="acm_person_identification_id" newTableName="acm_identification_id"/>
         <!--change value of the id generator-->
