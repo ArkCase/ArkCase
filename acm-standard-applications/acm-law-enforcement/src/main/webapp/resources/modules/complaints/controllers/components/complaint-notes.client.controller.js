@@ -14,11 +14,10 @@ angular.module('complaints').controller('Complaints.NotesController', ['$scope',
                     parentTitle: $scope.parentTitleFromComplaint,
                     noteType: "GENERAL"
                 };
-
+                $scope.config = config;
+                return config;
             });
 
-            $scope.config = config;
-            return config;
         });
     }
 ]);
