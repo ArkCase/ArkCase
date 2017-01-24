@@ -1,13 +1,13 @@
-var casePage = require('../Pages/case_page.js');
-var Objects = require('../json/Objects.json');
-var taskPage = require('../Pages/task_page.js');
-var loginPage = require('../Pages/login_page.js');
+var casePage = require('../../Pages/case_page.js');
+var Objects = require('../../json/Objects.json');
+var taskPage = require('../../Pages/task_page.js');
+var loginPage = require('../../Pages/login_page.js');
 var flag = false;
 var EC = protractor.ExpectedConditions;
-var timeTrackingPage = require('../Pages/time_tracking_page.js');
-var costTrackingPage = require('../Pages/cost_tracking_page.js');
-var preferencesPage = require('../Pages/preference_page.js');
-var complaintPage = require('../Pages/complaint_page.js');
+var timeTrackingPage = require('../../Pages/time_tracking_page.js');
+var costTrackingPage = require('../../Pages/cost_tracking_page.js');
+var preferencesPage = require('../../Pages/preference_page.js');
+var complaintPage = require('../../Pages/complaint_page.js');
 var using = require(process.env['USERPROFILE'] + '/node_modules/jasmine-data-provider');
 
 
