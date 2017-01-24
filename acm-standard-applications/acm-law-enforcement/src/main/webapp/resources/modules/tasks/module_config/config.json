@@ -110,6 +110,7 @@
           "details",
           "reworkdetails",
           "docsreview",
+          "parentdocs",
           "attachments",
           "notes",
           "references",
@@ -141,6 +142,14 @@
         "icon": "fa fa-search-plus",
         "components": [
           "docsreview"
+        ]
+      },
+      {
+        "type": "p/TASK/patt",
+        "label": "Parent Documents",
+        "icon": "fa fa-file",
+        "components": [
+          "parentdocs"
         ]
       },
       {
@@ -205,6 +214,7 @@
         "components": [
           "details",
           "rejcomments",
+          "parentdocs",
           "attachments",
           "notes",
           "references",
@@ -228,6 +238,14 @@
         "icon": "fa fa-hand-stop-o",
         "components": [
           "rejcomments"
+        ]
+      },
+      {
+        "type": "p/ADHOC/patt",
+        "label": "Parent Documents",
+        "icon": "fa fa-file",
+        "components": [
+          "parentdocs"
         ]
       },
       {
@@ -787,6 +805,20 @@
           "fullNameField": "creator_full_name_lcs"
         }
       ]
+    },
+    {
+      "id": "parentdocs",
+      "title": "Parent Documents",
+      "icon": "fa fa-file",
+      "enabled": true,
+      "type": "empty",
+      "docTree": {
+        "email": {
+          "subjectRegex": "(.*)\\$([^\\s]+)",
+          "objectTypeRegexGroup": 1,
+          "objectNumberRegexGroup": 2
+        }
+      }
     },
     {
       "id": "attachments",

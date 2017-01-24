@@ -2,14 +2,17 @@
 
 angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state', '$stateParams', '$sce', '$q', '$modal'
     , 'ConfigService', 'UtilService', 'TicketService', 'LookupService', 'Frevvo.FormService', 'Task.NewTaskService'
-    , 'Authentication', 'Util.DateService', 'Dialog.BootboxService', 'ObjectService'
+    , 'Authentication', 'Util.DateService', 'Dialog.BootboxService', 'ObjectService', 'Object.LookupService', 'Admin.FunctionalAccessControlService'
     , function ($scope, $state, $stateParams, $sce, $q, $modal, ConfigService, Util, TicketService, LookupService
-        , FrevvoFormService, TaskNewTaskService, Authentication, UtilDateService, DialogService, ObjectService) {
+        , FrevvoFormService, TaskNewTaskService, Authentication, UtilDateService, DialogService, ObjectService, ObjectLookupService, AdminFunctionalAccessControlService) {
 
         $scope.config = null;
         $scope.userSearchConfig = null;
         $scope.objectSearchConfig = null;
         $scope.isAssocType = false;
+
+        $scope.groupTask = false;
+        $scope.chosenGroup = "";
 
         $scope.options = {
             focus: true,
@@ -19,10 +22,21 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
 
         Authentication.queryUserInfo().then(
             function (userInfo) {
-
+                $scope.userInfo = userInfo;
                 $scope.userFullName = userInfo.fullName;
                 $scope.userId = userInfo.userId;
                 return userInfo;
+            }
+        );
+
+        ObjectLookupService.getGroups().then(
+            function (groups) {
+                var options = [];
+                _.each(groups, function (group) {
+                    options.push({value: group.name, text: group.name});
+                });
+                $scope.assignableGroups = options;
+                return groups;
             }
         );
 
@@ -84,6 +98,19 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
         $scope.inputClear = function(){
             $scope.config.data.attachedToObjectName = null;
         }
+
+        //groupChange function
+        $scope.groupChange = function () {
+            $scope.config.data.candidateGroups = [$scope.chosenGroup];
+        };
+
+        $scope.groupTaskToggle = function () {
+            //Clear relevant information
+            $scope.config.data.candidateGroups = [];
+            $scope.chosenGroup = "";
+            $scope.config.data.assignee = null;
+            $scope.userName = "";
+        };
 
         $scope.userSearch = function () {
             var modalInstance = $modal.open({

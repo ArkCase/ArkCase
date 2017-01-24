@@ -1,8 +1,8 @@
-var casePage = require('../Pages/case_page.js');
-var Objects = require('../json/Objects.json');
-var loginPage = require('../Pages/login_page.js');
-var complaintPage = require('../Pages/complaint_page.js');
-var taskPage = require('../Pages/task_page.js');
+var casePage = require('../../Pages/case_page.js');
+var Objects = require('../../json/Objects.json');
+var loginPage = require('../../Pages/login_page.js');
+var complaintPage = require('../../Pages/complaint_page.js');
+var taskPage = require('../../Pages/task_page.js');
 var flag = false;
 
 
@@ -38,8 +38,6 @@ describe('create new case', function() {
         loginPage.Logout();
 
     });
-
-
 
     it('should create new case ', function() {
 

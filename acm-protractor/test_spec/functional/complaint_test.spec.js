@@ -1,14 +1,14 @@
-var logger = require('../log');
-var utils = require('../util/utils.js');
-var complaintPage = require('../Pages/complaint_page.js');
-var casePage = require('../Pages/case_page.js');
-var userPage = require('../Pages/user_profile_page.js');
-var taskPage = require('../Pages/task_page.js');
-var Objects = require('../json/Objects.json');
-var loginPage = require('../Pages/login_page.js');
-var timeTrackingPage = require('../Pages/time_tracking_page.js');
-var costTrackingPage = require('../Pages/cost_tracking_page.js');
-var preferencesPage = require('../Pages/preference_page.js');
+var logger = require('../../log');
+var utils = require('../../util/utils.js');
+var complaintPage = require('../../Pages/complaint_page.js');
+var casePage = require('../../Pages/case_page.js');
+var userPage = require('../../Pages/user_profile_page.js');
+var taskPage = require('../../Pages/task_page.js');
+var Objects = require('../../json/Objects.json');
+var loginPage = require('../../Pages/login_page.js');
+var timeTrackingPage = require('../../Pages/time_tracking_page.js');
+var costTrackingPage = require('../../Pages/cost_tracking_page.js');
+var preferencesPage = require('../../Pages/preference_page.js');
 var flag = false;
 
 function testAsync(done) {
@@ -19,7 +19,6 @@ function testAsync(done) {
     }, 30000);
 
 }
-
 
 describe('Create new complaint ', function() {
 
@@ -134,14 +133,14 @@ describe('Create new complaint ', function() {
 
     });
 
-    it('should create new complaint and close complaint with Open Investigation, approve automatic generated task and validate created case', function() {
+    it('should navigate to complaints and close complaint with Open Investigation, approve automatic generated task and validate created case', function() {
 
         complaintPage.clickModuleComplaints();
         complaintPage.clickCloseComplaint().switchToIframes().closeComplaint("Open Investigation", Objects.complaintPage.data.description, Objects.complaintPage.data.approver);
-        complaintPage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Tasks")
+        complaintPage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Tasks");
         complaintPage.waitForTasksTable();
         complaintPage.clickRefreshButton();
-        expect(complaintPage.returnAutomatedTask()).toContain(Objects.casepage.data.automatedTaskTitle);
+        expect(complaintPage.returnAutomatedTask()).toContain(Objects.complaintPage.data.automaticTaskNameCloseComplaint);
         complaintPage.clickTaskTitle();
         taskPage.clickApproveBtn();
         expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateClosed, 'The task state should be CLOSED');
@@ -579,6 +578,13 @@ describe('Create new complaint ', function() {
         complaintPage.verifyTasksTableColumnsNumber();
     });
 
+     it('should verify if the people intiator delete button is displayed', function() {
+
+        complaintPage.clickModuleComplaints();
+        complaintPage.clickPeopleLinkBtn();
+        complaintPage.verifyIfInitiatorCanBeDeleted();
+    });
+
     it('should verify that searching of Case id during close complaint is retrieving the data in the fields', function () {
         casePage.navigateToPage("Case Files").waitForCaseID();
         var caseid = casePage.getCaseId();
@@ -592,6 +598,5 @@ describe('Create new complaint ', function() {
         expect(complaintPage.returnCasePriority()).toEqual(casePriority);
         complaintPage.switchToDefaultContent();
     })
-
 
 });
