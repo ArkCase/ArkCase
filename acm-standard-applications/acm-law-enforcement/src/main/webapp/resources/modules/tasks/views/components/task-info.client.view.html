@@ -20,22 +20,27 @@
                 <small class="text-muted">"% of Completion"</small>
             </div>
             <div class="col-xs-12 col-md-4">
-                <div ng-if="objectInfo.assignee">
-                    <div class="h4 font-bold">
-                        <a href="" class="editable-click no-outline" ng-click="showAssigneePicker()" permission="editTask" permission-properties="objectInfo" permission-action="disable">
-                            <user-full-name userId="objectInfo.assignee" fallback="None"/>
-                        </a>
-                    </div>
-                    <small class="text-muted">Assignee</small>
+                <!--<div ng-if="objectInfo.assignee">-->
+                    <!--<div class="h4 font-bold">-->
+                        <!--<a href="" class="editable-click no-outline" ng-click="showAssigneePicker()" permission="editTask" permission-properties="objectInfo" permission-action="disable">-->
+                            <!--<user-full-name userId="objectInfo.assignee" fallback="None"/>-->
+                        <!--</a>-->
+                    <!--</div>-->
+                    <!--<small class="text-muted">Assignee</small>-->
+                <!--</div>-->
+                <!--<div ng-if="objectInfo.candidateGroups[0]">-->
+                    <!--<div class="h4 font-bold">-->
+                        <!--<a href="" class="editable-click no-outline" ng-click="showAssigneePicker()"  permission="editTask" permission-properties="objectInfo" permission-action="disable">-->
+                            <!--{{objectInfo.candidateGroups[0] || 'None'}}-->
+                        <!--</a>-->
+                    <!--</div>-->
+                    <!--<small class="text-muted">Group Bucket</small>-->
+                <!--</div>-->
+                <div class="h4 font-bold">
+                    <a href="javascript:;" class="editable-click no-outline" ng-click="openAssigneePickerModal()" permission="editTask" permission-properties="objectInfo" permission-action="disable">
+                        {{assignee | mapKeyValue: assignableUsers:'object_id_s':'name' || 'Unknown'}}</a>
                 </div>
-                <div ng-if="objectInfo.candidateGroups[0]">
-                    <div class="h4 font-bold">
-                        <a href="" class="editable-click no-outline" ng-click="showAssigneePicker()"  permission="editTask" permission-properties="objectInfo" permission-action="disable">
-                            {{objectInfo.candidateGroups[0] || 'None'}}
-                        </a>
-                    </div>
-                    <small class="text-muted">Group Bucket</small>
-                </div>
+                <small class="text-muted">Assignee</small>
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
