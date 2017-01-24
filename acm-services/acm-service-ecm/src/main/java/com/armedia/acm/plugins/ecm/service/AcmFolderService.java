@@ -60,4 +60,13 @@ public interface AcmFolderService {
                                AcmFolder rootFolderOfCopy) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException;
 
     AcmContainer findContainerByFolderId(Long folderId) throws AcmObjectNotFoundException;
+
+    /**
+     * retrieves root folder
+     *
+     * @param parentObjectId
+     * @param parentObjectType
+     * @return AcmFolder root folder for given objectId, objectType
+     */
+    AcmFolder getRootFolder(Long parentObjectId, String parentObjectType) throws AcmObjectNotFoundException;
 }

@@ -92,6 +92,7 @@ public class ComplaintPipelineIT
     {
         Complaint complaint = complaintFactory.complaint();
         complaint.setRestricted(true);
+        complaint.setCreator("auditUser");
 
         // complaint number should be set by the flow
         complaint.setComplaintNumber(null);
