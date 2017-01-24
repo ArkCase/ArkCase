@@ -24,6 +24,7 @@ var resultValue = element(by.xpath(Objects.auditPage.locators.resultValue));
 var ipAddressValue = element(by.xpath(Objects.auditPage.locators.ipAddressValue));
 var objectIdValue = element(by.xpath(Objects.auditPage.locators.objectIdValue));
 var objectTypeValue = element(by.xpath(Objects.auditPage.locators.objectTypeValue));
+var objectIdValueSecondRow = element(by.xpath(Objects.auditPage.locators.objectIdValueSecondRow));
 
 var AuditPage = function() {
 
@@ -91,7 +92,9 @@ var AuditPage = function() {
         return auditReportObjectTypeTitle.getText();
     };
     this.returnDateValue = function () {
-        return dateValue.getText();
+        dateValue.getText().then(function (text) {
+            return text.substring(0,9);
+        })
     };
     this.returnUserValue = function () {
         return userValue.getText();
@@ -111,11 +114,12 @@ var AuditPage = function() {
     this.returnObjectTypeValue = function () {
         return objectTypeValue.getText();
     };
-
+    this.returnSecondRowObjectIdValue = function () {
+        return objectIdValueSecondRow.getText();
+    };
     this.switchToAuditframes = function() {
-        browser.ignoreSynchronization = true;
-        browser.wait(EC.visibilityOf(element(by.name(Objects.reportPage.locators.reportsIFrame))), 120000);
-        browser.switchTo().frame(browser.driver.findElement(by.name("audit-iframe"))).then(function () {
+        browser.ignoresynchronization = true;
+         browser.switchTo().frame(browser.driver.findElement(by.name("audit-iframe"))).then(function () {
             browser.switchTo().frame(browser.driver.findElement(by.id("reportContent")));
         });
         return this;
@@ -134,15 +138,14 @@ var AuditPage = function() {
         });
     };
 
-    this.validateAuditReportValues = function (date, user, name, result, ipAddress, objectId, objectType) {
+    this.validateAuditReportValues = function (date, user, name, result, objectId, objectType) {
         browser.wait(EC.presenceOf(element(by.xpath(Objects.auditPage.locators.dateValue))), 30000).then(function() {
             browser.wait(EC.visibilityOf(element(by.xpath(Objects.auditPage.locators.dateValue))), 30000).then(function() {
-                expect(dateValue.getText()).toEqual(date);
+                expect(dateValue.getText()).toContain(date);
                 expect(userValue.getText()).toEqual(user);
                 expect(nameValue.getText()).toEqual(name);
                 expect(resultValue.getText()).toEqual(result);
-                expect(ipAddressValue.getText()).toEqual(ipAddress);
-                expect(objectIdValue.getText()).toEqual(objectId);
+                expect(objectId).toContain(objectIdValue.getText());
                 expect(objectTypeValue.getText()).toEqual(objectType);
             });
         })
