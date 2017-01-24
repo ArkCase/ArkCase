@@ -42,8 +42,8 @@ public class AcmProcessMailServiceImpl implements AcmProcessMailService
     public void extractAttachmentsAndUpload(Message message, Long parentObjectId, String parentObjectType, AcmFolder containingFolder, Authentication auth)
     {
         String tempDir = System.getProperty("java.io.tmpdir");
-        String bodyFileName = parentObjectId + "_" + parentObjectType + ".eml";
-        File messageFile = new File(tempDir + File.separator + UUID.randomUUID().toString() + "_" + bodyFileName);
+        String bodyFileName = parentObjectId + "_" + parentObjectType + "_" + System.currentTimeMillis() + ".eml";//we must make sure that file name is unique that's why we add timestamp as sufix
+        File messageFile = new File(tempDir + File.separator + bodyFileName);
 
         try
         {
@@ -86,7 +86,7 @@ public class AcmProcessMailServiceImpl implements AcmProcessMailService
 
                 try (InputStream attachmentIS = bodyPart.getInputStream())
                 {
-                    String fileName = bodyPart.getFileName();
+                    String fileName = System.currentTimeMillis() + "_" + bodyPart.getFileName();//we must make sure that file name is unique that's why we add timestamp as prefix
                     ecmFileService.upload(fileName, "attachment", "Document",
                             attachmentIS, "message/rfc822", fileName, auth,
                             folder.getCmisFolderId(), parentObjectType, parentObjectId);
