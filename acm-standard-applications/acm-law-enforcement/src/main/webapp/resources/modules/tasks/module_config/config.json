@@ -1133,7 +1133,7 @@
           "headerCellFilter": "translate"
         },
         {
-          "name": "reator_full_name_lcs",
+          "name": "creator_full_name_lcs",
           "displayName": "tasks.objectSearch.objectGridColumns.username",
           "headerCellFilter": "translate"
         }
