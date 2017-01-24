@@ -4,6 +4,7 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.easymock.Capture;
+import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -84,14 +85,14 @@ public class AcmProcessMailServiceTest extends EasyMockSupport
 
         Capture<InputStream> isCapture = newCapture();
         expect(ecmFileServiceMock.upload(
-                eq("1_CASE_FILE.eml"), eq("mail"), eq("Document"),
+                EasyMock.anyString(), eq("mail"), eq("Document"),
                 capture(isCapture), eq("message/rfc822"),
-                eq("1_CASE_FILE.eml"), eq(authMock),
+                EasyMock.anyString(), eq(authMock),
                 eq("cmis_folder_id"), eq("CASE_FILE"), eq(1L))).andAnswer(() -> null);
 
-        expect(ecmFileServiceMock.upload(eq("just bytes"), eq("attachment"), eq("Document"),
+        expect(ecmFileServiceMock.upload(EasyMock.anyString(), eq("attachment"), eq("Document"),
                 capture(isCapture), eq("message/rfc822"),
-                eq("just bytes"), eq(authMock),
+                EasyMock.anyString(), eq(authMock),
                 eq("cmis_folder_id"), eq("CASE_FILE"), eq(1L))).andAnswer(() -> null);
 
         Capture<OutputStream> osCapture = newCapture();
