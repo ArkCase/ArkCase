@@ -2,6 +2,7 @@ var casePage = require('../Pages/case_page.js');
 var Objects = require('../json/Objects.json');
 var loginPage = require('../Pages/login_page.js');
 var complaintPage = require('../Pages/complaint_page.js');
+var taskPage = require('../Pages/task_page.js');
 var flag = false;
 
 
@@ -37,8 +38,6 @@ describe('create new case', function() {
         loginPage.Logout();
 
     });
-
-
 
     it('should create new case ', function() {
 
@@ -76,3 +75,28 @@ describe('Create new complaint ', function() {
 
     });
 });
+
+describe('Create new task ', function() {
+
+    beforeEach(function(done) {
+
+        loginPage.Login(Objects.loginpage.data.supervisoruser.username, Objects.loginpage.data.supervisoruser.password);
+        testAsync(done);
+
+    });
+
+    afterEach(function() {
+
+        loginPage.Logout();
+
+    });
+
+
+    it('should create new task ', function() {
+
+        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+        expect(taskPage.returnTasksTitle()).toEqual(Objects.taskpage.data.tasksTitle);
+
+    });
+});
+

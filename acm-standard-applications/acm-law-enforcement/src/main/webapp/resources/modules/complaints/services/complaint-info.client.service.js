@@ -140,6 +140,10 @@ angular.module('services').factory('Complaint.InfoService', ['$resource', '$tran
             if (!Service.validateComplaintInfo(complaintInfo)) {
                 return Util.errorPromise($translate.instant("common.service.error.invalidData"));
             }
+            //we need to make one of the fields is changed in order to be sure that update will be executed
+            //if we change modified won't make any differences since is updated before update to database
+            //but update will be trigger
+            complaintInfo.modified = null;
             return Util.serviceCall({
                 service: ObjectInfoService.save
                 , param: {type: "complaint"}

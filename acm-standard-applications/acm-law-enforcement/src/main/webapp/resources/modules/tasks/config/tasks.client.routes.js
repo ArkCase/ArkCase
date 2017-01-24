@@ -81,6 +81,11 @@ angular.module('tasks').config(['$stateProvider',
                 templateUrl: 'modules/tasks/views/components/task-rejcomments.client.view.html'
             })
 
+            .state('tasks.parentdocs', {
+                url: '/:type/:id/parentdocs',
+                templateUrl: 'modules/tasks/views/components/task-parentdocs.client.view.html'
+            })
+
             .state('tasks.attachments', {
                 url: '/:type/:id/attachments',
                 templateUrl: 'modules/tasks/views/components/task-attachments.client.view.html'

@@ -95,6 +95,12 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
 
     private String legacySystemId;
 
+    private boolean buckslipTask;
+
+    private List<String> buckslipFutureApprovers;
+
+    private String buckslipPastApprovers;
+
     public AcmContainer getContainer()
     {
         return container;
@@ -543,6 +549,36 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
     public void setLegacySystemId(String legacySystemId)
     {
         this.legacySystemId = legacySystemId;
+    }
+
+    public boolean isBuckslipTask()
+    {
+        return buckslipTask;
+    }
+
+    public void setBuckslipTask(boolean buckslipTask)
+    {
+        this.buckslipTask = buckslipTask;
+    }
+
+    public List<String> getBuckslipFutureApprovers()
+    {
+        return buckslipFutureApprovers;
+    }
+
+    public void setBuckslipFutureApprovers(List<String> buckslipFutureApprovers)
+    {
+        this.buckslipFutureApprovers = buckslipFutureApprovers;
+    }
+
+    public String getBuckslipPastApprovers()
+    {
+        return buckslipPastApprovers;
+    }
+
+    public void setBuckslipPastApprovers(String buckslipPastApprovers)
+    {
+        this.buckslipPastApprovers = buckslipPastApprovers;
     }
 
     @Override

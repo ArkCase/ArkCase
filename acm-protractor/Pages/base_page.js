@@ -1567,24 +1567,19 @@ var BasePage = function() {
             browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.fileTitle))), 30000).then(function() {});
         });
     }
-    this.clickFullNameLink = function() {
-        browser.wait(EC.visibilityOf(element(by.css('.fullname'))), 30000).then(function() {
-            browser.wait(EC.elementToBeClickable(element(by.css('.fullname'))), 30000).then(function() {
-                fullnameLink.click();
-            });
-        });
-        return this;
-    };
+
     this.clickLogout = function() {
         browser.wait(EC.visibilityOf(element(by.linkText("Logout"))), 30000).then(function() {
             logoutLink.click().then(function() {
                 browser.ignoresynchronization = true;
                 browser.sleep(10000);
-                expect(logoutSucesfullMessage.getText()).toEqual('You have been logged out successfully.');
-            })
+                var logoutSucesfullMessage = browser.driver.findElement(by.css(Objects.basepage.locators.logoutSucesfullMessage));
+                expect(logoutSucesfullMessage.getText()).toEqual('You have been logged out successfully.', 'Logout was unsuccessfull');
+            });
         });
         return this;
     };
+
     this.Logout = function() {
         this.clickFullNameLink();
         this.clickLogout();
@@ -1679,23 +1674,7 @@ var BasePage = function() {
         });
         return this;
     };
-    this.clickLogout = function() {
-        browser.wait(EC.visibilityOf(element(by.linkText("Logout"))), 30000).then(function() {
-            logoutLink.click().then(function() {
-                browser.ignoresynchronization = true;
-                browser.driver.sleep(5000);
-                browser.driver.wait(EC.visibilityOf(element(by.css(".alert.alert-success"))), 30000).then(function() {
-                    expect(logoutSucesfullMessage.getText()).toEqual('You have been logged out successfully.');
-                });
-            });
-        });
-        return this;
-    };
-    this.Logout = function() {
-        this.clickFullNameLink();
-        this.clickLogout();
-        return this;
-    };
+
     this.clickCheckin = function() {
         checkIn.click();
         return this;
@@ -2085,7 +2064,6 @@ var BasePage = function() {
 
         });
     }
-
 
 }
 
