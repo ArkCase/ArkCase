@@ -34,13 +34,13 @@
             "root": ".//span[@title='root']",
             "newCorrespondence": ".//li[@data-command='subMenuCorrespondenceForms']",
             "docRow": "//table/tbody/tr[3]",
-            "docTitle": "//table/tbody/tr[3]/td[3]/span/span[3]",
+            "docTitle": "//table/tbody/tr[2]/td[3]/span/span[3]",
             "docExtension": "//table/tbody/tr[3]/td[4]",
             "docType": "//table/tbody/tr[3]/td[5]",
             "docCreated": "//table/tbody/tr[3]/td[6]",
             "docModified": "//table/tbody/tr[3]/td[7]",
             "docAuthor": "//table/tbody/tr[3]/td[8]",
-            "docVersion": "//table/tbody/tr[3]/td[9]/span/select/option",
+            "docVersion": "//table/tbody/tr[2]/td[9]/span/select/option",
             "docStatus": "//table/tbody/tr[3]/td[10]",
             "deleteDoc": ".//li[@data-command='remove']",
             "downloadDoc": ".//li[@data-command='download']",
@@ -70,7 +70,8 @@
             "noteColumnValue": ".ui-grid-cell-contents.ng-binding.ng-scope",
             "restrictCheckbox": "restricted",
             "restrictCheckboxDisabled": ".//input[@ng-model='restricted'][@disabled='disabled']",
-            "notificationMessage": "[ng-show='!$messageTemplate']"
+            "notificationMessage": "[ng-show='!$messageTemplate']",
+            "docVersionDropDownList": ".docversion.inline"
 
 
         },
@@ -466,7 +467,8 @@
             "title": "ComplaintTitle",
             "description": "Description",
             "approver": "samuel",
-            "titleComplaint": "NewComplaint"
+            "titleComplaint": "NewComplaint",
+            "automaticTaskNameCloseComplaint": "Review Request to Close Complaint"
         }
     },
     "casepage": {
@@ -777,11 +779,25 @@
             "ListBox": "selectedObject",
             "notAuthorizedListBox": "selectedNotAuthorized",
             "authorizedListBox": "selectedAuthorized",
-            "LDAPCol" : "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid"
+            "Col" : "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
+            "tableRow": ".//*[@class='ui-grid-cell-contents ng-binding ng-scope']"
         },
         "data":{
             "ArmediaDirectoryName": "armedia",
-            "ArmediaLDAPUrl": "ldaps://arm-pr-w8x-ad03.armedia.com:636"
+            "ArmediaLDAPUrl": "ldaps://arm-pr-w8x-ad03.armedia.com:636",
+            "formName": "Report of Investigation",
+            "applicationName": "ACM - Armedia Case Management",
+            "description": "Report of Investigation",
+            "caseTarget": "CASE_FILE",
+            "complaintTarget": "COMPLAINT",
+            "complaintBussinesProcessName": "Complaint review and approval process",
+            "complaintBPDescription": "",
+            "complaintBPModified": "07/11/2016",
+            "complaintBPAuthor": "",
+            "docApprovalBussinesProcessName": "ACM Document Approval Process",
+            "docApprovalBPDescription": "",
+            "docApprovalBPModified": "07/11/2016",
+            "docApprovalBPAuthor": ""
         }
     },
     "reportPage": {
@@ -871,12 +887,13 @@
             "auditReportColumn6Title": "//table/tbody/tr[2]/td[7]",
             "auditReportColumn7Title": "//table/tbody/tr[2]/td[8]",
             "dateValue": "//table/tbody/tr[4]/td[2]",
-            "userValue": "//table/tbody/tr[4]/td[3]",
-            "nameValue": "//table/tbody/tr[4]/td[4]",
-            "resultValue": "//table/tbody/tr[4]/td[5]",
+            "userValue": "//table/tbody/tr[3]/td[3]",
+            "nameValue": "//table/tbody/tr[3]/td[4]",
+            "resultValue": "//table/tbody/tr[4]/td[3]",
             "ipAddressValue": "//table/tbody/tr[4]/td[6]",
-            "objectIdValue": "//table/tbody/tr[4]/td[7]",
-            "objectTypeValue": "//table/tbody/tr[4]/td[8]"
+            "objectIdValue": "//table/tbody/tr[4]/td[5]",
+            "objectTypeValue": "//table/tbody/tr[4]/td[6]",
+            "objectIdValueSecondRow": "//table/tbody/tr[6]/td[5]"
         },
         "data":{
             "auditReportColumn1Title": "Date",

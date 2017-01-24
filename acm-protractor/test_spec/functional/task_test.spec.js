@@ -1,11 +1,11 @@
-var logger = require('../log');
-var utils = require('../util/utils.js');
-var taskPage = require('../Pages/task_page.js');
-var userPage = require('../Pages/user_profile_page.js');
-var loginPage = require('../Pages/login_page.js');
-var Objects = require('../json/Objects.json');
+var logger = require('../../log');
+var utils = require('../../util/utils.js');
+var taskPage = require('../../Pages/task_page.js');
+var userPage = require('../../Pages/user_profile_page.js');
+var loginPage = require('../../Pages/login_page.js');
+var Objects = require('../../json/Objects.json');
 var using = require(process.env['USERPROFILE'] + '/node_modules/jasmine-data-provider');
-var preferencesPage = require('../Pages/preference_page.js');
+var preferencesPage = require('../../Pages/preference_page.js');
 var flag = false;
 
 function testAsync(done) {

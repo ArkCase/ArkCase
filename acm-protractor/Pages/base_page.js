@@ -231,6 +231,7 @@ var timeTrackingModule = element(by.css(Objects.timetrackingPage.locators.timeTr
 var costTrackingModule = element(by.css(Objects.costsheetPage.locators.costTrackingModule));
 var initiatorDeleteBtn = element(by.xpath(Objects.casepage.locators.initiatorDeleteBtn));
 var notificationMessage = element(by.css(Objects.basepage.locators.notificationMessage));
+var docVersionDropDownList = new SelectWrapper(by.css(Objects.basepage.locators.docVersionDropDownList));
 
 
 var BasePage = function() {
@@ -383,8 +384,9 @@ var BasePage = function() {
                     break;
             }
             var el = element(by.xpath(completexPath));
-            //browser.wait(EC.visibilityOf(element(by.xpath(completexPath))), 30000).then(function () {
-            el.click();
+            browser.wait(EC.visibilityOf(element(by.xpath(completexPath))), 30000).then(function () {
+                el.click();
+            });
 
         });
 
@@ -625,6 +627,7 @@ var BasePage = function() {
                 })
             });
         });
+        this.switchToIframes();
         return this;
     }
 
@@ -1285,13 +1288,16 @@ var BasePage = function() {
         });
     }
     this.clickModuleCasesFiles = function() {
+        browser.wait(EC.visibilityOf(element(by.css(Objects.timetrackingPage.locators.caseFileModule))), 30000).then(function () {
+            browser.executeScript('arguments[0].click()', caseFileModule);
 
-        browser.executeScript('arguments[0].click()', caseFileModule);
+        })
         return this;
     }
     this.clickModuleComplaints = function() {
-
-        browser.executeScript('arguments[0].click()', complaintsModule);
+        browser.wait(EC.visibilityOf(element(by.css(Objects.timetrackingPage.locators.complaintsModule))), 30000).then(function () {
+            browser.executeScript('arguments[0].click()', complaintsModule);
+        });
     }
     this.clickModuleTasks = function() {
         browser.executeScript('arguments[0].click()', tasksModule);
@@ -1551,40 +1557,12 @@ var BasePage = function() {
         cancelEditing.click();
         return this;
     };
-    this.rightClickDocument = function() {
-        browser.wait(EC.presenceOf(element(by.xpath(Objects.basepage.locators.docTitle))), 30000).then(function() {
-            browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.docTitle))), 30000).then(function() {
-                docTitle.click().then(function() {
-                    browser.actions().click(protractor.Button.RIGHT).perform();
-                })
-            });
-        });
-        return this;
-
-    };
     this.rightClickFileTitle = function() {
         browser.wait(EC.presenceOf(element(by.xpath(Objects.basepage.locators.fileTitle))), 30000).then(function() {
             browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.fileTitle))), 30000).then(function() {});
         });
     }
 
-    this.clickLogout = function() {
-        browser.wait(EC.visibilityOf(element(by.linkText("Logout"))), 30000).then(function() {
-            logoutLink.click().then(function() {
-                browser.ignoresynchronization = true;
-                browser.sleep(10000);
-                var logoutSucesfullMessage = browser.driver.findElement(by.css(Objects.basepage.locators.logoutSucesfullMessage));
-                expect(logoutSucesfullMessage.getText()).toEqual('You have been logged out successfully.', 'Logout was unsuccessfull');
-            });
-        });
-        return this;
-    };
-
-    this.Logout = function() {
-        this.clickFullNameLink();
-        this.clickLogout();
-        return this;
-    };
     this.clickCheckin = function() {
         checkIn.click();
         return this;
@@ -1597,15 +1575,6 @@ var BasePage = function() {
         cancelEditing.click();
         return this;
     };
-    this.rightClickDocument = function() {
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.docTitle))), 30000).then(function() {
-            docTitle.click();
-            browser.actions().click(protractor.Button.RIGHT).perform();
-        });
-        return this;
-
-    };
-
     this.insertDetailsTextAreaText = function(details) {
         browser.wait(EC.presenceOf(element(by.xpath(Objects.taskspage.locators.detailsTextArea))), 30000).then(function() {
             browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.detailsTextArea))), 30000).then(function() {
@@ -2065,7 +2034,20 @@ var BasePage = function() {
         });
     }
 
+    this.doubleClickRootFolder = function () {
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.root))), 30000).then(function() {
+            root.click();
+            browser.actions().doubleClick(root).perform();
+        });
+        return this;
+    }
+    this.uploadFile = function () {
+        util.uploadDocx();
+        return this;
+    }
+    this.replaceVersion = function (value) {
+        docVersionDropDownList.selectByValue(value);
+    }
+
 }
-
-
 module.exports = new BasePage();

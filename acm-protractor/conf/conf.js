@@ -40,20 +40,27 @@ exports.config = {
     // }],
 
     specs: [
-
-          '../test_spec/subscriptions_test.js',
-          '../test_spec/verification_test.spec.js',
-           '../test_spec/dashboard_test.spec.js',
-           '../test_spec/task_test.spec.js',
-           '../test_spec/case_test.spec.js',
-           '../test_spec/complaint_test.spec.js',
-           '../test_spec/user_test.spec.js',
-           '../test_spec/notification_test.js'
-           '../test_spec/admin_test.js',
-           '../test_spec/report_test.spec.js',
-           '../test_spec/audit_test.spec.js',
-           '../test_spec/preference_test.spec.js'
+           '../test_spec/functional/verification_test.spec.js',
+           '../test_spec/functional/subscriptions_test.spec.js',
+           '../test_spec/functional/dashboard_test.spec.js',
+           '../test_spec/functional/task_test.spec.js',
+           '../test_spec/functional/case_test.spec.js',
+           '../test_spec/functional/complaint_test.spec.js',
+           '../test_spec/functional/user_test.spec.js',
+           '../test_spec/functional/notification_test.spec.js',
+           '../test_spec/functional/admin_test.spec.js',
+           '../test_spec/functional/report_test.spec.js',
+           '../test_spec/functional/audit_test.spec.js',
+           '../test_spec/functional/preference_test.spec.js'
     ],
+        suites:
+    {
+        smoke: ['../test_spec/smoke/*.spec.js'],
+        regression: ['../test_spec/regression/*.spec.js'],
+        functional: ['../test_spec/functional/*.spec.js'],
+        all: ['../test_spec/*/*.spec.js'],
+        selected: ['../test_spec/functional/dashboard_test.spec.js'],
+    },
 
     jasmineNodeOpts: {
         showColors: true,
