@@ -1,9 +1,9 @@
-var logger = require('../log');
-var userPage = require('../Pages/user_profile_page.js');
-var loginPage = require('../Pages/login_page.js');
+var logger = require('../../log');
+var userPage = require('../../Pages/user_profile_page.js');
+var loginPage = require('../../Pages/login_page.js');
 var robot = require(process.env['USERPROFILE'] + '/node_modules/robotjs');
-var utils = require('../util/utils.js');
-var Objects = require('../json/Objects.json');
+var utils = require('../../util/utils.js');
+var Objects = require('../../json/Objects.json');
 var flag = false;
 
 

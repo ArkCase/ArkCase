@@ -2,11 +2,11 @@
 
 angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$stateParams', '$translate', '$timeout'
     , 'UtilService', 'Util.DateService', 'ConfigService', 'LookupService', 'Object.LookupService', 'Task.InfoService', 'Object.ModelService'
-    , 'Helper.ObjectBrowserService', 'MessageService', 'Task.AlertsService', 'ObjectService', 'Helper.UiGridService', '$modal'
+    , 'Helper.ObjectBrowserService', 'Task.AlertsService', 'ObjectService', 'Helper.UiGridService', '$modal'
     , 'Object.ParticipantService', '$q', 'Case.InfoService', 'Complaint.InfoService'
     , function ($scope, $stateParams, $translate, $timeout
         , Util, UtilDateService, ConfigService, LookupService, ObjectLookupService, TaskInfoService, ObjectModelService
-        , HelperObjectBrowserService, MessageService, TaskAlertsService, ObjectService, HelperUiGridService, $modal, ObjectParticipantService, $q
+        , HelperObjectBrowserService, TaskAlertsService, ObjectService, HelperUiGridService, $modal, ObjectParticipantService, $q
         , CaseInfoService, ComplaintInfoService) {
 
         new HelperObjectBrowserService.Component({
@@ -86,7 +86,7 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
                     $scope.assignee = data.participant.participantLdapId;
                     $scope.updateAssignee($scope.assignee);
                 }
-            }, function(error) {    
+            }, function(error) {
             });
         };
 
@@ -98,7 +98,7 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             $scope.dateInfo.isOverdue = TaskAlertsService.calculateOverdue($scope.dateInfo.dueDate);
             $scope.dateInfo.isDeadline = TaskAlertsService.calculateDeadline($scope.dateInfo.dueDate);
             $scope.assignee = ObjectModelService.getAssignee($scope.objectInfo);
-            
+
             if (ObjectService.ObjectTypes.CASE_FILE == $scope.objectInfo.parentObjectType) {
                 CaseInfoService.getCaseInfo($scope.objectInfo.parentObjectId).then(
                     function (caseInfo) {
@@ -117,7 +117,7 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
         $scope.defaultDatePickerFormat = UtilDateService.defaultDatePickerFormat;
         $scope.picker = {opened: false};
         $scope.onPickerClick = function () {
-        	$scope.picker.opened = true;
+            $scope.picker.opened = true;
         };
 
         $scope.validatePercentComplete = function (value) {
@@ -144,6 +144,57 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             saveTask();
         };
 
+        //user group picker
+        $scope.showAssigneePicker = function () {
+            var cfg = {};
+            cfg.topLevelGroupTypes = ["LDAP_GROUP"];
+
+            var modalInstance = $modal.open({
+                animation: $scope.animationsEnabled,
+                templateUrl: 'modules/tasks/views/components/dialog/user-group-picker.client.view.html',
+                controller: 'Tasks.UserGroupPickerDialogController',
+                size: 'lg',
+                resolve: {
+                    cfg: function () {
+                        return cfg;
+                    },
+                    parentType: function () {
+                        return $scope.objectInfo.attachedToObjectType;
+                    },
+                    showGroupAndUserPicker: function () {
+                        return true;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (chosenNode) {
+                if (chosenNode) {
+                    if (Util.goodValue(chosenNode[0])) { //Selected a user
+                        //Change Assignee
+                        var userId = Util.goodMapValue(chosenNode[0], 'object_id_s');
+                        if (userId) {
+                            $scope.objectInfo.candidateGroups = [];
+                            $scope.updateAssignee(userId);
+                        }
+                    } else if (Util.goodValue(chosenNode[1])) { //Selected a group
+                        var group = Util.goodMapValue(chosenNode[1], 'object_id_s');
+                        if (group) {
+                            $scope.objectInfo.candidateGroups = [group];
+
+                            //Clear participants as it causes concurrent modification errors when
+                            //there is no assignee, but a participant of type assignee is present
+                            $scope.objectInfo.participants = null;
+                            $scope.updateAssignee(null);
+                        }
+                    }
+                }
+
+            }, function () {
+                // Cancel button was clicked.
+                return [];
+            });
+        };
+
         function saveTask() {
             var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
             if (TaskInfoService.validateTaskInfo($scope.objectInfo)) {
@@ -152,13 +203,16 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
                 promiseSaveInfo.then(
                     function (taskInfo) {
                         $scope.$emit("report-object-updated", taskInfo);
-                        return taskInfo;
+                        TaskInfoService.resetTaskCacheById(taskInfo.taskId);
+                        return TaskInfoService.getTaskInfo(taskInfo.taskId);
                     }
                     , function (error) {
                         $scope.$emit("report-object-update-failed", error);
                         return error;
                     }
-                );
+                ).then(function (taskInfo) {
+                    onObjectInfoRetrieved(taskInfo);
+                });
             }
             return promiseSaveInfo;
         }
