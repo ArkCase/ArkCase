@@ -897,7 +897,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
         copyFolderChildrenStructure(folderChildren, containerOfCopy, copiedFolder);
     }
-    
+
     private void copyFolderChildrenStructure(List<AcmObject> folderChildren, AcmContainer containerOfCopy, AcmFolder destinationFolder)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmFolderException
     {
@@ -940,6 +940,26 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
                 log.error("Couldn't create folder structure for document with id=" + documentId + " and will not be copied.", e);
             }
         }
+    }
+
+    /**
+     * retrieves root folder
+     *
+     * @param parentObjectId
+     * @param parentObjectType
+     * @return AcmFolder root folder for given objectId, objectType
+     */
+    @Override
+    public AcmFolder getRootFolder(Long parentObjectId, String parentObjectType) throws AcmObjectNotFoundException
+    {
+        log.debug("get root folder for[{},{}] ", parentObjectId, parentObjectType);
+
+        AcmContainer container = getContainerDao().findFolderByObjectTypeAndId(parentObjectType, parentObjectId);
+        if (container == null)
+        {
+            throw new AcmObjectNotFoundException(parentObjectType, parentObjectId, "Container object not found", null);
+        }
+        return container.getFolder();
     }
 
     public EcmFileDao getFileDao()
