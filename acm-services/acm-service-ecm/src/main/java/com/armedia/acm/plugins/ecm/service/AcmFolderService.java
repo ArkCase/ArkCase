@@ -58,4 +58,13 @@ public interface AcmFolderService {
     void copyDocumentStructure(Long documentId,
                                AcmContainer containerOfCopy,
                                AcmFolder rootFolderOfCopy) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException;
+
+    /**
+     * retrieves root folder
+     *
+     * @param parentObjectId
+     * @param parentObjectType
+     * @return AcmFolder root folder for given objectId, objectType
+     */
+    AcmFolder getRootFolder(Long parentObjectId, String parentObjectType) throws AcmObjectNotFoundException;
 }
