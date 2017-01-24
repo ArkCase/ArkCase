@@ -1,7 +1,7 @@
-var Objects = require('../json/Objects.json');
-var loginPage = require('../Pages/login_page.js');
-var subscriptionPage = require('../Pages/subscriptions_page.js')
-var utils = require('../util/utils.js');
+var Objects = require('../../json/Objects.json');
+var loginPage = require('../../Pages/login_page.js');
+var subscriptionPage = require('../../Pages/subscriptions_page.js')
+var utils = require('../../util/utils.js');
 var using = require(process.env['USERPROFILE'] + '/node_modules/jasmine-data-provider');
 
 
@@ -53,7 +53,7 @@ describe('Subscriptions page tests', function() {
         expect(subscriptionPage.returnResultParentType()).toEqual("CASE_FILE");
     });
 
-    it('should select previous week and verify the mdified date in result table', function() {
+    it('should select previous week and verify the modified date in result table', function() {
 
         subscriptionPage.clickSubcriptionsModule();
         subscriptionPage.selectSubscription("Previous Week")
@@ -61,7 +61,7 @@ describe('Subscriptions page tests', function() {
         subscriptionPage.returnModifiedByWeek();
     });
 
-    it('should select previous month and verify the mdified date in result table', function() {
+    it('should select previous month and verify the modified date in result table', function() {
 
         subscriptionPage.clickSubcriptionsModule();
         subscriptionPage.selectSubscription("Previous Month")
@@ -70,7 +70,7 @@ describe('Subscriptions page tests', function() {
 
     });
 
-    it('should select previous Year and verify the mdified date in result table', function() {
+    it('should select previous Year and verify the modified date in result table', function() {
 
         subscriptionPage.clickSubcriptionsModule();
         subscriptionPage.selectSubscription("Previous Year")

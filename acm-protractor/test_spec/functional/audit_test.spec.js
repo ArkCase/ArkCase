@@ -1,10 +1,10 @@
-var logger = require('../log');
-var auditPage = require('../Pages/audit_page.js');
-var casePage = require('../Pages/case_page.js');
-var complaintPage = require('../Pages/complaint_page.js');
-var Objects = require('../json/Objects.json');
-var utils = require('../util/utils.js');
-var loginPage = require('../Pages/login_page.js');
+var logger = require('../../log');
+var auditPage = require('../../Pages/audit_page.js');
+var casePage = require('../../Pages/case_page.js');
+var complaintPage = require('../../Pages/complaint_page.js');
+var Objects = require('../../json/Objects.json');
+var utils = require('../../util/utils.js');
+var loginPage = require('../../Pages/login_page.js');
 var flag = false;
 var EC = protractor.ExpectedConditions;
 

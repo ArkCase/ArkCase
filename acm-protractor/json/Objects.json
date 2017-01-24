@@ -9,7 +9,7 @@
         "data": {
             "supervisoruser": {
 
-                "username": "samuel-acm",
+                "username": "sally-acm",
                 "password": "AcMd3v$"
             },
             "adminuser": {
@@ -779,11 +779,25 @@
             "ListBox": "selectedObject",
             "notAuthorizedListBox": "selectedNotAuthorized",
             "authorizedListBox": "selectedAuthorized",
-            "LDAPCol" : "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid"
+            "Col" : "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
+            "tableRow": ".//*[@class='ui-grid-cell-contents ng-binding ng-scope']"
         },
         "data":{
             "ArmediaDirectoryName": "armedia",
-            "ArmediaLDAPUrl": "ldaps://arm-pr-w8x-ad03.armedia.com:636"
+            "ArmediaLDAPUrl": "ldaps://arm-pr-w8x-ad03.armedia.com:636",
+            "formName": "Report of Investigation",
+            "applicationName": "ACM - Armedia Case Management",
+            "description": "Report of Investigation",
+            "caseTarget": "CASE_FILE",
+            "complaintTarget": "COMPLAINT",
+            "complaintBussinesProcessName": "Complaint review and approval process",
+            "complaintBPDescription": "",
+            "complaintBPModified": "07/11/2016",
+            "complaintBPAuthor": "",
+            "docApprovalBussinesProcessName": "ACM Document Approval Process",
+            "docApprovalBPDescription": "",
+            "docApprovalBPModified": "07/11/2016",
+            "docApprovalBPAuthor": ""
         }
     },
     "reportPage": {

@@ -1,7 +1,7 @@
-var logger = require('../log');
-var dashPage = require('../Pages/dashboard_page.js');
-var loginPage = require('../Pages/login_page.js');
-var Objects = require('../json/Objects.json');
+var logger = require('../../log');
+var dashPage = require('../../Pages/dashboard_page.js');
+var loginPage = require('../../Pages/login_page.js');
+var Objects = require('../../json/Objects.json');
 var flag = false;
 var using = require(process.env['USERPROFILE'] + '/node_modules/jasmine-data-provider');
 
