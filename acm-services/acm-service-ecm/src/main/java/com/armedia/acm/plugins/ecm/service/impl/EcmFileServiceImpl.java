@@ -27,7 +27,6 @@ import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
-
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.json.JSONArray;
@@ -38,12 +37,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.PersistenceException;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
@@ -955,6 +954,46 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     @Override
     public void deleteFile(Long objectId) throws AcmUserActionFailedException, AcmObjectNotFoundException
+    {
+
+        EcmFile file = getEcmFileDao().find(objectId);
+
+        if (file == null)
+        {
+            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, objectId, "File not found", null);
+        }
+
+        Map<String, Object> props = new HashMap<>();
+        props.put(EcmFileConstants.ECM_FILE_ID, file.getVersionSeriesId());
+
+        try
+        {
+            getMuleContextManager().send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, file, props);
+
+            getEcmFileDao().deleteFile(objectId);
+        } catch (MuleException e)
+        {
+            if (log.isErrorEnabled())
+            {
+                log.error("Could not delete file " + e.getMessage(), e);
+            }
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DELETE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
+                    file.getId(), "Could not delete file", e);
+        } catch (PersistenceException e)
+        {
+            if (log.isErrorEnabled())
+            {
+                log.error("Could not delete file " + e.getMessage(), e);
+            }
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DELETE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
+                    file.getId(), "Could not delete file", e);
+
+        }
+    }
+
+    @Override
+    @PreAuthorize("hasPermission(#parentId, #parentType, 'editAttachments')")
+    public void deleteFile(Long objectId, Long parentId, String parentType) throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
 
         EcmFile file = getEcmFileDao().find(objectId);
