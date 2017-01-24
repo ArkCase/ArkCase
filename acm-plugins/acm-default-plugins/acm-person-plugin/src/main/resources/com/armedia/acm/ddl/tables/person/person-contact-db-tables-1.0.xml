@@ -5,7 +5,7 @@
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
 
-    <changeSet id="01-create-person-contact-table" author="nebojsha.davidovikj">
+    <changeSet id="01-create-person-contact-table" author="nebojsha.davidovikj" dbms="oracle,postgresql,mssql">
         <createTable tableName="acm_person_contact">
             <column name="cm_person_contact_id" type="${idType}">
                 <constraints
@@ -24,6 +24,35 @@
                 <constraints nullable="false"/>
             </column>
             <column name="cm_person_contact_modified" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_person_contact_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="01-create-person-contact-table" author="nebojsha.davidovikj" dbms="mysql">
+        <createTable tableName="acm_person_contact">
+            <column name="cm_person_contact_id" type="${idType}">
+                <constraints
+                        primaryKey="true"
+                        primaryKeyName="pk_person_contact"/>
+            </column>
+            <column name="cm_person_contact_attention" type="VARCHAR(1024)"/>
+            <column name="cm_person_contact_company_name" type="VARCHAR(1024)"/>
+            <column name="cm_person_contact_name" type="VARCHAR(1024)"/>
+
+            <!-- Audit-->
+            <column name="cm_person_contact_created" type="${timestampType}"
+                    defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_person_contact_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_person_contact_modified" type="${timestampType}"
+                    defaultValueComputed="${timestampFunction}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_person_contact_modifier" type="VARCHAR(1024)">
