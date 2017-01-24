@@ -33,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
@@ -66,6 +67,16 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
     @Override
     public AcmFolder addNewFolder(Long parentFolderId, String newFolderName) throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
+    {
+
+        AcmFolder folder = getFolderDao().find(parentFolderId);
+
+        return addNewFolder(folder, newFolderName);
+    }
+
+    @Override
+    @PreAuthorize("hasPermission(#parentId, #parentType, 'editAttachments')")
+    public AcmFolder addNewFolder(Long parentFolderId, String newFolderName, Long parentId, String parentType) throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
     {
 
         AcmFolder folder = getFolderDao().find(parentFolderId);
@@ -939,6 +950,24 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             {
                 log.error("Couldn't create folder structure for document with id=" + documentId + " and will not be copied.", e);
             }
+        }
+    }
+
+    @Override
+    public AcmContainer findContainerByFolderId(Long folderId) throws AcmObjectNotFoundException
+    {
+        Long inputId = folderId;
+        try
+        {
+            while (folderDao.find(folderId).getParentFolderId() != null)
+            {
+                folderId = folderDao.find(folderId).getParentFolderId();
+            }
+            return getContainerDao().findByFolderId(folderId);
+        } catch (Exception e)
+        {
+            log.error("Couldn't find the container of the folder with ID {}", inputId);
+            throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE, null, "Container not found", e);
         }
     }
 
