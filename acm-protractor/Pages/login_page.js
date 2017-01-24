@@ -3,7 +3,7 @@ var basePage = require('./base_page.js');
 var logs = require(process.env['USERPROFILE'] + '/node_modules/winston');
 var fullnameLink = element(by.css(Objects.basepage.locators.fullnameLink));
 var logoutLink = element(by.linkText(Objects.basepage.locators.logoutLink));
-var logoutSucesfullMessage = element(by.css(Objects.basepage.locators.logoutSucesfullMessage));
+//var logoutSucesfullMessage = element(by.css(Objects.basepage.locators.logoutSucesfullMessage));
 var EC = protractor.ExpectedConditions;
 
 var LoginPage = function() {
@@ -41,6 +41,7 @@ var LoginPage = function() {
             logoutLink.click().then(function() {
                 browser.ignoresynchronization = true;
                 browser.sleep(10000);
+                var logoutSucesfullMessage = browser.driver.findElement(by.css(Objects.basepage.locators.logoutSucesfullMessage));
                 expect(logoutSucesfullMessage.getText()).toEqual('You have been logged out successfully.');
             })
         });
