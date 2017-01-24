@@ -60,6 +60,7 @@ public class SaveCaseFileAPIController
 
             CaseFile saved = getSaveCaseService().saveCase(in, auth, ipAddress);
 
+            // Detach the object to prevent event handler changes from being persisted to the database
             entityManager.detach(saved);
 
             // since the approver list is not persisted to the database, we want to send them back to the caller...
