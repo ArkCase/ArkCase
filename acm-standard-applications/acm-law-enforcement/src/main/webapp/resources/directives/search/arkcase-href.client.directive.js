@@ -4,8 +4,8 @@
 
 'use strict';
 
-angular.module('directives').directive('arkcaseHref', ['$parse', 'UtilService', 'ObjectService', 'Object.LookupService'
-    , function($parse, Util, ObjectService, ObjectLookupService) {
+angular.module('directives').directive('arkcaseHref', ['UtilService', 'ObjectService', 'Object.LookupService'
+    , function(Util, ObjectService, ObjectLookupService) {
         var defaults = {
             isParent: false
         };
