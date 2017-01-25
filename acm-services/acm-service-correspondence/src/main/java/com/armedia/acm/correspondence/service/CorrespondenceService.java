@@ -1,11 +1,13 @@
 package com.armedia.acm.correspondence.service;
 
-
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.correspondence.model.CorrespondenceQuery;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
+import com.armedia.acm.correspondence.model.QueryType;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.spring.SpringContextHolder;
+
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +19,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class CorrespondenceService
 {
@@ -29,10 +33,9 @@ public class CorrespondenceService
     private static final String TEMP_FILE_PREFIX = "template-";
     private static final String TEMP_FILE_SUFFIX = ".docx";
 
-
-
     /**
      * For use from MVC controllers and any other client with an Authentication object.
+     *
      * @param authentication
      * @param templateName
      * @param parentObjectType
@@ -43,11 +46,7 @@ public class CorrespondenceService
      * @throws IllegalArgumentException
      * @throws AcmCreateObjectFailedException
      */
-    public EcmFile generate(
-            Authentication authentication,
-            String templateName,
-            String parentObjectType,
-            Long parentObjectId,
+    public EcmFile generate(Authentication authentication, String templateName, String parentObjectType, Long parentObjectId,
             String targetCmisFolderId)
             throws IOException, IllegalArgumentException, AcmCreateObjectFailedException, AcmUserActionFailedException
     {
@@ -64,25 +63,17 @@ public class CorrespondenceService
             FileOutputStream fosToWriteFile = new FileOutputStream(file);
             FileInputStream fisForUploadToEcm = new FileInputStream(file);
 
-            EcmFile retval = getCorrespondenceGenerator().generateCorrespondence(
-                    authentication,
-                    parentObjectType,
-                    parentObjectId,
-                    targetCmisFolderId,
-                    template,
-                    new Object[] { parentObjectId },
-                    fosToWriteFile,
-                    fisForUploadToEcm);
+            EcmFile retval = getCorrespondenceGenerator().generateCorrespondence(authentication, parentObjectType, parentObjectId,
+                    targetCmisFolderId, template, new Object[] {parentObjectId}, fosToWriteFile, fisForUploadToEcm);
 
             log.debug("Correspondence CMIS ID: " + retval.getVersionSeriesId());
 
             getEventPublisher().publishCorrespondenceAdded(retval, authentication, true);
 
             return retval;
-        }
-        finally
+        } finally
         {
-            if ( file != null )
+            if (file != null)
             {
                 FileUtils.deleteQuietly(file);
             }
@@ -92,11 +83,10 @@ public class CorrespondenceService
 
     private CorrespondenceTemplate findTemplate(String templateName)
     {
-        Collection<CorrespondenceTemplate> templates =
-                getSpringContextHolder().getAllBeansOfType(CorrespondenceTemplate.class).values();
-        for ( CorrespondenceTemplate template : templates )
+        Collection<CorrespondenceTemplate> templates = getSpringContextHolder().getAllBeansOfType(CorrespondenceTemplate.class).values();
+        for (CorrespondenceTemplate template : templates)
         {
-            if ( templateName.equalsIgnoreCase(template.getTemplateFilename()))
+            if (templateName.equalsIgnoreCase(template.getTemplateFilename()))
             {
                 return template;
             }
@@ -106,20 +96,33 @@ public class CorrespondenceService
     }
 
     /**
-     * Helper method for use from Activiti and other clients with no direct access to an Authentication, but in
-     * the call stack of a Spring MVC authentication... so there is an Authentication in the Spring Security
-     * context holder.
+     * Helper method for use from Activiti and other clients with no direct access to an Authentication, but in the call
+     * stack of a Spring MVC authentication... so there is an Authentication in the Spring Security context holder.
      */
-    public EcmFile generate(
-            String templateName,
-            String parentObjectType,
-            Long parentObjectId,
-            String targetCmisFolderId
-    ) throws IOException, IllegalArgumentException, AcmCreateObjectFailedException, AcmUserActionFailedException
+    public EcmFile generate(String templateName, String parentObjectType, Long parentObjectId, String targetCmisFolderId)
+            throws IOException, IllegalArgumentException, AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
 
         return generate(currentUser, templateName, parentObjectType, parentObjectId, targetCmisFolderId);
+    }
+
+    /**
+     * @return
+     */
+    public Map<String, CorrespondenceQuery> getAllQueries()
+    {
+        return springContextHolder.getAllBeansOfType(CorrespondenceQuery.class);
+    }
+
+    /**
+     * @param queryType
+     * @return
+     */
+    public Map<String, CorrespondenceQuery> getQueriesByType(QueryType queryType)
+    {
+        return getAllQueries().entrySet().stream().filter(entry -> entry.getValue().getQueryType().equals(queryType))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     public SpringContextHolder getSpringContextHolder()
@@ -142,11 +145,14 @@ public class CorrespondenceService
         this.correspondenceGenerator = correspondenceGenerator;
     }
 
-    public CorrespondenceEventPublisher getEventPublisher() {
+    public CorrespondenceEventPublisher getEventPublisher()
+    {
         return eventPublisher;
     }
 
-    public void setEventPublisher(CorrespondenceEventPublisher eventPublisher) {
+    public void setEventPublisher(CorrespondenceEventPublisher eventPublisher)
+    {
         this.eventPublisher = eventPublisher;
     }
+
 }
