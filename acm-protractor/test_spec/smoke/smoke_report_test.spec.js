@@ -59,19 +59,19 @@ describe('reports tests', function() {
 
     });
 
-     it('should navigate to complaints and verify that complaint draft is displayed in complaint drafts report ', function() {
+    it('should navigate to complaints and verify that complaint draft is displayed in complaint drafts report ', function() {
 
-         complaintPage.navigateToPage("Complaints").waitForComplaintID();
-         var createdDate = complaintPage.returnCreatedDate();
-         var type = complaintPage.returnComplaintType();
-         var priority = complaintPage.returnComplaintPriority();
-         var complaintTitle = complaintPage.returnComplaintTitle();
-         reportPage.navigateToPage("Reports");
-         reportPage.runReport("COMPLAINT REPORT", "Draft", createdDate, createdDate);
-         reportPage.switchToReportframes();
-         reportPage.validateComplaintReportTitles(Objects.reportPage.data.ComplaintReportTitleName, Objects.reportPage.data.ComplaintReportColumn1Title, Objects.reportPage.data.CaseSummaryColumn2Title, Objects.reportPage.data.ComplaintReportColumn3Title, Objects.reportPage.data.ComplaintReportColumn4Title, Objects.reportPage.data.ComplaintReportColumn5Title, Objects.reportPage.data.ComplaintReportColumn6Title);
-         reportPage.validateComplaintReportValues(complaintTitle, "DRAFT", type, priority, createdDate, createdDate);
-         reportPage.switchToDefaultContent();
+        complaintPage.navigateToPage("Complaints").waitForComplaintID();
+        var createdDate = complaintPage.returnCreatedDate();
+        var type = complaintPage.returnComplaintType();
+        var priority = complaintPage.returnComplaintPriority();
+        var complaintTitle = complaintPage.returnComplaintTitle();
+        reportPage.navigateToPage("Reports");
+        reportPage.runReport("COMPLAINT REPORT", "Draft", createdDate, createdDate);
+        reportPage.switchToReportframes();
+        reportPage.validateComplaintReportTitles(Objects.reportPage.data.ComplaintReportTitleName, Objects.reportPage.data.ComplaintReportColumn1Title, Objects.reportPage.data.CaseSummaryColumn2Title, Objects.reportPage.data.ComplaintReportColumn3Title, Objects.reportPage.data.ComplaintReportColumn4Title, Objects.reportPage.data.ComplaintReportColumn5Title, Objects.reportPage.data.ComplaintReportColumn6Title);
+        reportPage.validateComplaintReportValues(complaintTitle, "DRAFT", type, priority, createdDate, createdDate);
+        reportPage.switchToDefaultContent();
 
     });
 

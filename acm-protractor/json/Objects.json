@@ -71,13 +71,16 @@
             "restrictCheckbox": "restricted",
             "restrictCheckboxDisabled": ".//input[@ng-model='restricted'][@disabled='disabled']",
             "notificationMessage": "[ng-show='!$messageTemplate']",
-            "docVersionDropDownList": ".docversion.inline"
+            "docVersionDropDownList": ".docversion.inline",
+            "emailRecepient": "recipientsStr",
+            "sendEmailButton": "Send Email"
 
 
         },
         "data": {
             "reportTitle": "Report of Investigation Title",
-            "note": "NoteText"
+            "note": "NoteText",
+            "email": "sanja.paskova@armedia.com"
 
         }
 
