@@ -7,7 +7,7 @@
     <property name="objectTypeLength" value="1024" dbms="postgresql,oracle"/>
     <property name="objectTypeLength" value="255" dbms="mysql,mssql"/>
 
-    <changeSet id="01-create-table-acm_object_lock" author="nebojsha.davidovikj">
+    <changeSet id="01-create-table-acm_object_lock" author="nebojsha.davidovikj" dbms="oracle,postgresql,mssql">
         <createTable tableName="acm_object_lock">
             <column name="cm_object_lock_id" type="${idType}">
                 <constraints primaryKeyName="pk_object_lock" primaryKey="true"/>
@@ -23,6 +23,42 @@
                 <constraints nullable="false"/>
             </column>
             <column name="cm_object_lock_modified" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_object_lock_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createIndex tableName="acm_object_lock" indexName="object_lock_unique_object_id_and_type" unique="true">
+            <column name="cm_object_id"/>
+            <column name="cm_object_type"/>
+        </createIndex>
+        <createTable tableName="acm_object_lock_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_object_lock_id">
+            <column name="cm_seq_num" value="100"/>
+            <column name="cm_seq_name" value="acm_object_lock"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="01-create-table-acm_object_lock" author="nebojsha.davidovikj" dbms="mysql">
+        <createTable tableName="acm_object_lock">
+            <column name="cm_object_lock_id" type="${idType}">
+                <constraints primaryKeyName="pk_object_lock" primaryKey="true"/>
+            </column>
+            <column name="cm_object_id" type="${fkIdType}"/>
+            <column name="cm_object_type" type="varchar(${objectTypeLength})"/>
+
+            <!--  Audit fields-->
+            <column name="cm_object_lock_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_object_lock_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_object_lock_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_object_lock_modifier" type="VARCHAR(1024)">
