@@ -294,6 +294,7 @@ public class PersonAssociationEventPublisher implements ApplicationEventPublishe
         personAssociationEvent.setEventAction(eventAction);
         personAssociationEvent.setParentObjectType(source.getParentType());
         personAssociationEvent.setParentObjectId(source.getParentId());
+        personAssociationEvent.setEventDescription(source.getParentType() + " Updated - Person " + eventAction + " (" + source.getPerson().getFullName() + ")");
         eventPublisher.publishEvent(personAssociationEvent);
     }
 

@@ -20,6 +20,7 @@ public class ApplicationNoteEvent extends AcmEvent
         setObjectType(NoteConstants.OBJECT_TYPE);
         setParentObjectId(source.getParentId());
         setParentObjectType(source.getParentType());
+        setEventDescription(source.getParentType() + " Updated - " + "Note " + noteEvent);
     }
 }
 
