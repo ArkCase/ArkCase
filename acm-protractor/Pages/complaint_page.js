@@ -109,22 +109,22 @@ var ComplaintPage = function() {
                         browser.wait(EC.visibilityOf(element(by.linkText(category))), 30000).then(function() {
                             var incidentCategory = element(by.linkText(category));
                             incidentCategory.click();
-                        })
-
-
+                        });
                     });
 
-                })
-            })
+                });
+            });
 
-        })
+        });
         return this;
     };
 
     this.insertTitle = function(title) {
-        complaintTitle.click();
-        complaintTitle.clear();
-        complaintTitle.sendKeys(title);
+        browser.wait(EC.visibilityOf(element(By.name(Objects.complaintPage.locators.complaintTitle))), 10000, "Complaint title filed is not displayed").then(function() {
+            complaintTitle.click().then(function() {
+                complaintTitle.sendKeys(title);
+            });
+        });
         return this;
     };
     this.insertIncidentInformation = function(category, title) {
@@ -156,8 +156,8 @@ var ComplaintPage = function() {
     };
     this.clickSubmitButton = function() {
         browser.wait(EC.invisibilityOf(element(by.xpath(Objects.basepage.locators.fadeElementDeleteNote))), 30000).then(function() {
-            browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.submitButton))), 30000).then(function () {
-                browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.complaintPage.locators.submitButton))), 30000).then(function () {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.submitButton))), 30000).then(function() {
+                browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.complaintPage.locators.submitButton))), 30000).then(function() {
                     submitButton.click();
                 });
             });
@@ -198,7 +198,7 @@ var ComplaintPage = function() {
                 browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.complaintPage.locators.complaintDispositionDDListBox))), 30000).then(function() {
                     complaintDispositionDDListBox.click().then(function() {
                         browser.wait(EC.visibilityOf(element(by.linkText(disposition))), 30000).then(function() {
-                            browser.wait(EC.elementToBeClickable(element(by.linkText(disposition))), 30000).then(function () {
+                            browser.wait(EC.elementToBeClickable(element(by.linkText(disposition))), 30000).then(function() {
                                 var complaintDisposition = element(by.linkText(disposition));
                                 complaintDisposition.click();
                             });
@@ -211,7 +211,7 @@ var ComplaintPage = function() {
     };
     this.insertCloseComplaintDescription = function(description) {
         browser.wait(EC.presenceOf(element(by.css(Objects.complaintPage.locators.closeComplaintDescription))), 30000).then(function() {
-            closeComplaintDescription.click().then(function () {
+            closeComplaintDescription.click().then(function() {
                 closeComplaintDescription.sendKeys(description);
             });
         });
@@ -229,39 +229,59 @@ var ComplaintPage = function() {
         browser.ignoreSynchronization = true;
         browser.wait(EC.visibilityOf(element(by.className("new-iframe ng-scope"))), 30000);
         browser.switchTo().frame(browser.driver.findElement(by.className("new-iframe ng-scope"))).then(function() {
-            browser.switchTo().frame(browser.driver.findElement(By.className("frevvo-form")));
+                browser.switchTo().frame(browser.driver.findElement(By.className("frevvo-form")));
+                this.selectApprover = function(approver) {
+                    browser.wait(EC.presenceOf(element(by.name(Objects.casepage.locators.selectApprover))), 30000).then(function() {
+                        browser.wait(EC.visibilityOf(element(by.name(Objects.casepage.locators.selectApprover))), 30000).then(function() {
+                            browser.wait(EC.elementToBeClickable(element(by.name(Objects.casepage.locators.selectApprover))), 30000).then(function() {
+                                selectApprover.click().then(function() {
+                                    browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.searchField))), 10000);
+                                    searchForUser.click();
+                                    searchForUser.sendKeys(approver);
+                                    goBtn.click().then(function() {
+                                        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchedUser))), 3000);
+                                        searchedUser.click().then(function() {
+                                            browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.addBtn))), 3000);
+                                            addBtn.click();
+                                        });
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
         });
-        return this;
-    };
-    this.switchToDefaultContent = function() {
 
-        browser.driver.switchTo().defaultContent();
-        return this;
+    return this;
+};
+this.switchToDefaultContent = function() {
 
-    };
+    browser.driver.switchTo().defaultContent();
+    return this;
 
-    this.waitForComplaintTitle = function () {
-        browser.wait(EC.presenceOf(element(by.xpath(Objects.complaintPage.locators.complaintTitleLink))), 30000).then(function () {
-            browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.complaintTitleLink))), 30000);
-        })
-    };
+};
 
-    this.addLocation = function(type, street, city, state, zip) {
+this.waitForComplaintTitle = function() {
+    browser.wait(EC.presenceOf(element(by.xpath(Objects.complaintPage.locators.complaintTitleLink))), 30000).then(function() {
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.complaintTitleLink))), 30000);
+    })
+};
 
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.locationsLinkBtn))), 30000).then(function() {
-            locationLinkBtn.click().then(function() {
-                browser.sleep(5000);
-                browser.wait(EC.visibilityOf(element(by.css(Objects.complaintPage.locators.addLocationBtn))), 3000).then(function() {
-                    addLocationBtn.click().then(function() {
-                        browser.wait(EC.visibilityOf(element(by.model(Objects.complaintPage.locators.locationTypeDropDown))), 10000, "Location type drop down is not displayed").then(function() {
-                            locationTypeDropDown.selectByText(type).then(function() {
-                                locationStreetInput.sendKeys(street).then(function() {
-                                    locationCityInput.sendKeys(city).then(function() {
-                                        locationStateInput.sendKeys(state).then(function() {
-                                            locationZipInput.sendKeys(zip).then(function() {
-                                                saveLocationBtn.click().then(function() {
-                                                    browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.complaintPage.locators.addedLocations)).get(0)), 30000, "Location is not added");
-                                                });
+this.addLocation = function(type, street, city, state, zip) {
+
+    browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.locationsLinkBtn))), 30000).then(function() {
+        locationLinkBtn.click().then(function() {
+            browser.sleep(5000);
+            browser.wait(EC.visibilityOf(element(by.css(Objects.complaintPage.locators.addLocationBtn))), 3000).then(function() {
+                addLocationBtn.click().then(function() {
+                    browser.wait(EC.visibilityOf(element(by.model(Objects.complaintPage.locators.locationTypeDropDown))), 10000, "Location type drop down is not displayed").then(function() {
+                        locationTypeDropDown.selectByText(type).then(function() {
+                            locationStreetInput.sendKeys(street).then(function() {
+                                locationCityInput.sendKeys(city).then(function() {
+                                    locationStateInput.sendKeys(state).then(function() {
+                                        locationZipInput.sendKeys(zip).then(function() {
+                                            saveLocationBtn.click().then(function() {
+                                                browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.complaintPage.locators.addedLocations)).get(0)), 30000, "Location is not added");
                                             });
                                         });
                                     });
@@ -272,7 +292,8 @@ var ComplaintPage = function() {
                 });
             });
         });
-return this;
+    });
+    return this;
 };
 this.deleteLocation = function() {
 
@@ -356,47 +377,47 @@ this.clickNewComplaintBtn = function() {
 }
 
 
-    this.getComplaintId = function() {
-        return complaintID.getText();
-    };
-    this.waitForComplaintID = function() {
-        browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.caseID))), 60000, "Case ID is not present").then(function() {
-            browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.caseID))), 60000, "Case ID is not displayed");
-        });
-    };
-    this.returnComplaintType = function () {
-        return complaintType.getText();
-    };
-    this.returnComplaintPriority = function () {
-        return complaintPriority.getText();
-    };
-    this.returnCreatedDate = function () {
-        return complaintCreateDate.getText();
-    };
-    this.returnComplaintTitle = function () {
-        return complaintTitleSaved.getText();
-    };
-    this.returnComplaintsTitle = function() {
-        return complaintsTitle.getText();
-    };
-    this.insertCaseNumber = function (caseid) {
-        caseNumber.click();
-        caseNumber.sendKeys(caseid);
-        return this;
-    };
-    this.clickSearchButton = function () {
-        searchButton.click();
-        return this;
-    };
-    this.returnCaseTitle = function () {
-        return caseTitle.getAttribute("value");
-    };
-    this.returnCaseCreatedDate = function () {
-        return caseCreatedDate.getAttribute("value");
-    };
-    this.returnCasePriority = function () {
-        return casePriority.getAttribute("value");
-    }
+this.getComplaintId = function() {
+    return complaintID.getText();
+};
+this.waitForComplaintID = function() {
+    browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.caseID))), 60000, "Case ID is not present").then(function() {
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.caseID))), 60000, "Case ID is not displayed");
+    });
+};
+this.returnComplaintType = function() {
+    return complaintType.getText();
+};
+this.returnComplaintPriority = function() {
+    return complaintPriority.getText();
+};
+this.returnCreatedDate = function() {
+    return complaintCreateDate.getText();
+};
+this.returnComplaintTitle = function() {
+    return complaintTitleSaved.getText();
+};
+this.returnComplaintsTitle = function() {
+    return complaintsTitle.getText();
+};
+this.insertCaseNumber = function(caseid) {
+    caseNumber.click();
+    caseNumber.sendKeys(caseid);
+    return this;
+};
+this.clickSearchButton = function() {
+    searchButton.click();
+    return this;
+};
+this.returnCaseTitle = function() {
+    return caseTitle.getAttribute("value");
+};
+this.returnCaseCreatedDate = function() {
+    return caseCreatedDate.getAttribute("value");
+};
+this.returnCasePriority = function() {
+    return casePriority.getAttribute("value");
+}
 };
 ComplaintPage.prototype = basePage;
 module.exports = new ComplaintPage();

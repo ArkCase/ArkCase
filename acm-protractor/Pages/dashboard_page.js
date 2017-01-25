@@ -1,4 +1,4 @@
-var Objects=require('../json/Objects.json');
+var Objects = require('../json/Objects.json');
 var basePage = require('./base_page.js');
 var editBtn = element(by.xpath(Objects.dashboardpage.locators.editBtn));
 var addNewWidgetBtn = element(by.xpath(Objects.dashboardpage.locators.addNewWidgetBtn));
@@ -20,69 +20,91 @@ var chnageWidgetLocationBtn = element(by.xpath(Objects.dashboardpage.locators.ch
 var editWidgetConfigurationBtn = element(by.xpath(Objects.dashboardpage.locators.editWidgetConfigurationBtn));
 var removeWidgetBtn = element.all(by.xpath(Objects.dashboardpage.locators.removeWidgetBtn)).get(0);
 var myTasks = element(by.linkText(Objects.dashboardpage.locators.myTasks));
+var dashboardTitleInput = element(by.id(Objects.dashboardpage.locators.dashboardTitleInput));
+var dashboardTitle = element(by.xpath(Objects.dashboardpage.locators.dashboardTitle));
 var EC = protractor.ExpectedConditions;
-var DashboardPage = function() { 
-	this.clickEditButton = function() {
-		editBtn.click();
-		return this;
-	};
-	this.clickAddWidgetButton = function(){
-		addNewWidgetBtn.click();
-		return this;
-	}	
-    this.returnWidgetTitle = function(){
-    	return widgetTitle.getText();
+var DashboardPage = function() {
+    this.clickEditButton = function() {
+        editBtn.click();
+        return this;
+    };
+    this.clickAddWidgetButton = function() {
+        addNewWidgetBtn.click();
+        return this;
     }
-    this.removeWidgetButton = function(){
+    this.returnWidgetTitle = function() {
+        return widgetTitle.getText();
+    }
+    this.removeWidgetButton = function() {
         removeWidgetBtn.click();
         return this;
     }
-    this.clickSaveChangesButton = function(){
-    	saveChangesBtn.click();
-    	return this;
+    this.clickSaveChangesButton = function() {
+        saveChangesBtn.click();
+        return this;
     }
-    this.addWidget = function(type){
-    	switch (type) {
-		case "CasesByStatus":
-			casesByStatus.click();
-			return this;
-			break;
-		case "MyCases":
-			myCases.click();
-	    	return this;
-            break;
-		case "MyComplaints":
-			myComplaints.click();
-	    	return this;
-	    	break;
-		case "NewComplaints":
-			newComplaints.click();
-	    	return this;
-	    	break;
-		case "TeamWorkload":
-			teamWorkload.click();
-	    	return this;
-	    	break;
-		case "Weather":
-            weather.click();
-            return this;
-	    	break;
-		case "News":
-			news.click();
-	    	return this;
-	    	break;
-	    	case "MyTasks":
-				myTasks.click();
-				return this;
+    this.addWidget = function(type) {
+        switch (type) {
+            case "CasesByStatus":
+                casesByStatus.click();
+                return this;
+                break;
+            case "MyCases":
+                myCases.click();
+                return this;
+                break;
+            case "MyComplaints":
+                myComplaints.click();
+                return this;
+                break;
+            case "NewComplaints":
+                newComplaints.click();
+                return this;
+                break;
+            case "TeamWorkload":
+                teamWorkload.click();
+                return this;
+                break;
+            case "Weather":
+                weather.click();
+                return this;
+                break;
+            case "News":
+                news.click();
+                return this;
+                break;
+            case "MyTasks":
+                myTasks.click();
+                return this;
 
-		default:
-			casesByStatus.click();
-		    return this;
-			break;
-		}		
-	}
+            default:
+                casesByStatus.click();
+                return this;
+                break;
+        }
+    }
 
+    this.editDashboardTitle = function(title) {
 
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.dashboardpage.locators.editBtn))), 10000, "Edit button in the dashboard page is not displayed").then(function() {
+            editBtn.click().then(function() {
+                editDashboardBtn.click().then(function() {
+                    dashboardTitleInput.clear().then(function() {
+                        dashboardTitleInput.sendKeys(title).then(function() {
+                            closeBtn.click().then(function() {
+                                saveChangesBtn.click();
+                            });
+                        });
+                    });
+                });
+            });
+        });
+        return this;
+    };
+
+    this.returnDashboardTitle = function() {
+        return dashboardTitle.getText();
+    }
 
 
 };

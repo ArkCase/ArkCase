@@ -9,7 +9,7 @@
         "data": {
             "supervisoruser": {
 
-                "username": "sally-acm",
+                "username": "samuel-acm",
                 "password": "AcMd3v$"
             },
             "adminuser": {
@@ -71,7 +71,8 @@
             "restrictCheckbox": "restricted",
             "restrictCheckboxDisabled": ".//input[@ng-model='restricted'][@disabled='disabled']",
             "notificationMessage": "[ng-show='!$messageTemplate']",
-            "docVersionDropDownList": ".docversion.inline"
+            "docVersionDropDownList": ".docversion.inline",
+            "sugestedTag": "[ng-click='addSuggestionByIndex($index)']"
 
 
         },
@@ -296,7 +297,9 @@
             "chnageWidgetLocationBtn": ".//*[@class='panel-title ng-binding ng-scope']/span/a[2]/i",
             "editWidgetConfigurationBtn": ".//*[@class='panel-title ng-binding ng-scope']/span/a[5]/i",
             "removeWidgetBtn": ".//*[@class='panel-title ng-binding ng-scope']/span/a[7]",
-            "myTasks": "My Tasks"
+            "myTasks": "My Tasks",
+            "dashboardTitleInput": "dashboardTitle",
+            "dashboardTitle": "//*[@class='module-header']/h3/span"
 
         },
 
@@ -440,7 +443,6 @@
             "complaintTitleLink": ".//a[@editable-text='objectInfo.complaintTitle']",
             "complaintType": ".//a[@editable-select='objectInfo.complaintType']",
             "complaintPriority": ".//a[@editable-select='objectInfo.priority']",
-            "complaintTitle": ".//a[@editable-text='objectInfo.complaintTitle']",
             "locationsLinkBtn": ".//*[@class='fa fa-location-arrow']",
             "addLocationBtn": "[ng-click='addNew()']",
             "locationTypeDropDown": "location.type",
@@ -624,7 +626,8 @@
             "claimButton": "[ng-click='claim(objectInfo)']",
             "unclaimButton": "[ng-click='unclaim(objectInfo)']",
             "addParticipantBtn": "[ng-click='addNew()']",
-            "searchField": "searchQuery"
+            "searchField": "searchQuery",
+            "tagPriority": ".//*[@class='ui-grid-cell-contents ui-grid-header-cell-primary-focus']"
 
         },
 
@@ -715,9 +718,10 @@
             "complaintsModule": "a[href*='#!/complaints//main']",
             "timesheetsPageTitle": ".//*[@class='module-header']/..//h3/span",
             "nextWeekBtn": "Next Week",
-            "periodInput": "periodUI",
-            "timeTrackingModule": "a[href*='#!/time-tracking//main']"
-
+            "periodInput": ".//*[@class='input f-date']",
+            "timeTrackingModule": "a[href*='#!/time-tracking//main']",
+            "timeTrackingDate": ".//*[@class='f-control Three columns  f-output  s-valid  s-prepend   s-linked Message s-new-line s-color-None']",
+            "chargeCodeAlertMessage":".//*[@class='f-status f-table-status s-alert']"
 
 
         },

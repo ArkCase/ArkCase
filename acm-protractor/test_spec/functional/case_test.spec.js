@@ -93,6 +93,7 @@ describe('case page tests', function() {
         });
 
     });
+
     it('should create new case and edit the assignee from ann to samuel', function () {
 
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
@@ -801,7 +802,6 @@ describe('case page tests', function() {
         casePage.participantTable();
         casePage.addParticipantFromParticipantTable("Assignee", "Samuel Supervisor");
         casePage.verifyTheNotificationMessage("Only one assignee is allowed");
-
     });
 
     it('should verify replace of document and return to previous version', function () {

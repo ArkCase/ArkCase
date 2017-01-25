@@ -46,8 +46,6 @@ var casesTitleStatus = element.all(by.xpath(Objects.casepage.locators.caseTitleS
 var owningGroup = element(by.xpath(Objects.casepage.locators.owningGroup));
 var caseTitleWithStatus = element(by.xpath(Objects.casepage.locators.caseTitleWithStatus));
 var submitBtn = element(by.xpath(Objects.casepage.locators.submitBtn));
-var claimButton = element(by.css(Objects.casepage.locators.claimButton));
-var unclaimButton = element(by.css(Objects.casepage.locators.unclaimButton));
 var priority = element(by.xpath(Objects.casepage.locators.priority));
 
 
@@ -243,31 +241,6 @@ var CasePage = function() {
         return owningGroup.getText();
     };
 
-    this.clickClaimButton = function() {
-
-        browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.claimButton))), 30000, "Claim button is not displayed").then(function() {
-            claimButton.click();
-        }).then(function() {
-            browser.sleep(5000);
-            element.all(by.css(Objects.casepage.locators.claimButton)).then(function(items) {
-                expect(items.length).toBe(0, "After is clicked the claim button is still displayed");
-                browser.sleep(5000);
-            });
-        });
-    }
-
-    this.clickUnclaimButton = function() {
-
-        browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.unclaimButton))), 30000, "Unclaim button is not displayed").then(function() {
-            unclaimButton.click();
-        }).then(function() {
-            browser.sleep(5000);
-            element.all(by.css(Objects.casepage.locators.unclaimButton)).then(function(items) {
-                expect(items.length).toBe(0, "After is clicked the unclaim button is still displayed");
-                browser.sleep(8000);
-            });
-        });
-    };
 
     this.returnPriority = function () {
         return priority.getText();
