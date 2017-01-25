@@ -4,6 +4,28 @@
 
 'use strict';
 
+/**
+ * @ngdoc directive
+ * @name global.directive:arkcaseHref
+ * @restrict A
+ *
+ * @description
+ *
+ * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/search/arkcase-href.client.directive.js directives/search/arkcase-href.client.directive.js}
+ *
+ * The arkcaseHref directive builds href for arkcase object.
+ *
+ * @param {Object} object-data Arkcase object data
+ * @param {Boolean} is-parent If true builds href for parent arkcase object. Default value is false
+ * @param {String} url If url exists in object-data, it can be used as such and will not be built. For example notification object already has url as attribute.
+ *
+ * @example
+ <example>
+ <file name="index.html">
+ <a arkcase-href object-data='row.entity' is-parent='false' url='row.entity.notification_link_s'>{{row.entity.name}}</a>
+ </file>
+ </example>
+ */
 angular.module('directives').directive('arkcaseHref', ['UtilService', 'ObjectService', 'Object.LookupService'
     , function(Util, ObjectService, ObjectLookupService) {
         var defaults = {
