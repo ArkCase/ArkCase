@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.correspondence.model.CorrespondenceQuery;
@@ -45,13 +42,12 @@ public class CorrespondenceQueryController
     }
 
     /**
-     * @param allQueries
+     * @param queries
      * @return
      */
-    private List<CorrespondenceQueryResponce> generateResponse(Map<String, CorrespondenceQuery> allQueries)
+    private List<CorrespondenceQueryResponce> generateResponse(Map<String, CorrespondenceQuery> queries)
     {
-        // TODO Auto-generated method stub
-        return allQueries.entrySet().stream().map(entry -> new CorrespondenceQueryResponce(entry.getKey(), entry.getValue()))
+        return queries.entrySet().stream().map(entry -> new CorrespondenceQueryResponce(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
     }
 
