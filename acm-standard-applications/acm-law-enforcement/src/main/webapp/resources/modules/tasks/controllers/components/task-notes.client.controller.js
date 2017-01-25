@@ -1,16 +1,22 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.NotesController', ['$scope', '$stateParams', 'ConfigService', 'ObjectService', 'Helper.ObjectBrowserService', 'PermissionsService', 'Task.InfoService'
+angular.module('tasks').controller('Tasks.NotesController', ['$scope', '$stateParams', 'ConfigService', 'ObjectService', 'Helper.ObjectBrowserService',
+    , 'PermissionsService', 'Task.InfoService'
     , function ($scope, $stateParams, ConfigService, ObjectService, HelperObjectBrowserService, PermissionsService, TaskInfoService) {
 
         ConfigService.getComponentConfig("tasks", "notes").then(function (config) {
-            $scope.notesInit = {
-                objectType: ObjectService.ObjectTypes.TASK,
-                currentObjectId: $stateParams.id,
-                isReadOnly: false
-            };
-            $scope.config = config;
-            return config;
+            TaskInfoService.getTaskInfo($stateParams.id).then(function (data) {
+                $scope.parentTitleFromTask = data.taskNumber;
+
+                $scope.notesInit = {
+                    objectType: ObjectService.ObjectTypes.TASK,
+                    currentObjectId: $stateParams.id,
+                    parentTitle: $scope.parentTitleFromTask,
+                    isReadOnly: false
+                };
+                $scope.config = config;
+                return config;
+            });
 
         });
 
