@@ -35,6 +35,8 @@ describe('edit user profile page', function() {
     loginPage.Login(Objects.loginpage.data.supervisoruser.username, Objects.loginpage.data.supervisoruser.password);
     logger.log('Info', 'User succesfully logged in as supervisor');
 
+    //Update Profile Information
+
     it('should navigate to user profile page', function() {
 
         userPage.clickUserNavigation();

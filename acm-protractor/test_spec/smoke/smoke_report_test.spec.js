@@ -41,6 +41,8 @@ describe('reports tests', function() {
 
     });
 
+    // Run each Report
+
     it('should navigate to case files and verify that case is displayed in case summary drafts report', function() {
 
         casePage.navigateToPage("Case Files");

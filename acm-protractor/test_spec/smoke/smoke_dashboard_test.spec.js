@@ -33,6 +33,8 @@ describe('dashboard page test', function() {
     loginPage.Login(Objects.loginpage.data.supervisoruser.username, Objects.loginpage.data.supervisoruser.password);
     logger.log('Info', 'User succesfully logged in as supervisor');
 
+    //Change Dashboard configuration
+
     using([{widgetName: "News", widgetTitle: Objects.dashboardpage.data.widgetTitleNews}, {widgetName: "MyTasks", widgetTitle:Objects.dashboardpage.data.widgetTitleMyTasks}, {widgetName: "MyCases", widgetTitle: Objects.dashboardpage.data.widgetTitleMyCases}, {widgetName: "MyComplaints", widgetTitle: Objects.dashboardpage.data.widgetTitleMyComplaints}, {widgetName: "NewComplaints", widgetTitle: Objects.dashboardpage.data.widgetTitleNewComplaints}, {widgetName: "TeamWorkload", widgetTitle: Objects.dashboardpage.data.widgetTitleTeamWorkload}, {widgetName: "CasesByStatus", widgetTitle: Objects.dashboardpage.data.widgetTitleCasesByStatus} , {widgetName:"Weather", widgetTitle: Objects.dashboardpage.data.widgetTitleWeather}], function(data) {
         it('should add/delete ' + data.widgetName, function () {
 

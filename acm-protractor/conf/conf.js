@@ -40,17 +40,17 @@ exports.config = {
     // }],
 
     specs: [
-           '../test_spec/functional/subscriptions_test.spec.js',
-           '../test_spec/smoke/smoke_dashboard_test.spec.js',
-           '../test_spec/functional/task_test.spec.js',
-           '../test_spec/functional/case_test.spec.js',
-           '../test_spec/functional/complaint_test.spec.js',
-           '../test_spec/smoke/smoke_user_test.spec.js',
-           '../test_spec/functional/notification_test.spec.js',
-           '../test_spec/functional/admin_test.spec.js',
-           '../test_spec/smoke/smoke_report_test.spec.js',
-           '../test_spec/functional/audit_test.spec.js',
-           '../test_spec/functional/preference_test.spec.js'
+
+        //any test can be run with command "protractor conf.js"
+
+           // '../test_spec/functional/subscriptions_test.spec.js',
+           // '../test_spec/functional/task_test.spec.js',
+           // '../test_spec/functional/case_test.spec.js',
+           // '../test_spec/functional/complaint_test.spec.js',
+           // '../test_spec/functional/notification_test.spec.js',
+           // '../test_spec/functional/admin_test.spec.js',
+           // '../test_spec/functional/audit_test.spec.js',
+           // '../test_spec/functional/preference_test.spec.js'
     ],
         suites:
     {
