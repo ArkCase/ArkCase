@@ -7,8 +7,17 @@ import java.util.List;
  */
 public class CorrespondenceQuery
 {
+    private String type;
     private String jpaQuery;
     private List<String> fieldNames;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public String getJpaQuery() {
         return jpaQuery;
