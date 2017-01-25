@@ -35,23 +35,13 @@ describe('Create new complaint ', function() {
 
     });
 
-    it('Verify adding correspondence document', function() {
+    it('should create new complaint ', function() {
 
-        complaintPage.clickNewButton().clickComplaintButton().switchToIframes().submitInitiatorInformation(Objects.complaintPage.data.firstName, Objects.complaintPage.data.lastName);
-        expect(complaintPage.returnFirstNameValue()).toEqual(Objects.complaintPage.data.firstName);
-        expect(complaintPage.returnLastNameValue()).toEqual(Objects.complaintPage.data.lastName);
-        complaintPage.reenterFirstName(Objects.complaintPage.data.firstName).clickTab("Incident").insertIncidentInformation("Arson", Objects.complaintPage.data.title).clickSubmitButton();
-        complaintPage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Documents");
-        complaintPage.rightClickRootFolder().addCorrespondence("complaint", "Notice of Investigation");
-        complaintPage.validateDocGridData(true, "Notice of Investigation", ".docx", "Notice of Investigation", utils.returnToday("/"), utils.returnToday("/"), userPage.returnUserNavigationProfile(), "1.0", "ACTIVE");
-    });
+        complaintPage.clickNewButton().clickComplaintButton().switchToIframes().submitInitiatorInformation(Objects.complaintPage.data.firstName, Objects.complaintPage.data.lastName).reenterFirstName(Objects.complaintPage.data.firstName).clickTab("Incident").insertIncidentInformation("Arson", Objects.complaintPage.data.title).clickSubmitButton();
+        complaintPage.switchToDefaultContent();
+        complaintPage.waitForComplaintsPage();
+        expect(complaintPage.returnComplaintsTitle()).toEqual(Objects.complaintPage.data.title);
 
-    it('Add new note and verify added note', function() {
-
-        complaintPage.clickModuleComplaints();
-        complaintPage.clickNotesLink();
-        complaintPage.addNote(Objects.casepage.data.note);
-        expect(complaintPage.returnNoteName()).toEqual(Objects.casepage.data.note, "The note is succesfully added");
     });
 
     it('Add/delete note', function() {
@@ -69,46 +59,6 @@ describe('Create new complaint ', function() {
         complaintPage.addNote(Objects.casepage.data.note);
         complaintPage.editNote(Objects.casepage.data.editnote);
         expect(complaintPage.returnNoteName()).toEqual(Objects.casepage.data.editnote, "The note is succesfully edited");
-    });
-
-    it('Add task from tasks table verify the task', function() {
-
-        complaintPage.clickModuleComplaints();
-        complaintPage.clickTasksLinkBtn();
-        complaintPage.clickAddTaskButton();
-        taskPage.insertSubject(Objects.taskpage.data.Subject).insertDueDateToday().clickSave();
-        taskPage.clickComplaintTitleInTasks();
-        complaintPage.clickTasksLinkBtn().waitForTasksTable();
-        expect(complaintPage.returnTaskTableTitle()).toContain(Objects.taskpage.data.Subject);
-        expect(complaintPage.returnTaskTableAssignee()).toEqual(Objects.casepage.data.assigneeSamuel);
-        expect(complaintPage.returnTaskTableCreatedDate()).toEqual(utils.returnToday("/"));
-        expect(complaintPage.returnTaskTablePriority()).toEqual(Objects.casepage.data.priorityMedium);
-        expect(complaintPage.returnTaskTableDueDate()).toEqual(utils.returnToday("/"));
-        expect(complaintPage.returnTaskTableStatus()).toEqual("ACTIVE");
-    });
-
-    it('should create new complaint and verify adding new document', function() {
-
-        complaintPage.clickNewButton().clickComplaintButton().switchToIframes().submitInitiatorInformation(Objects.complaintPage.data.firstName, Objects.complaintPage.data.lastName);
-        expect(complaintPage.returnFirstNameValue()).toEqual(Objects.complaintPage.data.firstName);
-        expect(complaintPage.returnLastNameValue()).toEqual(Objects.complaintPage.data.lastName);
-        complaintPage.reenterFirstName(Objects.complaintPage.data.firstName).clickTab("Incident").insertIncidentInformation("Arson", Objects.complaintPage.data.title).clickSubmitButton();
-        complaintPage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Documents");
-        complaintPage.rightClickRootFolder().addDocument("Notice of Investigation");
-        utils.uploadDocx();
-        complaintPage.validateDocGridData(true, "ArkCaseTesting", ".docx", "Notice of Investigation", utils.returnToday("/"), utils.returnToday("/"), userPage.returnUserNavigationProfile(), "1.0", "ACTIVE");
-
-    });
-
-    it('Verify text details add verify if is saved', function() {
-
-        complaintPage.clickModuleComplaints();
-        complaintPage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Details");
-        complaintPage.insertDetailsTextAreaText(Objects.taskspage.data.detailsTextArea);
-        complaintPage.clickSaveDetailsButton();
-        complaintPage.clickRefreshButton();
-        expect(complaintPage.returnDetailsTextArea()).toEqual(Objects.taskspage.data.detailsTextArea, 'After refresh the details text is not saved');
-
     });
 
     it('Add link from details', function() {
@@ -130,22 +80,6 @@ describe('Create new complaint ', function() {
         complaintPage.clickDetailsAddPicture();
         complaintPage.uploadPicture();
         expect(complaintPage.returnDetailsUploadedImage());
-
-    });
-
-    it('should navigate to complaints and close complaint with Open Investigation, approve automatic generated task and validate created case', function() {
-
-        complaintPage.clickModuleComplaints();
-        complaintPage.clickCloseComplaint().switchToIframes().closeComplaint("Open Investigation", Objects.complaintPage.data.description, Objects.complaintPage.data.approver);
-        complaintPage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Tasks");
-        complaintPage.waitForTasksTable();
-        complaintPage.clickRefreshButton();
-        expect(complaintPage.returnAutomatedTask()).toContain(Objects.complaintPage.data.automaticTaskNameCloseComplaint);
-        complaintPage.clickTaskTitle();
-        taskPage.clickApproveBtn();
-        expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateClosed, 'The task state should be CLOSED');
-        complaintPage.navigateToPage("Cases").clickExpandFancyTreeTopElementAndSubLink("Details");
-        expect(complaintPage.returnDetailsTextArea()).toContain(Objects.casepage.data.automatedTaskTitle);
 
     });
 
@@ -195,15 +129,6 @@ describe('Create new complaint ', function() {
         complaintPage.clickModuleComplaints();
         complaintPage.editAssignee("bthomas");
         expect(complaintPage.returnAssignee()).toEqual("Bill Thomas");
-    });
-
-    it('Verify people initiator', function() {
-
-        complaintPage.clickModuleComplaints();
-        complaintPage.clickPeopleLinkBtn();
-        expect(complaintPage.returnPeopleType()).toEqual(Objects.casepage.data.peopleTypeInitiaor);
-        expect(complaintPage.returnPeopleFirstName()).toEqual(Objects.complaintPage.data.firstName);
-        expect(complaintPage.returnPeopleLastName()).toEqual(Objects.complaintPage.data.lastName);
     });
 
     it('should create new complaint and add person', function() {
@@ -441,21 +366,6 @@ describe('Create new complaint ', function() {
         expect(complaintPage.returnLocationZip()).toEqual("zip1");
     });
 
-    it('Verify the assighnee by default', function() {
-
-        complaintPage.clickModuleComplaints();
-        complaintPage.participantTable();
-        expect(complaintPage.returnParticipantTypeFirstRow()).toEqual("*");
-        expect(complaintPage.returnParticipantNameFirstRow()).toEqual("*");
-        expect(complaintPage.returnParticipantTypeSecondRow()).toEqual("assignee");
-        expect(complaintPage.returnParticipantNameSecondRow()).toEqual("Samuel Supervisor");
-        expect(complaintPage.returnParticipantTypeThirdRow()).toEqual("owning group");
-        expect(complaintPage.returnParticipantNameThirdRow()).toEqual("ACM_INVESTIGATOR_DEV");
-        expect(complaintPage.returnParticipantTypeForthRow()).toEqual("reader");
-        expect(complaintPage.returnParticipantNameForthRow()).toEqual("Samuel Supervisor");
-    });
-
-
     it('should Add tag', function() {
 
         complaintPage.clickModuleComplaints();
@@ -518,15 +428,6 @@ describe('Create new complaint ', function() {
             expect(complaintPage.returncostSheetTotalCost()).toEqual(Objects.costsheetPage.data.verifyAmmount);
             expect(complaintPage.returncostSheetStatus()).toEqual(Objects.casepage.data.statusDraft);
         });
-    });
-
-    it('should Verify the event in the history table', function() {
-
-        complaintPage.clickModuleComplaints();
-        complaintPage.historyTable();
-        expect(complaintPage.returnHistoryEventName()).toEqual("Complaint Created");
-        expect(complaintPage.returnHistoryDate()).toContain(utils.returnToday("/"));
-        expect(complaintPage.returnHistoryUser()).toEqual(Objects.casepage.data.assigneeSamuel);
     });
 
     it('should verify if complaint can be added as reference to itself', function() {

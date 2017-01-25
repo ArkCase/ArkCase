@@ -232,7 +232,8 @@ var costTrackingModule = element(by.css(Objects.costsheetPage.locators.costTrack
 var initiatorDeleteBtn = element(by.xpath(Objects.casepage.locators.initiatorDeleteBtn));
 var notificationMessage = element(by.css(Objects.basepage.locators.notificationMessage));
 var docVersionDropDownList = new SelectWrapper(by.css(Objects.basepage.locators.docVersionDropDownList));
-
+var emailRecepient = element(by.model(Objects.basepage.locators.emailRecepient));
+var sendEmailButton = element(by.buttonText(Objects.basepage.locators.sendEmailButton));
 
 var BasePage = function() {
 
@@ -2047,7 +2048,22 @@ var BasePage = function() {
     }
     this.replaceVersion = function (value) {
         docVersionDropDownList.selectByValue(value);
+    };
+    this.insertRecipient = function (email) {
+        emailRecepient.click();
+        emailRecepient.sendKeys(email);
+        return this;
+    };
+    this.clickSendEmailButton = function () {
+        sendEmailButton.click();
+        return this;
+    };
+    this.sendEmail = function (email) {
+        this.insertRecipient(email);
+        this.clickSendEmailButton();
+        return this;
     }
+
 
 }
 module.exports = new BasePage();
