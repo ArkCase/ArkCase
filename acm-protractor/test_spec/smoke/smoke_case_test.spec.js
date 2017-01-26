@@ -59,7 +59,7 @@ describe('case page tests', function() {
 
     //verify that case type is correct on new created case
 
-    xit('should create new case and verify case type', function () {
+    it('should create new case and verify case type', function () {
 
         casePage.clickModuleCasesFiles();
         expect(casePage.returnCaseType()).toEqual(Objects.casepage.data.casesType);
@@ -67,7 +67,7 @@ describe('case page tests', function() {
 
     //close case and make sure the files are declared as records on the Alfresco site
 
-    xit('should create new case and change case status to closed, verify the automated task in tasks table and approve', function () {
+    it('should create new case and change case status to closed, verify the automated task in tasks table and approve', function () {
 
         casePage.clickModuleCasesFiles();
         casePage.waitForChangeCaseButton();
@@ -83,7 +83,7 @@ describe('case page tests', function() {
 
     // verify that priority is correct on new created case
 
-    xit('should verify the priority filed', function () {
+    it('should verify the priority filed', function () {
 
         casePage.clickModuleCasesFiles();
         expect(casePage.returnPriority()).toEqual(Objects.casepage.data.priorityMedium);
@@ -91,7 +91,7 @@ describe('case page tests', function() {
 
     //verify that created date is correct on new created case
 
-    xit('should   verify the created date', function () {
+    it('should   verify the created date', function () {
 
         casePage.clickModuleCasesFiles();
         expect(casePage.returnCreatedDate()).toEqual(utils.returnToday("/"));
@@ -100,7 +100,7 @@ describe('case page tests', function() {
 
     //verify Add Notes
 
-    xit('should  add/delete note', function () {
+    it('should  add/delete note', function () {
 
         casePage.clickModuleCasesFiles();
         casePage.clickNotesLink();
@@ -110,7 +110,7 @@ describe('case page tests', function() {
 
     //Create a task associated to case
 
-    xit('should  add task from tasks table verify the task', function () {
+    it('should  add task from tasks table verify the task', function () {
 
         casePage.clickModuleCasesFiles();
         casePage.clickTasksLinkBtn();
@@ -128,7 +128,7 @@ describe('case page tests', function() {
 
     //verify people initiator on new created case
 
-    xit('should  verify the people initiator', function () {
+    it('should  verify the people initiator', function () {
 
         casePage.clickModuleCasesFiles();
         casePage.clickPeopleLinkBtn();
@@ -139,7 +139,7 @@ describe('case page tests', function() {
 
     //verify history table on new created case
 
-    xit('should create new case and verify the history table', function () {
+    it('should create new case and verify the history table', function () {
 
         casePage.clickModuleCasesFiles();
         casePage.historyTable();
@@ -151,7 +151,7 @@ describe('case page tests', function() {
 
     //verify adding document to document management
 
-    xit('should create new case and verify adding correspondence document', function () {
+    it('should create new case and verify adding correspondence document', function () {
 
         casePage.clickModuleCasesFiles();
         casePage.clickExpandFancyTreeTopElement();

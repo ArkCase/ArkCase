@@ -76,7 +76,8 @@ describe('Create new complaint ', function() {
 
     it('should create new complaint and add picture from details', function() {
 
-        complaintPage.clickModuleComplaints(); complaintPage.clickExpandFancyTreeTopElementAndSubLink("Details");
+        complaintPage.clickModuleComplaints();
+        complaintPage.clickExpandFancyTreeTopElementAndSubLink("Details");
         complaintPage.clickDetailsAddPicture();
         complaintPage.uploadPicture();
         expect(complaintPage.returnDetailsUploadedImage());
@@ -479,14 +480,14 @@ describe('Create new complaint ', function() {
         complaintPage.verifyTasksTableColumnsNumber();
     });
 
-     it('should verify if the people intiator delete button is displayed', function() {
+    it('should verify if the people intiator delete button is displayed', function() {
 
         complaintPage.clickModuleComplaints();
         complaintPage.clickPeopleLinkBtn();
         complaintPage.verifyIfInitiatorCanBeDeleted();
     });
 
-    it('should verify that searching of Case id during close complaint is retrieving the data in the fields', function () {
+    it('should verify that searching of Case id during close complaint is retrieving the data in the fields', function() {
         casePage.navigateToPage("Case Files").waitForCaseID();
         var caseid = casePage.getCaseId();
         var caseTitle = casePage.returnCaseTitle();
@@ -498,6 +499,38 @@ describe('Create new complaint ', function() {
         expect(complaintPage.returnCaseCreatedDate()).toEqual(caseCreateDate);
         expect(complaintPage.returnCasePriority()).toEqual(casePriority);
         complaintPage.switchToDefaultContent();
-    })
+    });
+
+    it('should create new Complaint by default assignee, claim it and verify the assignee', function() {
+
+        complaintPage.clickNewButton().clickComplaintButton().switchToIframes();
+        complaintPage.submitInitiatorInformation(Objects.complaintPage.data.firstName, Objects.complaintPage.data.lastName).reenterFirstName(Objects.complaintPage.data.firstName).clickTab("Incident").insertIncidentInformation("Arson", Objects.complaintPage.data.title);
+        complaintPage.clickSubmitBtn();
+        complaintPage.switchToDefaultContent();
+        complaintPage.waitForComplaintsPage();
+        complaintPage.clickClaimButton();
+        expect(complaintPage.returnAssignee()).toEqual(Objects.casepage.data.assigneeSamuel);
+    });
+
+    it('should create new Complaint by default assignee, claim it verify the assignee then uncalaim it and verify if the assignee is removed ', function() {
+
+        complaintPage.clickNewButton().clickComplaintButton().switchToIframes();
+        complaintPage.submitInitiatorInformation(Objects.complaintPage.data.firstName, Objects.complaintPage.data.lastName).reenterFirstName(Objects.complaintPage.data.firstName).clickTab("Incident").insertIncidentInformation("Arson", Objects.complaintPage.data.title);
+        complaintPage.clickSubmitBtn();
+        complaintPage.switchToDefaultContent();
+        complaintPage.waitForComplaintsPage();
+        complaintPage.clickClaimButton();
+        expect(complaintPage.returnAssignee()).toEqual(Objects.casepage.data.assigneeSamuel);
+        complaintPage.clickUnclaimButton();
+        expect(complaintPage.returnAssignee()).toEqual("", "The assignee name is displayed");
+    });
+
+    it('Verify if reader is displayed in participants table', function() {
+
+        complaintPage.clickModuleComplaints();
+        complaintPage.participantTable();
+        expect(complaintPage.returnParticipantTypeForthRow()).toEqual("reader");
+        expect(complaintPage.returnParticipantNameForthRow()).toEqual("Samuel Supervisor");
+    });
 
 });
