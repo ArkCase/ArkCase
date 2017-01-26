@@ -113,7 +113,7 @@ var CasePage = function() {
     }
 
 
-    this.switchToDefaultContent = function() {
+    this.switchToDefaultContentCases = function() {
 
         browser.driver.switchTo().defaultContent();
         browser.waitForAngular();
@@ -242,7 +242,7 @@ var CasePage = function() {
     };
 
 
-    this.returnPriority = function () {
+    this.returnPriority = function() {
         return priority.getText();
     }
 

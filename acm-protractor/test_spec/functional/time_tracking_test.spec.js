@@ -1,9 +1,9 @@
-var Objects = require('../json/Objects.json');
-var utils = require('../util/utils.js');
-var loginPage = require('../Pages/login_page.js');
+var Objects = require('../../json/Objects.json');
+var utils = require('../../util/utils.js');
+var loginPage = require('../../Pages/login_page.js');
 var flag = false;
 var EC = protractor.ExpectedConditions;
-var timeTrackingPage = require('../Pages/time_tracking_page.js');
+var timeTrackingPage = require('../../Pages/time_tracking_page.js');
 
 function testAsync(done) {
 
@@ -62,9 +62,10 @@ describe('Time Tracking page tests', function() {
         timeTrackingPage.clickModuleTimeTracking();
         timeTrackingPage.clickLastElementInTreeData();
         timeTrackingPage.clickTagsLinkBtn();
-        timeTrackingPage.addSugestedTag("milan");
-        expect(timeTrackingPage.returnTagName()).toEqual("milan");
+        timeTrackingPage.addSugestedTag(Objects.timetrackingPage.data.tagname);
+        expect(timeTrackingPage.returnTagName()).toEqual(Objects.timetrackingPage.data.tagname);
         expect(timeTrackingPage.returntagCratedDate()).toEqual(utils.returnToday("/"));
         expect(timeTrackingPage.returntagCreatedBy()).toEqual(Objects.casepage.data.assigneeSamuel);
+        timeTrackingPage.deleteTag();
     });
 });

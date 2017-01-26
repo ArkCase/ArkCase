@@ -230,15 +230,16 @@ var tasksModule = element(by.css(Objects.taskspage.locators.TasksModule));
 var timeTrackingModule = element(by.css(Objects.timetrackingPage.locators.timeTrackingModule));
 var costTrackingModule = element(by.css(Objects.costsheetPage.locators.costTrackingModule));
 var initiatorDeleteBtn = element(by.xpath(Objects.casepage.locators.initiatorDeleteBtn));
-var notificationMessage = element(by.css(Objects.basepage.locators.notificationMessage)); << << << < Updated upstream
-var docVersionDropDownList = new SelectWrapper(by.css(Objects.basepage.locators.docVersionDropDownList)); === === =
+var notificationMessage = element(by.css(Objects.basepage.locators.notificationMessage));
+var docVersionDropDownList = new SelectWrapper(by.css(Objects.basepage.locators.docVersionDropDownList));
 var claimButton = element(by.css(Objects.casepage.locators.claimButton));
 var unclaimButton = element(by.css(Objects.casepage.locators.unclaimButton));
 var sugestedTag = element(by.css(Objects.basepage.locators.sugestedTag));
 var tagPriority = element(by.xpath(Objects.casepage.locators.tagPriority));
-
->>> >>> > Stashed changes
-
+var participantTypeConflictMessage = element(by.css(Objects.casepage.locators.participantTypeConflictMessage));
+var addParticipantTypeSecondRowbtn = element(by.xpath(Objects.casepage.locators.addParticipantTypeSecondRowbtn));
+var selectParticipantTypeSecondRow = element(by.xpath(Objects.casepage.locators.selectParticipantTypeSecondRow));
+var selectParticipantSecondRow = element.all(by.name(Objects.casepage.locators.selectParticipant)).get(1);
 
 var BasePage = function() {
 
@@ -610,7 +611,6 @@ var BasePage = function() {
                         sugestedTag.click().then(function() {
                             tagPopUpTitle.click().then(function() {
                                 addTagBtn.click().then(function() {
-                                    browser.sleep(5000);
                                     tagPriority.click().then(function() {
                                         element.all(by.repeater(Objects.casepage.locators.tagTableColumns)).then(function(items) {
                                             expect(items.length).toBeGreaterThan(3, "The suggested  tag is not added");
@@ -1905,10 +1905,8 @@ var BasePage = function() {
         browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.claimButton))), 30000, "Claim button is not displayed").then(function() {
             claimButton.click();
         }).then(function() {
-            browser.sleep(5000);
-            element.all(by.css(Objects.casepage.locators.claimButton)).then(function(items) {
-                expect(items.length).toBe(0, "After is clicked the claim button is still displayed");
-                browser.sleep(5000);
+            browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.unclaimButton))), 10000, "After is clicked the claim button is still displayed").then(function() {
+                browser.wait(EC.textToBePresentInElement((assigneeLink), Objects.casepage.data.assigneeSamuel), 10000);
             });
         });
     }
@@ -1932,10 +1930,8 @@ var BasePage = function() {
         browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.unclaimButton))), 30000, "Unclaim button is not displayed").then(function() {
             unclaimButton.click();
         }).then(function() {
-            browser.sleep(5000);
-            element.all(by.css(Objects.casepage.locators.unclaimButton)).then(function(items) {
-                expect(items.length).toBe(0, "After is clicked the unclaim button is still displayed");
-                browser.sleep(8000);
+            browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.claimButton))), 10000, "After is clicked the unclaim button is still displayed").then(function() {
+                browser.wait(EC.textToBePresentInElement((assigneeLink), ""), 10000);
             });
         });
     };
@@ -1945,7 +1941,52 @@ var BasePage = function() {
         var lastElement = $('.fancytree-lastsib');
         lastElement.click();
     }
-}
+
+    this.returnParticipantTypeAlert = function() {
+        browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.participantTypeConflictMessage))), 10000, "Participant conflict message is not displayed");
+        return participantTypeConflictMessage.getText();
+    }
+
+
+    this.clickAddParticipantTypeSecondRowbtn = function() {
+
+        browser.executeScript('arguments[0].click()', addParticipantTypeSecondRowbtn);
+    }
+
+    this.selectParticipantSecondRow = function(type, participant) {
+
+        var participantType = element(by.linkText(type));
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.selectParticipantTypeSecondRow))), 10000).then(function() {
+            selectParticipantTypeSecondRow.click().then(function() {
+                participantType.click().then(function() {
+                    selectParticipantSecondRow.click().then(function() {
+                        browser.driver.switchTo().defaultContent();
+                        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchForUserInput))), 10000, "Search for user input is not displayed").then(function() {
+                            searchForUserInput.sendKeys(participant).then(function() {
+                                searchForUserBtn.click().then(function() {
+                                    browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchedUserName))), 30000, "Searched user is not displayed").then(function() {
+                                        searchedUser.click().then(function() {
+                                            okBtn.click();
+                                        });
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+
+        return this;
+    };
+
+
+
+
+
+
 
 }
+
+
 module.exports = new BasePage();
