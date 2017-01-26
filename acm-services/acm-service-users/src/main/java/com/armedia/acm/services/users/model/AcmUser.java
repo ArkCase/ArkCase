@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
@@ -41,6 +42,12 @@ public class AcmUser implements Serializable, AcmLdapUser
 
     @Column(name = "cm_user_directory_name", updatable = false)
     private String userDirectoryName;
+
+    @Column(name = "cm_samaccountname")
+    private String sAMAccountName;
+
+    @Column(name = "cm_user_principal_name")
+    private String userPrincipalName;
 
     @JsonFormat(pattern = AcmUsersConstants.SOLR_DATE_FORMAT)
     @Column(name = "cm_user_created", insertable = true, updatable = false)
@@ -82,7 +89,6 @@ public class AcmUser implements Serializable, AcmLdapUser
         setModified(new Date());
     }
 
-
     public String getFullName()
     {
         return fullName;
@@ -111,6 +117,26 @@ public class AcmUser implements Serializable, AcmLdapUser
     public void setUserDirectoryName(String userDirectoryName)
     {
         this.userDirectoryName = userDirectoryName;
+    }
+
+    public String getsAMAccountName()
+    {
+        return sAMAccountName;
+    }
+
+    public void setsAMAccountName(String sAMAccountName)
+    {
+        this.sAMAccountName = sAMAccountName;
+    }
+
+    public String getUserPrincipalName()
+    {
+        return userPrincipalName;
+    }
+
+    public void setUserPrincipalName(String userPrincipalName)
+    {
+        this.userPrincipalName = userPrincipalName;
     }
 
     public Date getCreated()
@@ -196,8 +222,8 @@ public class AcmUser implements Serializable, AcmLdapUser
     }
 
     /**
-     * Because of bidirectional ManyToMany relation, this method should be used for adding
-     * groups to the user. Don't use getGroups().add(..) or getGroups().addAll(..)
+     * Because of bidirectional ManyToMany relation, this method should be used for adding groups to the user. Don't use getGroups().add(..)
+     * or getGroups().addAll(..)
      *
      * @param group
      */
@@ -220,8 +246,7 @@ public class AcmUser implements Serializable, AcmLdapUser
     }
 
     /**
-     * Because of bidirectional ManyToMany relation, this method should be used for removing
-     * groups from the user.
+     * Because of bidirectional ManyToMany relation, this method should be used for removing groups from the user.
      *
      * @param group
      */
@@ -251,7 +276,8 @@ public class AcmUser implements Serializable, AcmLdapUser
         if (getUserId() == null)
         {
             return 0;
-        } else
+        }
+        else
         {
             return getUserId().hashCode();
         }
