@@ -249,26 +249,7 @@ describe('Create new task ', function() {
 
 
     });
-    it('should create new task and verify workflow table data', function() {
 
-        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
-        taskPage.workflowLink.click();
-        expect(taskPage.returnWorkflowTitle()).toEqual(Objects.taskspage.data.workflowTitle);
-        expect(taskPage.returnWorkflowParticipant()).toEqual(Objects.taskspage.data.supervisor);
-        expect(taskPage.returnWorkflowStatus()).toEqual(Objects.taskspage.data.workflowStatus);
-        expect(taskPage.returnWorkflowStartDate()).toEqual(utils.returnToday("/"));
-
-    });
-    it('should create new task and verify history table data', function() {
-
-        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "High", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
-        taskPage.clickHistoryLink();
-        expect(taskPage.returnHistoryTableTitle()).toEqual(Objects.taskspage.data.historyTableTitle);
-        expect(taskPage.returnHistoryEventName()).toEqual(Objects.taskspage.data.historyEventName);
-        expect(taskPage.returnHistoryUser()).toEqual(Objects.taskspage.data.supervisor);
-        expect(taskPage.returnHistoryDate()).toContain(utils.returnToday("/"));
-
-    });
     it('should create new task add link from task details', function() {
 
         taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Expedite", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
