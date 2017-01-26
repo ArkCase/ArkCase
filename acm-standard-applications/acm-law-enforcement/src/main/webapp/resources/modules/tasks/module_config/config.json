@@ -988,7 +988,7 @@
           "name": "eventType",
           "displayName": "tasks.comp.history.table.columns.eventType",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div ng-if='row.entity.eventDescription'>{{row.entity.eventDescription}}</div><div ng-if='!row.entity.eventDescription'>{{row.entity.eventType}}</div>"
+          "cellTemplate": "<div> <span ng-if='row.entity.parentObjectType'>{{('common.objectTypes.'+row.entity.parentObjectType) | translate}} Updated - </span> {{row.entity.eventDescription || row.entity.eventType}}</div>"
         },
         {
           "name": "eventDate",
