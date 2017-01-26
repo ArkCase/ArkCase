@@ -2,6 +2,7 @@ package com.armedia.acm.services.participants.service;
 
 import com.armedia.acm.services.participants.dao.AcmParticipantDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.services.participants.model.CheckParticipantListModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +16,7 @@ public class AcmParticipantService
 {
 
     private AcmParticipantDao participantDao;
+    private ParticipantsBusinessRule participantsBusinessRule;
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -27,11 +29,28 @@ public class AcmParticipantService
         participant.setObjectId(objectId);
         participant.setObjectType(objectType);
 
+        try
+        {
+            applyParticipantRules(participant);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
         AcmParticipant savedParticipant = getParticipantDao().save(participant);
 
         log.debug("Added participant [{}] to object type [{}] with object id [{}]", userId, objectType, objectId);
 
         return savedParticipant;
+    }
+
+    private void applyParticipantRules(Object obj)
+    {
+        if (obj instanceof CheckParticipantListModel)
+        {
+            CheckParticipantListModel model = (CheckParticipantListModel) obj;
+            participantsBusinessRule.applyRules(model);
+        }
     }
 
     public AcmParticipant getParticipantByParticipantTypeAndObjectTypeAndId(String userId, String participantType, String objectType, Long objectId)
@@ -42,6 +61,8 @@ public class AcmParticipantService
     public AcmParticipant changeParticipantRole(AcmParticipant participant, String newRole) throws Exception
     {
         participant.setParticipantType(newRole);
+        applyParticipantRules(participant);
+
         AcmParticipant updatedParticipant = getParticipantDao().save(participant);
         return updatedParticipant;
     }
@@ -74,5 +95,15 @@ public class AcmParticipantService
     public void setParticipantDao(AcmParticipantDao participantDao)
     {
         this.participantDao = participantDao;
+    }
+
+    public ParticipantsBusinessRule getParticipantsBusinessRule()
+    {
+        return participantsBusinessRule;
+    }
+
+    public void setParticipantsBusinessRule(ParticipantsBusinessRule participantsBusinessRule)
+    {
+        this.participantsBusinessRule = participantsBusinessRule;
     }
 }
