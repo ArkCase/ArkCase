@@ -41,29 +41,18 @@ exports.config = {
 
     specs: [
 
-           '../test_spec/functional/verification_test.spec.js',
-           '../test_spec/functional/subscriptions_test.spec.js',
-           '../test_spec/functional/dashboard_test.spec.js',
-           '../test_spec/functional/task_test.spec.js',
-           '../test_spec/functional/case_test.spec.js'
-           '../test_spec/functional/complaint_test.spec.js',
-           '../test_spec/functional/user_test.spec.js',
-           '../test_spec/functional/notification_test.spec.js',
-           '../test_spec/functional/admin_test.spec.js',
-           '../test_spec/functional/report_test.spec.js',
-           '../test_spec/functional/audit_test.spec.js',
-           '../test_spec/functional/preference_test.spec.js',
-           '../test_spec/functional/time_tracking_test.spec.js',
-           '../test_spec/functional/cost_tracking_test.spec.js'
+        //any test can be run with command "protractor conf.js, just place it here"
 
     ],
+        //any suite can be run with command "protractor conf.js --suite=selected"
+
         suites:
     {
         smoke: ['../test_spec/smoke/*.spec.js'],
         regression: ['../test_spec/regression/*.spec.js'],
         functional: ['../test_spec/functional/*.spec.js'],
         all: ['../test_spec/*/*.spec.js'],
-        selected: ['../test_spec/functional/dashboard_test.spec.js'],
+        selected: [ '../test_spec/smoke/smoke_case_test.spec.js'],
     },
 
     jasmineNodeOpts: {
