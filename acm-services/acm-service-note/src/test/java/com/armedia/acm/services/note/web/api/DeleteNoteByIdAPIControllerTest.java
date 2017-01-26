@@ -76,7 +76,7 @@ public class DeleteNoteByIdAPIControllerTest extends EasyMockSupport
         expect(mockNote.getCreated()).andReturn(new Date());
         expect(mockNote.getModifier()).andReturn("user");
         expect(mockNote.getParentId()).andReturn(parentId);
-        expect(mockNote.getParentType()).andReturn("PARENT_TYPE").times(2);
+        expect(mockNote.getParentType()).andReturn("PARENT_TYPE");
 
         expect(mockNoteDao.find(eq(noteId))).andReturn(mockNote);
 
@@ -122,7 +122,7 @@ public class DeleteNoteByIdAPIControllerTest extends EasyMockSupport
         expect(mockNote.getCreated()).andReturn(new Date());
         expect(mockNote.getModifier()).andReturn("user");
         expect(mockNote.getParentId()).andReturn(parentId);
-        expect(mockNote.getParentType()).andReturn("PARENT_TYPE").times(2);
+        expect(mockNote.getParentType()).andReturn("PARENT_TYPE");
 
         expect(mockNoteDao.find(eq(noteId))).andReturn(mockNote);
 
