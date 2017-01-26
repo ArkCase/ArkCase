@@ -56,7 +56,7 @@ describe('case page tests', function() {
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
         casePage.clickNextBtn();
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContentCases();
+        casePage.switchToDefaultContent();
         casePage.waitForChangeCaseButton();
         casePage.clickChangeCaseBtn();
         casePage.switchToIframes().selectCaseStatus("Closed");
@@ -99,7 +99,7 @@ describe('case page tests', function() {
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
         casePage.clickNextBtn();
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContentCases();
+        casePage.switchToDefaultContent();
         casePage.waitForAssignee();
         casePage.editAssignee("samuel-acm").waitForAssignee();
         expect(casePage.returnAssignee()).toEqual(Objects.casepage.data.assigneeSamuel);
@@ -164,7 +164,7 @@ describe('case page tests', function() {
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
         casePage.clickNextBtn();
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContentCases();
+        casePage.switchToDefaultContent();
         casePage.clickPeopleLinkBtn();
         casePage.editInitiator(Objects.casepage.data.peopleFirstNameEdit, Objects.casepage.data.peopleLastNameedit);
         expect(casePage.returnPeopleType()).toEqual(Objects.casepage.data.peopleTypeInitiaor);
@@ -178,7 +178,7 @@ describe('case page tests', function() {
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
         casePage.clickNextBtn();
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContentCases();
+        casePage.switchToDefaultContent();
         casePage.clickPeopleLinkBtn();
         casePage.addContactMethod(Objects.casepage.data.contactMethodFacebook, Objects.casepage.data.contactMethodFacebook);
         expect(casePage.returnContatMethodType()).toEqual(Objects.casepage.data.contactMethodFacebook);
@@ -193,7 +193,7 @@ describe('case page tests', function() {
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
         casePage.clickNextBtn();
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContentCases();
+        casePage.switchToDefaultContent();
         casePage.clickPeopleLinkBtn();
         casePage.addContactMethod(Objects.casepage.data.contactMethodFacebook, Objects.casepage.data.contactMethodFacebook);
         casePage.deleteContactMethod();
@@ -204,7 +204,7 @@ describe('case page tests', function() {
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
         casePage.clickNextBtn();
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContentCases();
+        casePage.switchToDefaultContent();
         casePage.clickPeopleLinkBtn();
         casePage.addContactMethod(Objects.casepage.data.contactMethodFacebook, Objects.casepage.data.contactMethodFacebook);
         casePage.editContactMethod(Objects.casepage.data.contactMethodEmail, Objects.casepage.data.contactMethodEmail);
@@ -219,7 +219,7 @@ describe('case page tests', function() {
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
         casePage.clickNextBtn();
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContentCases();
+        casePage.switchToDefaultContent();
         casePage.clickPeopleLinkBtn();
         casePage.addOrganization(Objects.casepage.data.organizationTypeGoverment, Objects.casepage.data.organizationTypeGoverment);
         expect(casePage.returnorganizationTypeFirstRow()).toEqual(Objects.casepage.data.organizationTypeGoverment);
@@ -233,7 +233,7 @@ describe('case page tests', function() {
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
         casePage.clickNextBtn();
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContentCases();
+        casePage.switchToDefaultContent();
         casePage.clickPeopleLinkBtn();
         casePage.addOrganization(Objects.casepage.data.organizationTypeGoverment, Objects.casepage.data.organizationTypeGoverment);
         casePage.deleteOrganization();
@@ -245,7 +245,7 @@ describe('case page tests', function() {
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
         casePage.clickNextBtn();
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContentCases();
+        casePage.switchToDefaultContent();
         casePage.clickPeopleLinkBtn();
         casePage.addOrganization(Objects.casepage.data.organizationTypeGoverment, Objects.casepage.data.organizationTypeGoverment);
         casePage.editOrganization(Objects.casepage.data.organizationTypeCorporation, Objects.casepage.data.organizationTypeCorporation);
@@ -261,7 +261,7 @@ describe('case page tests', function() {
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
         casePage.clickNextBtn();
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContentCases();
+        casePage.switchToDefaultContent();
         casePage.clickPeopleLinkBtn();
         casePage.addAddress(Objects.casepage.data.addressTypeHome, Objects.casepage.data.street, Objects.casepage.data.city, Objects.casepage.data.state, Objects.casepage.data.zip, Objects.casepage.data.country);
         expect(casePage.returnAddressType()).toEqual(Objects.casepage.data.addressTypeHome);
@@ -280,7 +280,7 @@ describe('case page tests', function() {
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
         casePage.clickNextBtn();
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContentCases();
+        casePage.switchToDefaultContent();
         casePage.clickPeopleLinkBtn();
         casePage.addAddress(Objects.casepage.data.addressTypeHome, Objects.casepage.data.street, Objects.casepage.data.city, Objects.casepage.data.state, Objects.casepage.data.zip, Objects.casepage.data.country);
         casePage.deleteAddress();
@@ -291,7 +291,7 @@ describe('case page tests', function() {
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
         casePage.clickNextBtn();
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContentCases();
+        casePage.switchToDefaultContent();
         casePage.clickPeopleLinkBtn();
         casePage.addAddress(Objects.casepage.data.addressTypeHome, Objects.casepage.data.street, Objects.casepage.data.city, Objects.casepage.data.state, Objects.casepage.data.zip, Objects.casepage.data.country);
         casePage.editAddress(Objects.casepage.data.addressTypeBusiness, Objects.casepage.data.editStreet, Objects.casepage.data.editCity, Objects.casepage.data.editState, Objects.casepage.data.editZip, Objects.casepage.data.editCountry);
@@ -310,7 +310,7 @@ describe('case page tests', function() {
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
         casePage.clickNextBtn();
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContentCases();
+        casePage.switchToDefaultContent();
         casePage.clickPeopleLinkBtn();
         casePage.addAlias(Objects.casepage.data.aliaseFKA, Objects.casepage.data.aliasValue);
         expect(casePage.returnAliasesType()).toEqual(Objects.casepage.data.aliaseFKA);
@@ -325,7 +325,7 @@ describe('case page tests', function() {
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
         casePage.clickNextBtn();
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContentCases();
+        casePage.switchToDefaultContent();
         casePage.clickPeopleLinkBtn();
         casePage.addAlias(Objects.casepage.data.aliaseFKA, Objects.casepage.data.aliasValue);
         casePage.deleteAlias();
@@ -337,7 +337,7 @@ describe('case page tests', function() {
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
         casePage.clickNextBtn();
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContentCases();
+        casePage.switchToDefaultContent();
         casePage.clickPeopleLinkBtn();
         casePage.addAlias(Objects.casepage.data.aliaseFKA, Objects.casepage.data.aliasValue);
         casePage.editAlias(Objects.casepage.data.aliasMarried, Objects.casepage.data.editAlias);
@@ -353,7 +353,7 @@ describe('case page tests', function() {
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
         casePage.clickNextBtn();
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContentCases();
+        casePage.switchToDefaultContent();
         casePage.clickTagsLinkBtn();
         casePage.addTag(Objects.casepage.data.tagname);
         expect(casePage.returnTagName()).toEqual(Objects.casepage.data.tagname);
@@ -375,7 +375,7 @@ describe('case page tests', function() {
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
         casePage.clickNextBtn();
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContentCases();
+        casePage.switchToDefaultContent();
         casePage.clickSubscribeBtn();
         expect(casePage.returnUnsubscribeBtnText()).toEqual(Objects.casepage.data.unsubscribeBtn);
     });
@@ -385,7 +385,7 @@ describe('case page tests', function() {
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
         casePage.clickNextBtn();
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContentCases();
+        casePage.switchToDefaultContent();
         casePage.clickSubscribeBtn();
         casePage.clickUnubscribeBtn();
         expect(casePage.returnSubscribeBtnText()).toEqual(Objects.casepage.data.subscribeBtn);
@@ -398,7 +398,7 @@ describe('case page tests', function() {
             casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
             casePage.clickNextBtn();
             casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-            casePage.switchToDefaultContentCases();
+            casePage.switchToDefaultContent();
             casePage.waitForChangeCaseButton();
             casePage.clickChangeCaseBtn();
             casePage.switchToIframes().selectCaseStatus(data.status);
@@ -431,7 +431,7 @@ describe('case page tests', function() {
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
         casePage.clickEditCaseBtn();
         casePage.switchToIframes().submitGeneralInformation(Objects.casepage.data.caseName, "Benefits Appeal").clickSubmitBtn();
-        casePage.switchToDefaultContentCases();
+        casePage.switchToDefaultContent();
         casePage.waitForCaseTitle()
         casePage.clickFirstTopElementInList();
         expect(casePage.returnCaseTitle()).toEqual(Objects.casepage.data.caseName, "Case name is not updated");
@@ -443,7 +443,7 @@ describe('case page tests', function() {
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
         casePage.clickNextBtn();
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContentCases();
+        casePage.switchToDefaultContent();
         casePage.waitForCaseID();
         var caseid = element(by.xpath(Objects.casepage.locators.caseID)).getText();
         casePage.navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
@@ -540,7 +540,7 @@ describe('case page tests', function() {
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
         casePage.clickNextBtn();
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContentCases();
+        casePage.switchToDefaultContent();
         casePage.waitForChangeCaseButton();
         element(by.xpath(Objects.casepage.locators.caseID)).getText().then(function(text) {
             console.log(text);
@@ -579,7 +579,7 @@ describe('case page tests', function() {
         casePage.selectParticipant("Owner", Objects.casepage.data.approverSamuel);
         casePage.switchToIframes();
         casePage.clickSubmitBtn();
-        casePage.switchToDefaultContentCases();
+        casePage.switchToDefaultContent();
         casePage.participantTable();
         expect(casePage.returnParticipantTypeFirstRow()).toEqual("*");
         expect(casePage.returnParticipantNameFirstRow()).toEqual("*");
@@ -597,7 +597,7 @@ describe('case page tests', function() {
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
         casePage.clickNextBtn();
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContentCases();
+        casePage.switchToDefaultContent();
         casePage.participantTable();
         expect(casePage.returnParticipantTypeFirstRow()).toEqual("*");
         expect(casePage.returnParticipantNameFirstRow()).toEqual("*");
@@ -627,7 +627,7 @@ describe('case page tests', function() {
             casePage.selectParticipant(data.participant, "Sally");
             casePage.switchToIframes();
             casePage.clickSubmitBtn();
-            casePage.switchToDefaultContentCases();
+            casePage.switchToDefaultContent();
             casePage.participantTable();
             expect(casePage.returnParticipantTypeFirstRow()).toEqual("*");
             expect(casePage.returnParticipantNameFirstRow()).toEqual("*");
@@ -645,7 +645,7 @@ describe('case page tests', function() {
     it('should create new case and verify adding new Report of Investigation document', function() {
 
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson").clickNextBtn().initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContentCases().clickExpandFancyTreeTopElementAndSubLink("Documents");
+        casePage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Documents");
         casePage.rightClickRootFolder().addDocument("Report of Investigation");
         casePage.switchToIframes().submitReportOfInvestigation(Objects.basepage.data.reportTitle, Objects.taskspage.data.assigneeSamuel);
         casePage.switchToDefaultContent().validateDocGridData(true, "Report of Investigation", ".pdf", "Report of Investigation", utils.returnToday("/"), utils.returnToday("/"), userPage.returnUserNavigationProfile(), "1.0", "ACTIVE");
@@ -661,7 +661,7 @@ describe('case page tests', function() {
         casePage.selectParticipant("Approver", "Ann");
         casePage.switchToIframes();
         casePage.clickSubmitBtn();
-        casePage.switchToDefaultContentCases();
+        casePage.switchToDefaultContent();
         casePage.participantTable();
         expect(casePage.returnParticipantTypeFirstRow()).toEqual("*");
         expect(casePage.returnParticipantNameFirstRow()).toEqual("*");
@@ -709,7 +709,7 @@ describe('case page tests', function() {
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
         casePage.clickNextBtn();
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContentCases();
+        casePage.switchToDefaultContent();
         casePage.participantTable();
         casePage.clickReaderDeleteBtn();
         casePage.clickRefreshBtn();
@@ -719,7 +719,7 @@ describe('case page tests', function() {
     it('should verify adding note in document viewer in cases', function() {
 
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson").clickNextBtn().initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContentCases().clickExpandFancyTreeTopElementAndSubLink("Documents");
+        casePage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Documents");
         casePage.clickDocTreeExpand().rightClickFileTitle().clickDocAction("Open");
         casePage.moveToTab().clickDocViewNotesLink().submitNote(Objects.basepage.data.note);
         expect(casePage.returnSavedNoteInGrid()).toEqual(Objects.basepage.data.note);
@@ -757,7 +757,7 @@ describe('case page tests', function() {
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
         casePage.clickNextBtn();
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContentCases();
+        casePage.switchToDefaultContent();
         casePage.clickTasksLinkBtn();
         casePage.clickAddTaskButton();
         taskPage.insertSubject(Objects.taskpage.data.Subject).insertDueDateToday().clickSave();
@@ -779,7 +779,7 @@ describe('case page tests', function() {
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
         casePage.clickNextBtn();
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContentCases();
+        casePage.switchToDefaultContent();
         casePage.clickClaimButton();
         expect(casePage.returnAssignee()).toEqual(Objects.casepage.data.assigneeSamuel);
     });
@@ -789,7 +789,7 @@ describe('case page tests', function() {
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
         casePage.clickNextBtn();
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContentCases();
+        casePage.switchToDefaultContent();
         casePage.clickClaimButton();
         expect(casePage.returnAssignee()).toEqual(Objects.casepage.data.assigneeSamuel);
         casePage.clickUnclaimButton();

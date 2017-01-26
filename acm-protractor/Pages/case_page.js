@@ -112,17 +112,6 @@ var CasePage = function() {
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesTitle))), 30000);
     }
 
-
-    this.switchToDefaultContentCases = function() {
-
-        browser.driver.switchTo().defaultContent();
-        browser.waitForAngular();
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesTitle))), 60000).then(function() {
-            browser.sleep(10000);
-        });
-        return this;
-    }
-
     this.waitForCaseType = function() {
 
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesType))), 30000, "Case type is not displayed");
