@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.casefile.web.api;
 
 import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.SaveCaseService;
 import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
@@ -18,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
 import java.util.Date;
@@ -36,8 +35,7 @@ public class SaveCaseFileAPIController
 
     private UserTrackerService userTrackerService;
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    private CaseFileDao caseFileDao;
 
     @PreAuthorize("#in.id == null or hasPermission(#in.id, 'CASE_FILE', 'saveCase')")
     @RequestMapping(method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_XML_VALUE})
@@ -61,7 +59,7 @@ public class SaveCaseFileAPIController
             CaseFile saved = getSaveCaseService().saveCase(in, auth, ipAddress);
 
             // Detach the object to prevent event handler changes from being persisted to the database
-            entityManager.detach(saved);
+            getCaseFileDao().getEm().detach(saved);
 
             // since the approver list is not persisted to the database, we want to send them back to the caller...
             // the approver list is only here to send to the Activiti engine. After the workflow is started the
@@ -112,5 +110,15 @@ public class SaveCaseFileAPIController
     public void setUserTrackerService(UserTrackerService userTrackerService)
     {
         this.userTrackerService = userTrackerService;
+    }
+
+    public CaseFileDao getCaseFileDao()
+    {
+        return caseFileDao;
+    }
+
+    public void setCaseFileDao(CaseFileDao caseFileDao)
+    {
+        this.caseFileDao = caseFileDao;
     }
 }
