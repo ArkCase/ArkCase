@@ -100,7 +100,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                 var isSelected = searchObject.isSelected;
                 scope.searchQuery = searchObject.searchQuery;
                 scope.onSelect = function ($item, $model, $label) {
-                    scope.$label = $label;
+                    scope.labelSelected = $label;
                     isSelected = true;
                 };
 
@@ -129,8 +129,8 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                         }
 
                         if (scope.isAutoSuggestActive && scope.searchQuery !== "" && isSelected) {
-                            scope.searchQuery = scope.$label;
-                            searchObject.searchQuery = scope.$label;
+                            scope.searchQuery = scope.labelSelected;
+                            searchObject.searchQuery = scope.labelSelected;
                             var query = SearchQueryBuilder.buildFacetedSearchQuery("\"" + scope.searchQuery + "\"", scope.filters, scope.pageSize, scope.start);
                             isSelected = false;
                         } else {
