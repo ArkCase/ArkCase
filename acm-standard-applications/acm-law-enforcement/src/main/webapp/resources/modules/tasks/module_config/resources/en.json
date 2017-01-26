@@ -209,6 +209,24 @@
       "username": "Username"
     }
   },
+  "tasks.objectSearch": {
+    "id": "objectSearch",
+    "title": "Object Search",
+    "search": {
+      "btn": "Search",
+      "placeholder": "Search for the case or complaint to this task."
+    },
+    "cancelButton": "Cancel",
+    "confirmButton": "Confirm",
+    "enabled": true,
+    "userFacetFilter": "\"Object Type\": ",
+    "objectGridColumns": {
+      "name": "Number",
+      "type": "Type",
+      "title": "Title",
+      "username": "Assignee"
+    }
+  },
   "tasks.comp.addreference": {
     "title": "Add Reference",
     "cancelButton": "Cancel",

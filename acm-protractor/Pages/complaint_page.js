@@ -109,22 +109,22 @@ var ComplaintPage = function() {
                         browser.wait(EC.visibilityOf(element(by.linkText(category))), 30000).then(function() {
                             var incidentCategory = element(by.linkText(category));
                             incidentCategory.click();
-                        })
-
-
+                        });
                     });
 
-                })
-            })
+                });
+            });
 
-        })
+        });
         return this;
     };
 
     this.insertTitle = function(title) {
-        complaintTitle.click();
-        complaintTitle.clear();
-        complaintTitle.sendKeys(title);
+        browser.wait(EC.visibilityOf(element(By.name(Objects.complaintPage.locators.complaintTitle))), 10000, "Complaint title filed is not displayed").then(function() {
+            complaintTitle.click().then(function() {
+                complaintTitle.sendKeys(title);
+            });
+        });
         return this;
     };
     this.insertIncidentInformation = function(category, title) {
@@ -156,8 +156,8 @@ var ComplaintPage = function() {
     };
     this.clickSubmitButton = function() {
         browser.wait(EC.invisibilityOf(element(by.xpath(Objects.basepage.locators.fadeElementDeleteNote))), 30000).then(function() {
-            browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.submitButton))), 30000).then(function () {
-                browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.complaintPage.locators.submitButton))), 30000).then(function () {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.submitButton))), 30000).then(function() {
+                browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.complaintPage.locators.submitButton))), 30000).then(function() {
                     submitButton.click();
                 });
             });
@@ -198,7 +198,7 @@ var ComplaintPage = function() {
                 browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.complaintPage.locators.complaintDispositionDDListBox))), 30000).then(function() {
                     complaintDispositionDDListBox.click().then(function() {
                         browser.wait(EC.visibilityOf(element(by.linkText(disposition))), 30000).then(function() {
-                            browser.wait(EC.elementToBeClickable(element(by.linkText(disposition))), 30000).then(function () {
+                            browser.wait(EC.elementToBeClickable(element(by.linkText(disposition))), 30000).then(function() {
                                 var complaintDisposition = element(by.linkText(disposition));
                                 complaintDisposition.click();
                             });
@@ -211,7 +211,7 @@ var ComplaintPage = function() {
     };
     this.insertCloseComplaintDescription = function(description) {
         browser.wait(EC.presenceOf(element(by.css(Objects.complaintPage.locators.closeComplaintDescription))), 30000).then(function() {
-            closeComplaintDescription.click().then(function () {
+            closeComplaintDescription.click().then(function() {
                 closeComplaintDescription.sendKeys(description);
             });
         });
@@ -231,6 +231,29 @@ var ComplaintPage = function() {
         browser.switchTo().frame(browser.driver.findElement(by.className("new-iframe ng-scope"))).then(function() {
             browser.switchTo().frame(browser.driver.findElement(By.className("frevvo-form")));
         });
+    }
+
+
+    this.selectApprover = function(approver) {
+        browser.wait(EC.presenceOf(element(by.name(Objects.casepage.locators.selectApprover))), 30000).then(function() {
+            browser.wait(EC.visibilityOf(element(by.name(Objects.casepage.locators.selectApprover))), 30000).then(function() {
+                browser.wait(EC.elementToBeClickable(element(by.name(Objects.casepage.locators.selectApprover))), 30000).then(function() {
+                    selectApprover.click().then(function() {
+                        browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.searchField))), 10000);
+                        searchForUser.click();
+                        searchForUser.sendKeys(approver);
+                        goBtn.click().then(function() {
+                            browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchedUser))), 3000);
+                            searchedUser.click().then(function() {
+                                browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.addBtn))), 3000);
+                                addBtn.click();
+                            });
+                        });
+                    });
+                });
+            });
+        });
+
         return this;
     };
     this.switchToDefaultContent = function() {
@@ -240,8 +263,8 @@ var ComplaintPage = function() {
 
     };
 
-    this.waitForComplaintTitle = function () {
-        browser.wait(EC.presenceOf(element(by.xpath(Objects.complaintPage.locators.complaintTitleLink))), 30000).then(function () {
+    this.waitForComplaintTitle = function() {
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.complaintPage.locators.complaintTitleLink))), 30000).then(function() {
             browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.complaintTitleLink))), 30000);
         })
     };
@@ -272,37 +295,38 @@ var ComplaintPage = function() {
                 });
             });
         });
-return this;
-};
-this.deleteLocation = function() {
+        return this;
+    };
+    this.deleteLocation = function() {
 
-    browser.wait(EC.visibilityOf(element(by.css(Objects.complaintPage.locators.deleteLocationBtn))), 30000).then(function() {
-        deleteLocationBtn.click().then(function() {
-            browser.sleep(5000);
-            element.all(by.repeater(Objects.complaintPage.locators.addedLocations)).then(function(items) {
-                expect(items.length).toBe(0, "The organization is not deleted");
+        browser.wait(EC.visibilityOf(element(by.css(Objects.complaintPage.locators.deleteLocationBtn))), 30000).then(function() {
+            deleteLocationBtn.click().then(function() {
+                browser.sleep(5000);
+                element.all(by.repeater(Objects.complaintPage.locators.addedLocations)).then(function(items) {
+                    expect(items.length).toBe(0, "The organization is not deleted");
+                });
             });
         });
-    });
-    return this;
-}
+        return this;
+    }
 
 
-this.editLocation = function(type, street, city, state, zip) {
+    this.editLocation = function(type, street, city, state, zip) {
 
-    editLocationBtn.click().then(function() {
-        browser.wait(EC.visibilityOf(element(by.model(Objects.complaintPage.locators.locationTypeDropDown))), 10000, "Location type drop down is not displayed").then(function() {
-            locationTypeDropDown.selectByText(type).then(function() {
-                locationStreetInput.clear().then(function() {
-                    locationStreetInput.sendKeys(street).then(function() {
-                        locationCityInput.clear().then(function() {
-                            locationCityInput.sendKeys(city).then(function() {
-                                locationStateInput.clear().then(function() {
-                                    locationStateInput.sendKeys(state).then(function() {
-                                        locationZipInput.clear().then(function() {
-                                            locationZipInput.sendKeys(zip).then(function() {
-                                                saveLocationBtn.click().then(function() {
-                                                    browser.wait(EC.textToBePresentInElement((locationType), type), 10000, "Location is not updated");
+        editLocationBtn.click().then(function() {
+            browser.wait(EC.visibilityOf(element(by.model(Objects.complaintPage.locators.locationTypeDropDown))), 10000, "Location type drop down is not displayed").then(function() {
+                locationTypeDropDown.selectByText(type).then(function() {
+                    locationStreetInput.clear().then(function() {
+                        locationStreetInput.sendKeys(street).then(function() {
+                            locationCityInput.clear().then(function() {
+                                locationCityInput.sendKeys(city).then(function() {
+                                    locationStateInput.clear().then(function() {
+                                        locationStateInput.sendKeys(state).then(function() {
+                                            locationZipInput.clear().then(function() {
+                                                locationZipInput.sendKeys(zip).then(function() {
+                                                    saveLocationBtn.click().then(function() {
+                                                        browser.wait(EC.textToBePresentInElement((locationType), type), 10000, "Location is not updated");
+                                                    });
                                                 });
                                             });
                                         });
@@ -314,46 +338,45 @@ this.editLocation = function(type, street, city, state, zip) {
                 });
             });
         });
-    });
-    return this;
-}
+        return this;
+    }
 
-this.waitForComplaintsPage = function() {
-    browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.complaintsTitle))), 40000, "Complaint title is not displayed");
-}
+    this.waitForComplaintsPage = function() {
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.complaintsTitle))), 40000, "Complaint title is not displayed");
+    }
 
 
-this.returnLocationAddress = function() {
-    return address.getText();
-}
+    this.returnLocationAddress = function() {
+        return address.getText();
+    }
 
-this.returnLocationType = function() {
-    return locationType.getText();
-}
-this.returnLocationCity = function() {
-    return locationCity.getText();
-}
-this.returnLocationState = function() {
-    return locationState.getText();
-}
-this.returnLocationZip = function() {
-    return locationZip.getText();
-}
+    this.returnLocationType = function() {
+        return locationType.getText();
+    }
+    this.returnLocationCity = function() {
+        return locationCity.getText();
+    }
+    this.returnLocationState = function() {
+        return locationState.getText();
+    }
+    this.returnLocationZip = function() {
+        return locationZip.getText();
+    }
 
-this.verifyIfAddLocationsBtnIsDisplayed = function() {
-    expect(addLocationBtn.isDisplayed()).toBe(false, "Add lcaotion button it should not be displayed");
-}
+    this.verifyIfAddLocationsBtnIsDisplayed = function() {
+        expect(addLocationBtn.isDisplayed()).toBe(false, "Add lcaotion button it should not be displayed");
+    }
 
-this.participantsTab = function() {
-    participantsTab.click();
-}
+    this.participantsTab = function() {
+        participantsTab.click();
+    }
 
-this.clickNewComplaintBtn = function() {
+    this.clickNewComplaintBtn = function() {
 
-    browser.wait(EC.visibilityOf(element(by.css(Objects.complaintPage.locators.newComplaintBtn))), 30000).then(function() {
-        newComplaintBtn.click().then(function() {});
-    });
-}
+        browser.wait(EC.visibilityOf(element(by.css(Objects.complaintPage.locators.newComplaintBtn))), 30000).then(function() {
+            newComplaintBtn.click().then(function() {});
+        });
+    }
 
 
     this.getComplaintId = function() {
@@ -364,37 +387,37 @@ this.clickNewComplaintBtn = function() {
             browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.caseID))), 60000, "Case ID is not displayed");
         });
     };
-    this.returnComplaintType = function () {
+    this.returnComplaintType = function() {
         return complaintType.getText();
     };
-    this.returnComplaintPriority = function () {
+    this.returnComplaintPriority = function() {
         return complaintPriority.getText();
     };
-    this.returnCreatedDate = function () {
+    this.returnCreatedDate = function() {
         return complaintCreateDate.getText();
     };
-    this.returnComplaintTitle = function () {
+    this.returnComplaintTitle = function() {
         return complaintTitleSaved.getText();
     };
     this.returnComplaintsTitle = function() {
         return complaintsTitle.getText();
     };
-    this.insertCaseNumber = function (caseid) {
+    this.insertCaseNumber = function(caseid) {
         caseNumber.click();
         caseNumber.sendKeys(caseid);
         return this;
     };
-    this.clickSearchButton = function () {
+    this.clickSearchButton = function() {
         searchButton.click();
         return this;
     };
-    this.returnCaseTitle = function () {
+    this.returnCaseTitle = function() {
         return caseTitle.getAttribute("value");
     };
-    this.returnCaseCreatedDate = function () {
+    this.returnCaseCreatedDate = function() {
         return caseCreatedDate.getAttribute("value");
     };
-    this.returnCasePriority = function () {
+    this.returnCasePriority = function() {
         return casePriority.getAttribute("value");
     }
 };
