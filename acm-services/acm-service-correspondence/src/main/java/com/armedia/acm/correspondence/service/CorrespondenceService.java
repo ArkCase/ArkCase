@@ -121,7 +121,7 @@ public class CorrespondenceService
      */
     public Map<String, CorrespondenceQuery> getQueriesByType(QueryType queryType)
     {
-        return getAllQueries().entrySet().stream().filter(entry -> entry.getValue().getQueryType().equals(queryType))
+        return getAllQueries().entrySet().stream().filter(entry -> entry.getValue().getType().equals(queryType))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
