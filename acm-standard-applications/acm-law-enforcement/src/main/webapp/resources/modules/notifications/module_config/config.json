@@ -37,7 +37,7 @@
           "name": "parent_number_lcs",
           "displayName": "notifications.comp.grid.columns.parentNumber",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a href'#' ng-if='row.entity.related_object_number_s' ng-click='grid.appScope.onClickParentObjLink($event, row.entity)'>{{row.entity.related_object_number_s}}</a><a href'#' ng-if='!row.entity.related_object_number_s' ng-click='grid.appScope.onClickParentObjLink($event, row.entity)'>{{row.entity.parent_number_lcs}}</a>"
+          "cellTemplate": "<a arkcase-href object-data='row.entity' is-parent='true' url='row.entity.notification_link_s' ng-if='row.entity.related_object_number_s'>{{row.entity.related_object_number_s}}</a><a arkcase-href object-data='row.entity' is-parent='true' url='row.entity.notification_link_s' ng-if='!row.entity.related_object_number_s'>{{row.entity.parent_number_lcs}}</a>"
         },
         {
           "name": "parent_type_s",
