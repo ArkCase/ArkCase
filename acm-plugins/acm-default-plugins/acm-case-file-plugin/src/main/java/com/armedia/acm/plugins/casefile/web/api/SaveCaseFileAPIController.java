@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
 import java.util.Date;
@@ -33,6 +35,9 @@ public class SaveCaseFileAPIController
     private CaseFileEventUtility caseFileEventUtility;
 
     private UserTrackerService userTrackerService;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @PreAuthorize("#in.id == null or hasPermission(#in.id, 'CASE_FILE', 'saveCase')")
     @RequestMapping(method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_XML_VALUE})
@@ -54,6 +59,9 @@ public class SaveCaseFileAPIController
             in.setModified(new Date());
 
             CaseFile saved = getSaveCaseService().saveCase(in, auth, ipAddress);
+
+            // Detach the object to prevent event handler changes from being persisted to the database
+            entityManager.detach(saved);
 
             // since the approver list is not persisted to the database, we want to send them back to the caller...
             // the approver list is only here to send to the Activiti engine. After the workflow is started the
