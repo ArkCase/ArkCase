@@ -1,9 +1,9 @@
-var Objects = require('../json/Objects.json');
-var utils = require('../util/utils.js');
-var loginPage = require('../Pages/login_page.js');
+var Objects = require('../../json/Objects.json');
+var utils = require('../../util/utils.js');
+var loginPage = require('../../Pages/login_page.js');
 var flag = false;
 var EC = protractor.ExpectedConditions;
-var costTrackingPage = require('../Pages/cost_tracking_page.js');
+var costTrackingPage = require('../../Pages/cost_tracking_page.js');
 
 function testAsync(done) {
 
@@ -21,7 +21,6 @@ function waitUrl(myUrl) {
         });
     }
 }
-
 
 describe('Cost Tracking page tests', function() {
 
@@ -42,10 +41,11 @@ describe('Cost Tracking page tests', function() {
         costTrackingPage.clickModuleCostTracking();
         costTrackingPage.clickLastElementInTreeData();
         costTrackingPage.clickTagsLinkBtn();
-        costTrackingPage.addSugestedTag("milan");
-        expect(costTrackingPage.returnTagName()).toEqual("milan");
+        costTrackingPage.addSugestedTag(Objects.timetrackingPage.data.tagname);
+        expect(costTrackingPage.returnTagName()).toEqual(Objects.timetrackingPage.data.tagname);
         expect(costTrackingPage.returntagCratedDate()).toEqual(utils.returnToday("/"));
         expect(costTrackingPage.returntagCreatedBy()).toEqual(Objects.casepage.data.assigneeSamuel);
+        costTrackingPage.deleteTag();
     });
 
 });

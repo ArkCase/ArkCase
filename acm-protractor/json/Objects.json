@@ -311,7 +311,8 @@
             "widgetTitleTeamWorkload": "Team Workload",
             "widgetTitleWeather": "Weather",
             "widgetTitleNews": "News",
-            "widgetTitleMyTasks": "My Tasks"
+            "widgetTitleMyTasks": "My Tasks",
+            "DashbordTitle": "Dashbord Title"
         }
     },
 
@@ -627,7 +628,10 @@
             "unclaimButton": "[ng-click='unclaim(objectInfo)']",
             "addParticipantBtn": "[ng-click='addNew()']",
             "searchField": "searchQuery",
-            "tagPriority": ".//*[@class='ui-grid-cell-contents ui-grid-header-cell-primary-focus']"
+            "tagPriority": ".//*[@class='ui-grid-cell-contents ui-grid-header-cell-primary-focus']",
+            "participantTypeConflictMessage": "[extid='warningParticipantTypeConflict']",
+            "addParticipantTypeSecondRowbtn": "//table/tbody/..//td[2]/span",
+            "selectParticipantTypeSecondRow": "//table/tbody/tr[2]/td[5]"
 
         },
 
@@ -727,7 +731,8 @@
         },
         "data": {
 
-            "date": "1"
+            "date": "1",
+            "tagname": "milan"
         }
     },
 

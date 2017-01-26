@@ -52,8 +52,8 @@ describe('dashboard page test', function() {
     });
     it('should edit dashboard title', function() {
 
-        dashPage.editDashboardTitle("Dashbord Title");
-        expect(dashPage.returnDashboardTitle()).toEqual('Dashbord Title');
+        dashPage.editDashboardTitle(Objects.dashboardpage.data.DashbordTitle);
+        expect(dashPage.returnDashboardTitle()).toEqual(Objects.dashboardpage.data.DashbordTitle);
     });
 
     it('should logout', function() {

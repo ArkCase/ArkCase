@@ -601,7 +601,8 @@ describe('Create new complaint ', function() {
 
     it('should create new Complaint by default assignee, claim it and verify the assignee', function() {
 
-        complaintPage.clickNewButton().clickComplaintButton().switchToIframes().submitInitiatorInformation(Objects.complaintPage.data.firstName, Objects.complaintPage.data.lastName).reenterFirstName(Objects.complaintPage.data.firstName).clickTab("Incident").insertIncidentInformation("Arson", Objects.complaintPage.data.title);
+        complaintPage.clickNewButton().clickComplaintButton().switchToIframes();
+        complaintPage.submitInitiatorInformation(Objects.complaintPage.data.firstName, Objects.complaintPage.data.lastName).reenterFirstName(Objects.complaintPage.data.firstName).clickTab("Incident").insertIncidentInformation("Arson", Objects.complaintPage.data.title);
         complaintPage.clickSubmitBtn();
         complaintPage.switchToDefaultContent();
         complaintPage.waitForComplaintsPage();
@@ -611,7 +612,8 @@ describe('Create new complaint ', function() {
 
     it('should create new Complaint by default assignee, claim it verify the assignee then uncalaim it and verify if the assignee is removed ', function() {
 
-        complaintPage.clickNewButton().clickComplaintButton().switchToIframes().submitInitiatorInformation(Objects.complaintPage.data.firstName, Objects.complaintPage.data.lastName).reenterFirstName(Objects.complaintPage.data.firstName).clickTab("Incident").insertIncidentInformation("Arson", Objects.complaintPage.data.title);
+        complaintPage.clickNewButton().clickComplaintButton().switchToIframes();
+        complaintPage.submitInitiatorInformation(Objects.complaintPage.data.firstName, Objects.complaintPage.data.lastName).reenterFirstName(Objects.complaintPage.data.firstName).clickTab("Incident").insertIncidentInformation("Arson", Objects.complaintPage.data.title);
         complaintPage.clickSubmitBtn();
         complaintPage.switchToDefaultContent();
         complaintPage.waitForComplaintsPage();
