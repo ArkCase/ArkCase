@@ -33,7 +33,7 @@ public class CorrespondenceQueryResponce
     public CorrespondenceQueryResponce(String beanId, CorrespondenceQuery queryBean)
     {
         this.beanId = beanId;
-        queryType = queryBean.getQueryType();
+        queryType = queryBean.getType();
         jpaQuery = queryBean.getJpaQuery();
         fieldNames = queryBean.getFieldNames();
     }

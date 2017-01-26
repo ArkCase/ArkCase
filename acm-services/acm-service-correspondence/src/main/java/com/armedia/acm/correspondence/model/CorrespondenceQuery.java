@@ -8,26 +8,26 @@ import java.util.List;
  */
 public class CorrespondenceQuery
 {
-    private QueryType queryType;
+    private QueryType type;
 
     private String jpaQuery;
 
     private List<String> fieldNames = new ArrayList<>();
 
     /**
-     * @return the queryType
+     * @return the type
      */
-    public QueryType getQueryType()
+    public QueryType getType()
     {
-        return queryType;
+        return type;
     }
 
     /**
-     * @param queryType the queryType to set
+     * @param type the type to set
      */
-    public void setQueryType(QueryType queryType)
+    public void setType(QueryType type)
     {
-        this.queryType = queryType;
+        this.type = type;
     }
 
     public String getJpaQuery()
