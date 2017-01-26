@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.casefile.service;
 
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
+import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
@@ -87,7 +88,11 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
         String participantsListJson = ParticipantUtils.createParticipantsListJson(in.getParticipants());
         solr.setAdditionalProperty("acm_participants_lcs", participantsListJson);
 
+        // The property "assignee_group_id_lcs" is used only for showing/hiding claim/unclaim buttons
         solr.setAdditionalProperty("assignee_group_id_lcs", in.getAssigneeGroup());
+
+        // This property is used for showin the owning group for the object
+        solr.setAdditionalProperty("owning_group_id_lcs", ParticipantUtils.getOwningGroupIdFromParticipants(in.getParticipants()));
 
         return solr;
     }
