@@ -2,7 +2,6 @@ package com.armedia.acm.plugins.casefile.web.api;
 
 import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
-import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.SaveCaseService;
 import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
@@ -35,8 +34,6 @@ public class SaveCaseFileAPIController
 
     private UserTrackerService userTrackerService;
 
-    private CaseFileDao caseFileDao;
-
     @PreAuthorize("#in.id == null or hasPermission(#in.id, 'CASE_FILE', 'saveCase')")
     @RequestMapping(method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_XML_VALUE})
     @ResponseBody
@@ -57,10 +54,6 @@ public class SaveCaseFileAPIController
             in.setModified(new Date());
 
             CaseFile saved = getSaveCaseService().saveCase(in, auth, ipAddress);
-
-            // Detach the object to prevent event handler changes from being persisted to the database
-            getCaseFileDao().getEm().flush();
-            getCaseFileDao().getEm().detach(saved);
 
             // since the approver list is not persisted to the database, we want to send them back to the caller...
             // the approver list is only here to send to the Activiti engine. After the workflow is started the
@@ -111,15 +104,5 @@ public class SaveCaseFileAPIController
     public void setUserTrackerService(UserTrackerService userTrackerService)
     {
         this.userTrackerService = userTrackerService;
-    }
-
-    public CaseFileDao getCaseFileDao()
-    {
-        return caseFileDao;
-    }
-
-    public void setCaseFileDao(CaseFileDao caseFileDao)
-    {
-        this.caseFileDao = caseFileDao;
     }
 }
