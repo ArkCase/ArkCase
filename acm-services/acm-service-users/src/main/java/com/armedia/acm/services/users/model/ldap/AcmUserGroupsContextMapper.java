@@ -21,7 +21,10 @@ public class AcmUserGroupsContextMapper implements ContextMapper
             "givenName",
             "dn",
             "distinguishedname",
-            "memberOf" };
+            "memberOf",
+            "sAMAccountName",
+            "userPrincipalName" };
+
     private Logger log = LoggerFactory.getLogger(getClass());
     private String userIdAttributeName;
     private String mailAttributeName;
@@ -57,6 +60,8 @@ public class AcmUserGroupsContextMapper implements ContextMapper
         user.setUserId(MapperUtils.getAttribute(adapter, getUserIdAttributeName()));
         user.setMail(MapperUtils.getAttribute(adapter, getMailAttributeName()));
         user.setDistinguishedName(adapter.getDn().toString());
+        user.setsAMAccountName(MapperUtils.getAttribute(adapter, "sAMAccountName"));
+        user.setUserPrincipalName(MapperUtils.getAttribute(adapter, "userPrincipalName"));
 
         Set<String> ldapGroupsForUser = new HashSet<>();
         if (adapter.attributeExists("memberOf"))

@@ -41,6 +41,8 @@ public class AcmLoginSuccessOperations
 
         addUserIdToSession(request, internalUserId);
 
+        addAlfrescoUserIdToSession(request);
+
         addPrivilegesToSession(request, authentication);
 
         addIpAddressToSession(request, authentication);
@@ -67,6 +69,35 @@ public class AcmLoginSuccessOperations
 
         // after successful login set the MDC variable (needed for API calls)
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY, userId);
+    }
+
+    private void addAlfrescoUserIdToSession(HttpServletRequest request)
+    {
+        HttpSession session = request.getSession(true);
+        AcmUser acmUser = (AcmUser) session.getAttribute("acm_user");
+
+        String alfrescoUserId = getAlfrescoUserIdLdapAttributeValue(acmUser);
+        session.setAttribute("acm_alfresco_username", alfrescoUserId);
+
+        log.debug("Session 'acm_alfresco_username' set to '{}'", alfrescoUserId);
+
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, alfrescoUserId);
+    }
+
+    private String getAlfrescoUserIdLdapAttributeValue(AcmUser acmUser)
+    {
+        switch (getAcmApplication().getAlfrescoUserIdLdapAttribute().toLowerCase())
+        {
+        case "samaccountname":
+            return acmUser.getsAMAccountName();
+        case "userprincipalname":
+            return acmUser.getUserPrincipalName();
+        case "dn":
+        case "distinguishedname":
+            return acmUser.getDistinguishedName();
+        default:
+            return acmUser.getsAMAccountName();
+        }
     }
 
     protected void addIpAddressToSession(HttpServletRequest request, Authentication authentication)
