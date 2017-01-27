@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.armedia.acm.correspondence.model;
 
 import java.util.Map;

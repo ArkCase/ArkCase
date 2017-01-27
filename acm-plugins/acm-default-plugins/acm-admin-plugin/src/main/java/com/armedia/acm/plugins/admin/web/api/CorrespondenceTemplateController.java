@@ -57,8 +57,8 @@ public class CorrespondenceTemplateController
 
         response.setDocumentType(template.getDocumentType());
         response.setTemplateFilename(template.getTemplateFilename());
-        response.setCorrespondenceQueryBeanId(correspondenceService.getQuryId(template.getQuery()));
-        response.setQueryTpe(template.getQuery().getType().name());
+        response.setCorrespondenceQueryBeanId(correspondenceService.getQueryId(template.getQuery()));
+        response.setQueryType(template.getQuery().getType().name());
         response.setTemplateSubstitutionVariables(template.getTemplateSubstitutionVariables());
         response.setDateFormatString(template.getDateFormatString());
         response.setNumberFormatString(template.getNumberFormatString());
