@@ -48,15 +48,19 @@ var helpers = function helpers() {
             robot.mouseClick("right");
         }
     this.returnToday = function(sign) {
+
         var now = new Date();
         var day = ("0" + now.getDate()).slice(-2);
         var month = ("0" + (now.getMonth() + 1)).slice(-2);
         return today = (month) + sign + (day) + sign + now.getFullYear();
     }
+
     this.rightClick = function() {
         browser.actions().click(protractor.Button.RIGHT).perform();
     }
+
     this.returnDate = function(sign, NoDays) {
+
         var now = new Date();
         var dueDate = new Date();
         dueDate.setDate(now.getDate() + NoDays);
@@ -96,7 +100,6 @@ var helpers = function helpers() {
         } else {
             return month;
         }
-
     }
 
     this.returnCurrentYear = function() {
@@ -136,13 +139,13 @@ var helpers = function helpers() {
         }
     }
     this.returnNumberOfGroupsFromJson = function(user) {
+
         var dictionarydoc = Users.response.docs;
         for (var i in dictionarydoc) {
             var userName = dictionarydoc[i].object_id_s;
             if (userName == user) {
                 return dictionarydoc[i].groups_id_ss.length;
             }
-
         }
     }
 };

@@ -61,7 +61,7 @@ var CasePage = function() {
     this.switchToIframes = function() {
 
         browser.ignoreSynchronization = true;
-        browser.wait(EC.visibilityOf(element(by.className("new-iframe ng-scope"))), 30000);
+        browser.wait(EC.visibilityOf(element(by.className("new-iframe ng-scope"))), 30000,"First iframe is not visible");
         browser.switchTo().frame(browser.driver.findElement(by.className("new-iframe ng-scope"))).then(function() {
             browser.switchTo().frame(browser.driver.findElement(By.className("frevvo-form")));
         });
@@ -101,27 +101,6 @@ var CasePage = function() {
 
         return this;
     }
-
-    this.waitForCaseType = function() {
-
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesType))), 30000, "Case type is not displayed");
-    }
-
-    this.waitForCaseTitle = function() {
-
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesTitle))), 30000);
-    }
-
-    this.waitForCaseType = function() {
-
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesType))), 30000, "Case type is not displayed");
-    }
-
-    this.waitForCaseTitle = function() {
-
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesTitle))), 60000, "Case title is not displayed");
-    }
-
 
     this.returnCasesPageTitle = function() {
 
@@ -233,6 +212,12 @@ var CasePage = function() {
 
     this.returnPriority = function() {
         return priority.getText();
+    }
+
+    this.waitForCasesPage = function() {
+
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesTitle))), 30000);
+        browser.sleep(10000);
     }
 
 };
