@@ -32,6 +32,10 @@ public class CorrespondenceTemplateManager implements InitializingBean
 
     private Resource correspondenceTemplatesConfiguration;
 
+    private Resource caseCorrespondenceForms;
+
+    private Resource complaintCorrespondenceForms;
+
     private List<CorrespondenceTemplate> templates = new ArrayList<>();
 
     Map<String, CorrespondenceQuery> correspondenceQueryBeansMap;
@@ -45,11 +49,27 @@ public class CorrespondenceTemplateManager implements InitializingBean
     }
 
     /**
-     * @param correspondenceTemplatesConfigurationPath the correspondenceTemplatesConfigurationPath to set
+     * @param correspondenceTemplatesConfiguration the correspondenceTemplatesConfiguration to set
      */
-    public void setCorrespondenceTemplatesConfigurationPath(Resource correspondenceTemplatesConfigurationPath)
+    public void setCorrespondenceTemplatesConfiguration(Resource correspondenceTemplatesConfiguration)
     {
-        correspondenceTemplatesConfiguration = correspondenceTemplatesConfigurationPath;
+        this.correspondenceTemplatesConfiguration = correspondenceTemplatesConfiguration;
+    }
+
+    /**
+     * @param caseCorrespondenceForms the caseCorrespondenceForms to set
+     */
+    public void setCaseCorrespondenceForms(Resource caseCorrespondenceForms)
+    {
+        this.caseCorrespondenceForms = caseCorrespondenceForms;
+    }
+
+    /**
+     * @param complaintCorrespondenceForms the complaintsCorrespondenceForms to set
+     */
+    public void setComplaintCorrespondenceForms(Resource complaintCorrespondenceForms)
+    {
+        this.complaintCorrespondenceForms = complaintCorrespondenceForms;
     }
 
     /*
@@ -112,6 +132,7 @@ public class CorrespondenceTemplateManager implements InitializingBean
         }
 
         updateConfiguration(templates);
+        updateLabels(template);
 
         return template;
     }
@@ -145,8 +166,6 @@ public class CorrespondenceTemplateManager implements InitializingBean
 
         File file = correspondenceTemplatesConfiguration.getFile();
         FileUtils.writeStringToFile(file, configurationsOutput);
-
-        // should update the complaintCorrespondenceForms.json and caseCorrespondenceForms.json as well
 
     }
 
@@ -184,6 +203,45 @@ public class CorrespondenceTemplateManager implements InitializingBean
     }
 
     /**
+     * @param template
+     * @throws IOException
+     */
+    private void updateLabels(CorrespondenceTemplate template) throws IOException
+    {
+        File file;
+        switch (template.getQuery().getType())
+        {
+        case CASE_FILE:
+            file = caseCorrespondenceForms.getFile();
+            break;
+        case COMPLAINT:
+            file = complaintCorrespondenceForms.getFile();
+        default:
+            throw new IllegalArgumentException();
+        }
+        String resource = FileUtils.readFileToString(file);
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+
+        List<TemplateLabel> templateLabels = mapper.readValue(resource, new TypeReference<List<TemplateLabel>>()
+        {
+        });
+
+        Optional<TemplateLabel> label = templateLabels.stream().filter(tl -> tl.getTemplate().equals(template.getTemplateFilename()))
+                .findAny();
+        if (label.isPresent())
+        {
+            label.get().setLabel(template.getDocumentType());
+        } else
+        {
+            templateLabels.add(new TemplateLabel(template.getTemplateFilename(), template.getDocumentType()));
+        }
+        FileUtils.writeStringToFile(file, mapper.writeValueAsString(templateLabels));
+
+    }
+
+    /**
      * @param templateFileName
      * @return
      */
@@ -206,7 +264,9 @@ public class CorrespondenceTemplateManager implements InitializingBean
             if (templates.remove(template))
             {
                 updateConfiguration(templates);
+                updateLabels(template);
             }
+            return template;
         }
         return null;
     }
