@@ -53,6 +53,10 @@ public class AcmUserGroupsContextMapper implements ContextMapper
             log.debug("User '{}' is disabled and won't be synced", fullName);
             user.setUserState("DISABLED");
         }
+        else
+        {
+            user.setUserState("VALID");
+        }
 
         user.setLastName(MapperUtils.getAttribute(adapter, "sn"));
         user.setFirstName(MapperUtils.getAttribute(adapter, "givenName"));

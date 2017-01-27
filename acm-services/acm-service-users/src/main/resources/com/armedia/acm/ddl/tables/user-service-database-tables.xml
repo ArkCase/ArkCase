@@ -287,6 +287,7 @@
          <addColumn tableName="acm_user">
              <column name="cm_samaccountname" type="VARCHAR(20)"/>
              <column name="cm_user_principal_name" type="VARCHAR(255)"/>
+             <column name="cm_distinguished_name" type="VARCHAR(255)"/>
          </addColumn>
      </changeSet>
 </databaseChangeLog>

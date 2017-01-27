@@ -69,7 +69,7 @@ public class AcmUser implements Serializable, AcmLdapUser
     @JsonIgnore
     private Set<AcmGroup> groups;
 
-    @Transient
+    @Column(name = "cm_distinguished_name")
     private String distinguishedName;
 
     @Transient
@@ -80,7 +80,6 @@ public class AcmUser implements Serializable, AcmLdapUser
     {
         setCreated(new Date());
         setModified(new Date());
-        setUserState("VALID");
     }
 
     @PreUpdate

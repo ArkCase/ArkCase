@@ -1,14 +1,17 @@
 package com.armedia.acm.services.users.dao.ldap;
 
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 
 import javax.persistence.EntityManager;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
 
 /**
  * Created by dmiller on 4/20/16.
@@ -43,7 +46,7 @@ public class UserDaoTest extends EasyMockSupport
 
         replayAll();
 
-        AcmUser saved = unit.saveAcmUser(user);
+        AcmUser saved = unit.save(user);
 
         verifyAll();
 
