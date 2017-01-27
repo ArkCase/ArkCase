@@ -115,6 +115,10 @@ public class MuleContextManager implements ApplicationContextAware
                     MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY) == null ? MDCConstants.ANONYMOUS_USER
                             : MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY),
                     DataType.STRING_DATA_TYPE);
+            message.setOutboundProperty(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY,
+                    MDC.get(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY) == null ? MDCConstants.ANONYMOUS_USER
+                            : MDC.get(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY),
+                    DataType.STRING_DATA_TYPE);
         }
     }
 
