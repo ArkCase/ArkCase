@@ -20,6 +20,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class CorrespondenceService
@@ -27,6 +29,8 @@ public class CorrespondenceService
     private SpringContextHolder springContextHolder;
     private CorrespondenceGenerator correspondenceGenerator;
     private CorrespondenceEventPublisher eventPublisher;
+
+    private CorrespondenceTemplateManager templateManager;
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -83,7 +87,7 @@ public class CorrespondenceService
 
     private CorrespondenceTemplate findTemplate(String templateName)
     {
-        Collection<CorrespondenceTemplate> templates = getSpringContextHolder().getAllBeansOfType(CorrespondenceTemplate.class).values();
+        Collection<CorrespondenceTemplate> templates = templateManager.getTemplates();
         for (CorrespondenceTemplate template : templates)
         {
             if (templateName.equalsIgnoreCase(template.getTemplateFilename()))
@@ -125,6 +129,62 @@ public class CorrespondenceService
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
+    /**
+     * @param queryBeanId
+     * @return
+     */
+    public CorrespondenceQuery getQueryByBeanId(String queryBeanId)
+    {
+        return springContextHolder.getAllBeansOfType(CorrespondenceQuery.class).get(queryBeanId);
+    }
+
+    /**
+     * @param query
+     * @return
+     */
+    public String getQuryId(CorrespondenceQuery query)
+    {
+        Map<String, CorrespondenceQuery> queryBeans = springContextHolder.getAllBeansOfType(CorrespondenceQuery.class);
+        if (queryBeans.values().contains(query))
+        {
+            Optional<Entry<String, CorrespondenceQuery>> searchResult = queryBeans.entrySet().stream()
+                    .filter(entry -> entry.getValue().equals(query)).findFirst();
+            if (searchResult.isPresent())
+            {
+                return searchResult.get().getKey();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param templateFileName
+     * @return
+     */
+    public CorrespondenceTemplate getTemplateByFileName(String templateFileName)
+    {
+        return templateManager.getTemplateByFileName(templateFileName);
+    }
+
+    /**
+     * @param templateFileName
+     * @return
+     * @throws IOException
+     */
+    public CorrespondenceTemplate deleteTemplate(String templateFileName) throws IOException
+    {
+        return templateManager.deleteTemplate(templateFileName);
+    }
+
+    /**
+     * @param mapRequestToTemplate
+     * @throws IOException
+     */
+    public CorrespondenceTemplate updateTemplate(CorrespondenceTemplate template) throws IOException
+    {
+        return templateManager.updateTemplate(template);
+    }
+
     public SpringContextHolder getSpringContextHolder()
     {
         return springContextHolder;
@@ -153,6 +213,14 @@ public class CorrespondenceService
     public void setEventPublisher(CorrespondenceEventPublisher eventPublisher)
     {
         this.eventPublisher = eventPublisher;
+    }
+
+    /**
+     * @param templateManager the templateManager to set
+     */
+    public void setTemplateManager(CorrespondenceTemplateManager templateManager)
+    {
+        this.templateManager = templateManager;
     }
 
 }
