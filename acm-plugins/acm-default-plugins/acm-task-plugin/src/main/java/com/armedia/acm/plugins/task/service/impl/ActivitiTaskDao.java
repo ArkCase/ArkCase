@@ -87,9 +87,23 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
     @Transactional
     public AcmTask createAdHocTask(AcmTask in) throws AcmTaskException
     {
-        Task activitiTask = getActivitiTaskService().newTask();
+        Task task = null;
+        if (in.isBuckslipTask())
+        {
+            ProcessInstance pi = activitiRuntimeService.startProcessInstanceByKey("ArkCaseBuckslipProcess");
+            List<Task> buckslipTaskList = activitiTaskService.createTaskQuery().processInstanceId(pi.getId()).list();
+            if (buckslipTaskList != null && buckslipTaskList.size() > 0)
+            {
+                task = buckslipTaskList.get(0);
+            }
 
-        AcmTask out = updateExistingActivitiTask(in, activitiTask);
+        }
+        if (task == null)
+        {
+            task = getActivitiTaskService().newTask();
+        }
+
+        AcmTask out = updateExistingActivitiTask(in, task);
         if (out.getStatus().equalsIgnoreCase(TaskConstants.STATE_CLOSED))
         {
             String taskId = String.valueOf(out.getId());
