@@ -1580,8 +1580,8 @@ var BasePage = function() {
     }
 
     this.clickParticipantTab = function() {
-
         participantTab.click();
+        return this;
     }
 
     this.selectParticipant = function(type, participant) {
@@ -1995,6 +1995,7 @@ var BasePage = function() {
 
         return this;
     };
+
 }
 
 
