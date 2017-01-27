@@ -3,12 +3,15 @@ package com.armedia.acm.plugins.task.service;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.task.model.AcmTask;
+import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
+import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,7 +54,7 @@ import static org.junit.Assert.*;
         "/spring/spring-library-user-service.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
-public class BuckslipArkcaseIT
+public class BuckslipArkcaseIT extends EasyMockSupport
 {
     @Autowired
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
@@ -75,13 +78,16 @@ public class BuckslipArkcaseIT
 
     private String processId;
 
+    private UserDao userDaoMock;
+
     private transient final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Before
     public void setUp() throws Exception
     {
         auditPropertyEntityAdapter.setUserId("TEST");
-
+        userDaoMock = createMock(UserDao.class);
+        //taskDao.set
         deployProcessIfNeeded();
         processId = startBuckslipProcess();
     }
@@ -193,12 +199,19 @@ public class BuckslipArkcaseIT
         assertNotNull(processId);
 
         // should have a task for Jerry... complete with 'CONCUR' outcome
+        AcmUser userBob = new AcmUser();
+        userBob.setUserId("bob");
+        AcmUser userPhil = new AcmUser();
+        userPhil.setUserId("phil");
+        AcmUser userJerry = new AcmUser();
+        userJerry.setUserId("jerry");
+
         AcmTask acmTask = findAcmTaskForProcess();
         assertNotNull(acmTask);
         assertEquals("jerry", acmTask.getAssignee());
         assertEquals(2, acmTask.getBuckslipFutureApprovers().size());
-        assertTrue(acmTask.getBuckslipFutureApprovers().contains("bob"));
-        assertTrue(acmTask.getBuckslipFutureApprovers().contains("phil"));
+        assertTrue(acmTask.getBuckslipFutureApprovers().contains(userBob));
+        assertTrue(acmTask.getBuckslipFutureApprovers().contains(userPhil));
         assertEquals("[]", acmTask.getBuckslipPastApprovers());
         Principal assignee = new UsernamePasswordAuthenticationToken("jerry", "jerry");
         taskDao.completeTask(assignee, acmTask.getTaskId(), "buckslipOutcome", "CONCUR");
@@ -208,11 +221,13 @@ public class BuckslipArkcaseIT
         assertNotNull(acmTask);
         assertEquals("bob", acmTask.getAssignee());
         assertEquals(1, acmTask.getBuckslipFutureApprovers().size());
-        assertTrue(acmTask.getBuckslipFutureApprovers().contains("phil"));
+        assertTrue(acmTask.getBuckslipFutureApprovers().contains(userPhil));
         assertTrue(acmTask.getBuckslipPastApprovers().contains("jerry"));
 
         // add the approver 'bill'
-        acmTask.getBuckslipFutureApprovers().add("bill");
+        AcmUser userBill = new AcmUser();
+        userBill.setUserId("bill");
+        //acmTask.getBuckslipFutureApprovers().add(userBill);
         taskDao.save(acmTask);
 
         assignee = new UsernamePasswordAuthenticationToken("bob", "bob");
@@ -223,7 +238,7 @@ public class BuckslipArkcaseIT
         assertNotNull(acmTask);
         assertEquals("phil", acmTask.getAssignee());
         assertEquals(1, acmTask.getBuckslipFutureApprovers().size());
-        assertTrue(acmTask.getBuckslipFutureApprovers().contains("bill"));
+        assertTrue(acmTask.getBuckslipFutureApprovers().contains(userBill));
         assertTrue(acmTask.getBuckslipPastApprovers().contains("jerry"));
         assertTrue(acmTask.getBuckslipPastApprovers().contains("bob"));
         assignee = new UsernamePasswordAuthenticationToken("phil", "phil");

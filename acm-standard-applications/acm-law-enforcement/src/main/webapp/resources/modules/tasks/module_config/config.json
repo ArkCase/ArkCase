@@ -117,7 +117,8 @@
           "workflow",
           "history",
           "signatures",
-          "tags"
+          "tags",
+          "approvalrouting"
         ]
       },
       {
@@ -209,6 +210,14 @@
         ]
       },
       {
+        "type": "p/TASK/apr",
+        "label": "Approval Routing",
+        "icon": "fa fa-sort-amount-desc",
+        "components": [
+          "approvalrouting"
+        ]
+      },
+      {
         "type": "p/ADHOC",
         "icon": "fa fa-check-circle",
         "components": [
@@ -221,7 +230,8 @@
           "workflow",
           "history",
           "signatures",
-          "tags"
+          "tags",
+          "approvalrouting"
         ]
       },
       {
@@ -302,6 +312,14 @@
         "icon": "fa fa-tags",
         "components": [
           "tags"
+        ]
+      },
+      {
+        "type": "p/ADHOC/apr",
+        "label": "Approval Routing",
+        "icon": "fa fa-sort-amount-desc",
+        "components": [
+          "approvalrouting"
         ]
       }
     ]
@@ -1274,9 +1292,75 @@
       "userSearch": {
         "userFacetFilter": "\"Object Type\": USER"
       },
-       "objectSearch": {
+      "objectSearch": {
         "objectFacetFilter": "\"Object Type\": "
       }
+    },
+    {
+      "id": "approvalrouting",
+      "title": "Approval Routing",
+      "icon": "fa fa-sort-amount-desc",
+      "addNewTooltip": "tasks.comp.approvalRouting.addNewTooltip",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": false,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
+      "columnDefs": [
+        {
+          "name": "order",
+          "displayName": "",
+          "headerCellFilter": "translate",
+          "enableSorting": false,
+          "enableColumnMenu": false,
+          "cellEditableCondition": false,
+          "width": "50",
+          "cellTemplate": ""
+        },
+        {
+          "name": "fullName",
+          "displayName": "Full Name",
+          "cellEditableCondition": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "act",
+          "cellEditableCondition": false,
+          "width": "70",
+          "headerCellTemplate": "<span></span>",
+          "cellTemplate": ""
+        }
+      ],
+      "userSearch": {
+        "userFacetFilter": "\"Object Type\": USER"
+      }
+    },
+    {
+      "id": "pastapprovals",
+      "title": "Past Approvals",
+      "icon": "fa fa-sort-amount-desc",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": false,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
+      "columnDefs": [
+        {
+          "name": "fullName",
+          "displayName": "Full Name",
+          "headerCellFilter": "translate"
+        }
+      ]
     }
   ]
 }

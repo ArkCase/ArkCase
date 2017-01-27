@@ -92,7 +92,7 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
         }
         catch(NoResultException e)
         {
-        	LOG.error("Cannot find EcmFile for containerId=" + containerId + ", folderId=" + folderId + " and fileType=" + fileType, e);
+        	LOG.debug("Cannot find EcmFile for containerId=" + containerId + ", folderId=" + folderId + " and fileType=" + fileType, e);
         }
         catch (NonUniqueResultException e1) 
         {
