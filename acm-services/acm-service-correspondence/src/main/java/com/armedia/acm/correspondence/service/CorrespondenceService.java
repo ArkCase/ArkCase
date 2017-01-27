@@ -142,7 +142,7 @@ public class CorrespondenceService
      * @param query
      * @return
      */
-    public String getQuryId(CorrespondenceQuery query)
+    public String getQueryId(CorrespondenceQuery query)
     {
         Map<String, CorrespondenceQuery> queryBeans = springContextHolder.getAllBeansOfType(CorrespondenceQuery.class);
         if (queryBeans.values().contains(query))
