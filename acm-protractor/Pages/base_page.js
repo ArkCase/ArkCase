@@ -242,6 +242,7 @@ var participantTypeConflictMessage = element(by.css(Objects.casepage.locators.pa
 var addParticipantTypeSecondRowbtn = element(by.xpath(Objects.casepage.locators.addParticipantTypeSecondRowbtn));
 var selectParticipantTypeSecondRow = element(by.xpath(Objects.casepage.locators.selectParticipantTypeSecondRow));
 var selectParticipantSecondRow = element.all(by.name(Objects.casepage.locators.selectParticipant)).get(1);
+var timeCanvasData = element(by.css(Objects.basepage.locators.timeCanvasData));
 
 var BasePage = function() {
 
@@ -1953,7 +1954,7 @@ var BasePage = function() {
     };
 
     this.clickLastElementInTreeData = function() {
-        browser.wait(EC.visibilityOf($('.fancytree-lastsib')), 10000, "Elements in the data tree are not displayed");
+        browser.wait(EC.visibilityOf($('.fancytree-lastsib')), 20000, "Elements in the data tree are not displayed");
         var lastElement = $('.fancytree-lastsib');
         lastElement.click();
     }
@@ -1995,6 +1996,15 @@ var BasePage = function() {
 
         return this;
     };
+
+    this.verifyTimeWidgetData = function(time) {
+
+        browser.wait(EC.visibilityOf(element(by.css(Objects.basepage.locators.timeCanvasData))), 30000, "Time widget data is not displayed");
+        timeCanvasData.evaluate('time.data').then(function(data) {
+        	var date=""+ data +"";
+            expect(date).toEqual(time, "The time in the time widget is not updated");
+        });
+    }
 
 }
 

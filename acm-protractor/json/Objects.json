@@ -74,7 +74,10 @@
             "docVersionDropDownList": ".docversion.inline",
             "emailRecepient": "recipientsStr",
             "sendEmailButton": "Send Email",
-            "sugestedTag": "[ng-click='addSuggestionByIndex($index)']"
+            "sugestedTag": "[ng-click='addSuggestionByIndex($index)']",
+            "timeCanvasData":"[chart-data='time.data']"
+
+
 
         },
         "data": {
@@ -719,7 +722,7 @@
             "timetrackingTitle": ".//*[@class='f-message decorator']/..//div/b",
             "saveBtn": "//input[@name='actionType'][@value='Save']",
             "newTimesheetBtn": "New Timesheet",
-            "editTimesheetBtn": "Edit Timesheet",
+            "editTimesheetBtn": "[ui-sref='frevvo.edit-timesheet(editTimesheetParams)']",
             "caseFileModule": "a[href*='#!/cases//main']",
             "complaintsModule": "a[href*='#!/complaints//main']",
             "timesheetsPageTitle": ".//*[@class='module-header']/..//h3/span",
@@ -727,9 +730,8 @@
             "periodInput": ".//*[@class='input f-date']",
             "timeTrackingModule": "a[href*='#!/time-tracking//main']",
             "timeTrackingDate": ".//*[@class='f-control Three columns  f-output  s-valid  s-prepend   s-linked Message s-new-line s-color-None']",
-            "chargeCodeAlertMessage":".//*[@class='f-status f-table-status s-alert']"
-
-
+            "chargeCodeAlertMessage":".//*[@class='f-status f-table-status s-alert']",
+            "timeTotal": "rowTotal"
         },
         "data": {
 

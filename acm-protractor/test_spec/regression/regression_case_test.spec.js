@@ -56,5 +56,31 @@ describe('case page tests', function() {
             casePage.switchToDefaultContent();
     });
 
+     it('should create new case add/edit timeSheet and verify the time widget data in cases overview page', function() {
+
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
+        casePage.clickNextBtn();
+        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
+        casePage.switchToDefaultContent();
+        casePage.clickModuleCasesFiles();
+        casePage.waitForCasesPage();
+        element(by.xpath(Objects.casepage.locators.caseID)).getText().then(function(text) {
+            console.log(text);
+            casePage.clickNewButton();
+            timeTrackingPage.navigateToTimeTrackingPage();
+            casePage.switchToIframes();
+            timeTrackingPage.submitTimesheetTable("Case", text, "8");
+            casePage.selectApprover(Objects.casepage.data.approverSamuel);
+            timeTrackingPage.clickSaveBtn();
+            timeTrackingPage.clickEditTimesheetBtn();
+            timeTrackingPage.switchToIframes();
+            timeTrackingPage.submitTimesheetTable("Case", text, "1");
+            casePage.selectApprover(Objects.casepage.data.approverSamuel);
+            timeTrackingPage.clickSaveBtn();
+            casePage.clickModuleCasesFiles();
+            casePage.verifyTimeWidgetData("7");
+
+        });
+    });
 
 });

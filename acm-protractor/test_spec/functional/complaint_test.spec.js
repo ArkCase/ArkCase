@@ -533,4 +533,32 @@ describe('Create new complaint ', function() {
         expect(complaintPage.returnParticipantNameForthRow()).toEqual("Samuel Supervisor");
     });
 
+    it('should create new complaint add/edit timeSheet and verify the time widget data in cases overview page', function() {
+
+        complaintPage.clickNewButton().clickComplaintButton().switchToIframes();
+        complaintPage.submitInitiatorInformation(Objects.complaintPage.data.firstName, Objects.complaintPage.data.lastName).reenterFirstName(Objects.complaintPage.data.firstName).clickTab("Incident").insertIncidentInformation("Arson", Objects.complaintPage.data.title);
+        complaintPage.clickSubmitBtn();
+        complaintPage.switchToDefaultContent();
+        complaintPage.clickModuleComplaints();
+        complaintPage.waitForComplaintsPage();
+        element(by.xpath(Objects.casepage.locators.caseID)).getText().then(function(text) {
+            console.log(text);
+            complaintPage.clickNewButton();
+            timeTrackingPage.navigateToTimeTrackingPage();
+            complaintPage.switchToIframes();
+            timeTrackingPage.submitTimesheetTable("Complaint", text, "8");
+            complaintPage.selectApprover(Objects.casepage.data.approverSamuel);
+            timeTrackingPage.clickSaveBtn();
+            timeTrackingPage.clickEditTimesheetBtn();
+            timeTrackingPage.switchToIframes();
+            timeTrackingPage.submitTimesheetTable("Complaint", text, "1");
+            complaintPage.selectApprover(Objects.casepage.data.approverSamuel);
+            timeTrackingPage.clickSaveBtn();
+            complaintPage.clickModuleComplaints();
+            complaintPage.verifyTimeWidgetData("7");
+
+        });
+    });
+
+
 });
