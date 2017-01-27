@@ -6,11 +6,10 @@ import com.armedia.acm.correspondence.service.CorrespondenceService;
 
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.ws.rs.PathParam;
 
 import java.util.List;
 import java.util.Map;
@@ -36,7 +35,7 @@ public class CorrespondenceQueryController
 
     @RequestMapping(value = "/queries/{queryType}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<CorrespondenceQueryResponce> getQueriesByType(@PathParam(value = "queryType") QueryType queryType)
+    public List<CorrespondenceQueryResponce> getQueriesByType(@PathVariable(value = "queryType") QueryType queryType)
     {
         return generateResponse(correspondenceService.getQueriesByType(queryType));
     }
