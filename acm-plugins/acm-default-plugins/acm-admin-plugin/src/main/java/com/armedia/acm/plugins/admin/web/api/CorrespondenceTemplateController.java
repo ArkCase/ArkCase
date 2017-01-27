@@ -24,14 +24,14 @@ public class CorrespondenceTemplateController
 
     private CorrespondenceService correspondenceService;
 
-    @RequestMapping(value = "/template/{templateFileName}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/template/{templateFileName:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public CorrespondenceTemplateRequestResponse getTemplate(@PathVariable(value = "templateFileName") String templateFileName)
     {
         return mapTemplateToResponse(correspondenceService.getTemplateByFileName(templateFileName));
     }
 
-    @RequestMapping(value = "/template/{templateFileName}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/template/{templateFileName:.+}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public CorrespondenceTemplateRequestResponse deleteTemplate(@PathVariable(value = "templateFileName") String templateFileName)
             throws IOException
@@ -41,7 +41,8 @@ public class CorrespondenceTemplateController
 
     @RequestMapping(value = "/template/update", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public CorrespondenceTemplateRequestResponse updateTemplate(@RequestBody CorrespondenceTemplateRequestResponse request) throws IOException
+    public CorrespondenceTemplateRequestResponse updateTemplate(@RequestBody CorrespondenceTemplateRequestResponse request)
+            throws IOException
     {
         return mapTemplateToResponse(correspondenceService.updateTemplate(mapRequestToTemplate(request)));
     }
