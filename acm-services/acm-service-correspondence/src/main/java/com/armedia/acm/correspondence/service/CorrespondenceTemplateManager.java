@@ -97,10 +97,9 @@ public class CorrespondenceTemplateManager implements InitializingBean
         return new ArrayList<>(templates);
     }
 
-    public void addTemplate(CorrespondenceTemplate template) throws IOException
+    public CorrespondenceTemplate updateTemplate(CorrespondenceTemplate template) throws IOException
     {
-        Optional<CorrespondenceTemplate> existing = templates.stream()
-                .filter(t -> t.getTemplateFilename().equals(template.getTemplateFilename())).findAny();
+        Optional<CorrespondenceTemplate> existing = findTemplate(template.getTemplateFilename());
         if (existing.isPresent())
         {
             CorrespondenceTemplate existingTemplate = existing.get();
@@ -111,7 +110,8 @@ public class CorrespondenceTemplateManager implements InitializingBean
         }
 
         updateConfiguration(templates);
-        // should update the complaintCorrespondenceForms.json and caseCorrespondenceForms.json as well
+
+        return template;
     }
 
     /**
@@ -143,6 +143,8 @@ public class CorrespondenceTemplateManager implements InitializingBean
         File file = correspondenceTemplatesConfiguration.getFile();
         FileUtils.writeStringToFile(file, configurationsOutput);
 
+        // should update the complaintCorrespondenceForms.json and caseCorrespondenceForms.json as well
+
     }
 
     private CorrespondenceTemplateConfiguration mapConfigurationFromTemplate(CorrespondenceTemplate template)
@@ -157,6 +159,39 @@ public class CorrespondenceTemplateManager implements InitializingBean
         configuration.setNumberFormatString(template.getNumberFormatString());
 
         return configuration;
+    }
+
+    /**
+     * @param templateFileName
+     * @return
+     */
+    public CorrespondenceTemplate getTemplateByFileName(String templateFileName)
+    {
+        return findTemplate(templateFileName).orElse(null);
+    }
+
+    /**
+     * @param templateFileName
+     * @return
+     * @throws IOException
+     */
+    public CorrespondenceTemplate deleteTemplate(String templateFileName) throws IOException
+    {
+        Optional<CorrespondenceTemplate> result = findTemplate(templateFileName);
+        if (result.isPresent())
+        {
+            CorrespondenceTemplate template = result.get();
+            if (templates.remove(template))
+            {
+                updateConfiguration(templates);
+            }
+        }
+        return null;
+    }
+
+    private Optional<CorrespondenceTemplate> findTemplate(String templateFileName)
+    {
+        return templates.stream().filter(t -> t.getTemplateFilename().equals(templateFileName)).findAny();
     }
 
 }

@@ -13,7 +13,11 @@
     <bean id="listCorrespondenceTemplates" class="com.armedia.acm.plugins.admin.web.api.ListAllTemplatesControllerAPI">
     </bean>
 
-    <bean id="listCorrespondenceQueries" class="com.armedia.acm.plugins.admin.web.api.CorrespondenceQueryController">
+    <bean id="correspondenceQueryController" class="com.armedia.acm.plugins.admin.web.api.CorrespondenceQueryController">
+        <property name="correspondenceService" ref="correspondenceService"/>
+    </bean>
+
+    <bean id="correspondenceTemplateController" class="com.armedia.acm.plugins.admin.web.api.CorrespondenceTemplateController">
         <property name="correspondenceService" ref="correspondenceService"/>
     </bean>
 

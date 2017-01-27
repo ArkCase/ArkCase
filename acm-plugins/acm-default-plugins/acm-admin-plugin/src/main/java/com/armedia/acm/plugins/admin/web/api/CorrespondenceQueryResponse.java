@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.correspondence.model.CorrespondenceQuery;
@@ -12,7 +9,7 @@ import java.util.List;
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jan 25, 2017
  *
  */
-public class CorrespondenceQueryResponce
+public class CorrespondenceQueryResponse
 {
 
     private String beanId;
@@ -26,11 +23,11 @@ public class CorrespondenceQueryResponce
     /**
      *
      */
-    public CorrespondenceQueryResponce()
+    public CorrespondenceQueryResponse()
     {
     }
 
-    public CorrespondenceQueryResponce(String beanId, CorrespondenceQuery queryBean)
+    public CorrespondenceQueryResponse(String beanId, CorrespondenceQuery queryBean)
     {
         this.beanId = beanId;
         queryType = queryBean.getType();
