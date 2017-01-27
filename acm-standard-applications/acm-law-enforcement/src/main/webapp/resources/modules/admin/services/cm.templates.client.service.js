@@ -21,6 +21,7 @@ angular.module('admin').service('Admin.CMTemplatesService', ['$http', 'Upload',
             retrieveQuerySelectList: retrieveQuerySelectList,
             fullDownloadPath: fullDownloadPath,
             uploadTemplate: uploadTemplate,
+            getTemplateData: getTemplateData,
             saveTemplateData: saveTemplateData,
             deleteTemplate: deleteTemplate
         });
@@ -50,6 +51,8 @@ angular.module('admin').service('Admin.CMTemplatesService', ['$http', 'Upload',
          * @description
          * Performs retrieving correspondence management templates query select list.
          *
+         * @param {string} objectType Object Type
+         *
          * @returns {HttpPromise} Future info about widgets
          */
         function retrieveQuerySelectList(objectType) {
@@ -61,18 +64,38 @@ angular.module('admin').service('Admin.CMTemplatesService', ['$http', 'Upload',
 
         /**
          * @ngdoc method
+         * @name getTemplateData
+         * @methodOf admin.service:Admin.CMTemplatesService
+         *
+         * @description
+         * Get query and mapped fields for template.
+         *
+         * @param {string} fileName FileName
+         *
+         * @returns {HttpPromise} Future info about widgets
+         */
+        function getTemplateData(fileName) {
+            return $http({
+                method: "GET",
+                url: 'api/latest/plugin/admin/template/' + fileName
+            });
+        };
+
+        /**
+         * @ngdoc method
          * @name saveTemplateData
          * @methodOf admin.service:Admin.CMTemplatesService
          *
          * @description
          * Saving query and mapped fields for template.
          *
+         * @param {object} template Contains template data
          * @returns {HttpPromise} Future info about widgets
          */
         function saveTemplateData(template) {
             return $http({
-                method: "POST",
-                url: 'api/latest/plugin/admin/template/',
+                method: "PUT",
+                url: 'api/latest/plugin/admin/template/update',
                 data: template
             });
         };
@@ -85,13 +108,13 @@ angular.module('admin').service('Admin.CMTemplatesService', ['$http', 'Upload',
          * @description
          * Saving query and mapped fields for template.
          *
+         * @param {string} fileName FileName
          * @returns {HttpPromise} Future info about widgets
          */
         function deleteTemplate(fileName) {
             return $http({
                 method: "DELETE",
-                url: 'api/latest/plugin/admin/template',
-                data: {fileName: fileName}
+                url: 'api/latest/plugin/admin/template/' + fileName
             });
         };
 
