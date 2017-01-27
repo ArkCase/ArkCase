@@ -6,6 +6,7 @@ import com.armedia.acm.correspondence.model.CorrespondenceTemplateConfiguration;
 import com.armedia.acm.spring.SpringContextHolder;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.InitializingBean;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -138,6 +140,7 @@ public class CorrespondenceTemplateManager implements InitializingBean
                 .collect(Collectors.toList());
 
         ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
         String configurationsOutput = mapper.writeValueAsString(configurations);
 
         File file = correspondenceTemplatesConfiguration.getFile();
@@ -152,13 +155,32 @@ public class CorrespondenceTemplateManager implements InitializingBean
         CorrespondenceTemplateConfiguration configuration = new CorrespondenceTemplateConfiguration();
 
         configuration.setDocumentType(template.getDocumentType());
-        configuration.setTemplateFilename(configuration.getTemplateFilename());
-        configuration.setCorrespondenceQueryBeanId(null);
+        configuration.setTemplateFilename(template.getTemplateFilename());
+        configuration.setCorrespondenceQueryBeanId(getQueryId(template.getQuery()));
         configuration.setTemplateSubstitutionVariables(template.getTemplateSubstitutionVariables());
         configuration.setDateFormatString(template.getDateFormatString());
         configuration.setNumberFormatString(template.getNumberFormatString());
 
         return configuration;
+    }
+
+    /**
+     * @param query
+     * @return
+     */
+    private String getQueryId(CorrespondenceQuery query)
+    {
+        Map<String, CorrespondenceQuery> queryBeans = springContextHolder.getAllBeansOfType(CorrespondenceQuery.class);
+        if (queryBeans.values().contains(query))
+        {
+            Optional<Entry<String, CorrespondenceQuery>> searchResult = queryBeans.entrySet().stream()
+                    .filter(entry -> entry.getValue().equals(query)).findFirst();
+            if (searchResult.isPresent())
+            {
+                return searchResult.get().getKey();
+            }
+        }
+        return null;
     }
 
     /**

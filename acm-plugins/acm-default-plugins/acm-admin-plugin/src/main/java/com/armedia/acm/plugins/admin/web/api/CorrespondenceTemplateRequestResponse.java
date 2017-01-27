@@ -15,7 +15,7 @@ public class CorrespondenceTemplateRequestResponse
 
     private String correspondenceQueryBeanId;
 
-    private String queryTpe;
+    private String queryType;
 
     private Map<String, String> templateSubstitutionVariables;
 
@@ -74,17 +74,17 @@ public class CorrespondenceTemplateRequestResponse
     /**
      * @return the queryTpe
      */
-    public String getQueryTpe()
+    public String getQueryType()
     {
-        return queryTpe;
+        return queryType;
     }
 
     /**
-     * @param queryTpe the queryTpe to set
+     * @param queryType the queryTpe to set
      */
-    public void setQueryTpe(String queryTpe)
+    public void setQueryType(String queryType)
     {
-        this.queryTpe = queryTpe;
+        this.queryType = queryType;
     }
 
     /**
