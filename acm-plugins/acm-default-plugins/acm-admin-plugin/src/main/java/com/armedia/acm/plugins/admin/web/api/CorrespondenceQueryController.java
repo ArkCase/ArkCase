@@ -28,25 +28,32 @@ public class CorrespondenceQueryController
 
     @RequestMapping(value = "/queries", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<CorrespondenceQueryResponce> getAllQueries()
+    public List<CorrespondenceQueryResponse> getAllQueries()
     {
         return generateResponse(correspondenceService.getAllQueries());
     }
 
     @RequestMapping(value = "/queries/{queryType}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<CorrespondenceQueryResponce> getQueriesByType(@PathVariable(value = "queryType") QueryType queryType)
+    public List<CorrespondenceQueryResponse> getQueriesByType(@PathVariable(value = "queryType") QueryType queryType)
     {
         return generateResponse(correspondenceService.getQueriesByType(queryType));
+    }
+
+    @RequestMapping(value = "/queries/query/{queryBeanId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public CorrespondenceQueryResponse getQueryByBeanId(@PathVariable(value = "queryBeanId") String queryBeanId)
+    {
+        return new CorrespondenceQueryResponse(queryBeanId, correspondenceService.getQueryByBeanId(queryBeanId));
     }
 
     /**
      * @param queries
      * @return
      */
-    private List<CorrespondenceQueryResponce> generateResponse(Map<String, CorrespondenceQuery> queries)
+    private List<CorrespondenceQueryResponse> generateResponse(Map<String, CorrespondenceQuery> queries)
     {
-        return queries.entrySet().stream().map(entry -> new CorrespondenceQueryResponce(entry.getKey(), entry.getValue()))
+        return queries.entrySet().stream().map(entry -> new CorrespondenceQueryResponse(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
     }
 
