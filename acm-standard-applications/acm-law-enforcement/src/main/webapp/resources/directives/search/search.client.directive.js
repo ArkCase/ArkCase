@@ -131,11 +131,11 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                         if (scope.isAutoSuggestActive && scope.searchQuery !== "" && isSelected) {
                             scope.searchQuery = scope.labelSelected;
                             searchObject.searchQuery = scope.labelSelected;
-                            var query = SearchQueryBuilder.buildFacetedSearchQuery("\"" + scope.searchQuery + "\"", scope.filters, scope.pageSize, scope.start);
+                            var query = SearchQueryBuilder.buildFacetedSearchQuerySorted("\"" + scope.searchQuery + "\"", scope.filters, scope.pageSize, scope.start, scope.sort);
                             isSelected = false;
                         } else {
                             scope.searchQuery = searchObject.searchQuery;
-                            var query = SearchQueryBuilder.buildFacetedSearchQuery((scope.multiFilter ? "*" : scope.searchQuery + "*"), scope.filters, scope.pageSize, scope.start);
+                            var query = SearchQueryBuilder.buildFacetedSearchQuerySorted((scope.multiFilter ? "*" : scope.searchQuery + "*"), scope.filters, scope.pageSize, scope.start, scope.sort);
                         }
                         if (query) {
                             setExportUrl(query);
@@ -348,6 +348,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                         scope.filterName = config.filterName;
                         scope.pageSize = config.paginationPageSize;
                         scope.start = config.start;
+                        scope.sort = Util.goodValue(config.sort, "");
                         scope.objectType = config.autoSuggestObjectType;
                         scope.gridOptions = {
                             enableColumnResizing: true,
@@ -371,6 +372,16 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                                     scope.selectedItem = row.isSelected ? row.entity : null;
                                 });
 
+                                // Get the sorting info from UI grid
+                                gridApi.core.on.sortChanged(scope, function (grid, sortColumns) {
+                                    if (sortColumns.length > 0) {
+                                        scope.sort = (sortColumns[0].colDef.sortField || sortColumns[0].colDef.name) + " " + sortColumns[0].sort.direction;
+                                    }
+                                    else {
+                                        scope.sort = "";
+                                    }
+                                    scope.queryExistingItems();
+                                });
 
                                 gridApi.pagination.on.paginationChanged(scope, function (newPage, pageSize) {
                                     scope.start = (newPage - 1) * pageSize;   //newPage is 1-based index
