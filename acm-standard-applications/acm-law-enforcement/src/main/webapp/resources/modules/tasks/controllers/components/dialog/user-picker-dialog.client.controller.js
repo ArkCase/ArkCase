@@ -1,51 +1,18 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.UserGroupPickerDialogController', ['$scope', '$modalInstance', '$q', 'UtilService'
-    , 'Admin.FunctionalAccessControlService', 'Admin.OrganizationalHierarchyService'
-    , 'cfg', 'parentType', 'showGroupAndUserPicker'
-    , function ($scope, $modalInstance, $q, Util, AdminFunctionalAccessControlService, organizationalHierarchyService, cfg, parentType, showGroupAndUserPicker) {
+angular.module('tasks').controller('UserPickerDialogController', ['$scope', '$modalInstance', '$q', 'UtilService'
+    , 'Admin.OrganizationalHierarchyService', 'cfg', 'parentType', 'showGroupAndUserPicker'
+    , function ($scope, $modalInstance, $q, Util, organizationalHierarchyService, cfg, parentType, showGroupAndUserPicker) {
         $scope.modalInstance = $modalInstance;
         $scope.data = [];
         $scope.groupsMap = {};
+        $scope.groupTypeList = ['LDAP_GROUP'];
 
         $scope.cfg = cfg;
-        showGroupAndUserPicker = Util.goodValue(showGroupAndUserPicker, false);
-        if ($scope.cfg) {
-            $scope.groupTypeList = Util.goodMapValue($scope.cfg, 'topLevelGroupTypes') && Util.isArray($scope.cfg.topLevelGroupTypes) && !_.isEmpty($scope.cfg.topLevelGroupTypes) ? $scope.cfg.topLevelGroupTypes : ['LDAP_GROUP'];
-            $scope.cfg.roleFilters = Util.goodMapValue($scope.cfg, 'roleFilters') && Util.isArray($scope.cfg.roleFilters) ? $scope.cfg.roleFilters : [];
-            $scope.cfg.treeFilters = _.sortBy(Util.goodMapValue($scope.cfg, 'treeFilters') && Util.isArray($scope.cfg.treeFilters) ? $scope.cfg.treeFilters : [], 'name');
-            $scope.cfg.allowedFilterRoles = Util.goodMapValue($scope.cfg, 'allowedFilterRoles') && Util.isArray($scope.cfg.allowedFilterRoles) ? $scope.cfg.allowedFilterRoles : [];
-            $scope.cfg.restricted = Util.goodMapValue($scope.cfg, 'restricted', false);
-        } else {
-            $scope.groupTypeList = ['LDAP_GROUP'];
-            $scope.cfg.roleFilters = [];
-            $scope.cfg.treeFilters = [];
-            $scope.cfg.allowedFilterRoles = [];
-            $scope.cfg.restricted = false;
+        $scope.showGroupAndUserPicker = showGroupAndUserPicker;
+        if ($scope.cfg && Util.isArray($scope.cfg.topLevelGroupTypes)) {
+            $scope.groupTypeList = $scope.cfg.topLevelGroupTypes;
         }
-
-        AdminFunctionalAccessControlService.getAppUserToGroups().then(function (roleGroups) {
-            $scope.appRoleToGroups = Util.goodMapValue(roleGroups, 'data');
-            if (_.isEmpty($scope.cfg.treeFilters)) {
-                $scope.cfg.treeFilters = buildTreeFilters($scope.appRoleToGroups);
-            }
-        });
-
-        var buildTreeFilters = function (roleToGroups) {
-            return _.chain(roleToGroups)
-                .keys()
-                .filter(function (key) {
-                    return _.isEmpty($scope.cfg.allowedFilterRoles) ? true : !_.isEmpty(_.intersection($scope.cfg.allowedFilterRoles, [key]));
-                })
-                .map(function (key) {
-                    return {
-                        name: key.replace(/\bROLE/, "").replace(/[_-]/g, " "),
-                        filter: key
-                    };
-                })
-                .sortBy('name')
-                .value();
-        };
 
         $scope.onLazyLoad = function (event, groupNode) {
             var parentId = groupNode.object_id_s;
@@ -106,16 +73,19 @@ angular.module('tasks').controller('Tasks.UserGroupPickerDialogController', ['$s
 
         $scope.onLoadMore = function (currentPage, pageSize) {
             var groupsPromise;
-
-            groupsPromise = organizationalHierarchyService.getFilteredTopLevelGroups(currentPage, pageSize, $scope.groupTypeList, $scope.cfg.roleFilters);
-
+            if ($scope.groupTypeList && Util.isArray($scope.groupTypeList)) {
+                groupsPromise = organizationalHierarchyService.getGroupsTopLevel(currentPage, pageSize, $scope.groupTypeList);
+            }
+            else {
+                groupsPromise = organizationalHierarchyService.getGroupsTopLevel(currentPage, pageSize, []);
+            }
 
             groupsPromise.then(function (payload) {
                 var tempGroups = [];
-                if (!Util.isArrayEmpty(_.get(payload, 'response.docs'))) {
-                    tempGroups = _.get(payload, 'response.docs');
+                if (!Util.isArrayEmpty(_.get(payload, 'data.response.docs'))) {
+                    tempGroups = _.get(payload, 'data.response.docs');
                 }
-                $scope.totalGroups = _.get(payload, 'response.numFound');
+                $scope.totalGroups = _.get(payload, 'data.response.numFound');
                 //create map from groups
                 for (var i = 0; i < tempGroups.length; i++) {
                     var tempGroup = tempGroups[i];
