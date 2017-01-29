@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('cases').controller('Tasks.ApprovalRoutingController', ['$scope', '$stateParams', '$q', '$translate', '$modal'
+angular.module('cases').controller('Tasks.FutureApprovalRoutingController', ['$scope', '$stateParams', '$q', '$translate', '$modal'
     , 'UtilService', 'Util.DateService', 'ConfigService', 'ObjectService', 'LookupService', 'Object.LookupService'
     , 'Task.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Authentication'
     , 'PermissionsService', 'Profile.UserInfoService'
@@ -11,8 +11,6 @@ angular.module('cases').controller('Tasks.ApprovalRoutingController', ['$scope',
 
         $scope.userSearchConfig = null;
         $scope.gridOptions = $scope.gridOptions || {};
-        $scope.pastApprovers = {};
-        $scope.pastApprovers.GridOptions = $scope.pastApprovers.GridOptions || {};
         $scope.oldData = null;
         $scope.taskInfo = null;
 
@@ -35,24 +33,7 @@ angular.module('cases').controller('Tasks.ApprovalRoutingController', ['$scope',
             }
         });
 
-        new HelperObjectBrowserService.Component({
-            scope: $scope
-            , stateParams: $stateParams
-            , moduleId: "tasks"
-            , componentId: "pastapprovals"
-            , retrieveObjectInfo: TaskInfoService.getTaskInfo
-            , validateObjectInfo: TaskInfoService.validateTaskInfo
-            , onConfigRetrieved: function (componentConfig) {
-                return onPastApprovalsConfigRetrieved(componentConfig);
-            }
-            , onObjectInfoRetrieved: function (objectInfo) {
-                onObjectInfoRetrieved(objectInfo);
-            }
-        });
-
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
-        var gridHelperPastApprovers = new HelperUiGridService.Grid({scope: $scope.pastApprovers});
-
 
         ConfigService.getModuleConfig("tasks").then(function (moduleConfig) {
             $scope.config = _.find(moduleConfig.components, {id: "approvalrouting"});
@@ -64,13 +45,6 @@ angular.module('cases').controller('Tasks.ApprovalRoutingController', ['$scope',
         Authentication.queryUserInfo().then(function (data) {
             currentUser = data.userId;
         });
-
-        var onPastApprovalsConfigRetrieved = function (config) {
-            $scope.pastApproversConfig = config;
-            gridHelperPastApprovers.setColumnDefs(config);
-            gridHelperPastApprovers.setBasicOptions(config);
-            gridHelperPastApprovers.disableGridScrolling(config);
-        };
 
         var onConfigRetrieved = function (config) {
             $scope.config = config;
@@ -97,15 +71,6 @@ angular.module('cases').controller('Tasks.ApprovalRoutingController', ['$scope',
             } else {
                 $scope.gridOptions.data = [];
                 $scope.gridOptions.noData = true;
-                $scope.noDataMessage = $translate.instant('tasks.comp.approvalRouting.noBuckslipMessage');
-            }
-            //set past approvers info
-            if (objectInfo.buckslipPastApprovers) {
-                $scope.pastApprovers.GridOptions.data = objectInfo.buckslipPastApprovers;
-                $scope.pastApprovers.GridOptions.noData = false;
-            } else {
-                $scope.pastApprovers.GridOptions.data = [];
-                $scope.pastApprovers.GridOptions.noData = true;
                 $scope.noDataMessage = $translate.instant('tasks.comp.approvalRouting.noBuckslipMessage');
             }
             $scope.oldData = _.cloneDeep($scope.gridOptions.data);
