@@ -91,6 +91,7 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
         if (in.isBuckslipTask())
         {
             ProcessInstance pi = activitiRuntimeService.startProcessInstanceByKey("ArkCaseBuckslipProcess");
+
             List<Task> buckslipTaskList = activitiTaskService.createTaskQuery().processInstanceId(pi.getId()).list();
             if (buckslipTaskList != null && buckslipTaskList.size() > 0)
             {
@@ -888,47 +889,32 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
             List<String> candidateGroups = findHistoricCandidateGroups(hti.getId());
             retval.setCandidateGroups(candidateGroups);
         }
-        Map processVariables = hti.getProcessVariables();
-        if (processVariables != null)
-        {
-            retval.setAttachedToObjectId((Long) processVariables.get(TaskConstants.VARIABLE_NAME_OBJECT_ID));
-            retval.setAttachedToObjectType((String) processVariables.get(TaskConstants.VARIABLE_NAME_OBJECT_TYPE));
-            retval.setAttachedToObjectName((String) processVariables.get(TaskConstants.VARIABLE_NAME_OBJECT_NAME));
-            retval.setWorkflowRequestId((Long) processVariables.get(TaskConstants.VARIABLE_NAME_REQUEST_ID));
-            retval.setWorkflowRequestType((String) processVariables.get(TaskConstants.VARIABLE_NAME_REQUEST_TYPE));
-            retval.setReviewDocumentPdfRenditionId((Long) processVariables.get(TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID));
-            retval.setReviewDocumentFormXmlId((Long) processVariables.get(TaskConstants.VARIABLE_NAME_XML_RENDITION_ID));
 
-            Long parentObjectId = (Long) processVariables.get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_ID);
+        if (hti.getProcessVariables() != null)
+        {
+            retval.setAttachedToObjectId((Long) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_OBJECT_ID));
+            retval.setAttachedToObjectType((String) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_OBJECT_TYPE));
+            retval.setAttachedToObjectName((String) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_OBJECT_NAME));
+            retval.setWorkflowRequestId((Long) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_REQUEST_ID));
+            retval.setWorkflowRequestType((String) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_REQUEST_TYPE));
+            retval.setReviewDocumentPdfRenditionId((Long) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID));
+            retval.setReviewDocumentFormXmlId((Long) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_XML_RENDITION_ID));
+
+            Long parentObjectId = (Long) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_ID);
             parentObjectId = parentObjectId == null ? retval.getAttachedToObjectId() : parentObjectId;
             retval.setParentObjectId(parentObjectId);
 
-            String parentObjectType = (String) processVariables.get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TYPE);
+            String parentObjectType = (String) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TYPE);
             parentObjectType = parentObjectType == null ? retval.getAttachedToObjectType() : parentObjectType;
             retval.setParentObjectType(parentObjectType);
 
-            String parentObjectName = (String) processVariables.get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_NAME);
+            String parentObjectName = (String) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_NAME);
             parentObjectName = parentObjectName == null ? retval.getAttachedToObjectName() : parentObjectName;
             retval.setParentObjectName(parentObjectName);
 
-            retval.setParentObjectTitle((String) processVariables.get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TITLE));
+            retval.setParentObjectTitle((String) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TITLE));
 
-            retval.setLegacySystemId((String) processVariables.get(TaskConstants.VARIABLE_NAME_LEGACY_SYSTEM_ID));
-
-            if (processVariables.containsKey(TaskConstants.VARIABLE_NAME_IS_BUCKSLIP_WORKFLOW))
-            {
-                Boolean isBuckslipWorkflow = (Boolean) processVariables.get(TaskConstants.VARIABLE_NAME_IS_BUCKSLIP_WORKFLOW);
-                retval.setBuckslipTask(isBuckslipWorkflow);
-
-                if (isBuckslipWorkflow != null && isBuckslipWorkflow.booleanValue())
-                {
-                    List<String> futureApprovers = (List<String>) processVariables.get(TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_APPROVERS);
-                    retval.setBuckslipFutureApprovers(acmUserService.getUserListForGivenIds(futureApprovers));
-
-                    String pastApprovers = (String) processVariables.get(TaskConstants.VARIABLE_NAME_PAST_APPROVERS);
-                    retval.setBuckslipPastApprovers(pastApprovers);
-                }
-            }
+            retval.setLegacySystemId((String) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_LEGACY_SYSTEM_ID));
         }
 
         if (hti.getTaskLocalVariables() != null)
@@ -1137,10 +1123,6 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
             String legacySystemId = (String) taskLocal.get(TaskConstants.VARIABLE_NAME_LEGACY_SYSTEM_ID);
             acmTask.setLegacySystemId(legacySystemId);
         }
-
-
-        acmTask.setBuckslipFutureApprovers(acmUserService.getUserListForGivenIds((List<String>) taskLocal.get(TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_APPROVERS)));
-
         Date startDate = (Date) taskLocal.get(TaskConstants.VARIABLE_NAME_START_DATE);
         acmTask.setTaskStartDate(startDate);
 
