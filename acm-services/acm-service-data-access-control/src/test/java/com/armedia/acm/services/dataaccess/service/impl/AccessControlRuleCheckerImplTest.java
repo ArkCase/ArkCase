@@ -149,10 +149,6 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
     @Test
     public void testStatusAsArrayInJSONRule() throws IOException
     {
-        List<String> caseStatuses = Arrays.asList("DRAFT", "ACTIVE", "Quality Control");
-
-        Map<String, Object> objectProperties = new HashMap<>();
-        objectProperties.put("status", caseStatuses);
         JSONObject rule = new JSONObject();
         rule.put("actionName", "editAttachments");
         rule.put("objectType", "CASE_FILE");
