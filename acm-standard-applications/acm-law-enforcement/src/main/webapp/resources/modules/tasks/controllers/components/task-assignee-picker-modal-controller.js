@@ -26,7 +26,8 @@ angular.module('tasks').controller('Tasks.AssigneePickerController', ['$scope', 
 
             params.header = $translate.instant("tasks.comp.assigneePickerModal.searchAssigneeHeader");
             //params.filter = '"Object Type": USER' + '&fq="Group": ' + $scope.owningGroup;
-            params.filter = '"Object Type": USER';
+            params.filter = 'fq="object_type_s":(GROUP OR USER)';
+            params.extraFilter = '&fq="name": ';
             params.config = Util.goodMapValue($scope.config, "dialogUserPicker");
 
             var modalInstance = $modal.open({
@@ -35,6 +36,7 @@ angular.module('tasks').controller('Tasks.AssigneePickerController', ['$scope', 
                     $scope.modalInstance = $modalInstance;
                     $scope.header = params.header;
                     $scope.filter = params.filter;
+                    $scope.extraFilter = params.extraFilter;
                     $scope.config = params.config;
                 }],
                 animation: true,
@@ -50,6 +52,7 @@ angular.module('tasks').controller('Tasks.AssigneePickerController', ['$scope', 
                 if (!Util.isEmpty(selected)) {
                     $scope.participant.participantLdapId = selected.object_id_s;
                     $scope.participant.id = selected.id;
+                    $scope.participant.object_type_s = selected.object_type_s;
                     $scope.participant.selectedAssigneeName = selected.name;
                 }
             });

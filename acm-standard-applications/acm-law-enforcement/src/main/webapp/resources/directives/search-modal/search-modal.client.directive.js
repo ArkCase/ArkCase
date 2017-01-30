@@ -17,6 +17,7 @@
  * @param {String} ok - (Optional)label for the add button. If not specified, default value is used
  * @param {String} searchPlaceholder - (Optional)label for the input placeholder. If not specified, default value is used
  * @param {Object} filter - filter required to send to the faceted search by default (e.g. for client : "\"Object Sub Type\":CLIENT")
+ * @param {Object} extraFilter - (Optional) extra filter to send to the faceted search if search against the "name" property
  * @param {String} defaultFilter  - (Optional) Used to  retrieve data by default.
  * @param {Boolean} disableSearch  - (Optional) Used to disable search controls (input, filter and search button).
  * @param {Object} config - config of the parent scope used mostly for the UI-grid and to retrieve other params
@@ -43,6 +44,7 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 ok: '@',
                 searchPlaceholder: '@',
                 filter: '@',
+                extraFilter: '@',
                 defaultFilter: '@',
                 disableSearch: '@',
                 config: '&',            //& : one way binding (read-only, can return key, value pair via a getter function)
@@ -94,6 +96,9 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 scope.selectedItem = null;
                 scope.selectedItems = [];
                 scope.queryExistingItems = function () {
+                    if (scope.extraFilter) {
+                        scope.filters = scope.filters + scope.extraFilter + '*' + scope.searchQuery + '*';
+                    }
                     var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuery(scope.searchQuery + '*', scope.filters, scope.pageSize, scope.start);
                     if (query) {
                         scope.showNoData = false;
