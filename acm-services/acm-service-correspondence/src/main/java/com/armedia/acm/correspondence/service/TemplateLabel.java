@@ -10,12 +10,8 @@ public class TemplateLabel
 
     private String label;
 
-    /**
-     *
-     */
     public TemplateLabel()
     {
-        // TODO Auto-generated constructor stub
     }
 
     /**
