@@ -20,7 +20,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -133,9 +132,9 @@ public class CorrespondenceService
      * @param queryBeanId
      * @return
      */
-    public CorrespondenceQuery getQueryByBeanId(String queryBeanId)
+    public Optional<CorrespondenceQuery> getQueryByBeanId(String queryBeanId)
     {
-        return springContextHolder.getAllBeansOfType(CorrespondenceQuery.class).get(queryBeanId);
+        return Optional.ofNullable(springContextHolder.getAllBeansOfType(CorrespondenceQuery.class).get(queryBeanId));
     }
 
     /**
@@ -144,24 +143,14 @@ public class CorrespondenceService
      */
     public String getQueryId(CorrespondenceQuery query)
     {
-        Map<String, CorrespondenceQuery> queryBeans = springContextHolder.getAllBeansOfType(CorrespondenceQuery.class);
-        if (queryBeans.values().contains(query))
-        {
-            Optional<Entry<String, CorrespondenceQuery>> searchResult = queryBeans.entrySet().stream()
-                    .filter(entry -> entry.getValue().equals(query)).findFirst();
-            if (searchResult.isPresent())
-            {
-                return searchResult.get().getKey();
-            }
-        }
-        return null;
+        return templateManager.getQueryId(query);
     }
 
     /**
      * @param templateFileName
      * @return
      */
-    public CorrespondenceTemplate getTemplateByFileName(String templateFileName)
+    public Optional<CorrespondenceTemplate> getTemplateByFileName(String templateFileName)
     {
         return templateManager.getTemplateByFileName(templateFileName);
     }
@@ -171,7 +160,7 @@ public class CorrespondenceService
      * @return
      * @throws IOException
      */
-    public CorrespondenceTemplate deleteTemplate(String templateFileName) throws IOException
+    public Optional<CorrespondenceTemplate> deleteTemplate(String templateFileName) throws IOException
     {
         return templateManager.deleteTemplate(templateFileName);
     }
@@ -180,7 +169,7 @@ public class CorrespondenceService
      * @param mapRequestToTemplate
      * @throws IOException
      */
-    public CorrespondenceTemplate updateTemplate(CorrespondenceTemplate template) throws IOException
+    public Optional<CorrespondenceTemplate> updateTemplate(CorrespondenceTemplate template) throws IOException
     {
         return templateManager.updateTemplate(template);
     }

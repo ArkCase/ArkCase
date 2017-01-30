@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.admin.web.api;
 import com.armedia.acm.correspondence.model.CorrespondenceQuery;
 import com.armedia.acm.correspondence.model.QueryType;
 import com.armedia.acm.correspondence.service.CorrespondenceService;
+import com.armedia.acm.plugins.admin.model.CorrespondenceQueryResponse;
 
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
  */
 @Controller
 @RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
-public class CorrespondenceQueryController
+public class CorrespondenceQueryAPIController
 {
 
     private CorrespondenceService correspondenceService;
@@ -44,7 +45,8 @@ public class CorrespondenceQueryController
     @ResponseBody
     public CorrespondenceQueryResponse getQueryByBeanId(@PathVariable(value = "queryBeanId") String queryBeanId)
     {
-        return new CorrespondenceQueryResponse(queryBeanId, correspondenceService.getQueryByBeanId(queryBeanId));
+        return new CorrespondenceQueryResponse(queryBeanId,
+                correspondenceService.getQueryByBeanId(queryBeanId).orElseThrow(CorrespondenceQueryNotFoundException::new));
     }
 
     /**
