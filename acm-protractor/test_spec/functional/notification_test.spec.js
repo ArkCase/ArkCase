@@ -31,11 +31,6 @@ describe('notification page test', function() {
 
     });
 
-    it('should verify that description date/time is equal to modified column date/time', function() {
-        notificationPage.navigateToPage("Notifications");
-        expect(notificationPage.returnDescription()).toContain(notificationPage.returnModifiedBy());
-    });
-
     it('should select previous month and verify it the result table', function() {
 
         notificationPage.navigateToPage("Notifications");
