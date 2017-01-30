@@ -31,6 +31,12 @@ Configuration of the Protractor tests is done in the ```config.js``` file.
 ```
 > protractor conf.js
 ```
+
+### Running suites - suite names are defined in conf.js file under suites
+```
+> protractor conf.js --suite=[SuiteName]
+```
+
 ### Using Object.json file for data and objects
 At the beggining of test add this row:
 ```
@@ -72,3 +78,8 @@ then use logging in the test, next row will log Info message with text "Username
 > logger.log('info', 'Username inserted');
 
 ```
+Install ```jasmine-data-provider``` simple data provider for jasmine
+````
+> npm install jasmine-data-provider
+
+````

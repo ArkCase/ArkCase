@@ -44,7 +44,9 @@ var caseID = element(by.xpath(Objects.casepage.locators.caseID));
 var reinvestigateBtn = element(by.css(Objects.casepage.locators.reinvestigateBtn));
 var casesTitleStatus = element.all(by.xpath(Objects.casepage.locators.caseTitleStatus)).get(0);
 var owningGroup = element(by.xpath(Objects.casepage.locators.owningGroup));
+var caseTitleWithStatus = element(by.xpath(Objects.casepage.locators.caseTitleWithStatus));
 var submitBtn = element(by.xpath(Objects.casepage.locators.submitBtn));
+var priority = element(by.xpath(Objects.casepage.locators.priority));
 
 
 var CasePage = function() {
@@ -110,16 +112,6 @@ var CasePage = function() {
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesTitle))), 30000);
     }
 
-
-    this.switchToDefaultContent = function() {
-
-        browser.driver.switchTo().defaultContent();
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesTitle))), 60000).then(function() {
-            browser.sleep(10000);
-        });
-        return this;
-    }
-
     this.waitForCaseType = function() {
 
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesType))), 30000, "Case type is not displayed");
@@ -183,6 +175,8 @@ var CasePage = function() {
     };
 
     this.chnageCaseSubmit = function() {
+
+        this.switchToIframes();
         browser.executeScript('arguments[0].click()', submitBtn);
     };
 
@@ -231,10 +225,16 @@ var CasePage = function() {
             reinvestigateBtn.click();
         });
     };
-   
-    this.returnOwningGroup = function () {
+
+    this.returnOwningGroup = function() {
         return owningGroup.getText();
+    };
+
+
+    this.returnPriority = function() {
+        return priority.getText();
     }
+
 };
 
 

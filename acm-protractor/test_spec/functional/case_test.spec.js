@@ -1,23 +1,24 @@
-var logger = require('../log');
-var casePage = require('../Pages/case_page.js');
-var userPage = require('../Pages/user_profile_page.js');
-var Objects = require('../json/Objects.json');
-var taskPage = require('../Pages/task_page.js');
-var utils = require('../util/utils.js');
-var userPage = require('../Pages/user_profile_page.js');
-var loginPage = require('../Pages/login_page.js');
+var logger = require('../../log');
+var casePage = require('../../Pages/case_page.js');
+var userPage = require('../../Pages/user_profile_page.js');
+var Objects = require('../../json/Objects.json');
+var taskPage = require('../../Pages/task_page.js');
+var utils = require('../../util/utils.js');
+var userPage = require('../../Pages/user_profile_page.js');
+var loginPage = require('../../Pages/login_page.js');
 var flag = false;
 var EC = protractor.ExpectedConditions;
-var timeTrackingPage = require('../Pages/time_tracking_page.js');
-var costTrackingPage = require('../Pages/cost_tracking_page.js');
-
+var timeTrackingPage = require('../../Pages/time_tracking_page.js');
+var costTrackingPage = require('../../Pages/cost_tracking_page.js');
+var using = require(process.env['USERPROFILE'] + '/node_modules/jasmine-data-provider');
+var preferencesPage = require('../../Pages/preference_page.js');
 
 function testAsync(done) {
 
     setTimeout(function() {
         flag = true;
         done();
-    }, 40000);
+    }, 30000);
 
 }
 
@@ -44,8 +45,8 @@ describe('case page tests', function() {
 
     });
 
-    it('should create new case and verify case title', function() {
 
+    it('should create new case ', function() {
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
         casePage.clickNextBtn();
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
@@ -54,85 +55,17 @@ describe('case page tests', function() {
         expect(casePage.returnCaseTitle()).toEqual(Objects.casepage.data.caseTitle);
     });
 
-    it('should create new case and verify case type', function() {
+    using([{ priority: "High", prioritySaved: Objects.casepage.data.priorityHigh }, {
+        priority: "Medium",
+        prioritySaved: Objects.casepage.data.priorityMedium
+    }, { priority: "Expedite", prioritySaved: Objects.casepage.data.priorityExpedite }], function(data) {
+        it('should create new case and edit the priority to ' + data.priority, function() {
 
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.waitForCaseType();
-        expect(casePage.returnCaseType()).toEqual(Objects.casepage.data.casesType);
-    });
+            casePage.clickModuleCasesFiles();
+            casePage.editPriority(data.priority);
+            expect(casePage.returnPriority()).toEqual(data.prioritySaved);
+        });
 
-    it('should create new case and change case status to closed, verify the automated task in tasks table and approve', function() {
-
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.waitForChangeCaseButton();
-        casePage.clickChangeCaseBtn();
-        casePage.switchToIframes().selectCaseStatus("Closed");
-        casePage.selectApprover(Objects.casepage.data.approverSamuel).chnageCaseSubmit();
-        casePage.clickTasksLinkBtn().waitForTasksTable();
-        expect(casePage.returnAutomatedTask()).toContain(Objects.casepage.data.automatedTaskTitle);
-        casePage.clickTaskTitle();
-        taskPage.clickApproveBtn();
-        expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateClosed, 'The task state should be CLOSED');
-    });
-
-    it('should create new case and verify the priority filed', function() {
-
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.waitForPriority();
-        expect(casePage.returnPriority()).toEqual(Objects.casepage.data.priorityMedium);
-    });
-
-    it('should create new case and verify the created date', function() {
-
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.waitForCreatedDate();
-        expect(casePage.returnCreatedDate()).toEqual(utils.returnToday("/"));
-
-    });
-
-    it('should create new case and edit the priority to High', function() {
-
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.waitForPriority();
-        casePage.editPriority('High');
-        expect(casePage.returnPriority()).toEqual(Objects.casepage.data.priorityHigh);
-    });
-
-    it('should create new case and edit the priority to Medium', function() {
-
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.waitForPriority();
-        casePage.editPriority('Medium');
-        expect(casePage.returnPriority()).toEqual(Objects.casepage.data.priorityMedium);
-    });
-
-    it('should create new case and edit the priority to Medium', function() {
-
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.waitForPriority();
-        casePage.editPriority('Expedite');
-        expect(casePage.returnPriority()).toEqual(Objects.casepage.data.priorityExpedite);
     });
 
     it('should create new case and edit the assignee from ann to samuel', function() {
@@ -146,66 +79,18 @@ describe('case page tests', function() {
         expect(casePage.returnAssignee()).toEqual(Objects.casepage.data.assigneeSamuel);
     });
 
-    it('should craete new case add/delete note', function() {
+    it('should create new case add/edit note', function () {
 
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.clickNotesLink();
-        casePage.addNote(Objects.casepage.data.note);
-        casePage.deleteNote();
-    });
-
-    it('should create new case add/edit note', function() {
-
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
+        casePage.clickModuleCasesFiles();
         casePage.clickNotesLink();
         casePage.addNote(Objects.casepage.data.note);
         casePage.editNote(Objects.casepage.data.editnote);
         expect(casePage.returnNoteName()).toEqual(Objects.casepage.data.editnote, "The note is not updated");
     });
 
-    it('should create new case and add task from tasks table verify the task', function() {
+    it('should create new case add person and verify the added person', function () {
 
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.clickTasksLinkBtn();
-        casePage.clickAddTaskButton();
-        taskPage.insertSubject(Objects.taskpage.data.Subject).insertDueDateToday().clickSave();
-        taskPage.clickCaseTitleInTasks();
-        casePage.clickTasksLinkBtn().waitForTasksTable();
-        expect(casePage.returnTaskTableTitle()).toContain(Objects.taskpage.data.Subject);
-        expect(casePage.returnTaskTableAssignee()).toEqual(Objects.casepage.data.assigneeSamuel);
-        expect(casePage.returnTaskTableCreatedDate()).toEqual(utils.returnToday("/"));
-        expect(casePage.returnTaskTablePriority()).toEqual(Objects.casepage.data.priorityMedium);
-        expect(casePage.returnTaskTableDueDate()).toEqual(utils.returnToday("/"));
-        expect(casePage.returnTaskTableStatus()).toEqual("ACTIVE");
-    });
-
-    it('should create new case and verify the people initiator', function() {
-
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.clickPeopleLinkBtn();
-        expect(casePage.returnPeopleType()).toEqual(Objects.casepage.data.peopleTypeInitiaor);
-        expect(casePage.returnPeopleFirstName()).toEqual(Objects.casepage.data.peopleFirstName);
-        expect(casePage.returnPeopleLastName()).toEqual(Objects.casepage.data.peopleLastName);
-    });
-
-    it('should create new case add person and verify the added person', function() {
-
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
+        casePage.clickModuleCasesFiles();
         casePage.clickPeopleLinkBtn();
         casePage.addPerson(Objects.casepage.data.peopleTypeWitness, Objects.casepage.data.peopleFirstName, Objects.casepage.data.peopleLastName);
         expect(casePage.returnPeopleTypeSecondRow()).toEqual(Objects.casepage.data.peopleTypeWitness);
@@ -419,10 +304,7 @@ describe('case page tests', function() {
 
     it('should create new case and add/delete tag', function() {
 
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
+        casePage.clickModuleCasesFiles();
         casePage.clickTagsLinkBtn();
         casePage.addTag(Objects.casepage.data.tagname);
         casePage.deleteTag();
@@ -451,63 +333,28 @@ describe('case page tests', function() {
 
     });
 
-    it('should create new case and change case status to active, verify the automated task in tasks table and approve', function() {
+    using([{ status: "Active" }, { status: "Inactive" }, { status: "Deleted" }], function(data) {
+        it('should create new case and change case status to ' + data.status + ', verify the automated task in tasks table and approve', function() {
 
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.waitForChangeCaseButton();
-        casePage.clickChangeCaseBtn();
-        casePage.switchToIframes().selectCaseStatus("Active");
-        casePage.selectApprover(Objects.casepage.data.approverSamuel).chnageCaseSubmit();
-        casePage.clickTasksLinkBtn().waitForTasksTable();
-        expect(casePage.returnAutomatedTask()).toContain(Objects.casepage.data.automatedTaskTitle);
-        casePage.clickTaskTitle();
-        taskPage.clickApproveBtn();
-        expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateClosed, 'The task state should be CLOSED');
-    });
-
-    it('should create new case and change case status to Inactive, verify the automated task in tasks table and approve', function() {
-
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.waitForChangeCaseButton();
-        casePage.clickChangeCaseBtn();
-        casePage.switchToIframes().selectCaseStatus("Inactive");
-        casePage.selectApprover(Objects.casepage.data.approverSamuel).chnageCaseSubmit();
-        casePage.clickTasksLinkBtn().waitForTasksTable();
-        expect(casePage.returnAutomatedTask()).toContain(Objects.casepage.data.automatedTaskTitle);
-        casePage.clickTaskTitle();
-        taskPage.clickApproveBtn();
-        expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateClosed, 'The task state should be CLOSED');
-    });
-
-    it('should create new case and change case status to active, verify the automated task in tasks table and approve', function() {
-
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.waitForChangeCaseButton();
-        casePage.clickChangeCaseBtn();
-        casePage.switchToIframes().selectCaseStatus("Deleted");
-        casePage.selectApprover(Objects.casepage.data.approverSamuel).chnageCaseSubmit();
-        casePage.clickTasksLinkBtn().waitForTasksTable();
-        expect(casePage.returnAutomatedTask()).toContain(Objects.casepage.data.automatedTaskTitle);
-        casePage.clickTaskTitle();
-        taskPage.clickApproveBtn();
-        expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateClosed, 'The task state should be CLOSED');
+            casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
+            casePage.clickNextBtn();
+            casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
+            casePage.switchToDefaultContent();
+            casePage.waitForChangeCaseButton();
+            casePage.clickChangeCaseBtn();
+            casePage.switchToIframes().selectCaseStatus(data.status);
+            casePage.selectApprover(Objects.casepage.data.approverSamuel).chnageCaseSubmit();
+            casePage.clickTasksLinkBtn().waitForTasksTable();
+            expect(casePage.returnAutomatedTask()).toContain(Objects.casepage.data.automatedTaskTitle);
+            casePage.clickTaskTitle();
+            taskPage.clickApproveBtn();
+            expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateClosed, 'The task state should be CLOSED');
+        });
     });
 
     it('should create new case and and create new case from new case button', function() {
 
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Benefits Appeal");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
+        casePage.clickModuleCasesFiles();
         casePage.clickNewCaseButton();
         casePage.switchToIframes().submitGeneralInformation(Objects.casepage.data.caseName, "Arson");
         casePage.clickNextBtn();
@@ -555,54 +402,22 @@ describe('case page tests', function() {
 
     it('should create case and verify if the same case be added as reference to itself', function() {
 
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.waitForCaseID();
+        casePage.clickModuleCasesFiles();
         var caseid = element(by.xpath(Objects.casepage.locators.caseID)).getText();
         casePage.addReferenceAsItself(caseid);
 
     });
 
-    it('should create new case and edit the due date', function() {
+    it('should  edit the due date', function() {
 
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
+        casePage.clickModuleCasesFiles();
         casePage.editDueDate();
         expect(casePage.returnDueDate()).toEqual(utils.returnToday("/"), "Due date is not updated");
     });
 
-    it('should create new case and verify the history table', function() {
+    it('should  add timesheet and verify in cases timesheet table', function () {
 
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.historyTable();
-        expect(casePage.returnHistoryEventName()).toEqual(Objects.casepage.data.historyEvent);
-        expect(casePage.returnHistoryDate()).toContain(utils.returnToday("/"));
-        expect(casePage.returnHistoryUser()).toEqual(Objects.casepage.data.assigneeSamuel);
-
-    });
-
-    it('should create new case and verify adding correspondence document', function() {
-
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson").initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
-        casePage.switchToDefaultContent().clickExpandFancyTreeTopElement();
-        casePage.rightClickRootFolder().addCorrespondence("case", "Notice of Investigation");
-        casePage.validateDocGridData(true, "Notice of Investigation", ".docx", "Notice of Investigation", utils.returnToday("/"), utils.returnToday("/"), userPage.returnUserNavigationProfile(), "1.0", "ACTIVE");
-
-    });
-
-    it('should create new case add timesheet and verify in cases timesheet table', function() {
-
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
+        casePage.clickModuleCasesFiles();
         element(by.xpath(Objects.casepage.locators.caseID)).getText().then(function(text) {
             console.log(text);
             casePage.clickNewButton();
@@ -622,13 +437,9 @@ describe('case page tests', function() {
         });
     });
 
-    it('should create new case add costsheet and verify in the cases costsheet table', function() {
+    it('should  costsheet and verify in the cases costsheet table', function() {
 
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.waitForChangeCaseButton();
+        casePage.clickModuleCasesFiles();
         element(by.xpath(Objects.casepage.locators.caseID)).getText().then(function(text) {
             console.log(text);
             casePage.clickNewButton();
@@ -703,164 +514,38 @@ describe('case page tests', function() {
 
     });
 
-    it('should craete new case and verify the assighnee by default', function() {
+    using([{participant: "Collaborator", participantSaved: "collaborator"}, {
+        participant: "Follower",
+        participantSaved: "follower"
+    }, { participant: "Reader", participantSaved: "reader" }, {
+        participant: "Co-Owner",
+        participantSaved: "co-owner"
+    }, { participant: "Supervisor", participantSaved: "supervisor" }, {
+        participant: "No Access",
+        participantSaved: "no access"
+    }, { participant: "Approver", participantSaved: "approver" }], function(data) {
+        it('should create new case  select ' + data.participant + ' from paricipant tab and verify it in the paricipants table', function() {
 
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.participantTable();
-        expect(casePage.returnParticipantTypeFirstRow()).toEqual("*");
-        expect(casePage.returnParticipantNameFirstRow()).toEqual("*");
-        expect(casePage.returnParticipantTypeSecondRow()).toEqual("assignee");
-        expect(casePage.returnParticipantNameSecondRow()).toEqual("Ann Administrator");
-        expect(casePage.returnParticipantTypeThirdRow()).toEqual("owning group");
-        expect(casePage.returnParticipantNameThirdRow()).toEqual("ACM_INVESTIGATOR_DEV");
-        expect(casePage.returnParticipantTypeForthRow()).toEqual("reader");
-        expect(casePage.returnParticipantNameForthRow()).toEqual("Samuel Supervisor");
-    });
+            casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
+            casePage.clickNextBtn();
+            casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
+            casePage.selectParticipant(data.participant, "Sally");
+            casePage.switchToIframes();
+            casePage.clickSubmitBtn();
+            casePage.switchToDefaultContent();
+            casePage.participantTable();
+            expect(casePage.returnParticipantTypeFirstRow()).toEqual("*");
+            expect(casePage.returnParticipantNameFirstRow()).toEqual("*");
+            expect(casePage.returnParticipantTypeSecondRow()).toEqual("assignee");
+            expect(casePage.returnParticipantNameSecondRow()).toEqual("Ann Administrator");
+            expect(casePage.returnParticipantTypeThirdRow()).toEqual(data.participantSaved);
+            expect(casePage.returnParticipantNameThirdRow()).toEqual("Sally Supervisor");
+            expect(casePage.returnParticipantTypeForthRow()).toEqual("owning group");
+            expect(casePage.returnParticipantNameForthRow()).toEqual("ACM_INVESTIGATOR_DEV");
+            expect(casePage.returnParticipantTypeFifthRow()).toEqual("reader");
+            expect(casePage.returnParticipantNameFifthRow()).toEqual("Samuel Supervisor");
 
-    it('should create new case  select collaborator from paricipant tab and verify it in the paricipants table', function() {
-
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
-        casePage.clickParticipantTab();
-        casePage.selectParticipant("Collaborator", "Sally");
-        casePage.switchToIframes();
-        casePage.clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.participantTable();
-        expect(casePage.returnParticipantTypeFirstRow()).toEqual("*");
-        expect(casePage.returnParticipantNameFirstRow()).toEqual("*");
-        expect(casePage.returnParticipantTypeSecondRow()).toEqual("assignee");
-        expect(casePage.returnParticipantNameSecondRow()).toEqual("Ann Administrator");
-        expect(casePage.returnParticipantTypeThirdRow()).toEqual("collaborator");
-        expect(casePage.returnParticipantNameThirdRow()).toEqual("Sally Supervisor");
-        expect(casePage.returnParticipantTypeForthRow()).toEqual("owning group");
-        expect(casePage.returnParticipantNameForthRow()).toEqual("ACM_INVESTIGATOR_DEV");
-        expect(casePage.returnParticipantTypeFifthRow()).toEqual("reader");
-        expect(casePage.returnParticipantNameFifthRow()).toEqual("Samuel Supervisor");
-
-    });
-
-    it('should create new case  select follower from paricipant tab and verify it in the paricipants table', function() {
-
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
-        casePage.clickParticipantTab();
-        casePage.selectParticipant("Follower", "Sally");
-        casePage.switchToIframes();
-        casePage.clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.participantTable();
-        expect(casePage.returnParticipantTypeFirstRow()).toEqual("*");
-        expect(casePage.returnParticipantNameFirstRow()).toEqual("*");
-        expect(casePage.returnParticipantTypeSecondRow()).toEqual("assignee");
-        expect(casePage.returnParticipantNameSecondRow()).toEqual("Ann Administrator");
-        expect(casePage.returnParticipantTypeThirdRow()).toEqual("follower");
-        expect(casePage.returnParticipantNameThirdRow()).toEqual("Sally Supervisor");
-        expect(casePage.returnParticipantTypeForthRow()).toEqual("owning group");
-        expect(casePage.returnParticipantNameForthRow()).toEqual("ACM_INVESTIGATOR_DEV");
-        expect(casePage.returnParticipantTypeFifthRow()).toEqual("reader");
-        expect(casePage.returnParticipantNameFifthRow()).toEqual("Samuel Supervisor");
-
-    });
-
-    it('should create new case and select reader from participant tab and verify it in the paricipant table', function() {
-
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
-        casePage.clickParticipantTab();
-        casePage.selectParticipant("Reader", "Sally");
-        casePage.switchToIframes();
-        casePage.clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.participantTable();
-        expect(casePage.returnParticipantTypeFirstRow()).toEqual("*");
-        expect(casePage.returnParticipantNameFirstRow()).toEqual("*");
-        expect(casePage.returnParticipantTypeSecondRow()).toEqual("assignee");
-        expect(casePage.returnParticipantNameSecondRow()).toEqual("Ann Administrator");
-        expect(casePage.returnParticipantTypeThirdRow()).toEqual("owning group");
-        expect(casePage.returnParticipantNameThirdRow()).toEqual("ACM_INVESTIGATOR_DEV");
-        expect(casePage.returnParticipantTypeForthRow()).toEqual("reader");
-        expect(casePage.returnParticipantNameForthRow()).toEqual("Samuel Supervisor");
-        expect(casePage.returnParticipantTypeFifthRow()).toEqual("reader");
-        expect(casePage.returnParticipantNameFifthRow()).toEqual("Sally Supervisor");
-
-    });
-
-    it('should create new case and select co-owner from paricipant tab and verify it in the participant table', function() {
-
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
-        casePage.clickParticipantTab();
-        casePage.selectParticipant("Co-Owner", "Samuel");
-        casePage.switchToIframes();
-        casePage.clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.participantTable();
-        expect(casePage.returnParticipantTypeFirstRow()).toEqual("*");
-        expect(casePage.returnParticipantNameFirstRow()).toEqual("*");
-        expect(casePage.returnParticipantTypeSecondRow()).toEqual("assignee");
-        expect(casePage.returnParticipantNameSecondRow()).toEqual("Ann Administrator");
-        expect(casePage.returnParticipantTypeThirdRow()).toEqual("co-owner");
-        expect(casePage.returnParticipantNameThirdRow()).toEqual("Samuel Supervisor");
-        expect(casePage.returnParticipantTypeForthRow()).toEqual("owning group");
-        expect(casePage.returnParticipantNameForthRow()).toEqual("ACM_INVESTIGATOR_DEV");
-        expect(casePage.returnParticipantTypeFifthRow()).toEqual("reader");
-        expect(casePage.returnParticipantNameFifthRow()).toEqual("Samuel Supervisor");
-
-    });
-
-    it('should create new case and select supervisor from participant tab and verify it in the participant table', function() {
-
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
-        casePage.clickParticipantTab();
-        casePage.selectParticipant("Supervisor", "Samuel");
-        casePage.switchToIframes();
-        casePage.clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.participantTable();
-        expect(casePage.returnParticipantTypeFirstRow()).toEqual("*");
-        expect(casePage.returnParticipantNameFirstRow()).toEqual("*");
-        expect(casePage.returnParticipantTypeSecondRow()).toEqual("assignee");
-        expect(casePage.returnParticipantNameSecondRow()).toEqual("Ann Administrator");
-        expect(casePage.returnParticipantTypeThirdRow()).toEqual("owning group");
-        expect(casePage.returnParticipantNameThirdRow()).toEqual("ACM_INVESTIGATOR_DEV");
-        expect(casePage.returnParticipantTypeForthRow()).toEqual("reader");
-        expect(casePage.returnParticipantNameForthRow()).toEqual("Samuel Supervisor");
-        expect(casePage.returnParticipantTypeFifthRow()).toEqual("supervisor");
-        expect(casePage.returnParticipantNameFifthRow()).toEqual("Samuel Supervisor");
-
-    });
-
-    it('should create new case and select No Access from participant tab and verify it in the paricipant table', function() {
-
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
-        casePage.clickParticipantTab();
-        casePage.selectParticipant("No Access", "Ann");
-        casePage.switchToIframes();
-        casePage.clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.participantTable();
-        expect(casePage.returnParticipantTypeFirstRow()).toEqual("*");
-        expect(casePage.returnParticipantNameFirstRow()).toEqual("*");
-        expect(casePage.returnParticipantTypeSecondRow()).toEqual("assignee");
-        expect(casePage.returnParticipantNameSecondRow()).toEqual("Ann Administrator");
-        expect(casePage.returnParticipantTypeThirdRow()).toEqual("no access");
-        expect(casePage.returnParticipantNameThirdRow()).toEqual("Ann Administrator'");
-        expect(casePage.returnParticipantTypeForthRow()).toEqual("owning group");
-        expect(casePage.returnParticipantNameForthRow()).toEqual("ACM_INVESTIGATOR_DEV");
-        expect(casePage.returnParticipantTypeFifthRow()).toEqual("reader");
-        expect(casePage.returnParticipantNameFifthRow()).toEqual("Samuel Supervisor");
+        });
     });
 
     it('should create new case and verify adding new Report of Investigation document', function() {
@@ -896,12 +581,9 @@ describe('case page tests', function() {
         expect(casePage.returnParticipantNameFifthRow()).toEqual("Samuel Supervisor");
     });
 
-    it('should create new case and verify if special type can be deleted', function() {
+    it('should  verify if special type can be deleted', function() {
 
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
+        casePage.clickModuleCasesFiles();
         casePage.participantTable();
         casePage.clickSpecialTypeDeleteBtn();
         casePage.clickRefreshBtn();
@@ -909,12 +591,9 @@ describe('case page tests', function() {
 
     });
 
-    it('should create new case and verify if assignee can be deleted', function() {
+    it('should  verify if assignee can be deleted', function() {
 
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
+        casePage.clickModuleCasesFiles();
         casePage.participantTable();
         casePage.clickDeleteAsigneeBtn();
         casePage.clickRefreshBtn();
@@ -922,19 +601,16 @@ describe('case page tests', function() {
 
     });
 
-    it('should create new case and verify if owning  can be deleted', function() {
+    it('should verify if owning  can be deleted', function() {
 
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
+        casePage.clickModuleCasesFiles();
         casePage.participantTable();
         casePage.clickOwningGroupDeleteBtn();
         casePage.clickRefreshBtn();
         casePage.verifyIfOwningGroupCanBeDeleted();
     });
 
-    it('should create new case and verify if owning  can be deleted', function() {
+    it('should  verify if reader  can be deleted', function() {
 
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
         casePage.clickNextBtn();
@@ -956,25 +632,95 @@ describe('case page tests', function() {
 
     });
 
-    it('should create new case and verify assigned to, owning group and due date', function() {
+    it('should edit assignee from participant table', function () {
 
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson").clickNextBtn().initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent().waitForCaseTitle();
-        expect(casePage.returnDueDate()).toEqual(utils.returnDate("/", 180));
-        expect(casePage.returnAssignee()).toEqual(Objects.taskspage.data.administrator);
-        expect(casePage.returnOwningGroup()).toEqual(Objects.casepage.data.owningGroup);
-
-    });
-
-    it('should create new case and edit assignee from participant table', function() {
-
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
+        casePage.clickModuleCasesFiles();
         casePage.participantTable();
         casePage.clickEditAssigneeBtn();
         casePage.editAssigneeInParticipantTable("Samuel Supervisor");
         expect(casePage.returnParticipantNameSecondRow()).toEqual("Samuel Supervisor");
     });
+
+    it('should verify if the people intiator delete button is displayed', function() {
+
+        casePage.clickModuleCasesFiles();
+        casePage.clickPeopleLinkBtn();
+        casePage.verifyIfInitiatorCanBeDeleted();
+    });
+
+
+    it('should create new case and add task from tasks table verify the task and verify the task table column number', function() {
+
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
+        casePage.clickNextBtn();
+        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
+        casePage.switchToDefaultContent();
+        casePage.clickTasksLinkBtn();
+        casePage.clickAddTaskButton();
+        taskPage.insertSubject(Objects.taskpage.data.Subject).insertDueDateToday().clickSave();
+        taskPage.clickCaseTitleInTasks();
+        casePage.clickTasksLinkBtn().waitForTasksTable();
+        casePage.verifyTasksTableColumnsNumber();
+    });
+
+    it('should create new case and verify the alert message for created case', function() {
+
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
+        casePage.clickNextBtn();
+        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
+        casePage.verifyTheNotificationMessage("Case File ");
+    });
+
+    it('should create new case by default assignee, claim it and verify the assignee', function() {
+
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
+        casePage.clickNextBtn();
+        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
+        casePage.switchToDefaultContent();
+        casePage.clickClaimButton();
+        expect(casePage.returnAssignee()).toEqual(Objects.casepage.data.assigneeSamuel);
+    });
+
+    it('should create new case by default assignee, claim it verify the assignee then uncalaim it and verify if the assignee is removed ', function() {
+
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
+        casePage.clickNextBtn();
+        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
+        casePage.switchToDefaultContent();
+        casePage.clickClaimButton();
+        expect(casePage.returnAssignee()).toEqual(Objects.casepage.data.assigneeSamuel);
+        casePage.clickUnclaimButton();
+        expect(casePage.returnAssignee()).toEqual("", "The assignee name is displayed");
+    });
+
+    it('should verify if another assignee can be added  from participant table', function() {
+
+        casePage.clickModuleCasesFiles();
+        casePage.participantTable();
+        casePage.addParticipantFromParticipantTable("Assignee", "Samuel Supervisor");
+        casePage.verifyTheNotificationMessage("Only one assignee is allowed");
+    });
+
+    it('should verify replace of document and return to previous version', function() {
+
+        casePage.clickModuleCasesFiles();
+        casePage.clickExpandFancyTreeTopElementAndSubLink("Documents").doubleClickRootFolder().rightClickDocument().clickDocAction("Replace").uploadFile().replaceVersion("1.0");
+        expect(casePage.returnDocVersionGrid()).toEqual("1.0");
+    });
+
+    it('should crate new case and try to add owner and no access from participant tab for same user and verify the alert message', function() {
+
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
+        casePage.clickNextBtn();
+        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
+        casePage.clickParticipantTab();
+        casePage.selectParticipant("Owner", Objects.casepage.data.approverSamuel);
+        casePage.switchToIframes();
+        casePage.clickAddParticipantTypeSecondRowbtn();
+        casePage.selectParticipantSecondRow("No Access", Objects.casepage.data.approverSamuel);
+        casePage.switchToIframes();
+        expect(casePage.returnParticipantTypeAlert()).toEqual("This action is not allowed. No Access and Owner is conflict combination.");
+        casePage.switchToDefaultContent();
+    });
+
 });

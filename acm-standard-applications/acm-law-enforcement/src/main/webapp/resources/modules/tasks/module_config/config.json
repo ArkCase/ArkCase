@@ -110,6 +110,7 @@
           "details",
           "reworkdetails",
           "docsreview",
+          "parentdocs",
           "attachments",
           "notes",
           "references",
@@ -141,6 +142,14 @@
         "icon": "fa fa-search-plus",
         "components": [
           "docsreview"
+        ]
+      },
+      {
+        "type": "p/TASK/patt",
+        "label": "Parent Documents",
+        "icon": "fa fa-file",
+        "components": [
+          "parentdocs"
         ]
       },
       {
@@ -205,6 +214,7 @@
         "components": [
           "details",
           "rejcomments",
+          "parentdocs",
           "attachments",
           "notes",
           "references",
@@ -228,6 +238,14 @@
         "icon": "fa fa-hand-stop-o",
         "components": [
           "rejcomments"
+        ]
+      },
+      {
+        "type": "p/ADHOC/patt",
+        "label": "Parent Documents",
+        "icon": "fa fa-file",
+        "components": [
+          "parentdocs"
         ]
       },
       {
@@ -641,9 +659,41 @@
     {
       "id": "info",
       "title": "Info",
-      "enabled": false,
-      "type": "empty",
-      "editable": false
+      "dialogUserPicker": {
+        "enableFiltering": false,
+        "multiSelect": false,
+        "showFacets": false,
+        "columnDefs": [
+          {
+            "name": "name",
+            "displayName": "tasks.comp.participants.dialogUserPicker.table.columns.name",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "object_type_s",
+            "displayName": "tasks.comp.participants.dialogUserPicker.table.columns.type",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "title",
+            "displayName": "tasks.comp.participants.dialogUserPicker.table.columns.title",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "object_id_s",
+            "displayName": "tasks.comp.participants.dialogUserPicker.table.columns.id",
+            "headerCellFilter": "translate"
+          }
+        ],
+        "paginationPageSizes": [
+          5,
+          10,
+          20,
+          50
+        ],
+        "paginationPageSize": 10,
+        "start": 0
+      }
     },
     {
       "id": "parentinfo",
@@ -755,6 +805,20 @@
           "fullNameField": "creator_full_name_lcs"
         }
       ]
+    },
+    {
+      "id": "parentdocs",
+      "title": "Parent Documents",
+      "icon": "fa fa-file",
+      "enabled": true,
+      "type": "empty",
+      "docTree": {
+        "email": {
+          "subjectRegex": "(.*)\\$([^\\s]+)",
+          "objectTypeRegexGroup": 1,
+          "objectNumberRegexGroup": 2
+        }
+      }
     },
     {
       "id": "attachments",
@@ -1012,10 +1076,9 @@
     {
       "id": "userSearch",
       "title": "Select users",
-      "enabled": "true",
-      "multi": true,
-      "type": "grid",
       "enableFiltering": false,
+      "multiSelect": false,
+      "showFacets": false,
       "columnDefs": [
         {
           "name": "name",
@@ -1048,6 +1111,43 @@
       "start": 0
     },
     {
+      "id": "objectSearch",
+      "title": "Select object",
+      "enableFiltering": false,
+      "multiSelect": false,
+      "showFacets": false,
+      "columnDefs": [
+        {
+          "name": "name",
+          "displayName": "tasks.objectSearch.objectGridColumns.name",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "object_type_s",
+          "displayName": "tasks.objectSearch.objectGridColumns.type",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "title_parseable",
+          "displayName": "tasks.objectSearch.objectGridColumns.title",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "creator_full_name_lcs",
+          "displayName": "tasks.objectSearch.objectGridColumns.username",
+          "headerCellFilter": "translate"
+        }
+      ],
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
+      "start": 0
+    },
+    {
       "id": "referenceSearchGrid",
       "title": "Reference Search",
       "enabled": "true",
@@ -1056,7 +1156,7 @@
       "emptySearch": false,
       "hideTypeahead": true,
       "showFacets": false,
-      "searchFilter": "\"Object Type\": COMPLAINT|CASE_FILE",
+      "searchFilter": "\"Object Type\": COMPLAINT|CASE_FILE|TASK|FILE",
       "columnDefs": [
         {
           "name": "object_id_s",
@@ -1173,6 +1273,9 @@
       },
       "userSearch": {
         "userFacetFilter": "\"Object Type\": USER"
+      },
+       "objectSearch": {
+        "objectFacetFilter": "\"Object Type\": "
       }
     }
   ]

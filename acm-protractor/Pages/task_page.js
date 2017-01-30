@@ -93,7 +93,8 @@ var startDateInputEdit = element(by.model(Objects.taskspage.locators.startDateIn
 var dueDateValue = element(by.model(Objects.taskspage.locators.dueDateInput));
 var approveBtn = element(by.xpath(Objects.taskspage.locators.approveBtn));
 var caseTitleInTasks = element(by.xpath(Objects.taskspage.locators.caseTitleInTasks));
-var complaintTitleInTasks=element(by.xpath(Objects.taskspage.locators.complaintTitleInTasks));
+var complaintTitleInTasks = element(by.xpath(Objects.taskspage.locators.complaintTitleInTasks));
+
 
 var TaskPage = function() {
     this.clickTaskButton = function() {
@@ -554,7 +555,7 @@ var TaskPage = function() {
         });
         return this;
     }
- this.clickComplaintTitleInTasks = function() {
+    this.clickComplaintTitleInTasks = function() {
 
         browser.wait(EC.presenceOf(element(by.xpath(Objects.taskspage.locators.complaintTitleInTasks))), 30000).then(function() {
             browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.complaintTitleInTasks))), 30000).then(function() {

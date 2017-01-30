@@ -15,7 +15,9 @@
     "new.button": "New Complaint",
     "close.button": "Close Complaint",
     "subscribe.button": "Subscribe",
-    "unsubscribe.button": "Unsubscribe"
+    "unsubscribe.button": "Unsubscribe",
+    "claim.button": "Claim",
+    "unclaim.button": "Unclaim"
   },
   "complaints.comp.details": {
     "title": "Details",
@@ -235,7 +237,7 @@
     "cancelButton": "Cancel",
     "confirmButton": "Add",
     "search": {
-      "placeholder": "Search for case or complaint",
+      "placeholder": "Search for case, complaint, file, task",
       "btn": "Search"
     },
     "grid": {
@@ -249,5 +251,12 @@
         "modified": "Modified"
       }
     }
+  },
+  "complaints.comp.assigneePickerModal": {
+    "title": "Change Assignee",
+    "assigneeNamelabel": "Assignee Name",
+    "btnCancelText": "Cancel",
+    "btnSaveText": "Save",
+    "searchAssigneeHeader": "Search Assignee"
   }
 }
