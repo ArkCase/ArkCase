@@ -1,10 +1,10 @@
-var logger = require('../log');
-var auditPage = require('../Pages/audit_page.js');
-var casePage = require('../Pages/case_page.js');
-var complaintPage = require('../Pages/complaint_page.js');
-var Objects = require('../json/Objects.json');
-var utils = require('../util/utils.js');
-var loginPage = require('../Pages/login_page.js');
+var logger = require('../../log');
+var auditPage = require('../../Pages/audit_page.js');
+var casePage = require('../../Pages/case_page.js');
+var complaintPage = require('../../Pages/complaint_page.js');
+var Objects = require('../../json/Objects.json');
+var utils = require('../../util/utils.js');
+var loginPage = require('../../Pages/login_page.js');
 var flag = false;
 var EC = protractor.ExpectedConditions;
 
@@ -41,6 +41,8 @@ describe('audit tests', function() {
 
     });
 
+    //Run audit report
+
     it('should navigate to case files and verify that case is displayed in audit case report', function() {
 
         casePage.navigateToPage("Case Files").waitForCaseID();
@@ -50,24 +52,9 @@ describe('audit tests', function() {
         auditPage.runReport("Case Files", caseid, utils.returnToday("/"), utils.returnToday("/"));
         auditPage.switchToAuditframes();
         auditPage.validateAuditReportTitles(Objects.auditPage.data.auditReportColumn1Title, Objects.auditPage.data.auditReportColumn2Title, Objects.auditPage.data.auditReportColumn3Title, Objects.auditPage.data.auditReportColumn4Title, Objects.auditPage.data.auditReportColumn5Title, Objects.auditPage.data.auditReportColumn6Title, Objects.auditPage.data.auditReportColumn7Title);
-        //auditPage.validateAuditReportValues();
+        auditPage.validateAuditReportValues(utils.returnToday("/"), Objects.taskspage.data.assigneeSamuel, "Case Viewed", "success", caseid, "CASE_FILE" );
         auditPage.switchToDefaultContent();
 
     });
-
-    it('should navigate to complaints and verify that complaint is displayed in audit complaint report ', function() {
-
-        complaintPage.navigateToPage("Complaints").waitForComplaintID();
-        var createdDate = complaintPage.returnCreatedDate();
-        var complaintId = complaintPage.getComplaintId();
-        complaintPage.navigateToPage("Audit");
-        auditPage.runReport("Complaints",complaintId , utils.returnToday("/"), utils.returnToday("/"));
-        auditPage.switchToAuditframes();
-        auditPage.validateAuditReportTitles(Objects.auditPage.data.auditReportColumn1Title, Objects.auditPage.data.auditReportColumn2Title, Objects.auditPage.data.auditReportColumn3Title, Objects.auditPage.data.auditReportColumn4Title, Objects.auditPage.data.auditReportColumn5Title, Objects.auditPage.data.auditReportColumn6Title, Objects.auditPage.data.auditReportColumn7Title);
-        //auditPage.validateAuditReportValues();
-        auditPage.switchToDefaultContent();
-
-    });
-
 
 });
