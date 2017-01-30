@@ -31,6 +31,8 @@
         <property name="userDao" ref="acmUserDao"/>
         <property name="organizationService" ref="organizationService"/>
         <property name="eventPublisher" ref="profileEventPublisher"/>
+        <property name="groupDao" ref="groupDao"/>
+        <property name="groupService" ref="groupService"/>
     </bean>
 
     <bean id="profilePlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
