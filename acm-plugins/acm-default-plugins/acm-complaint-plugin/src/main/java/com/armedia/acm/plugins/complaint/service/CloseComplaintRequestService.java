@@ -174,7 +174,7 @@ public class CloseComplaintRequestService
             String complaintFolderName = complaintFolderName = String.format(getComplaintFolderNameFormat(),
                     updatedComplaint.getComplaintNumber());
 
-            container.getFolder().setParentFolderId(containerCaseFile.getFolder().getId());
+            container.getFolder().setParentFolder(containerCaseFile.getFolder());
             container.getFolder().setName(complaintFolderName);
 
             if (files != null && files.getChildren() != null)
