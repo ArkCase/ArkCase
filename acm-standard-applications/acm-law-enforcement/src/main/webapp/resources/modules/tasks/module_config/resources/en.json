@@ -75,6 +75,10 @@
       "modifier": "User Last Modified"
     }
   },
+  "tasks.comp.parentdocs": {
+    "title": "Parent Documents",
+    "noParentDataMessage": "No parent documents for standalone task"
+  },
   "tasks.comp.attachments": {
     "title": "Attachments"
   },
@@ -203,6 +207,24 @@
       "type": "Type",
       "title": "Title",
       "username": "Username"
+    }
+  },
+  "tasks.objectSearch": {
+    "id": "objectSearch",
+    "title": "Object Search",
+    "search": {
+      "btn": "Search",
+      "placeholder": "Search for the case or complaint to this task."
+    },
+    "cancelButton": "Cancel",
+    "confirmButton": "Confirm",
+    "enabled": true,
+    "userFacetFilter": "\"Object Type\": ",
+    "objectGridColumns": {
+      "name": "Number",
+      "type": "Type",
+      "title": "Title",
+      "username": "Assignee"
     }
   },
   "tasks.comp.addreference": {

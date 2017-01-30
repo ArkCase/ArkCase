@@ -5,14 +5,12 @@ import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
-
 import java.util.List;
 
 /**
@@ -89,6 +87,22 @@ public class AcmContainerDao extends AcmAbstractDao<AcmContainer>
 
         List<AcmContainer> resultList = query.getResultList();
         return resultList;
+    }
+
+    public AcmContainer findByFolderId(Long folderId) throws AcmObjectNotFoundException
+    {
+        TypedQuery<AcmContainer> query = getEm().createQuery(EcmFileConstants.FIND_CONTAINER_QUERY_BY_FOLDER_ID, getPersistenceClass());
+
+        query.setParameter("folderId", folderId);
+        try
+        {
+            AcmContainer found = query.getSingleResult();
+            log.info("Found existing folder with folderId {}", folderId);
+            return found;
+        } catch (NoResultException e)
+        {
+            throw new AcmObjectNotFoundException(null, folderId, e.getMessage(), e);
+        }
     }
 
     @Override
