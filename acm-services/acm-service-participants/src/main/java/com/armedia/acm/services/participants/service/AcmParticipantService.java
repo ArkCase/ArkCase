@@ -6,6 +6,7 @@ import com.armedia.acm.services.participants.model.CheckParticipantListModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -29,12 +30,15 @@ public class AcmParticipantService
         participant.setObjectId(objectId);
         participant.setObjectType(objectType);
 
+        CheckParticipantListModel model = new CheckParticipantListModel();
+
+
         try
         {
-            applyParticipantRules(participant);
+            applyParticipantRules(participant, model);
         } catch (Exception e)
         {
-            e.printStackTrace();
+            log.error("Failed to apply the participant rules: {}", e.getMessage(), e);
         }
 
         AcmParticipant savedParticipant = getParticipantDao().save(participant);
@@ -44,13 +48,23 @@ public class AcmParticipantService
         return savedParticipant;
     }
 
-    private void applyParticipantRules(Object obj)
+    private List<String> applyParticipantRules(AcmParticipant participant, CheckParticipantListModel model)
     {
-        if (obj instanceof CheckParticipantListModel)
+        List<AcmParticipant> allParticipantsFromParentObject = participantDao.findParticipantsForObject(participant.getObjectType(), participant.getObjectId());
+        if (allParticipantsFromParentObject != null)
         {
-            CheckParticipantListModel model = (CheckParticipantListModel) obj;
-            participantsBusinessRule.applyRules(model);
+            model.setParticipantList(allParticipantsFromParentObject);
+            model.setObjectType(participant.getObjectType());
+            model = participantsBusinessRule.applyRules(model);
+
+            List<String> listOfErrors = new ArrayList<>();
+            if (!model.getErrors().isEmpty())
+            {
+                listOfErrors = model.getErrors();
+            }
+            return listOfErrors;
         }
+        return null;
     }
 
     public AcmParticipant getParticipantByParticipantTypeAndObjectTypeAndId(String userId, String participantType, String objectType, Long objectId)
@@ -61,7 +75,9 @@ public class AcmParticipantService
     public AcmParticipant changeParticipantRole(AcmParticipant participant, String newRole) throws Exception
     {
         participant.setParticipantType(newRole);
-        applyParticipantRules(participant);
+        CheckParticipantListModel model = new CheckParticipantListModel();
+
+        applyParticipantRules(participant, model);
 
         AcmParticipant updatedParticipant = getParticipantDao().save(participant);
         return updatedParticipant;
