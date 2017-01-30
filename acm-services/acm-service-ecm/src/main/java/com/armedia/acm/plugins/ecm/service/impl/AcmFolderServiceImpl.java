@@ -665,7 +665,6 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         }
         newFolder.setName(folderName);
         newFolder.setParentFolder(folder);
-        newFolder.setParentFolder(folder);
         newFolder.setParentFolderParticipants(folder.getParticipants());
         AcmFolder result;
         try
