@@ -171,12 +171,9 @@ var insertLinkBtn = element(by.buttonText(Objects.taskspage.locators.insertLinkB
 var detailsPicture = element(by.xpath(Objects.basepage.locators.detailsPicture));
 var browseButton = element(by.name(Objects.basepage.locators.browseButton));
 var detailsUploadedImage = element(by.xpath(Objects.basepage.locators.detailsUploadedImage));
-var fullnameLink = element(by.css(Objects.basepage.locators.fullnameLink));
-var logoutLink = element(by.linkText(Objects.basepage.locators.logoutLink));
 var checkOut = element(by.xpath(Objects.basepage.locators.checkout));
 var checkIn = element(by.xpath(Objects.basepage.locators.checkin));
 var cancelEditing = element(by.xpath(Objects.basepage.locators.cancelEditing));
-var logoutSucesfullMessage = element(by.css(Objects.basepage.locators.logoutSucesfullMessage));
 var checkoutDisabled = element(by.xpath(Objects.basepage.locators.checkoutDisabled));
 var checkinDisabled = element(by.xpath(Objects.basepage.locators.checkinDisabled));
 var cancelEditingDisabled = element(by.xpath(Objects.basepage.locators.cancelEditingDisabled));
@@ -187,9 +184,9 @@ var submitButton = element(by.xpath(Objects.complaintPage.locators.submitButton)
 var participantTab = element(by.css(Objects.casepage.locators.participantsTab));
 var selectParticipantType = element(by.xpath(Objects.casepage.locators.selectParticipantType));
 var selectparticipant = element(by.name(Objects.casepage.locators.selectParticipant));
-var searchForUserInput = element(by.xpath(Objects.casepage.locators.searchForUser));
+var searchForUserInput = element(by.xpath(Objects.casepage.locators.searchForUserInput));
 var searchForUserBtn = element(by.buttonText(Objects.casepage.locators.searchUserBtn));
-var searchedUser = element.all(by.repeater(Objects.casepage.locators.searchedUserName)).get(0);
+var searchedUser = element(by.xpath(Objects.casepage.locators.searchedUserName));
 var okBtn = element(by.buttonText(Objects.casepage.locators.OkBtn));
 var participantTypeFirstRow = element.all(by.xpath(Objects.casepage.locators.participantTableRow)).get(0);
 var participantNameFirstRow = element.all(by.xpath(Objects.casepage.locators.participantTableRow)).get(1);
@@ -202,9 +199,10 @@ var participantNameForthRow = element.all(by.xpath(Objects.casepage.locators.par
 var participantTypeFifthRow = element.all(by.xpath(Objects.casepage.locators.participantTableRow)).get(8);
 var participantNameFifthRow = element.all(by.xpath(Objects.casepage.locators.participantTableRow)).get(9);
 var participantsLinkBtn = element(by.xpath(Objects.casepage.locators.participantLinkBtn));
+var addParticipantBtn = element(by.css(Objects.casepage.locators.addParticipantBtn));
 var priorityType = element.all(by.xpath(Objects.casepage.locators.priorityType)).get(0);
 var editAssigneeBtn = element.all(by.css(Objects.casepage.locators.participantEditBtn)).get(1);
-var modalParticipantType = element(by.model(Objects.casepage.locators.modalParticipantType));
+var modalParticipantType = new SelectWrapper(by.xpath(Objects.casepage.locators.modalParticipantType));
 var modalParticipantName = element(by.model(Objects.casepage.locators.modalParticipantName));
 var saveParticipantBtn = element(by.buttonText(Objects.casepage.locators.saveParticipantBtn));
 var assigneeDeleteBtn = element.all(by.css(Objects.casepage.locators.participantDeleteBtn)).get(1);
@@ -221,26 +219,42 @@ var noteColumnValue = element(by.css(Objects.basepage.locators.noteColumnValue))
 var priorityLink = element(by.xpath(Objects.casepage.locators.priority));
 var priorityDropDownEdit = new SelectWrapper(by.xpath(Objects.casepage.locators.priorityDropDown));
 var priorityBtn = element(by.xpath(Objects.casepage.locators.priorityBtn));
-var assigneeLink = element(by.xpath(Objects.casepage.locators.assignee));
+var assigneeLink = element(by.css(Objects.casepage.locators.assignee));
 var assigneeDropDown = new SelectWrapper(by.xpath(Objects.casepage.locators.assigneeDropDown));
 var assigneeBtn = element(by.xpath(Objects.casepage.locators.assigneeBtn));
 var submitBtn = element(by.xpath(Objects.casepage.locators.submitBtn));
 var complaintParticipantsTab = element(By.xpath(Objects.complaintPage.locators.participantsTab));
-//var dueDate = element(by.xpath(Objects.casepage.locators.dueDate));
+var preferenceLink = element(by.linkText(Objects.preferencesPage.locators.preferenceLink));
+var overviewLink = element(by.xpath(Objects.casepage.locators.overviewLink));
+var tasksModule = element(by.css(Objects.taskspage.locators.TasksModule));
+var timeTrackingModule = element(by.css(Objects.timetrackingPage.locators.timeTrackingModule));
+var costTrackingModule = element(by.css(Objects.costsheetPage.locators.costTrackingModule));
+var initiatorDeleteBtn = element(by.xpath(Objects.casepage.locators.initiatorDeleteBtn));
+var notificationMessage = element(by.css(Objects.basepage.locators.notificationMessage));
+var docVersionDropDownList = new SelectWrapper(by.css(Objects.basepage.locators.docVersionDropDownList));
+var emailRecepient = element(by.model(Objects.basepage.locators.emailRecepient));
+var sendEmailButton = element(by.buttonText(Objects.basepage.locators.sendEmailButton));
+var claimButton = element(by.css(Objects.casepage.locators.claimButton));
+var unclaimButton = element(by.css(Objects.casepage.locators.unclaimButton));
+var sugestedTag = element(by.css(Objects.basepage.locators.sugestedTag));
+var tagPriority = element(by.xpath(Objects.casepage.locators.tagPriority));
+var participantTypeConflictMessage = element(by.css(Objects.casepage.locators.participantTypeConflictMessage));
+var addParticipantTypeSecondRowbtn = element(by.xpath(Objects.casepage.locators.addParticipantTypeSecondRowbtn));
+var selectParticipantTypeSecondRow = element(by.xpath(Objects.casepage.locators.selectParticipantTypeSecondRow));
+var selectParticipantSecondRow = element.all(by.name(Objects.casepage.locators.selectParticipant)).get(1);
 
 var BasePage = function() {
 
     this.navigateToURL = function(url) {
 
         browser.get(url);
-
     };
 
     this.getPageTitle = function() {
 
         return browser.getTitle();
-
     };
+
     this.clickNewButton = function() {
         browser.waitForAngular().then(function() {
             browser.wait(EC.presenceOf(element(by.xpath(Objects.basepage.locators.newButton))), 30000).then(function() {
@@ -377,62 +391,10 @@ var BasePage = function() {
                     completexPath = xPathStr + "open']";
                     break;
             }
-
             var el = element(by.xpath(completexPath));
-            el.click();
-            var xPathStr = ".//li[@data-command='";
-            var completexPath;
-            switch (action) {
-                case "Open":
-                    completexPath = xPathStr + "open']";
-                    break;
-                case "Edit":
-                    completexPath = xPathStr + "editWithWebDAV']";
-                    break;
-                case "Email":
-                    completexPath = xPathStr + "email']";
-                    break;
-                case "Checkout":
-                    completexPath = xPathStr + "checkout']";
-                    break;
-                case "Checkin":
-                    completexPath = xPathStr + "checkin']";
-                    break;
-                case "Cancel Editing":
-                    completexPath = xPathStr + "cancelEditing']";
-                    break;
-                case "Cut":
-                    completexPath = xPathStr + "cut']";
-                    break;
-                case "Copy":
-                    completexPath = xPathStr + "copy']";
-                    break;
-                case "Paste":
-                    completexPath = xPathStr + "paste']";
-                    break;
-                case "Rename":
-                    completexPath = xPathStr + "rename']";
-                    break;
-                case "Delete":
-                    completexPath = xPathStr + "remove']";
-                    break;
-                case "Download":
-                    completexPath = xPathStr + "download']";
-                    break;
-                case "Replace":
-                    completexPath = xPathStr + "replace']";
-                    break;
-                case "Declare As Record":
-                    completexPath = xPathStr + "declare']";
-                    break;
-                default:
-                    completexPath = xPathStr + "open']";
-                    break;
-            }
-
-            var el = element(by.xpath(completexPath));
-            //browser.wait(EC.visibilityOf(element(by.xpath(completexPath))), 30000).then(function () {
-            el.click();
+            browser.wait(EC.visibilityOf(element(by.xpath(completexPath))), 30000).then(function() {
+                el.click();
+            });
 
         });
 
@@ -526,11 +488,12 @@ var BasePage = function() {
                     var el = element(by.xpath(completexPath));
                     el.click();
                 });
-                return this;
             });
         });
+        return this;
 
     };
+
     this.clickNotesLink = function() {
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.notesLink))), 30000, "Notes link button is not displayed");
         notesLink.click().then(function() {
@@ -597,24 +560,6 @@ var BasePage = function() {
         });
         return this;
     };
-    this.editNote = function(note) {
-        browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.casepage.locators.editNoteBtn)).get(3).all(by.tagName(Objects.casepage.locators.tag)).get(0)), 10000).then(function() {
-            browser.wait(EC.elementToBeClickable(element.all(by.repeater(Objects.casepage.locators.editNoteBtn)).get(3).all(by.tagName(Objects.casepage.locators.tag)).get(0)), 10000).then(function() {
-                editNoteBtn.click().then(function() {
-                    noteTextArea.clear().then(function() {
-                        noteTextArea.sendKeys(note).then(function() {
-                            browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.saveNoteBtn))), 10000).then(function() {
-                                saveNoteBtn.click().then(function() {
-                                    browser.wait(EC.textToBePresentInElement((addedNoteName), Objects.casepage.data.editnote), 10000);
-                                });
-                            });
-                        });
-                    });
-                });
-            });
-        });
-        return this;
-    };
 
     this.clickTagsLinkBtn = function() {
 
@@ -635,7 +580,7 @@ var BasePage = function() {
                         addTagBtn.click().then(function() {
                             browser.sleep(5000);
                             element.all(by.repeater(Objects.casepage.locators.tagTableColumns)).then(function(items) {
-                                expect(items.length).toBe(4, "The tag is not added");
+                                expect(items.length).toBeGreaterThan(3, "The tag is not added");
                             });
                         });
                     });
@@ -656,6 +601,31 @@ var BasePage = function() {
 
     this.returntagCreatedBy = function() {
         return tagCreatedBy.getText();
+    }
+
+
+    this.addSugestedTag = function(tagName) {
+
+        addNewTagBtn.click().then(function() {
+            browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.addTagInput))), 20000, " Add tag modal is not displayed").then(function() {
+                addTagInput.sendKeys(tagName).then(function() {
+                    browser.wait(EC.visibilityOf(element(by.css(Objects.basepage.locators.sugestedTag))), 10000, "Sugested tag is not displayed").then(function() {
+                        sugestedTag.click().then(function() {
+                            tagPopUpTitle.click().then(function() {
+                                addTagBtn.click().then(function() {
+                                    tagPriority.click().then(function() {
+                                        element.all(by.repeater(Objects.casepage.locators.tagTableColumns)).then(function(items) {
+                                            expect(items.length).toBeGreaterThan(3, "The suggested  tag is not added");
+                                        });
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+        return this;
     }
 
     this.deleteTag = function() {
@@ -680,7 +650,7 @@ var BasePage = function() {
                         searchForUserInput.click();
                         searchForUserInput.sendKeys(approverSamuel);
                         searchForUserBtn.click().then(function() {
-                            browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.casepage.locators.searchedUserName)).get(0)), 3000);
+                            browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchedUserName))), 3000);
                             searchedUser.click().then(function() {
                                 browser.wait(EC.visibilityOf(element(by.buttonText(Objects.casepage.locators.OkBtn))), 3000);
                                 okBtn.click();
@@ -690,6 +660,7 @@ var BasePage = function() {
                 })
             });
         });
+        this.switchToIframes();
         return this;
     }
 
@@ -859,8 +830,16 @@ var BasePage = function() {
             });
         });
         return this;
+    }
 
+    this.verifyIfInitiatorCanBeDeleted = function() {
 
+        browser.wait(EC.visibilityOf(element(by.repeater(Objects.casepage.locators.peopleTableColumns))), 10000, "People table columns are not displayed").then(function() {
+            element.all(by.xpath(Objects.casepage.locators.initiatorDeleteBtn)).then(function(items) {
+                expect(items.length).toBe(0, "The delete button for the initiator should not be displayed");
+            });
+        });
+        return this;
     }
 
     this.addContactMethod = function(contactMethodType, contactvalue) {
@@ -1012,41 +991,33 @@ var BasePage = function() {
     this.addAddress = function(addressType, street, city, state, zip, country) {
 
         addressLinkBtn.click().then(function() {
-            browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.addAddressBtn))), 10000).then(function() {
-                addAddressBtn.click().then(function() {
-                    browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.addressTypeDropDow))), 10000).then(function() {
-                        addressTypeDropDow.selectByText(addressType).then(function() {
-                            streetAddress.sendKeys(street).then(function() {
-                                addressCity.sendKeys(city).then(function() {
-                                    addressState.sendKeys(state).then(function() {
-                                        addressZip.sendKeys(zip).then(function() {
-                                            addressCountry.sendKeys(country).then(function() {
-                                                saveAddressBtn.click().then(function() {
-                                                    browser.sleep(8000);
-                                                    addressLinkBtn.click();
-                                                });
-                                            });
-
-                                        });
-
-                                    });
-
-                                });
-
-                            });
-
-                        });
-                    });
-
-                });
-
+            browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.addAddressBtn))), 10000);
+        }).then(function() {
+            addAddressBtn.click();
+        }).then(function() {
+            browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.addressTypeDropDow))), 10000).then(function() {
+                addressTypeDropDow.selectByText(addressType);
+            }).then(function() {
+                streetAddress.sendKeys(street);
+            }).then(function() {
+                addressCity.sendKeys(city);
+            }).then(function() {
+                addressState.sendKeys(state);
+            }).then(function() {
+                addressZip.sendKeys(zip);
+            }).then(function() {
+                addressCountry.sendKeys(country);
+            }).then(function() {
+                saveAddressBtn.click();
+            }).then(function() {
+                browser.sleep(8000);
+                addressLinkBtn.click();
             });
-
         });
-
 
         return this;
     }
+
     this.returnAddressType = function() {
         return addressTypeValue.getText();
     }
@@ -1091,39 +1062,38 @@ var BasePage = function() {
     this.editAddress = function(addressType, street, city, state, zip, country) {
 
         editAddressBtn.click().then(function() {
-            browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.addressTypeDropDow))), 10000).then(function() {
-                addressTypeDropDow.selectByText(addressType).then(function() {
-                    streetAddress.clear().then(function() {
-                        streetAddress.sendKeys(street).then(function() {
-                            addressCity.clear().then(function() {
-                                addressCity.sendKeys(city).then(function() {
-                                    addressState.clear().then(function() {
-                                        addressState.sendKeys(state).then(function() {
-                                            addressZip.clear().then(function() {
-                                                addressZip.sendKeys(zip).then(function() {
-                                                    addressCountry.clear().then(function() {
-                                                        addressCountry.sendKeys(country).then(function() {
-                                                            saveAddressBtn.click();
-                                                            browser.sleep(8000);
-                                                            addressLinkBtn.click();
-                                                        });
-                                                    });
-                                                });
-
-                                            });
-                                        });
-                                    });
-
-                                });
-                            });
-                        });
-                    });
-                });
-            });
-
+            browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.addressTypeDropDow))), 10000);
+        }).then(function() {
+            addressTypeDropDow.selectByText(addressType);
+        }).then(function() {
+            streetAddress.clear();
+        }).then(function() {
+            streetAddress.sendKeys(street);
+        }).then(function() {
+            addressCity.clear();
+        }).then(function() {
+            addressCity.sendKeys(city);
+        }).then(function() {
+            addressState.clear();
+        }).then(function() {
+            addressState.sendKeys(state);
+        }).then(function() {
+            addressZip.clear();
+        }).then(function() {
+            addressZip.sendKeys(zip);
+        }).then(function() {
+            addressCountry.clear();
+        }).then(function() {
+            addressCountry.sendKeys(country);
+        }).then(function() {
+            saveAddressBtn.click();
+            browser.sleep(8000);
+            addressLinkBtn.click();
         });
+
         return this;
     }
+
     this.returnAliasesType = function() {
         return aliasesTypeValue.getText();
     }
@@ -1141,24 +1111,20 @@ var BasePage = function() {
 
         aliassesLinkBtn.click().then(function() {
             browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.addAliasesBtn))), 10000).then(function() {
-                addAliasesBtn.click().then(function() {
-                    browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.aliasesDropdown))), 10000).then(function() {
-                        aliasesDropdown.selectByText(aliasType).then(function() {
-                            aliasesInputValue.sendKeys(aliasValue).then(function() {
-                                saveAliasBtn.click().then(function() {
-                                    browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(6)), 10000).then(function() {
-                                        browser.sleep(8000);
-                                        aliassesLinkBtn.click();
-
-                                    });
-                                });
-
-                            });
-
-                        });
+                addAliasesBtn.click();
+            }).then(function() {
+                browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.aliasesDropdown))), 10000).then(function() {
+                    aliasesDropdown.selectByText(aliasType);
+                }).then(function() {
+                    aliasesInputValue.sendKeys(aliasValue);
+                }).then(function() {
+                    saveAliasBtn.click();
+                }).then(function() {
+                    browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.casepage.locators.peopleTableColumns)).get(6)), 10000).then(function() {
+                        browser.sleep(8000);
+                        aliassesLinkBtn.click();
 
                     });
-
                 });
             });
         });
@@ -1355,15 +1321,29 @@ var BasePage = function() {
         });
     }
     this.clickModuleCasesFiles = function() {
+        browser.wait(EC.visibilityOf(element(by.css(Objects.timetrackingPage.locators.caseFileModule))), 30000).then(function() {
+            browser.executeScript('arguments[0].click()', caseFileModule);
 
-        browser.executeScript('arguments[0].click()', caseFileModule);
+        })
         return this;
     }
     this.clickModuleComplaints = function() {
-
-        browser.executeScript('arguments[0].click()', complaintsModule);
+        browser.wait(EC.visibilityOf(element(by.css(Objects.timetrackingPage.locators.complaintsModule))), 30000).then(function() {
+            browser.executeScript('arguments[0].click()', complaintsModule);
+        });
     }
+    this.clickModuleTasks = function() {
+        browser.executeScript('arguments[0].click()', tasksModule);
+    }
+    this.clickModuleTimeTracking = function() {
 
+        browser.executeScript('arguments[0].click()', timeTrackingModule);
+
+    }
+    this.clickModuleCostTracking = function() {
+
+        browser.executeScript('arguments[0].click()', costTrackingModule);
+    }
 
     this.clickAddTaskButton = function() {
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.addNewTaskBtn))), 30000).then(function() {
@@ -1474,67 +1454,20 @@ var BasePage = function() {
         this.selectDocument(doctype);
         return this;
     };
-    this.insertDetailsTextAreaText = function(details) {
-        browser.wait(EC.presenceOf(element(by.xpath(Objects.taskspage.locators.detailsTextArea))), 30000).then(function() {
-            browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.detailsTextArea))), 30000).then(function() {
-                browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.taskspage.locators.detailsTextArea))), 30000).then(function() {
-                    detailsTextArea.clear();
-                    detailsTextArea.sendKeys(details);
-                    return this;
-                });
-            });
-        });
-    };
-    this.clickSaveDetailsButton = function() {
-        detailsSaveBtn.click();
-        return this;
-    };
-    this.clickRefreshButton = function() {
-        refreshBtn.click();
-        return this;
-    };
-    this.returnDetailsTextArea = function() {
-        return detailsTextArea.getText();
-    };
-    this.clickInsertLinkInDetails = function() {
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.detailsLinkBtn))), 30000).then(function() {
-            detailsLinkBtn.click();
-            return this;
-        });
-    };
-    this.returnInsertLinkTitle = function() {
-        return insertLinkTitle.getText();
-    };
-    this.insertDetailsTextAreaLink = function(text, url) {
-        insertLinkText.click();
-        insertLinkText.sendKeys(text);
-        insertLinkUrl.clear();
-        insertLinkUrl.sendKeys(url);
-        insertLinkBtn.click();
-    };
-    this.clickDetailsAddPicture = function() {
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.detailsPicture))), 30000).then(function() {
-            detailsPicture.click();
-            return this;
-        })
-    };
-    this.uploadPicture = function() {
-        browseButton.click().then(function() {
-            util.uploadPng();
-        });
-        return this;
-    };
+
     this.returnDetailsUploadedImage = function() {
         browser.wait(EC.presenceOf(element(by.xpath(Objects.basepage.locators.detailsUploadedImage))), 10000, "The image is not uploaded");
     };
-
-    this.navigateToPage = function(link) {
-        xPathStr = ".//a[@title='";
-        var completexPath = xPathStr + link + "']";
-        var el = element(by.xpath(completexPath));
-        browser.wait(EC.visibilityOf(element(by.xpath(completexPath))), 30000).then(function() {
-            el.click();
-        });
+    this.clickCheckin = function() {
+        checkIn.click();
+        return this;
+    };
+    this.clickCheckOut = function() {
+        checkOut.click();
+        return this;
+    };
+    this.clickCancelEditing = function() {
+        cancelEditing.click();
         return this;
     };
 
@@ -1580,153 +1513,7 @@ var BasePage = function() {
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.detailsPicture))), 30000).then(function() {
             detailsPicture.click();
             return this;
-        })
-    };
-    this.uploadPicture = function() {
-        browseButton.click().then(function() {
-            util.uploadPng();
         });
-        return this;
-    };
-
-    this.clickFullNameLink = function() {
-        browser.wait(EC.visibilityOf(element(by.css('.fullname'))), 30000).then(function() {
-            browser.wait(EC.elementToBeClickable(element(by.css('.fullname'))), 30000).then(function() {
-                fullnameLink.click();
-            });
-        });
-        return this;
-    };
-    this.clickLogout = function() {
-        browser.wait(EC.visibilityOf(element(by.linkText("Logout"))), 30000).then(function() {
-            logoutLink.click().then(function() {
-                browser.ignoresynchronization = true;
-                expect(logoutSucesfullMessage.getText()).toEqual('You have been logged out successfully.');
-
-            })
-        });
-        return this;
-    };
-    this.Logout = function() {
-        this.clickFullNameLink();
-        this.clickLogout();
-        return this;
-    };
-    this.clickCheckin = function() {
-        checkIn.click();
-        return this;
-    };
-    this.clickCheckOut = function() {
-        checkOut.click();
-        return this;
-    };
-    this.clickCancelEditing = function() {
-        cancelEditing.click();
-        return this;
-    };
-    this.rightClickDocument = function() {
-        browser.wait(EC.presenceOf(element(by.xpath(Objects.basepage.locators.docTitle))), 30000).then(function() {
-            browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.docTitle))), 30000).then(function() {
-                docTitle.click().then(function() {
-                    browser.actions().click(protractor.Button.RIGHT).perform();
-                })
-            });
-        });
-        return this;
-
-    };
-    this.rightClickFileTitle = function() {
-        browser.wait(EC.presenceOf(element(by.xpath(Objects.basepage.locators.fileTitle))), 30000).then(function() {
-            browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.fileTitle))), 30000).then(function() {});
-        });
-    }
-    this.clickFullNameLink = function() {
-        browser.wait(EC.visibilityOf(element(by.css('.fullname'))), 30000).then(function() {
-            browser.wait(EC.elementToBeClickable(element(by.css('.fullname'))), 30000).then(function() {
-                fullnameLink.click();
-            });
-        });
-        return this;
-    };
-    this.clickLogout = function() {
-        browser.wait(EC.visibilityOf(element(by.linkText("Logout"))), 30000).then(function() {
-            logoutLink.click().then(function() {
-                browser.ignoresynchronization = true;
-                browser.sleep(10000);
-                expect(logoutSucesfullMessage.getText()).toEqual('You have been logged out successfully.');
-            })
-        });
-        return this;
-    };
-    this.Logout = function() {
-        this.clickFullNameLink();
-        this.clickLogout();
-        return this;
-    };
-    this.clickCheckin = function() {
-        checkIn.click();
-        return this;
-    };
-    this.clickCheckOut = function() {
-        checkOut.click();
-        return this;
-    };
-    this.clickCancelEditing = function() {
-        cancelEditing.click();
-        return this;
-    };
-    this.rightClickDocument = function() {
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.docTitle))), 30000).then(function() {
-            docTitle.click();
-            browser.actions().click(protractor.Button.RIGHT).perform();
-        });
-        return this;
-
-    };
-
-    this.insertDetailsTextAreaText = function(details) {
-        browser.wait(EC.presenceOf(element(by.xpath(Objects.taskspage.locators.detailsTextArea))), 30000).then(function() {
-            browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.detailsTextArea))), 30000).then(function() {
-                browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.taskspage.locators.detailsTextArea))), 30000).then(function() {
-                    detailsTextArea.clear();
-                    detailsTextArea.sendKeys(details);
-                    return this;
-                });
-            });
-        });
-    };
-    this.clickSaveDetailsButton = function() {
-        detailsSaveBtn.click();
-        return this;
-    };
-    this.clickRefreshButton = function() {
-        refreshBtn.click();
-        return this;
-    };
-    this.returnDetailsTextArea = function() {
-        return detailsTextArea.getText();
-    };
-    this.clickInsertLinkInDetails = function() {
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.detailsLinkBtn))), 30000).then(function() {
-            detailsLinkBtn.click();
-            return this;
-        });
-    };
-    this.returnInsertLinkTitle = function() {
-        return insertLinkTitle.getText();
-    };
-    this.insertDetailsTextAreaLink = function(text, url) {
-        insertLinkText.click();
-        insertLinkText.sendKeys(text);
-        insertLinkUrl.clear();
-        insertLinkUrl.sendKeys(url);
-        insertLinkBtn.click();
-    };
-    this.clickDetailsAddPicture = function() {
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.detailsPicture))), 30000).then(function() {
-            detailsPicture.click();
-            return this;
-        })
     };
     this.uploadPicture = function() {
         browseButton.click().then(function() {
@@ -1744,42 +1531,7 @@ var BasePage = function() {
         });
         return this;
     }
-    this.clickFullNameLink = function() {
-        browser.wait(EC.visibilityOf(element(by.css('.fullname'))), 30000).then(function() {
-            browser.wait(EC.elementToBeClickable(element(by.css('.fullname'))), 30000).then(function() {
-                browser.executeScript('arguments[0].click()', fullnameLink);
-            });
-        });
-        return this;
-    };
-    this.clickLogout = function() {
-        browser.wait(EC.visibilityOf(element(by.linkText("Logout"))), 30000).then(function() {
-            logoutLink.click().then(function() {
-                browser.ignoresynchronization = true;
-                // browser.driver.wait(EC.visibilityOf(element(by.css(".alert.alert-success"))), 30000).then(function() {
-                // expect(logoutSucesfullMessage.getText()).toEqual('You have been logged out successfully.');
-                //});
-            })
-        });
-        return this;
-    };
-    this.Logout = function() {
-        this.clickFullNameLink();
-        this.clickLogout();
-        return this;
-    };
-    this.clickCheckin = function() {
-        checkIn.click();
-        return this;
-    };
-    this.clickCheckOut = function() {
-        checkOut.click();
-        return this;
-    };
-    this.clickCancelEditing = function() {
-        cancelEditing.click();
-        return this;
-    };
+
     this.rightClickDocument = function() {
         browser.wait(EC.presenceOf(element(by.xpath(Objects.basepage.locators.docTitle))), 30000).then(function() {
             browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.docTitle))), 30000).then(function() {
@@ -1789,7 +1541,6 @@ var BasePage = function() {
             });
         });
         return this;
-
     };
     this.rightClickFileTitle = function() {
         browser.wait(EC.presenceOf(element(by.xpath(Objects.basepage.locators.fileTitle))), 30000).then(function() {
@@ -1829,10 +1580,10 @@ var BasePage = function() {
     }
 
     this.clickParticipantTab = function() {
-
         participantTab.click();
-
+        return this;
     }
+
     this.selectParticipant = function(type, participant) {
 
         var participantType = element(by.linkText(type));
@@ -1844,7 +1595,7 @@ var BasePage = function() {
                         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchForUserInput))), 10000, "Search for user input is not displayed").then(function() {
                             searchForUserInput.sendKeys(participant).then(function() {
                                 searchForUserBtn.click().then(function() {
-                                    browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.casepage.locators.searchedUserName)).get(0)), 30000, "Searched user is not displayed").then(function() {
+                                    browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchedUserName))), 30000, "Searched user is not displayed").then(function() {
                                         searchedUser.click().then(function() {
                                             okBtn.click();
                                         });
@@ -1965,7 +1716,6 @@ var BasePage = function() {
         });
     }
 
-
     this.clickEditAssigneeBtn = function() {
 
         browser.wait(EC.textToBePresentInElement((participantTypeSecondRow), "assignee"), 10000).then(function() {
@@ -1980,7 +1730,7 @@ var BasePage = function() {
                 browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchForUserInput))), 10000, "Search for user input is not displayed").then(function() {
                     searchForUserInput.sendKeys(participant).then(function() {
                         searchForUserBtn.click().then(function() {
-                            browser.wait(EC.presenceOf(element.all(by.repeater(Objects.casepage.locators.searchedUserName)).get(0)), 30000, "Searched user is not displayed").then(function() {
+                            browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.searchedUserName))), 30000, "Searched user is not displayed").then(function() {
                                 searchedUser.click().then(function() {
                                     browser.sleep(3000);
                                     okBtn.click().then(function() {
@@ -1999,6 +1749,37 @@ var BasePage = function() {
                 });
             });
         });
+        return this;
+    }
+
+    this.addParticipantFromParticipantTable = function(type, participant) {
+
+        addParticipantBtn.click().then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.modalParticipantType))), 30000).then(function() {
+                modalParticipantType.selectByText(type).then(function() {
+                    modalParticipantName.click().then(function() {
+                        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchForUserInput))), 10000, "Search for user input is not displayed").then(function() {
+                            searchForUserInput.sendKeys(participant).then(function() {
+                                searchForUserBtn.click().then(function() {
+                                    browser.sleep(3000);
+                                    browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.searchedUserName))), 30000, "Searched user is not displayed").then(function() {
+                                        searchedUser.click().then(function() {
+                                            browser.sleep(3000);
+                                            okBtn.click().then(function() {
+                                                browser.sleep(3000);
+                                                saveParticipantBtn.click();
+                                                browser.sleep(5000);
+                                            });
+                                        });
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+
         return this;
     }
 
@@ -2060,22 +1841,162 @@ var BasePage = function() {
     }
 
     this.waitForAssignee = function() {
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.assignee))), 30000, "Assignee is not visible");
+        browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.assignee))), 30000, "Assignee is not visible");
     };
 
     this.returnAssignee = function() {
+
         return assigneeLink.getText();
     };
 
-    //this.returnDueDate = function () {
-    //     return dueDate.getText();
-    //};
     this.clickSubmitBtn = function() {
         browser.sleep(3000);
         browser.executeScript('arguments[0].click()', submitBtn);
         return this;
     }
-};
+
+    this.clickPreferenceLink = function() {
+        browser.wait(EC.visibilityOf(element(by.linkText(Objects.preferencesPage.locators.preferenceLink))), 10000, "Preference link is not displayed").then(function() {
+            preferenceLink.click();
+        });
+    }
+
+    this.navigateToPreferencePage = function() {
+        this.clickFullNameLink();
+        this.clickPreferenceLink();
+    }
+
+    this.waitForOverView = function() {
+
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.overviewLink))), 20000, "Owerview Link is nor displayed").then(function() {
+            browser.sleep(5000);
+        });
+    }
+
+    this.verifyIfWidgetIsDisplayed = function(widget, title) {
+
+        element.all(by.css('[adf-widget-type=' + widget + ']')).then(function(items) {
+            expect(items.length).toBe(1, "The" + " " + title + " " + "widget is enabled and not displayed");
+            expect(element(by.css('[adf-widget-type=' + widget + ']')).element(by.css('.ng-scope')).getText()).toEqual(title);
+        });
+    }
+
+    this.verifyIfWidgetIsNotDisplayed = function(widget, title) {
+
+        element.all(by.css('[adf-widget-type=' + widget + ']')).then(function(items) {
+            expect(items.length).toBe(0, "The" + " " + title + " " + "widget is disabled it should not be displayed");
+        });
+    }
+
+    this.verifyTasksTableColumnsNumber = function() {
+
+        element.all(by.repeater(Objects.casepage.locators.taskTableRows)).then(function(items) {
+            expect(items.length).toBe(7, "The column number in the task table is changed");
+        });
+    }
+
+    this.verifyTheNotificationMessage = function(objectEvent) {
+        browser.driver.switchTo().defaultContent();
+        browser.wait(EC.visibilityOf(element(by.css(Objects.basepage.locators.notificationMessage))), 30000, "Notification Message is not displayed").then(function() {
+            expect(notificationMessage.getText()).toContain(objectEvent);
+        });
+    }
+
+    this.clickClaimButton = function() {
+
+        browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.claimButton))), 30000, "Claim button is not displayed").then(function() {
+            claimButton.click();
+        }).then(function() {
+            browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.unclaimButton))), 10000, "After is clicked the claim button is still displayed").then(function() {
+                browser.wait(EC.textToBePresentInElement((assigneeLink), Objects.casepage.data.assigneeSamuel), 10000);
+            });
+        });
+    }
+    this.doubleClickRootFolder = function() {
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.root))), 30000).then(function() {
+            root.click();
+            browser.actions().doubleClick(root).perform();
+        });
+        return this;
+    }
+    this.uploadFile = function() {
+        util.uploadDocx();
+        return this;
+    }
+    this.replaceVersion = function(value) {
+        docVersionDropDownList.selectByValue(value);
+    };
+    this.insertRecipient = function (email) {
+        emailRecepient.click();
+        emailRecepient.sendKeys(email);
+        return this;
+    };
+    this.clickSendEmailButton = function () {
+        sendEmailButton.click();
+        return this;
+    };
+    this.sendEmail = function (email) {
+        this.insertRecipient(email);
+        this.clickSendEmailButton();
+        return this;
+    }
+
+    this.clickUnclaimButton = function() {
+
+        browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.unclaimButton))), 30000, "Unclaim button is not displayed").then(function() {
+            unclaimButton.click();
+        }).then(function() {
+            browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.claimButton))), 10000, "After is clicked the unclaim button is still displayed").then(function() {
+                browser.wait(EC.textToBePresentInElement((assigneeLink), ""), 10000);
+            });
+        });
+    };
+
+    this.clickLastElementInTreeData = function() {
+        browser.wait(EC.visibilityOf($('.fancytree-lastsib')), 10000, "Elements in the data tree are not displayed");
+        var lastElement = $('.fancytree-lastsib');
+        lastElement.click();
+    }
+
+    this.returnParticipantTypeAlert = function() {
+        browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.participantTypeConflictMessage))), 10000, "Participant conflict message is not displayed");
+        return participantTypeConflictMessage.getText();
+    }
+
+
+    this.clickAddParticipantTypeSecondRowbtn = function() {
+
+        browser.executeScript('arguments[0].click()', addParticipantTypeSecondRowbtn);
+    }
+
+    this.selectParticipantSecondRow = function(type, participant) {
+
+        var participantType = element(by.linkText(type));
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.selectParticipantTypeSecondRow))), 10000).then(function() {
+            selectParticipantTypeSecondRow.click().then(function() {
+                participantType.click().then(function() {
+                    selectParticipantSecondRow.click().then(function() {
+                        browser.driver.switchTo().defaultContent();
+                        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchForUserInput))), 10000, "Search for user input is not displayed").then(function() {
+                            searchForUserInput.sendKeys(participant).then(function() {
+                                searchForUserBtn.click().then(function() {
+                                    browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchedUserName))), 30000, "Searched user is not displayed").then(function() {
+                                        searchedUser.click().then(function() {
+                                            okBtn.click();
+                                        });
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+
+        return this;
+    };
+
+}
 
 
 module.exports = new BasePage();

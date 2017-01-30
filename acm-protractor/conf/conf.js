@@ -1,5 +1,6 @@
 var HtmlScreenshotReporter = require(process.env['USERPROFILE'] + '/node_modules/protractor-jasmine2-screenshot-reporter');
 var utils = require('../util/utils.js');
+var Objects = require('../json/Objects.json');
 var reporter = new HtmlScreenshotReporter({
     dest: 'target/screenshots_' + utils.returnToday("_"),
     filename: 'AutoTestRun-report.html'
@@ -40,14 +41,19 @@ exports.config = {
 
     specs: [
 
-           '../test_spec/dashboard_test.spec.js',
-           '../test_spec/task_test.spec.js',
-           '../test_spec/case_test.spec.js',
-           '../test_spec/complaint_test.spec.js',
-           '../test_spec/user_test.spec.js',
-           '../test_spec/notification_test.js',
-           '../test_spec/admin_test.js'
+        //any test can be run with command "protractor conf.js, just place it here"
+
     ],
+        //any suite can be run with command "protractor conf.js --suite=selected"
+
+        suites:
+    {
+        smoke: ['../test_spec/smoke/*.spec.js'],
+        regression: ['../test_spec/regression/*.spec.js'],
+        functional: ['../test_spec/functional/*.spec.js'],
+        all: ['../test_spec/*/*.spec.js'],
+        selected: [ '../test_spec/regression/regression_case_test.spec.js'],
+    },
 
     jasmineNodeOpts: {
         showColors: true,
@@ -64,7 +70,7 @@ exports.config = {
         jasmine.getEnv().addReporter(reporter);
 
         browser.driver.manage().window().maximize();
-        browser.driver.get('https://core.arkcase.dev.armedia.com/arkcase/login');
+        browser.driver.get(Objects.siteurl);
         browser.manage().timeouts().setScriptTimeout(90000);
         browser.manage().timeouts().pageLoadTimeout(40000);
     },

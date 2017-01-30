@@ -149,7 +149,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                 var gridAddEntityButtons = function (columnDefs) {
                     if ("entity" == Util.goodMapValue(columnDefs, "[0].name")) {
                         var columnDef = columnDefs[0];
-                        columnDef.width = 90;
+                        columnDef.width = 92;
                         columnDef.headerCellTemplate = "<span></span>";
                         columnDef.cellTemplate = "<a ng-click='grid.appScope.expand(\"contactMethods\", row)' title='" + $translate.instant("common.directive.corePeople.contactMethods.title") + "' class='inline animated btn btn-default btn-xs'><i class='fa fa-phone'></i></a>"
                             + "<a ng-click='grid.appScope.expand(\"organizations\", row)' title='" + $translate.instant("common.directive.corePeople.organizations.title") + "' class='inline animated btn btn-default btn-xs'><i class='fa fa-cubes'></i></a>"
@@ -278,7 +278,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                 scope.deleteRow = function (rowEntity) {
                     gridHelper.deleteRow(rowEntity);
                     var id = Util.goodMapValue(rowEntity, "id", 0);
-                        if (0 < id) {    //do not need to save for deleting a new row
+                    if (0 < id) {    //do not need to save for deleting a new row
                         ObjectPersonService.deletePersonAssociation(id).then(
                             function (personAssociationDeleted) {
                                 refresh();
@@ -288,7 +288,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                                 return error;
                             }
                         );
-                        }
+                    }
 
                 };
 
@@ -571,6 +571,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                 };
                 var showModalOrganizations = function (organization, isEdit) {
                     var modalScope = scope.$new();
+                    modalScope.config = scope.config;
                     modalScope.organization = organization || {};
                     modalScope.isEdit = isEdit || false;
 
@@ -578,37 +579,44 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                         scope: modalScope,
                         animation: true,
                         templateUrl: 'directives/core-people/core-people-organizations-modal.client.view.html',
-                        controller: ['$scope', '$modalInstance', function ($scope, $modalInstance) {
-                            $scope.onClickOk = function () {
-                                $modalInstance.close({
-                                    organization: $scope.organization,
-                                    isEdit: $scope.isEdit
-                                });
-                            };
-                            $scope.onClickCancel = function () {
-                                $modalInstance.dismiss('cancel');
-                            }
-                        }],
+                        controller: "Directives.CorePeopleOrganizationsModalController",
                         size: 'sm'
                     });
 
                     modalInstance.result.then(function (data) {
-                        var organization;
-                        var personAssociation = _.find(scope.objectInfo.personAssociations, function (pa) {
-                            return Util.compare(pa.id, data.organization.parentId);
-                        });
-                        if (!data.isEdit)
-                            organization = scope.organization;
-                        else {
-                            organization = _.find(personAssociation.person.organizations, {organizationId: data.organization.organizationId});
+                            var organization;
+                            var isDuplicate = false;
+                            var personAssociation = _.find(scope.objectInfo.personAssociations, function (pa) {
+                                return Util.compare(pa.id, data.organization.parentId);
+                            });
+                            if (!data.isEdit) {
+                                var duplicateOrganization;
+                                duplicateOrganization = _.find(personAssociation.person.organizations, function (organization) {
+                                    return Util.compare(organization.organizationId, data.organization.organizationId);
+                                });
+
+                                if (duplicateOrganization == undefined) {
+                                    organization = scope.organization;
+                                    organization.organizationId = data.organization.organizationId;
+                                } else {
+                                    isDuplicate = true;
+                                }
+                            }
+                            else {
+                                organization = _.find(personAssociation.person.organizations, {organizationId: data.organization.organizationId});
+                            }
+
+                            if (!isDuplicate) {
+                                organization.organizationType = data.organization.organizationType;
+                                organization.organizationValue = data.organization.organizationValue;
+
+                                if (!data.isEdit) {
+                                    personAssociation.person.organizations.push(organization);
+                                }
+                                saveObjectInfoAndRefresh(personAssociation);
+                            }
                         }
-                        organization.organizationType = data.organization.organizationType;
-                        organization.organizationValue = data.organization.organizationValue;
-                        if (!data.isEdit) {
-                            personAssociation.person.organizations.push(organization);
-                        }
-                        saveObjectInfoAndRefresh(personAssociation);
-                    });
+                    );
                 };
                 var showModalAddresses = function (address, isEdit) {
                     var modalScope = scope.$new();
