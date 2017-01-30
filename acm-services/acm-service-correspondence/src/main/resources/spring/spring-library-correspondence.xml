@@ -35,6 +35,14 @@
         <property name="correspondenceGenerator" ref="correspondenceGenerator"/>
         <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="eventPublisher" ref="correspondenceEventPublisher"/>
+        <property name="templateManager" ref="correspondenceTemplateManager"/>
+    </bean>
+
+    <bean id="correspondenceTemplateManager" class="com.armedia.acm.correspondence.service.CorrespondenceTemplateManager">
+        <property name="springContextHolder" ref="acmContextHolder"/>
+        <property name="correspondenceTemplatesConfiguration" value="file:${user.home}/.arkcase/acm/spring/correspondence/correspondence-templates-configuration.json"/>
+        <property name="caseCorrespondenceForms" value="file:${user.home}/.arkcase/acm/lookups/caseCorrespondenceForms.json"/>
+        <property name="complaintCorrespondenceForms" value="file:${user.home}/.arkcase/acm/lookups/complaintCorrespondenceForms.json"/>
     </bean>
 
     <bean id="correspondenceEventPublisher" class="com.armedia.acm.correspondence.service.CorrespondenceEventPublisher"/>
