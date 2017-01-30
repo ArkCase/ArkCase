@@ -29,9 +29,11 @@ var LoginPage = function() {
         this.clickLogin();
     };
     this.clickFullNameLink = function() {
-        browser.wait(EC.visibilityOf(element(by.css('.fullname'))), 30000).then(function() {
-            browser.wait(EC.elementToBeClickable(element(by.css('.fullname'))), 30000).then(function() {
-                browser.executeScript('arguments[0].click()', fullnameLink);
+        browser.wait(EC.presenceOf(element(by.css('.fullname'))), 30000).then(function() {
+            browser.wait(EC.visibilityOf(element(by.css('.fullname'))), 30000).then(function () {
+                browser.wait(EC.elementToBeClickable(element(by.css('.fullname'))), 30000).then(function () {
+                    browser.executeScript('arguments[0].click()', fullnameLink);
+                });
             });
         });
         return this;
