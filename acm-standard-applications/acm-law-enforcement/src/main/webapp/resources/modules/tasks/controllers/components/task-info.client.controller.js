@@ -41,6 +41,17 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             }
         );
 
+        ObjectLookupService.getGroups().then(
+            function (groups) {
+                var options = [];
+                _.each(groups, function (group) {
+                    options.push({value: group.name, text: group.name});
+                });
+                $scope.owningGroups = options;
+                return groups;
+            }
+        );
+
         ObjectLookupService.getPriorities().then(
             function (priorities) {
                 var options = [];
@@ -83,8 +94,16 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
                 $scope.participant = {};
                 if (data.participant.participantLdapId != '' && data.participant.participantLdapId != null) {
                     $scope.participant.participantLdapId = data.participant.participantLdapId;
-                    $scope.assignee = data.participant.participantLdapId;
-                    $scope.updateAssignee($scope.assignee);
+                    $scope.participant.object_type_s = data.participant.object_type_s;
+                    if ($scope.participant.object_type_s === 'USER') {
+                        $scope.assignee = data.participant.participantLdapId;
+                        $scope.updateAssignee($scope.assignee);
+                    } else {
+                        $scope.owningGroup = data.participant.selectedAssigneeName;
+                        $scope.assignee = '';
+                        $scope.updateAssignee($scope.assignee);
+                    }
+
                 }
             }, function(error) {
             });
@@ -141,6 +160,10 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
         };
         $scope.updateDueDate = function (dueDate) {
             $scope.objectInfo.dueDate = UtilDateService.dateToIso($scope.dateInfo.dueDate);
+            saveTask();
+        };
+        $scope.updateOwningGroup = function () {
+            ObjectModelService.setGroup($scope.objectInfo, $scope.owningGroup);
             saveTask();
         };
 
