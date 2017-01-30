@@ -447,7 +447,7 @@ public class CaseFileService extends FrevvoFormAbstractService
 
                 String caseFolderName = String.format(getCaseFolderNameFormat(), oldCase.getCaseNumber());
 
-                oldContainer.getFolder().setParentFolderId(newContainer.getFolder().getId());
+                oldContainer.getFolder().setParentFolder(newContainer.getFolder());
                 oldContainer.getFolder().setName(caseFolderName);
 
                 if (files != null && files.getChildren() != null)
