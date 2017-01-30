@@ -230,8 +230,7 @@
           "workflow",
           "history",
           "signatures",
-          "tags",
-          "approvalrouting"
+          "tags"
         ]
       },
       {
@@ -312,14 +311,6 @@
         "icon": "fa fa-tags",
         "components": [
           "tags"
-        ]
-      },
-      {
-        "type": "p/ADHOC/apr",
-        "label": "Approval Routing",
-        "icon": "fa fa-sort-amount-desc",
-        "components": [
-          "approvalrouting"
         ]
       }
     ]

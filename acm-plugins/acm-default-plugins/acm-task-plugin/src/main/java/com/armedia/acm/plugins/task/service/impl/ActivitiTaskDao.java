@@ -87,24 +87,9 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
     @Transactional
     public AcmTask createAdHocTask(AcmTask in) throws AcmTaskException
     {
-        Task task = null;
-        if (in.isBuckslipTask())
-        {
-            ProcessInstance pi = activitiRuntimeService.startProcessInstanceByKey("ArkCaseBuckslipProcess");
+        Task activitiTask = getActivitiTaskService().newTask();
 
-            List<Task> buckslipTaskList = activitiTaskService.createTaskQuery().processInstanceId(pi.getId()).list();
-            if (buckslipTaskList != null && buckslipTaskList.size() > 0)
-            {
-                task = buckslipTaskList.get(0);
-            }
-
-        }
-        if (task == null)
-        {
-            task = getActivitiTaskService().newTask();
-        }
-
-        AcmTask out = updateExistingActivitiTask(in, task);
+        AcmTask out = updateExistingActivitiTask(in, activitiTask);
         if (out.getStatus().equalsIgnoreCase(TaskConstants.STATE_CLOSED))
         {
             String taskId = String.valueOf(out.getId());
@@ -213,7 +198,7 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
 
             if (in.isBuckslipTask())
             {
-                getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_APPROVERS,
+                getActivitiTaskService().setVariable(activitiTask.getId(), TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_APPROVERS,
                         acmUserService.extractIdsFromUserList(in.getBuckslipFutureApprovers()));
             }
 
