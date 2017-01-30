@@ -38,6 +38,7 @@ public abstract class FrevvoFormChargeAbstractService extends FrevvoFormAbstract
 	 * @param types
 	 * @return
 	 */
+	@Deprecated
 	public OptionsAndDetailsByType getCodeOptionsAndDetails(String formName, List<String> types)
 	{
 		OptionsAndDetailsByType optionsAndDetailsByType = new OptionsAndDetailsByType();
