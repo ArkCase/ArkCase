@@ -6,7 +6,7 @@
     <property name="cmParentObjectTypeLength" value="1024" dbms="oracle,postgresql"/>
     <property name="cmParentObjectTypeLength" value="255" dbms="mysql,mssql"/>
 
-	<changeSet id="01-tag-tables" author="marst">
+	<changeSet id="01-tag-tables" author="marst" dbms="oracle,postgresql,mssql">
 		<createTable tableName="acm_tag">
 			<column name="cm_tag_id" type="${idType}">
 				<constraints primaryKey="true" primaryKeyName="pk_cm_tag_id" />
@@ -44,7 +44,45 @@
 		</createTable>
 	</changeSet>
 
-	<changeSet id="2-tag-tables" author="marst">
+	<changeSet id="01-tag-tables" author="marst" dbms="mysql">
+		<createTable tableName="acm_tag">
+			<column name="cm_tag_id" type="${idType}">
+				<constraints primaryKey="true" primaryKeyName="pk_cm_tag_id"/>
+			</column>
+
+			<column name="cm_file_id" type="${fkIdType}"/>
+
+			<column name="cm_tag_text" type="VARCHAR(256)">
+				<constraints nullable="false"/>
+			</column>
+
+			<column name="cm_tag_creator" type="VARCHAR(128)">
+				<constraints nullable="false"/>
+			</column>
+
+			<column name="cm_tag_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+				<constraints nullable="false"/>
+			</column>
+
+			<column name="cm_tag_modifier" type="VARCHAR(128)">
+				<constraints nullable="false"/>
+			</column>
+
+			<column name="cm_tag_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+				<constraints nullable="false"/>
+			</column>
+
+			<column name="cm_parent_object_id" type="${fkIdType}">
+				<constraints nullable="false"/>
+			</column>
+
+			<column name="cm_parent_object_type" type="VARCHAR(128)">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+	</changeSet>
+
+	<changeSet id="2-tag-tables" author="marst" dbms="oracle,postgresql,mssql">
 
 		<dropColumn tableName="acm_tag" columnName="cm_file_id" />
 		<dropColumn tableName="acm_tag" columnName="cm_parent_object_id" />
@@ -97,6 +135,60 @@
 
 	</changeSet>
 
+	<changeSet id="2-tag-tables" author="marst" dbms="mysql">
+
+		<dropColumn tableName="acm_tag" columnName="cm_file_id"/>
+		<dropColumn tableName="acm_tag" columnName="cm_parent_object_id"/>
+		<dropColumn tableName="acm_tag" columnName="cm_parent_object_type"/>
+
+
+		<addColumn tableName="acm_tag">
+			<column name="cm_tag_description" type="VARCHAR(1024)">
+				<constraints nullable="true"/>
+			</column>
+		</addColumn>
+
+		<addColumn tableName="acm_tag">
+			<column name="cm_tag_name" type="VARCHAR(256)">
+				<constraints nullable="true"/>
+			</column>
+		</addColumn>
+
+		<createTable tableName="acm_associated_tag">
+			<column name="cm_associated_tag_id" type="${idType}">
+				<constraints primaryKey="true" primaryKeyName="pk_cm_associated_tag_id"/>
+			</column>
+
+			<column name="cm_tag_id" type="${fkIdType}"/>
+
+			<column name="cm_associated_tag_creator" type="VARCHAR(128)">
+				<constraints nullable="false"/>
+			</column>
+
+			<column name="cm_associated_tag_created" type="${timestampType}"
+					defaultValueComputed="${timestampFunction}">
+				<constraints nullable="false"/>
+			</column>
+
+			<column name="cm_parent_object_id" type="${fkIdType}">
+				<constraints nullable="false"/>
+			</column>
+
+			<column name="cm_parent_object_type" type="VARCHAR(128)">
+				<constraints nullable="false"/>
+			</column>
+
+		</createTable>
+
+		<createIndex tableName="acm_associated_tag" unique="true"
+					 indexName="idx_tag_object_type">
+			<column name="cm_tag_id" type="${fkIdType}"/>
+			<column name="cm_parent_object_id" type="${fkIdType}"/>
+			<column name="cm_parent_object_type" type="VARCHAR(${cmParentObjectTypeLength})"/>
+		</createIndex>
+
+	</changeSet>
+
 	<changeSet id="03-add-new-token-column-in-acm-tag-table"
 		author="marst">
 		<addColumn tableName="acm_tag">
@@ -126,7 +218,7 @@
 		</insert>
 	</changeSet>
 
-	<changeSet id="11-acm_associated_tag" author="nadica.cuculova">
+	<changeSet id="11-acm_associated_tag" author="nadica.cuculova" dbms="oracle,postgresql,mssql">
 		<addColumn tableName="acm_associated_tag">
 			<column name="cm_associated_tag_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
 				<constraints nullable="false" />
@@ -135,6 +227,21 @@
 		<addColumn tableName="acm_associated_tag">
 			<column name="cm_associated_tag_modifier" type="VARCHAR(1024)" defaultValueComputed="${user}">
 				<constraints nullable="false" />
+			</column>
+		</addColumn>
+	</changeSet>
+
+	<changeSet id="11-acm_associated_tag" author="nadica.cuculova" dbms="mysql">
+		<addColumn tableName="acm_associated_tag">
+			<column name="cm_associated_tag_modified" type="${timestampType}"
+					defaultValueComputed="${timestampFunction}">
+				<constraints nullable="false"/>
+			</column>
+		</addColumn>
+		<addColumn tableName="acm_associated_tag">
+			<!-- note, MySQL doesn't let you default a column to current_user -->
+			<column name="cm_associated_tag_modifier" type="VARCHAR(1024)">
+				<constraints nullable="false"/>
 			</column>
 		</addColumn>
 	</changeSet>

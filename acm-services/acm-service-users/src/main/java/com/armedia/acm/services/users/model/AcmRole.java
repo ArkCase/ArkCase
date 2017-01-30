@@ -4,17 +4,16 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 @Entity
-@Table(name = "ACM_ROLE")
+@Table(name = "acm_role")
 public class AcmRole
 {
     @Id
-    @Column(name = "CM_ROLE_NAME")
+    @Column(name = "cm_role_name")
     private String roleName;
 
-    @Column(name = "CM_ROLE_TYPE")
+    @Column(name = "cm_role_type")
     private String roleType;
 
     public String getRoleName()
