@@ -41,33 +41,19 @@ describe('audit tests', function() {
 
     });
 
-    // it('should navigate to case files and verify that case is displayed in audit case report', function() {
-    //
-    //     casePage.navigateToPage("Case Files").waitForCaseID();
-    //     var caseid = casePage.getCaseId();
-    //     var createdDate = casePage.returnCreatedDate();
-    //     casePage.navigateToPage("Audit");
-    //     auditPage.runReport("Case Files", caseid, utils.returnToday("/"), utils.returnToday("/"));
-    //     auditPage.switchToAuditframes();
-    //     auditPage.validateAuditReportTitles(Objects.auditPage.data.auditReportColumn1Title, Objects.auditPage.data.auditReportColumn2Title, Objects.auditPage.data.auditReportColumn3Title, Objects.auditPage.data.auditReportColumn4Title, Objects.auditPage.data.auditReportColumn5Title, Objects.auditPage.data.auditReportColumn6Title, Objects.auditPage.data.auditReportColumn7Title);
-    //     auditPage.validateAuditReportValues(utils.returnToday("/"), Objects.taskspage.data.assigneeSamuel, "Case Viewed", "success", caseid, "CASE_FILE" );
-    //     auditPage.switchToDefaultContent();
-    //
-    // });
-    //
-    // it('should navigate to complaints and verify that complaint is displayed in audit complaint report ', function() {
-    //
-    //     complaintPage.navigateToPage("Complaints").waitForComplaintID();
-    //     var createdDate = complaintPage.returnCreatedDate();
-    //     var complaintId = complaintPage.getComplaintId();
-    //     complaintPage.navigateToPage("Audit");
-    //     auditPage.runReport("Complaints",complaintId , utils.returnToday("/"), utils.returnToday("/"));
-    //     auditPage.switchToAuditframes();
-    //     auditPage.validateAuditReportTitles(Objects.auditPage.data.auditReportColumn1Title, Objects.auditPage.data.auditReportColumn2Title, Objects.auditPage.data.auditReportColumn3Title, Objects.auditPage.data.auditReportColumn4Title, Objects.auditPage.data.auditReportColumn5Title, Objects.auditPage.data.auditReportColumn6Title, Objects.auditPage.data.auditReportColumn7Title);
-    //     auditPage.validateAuditReportValues(utils.returnToday("/"), Objects.taskspage.data.assigneeSamuel, "Find Complaint", "success", complaintId, "COMPLAINT" );
-    //     auditPage.switchToDefaultContent();
-    //
-    // });
+    it('should navigate to complaints and verify that complaint is displayed in audit complaint report ', function() {
+
+        complaintPage.navigateToPage("Complaints").waitForComplaintID();
+        var createdDate = complaintPage.returnCreatedDate();
+        var complaintId = complaintPage.getComplaintId();
+        complaintPage.navigateToPage("Audit");
+        auditPage.runReport("Complaints",complaintId , utils.returnToday("/"), utils.returnToday("/"));
+        auditPage.switchToAuditframes();
+        auditPage.validateAuditReportTitles(Objects.auditPage.data.auditReportColumn1Title, Objects.auditPage.data.auditReportColumn2Title, Objects.auditPage.data.auditReportColumn3Title, Objects.auditPage.data.auditReportColumn4Title, Objects.auditPage.data.auditReportColumn5Title, Objects.auditPage.data.auditReportColumn6Title, Objects.auditPage.data.auditReportColumn7Title);
+        auditPage.validateAuditReportValues(utils.returnToday("/"), Objects.taskspage.data.assigneeSamuel, "Find Complaint", "success", complaintId, "COMPLAINT" );
+        auditPage.switchToDefaultContent();
+
+    });
 
     //this tests should be changed after resolution of issue with filtering id, currently filtering by id does not work
     it('should navigate to case files, view one case file and verify that during auditing only one record is generated', function() {

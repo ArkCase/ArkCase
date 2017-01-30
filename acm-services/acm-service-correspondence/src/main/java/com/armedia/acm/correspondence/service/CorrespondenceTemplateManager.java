@@ -1,5 +1,9 @@
 package com.armedia.acm.correspondence.service;
 
+import static com.armedia.acm.correspondence.service.TemplateMapper.mapConfigurationFromTemplate;
+import static com.armedia.acm.correspondence.service.TemplateMapper.mapTemplateFromConfiguration;
+import static com.armedia.acm.correspondence.service.TemplateMapper.updateTemplateState;
+
 import com.armedia.acm.correspondence.model.CorrespondenceQuery;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplateConfiguration;
@@ -15,10 +19,13 @@ import org.springframework.core.io.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -32,9 +39,11 @@ public class CorrespondenceTemplateManager implements InitializingBean
 
     private Resource correspondenceTemplatesConfiguration;
 
-    private List<CorrespondenceTemplate> templates = new ArrayList<>();
+    private Resource caseCorrespondenceForms;
 
-    Map<String, CorrespondenceQuery> correspondenceQueryBeansMap;
+    private Resource complaintCorrespondenceForms;
+
+    private Map<String, CorrespondenceTemplate> templates = new HashMap<>();
 
     /**
      * @param springContextHolder the springContextHolder to set
@@ -45,11 +54,27 @@ public class CorrespondenceTemplateManager implements InitializingBean
     }
 
     /**
-     * @param correspondenceTemplatesConfigurationPath the correspondenceTemplatesConfigurationPath to set
+     * @param correspondenceTemplatesConfiguration the correspondenceTemplatesConfiguration to set
      */
-    public void setCorrespondenceTemplatesConfigurationPath(Resource correspondenceTemplatesConfigurationPath)
+    public void setCorrespondenceTemplatesConfiguration(Resource correspondenceTemplatesConfiguration)
     {
-        correspondenceTemplatesConfiguration = correspondenceTemplatesConfigurationPath;
+        this.correspondenceTemplatesConfiguration = correspondenceTemplatesConfiguration;
+    }
+
+    /**
+     * @param caseCorrespondenceForms the caseCorrespondenceForms to set
+     */
+    public void setCaseCorrespondenceForms(Resource caseCorrespondenceForms)
+    {
+        this.caseCorrespondenceForms = caseCorrespondenceForms;
+    }
+
+    /**
+     * @param complaintCorrespondenceForms the complaintsCorrespondenceForms to set
+     */
+    public void setComplaintCorrespondenceForms(Resource complaintCorrespondenceForms)
+    {
+        this.complaintCorrespondenceForms = complaintCorrespondenceForms;
     }
 
     /*
@@ -70,105 +95,26 @@ public class CorrespondenceTemplateManager implements InitializingBean
                 {
                 });
 
-        correspondenceQueryBeansMap = springContextHolder.getAllBeansOfType(CorrespondenceQuery.class);
+        Map<String, CorrespondenceQuery> correspondenceQueryBeansMap = springContextHolder.getAllBeansOfType(CorrespondenceQuery.class);
 
-        templates.addAll(templateConfigurations.stream().map(this::mapTemplateFromConfiguration).collect(Collectors.toList()));
+        templates.putAll(templateConfigurations.stream().map(c -> mapTemplateFromConfiguration(c, correspondenceQueryBeansMap))
+                .collect(Collectors.toMap(CorrespondenceTemplate::getTemplateFilename, Function.identity())));
 
-        correspondenceQueryBeansMap = null;
-    }
-
-    private CorrespondenceTemplate mapTemplateFromConfiguration(CorrespondenceTemplateConfiguration configuration)
-    {
-        CorrespondenceTemplate template = new CorrespondenceTemplate();
-
-        template.setDocumentType(configuration.getDocumentType());
-        template.setTemplateFilename(configuration.getTemplateFilename());
-        template.setQuery(correspondenceQueryBeansMap.get(configuration.getCorrespondenceQueryBeanId()));
-        template.setTemplateSubstitutionVariables(configuration.getTemplateSubstitutionVariables());
-        template.setDateFormatString(configuration.getDateFormatString());
-        template.setNumberFormatString(configuration.getNumberFormatString());
-
-        return template;
     }
 
     /**
      * @return the templates
      */
-    public List<CorrespondenceTemplate> getTemplates()
+    List<CorrespondenceTemplate> getTemplates()
     {
-        return new ArrayList<>(templates);
-    }
-
-    public CorrespondenceTemplate updateTemplate(CorrespondenceTemplate template) throws IOException
-    {
-        Optional<CorrespondenceTemplate> existing = findTemplate(template.getTemplateFilename());
-        if (existing.isPresent())
-        {
-            CorrespondenceTemplate existingTemplate = existing.get();
-            updateTemplate(existingTemplate, template);
-        } else
-        {
-            templates.add(template);
-        }
-
-        updateConfiguration(templates);
-
-        return template;
-    }
-
-    /**
-     * @param existingTemplate
-     * @param template
-     */
-    private void updateTemplate(CorrespondenceTemplate existingTemplate, CorrespondenceTemplate template)
-    {
-        existingTemplate.setDocumentType(template.getDocumentType());
-        existingTemplate.setTemplateFilename(template.getTemplateFilename());
-        existingTemplate.setQuery(template.getQuery());
-        existingTemplate.setTemplateSubstitutionVariables(template.getTemplateSubstitutionVariables());
-        existingTemplate.setDateFormatString(template.getDateFormatString());
-        existingTemplate.setNumberFormatString(template.getNumberFormatString());
-    }
-
-    /**
-     * @param templates2
-     * @throws IOException
-     */
-    private void updateConfiguration(List<CorrespondenceTemplate> templates) throws IOException
-    {
-        List<CorrespondenceTemplateConfiguration> configurations = templates.stream().map(this::mapConfigurationFromTemplate)
-                .collect(Collectors.toList());
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.enable(SerializationFeature.INDENT_OUTPUT);
-        String configurationsOutput = mapper.writeValueAsString(configurations);
-
-        File file = correspondenceTemplatesConfiguration.getFile();
-        FileUtils.writeStringToFile(file, configurationsOutput);
-
-        // should update the complaintCorrespondenceForms.json and caseCorrespondenceForms.json as well
-
-    }
-
-    private CorrespondenceTemplateConfiguration mapConfigurationFromTemplate(CorrespondenceTemplate template)
-    {
-        CorrespondenceTemplateConfiguration configuration = new CorrespondenceTemplateConfiguration();
-
-        configuration.setDocumentType(template.getDocumentType());
-        configuration.setTemplateFilename(template.getTemplateFilename());
-        configuration.setCorrespondenceQueryBeanId(getQueryId(template.getQuery()));
-        configuration.setTemplateSubstitutionVariables(template.getTemplateSubstitutionVariables());
-        configuration.setDateFormatString(template.getDateFormatString());
-        configuration.setNumberFormatString(template.getNumberFormatString());
-
-        return configuration;
+        return new ArrayList<>(templates.values());
     }
 
     /**
      * @param query
      * @return
      */
-    private String getQueryId(CorrespondenceQuery query)
+    String getQueryId(CorrespondenceQuery query)
     {
         Map<String, CorrespondenceQuery> queryBeans = springContextHolder.getAllBeansOfType(CorrespondenceQuery.class);
         if (queryBeans.values().contains(query))
@@ -183,13 +129,32 @@ public class CorrespondenceTemplateManager implements InitializingBean
         return null;
     }
 
-    /**
-     * @param templateFileName
-     * @return
-     */
-    public CorrespondenceTemplate getTemplateByFileName(String templateFileName)
+    Optional<CorrespondenceTemplate> updateTemplate(CorrespondenceTemplate template) throws IOException
     {
-        return findTemplate(templateFileName).orElse(null);
+        Optional<CorrespondenceTemplate> existing = findTemplate(template.getTemplateFilename());
+        if (existing.isPresent())
+        {
+            CorrespondenceTemplate existingTemplate = existing.get();
+            updateTemplateState(existingTemplate, template);
+        } else
+        {
+            templates.put(template.getTemplateFilename(), template);
+        }
+
+        updateConfiguration(templates.values());
+        updateLabels(template, templateLabels -> {
+            Optional<TemplateLabel> label = templateLabels.stream().filter(tl -> tl.getTemplate().equals(template.getTemplateFilename()))
+                    .findAny();
+            if (label.isPresent())
+            {
+                label.get().setLabel(template.getDocumentType());
+            } else
+            {
+                templateLabels.add(new TemplateLabel(template.getTemplateFilename(), template.getDocumentType()));
+            }
+        });
+
+        return Optional.of(template);
     }
 
     /**
@@ -197,23 +162,95 @@ public class CorrespondenceTemplateManager implements InitializingBean
      * @return
      * @throws IOException
      */
-    public CorrespondenceTemplate deleteTemplate(String templateFileName) throws IOException
+    Optional<CorrespondenceTemplate> deleteTemplate(String templateFileName) throws IOException
     {
         Optional<CorrespondenceTemplate> result = findTemplate(templateFileName);
         if (result.isPresent())
         {
             CorrespondenceTemplate template = result.get();
-            if (templates.remove(template))
-            {
-                updateConfiguration(templates);
-            }
+            templates.remove(template.getTemplateFilename());
+            updateConfiguration(templates.values());
+            updateLabels(template, templateLabels -> {
+                Optional<TemplateLabel> label = templateLabels.stream()
+                        .filter(tl -> tl.getTemplate().equals(template.getTemplateFilename())).findAny();
+                if (label.isPresent())
+                {
+                    templateLabels.remove(label.get());
+                }
+            });
+            return result;
         }
-        return null;
+        return Optional.empty();
+    }
+
+    /**
+     * @param templateFileName
+     * @return
+     */
+    Optional<CorrespondenceTemplate> getTemplateByFileName(String templateFileName)
+    {
+        return findTemplate(templateFileName);
     }
 
     private Optional<CorrespondenceTemplate> findTemplate(String templateFileName)
     {
-        return templates.stream().filter(t -> t.getTemplateFilename().equals(templateFileName)).findAny();
+        return Optional.ofNullable(templates.get(templateFileName));
+    }
+
+    /**
+     * @param templates2
+     * @throws IOException
+     */
+    private void updateConfiguration(Collection<CorrespondenceTemplate> templates) throws IOException
+    {
+        List<CorrespondenceTemplateConfiguration> configurations = templates.stream()
+                .map(template -> mapConfigurationFromTemplate(template, this::getQueryId)).collect(Collectors.toList());
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        String configurationsOutput = mapper.writeValueAsString(configurations);
+
+        File file = correspondenceTemplatesConfiguration.getFile();
+        FileUtils.writeStringToFile(file, configurationsOutput);
+
+    }
+
+    @FunctionalInterface
+    private static interface LabelsUpdater
+    {
+        void updateLabels(List<TemplateLabel> templateLabels);
+    }
+
+    /**
+     * @param template
+     * @throws IOException
+     */
+    private void updateLabels(CorrespondenceTemplate template, LabelsUpdater updater) throws IOException
+    {
+        File file;
+        switch (template.getQuery().getType())
+        {
+        case CASE_FILE:
+            file = caseCorrespondenceForms.getFile();
+            break;
+        case COMPLAINT:
+            file = complaintCorrespondenceForms.getFile();
+        default:
+            throw new IllegalArgumentException();
+        }
+        String resource = FileUtils.readFileToString(file);
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+
+        List<TemplateLabel> templateLabels = mapper.readValue(resource, new TypeReference<List<TemplateLabel>>()
+        {
+        });
+
+        updater.updateLabels(templateLabels);
+
+        FileUtils.writeStringToFile(file, mapper.writeValueAsString(templateLabels));
+
     }
 
 }

@@ -7,10 +7,13 @@ import com.armedia.acm.plugins.person.service.OrganizationService;
 import com.armedia.acm.plugins.profile.dao.UserOrgDao;
 import com.armedia.acm.plugins.profile.model.ProfileDTO;
 import com.armedia.acm.plugins.profile.model.UserOrg;
+import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmRole;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.RoleType;
+import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.service.group.GroupService;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -19,10 +22,7 @@ import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.springframework.security.core.Authentication;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static junit.framework.TestCase.*;
 import static org.easymock.EasyMock.*;
@@ -42,6 +42,8 @@ public class UserOrgServiceImplTest extends EasyMockSupport
     private ProfileEventPublisher mockEventPublisher;
     private MuleContextManager mockMuleContextManager;
     private Map<String, Object> muleMessageProps;
+    private AcmGroupDao mockGroupDao;
+    private GroupService mockGroupService;
 
     @Before
     public void setUp()
@@ -52,6 +54,8 @@ public class UserOrgServiceImplTest extends EasyMockSupport
         mockOrganizationService = createMock(OrganizationService.class);
         mockEventPublisher = createMock(ProfileEventPublisher.class);
         mockMuleContextManager = createMock(MuleContextManager.class);
+        mockGroupDao = createMock(AcmGroupDao.class);
+        mockGroupService = createMock(GroupService.class);
 
         userOrgService = new UserOrgServiceImpl();
         userOrgService.setUserDao(mockUserDao);
@@ -59,6 +63,8 @@ public class UserOrgServiceImplTest extends EasyMockSupport
         userOrgService.setOrganizationService(mockOrganizationService);
         userOrgService.setEventPublisher(mockEventPublisher);
         userOrgService.setMuleContextManager(mockMuleContextManager);
+        userOrgService.setGroupDao(mockGroupDao);
+        userOrgService.setGroupService(mockGroupService);
 
         muleMessageProps = Collections.singletonMap("acmUser", mockAuthentication);
     }
@@ -236,13 +242,20 @@ public class UserOrgServiceImplTest extends EasyMockSupport
         UserOrg expectedUserOrg = createAndSetUserOrg();
         expectedUserOrg.setWebsite("unknown.com");
 
-        AcmRole role = new AcmRole();
-        role.setRoleName("ACM_INVESTIGATOR");
-        List<AcmRole> roles = new ArrayList<>();
-        roles.add(role);
+        AcmUser user = new AcmUser();
+        user.setUserId(USER_ID);
+
+        AcmGroup group = new AcmGroup();
+        group.setName("ACM_INVESTIGATOR");
+
+        Set<AcmGroup> groups = new HashSet<>();
+        groups.add(group);
+
+        user.setGroups(groups);
 
         expect(mockUserOrgDao.findByUserId(USER_ID)).andReturn(expectedUserOrg);
-        expect(mockUserDao.findAllRolesByUserAndRoleType(USER_ID, RoleType.LDAP_GROUP)).andReturn(roles);
+        expect(mockUserDao.findByUserIdAnyCase(USER_ID)).andReturn(user);
+        expect(mockGroupService.isUUIDPresentInTheGroupName(group.getName())).andReturn(false);
 
         replayAll();
 
@@ -252,7 +265,7 @@ public class UserOrgServiceImplTest extends EasyMockSupport
 
         assertEquals(expectedUserOrg.getWebsite(), profileDTO.getWebsite());
         assertEquals(expectedUserOrg.getUser().getUserId(), profileDTO.getUserId());
-        assertEquals(role.getRoleName(), profileDTO.getGroups().get(0));
+        assertEquals(group.getName(), profileDTO.getGroups().get(0));
         assertEquals(expectedUserOrg.getOrganization().getOrganizationValue(), profileDTO.getCompanyName());
     }
 
@@ -264,14 +277,18 @@ public class UserOrgServiceImplTest extends EasyMockSupport
         UserOrg expectedUserOrg = new UserOrg();
         expectedUserOrg.setUser(user);
 
-        AcmRole role = new AcmRole();
-        role.setRoleName("ACM_INVESTIGATOR");
-        List<AcmRole> roles = new ArrayList<>();
-        roles.add(role);
+        AcmGroup group = new AcmGroup();
+        group.setName("ACM_INVESTIGATOR");
+
+        Set<AcmGroup> groups = new HashSet<>();
+        groups.add(group);
+
+        user.setGroups(groups);
 
         expect(mockUserOrgDao.findByUserId(USER_ID)).andReturn(null);
         expect(mockUserDao.findByUserId(USER_ID)).andReturn(user);
-        expect(mockUserDao.findAllRolesByUserAndRoleType(USER_ID, RoleType.LDAP_GROUP)).andReturn(roles);
+        expect(mockUserDao.findByUserIdAnyCase(USER_ID)).andReturn(user);
+        expect(mockGroupService.isUUIDPresentInTheGroupName(group.getName())).andReturn(false);
 
         MuleMessage mockMuleMessage = createMock(MuleMessage.class);
         MuleException mockMuleException = null;
@@ -299,7 +316,7 @@ public class UserOrgServiceImplTest extends EasyMockSupport
 
         assertEquals(captureUserOrg.getValue().getUser().getUserId(), USER_ID);
         assertEquals(profileDTO.getUserId(), expectedUserOrg.getUser().getUserId());
-        assertEquals(profileDTO.getGroups().get(0), role.getRoleName());
+        assertEquals(profileDTO.getGroups().get(0), group.getName());
         assertNull(profileDTO.getCompanyName());
     }
 

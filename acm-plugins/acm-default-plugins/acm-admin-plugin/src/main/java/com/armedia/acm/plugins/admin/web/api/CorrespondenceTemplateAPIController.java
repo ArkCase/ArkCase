@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
 import com.armedia.acm.correspondence.service.CorrespondenceService;
+import com.armedia.acm.plugins.admin.model.CorrespondenceTemplateRequestResponse;
 
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jan 27, 2017
@@ -19,7 +21,7 @@ import java.io.IOException;
  */
 @Controller
 @RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
-public class CorrespondenceTemplateController
+public class CorrespondenceTemplateAPIController
 {
 
     private CorrespondenceService correspondenceService;
@@ -51,8 +53,10 @@ public class CorrespondenceTemplateController
      * @param templateByFileName
      * @return
      */
-    private CorrespondenceTemplateRequestResponse mapTemplateToResponse(CorrespondenceTemplate template)
+    private CorrespondenceTemplateRequestResponse mapTemplateToResponse(Optional<CorrespondenceTemplate> templateHolder)
     {
+        CorrespondenceTemplate template = templateHolder.orElseThrow(CorrespondenceTemplateNotFoundException::new);
+
         CorrespondenceTemplateRequestResponse response = new CorrespondenceTemplateRequestResponse();
 
         response.setDocumentType(template.getDocumentType());
@@ -76,7 +80,8 @@ public class CorrespondenceTemplateController
 
         template.setDocumentType(request.getDocumentType());
         template.setTemplateFilename(request.getTemplateFilename());
-        template.setQuery(correspondenceService.getQueryByBeanId(request.getCorrespondenceQueryBeanId()));
+        template.setQuery(correspondenceService.getQueryByBeanId(request.getCorrespondenceQueryBeanId())
+                .orElseThrow(CorrespondenceTemplateNotFoundException::new));
         template.setTemplateSubstitutionVariables(request.getTemplateSubstitutionVariables());
         template.setDateFormatString(request.getDateFormatString());
         template.setNumberFormatString(request.getNumberFormatString());

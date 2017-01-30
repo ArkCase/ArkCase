@@ -1,4 +1,4 @@
-package com.armedia.acm.plugins.admin.web.api;
+package com.armedia.acm.plugins.admin.model;
 
 import com.armedia.acm.correspondence.model.CorrespondenceQuery;
 import com.armedia.acm.correspondence.model.QueryType;
