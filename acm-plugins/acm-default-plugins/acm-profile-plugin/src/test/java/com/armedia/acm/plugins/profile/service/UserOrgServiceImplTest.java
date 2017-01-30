@@ -22,10 +22,7 @@ import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.springframework.security.core.Authentication;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static junit.framework.TestCase.*;
 import static org.easymock.EasyMock.*;
@@ -250,12 +247,14 @@ public class UserOrgServiceImplTest extends EasyMockSupport
 
         AcmGroup group = new AcmGroup();
         group.setName("ACM_INVESTIGATOR");
-        List<AcmGroup> groups = new ArrayList<>();
+
+        Set<AcmGroup> groups = new HashSet<>();
         groups.add(group);
 
+        user.setGroups(groups);
+
         expect(mockUserOrgDao.findByUserId(USER_ID)).andReturn(expectedUserOrg);
-        expect(mockUserDao.findByUserId(USER_ID)).andReturn(user);
-        expect(mockGroupDao.findByUserMember(user)).andReturn(groups);
+        expect(mockUserDao.findByUserIdAnyCase(USER_ID)).andReturn(user);
         expect(mockGroupService.isUUIDPresentInTheGroupName(group.getName())).andReturn(false);
 
         replayAll();
@@ -280,12 +279,15 @@ public class UserOrgServiceImplTest extends EasyMockSupport
 
         AcmGroup group = new AcmGroup();
         group.setName("ACM_INVESTIGATOR");
-        List<AcmGroup> groups = new ArrayList<>();
+
+        Set<AcmGroup> groups = new HashSet<>();
         groups.add(group);
 
+        user.setGroups(groups);
+
         expect(mockUserOrgDao.findByUserId(USER_ID)).andReturn(null);
-        expect(mockUserDao.findByUserId(USER_ID)).andReturn(user).anyTimes();
-        expect(mockGroupDao.findByUserMember(user)).andReturn(groups);
+        expect(mockUserDao.findByUserId(USER_ID)).andReturn(user);
+        expect(mockUserDao.findByUserIdAnyCase(USER_ID)).andReturn(user);
         expect(mockGroupService.isUUIDPresentInTheGroupName(group.getName())).andReturn(false);
 
         MuleMessage mockMuleMessage = createMock(MuleMessage.class);

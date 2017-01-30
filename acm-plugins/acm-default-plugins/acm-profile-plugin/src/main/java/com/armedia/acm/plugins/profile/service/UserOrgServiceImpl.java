@@ -22,9 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class UserOrgServiceImpl implements UserOrgService
@@ -83,7 +81,7 @@ public class UserOrgServiceImpl implements UserOrgService
         return saved;
     }
 
-    private ProfileDTO createProfileDTO(UserOrg userOrgInfo, List<AcmGroup> groups)
+    private ProfileDTO createProfileDTO(UserOrg userOrgInfo, Set<AcmGroup> groups)
     {
         ProfileDTO profileDTO = new ProfileDTO();
 
@@ -146,9 +144,8 @@ public class UserOrgServiceImpl implements UserOrgService
             }
         }
 
-        AcmUser user = userDao.findByUserId(userId);
-        List<AcmGroup> groups = groupDao.findByUserMember(user);
-        return createProfileDTO(userOrg, groups);
+        AcmUser user = userDao.findByUserIdAnyCase(userId);
+        return createProfileDTO(userOrg, user.getGroups());
     }
 
     @Override
