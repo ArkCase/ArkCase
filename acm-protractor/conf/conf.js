@@ -52,7 +52,7 @@ exports.config = {
         regression: ['../test_spec/regression/*.spec.js'],
         functional: ['../test_spec/functional/*.spec.js'],
         all: ['../test_spec/*/*.spec.js'],
-        selected: [ '../test_spec/smoke/smoke_case_test.spec.js'],
+        selected: [ '../test_spec/regression/regression_case_test.spec.js'],
     },
 
     jasmineNodeOpts: {
