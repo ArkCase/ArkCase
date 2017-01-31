@@ -95,7 +95,7 @@ angular.module('admin').service('Admin.CMTemplatesService', ['$http', 'Upload',
         function saveTemplateData(template) {
             return $http({
                 method: "PUT",
-                url: 'api/latest/plugin/admin/template/update',
+                url: 'api/latest/plugin/admin/template',
                 data: template
             });
         };
