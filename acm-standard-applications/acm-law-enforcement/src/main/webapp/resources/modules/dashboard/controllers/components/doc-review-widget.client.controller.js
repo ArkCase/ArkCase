@@ -13,15 +13,22 @@ angular.module('dashboard.docReview', ['adf.provider'])
                 }
             );
     })
-    .controller('Dashboard.DocReviewController', ['$scope', '$translate', '$stateParams', '$q', 'UtilService', 'Task.InfoService'
-        , 'Authentication', 'Dashboard.DashboardService', 'ConfigService', 'Helper.ObjectBrowserService',
-        function ($scope, $translate, $stateParams, $q, Util, TaskInfoService, Authentication, DashboardService, ConfigService, HelperObjectBrowserService) {
+    .controller('Dashboard.DocReviewController', ['$scope', '$stateParams', 'Task.InfoService', 'Helper.ObjectBrowserService'
+        , function ($scope, $stateParams, TaskInfoService, HelperObjectBrowserService) {
 
-            var promiseConfig;
-            var promiseInfo;
             var modules = [
-                {name: "TASK", configName: "tasks", getInfo: TaskInfoService.getTaskInfo}
-                , {name: "ADHOC", configName: "tasks", getInfo: TaskInfoService.getTaskInfo}
+                {
+                    name: "TASK",
+                    configName: "tasks",
+                    getInfo: TaskInfoService.getTaskInfo,
+                    validateInfo: TaskInfoService.validateTaskInfo
+                }
+                , {
+                    name: "ADHOC",
+                    configName: "tasks",
+                    getInfo: TaskInfoService.getTaskInfo,
+                    validateInfo: TaskInfoService.validateTaskInfo
+                }
             ];
 
             var module = _.find(modules, function (module) {
@@ -33,27 +40,32 @@ angular.module('dashboard.docReview', ['adf.provider'])
                 columnDefs: []
             };
 
-            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-            if (module && Util.goodPositive(currentObjectId, false)) {
-                promiseConfig = ConfigService.getModuleConfig(module.configName);
-                promiseInfo = module.getInfo(currentObjectId);
+            new HelperObjectBrowserService.Component({
+                scope: $scope
+                , stateParams: $stateParams
+                , moduleId: module.configName
+                , componentId: "main"
+                , retrieveObjectInfo: module.getInfo
+                , validateObjectInfo: module.validateInfo
+                , onObjectInfoRetrieved: function (objectInfo) {
+                    onObjectInfoRetrieved(objectInfo);
+                }
+                , onConfigRetrieved: function (componentConfig) {
+                    onConfigRetrieved(componentConfig);
+                }
+            });
 
-                $q.all([promiseConfig, promiseInfo]).then(function (data) {
-                        var config = _.find(data[0].components, {id: "main"});
-                        var info = data[1];
-                        var widgetInfo = _.find(config.widgets, function (widget) {
-                            return widget.id === "docsReview";
-                        });
-                        $scope.config = config;
-                        $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
+            var onObjectInfoRetrieved = function (objectInfo) {
+                $scope.gridOptions.data = objectInfo.documentUnderReview ? [objectInfo.documentUnderReview] : [];
+                $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
+            };
 
-                        $scope.gridOptions.data = info.documentUnderReview;
-                        $scope.gridOptions.totalItems = $scope.gridOptions.data ? 1 : 0;
-                    },
-                    function (err) {
+            var onConfigRetrieved = function (componentConfig) {
+                var widgetInfo = _.find(componentConfig.widgets, function (widget) {
+                    return widget.id === "docsReview";
+                });
 
-                    }
-                );
-            }
+                $scope.gridOptions.columnDefs = widgetInfo ? widgetInfo.columnDefs : [];
+            };
         }
     ]);

@@ -88,13 +88,25 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                     scope.emptySearch = scope.config.emptySearch;
                 }
 
-                var isSelected = false;
+                var searchObject = new Object();
+                try {
+                    searchObject = JSON.parse(scope.searchQuery);
+                } catch (e) {
+                    searchObject.searchQuery = scope.searchQuery;
+                    searchObject.isSelected = false;
+                }
+
+
+                var isSelected = searchObject.isSelected;
+                scope.searchQuery = searchObject.searchQuery;
                 scope.onSelect = function ($item, $model, $label) {
+                    scope.labelSelected = $label;
                     isSelected = true;
                 };
 
                 scope.queryExistingItems = function (start) {
                     scope.start = Util.goodNumber(start, 0);
+                    scope.searchQuery = searchObject.searchQuery;
                     if (!scope.searchQuery || scope.searchQuery.length === 0) {
                         if (!scope.emptySearch) {
                             scope.searchQuery = "";
@@ -117,8 +129,12 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                         }
 
                         if (scope.isAutoSuggestActive && scope.searchQuery !== "" && isSelected) {
+                            scope.searchQuery = scope.labelSelected;
+                            searchObject.searchQuery = scope.labelSelected;
                             var query = SearchQueryBuilder.buildFacetedSearchQuery("\"" + scope.searchQuery + "\"", scope.filters, scope.pageSize, scope.start);
+                            isSelected = false;
                         } else {
+                            scope.searchQuery = searchObject.searchQuery;
                             var query = SearchQueryBuilder.buildFacetedSearchQuery((scope.multiFilter ? "*" : scope.searchQuery + "*"), scope.filters, scope.pageSize, scope.start);
                         }
                         if (query) {
@@ -303,10 +319,13 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
 
                 scope.keyUp = function (event) {
                     scope.searchQuery = scope.searchQuery.replace('*', '');
+                    searchObject.searchQuery = scope.searchQuery;
+
                     if (event.keyCode == 13 && scope.searchQuery) {
                         scope.queryExistingItems();
                     }
                 };
+
 
                 scope.downloadCSV = function () {
                     if (scope.gridApi && scope.gridApi.exporter) {

@@ -1,7 +1,9 @@
-var logger = require('../log');
-var notificationPage = require('../Pages/notifications_page.js');
-var loginPage = require('../Pages/login_page.js');
-var Objects = require('../json/Objects.json');
+var logger = require('../../log');
+var notificationPage = require('../../Pages/notifications_page.js');
+var loginPage = require('../../Pages/login_page.js');
+var Objects = require('../../json/Objects.json');
+var utils = require('../../util/utils.js');
+var using = require(process.env['USERPROFILE'] + '/node_modules/jasmine-data-provider');
 var flag = false;
 
 function testAsync(done) {
@@ -9,7 +11,7 @@ function testAsync(done) {
     setTimeout(function() {
         flag = true;
         done();
-    }, 60000);
+    }, 30000);
 
 }
 
@@ -29,10 +31,10 @@ describe('notification page test', function() {
 
     });
 
+    //Click on the Notification Module
+
     it('should verify that description date/time is equal to modified column date/time', function() {
         notificationPage.navigateToPage("Notifications");
         expect(notificationPage.returnDescription()).toContain(notificationPage.returnModifiedBy());
     });
-
-
 });

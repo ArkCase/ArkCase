@@ -184,7 +184,7 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
          *
          * @returns {Object} Promise
          */
-        Service.removeParticipant = function(userId, participantType, objectType, objectId) {
+        Service.removeParticipant = function (userId, participantType, objectType, objectId) {
             return Util.serviceCall({
                 service: Service.delete
                 , param: {
@@ -214,7 +214,7 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
          *
          * @returns {Object} Promise
          */
-        Service.changeParticipantRole = function(participantId, participantType) {
+        Service.changeParticipantRole = function (participantId, participantType) {
             return Util.serviceCall({
                 service: Service.changeRole
                 , param: {
@@ -281,6 +281,11 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
                 MessageService.error($translate.instant("common.directive.coreParticipants.message.error.owninggroupUnique"));
                 return false;
             }
+            if (_.filter(data, function (pa) {
+                    return Util.compare(" ", pa.participantType);
+                }).length > 1) {
+                return false;
+            }
             return true;
         };
 
@@ -330,7 +335,7 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
          *
          * @returns {Object} Promise
          */
-        Service.validateRemovedParticipant = function(data){
+        Service.validateRemovedParticipant = function (data) {
             if (Util.isEmpty(data)) {
                 return false;
             }

@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootScope', 'Acm.StoreService', 'Object.AuditService'
-    , function ($q, $rootScope, Store, ObjectAuditService) {
+angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootScope', 'Acm.StoreService', 'Object.AuditService', 'TimeTracking.InfoService'
+    , function ($q, $rootScope, Store, ObjectAuditService, TimeTrackingInfoService) {
         var Service = {};
 
         Service.handleMessage = handleMessage;
@@ -34,6 +34,17 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
                 handleCacheObject(message.parentObjectType, message.parentObjectId);
                 handleCacheLists(message.parentObjectType, message.parentObjectId);
                 handleSubCacheLists(message.parentObjectType, message.parentObjectId);
+            }
+            // A timesheet does not have parent id/type field, but could have multiple complaint/case "parent" objects
+            if (message.objectType == 'TIMESHEET' || message.parentObjectType == 'TIMESHEET') {
+                var timesheetId = message.objectType == 'TIMESHEET' ? message.objectId : message.parentObjectId;
+                TimeTrackingInfoService.getTimesheetParentObjectsTypeId(timesheetId).then(function (parentObjectsTypeId) {
+                    angular.forEach(parentObjectsTypeId, function (data) {
+                        handleCacheObject(data.type, data.objectId);
+                        handleCacheLists(data.type, data.objectId);
+                        handleSubCacheLists(data.type, data.objectId);
+                    });
+                });
             }
         }
 

@@ -4,7 +4,7 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="01-create-notification-table" author="manojd">
+    <changeSet id="01-create-notification-table" author="manojd" dbms="oracle,postgresql,mssql">
         <createTable tableName="acm_notification">
             <column name="cm_notification_id" type="${idType}">
                 <constraints
@@ -12,6 +12,35 @@
                         primaryKeyName="pk_notification"/>
             </column>
             <column name="cm_notification_created" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_notification_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="cm_notification_status" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_notification_action" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_notification_note" type="CLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_notification_comment" type="CLOB">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="01-create-notification-table" author="manojd" dbms="mysql">
+        <createTable tableName="acm_notification">
+            <column name="cm_notification_id" type="${idType}">
+                <constraints
+                        primaryKey="true"
+                        primaryKeyName="pk_notification"/>
+            </column>
+            <column name="cm_notification_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_notification_creator" type="VARCHAR(1024)">
@@ -56,9 +85,20 @@
         <addPrimaryKey tableName="acm_notification" columnNames="cm_notification_id" constraintName="pk_notification"/>
     </changeSet>
 
-    <changeSet id="03-add-modify-params" author="manojd">
+    <changeSet id="03-add-modify-params" author="manojd" dbms="oracle,postgresql,mssql">
         <addColumn tableName="acm_notification">
             <column name="cm_modified" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="03-add-modify-params" author="manojd" dbms="mysql">
+        <addColumn tableName="acm_notification">
+            <column name="cm_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_modifier" type="VARCHAR(1024)">

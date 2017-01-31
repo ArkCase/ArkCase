@@ -1,5 +1,6 @@
 package com.armedia.acm.correspondence.service;
 
+import com.armedia.acm.correspondence.model.CorrespondenceQuery;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
 import com.armedia.acm.correspondence.utils.PoiWordGenerator;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
@@ -34,6 +35,7 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
 {
     private CorrespondenceGenerator unit;
 
+    private CorrespondenceQuery correspondenceQuery;
     private CorrespondenceTemplate correspondenceTemplate;
 
     private EntityManager mockEntityManager;
@@ -43,6 +45,10 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
     private InputStream mockInputStream;
     private Authentication mockAuthentication;
     private EcmFileService mockEcmFileService;
+
+    private String key1;
+    private String key2;
+    private String key3;
 
     private String var1;
     private String var2;
@@ -73,17 +79,29 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
         String dateFormat = "MM/dd/YYYY";
         String numberFormat = "#,###";
 
+        key1 = "key1";
+        key2 = "key2";
+        key3 = "key3";
+
         var1 = "var1";
         var2 = "var2";
         var3 = "var3";
 
-        List<String> substitutionVars = Arrays.asList(var1, var2, var3);
+        List<String> fieldNames = Arrays.asList(key1, key2, key3);
+        Map<String, String> substitutionVars = new HashMap<>();
+        substitutionVars.put(key1, var1);
+        substitutionVars.put(key2, var2);
+        substitutionVars.put(key3, var3);
+
+        correspondenceQuery = new CorrespondenceQuery();
+        correspondenceQuery.setJpaQuery(jpaQuery);
+        correspondenceQuery.setFieldNames(fieldNames);
 
 
         correspondenceTemplate = new CorrespondenceTemplate();
         correspondenceTemplate.setDocumentType(doctype);
         correspondenceTemplate.setTemplateFilename(templateName);
-        correspondenceTemplate.setJpaQuery(jpaQuery);
+        correspondenceTemplate.setQuery(correspondenceQuery);
         correspondenceTemplate.setTemplateSubstitutionVariables(substitutionVars);
         correspondenceTemplate.setDateFormatString(dateFormat);
         correspondenceTemplate.setNumberFormatString(numberFormat);
@@ -118,7 +136,7 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
 
         Capture<String> filename = new Capture<>();
 
-        expect(mockEntityManager.createQuery(correspondenceTemplate.getJpaQuery())).andReturn(mockQuery);
+        expect(mockEntityManager.createQuery(correspondenceQuery.getJpaQuery())).andReturn(mockQuery);
         expect(mockQuery.setParameter(1, queryArgs[0])).andReturn(mockQuery);
         expect(mockQuery.getResultList()).andReturn(results);
         mockWordGenerator.generate(capture(captureResourceTemplate), eq(mockOutputStream), eq(substitutions));

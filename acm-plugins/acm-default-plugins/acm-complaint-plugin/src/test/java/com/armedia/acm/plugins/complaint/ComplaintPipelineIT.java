@@ -58,6 +58,8 @@ import static org.junit.Assert.assertNotNull;
                 "/spring/spring-library-task.xml",
                 "/spring/spring-library-user-login.xml",
                 "/spring/spring-library-user-service.xml",
+                "/spring/spring-library-notification.xml",
+                "/spring/spring-library-service-data.xml"
         }
 )
 @TransactionConfiguration(defaultRollback = false, transactionManager = "transactionManager")
@@ -90,6 +92,7 @@ public class ComplaintPipelineIT
     {
         Complaint complaint = complaintFactory.complaint();
         complaint.setRestricted(true);
+        complaint.setCreator("auditUser");
 
         // complaint number should be set by the flow
         complaint.setComplaintNumber(null);

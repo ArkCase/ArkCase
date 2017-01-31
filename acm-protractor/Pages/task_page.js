@@ -1,5 +1,5 @@
 var Objects = require('../json/Objects.json');
-var basePage =require('../Pages/base_page.js');
+var basePage = require('../Pages/base_page.js');
 var EC = protractor.ExpectedConditions;
 var SelectWrapper = require('../util/select-wrapper.js');
 var taskBtn = element(by.linkText(Objects.taskpage.locators.taskButton));
@@ -93,6 +93,8 @@ var startDateInputEdit = element(by.model(Objects.taskspage.locators.startDateIn
 var dueDateValue = element(by.model(Objects.taskspage.locators.dueDateInput));
 var approveBtn = element(by.xpath(Objects.taskspage.locators.approveBtn));
 var caseTitleInTasks = element(by.xpath(Objects.taskspage.locators.caseTitleInTasks));
+var complaintTitleInTasks = element(by.xpath(Objects.taskspage.locators.complaintTitleInTasks));
+
 
 var TaskPage = function() {
     this.clickTaskButton = function() {
@@ -540,18 +542,33 @@ var TaskPage = function() {
         return this;
     }
     this.clickCaseTitleInTasks = function() {
-       
-            browser.wait(EC.presenceOf(element(by.xpath(Objects.taskspage.locators.caseTitleInTasks))), 30000).then(function() {
-                browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.caseTitleInTasks))), 30000).then(function() {
-                    browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.taskspage.locators.caseTitleInTasks))), 30000).then(function() {
-                        caseTitleInTasks.click().then(function() {
-                            browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.tasksLink))), 30000);
-                        });
+
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.taskspage.locators.caseTitleInTasks))), 30000).then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.caseTitleInTasks))), 30000).then(function() {
+                browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.taskspage.locators.caseTitleInTasks))), 30000).then(function() {
+                    caseTitleInTasks.click().then(function() {
+                        browser.sleep(5000);
+                        browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.tasksLink))), 30000);
                     });
                 });
             });
+        });
+        return this;
     }
+    this.clickComplaintTitleInTasks = function() {
 
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.taskspage.locators.complaintTitleInTasks))), 30000).then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.complaintTitleInTasks))), 30000).then(function() {
+                browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.taskspage.locators.complaintTitleInTasks))), 30000).then(function() {
+                    complaintTitleInTasks.click().then(function() {
+                        browser.sleep(5000);
+                        browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.tasksLink))), 30000);
+                    });
+                });
+            });
+        });
+        return this;
+    }
 
 };
 

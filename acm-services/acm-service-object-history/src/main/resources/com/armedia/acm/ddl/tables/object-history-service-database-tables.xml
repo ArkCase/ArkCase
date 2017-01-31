@@ -10,7 +10,7 @@
     <property name="cmObjectTypeLength" value="1024" dbms="postgresql,oracle"/>
     <property name="cmObjectTypeLength" value="255" dbms="mysql,mssql"/>
 
-    <changeSet id="01-create-object-history-table-fix" author="nebojsha.davidovikj">
+    <changeSet id="01-create-object-history-table-fix" author="nebojsha.davidovikj" dbms="oracle,postgresql,mssql">
         <createTable tableName="acm_object_history">
             <column name="cm_id" type="${idType}">
                 <constraints primaryKey="true" primaryKeyName="pk_cm_object_history_id"/>
@@ -48,7 +48,45 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="06-create-assignment-table" author="riste.tutureski">
+    <changeSet id="01-create-object-history-table-fix" author="nebojsha.davidovikj" dbms="mysql">
+        <createTable tableName="acm_object_history">
+            <column name="cm_id" type="${idType}">
+                <constraints primaryKey="true" primaryKeyName="pk_cm_object_history_id"/>
+            </column>
+            <column name="cm_object_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_object_type" type="VARCHAR(${cmObjectTypeLength})">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_object_string" type="CLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_user_id" type="VARCHAR(${cmUserIdLength})">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_date" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_type" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="06-create-assignment-table" author="riste.tutureski" dbms="oracle,postgresql,mssql">
         <createTable tableName="acm_assignment">
             <column name="cm_assignment_id" type="${idType}">
                 <constraints primaryKey="true" primaryKeyName="pk_cm_assignment_id"/>
@@ -78,6 +116,44 @@
                 <constraints nullable="false"/>
             </column>
             <column name="cm_assignment_modified" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_assignment_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="06-create-assignment-table" author="riste.tutureski" dbms="mysql">
+        <createTable tableName="acm_assignment">
+            <column name="cm_assignment_id" type="${idType}">
+                <constraints primaryKey="true" primaryKeyName="pk_cm_assignment_id"/>
+            </column>
+            <column name="cm_assignment_object_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_assignment_object_type" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_assignment_object_title" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_assignment_object_name" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_assignment_new_assignee" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_assignment_old_assignee" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_assignment_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_assignment_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_assignment_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_assignment_modifier" type="VARCHAR(1024)">
