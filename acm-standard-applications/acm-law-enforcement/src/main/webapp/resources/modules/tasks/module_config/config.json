@@ -1315,7 +1315,6 @@
         },
         {
           "name": "fullName",
-          "displayName": "Full Name",
           "cellEditableCondition": false,
           "headerCellFilter": "translate"
         },
@@ -1347,9 +1346,20 @@
       "paginationPageSize": 10,
       "columnDefs": [
         {
-          "name": "fullName",
-          "displayName": "Full Name",
-          "headerCellFilter": "translate"
+          "name": "approvalDate",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.approvalDate | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>",
+          "cellEditableCondition": false
+        },
+        {
+          "name": "approverId",
+          "headerCellFilter": "translate",
+          "cellEditableCondition": false
+        },
+        {
+          "name": "approverDecision",
+          "headerCellFilter": "translate",
+          "cellEditableCondition": false
         }
       ]
     }

@@ -178,7 +178,6 @@ angular.module('cases').controller('Tasks.FutureApprovalRoutingController', ['$s
             if (TaskInfoService.validateTaskInfo($scope.objectInfo)) {
 
                 $scope.taskInfo.buckslipFutureApprovers = $scope.gridOptions.data;
-                $scope.taskInfo.buckslipTask = true;
                 promiseSaveInfo = TaskInfoService.saveTaskInfo($scope.taskInfo);
                 promiseSaveInfo.then(
                     function (taskInfo) {

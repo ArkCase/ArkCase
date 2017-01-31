@@ -277,7 +277,8 @@
     "searchAssigneeHeader": "Search Assignee"
   },
   "tasks.comp.approvalRouting": {
-    "title": "Approval Routing",
+    "title": "Future Approvers",
+    "addNewTooltip": "Add new approver",
     "noBuckslipMessage":"No Data",
     "button": {
       "save.tooltip": "Save Changes"
@@ -290,7 +291,9 @@
     "title": "Past Approvers",
     "noBuckslipMessage":"No Data",
     "table.columns": {
-      "fullName": "Full Name"
+      "approvalDate": "Approval Date",
+      "approverId": "Approver",
+      "approverDecision": "Approver Decision"
     }
   }
 }

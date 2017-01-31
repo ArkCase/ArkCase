@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 /**
  * Created by dmiller on 12/5/2016.
  */
-public class FileCreatedWorkflowHandler implements ApplicationListener<EcmFileAddedEvent>
+public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<EcmFileAddedEvent>
 {
     private FileWorkflowBusinessRule fileWorkflowBusinessRule;
 
@@ -35,11 +35,17 @@ public class FileCreatedWorkflowHandler implements ApplicationListener<EcmFileAd
         EcmFile source = event.getSource();
 
         EcmFileWorkflowConfiguration configuration = new EcmFileWorkflowConfiguration();
+
+        configuration.setBuckslipProcess(true);
         configuration.setEcmFile(source);
 
         LOG.debug("Calling business rules for new file id {}, type {}", source.getId(), source.getFileType());
 
         configuration = getFileWorkflowBusinessRule().applyRules(configuration);
+        if (!configuration.isBuckslipProcess())
+        {
+            return;
+        }
 
         LOG.debug("start process for file id {}, type {}? {}", source.getId(), source.getFileType(), configuration.isStartProcess());
 
@@ -64,6 +70,7 @@ public class FileCreatedWorkflowHandler implements ApplicationListener<EcmFileAd
         pvars.put("taskName", configuration.getTaskName());
         pvars.put("documentAuthor", event.getUserId());
         pvars.put("pdfRenditionId", event.getSource().getFileId());
+        pvars.put("documentType", event.getSource().getContainer().getContainerObjectTitle());
 
         pvars.put("OBJECT_TYPE", "FILE");
         pvars.put("OBJECT_ID", event.getSource().getFileId());

@@ -225,7 +225,7 @@
     
     <bean id="pageCountService" class="com.armedia.acm.plugins.ecm.service.impl.PageCountServiceImpl"/>
 
-    <bean id="fileCreatedWorkflowHandler" class="com.armedia.acm.plugins.ecm.handler.FileCreatedWorkflowHandler">
+    <bean id="fileCreatedWorkflowHandler" class="com.armedia.acm.plugins.ecm.handler.FileCreatedBuckslipWorkflowHandler">
         <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
         <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
     </bean>
