@@ -10,7 +10,7 @@ angular.module('cases').controller('Tasks.PastApprovalRoutingController', ['$sco
         , PermissionsService, UserInfoService) {
 
         $scope.pastApprovers = {};
-        $scope.pastApprovers.GridOptions = $scope.pastApprovers.GridOptions || {};
+        $scope.gridOptions = $scope.gridOptions || {};
         $scope.taskInfo = null;
 
         var currentUser = '';
@@ -30,12 +30,10 @@ angular.module('cases').controller('Tasks.PastApprovalRoutingController', ['$sco
             }
         });
 
-        var gridHelperPastApprovers = new HelperUiGridService.Grid({scope: $scope.pastApprovers});
+        var gridHelperPastApprovers = new HelperUiGridService.Grid({scope: $scope});
 
 
         ConfigService.getModuleConfig("tasks").then(function (moduleConfig) {
-            $scope.config = _.find(moduleConfig.components, {id: "approvalrouting"});
-
             $scope.userSearchConfig = _.find(moduleConfig.components, {id: "userSearch"});
             return moduleConfig;
         });
@@ -57,11 +55,11 @@ angular.module('cases').controller('Tasks.PastApprovalRoutingController', ['$sco
 
             //set past approvers info
             if (objectInfo.buckslipPastApprovers) {
-                $scope.pastApprovers.GridOptions.data = objectInfo.buckslipPastApprovers;
-                $scope.pastApprovers.GridOptions.noData = false;
+                $scope.gridOptions.data = angular.fromJson(objectInfo.buckslipPastApprovers);
+                $scope.gridOptions.noData = false;
             } else {
-                $scope.pastApprovers.GridOptions.data = [];
-                $scope.pastApprovers.GridOptions.noData = true;
+                $scope.gridOptions.data = [];
+                $scope.gridOptions.noData = true;
                 $scope.noDataMessage = $translate.instant('tasks.comp.approvalRouting.noBuckslipMessage');
             }
             $scope.oldData = _.cloneDeep($scope.gridOptions.data);
