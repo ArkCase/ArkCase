@@ -63,7 +63,20 @@ var helpers = function helpers() {
         var day = ("0" + dueDate.getDate()).slice(-2);
         var month = ("0" + (dueDate.getMonth() + 1)).slice(-2);
         return dueDateOut = (month) + sign + (day) + sign + dueDate.getFullYear();
+    }
 
+    this.returnTimeTrackingWeek = function() {
+
+        var now = new Date();
+        var monthNames = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+        var currentMonth = monthNames[now.getMonth()];
+        var first = new Date(now.setDate(now.getDate() - now.getDay()));
+        var last = new Date(now.setDate(now.getDate() - now.getDay() + 6));
+        var firstday = first.getDate();
+        var lastday = last.getDate();
+        return week = (currentMonth) + " " + (firstday) + " - " + (currentMonth) + " " + (lastday) + " " + now.getFullYear();
     }
 
     this.returnCurrentMonth = function() {
@@ -109,9 +122,9 @@ var helpers = function helpers() {
         var day4 = ("0" + now.getDate()).slice(-2) - 4;
         var day5 = ("0" + now.getDate()).slice(-2) - 5;
         var day6 = ("0" + now.getDate()).slice(-2) - 6;
-        var week=[day,day1,day2,day3,day4,day5,day6];
+        var week = [day, day1, day2, day3, day4, day5, day6];
         return week;
-       
+
     }
     this.readGroupsFromJson = function(user) {
         var dictionarydoc = Users.response.docs;
@@ -120,7 +133,6 @@ var helpers = function helpers() {
             if (userName == user) {
                 return dictionarydoc[i].groups_id_ss;
             }
-
         }
     }
     this.returnNumberOfGroupsFromJson = function(user) {

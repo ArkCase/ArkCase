@@ -32,10 +32,12 @@ describe("Testing async calls with beforeEach and passing the special done callb
 
 describe('edit user profile page', function() {
 
-        loginPage.Login(Objects.loginpage.data.supervisoruser.username, Objects.loginpage.data.supervisoruser.password);
-        logger.log('Info', 'User succesfully logged in as supervisor');
+    loginPage.Login(Objects.loginpage.data.supervisoruser.username, Objects.loginpage.data.supervisoruser.password);
+    logger.log('Info', 'User succesfully logged in as supervisor');
 
-       it('should navigate to user profile page', function() {
+    //Update Profile Information
+
+    it('should navigate to user profile page', function() {
 
         userPage.clickUserNavigation();
         expect(userPage.returnUserNavigationProfile()).toEqual(Objects.userpage.data.userNavigationProfile);
