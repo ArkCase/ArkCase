@@ -7,7 +7,6 @@ public class AcmLdapConfig
     private String authUserDn;
     private String authUserPassword;
     private String userIdAttributeName;
-    private String uidNumberAttribute;
     private String mailAttributeName;
     private boolean ignorePartialResultException;
     private String referral;
@@ -50,16 +49,6 @@ public class AcmLdapConfig
     public void setUserIdAttributeName(String userIdAttributeName)
     {
         this.userIdAttributeName = userIdAttributeName;
-    }
-
-    public String getUidNumberAttribute()
-    {
-        return uidNumberAttribute;
-    }
-
-    public void setUidNumberAttribute(String uidNumberAttribute)
-    {
-        this.uidNumberAttribute = uidNumberAttribute;
     }
 
     public boolean isIgnorePartialResultException()
