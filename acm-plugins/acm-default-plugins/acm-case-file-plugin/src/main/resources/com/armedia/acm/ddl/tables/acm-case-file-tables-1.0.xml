@@ -7,7 +7,7 @@
     <property name="caseNumberLength" value="1024" dbms="postgresql,oracle"/>
     <property name="caseNumberLength" value="255" dbms="mysql,mssql"/>
 
-    <changeSet id="case-file-01-acm-case-file-table" author="dmiller">
+    <changeSet id="case-file-01-acm-case-file-table" author="dmiller" dbms="oracle,postgresql,mssql">
         <createTable tableName="acm_case_file">
             <column name="cm_case_id" type="${idType}">
                 <constraints primaryKeyName="pk_acm_case_file" primaryKey="true"/>
@@ -43,13 +43,49 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="case-file-01-acm-case-file-table" author="dmiller" dbms="mysql">
+        <createTable tableName="acm_case_file">
+            <column name="cm_case_id" type="${idType}">
+                <constraints primaryKeyName="pk_acm_case_file" primaryKey="true"/>
+            </column>
+            <column name="cm_case_number" type="VARCHAR(${caseNumberLength})">
+                <constraints unique="true" uniqueConstraintName="uk_case_file_number"
+                             nullable="false"/>
+            </column>
+            <column name="cm_case_type" type="VARCHAR(4000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_case_status" type="VARCHAR(4000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_case_title" type="VARCHAR(4000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_case_ecm_folder_id" type="VARCHAR(1024)"/>
+            <column name="cm_case_closed" type="DATE"/>
+            <column name="cm_case_disposition" type="VARCHAR(4000)"/>
+            <column name="cm_case_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_case_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_case_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_case_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
     <changeSet id="02-add-priority-column" author="marst">
         <addColumn tableName="acm_case_file">
             <column name="cm_case_priority" type="VARCHAR(1024)"/>
         </addColumn>
     </changeSet>
 
-    <changeSet id="case-file-03-add-disposition-table" author="dmiller">
+    <changeSet id="case-file-03-add-disposition-table" author="dmiller" dbms="oracle,postgresql,mssql">
         <createTable tableName="acm_disposition">
             <column name="cm_disposition_id" type="${idType}">
                 <constraints primaryKey="true" primaryKeyName="pk_disposition"/>
@@ -69,6 +105,34 @@
                 <constraints nullable="false"/>
             </column>
             <column name="cm_disposition_modified" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_disposition_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="case-file-03-add-disposition-table" author="dmiller" dbms="mysql">
+        <createTable tableName="acm_disposition">
+            <column name="cm_disposition_id" type="${idType}">
+                <constraints primaryKey="true" primaryKeyName="pk_disposition"/>
+            </column>
+            <column name="cm_close_date" type="DATE"/>
+            <column name="cm_disposition_type" type="VARCHAR(4000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_refer_ext_org_name" type="VARCHAR(4000)"/>
+            <column name="cm_refer_ext_person_name" type="VARCHAR(4000)"/>
+            <column name="cm_refer_ext_contact_method_id" type="${fkIdType}"/>
+            <column name="cm_existing_case_number" type="VARCHAR(${caseNumberLength})"/>
+            <column name="cm_disposition_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_disposition_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_disposition_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_disposition_modifier" type="VARCHAR(1024)">
@@ -114,7 +178,7 @@
         </addColumn>
     </changeSet>
 
-    <changeSet id="case-file-09-add-close-case-request-table" author="riste.tutureski">
+    <changeSet id="case-file-09-add-close-case-request-table" author="riste.tutureski" dbms="oracle,postgresql,mssql">
         <createTable tableName="acm_close_case_request">
             <column name="cm_close_case_id" type="${idType}">
                 <constraints primaryKeyName="pk_close_case_request" primaryKey="true"/>
@@ -149,6 +213,41 @@
                                  initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
+    <changeSet id="case-file-09-add-close-case-request-table" author="riste.tutureski" dbms="mysql">
+        <createTable tableName="acm_close_case_request">
+            <column name="cm_close_case_id" type="${idType}">
+                <constraints primaryKeyName="pk_close_case_request" primaryKey="true"/>
+            </column>
+            <column name="cm_case_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_disposition_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_close_case_status" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_close_case_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_close_case_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_close_case_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_close_case_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="acm_close_case_request" baseColumnNames="cm_case_id"
+                                 constraintName="fk_close_case_cmplnt_id"
+                                 referencedTableName="acm_case_file"
+                                 referencedColumnNames="cm_case_id"
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
+    </changeSet>
+
     <changeSet id="case-file-10-drop-not-null-constraints" author="dmiller">
         <dropNotNullConstraint tableName="acm_case_file" columnName="cm_case_type" columnDataType="VARCHAR(4000)"/>
         <dropNotNullConstraint tableName="acm_case_file" columnName="cm_case_title" columnDataType="VARCHAR(4000)"/>
@@ -158,7 +257,7 @@
         <dropTable tableName="acm_close_case_request" cascadeConstraints="true"/>
     </changeSet>
 
-    <changeSet id="case-file-12-add-change-case-status-table" author="riste.tutureski">
+    <changeSet id="case-file-12-add-change-case-status-table" author="riste.tutureski" dbms="oracle,postgresql,mssql">
         <createTable tableName="acm_change_case_status">
             <column name="cm_change_case_status_id" type="${idType}">
                 <constraints primaryKeyName="pk_change_case_status" primaryKey="true"/>
@@ -176,6 +275,40 @@
                 <constraints nullable="false"/>
             </column>
             <column name="cm_change_case_status_modified" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_change_case_status_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="acm_change_case_status" baseColumnNames="cm_case_id"
+                                 constraintName="fk_change_case_status_case_id"
+                                 referencedTableName="acm_case_file"
+                                 referencedColumnNames="cm_case_id"
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
+    </changeSet>
+
+    <changeSet id="case-file-12-add-change-case-status-table" author="riste.tutureski" dbms="mysql">
+        <createTable tableName="acm_change_case_status">
+            <column name="cm_change_case_status_id" type="${idType}">
+                <constraints primaryKeyName="pk_change_case_status" primaryKey="true"/>
+            </column>
+            <column name="cm_case_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_change_case_status_status" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_change_case_status_created" type="${timestampType}"
+                    defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_change_case_status_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_change_case_status_modified" type="${timestampType}"
+                    defaultValueComputed="${timestampFunction}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_change_case_status_modifier" type="VARCHAR(1024)">
@@ -280,7 +413,7 @@
         </addColumn>
     </changeSet>
 
-    <changeSet id="24-create-table-acm_queue" author="nebojsha.davidovikj">
+    <changeSet id="24-create-table-acm_queue" author="nebojsha.davidovikj" dbms="oracle,postgresql,mssql">
         <createTable tableName="acm_queue">
             <column name="cm_queue_id" type="${idType}">
                 <constraints primaryKeyName="pk_queue" primaryKey="true"/>
@@ -295,6 +428,37 @@
                 <constraints nullable="false"/>
             </column>
             <column name="cm_queue_modified" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_queue_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="acm_queue_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_queue_id">
+            <column name="cm_seq_num" value="100"/>
+            <column name="cm_seq_name" value="acm_queue"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="24-create-table-acm_queue" author="nebojsha.davidovikj" dbms="mysql">
+        <createTable tableName="acm_queue">
+            <column name="cm_queue_id" type="${idType}">
+                <constraints primaryKeyName="pk_queue" primaryKey="true"/>
+            </column>
+            <column name="cm_name" type="varchar(1000)"/>
+
+            <!--  Audit fields-->
+            <column name="cm_queue_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_queue_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_queue_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_queue_modifier" type="VARCHAR(1024)">
