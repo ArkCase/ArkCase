@@ -94,7 +94,7 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 scope.selectedItem = null;
                 scope.selectedItems = [];
                 scope.queryExistingItems = function () {
-                    var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuery(scope.searchQuery + '*', scope.filters, scope.pageSize, scope.start);
+                    var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuerySorted(scope.searchQuery + '*', scope.filters, scope.pageSize, scope.start, scope.sort);
                     if (query) {
                         scope.showNoData = false;
                         SearchService.queryFilteredSearch({
@@ -171,6 +171,7 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 if (scope.config()) {
                     scope.pageSize = scope.config().paginationPageSize;
                     scope.start = scope.config().start;
+                    scope.sort = Util.goodValue(scope.config().sort, "");
                     scope.gridOptions = {
                         enableColumnResizing: true,
                         enableRowSelection: true,
@@ -204,6 +205,20 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                                 }
                             });
 
+                            // Get the sorting info from UI grid
+                            gridApi.core.on.sortChanged(scope, function (grid, sortColumns) {
+                                if (sortColumns.length > 0) {
+                                    var sortColArr = [];
+                                    _.each(sortColumns, function (col) {
+                                        sortColArr.push((col.colDef.sortField || col.colDef.name) + " " + col.sort.direction);
+                                    });
+                                    scope.sort = sortColArr.join(',');
+                                }
+                                else {
+                                    scope.sort = "";
+                                }
+                                scope.queryExistingItems();
+                            });
 
                             gridApi.pagination.on.paginationChanged(scope, function (newPage, pageSize) {
                                 scope.start = (newPage - 1) * pageSize;   //newPage is 1-based index
@@ -224,7 +239,7 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
 
                 // Perform initial request to get list of documents if defaultFilter is defined
                 if (scope.defaultFilter) {
-                    var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuery(scope.searchQuery + '*', scope.defaultFilter, scope.pageSize, 0);
+                    var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuerySorted(scope.searchQuery + '*', scope.defaultFilter, scope.pageSize, 0, scope.sort);
                     if (query) {
                         scope.showNoData = true;
                         SearchService.queryFilteredSearch({
