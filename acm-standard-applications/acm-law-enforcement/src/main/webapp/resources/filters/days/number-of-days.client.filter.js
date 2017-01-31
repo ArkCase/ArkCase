@@ -25,7 +25,7 @@ angular.module('filters').filter('numberOfDays', function () {
         if (toDate && fromDate) {
             var dayDiff = Math.floor((toDate - fromDate) / millisecondsNumber);
             if (angular.isNumber(dayDiff)) {
-                return dayDiff;
+                return dayDiff + 1;
             }
         }
     };
