@@ -380,7 +380,7 @@ public class CaseFileService extends FrevvoFormAbstractService
                 oldCaseId = Long.parseLong(oldCaseIdAsString);
             } catch (Exception e)
             {
-                LOG.error("Cannot parse String oldCaseId=" + oldCaseIdAsString + " to Long.", e);
+                LOG.error("Cannot parse String oldCaseId={} to Long.", oldCaseIdAsString, e);
             }
 
             if (oldCaseId != null && oldCaseNumber != null && form.getId() != null && form.getCaseNumber() != null)
@@ -447,7 +447,7 @@ public class CaseFileService extends FrevvoFormAbstractService
 
                 String caseFolderName = String.format(getCaseFolderNameFormat(), oldCase.getCaseNumber());
 
-                oldContainer.getFolder().setParentFolderId(newContainer.getFolder().getId());
+                oldContainer.getFolder().setParentFolder(newContainer.getFolder());
                 oldContainer.getFolder().setName(caseFolderName);
 
                 if (files != null && files.getChildren() != null)
