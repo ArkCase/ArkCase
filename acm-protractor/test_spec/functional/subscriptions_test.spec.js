@@ -45,7 +45,6 @@ describe('Subscriptions page tests', function() {
 
     });
 
-
     it('should search for case and  verify it in the result table', function() {
 
         subscriptionPage.clickSubcriptionsModule();

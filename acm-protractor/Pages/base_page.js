@@ -243,6 +243,9 @@ var addParticipantTypeSecondRowbtn = element(by.xpath(Objects.casepage.locators.
 var selectParticipantTypeSecondRow = element(by.xpath(Objects.casepage.locators.selectParticipantTypeSecondRow));
 var selectParticipantSecondRow = element.all(by.name(Objects.casepage.locators.selectParticipant)).get(1);
 var timeCanvasData = element(by.css(Objects.basepage.locators.timeCanvasData));
+var owningGroupDropDown = new SelectWrapper(by.xpath(Objects.basepage.locators.owningGroupDropDown));
+var owningGroupConfirmBtn = element(by.xpath(Objects.basepage.locators.owningGroupConfirmBtn));
+var owningGroup = element(by.xpath(Objects.casepage.locators.owningGroup));
 
 var BasePage = function() {
 
@@ -1927,16 +1930,16 @@ var BasePage = function() {
     this.replaceVersion = function(value) {
         docVersionDropDownList.selectByValue(value);
     };
-    this.insertRecipient = function (email) {
+    this.insertRecipient = function(email) {
         emailRecepient.click();
         emailRecepient.sendKeys(email);
         return this;
     };
-    this.clickSendEmailButton = function () {
+    this.clickSendEmailButton = function() {
         sendEmailButton.click();
         return this;
     };
-    this.sendEmail = function (email) {
+    this.sendEmail = function(email) {
         this.insertRecipient(email);
         this.clickSendEmailButton();
         return this;
@@ -1951,6 +1954,7 @@ var BasePage = function() {
                 browser.wait(EC.textToBePresentInElement((assigneeLink), ""), 10000);
             });
         });
+        return this;
     };
 
     this.clickLastElementInTreeData = function() {
@@ -2001,10 +2005,32 @@ var BasePage = function() {
 
         browser.wait(EC.visibilityOf(element(by.css(Objects.basepage.locators.timeCanvasData))), 30000, "Time widget data is not displayed");
         timeCanvasData.evaluate('time.data').then(function(data) {
-        	var date=""+ data +"";
+            var date = "" + data + "";
             expect(date).toEqual(time, "The time in the time widget is not updated");
         });
     }
+
+    this.verifyFirstElementNameNoAccess = function() {
+
+        browser.wait(EC.textToBePresentInElement((firstElementInList), "No Access"), 10000, "Name of the object in the list should be No Access");
+    }
+
+    this.returnOwningGroup = function() {
+        return owningGroup.getText();
+    };
+
+
+
+    this.editOwningGroup = function(owninggroup) {
+
+        owningGroup.click().then(function() {
+            owningGroupDropDown.selectByText(owninggroup).then(function() {
+                owningGroupConfirmBtn.click();
+            });
+        });
+        return this;
+    }
+
 
 }
 
