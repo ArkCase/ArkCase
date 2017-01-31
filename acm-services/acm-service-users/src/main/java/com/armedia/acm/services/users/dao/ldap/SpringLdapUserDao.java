@@ -2,6 +2,7 @@ package com.armedia.acm.services.users.dao.ldap;
 
 
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.ldap.AcmLdapConfig;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.AcmUserGroupsContextMapper;
 import org.apache.commons.collections.CollectionUtils;
@@ -9,6 +10,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
@@ -52,5 +54,18 @@ public class SpringLdapUserDao
         }
 
         throw new UsernameNotFoundException("User with id [" + username + "] cannot be found");
+    }
+
+    public void changeUserPassword(String dn, String password, LdapTemplate ldapTemplate, AcmLdapConfig config)
+    {
+        String base = config.getBaseDC();
+        if (dn.endsWith(base))
+        {
+            base = "," + base;
+            dn = dn.substring(0, dn.indexOf(base));
+        }
+        DirContextOperations context = ldapTemplate.lookupContext(dn);
+        context.setAttributeValue("userPassword", password);
+        ldapTemplate.modifyAttributes(context);
     }
 }
