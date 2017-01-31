@@ -47,21 +47,18 @@ describe('case page tests', function() {
 
     it('should create new case and try to add owner and no access from participant tab for same user and verify the alert message', function() {
 
-            casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson").clickNextBtn().initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
-            casePage.clickParticipantTab().selectParticipant("Owner", Objects.casepage.data.approverSamuel);
-            casePage.switchToIframes().clickAddParticipantTypeSecondRowbtn();
-            casePage.selectParticipantSecondRow("No Access", Objects.casepage.data.approverSamuel);
-            casePage.switchToIframes();
-            expect(casePage.returnParticipantTypeAlert()).toEqual("This action is not allowed. No Access and Owner is conflict combination.");
-            casePage.switchToDefaultContent();
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson").clickNextBtn().initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
+        casePage.clickParticipantTab().selectParticipant("Owner", Objects.casepage.data.approverSamuel);
+        casePage.switchToIframes().clickAddParticipantTypeSecondRowbtn();
+        casePage.selectParticipantSecondRow("No Access", Objects.casepage.data.approverSamuel);
+        casePage.switchToIframes();
+        expect(casePage.returnParticipantTypeAlert()).toEqual("This action is not allowed. No Access and Owner is conflict combination.");
+        casePage.switchToDefaultContent();
     });
 
-     it('should create new case add/edit timeSheet and verify the time widget data in cases overview page', function() {
+    it('should create new case add/edit timeSheet and verify the time widget data in cases overview page', function() {
 
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
+
         casePage.clickModuleCasesFiles();
         casePage.waitForCasesPage();
         element(by.xpath(Objects.casepage.locators.caseID)).getText().then(function(text) {
@@ -72,6 +69,7 @@ describe('case page tests', function() {
             timeTrackingPage.submitTimesheetTable("Case", text, "8");
             casePage.selectApprover(Objects.casepage.data.approverSamuel);
             timeTrackingPage.clickSaveBtn();
+            timeTrackingPage.clickLastElementInTreeData();
             timeTrackingPage.clickEditTimesheetBtn();
             timeTrackingPage.switchToIframes();
             timeTrackingPage.submitTimesheetTable("Case", text, "1");
@@ -81,6 +79,20 @@ describe('case page tests', function() {
             casePage.verifyTimeWidgetData("7");
 
         });
+    });
+
+    it('should create new case verify the notification message and no access of the object name ', function() {
+
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
+        casePage.clickNextBtn();
+        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
+        casePage.switchToDefaultContent();
+        casePage.waitForCasesPage();
+        casePage.editOwningGroup(Objects.basepage.data.owningGroupAdministratorDev);
+        expect(casePage.returnOwningGroup()).toEqual(Objects.basepage.data.owningGroupAdministratorDev);
+        casePage.verifyTheNotificationMessage("Case File ");
+        casePage.editPriority("High");
+        casePage.verifyFirstElementNameNoAccess();
     });
 
 });

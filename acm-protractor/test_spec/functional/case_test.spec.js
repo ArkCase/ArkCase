@@ -97,8 +97,8 @@ describe('case page tests', function() {
             casePage.editPriority(data.priority);
             expect(casePage.returnPriority()).toEqual(data.prioritySaved);
         });
-
     });
+
 
     it('should create new case and edit the assignee from ann to samuel', function() {
 
@@ -712,6 +712,7 @@ describe('case page tests', function() {
         casePage.verifyIfAssigneeCanBeDeleted();
 
     });
+
     it('should  verify if assignee can be deleted', function() {
 
         casePage.clickModuleCasesFiles();
@@ -778,7 +779,6 @@ describe('case page tests', function() {
         casePage.clickPeopleLinkBtn();
         casePage.verifyIfInitiatorCanBeDeleted();
     });
-
 
 
     it('should create new case and add task from tasks table verify the task and verify the task table column number', function() {
@@ -856,6 +856,7 @@ describe('case page tests', function() {
         casePage.switchToIframes();
         expect(casePage.returnParticipantTypeAlert()).toEqual("This action is not allowed. No Access and Owner is conflict combination.");
         casePage.switchToDefaultContent();
+
     });
 
 });

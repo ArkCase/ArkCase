@@ -9,7 +9,7 @@
         "data": {
             "supervisoruser": {
 
-                "username": "sally-acm",
+                "username": "samuel-acm",
                 "password": "AcMd3v$"
             },
             "adminuser": {
@@ -75,7 +75,9 @@
             "emailRecepient": "recipientsStr",
             "sendEmailButton": "Send Email",
             "sugestedTag": "[ng-click='addSuggestionByIndex($index)']",
-            "timeCanvasData":"[chart-data='time.data']"
+            "timeCanvasData":"[chart-data='time.data']",
+            "owningGroupDropDown": ".//*[@class='editable-controls form-group']/..//select",
+            "owningGroupConfirmBtn": ".//*[@class='editable-controls form-group']/..//button[1]"
 
 
 
@@ -83,7 +85,8 @@
         "data": {
             "reportTitle": "Report of Investigation Title",
             "note": "NoteText",
-            "email": "sanja.paskova@armedia.com"
+            "email": "sanja.paskova@armedia.com",
+            "owningGroupAdministratorDev":"ACM_ADMINISTRATOR_DEV"
 
         }
 

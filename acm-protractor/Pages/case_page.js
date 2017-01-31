@@ -43,7 +43,6 @@ var firstCaseInCasesList = element(by.xpath(Objects.casepage.locators.firstCaseI
 var caseID = element(by.xpath(Objects.casepage.locators.caseID));
 var reinvestigateBtn = element(by.css(Objects.casepage.locators.reinvestigateBtn));
 var casesTitleStatus = element.all(by.xpath(Objects.casepage.locators.caseTitleStatus)).get(0);
-var owningGroup = element(by.xpath(Objects.casepage.locators.owningGroup));
 var caseTitleWithStatus = element(by.xpath(Objects.casepage.locators.caseTitleWithStatus));
 var submitBtn = element(by.xpath(Objects.casepage.locators.submitBtn));
 var priority = element(by.xpath(Objects.casepage.locators.priority));
@@ -204,11 +203,6 @@ var CasePage = function() {
             reinvestigateBtn.click();
         });
     };
-
-    this.returnOwningGroup = function() {
-        return owningGroup.getText();
-    };
-
 
     this.returnPriority = function() {
         return priority.getText();
