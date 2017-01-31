@@ -4,13 +4,16 @@ import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
 import com.armedia.acm.correspondence.service.CorrespondenceService;
 import com.armedia.acm.plugins.admin.model.CorrespondenceTemplateRequestResponse;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -41,12 +44,18 @@ public class CorrespondenceTemplateAPIController
         return mapTemplateToResponse(correspondenceService.deleteTemplate(templateFileName));
     }
 
-    @RequestMapping(value = "/template/update", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/template", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public CorrespondenceTemplateRequestResponse updateTemplate(@RequestBody CorrespondenceTemplateRequestResponse request)
             throws IOException
     {
         return mapTemplateToResponse(correspondenceService.updateTemplate(mapRequestToTemplate(request)));
+    }
+
+    @ExceptionHandler(CorrespondenceTemplateNotFoundException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Error while retreiving correspondence template.")
+    public void handleException()
+    {
     }
 
     /**

@@ -13,7 +13,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import org.apache.commons.io.FileUtils;
-import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.io.Resource;
 
 import java.io.File;
@@ -32,7 +33,7 @@ import java.util.stream.Collectors;
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jan 26, 2017
  *
  */
-public class CorrespondenceTemplateManager implements InitializingBean
+public class CorrespondenceTemplateManager implements ApplicationListener<ContextRefreshedEvent>
 {
 
     private SpringContextHolder springContextHolder;
@@ -83,22 +84,29 @@ public class CorrespondenceTemplateManager implements InitializingBean
      * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
      */
     @Override
-    public void afterPropertiesSet() throws Exception
+    public void onApplicationEvent(ContextRefreshedEvent event)
     {
-        File file = correspondenceTemplatesConfiguration.getFile();
-        String resource = FileUtils.readFileToString(file);
+        try
+        {
+            File file = correspondenceTemplatesConfiguration.getFile();
+            String resource = FileUtils.readFileToString(file);
 
-        ObjectMapper mapper = new ObjectMapper();
+            ObjectMapper mapper = new ObjectMapper();
 
-        List<CorrespondenceTemplateConfiguration> templateConfigurations = mapper.readValue(resource,
-                new TypeReference<List<CorrespondenceTemplateConfiguration>>()
-                {
-                });
+            List<CorrespondenceTemplateConfiguration> templateConfigurations = mapper.readValue(resource,
+                    new TypeReference<List<CorrespondenceTemplateConfiguration>>()
+                    {
+                    });
 
-        Map<String, CorrespondenceQuery> correspondenceQueryBeansMap = springContextHolder.getAllBeansOfType(CorrespondenceQuery.class);
+            Map<String, CorrespondenceQuery> correspondenceQueryBeansMap = springContextHolder.getAllBeansOfType(CorrespondenceQuery.class);
 
-        templates.putAll(templateConfigurations.stream().map(c -> mapTemplateFromConfiguration(c, correspondenceQueryBeansMap))
-                .collect(Collectors.toMap(CorrespondenceTemplate::getTemplateFilename, Function.identity())));
+            templates.putAll(templateConfigurations.stream().map(c -> mapTemplateFromConfiguration(c, correspondenceQueryBeansMap))
+                    .collect(Collectors.toMap(CorrespondenceTemplate::getTemplateFilename, Function.identity())));
+
+        } catch (IOException ioe)
+        {
+            throw new IllegalStateException(ioe);
+        }
 
     }
 
