@@ -204,8 +204,16 @@ public class SplitCaseFileServiceTest extends EasyMockSupport
     {
         // Documents and folder structure
         /*
-         * ROOT |---F2 (folder) | |---F4 (folder) | |---d2 (document) | |---d3 (document) | |---F3 (folder) | |---d4
-         * (document) | |---d1 (document)
+         * ROOT
+             |---F2 (folder)
+             |   |---F4 (folder)
+             |       |---d2 (document)
+             |       |---d3 (document)
+             |
+             |---F3 (folder)
+             |   |---d4 (document)
+             |
+             |---d1 (document)
          */
 
         // fill folder map for testing

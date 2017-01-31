@@ -72,12 +72,12 @@ public class CloseComplaintRequestService
         Complaint updatedComplaint = updateComplaintStatus(complaintId, updatedRequest.getDisposition());
 
         boolean shouldFullInvestigationBeOpened = shallWeOpenAFullInvestigation(updatedRequest);
-        log.debug("Open a new investigation? " + shouldFullInvestigationBeOpened);
+        log.debug("Open a new investigation? {}", shouldFullInvestigationBeOpened);
 
         if (shouldFullInvestigationBeOpened)
         {
             CaseFile fullInvestigation = openFullInvestigation(updatedComplaint, user, null, updatedComplaint.getObjectType(), ipAddress);
-            log.debug("Opened a full investigation: " + fullInvestigation.getCaseNumber());
+            log.debug("Opened a full investigation: {}", fullInvestigation.getCaseNumber());
 
             // Add CaseFile as Reference to the Complaint
             addReferenceToComplaint(updatedComplaint, fullInvestigation, fullInvestigation.getObjectType());
@@ -91,7 +91,7 @@ public class CloseComplaintRequestService
             CaseFile updatedCaseFile = addToExistingCaseFile(updatedRequest, updatedComplaint, user, ipAddress);
             if (updatedCaseFile != null)
             {
-                log.debug("Added complaint to existing case file: " + updatedCaseFile.getCaseNumber());
+                log.debug("Added complaint to existing case file: {}", updatedCaseFile.getCaseNumber());
 
                 // Add CaseFile as Reference to the Complaint
                 addReferenceToComplaint(updatedComplaint, updatedCaseFile, updatedCaseFile.getObjectType());
@@ -125,7 +125,7 @@ public class CloseComplaintRequestService
         CaseFile existingCaseFile = getCaseFileDao().findByCaseNumber(caseNumber);
         if (existingCaseFile == null)
         {
-            log.error("Can not add complaint to existing case file since there is no case file with number '" + caseNumber + "'!");
+            log.error("Can not add complaint to existing case file since there is no case file with number '{}'!", caseNumber);
             return null;
         }
 
@@ -220,7 +220,7 @@ public class CloseComplaintRequestService
     {
         if (updatedRequest.getDisposition() == null)
         {
-            log.debug("No disposition for request ID '" + updatedRequest.getId() + "'");
+            log.debug("No disposition for request ID '{}'", updatedRequest.getId());
             return false;
         }
 
@@ -247,7 +247,7 @@ public class CloseComplaintRequestService
         ObjectAssociation originalComplaint = makeObjectAssociation(updatedComplaint.getComplaintId(),
                 updatedComplaint.getComplaintNumber(), objectType, updatedComplaint.getComplaintTitle());
         originalComplaint.setStatus("CLOSED");
-        log.debug("reference object title: " + originalComplaint.getTargetTitle());
+        log.debug("reference object title: {}", originalComplaint.getTargetTitle());
         caseFile.addChildObject(originalComplaint);
 
         addPersonsToCaseFile(updatedComplaint.getPersonAssociations(), caseFile);
@@ -318,7 +318,7 @@ public class CloseComplaintRequestService
     {
         if (updatedRequest.getDisposition() == null)
         {
-            log.debug("No disposition for request ID '" + updatedRequest.getId() + "'");
+            log.debug("No disposition for request ID '{}'", updatedRequest.getId());
             return false;
         }
 

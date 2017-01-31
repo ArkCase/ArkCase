@@ -380,7 +380,7 @@ public class CaseFileService extends FrevvoFormAbstractService
                 oldCaseId = Long.parseLong(oldCaseIdAsString);
             } catch (Exception e)
             {
-                LOG.error("Cannot parse String oldCaseId=" + oldCaseIdAsString + " to Long.", e);
+                LOG.error("Cannot parse String oldCaseId={} to Long.", oldCaseIdAsString, e);
             }
 
             if (oldCaseId != null && oldCaseNumber != null && form.getId() != null && form.getCaseNumber() != null)

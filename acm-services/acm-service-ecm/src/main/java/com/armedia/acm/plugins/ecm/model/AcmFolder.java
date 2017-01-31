@@ -71,11 +71,11 @@ public class AcmFolder implements AcmEntity, Serializable, AcmObject, AcmAssigne
     @Column(name = "cm_cmis_folder_id")
     private String cmisFolderId;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "cm_parent_folder_id")
     private AcmFolder parentFolder;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "parentFolder")
     private List<AcmFolder> childrenFolders;
 
