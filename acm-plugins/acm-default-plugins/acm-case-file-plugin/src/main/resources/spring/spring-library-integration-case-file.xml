@@ -25,6 +25,6 @@
     <int:service-activator input-channel="caseFileFilteredMailChannel" ref="caseFileMailHandler" method="handle"/>
 
     <int:chain input-channel="mailChannel" output-channel="caseFileFilteredMailChannel">
-        <int:filter ref="caseFileMailFilter" throw-exception-on-rejection="true" method="accept"/>
+        <int:filter ref="caseFileMailFilter" throw-exception-on-rejection="false" method="accept"/>
     </int:chain>
 </beans>

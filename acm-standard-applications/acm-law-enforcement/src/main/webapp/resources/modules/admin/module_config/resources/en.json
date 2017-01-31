@@ -270,6 +270,8 @@
       "title": "Correspondence Management",
       "templates": "Correspondence Templates",
       "templates.addNewTemplate": "Add New Template",
+      "templates.addTemplate": "Add Template",
+      "templates.editTemplate": "Edit Template",
       "templates.grid": {
         "id": "ID",
         "title": "Title",
@@ -277,6 +279,23 @@
         "created": "Created",
         "modified": "Modified",
         "creator": "Creator"
+      },
+      "templates.fieldNames.label": "Map fields to values from the template",
+      "templates.querySelect": {
+        "header.text": "Select Query",
+        "btnCancel.text": "Cancel",
+        "btnOk.text": "Select",
+        "table.columns": {
+          "beanId": "Bean ID",
+          "jpaQuery": "JPA Query",
+          "queryType": "Query Type"
+        }
+      },
+      "templates.modal": {
+        "objectTypes.label": "Object Types",
+        "querySelect.label": "Query Select",
+        "btnCancel.text": "Cancel",
+        "btnOk.text": "Save"
       }
     },
     "forms.defaultValue": "Select Target",

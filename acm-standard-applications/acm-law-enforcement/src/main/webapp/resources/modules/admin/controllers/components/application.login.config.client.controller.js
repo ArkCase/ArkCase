@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('admin').controller('Admin.LoginConfigController', ['$scope', '$q', '$modal', '$translate'
-    , 'UtilService', 'Admin.ApplicationSettingsService', 'Dialog.BootboxService'
+    , 'UtilService', 'Admin.ApplicationSettingsService', 'Dialog.BootboxService', 'MessageService'
     , function ($scope, $q, $modal, $translate
-        , Util, ApplicationSettingsService, DialogService
+        , Util, ApplicationSettingsService, DialogService, messageService
     ) {
         var saved = {};
         ApplicationSettingsService.getProperty(ApplicationSettingsService.PROPERTIES.IDLE_LIMIT).then(function (response) {
@@ -27,7 +27,10 @@ angular.module('admin').controller('Admin.LoginConfigController', ['$scope', '$q
                 );
                 saved.idleLimit = $scope.idleLimit;
 
-                DialogService.alert($translate.instant("admin.application.login.config.inform"));
+                DialogService.alert($translate.instant("admin.application.login.config.inform")).then(function () {
+                    //success
+                    messageService.succsessAction();
+                });
             }
         }
     }

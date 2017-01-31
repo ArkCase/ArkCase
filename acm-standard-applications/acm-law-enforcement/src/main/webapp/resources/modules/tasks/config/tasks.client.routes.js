@@ -12,6 +12,7 @@ angular.module('tasks').config(['$stateProvider',
                 resolve: {
                     translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
                         $translatePartialLoader.addPart('common');
+                        $translatePartialLoader.addPart('dashboard');
                         $translatePartialLoader.addPart('tasks');
                         return $translate.refresh();
                     }]
@@ -78,6 +79,11 @@ angular.module('tasks').config(['$stateProvider',
             .state('tasks.rejcomments', {
                 url: '/:type/:id/rejcomments',
                 templateUrl: 'modules/tasks/views/components/task-rejcomments.client.view.html'
+            })
+
+            .state('tasks.parentdocs', {
+                url: '/:type/:id/parentdocs',
+                templateUrl: 'modules/tasks/views/components/task-parentdocs.client.view.html'
             })
 
             .state('tasks.attachments', {

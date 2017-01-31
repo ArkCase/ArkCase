@@ -13,52 +13,64 @@ angular.module('dashboard.reworkDetails', ['adf.provider'])
                 }
             );
     })
-    .controller('Dashboard.LocationController', ['$scope', '$translate', '$stateParams', '$q', 'UtilService', 'Task.InfoService'
-        , 'Authentication', 'Dashboard.DashboardService', 'ConfigService', 'Helper.ObjectBrowserService',
-        function ($scope, $translate, $stateParams, $q, Util, TaskInfoService, Authentication, DashboardService
-            , ConfigService, HelperObjectBrowserService) {
+    .controller('Dashboard.LocationController', ['$scope', '$stateParams', 'Task.InfoService', 'Helper.ObjectBrowserService'
+        ,function ($scope, $stateParams, TaskInfoService, HelperObjectBrowserService) {
 
-            var promiseConfig;
-            var promiseInfo;
             var modules = [
-                {name: "TASK", configName: "tasks", getInfo: TaskInfoService.getTaskInfo}
-                , {name: "ADHOC", configName: "tasks", getInfo: TaskInfoService.getTaskInfo}
+                {
+                    name: "TASK",
+                    configName: "tasks",
+                    getInfo: TaskInfoService.getTaskInfo,
+                    validateInfo: TaskInfoService.validateTaskInfo
+                }
+                , {
+                    name: "ADHOC",
+                    configName: "tasks",
+                    getInfo: TaskInfoService.getTaskInfo,
+                    validateInfo: TaskInfoService.validateTaskInfo
+                }
             ];
 
             var module = _.find(modules, function (module) {
                 return module.name == $stateParams.type;
             });
-            
+
             $scope.gridOptions = {
                 enableColumnResizing: true,
                 columnDefs: []
             };
 
-            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-            if (module && Util.goodPositive(currentObjectId, false)) {
-                promiseConfig = ConfigService.getModuleConfig(module.configName);
-                promiseInfo = module.getInfo(currentObjectId);
+            new HelperObjectBrowserService.Component({
+                scope: $scope
+                , stateParams: $stateParams
+                , moduleId: module.configName
+                , componentId: "main"
+                , retrieveObjectInfo: module.getInfo
+                , validateObjectInfo: module.validateInfo
+                , onObjectInfoRetrieved: function (objectInfo) {
+                    onObjectInfoRetrieved(objectInfo);
+                }
+                , onConfigRetrieved: function (componentConfig) {
+                    onConfigRetrieved(componentConfig);
+                }
+            });
 
-                $q.all([promiseConfig, promiseInfo]).then(function (data) {
-                        var config = _.find(data[0].components, {id: "main"});
-                        var info = angular.copy(data[1]);
-                        var widgetInfo = _.find(config.widgets, function (widget) {
-                            return widget.id === "reworkDetails";
-                        });
-                        $scope.config = config;
-                        $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
+            var onObjectInfoRetrieved = function (objectInfo) {
+                var data = angular.copy(objectInfo);
+                $scope.gridOptions.data = [data];
+                if (!$scope.gridOptions.data[0].reworkInstructions) {
+                    $scope.gridOptions.data[0].taskStartDate = "";
+                    $scope.gridOptions.data[0].assignee = "";
+                }
+                $scope.gridOptions.totalItems = $scope.gridOptions.data ? 1 : 0;
+            };
 
-                        $scope.gridOptions.data = [info];
-                        if(!$scope.gridOptions.data[0].reworkInstructions) {
-                            $scope.gridOptions.data[0].taskStartDate = "";
-                            $scope.gridOptions.data[0].assignee = "";
-                        }
-                        $scope.gridOptions.totalItems = $scope.gridOptions.data ? 1 : 0;
-                    },
-                    function (err) {
+            var onConfigRetrieved = function (componentConfig) {
+                var widgetInfo = _.find(componentConfig.widgets, function (widget) {
+                    return widget.id === "reworkDetails";
+                });
 
-                    }
-                );
-            }
+                $scope.gridOptions.columnDefs = widgetInfo ? widgetInfo.columnDefs : [];
+            };
         }
     ]);

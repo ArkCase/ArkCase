@@ -64,7 +64,7 @@ angular.module('services').factory('TimeTracking.InfoService', ['$resource', '$t
 
         /**
          * @ngdoc method
-         * @name resetTimeTrackingInfo
+         * @name resetTimesheetInfo
          * @methodOf services:TimeTracking.InfoService
          *
          * @description
@@ -72,7 +72,7 @@ angular.module('services').factory('TimeTracking.InfoService', ['$resource', '$t
          *
          * @returns None
          */
-        Service.resetTimeTrackingInfo = function () {
+        Service.resetTimesheetInfo = function () {
             var cacheInfo = new Store.CacheFifo(Service.CacheNames.TIMESHEET_INFO);
             cacheInfo.reset();
         };
@@ -100,6 +100,34 @@ angular.module('services').factory('TimeTracking.InfoService', ['$resource', '$t
                     if (Service.validateTimesheet(data)) {
                         cacheTimesheetInfo.put(id, data);
                         return data;
+                    }
+                }
+            });
+        };
+
+        /**
+         * @ngdoc method
+         * @name getTimesheetParentObjectsTypeId
+         * @methodOf service:TimeTracking.InfoService
+         *
+         * @description
+         * Query Objects(complaint/case) related to timesheet data
+         *
+         * @param {Number} id  Timesheet ID
+         *
+         * @returns {Object} Promise
+         */
+        Service.getTimesheetParentObjectsTypeId = function (id) {
+            return Util.serviceCall({
+                service: Service.get
+                , param: {id: id}
+                , onSuccess: function (timesheetInfo) {
+                    if (Service.validateTimesheet(timesheetInfo)) {
+                        return _.map(_.uniq(timesheetInfo.times, function (data) {
+                            return data.type + data.objectId;
+                        }), function (data) {
+                            return {type: data.type, objectId: data.objectId};
+                        });
                     }
                 }
             });

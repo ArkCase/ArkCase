@@ -2,10 +2,12 @@
 
 angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$stateParams', '$translate', '$timeout'
     , 'UtilService', 'Util.DateService', 'ConfigService', 'LookupService', 'Object.LookupService', 'Task.InfoService', 'Object.ModelService'
-    , 'Helper.ObjectBrowserService', 'MessageService', 'Task.AlertsService'
+    , 'Helper.ObjectBrowserService', 'Task.AlertsService', 'ObjectService', 'Helper.UiGridService', '$modal'
+    , 'Object.ParticipantService', '$q', 'Case.InfoService', 'Complaint.InfoService'
     , function ($scope, $stateParams, $translate, $timeout
         , Util, UtilDateService, ConfigService, LookupService, ObjectLookupService, TaskInfoService, ObjectModelService
-        , HelperObjectBrowserService, MessageService, TaskAlertsService) {
+        , HelperObjectBrowserService, TaskAlertsService, ObjectService, HelperUiGridService, $modal, ObjectParticipantService, $q
+        , CaseInfoService, ComplaintInfoService) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -19,6 +21,14 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             }
         });
 
+        var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+        var promiseUsers = gridHelper.getUsers();
+        var promiseConfig = ConfigService.getModuleConfig("tasks");
+
+        $q.all([promiseConfig]).then(function (data) {
+            var foundComponent = data[0].components.filter(function(component) { return component.title === 'Info'; });
+            $scope.config = foundComponent[0];
+        });
 
         LookupService.getUsers().then(
             function (users) {
@@ -42,6 +52,44 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             }
         );
 
+        $scope.openAssigneePickerModal = function () {
+            var participant = {
+                        id: '',
+                        participantLdapId: '',
+                        config: $scope.config
+                    };
+            showModal(participant, false);
+        };
+
+        var showModal = function (participant, isEdit) {
+            var modalScope = $scope.$new();
+            modalScope.participant = participant || {};
+
+            var modalInstance = $modal.open({
+                scope: modalScope,
+                animation: true,
+                templateUrl: "modules/tasks/views/components/task-assignee-picker-modal.client.view.html",
+                controller: "Tasks.AssigneePickerController",
+                size: 'md',
+                backdrop: 'static',
+                resolve: {
+                    owningGroup: function () {
+                        return $scope.owningGroup;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (data) {
+                $scope.participant = {};
+                if (data.participant.participantLdapId != '' && data.participant.participantLdapId != null) {
+                    $scope.participant.participantLdapId = data.participant.participantLdapId;
+                    $scope.assignee = data.participant.participantLdapId;
+                    $scope.updateAssignee($scope.assignee);
+                }
+            }, function(error) {
+            });
+        };
+
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
             $scope.dateInfo = $scope.dateInfo || {};
@@ -49,13 +97,27 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             $scope.dateInfo.taskStartDate = UtilDateService.isoToDate($scope.objectInfo.taskStartDate);
             $scope.dateInfo.isOverdue = TaskAlertsService.calculateOverdue($scope.dateInfo.dueDate);
             $scope.dateInfo.isDeadline = TaskAlertsService.calculateDeadline($scope.dateInfo.dueDate);
-            $scope.assignee = ObjectModelService.getAssignee($scope.objectInfo); 
+            $scope.assignee = ObjectModelService.getAssignee($scope.objectInfo);
+
+            if (ObjectService.ObjectTypes.CASE_FILE == $scope.objectInfo.parentObjectType) {
+                CaseInfoService.getCaseInfo($scope.objectInfo.parentObjectId).then(
+                    function (caseInfo) {
+                        $scope.owningGroup = ObjectModelService.getGroup(caseInfo);
+                    }
+                );
+            } else if (ObjectService.ObjectTypes.COMPLAINT == $scope.objectInfo.parentObjectType) {
+                ComplaintInfoService.getComplaintInfo($scope.objectInfo.parentObjectId).then(
+                    function (complaintInfo) {
+                        $scope.owningGroup = ObjectModelService.getGroup(complaintInfo);
+                    }
+                );
+            }
         };
 
         $scope.defaultDatePickerFormat = UtilDateService.defaultDatePickerFormat;
         $scope.picker = {opened: false};
         $scope.onPickerClick = function () {
-        	$scope.picker.opened = true;
+            $scope.picker.opened = true;
         };
 
         $scope.validatePercentComplete = function (value) {
@@ -81,9 +143,57 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             $scope.objectInfo.dueDate = UtilDateService.dateToIso($scope.dateInfo.dueDate);
             saveTask();
         };
-        $scope.$on('accessDenied', function(event, message){
-            MessageService.info(message);
-        });
+
+        //user group picker
+        $scope.showAssigneePicker = function () {
+            var cfg = {};
+            cfg.topLevelGroupTypes = ["LDAP_GROUP"];
+
+            var modalInstance = $modal.open({
+                animation: $scope.animationsEnabled,
+                templateUrl: 'modules/tasks/views/components/dialog/user-group-picker.client.view.html',
+                controller: 'Tasks.UserGroupPickerDialogController',
+                size: 'lg',
+                resolve: {
+                    cfg: function () {
+                        return cfg;
+                    },
+                    parentType: function () {
+                        return $scope.objectInfo.attachedToObjectType;
+                    },
+                    showGroupAndUserPicker: function () {
+                        return true;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (chosenNode) {
+                if (chosenNode) {
+                    if (Util.goodValue(chosenNode[0])) { //Selected a user
+                        //Change Assignee
+                        var userId = Util.goodMapValue(chosenNode[0], 'object_id_s');
+                        if (userId) {
+                            $scope.objectInfo.candidateGroups = [];
+                            $scope.updateAssignee(userId);
+                        }
+                    } else if (Util.goodValue(chosenNode[1])) { //Selected a group
+                        var group = Util.goodMapValue(chosenNode[1], 'object_id_s');
+                        if (group) {
+                            $scope.objectInfo.candidateGroups = [group];
+
+                            //Clear participants as it causes concurrent modification errors when
+                            //there is no assignee, but a participant of type assignee is present
+                            $scope.objectInfo.participants = null;
+                            $scope.updateAssignee(null);
+                        }
+                    }
+                }
+
+            }, function () {
+                // Cancel button was clicked.
+                return [];
+            });
+        };
 
         function saveTask() {
             var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
@@ -93,13 +203,16 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
                 promiseSaveInfo.then(
                     function (taskInfo) {
                         $scope.$emit("report-object-updated", taskInfo);
-                        return taskInfo;
+                        TaskInfoService.resetTaskCacheById(taskInfo.taskId);
+                        return TaskInfoService.getTaskInfo(taskInfo.taskId);
                     }
                     , function (error) {
                         $scope.$emit("report-object-update-failed", error);
                         return error;
                     }
-                );
+                ).then(function (taskInfo) {
+                    onObjectInfoRetrieved(taskInfo);
+                });
             }
             return promiseSaveInfo;
         }

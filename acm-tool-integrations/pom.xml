@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm</artifactId>
         <groupId>com.armedia</groupId>
-        <version>3.1.5-SNAPSHOT</version>
+        <version>3.1.7-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -19,24 +19,24 @@
         <module>acm-activiti-configuration</module>
         <module>acm-cmis-configuration</module>
         <module>acm-drools-rule-monitor</module>
+        <module>acm-email</module>
+        <module>acm-encryption</module>
+        <module>acm-ephesoft</module>
         <module>acm-files-folder-watcher</module>
         <module>acm-files-property-file-manager</module>
+        <module>acm-form-configuration</module>
         <module>acm-mule-context-manager</module>
+        <module>acm-mule-module-cmis</module>
+        <module>acm-object-converter</module>
+        <module>acm-object-data-processing-api</module>
+        <module>acm-pdf-utilities</module>
+        <module>acm-proxy-http</module>
+        <module>acm-report-configuration</module>
         <module>acm-spring-classpath-copier</module>
         <module>acm-spring-context-holder</module>
         <module>acm-spring-data-source</module>
-        <module>acm-report-configuration</module>
-        <module>acm-object-converter</module>
-        <module>acm-encryption</module>
-        <module>acm-email</module>
         <module>acm-reload-properties</module>
-        <module>acm-ephesoft</module>
-        <module>acm-pdf-utilities</module>
-        <module>acm-form-configuration</module>
         <module>acm-websockets</module>
-        <module>acm-proxy-http</module>
-        <module>acm-mule-module-cmis</module>
-        <module>acm-object-data-processing-api</module>
     </modules>
 
 </project>

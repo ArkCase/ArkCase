@@ -4,7 +4,7 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="01-create-addressable-tables" author="dmiller">
+    <changeSet id="01-create-addressable-tables" author="dmiller" dbms="oracle,postgresql,mssql">
         <createTable tableName="acm_postal_address">
             <column name="cm_address_id" type="${idType}">
                 <constraints
@@ -65,6 +65,87 @@
                 <constraints nullable="false"/>
             </column>
             <column name="cm_contact_method_modified" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_contact_method_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_contact_type" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_contact_location" type="VARCHAR(128)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_contact_value" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+    </changeSet>
+
+    <changeSet id="01-create-addressable-tables" author="dmiller" dbms="mysql">
+        <createTable tableName="acm_postal_address">
+            <column name="cm_address_id" type="${idType}">
+                <constraints
+                        primaryKey="true"
+                        primaryKeyName="pk_postal_address"/>
+            </column>
+            <column name="cm_address_status" type="VARCHAR(128)" defaultValue="ACTIVE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_address_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_address_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_address_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_address_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_address_type" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_street_address" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_street_address_extra" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_locality" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_region" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_postal_code" type="VARCHAR(128)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_country" type="VARCHAR(128)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="acm_contact_method">
+            <column name="cm_contact_method_id" type="${idType}">
+                <constraints
+                        primaryKey="true"
+                        primaryKeyName="pk_contact_method"/>
+            </column>
+            <column name="cm_contact_method_status" type="VARCHAR(128)" defaultValue="ACTIVE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_contact_method_created" type="${timestampType}"
+                    defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_contact_method_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_contact_method_modified" type="${timestampType}"
+                    defaultValueComputed="${timestampFunction}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_contact_method_modifier" type="VARCHAR(1024)">

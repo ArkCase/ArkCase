@@ -55,12 +55,20 @@ angular.module('admin').controller('Admin.SelectPrivilegesController', ['$scope'
         };
 
         //callback function when groups are moved
-        $scope.onAuthRoleSelected = function (selectedObject, authorized, notAuthorized) {
-            var privileges = [];
+        $scope.onAuthRoleSelected = function (selectedObject, authorized, notAuthorized, isClicked) {
+            
+        	var deferred = $q.defer();
+        	var privileges = [];
             angular.forEach(authorized, function (element) {
                 privileges.push(element.key);
             });
-            selectPrivilegesService.addRolePrivileges(selectedObject.key, privileges);
+            selectPrivilegesService.addRolePrivileges(selectedObject.key, privileges).then(function() {
+            	deferred.resolve();
+            }, function(){
+            	deferred.reject();
+            });
+
+            return deferred.promise;
         };
 
 
