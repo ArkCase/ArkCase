@@ -375,7 +375,11 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                                 // Get the sorting info from UI grid
                                 gridApi.core.on.sortChanged(scope, function (grid, sortColumns) {
                                     if (sortColumns.length > 0) {
-                                        scope.sort = (sortColumns[0].colDef.sortField || sortColumns[0].colDef.name) + " " + sortColumns[0].sort.direction;
+                                        var sortColArr = [];
+                                        _.each(sortColumns, function (col) {
+                                            sortColArr.push((col.colDef.sortField || col.colDef.name) + " " + col.sort.direction);
+                                        });
+                                        scope.sort = sortColArr.join(',');
                                     }
                                     else {
                                         scope.sort = "";
