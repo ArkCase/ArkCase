@@ -44,12 +44,18 @@ public class CorrespondenceTemplateAPIController
         return mapTemplateToResponse(correspondenceService.deleteTemplate(templateFileName));
     }
 
-    @RequestMapping(value = "/template/update", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/template", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public CorrespondenceTemplateRequestResponse updateTemplate(@RequestBody CorrespondenceTemplateRequestResponse request)
             throws IOException
     {
         return mapTemplateToResponse(correspondenceService.updateTemplate(mapRequestToTemplate(request)));
+    }
+
+    @ExceptionHandler(CorrespondenceTemplateNotFoundException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Error while retreiving correspondence template.")
+    public void handleException()
+    {
     }
 
     /**
@@ -71,12 +77,6 @@ public class CorrespondenceTemplateAPIController
         response.setNumberFormatString(template.getNumberFormatString());
 
         return response;
-    }
-
-    @ExceptionHandler(CorrespondenceTemplateNotFoundException.class)
-    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Error while retreiving correspondence template.")
-    public void handleException()
-    {
     }
 
     /**
