@@ -269,9 +269,9 @@
     "correspondenceManagement": {
       "title": "Correspondence Management",
       "templates": "Correspondence Templates",
-      "templates.addNewTemplate": "Add New Template",
-      "templates.addTemplate": "Add Template",
-      "templates.editTemplate": "Edit Template",
+      "templates.addNewTemplate": "Map Fields to Values",
+      "templates.addTemplate": "Map Fields to Values",
+      "templates.editTemplate": "Edit Field Mapping",
       "templates.grid": {
         "id": "ID",
         "title": "Title",
@@ -295,7 +295,7 @@
         "objectTypes.label": "Object Types",
         "querySelect.label": "Select Query",
         "btnCancel.text": "Cancel",
-        "btnOk.text": "Add Template"
+        "btnOk.text": "Save Field Mapping"
       }
     },
     "forms.defaultValue": "Select Target",
