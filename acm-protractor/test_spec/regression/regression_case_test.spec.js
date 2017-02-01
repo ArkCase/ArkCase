@@ -95,4 +95,19 @@ describe('case page tests', function() {
         casePage.verifyFirstElementNameNoAccess();
     });
 
+    it('should create new case with owner  and edit the assignee ', function() {
+
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
+        casePage.clickNextBtn();
+        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
+        casePage.clickParticipantTab();
+        casePage.selectParticipant("Owner", Objects.casepage.data.approverSamuel);
+        casePage.switchToIframes();
+        casePage.clickSubmitBtn();
+        casePage.switchToDefaultContent();
+        casePage.waitForCasesPage();
+        casePage.editAssignee(Objects.basepage.data.IanInvestigator).waitForAssignee();
+        expect(casePage.returnAssignee()).toEqual(Objects.basepage.data.IanInvestigator);
+    });
+
 });

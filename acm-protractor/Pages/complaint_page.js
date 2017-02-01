@@ -52,6 +52,12 @@ var searchButton = element(by.xpath(Objects.complaintPage.locators.searchButton)
 var caseTitle = element(by.name(Objects.complaintPage.locators.caseTitle));
 var caseCreatedDate = element(by.name(Objects.complaintPage.locators.caseCreatedDate));
 var casePriority = element(by.name(Objects.complaintPage.locators.casePriority));
+var selectParticipantType=element(by.xpath(Objects.complaintPage.locators.selectParticipantType));
+var selectparticipant = element(by.name(Objects.casepage.locators.selectParticipant));
+var searchForUserInput = element(by.xpath(Objects.casepage.locators.searchForUserInput));
+var searchForUserBtn = element(by.buttonText(Objects.casepage.locators.searchUserBtn));
+var searchedUser = element(by.xpath(Objects.casepage.locators.searchedUserName));
+var okBtn = element(by.buttonText(Objects.casepage.locators.OkBtn));
 
 var ComplaintPage = function() {
 
@@ -382,6 +388,34 @@ var ComplaintPage = function() {
     this.returnCasePriority = function() {
         return casePriority.getAttribute("value");
     }
+
+    this.selectParticipant = function(type, participant) {
+
+        var participantType = element(by.linkText(type));
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.selectParticipantType))), 10000).then(function() {
+            selectParticipantType.click().then(function() {
+                participantType.click().then(function() {
+                    selectparticipant.click().then(function() {
+                        browser.driver.switchTo().defaultContent();
+                        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchForUserInput))), 10000, "Search for user input is not displayed").then(function() {
+                            searchForUserInput.sendKeys(participant).then(function() {
+                                searchForUserBtn.click().then(function() {
+                                    browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchedUserName))), 30000, "Searched user is not displayed").then(function() {
+                                        searchedUser.click().then(function() {
+                                            okBtn.click();
+                                        });
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+
+        return this;
+    };
+
 };
 ComplaintPage.prototype = basePage;
 module.exports = new ComplaintPage();

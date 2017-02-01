@@ -99,18 +99,6 @@ describe('case page tests', function() {
         });
     });
 
-
-    it('should create new case and edit the assignee from ann to samuel', function() {
-
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.waitForCasesPage();
-        casePage.editAssignee("samuel-acm").waitForAssignee();
-        expect(casePage.returnAssignee()).toEqual(Objects.casepage.data.assigneeSamuel);
-    });
-
     it('should  add/delete note', function() {
 
         casePage.clickModuleCasesFiles();

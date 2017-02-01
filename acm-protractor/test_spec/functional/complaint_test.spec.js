@@ -9,6 +9,7 @@ var loginPage = require('../../Pages/login_page.js');
 var timeTrackingPage = require('../../Pages/time_tracking_page.js');
 var costTrackingPage = require('../../Pages/cost_tracking_page.js');
 var preferencesPage = require('../../Pages/preference_page.js');
+var using = require(process.env['USERPROFILE'] + '/node_modules/jasmine-data-provider');
 var flag = false;
 
 function testAsync(done) {
@@ -104,33 +105,19 @@ describe('Create new complaint ', function() {
 
     });
 
-    it('Edit priority to High', function() {
+    using([{ priority: "High", prioritySaved: Objects.casepage.data.priorityHigh }, {
+        priority: "Medium",
+        prioritySaved: Objects.casepage.data.priorityMedium
+    }, { priority: "Expedite", prioritySaved: Objects.casepage.data.priorityExpedite }], function(data) {
+        it('should create new case and edit the priority to ' + data.priority, function() {
 
-        complaintPage.clickModuleComplaints();
-        complaintPage.editPriority('High');
-        expect(complaintPage.returnPriority()).toEqual(Objects.casepage.data.priorityHigh);
+            complaintPage.clickModuleComplaints();
+            complaintPage.waitForComplaintsPage();
+            complaintPage.editPriority(data.priority);
+            expect(complaintPage.returnPriority()).toEqual(data.prioritySaved);
+        });
     });
 
-    it('Edit priority to Expedite', function() {
-
-        complaintPage.clickModuleComplaints();
-        complaintPage.editPriority('Expedite');
-        expect(complaintPage.returnPriority()).toEqual(Objects.casepage.data.priorityExpedite);
-    });
-
-    it('Edit priority to Low', function() {
-
-        complaintPage.clickModuleComplaints();
-        complaintPage.editPriority('Low');
-        expect(complaintPage.returnPriority()).toEqual("Low");
-    });
-
-    it('Edit assignee', function() {
-
-        complaintPage.clickModuleComplaints();
-        complaintPage.editAssignee("bthomas");
-        expect(complaintPage.returnAssignee()).toEqual("Bill Thomas");
-    });
 
     it('should create new complaint and add person', function() {
 
@@ -488,6 +475,7 @@ describe('Create new complaint ', function() {
     });
 
     it('should verify that searching of Case id during close complaint is retrieving the data in the fields', function() {
+
         casePage.navigateToPage("Case Files").waitForCaseID();
         var caseid = casePage.getCaseId();
         var caseTitle = casePage.returnCaseTitle();
@@ -559,6 +547,4 @@ describe('Create new complaint ', function() {
 
         });
     });
-
-
 });
