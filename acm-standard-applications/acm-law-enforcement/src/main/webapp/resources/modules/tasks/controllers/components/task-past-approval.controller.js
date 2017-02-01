@@ -32,12 +32,6 @@ angular.module('cases').controller('Tasks.PastApprovalRoutingController', ['$sco
 
         var gridHelperPastApprovers = new HelperUiGridService.Grid({scope: $scope});
 
-
-        ConfigService.getModuleConfig("tasks").then(function (moduleConfig) {
-            $scope.userSearchConfig = _.find(moduleConfig.components, {id: "userSearch"});
-            return moduleConfig;
-        });
-
         Authentication.queryUserInfo().then(function (data) {
             currentUser = data.userId;
         });
@@ -62,7 +56,6 @@ angular.module('cases').controller('Tasks.PastApprovalRoutingController', ['$sco
                 $scope.gridOptions.noData = true;
                 $scope.noDataMessage = $translate.instant('tasks.comp.approvalRouting.noBuckslipMessage');
             }
-            $scope.oldData = _.cloneDeep($scope.gridOptions.data);
         };
     }
 ])

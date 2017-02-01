@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('cases').controller('Tasks.FutureApprovalRoutingController', ['$scope', '$stateParams', '$q', '$translate', '$modal'
+angular.module('tasks').controller('Tasks.FutureApprovalRoutingController', ['$scope', '$stateParams', '$q', '$translate', '$modal'
     , 'UtilService', 'Util.DateService', 'ConfigService', 'ObjectService', 'LookupService', 'Object.LookupService'
     , 'Task.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Authentication'
     , 'PermissionsService', 'Profile.UserInfoService'
@@ -15,8 +15,6 @@ angular.module('cases').controller('Tasks.FutureApprovalRoutingController', ['$s
         $scope.taskInfo = null;
 
         var currentUser = '';
-        var canEditMetadata = true;
-        var canEditBuckslip = true;
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -36,8 +34,6 @@ angular.module('cases').controller('Tasks.FutureApprovalRoutingController', ['$s
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
         ConfigService.getModuleConfig("tasks").then(function (moduleConfig) {
-            $scope.config = _.find(moduleConfig.components, {id: "approvalrouting"});
-
             $scope.userSearchConfig = _.find(moduleConfig.components, {id: "userSearch"});
             return moduleConfig;
         });
@@ -73,7 +69,7 @@ angular.module('cases').controller('Tasks.FutureApprovalRoutingController', ['$s
                 $scope.gridOptions.noData = true;
                 $scope.noDataMessage = $translate.instant('tasks.comp.approvalRouting.noBuckslipMessage');
             }
-            $scope.oldData = _.cloneDeep($scope.gridOptions.data);
+            $scope.oldData = angular.copy($scope.gridOptions.data);
         };
 
         $scope.userSearch = function () {
@@ -137,25 +133,17 @@ angular.module('cases').controller('Tasks.FutureApprovalRoutingController', ['$s
             }
         };
 
-        $scope.isReadOnly = function (objectInfo) {
-            if (canEditMetadata) {
-                return (objectInfo) ? ("Closed" == objectInfo.status) : true;
-            }
-            return true;
-        };
-
         $scope.gridButtonReadOnly = function (rowEntity) {
-            if (canEditBuckslip) {
-                if (Util.goodMapValue($scope.objectInfo, 'status') == 'Closed') {
+            if (Util.goodMapValue($scope.objectInfo, 'status') == 'Closed') {
+                return true;
+            } else {
+                if (!Util.isEmpty(Util.goodMapValue(rowEntity, 'decision'))) {
                     return true;
-                } else {
-                    if (!Util.isEmpty(Util.goodMapValue(rowEntity, 'decision'))) {
-                        return true;
-                    }
+                }
+                else {
                     return false;
                 }
             }
-            return true;
         };
 
         $scope.isDataChanged = function () {
@@ -182,7 +170,6 @@ angular.module('cases').controller('Tasks.FutureApprovalRoutingController', ['$s
                 promiseSaveInfo.then(
                     function (taskInfo) {
                         $scope.$emit("report-object-updated", taskInfo);
-                        TaskInfoService.resetTaskCacheById(taskInfo.taskId);
                         return TaskInfoService.getTaskInfo(taskInfo.taskId);
                     }
                     , function (error) {
@@ -264,24 +251,6 @@ angular.module('cases').controller('Tasks.FutureApprovalRoutingController', ['$s
             cellTemplate += "><i class='" + icon + "'></i></a>";
 
             return cellTemplate;
-        };
-
-        $scope.gridEditButtonReadOnly = function (rowEntity) {
-            if (canEditBuckslip) {
-                if (Util.goodMapValue($scope.objectInfo, 'status') == 'Closed') {
-                    return true;
-                } else {
-                    if (!Util.isEmpty(Util.goodMapValue(rowEntity, 'decision'))) {
-                        return true;
-                    }
-                    else if (!Util.compare(rowEntity.defaultApprover, currentUser)) {
-                        return true;
-                    }
-                    return false;
-                }
-            }
-
-            return true;
         };
 
         function convertProfileToUser(userProfile) {
