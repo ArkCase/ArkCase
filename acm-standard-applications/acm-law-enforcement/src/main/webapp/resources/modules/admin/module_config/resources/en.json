@@ -295,7 +295,7 @@
         "objectTypes.label": "Object Types",
         "querySelect.label": "Select Query",
         "btnCancel.text": "Cancel",
-        "btnOk.text": "Save Field Mapping"
+        "btnOk.text": "Map Fields"
       }
     },
     "forms.defaultValue": "Select Target",
