@@ -232,7 +232,7 @@ var costTrackingModule = element(by.css(Objects.costsheetPage.locators.costTrack
 var initiatorDeleteBtn = element(by.xpath(Objects.casepage.locators.initiatorDeleteBtn));
 var notificationMessage = element(by.css(Objects.basepage.locators.notificationMessage));
 var docVersionDropDownList = new SelectWrapper(by.css(Objects.basepage.locators.docVersionDropDownList));
-var emailRecepient = element(by.model(Objects.basepage.locators.emailRecepient));
+var emailRecepient = element(by.xpath(Objects.basepage.locators.emailRecepient));
 var sendEmailButton = element(by.buttonText(Objects.basepage.locators.sendEmailButton));
 var claimButton = element(by.css(Objects.casepage.locators.claimButton));
 var unclaimButton = element(by.css(Objects.casepage.locators.unclaimButton));
@@ -242,6 +242,8 @@ var participantTypeConflictMessage = element(by.css(Objects.casepage.locators.pa
 var addParticipantTypeSecondRowbtn = element(by.xpath(Objects.casepage.locators.addParticipantTypeSecondRowbtn));
 var selectParticipantTypeSecondRow = element(by.xpath(Objects.casepage.locators.selectParticipantTypeSecondRow));
 var selectParticipantSecondRow = element.all(by.name(Objects.casepage.locators.selectParticipant)).get(1);
+var searchField = element(by.model(Objects.casepage.locators.searchField));
+var fadeElement = element(by.xpath(Objects.basepage.locators.fadeElement));
 
 var BasePage = function() {
 
@@ -594,7 +596,6 @@ var BasePage = function() {
         return createdTagName.getText();
     }
 
-
     this.returntagCratedDate = function() {
         return tagCratedDate.getText();
     }
@@ -602,7 +603,6 @@ var BasePage = function() {
     this.returntagCreatedBy = function() {
         return tagCreatedBy.getText();
     }
-
 
     this.addSugestedTag = function(tagName) {
 
@@ -1926,18 +1926,46 @@ var BasePage = function() {
     this.replaceVersion = function(value) {
         docVersionDropDownList.selectByValue(value);
     };
-    this.insertRecipient = function (email) {
-        emailRecepient.click();
-        emailRecepient.sendKeys(email);
+    this.selectRecipient = function (email) {
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.searchForUserInput))), 30000).then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchForUserInput))), 30000).then(function () {
+                browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.casepage.locators.searchForUserInput))), 30000).then(function () {
+                    searchForUserInput.click();
+                    searchForUserInput.sendKeys(Objects.casepage.data.approverSamuel);
+                    searchForUserBtn.click().then(function () {
+                        browser.wait(EC.presenceOf(element.all(by.repeater(Objects.casepage.locators.addedReferenceRow)).get(0)), 30000).then(function () {
+                            browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.casepage.locators.addedReferenceRow)).get(0)), 30000).then(function () {
+                                browser.wait(EC.elementToBeClickable(element.all(by.repeater(Objects.casepage.locators.addedReferenceRow)).get(0)), 30000).then(function () {
+                                    searchedUser.click().then(function () {
+                                        // browser.wait(EC.invisibilityOf(element(by.xpath(Objects.basepage.locators.fadeElement))), 100000).then(function () {
+                                            browser.wait(EC.presenceOf(element(by.buttonText(Objects.basepage.locators.sendEmailButton))), 30000).then(function () {
+                                                browser.wait(EC.visibilityOf(element(by.buttonText(Objects.basepage.locators.sendEmailButton))), 30000).then(function () {
+                                                    browser.wait(EC.elementToBeClickable(element(by.buttonText(Objects.basepage.locators.sendEmailButton))), 30000).then(function () {
+                                                        browser.executeScript('arguments[0].click()', sendEmailButton);
+                                                    });
+                                                    });
+                                                })
+                                            })
+                                        });
+                                    });
+                                })
+                            });
+                        });
+                    });
+                });
+            // });
+       //});
         return this;
     };
     this.clickSendEmailButton = function () {
-        sendEmailButton.click();
+        browser.wait(EC.elementToBeClickable(element(by.css(Objects.basepage.locators.sendEmailButton))), 30000).then(function () {
+            sendEmailButton.click();
+        });
         return this;
     };
     this.sendEmail = function (email) {
-        this.insertRecipient(email);
-        this.clickSendEmailButton();
+        this.selectRecipient(email);
+        //this.clickSendEmailButton();
         return this;
     }
 
@@ -1996,7 +2024,20 @@ var BasePage = function() {
         return this;
     };
 
-}
+    this.clickSublink = function (link) {
+        var xPathStr = "//span[contains(text(),'";
+        var completexPath;
+        completexPath = xPathStr + link + "')]";
+        browser.wait(EC.presenceOf(element(by.xpath(completexPath))), 30000).then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(completexPath))), 30000).then(function () {
+                browser.wait(EC.elementToBeClickable(element(by.xpath(completexPath))), 30000).then(function () {
+                    var el = element(by.xpath(completexPath));
+                    browser.executeScript('arguments[0].click()', el);
+                });
+            });
+        });
+    }
 
+}
 
 module.exports = new BasePage();
