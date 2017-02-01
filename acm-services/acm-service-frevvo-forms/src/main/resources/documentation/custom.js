@@ -55,25 +55,27 @@ document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/p
 var frevvoMessaging = null;
 
 var CustomEventHandlers = {
-   setup: function (el) {
-	   var elState = CustomView.getState(el);
-       if (CustomView.hasClass(el, 'nextTab')) {
-           FEvent.observe(el, 'click', this.scrollTop.bindAsObserver(this, el));
-       } else if (CustomView.hasClass(el, 'previousTab')) {
-           FEvent.observe(el, 'click', this.scrollTop.bindAsObserver(this, el));
-       } else if (CustomView.hasClass(el, 'createUserPicker')) {
-           this.createUserPicker();
-       } else if (isSimpleUserPicker(el) || isAdvancedUserPicker(el)) {
-           FEvent.observe(el, 'click', this.showUserPicker.bindAsObserver(this, el));
-       }
-   },
-   
-   scrollTop: function (event, element) {
-       document.getElementById("wrapper").scrollIntoView();
-   },
-   
-   createUserPicker: function() {
-       if (isEmpty(frevvoMessaging)) {
+    setup: function (el) {
+        var elState = CustomView.getState(el);
+        if (CustomView.hasClass(el, 'nextTab')) {
+            FEvent.observe(el, 'click', this.scrollTop.bindAsObserver(this, el));
+        } else if (CustomView.hasClass(el, 'previousTab')) {
+            FEvent.observe(el, 'click', this.scrollTop.bindAsObserver(this, el));
+        } else if (CustomView.hasClass(el, 'createCommonPicker')) {
+            this.createCommonPicker();
+        } else if (isSimpleUserPicker(el) || isAdvancedUserPicker(el)) {
+            FEvent.observe(el, 'click', this.showUserPicker.bindAsObserver(this, el));
+        } else if (isObjectPicker(el)) {
+            FEvent.observe(el, 'click', this.showObjectPicker.bindAsObserver(this, el));
+        }
+    },
+
+    scrollTop: function (event, element) {
+        document.getElementById("wrapper").scrollIntoView();
+    },
+
+    createCommonPicker: function () {
+        if (isEmpty(frevvoMessaging)) {
             frevvoMessaging = {};
             frevvoMessaging.elements = {};
             frevvoMessaging.receiver = getArkCaseWindow();
@@ -85,25 +87,35 @@ var CustomEventHandlers = {
             frevvoMessaging.receive = function receive(e) {
                 if (!isEmpty(e) && !isEmpty(e.data) && !isEmpty(e.data.source) && e.data.source == "arkcase") {
                     // Do actions sent from Arkcase
-                    if (!isEmpty(e.data.action) && !isEmpty(e.data.elementId) && !isEmpty(frevvoMessaging.elements) && e.data.action == "fill-user-picker-data") {
-                        var element = frevvoMessaging.elements[e.data.elementId];
-                        if (!isEmpty(element)) {
-                            if (isSimpleUserPicker(element)) {
-                                // Simple user picker (fill only user id and full name)
-                                doSimpleUserPicker(element, e.data.data.object_id_s, e.data.data.name);
-                            } else if (isAdvancedUserPicker(element)){
-                                // Advanced user picker (fill user id, full name, first name, last name, location, email, phone ... etc ...)
-                                doAdvancedUserPicker(element, e.data.data.object_id_s);
+                    if (!isEmpty(e.data.action) && !isEmpty(e.data.elementId) && !isEmpty(frevvoMessaging.elements)) {
+                        if (e.data.action == "fill-user-picker-data") {
+                            var element = frevvoMessaging.elements[e.data.elementId];
+                            if (!isEmpty(element)) {
+                                if (isSimpleUserPicker(element)) {
+                                    // Simple user picker (fill only user id and full name)
+                                    doSimpleUserPicker(element, e.data.data.object_id_s, e.data.data.name);
+                                } else if (isAdvancedUserPicker(element)) {
+                                    // Advanced user picker (fill user id, full name, first name, last name, location, email, phone ... etc ...)
+                                    doAdvancedUserPicker(element, e.data.data.object_id_s);
+                                }
+                            }
+                        }
+                        if (e.data.action == "fill-object-picker-data") {
+                            var element = frevvoMessaging.elements[e.data.elementId];
+                            if (!isEmpty(element)) {
+                                var pickedObject = e.data.data;
+                                // update charge code element
+                                updateElementValue(pickedObject.name, 'input', e.data.elementId, null);
                             }
                         }
                     }
                 }
             }
-            
+
             window.addEventListener('message', frevvoMessaging.receive);
         }
    },
-   
+
    showUserPicker: function(event, element) {
         if (!isEmpty(frevvoMessaging)) {
             var message = {};
@@ -112,17 +124,88 @@ var CustomEventHandlers = {
             message.action = "open-user-picker";
             message.elementId = element.id;
             frevvoMessaging.elements[element.id] = element;
-            
+
             var owningGroup = getOwningGroup();
             if (!isEmpty(owningGroup)) {
                 message.data = {"owningGroup": owningGroup};
             }
-            
+
             // Open user picker
             frevvoMessaging.send(message);
         }
-   }
-}
+    },
+
+
+    showObjectPicker: function (event, element) {
+        var itemsToExclude = [];
+        var objectType;
+        var costFormElement = getHtmlElement('costsheetForm', 'input');
+        var timeFormElement = getHtmlElement('timesheetForm', 'input');
+
+        // find selected type
+        if (costFormElement) {
+            objectType = getElementValue('objectType', 'input', 'ovalue');
+        } else if (timeFormElement) {
+            objectType = findObjectType(element);
+            var populatedElements = getHtmlElementsByCssClass('objectPicker_objectNumber_openObjectPicker', 'input');
+            var chargeItems = populateChargeCodeTypes(populatedElements);
+            itemsToExclude = excludeSelectedItems(chargeItems, objectType);
+        }
+
+        if (!isEmpty(frevvoMessaging)) {
+            var message = {};
+            message.source = "frevvo";
+            message.data = "";
+            message.action = "open-object-picker";
+            message.elementId = element.id;
+
+            frevvoMessaging.elements[element.id] = element;
+            if (!isEmpty(objectType)) {
+                message.data = {
+                    "objectType": objectType,
+                    "itemsToExclude": itemsToExclude
+                };
+            }
+            // Open user picker
+            frevvoMessaging.send(message);
+        }
+
+        function populateChargeCodeTypes(populatedElements) {
+            // populate types for charge codes
+            var chargeItems = [];
+            for (var i = 0; i < populatedElements.length; i++) {
+                var chargeCode = populatedElements[i].value;
+                if (chargeCode.length > 0) {
+                    var type = findObjectType(populatedElements[i]);
+                    var item = {
+                        type: type,
+                        chargeCode: chargeCode
+                    };
+                    chargeItems.push(item);
+                }
+            }
+            return chargeItems;
+        }
+
+        function excludeSelectedItems(chargeItems, objectType) {
+            var itemsToExclude = [];
+            for (var j = 0; j < chargeItems.length; j++) {
+                var item = chargeItems[j];
+                if (item.type == objectType && item.chargeCode != element.value) {
+                    itemsToExclude.push(item.chargeCode);
+                }
+            }
+            return itemsToExclude;
+        }
+
+        function findObjectType(element) {
+            var $$ = frevvo_jQuery;
+            var tdElement = $$(element).closest('td');
+            var prevTdElement = $$(tdElement).prev().find('input')[0];
+            return $$(prevTdElement).attr('ovalue');
+        }
+    }
+};
 
 /**
  * Get ArkCase window. Because Frevvo is adding one additional iframe, Frevvo form is shown in the second iframe (one iframe set by ArkCase and one by Frevvo itself)
@@ -135,7 +218,7 @@ function getArkCaseWindow() {
     if (!isEmpty(window) && !isEmpty(window.parent) && !isEmpty(window.parent.parent)) {
         return window.parent.parent;
     }
-    
+
     return null;
 }
 
@@ -159,15 +242,15 @@ function isEmpty(val) {
  * The logic for populating fields after clicking "Add" button in the user picker when we should fill only simple information, like User Id and Full Name
  */
 function doSimpleUserPicker(element, userId, value) {
-	updateElement(element, 'fullName', value)
-	updateElement(element, 'id', userId);
+    updateElement(element, 'fullName', value)
+    updateElement(element, 'id', userId);
 }
 
 /**
  * The logic for populating fields after clicking "Add" button in the user picker when we should fill multiple fields, like User Id, First Name, Last Name, Location, Email, Phone
  */
 function doAdvancedUserPicker(element, userId) {
-	var response = Profile.Service.Info.retrieveProfileInfo(userId);				
+	var response = Profile.Service.Info.retrieveProfileInfo(userId);
 	if (response) {
 		var responseObj = JSON.parse(response);
 		if (responseObj) {
@@ -203,6 +286,12 @@ function isSimpleUserPicker(element) {
 	}
 }
 
+
+function isObjectPicker(element) {
+    var cssClass = getCssClass(element);
+    return (cssClass && cssClass.indexOf('openObjectPicker') > -1);
+}
+
 /**
  * Recognizing if the advanced user picker logic should be executed - fill multiple fields
  */
@@ -217,7 +306,8 @@ function isAdvancedUserPicker(element) {
 
 /**
  * Taking CSS class from the element. This CSS class is the class entered in the Frevvo form while designing the form with Frevvo Engine.
- * It can be "userPickerSimple_<RECOGNITIONTEXT>_<FIELDNAME>" - for simple user picker or "userPickerAdvanced_<RECOGNITIONTEXT>_<FIELDNAME>" - for advanced user picer
+ * It can be "userPickerSimple_<RECOGNITIONTEXT>_<FIELDNAME>" - for simple user picker or
+ * "userPickerAdvanced_<RECOGNITIONTEXT>_<FIELDNAME>" - for advanced user picker
  */
 function getCssClass(element) {
 	var elementState = CustomView.getState(element);
@@ -230,13 +320,13 @@ function getCssClass(element) {
 /**
  * The class is in the format: "userPickerSimple_<RECOGNITIONTEXT>_<FIELDNAME>" or "userPickerAdvanced_<RECOGNITIONTEXT>_<FIELDNAME>"
  * For example: userPickerAdvanced_prosecutor_firstName
- * This method will return: userPickerAdvanced_prosecutor 
+ * This method will return: userPickerAdvanced_prosecutor
  */
 function getCssClassDivided(element) {
 	var cssClass = getCssClass(element);
 	if (cssClass != null) {
 		var cssClassArray = cssClass.split('_');
-		
+
 		if (cssClassArray && cssClassArray.length === 3) {
 			return cssClassArray[0] + '_' + cssClassArray[1];
 		}
@@ -265,7 +355,7 @@ function updateElement(element, fieldName, value) {
 				// Normal behaviour - element is not found
 			}
 		}
-		
+
 		if (elementToUpdate != null) {
 			elementToUpdate.value = value;
 			dispatchChangeEvent(elementToUpdate);
@@ -287,6 +377,79 @@ function getOwningGroup() {
 	}
 }
 
+/**
+ * Finds element by elementId
+ * @param elementId
+ * @returns {Element}
+ */
+function getElementById(elementId) {
+    return document.getElementById(elementId);
+}
+
+/**
+ * Returns html element
+ * @param cssClass Class of the html element to be used as selector
+ * @param elementType Type of the html element to be used as selector
+ */
+function getHtmlElement(cssClass, elementType) {
+    try {
+        return document.getElementsBySelector('.' + cssClass + ' ' + elementType)[0];
+    } catch (e) {
+        // Normal behaviour - the element is not found
+        return null;
+    }
+}
+
+/**
+ * Returns html elements with the provided class
+ * @param cssClass Class of the html element to be used as selector
+ * @param elementType Type of the html element to be used as selector
+ */
+function getHtmlElementsByCssClass(cssClass, elementType) {
+    try {
+        return document.getElementsBySelector('.' + cssClass + ' ' + elementType);
+    } catch (e) {
+        // Normal behaviour - the element is not found
+        return null;
+    }
+}
+
+
+/**
+ * Returns html element value
+ * @param cssClass Class of the html element to be used as selector
+ * @param elementType Type of the html element to be used as selector
+ * @param property Element's attribute
+ */
+function getElementValue(cssClass, elementType, property) {
+    var $$ = frevvo_jQuery;
+    var htmlElement = getHtmlElement(cssClass, elementType);
+    property = (property !== undefined) ? property : "value";
+    return htmlElement ? $$(htmlElement).attr(property) : null;
+}
+
+/**
+ * Sets html element content
+ * @param value Text content for the html element
+ * @param elementType Type of the html element to be used as selector
+ * @param elementId id of the html element to be used as selector
+ * @param cssClass Class of the html element to be used as selector
+ * @param property (optional) The attribute to be set
+ */
+function updateElementValue(value, elementType, elementId, cssClass, property) {
+    var htmlElement;
+    if (elementId) {
+        htmlElement = getElementById(elementId);
+    } else if (cssClass) {
+        htmlElement = getHtmlElement(cssClass, elementType, value);
+    }
+    property = (property !== undefined) ? property : "value";
+    if (htmlElement) {
+        htmlElement[property] = value;
+        dispatchChangeEvent(htmlElement);
+    }
+}
+
 /* Rich Text Area properties - START */
 var rtaSelector = 'div.rta_container span.f-message:not([style="display: none;"])';
 
@@ -302,9 +465,9 @@ var rtaSummernoteOptions = {
 							  ['view', ['fullscreen', 'codeview']],
 							  ['help', ['help']]
 							],
-					  
+
 							height: 280
 						};
-						
+
 var rtaRefreshMilliseconds = 500;
 /* Rich Text Area properties - END */

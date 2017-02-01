@@ -7,10 +7,7 @@ import com.armedia.acm.form.cost.model.CostForm;
 import com.armedia.acm.form.cost.model.CostItem;
 import com.armedia.acm.frevvo.config.FrevvoFormChargeAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
-import com.armedia.acm.frevvo.model.Details;
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
-import com.armedia.acm.frevvo.model.Options;
-import com.armedia.acm.frevvo.model.OptionsAndDetailsByType;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
@@ -30,7 +27,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author riste.tutureski
@@ -109,13 +105,13 @@ public class CostService extends FrevvoFormChargeAbstractService
 
         if (form == null)
         {
-            LOG.warn("Cannot unmarshall Time Form.");
+            LOG.warn("Unmarshalling CostForm failed!");
             return false;
         }
 
         AcmCostsheet costsheet = getCostFactory().asAcmCostsheet(form);
 
-        // Create timesheet folder (if not exist)
+        // Create costsheet folder (if not exist)
         String rootFolder = (String) getCostsheetService().getProperties().get(CostsheetConstants.ROOT_FOLDER_KEY);
         String folderName = getCostsheetService().createName(costsheet);
         String uniqueFolderName = getFolderAndFilesUtils().createUniqueFolderName(folderName);
@@ -133,8 +129,7 @@ public class CostService extends FrevvoFormChargeAbstractService
 
         boolean startWorkflow = getCostsheetService().checkWorkflowStartup(CostsheetConstants.EVENT_TYPE + "." + submissionName.toLowerCase());
 
-        FrevvoUploadedFiles uploadedFiles = null;
-        uploadedFiles = saveAttachments(attachments, saved.getContainer().getFolder().getCmisFolderId(), FrevvoFormName.COSTSHEET.toUpperCase(), saved.getId());
+        FrevvoUploadedFiles uploadedFiles = saveAttachments(attachments, saved.getContainer().getFolder().getCmisFolderId(), FrevvoFormName.COSTSHEET.toUpperCase(), saved.getId());
 
         getCostsheetEventPublisher().publishEvent(saved, userId, ipAddress, true, submissionName.toLowerCase(), uploadedFiles, startWorkflow);
 
@@ -163,15 +158,6 @@ public class CostService extends FrevvoFormChargeAbstractService
         CostItem item = new CostItem();
         item.setTitleOptions(convertToList((String) getProperties().get(getFormName() + ".titles"), ","));
         form.setItems(Arrays.asList(item));
-
-        // Set charge codes for each type and details for w
-        OptionsAndDetailsByType optionsAndDetailsByType = getCodeOptionsAndDetails(getFormName(), types);
-
-        Map<String, Options> codeOptions = optionsAndDetailsByType.getOptionsByType();
-        Map<String, Map<String, Details>> codeOptionsDetails = optionsAndDetailsByType.getOptionsDetailsByType();
-
-        form.setCodeOptions(codeOptions);
-        form.setCodeDetails(codeOptionsDetails);
 
         // Create JSON and back to the Frevvo form
         JSONObject json = createResponse(form);
