@@ -284,7 +284,7 @@
       "templates.querySelect": {
         "header.text": "Select Query",
         "btnCancel.text": "Cancel",
-        "btnOk.text": "Select",
+        "btnOk.text": "Select Query",
         "table.columns": {
           "beanId": "Bean ID",
           "jpaQuery": "JPA Query",
@@ -293,9 +293,9 @@
       },
       "templates.modal": {
         "objectTypes.label": "Object Types",
-        "querySelect.label": "Query Select",
+        "querySelect.label": "Select Query",
         "btnCancel.text": "Cancel",
-        "btnOk.text": "Save"
+        "btnOk.text": "Add Template"
       }
     },
     "forms.defaultValue": "Select Target",
