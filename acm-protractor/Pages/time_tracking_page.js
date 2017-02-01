@@ -14,13 +14,14 @@ var thursdayInput = element(by.name(Objects.timetrackingPage.locators.thursdayIn
 var fridayInput = element(by.name(Objects.timetrackingPage.locators.fridayInput));
 var saturdayInput = element(by.name(Objects.timetrackingPage.locators.saturdayInput));
 var saveBtn = element(by.xpath(Objects.timetrackingPage.locators.saveBtn));
-var editTimesheet = element(by.buttonText(Objects.timetrackingPage.locators.editTimesheetBtn));
+var editTimesheet = element(by.css(Objects.timetrackingPage.locators.editTimesheetBtn));
 var newTimesheet = element(by.buttonText(Objects.timetrackingPage.locators.newTimesheetBtn));
 var timeSheetsPageTitle = element(by.xpath(Objects.timetrackingPage.locators.timesheetsPageTitle));
 var nextWeekBtn = element(by.buttonText(Objects.timetrackingPage.locators.nextWeekBtn));
 var periodInput = element(by.xpath(Objects.timetrackingPage.locators.periodInput));
 var timeTrackingDate = element(by.xpath(Objects.timetrackingPage.locators.timeTrackingDate));
 var chargeCodeAlertMessage = element(by.xpath(Objects.timetrackingPage.locators.chargeCodeAlertMessage));
+var timeTotal=element(by.name(Objects.timetrackingPage.locators.timeTotal));
 
 
 
@@ -54,19 +55,19 @@ var timeTrackingPage = function() {
             }).then(function() {
                 chargeCode.click();
             }).then(function() {
-                sundayInput.sendKeys(hours);
+                sundayInput.click().clear().sendKeys(hours);
             }).then(function() {
-                mondayInput.sendKeys(hours);
+                mondayInput.click().clear().sendKeys(hours);
             }).then(function() {
-                tuesdayInput.sendKeys(hours);
+                tuesdayInput.click().clear().sendKeys(hours);
             }).then(function() {
-                wednsdayInput.sendKeys(hours);
+                wednsdayInput.click().clear().sendKeys(hours);
             }).then(function() {
-                thursdayInput.sendKeys(hours);
+                thursdayInput.click().clear().sendKeys(hours);
             }).then(function() {
-                fridayInput.sendKeys(hours);
+                fridayInput.click().clear().sendKeys(hours);
             }).then(function() {
-                saturdayInput.sendKeys(hours);
+                saturdayInput.click().clear().sendKeys(hours);
             });
         });
 
@@ -105,6 +106,14 @@ var timeTrackingPage = function() {
         });
         return this;
     };
+
+    this.clickEditTimesheetBtn = function() {
+
+        browser.wait(EC.visibilityOf(element(by.css(Objects.timetrackingPage.locators.editTimesheetBtn))), 30000, "Edit Timesheet button is not displayed").then(function() {
+            editTimesheet.click();
+        });
+        return this;
+    }
 
 };
 timeTrackingPage.prototype = basePage;
