@@ -1315,6 +1315,7 @@
         },
         {
           "name": "fullName",
+          "displayName": "tasks.comp.approvalRouting.table.columns.fullName",
           "cellEditableCondition": false,
           "headerCellFilter": "translate"
         },
@@ -1347,17 +1348,20 @@
       "columnDefs": [
         {
           "name": "approvalDate",
+          "displayName": "tasks.comp.pastApprovals.table.columns.approvalDate",
           "headerCellFilter": "translate",
           "cellTemplate": "<div>{{ row.entity.approvalDate | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>",
           "cellEditableCondition": false
         },
         {
           "name": "approverId",
+          "displayName": "tasks.comp.pastApprovals.table.columns.approverId",
           "headerCellFilter": "translate",
           "cellEditableCondition": false
         },
         {
           "name": "approverDecision",
+          "displayName": "tasks.comp.pastApprovals.table.columns.approverDecision",
           "headerCellFilter": "translate",
           "cellEditableCondition": false
         }
