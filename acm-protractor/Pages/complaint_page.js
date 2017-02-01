@@ -52,6 +52,12 @@ var searchButton = element(by.xpath(Objects.complaintPage.locators.searchButton)
 var caseTitle = element(by.name(Objects.complaintPage.locators.caseTitle));
 var caseCreatedDate = element(by.name(Objects.complaintPage.locators.caseCreatedDate));
 var casePriority = element(by.name(Objects.complaintPage.locators.casePriority));
+var selectParticipantType=element(by.xpath(Objects.complaintPage.locators.selectParticipantType));
+var selectparticipant = element(by.name(Objects.casepage.locators.selectParticipant));
+var searchForUserInput = element(by.xpath(Objects.casepage.locators.searchForUserInput));
+var searchForUserBtn = element(by.buttonText(Objects.casepage.locators.searchUserBtn));
+var searchedUser = element(by.xpath(Objects.casepage.locators.searchedUserName));
+var okBtn = element(by.buttonText(Objects.casepage.locators.OkBtn));
 
 var ComplaintPage = function() {
 
@@ -225,44 +231,6 @@ var ComplaintPage = function() {
         return this;
     };
 
-    this.switchToIframes = function() {
-        browser.ignoreSynchronization = true;
-        browser.wait(EC.visibilityOf(element(by.className("new-iframe ng-scope"))), 30000);
-        browser.switchTo().frame(browser.driver.findElement(by.className("new-iframe ng-scope"))).then(function() {
-            browser.switchTo().frame(browser.driver.findElement(By.className("frevvo-form")));
-        });
-    }
-
-
-    this.selectApprover = function(approver) {
-        browser.wait(EC.presenceOf(element(by.name(Objects.casepage.locators.selectApprover))), 30000).then(function() {
-            browser.wait(EC.visibilityOf(element(by.name(Objects.casepage.locators.selectApprover))), 30000).then(function() {
-                browser.wait(EC.elementToBeClickable(element(by.name(Objects.casepage.locators.selectApprover))), 30000).then(function() {
-                    selectApprover.click().then(function() {
-                        browser.wait(EC.visibilityOf(element(by.model(Objects.casepage.locators.searchField))), 10000);
-                        searchForUser.click();
-                        searchForUser.sendKeys(approver);
-                        goBtn.click().then(function() {
-                            browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchedUser))), 3000);
-                            searchedUser.click().then(function() {
-                                browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.addBtn))), 3000);
-                                addBtn.click();
-                            });
-                        });
-                    });
-                });
-            });
-        });
-
-        return this;
-    };
-    this.switchToDefaultContent = function() {
-
-        browser.driver.switchTo().defaultContent();
-        return this;
-
-    };
-
     this.waitForComplaintTitle = function() {
         browser.wait(EC.presenceOf(element(by.xpath(Objects.complaintPage.locators.complaintTitleLink))), 30000).then(function() {
             browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.complaintTitleLink))), 30000);
@@ -420,6 +388,34 @@ var ComplaintPage = function() {
     this.returnCasePriority = function() {
         return casePriority.getAttribute("value");
     }
+
+    this.selectParticipant = function(type, participant) {
+
+        var participantType = element(by.linkText(type));
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.selectParticipantType))), 10000).then(function() {
+            selectParticipantType.click().then(function() {
+                participantType.click().then(function() {
+                    selectparticipant.click().then(function() {
+                        browser.driver.switchTo().defaultContent();
+                        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchForUserInput))), 10000, "Search for user input is not displayed").then(function() {
+                            searchForUserInput.sendKeys(participant).then(function() {
+                                searchForUserBtn.click().then(function() {
+                                    browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchedUserName))), 30000, "Searched user is not displayed").then(function() {
+                                        searchedUser.click().then(function() {
+                                            okBtn.click();
+                                        });
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+
+        return this;
+    };
+
 };
 ComplaintPage.prototype = basePage;
 module.exports = new ComplaintPage();

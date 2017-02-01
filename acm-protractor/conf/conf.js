@@ -46,8 +46,9 @@ exports.config = {
     ],
         //any suite can be run with command "protractor conf.js --suite=selected"
 
-        suites:
-    {
+      
+    suites: {
+
         smoke: ['../test_spec/smoke/*.spec.js'],
         regression: ['../test_spec/regression/*.spec.js'],
         functional: ['../test_spec/functional/*.spec.js'],

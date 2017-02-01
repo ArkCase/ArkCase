@@ -242,6 +242,11 @@ var participantTypeConflictMessage = element(by.css(Objects.casepage.locators.pa
 var addParticipantTypeSecondRowbtn = element(by.xpath(Objects.casepage.locators.addParticipantTypeSecondRowbtn));
 var selectParticipantTypeSecondRow = element(by.xpath(Objects.casepage.locators.selectParticipantTypeSecondRow));
 var selectParticipantSecondRow = element.all(by.name(Objects.casepage.locators.selectParticipant)).get(1);
+var timeCanvasData = element(by.css(Objects.basepage.locators.timeCanvasData));
+var owningGroupDropDown = new SelectWrapper(by.xpath(Objects.basepage.locators.owningGroupDropDown));
+var owningGroupConfirmBtn = element(by.xpath(Objects.basepage.locators.owningGroupConfirmBtn));
+var owningGroup = element(by.xpath(Objects.casepage.locators.owningGroup));
+var assigneeNameModelInput = element(by.model(Objects.basepage.locators.assigneeNameModelInput));
 
 var BasePage = function() {
 
@@ -1816,7 +1821,7 @@ var BasePage = function() {
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.priority))), 20000);
     };
     this.editPriority = function(priority) {
-
+    	
         priorityLink.click().then(function() {
             priorityDropDownEdit.selectByText(priority).then(function() {
                 priorityBtn.click();
@@ -1830,11 +1835,23 @@ var BasePage = function() {
     this.editAssignee = function(assignee) {
 
         assigneeLink.click().then(function() {
-            browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.assigneeDropDown))), 5000).then(function() {
-                assigneeDropDown.selectByText(assignee).then(function() {
-                    assigneeBtn.click();
+            browser.wait(EC.presenceOf(element(by.model(Objects.basepage.locators.assigneeNameModelInput))), 5000, "Assignee name input  is not displayed").then(function() {
+                assigneeNameModelInput.click().then(function() {
+                    browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchForUserInput))), 10000, "Search for user input is not displayed").then(function() {
+                        searchForUserInput.sendKeys(assignee).then(function() {
+                            searchForUserBtn.click().then(function() {
+                                browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.searchedUserName))), 30000, "Searched user is not displayed").then(function() {
+                                    searchedUser.click().then(function() {
+                                        browser.wait(EC.visibilityOf(element(by.buttonText(Objects.casepage.locators.OkBtn))), 10000);
+                                        okBtn.click().then(function() {
+                                            browser.executeScript('arguments[0].click()', saveButton);
+                                        });
+                                    });
+                                });
+                            });
+                        });
+                    });
                 });
-
             });
         });
         return this;
@@ -1926,16 +1943,16 @@ var BasePage = function() {
     this.replaceVersion = function(value) {
         docVersionDropDownList.selectByValue(value);
     };
-    this.insertRecipient = function (email) {
+    this.insertRecipient = function(email) {
         emailRecepient.click();
         emailRecepient.sendKeys(email);
         return this;
     };
-    this.clickSendEmailButton = function () {
+    this.clickSendEmailButton = function() {
         sendEmailButton.click();
         return this;
     };
-    this.sendEmail = function (email) {
+    this.sendEmail = function(email) {
         this.insertRecipient(email);
         this.clickSendEmailButton();
         return this;
@@ -1950,10 +1967,11 @@ var BasePage = function() {
                 browser.wait(EC.textToBePresentInElement((assigneeLink), ""), 10000);
             });
         });
+        return this;
     };
 
     this.clickLastElementInTreeData = function() {
-        browser.wait(EC.visibilityOf($('.fancytree-lastsib')), 10000, "Elements in the data tree are not displayed");
+        browser.wait(EC.visibilityOf($('.fancytree-lastsib')), 20000, "Elements in the data tree are not displayed");
         var lastElement = $('.fancytree-lastsib');
         lastElement.click();
     }
@@ -1995,6 +2013,37 @@ var BasePage = function() {
 
         return this;
     };
+
+    this.verifyTimeWidgetData = function(time) {
+
+        browser.wait(EC.visibilityOf(element(by.css(Objects.basepage.locators.timeCanvasData))), 30000, "Time widget data is not displayed");
+        timeCanvasData.evaluate('time.data').then(function(data) {
+            var date = "" + data + "";
+            expect(date).toEqual(time, "The time in the time widget is not updated");
+        });
+    }
+
+    this.verifyFirstElementNameNoAccess = function() {
+
+        browser.wait(EC.textToBePresentInElement((firstElementInList), "No Access"), 10000, "Name of the object in the list should be No Access");
+    }
+
+    this.returnOwningGroup = function() {
+        return owningGroup.getText();
+    };
+
+
+
+    this.editOwningGroup = function(owninggroup) {
+
+        owningGroup.click().then(function() {
+            owningGroupDropDown.selectByText(owninggroup).then(function() {
+                owningGroupConfirmBtn.click();
+            });
+        });
+        return this;
+    }
+
 
 }
 
