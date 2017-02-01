@@ -1,0 +1,22 @@
+<div class="modal-header">
+    <h3>
+        <span translate>admin.correspondenceManagement.templates.querySelect.header.text</span>
+    </h3>
+</div>
+<div class="modal-body">
+    <div ui-grid="gridOptions"
+         ui-grid-resize-columns
+         ui-grid-auto-resize
+         ui-grid-pagination
+         ui-grid-selection
+         adjust-table-height="gridOptions.data.length"
+         class="grid"></div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-secondary" ng-click="onClickCancel()">
+        <span translate>admin.correspondenceManagement.templates.querySelect.btnCancel.text</span>
+    </button>
+    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="countRows<=0">
+        <span translate>admin.correspondenceManagement.templates.querySelect.btnOk.text</span>
+    </button>
+</div>

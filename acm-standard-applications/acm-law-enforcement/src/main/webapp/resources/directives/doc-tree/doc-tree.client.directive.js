@@ -2133,7 +2133,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             , data: {}
                             , onSuccess: function (data) {
                                 if (Validator.validateCreateInfo(data)) {
-                                    if (data.parentFolderId == parentId) {
+                                    if (data.parentFolder.id == parentId) {
                                         var createInfo = data;
                                         var folderList = DocTree.cacheFolderList.get(cacheKey);
                                         if (Validator.validateFolderList(folderList)) {
@@ -4150,7 +4150,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 if (0 == data.id) {
                     return false;
                 }
-                if (Util.isEmpty(data.parentFolderId)) {
+                if (Util.isEmpty(data.parentFolder)) {
                     return false;
                 }
                 return true;
