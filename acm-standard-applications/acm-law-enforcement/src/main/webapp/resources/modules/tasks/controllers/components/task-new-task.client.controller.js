@@ -112,7 +112,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             $scope.userName = "";
         };
 
-        $scope.userSearch = function () {
+        $scope.userOrGroupSearch = function () {
             var modalInstance = $modal.open({
                 animation: $scope.animationsEnabled,
                 templateUrl: 'modules/tasks/views/components/task-user-search.client.view.html',
@@ -120,7 +120,10 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
                 size: 'lg',
                 resolve: {
                     $filter: function () {
-                        return $scope.config.userSearch.userFacetFilter;
+                        return $scope.config.userOrGroupSearch.userOrGroupFacetFilter;
+                    },
+                    $extraFilter: function () {
+                        return $scope.config.userOrGroupSearch.userOrGroupFacetExtraFilter;
                     },
                     $config: function () {
                         return $scope.userSearchConfig;
@@ -128,13 +131,22 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
                 }
             });
 
-            modalInstance.result.then(function (chosenUser) {
-                if (chosenUser) {
-                    $scope.config.data.assignee = chosenUser.object_id_s;
-                    $scope.userName = chosenUser.name;
+            modalInstance.result.then(function (chosenUserOrGroup) {
+                if (chosenUserOrGroup) {
+                    if (chosenUserOrGroup.object_type_s === 'USER') {  // Selected a user
+                        $scope.config.data.assignee = chosenUserOrGroup.object_id_s;
+                        $scope.userOrGroupName = chosenUserOrGroup.name;
 
-                    return;
-                }
+                       return; 
+                    } else if (chosenUserOrGroup.object_type_s === 'GROUP') {
+
+                        $scope.config.data.assignee = null;
+                        $scope.config.data.candidateGroups = [chosenUserOrGroup.object_id_s];
+                        $scope.userOrGroupName = chosenUserOrGroup.name;
+                        
+                        return;
+                    }
+                } 
 
             }, function () {
                 // Cancel button was clicked.

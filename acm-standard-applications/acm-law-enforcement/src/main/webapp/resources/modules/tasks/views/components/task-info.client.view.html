@@ -20,36 +20,30 @@
                 <small class="text-muted">"% of Completion"</small>
             </div>
             <div class="col-xs-9 col-md-3">
-                <!-- <div ng-if="objectInfo.assignee">
-                    <div class="h4 font-bold">
-                        <a href="" class="editable-click no-outline" ng-click="showAssigneePicker()" permission="editTask" permission-properties="objectInfo" permission-action="disable">
+                <div>
+                    <div class="h4 font-bold no-margin">
+                        <a href="" class="editable-click no-outline" ng-click="openAssigneePickerModal()" permission="editTask" permission-properties="objectInfo" permission-action="disable">
                             <user-full-name userId="objectInfo.assignee" fallback="None"/>
                         </a>
                     </div>
                     <small class="text-muted">Assignee</small>
                 </div>
-                <div ng-if="objectInfo.candidateGroups[0]">
-                    <div class="h4 font-bold">
-                        <a href="" class="editable-click no-outline" ng-click="showAssigneePicker()"  permission="editTask" permission-properties="objectInfo" permission-action="disable">
-                            {{objectInfo.candidateGroups[0] || 'None'}}
-                        </a>
-                    </div>
-                    <small class="text-muted">Group Bucket</small>
-                </div> -->
-                <div class="h4 font-bold no-margin">
-                    <a href="javascript:;" class="editable-click no-outline" ng-click="openAssigneePickerModal()" permission="editTask" permission-properties="objectInfo" permission-action="disable">
-                        {{assignee | mapKeyValue: assignableUsers:'object_id_s':'name' || 'Unknown'}}</a>
-                </div>
-                <small class="text-muted">Assignee</small>
             </div>
             <div class="col-xs-9 col-md-3">
                 <div class="h4 font-bold no-margin">
-                    <a href="#" editable-select="owningGroup" onaftersave="updateOwningGroup()"
-                       permission="editCase" permission-properties="objectInfo" permission-action="disable"
-                       e-ng-options="o.value as o.text for o in owningGroups"> {{owningGroup || 'Unknown'}}</a>
+                    <a href="" class="editable-click no-outline" ng-click="openGroupPickerModal()"
+                       permission="editTask" permission-properties="objectInfo" permission-action="disable"> {{owningGroup || 'Unknown'}}</a>
                 </div>
                 <small class="text-muted">Owning Group</small>
             </div>
+            <!-- <div class="col-xs-9 col-md-3">
+                <div class="h4 font-bold no-margin">
+                    <a href="#" editable-select="owningGroup" onaftersave="updateOwningGroup()"
+                       permission="editTask" permission-properties="objectInfo" permission-action="disable"
+                       e-ng-options="o.value as o.text for o in owningGroups"> {{owningGroup || 'Unknown'}}</a>
+                </div>
+                <small class="text-muted">Owning Group</small>
+            </div> -->
             <div class="col-xs-9 col-md-3">
                 <div class="h4 font-bold no-margin">
                     <a href="#" editable-select="objectInfo.priority" onaftersave="saveTask()"

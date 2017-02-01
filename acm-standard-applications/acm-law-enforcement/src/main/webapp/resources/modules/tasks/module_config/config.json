@@ -1082,22 +1082,22 @@
       "columnDefs": [
         {
           "name": "name",
-          "displayName": "tasks.userSearch.assigneeGridColumns.name",
+          "displayName": "tasks.userOrGroupSearch.assigneeGridColumns.name",
           "headerCellFilter": "translate"
         },
         {
           "name": "object_type_s",
-          "displayName": "tasks.userSearch.assigneeGridColumns.type",
+          "displayName": "tasks.userOrGroupSearch.assigneeGridColumns.type",
           "headerCellFilter": "translate"
         },
         {
           "name": "title",
-          "displayName": "tasks.userSearch.assigneeGridColumns.title",
+          "displayName": "tasks.userOrGroupSearch.assigneeGridColumns.title",
           "headerCellFilter": "translate"
         },
         {
           "name": "object_id_s",
-          "displayName": "tasks.userSearch.assigneeGridColumns.username",
+          "displayName": "tasks.userOrGroupSearch.assigneeGridColumns.username",
           "headerCellFilter": "translate"
         }
       ],
@@ -1271,8 +1271,9 @@
         "taskStartDate": "",
         "title": ""
       },
-      "userSearch": {
-        "userFacetFilter": "\"Object Type\": USER"
+      "userOrGroupSearch": {
+        "userOrGroupFacetFilter": "fq=\"object_type_s\":(GROUP OR USER)",
+        "userOrGroupFacetExtraFilter": "&fq=\"name\": "
       },
        "objectSearch": {
         "objectFacetFilter": "\"Object Type\": "

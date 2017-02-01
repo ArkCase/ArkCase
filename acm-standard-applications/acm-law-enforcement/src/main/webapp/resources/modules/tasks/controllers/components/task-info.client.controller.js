@@ -69,10 +69,10 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
                         participantLdapId: '',
                         config: $scope.config
                     };
-            showModal(participant, false);
+            showAssigneeModal(participant, false);
         };
 
-        var showModal = function (participant, isEdit) {
+        var showAssigneeModal = function (participant, isEdit) {
             var modalScope = $scope.$new();
             modalScope.participant = participant || {};
 
@@ -90,21 +90,83 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
                 }
             });
 
-            modalInstance.result.then(function (data) {
+            modalInstance.result.then(function (chosenNode) {
                 $scope.participant = {};
-                if (data.participant.participantLdapId != '' && data.participant.participantLdapId != null) {
-                    $scope.participant.participantLdapId = data.participant.participantLdapId;
-                    $scope.participant.object_type_s = data.participant.object_type_s;
-                    if ($scope.participant.object_type_s === 'USER') {
-                        $scope.assignee = data.participant.participantLdapId;
-                        $scope.updateAssignee($scope.assignee);
-                    } else {
-                        $scope.owningGroup = data.participant.selectedAssigneeName;
-                        $scope.assignee = '';
-                        $scope.updateAssignee($scope.assignee);
-                    }
+                
+                if (chosenNode.participant.participantLdapId != '' && chosenNode.participant.participantLdapId != null) {
+                    $scope.participant.participantLdapId = chosenNode.participant.participantLdapId;
+                    $scope.participant.object_type_s = chosenNode.participant.object_type_s;
 
+                    if ($scope.participant.object_type_s === 'USER') { //Selected a user
+                        if ($scope.participant.participantLdapId) {
+                            $scope.objectInfo.candidateGroups = [];
+                            $scope.assignee = data.participant.participantLdapId;
+                            $scope.updateAssignee($scope.assignee);
+                        }
+                    } else if ($scope.participant.object_type_s === 'GROUP') { //Selected a group
+                        if ($scope.participant.participantLdapId) {
+                            $scope.objectInfo.candidateGroups = [$scope.participant.participantLdapId];
+                            $scope.owningGroup = chosenNode.participant.selectedAssigneeName;
+
+                            //Clear participants as it causes concurrent modification errors when
+                            //there is no assignee, but a participant of type assignee is present
+                            $scope.objectInfo.participants = null;
+                            $scope.updateAssignee(null);
+                            $scope.updateOwningGroup();
+                        }
+                    }
                 }
+
+            }, function(error) {
+            });
+        };
+
+        $scope.openGroupPickerModal = function () {
+            var participant = {
+                        id: '',
+                        participantLdapId: '',
+                        config: $scope.config
+                    };
+            showGroupModal(participant, false);
+        };
+
+        var showGroupModal = function (participant, isEdit) {
+            var modalScope = $scope.$new();
+            modalScope.participant = participant || {};
+
+            var modalInstance = $modal.open({
+                scope: modalScope,
+                animation: true,
+                templateUrl: "modules/tasks/views/components/task-group-picker-modal.client.view.html",
+                controller: "Tasks.GroupPickerController",
+                size: 'md',
+                backdrop: 'static',
+                resolve: {
+                    owningGroup: function () {
+                        return $scope.owningGroup;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (chosenGroup) {
+                $scope.participant = {};
+                
+                if (chosenGroup.participant.participantLdapId != '' && chosenGroup.participant.participantLdapId != null) {
+                    $scope.participant.participantLdapId = chosenGroup.participant.participantLdapId;
+                    $scope.participant.object_type_s = chosenGroup.participant.object_type_s;
+
+                    if ($scope.participant.participantLdapId) {
+                        $scope.objectInfo.candidateGroups = [$scope.participant.participantLdapId];
+                        $scope.owningGroup = chosenGroup.participant.selectedAssigneeName;
+
+                        //Clear participants as it causes concurrent modification errors when
+                        //there is no assignee, but a participant of type assignee is present
+                        $scope.objectInfo.participants = null;
+                        $scope.updateAssignee(null);
+                        $scope.updateOwningGroup();
+                    }
+                }
+
             }, function(error) {
             });
         };
