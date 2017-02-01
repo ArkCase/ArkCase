@@ -246,6 +246,7 @@ var timeCanvasData = element(by.css(Objects.basepage.locators.timeCanvasData));
 var owningGroupDropDown = new SelectWrapper(by.xpath(Objects.basepage.locators.owningGroupDropDown));
 var owningGroupConfirmBtn = element(by.xpath(Objects.basepage.locators.owningGroupConfirmBtn));
 var owningGroup = element(by.xpath(Objects.casepage.locators.owningGroup));
+var assigneeNameModelInput = element(by.model(Objects.basepage.locators.assigneeNameModelInput));
 
 var BasePage = function() {
 
@@ -1820,7 +1821,7 @@ var BasePage = function() {
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.priority))), 20000);
     };
     this.editPriority = function(priority) {
-
+    	
         priorityLink.click().then(function() {
             priorityDropDownEdit.selectByText(priority).then(function() {
                 priorityBtn.click();
@@ -1834,11 +1835,23 @@ var BasePage = function() {
     this.editAssignee = function(assignee) {
 
         assigneeLink.click().then(function() {
-            browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.assigneeDropDown))), 5000).then(function() {
-                assigneeDropDown.selectByText(assignee).then(function() {
-                    assigneeBtn.click();
+            browser.wait(EC.presenceOf(element(by.model(Objects.basepage.locators.assigneeNameModelInput))), 5000, "Assignee name input  is not displayed").then(function() {
+                assigneeNameModelInput.click().then(function() {
+                    browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchForUserInput))), 10000, "Search for user input is not displayed").then(function() {
+                        searchForUserInput.sendKeys(assignee).then(function() {
+                            searchForUserBtn.click().then(function() {
+                                browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.searchedUserName))), 30000, "Searched user is not displayed").then(function() {
+                                    searchedUser.click().then(function() {
+                                        browser.wait(EC.visibilityOf(element(by.buttonText(Objects.casepage.locators.OkBtn))), 10000);
+                                        okBtn.click().then(function() {
+                                            browser.executeScript('arguments[0].click()', saveButton);
+                                        });
+                                    });
+                                });
+                            });
+                        });
+                    });
                 });
-
             });
         });
         return this;

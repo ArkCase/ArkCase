@@ -35,7 +35,7 @@ describe(' Complaint page tests ', function() {
 
     });
 
-    
+
 
     it('Verify if reader is displayed in participants table', function() {
 
@@ -44,10 +44,10 @@ describe(' Complaint page tests ', function() {
         expect(complaintPage.returnParticipantTypeForthRow()).toEqual("reader");
         expect(complaintPage.returnParticipantNameForthRow()).toEqual("Samuel Supervisor");
     });
-    
+
     it('should create new complaint add/edit timeSheet and verify the time widget data in cases overview page', function() {
 
-       
+
         complaintPage.clickModuleComplaints();
         complaintPage.waitForComplaintsPage();
         element(by.xpath(Objects.casepage.locators.caseID)).getText().then(function(text) {
@@ -69,5 +69,17 @@ describe(' Complaint page tests ', function() {
         });
     });
 
+    it('should edit assignee', function() {
+
+        complaintPage.clickNewButton().clickComplaintButton().switchToIframes().submitInitiatorInformation(Objects.complaintPage.data.firstName, Objects.complaintPage.data.lastName).reenterFirstName(Objects.complaintPage.data.firstName).clickTab("Incident").insertIncidentInformation("Arson", Objects.complaintPage.data.title);
+        complaintPage.participantsTab();
+        complaintPage.selectParticipant("Owner", Objects.casepage.data.approverSamuel);
+        complaintPage.switchToIframes();
+        complaintPage.clickSubmitButton();
+        complaintPage.switchToDefaultContent();
+        complaintPage.waitForComplaintsPage();
+        complaintPage.editAssignee("bthomas");
+        expect(complaintPage.returnAssignee()).toEqual("Bill Thomas");
+    });
 
 });

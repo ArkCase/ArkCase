@@ -77,7 +77,8 @@
             "sugestedTag": "[ng-click='addSuggestionByIndex($index)']",
             "timeCanvasData":"[chart-data='time.data']",
             "owningGroupDropDown": ".//*[@class='editable-controls form-group']/..//select",
-            "owningGroupConfirmBtn": ".//*[@class='editable-controls form-group']/..//button[1]"
+            "owningGroupConfirmBtn": ".//*[@class='editable-controls form-group']/..//button[1]",
+            "assigneeNameModelInput": "participant.selectedAssigneeName"
 
 
 
@@ -86,7 +87,8 @@
             "reportTitle": "Report of Investigation Title",
             "note": "NoteText",
             "email": "sanja.paskova@armedia.com",
-            "owningGroupAdministratorDev":"ACM_ADMINISTRATOR_DEV"
+            "owningGroupAdministratorDev":"ACM_ADMINISTRATOR_DEV",
+            "IanInvestigator":"Ian Investigator"
 
         }
 
@@ -469,7 +471,8 @@
             "searchButton": ".//input[@value='Search']",
             "caseTitle": "caseTitle",
             "caseCreatedDate": "caseCreationDate",
-            "casePriority": "casePriority"
+            "casePriority": "casePriority",
+            "selectParticipantType": ".//*[@class='c-table clearfix']/..//tbody/tr/td[4]"
         },
         "data": {
             "firstName": "ComplaintFirstName",
