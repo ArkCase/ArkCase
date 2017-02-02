@@ -7,6 +7,7 @@ import com.armedia.acm.plugins.admin.model.CorrespondenceTemplateRequestResponse
 import org.apache.commons.io.FileUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -66,10 +68,10 @@ public class CorrespondenceTemplateAPIController
 
     @RequestMapping(value = "/template", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public CorrespondenceTemplateRequestResponse updateTemplate(@RequestBody CorrespondenceTemplateRequestResponse request)
-            throws IOException
+    public CorrespondenceTemplateRequestResponse updateTemplate(@RequestBody CorrespondenceTemplateRequestResponse request,
+            Authentication auth) throws IOException
     {
-        return mapTemplateToResponse(correspondenceService.updateTemplate(mapRequestToTemplate(request)));
+        return mapTemplateToResponse(correspondenceService.updateTemplate(mapRequestToTemplate(request, auth)));
     }
 
     @ExceptionHandler(CorrespondenceTemplateNotFoundException.class)
@@ -110,7 +112,7 @@ public class CorrespondenceTemplateAPIController
      * @param request
      * @return
      */
-    private CorrespondenceTemplate mapRequestToTemplate(CorrespondenceTemplateRequestResponse request)
+    private CorrespondenceTemplate mapRequestToTemplate(CorrespondenceTemplateRequestResponse request, Authentication auth)
     {
         CorrespondenceTemplate template = new CorrespondenceTemplate();
 
@@ -123,8 +125,8 @@ public class CorrespondenceTemplateAPIController
         template.setDateFormatString(request.getDateFormatString());
         template.setNumberFormatString(request.getNumberFormatString());
         template.setActivated(request.isActivated());
-        template.setModifier(request.getModifier());
-        template.setModified(request.getModified());
+        template.setModifier(auth.getName());
+        template.setModified(new Date());
 
         return template;
     }
