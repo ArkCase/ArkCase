@@ -64,14 +64,17 @@ public class CorrespondenceTemplateAPIController
      */
     private CorrespondenceTemplateRequestResponse mapTemplateToResponse(Optional<CorrespondenceTemplate> templateHolder)
     {
-        CorrespondenceTemplate template = templateHolder.orElseThrow(CorrespondenceTemplateNotFoundException::new);
+        CorrespondenceTemplate template = templateHolder.orElse(new CorrespondenceTemplate());
 
         CorrespondenceTemplateRequestResponse response = new CorrespondenceTemplateRequestResponse();
 
         response.setDocumentType(template.getDocumentType());
         response.setTemplateFilename(template.getTemplateFilename());
-        response.setCorrespondenceQueryBeanId(correspondenceService.getQueryId(template.getQuery()));
-        response.setQueryType(template.getQuery().getType().name());
+        if (template.getQuery() != null)
+        {
+            response.setCorrespondenceQueryBeanId(correspondenceService.getQueryId(template.getQuery()));
+            response.setQueryType(template.getQuery().getType().name());
+        }
         response.setTemplateSubstitutionVariables(template.getTemplateSubstitutionVariables());
         response.setDateFormatString(template.getDateFormatString());
         response.setNumberFormatString(template.getNumberFormatString());

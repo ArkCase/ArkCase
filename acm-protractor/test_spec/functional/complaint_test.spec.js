@@ -9,6 +9,7 @@ var loginPage = require('../../Pages/login_page.js');
 var timeTrackingPage = require('../../Pages/time_tracking_page.js');
 var costTrackingPage = require('../../Pages/cost_tracking_page.js');
 var preferencesPage = require('../../Pages/preference_page.js');
+var using = require(process.env['USERPROFILE'] + '/node_modules/jasmine-data-provider');
 var flag = false;
 
 function testAsync(done) {
@@ -40,7 +41,7 @@ describe('Create new complaint ', function() {
         complaintPage.clickNewButton().clickComplaintButton().switchToIframes().submitInitiatorInformation(Objects.complaintPage.data.firstName, Objects.complaintPage.data.lastName).reenterFirstName(Objects.complaintPage.data.firstName).clickTab("Incident").insertIncidentInformation("Arson", Objects.complaintPage.data.title).clickSubmitButton();
         complaintPage.switchToDefaultContent();
         complaintPage.waitForComplaintsPage();
-        expect(complaintPage.returnComplaintsTitle()).toEqual(Objects.complaintPage.data.title);
+        expect(complaintPage.returnComplaintsTitle()).toEqual(Objects.complaintPage.data.title, "Title is not correct on new created complaint");
 
     });
 
@@ -80,7 +81,7 @@ describe('Create new complaint ', function() {
         complaintPage.clickExpandFancyTreeTopElementAndSubLink("Details");
         complaintPage.clickDetailsAddPicture();
         complaintPage.uploadPicture();
-        expect(complaintPage.returnDetailsUploadedImage());
+        expect(complaintPage.returnDetailsUploadedImage(), "Image is not succesfully added in details");
 
     });
 
@@ -100,36 +101,29 @@ describe('Create new complaint ', function() {
         complaintPage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Documents");
         complaintPage.clickDocTreeExpand().rightClickFileTitle().clickDocAction("Open");
         complaintPage.moveToTab().clickDocViewNotesLink().submitNote(Objects.basepage.data.note);
-        expect(complaintPage.returnSavedNoteInGrid()).toEqual(Objects.basepage.data.note);
+        expect(complaintPage.returnSavedNoteInGrid()).toEqual(Objects.basepage.data.note, "Note is not succesfulluly added in document viewer in complaints");
 
     });
 
-    it('Edit priority to High', function() {
+    using([{ priority: "High", prioritySaved: Objects.casepage.data.priorityHigh }, {
+        priority: "Medium",
+        prioritySaved: Objects.casepage.data.priorityMedium
+    }, { priority: "Expedite", prioritySaved: Objects.casepage.data.priorityExpedite }, { priority: "Low", prioritySaved: Objects.taskspage.data.priorityLow}], function(data) {
+        it('should create new case and edit the priority to ' + data.priority, function() {
 
-        complaintPage.clickModuleComplaints();
-        complaintPage.editPriority('High');
-        expect(complaintPage.returnPriority()).toEqual(Objects.casepage.data.priorityHigh);
-    });
 
-    it('Edit priority to Expedite', function() {
-
-        complaintPage.clickModuleComplaints();
-        complaintPage.editPriority('Expedite');
-        expect(complaintPage.returnPriority()).toEqual(Objects.casepage.data.priorityExpedite);
-    });
-
-    it('Edit priority to Low', function() {
-
-        complaintPage.clickModuleComplaints();
-        complaintPage.editPriority('Low');
-        expect(complaintPage.returnPriority()).toEqual("Low");
+            complaintPage.clickModuleComplaints();
+            complaintPage.waitForComplaintsPage();
+            complaintPage.editPriority(data.priority);
+            expect(complaintPage.returnPriority()).toEqual(data.prioritySaved);
+        });
     });
 
     it('Edit assignee', function() {
 
         complaintPage.clickModuleComplaints();
         complaintPage.editAssignee("bthomas");
-        expect(complaintPage.returnAssignee()).toEqual("Bill Thomas");
+        expect(complaintPage.returnAssignee()).toEqual("Bill Thomas", "Assignee is not updated");
     });
 
     it('should create new complaint and add person', function() {
@@ -138,9 +132,9 @@ describe('Create new complaint ', function() {
         complaintPage.switchToDefaultContent();
         complaintPage.clickPeopleLinkBtn();
         complaintPage.addPerson(Objects.casepage.data.peopleTypeWitness, Objects.casepage.data.peopleFirstName, Objects.casepage.data.peopleLastName);
-        expect(complaintPage.returnPeopleTypeSecondRow()).toEqual(Objects.casepage.data.peopleTypeWitness);
-        expect(complaintPage.returnPeopleFirstNameColumnSecondRow()).toEqual(Objects.casepage.data.peopleFirstName);
-        expect(complaintPage.returnPeopleLastNameColumnSecondRow()).toEqual(Objects.casepage.data.peopleLastName);
+        expect(complaintPage.returnPeopleTypeSecondRow()).toEqual(Objects.casepage.data.peopleTypeWitness, "Type of added person in complaints is not correct");
+        expect(complaintPage.returnPeopleFirstNameColumnSecondRow()).toEqual(Objects.casepage.data.peopleFirstName, "First name of added person in complaints is not correct");
+        expect(complaintPage.returnPeopleLastNameColumnSecondRow()).toEqual(Objects.casepage.data.peopleLastName, "Last name of addede person in complaints is not correct");
     });
 
 
@@ -488,6 +482,7 @@ describe('Create new complaint ', function() {
     });
 
     it('should verify that searching of Case id during close complaint is retrieving the data in the fields', function() {
+
         casePage.navigateToPage("Case Files").waitForCaseID();
         var caseid = casePage.getCaseId();
         var caseTitle = casePage.returnCaseTitle();
@@ -533,4 +528,30 @@ describe('Create new complaint ', function() {
         expect(complaintPage.returnParticipantNameForthRow()).toEqual("Samuel Supervisor");
     });
 
+    it('should create new complaint add/edit timeSheet and verify the time widget data in cases overview page', function() {
+
+        complaintPage.clickNewButton().clickComplaintButton().switchToIframes();
+        complaintPage.submitInitiatorInformation(Objects.complaintPage.data.firstName, Objects.complaintPage.data.lastName).reenterFirstName(Objects.complaintPage.data.firstName).clickTab("Incident").insertIncidentInformation("Arson", Objects.complaintPage.data.title);
+        complaintPage.clickSubmitBtn();
+        complaintPage.switchToDefaultContent();
+        complaintPage.clickModuleComplaints();
+        complaintPage.waitForComplaintsPage();
+        element(by.xpath(Objects.casepage.locators.caseID)).getText().then(function(text) {
+            console.log(text);
+            complaintPage.clickNewButton();
+            timeTrackingPage.navigateToTimeTrackingPage();
+            complaintPage.switchToIframes();
+            timeTrackingPage.submitTimesheetTable("Complaint", text, "8");
+            complaintPage.selectApprover(Objects.casepage.data.approverSamuel);
+            timeTrackingPage.clickSaveBtn();
+            timeTrackingPage.clickEditTimesheetBtn();
+            timeTrackingPage.switchToIframes();
+            timeTrackingPage.submitTimesheetTable("Complaint", text, "1");
+            complaintPage.selectApprover(Objects.casepage.data.approverSamuel);
+            timeTrackingPage.clickSaveBtn();
+            complaintPage.clickModuleComplaints();
+            complaintPage.verifyTimeWidgetData("7");
+
+        });
+    });
 });

@@ -22,11 +22,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -45,6 +48,8 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
     private Resource complaintCorrespondenceForms;
 
     private Map<String, CorrespondenceTemplate> templates = new HashMap<>();
+
+    private Pattern camelCase = Pattern.compile("[A-Za-z].*?(?=([A-Z]|\\.))");
 
     /**
      * @param springContextHolder the springContextHolder to set
@@ -197,12 +202,35 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
      */
     Optional<CorrespondenceTemplate> getTemplateByFileName(String templateFileName)
     {
-        return findTemplate(templateFileName);
+        return Optional.of(findTemplate(templateFileName).orElseGet(() -> {
+            CorrespondenceTemplate template = new CorrespondenceTemplate();
+            template.setTemplateFilename(templateFileName);
+            template.setDocumentType(generateDocumentTypeFromFilename(templateFileName));
+            template.setDateFormatString("MM/dd/yyyy");
+            template.setNumberFormatString("###,###,###");
+            template.setTemplateSubstitutionVariables(new HashMap<>());
+            return template;
+        }));
     }
 
     private Optional<CorrespondenceTemplate> findTemplate(String templateFileName)
     {
         return Optional.ofNullable(templates.get(templateFileName));
+    }
+
+    /**
+     * @param documentType
+     * @return
+     */
+    private String generateDocumentTypeFromFilename(String documentType)
+    {
+        Matcher matcher = camelCase.matcher(documentType);
+        List<String> matches = new LinkedList<>();
+        while (matcher.find())
+        {
+            matches.add((matcher.group()));
+        }
+        return matches.stream().collect(Collectors.joining(" "));
     }
 
     /**
