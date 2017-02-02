@@ -10,6 +10,8 @@ public class TemplateLabel
 
     private String label;
 
+    private boolean activated;
+
     public TemplateLabel()
     {
     }
@@ -18,10 +20,11 @@ public class TemplateLabel
      * @param templateFilename
      * @param documentType
      */
-    public TemplateLabel(String template, String label)
+    public TemplateLabel(String template, String label, boolean activated)
     {
         this.template = template;
         this.label = label;
+        this.activated = activated;
     }
 
     /**
@@ -54,5 +57,21 @@ public class TemplateLabel
     public void setLabel(String label)
     {
         this.label = label;
+    }
+
+    /**
+     * @return the activated
+     */
+    public boolean isActivated()
+    {
+        return activated;
+    }
+
+    /**
+     * @param activated the activated to set
+     */
+    public void setActivated(boolean activated)
+    {
+        this.activated = activated;
     }
 }

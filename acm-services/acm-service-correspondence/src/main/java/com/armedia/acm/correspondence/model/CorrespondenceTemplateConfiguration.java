@@ -9,6 +9,8 @@ import java.util.Map;
 public class CorrespondenceTemplateConfiguration
 {
 
+    private String displayName;
+
     private String documentType;
 
     private String templateFilename;
@@ -20,6 +22,24 @@ public class CorrespondenceTemplateConfiguration
     private String dateFormatString;
 
     private String numberFormatString;
+
+    private boolean activated;
+
+    /**
+     * @return the dislpayName
+     */
+    public String getDisplayName()
+    {
+        return displayName;
+    }
+
+    /**
+     * @param displayName the dislpayName to set
+     */
+    public void setDisplayName(String displayName)
+    {
+        this.displayName = displayName;
+    }
 
     /**
      * @return the documentType
@@ -115,6 +135,22 @@ public class CorrespondenceTemplateConfiguration
     public void setNumberFormatString(String numberFormatString)
     {
         this.numberFormatString = numberFormatString;
+    }
+
+    /**
+     * @return the activated
+     */
+    public boolean isActivated()
+    {
+        return activated;
+    }
+
+    /**
+     * @param activated the activated to set
+     */
+    public void setActivated(boolean activated)
+    {
+        this.activated = activated;
     }
 
 }
