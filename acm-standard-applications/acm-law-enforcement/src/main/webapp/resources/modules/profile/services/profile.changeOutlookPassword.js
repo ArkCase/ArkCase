@@ -2,8 +2,7 @@
 angular.module('profile').service('Profile.ChangePasswordService', function ($http, $q, $modal) {
     return ({
         changePassword: changePassword,
-        changeLdapPassword: changeLdapPassword,
-        isChangePasswordExposed: isChangePasswordExposed
+        changeLdapPassword: changeLdapPassword
     });
     function changePassword(newPassword) {
         var request = $http({
@@ -50,12 +49,5 @@ angular.module('profile').service('Profile.ChangePasswordService', function ($ht
             data: credentials
         });
         return (request.then(handleSuccess, handleError));
-    }
-
-    function isChangePasswordExposed() {
-        return $http({
-            method: "GET",
-            url: "api/v1/users/changePassword"
-        });
     }
 });

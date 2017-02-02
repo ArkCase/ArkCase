@@ -27,14 +27,14 @@ public class LdapUserAPIController
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(value = "/changePassword", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/editUsers", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Map<String, Boolean> isChangePasswordEnabled()
+    public Map<String, Boolean> isEditingLdapUsersEnabled()
     {
         ldapAuthenticateService =
                 acmContextHolder.getAllBeansOfType(LdapAuthenticateService.class).get("armedia_ldapAuthenticateService");
-        boolean exposeChangePassword = ldapAuthenticateService.getLdapAuthenticateConfig().getChangePasswordExposed();
-        return Collections.singletonMap("exposeChangePassword", exposeChangePassword);
+        boolean enableEditingLdapUsers = ldapAuthenticateService.getLdapAuthenticateConfig().getEnableEditingLdapUsers();
+        return Collections.singletonMap("enableEditingLdapUsers", enableEditingLdapUsers);
     }
 
     @RequestMapping(value = "/changePassword", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
