@@ -19,6 +19,7 @@ public class AcmGroupContextMapper implements ContextMapper
         String groupName = MapperUtils.getAttribute(adapter, "cn");
         // Throughout the application we use the group names in upper case only, so converting here at mapping level
         group.setGroupName(groupName.toUpperCase());
+        group.setDistinguishedName(adapter.getDn().toString());
 
         Set<String> potentialParentGroups = new HashSet<>();
         if (adapter.attributeExists("memberOf"))

@@ -1,6 +1,10 @@
 package com.armedia.acm.services.users.web.api;
 
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.ldap.LdapUserCreateRequest;
 import com.armedia.acm.services.users.service.ldap.LdapAuthenticateService;
+import com.armedia.acm.services.users.service.ldap.LdapUserService;
 import com.armedia.acm.spring.SpringContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,16 +22,18 @@ import java.util.Collections;
 import java.util.Map;
 
 @Controller
-@RequestMapping(value = {"/api/v1/users", "/api/latest/users"})
+@RequestMapping(value = {"/api/v1/users/ldap", "/api/latest/users/ldap"})
 public class LdapUserAPIController
 {
     private SpringContextHolder acmContextHolder;
 
     private LdapAuthenticateService ldapAuthenticateService;
 
+    private LdapUserService ldapUserService;
+
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(value = "/editUsers", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/editingEnabled", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Map<String, Boolean> isEditingLdapUsersEnabled()
     {
@@ -35,6 +41,24 @@ public class LdapUserAPIController
                 acmContextHolder.getAllBeansOfType(LdapAuthenticateService.class).get("armedia_ldapAuthenticateService");
         boolean enableEditingLdapUsers = ldapAuthenticateService.getLdapAuthenticateConfig().getEnableEditingLdapUsers();
         return Collections.singletonMap("enableEditingLdapUsers", enableEditingLdapUsers);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public AcmUser addLdapUser(
+            @RequestBody LdapUserCreateRequest ldapUserCreateRequest,
+            HttpServletResponse response) throws AcmUserActionFailedException
+    {
+        try
+        {
+            return ldapUserService.createLdapUser(ldapUserCreateRequest.getAcmUser(),
+                    ldapUserCreateRequest.getGroupName(), ldapUserCreateRequest.getPassword());
+        } catch (Exception e)
+        {
+            log.error("Creating LDAP user failed!", e);
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            throw new AcmUserActionFailedException("create LDAP user", null, null, "Creating LDAP user failed!", e);
+        }
     }
 
     @RequestMapping(value = "/changePassword", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -72,5 +96,15 @@ public class LdapUserAPIController
     public void setAcmContextHolder(SpringContextHolder acmContextHolder)
     {
         this.acmContextHolder = acmContextHolder;
+    }
+
+    public LdapUserService getLdapUserService()
+    {
+        return ldapUserService;
+    }
+
+    public void setLdapUserService(LdapUserService ldapUserService)
+    {
+        this.ldapUserService = ldapUserService;
     }
 }

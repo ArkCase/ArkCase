@@ -4,12 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Created by armdev on 7/2/14.
- */
 public class LdapGroup
 {
     private String groupName;
+    private String distinguishedName;
     private String[] memberDistinguishedNames = {};
     private List<AcmUser> users = new ArrayList<>();
     private Set<String> memberOfGroups;
@@ -22,6 +20,16 @@ public class LdapGroup
     public void setGroupName(String groupName)
     {
         this.groupName = groupName;
+    }
+
+    public String getDistinguishedName()
+    {
+        return distinguishedName;
+    }
+
+    public void setDistinguishedName(String distinguishedName)
+    {
+        this.distinguishedName = distinguishedName;
     }
 
     public String[] getMemberDistinguishedNames()

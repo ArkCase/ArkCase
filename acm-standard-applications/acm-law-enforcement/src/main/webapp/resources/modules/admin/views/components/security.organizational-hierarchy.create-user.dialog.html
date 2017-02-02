@@ -1,0 +1,47 @@
+<form ng-submit="ok()" novalidate name="userForm">
+    <div class="modal-header">
+        <h4 class="modal-title">
+            <span translate>admin.security.organizationalHierarchy.addLdapMember.title</span>
+        </h4>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label for="firstName">{{"admin.security.organizationalHierarchy.addLdapMember.firstName" |
+                translate}}</label>
+            <input type="text" class="form-control" id="firstName"
+                   placeholder="{{admin.security.organizationalHierarchy.addLdapMember.firstName | translate}}"
+                   ng-model="user.firstName" required>
+        </div>
+        <div class="form-group">
+            <label for="lastName">{{"admin.security.organizationalHierarchy.addLdapMember.lastName" |
+                translate}}</label>
+            <input type="text" class="form-control" id="lastName" name="lastName"
+                   placeholder="{{admin.security.organizationalHierarchy.addLdapMember.lastName | translate}}"
+                   ng-model="user.lastName" required>
+            <p ng-show="userForm.lastName.$invalid && !userForm.lastName.$pristine" class="help-block error">
+                Last name is required
+            </p>
+        </div>
+        <div class="form-group">
+            <label for="email">{{"admin.security.organizationalHierarchy.addLdapMember.email" | translate}}</label>
+            <input type="email" class="form-control" id="email"
+                   placeholder="{{admin.security.organizationalHierarchy.addLdapMember.email | translate}}"
+                   ng-model="user.mail" required>
+        </div>
+        <div class="form-group">
+            <label for="password">{{"admin.security.organizationalHierarchy.addLdapMember.password" |
+                translate}}</label>
+            <input type="password" class="form-control" id="password"
+                   placeholder="{{admin.security.organizationalHierarchy.addLdapMember.password | translate}}"
+                   ng-model="data.password" required>
+        </div>
+    </div>
+    <div class=" modal-footer">
+        <button type="button" class="btn btn-secondary" ng-click="$dismiss()">
+            <span translate>admin.security.organizationalHierarchy.addLdapMember.btn.cancel</span>
+        </button>
+        <button type="submit" class="btn btn-primary" ng-disabled="userForm.$invalid">
+            <span translate>admin.security.organizationalHierarchy.addLdapMember.btn.ok</span>
+        </button>
+    </div>
+</form>

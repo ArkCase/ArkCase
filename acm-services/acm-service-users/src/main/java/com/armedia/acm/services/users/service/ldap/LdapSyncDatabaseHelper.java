@@ -32,8 +32,9 @@ public class LdapSyncDatabaseHelper
 
     @Transactional
     @CacheEvict(value = "quiet-user-cache", allEntries = true)
-    public void updateDatabase(String directoryName, Set<String> allRoles, List<AcmUser> users, Map<String, Set<AcmUser>> usersByRole,
-            Map<String, Set<AcmUser>> usersByLdapGroup, Map<String, String> childParentPair, boolean singleUser)
+    public void updateDatabase(String directoryName, Set<String> allRoles, List<AcmUser> users, Map<String,
+            Set<AcmUser>> usersByRole, Map<String, Set<AcmUser>> usersByLdapGroup, Map<String, String> childParentPair,
+                               Map<String, String> groupDNPairs, boolean singleUser)
     {
         if (!singleUser)
         {
@@ -42,9 +43,9 @@ public class LdapSyncDatabaseHelper
             getUserDao().markAllUsersInvalid(directoryName);
             getUserDao().markAllRolesInvalid(directoryName);
 
-            persistApplicationRoles(allRoles, ROLE_TYPE_APPLICATION_ROLE, null);
+            persistApplicationRoles(allRoles, ROLE_TYPE_APPLICATION_ROLE, null, null);
         }
-        persistApplicationRoles(usersByLdapGroup.keySet(), ROLE_TYPE_LDAP_GROUP, childParentPair);
+        persistApplicationRoles(usersByLdapGroup.keySet(), ROLE_TYPE_LDAP_GROUP, childParentPair, groupDNPairs);
 
         persistUsers(directoryName, users);
 
@@ -129,7 +130,8 @@ public class LdapSyncDatabaseHelper
         return retval;
     }
 
-    protected void persistApplicationRoles(Set<String> applicationRoles, String roleType, Map<String, String> childParentPair)
+    protected void persistApplicationRoles(Set<String> applicationRoles, String roleType,
+                                           Map<String, String> childParentPair, Map<String, String> groupDNPairs)
     {
         for (String role : applicationRoles)
         {
@@ -155,6 +157,11 @@ public class LdapSyncDatabaseHelper
 
                     parentGroup.setName(parentName);
                     parentGroup.setType(ROLE_TYPE_LDAP_GROUP);
+                    if (groupDNPairs != null)
+                    {
+                        String parentGroupDN = groupDNPairs.get(parentName);
+                        parentGroup.setDistinguishedName(parentGroupDN);
+                    }
 
                     if (!AcmGroupStatus.DELETE.equals(parentGroup.getStatus()))
                     {
@@ -173,6 +180,11 @@ public class LdapSyncDatabaseHelper
                 group.setName(role);
                 group.setType(roleType);
                 group.setParentGroup(parentGroup);
+                if (groupDNPairs != null)
+                {
+                    String groupDN = groupDNPairs.get(role);
+                    group.setDistinguishedName(groupDN);
+                }
                 if (!AcmGroupStatus.DELETE.equals(group.getStatus()))
                 {
                     group.setStatus(AcmGroupStatus.ACTIVE);
