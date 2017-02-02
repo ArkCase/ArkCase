@@ -18,7 +18,9 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile', 'Mess
                 totalGroups: '=',
                 showActions: '=',
                 showSupervisor: '=',
-                showType: '='
+                showType: '=',
+                enableEditingLdapUsers: '=',
+                onAddLdapMember: "="
             },
             link: function (scope, element, attrs) {
                 var $tbl = $("#org");
@@ -71,6 +73,14 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile', 'Mess
                             if (node.data.isMember && node.parent.data.object_sub_type_s != "LDAP_GROUP") {
                                 $tdList.eq(3).append($compile("<button class='btn btn-link btn-xs' type='button' ng-click='removeUserBtn($event)' name='removeMember' title='Remove Member'><i class='fa fa-trash-o'></i></button>")(scope));
                             }
+
+                            if (scope.enableEditingLdapUsers && node.data.object_sub_type_s == "LDAP_GROUP") {
+                                $tdList.eq(3).append($compile("<button class='btn btn-link btn-xs' type='button' ng-click='addLdapUser($event)' name='addMember' title='Add Member'><i class='fa fa-user'></i></button>")(scope));
+                            }
+
+                            if (scope.enableEditingLdapUsers && node.data.isMember && node.parent.data.object_sub_type_s == "LDAP_GROUP") {
+                                $tdList.eq(3).append($compile("<button class='btn btn-link btn-xs' type='button' ng-click='editLdapUser($event)' name='editMember' title='Edit Member'><i class='fa fa-pencil'></i></button>")(scope));
+                            }
                         }
                     }
                 };
@@ -111,65 +121,88 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile', 'Mess
                 scope.pickUsersBtn = function (event) {
                     var node = $.ui.fancytree.getNode(event);
                     scope.onAddMembers(node.data).then(function (members) {
-                    	//success
-                    	angular.forEach(members, function (member) {
+                        //success
+                        angular.forEach(members, function (member) {
                             node.addChildren(member);
                         });
                         node.setExpanded();
                         messageService.succsessAction();
                     }, function () {
                         //error
-                    	messageService.errorAction();
+                        messageService.errorAction();
                     });
+                };
+
+                scope.addLdapUser = function (event) {
+                    var node = $.ui.fancytree.getNode(event);
+                    scope.onAddLdapMember(node.data).then(function (member) {
+                        node.addChildren(member);
+                        node.setExpanded();
+                        messageService.succsessAction();
+                    }, function (error) {
+                        if (error != "cancel")
+                            messageService.errorAction();
+                    });
+                };
+
+                scope.editLdapUser = function (event) {
+                    var node = $.ui.fancytree.getNode(event);
+                    /*scope.onEditLdapMember(node.data).then(function (member) {
+                     /!*node.addChildren(member);
+                     node.setExpanded();*!/
+                     messageService.succsessAction();
+                     }, function () {
+                     messageService.errorAction();
+                     });*/
                 };
 
                 scope.addSubgroup = function (event) {
                     var node = $.ui.fancytree.getNode(event);
                     scope.onAddSubGroup(node.data).then(function (subGroup) {
-                    	//success
-                    	node.addNode(subGroup, 'firstChild');
+                        //success
+                        node.addNode(subGroup, 'firstChild');
                         node.setExpanded();
-                    	messageService.succsessAction();
+                        messageService.succsessAction();
                     }, function () {
                         //error
-                    	messageService.errorAction();
+                        messageService.errorAction();
                     });
                 };
 
                 scope.addSupervisor = function (event) {
                     var node = $.ui.fancytree.getNode(event);
                     scope.onSetSupervisor(node.data).then(function (payload) {
-                    	//success
-                    	node.data.supervisor = payload.supervisor.fullName;
+                        //success
+                        node.data.supervisor = payload.supervisor.fullName;
                         node.renderTitle();
                         messageService.succsessAction();
                     }, function () {
                         //error
-                    	messageService.errorAction();
+                        messageService.errorAction();
                     });
                 };
 
                 scope.removeUserBtn = function (event) {
                     var node = $.ui.fancytree.getNode(event);
                     scope.onDeleteMembers(node.parent.data, node.data).then(function () {
-                    	//success
-                    	node.remove();
+                        //success
+                        node.remove();
                         messageService.succsessAction();
                     }, function () {
                         //error
-                    	messageService.errorAction();
+                        messageService.errorAction();
                     });
                 };
 
                 scope.removeGroupBtn = function (event) {
                     var node = $.ui.fancytree.getNode(event);
                     scope.onDeleteGroup(node.data).then(function () {
-                    	//success
-                    	node.remove();
+                        //success
+                        node.remove();
                         messageService.succsessAction();
                     }, function () {
                         //error
-                    	messageService.errorAction();
+                        messageService.errorAction();
                     });
                 };
 

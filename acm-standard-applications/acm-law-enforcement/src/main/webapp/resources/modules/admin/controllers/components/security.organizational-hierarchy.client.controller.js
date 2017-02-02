@@ -1,6 +1,8 @@
 'use strict';
 
-angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['$scope', 'Admin.OrganizationalHierarchyService', '$q', '$modal', 'MessageService', '$translate', 'Admin.ModalDialogService', 'UtilService',
+angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['$scope'
+    , 'Admin.OrganizationalHierarchyService', '$q', '$modal', 'MessageService', '$translate', 'Admin.ModalDialogService'
+    , 'UtilService',
     function ($scope, organizationalHierarchyService, $q, $modal, messageService, $translate, modalDialogService, Util) {
 
         var UUIDRegExString = ".*-UUID-[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}";
@@ -9,6 +11,12 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
 
         $scope.data = [];
         var groupsMap = {};
+
+        $scope.enableEditingLdapUsers = false;
+
+        organizationalHierarchyService.isEnabledEditingLdapUsers().then(function (isEnabledEditingLdapUsers) {
+            $scope.enableEditingLdapUsers = isEnabledEditingLdapUsers;
+        });
 
         $scope.config.$promise.then(function (config) {
             $scope.cfg = _.find(config.components, {id: 'usersPicker'});
@@ -243,6 +251,44 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
             return deffered.promise;
         };
 
+        $scope.onAddLdapMember = function (group) {
+            var deffered = $q.defer();
+            var modalInstance = $modal.open({
+                animation: $scope.animationsEnabled,
+                templateUrl: 'modules/admin/views/components/security.organizational-hierarchy.create-user.dialog.html',
+                controller: ['$scope', '$modalInstance', function ($scope, $modalInstance) {
+                    $scope.user = {};
+                    $scope.data = {
+                        "acmUser": $scope.user,
+                        "groupName": group.object_id_s
+                    };
+                    $scope.ok = function () {
+                        $modalInstance.close($scope.data);
+                    };
+                }],
+                size: 'md'
+            });
+
+            modalInstance.result.then(function (data) {
+                organizationalHierarchyService.addMemberToLdapGroup(data).then(function (member) {
+                    //saving success
+                    //map members
+                    var unmappedMembers = [];
+                    var unmappedMember = unMapMember(member);
+                    unmappedMembers.push(unmappedMember);
+                    deffered.resolve(unmappedMembers);
+                }, function () {
+                    //saving error
+                    deffered.reject();
+                });
+            }, function () {
+                // Cancel button was clicked
+                deffered.reject("cancel");
+                return [];
+            });
+            return deffered.promise;
+        };
+
         $scope.onLazyLoad = function (event, groupNode) {
 
             var parentId = groupNode.object_id_s;
@@ -304,7 +350,6 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
             return groupsMap[id];
         }
 
-
         function mapMember(member) {
             var mapped = {};
             mapped["userId"] = member.object_id_s;
@@ -338,15 +383,15 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                 animation: true,
                 templateUrl: 'modules/admin/views/components/security.organizational-hierarchy.create-group.dialog.html',
                 controller: function ($scope, $modalInstance) {
-                    $scope.inputValid = true;
+                    $scope.inputInvalid = true;
                     $scope.adHocGroup = {};
 
                     //watch the input to enable/disable ok button
                     $scope.$watch('adHocGroup.name', function (newValue) {
                         if (newValue) {
-                            $scope.inputValid = false;
+                            $scope.inputInvalid = false;
                         } else {
-                            $scope.inputValid = true;
+                            $scope.inputInvalid = true;
                         }
                     }, true);
                     $scope.ok = function () {
@@ -382,7 +427,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                     messageService.succsessAction();
                 }, function () {
                     //error adding group
-                	messageService.errorAction();
+                    messageService.errorAction();
                 });
             }, function (result) {
                 //button cancel, nothing to do.

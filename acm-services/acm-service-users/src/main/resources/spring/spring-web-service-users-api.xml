@@ -70,8 +70,8 @@
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
 
-    <bean id="userInfoAPIController" class="com.armedia.acm.services.users.web.api.LdapUserAPIController">
+    <bean id="ldapUserAPIController" class="com.armedia.acm.services.users.web.api.LdapUserAPIController">
         <property name="acmContextHolder" ref="acmContextHolder"/>
+        <property name="ldapUserService" ref="ldapUserService"/>
     </bean>
-
 </beans>

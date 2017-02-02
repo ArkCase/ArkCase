@@ -89,6 +89,17 @@
           "searchPlaceholder": "Enter to search for members."
         }
       },
+      "addLdapMember": {
+        "title": "Add Ldap Member",
+        "firstName": "FirstName",
+        "lastName": "LastName",
+        "email": "Email",
+        "password": "Password",
+        "btn": {
+          "cancel": "Cancel",
+          "ok": "Add User"
+        }
+      },
       "addMembersGridColumns": {
         "name": "Name",
         "type": "Type",

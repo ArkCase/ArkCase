@@ -39,16 +39,19 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
             _getFilteredTopLevelGroups: {
                 method: 'GET',
                 url: 'api/v1/service/functionalaccess/groups/toplevel',
-                cache: false,
-                isArray: false
+                cache: false
             },
 
             _getInternalUsersConfig: {
                 method: 'GET',
-                url: 'api/v1/users/editUsers',
-                cache: false,
-                isArray: false
+                url: 'api/v1/users/ldap/editingEnabled',
+                cache: false
             },
+
+            _addMemberToLdapGroup: {
+                method: 'POST',
+                url: 'api/latest/users/ldap'
+            }
         });
 
         Service.CacheNames = {
@@ -68,6 +71,7 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
             setSupervisor: setSupervisor,
             getFilteredTopLevelGroups: getFilteredTopLevelGroups,
             isEnabledEditingLdapUsers: isEnabledEditingLdapUsers,
+            addMemberToLdapGroup: addMemberToLdapGroup
         });
 
         /**
@@ -339,6 +343,28 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
                     var config = response.enableEditingLdapUsers;
                     cacheConfig.put(Service.CacheNames.KEY, config);
                     return config;
+                }
+            });
+        }
+
+        /**
+         * @ngdoc method
+         * @name addMembersToLdapGroup
+         * @methodOf admin.service:Admin.OrganizationalHierarchyService
+         *
+         * @description
+         * Performs adding members to ldap group
+         *
+         * ldapUser {object} Ldap AcmUser object to be created
+         *
+         * @returns {HttpPromise} Future info about add members to ldap group
+         */
+        function addMemberToLdapGroup(ldapUser) {
+            return Util.serviceCall({
+                service: Service._addMemberToLdapGroup
+                , data: ldapUser
+                , onSuccess: function (data) {
+                    return data;
                 }
             });
         }

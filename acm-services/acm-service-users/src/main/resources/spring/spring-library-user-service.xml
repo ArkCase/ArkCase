@@ -75,4 +75,10 @@
         <property name="groupService" ref="groupService"/>
     </bean>
 
+    <bean id="ldapUserService" class="com.armedia.acm.services.users.service.ldap.LdapUserService">
+        <property name="ldapDao" ref="springLdapPagedDao"/>
+        <property name="userDao" ref="userJpaDao"/>
+        <property name="groupDao" ref="groupDao"/>
+        <property name="acmContextHolder" ref="acmContextHolder"/>
+    </bean>
 </beans>
