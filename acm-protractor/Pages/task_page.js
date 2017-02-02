@@ -536,19 +536,19 @@ var TaskPage = function() {
 
         browser.wait(EC.presenceOf(element(by.xpath(Objects.taskspage.locators.approveBtn))), 30000, "Approve button is not displayed").then(function() {
             approveBtn.click().then(function() {
-                browser.wait(EC.textToBePresentInElement((taskState), Objects.taskspage.data.taskStateClosed), 10000);
+                browser.wait(EC.textToBePresentInElement((taskState), Objects.taskspage.data.taskStateClosed), 10000, "Task state is not changed into Closed");
             });
         });
         return this;
     }
     this.clickCaseTitleInTasks = function() {
 
-        browser.wait(EC.presenceOf(element(by.xpath(Objects.taskspage.locators.caseTitleInTasks))), 30000).then(function() {
-            browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.caseTitleInTasks))), 30000).then(function() {
-                browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.taskspage.locators.caseTitleInTasks))), 30000).then(function() {
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.taskspage.locators.caseTitleInTasks))), 30000, "Case title in tasks is not present in DOM").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.caseTitleInTasks))), 30000, "Case title in tasks is not visible").then(function() {
+                browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.taskspage.locators.caseTitleInTasks))), 30000, "Case title in tasks is not clickable").then(function() {
                     caseTitleInTasks.click().then(function() {
                         browser.sleep(5000);
-                        browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.tasksLink))), 30000);
+                        browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.tasksLink))), 30000, "After click on case title, tasks link is not present in DOM");
                     });
                 });
             });
@@ -557,12 +557,12 @@ var TaskPage = function() {
     }
     this.clickComplaintTitleInTasks = function() {
 
-        browser.wait(EC.presenceOf(element(by.xpath(Objects.taskspage.locators.complaintTitleInTasks))), 30000).then(function() {
-            browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.complaintTitleInTasks))), 30000).then(function() {
-                browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.taskspage.locators.complaintTitleInTasks))), 30000).then(function() {
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.taskspage.locators.complaintTitleInTasks))), 30000, "Complaint title in tasks is not present in DOM").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.complaintTitleInTasks))), 30000, "Complaint title in tasks is no visible").then(function() {
+                browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.taskspage.locators.complaintTitleInTasks))), 30000, "Complaint title in tasks is not clickable").then(function() {
                     complaintTitleInTasks.click().then(function() {
                         browser.sleep(5000);
-                        browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.tasksLink))), 30000);
+                        browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.tasksLink))), 30000, "After click on complaint title, tasks link is not present in DOM");
                     });
                 });
             });

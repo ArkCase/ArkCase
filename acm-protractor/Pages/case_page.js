@@ -68,12 +68,12 @@ var CasePage = function() {
     }
     this.submitGeneralInformation = function(title, type) {
 
-        browser.wait(EC.visibilityOf(element(by.name(Objects.casepage.locators.caseTitle))), 30000);
+        browser.wait(EC.visibilityOf(element(by.name(Objects.casepage.locators.caseTitle))), 30000, "Case Title is not visible");
         var caseType = element(by.linkText(type));
         caseTitle.click().then(function() {
             caseTitle.sendKeys(title).then(function() {
                 caseTypeDropDown.click().then(function() {
-                    browser.wait(EC.textToBePresentInElement((caseType), type), 10000).then(function() {
+                    browser.wait(EC.textToBePresentInElement((caseType), type), 10000, "Selected " + type + "is not present in type drop down list").then(function() {
                         caseType.click();
                     });
                 });
@@ -89,7 +89,7 @@ var CasePage = function() {
 
     this.initiatorInformation = function(firstname, lastname) {
 
-        browser.wait(EC.visibilityOf(element(by.name(Objects.casepage.locators.firstName))), 10000);
+        browser.wait(EC.visibilityOf(element(by.name(Objects.casepage.locators.firstName))), 10000, "First name field is not visible");
         firstName.click().then(function() {
             firstName.sendKeys(firstname).then(function() {
                 lastName.click().then(function() {
@@ -99,6 +99,26 @@ var CasePage = function() {
         });
 
         return this;
+    }
+
+    this.waitForCaseType = function() {
+
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesType))), 30000, "Case type is not displayed");
+    }
+
+    this.waitForCaseTitle = function() {
+
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesTitle))), 30000, "Case title is not visible");
+    }
+
+    this.waitForCaseType = function() {
+
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesType))), 30000, "Case type is not displayed");
+    }
+
+    this.waitForCaseTitle = function() {
+
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesTitle))), 60000, "Case title is not displayed");
     }
 
     this.returnCasesPageTitle = function() {
@@ -113,8 +133,8 @@ var CasePage = function() {
     };
     this.caseTitleStatus = function(titleStatus) {
 
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.caseTitleStatus))), 30000).then(function() {
-            browser.wait(EC.textToBePresentInElement((casesTitleStatus), titleStatus), 10000);
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.caseTitleStatus))), 30000, "Case title status is not visible").then(function() {
+            browser.wait(EC.textToBePresentInElement((casesTitleStatus), titleStatus), 10000, titleStatus + " is not present in case status drop down list");
 
         });
     }
@@ -127,7 +147,7 @@ var CasePage = function() {
 
     this.waitForChangeCaseButton = function() {
 
-        browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.changeCaseStatusBtn))), 30000);
+        browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.changeCaseStatusBtn))), 30000, "Change case button is not visible");
 
     };
 
@@ -143,7 +163,7 @@ var CasePage = function() {
 
     this.selectCaseStatus = function(status) {
         var caseStatus = element(by.linkText(status));
-        browser.wait(EC.visibilityOf(element(by.className(Objects.casepage.locators.changeCaseStatusTitle))), 15000).then(function() {
+        browser.wait(EC.visibilityOf(element(by.className(Objects.casepage.locators.changeCaseStatusTitle))), 15000, "Change case status title is not visible").then(function() {
             changeStatusDropDown.click().then(function() {
                 browser.wait(EC.textToBePresentInElement((caseStatus), status), 10000, "The option " + status + " Is not displayed").then(function() {
                     caseStatus.click();
@@ -160,7 +180,7 @@ var CasePage = function() {
 
 
     this.waitForCreatedDate = function() {
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.createdDate))), 20000);
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.createdDate))), 20000, "Created date is not visible");
     };
 
     this.returnCreatedDate = function() {
@@ -169,7 +189,7 @@ var CasePage = function() {
 
 
     this.clickExpandLinks = function() {
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.changeCaseStatusBtn))), 30000);
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.changeCaseStatusBtn))), 30000, "Change case status button is not visible");
         expandLinksButton.click();
         return this;
     }

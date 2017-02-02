@@ -29,9 +29,17 @@ describe("Testing async calls with beforeEach and passing the special done callb
 
 describe('dashboard page test', function() {
 
+        beforeEach(function (done) {
 
-    loginPage.Login(Objects.loginpage.data.supervisoruser.username, Objects.loginpage.data.supervisoruser.password);
-    logger.log('Info', 'User succesfully logged in as supervisor');
+            loginPage.Login(Objects.loginpage.data.supervisoruser.username, Objects.loginpage.data.supervisoruser.password);
+            testAsync(done);
+
+        });
+
+        afterEach(function () {
+            loginPage.Logout();
+
+        });
 
 
     //Change Dashboard configuration
@@ -57,12 +65,6 @@ describe('dashboard page test', function() {
 
         dashPage.editDashboardTitle(Objects.dashboardpage.data.DashbordTitle);
         expect(dashPage.returnDashboardTitle()).toEqual(Objects.dashboardpage.data.DashbordTitle);
-    });
-
-    it('should logout', function() {
-
-        loginPage.Logout();
-
     });
 
 });

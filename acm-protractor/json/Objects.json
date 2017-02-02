@@ -1,5 +1,5 @@
 {
-    "siteurl": "http://core.arkcase.dev.armedia.com/arkcase/login",
+    "siteurl": "https://core.arkcase.dev.armedia.com/arkcase/login",
     "loginpage": {
         "locators": {
             "username": "j_username",
@@ -72,16 +72,14 @@
             "restrictCheckboxDisabled": ".//input[@ng-model='restricted'][@disabled='disabled']",
             "notificationMessage": "[ng-show='!$messageTemplate']",
             "docVersionDropDownList": ".docversion.inline",
-            "emailRecepient": "recipientsStr",
+            "emailRecepient": "//textarea",
             "sendEmailButton": "Send Email",
             "sugestedTag": "[ng-click='addSuggestionByIndex($index)']",
+            "fadeElement": "//*[@animate='animate']"
             "timeCanvasData":"[chart-data='time.data']",
             "owningGroupDropDown": ".//*[@class='editable-controls form-group']/..//select",
             "owningGroupConfirmBtn": ".//*[@class='editable-controls form-group']/..//button[1]",
             "assigneeNameModelInput": "participant.selectedAssigneeName"
-
-
-
         },
         "data": {
             "reportTitle": "Report of Investigation Title",
@@ -622,7 +620,7 @@
             "searchForUserInput": "//*[@class='modal-search-header']/..//input",
             "searchUserBtn": "Search",
             "OkBtn": "OK",
-            "searchedUserName":".//*[@class='ui-grid-canvas']/div/div[1]/div[4]",
+            "searchedUserName":".//*[@class='ui-grid-canvas']/div/div[1]/div[2]",
             "participantLinkBtn": ".//*[@class='fa fa-users']",
             "participantTableRow": ".//*[@class='ui-grid-cell-contents ng-binding ng-scope']",
             "participantTable": ".//*[@class='panel panel-success panel-grid']",
