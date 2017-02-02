@@ -4,6 +4,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileAddedEvent;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
+
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.slf4j.Logger;
@@ -28,7 +29,6 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
 
     private transient final Logger LOG = LoggerFactory.getLogger(getClass());
 
-
     @Override
     public void onApplicationEvent(EcmFileAddedEvent event)
     {
@@ -36,7 +36,6 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
 
         EcmFileWorkflowConfiguration configuration = new EcmFileWorkflowConfiguration();
 
-        configuration.setBuckslipProcess(true);
         configuration.setEcmFile(source);
 
         LOG.debug("Calling business rules for new file id {}, type {}", source.getId(), source.getFileType());
@@ -62,9 +61,8 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
         Map<String, Object> pvars = new HashMap<>();
 
         String approversCsv = configuration.getApprovers();
-        List<String> approvers = approversCsv == null ?
-                new ArrayList<>() :
-                Arrays.stream(approversCsv.split(",")).filter(s -> s != null).map(s -> s.trim()).collect(Collectors.toList());
+        List<String> approvers = approversCsv == null ? new ArrayList<>()
+                : Arrays.stream(approversCsv.split(",")).filter(s -> s != null).map(s -> s.trim()).collect(Collectors.toList());
         // the process should work with either "approvers" or "futureApprovers"
         pvars.put("approvers", approvers);
         pvars.put("taskName", configuration.getTaskName());
@@ -86,7 +84,8 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
 
         ProcessInstance pi = getActivitiRuntimeService().startProcessInstanceByKey(processName, pvars);
 
-        LOG.debug("Started business process with id {} for file of type {}, id {}", pi.getId(), event.getSource().getFileType(), event.getEcmFileId());
+        LOG.debug("Started business process with id {} for file of type {}, id {}", pi.getId(), event.getSource().getFileType(),
+                event.getEcmFileId());
 
     }
 
