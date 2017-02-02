@@ -14,8 +14,8 @@
  *
  * The Admin.OrganizationalHierarchyService provides Organizational Hierarchy REST calls functionality
  */
-angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http', 'UtilService', '$resource',
-    function ($http, Util, $resource) {
+angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http', 'UtilService', 'Acm.StoreService', '$resource',
+    function ($http, Util, Store, $resource) {
         var Service = $resource('api/latest/users/group', {}, {
             /**
              * @ngdoc method
@@ -41,9 +41,20 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
                 url: 'api/v1/service/functionalaccess/groups/toplevel',
                 cache: false,
                 isArray: false
-            }
+            },
 
+            _getInternalUsersConfig: {
+                method: 'GET',
+                url: 'api/v1/users/editUsers',
+                cache: false,
+                isArray: false
+            },
         });
+
+        Service.CacheNames = {
+            INTERNAL_USER_CONFIG: "INTERNAL_USER_CONFIG",
+            KEY: "enableEditingLdapUsers"
+        };
 
         return ({
             getGroups: getGroups,
@@ -56,6 +67,7 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
             removeGroup: removeGroup,
             setSupervisor: setSupervisor,
             getFilteredTopLevelGroups: getFilteredTopLevelGroups,
+            isEnabledEditingLdapUsers: isEnabledEditingLdapUsers,
         });
 
         /**
@@ -317,4 +329,17 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
             });
         }
 
+        function isEnabledEditingLdapUsers() {
+            var cacheConfig = new Store.CacheFifo(Service.CacheNames.INTERNAL_USER_CONFIG);
+            var config = cacheConfig.get(Service.CacheNames.KEY);
+            return Util.serviceCall({
+                service: Service._getInternalUsersConfig
+                , result: config
+                , onSuccess: function (response) {
+                    var config = response.enableEditingLdapUsers;
+                    cacheConfig.put(Service.CacheNames.KEY, config);
+                    return config;
+                }
+            });
+        }
     }]);

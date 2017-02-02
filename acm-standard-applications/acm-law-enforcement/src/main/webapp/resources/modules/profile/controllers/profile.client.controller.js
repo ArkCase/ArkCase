@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('profile').controller('ProfileController', ['$scope', 'ConfigService', 'Profile.ChangePasswordService'
-    , '$modal',
-    function ($scope, ConfigService, ChangePasswordService, $modal) {
+angular.module('profile').controller('ProfileController', ['$scope', 'ConfigService'
+    , 'Admin.OrganizationalHierarchyService', '$modal',
+    function ($scope, ConfigService, OrganizationalHierarchyService, $modal) {
         $scope.config = ConfigService.getModule({moduleId: 'profile'});
         $scope.$on('req-component-config', onConfigRequest);
         function onConfigRequest(e, componentId) {
@@ -14,8 +14,8 @@ angular.module('profile').controller('ProfileController', ['$scope', 'ConfigServ
 
         $scope.exposeChangePassword = false;
 
-        ChangePasswordService.isChangePasswordExposed().then(function (response) {
-            $scope.exposeChangePassword = response.data.exposeChangePassword;
+        OrganizationalHierarchyService.isEnabledEditingLdapUsers().then(function (enableEditingLdapUsers) {
+            $scope.exposeChangePassword = enableEditingLdapUsers;
         });
 
         $scope.openPasswordDialog = function () {

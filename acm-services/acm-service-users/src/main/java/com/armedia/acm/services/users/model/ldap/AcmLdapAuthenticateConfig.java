@@ -4,7 +4,7 @@ public class AcmLdapAuthenticateConfig extends AcmLdapConfig
 {
     private String searchBase;
 
-    private boolean changePasswordExposed;
+    private boolean enableEditingLdapUsers;
 
     public String getSearchBase()
     {
@@ -16,13 +16,13 @@ public class AcmLdapAuthenticateConfig extends AcmLdapConfig
         this.searchBase = searchBase;
     }
 
-    public boolean getChangePasswordExposed()
+    public boolean getEnableEditingLdapUsers()
     {
-        return changePasswordExposed;
+        return enableEditingLdapUsers;
     }
 
-    public void setChangePasswordExposed(boolean changePasswordExposed)
+    public void setEnableEditingLdapUsers(boolean enableEditingLdapUsers)
     {
-        this.changePasswordExposed = changePasswordExposed;
+        this.enableEditingLdapUsers = enableEditingLdapUsers;
     }
 }
