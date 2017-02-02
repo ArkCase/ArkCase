@@ -2,6 +2,9 @@ package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.model.TemplateUpload;
 
+import org.apache.poi.POIXMLProperties;
+import org.apache.poi.openxml4j.opc.OPCPackage;
+import org.apache.poi.openxml4j.opc.internal.PackagePropertiesPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -18,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import java.io.File;
 import java.nio.file.Files;
-import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -108,7 +110,6 @@ public class AddCorrespondenceTemplatesAPI
                 TemplateUpload templateUpload = new TemplateUpload();
                 Path path = Paths.get(pathName + "/" + template.getName());
                 BasicFileAttributes attributes = Files.readAttributes(path, BasicFileAttributes.class);
-                String user = Files.getOwner(path, LinkOption.NOFOLLOW_LINKS).getName();
                 FileTime creationTime = attributes.creationTime();
                 FileTime modifiedTime = attributes.lastModifiedTime();
 
@@ -116,7 +117,7 @@ public class AddCorrespondenceTemplatesAPI
                 templateUpload.setPath(template.getAbsolutePath());
                 templateUpload.setModified(modifiedTime.toString());
                 templateUpload.setName(template.getName());
-                templateUpload.setCreator(user);
+                templateUpload.setCreator(authentication.getName());
                 templateUpload.setCreated(creationTime.toString());
                 getUploadedTemplates().add(templateUpload);
             }

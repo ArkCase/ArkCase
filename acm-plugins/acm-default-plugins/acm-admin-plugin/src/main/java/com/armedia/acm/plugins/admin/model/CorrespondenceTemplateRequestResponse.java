@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.admin.model;
 
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -26,6 +27,10 @@ public class CorrespondenceTemplateRequestResponse
     private String numberFormatString;
 
     private boolean activated;
+
+    private String modifier;
+
+    private Date modified;
 
     /**
      * @return the dislpayName
@@ -169,6 +174,38 @@ public class CorrespondenceTemplateRequestResponse
     public void setActivated(boolean activated)
     {
         this.activated = activated;
+    }
+
+    /**
+     * @return the modifier
+     */
+    public String getModifier()
+    {
+        return modifier;
+    }
+
+    /**
+     * @param modifier the modifier to set
+     */
+    public void setModifier(String modifier)
+    {
+        this.modifier = modifier;
+    }
+
+    /**
+     * @return the modified
+     */
+    public Date getModified()
+    {
+        return modified;
+    }
+
+    /**
+     * @param modified the modified to set
+     */
+    public void setModified(Date modified)
+    {
+        this.modified = modified;
     }
 
 }

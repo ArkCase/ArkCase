@@ -27,6 +27,8 @@ public class TemplateMapper
         template.setDateFormatString(configuration.getDateFormatString());
         template.setNumberFormatString(configuration.getNumberFormatString());
         template.setActivated(configuration.isActivated());
+        template.setModifier(configuration.getModifier());
+        template.setModified(configuration.getModified());
 
         return template;
     }
@@ -44,6 +46,8 @@ public class TemplateMapper
         configuration.setDateFormatString(template.getDateFormatString());
         configuration.setNumberFormatString(template.getNumberFormatString());
         configuration.setActivated(template.isActivated());
+        configuration.setModifier(template.getModifier());
+        configuration.setModified(template.getModified());
 
         return configuration;
     }
@@ -62,6 +66,8 @@ public class TemplateMapper
         toUpdate.setDateFormatString(updateFrom.getDateFormatString());
         toUpdate.setNumberFormatString(updateFrom.getNumberFormatString());
         toUpdate.setActivated(updateFrom.isActivated());
+        toUpdate.setModifier(updateFrom.getModifier());
+        toUpdate.setModified(updateFrom.getModified());
     }
 
 }

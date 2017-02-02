@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.File;
 import java.nio.file.Files;
-import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -51,7 +50,6 @@ public class ListAllTemplatesControllerAPI
                 TemplateUpload templateUpload = new TemplateUpload();
                 Path path = Paths.get(pathName + "/" + template.getName());
                 BasicFileAttributes attributes = Files.readAttributes(path, BasicFileAttributes.class);
-                String user = Files.getOwner(path, LinkOption.NOFOLLOW_LINKS).getName();
                 FileTime creationTime = attributes.creationTime();
                 FileTime modifiedTime = attributes.lastModifiedTime();
 
@@ -59,7 +57,7 @@ public class ListAllTemplatesControllerAPI
                 templateUpload.setPath(template.getAbsolutePath());
                 templateUpload.setModified(modifiedTime.toString());
                 templateUpload.setName(template.getName());
-                templateUpload.setCreator(user);
+                templateUpload.setCreator(authentication.getName());
                 templateUpload.setCreated(creationTime.toString());
                 getUploadedTemplates().add(templateUpload);
             }
