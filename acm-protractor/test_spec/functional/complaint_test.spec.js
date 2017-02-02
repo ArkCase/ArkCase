@@ -41,7 +41,7 @@ describe('Create new complaint ', function() {
         complaintPage.clickNewButton().clickComplaintButton().switchToIframes().submitInitiatorInformation(Objects.complaintPage.data.firstName, Objects.complaintPage.data.lastName).reenterFirstName(Objects.complaintPage.data.firstName).clickTab("Incident").insertIncidentInformation("Arson", Objects.complaintPage.data.title).clickSubmitButton();
         complaintPage.switchToDefaultContent();
         complaintPage.waitForComplaintsPage();
-        expect(complaintPage.returnComplaintsTitle()).toEqual(Objects.complaintPage.data.title);
+        expect(complaintPage.returnComplaintsTitle()).toEqual(Objects.complaintPage.data.title, "Title is not correct on new created complaint");
 
     });
 
@@ -81,7 +81,7 @@ describe('Create new complaint ', function() {
         complaintPage.clickExpandFancyTreeTopElementAndSubLink("Details");
         complaintPage.clickDetailsAddPicture();
         complaintPage.uploadPicture();
-        expect(complaintPage.returnDetailsUploadedImage());
+        expect(complaintPage.returnDetailsUploadedImage(), "Image is not succesfully added in details");
 
     });
 
@@ -101,15 +101,16 @@ describe('Create new complaint ', function() {
         complaintPage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Documents");
         complaintPage.clickDocTreeExpand().rightClickFileTitle().clickDocAction("Open");
         complaintPage.moveToTab().clickDocViewNotesLink().submitNote(Objects.basepage.data.note);
-        expect(complaintPage.returnSavedNoteInGrid()).toEqual(Objects.basepage.data.note);
+        expect(complaintPage.returnSavedNoteInGrid()).toEqual(Objects.basepage.data.note, "Note is not succesfulluly added in document viewer in complaints");
 
     });
 
     using([{ priority: "High", prioritySaved: Objects.casepage.data.priorityHigh }, {
         priority: "Medium",
         prioritySaved: Objects.casepage.data.priorityMedium
-    }, { priority: "Expedite", prioritySaved: Objects.casepage.data.priorityExpedite }], function(data) {
+    }, { priority: "Expedite", prioritySaved: Objects.casepage.data.priorityExpedite }, { priority: "Low", prioritySaved: Objects.taskspage.data.priorityLow}], function(data) {
         it('should create new case and edit the priority to ' + data.priority, function() {
+
 
             complaintPage.clickModuleComplaints();
             complaintPage.waitForComplaintsPage();
@@ -118,6 +119,12 @@ describe('Create new complaint ', function() {
         });
     });
 
+    it('Edit assignee', function() {
+
+        complaintPage.clickModuleComplaints();
+        complaintPage.editAssignee("bthomas");
+        expect(complaintPage.returnAssignee()).toEqual("Bill Thomas", "Assignee is not updated");
+    });
 
     it('should create new complaint and add person', function() {
 
@@ -125,9 +132,9 @@ describe('Create new complaint ', function() {
         complaintPage.switchToDefaultContent();
         complaintPage.clickPeopleLinkBtn();
         complaintPage.addPerson(Objects.casepage.data.peopleTypeWitness, Objects.casepage.data.peopleFirstName, Objects.casepage.data.peopleLastName);
-        expect(complaintPage.returnPeopleTypeSecondRow()).toEqual(Objects.casepage.data.peopleTypeWitness);
-        expect(complaintPage.returnPeopleFirstNameColumnSecondRow()).toEqual(Objects.casepage.data.peopleFirstName);
-        expect(complaintPage.returnPeopleLastNameColumnSecondRow()).toEqual(Objects.casepage.data.peopleLastName);
+        expect(complaintPage.returnPeopleTypeSecondRow()).toEqual(Objects.casepage.data.peopleTypeWitness, "Type of added person in complaints is not correct");
+        expect(complaintPage.returnPeopleFirstNameColumnSecondRow()).toEqual(Objects.casepage.data.peopleFirstName, "First name of added person in complaints is not correct");
+        expect(complaintPage.returnPeopleLastNameColumnSecondRow()).toEqual(Objects.casepage.data.peopleLastName, "Last name of addede person in complaints is not correct");
     });
 
 

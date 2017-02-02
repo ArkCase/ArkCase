@@ -95,16 +95,18 @@ describe('case page tests', function() {
 
             casePage.clickModuleCasesFiles();
             casePage.editPriority(data.priority);
-            expect(casePage.returnPriority()).toEqual(data.prioritySaved);
+            expect(casePage.returnPriority()).toEqual(data.prioritySaved, "Priority is not updated");
         });
     });
 
-    it('should  add/delete note', function() {
-
-        casePage.clickModuleCasesFiles();
-        casePage.clickNotesLink();
-        casePage.addNote(Objects.casepage.data.note);
-        casePage.deleteNote();
+    it('should  create new case and edit assgined' , function() {
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
+        casePage.clickNextBtn();
+        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
+        casePage.switchToDefaultContent();
+        casePage.waitForAssignee();
+        casePage.editAssignee("samuel-acm").waitForAssignee();
+        expect(casePage.returnAssignee()).toEqual(Objects.casepage.data.assigneeSamuel, "Assignee is not updated");
     });
 
     it('should  add/edit note', function() {
@@ -147,9 +149,9 @@ describe('case page tests', function() {
         casePage.clickPeopleLinkBtn();
         casePage.waitForCasesPage();
         casePage.addPerson(Objects.casepage.data.peopleTypeWitness, Objects.casepage.data.peopleFirstName, Objects.casepage.data.peopleLastName);
-        expect(casePage.returnPeopleTypeSecondRow()).toEqual(Objects.casepage.data.peopleTypeWitness);
-        expect(casePage.returnPeopleFirstNameColumnSecondRow()).toEqual(Objects.casepage.data.peopleFirstName);
-        expect(casePage.returnPeopleLastNameColumnSecondRow()).toEqual(Objects.casepage.data.peopleLastName);
+        expect(casePage.returnPeopleTypeSecondRow()).toEqual(Objects.casepage.data.peopleTypeWitness, "People type is not correct");
+        expect(casePage.returnPeopleFirstNameColumnSecondRow()).toEqual(Objects.casepage.data.peopleFirstName, "People first name is not correct");
+        expect(casePage.returnPeopleLastNameColumnSecondRow()).toEqual(Objects.casepage.data.peopleLastName, "People last name is not correct");
 
     });
 
@@ -163,9 +165,9 @@ describe('case page tests', function() {
         casePage.waitForCasesPage();
         casePage.clickPeopleLinkBtn();
         casePage.editInitiator(Objects.casepage.data.peopleFirstNameEdit, Objects.casepage.data.peopleLastNameedit);
-        expect(casePage.returnPeopleType()).toEqual(Objects.casepage.data.peopleTypeInitiaor);
-        expect(casePage.returnPeopleFirstName()).toEqual(Objects.casepage.data.peopleFirstNameEdit);
-        expect(casePage.returnPeopleLastName()).toEqual(Objects.casepage.data.peopleLastNameedit);
+        expect(casePage.returnPeopleType()).toEqual(Objects.casepage.data.peopleTypeInitiaor, "People type in person is not updated");
+        expect(casePage.returnPeopleFirstName()).toEqual(Objects.casepage.data.peopleFirstNameEdit, "People first name is not updated");
+        expect(casePage.returnPeopleLastName()).toEqual(Objects.casepage.data.peopleLastNameedit, "People last name is not updated");
 
     });
 
@@ -178,10 +180,10 @@ describe('case page tests', function() {
         casePage.waitForCasesPage();
         casePage.clickPeopleLinkBtn();
         casePage.addContactMethod(Objects.casepage.data.contactMethodFacebook, Objects.casepage.data.contactMethodFacebook);
-        expect(casePage.returnContatMethodType()).toEqual(Objects.casepage.data.contactMethodFacebook);
-        expect(casePage.returncontactMethodValueFirstRow()).toEqual(Objects.casepage.data.contactMethodFacebook);
-        expect(casePage.returncontactMethodLastModifiedFirstRow()).toEqual(utils.returnToday("/"));
-        expect(casePage.returncontactMethodModifiedByFirstRow()).toEqual(Objects.casepage.data.assigneeSamuel);
+        expect(casePage.returnContatMethodType()).toEqual(Objects.casepage.data.contactMethodFacebook, "type is not correct on inserted contact method");
+        expect(casePage.returncontactMethodValueFirstRow()).toEqual(Objects.casepage.data.contactMethodFacebook, "value is not correct in inserted contact method");
+        expect(casePage.returncontactMethodLastModifiedFirstRow()).toEqual(utils.returnToday("/"), "last modified date is not correct in inserted contact method");
+        expect(casePage.returncontactMethodModifiedByFirstRow()).toEqual(Objects.casepage.data.assigneeSamuel, "modified by is not correct in inserted contact method");
 
     });
 
@@ -207,10 +209,10 @@ describe('case page tests', function() {
         casePage.clickPeopleLinkBtn();
         casePage.addContactMethod(Objects.casepage.data.contactMethodFacebook, Objects.casepage.data.contactMethodFacebook);
         casePage.editContactMethod(Objects.casepage.data.contactMethodEmail, Objects.casepage.data.contactMethodEmail);
-        expect(casePage.returnContatMethodType()).toEqual(Objects.casepage.data.contactMethodEmail);
-        expect(casePage.returncontactMethodValueFirstRow()).toEqual(Objects.casepage.data.contactMethodEmail);
-        expect(casePage.returncontactMethodLastModifiedFirstRow()).toEqual(utils.returnToday("/"));
-        expect(casePage.returncontactMethodModifiedByFirstRow()).toEqual(Objects.casepage.data.assigneeSamuel);
+        expect(casePage.returnContatMethodType()).toEqual(Objects.casepage.data.contactMethodEmail, "Contact method type is not updated");
+        expect(casePage.returncontactMethodValueFirstRow()).toEqual(Objects.casepage.data.contactMethodEmail, "Contact method value is not updated");
+        expect(casePage.returncontactMethodLastModifiedFirstRow()).toEqual(utils.returnToday("/"), "Contact method last modified date is not updated");
+        expect(casePage.returncontactMethodModifiedByFirstRow()).toEqual(Objects.casepage.data.assigneeSamuel, "Contact method modified by is not updated");
     });
 
     it('should create new case and add organization', function() {
@@ -222,10 +224,10 @@ describe('case page tests', function() {
         casePage.waitForCasesPage();
         casePage.clickPeopleLinkBtn();
         casePage.addOrganization(Objects.casepage.data.organizationTypeGoverment, Objects.casepage.data.organizationTypeGoverment);
-        expect(casePage.returnorganizationTypeFirstRow()).toEqual(Objects.casepage.data.organizationTypeGoverment);
-        expect(casePage.returnorganizationValueFirstRow()).toEqual(Objects.casepage.data.organizationTypeGoverment);
-        expect(casePage.returnorganizationLastModifiedFirstRow()).toEqual(utils.returnToday("/"));
-        expect(casePage.returnorganizationModifiedByFirstRow()).toEqual(Objects.casepage.data.assigneeSamuel);
+        expect(casePage.returnorganizationTypeFirstRow()).toEqual(Objects.casepage.data.organizationTypeGoverment, "Organization type is not correct on added organization");
+        expect(casePage.returnorganizationValueFirstRow()).toEqual(Objects.casepage.data.organizationTypeGoverment, "Organization value is not correct on added organization");
+        expect(casePage.returnorganizationLastModifiedFirstRow()).toEqual(utils.returnToday("/"), "Organization last modified date is not correct on added organization");
+        expect(casePage.returnorganizationModifiedByFirstRow()).toEqual(Objects.casepage.data.assigneeSamuel, "Organization modified by is not correct on added organization");
     });
 
     it('should create new case add/delete organization', function() {
@@ -251,10 +253,10 @@ describe('case page tests', function() {
         casePage.clickPeopleLinkBtn();
         casePage.addOrganization(Objects.casepage.data.organizationTypeGoverment, Objects.casepage.data.organizationTypeGoverment);
         casePage.editOrganization(Objects.casepage.data.organizationTypeCorporation, Objects.casepage.data.organizationTypeCorporation);
-        expect(casePage.returnorganizationTypeFirstRow()).toEqual(Objects.casepage.data.organizationTypeCorporation);
-        expect(casePage.returnorganizationValueFirstRow()).toEqual(Objects.casepage.data.organizationTypeCorporation);
-        expect(casePage.returnorganizationLastModifiedFirstRow()).toEqual(utils.returnToday("/"));
-        expect(casePage.returnorganizationModifiedByFirstRow()).toEqual(Objects.casepage.data.assigneeSamuel);
+        expect(casePage.returnorganizationTypeFirstRow()).toEqual(Objects.casepage.data.organizationTypeCorporation, "Organization type is not updated");
+        expect(casePage.returnorganizationValueFirstRow()).toEqual(Objects.casepage.data.organizationTypeCorporation, "Organization value is not updated");
+        expect(casePage.returnorganizationLastModifiedFirstRow()).toEqual(utils.returnToday("/"), "Organization last modified is not updated");
+        expect(casePage.returnorganizationModifiedByFirstRow()).toEqual(Objects.casepage.data.assigneeSamuel, "Organization modified by is not updated");
 
     });
 
@@ -267,14 +269,14 @@ describe('case page tests', function() {
         casePage.waitForCasesPage();
         casePage.clickPeopleLinkBtn();
         casePage.addAddress(Objects.casepage.data.addressTypeHome, Objects.casepage.data.street, Objects.casepage.data.city, Objects.casepage.data.state, Objects.casepage.data.zip, Objects.casepage.data.country);
-        expect(casePage.returnAddressType()).toEqual(Objects.casepage.data.addressTypeHome);
-        expect(casePage.returnAddressStreet()).toEqual(Objects.casepage.data.street);
-        expect(casePage.returnAddressCity()).toEqual(Objects.casepage.data.city);
-        expect(casePage.returnAddressState()).toEqual(Objects.casepage.data.state);
-        expect(casePage.returnAddressZip()).toEqual(Objects.casepage.data.zip);
-        expect(casePage.returnaddressCountryValue()).toEqual(Objects.casepage.data.country);
-        expect(casePage.returnAddressLastModified()).toEqual(utils.returnToday("/"));
-        expect(casePage.returnAddressModifiedBy()).toEqual(Objects.casepage.data.assigneeSamuel);
+        expect(casePage.returnAddressType()).toEqual(Objects.casepage.data.addressTypeHome, "Type is not correct in added address");
+        expect(casePage.returnAddressStreet()).toEqual(Objects.casepage.data.street, "Street is not correct in added address");
+        expect(casePage.returnAddressCity()).toEqual(Objects.casepage.data.city, "City is not correct in added address");
+        expect(casePage.returnAddressState()).toEqual(Objects.casepage.data.state, "State is not correct in added address");
+        expect(casePage.returnAddressZip()).toEqual(Objects.casepage.data.zip, "Zip is not correct in added address");
+        expect(casePage.returnaddressCountryValue()).toEqual(Objects.casepage.data.country, "Country is not correct in added address");
+        expect(casePage.returnAddressLastModified()).toEqual(utils.returnToday("/"), "Last modified is not correct in added address");
+        expect(casePage.returnAddressModifiedBy()).toEqual(Objects.casepage.data.assigneeSamuel, "Modified by is not correct in added address");
 
     });
 
@@ -300,14 +302,14 @@ describe('case page tests', function() {
         casePage.clickPeopleLinkBtn();
         casePage.addAddress(Objects.casepage.data.addressTypeHome, Objects.casepage.data.street, Objects.casepage.data.city, Objects.casepage.data.state, Objects.casepage.data.zip, Objects.casepage.data.country);
         casePage.editAddress(Objects.casepage.data.addressTypeBusiness, Objects.casepage.data.editStreet, Objects.casepage.data.editCity, Objects.casepage.data.editState, Objects.casepage.data.editZip, Objects.casepage.data.editCountry);
-        expect(casePage.returnAddressType()).toEqual(Objects.casepage.data.addressTypeBusiness);
-        expect(casePage.returnAddressStreet()).toEqual(Objects.casepage.data.editStreet);
-        expect(casePage.returnAddressCity()).toEqual(Objects.casepage.data.editCity);
-        expect(casePage.returnAddressState()).toEqual(Objects.casepage.data.editState);
-        expect(casePage.returnAddressZip()).toEqual(Objects.casepage.data.editZip);
-        expect(casePage.returnaddressCountryValue()).toEqual(Objects.casepage.data.editCountry);
-        expect(casePage.returnAddressLastModified()).toEqual(utils.returnToday("/"));
-        expect(casePage.returnAddressModifiedBy()).toEqual(Objects.casepage.data.assigneeSamuel);
+        expect(casePage.returnAddressType()).toEqual(Objects.casepage.data.addressTypeBusiness, "Address type is not updated");
+        expect(casePage.returnAddressStreet()).toEqual(Objects.casepage.data.editStreet, "Address street is not updated");
+        expect(casePage.returnAddressCity()).toEqual(Objects.casepage.data.editCity, "Address city is not updated");
+        expect(casePage.returnAddressState()).toEqual(Objects.casepage.data.editState, "Address state is not updated");
+        expect(casePage.returnAddressZip()).toEqual(Objects.casepage.data.editZip, "Address zip is not updated");
+        expect(casePage.returnaddressCountryValue()).toEqual(Objects.casepage.data.editCountry, "Address country is not updated");
+        expect(casePage.returnAddressLastModified()).toEqual(utils.returnToday("/"), "Address last modified is not updated");
+        expect(casePage.returnAddressModifiedBy()).toEqual(Objects.casepage.data.assigneeSamuel, "Address modified by is not updated");
     });
 
     it('should create new case and add alias', function() {
@@ -349,10 +351,10 @@ describe('case page tests', function() {
         casePage.clickPeopleLinkBtn();
         casePage.addAlias(Objects.casepage.data.aliaseFKA, Objects.casepage.data.aliasValue);
         casePage.editAlias(Objects.casepage.data.aliasMarried, Objects.casepage.data.editAlias);
-        expect(casePage.returnAliasesType()).toEqual(Objects.casepage.data.aliasMarried);
-        expect(casePage.returnAliasesValue()).toEqual(Objects.casepage.data.editAlias);
-        expect(casePage.returnAliasesLastModified()).toEqual(utils.returnToday("/"));
-        expect(casePage.returnAliasesModifiedBy()).toEqual(Objects.casepage.data.assigneeSamuel);
+        expect(casePage.returnAliasesType()).toEqual(Objects.casepage.data.aliasMarried, "Alias type is not updated");
+        expect(casePage.returnAliasesValue()).toEqual(Objects.casepage.data.editAlias, "Alias value is not updated");
+        expect(casePage.returnAliasesLastModified()).toEqual(utils.returnToday("/"), "Alias last modified is not updated");
+        expect(casePage.returnAliasesModifiedBy()).toEqual(Objects.casepage.data.assigneeSamuel, "Alias modified by is not updated");
 
     });
 
@@ -365,9 +367,9 @@ describe('case page tests', function() {
         casePage.waitForCasesPage();
         casePage.clickTagsLinkBtn();
         casePage.addTag(Objects.casepage.data.tagname);
-        expect(casePage.returnTagName()).toEqual(Objects.casepage.data.tagname);
-        expect(casePage.returntagCratedDate()).toEqual(utils.returnToday("/"));
-        expect(casePage.returntagCreatedBy()).toEqual(Objects.casepage.data.assigneeSamuel);
+        expect(casePage.returnTagName()).toEqual(Objects.casepage.data.tagname, "Name is not correct on added tag");
+        expect(casePage.returntagCratedDate()).toEqual(utils.returnToday("/"), "Created date is not correct on added tag");
+        expect(casePage.returntagCreatedBy()).toEqual(Objects.casepage.data.assigneeSamuel, "Created by is not correct on added tag");
     });
 
     it('should create new case and add/delete tag', function() {
@@ -387,7 +389,7 @@ describe('case page tests', function() {
         casePage.switchToDefaultContent();
         casePage.waitForCasesPage();
         casePage.clickSubscribeBtn();
-        expect(casePage.returnUnsubscribeBtnText()).toEqual(Objects.casepage.data.unsubscribeBtn);
+        expect(casePage.returnUnsubscribeBtnText()).toEqual(Objects.casepage.data.unsubscribeBtn, "After click on subscribe text on button is not changed into Unsubscribe");
     });
 
     it('should create new case and click unubscribe button, verify if is changed to subscribe', function() {
@@ -399,7 +401,7 @@ describe('case page tests', function() {
         casePage.waitForCasesPage();
         casePage.clickSubscribeBtn();
         casePage.clickUnubscribeBtn();
-        expect(casePage.returnSubscribeBtnText()).toEqual(Objects.casepage.data.subscribeBtn);
+        expect(casePage.returnSubscribeBtnText()).toEqual(Objects.casepage.data.subscribeBtn, "After click on unsubscribe text on button is not changed into Subscribe");
 
     });
 
@@ -415,7 +417,7 @@ describe('case page tests', function() {
             casePage.switchToIframes().selectCaseStatus(data.status);
             casePage.selectApprover(Objects.casepage.data.approverSamuel).chnageCaseSubmit();
             casePage.clickTasksLinkBtn().waitForTasksTable();
-            expect(casePage.returnAutomatedTask()).toContain(Objects.casepage.data.automatedTaskTitle);
+            expect(casePage.returnAutomatedTask()).toContain(Objects.casepage.data.automatedTaskTitle, "Automated task title does not contain task title");
             casePage.clickTaskTitle();
             taskPage.clickApproveBtn();
             expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateClosed, 'The task state should be CLOSED');
@@ -431,7 +433,7 @@ describe('case page tests', function() {
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
         casePage.waitForCasesPage();
         casePage.clickFirstTopElementInList();
-        expect(casePage.returnCaseTitle()).toEqual(Objects.casepage.data.caseName);
+        expect(casePage.returnCaseTitle()).toEqual(Objects.casepage.data.caseName, "Name is not correct in new created case");
     });
 
 
@@ -462,11 +464,11 @@ describe('case page tests', function() {
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
         casePage.waitForCaseTitle();
         casePage.clickFirstTopElementInList().addReference(caseid);
-        expect(casePage.returnReferenceNumber()).toEqual(caseid);
-        expect(casePage.returnReferenceTitle()).toEqual(Objects.casepage.data.referenceCaseName);
-        expect(casePage.returnReferenceModified()).toEqual(utils.returnToday("/"));
-        expect(casePage.returnReferenceType()).toEqual(Objects.casepage.data.referenceType);
-        expect(casePage.returnReferenceStatus()).toEqual(Objects.casepage.data.referenceStatusDraft);
+        expect(casePage.returnReferenceNumber()).toEqual(caseid, "id is not correct in column on added case as reference");
+        expect(casePage.returnReferenceTitle()).toEqual(Objects.casepage.data.referenceCaseName, "name is not correct in column on added case as reference");
+        expect(casePage.returnReferenceModified()).toEqual(utils.returnToday("/"), "modified date is not correct in column on added case as reference");
+        expect(casePage.returnReferenceType()).toEqual(Objects.casepage.data.referenceType, "type is not correct in column on added case as reference");
+        expect(casePage.returnReferenceStatus()).toEqual(Objects.casepage.data.referenceStatusDraft, "status is not correct in column on added case as reference");
 
     });
 
@@ -517,11 +519,11 @@ describe('case page tests', function() {
             timeTrackingPage.clickSaveBtn();
             casePage.clickModuleCasesFiles();
             casePage.TimeTable();
-            expect(casePage.returnTimesheetFormName()).toContain(Objects.casepage.data.timeSheet);
-            expect(casePage.returnTimesheetUser()).toEqual(Objects.casepage.data.assigneeSamuel);
-            expect(casePage.returnTimesheetModifiedDate()).toEqual(utils.returnToday("/"));
-            expect(casePage.returnTimesheetStatus()).toEqual(Objects.casepage.data.statusDraft);
-            expect(casePage.returnTimesheetHours()).toEqual(Objects.casepage.data.totalHours);
+            expect(casePage.returnTimesheetFormName()).toContain(Objects.casepage.data.timeSheet, "Name is not correct on added timesheet on case");
+            expect(casePage.returnTimesheetUser()).toEqual(Objects.casepage.data.assigneeSamuel, "User is not correct on added timesheet on case");
+            expect(casePage.returnTimesheetModifiedDate()).toEqual(utils.returnToday("/"), "Modified date is not correct on added timesheet on case");
+            expect(casePage.returnTimesheetStatus()).toEqual(Objects.casepage.data.statusDraft, "Status is not correct on added timesheet on case");
+            expect(casePage.returnTimesheetHours()).toEqual(Objects.casepage.data.totalHours, "Hours is not correct on added timesheet on case");
         });
     });
 
@@ -537,11 +539,11 @@ describe('case page tests', function() {
             costTrackingPage.clickSaveBtn();
             casePage.clickModuleCasesFiles();
             casePage.CostTable();
-            expect(casePage.returncostSheetFormName()).toContain("Costsheet");
-            expect(casePage.returncostSheetUser()).toEqual(Objects.casepage.data.assigneeSamuel);
-            expect(casePage.returncostSheetModifiedDate()).toEqual(utils.returnToday("/"));
-            expect(casePage.returncostSheetTotalCost()).toEqual(Objects.costsheetPage.data.verifyAmmount);
-            expect(casePage.returncostSheetStatus()).toEqual(Objects.casepage.data.statusDraft);
+            expect(casePage.returncostSheetFormName()).toContain("Costsheet", "Name is not correct on added costsheet on case");
+            expect(casePage.returncostSheetUser()).toEqual(Objects.casepage.data.assigneeSamuel, "User is not correct on added costsheet on case");
+            expect(casePage.returncostSheetModifiedDate()).toEqual(utils.returnToday("/"), "Modified date is not correct on added costsheet on case");
+            expect(casePage.returncostSheetTotalCost()).toEqual(Objects.costsheetPage.data.verifyAmmount, "Total cost is not correct on added costsheet on case");
+            expect(casePage.returncostSheetStatus()).toEqual(Objects.casepage.data.statusDraft, "Status is not correct on added costsheet on case");
         });
     });
 
@@ -573,11 +575,11 @@ describe('case page tests', function() {
             casePage.clickSecondElementInList();
             expect(casePage.returnCaseType()).toEqual("Agricultural")
             casePage.clikReferenceLink();
-            expect(casePage.returnReferenceNumber()).toEqual(text);
-            expect(casePage.returnReferenceTitle()).toEqual("New Case");
-            expect(casePage.returnReferenceModified()).toEqual(utils.returnToday("/"));
-            expect(casePage.returnReferenceType()).toEqual(Objects.casepage.data.referenceType);
-            expect(casePage.returnReferenceStatus()).toEqual("CLOSED");
+            expect(casePage.returnReferenceNumber()).toEqual(text, "Reference number is not correct after closing case and reinvestigate it");
+            expect(casePage.returnReferenceTitle()).toEqual("New Case", "Reference title is not correct after closing case and reinvestigate it");
+            expect(casePage.returnReferenceModified()).toEqual(utils.returnToday("/"), "Modified is not correct after closing case and reinvestigate it");
+            expect(casePage.returnReferenceType()).toEqual(Objects.casepage.data.referenceType, "Type is not correct after closing case and reinvestigate it");
+            expect(casePage.returnReferenceStatus()).toEqual("CLOSED", "Status is not closed after closing case and reinvestigate it");
         });
     });
 
@@ -593,14 +595,14 @@ describe('case page tests', function() {
         casePage.switchToDefaultContent();
         casePage.waitForCasesPage();
         casePage.participantTable();
-        expect(casePage.returnParticipantTypeFirstRow()).toEqual("*");
-        expect(casePage.returnParticipantNameFirstRow()).toEqual("*");
-        expect(casePage.returnParticipantTypeSecondRow()).toEqual("assignee");
-        expect(casePage.returnParticipantNameSecondRow()).toEqual("Samuel Supervisor");
-        expect(casePage.returnParticipantTypeThirdRow()).toEqual("owning group");
-        expect(casePage.returnParticipantNameThirdRow()).toEqual("ACM_INVESTIGATOR_DEV");
-        expect(casePage.returnParticipantTypeForthRow()).toEqual("reader");
-        expect(casePage.returnParticipantNameForthRow()).toEqual("Samuel Supervisor");
+        expect(casePage.returnParticipantTypeFirstRow()).toEqual("*", "Participant type in first row is not correct after adding participant owner");
+        expect(casePage.returnParticipantNameFirstRow()).toEqual("*", "Participant name in first row is no correct after adding participant owner");
+        expect(casePage.returnParticipantTypeSecondRow()).toEqual("assignee", "Participant type in second row is not correct after adding participant owner");
+        expect(casePage.returnParticipantNameSecondRow()).toEqual("Samuel Supervisor", "Participant name in second row is not correct after adding participant owner");
+        expect(casePage.returnParticipantTypeThirdRow()).toEqual("owning group", "Participant type in third row is not correct after adding participant owner");
+        expect(casePage.returnParticipantNameThirdRow()).toEqual("ACM_INVESTIGATOR_DEV", "Participant name in third row is not correct after adding participant owner");
+        expect(casePage.returnParticipantTypeForthRow()).toEqual("reader", "Participant type in forth row is not correct after adding participant owner");
+        expect(casePage.returnParticipantNameForthRow()).toEqual("Samuel Supervisor", "Participant name in forth row is not correct after adding participant owner");
 
     });
 
@@ -612,14 +614,14 @@ describe('case page tests', function() {
         casePage.switchToDefaultContent();
         casePage.waitForCasesPage();
         casePage.participantTable();
-        expect(casePage.returnParticipantTypeFirstRow()).toEqual("*");
-        expect(casePage.returnParticipantNameFirstRow()).toEqual("*");
-        expect(casePage.returnParticipantTypeSecondRow()).toEqual("assignee");
-        expect(casePage.returnParticipantNameSecondRow()).toEqual("Ann Administrator");
-        expect(casePage.returnParticipantTypeThirdRow()).toEqual("owning group");
-        expect(casePage.returnParticipantNameThirdRow()).toEqual("ACM_INVESTIGATOR_DEV");
-        expect(casePage.returnParticipantTypeForthRow()).toEqual("reader");
-        expect(casePage.returnParticipantNameForthRow()).toEqual("Samuel Supervisor");
+        expect(casePage.returnParticipantTypeFirstRow()).toEqual("*", "Participant type in first row is not correct after adding participant owner");
+        expect(casePage.returnParticipantNameFirstRow()).toEqual("*", "Participant name in first row is no correct after adding participant owner");
+        expect(casePage.returnParticipantTypeSecondRow()).toEqual("assignee", "Participant type in second row is not correct after adding participant owner");
+        expect(casePage.returnParticipantNameSecondRow()).toEqual("Samuel Supervisor", "Participant name in second row is not correct after adding participant owner");
+        expect(casePage.returnParticipantTypeThirdRow()).toEqual("owning group", "Participant type in third row is not correct after adding participant owner");
+        expect(casePage.returnParticipantNameThirdRow()).toEqual("ACM_INVESTIGATOR_DEV", "Participant name in third row is not correct after adding participant owner");
+        expect(casePage.returnParticipantTypeForthRow()).toEqual("reader", "Participant type in forth row is not correct after adding participant owner");
+        expect(casePage.returnParticipantNameForthRow()).toEqual("Samuel Supervisor", "Participant name in forth row is not correct after adding participant owner");
     });
 
     using([{ participant: "Collaborator", participantSaved: "collaborator" }, {
@@ -644,16 +646,16 @@ describe('case page tests', function() {
             casePage.switchToDefaultContent();
             casePage.waitForCasesPage();
             casePage.participantTable();
-            expect(casePage.returnParticipantTypeFirstRow()).toEqual("*");
-            expect(casePage.returnParticipantNameFirstRow()).toEqual("*");
-            expect(casePage.returnParticipantTypeSecondRow()).toEqual("assignee");
-            expect(casePage.returnParticipantNameSecondRow()).toEqual("Ann Administrator");
-            expect(casePage.returnParticipantTypeThirdRow()).toEqual(data.participantSaved);
-            expect(casePage.returnParticipantNameThirdRow()).toEqual("Sally Supervisor");
-            expect(casePage.returnParticipantTypeForthRow()).toEqual("owning group");
-            expect(casePage.returnParticipantNameForthRow()).toEqual("ACM_INVESTIGATOR_DEV");
-            expect(casePage.returnParticipantTypeFifthRow()).toEqual("reader");
-            expect(casePage.returnParticipantNameFifthRow()).toEqual("Samuel Supervisor");
+            expect(casePage.returnParticipantTypeFirstRow()).toEqual("*", "Participant type in first row is not correct after adding participant " + data.participant);
+            expect(casePage.returnParticipantNameFirstRow()).toEqual("*", "Participant name in first row is no correct after adding participant " + data.participant);
+            expect(casePage.returnParticipantTypeSecondRow()).toEqual("assignee", "Participant type in second row is not correct after adding participant  " + data.participant);
+            expect(casePage.returnParticipantNameSecondRow()).toEqual("Ann Administrator", "Participant name in second row is not correct after adding participant " + data.participant);
+            expect(casePage.returnParticipantTypeThirdRow()).toEqual(data.participantSaved, "Participant type in third row is not correct after adding participant " + data.participant);
+            expect(casePage.returnParticipantNameThirdRow()).toEqual("Sally Supervisor", "Participant name in third row is not correct after adding participant " + data.participant);
+            expect(casePage.returnParticipantTypeForthRow()).toEqual("owning group", "Participant type in forth row is not correct after adding participant " + data.participant);
+            expect(casePage.returnParticipantNameForthRow()).toEqual("ACM_INVESTIGATOR_DEV", "Participant name in forth row is not correct after adding participant " + data.participant);
+            expect(casePage.returnParticipantTypeFifthRow()).toEqual("reader", "Participant type in fifth row is not correct after adding participant " + data.participant);
+            expect(casePage.returnParticipantNameFifthRow()).toEqual("Samuel Supervisor", "Participant name in fifth row is not correct after adding participant " +data.participant);
         });
     });
 
@@ -679,16 +681,16 @@ describe('case page tests', function() {
         casePage.switchToDefaultContent();
         casePage.waitForCasesPage();
         casePage.participantTable();
-        expect(casePage.returnParticipantTypeFirstRow()).toEqual("*");
-        expect(casePage.returnParticipantNameFirstRow()).toEqual("*");
-        expect(casePage.returnParticipantTypeSecondRow()).toEqual("approver");
-        expect(casePage.returnParticipantNameSecondRow()).toEqual("Ann Administrator");
-        expect(casePage.returnParticipantTypeThirdRow()).toEqual("assignee");
-        expect(casePage.returnParticipantNameThirdRow()).toEqual("Ann Administrator");
-        expect(casePage.returnParticipantTypeForthRow()).toEqual("owning group");
-        expect(casePage.returnParticipantNameForthRow()).toEqual("ACM_INVESTIGATOR_DEV");
-        expect(casePage.returnParticipantTypeFifthRow()).toEqual("reader");
-        expect(casePage.returnParticipantNameFifthRow()).toEqual("Samuel Supervisor");
+        expect(casePage.returnParticipantTypeFirstRow()).toEqual("*", "Participant type in first row is not correct after adding approver from participant");
+        expect(casePage.returnParticipantNameFirstRow()).toEqual("*", "Participant name in first row is not correct after adding approver from participant");
+        expect(casePage.returnParticipantTypeSecondRow()).toEqual("approver", "Participant type in second row is not correct after adding approver from participant");
+        expect(casePage.returnParticipantNameSecondRow()).toEqual("Ann Administrator", "Participant name in second row is not correct after adding approver from participant");
+        expect(casePage.returnParticipantTypeThirdRow()).toEqual("assignee", "Participant type in third row is not correct after adding approver from participant");
+        expect(casePage.returnParticipantNameThirdRow()).toEqual("Ann Administrator", "Participant name in third row is not correct after addinf approver from participant");
+        expect(casePage.returnParticipantTypeForthRow()).toEqual("owning group", "Participant type in forth row is not correct after adding approver from participant");
+        expect(casePage.returnParticipantNameForthRow()).toEqual("ACM_INVESTIGATOR_DEV", "Participant name in forth row is not correct after adding approver from participant");
+        expect(casePage.returnParticipantTypeFifthRow()).toEqual("reader", "Participant type in fifth row is not correct after adding approver from participant");
+        expect(casePage.returnParticipantNameFifthRow()).toEqual("Samuel Supervisor", "Participant name in fifth row is not correct after adding approver from participant");
     });
 
     it('should  verify if special type can be deleted', function() {
@@ -739,16 +741,7 @@ describe('case page tests', function() {
         casePage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Documents");
         casePage.clickDocTreeExpand().rightClickFileTitle().clickDocAction("Open");
         casePage.moveToTab().clickDocViewNotesLink().submitNote(Objects.basepage.data.note);
-        expect(casePage.returnSavedNoteInGrid()).toEqual(Objects.basepage.data.note);
-
-    });
-
-    it('should  verify assigned to, owning group and due date', function() {
-
-        casePage.clickModuleCasesFiles();
-        expect(casePage.returnDueDate()).toEqual(utils.returnDate("/", 180));
-        expect(casePage.returnAssignee()).toEqual(Objects.taskspage.data.administrator);
-        expect(casePage.returnOwningGroup()).toEqual(Objects.casepage.data.owningGroup);
+        expect(casePage.returnSavedNoteInGrid()).toEqual(Objects.basepage.data.note, "Note is not succcessfully saved in document viewer");
 
     });
 
@@ -758,7 +751,7 @@ describe('case page tests', function() {
         casePage.participantTable();
         casePage.clickEditAssigneeBtn();
         casePage.editAssigneeInParticipantTable("Samuel Supervisor");
-        expect(casePage.returnParticipantNameSecondRow()).toEqual("Samuel Supervisor");
+        expect(casePage.returnParticipantNameSecondRow()).toEqual("Samuel Supervisor", "Edited assignee is not saved");
     });
 
     it('should verify if the people intiator delete button is displayed', function() {
@@ -789,7 +782,7 @@ describe('case page tests', function() {
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
         casePage.clickNextBtn();
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.verifyTheNotificationMessage("Case File ");
+        casePage.verifyTheNotificationMessage("Case File ", "The notification message after save is not correct");
     });
 
     it('should create new case by default assignee, claim it and verify the assignee', function() {
@@ -800,7 +793,7 @@ describe('case page tests', function() {
         casePage.switchToDefaultContent();
         casePage.waitForCasesPage();
         casePage.clickClaimButton();
-        expect(casePage.returnAssignee()).toEqual(Objects.casepage.data.assigneeSamuel);
+        expect(casePage.returnAssignee()).toEqual(Objects.casepage.data.assigneeSamuel, "After claim assignee is not correct");
     });
 
     it('should create new case by default assignee, claim it verify the assignee then uncalaim it and verify if the assignee is removed ', function() {
@@ -811,7 +804,7 @@ describe('case page tests', function() {
         casePage.switchToDefaultContent();
         casePage.waitForCasesPage();
         casePage.clickClaimButton();
-        expect(casePage.returnAssignee()).toEqual(Objects.casepage.data.assigneeSamuel);
+        expect(casePage.returnAssignee()).toEqual(Objects.casepage.data.assigneeSamuel, "Default assignee is not correct when case is created");
         casePage.clickUnclaimButton();
         expect(casePage.returnAssignee()).toEqual("", "The assignee name is displayed");
     });

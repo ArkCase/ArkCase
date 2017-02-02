@@ -64,9 +64,9 @@ var ComplaintPage = function() {
     browser.ignoreSynchronization = true;
     this.clickComplaintButton = function() {
         browser.ignoreSynchronization = false;
-        browser.wait(EC.presenceOf(element(by.linkText(Objects.complaintPage.locators.complaintButton))), 30000).then(function() {
-            browser.wait(EC.visibilityOf(element(by.linkText(Objects.complaintPage.locators.complaintButton))), 30000).then(function() {
-                browser.wait(EC.elementToBeClickable(element(by.linkText(Objects.complaintPage.locators.complaintButton))), 30000).then(function() {
+        browser.wait(EC.presenceOf(element(by.linkText(Objects.complaintPage.locators.complaintButton))), 30000, "New Complaint button is not present in DOM").then(function() {
+            browser.wait(EC.visibilityOf(element(by.linkText(Objects.complaintPage.locators.complaintButton))), 30000, "New complaint button is not visible").then(function() {
+                browser.wait(EC.elementToBeClickable(element(by.linkText(Objects.complaintPage.locators.complaintButton))), 30000, "New complaint button is not clickable").then(function() {
                     complaintButton.click();
                 });
             });
@@ -78,13 +78,13 @@ var ComplaintPage = function() {
 
     this.submitInitiatorInformation = function(name, surname) {
         this.clickRadioBtnNewInitiator();
-        browser.wait(EC.presenceOf(element(by.name(Objects.complaintPage.locators.firstName))), 30000).then(function() {
-            browser.wait(EC.visibilityOf(element(by.name(Objects.complaintPage.locators.firstName))), 30000).then(function() {
-                browser.wait(EC.elementToBeClickable(element(by.name(Objects.complaintPage.locators.firstName))), 30000).then(function() {
+        browser.wait(EC.presenceOf(element(by.name(Objects.complaintPage.locators.firstName))), 30000, "First name field is not present in DOM").then(function() {
+            browser.wait(EC.visibilityOf(element(by.name(Objects.complaintPage.locators.firstName))), 30000, "First name field is not visible").then(function() {
+                browser.wait(EC.elementToBeClickable(element(by.name(Objects.complaintPage.locators.firstName))), 30000, "First name field is not clickable").then(function() {
                     firstName.click().then(function() {
                         firstName.clear();
                         firstName.sendKeys(name).then(function() {
-                            browser.wait(EC.visibilityOf(element(by.name(Objects.complaintPage.locators.lastName))), 30000).then(function() {
+                            browser.wait(EC.visibilityOf(element(by.name(Objects.complaintPage.locators.lastName))), 30000, "Last name field is not visible").then(function() {
                                 lastName.click().then(function() {
                                     lastName.sendKeys(surname);
                                 });
@@ -98,9 +98,9 @@ var ComplaintPage = function() {
     };
 
     this.clickNextButton = function() {
-        browser.wait(EC.presenceOf(element(by.name(Objects.complaintPage.locators.firstName))), 30000).then(function() {
-            browser.wait(EC.visibilityOf(element(by.name(Objects.complaintPage.locators.firstName))), 30000).then(function() {
-                browser.wait(EC.elementToBeClickable(element(by.name(Objects.complaintPage.locators.firstName))), 30000).then(function() {
+        browser.wait(EC.presenceOf(element(by.name(Objects.complaintPage.locators.firstName))), 30000, "First name field is not present in DOM").then(function() {
+            browser.wait(EC.visibilityOf(element(by.name(Objects.complaintPage.locators.firstName))), 30000, "Frist name field is not visible").then(function() {
+                browser.wait(EC.elementToBeClickable(element(by.name(Objects.complaintPage.locators.firstName))), 30000, "First name field is not clickable").then(function() {
                     nextButton.click();
                 });
             });
@@ -108,11 +108,11 @@ var ComplaintPage = function() {
     };
 
     this.selectIncidentCategory = function(category) {
-        browser.wait(EC.presenceOf(element(by.xpath(Objects.complaintPage.locators.incidentCategoryDDListBox))), 30000).then(function() {
-            browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.incidentCategoryDDListBox))), 30000).then(function() {
-                browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.complaintPage.locators.incidentCategoryDDListBox))), 30000).then(function() {
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.complaintPage.locators.incidentCategoryDDListBox))), 30000, "Incident category drop down list is not present in DOM").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.incidentCategoryDDListBox))), 30000, "Incident category drop down list is not visible").then(function() {
+                browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.complaintPage.locators.incidentCategoryDDListBox))), 30000, "Incident cateogyr drop donw list is not clickable").then(function() {
                     incidentCategoryDDListBox.click().then(function() {
-                        browser.wait(EC.visibilityOf(element(by.linkText(category))), 30000).then(function() {
+                        browser.wait(EC.visibilityOf(element(by.linkText(category))), 30000, category + " link is not visible in incident category drop down list").then(function() {
                             var incidentCategory = element(by.linkText(category));
                             incidentCategory.click();
                         });
@@ -161,9 +161,9 @@ var ComplaintPage = function() {
         return this;
     };
     this.clickSubmitButton = function() {
-        browser.wait(EC.invisibilityOf(element(by.xpath(Objects.basepage.locators.fadeElementDeleteNote))), 30000).then(function() {
-            browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.submitButton))), 30000).then(function() {
-                browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.complaintPage.locators.submitButton))), 30000).then(function() {
+        browser.wait(EC.invisibilityOf(element(by.xpath(Objects.basepage.locators.fadeElementDeleteNote))), 30000, "Animation element is visible").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.submitButton))), 30000, "Submit button is not visible ").then(function() {
+                browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.complaintPage.locators.submitButton))), 30000, "Submit button is not clickable").then(function() {
                     submitButton.click();
                 });
             });
@@ -171,7 +171,7 @@ var ComplaintPage = function() {
         return this;
     };
     this.clickRadioBtnNewInitiator = function() {
-        browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.complaintPage.locators.radioButtonNewInitiator))), 30000).then(function() {
+        browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.complaintPage.locators.radioButtonNewInitiator))), 30000, "Radio button for new initiator is not clickable").then(function() {
             radioButtonNewInitiator.click();
         });
         return this;
@@ -189,9 +189,9 @@ var ComplaintPage = function() {
         return this;
     };
     this.clickCloseComplaint = function() {
-        browser.wait(EC.presenceOf(element(by.xpath(Objects.complaintPage.locators.closeComplaintButton))), 30000).then(function() {
-            browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.closeComplaintButton))), 30000).then(function() {
-                browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.complaintPage.locators.closeComplaintButton))), 30000).then(function() {
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.complaintPage.locators.closeComplaintButton))), 30000, "Close complaint button is not present in DOM").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.closeComplaintButton))), 30000, "Close complaint button is not visible").then(function() {
+                browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.complaintPage.locators.closeComplaintButton))), 30000, "Close complaint button is not clickable").then(function() {
                     closeComplaintButton.click();
                 });
             });
@@ -199,12 +199,12 @@ var ComplaintPage = function() {
         return this;
     };
     this.selectComplaintDisposition = function(disposition) {
-        browser.wait(EC.presenceOf(element(by.xpath(Objects.complaintPage.locators.complaintDispositionDDListBox))), 30000).then(function() {
-            browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.complaintDispositionDDListBox))), 30000).then(function() {
-                browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.complaintPage.locators.complaintDispositionDDListBox))), 30000).then(function() {
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.complaintPage.locators.complaintDispositionDDListBox))), 30000, "Complaint disposition drop down list is not present in DOM").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.complaintDispositionDDListBox))), 30000, "Complaint disposition drop down list is not visible").then(function() {
+                browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.complaintPage.locators.complaintDispositionDDListBox))), 30000, "Complaint disposition drop down list is not clickable").then(function() {
                     complaintDispositionDDListBox.click().then(function() {
-                        browser.wait(EC.visibilityOf(element(by.linkText(disposition))), 30000).then(function() {
-                            browser.wait(EC.elementToBeClickable(element(by.linkText(disposition))), 30000).then(function() {
+                        browser.wait(EC.visibilityOf(element(by.linkText(disposition))), 30000, disposition + " is not visible in complaint disposition drop down list").then(function() {
+                            browser.wait(EC.elementToBeClickable(element(by.linkText(disposition))), 30000, disposition + " is not clickable is complaint disposition drop down list").then(function() {
                                 var complaintDisposition = element(by.linkText(disposition));
                                 complaintDisposition.click();
                             });
@@ -216,7 +216,7 @@ var ComplaintPage = function() {
         return this;
     };
     this.insertCloseComplaintDescription = function(description) {
-        browser.wait(EC.presenceOf(element(by.css(Objects.complaintPage.locators.closeComplaintDescription))), 30000).then(function() {
+        browser.wait(EC.presenceOf(element(by.css(Objects.complaintPage.locators.closeComplaintDescription))), 30000, "Close complaint description field is not present in DOM").then(function() {
             closeComplaintDescription.click().then(function() {
                 closeComplaintDescription.sendKeys(description);
             });
@@ -232,17 +232,17 @@ var ComplaintPage = function() {
     };
 
     this.waitForComplaintTitle = function() {
-        browser.wait(EC.presenceOf(element(by.xpath(Objects.complaintPage.locators.complaintTitleLink))), 30000).then(function() {
-            browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.complaintTitleLink))), 30000);
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.complaintPage.locators.complaintTitleLink))), 30000, "Complaint title is not present in DOM").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.complaintTitleLink))), 30000, "Complaint title is not visible");
         })
     };
 
     this.addLocation = function(type, street, city, state, zip) {
 
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.locationsLinkBtn))), 30000).then(function() {
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.locationsLinkBtn))), 30000, "Locations link button is not visible").then(function() {
             locationLinkBtn.click().then(function() {
                 browser.sleep(5000);
-                browser.wait(EC.visibilityOf(element(by.css(Objects.complaintPage.locators.addLocationBtn))), 3000).then(function() {
+                browser.wait(EC.visibilityOf(element(by.css(Objects.complaintPage.locators.addLocationBtn))), 3000, "Add location button is not visible").then(function() {
                     addLocationBtn.click().then(function() {
                         browser.wait(EC.visibilityOf(element(by.model(Objects.complaintPage.locators.locationTypeDropDown))), 10000, "Location type drop down is not displayed").then(function() {
                             locationTypeDropDown.selectByText(type).then(function() {
@@ -267,7 +267,7 @@ var ComplaintPage = function() {
     };
     this.deleteLocation = function() {
 
-        browser.wait(EC.visibilityOf(element(by.css(Objects.complaintPage.locators.deleteLocationBtn))), 30000).then(function() {
+        browser.wait(EC.visibilityOf(element(by.css(Objects.complaintPage.locators.deleteLocationBtn))), 30000, "Delete location button is not visible").then(function() {
             deleteLocationBtn.click().then(function() {
                 browser.sleep(5000);
                 element.all(by.repeater(Objects.complaintPage.locators.addedLocations)).then(function(items) {
@@ -341,7 +341,7 @@ var ComplaintPage = function() {
 
     this.clickNewComplaintBtn = function() {
 
-        browser.wait(EC.visibilityOf(element(by.css(Objects.complaintPage.locators.newComplaintBtn))), 30000).then(function() {
+        browser.wait(EC.visibilityOf(element(by.css(Objects.complaintPage.locators.newComplaintBtn))), 30000, "New complaint button is not visible").then(function() {
             newComplaintBtn.click().then(function() {});
         });
     }
