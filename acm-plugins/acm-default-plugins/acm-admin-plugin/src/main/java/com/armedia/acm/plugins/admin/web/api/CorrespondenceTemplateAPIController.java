@@ -4,6 +4,7 @@ import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
 import com.armedia.acm.correspondence.service.CorrespondenceService;
 import com.armedia.acm.plugins.admin.model.CorrespondenceTemplateRequestResponse;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -15,8 +16,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jan 27, 2017
@@ -28,6 +32,14 @@ public class CorrespondenceTemplateAPIController
 {
 
     private CorrespondenceService correspondenceService;
+
+    @RequestMapping(value = "/templates", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<CorrespondenceTemplateRequestResponse> getAllTemplates()
+    {
+        return correspondenceService.getAllTemplates().stream().map(t -> mapTemplateToResponse(Optional.of(t)))
+                .collect(Collectors.toList());
+    }
 
     @RequestMapping(value = "/template/{templateFileName:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -41,7 +53,15 @@ public class CorrespondenceTemplateAPIController
     public CorrespondenceTemplateRequestResponse deleteTemplate(@PathVariable(value = "templateFileName") String templateFileName)
             throws IOException
     {
-        return mapTemplateToResponse(correspondenceService.deleteTemplate(templateFileName));
+        File templatesDir = new File(System.getProperty("user.home") + "/.arkcase/acm/correspondenceTemplates");
+        File template = new File(templatesDir, templateFileName);
+        if (FileUtils.deleteQuietly(template))
+        {
+            return mapTemplateToResponse(correspondenceService.deleteTemplate(templateFileName));
+        } else
+        {
+            throw new CorrespondenceTemplateNotFoundException();
+        }
     }
 
     @RequestMapping(value = "/template", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -80,6 +100,8 @@ public class CorrespondenceTemplateAPIController
         response.setDateFormatString(template.getDateFormatString());
         response.setNumberFormatString(template.getNumberFormatString());
         response.setActivated(template.isActivated());
+        response.setModifier(template.getModifier());
+        response.setModified(template.getModified());
 
         return response;
     }
@@ -101,6 +123,8 @@ public class CorrespondenceTemplateAPIController
         template.setDateFormatString(request.getDateFormatString());
         template.setNumberFormatString(request.getNumberFormatString());
         template.setActivated(request.isActivated());
+        template.setModifier(request.getModifier());
+        template.setModified(request.getModified());
 
         return template;
     }
