@@ -2,6 +2,7 @@
 package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.model.TemplateUpload;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -13,13 +14,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.List;
-
 
 /**
  * Created by manoj.dhungana on 12/8/2014.
@@ -31,12 +32,10 @@ public class ListAllTemplatesControllerAPI
     private Logger log = LoggerFactory.getLogger(getClass());
     List<Object> templateUploadList = new ArrayList<>();
 
-    @RequestMapping(value = "/template/list", method = RequestMethod.GET, produces = {
-            MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
-    })
+    @RequestMapping(value = "/template/list", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE,
+            MediaType.TEXT_PLAIN_VALUE})
     @ResponseBody
-    public List<Object> listTemplates(
-            Authentication authentication) throws Exception
+    public List<Object> listTemplates(Authentication authentication) throws Exception
     {
 
         String userHome = System.getProperty("user.home");
@@ -48,25 +47,25 @@ public class ListAllTemplatesControllerAPI
         {
             for (File template : templates)
             {
-                //access creation and last modified date via file attributes
+                // access creation and last modified date via file attributes
                 TemplateUpload templateUpload = new TemplateUpload();
                 Path path = Paths.get(pathName + "/" + template.getName());
                 BasicFileAttributes attributes = Files.readAttributes(path, BasicFileAttributes.class);
+                String user = Files.getOwner(path, LinkOption.NOFOLLOW_LINKS).getName();
                 FileTime creationTime = attributes.creationTime();
                 FileTime modifiedTime = attributes.lastModifiedTime();
 
-                //details
+                // details
                 templateUpload.setPath(template.getAbsolutePath());
                 templateUpload.setModified(modifiedTime.toString());
                 templateUpload.setName(template.getName());
-                templateUpload.setCreator(authentication.getName());
+                templateUpload.setCreator(user);
                 templateUpload.setCreated(creationTime.toString());
                 getUploadedTemplates().add(templateUpload);
             }
         }
         return getUploadedTemplates();
     }
-
 
     public List<Object> getUploadedTemplates()
     {

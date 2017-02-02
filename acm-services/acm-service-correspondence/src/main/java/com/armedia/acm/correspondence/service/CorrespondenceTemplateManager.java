@@ -156,14 +156,16 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
 
         updateConfiguration(templates.values());
         updateLabels(template, templateLabels -> {
-            Optional<TemplateLabel> label = templateLabels.stream().filter(tl -> tl.getTemplate().equals(template.getTemplateFilename()))
-                    .findAny();
-            if (label.isPresent())
+            Optional<TemplateLabel> labelHolder = templateLabels.stream()
+                    .filter(tl -> tl.getTemplate().equals(template.getTemplateFilename())).findAny();
+            if (labelHolder.isPresent())
             {
-                label.get().setLabel(template.getDocumentType());
+                TemplateLabel label = labelHolder.get();
+                label.setLabel(template.getDisplayName());
+                label.setActivated(template.isActivated());
             } else
             {
-                templateLabels.add(new TemplateLabel(template.getTemplateFilename(), template.getDocumentType()));
+                templateLabels.add(new TemplateLabel(template.getTemplateFilename(), template.getDocumentType(), template.isActivated()));
             }
         });
 

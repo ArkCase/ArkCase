@@ -64,10 +64,11 @@ public class CorrespondenceTemplateAPIController
      */
     private CorrespondenceTemplateRequestResponse mapTemplateToResponse(Optional<CorrespondenceTemplate> templateHolder)
     {
-        CorrespondenceTemplate template = templateHolder.orElse(new CorrespondenceTemplate());
+        CorrespondenceTemplate template = templateHolder.orElseThrow(CorrespondenceTemplateNotFoundException::new);
 
         CorrespondenceTemplateRequestResponse response = new CorrespondenceTemplateRequestResponse();
 
+        response.setDisplayName(template.getDisplayName());
         response.setDocumentType(template.getDocumentType());
         response.setTemplateFilename(template.getTemplateFilename());
         if (template.getQuery() != null)
@@ -78,6 +79,7 @@ public class CorrespondenceTemplateAPIController
         response.setTemplateSubstitutionVariables(template.getTemplateSubstitutionVariables());
         response.setDateFormatString(template.getDateFormatString());
         response.setNumberFormatString(template.getNumberFormatString());
+        response.setActivated(template.isActivated());
 
         return response;
     }
@@ -90,6 +92,7 @@ public class CorrespondenceTemplateAPIController
     {
         CorrespondenceTemplate template = new CorrespondenceTemplate();
 
+        template.setDisplayName(request.getDisplayName());
         template.setDocumentType(request.getDocumentType());
         template.setTemplateFilename(request.getTemplateFilename());
         template.setQuery(correspondenceService.getQueryByBeanId(request.getCorrespondenceQueryBeanId())
@@ -97,6 +100,7 @@ public class CorrespondenceTemplateAPIController
         template.setTemplateSubstitutionVariables(request.getTemplateSubstitutionVariables());
         template.setDateFormatString(request.getDateFormatString());
         template.setNumberFormatString(request.getNumberFormatString());
+        template.setActivated(request.isActivated());
 
         return template;
     }
