@@ -127,21 +127,39 @@ public class MergeCaseServiceImpl implements MergeCaseService
             {
                 if (foundAssignee.getParticipantLdapId().equals(auth.getName()))
                     return;
-                foundAssignee.setParticipantType(ParticipantTypes.FOLLOWER);
-                AcmParticipant addedAssignee = acmParticipantService.saveParticipant(auth.getName(), ParticipantTypes.ASSIGNEE, target.getId(), target.getObjectType());
-                target.getParticipants().add(addedAssignee);
+                try
+                {
+                    foundAssignee.setParticipantType(ParticipantTypes.FOLLOWER);
+                    AcmParticipant addedAssignee = acmParticipantService.saveParticipant(auth.getName(), ParticipantTypes.ASSIGNEE, target.getId(), target.getObjectType());
+                    target.getParticipants().add(addedAssignee);
+                } catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
             } else
             {
-                AcmParticipant addedAssignee = acmParticipantService.saveParticipant(auth.getName(), ParticipantTypes.ASSIGNEE, target.getId(), target.getObjectType());
-                target.getParticipants().add(addedAssignee);
+                try
+                {
+                    AcmParticipant addedAssignee = acmParticipantService.saveParticipant(auth.getName(), ParticipantTypes.ASSIGNEE, target.getId(), target.getObjectType());
+                    target.getParticipants().add(addedAssignee);
+                } catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
             }
         } else
         {
             //there are no participants in target case file, just add current user as assignee
-            AcmParticipant addedAssignee = acmParticipantService.saveParticipant(auth.getName(), ParticipantTypes.ASSIGNEE, target.getId(), target.getObjectType());
-            List<AcmParticipant> participants = new ArrayList<>();
-            participants.add(addedAssignee);
-            target.setParticipants(participants);
+            try
+            {
+                AcmParticipant addedAssignee = acmParticipantService.saveParticipant(auth.getName(), ParticipantTypes.ASSIGNEE, target.getId(), target.getObjectType());
+                List<AcmParticipant> participants = new ArrayList<>();
+                participants.add(addedAssignee);
+                target.setParticipants(participants);
+            } catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 
