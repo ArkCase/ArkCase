@@ -9,7 +9,7 @@
         "data": {
             "supervisoruser": {
 
-                "username": "sally-acm",
+                "username": "samuel-acm",
                 "password": "AcMd3v$"
             },
             "adminuser": {
@@ -76,12 +76,17 @@
             "sendEmailButton": "Send Email",
             "sugestedTag": "[ng-click='addSuggestionByIndex($index)']",
             "fadeElement": "//*[@animate='animate']"
-
+            "timeCanvasData":"[chart-data='time.data']",
+            "owningGroupDropDown": ".//*[@class='editable-controls form-group']/..//select",
+            "owningGroupConfirmBtn": ".//*[@class='editable-controls form-group']/..//button[1]",
+            "assigneeNameModelInput": "participant.selectedAssigneeName"
         },
         "data": {
             "reportTitle": "Report of Investigation Title",
             "note": "NoteText",
-            "email": "sanja.paskova@armedia.com"
+            "email": "sanja.paskova@armedia.com",
+            "owningGroupAdministratorDev":"ACM_ADMINISTRATOR_DEV",
+            "IanInvestigator":"Ian Investigator"
 
         }
 
@@ -464,7 +469,8 @@
             "searchButton": ".//input[@value='Search']",
             "caseTitle": "caseTitle",
             "caseCreatedDate": "caseCreationDate",
-            "casePriority": "casePriority"
+            "casePriority": "casePriority",
+            "selectParticipantType": ".//*[@class='c-table clearfix']/..//tbody/tr/td[4]"
         },
         "data": {
             "firstName": "ComplaintFirstName",
@@ -720,7 +726,7 @@
             "timetrackingTitle": ".//*[@class='f-message decorator']/..//div/b",
             "saveBtn": "//input[@name='actionType'][@value='Save']",
             "newTimesheetBtn": "New Timesheet",
-            "editTimesheetBtn": "Edit Timesheet",
+            "editTimesheetBtn": "[ui-sref='frevvo.edit-timesheet(editTimesheetParams)']",
             "caseFileModule": "a[href*='#!/cases//main']",
             "complaintsModule": "a[href*='#!/complaints//main']",
             "timesheetsPageTitle": ".//*[@class='module-header']/..//h3/span",
@@ -728,9 +734,8 @@
             "periodInput": ".//*[@class='input f-date']",
             "timeTrackingModule": "a[href*='#!/time-tracking//main']",
             "timeTrackingDate": ".//*[@class='f-control Three columns  f-output  s-valid  s-prepend   s-linked Message s-new-line s-color-None']",
-            "chargeCodeAlertMessage":".//*[@class='f-status f-table-status s-alert']"
-
-
+            "chargeCodeAlertMessage":".//*[@class='f-status f-table-status s-alert']",
+            "timeTotal": "rowTotal"
         },
         "data": {
 
