@@ -1,5 +1,6 @@
 package com.armedia.acm.services.participants.service;
 
+import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.services.participants.dao.AcmParticipantDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.CheckParticipantListModel;
@@ -21,7 +22,7 @@ public class AcmParticipantService
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    public AcmParticipant saveParticipant(String userId, String participantType, Long objectId, String objectType)
+    public AcmParticipant saveParticipant(String userId, String participantType, Long objectId, String objectType) throws AcmAccessControlException
     {
 
         AcmParticipant participant = new AcmParticipant();
@@ -31,14 +32,10 @@ public class AcmParticipantService
         participant.setObjectType(objectType);
 
         CheckParticipantListModel model = new CheckParticipantListModel();
-
-
-        try
+        List<String> errorListAfterRules = applyParticipantRules(participant, model);
+        if (errorListAfterRules != null)
         {
-            applyParticipantRules(participant, model);
-        } catch (Exception e)
-        {
-            log.error("Failed to apply the participant rules: {}", e.getMessage(), e);
+            throw new AcmAccessControlException(errorListAfterRules, "Conflict permissions combination has occurred for the chosen participants");
         }
 
         AcmParticipant savedParticipant = getParticipantDao().save(participant);
@@ -58,9 +55,9 @@ public class AcmParticipantService
             model = participantsBusinessRule.applyRules(model);
 
             List<String> listOfErrors = new ArrayList<>();
-            if (!model.getErrors().isEmpty())
+            if (!model.getErrorsList().isEmpty())
             {
-                listOfErrors = model.getErrors();
+                listOfErrors = model.getErrorsList();
             }
             return listOfErrors;
         }

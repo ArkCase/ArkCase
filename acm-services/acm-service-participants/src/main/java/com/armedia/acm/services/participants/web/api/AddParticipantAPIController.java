@@ -1,6 +1,5 @@
 package com.armedia.acm.services.participants.web.api;
 
-import com.armedia.acm.core.exceptions.AccsessControlException;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantConstants;
@@ -62,10 +61,10 @@ public class AddParticipantAPIController
             {
                 log.error("Exception occurred while trying to add the Participant {} on object [{}]:[{}] as a {}", userId, objectType, objectId, participantType, e);
                 getAcmParticipantEventPublisher().publishParticipantCreatedEvent(addedParticipant, authentication, false);
-                if (e instanceof AccsessControlException)
+                /*if (e instanceof AcmAccessControlException)
                 {
-                    throw e;
-                }
+                    throw new AcmAccessControlException()
+                }*/
                 throw new AcmCreateObjectFailedException(ParticipantConstants.OBJECT_TYPE, "Participant " + userId + " was not added on object['" + objectType + "]:[" + objectId + "] as a " + participantType + " and there is no row inserted into DB due to exception: ", e);
             }
         }

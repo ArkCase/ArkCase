@@ -1,22 +1,23 @@
 package com.armedia.acm.services.participants.model;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CheckParticipantListModel
 {
-    private List<String> errors;
+    private List<String> errorsList = new ArrayList<>();
     private List<AcmParticipant> participantList;
     private String objectType;
 
-    public List<String> getErrors()
+    public List<String> getErrorsList()
     {
-        return errors;
+        return errorsList;
     }
 
-    public void setErrors(List<String> errors)
+    public void setErrorsList(List<String> errorsList)
     {
-        this.errors = errors;
+        this.errorsList = errorsList;
     }
 
     public List<AcmParticipant> getParticipantList()
@@ -37,5 +38,10 @@ public class CheckParticipantListModel
     public void setObjectType(String objectType)
     {
         this.objectType = objectType;
+    }
+
+    public void addErrorMessage(String reason)
+    {
+        errorsList.add(reason);
     }
 }

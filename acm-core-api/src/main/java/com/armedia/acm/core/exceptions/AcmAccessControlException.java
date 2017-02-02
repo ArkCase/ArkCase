@@ -3,13 +3,13 @@ package com.armedia.acm.core.exceptions;
 
 import java.util.List;
 
-public class AccsessControlException extends Exception
+public class AcmAccessControlException extends Exception
 {
     private List<String> listOfErrors;
 
-    public AccsessControlException(String message, Throwable cause, List<String> listOfErrors)
+    public AcmAccessControlException(List<String> listOfErrors, String message)
     {
-        super(message, cause);
+        super(message);
         this.listOfErrors = listOfErrors;
     }
 
