@@ -6,7 +6,7 @@ angular.module('welcome').controller(
         '$window',
         'Acm.LoginService',
         'Acm.AppService',
-        function($state, $window, AcmLoginService, AcmAppService) {
+        function ($state, $window, AcmLoginService, AcmAppService) {
             AcmLoginService.setLogin(true);
             AcmLoginService.setLastIdle();
 
@@ -14,8 +14,17 @@ angular.module('welcome').controller(
             if (sessionStorage.redirectState) {
                 // redirect to the last remembered state
                 var redirectState = angular.fromJson(sessionStorage.redirectState);
-                sessionStorage.removeItem("redirectState");
-                $state.go(redirectState.hash.split('/')[1]);
+
+                //because of redirect bug where we are stuck in goodbye state
+                //here is the fix
+                var index = redirectState.hash.indexOf('goodbye');
+                if (index >= 0) {
+                    sessionStorage.removeItem("redirectState");
+                    $state.go("dashboard");
+                } else {
+                    sessionStorage.removeItem("redirectState");
+                    $state.go(redirectState.hash.split('/')[1]);
+                }
             } else if (sessionStorage.redirectURL) {
                 // redirect to hash passed in the URL of the login page
                 sessionStorage.removeItem("redirectUrl");
