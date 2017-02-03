@@ -96,7 +96,7 @@ describe('case page tests', function() {
         casePage.switchToDefaultContent();
         casePage.waitForCasesPage();
         casePage.editAssignee(Objects.basepage.data.IanInvestigator).waitForAssignee();
-        expect(casePage.returnAssignee()).toEqual(Objects.basepage.data.IanInvestigator);
+        expect(casePage.returnAssignee()).toEqual(Objects.basepage.data.IanInvestigator, "The assignee is not updated");
     });
 
        it('should create new case verify the notification message and no access of the object name ', function() {
@@ -104,7 +104,7 @@ describe('case page tests', function() {
         casePage.clickModuleCasesFiles();
         casePage.waitForCasesPage();
         casePage.editOwningGroup(Objects.basepage.data.owningGroupAdministratorDev);
-        expect(casePage.returnOwningGroup()).toEqual(Objects.basepage.data.owningGroupAdministratorDev);
+        expect(casePage.returnOwningGroup()).toEqual(Objects.basepage.data.owningGroupAdministratorDev, "Owning group is not updated");
         casePage.verifyTheNotificationMessage("Case File ");
         casePage.editPriority("High");
         casePage.verifyFirstElementNameNoAccess();

@@ -50,7 +50,7 @@ describe('preference page  tests', function() {
             preferencesPage.enableWidget(data.preference, data.widget);
             complaintPage.clickModuleComplaints();
             complaintPage.waitForOverView();
-            complaintPage.verifyIfWidgetIsDisplayed(data.expected, data.widget);
+            complaintPage.verifyIfWidgetIsDisplayed(data.expected, data.widget, data.expected + "widget is not displayed in complaint overview page");
         });
 
         it('should disabled the Complaints wdgets in preference page and verify it in the Complaints  overview page ', function() {
@@ -59,7 +59,7 @@ describe('preference page  tests', function() {
             preferencesPage.disabledWidget(data.preference, data.widget);
             complaintPage.clickModuleComplaints();
             complaintPage.waitForOverView();
-            complaintPage.verifyIfWidgetIsNotDisplayed(data.expected, data.widget);
+            complaintPage.verifyIfWidgetIsNotDisplayed(data.expected, data.widget, data.expected + "widget is displayed in complaint overview page");
         });
 
     });
@@ -78,7 +78,7 @@ describe('preference page  tests', function() {
             preferencesPage.disabledWidget(data.preference, data.widget);
             casePage.clickModuleCasesFiles();
             casePage.waitForOverView();
-            casePage.verifyIfWidgetIsNotDisplayed(data.expected, data.widget);
+            casePage.verifyIfWidgetIsNotDisplayed(data.expected, data.widget, data.expected + "widget is displayed in cases overview page");
         });
 
         it('should enable the Cases widgets in preference page and verify it in the cases overview page ', function() {
@@ -87,7 +87,7 @@ describe('preference page  tests', function() {
             preferencesPage.enableWidget(data.preference, data.widget);
             casePage.clickModuleCasesFiles();
             casePage.waitForOverView();
-            casePage.verifyIfWidgetIsDisplayed(data.expected, data.widget);
+            casePage.verifyIfWidgetIsDisplayed(data.expected, data.widget, data.expected + "widget is not displayed in cases overview page");
         });
     });
 
@@ -104,7 +104,7 @@ describe('preference page  tests', function() {
             preferencesPage.disabledWidget(data.preference, data.widget);
             taskPage.clickModuleTasks();
             taskPage.waitForOverView();
-            taskPage.verifyIfWidgetIsNotDisplayed(data.expected, data.widget);
+            taskPage.verifyIfWidgetIsNotDisplayed(data.expected, data.widget, data.expected + "widget is displayed in tasks overview page");
         });
 
         it('should enable the Tasks widgets in preference page and verify it in the tasks overview page ', function() {
@@ -113,7 +113,7 @@ describe('preference page  tests', function() {
             preferencesPage.enableWidget(data.preference, data.widget);
             taskPage.clickModuleTasks();
             taskPage.waitForOverView();
-            taskPage.verifyIfWidgetIsDisplayed(data.expected, data.widget);
+            taskPage.verifyIfWidgetIsDisplayed(data.expected, data.widget, data.expected + "widget is not displayed in tasks overview page");
         });
 
     });
@@ -128,7 +128,7 @@ describe('preference page  tests', function() {
             preferencesPage.disabledWidget(data.preference, data.widget);
             costTrackingPage.clickModuleCostTracking();
             costTrackingPage.waitForOverView();
-            costTrackingPage.verifyIfWidgetIsNotDisplayed(data.expected, data.widget);
+            costTrackingPage.verifyIfWidgetIsNotDisplayed(data.expected, data.widget, data.expected + "widget is displayed in cases overview page");
         });
 
         it('should enable the Cost Tracking widgets in preference page and verify it in the cases overview page ', function() {
@@ -137,7 +137,7 @@ describe('preference page  tests', function() {
             preferencesPage.enableWidget(data.preference, data.widget);
             costTrackingPage.clickModuleCostTracking();
             costTrackingPage.waitForOverView();
-            costTrackingPage.verifyIfWidgetIsDisplayed(data.expected, data.widget);
+            costTrackingPage.verifyIfWidgetIsDisplayed(data.expected, data.widget, data.expected + "widget is not displayed in cases overview page");
         });
     });
 
@@ -151,7 +151,7 @@ describe('preference page  tests', function() {
             preferencesPage.disabledWidget(data.preference, data.widget);
             timeTrackingPage.clickModuleTimeTracking();
             timeTrackingPage.waitForOverView();
-            timeTrackingPage.verifyIfWidgetIsNotDisplayed(data.expected, data.widget);
+            timeTrackingPage.verifyIfWidgetIsNotDisplayed(data.expected, data.widget, data.expected + "widget is dispalyed in cases overview page");
         });
 
         it('should enable the Time Tracking widgets in preference page and verify it in the cases overview page ', function() {
@@ -160,7 +160,7 @@ describe('preference page  tests', function() {
             preferencesPage.enableWidget(data.preference, data.widget);
             timeTrackingPage.clickModuleTimeTracking();
             timeTrackingPage.waitForOverView();
-            timeTrackingPage.verifyIfWidgetIsDisplayed(data.expected, data.widget);
+            timeTrackingPage.verifyIfWidgetIsDisplayed(data.expected, data.widget, data.expected + "widget is not displayed in cases overview page");
         });
     });
 });

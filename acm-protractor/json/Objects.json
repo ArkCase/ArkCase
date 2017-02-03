@@ -75,7 +75,7 @@
             "emailRecepient": "//textarea",
             "sendEmailButton": "Send Email",
             "sugestedTag": "[ng-click='addSuggestionByIndex($index)']",
-            "fadeElement": "//*[@animate='animate']"
+            "fadeElement": "//*[@animate='animate']",
             "timeCanvasData":"[chart-data='time.data']",
             "owningGroupDropDown": ".//*[@class='editable-controls form-group']/..//select",
             "owningGroupConfirmBtn": ".//*[@class='editable-controls form-group']/..//button[1]",
