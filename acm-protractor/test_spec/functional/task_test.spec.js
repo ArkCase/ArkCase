@@ -396,11 +396,4 @@ describe('Create new task ', function() {
 
     });
 
-    it('should create new task with selcting group and verify it ', function() {
-
-        taskPage.clickNewButton().clickTaskButton().insertGroupTaskData(Objects.taskspage.data.owningGroup, Objects.taskpage.data.Subject, utils.returnToday("/"), Objects.taskpage.data.DueDateInput, "Expedite", Objects.taskpage.data.percentCompleteInput).clickSave();
-        expect(taskPage.returnAssignee()).toEqual(Objects.taskspage.data.owningGroup, "Assigned group name is not correct");
-
-    });
-
 });
