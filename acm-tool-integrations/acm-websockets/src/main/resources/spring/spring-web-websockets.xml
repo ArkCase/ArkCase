@@ -47,7 +47,11 @@
 
     <websocket:message-broker application-destination-prefix="${acm.websockets.application_destination_prefix}">
         <websocket:stomp-endpoint path="${acm.websockets.stomp_endpoint}">
-            <websocket:sockjs websocket-enabled="true"/>
+            <!-- client-library-url: sockjs version must be always aligned with bower dependency (see bower.json) -->
+            <websocket:sockjs
+                    websocket-enabled="true"
+                    client-library-url="https://cdn.jsdelivr.net/sockjs/1.1.2/sockjs.min.js">
+            </websocket:sockjs>
         </websocket:stomp-endpoint>
         <websocket:stomp-broker-relay prefix="/topic,/queue"
                                       relay-host="${acm.websockets.stomp_broker_relay.relay_host}"
