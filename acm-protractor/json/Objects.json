@@ -125,7 +125,9 @@
             "chooseFilesBtn": ".//*[@class='form-group row note-group-select-from-files']/input",
             "associateNumberInput": "associateNumber",
             "taskState": ".//*[@class='clearfix']/div[2]/div[6]/div",
-            "editSubmitButton": ".btn.btn-primary.btn-sm"
+            "editSubmitButton": ".btn.btn-primary.btn-sm",
+            "groupTask": "groupToggle",
+            "selectGroup": "chosenGroup"
         },
 
         "data": {
@@ -148,7 +150,7 @@
         "locators": {
 
             "priority": ".//*[@class='clearfix']/div[2]/div[3]/div/a",
-            "assignee": ".//*[@class='clearfix']/div[2]/div[2]/div/a",
+            "assignee": "[ng-click='showAssigneePicker()']",
             "assigneeDropDown": "$data",
             "selectAssignee": ".//*[.='Ann Administrator']",
             "assigneeBtn": ".//*[@class='clearfix']/div[2]/div[2]/div/form/div/span/button[1]",
@@ -278,7 +280,8 @@
             "documentWordTitle": "ArkCaseTesting",
             "documentExcelWordTitle": "caseSummary",
             "documentPdfTitle": "caseSummary",
-            "documentTitleInput": "folder"
+            "documentTitleInput": "folder",
+            "owningGroup": "ACM_ANALYST_DEV"
 
         }
     },
