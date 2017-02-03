@@ -56,7 +56,7 @@ describe('dashboard page test', function() {
         it('should add/delete ' + data.widgetName, function() {
 
             dashPage.clickEditButton().clickAddWidgetButton().addWidget(data.widgetName).clickSaveChangesButton();
-            expect(dashPage.returnWidgetTitle()).toEqual(data.widgetTitle);
+            expect(dashPage.returnWidgetTitle()).toEqual(data.widgetTitle, "Widget title is not correct in widget " + data.widgetName);
             dashPage.clickEditButton().removeWidgetButton().clickSaveChangesButton();
 
         });
@@ -64,7 +64,7 @@ describe('dashboard page test', function() {
     it('should edit dashboard title', function() {
 
         dashPage.editDashboardTitle(Objects.dashboardpage.data.DashbordTitle);
-        expect(dashPage.returnDashboardTitle()).toEqual(Objects.dashboardpage.data.DashbordTitle);
+        expect(dashPage.returnDashboardTitle()).toEqual(Objects.dashboardpage.data.DashbordTitle, "Dashboard title is not updated");
     });
 
 });

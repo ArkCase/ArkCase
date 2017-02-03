@@ -39,7 +39,7 @@ describe('Subscriptions page tests', function() {
             subscriptionPage.clickSubcriptionsModule();
             subscriptionPage.selectSubscription(data.parentType);
             subscriptionPage.clickParentTypeSort();
-            expect(subscriptionPage.returnResultParentType()).toEqual(data.expected);
+            expect(subscriptionPage.returnResultParentType()).toEqual(data.expected, "result parent is not correct for " + data.parentType);
 
         });
 
@@ -49,7 +49,7 @@ describe('Subscriptions page tests', function() {
 
         subscriptionPage.clickSubcriptionsModule();
         subscriptionPage.searchForSubscription("case")
-        expect(subscriptionPage.returnResultParentType()).toEqual("CASE_FILE");
+        expect(subscriptionPage.returnResultParentType()).toEqual("CASE_FILE", "result parent is not correct for case");
     });
 
     it('should select previous week and verify the modified date in result table', function() {
