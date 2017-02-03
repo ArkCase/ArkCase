@@ -28,7 +28,7 @@
 
     <bean id="loggingHandler" class="org.springframework.integration.handler.LoggingHandler">
         <constructor-arg value="ERROR"/>
-        <property name="expression" value="payload"/>
+        <property name="expression" value="payload.message"/>
     </bean>
 
     <int:chain input-channel="mailErrorChannel">
