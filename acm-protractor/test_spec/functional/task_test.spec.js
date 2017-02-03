@@ -47,8 +47,8 @@ describe('Create new task ', function() {
 
     });
 
-    using([{priority: "High", prioritySaved: Objects.taskspage.data.priorityHigh}, {priority: "Low", prioritySaved: Objects.taskspage.data.priorityLow}, {priority: "Expedite", prioritySaved: Objects.taskspage.data.priorityExpedite}], function(data) {
-        it('should create new task with priority ' + data.priority, function () {
+    using([{ priority: "High", prioritySaved: Objects.taskspage.data.priorityHigh }, { priority: "Low", prioritySaved: Objects.taskspage.data.priorityLow }, { priority: "Expedite", prioritySaved: Objects.taskspage.data.priorityExpedite }], function(data) {
+        it('should create new task with priority ' + data.priority, function() {
             taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), data.priority, Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea);
             expect(taskPage.returnDueDateText()).not.toBeTruthy();
             taskPage.clickSave();
@@ -172,8 +172,8 @@ describe('Create new task ', function() {
     });
 
 
-    using([{priority: "High", prioritySaved: Objects.taskspage.data.priorityHigh}, {priority: "Expedite", prioritySaved: Objects.taskspage.data.priorityExpedite}], function(data) {
-        it('should create new task and edit priority to ' + data.priority, function () {
+    using([{ priority: "High", prioritySaved: Objects.taskspage.data.priorityHigh }, { priority: "Expedite", prioritySaved: Objects.taskspage.data.priorityExpedite }], function(data) {
+        it('should create new task and edit priority to ' + data.priority, function() {
 
             taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
             taskPage.editPriority(data.priority);
@@ -395,6 +395,5 @@ describe('Create new task ', function() {
         expect(taskPage.validateCancelEditingEnabled()).not.toBeTruthy();
 
     });
-
 
 });
