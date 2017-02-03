@@ -258,7 +258,6 @@
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-email</artifactId>
-            <version>${mule.version}</version>
         </dependency>
     </dependencies>
 </project>

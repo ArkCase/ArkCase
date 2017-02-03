@@ -17,7 +17,7 @@
         <dependency>
             <groupId>com.frevvo</groupId>
             <artifactId>forms-java</artifactId>
-            <version>${frevvo.forms.version}</version>
+            <classifier>mailfix</classifier>
         </dependency>
         <!-- spring -->
         
