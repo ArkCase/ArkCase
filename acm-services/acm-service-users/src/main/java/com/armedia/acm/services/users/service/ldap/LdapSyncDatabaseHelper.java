@@ -33,8 +33,8 @@ public class LdapSyncDatabaseHelper
     @Transactional
     @CacheEvict(value = "quiet-user-cache", allEntries = true)
     public void updateDatabase(String directoryName, Set<String> allRoles, List<AcmUser> users, Map<String,
-            Set<AcmUser>> usersByRole, Map<String, Set<AcmUser>> usersByLdapGroup, Map<String, String> childParentPair,
-                               Map<String, String> groupDNPairs, boolean singleUser)
+            Set<AcmUser>> usersByRole, Map<String, Set<AcmUser>> usersByLdapGroup, Map<String, String> groupDNPairs,
+                               Map<String, String> childParentPair, boolean singleUser)
     {
         if (!singleUser)
         {

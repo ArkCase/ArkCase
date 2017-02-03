@@ -112,7 +112,7 @@ public class LdapSyncService
         List<AcmUser> ldapUsers = getLdapDao().findUsersPaged(template, getLdapSyncConfig());
         List<LdapGroup> acmGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig());
 
-        processRecordsAndUpdateDatabase(ldapUsers, acmGroups, false, getLdapSyncConfig().getBaseDC());
+        processRecordsAndUpdateDatabase(ldapUsers, acmGroups, false);
     }
 
     /**
@@ -132,12 +132,12 @@ public class LdapSyncService
         List<AcmUser> acmUsers = Arrays.asList(user);
         List<LdapGroup> acmGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig());
 
-        processRecordsAndUpdateDatabase(acmUsers, acmGroups, true, getLdapSyncConfig().getBaseDC());
+        processRecordsAndUpdateDatabase(acmUsers, acmGroups, true);
 
         return user;
     }
 
-    public void processRecordsAndUpdateDatabase(List<AcmUser> acmUsers, List<LdapGroup> acmGroups, boolean singleUser, String baseDC)
+    public void processRecordsAndUpdateDatabase(List<AcmUser> acmUsers, List<LdapGroup> acmGroups, boolean singleUser)
     {
         acmUsers = filterUsersForKnownGroups(acmUsers, acmGroups);
         filterUserGroups(acmUsers, acmGroups);
@@ -146,7 +146,7 @@ public class LdapSyncService
         Map<String, Set<AcmUser>> usersByLdapGroup = getUsersByLdapGroup(acmGroups, acmUsers);
         Map<String, Set<AcmUser>> usersByApplicationRole = getUsersByApplicationRole(usersByLdapGroup);
         Map<String, String> childParentPair = populateGroupParentPairs(acmGroups);
-        Map<String, String> groupNameDistinguishedNamePair = populateGroupNameDistinguishedNamePair(acmGroups, baseDC);
+        Map<String, String> groupNameDistinguishedNamePair = populateGroupNameDistinguishedNamePair(acmGroups);
 
         Set<String> applicationRoles = new HashSet<>();
         Map<String, String> roleToGroup = getLdapSyncConfig().getRoleToGroupMap();
@@ -253,13 +253,13 @@ public class LdapSyncService
         return filteredUsers;
     }
 
-    public Map<String, String> populateGroupNameDistinguishedNamePair(List<LdapGroup> ldapGroups, String baseDC)
+    public Map<String, String> populateGroupNameDistinguishedNamePair(List<LdapGroup> ldapGroups)
     {
         return ldapGroups.stream()
                 .collect(
                         Collectors.toMap(
                                 LdapGroup::getGroupName,
-                                group -> String.format("%s,%s", group.getDistinguishedName(), baseDC)
+                                group -> String.format("%s,%s", group.getDistinguishedName(), getLdapSyncConfig().getBaseDC())
                         )
                 );
     }
@@ -273,7 +273,7 @@ public class LdapSyncService
             if (!groupParents.isEmpty())
             {
                 // find only groups with parent groups and return child-parent group pairs
-                groupParents.stream()
+                groupParents
                         .forEach(groupParent -> groupParentPairs.put(group.getGroupName(), groupParent));
             }
         }
