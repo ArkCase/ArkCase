@@ -82,7 +82,7 @@ angular.module('services').factory('MessageService', ['$injector', '$translate',
              * This method displays error message in notify popup window.
              */
             error: function (message) {
-                showMessage(message);
+        	showMessage(message, {position: 'left'});
             },
 
             /**

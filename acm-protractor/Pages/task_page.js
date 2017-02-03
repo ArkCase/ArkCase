@@ -28,7 +28,7 @@ var chooseFilesBtn = element(by.xpath(Objects.taskpage.locators.chooseFilesBtn))
 var priority = element(by.xpath(Objects.taskspage.locators.priority));
 var taskSubject = element(by.xpath(Objects.taskspage.locators.taskSubject));
 var detailsLink = element.all(by.repeater(Objects.taskspage.locators.detailsLink)).get(1);
-var assignee = element(by.xpath(Objects.taskspage.locators.assignee));
+var assignee = element(by.css(Objects.taskspage.locators.assignee));
 var percent = element(by.xpath(Objects.taskspage.locators.percent));
 var startDate = element(by.xpath(Objects.taskspage.locators.startDate));
 var dueDate = element(by.xpath(Objects.taskspage.locators.dueDate));
@@ -93,7 +93,10 @@ var startDateInputEdit = element(by.model(Objects.taskspage.locators.startDateIn
 var dueDateValue = element(by.model(Objects.taskspage.locators.dueDateInput));
 var approveBtn = element(by.xpath(Objects.taskspage.locators.approveBtn));
 var caseTitleInTasks = element(by.xpath(Objects.taskspage.locators.caseTitleInTasks));
-var complaintTitleInTasks=element(by.xpath(Objects.taskspage.locators.complaintTitleInTasks));
+var complaintTitleInTasks = element(by.xpath(Objects.taskspage.locators.complaintTitleInTasks));
+var groupTaskCheckBox = element(by.id(Objects.taskpage.locators.groupTask));
+var selectGroup = new SelectWrapper(by.model(Objects.taskpage.locators.selectGroup));
+
 
 var TaskPage = function() {
     this.clickTaskButton = function() {
@@ -535,39 +538,58 @@ var TaskPage = function() {
 
         browser.wait(EC.presenceOf(element(by.xpath(Objects.taskspage.locators.approveBtn))), 30000, "Approve button is not displayed").then(function() {
             approveBtn.click().then(function() {
-                browser.wait(EC.textToBePresentInElement((taskState), Objects.taskspage.data.taskStateClosed), 10000);
+                browser.wait(EC.textToBePresentInElement((taskState), Objects.taskspage.data.taskStateClosed), 10000, "Task state is not changed into Closed");
             });
         });
         return this;
     }
     this.clickCaseTitleInTasks = function() {
 
-        browser.wait(EC.presenceOf(element(by.xpath(Objects.taskspage.locators.caseTitleInTasks))), 30000).then(function() {
-            browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.caseTitleInTasks))), 30000).then(function() {
-                browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.taskspage.locators.caseTitleInTasks))), 30000).then(function() {
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.taskspage.locators.caseTitleInTasks))), 30000, "Case title in tasks is not present in DOM").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.caseTitleInTasks))), 30000, "Case title in tasks is not visible").then(function() {
+                browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.taskspage.locators.caseTitleInTasks))), 30000, "Case title in tasks is not clickable").then(function() {
                     caseTitleInTasks.click().then(function() {
                         browser.sleep(5000);
-                        browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.tasksLink))), 30000);
+                        browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.tasksLink))), 30000, "After click on case title, tasks link is not present in DOM");
                     });
                 });
             });
         });
         return this;
     }
- this.clickComplaintTitleInTasks = function() {
+    this.clickComplaintTitleInTasks = function() {
 
-        browser.wait(EC.presenceOf(element(by.xpath(Objects.taskspage.locators.complaintTitleInTasks))), 30000).then(function() {
-            browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.complaintTitleInTasks))), 30000).then(function() {
-                browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.taskspage.locators.complaintTitleInTasks))), 30000).then(function() {
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.taskspage.locators.complaintTitleInTasks))), 30000, "Complaint title in tasks is not present in DOM").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.complaintTitleInTasks))), 30000, "Complaint title in tasks is no visible").then(function() {
+                browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.taskspage.locators.complaintTitleInTasks))), 30000, "Complaint title in tasks is not clickable").then(function() {
                     complaintTitleInTasks.click().then(function() {
                         browser.sleep(5000);
-                        browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.tasksLink))), 30000);
+                        browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.tasksLink))), 30000, "After click on complaint title, tasks link is not present in DOM");
                     });
                 });
             });
         });
         return this;
     }
+
+
+    this.selectGroup = function(group) {
+
+        groupTaskCheckBox.click().then(function() {
+            selectGroup.selectByText(group);
+        });
+        return this;
+    }
+
+    this.insertGroupTaskData = function(group, subject, startdate, duedate, priority, percent, note) {
+        this.selectGroup(group);
+        this.insertSubject(subject);
+        this.insertStartDate(startdate);
+        this.insertDueDate(duedate);
+        this.selectPriority(priority);
+        this.insertPercentComplete(percent);
+        return this;
+    };
 
 };
 

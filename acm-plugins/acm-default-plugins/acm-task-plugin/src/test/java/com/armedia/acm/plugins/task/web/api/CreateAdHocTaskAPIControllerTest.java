@@ -7,7 +7,7 @@ import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -38,7 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:/spring/spring-web-acm-web.xml", "classpath:/spring/spring-library-task-plugin-test.xml" })
+@ContextConfiguration(locations = {"classpath:/spring/spring-web-acm-web.xml", "classpath:/spring/spring-library-task-plugin-test.xml"})
 public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
 {
     private MockMvc mockMvc;
@@ -182,7 +182,7 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
         {
             mockMvc.perform(post("/api/v1/plugin/task/adHocTask").accept(MediaType.parseMediaType("application/json;charset=UTF-8")).session(mockHttpSession).principal(mockAuthentication)
                     .contentType(MediaType.APPLICATION_JSON).content(inJson)).andExpect(status().isBadRequest()).andExpect(content().contentType(MediaType.TEXT_PLAIN));
-        }catch(Exception e)
+        } catch (Exception e)
         {
             exception = e;
         }

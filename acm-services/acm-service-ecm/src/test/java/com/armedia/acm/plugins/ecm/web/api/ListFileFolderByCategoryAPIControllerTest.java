@@ -4,7 +4,7 @@ import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,16 +19,18 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.easymock.EasyMock.*;
+
+import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Created by manoj.dhungana on 7/23/2015.
  */
 
-public class ListFileFolderByCategoryAPIControllerTest extends EasyMockSupport {
+public class ListFileFolderByCategoryAPIControllerTest extends EasyMockSupport
+{
 
     private MockMvc mockMvc;
     private EcmFileService mockEcmFileService;
@@ -42,7 +44,8 @@ public class ListFileFolderByCategoryAPIControllerTest extends EasyMockSupport {
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Before
-    public void setUP() throws Exception{
+    public void setUP() throws Exception
+    {
         mockEcmFileService = createMock(EcmFileService.class);
         mockAuthentication = createMock(Authentication.class);
         mockHttpSession = new MockHttpSession();
@@ -52,7 +55,8 @@ public class ListFileFolderByCategoryAPIControllerTest extends EasyMockSupport {
     }
 
     @Test
-    public void listFileFolderByCategory_success() throws Exception{
+    public void listFileFolderByCategory_success() throws Exception
+    {
 
         String category = "Correspondence";
         String parentObjectType = "CASE_FILE";
@@ -68,7 +72,7 @@ public class ListFileFolderByCategoryAPIControllerTest extends EasyMockSupport {
         container.setContainerObjectType(parentObjectType);
         container.setFolder(new AcmFolder());
 
-        String url = "/api/v1/service/ecm/bycategory/" + parentObjectType +"/" + parentObjectId + "?category=Correspondence";
+        String url = "/api/v1/service/ecm/bycategory/" + parentObjectType + "/" + parentObjectId + "?category=Correspondence";
         log.info("Rest endpoint : " + url);
 
 
@@ -82,8 +86,8 @@ public class ListFileFolderByCategoryAPIControllerTest extends EasyMockSupport {
                 get(url)
                         .principal(mockAuthentication)
                         .session(mockHttpSession))
-                        .andExpect(status().isOk())
-                        .andReturn();
+                .andExpect(status().isOk())
+                .andReturn();
 
         verifyAll();
 

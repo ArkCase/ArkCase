@@ -6,10 +6,14 @@ import com.armedia.acm.plugins.person.service.OrganizationService;
 import com.armedia.acm.plugins.profile.dao.UserOrgDao;
 import com.armedia.acm.plugins.profile.model.ProfileDTO;
 import com.armedia.acm.plugins.profile.model.UserOrg;
+import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmRole;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.RoleType;
+import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.service.group.GroupService;
+import com.armedia.acm.services.users.service.group.GroupServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
@@ -18,9 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class UserOrgServiceImpl implements UserOrgService
@@ -38,6 +40,10 @@ public class UserOrgServiceImpl implements UserOrgService
     private MuleContextManager muleContextManager;
 
     private ProfileEventPublisher eventPublisher;
+
+    private AcmGroupDao groupDao;
+
+    private GroupService groupService;
 
     @Override
     public UserOrg getUserOrgForUserId(String userId)
@@ -75,15 +81,16 @@ public class UserOrgServiceImpl implements UserOrgService
         return saved;
     }
 
-    private ProfileDTO createProfileDTO(UserOrg userOrgInfo, List<AcmRole> ldapRoles)
+    private ProfileDTO createProfileDTO(UserOrg userOrgInfo, Set<AcmGroup> groups)
     {
         ProfileDTO profileDTO = new ProfileDTO();
 
-        List<String> groups = ldapRoles.stream().map(AcmRole::getRoleName).collect(Collectors.toList());
+        List<String> groupsNames = groups.stream().map(group -> groupService.isUUIDPresentInTheGroupName(group.getName())
+                ? group.getName().substring(0, group.getName().lastIndexOf("-UUID-")) : group.getName()).collect(Collectors.toList());
 
         profileDTO.setUserOrgId(userOrgInfo.getUserOrgId());
 
-        profileDTO.setGroups(groups);
+        profileDTO.setGroups(groupsNames);
 
         AcmUser user = userOrgInfo.getUser();
         profileDTO.setUserId(user.getUserId());
@@ -136,8 +143,9 @@ public class UserOrgServiceImpl implements UserOrgService
                 getEventPublisher().publishProfileEvent(userOrg, authentication, true, false);
             }
         }
-        List<AcmRole> groups = userDao.findAllRolesByUserAndRoleType(userId, RoleType.LDAP_GROUP);
-        return createProfileDTO(userOrg, groups);
+
+        AcmUser user = userDao.findByUserIdAnyCase(userId);
+        return createProfileDTO(userOrg, user.getGroups());
     }
 
     @Override
@@ -262,5 +270,21 @@ public class UserOrgServiceImpl implements UserOrgService
     public void setEventPublisher(ProfileEventPublisher eventPublisher)
     {
         this.eventPublisher = eventPublisher;
+    }
+
+    public AcmGroupDao getGroupDao() {
+        return groupDao;
+    }
+
+    public void setGroupDao(AcmGroupDao groupDao) {
+        this.groupDao = groupDao;
+    }
+
+    public GroupService getGroupService() {
+        return groupService;
+    }
+
+    public void setGroupService(GroupService groupService) {
+        this.groupService = groupService;
     }
 }

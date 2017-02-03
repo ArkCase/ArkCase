@@ -44,4 +44,9 @@ public interface TaskConstants
 
     String VARIABLE_NAME_LEGACY_SYSTEM_ID = "LEGACY_SYSTEM_ID";
 
+    String VARIABLE_NAME_IS_BUCKSLIP_WORKFLOW = "isBuckslipWorkflow";
+
+    String VARIABLE_NAME_BUCKSLIP_FUTURE_APPROVERS = "futureApprovers";
+    String VARIABLE_NAME_PAST_APPROVERS = "pastApprovers";
+
 }

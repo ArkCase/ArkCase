@@ -7,9 +7,12 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 
+import com.armedia.acm.services.email.event.SmtpEmailReceivedEvent;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,11 +33,10 @@ import java.util.regex.Pattern;
 /**
  * Acm Object mail handler, handles incoming entity related emails and imports the email files in entity contained email
  * folder
- * 
+ *
  * @author dame.gjorgjievski
  */
-public class AcmObjectMailHandler
-{
+public class AcmObjectMailHandler implements ApplicationEventPublisherAware {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private final AcmNameDao entityDao;
@@ -42,34 +44,35 @@ public class AcmObjectMailHandler
     private EcmFileService ecmFileService;
     private AcmFolderService acmFolderService;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
+    private ApplicationEventPublisher eventPublisher;
 
     private String objectIdRegexPattern;
     private String mailDirectory;
     private boolean enabled;
 
-    public AcmObjectMailHandler(AcmNameDao dao)
-    {
+    public AcmObjectMailHandler(AcmNameDao dao) {
         this.entityDao = dao;
+    }
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        eventPublisher = applicationEventPublisher;
     }
 
     @Transactional
     public void handle(Message message) throws MessagingException, IllegalAccessException, IllegalArgumentException,
-            InvocationTargetException, NoSuchMethodException, SecurityException
-    {
-        if (!enabled)
-        {
+            InvocationTargetException, NoSuchMethodException, SecurityException {
+        if (!enabled) {
             return;
         }
 
         String entityId = extractIdFromSubject(message);
-        if (entityId == null)
-        {
+        if (entityId == null) {
             throw new EntityNotFoundException("Subject in the mail didn't match correct entity number. subject: " + message.getSubject());
         }
 
         AcmObject entity = entityDao.findByName(entityId);
-        if (entity == null)
-        {
+        if (entity == null) {
             throw new EntityNotFoundException("No entity was found with given number: " + entityId);
         }
 
@@ -78,80 +81,76 @@ public class AcmObjectMailHandler
         String tempDir = System.getProperty("java.io.tmpdir");
         String messageFileName = System.currentTimeMillis() + "_" + entityId + ".eml";
         File messageFile = new File(tempDir + File.separator + messageFileName);
+        Exception exception = null;
 
-        try
-        {
-            try (OutputStream os = new FileOutputStream(messageFile))
-            {
+        try {
+            try (OutputStream os = new FileOutputStream(messageFile)) {
                 message.writeTo(os);
             }
 
             AcmFolder folder = acmFolderService.addNewFolderByPath(entity.getObjectType(), entity.getId(), mailDirectory);
-            try (InputStream is = new FileInputStream(messageFile))
-            {
+            try (InputStream is = new FileInputStream(messageFile)) {
                 Authentication auth = new UsernamePasswordAuthenticationToken(userId, "");
                 ecmFileService.upload(messageFileName, "mail", "Document", is, "message/rfc822", messageFileName, auth,
                         folder.getCmisFolderId(), entity.getObjectType(), entity.getId());
+
+
             }
 
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             log.error("Error processing complaint with number '{}'. Exception msg: '{}' ", entityId, e.getMessage());
+            exception = e;
         }
+
+        SmtpEmailReceivedEvent event = new SmtpEmailReceivedEvent(message, userId, entity.getId(), entity.getObjectType());
+        boolean success = (exception == null);
+        event.setSucceeded(success);
+        eventPublisher.publishEvent(event);
 
     }
 
     /**
      * Extract id from message subject
-     * 
+     *
      * @param message
      * @return
      * @throws MessagingException
      */
-    private String extractIdFromSubject(Message message) throws MessagingException
-    {
+    private String extractIdFromSubject(Message message) throws MessagingException {
         String result = null;
         String subject = message.getSubject();
-        if (!StringUtils.isEmpty(subject))
-        {
+        if (!StringUtils.isEmpty(subject)) {
 
             Pattern pattern = Pattern.compile(objectIdRegexPattern);
             Matcher matcher = pattern.matcher(subject);
-            if (matcher.find())
-            {
+            if (matcher.find()) {
                 result = subject.substring(matcher.start(), matcher.end());
             }
         }
         return result;
     }
 
-    public void setEcmFileService(EcmFileService ecmFileService)
-    {
+    public void setEcmFileService(EcmFileService ecmFileService) {
         this.ecmFileService = ecmFileService;
     }
 
-    public void setAcmFolderService(AcmFolderService acmFolderService)
-    {
+    public void setAcmFolderService(AcmFolderService acmFolderService) {
         this.acmFolderService = acmFolderService;
     }
 
-    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
-    {
+    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter) {
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 
-    public void setObjectIdRegexPattern(String objectIdRegexPattern)
-    {
+    public void setObjectIdRegexPattern(String objectIdRegexPattern) {
         this.objectIdRegexPattern = objectIdRegexPattern;
     }
 
-    public void setMailDirectory(String mailDirectory)
-    {
+    public void setMailDirectory(String mailDirectory) {
         this.mailDirectory = mailDirectory;
     }
 
-    public void setEnabled(boolean enabled)
-    {
+    public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 

@@ -162,7 +162,10 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
             // if the Solr search returns the object, the user has read access to it... eventually we will extend
             // this evaluator to consider additional access levels, but for now we will grant any access so long as
             // the user can read the object.
-            return getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, 0, 1, "id asc");
+            String result = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, 0, 1, "id asc");
+            if (result.contains("numFound\":0"))
+                result = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, 0, 1, "id asc");
+            return result;
         } catch (MuleException e)
         {
             log.error("Unable to retrieve Solr document for object with id [{}] of type [{}]", objectId, objectType, e);
