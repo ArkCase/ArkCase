@@ -28,7 +28,7 @@ var chooseFilesBtn = element(by.xpath(Objects.taskpage.locators.chooseFilesBtn))
 var priority = element(by.xpath(Objects.taskspage.locators.priority));
 var taskSubject = element(by.xpath(Objects.taskspage.locators.taskSubject));
 var detailsLink = element.all(by.repeater(Objects.taskspage.locators.detailsLink)).get(1);
-var assignee = element(by.xpath(Objects.taskspage.locators.assignee));
+var assignee = element(by.css(Objects.taskspage.locators.assignee));
 var percent = element(by.xpath(Objects.taskspage.locators.percent));
 var startDate = element(by.xpath(Objects.taskspage.locators.startDate));
 var dueDate = element(by.xpath(Objects.taskspage.locators.dueDate));
@@ -94,6 +94,8 @@ var dueDateValue = element(by.model(Objects.taskspage.locators.dueDateInput));
 var approveBtn = element(by.xpath(Objects.taskspage.locators.approveBtn));
 var caseTitleInTasks = element(by.xpath(Objects.taskspage.locators.caseTitleInTasks));
 var complaintTitleInTasks = element(by.xpath(Objects.taskspage.locators.complaintTitleInTasks));
+var groupTaskCheckBox = element(by.id(Objects.taskpage.locators.groupTask));
+var selectGroup = new SelectWrapper(by.model(Objects.taskpage.locators.selectGroup));
 
 
 var TaskPage = function() {
@@ -569,6 +571,25 @@ var TaskPage = function() {
         });
         return this;
     }
+
+
+    this.selectGroup = function(group) {
+
+        groupTaskCheckBox.click().then(function() {
+            selectGroup.selectByText(group);
+        });
+        return this;
+    }
+
+    this.insertGroupTaskData = function(group, subject, startdate, duedate, priority, percent, note) {
+        this.selectGroup(group);
+        this.insertSubject(subject);
+        this.insertStartDate(startdate);
+        this.insertDueDate(duedate);
+        this.selectPriority(priority);
+        this.insertPercentComplete(percent);
+        return this;
+    };
 
 };
 
