@@ -45,17 +45,22 @@
         </dependency>
 
         <dependency>
-            <groupId>org.projectreactor</groupId>
+            <groupId>io.projectreactor</groupId>
             <artifactId>reactor-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.projectreactor</groupId>
+            <groupId>io.projectreactor</groupId>
             <artifactId>reactor-net</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.projectreactor.spring</groupId>
+            <groupId>io.projectreactor.spring</groupId>
             <artifactId>reactor-spring-context</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
         </dependency>
 
         <!-- testing -->
