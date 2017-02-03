@@ -95,7 +95,7 @@
         <asm.version>5.0.3</asm.version>
         <org.apache.poi.version>3.10.1</org.apache.poi.version>
         <frevvo.forms.version>6.3</frevvo.forms.version>
-        <java.mail.version>1.5.4</java.mail.version>
+        <java.mail.version>1.5.6</java.mail.version>
         <spring.integration.version>4.1.6.RELEASE</spring.integration.version>
         <com.google.guava.version>18.0</com.google.guava.version>
         <postgresql.version>9.3-1100-jdbc41</postgresql.version>
@@ -577,7 +577,8 @@
                         WEB-INF/lib/workbench-*.jar,
                         WEB-INF/lib/runtime-*.jar,
                         WEB-INF/lib/mule-devkit-*.jar,
-                        WEB-INF/lib/mule-module-devkit-*.jar
+                        WEB-INF/lib/mule-module-devkit-*.jar,
+                        WEB-INF/lib/mail-1.4*.jar
                     </packagingExcludes>
                 </configuration>
             </plugin>
@@ -814,6 +815,62 @@
 
     <dependencyManagement>
         <dependencies>
+
+            <!-- milton -->
+            <dependency>
+                <groupId>io.milton</groupId>
+                <artifactId>milton-server-ent</artifactId>
+                <version>${milton.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.milton</groupId>
+                <artifactId>milton-mail-api</artifactId>
+                <version>${milton.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.mail</groupId>
+                        <artifactId>mail</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>io.milton</groupId>
+                <artifactId>milton-mail-server</artifactId>
+                <version>${milton.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.mail</groupId>
+                        <artifactId>mail</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <!-- frevvo forms -->
+            <dependency>
+                <groupId>com.frevvo</groupId>
+                <artifactId>forms-java</artifactId>
+                <version>${frevvo.forms.version}</version>
+                <classifier>mailfix</classifier>
+            </dependency>
+
+            <!-- Java mail-->
+            <dependency>
+                <groupId>javax.mail</groupId>
+                <artifactId>javax.mail-api</artifactId>
+                <version>${java.mail.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.mail</groupId>
+                <artifactId>imap</artifactId>
+                <version>${java.mail.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.mail</groupId>
+                <artifactId>javax.mail</artifactId>
+                <version>${java.mail.version}</version>
+            </dependency>
 
             <!-- date time -->
             <dependency>
@@ -1194,6 +1251,18 @@
                 <scope>compile</scope>
             </dependency>
             <dependency>
+                <groupId>org.mule.modules</groupId>
+                <artifactId>mule-module-http</artifactId>
+                <version>${mule.version}</version>
+                <scope>runtime</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.mail</groupId>
+                        <artifactId>mail</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
                 <groupId>org.mule.transports</groupId>
                 <artifactId>mule-transport-vm</artifactId>
                 <version>${mule.version}</version>
@@ -1204,6 +1273,17 @@
                 <artifactId>mule-transport-file</artifactId>
                 <version>${mule.version}</version>
                 <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mule.transports</groupId>
+                <artifactId>mule-transport-email</artifactId>
+                <version>${mule.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.mail</groupId>
+                        <artifactId>mail</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.mule.transports</groupId>
@@ -1272,6 +1352,12 @@
                 <artifactId>mule-module-json</artifactId>
                 <version>${mule.version}</version>
                 <scope>runtime</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.mail</groupId>
+                        <artifactId>mail</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.mule.modules</groupId>
@@ -1286,6 +1372,10 @@
                     <exclusion>
                         <groupId>oauth.signpost</groupId>
                         <artifactId>signpost-core</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>javax.mail</groupId>
+                        <artifactId>mail</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -1372,6 +1462,17 @@
                 <version>${apache-commons-exec.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-email</artifactId>
+                <version>1.2</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.mail</groupId>
+                        <artifactId>mail</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient</artifactId>
                 <version>${apache-httpcomponents-httpclient.version}</version>
@@ -1419,6 +1520,12 @@
                 <artifactId>json-schema-validator</artifactId>
                 <version>${json-schema-validator.version}</version>
                 <scope>compile</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.mail</groupId>
+                        <artifactId>mailapi</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <!-- xml -->
@@ -1693,6 +1800,7 @@
                 <groupId>org.powermock</groupId>
                 <artifactId>powermock-api-easymock</artifactId>
                 <version>${powermock.version}</version>
+                <scope>test</scope>
                 <exclusions>
                     <exclusion>
                         <!-- powermock pulls in an older version of cglib that breaks our unit tests -->
