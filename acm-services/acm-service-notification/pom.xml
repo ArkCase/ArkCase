@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-services</artifactId>
         <groupId>com.armedia.acm</groupId>
-        <version>3.1.6-SNAPSHOT</version>
+        <version>3.1.7-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -76,13 +76,13 @@
             <artifactId>acm-web</artifactId>
             <version>${acm.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-audit</artifactId>
             <version>${acm.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-object-history</artifactId>
@@ -104,19 +104,15 @@
             <artifactId>acm-mule-context-manager</artifactId>
             <version>${acm.version}</version>
         </dependency>
-        
-        
-        
-        
-        
-        
+
+
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-files-property-file-manager</artifactId>
             <version>${acm.version}</version>
         </dependency>
-        
-        
+
+
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-reload-properties</artifactId>
@@ -150,9 +146,9 @@
 
         <!-- preconditions -->
         <dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-		</dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
 
 
         <!-- logging -->
@@ -166,12 +162,6 @@
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>${org.json.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
-            <version>${jackson-mapper-asl.version}</version>
         </dependency>
 
         <dependency>
@@ -198,7 +188,6 @@
             <artifactId>javax.servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
-
 
 
         <!-- testing -->
@@ -242,14 +231,14 @@
             <artifactId>spring-oxm</artifactId>
             <scope>test</scope>
         </dependency>
-        
+
         <!-- Reloading .property file without restarting the server -->
         <dependency>
-			<groupId>net.unicon.springframework</groupId>
-			<artifactId>springframework-addons</artifactId>
-		</dependency>
-		
-		<!-- mule -->
+            <groupId>net.unicon.springframework</groupId>
+            <artifactId>springframework-addons</artifactId>
+        </dependency>
+
+        <!-- mule -->
         <dependency>
             <groupId>org.mule</groupId>
             <artifactId>mule-core</artifactId>

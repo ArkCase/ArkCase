@@ -35,7 +35,7 @@
     "costsheet": {
       "approver.label": "Approver"
     },
-    "timesheet":{
+    "timesheet": {
       "approver.label": "Approver"
     },
     "_xxx_courtRoomName": "Court Room Name:"
@@ -49,6 +49,8 @@
     "complete.button": "Complete",
     "approve.button": "Approve Document",
     "rework.button": "Send for Rework",
+    "claim.button": "Claim",
+    "unclaim.button": "Unclaim",
     "error.outcomeFieldMissing": "Cannot complete task because of missing required value",
     "modal": {
       "errorHeaderText": "Error",
@@ -73,6 +75,10 @@
       "modifier": "User Last Modified"
     }
   },
+  "tasks.comp.parentdocs": {
+    "title": "Parent Documents",
+    "noParentDataMessage": "No parent documents for standalone task"
+  },
   "tasks.comp.attachments": {
     "title": "Attachments"
   },
@@ -84,7 +90,7 @@
       "creator": "Author"
     }
   },
-   "tasks.comp.references": {
+  "tasks.comp.references": {
     "title": "References",
     "table.columns": {
       "targetName": "Number",
@@ -181,7 +187,9 @@
     "notes.label": "Notes",
     "saveButton": "Save",
     "overdue.tooltip": "Task is Overdue",
-    "deadline.tooltip": "Deadline is Approaching"
+    "deadline.tooltip": "Deadline is Approaching",
+    "groupToggle.label": "Group Task?",
+    "group.placeholder": "Please select a group."
   },
   "tasks.userSearch": {
     "id": "userSearch",
@@ -201,12 +209,30 @@
       "username": "Username"
     }
   },
-    "tasks.comp.addreference": {
+  "tasks.objectSearch": {
+    "id": "objectSearch",
+    "title": "Object Search",
+    "search": {
+      "btn": "Search",
+      "placeholder": "Search for the case or complaint to this task."
+    },
+    "cancelButton": "Cancel",
+    "confirmButton": "Confirm",
+    "enabled": true,
+    "userFacetFilter": "\"Object Type\": ",
+    "objectGridColumns": {
+      "name": "Number",
+      "type": "Type",
+      "title": "Title",
+      "username": "Assignee"
+    }
+  },
+  "tasks.comp.addreference": {
     "title": "Add Reference",
     "cancelButton": "Cancel",
     "confirmButton": "Add",
     "search": {
-      "placeholder": "Search for case or complaint",
+      "placeholder": "Search for case, complaint, file, task",
       "btn": "Search"
     },
     "grid": {
@@ -220,5 +246,54 @@
         "modified": "Modified"
       }
     }
-  }   
+  },
+  "tasks.comp.participants": {
+    "title": "Participants",
+    "table.columns": {
+      "type": "Type",
+      "name": "Name"
+    },
+    "dialogUserPicker": {
+      "header": "Choose User",
+      "table.columns": {
+        "name": "Name",
+        "type": "Type",
+        "title": "Title",
+        "id": "Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "Choose Group",
+      "table.columns": {
+        "name": "Name"
+      }
+    }
+  },
+  "tasks.comp.assigneePickerModal": {
+    "title": "Change Assignee",
+    "assigneeNamelabel": "Assignee Name",
+    "btnCancelText": "Cancel",
+    "btnSaveText": "Save",
+    "searchAssigneeHeader": "Search Assignee"
+  },
+  "tasks.comp.approvalRouting": {
+    "title": "Future Approvers",
+    "addNewTooltip": "Add new approver",
+    "noBuckslipMessage":"No Data",
+    "button": {
+      "save.tooltip": "Save Changes"
+    },
+    "table.columns": {
+      "fullName": "Full Name"
+    }
+  },
+  "tasks.comp.pastApprovals": {
+    "title": "Past Approvers",
+    "noBuckslipMessage":"No Data",
+    "table.columns": {
+      "approvalDate": "Approval Date",
+      "approverId": "Approver",
+      "approverDecision": "Approver Decision"
+    }
+  }
 }

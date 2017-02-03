@@ -49,9 +49,9 @@ public class AcmFolderToSolrTransformer implements AcmObjectToSolrDocTransformer
         doc.setLast_modified_tdt(in.getModified());
         doc.setName(in.getName());
         doc.setModifier_s(in.getModifier());
-        doc.setParent_object_id_i(in.getParentFolderId());
-        doc.setParent_object_id_s(in.getParentFolderId() == null ? null : "" + in.getParentFolderId());
-        doc.setParent_object_type_s(in.getParentFolderId() == null ? null : in.getObjectType());
+        doc.setParent_object_id_i(in.getParentFolder() == null ? null : in.getParentFolder().getId());
+        doc.setParent_object_id_s(in.getParentFolder() == null ? null : "" + in.getParentFolder().getId());
+        doc.setParent_object_type_s(in.getParentFolder() == null ? null : in.getObjectType());
         doc.setTitle_parseable(in.getName());
         doc.setTitle_t(in.getName());
 
@@ -62,7 +62,7 @@ public class AcmFolderToSolrTransformer implements AcmObjectToSolrDocTransformer
         // need an _lcs field for sorting
         doc.setName_lcs(in.getName());
 
-        doc.setParent_folder_id_i(in.getParentFolderId());
+        doc.setParent_folder_id_i(in.getParentFolder() == null ? null : in.getParentFolder().getId());
 
         doc.setStatus_s(in.getStatus());
 

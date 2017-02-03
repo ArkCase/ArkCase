@@ -75,7 +75,7 @@
         "value": "object_id_s ASC"
       },
       {
-        "desc": "Sort Case ID Dece",
+        "desc": "Sort Case ID Desc",
         "name": "sort-case-id-desc",
         "value": "object_id_s DESC"
       },
@@ -696,6 +696,31 @@
             "fullNameField": "creator_full_name_lcs"
           }
         ]
+      },
+      "dialogOrganizationPicker": {
+        "enableFiltering": false,
+        "multiSelect": false,
+        "showFacets": false,
+        "columnDefs": [
+          {
+            "name": "type_lcs",
+            "displayName": "common.directive.corePeople.organizations.modal.dialogOrganizationPicker.table.columns.type",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "name",
+            "displayName": "common.directive.corePeople.organizations.modal.dialogOrganizationPicker.table.columns.name",
+            "headerCellFilter": "translate"
+          }
+        ],
+        "paginationPageSizes": [
+          5,
+          10,
+          20,
+          50
+        ],
+        "paginationPageSize": 10,
+        "start": 0
       }
     },
     {
@@ -713,6 +738,7 @@
         50
       ],
       "paginationPageSize": 5,
+      "typeNoAccess": "No Access",
       "columnDefs": [
         {
           "name": "participantType",
@@ -954,7 +980,7 @@
           "name": "eventType",
           "displayName": "cases.comp.history.table.columns.eventType",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div ng-if='row.entity.eventDescription'>{{row.entity.eventDescription}}</div><div ng-if='!row.entity.eventDescription'>{{row.entity.eventType}}</div>"
+          "cellTemplate": "<div> <span ng-if='row.entity.parentObjectType'>{{('common.objectTypes.'+row.entity.parentObjectType) | translate}} Updated - </span> {{row.entity.eventDescription || row.entity.eventType}}</div>"
         },
         {
           "name": "eventDate",
@@ -1170,7 +1196,7 @@
       "emptySearch": false,
       "hideTypeahead": true,
       "showFacets": false,
-      "searchFilter": "\"Object Type\": COMPLAINT|CASE_FILE",
+      "searchFilter": "\"Object Type\": COMPLAINT|CASE_FILE|TASK|FILE",
       "columnDefs": [
         {
           "name": "object_id_s",

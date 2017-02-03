@@ -3,11 +3,11 @@
 angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state', '$stateParams', '$modal'
     , 'UtilService', 'ConfigService', 'Authentication'
     , 'Task.InfoService', 'Task.WorkflowService', 'Object.SubscriptionService', 'Object.SignatureService', 'ObjectService'
-    , 'Helper.ObjectBrowserService'
+    , 'Helper.ObjectBrowserService', '$translate'
     , function ($scope, $state, $stateParams, $modal
         , Util, ConfigService, Authentication
         , TaskInfoService, TaskWorkflowService, ObjectSubscriptionService, ObjectSignatureService, ObjectService
-        , HelperObjectBrowserService) {
+        , HelperObjectBrowserService, $translate) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -34,6 +34,7 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
 
             promiseQueryUser.then(function (userInfo) {
                 $scope.userId = userInfo.userId;
+                $scope.userInfo = userInfo;
 
                 //we should wait for userId before we compare it with assignee
                 if (!Util.isEmpty($scope.objectInfo.assignee)) {
@@ -168,8 +169,88 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
             }
         };
 
+        $scope.showClaimBtn = function () {
+            var isClosedStatus = Util.compare(Util.goodMapValue($scope.objectInfo, 'status'), "CLOSED") || Util.compare(Util.goodMapValue($scope.objectInfo, 'status'), "TERMINATED");
+            if ($scope.objectInfo && !Util.goodMapValue($scope.objectInfo, "assignee", false)) {
+                if (Util.goodMapValue($scope.objectInfo, "candidateGroups", false) && !Util.isArrayEmpty($scope.objectInfo.candidateGroups)) {
+                    if (Util.goodMapValue($scope.userInfo, "authorities", false) && !Util.isArrayEmpty($scope.userInfo.authorities)) {
+                        if (_.includes($scope.userInfo.authorities, "ROLE_ADMINISTRATOR")) {
+                            //Admin users can claim any group task.
+                            return !isClosedStatus;
+                        }
+                        if (!Util.isArrayEmpty(_.intersection($scope.objectInfo.candidateGroups, $scope.userInfo.authorities))) {
+                            return !isClosedStatus;
+                        }
+                    }
+                }
+            }
+            return false;
+        };
+
+        $scope.claimTask = function () {
+            if (Util.goodMapValue($scope.objectInfo, "taskId", false)) {
+                TaskWorkflowService.claimTask($scope.objectInfo.taskId).then(
+                    function (taskInfo) {
+                        TaskInfoService.resetTaskCacheById(taskInfo.taskId);
+                        return TaskInfoService.getTaskInfo(taskInfo.taskId);
+                    }
+                ).then(function (taskInfoUpdated) {
+                    saveTask(taskInfoUpdated).then(function (taskInfoUpdated) {
+                        $scope.refresh();
+                        return taskInfoUpdated;
+                    }, function (error) {
+                        //Ignore a failed save here as the claim will take care of modifying Activiti Task.
+                        //Error is caused by a participant data integrity issue that occurs every so often.
+                        $scope.$emit("report-object-updated", taskInfoUpdated);
+                        return taskInfoUpdated;
+                    });
+                });
+            }
+        };
+
+        $scope.showUnclaimBtn = function () {
+            if ($scope.objectInfo && Util.goodMapValue($scope.objectInfo, "assignee", false)) {
+                if (Util.goodMapValue($scope.userInfo, "authorities", false) && !Util.isArrayEmpty($scope.userInfo.authorities)) {
+                    if (_.includes($scope.userInfo.authorities, "ROLE_ADMINISTRATOR")) {
+                        //Admin users can u3n-claim any group task.
+                        return true;
+                    }
+                    else if (!Util.isArrayEmpty(_.intersection($scope.objectInfo.candidateGroups, $scope.userInfo.authorities))) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        };
+
+        $scope.unclaimTask = function () {
+            if (Util.goodMapValue($scope.objectInfo, "taskId", false)) {
+                TaskWorkflowService.unclaimTask($scope.objectInfo.taskId).then(
+                    function (taskInfo) {
+                        $scope.$emit("report-object-updated", taskInfo);
+                        return taskInfo;
+                    }
+                    , function (error) {
+                        return error;
+                    }
+                );
+            }
+        };
+
         $scope.refresh = function () {
             $scope.$emit('report-object-refreshed', $stateParams.id);
+        };
+
+        var saveTask = function (taskInfoUpdated) {
+            var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
+            if (TaskInfoService.validateTaskInfo($scope.objectInfo)) {
+                var objectInfo = taskInfoUpdated == null ? Util.omitNg($scope.objectInfo) : Util.omitNg(taskInfoUpdated);
+                TaskInfoService.saveTaskInfo(objectInfo).then(function (taskInfo) {
+                    $scope.$emit("report-object-updated", taskInfo);
+                    return taskInfo;
+                });
+            }
+            return promiseSaveInfo;
         };
 
         $scope.showErrorDialog = function (error) {
@@ -209,7 +290,7 @@ angular.module('tasks').controller('Tasks.RejectDialogController', ['$scope', '$
     ]
 );
 angular.module('tasks').controller('Tasks.SignatureDialogController', ['$scope', '$modalInstance',
-    function ($scope, $modalInstance) {
+        function ($scope, $modalInstance) {
             $scope.onClickCancel = function () {
                 $modalInstance.dismiss('Cancel');
             };

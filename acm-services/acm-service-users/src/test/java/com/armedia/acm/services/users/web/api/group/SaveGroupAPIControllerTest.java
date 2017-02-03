@@ -6,8 +6,7 @@ package com.armedia.acm.services.users.web.api.group;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.service.group.GroupService;
-import com.armedia.acm.services.users.service.group.GroupServiceImpl;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -84,7 +83,7 @@ public class SaveGroupAPIControllerTest extends EasyMockSupport
 
         Capture<AcmGroup> found = new Capture<AcmGroup>();
 
-		expect(getMockAuthentication().getName()).andReturn("user");
+        expect(getMockAuthentication().getName()).andReturn("user");
         expect(getMockGroupService().checkAndSaveAdHocGroup(capture(found))).andReturn(group);
         replayAll();
 

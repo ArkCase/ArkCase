@@ -14,11 +14,14 @@ var thursdayInput = element(by.name(Objects.timetrackingPage.locators.thursdayIn
 var fridayInput = element(by.name(Objects.timetrackingPage.locators.fridayInput));
 var saturdayInput = element(by.name(Objects.timetrackingPage.locators.saturdayInput));
 var saveBtn = element(by.xpath(Objects.timetrackingPage.locators.saveBtn));
-var editTimesheet = element(by.buttonText(Objects.timetrackingPage.locators.editTimesheetBtn));
+var editTimesheet = element(by.css(Objects.timetrackingPage.locators.editTimesheetBtn));
 var newTimesheet = element(by.buttonText(Objects.timetrackingPage.locators.newTimesheetBtn));
 var timeSheetsPageTitle = element(by.xpath(Objects.timetrackingPage.locators.timesheetsPageTitle));
 var nextWeekBtn = element(by.buttonText(Objects.timetrackingPage.locators.nextWeekBtn));
-var periodInput = element(by.name(Objects.timetrackingPage.locators.periodInput));
+var periodInput = element(by.xpath(Objects.timetrackingPage.locators.periodInput));
+var timeTrackingDate = element(by.xpath(Objects.timetrackingPage.locators.timeTrackingDate));
+var chargeCodeAlertMessage = element(by.xpath(Objects.timetrackingPage.locators.chargeCodeAlertMessage));
+var timeTotal=element(by.name(Objects.timetrackingPage.locators.timeTotal));
 
 
 
@@ -39,55 +42,79 @@ var timeTrackingPage = function() {
 
         var timesheetType = element(by.linkText(type));
         var chargeCode = element(by.linkText(code));
-        browser.wait(EC.visibilityOf(element.all(by.xpath(Objects.timetrackingPage.locators.timesheetDropDown)).get(2)), 30000).then(function() {
+        browser.wait(EC.visibilityOf(element.all(by.xpath(Objects.timetrackingPage.locators.timesheetDropDown)).get(2)), 30000, "Timesheet drop down list is no visible").then(function() {
             browser.sleep(5000);
-            periodInput.click().then(function() {
-                browser.sleep(3000);
-                periodInput.clear().then(function() {
-                        periodInput.sendKeys(Objects.timetrackingPage.data.date).then(function() {
-                            browser.sleep(3000);
-                            nextWeekBtn.click().then(function() {
-                                browser.sleep(3000);
-                                timesheetTypeDropDown.click().then(function() {
-                                    browser.wait(EC.textToBePresentInElement((timesheetType), type), 10000).then(function() {
-                                        timesheetType.click().then(function() {
-                                            chargeCodeDropDown.click().then(function() {
-                                                browser.wait(EC.textToBePresentInElement((chargeCode), code), 10000, "The" + code + "is not present in the dropdown").then(function() {
-                                                    chargeCode.click().then(function() {
-                                                        sundayInput.sendKeys(hours).then(function() {
-                                                            mondayInput.sendKeys(hours).then(function() {
-                                                                tuesdayInput.sendKeys(hours).then(function() {
-                                                                    wednsdayInput.sendKeys(hours).then(function() {
-                                                                        thursdayInput.sendKeys(hours).then(function() {
-                                                                            fridayInput.sendKeys(hours).then(function() {
-                                                                                saturdayInput.sendKeys(hours);
-                                                                            });
-                                                                        });
-                                                                    });
-                                                                });
-                                                            });
-                                                        });
-                                                    });
-                                                });
-                                            });
-                                        });
-                                    });
-                                });
-                            });
-                        });
-                    });
-                });
+            timesheetTypeDropDown.click().then(function() {
+                browser.wait(EC.textToBePresentInElement((timesheetType), type), 10000, type + " is not present in timesheet type drop down list");
+            }).then(function() {
+                timesheetType.click();
+            }).then(function() {
+                chargeCodeDropDown.click();
+            }).then(function() {
+                browser.wait(EC.textToBePresentInElement((chargeCode), code), 10000, "The" + code + "is not present in the dropdown");
+            }).then(function() {
+                chargeCode.click();
+            }).then(function() {
+                sundayInput.click().clear().sendKeys(hours);
+            }).then(function() {
+                mondayInput.click().clear().sendKeys(hours);
+            }).then(function() {
+                tuesdayInput.click().clear().sendKeys(hours);
+            }).then(function() {
+                wednsdayInput.click().clear().sendKeys(hours);
+            }).then(function() {
+                thursdayInput.click().clear().sendKeys(hours);
+            }).then(function() {
+                fridayInput.click().clear().sendKeys(hours);
+            }).then(function() {
+                saturdayInput.click().clear().sendKeys(hours);
             });
+        });
+
         return this;
     }
 
     this.clickSaveBtn = function() {
         browser.executeScript('arguments[0].click()', saveBtn);
-          browser.driver.switchTo().defaultContent();
-          browser.sleep(15000);
+        browser.driver.switchTo().defaultContent();
+        browser.sleep(15000);
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.timetrackingPage.locators.timesheetsPageTitle))), 30000, "Timesheets page title is not displayed");
         return this;
-}
-};
+    }
 
+    this.returnTimeTrackingDate = function() {
+
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.timetrackingPage.locators.timeTrackingDate))), 10000, "The time tracking date label is not displayed");
+        return timeTrackingDate.getText();
+    }
+
+    this.returnchargeCodeAlertMessage = function() {
+
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.timetrackingPage.locators.chargeCodeAlertMessage))), 10000, "Alert message for empty charge code is not displayed");
+        return chargeCodeAlertMessage.getText();
+    }
+
+    this.selectTimesheetType = function(type) {
+
+        var timesheetType = element(by.linkText(type));
+        browser.wait(EC.visibilityOf(element.all(by.xpath(Objects.timetrackingPage.locators.timesheetDropDown)).get(2)), 30000, "Timesheet tyoe drop down is not visible").then(function() {
+            timesheetTypeDropDown.click().then(function() {
+                browser.wait(EC.textToBePresentInElement((timesheetType), type), 10000, type + " is not present in timesheet type drop down list");
+            }).then(function() {
+                timesheetType.click();
+            });
+        });
+        return this;
+    };
+
+    this.clickEditTimesheetBtn = function() {
+
+        browser.wait(EC.visibilityOf(element(by.css(Objects.timetrackingPage.locators.editTimesheetBtn))), 30000, "Edit Timesheet button is not displayed").then(function() {
+            editTimesheet.click();
+        });
+        return this;
+    }
+
+};
+timeTrackingPage.prototype = basePage;
 module.exports = new timeTrackingPage();

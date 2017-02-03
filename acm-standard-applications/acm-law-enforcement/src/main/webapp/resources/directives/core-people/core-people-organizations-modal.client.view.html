@@ -10,17 +10,37 @@
 </div>
 <div class="modal-body">
     <form name="organizationForm">
+
+        <div id="selectRadio" ng-hide="isEdit">
+            <div>
+                <input ng-model="selectExisting" value="0"
+                       type="radio" ng-change="radioChanged()" id="addNew"
+                       class="radio-inline">
+                <label class="radio-inline" for="addNew">
+                    <span translate>common.directive.corePeople.organizations.modal.addNew.label</span>
+                </label>
+            </div>
+            <div>
+                <input ng-model="selectExisting" value="1" type="radio"
+                       ng-change="radioChanged()" id="selectExisting"
+                       class="radio-inline">
+                <label class="radio-inline" for="selectExisting">
+                    <span translate>common.directive.corePeople.organizations.modal.selectExisting.label</span>
+                </label>
+            </div>
+        </div>
         <div>
             <label for="organizationTypes_{{::$id}}" translate>common.directive.corePeople.organizations.modal.organizationTypes.label</label>
         </div>
         <select id="organizationTypes_{{::$id}}"
-                ng-model="organization.organizationType"
-                ng-options="item.type as item.name for item in organization.organizationTypes"></select>
+                ng-model="organization.organizationType" ng-click="pickOrganization()"
+                ng-options=" item.type as item.name for item in organization.organizationTypes"></select>
 
         <div>
             <label for="organizationValue_{{::$id}}" translate>common.directive.corePeople.organizations.modal.value.label</label>
         </div>
-        <input id="organizationValue_{{::$id}}" type="text" ng-model="organization.organizationValue">
+        <input id="organizationValue_{{::$id}}" type="text" ng-model="organization.organizationValue"
+               ng-click="pickOrganization()">
     </form>
 </div>
 <div class="modal-footer">
