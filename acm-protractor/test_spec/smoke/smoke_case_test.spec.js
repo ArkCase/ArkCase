@@ -54,7 +54,7 @@ describe('case page tests', function() {
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
         casePage.switchToDefaultContent();
         casePage.waitForCaseTitle();
-        expect(casePage.returnCaseTitle()).toEqual(Objects.casepage.data.caseTitle);
+        expect(casePage.returnCaseTitle()).toEqual(Objects.casepage.data.caseTitle, "Case title is not correct");
     });
 
     //verify that case type is correct on new created case
@@ -62,7 +62,7 @@ describe('case page tests', function() {
     it('should create new case and verify case type', function () {
 
         casePage.clickModuleCasesFiles();
-        expect(casePage.returnCaseType()).toEqual(Objects.casepage.data.casesType);
+        expect(casePage.returnCaseType()).toEqual(Objects.casepage.data.casesType, "Case type is not correct");
     });
 
     //close case and make sure the files are declared as records on the Alfresco site
@@ -86,7 +86,7 @@ describe('case page tests', function() {
     it('should verify the priority filed', function () {
 
         casePage.clickModuleCasesFiles();
-        expect(casePage.returnPriority()).toEqual(Objects.casepage.data.priorityMedium);
+        expect(casePage.returnPriority()).toEqual(Objects.casepage.data.priorityMedium, "Priority is not correct");
     });
 
     //verify that created date is correct on new created case
@@ -94,7 +94,7 @@ describe('case page tests', function() {
     it('should   verify the created date', function () {
 
         casePage.clickModuleCasesFiles();
-        expect(casePage.returnCreatedDate()).toEqual(utils.returnToday("/"));
+        expect(casePage.returnCreatedDate()).toEqual(utils.returnToday("/"), "Created date is not correct");
 
     });
 
@@ -118,12 +118,12 @@ describe('case page tests', function() {
         taskPage.insertSubject(Objects.taskpage.data.Subject).insertDueDateToday().clickSave();
         taskPage.clickCaseTitleInTasks();
         casePage.clickTasksLinkBtn().waitForTasksTable();
-        expect(casePage.returnTaskTableTitle()).toContain(Objects.taskpage.data.Subject);
-        expect(casePage.returnTaskTableAssignee()).toEqual(Objects.casepage.data.assigneeSamuel);
-        expect(casePage.returnTaskTableCreatedDate()).toEqual(utils.returnToday("/"));
-        expect(casePage.returnTaskTablePriority()).toEqual(Objects.casepage.data.priorityMedium);
-        expect(casePage.returnTaskTableDueDate()).toEqual(utils.returnToday("/"));
-        expect(casePage.returnTaskTableStatus()).toEqual("ACTIVE");
+        expect(casePage.returnTaskTableTitle()).toContain(Objects.taskpage.data.Subject, "Task subject is not correct");
+        expect(casePage.returnTaskTableAssignee()).toEqual(Objects.casepage.data.assigneeSamuel, "Task assignee is not correct");
+        expect(casePage.returnTaskTableCreatedDate()).toEqual(utils.returnToday("/"), "Task created date is not correct");
+        expect(casePage.returnTaskTablePriority()).toEqual(Objects.casepage.data.priorityMedium, "Task priority is not correct");
+        expect(casePage.returnTaskTableDueDate()).toEqual(utils.returnToday("/"), "Task due date is not correct");
+        expect(casePage.returnTaskTableStatus()).toEqual("ACTIVE", "Task status is not correct");
     });
 
     //verify people initiator on new created case
@@ -132,9 +132,9 @@ describe('case page tests', function() {
 
         casePage.clickModuleCasesFiles();
         casePage.clickPeopleLinkBtn();
-        expect(casePage.returnPeopleType()).toEqual(Objects.casepage.data.peopleTypeInitiaor);
-        expect(casePage.returnPeopleFirstName()).toEqual(Objects.casepage.data.peopleFirstName);
-        expect(casePage.returnPeopleLastName()).toEqual(Objects.casepage.data.peopleLastName);
+        expect(casePage.returnPeopleType()).toEqual(Objects.casepage.data.peopleTypeInitiaor, "People type is not correct");
+        expect(casePage.returnPeopleFirstName()).toEqual(Objects.casepage.data.peopleFirstName, "People first name is not correct");
+        expect(casePage.returnPeopleLastName()).toEqual(Objects.casepage.data.peopleLastName, "People last name is not correct");
     });
 
     //verify history table on new created case
@@ -143,9 +143,9 @@ describe('case page tests', function() {
 
         casePage.clickModuleCasesFiles();
         casePage.historyTable();
-        expect(casePage.returnHistoryEventName()).toEqual(Objects.casepage.data.historyEvent);
-        expect(casePage.returnHistoryDate()).toContain(utils.returnToday("/"));
-        expect(casePage.returnHistoryUser()).toEqual(Objects.casepage.data.assigneeSamuel);
+        expect(casePage.returnHistoryEventName()).toEqual(Objects.casepage.data.historyEvent, "History event name is not correct");
+        expect(casePage.returnHistoryDate()).toContain(utils.returnToday("/"), "History date is not correct");
+        expect(casePage.returnHistoryUser()).toEqual(Objects.casepage.data.assigneeSamuel, "History assignee is not correct");
 
     });
 
@@ -168,7 +168,7 @@ describe('case page tests', function() {
         casePage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Documents");
         casePage.clickDocTreeExpand().rightClickFileTitle().clickDocAction("Open");
         casePage.moveToTab().clickDocViewNotesLink().submitNote(Objects.basepage.data.note);
-        expect(casePage.returnSavedNoteInGrid()).toEqual(Objects.basepage.data.note);
+        expect(casePage.returnSavedNoteInGrid()).toEqual(Objects.basepage.data.note, "Note is not saved in document viewer");
 
     });
 
@@ -191,14 +191,14 @@ describe('case page tests', function() {
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
         casePage.switchToDefaultContent();
         casePage.participantTable();
-        expect(casePage.returnParticipantTypeFirstRow()).toEqual("*");
-        expect(casePage.returnParticipantNameFirstRow()).toEqual("*");
-        expect(casePage.returnParticipantTypeSecondRow()).toEqual("assignee");
-        expect(casePage.returnParticipantNameSecondRow()).toEqual("Ann Administrator");
-        expect(casePage.returnParticipantTypeThirdRow()).toEqual("owning group");
-        expect(casePage.returnParticipantNameThirdRow()).toEqual("ACM_INVESTIGATOR_DEV");
-        expect(casePage.returnParticipantTypeForthRow()).toEqual("reader");
-        expect(casePage.returnParticipantNameForthRow()).toEqual("Samuel Supervisor");
+        expect(casePage.returnParticipantTypeFirstRow()).toEqual("*", "Participant type in first row is not correct");
+        expect(casePage.returnParticipantNameFirstRow()).toEqual("*", "Participant name in first row is not correct");
+        expect(casePage.returnParticipantTypeSecondRow()).toEqual("assignee", "Participant type in second row is not correct");
+        expect(casePage.returnParticipantNameSecondRow()).toEqual("Ann Administrator", "Participant name in second row is not correct");
+        expect(casePage.returnParticipantTypeThirdRow()).toEqual("owning group", "Participant type in third row is not correct");
+        expect(casePage.returnParticipantNameThirdRow()).toEqual("ACM_INVESTIGATOR_DEV", "Participant row in third row is not correct");
+        expect(casePage.returnParticipantTypeForthRow()).toEqual("reader", "Participant type in forth row is not correct");
+        expect(casePage.returnParticipantNameForthRow()).toEqual("Samuel Supervisor", "Participant name in forth row is not correct");
     });
 
     //verify assigned to, owning group and due date
@@ -206,9 +206,9 @@ describe('case page tests', function() {
     it('should  verify assigned to, owning group and due date', function () {
 
         casePage.clickModuleCasesFiles();
-        expect(casePage.returnDueDate()).toEqual(utils.returnDate("/", 180));
-        expect(casePage.returnAssignee()).toEqual(Objects.taskspage.data.administrator);
-        expect(casePage.returnOwningGroup()).toEqual(Objects.casepage.data.owningGroup);
+        expect(casePage.returnDueDate()).toEqual(utils.returnDate("/", 180), "Default due date is not correct");
+        expect(casePage.returnAssignee()).toEqual(Objects.taskspage.data.administrator, "Asignee is not correct");
+        expect(casePage.returnOwningGroup()).toEqual(Objects.casepage.data.owningGroup, "Default owning group is not correct");
 
     });
 
