@@ -149,14 +149,14 @@ describe('case page tests', function() {
 
         casePage.clickModuleCasesFiles();
         casePage.participantTable();
-        expect(casePage.returnParticipantTypeFirstRow()).toEqual("owning group", "Owning group label is not correct");
-        expect(casePage.returnParticipantNameFirstRow()).toEqual("ACM_INVESTIGATOR_DEV", "Owning group by default is not correct");
-        expect(casePage.returnParticipantTypeSecondRow()).toEqual("*", "Participant type in second row is not correct");
-        expect(casePage.returnParticipantNameSecondRow()).toEqual("*", "Participant name in second row is not correct");
-        expect(casePage.returnParticipantTypeThirdRow()).toEqual("assignee", "Assignee label is not correct");
-        expect(casePage.returnParticipantNameThirdRow()).toEqual("", "Assignee by default should be empty");
+        expect(casePage.returnParticipantTypeFirstRow()).toEqual("*", "Participant type in first row is not correct");
+        expect(casePage.returnParticipantNameFirstRow()).toEqual("*", "Participant name in first row is not correct");
+        expect(casePage.returnParticipantTypeSecondRow()).toEqual("assignee", "assignee label is not correct");
+        expect(casePage.returnParticipantNameSecondRow()).toEqual("", "assignee should be empty");
+        expect(casePage.returnParticipantTypeThirdRow()).toEqual("owning group", "owning group label is not correct");
+        expect(casePage.returnParticipantNameThirdRow()).toEqual("ACM_INVESTIGATOR_DEV", "owning group is not correct");
         expect(casePage.returnParticipantTypeForthRow()).toEqual("reader", "reader label is not correct");
-        expect(casePage.returnParticipantNameForthRow()).toEqual("Samuel Supervisor", "Reader - current user by default is not correct");
+        expect(casePage.returnParticipantNameForthRow()).toEqual("Samuel Supervisor", "reader value is not current user");
     });
 
     //verify assigned to, owning group and due date
