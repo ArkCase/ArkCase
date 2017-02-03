@@ -1325,14 +1325,21 @@ var BasePage = function() {
     }
     this.clickModuleCasesFiles = function() {
         browser.wait(EC.visibilityOf(element(by.css(Objects.timetrackingPage.locators.caseFileModule))), 30000, "Case module is not visible").then(function() {
-            browser.executeScript('arguments[0].click()', caseFileModule);
+            browser.executeScript('arguments[0].click()', caseFileModule).then(function () {
+                browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesTitle))), 30000, "Case title is not visible");
+            })
 
         })
         return this;
     }
     this.clickModuleComplaints = function() {
         browser.wait(EC.visibilityOf(element(by.css(Objects.timetrackingPage.locators.complaintsModule))), 30000, "Complaints module is not visible").then(function() {
-            browser.executeScript('arguments[0].click()', complaintsModule);
+            browser.executeScript('arguments[0].click()', complaintsModule).then(function () {
+                browser.wait(EC.presenceOf(element(by.xpath(Objects.complaintPage.locators.complaintTitleLink))), 30000, "Complaint title is not present in DOM").then(function() {
+                    browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.complaintTitleLink))), 30000, "Complaint title is not visible");
+                })
+
+            })
         });
     }
     this.clickModuleTasks = function() {
