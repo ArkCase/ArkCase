@@ -162,15 +162,15 @@ describe('Create new complaint ', function() {
         complaintPage.participantTable();
         expect(complaintPage.returnParticipantTypeFirstRow()).toEqual("*", "Participant type in first row is not correct");
         expect(complaintPage.returnParticipantNameFirstRow()).toEqual("*", "Participant name in first row is not correct");
-        expect(complaintPage.returnParticipantTypeSecondRow()).toEqual("assignee", "Participant type in second row is not correct");
-        expect(complaintPage.returnParticipantNameSecondRow()).toEqual("Samuel Supervisor", "Participant name in second row is not correct");
-        expect(complaintPage.returnParticipantTypeThirdRow()).toEqual("owning group", "Participant type in third row is not correct");
-        expect(complaintPage.returnParticipantNameThirdRow()).toEqual("ACM_INVESTIGATOR_DEV", "Participant name in third row is not correct");
-        expect(complaintPage.returnParticipantTypeForthRow()).toEqual("reader", "Participant type in forth row is not correct");
-        expect(complaintPage.returnParticipantNameForthRow()).toEqual("Samuel Supervisor", "Participant name in forth row is not correct");
+        expect(complaintPage.returnParticipantTypeSecondRow()).toEqual("assignee", "assignee label is not correct");
+        expect(complaintPage.returnParticipantNameSecondRow()).toEqual("", "assignee should be empty");
+        expect(complaintPage.returnParticipantTypeThirdRow()).toEqual("owning group", "owning group label is not correct");
+        expect(complaintPage.returnParticipantNameThirdRow()).toEqual("ACM_INVESTIGATOR_DEV", "owning group is not correct");
+        expect(complaintPage.returnParticipantTypeForthRow()).toEqual("reader", "reader label is not correct");
+        expect(complaintPage.returnParticipantNameForthRow()).toEqual("Samuel Supervisor", "reader value is not current user");
     });
 
-    //verify the event in history on new added complaint
+    // verify the event in history on new added complaint
 
     it('should Verify the event in the history table', function() {
 

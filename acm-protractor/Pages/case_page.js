@@ -172,9 +172,9 @@ var CasePage = function() {
         });
     };
 
-    this.chnageCaseSubmit = function() {
-
-        this.switchToIframes();
+    this.chnageCaseSubmit = function(status) {
+        this.selectCaseStatus(status)
+        //this.switchToIframes();
         browser.executeScript('arguments[0].click()', submitBtn);
     };
 
