@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('admin').controller('Tasks.UserGroupPickerDialogController', ['$scope', '$modalInstance', '$q', 'UtilService'
+angular.module('tasks').controller('Tasks.UserGroupPickerDialogController', ['$scope', '$modalInstance', '$q', 'UtilService'
     , 'Admin.FunctionalAccessControlService', 'Admin.OrganizationalHierarchyService'
     , 'cfg', 'parentType', 'showGroupAndUserPicker'
     , function ($scope, $modalInstance, $q, Util, AdminFunctionalAccessControlService, organizationalHierarchyService, cfg, parentType, showGroupAndUserPicker) {

@@ -29,9 +29,9 @@ var objectIdValueSecondRow = element(by.xpath(Objects.auditPage.locators.objectI
 var AuditPage = function() {
 
     this.selectReportName = function(report) {
-        browser.wait(EC.presenceOf(element(by.id(Objects.auditPage.locators.reportName))), 30000).then(function () {
-            browser.wait(EC.visibilityOf(element(by.id(Objects.auditPage.locators.reportName))), 30000).then(function () {
-                browser.wait((EC.textToBePresentInElement(element(by.id(Objects.auditPage.locators.reportName)), report)), 30000).then(function () {
+        browser.wait(EC.presenceOf(element(by.id(Objects.auditPage.locators.reportName))), 30000, "Select report drop down is not present in the DOM").then(function () {
+            browser.wait(EC.visibilityOf(element(by.id(Objects.auditPage.locators.reportName))), 30000, "Select report drop down is not visible").then(function () {
+                browser.wait((EC.textToBePresentInElement(element(by.id(Objects.auditPage.locators.reportName)), report)), 30000, report + " is not present in select report drop down list").then(function () {
                     reportNameDropDownList.selectByText(report);
                 });
             });
@@ -39,21 +39,21 @@ var AuditPage = function() {
         return this;
     };
     this.insertId = function (id) {
-        browser.wait(EC.visibilityOf(element(by.id(Objects.auditPage.locators.id))), 30000).then(function () {
+        browser.wait(EC.visibilityOf(element(by.id(Objects.auditPage.locators.id))), 30000, "File id field is not visible").then(function () {
             fileId.clear();
             fileId.sendKeys(id);
         });
         return this;
     };
     this.insertDateFrom = function (datefrom) {
-        browser.wait(EC.visibilityOf(element(by.id(Objects.auditPage.locators.dateFromAudit))), 30000).then(function () {
+        browser.wait(EC.visibilityOf(element(by.id(Objects.auditPage.locators.dateFromAudit))), 30000, "Date from element is not visible").then(function () {
             dateFrom.clear();
             dateFrom.sendKeys(datefrom);
         });
         return this;
     };
     this.insertDateTo = function (dateto) {
-        browser.wait(EC.visibilityOf(element(by.id(Objects.auditPage.locators.dateToAudit))), 30000).then(function () {
+        browser.wait(EC.visibilityOf(element(by.id(Objects.auditPage.locators.dateToAudit))), 30000, "Date to element is not visible").then(function () {
             dateTo.clear();
             dateTo.sendKeys(dateto);
         });
@@ -125,28 +125,28 @@ var AuditPage = function() {
         return this;
     };
     this.validateAuditReportTitles = function(dateTitle, userTitle, nameTitle, resultTitle, ipAddressTitle, objectIdTitle, objectTypeTitle) {
-        browser.wait(EC.presenceOf(element(by.xpath(Objects.auditPage.locators.auditReportColumn1Title))), 30000).then(function() {
-            browser.wait(EC.visibilityOf(element(by.xpath(Objects.auditPage.locators.auditReportColumn1Title))), 30000).then(function () {
-                expect(auditReportDateColumnTitle.getText()).toBe(dateTitle);
-                expect(auditReportUserColumnTitle.getText()).toEqual(userTitle);
-                expect(auditReportNameColumnTitle.getText()).toEqual(nameTitle);
-                expect(auditReportResultColumnTitle.getText()).toEqual(resultTitle);
-                expect(auditReportIpAddressColumnTitle.getText()).toEqual(ipAddressTitle);
-                expect(auditReportObjectIdTitle.getText()).toEqual(objectIdTitle);
-                expect(auditReportObjectTypeTitle.getText()).toEqual(objectTypeTitle);
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.auditPage.locators.auditReportColumn1Title))), 30000, "Report column 1 title is not present in the DOM").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.auditPage.locators.auditReportColumn1Title))), 30000, "Report column 1 title is not visible").then(function () {
+                expect(auditReportDateColumnTitle.getText()).toBe(dateTitle, "Date title column in audit report is not correct");
+                expect(auditReportUserColumnTitle.getText()).toEqual(userTitle, "User title column in audit report is not correct");
+                expect(auditReportNameColumnTitle.getText()).toEqual(nameTitle, "Name title column in audit report is not correct");
+                expect(auditReportResultColumnTitle.getText()).toEqual(resultTitle, "Result title column in audit report is not correct");
+                expect(auditReportIpAddressColumnTitle.getText()).toEqual(ipAddressTitle, "IP address title column in audit report is not correct");
+                expect(auditReportObjectIdTitle.getText()).toEqual(objectIdTitle, "Object Id title in audit report is not correct");
+                expect(auditReportObjectTypeTitle.getText()).toEqual(objectTypeTitle, "Object type title in audit report is not correct");
             });
         });
     };
 
     this.validateAuditReportValues = function (date, user, name, result, objectId, objectType) {
-        browser.wait(EC.presenceOf(element(by.xpath(Objects.auditPage.locators.dateValue))), 30000).then(function() {
-            browser.wait(EC.visibilityOf(element(by.xpath(Objects.auditPage.locators.dateValue))), 30000).then(function() {
-                expect(dateValue.getText()).toContain(date);
-                expect(userValue.getText()).toEqual(user);
-                expect(nameValue.getText()).toEqual(name);
-                expect(resultValue.getText()).toEqual(result);
-                expect(objectId).toContain(objectIdValue.getText());
-                expect(objectTypeValue.getText()).toEqual(objectType);
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.auditPage.locators.dateValue))), 30000, "Date value in report is not present in the DOM").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.auditPage.locators.dateValue))), 30000, "Date value in report is not visible").then(function() {
+                expect(dateValue.getText()).toContain(date, "Date value in audit report is not correct");
+                expect(userValue.getText()).toEqual(user, "User value in audit report is not correct");
+                expect(nameValue.getText()).toEqual(name, "Name value in audit report is not correct");
+                expect(resultValue.getText()).toEqual(result, "Result value in audit report is not correct");
+                expect(objectId).toContain(objectIdValue.getText(), "Object id in audit report is not correct");
+                expect(objectTypeValue.getText()).toEqual(objectType, "Object type value in audit report is not correct");
             });
         })
     };

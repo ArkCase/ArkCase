@@ -1,5 +1,11 @@
 package com.armedia.acm.plugins.casefile.service;
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
@@ -15,6 +21,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.task.service.AcmTaskService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
+
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
@@ -37,16 +44,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.eq;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {
-        "/spring/spring-library-split-case-test.xml"
-})
+@ContextConfiguration(locations = { "/spring/spring-library-split-case-test.xml" })
 @TransactionConfiguration(defaultRollback = true)
 public class SplitCaseFileServiceTest extends EasyMockSupport
 {
@@ -70,7 +69,6 @@ public class SplitCaseFileServiceTest extends EasyMockSupport
     private Map<Long, AcmFolder> folderMap = new HashMap<>();
     private Map<Long, EcmFile> documentMap = new HashMap<>();
 
-
     @Before
     public void setUp()
     {
@@ -78,7 +76,7 @@ public class SplitCaseFileServiceTest extends EasyMockSupport
         ipAddress = "127.0.0.1";
 
         sourceId = 1L;
-        //create mocks
+        // create mocks
         saveCaseService = createMock(SaveCaseService.class);
         caseFileDao = createMock(CaseFileDao.class);
         acmFolderService = createMock(AcmFolderService.class);
@@ -98,9 +96,9 @@ public class SplitCaseFileServiceTest extends EasyMockSupport
         createSourceFolderStructure();
     }
 
-
     @Test
-    public void splitCaseTest() throws MergeCaseFilesException, MuleException, AcmUserActionFailedException, AcmCreateObjectFailedException, IOException, SplitCaseFileException, AcmFolderException, AcmObjectNotFoundException, PipelineProcessException
+    public void splitCaseTest() throws MergeCaseFilesException, MuleException, AcmUserActionFailedException, AcmCreateObjectFailedException,
+            IOException, SplitCaseFileException, AcmFolderException, AcmObjectNotFoundException, PipelineProcessException
     {
         assertNotNull(splitCaseService);
 
@@ -120,8 +118,11 @@ public class SplitCaseFileServiceTest extends EasyMockSupport
 
         EasyMock.expect(caseFileDao.find(sourceId)).andReturn(sourceCaseFile).anyTimes();
         EasyMock.expect(mockSplitCaseFileBusinessRule.applyRules(capture(toSplitCaseRulesCapture))).andReturn(null);
-        EasyMock.expect(saveCaseService.saveCase(capture(caseFileCapture), eq(auth), eq(ipAddress))).andAnswer(new IAnswer<CaseFile>() {
-            public CaseFile answer() throws Throwable {
+        EasyMock.expect(saveCaseService.saveCase(capture(caseFileCapture), eq(auth), eq(ipAddress))).andAnswer(new IAnswer<CaseFile>()
+        {
+            @Override
+            public CaseFile answer() throws Throwable
+            {
                 CaseFile copiedCaseFile = caseFileCapture.getValue();
                 copiedCaseFile.setId(2l);
 
@@ -141,7 +142,6 @@ public class SplitCaseFileServiceTest extends EasyMockSupport
 
         EasyMock.expect(saveCaseService.saveCase(eq(sourceCaseFile), eq(auth), eq(ipAddress))).andReturn(sourceCaseFile);
 
-
         Capture<Long> folderIdCapture = new Capture<>();
         Capture<AcmContainer> tContainerCapture = new Capture<>();
         Capture<AcmFolder> tFolderCapture = new Capture<>();
@@ -151,7 +151,8 @@ public class SplitCaseFileServiceTest extends EasyMockSupport
             @Override
             public Object answer() throws Throwable
             {
-                log.info("folder Id = {}, tContainer = {}, tFolder = {}", folderIdCapture.getValue().toString(), tContainerCapture.getValue(), tFolderCapture.getValue());
+                log.info("folder Id = {}, tContainer = {}, tFolder = {}", folderIdCapture.getValue().toString(),
+                        tContainerCapture.getValue(), tFolderCapture.getValue());
                 return null; // required to be null for a void method
             }
         }).anyTimes();
@@ -165,7 +166,8 @@ public class SplitCaseFileServiceTest extends EasyMockSupport
             @Override
             public Object answer() throws Throwable
             {
-                log.info("documentId = {}, ttContainer = {}, ttFolder = {}", documentIdCapture.getValue().toString(), ttContainerCapture.getValue(), ttFolderCapture.getValue());
+                log.info("documentId = {}, ttContainer = {}, ttFolder = {}", documentIdCapture.getValue().toString(),
+                        ttContainerCapture.getValue(), ttFolderCapture.getValue());
                 return null; // required to be null for a void method
             }
         }).anyTimes();
@@ -181,19 +183,10 @@ public class SplitCaseFileServiceTest extends EasyMockSupport
         splitCaseOptions.setAttachments(attachments);
         splitCaseOptions.setPreserveFolderStructure(true);
 
-
         // file structure
         /*
-            ROOT
-            |---F2 (folder)
-            |   |---F4 (folder)
-            |       |---d2 (document)
-            |       |---d3 (document)
-            |
-            |---F3 (folder)
-            |   |---d4 (document)
-            |
-            |---d1 (document)
+         * ROOT |---F2 (folder) | |---F4 (folder) | |---d2 (document) | |---d3 (document) | |---F3 (folder) | |---d4
+         * (document) | |---d1 (document)
          */
         splitCaseService.splitCase(auth, ipAddress, splitCaseOptions);
 
@@ -209,41 +202,41 @@ public class SplitCaseFileServiceTest extends EasyMockSupport
 
     private void createSourceFolderStructure()
     {
-        //Documents and folder structure
+        // Documents and folder structure
         /*
-            ROOT
-            |---F2 (folder)
-            |   |---F4 (folder)
-            |       |---d2 (document)
-            |       |---d3 (document)
-            |
-            |---F3 (folder)
-            |   |---d4 (document)
-            |
-            |---d1 (document)
+         * ROOT
+             |---F2 (folder)
+             |   |---F4 (folder)
+             |       |---d2 (document)
+             |       |---d3 (document)
+             |
+             |---F3 (folder)
+             |   |---d4 (document)
+             |
+             |---d1 (document)
          */
 
-        //fill folder map for testing
+        // fill folder map for testing
 
         AcmFolder f2 = new AcmFolder();
         f2.setId(2l);
         f2.setName("F2");
-        f2.setParentFolderId(sourceFolder.getId());
+        f2.setParentFolder(sourceFolder);
         addToFolderMap(f2);
 
         AcmFolder f3 = new AcmFolder();
         f3.setId(3l);
         f3.setName("F3");
-        f3.setParentFolderId(sourceFolder.getId());
+        f3.setParentFolder(sourceFolder);
         addToFolderMap(f3);
 
         AcmFolder f4 = new AcmFolder();
         f4.setId(4l);
         f4.setName("F4");
-        f4.setParentFolderId(2l);
+        f4.setParentFolder(sourceFolder);
         addToFolderMap(f4);
 
-        //fill document Map
+        // fill document Map
         EcmFile d1 = new EcmFile();
         d1.setFileId(1l);
         d1.setFileName("d1");

@@ -117,7 +117,8 @@
           "workflow",
           "history",
           "signatures",
-          "tags"
+          "tags",
+          "approvalrouting"
         ]
       },
       {
@@ -206,6 +207,14 @@
         "icon": "fa fa-tags",
         "components": [
           "tags"
+        ]
+      },
+      {
+        "type": "p/TASK/apr",
+        "label": "Approval Routing",
+        "icon": "fa fa-sort-amount-desc",
+        "components": [
+          "approvalrouting"
         ]
       },
       {
@@ -988,7 +997,7 @@
           "name": "eventType",
           "displayName": "tasks.comp.history.table.columns.eventType",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div ng-if='row.entity.eventDescription'>{{row.entity.eventDescription}}</div><div ng-if='!row.entity.eventDescription'>{{row.entity.eventType}}</div>"
+          "cellTemplate": "<div> <span ng-if='row.entity.parentObjectType'>{{('common.objectTypes.'+row.entity.parentObjectType) | translate}} Updated - </span> {{row.entity.eventDescription || row.entity.eventType}}</div>"
         },
         {
           "name": "eventDate",
@@ -1274,9 +1283,89 @@
       "userSearch": {
         "userFacetFilter": "\"Object Type\": USER"
       },
-       "objectSearch": {
+      "objectSearch": {
         "objectFacetFilter": "\"Object Type\": "
       }
+    },
+    {
+      "id": "approvalrouting",
+      "title": "Approval Routing",
+      "icon": "fa fa-sort-amount-desc",
+      "addNewTooltip": "tasks.comp.approvalRouting.addNewTooltip",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": false,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
+      "columnDefs": [
+        {
+          "name": "order",
+          "displayName": "",
+          "headerCellFilter": "translate",
+          "enableSorting": false,
+          "enableColumnMenu": false,
+          "cellEditableCondition": false,
+          "width": "50",
+          "cellTemplate": ""
+        },
+        {
+          "name": "fullName",
+          "displayName": "tasks.comp.approvalRouting.table.columns.fullName",
+          "cellEditableCondition": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "act",
+          "cellEditableCondition": false,
+          "width": "70",
+          "headerCellTemplate": "<span></span>",
+          "cellTemplate": ""
+        }
+      ],
+      "userSearch": {
+        "userFacetFilter": "\"Object Type\": USER"
+      }
+    },
+    {
+      "id": "pastapprovals",
+      "title": "Past Approvals",
+      "icon": "fa fa-sort-amount-desc",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": false,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
+      "columnDefs": [
+        {
+          "name": "approvalDate",
+          "displayName": "tasks.comp.pastApprovals.table.columns.approvalDate",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.approvalDate | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>",
+          "cellEditableCondition": false
+        },
+        {
+          "name": "approverId",
+          "displayName": "tasks.comp.pastApprovals.table.columns.approverId",
+          "headerCellFilter": "translate",
+          "cellEditableCondition": false
+        },
+        {
+          "name": "approverDecision",
+          "displayName": "tasks.comp.pastApprovals.table.columns.approverDecision",
+          "headerCellFilter": "translate",
+          "cellEditableCondition": false
+        }
+      ]
     }
   ]
 }
