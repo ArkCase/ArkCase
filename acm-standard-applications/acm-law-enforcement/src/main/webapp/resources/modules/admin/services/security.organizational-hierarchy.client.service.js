@@ -50,7 +50,18 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
 
             _addMemberToLdapGroup: {
                 method: 'POST',
-                url: 'api/latest/users/ldap'
+                url: 'api/latest/users/ldap/add'
+            },
+
+            _editLdapUser: {
+                method: 'POST',
+                url: 'api/latest/users/ldap/edit'
+            },
+
+            _addExistingMembersToLdapGroup: {
+                method: 'POST',
+                url: 'api/latest/users/ldap/add/:groupName',
+                isArray: true
             }
         });
 
@@ -71,7 +82,9 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
             setSupervisor: setSupervisor,
             getFilteredTopLevelGroups: getFilteredTopLevelGroups,
             isEnabledEditingLdapUsers: isEnabledEditingLdapUsers,
-            addMemberToLdapGroup: addMemberToLdapGroup
+            addMemberToLdapGroup: addMemberToLdapGroup,
+            editGroupMember: editGroupMember,
+            addExistingMembersToLdapGroup: addExistingMembersToLdapGroup
         });
 
         /**
@@ -363,6 +376,29 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
             return Util.serviceCall({
                 service: Service._addMemberToLdapGroup
                 , data: ldapUser
+                , onSuccess: function (data) {
+                    return data;
+                }
+            });
+        }
+
+        function editGroupMember(ldapUser) {
+            return Util.serviceCall({
+                service: Service._editLdapUser
+                , data: ldapUser
+                , onSuccess: function (data) {
+                    return data;
+                }
+            });
+        }
+
+        function addExistingMembersToLdapGroup(ldapUsers, groupName) {
+            return Util.serviceCall({
+                service: Service._addExistingMembersToLdapGroup
+                , data: ldapUsers
+                , param: {
+                    "groupName": groupName
+                }
                 , onSuccess: function (data) {
                     return data;
                 }

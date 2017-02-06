@@ -9,10 +9,10 @@
 </div>
 <panel-view header="{{'admin.security.organizationalHierarchy.title' | translate}}" collapsible="false">
         <tree-table-view tree-data="data" on-lazy-load="onLazyLoad" config="cfg" on-add-members="onAddMembers"
-                         on-load-more="onLoadMore" total-groups="totalGroups"
-                         on-delete-group="onDeleteGroup" on-delete-members="onDeleteMembers"
-                         on-add-sub-group="onAddSubGroup" on-set-supervisor="onSetSupervisor"
+                         on-load-more="onLoadMore" total-groups="totalGroups" on-delete-group="onDeleteGroup"
+                         on-delete-members="onDeleteMembers" on-add-sub-group="onAddSubGroup" on-set-supervisor="onSetSupervisor"
                          show-actions="true" show-supervisor="true" show-type="true" enable-editing-ldap-users="enableEditingLdapUsers"
-                         on-add-ldap-member="onAddLdapMember"/>
+                         on-add-ldap-member="onAddLdapMember" on-edit-ldap-member="onEditLdapMember"
+                         on-add-existing-members-to-ldap-group="addExistingMembersToLdapGroup"/>
 </panel-view>
 </div>

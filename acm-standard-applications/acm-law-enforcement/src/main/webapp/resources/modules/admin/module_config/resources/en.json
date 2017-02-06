@@ -89,16 +89,26 @@
           "searchPlaceholder": "Enter to search for members."
         }
       },
-      "addLdapMember": {
-        "title": "Add Ldap Member",
+      "createUserDialog": {
+        "addLdapMember": {
+          "title": "Add Ldap Member",
+          "btn": {
+            "cancel": "Cancel",
+            "ok": "Add Ldap User"
+          }
+        },
+        "editLdapMember": {
+          "title": "Edit Ldap Member",
+          "btn": {
+            "cancel": "Cancel",
+            "ok": "Edit Ldap User"
+          }
+        },
+        "username": "Username",
         "firstName": "FirstName",
         "lastName": "LastName",
         "email": "Email",
-        "password": "Password",
-        "btn": {
-          "cancel": "Cancel",
-          "ok": "Add User"
-        }
+        "password": "Password"
       },
       "addMembersGridColumns": {
         "name": "Name",

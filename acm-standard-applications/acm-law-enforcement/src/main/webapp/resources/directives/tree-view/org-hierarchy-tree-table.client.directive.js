@@ -20,7 +20,9 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile', 'Mess
                 showSupervisor: '=',
                 showType: '=',
                 enableEditingLdapUsers: '=',
-                onAddLdapMember: "="
+                onAddLdapMember: "=",
+                onEditLdapMember: "=",
+                onAddExistingMembersToLdapGroup: "="
             },
             link: function (scope, element, attrs) {
                 var $tbl = $("#org");
@@ -75,11 +77,12 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile', 'Mess
                             }
 
                             if (scope.enableEditingLdapUsers && node.data.object_sub_type_s == "LDAP_GROUP") {
-                                $tdList.eq(3).append($compile("<button class='btn btn-link btn-xs' type='button' ng-click='addLdapUser($event)' name='addMember' title='Add Member'><i class='fa fa-user'></i></button>")(scope));
+                                $tdList.eq(3).html($compile("<button class='btn btn-link btn-xs' type='button' ng-click='addExistingUser($event)' name='addExistingMembers' title='Add Existing Members'><i class='fa fa-user'></i></button>" +
+                                    "<button class='btn btn-link btn-xs' type='button' ng-click='addLdapUser($event)' name='addMember' title='Add New Member'><i class='fa fa-user-plus'></i></button>")(scope));
                             }
 
                             if (scope.enableEditingLdapUsers && node.data.isMember && node.parent.data.object_sub_type_s == "LDAP_GROUP") {
-                                $tdList.eq(3).append($compile("<button class='btn btn-link btn-xs' type='button' ng-click='editLdapUser($event)' name='editMember' title='Edit Member'><i class='fa fa-pencil'></i></button>")(scope));
+                                $tdList.eq(3).html($compile("<button class='btn btn-link btn-xs' type='button' ng-click='editLdapUser($event)' name='editMember' title='Edit Member'><i class='fa fa-pencil'></i></button>")(scope));
                             }
                         }
                     }
@@ -133,6 +136,24 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile', 'Mess
                     });
                 };
 
+                scope.addExistingUser = function (event) {
+                    var node = $.ui.fancytree.getNode(event);
+                    scope.onAddExistingMembersToLdapGroup(node.data).then(function (members) {
+                        //success
+                        angular.forEach(members, function (member) {
+                            node.addChildren(member);
+                        });
+                        node.setExpanded();
+                        messageService.succsessAction();
+                    }, function (error) {
+                        //error
+                        if (error != "cancel") {
+                            messageService.errorAction();
+                        }
+                    });
+                };
+
+
                 scope.addLdapUser = function (event) {
                     var node = $.ui.fancytree.getNode(event);
                     scope.onAddLdapMember(node.data).then(function (member) {
@@ -140,20 +161,24 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile', 'Mess
                         node.setExpanded();
                         messageService.succsessAction();
                     }, function (error) {
-                        if (error != "cancel")
+                        if (error != "cancel") {
                             messageService.errorAction();
+                        }
                     });
                 };
 
                 scope.editLdapUser = function (event) {
                     var node = $.ui.fancytree.getNode(event);
-                    /*scope.onEditLdapMember(node.data).then(function (member) {
-                     /!*node.addChildren(member);
-                     node.setExpanded();*!/
-                     messageService.succsessAction();
-                     }, function () {
-                     messageService.errorAction();
-                     });*/
+                    scope.onEditLdapMember(node.data).then(function (member) {
+                        node.data = member;
+                        node.title = member.name;
+                        node.renderTitle();
+                        messageService.succsessAction();
+                    }, function (error) {
+                        if (error != "cancel") {
+                            messageService.errorAction();
+                        }
+                    });
                 };
 
                 scope.addSubgroup = function (event) {
