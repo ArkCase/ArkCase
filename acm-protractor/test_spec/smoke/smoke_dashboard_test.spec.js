@@ -29,9 +29,17 @@ describe("Testing async calls with beforeEach and passing the special done callb
 
 describe('dashboard page test', function() {
 
+        beforeEach(function (done) {
 
-    loginPage.Login(Objects.loginpage.data.supervisoruser.username, Objects.loginpage.data.supervisoruser.password);
-    logger.log('Info', 'User succesfully logged in as supervisor');
+            loginPage.Login(Objects.loginpage.data.supervisoruser.username, Objects.loginpage.data.supervisoruser.password);
+            testAsync(done);
+
+        });
+
+        afterEach(function () {
+            loginPage.Logout();
+
+        });
 
 
     //Change Dashboard configuration
@@ -48,7 +56,7 @@ describe('dashboard page test', function() {
         it('should add/delete ' + data.widgetName, function() {
 
             dashPage.clickEditButton().clickAddWidgetButton().addWidget(data.widgetName).clickSaveChangesButton();
-            expect(dashPage.returnWidgetTitle()).toEqual(data.widgetTitle);
+            expect(dashPage.returnWidgetTitle()).toEqual(data.widgetTitle, "Widget title is not correct in widget " + data.widgetName);
             dashPage.clickEditButton().removeWidgetButton().clickSaveChangesButton();
 
         });
@@ -56,13 +64,7 @@ describe('dashboard page test', function() {
     it('should edit dashboard title', function() {
 
         dashPage.editDashboardTitle(Objects.dashboardpage.data.DashbordTitle);
-        expect(dashPage.returnDashboardTitle()).toEqual(Objects.dashboardpage.data.DashbordTitle);
-    });
-
-    it('should logout', function() {
-
-        loginPage.Logout();
-
+        expect(dashPage.returnDashboardTitle()).toEqual(Objects.dashboardpage.data.DashbordTitle, "Dashboard title is not updated");
     });
 
 });

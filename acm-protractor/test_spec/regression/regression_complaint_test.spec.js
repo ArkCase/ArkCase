@@ -41,8 +41,8 @@ describe(' Complaint page tests ', function() {
 
         complaintPage.clickModuleComplaints();
         complaintPage.participantTable();
-        expect(complaintPage.returnParticipantTypeForthRow()).toEqual("reader");
-        expect(complaintPage.returnParticipantNameForthRow()).toEqual("Samuel Supervisor");
+        expect(complaintPage.returnParticipantTypeForthRow()).toEqual("reader", "Participant type is correct in forth row");
+        expect(complaintPage.returnParticipantNameForthRow()).toEqual("Samuel Supervisor", "Participant name is not correct in forth row");
     });
 
     it('should create new complaint add/edit timeSheet and verify the time widget data in cases overview page', function() {
@@ -79,7 +79,7 @@ describe(' Complaint page tests ', function() {
         complaintPage.switchToDefaultContent();
         complaintPage.waitForComplaintsPage();
         complaintPage.editAssignee("bthomas");
-        expect(complaintPage.returnAssignee()).toEqual("Bill Thomas");
+        expect(complaintPage.returnAssignee()).toEqual("Bill Thomas", "Assignee is not updated");
     });
 
 });

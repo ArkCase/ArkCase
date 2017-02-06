@@ -12,6 +12,8 @@ var timeTrackingPage = require('../../Pages/time_tracking_page.js');
 var costTrackingPage = require('../../Pages/cost_tracking_page.js');
 var using = require(process.env['USERPROFILE'] + '/node_modules/jasmine-data-provider');
 var preferencesPage = require('../../Pages/preference_page.js');
+var auditPage = require('../../Pages/audit_page.js');
+
 
 function testAsync(done) {
 
@@ -94,7 +96,7 @@ describe('case page tests', function() {
         casePage.switchToDefaultContent();
         casePage.waitForCasesPage();
         casePage.editAssignee(Objects.basepage.data.IanInvestigator).waitForAssignee();
-        expect(casePage.returnAssignee()).toEqual(Objects.basepage.data.IanInvestigator);
+        expect(casePage.returnAssignee()).toEqual(Objects.basepage.data.IanInvestigator, "The assignee is not updated");
     });
 
        it('should create new case verify the notification message and no access of the object name ', function() {
@@ -102,10 +104,29 @@ describe('case page tests', function() {
         casePage.clickModuleCasesFiles();
         casePage.waitForCasesPage();
         casePage.editOwningGroup(Objects.basepage.data.owningGroupAdministratorDev);
-        expect(casePage.returnOwningGroup()).toEqual(Objects.basepage.data.owningGroupAdministratorDev);
+        expect(casePage.returnOwningGroup()).toEqual(Objects.basepage.data.owningGroupAdministratorDev, "Owning group is not updated");
         casePage.verifyTheNotificationMessage("Case File ");
         casePage.editPriority("High");
         casePage.verifyFirstElementNameNoAccess();
+    });
+
+    it('should open document and send email and then check history table and auditing', function() {
+
+        casePage.clickModuleCasesFiles();
+        casePage.waitForCaseID();
+        var caseid = element(by.xpath(Objects.casepage.locators.caseID)).getText();
+        casePage.clickExpandFancyTreeTopElementAndSubLink("Documents").doubleClickRootFolder().rightClickDocument().clickDocAction("Email").sendEmail();
+        casePage.clickSublink("History");
+        //currently sending emails is not working to be added code for check in history table and also audit report
+        // expect(casePage.returnHistoryEventName()).toEqual(Objects.casepage.data.historyEvent);
+        // expect(casePage.returnHistoryDate()).toContain(utils.returnToday("/"));
+        // expect(casePage.returnHistoryUser()).toEqual(Objects.casepage.data.assigneeSamuel);
+        // casePage.navigateToPage("Audit");
+        // auditPage.runReport("Files", "", utils.returnToday("/"), utils.returnToday("/"));
+        // auditPage.switchToAuditframes();
+        // auditPage.validateAuditReportTitles(Objects.auditPage.data.auditReportColumn1Title, Objects.auditPage.data.auditReportColumn2Title, Objects.auditPage.data.auditReportColumn3Title, Objects.auditPage.data.auditReportColumn4Title, Objects.auditPage.data.auditReportColumn5Title, Objects.auditPage.data.auditReportColumn6Title, Objects.auditPage.data.auditReportColumn7Title);
+        // auditPage.validateAuditReportValues(utils.returnToday("/"), Objects.taskspage.data.assigneeSamuel, "Case Viewed", "success", caseid, "CASE_FILE" );
+
     });
 
 

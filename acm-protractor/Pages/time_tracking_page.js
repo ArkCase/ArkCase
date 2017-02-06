@@ -42,10 +42,10 @@ var timeTrackingPage = function() {
 
         var timesheetType = element(by.linkText(type));
         var chargeCode = element(by.linkText(code));
-        browser.wait(EC.visibilityOf(element.all(by.xpath(Objects.timetrackingPage.locators.timesheetDropDown)).get(2)), 30000).then(function() {
+        browser.wait(EC.visibilityOf(element.all(by.xpath(Objects.timetrackingPage.locators.timesheetDropDown)).get(2)), 30000, "Timesheet drop down list is no visible").then(function() {
             browser.sleep(5000);
             timesheetTypeDropDown.click().then(function() {
-                browser.wait(EC.textToBePresentInElement((timesheetType), type), 10000);
+                browser.wait(EC.textToBePresentInElement((timesheetType), type), 10000, type + " is not present in timesheet type drop down list");
             }).then(function() {
                 timesheetType.click();
             }).then(function() {
@@ -97,9 +97,9 @@ var timeTrackingPage = function() {
     this.selectTimesheetType = function(type) {
 
         var timesheetType = element(by.linkText(type));
-        browser.wait(EC.visibilityOf(element.all(by.xpath(Objects.timetrackingPage.locators.timesheetDropDown)).get(2)), 30000).then(function() {
+        browser.wait(EC.visibilityOf(element.all(by.xpath(Objects.timetrackingPage.locators.timesheetDropDown)).get(2)), 30000, "Timesheet tyoe drop down is not visible").then(function() {
             timesheetTypeDropDown.click().then(function() {
-                browser.wait(EC.textToBePresentInElement((timesheetType), type), 10000);
+                browser.wait(EC.textToBePresentInElement((timesheetType), type), 10000, type + " is not present in timesheet type drop down list");
             }).then(function() {
                 timesheetType.click();
             });
