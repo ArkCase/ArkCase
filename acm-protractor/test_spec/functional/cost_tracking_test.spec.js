@@ -42,9 +42,9 @@ describe('Cost Tracking page tests', function() {
         costTrackingPage.clickLastElementInTreeData();
         costTrackingPage.clickTagsLinkBtn();
         costTrackingPage.addSugestedTag(Objects.timetrackingPage.data.tagname);
-        expect(costTrackingPage.returnTagName()).toEqual(Objects.timetrackingPage.data.tagname);
-        expect(costTrackingPage.returntagCratedDate()).toEqual(utils.returnToday("/"));
-        expect(costTrackingPage.returntagCreatedBy()).toEqual(Objects.casepage.data.assigneeSamuel);
+        expect(costTrackingPage.returnTagName()).toEqual(Objects.timetrackingPage.data.tagname, "Tag name is not correct");
+        expect(costTrackingPage.returntagCratedDate()).toEqual(utils.returnToday("/"), "Tag created date is not correct");
+        expect(costTrackingPage.returntagCreatedBy()).toEqual(Objects.casepage.data.assigneeSamuel, "Tag created by is not correct");
         costTrackingPage.deleteTag();
     });
 
