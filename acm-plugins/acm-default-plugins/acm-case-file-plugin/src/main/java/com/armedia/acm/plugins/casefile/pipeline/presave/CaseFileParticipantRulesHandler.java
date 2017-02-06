@@ -13,13 +13,13 @@ import org.slf4j.LoggerFactory;
 public class CaseFileParticipantRulesHandler implements PipelineHandler<CaseFile, CaseFilePipelineContext>
 {
     /**
-     * Business rule manager.
-     */
-
-    /**
      * Logger instance.
      */
     private final Logger log = LoggerFactory.getLogger(getClass());
+
+    /**
+     * Business rule manager.
+     */
     private ParticipantsBusinessRule participantsRule;
 
     @Override
