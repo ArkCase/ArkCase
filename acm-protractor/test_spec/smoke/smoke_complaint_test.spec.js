@@ -89,12 +89,12 @@ describe('Create new complaint ', function() {
         taskPage.insertSubject(Objects.taskpage.data.Subject).insertDueDateToday().clickSave();
         taskPage.clickComplaintTitleInTasks();
         complaintPage.clickTasksLinkBtn().waitForTasksTable();
-        expect(complaintPage.returnTaskTableTitle()).toContain(Objects.taskpage.data.Subject);
-        expect(complaintPage.returnTaskTableAssignee()).toEqual(Objects.casepage.data.assigneeSamuel);
-        expect(complaintPage.returnTaskTableCreatedDate()).toEqual(utils.returnToday("/"));
-        expect(complaintPage.returnTaskTablePriority()).toEqual(Objects.casepage.data.priorityMedium);
-        expect(complaintPage.returnTaskTableDueDate()).toEqual(utils.returnToday("/"));
-        expect(complaintPage.returnTaskTableStatus()).toEqual("ACTIVE");
+        expect(complaintPage.returnTaskTableTitle()).toContain(Objects.taskpage.data.Subject, "Task subject is not correct in the grid");
+        expect(complaintPage.returnTaskTableAssignee()).toEqual(Objects.casepage.data.assigneeSamuel, "Asignee is not correct in grid");
+        expect(complaintPage.returnTaskTableCreatedDate()).toEqual(utils.returnToday("/"), "Created date is not correct in grid");
+        expect(complaintPage.returnTaskTablePriority()).toEqual(Objects.casepage.data.priorityMedium, "Priority is not correct in grid");
+        expect(complaintPage.returnTaskTableDueDate()).toEqual(utils.returnToday("/"), "Task due date is not correct in grid");
+        expect(complaintPage.returnTaskTableStatus()).toEqual("ACTIVE", "Task status is not correct in grid");
     });
 
     //Add a document to document management
@@ -134,12 +134,12 @@ describe('Create new complaint ', function() {
         complaintPage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Tasks");
         complaintPage.waitForTasksTable();
         complaintPage.clickRefreshButton();
-        expect(complaintPage.returnAutomatedTask()).toContain(Objects.complaintPage.data.automaticTaskNameCloseComplaint);
+        expect(complaintPage.returnAutomatedTask()).toContain(Objects.complaintPage.data.automaticTaskNameCloseComplaint, "Automated task name is not correct");
         complaintPage.clickTaskTitle();
         taskPage.clickApproveBtn();
         expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateClosed, 'The task state should be CLOSED');
         complaintPage.navigateToPage("Cases").clickExpandFancyTreeTopElementAndSubLink("Details");
-        expect(complaintPage.returnDetailsTextArea()).toContain(Objects.casepage.data.automatedTaskTitle);
+        expect(complaintPage.returnDetailsTextArea()).toContain(Objects.casepage.data.automatedTaskTitle, "Details text area does not containt automated task title");
 
     });
 
@@ -149,9 +149,9 @@ describe('Create new complaint ', function() {
 
         complaintPage.clickModuleComplaints();
         complaintPage.clickPeopleLinkBtn();
-        expect(complaintPage.returnPeopleType()).toEqual(Objects.casepage.data.peopleTypeInitiaor);
-        expect(complaintPage.returnPeopleFirstName()).toEqual(Objects.complaintPage.data.firstName);
-        expect(complaintPage.returnPeopleLastName()).toEqual(Objects.complaintPage.data.lastName);
+        expect(complaintPage.returnPeopleType()).toEqual(Objects.casepage.data.peopleTypeInitiaor, "People type is not correct");
+        expect(complaintPage.returnPeopleFirstName()).toEqual(Objects.complaintPage.data.firstName, "First name is not correct");
+        expect(complaintPage.returnPeopleLastName()).toEqual(Objects.complaintPage.data.lastName, "Last name is not correct");
     });
 
     //verify the assignee on new added complaint
@@ -160,25 +160,25 @@ describe('Create new complaint ', function() {
 
         complaintPage.clickModuleComplaints();
         complaintPage.participantTable();
-        expect(complaintPage.returnParticipantTypeFirstRow()).toEqual("*");
-        expect(complaintPage.returnParticipantNameFirstRow()).toEqual("*");
-        expect(complaintPage.returnParticipantTypeSecondRow()).toEqual("assignee");
-        expect(complaintPage.returnParticipantNameSecondRow()).toEqual("Samuel Supervisor");
-        expect(complaintPage.returnParticipantTypeThirdRow()).toEqual("owning group");
-        expect(complaintPage.returnParticipantNameThirdRow()).toEqual("ACM_INVESTIGATOR_DEV");
-        expect(complaintPage.returnParticipantTypeForthRow()).toEqual("reader");
-        expect(complaintPage.returnParticipantNameForthRow()).toEqual("Samuel Supervisor");
+        expect(complaintPage.returnParticipantTypeFirstRow()).toEqual("*", "Participant type in first row is not correct");
+        expect(complaintPage.returnParticipantNameFirstRow()).toEqual("*", "Participant name in first row is not correct");
+        expect(complaintPage.returnParticipantTypeSecondRow()).toEqual("assignee", "assignee label is not correct");
+        expect(complaintPage.returnParticipantNameSecondRow()).toEqual("", "assignee should be empty");
+        expect(complaintPage.returnParticipantTypeThirdRow()).toEqual("owning group", "owning group label is not correct");
+        expect(complaintPage.returnParticipantNameThirdRow()).toEqual("ACM_INVESTIGATOR_DEV", "owning group is not correct");
+        expect(complaintPage.returnParticipantTypeForthRow()).toEqual("reader", "reader label is not correct");
+        expect(complaintPage.returnParticipantNameForthRow()).toEqual("Samuel Supervisor", "reader value is not current user");
     });
 
-    //verify the event in history on new added complaint
+    // verify the event in history on new added complaint
 
     it('should Verify the event in the history table', function() {
 
         complaintPage.clickModuleComplaints();
         complaintPage.historyTable();
-        expect(complaintPage.returnHistoryEventName()).toEqual("Complaint Created");
-        expect(complaintPage.returnHistoryDate()).toContain(utils.returnToday("/"));
-        expect(complaintPage.returnHistoryUser()).toEqual(Objects.casepage.data.assigneeSamuel);
+        expect(complaintPage.returnHistoryEventName()).toEqual("Complaint Created", "History event name is not correct");
+        expect(complaintPage.returnHistoryDate()).toContain(utils.returnToday("/"), "History date is not correct");
+        expect(complaintPage.returnHistoryUser()).toEqual(Objects.casepage.data.assigneeSamuel, "Assignee in history is not correct");
     });
 
 });

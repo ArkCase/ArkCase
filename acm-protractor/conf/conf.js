@@ -17,7 +17,7 @@ exports.config = {
     framework: 'jasmine2',
     //next 3 lines are for run on selenium GRID, the path should be changed to take drivers from ACM configuraion project
     //not working for safari browser, should be investigated why? 
-    //seleniumAddress: 'http://localhost:4444/wd/hub',        
+    //seleniumAddress: 'http://localhost:4444/wd/hub',
     //seleniumArgs: '-Dwebdriver.ie.driver='+process.env['USERPROFILE']+'/AppData/Roaming/npm/node_modules/protractor/selenium/IEDriverServer_x64_2.52.0.exe',
     //seleniumArgs: '-Dwebdriver.safari.driver='+process.env['USERPROFILE']+'/AppData/Roaming/npm/node_modules/protractor/selenium/SafariDriver.safariextz',
     // Capabilities to be passed to the webdriver instance.
@@ -42,7 +42,7 @@ exports.config = {
     specs: [
 
         //any test can be run with command "protractor conf.js, just place it here"
-
+       
     ],
         //any suite can be run with command "protractor conf.js --suite=selected"
 
@@ -53,7 +53,7 @@ exports.config = {
         regression: ['../test_spec/regression/*.spec.js'],
         functional: ['../test_spec/functional/*.spec.js'],
         all: ['../test_spec/*/*.spec.js'],
-        selected: [ '../test_spec/regression/regression_case_test.spec.js'],
+        selected: [ '../test_spec/smoke/smoke_case_test.spec.js'],
     },
 
     jasmineNodeOpts: {

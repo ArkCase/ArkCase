@@ -40,7 +40,7 @@ var NotificationPage = function() {
         browser.wait(EC.visibilityOf(element(by.model(Objects.notificationPage.locators.notificationsInput))), 20000, "Search input for notification is not displayed").then(function() {
             searchNotificationInput.sendKeys(data).then(function() {
                 searchBtn.click().then(function() {
-                    browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.notificationPage.locators.notificationCol)).get(2)), 10000);
+                    browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.notificationPage.locators.notificationCol)).get(2)), 10000, "Notification column after search is not visible");
                 });
             });
         });

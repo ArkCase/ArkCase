@@ -25,7 +25,7 @@ var subscriptionPage = function() {
 
         browser.wait(EC.visibilityOf(element(by.cssContainingText(Objects.subscriptionsPage.locators.facets, subscription))), 20000, "Checkbox for" + " " + subscription + "Is not displayed").then(function() {
             element(by.cssContainingText(Objects.subscriptionsPage.locators.facets, subscription)).click().then(function() {
-                browser.wait(EC.visibilityOf(element(by.cssContainingText(Objects.subscriptionsPage.locators.facets, subscription))), 10000);
+                browser.wait(EC.visibilityOf(element(by.cssContainingText(Objects.subscriptionsPage.locators.facets, subscription))), 10000, subscription + "is not diplayed in facets");
             });
         });
     }
@@ -35,7 +35,7 @@ var subscriptionPage = function() {
         browser.wait(EC.visibilityOf(element(by.model(Objects.subscriptionsPage.locators.subscriptionsInput))), 20000, "Search input for subscription is not displayed").then(function() {
             searchSubscriptionInput.sendKeys(data).then(function() {
                 searchBtn.click().then(function() {
-                    browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.subscriptionsPage.locators.resultTable)).get(2)), 10000);
+                    browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.subscriptionsPage.locators.resultTable)).get(2)), 10000, "After searching subscriptions result table is not visible");
                 });
             });
         });

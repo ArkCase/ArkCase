@@ -38,14 +38,14 @@ describe('Create new task ', function() {
    it('should create new task status active', function() {
 
         taskPage.clickNewButton().clickTaskButton();
-        expect(taskPage.returnTasksTitle()).toEqual(Objects.taskspage.data.taskTitle);
+        expect(taskPage.returnTasksTitle()).toEqual(Objects.taskspage.data.taskTitle, "Tasks module title is not correct");
         taskPage.insertSubject(Objects.taskpage.data.Subject);
         expect(taskPage.returnStartDateInput()).not.toBeTruthy();
         taskPage.insertDueDateToday();
         expect(taskPage.returnDueDateInput()).not.toBeTruthy();
         taskPage.insertPercentComplete(Objects.taskpage.data.percentCompleteInput).clickSave();
-        expect(taskPage.returnTasksTitle()).toEqual(Objects.taskpage.data.tasksTitle);
-        expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateActive);
+        expect(taskPage.returnTasksTitle()).toEqual(Objects.taskpage.data.tasksTitle, "Task title is not correct");
+        expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateActive, "Task status is not correct");
 
     });
 
@@ -55,7 +55,7 @@ describe('Create new task ', function() {
 
         taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "High", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
         taskPage.clickCompleteButton();
-        expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateClosed);
+        expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateClosed, "After complete task status is not changed into closed");
 
     });
 
@@ -65,10 +65,10 @@ describe('Create new task ', function() {
 
         taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
         taskPage.workflowLink.click();
-        expect(taskPage.returnWorkflowTitle()).toEqual(Objects.taskspage.data.workflowTitle);
-        expect(taskPage.returnWorkflowParticipant()).toEqual(Objects.taskspage.data.supervisor);
-        expect(taskPage.returnWorkflowStatus()).toEqual(Objects.taskspage.data.workflowStatus);
-        expect(taskPage.returnWorkflowStartDate()).toEqual(utils.returnToday("/"));
+        expect(taskPage.returnWorkflowTitle()).toEqual(Objects.taskspage.data.workflowTitle, "Workflow title is not correct");
+        expect(taskPage.returnWorkflowParticipant()).toEqual(Objects.taskspage.data.supervisor, "Workflow participant is not correct");
+        expect(taskPage.returnWorkflowStatus()).toEqual(Objects.taskspage.data.workflowStatus, "Workflow status is not correct");
+        expect(taskPage.returnWorkflowStartDate()).toEqual(utils.returnToday("/"), "Workflow start date is not correct");
 
     });
 
@@ -78,10 +78,10 @@ describe('Create new task ', function() {
 
         taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "High", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
         taskPage.clickHistoryLink();
-        expect(taskPage.returnHistoryTableTitle()).toEqual(Objects.taskspage.data.historyTableTitle);
-        expect(taskPage.returnHistoryEventName()).toEqual(Objects.taskspage.data.historyEventName);
-        expect(taskPage.returnHistoryUser()).toEqual(Objects.taskspage.data.supervisor);
-        expect(taskPage.returnHistoryDate()).toContain(utils.returnToday("/"));
+        expect(taskPage.returnHistoryTableTitle()).toEqual(Objects.taskspage.data.historyTableTitle, "History title is not correct");
+        expect(taskPage.returnHistoryEventName()).toEqual(Objects.taskspage.data.historyEventName, "History event name is not correct");
+        expect(taskPage.returnHistoryUser()).toEqual(Objects.taskspage.data.supervisor, "History user is not correct");
+        expect(taskPage.returnHistoryDate()).toContain(utils.returnToday("/"), "History date is not correct");
 
     });
 
