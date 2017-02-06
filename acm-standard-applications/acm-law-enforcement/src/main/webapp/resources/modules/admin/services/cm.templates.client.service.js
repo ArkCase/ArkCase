@@ -39,7 +39,8 @@ angular.module('admin').service('Admin.CMTemplatesService', ['$http', 'Upload',
         function retrieveTemplatesList() {
             return $http({
                 method: "GET",
-                url: "api/latest/plugin/admin/template/list"
+                url: "api/latest/plugin/admin/templates",
+                cache: false
             });
         };
 
