@@ -45,7 +45,7 @@ public class LdapAuthenticateService
         log.debug("Changing password for user: {}", userName);
         LdapTemplate ldapTemplate = getLdapDao().buildLdapTemplate(getLdapAuthenticateConfig());
         AcmUser acmUser = userDao.findByUserId(userName);
-        ldapUserDao.changeUserPassword("cn=ArkCase Admin,ou=users,dc=arkcase,dc=com", password, ldapTemplate, getLdapAuthenticateConfig());
+        ldapUserDao.changeUserPassword(acmUser.getDistinguishedName(), password, ldapTemplate, getLdapAuthenticateConfig());
         log.debug("Password changed successfully for DN: {}", acmUser.getDistinguishedName());
     }
 
