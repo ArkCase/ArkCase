@@ -643,7 +643,8 @@
             "tagPriority": ".//*[@class='ui-grid-cell-contents ui-grid-header-cell-primary-focus']",
             "participantTypeConflictMessage": "[extid='warningParticipantTypeConflict']",
             "addParticipantTypeSecondRowbtn": "//table/tbody/..//td[2]/span",
-            "selectParticipantTypeSecondRow": "//table/tbody/tr[2]/td[5]"
+            "selectParticipantTypeSecondRow": "//table/tbody/tr[2]/td[5]",
+            "doc": "vvCurrentPage"
 
         },
 
