@@ -88,7 +88,7 @@ public class LdapUserService
 
         LdapTemplate ldapTemplate = getLdapDao().buildLdapTemplate(ldapSyncConfig);
 
-        DirContextOperations context = ldapTemplate.lookupContext("samaccountname=petko,ou=users");
+        DirContextOperations context = ldapTemplate.lookupContext(acmUser.getDistinguishedName());
         context = createContextForEditUser(acmUser, context);
         log.debug("Modify User in LDAP...");
         ldapTemplate.modifyAttributes(context);
@@ -112,8 +112,7 @@ public class LdapUserService
 
             LdapTemplate ldapTemplate = getLdapDao().buildLdapTemplate(ldapSyncConfig);
 
-            // FIXME: savedUser.getDistinguishedName()!
-            DirContextOperations context = ldapTemplate.lookupContext("samaccountname=petko,ou=users");
+            DirContextOperations context = ldapTemplate.lookupContext(savedUser.getDistinguishedName());
             context.addAttributeValue("memberOf", ldapGroup.getDistinguishedName());
             log.debug("Modify User in LDAP...");
             ldapTemplate.modifyAttributes(context);
