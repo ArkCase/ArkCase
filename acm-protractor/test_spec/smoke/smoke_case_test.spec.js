@@ -57,14 +57,30 @@ describe('case page tests', function() {
         expect(casePage.returnCaseTitle()).toEqual(Objects.casepage.data.caseTitle, "Case title is not correct");
     });
 
+    // close case and make sure the files are declared as records on the Alfresco site
+
+    it('should create new case and change case status to closed, verify the automated task in tasks table and approve', function () {
+
+        casePage.clickModuleCasesFiles();
+        casePage.waitForCaseTitle();
+        casePage.waitForChangeCaseButton();
+        casePage.clickChangeCaseBtn();
+        casePage.switchToIframes().changeCaseSubmit(Objects.casepage.data.approverSamuel, "Closed");
+        casePage.clickTasksLinkBtn().waitForTasksTable();
+        expect(casePage.returnAutomatedTask()).toContain(Objects.casepage.data.automatedTaskTitle);
+        casePage.clickTaskTitle();
+        taskPage.clickApproveBtn();
+        expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateClosed, 'The task state should be CLOSED');
+    });
+
     //Create a task associated to case
 
-    it('should  add task from tasks table verify the task', function () {
+    it('should  add add hoc task from tasks table and verify the task', function () {
 
         casePage.clickModuleCasesFiles();
         casePage.clickTasksLinkBtn();
         casePage.clickAddTaskButton();
-        taskPage.insertSubject(Objects.taskpage.data.Subject).insertDueDateToday().clickSave();
+        taskPage.insertSubject(Objects.taskpage.data.Subject).insertDueDate(utils.returnToday("/")).clickSave();
         taskPage.clickCaseTitleInTasks();
         casePage.clickExpandFancyTreeTopElementAndSubLink("Tasks").waitForTasksTable();
         expect(casePage.returnTaskTableTitle()).toContain(Objects.taskpage.data.Subject, "Task subject is not correct");
@@ -77,30 +93,10 @@ describe('case page tests', function() {
 
     //verify that case type is correct on new created case
 
-    it('should create new case and verify case type', function () {
+    it('should verify case type', function () {
 
         casePage.clickModuleCasesFiles();
         expect(casePage.returnCaseType()).toEqual(Objects.casepage.data.casesType, "Case type is not correct");
-    });
-
-   // close case and make sure the files are declared as records on the Alfresco site
-
-    it('should create new case and change case status to closed, verify the automated task in tasks table and approve', function () {
-
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.waitForCaseTitle();
-        casePage.waitForChangeCaseButton();
-        casePage.clickChangeCaseBtn();
-        casePage.switchToIframes().selectCaseStatus("Closed");
-        casePage.selectApprover(Objects.casepage.data.approverSamuel).chnageCaseSubmit("Closed");
-        casePage.clickTasksLinkBtn().waitForTasksTable();
-        expect(casePage.returnAutomatedTask()).toContain(Objects.casepage.data.automatedTaskTitle);
-        casePage.clickTaskTitle();
-        taskPage.clickApproveBtn();
-        expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateClosed, 'The task state should be CLOSED');
     });
 
     //verify that priority is correct on new created case
@@ -113,7 +109,7 @@ describe('case page tests', function() {
 
     //verify that created date is correct on new created case
 
-    it('should   verify the created date', function () {
+    it('should verify the created date', function () {
 
         casePage.clickModuleCasesFiles();
         expect(casePage.returnCreatedDate()).toEqual(utils.returnToday("/"), "Created date is not correct");
@@ -133,7 +129,7 @@ describe('case page tests', function() {
 
     //verify history table on new created case
 
-    it('should create new case and verify the history table', function () {
+    it('should verify the history table', function () {
 
         casePage.clickModuleCasesFiles();
         casePage.historyTable();
@@ -145,7 +141,7 @@ describe('case page tests', function() {
 
     //verify assignee by default on new created case
 
-    it('should create new case and verify the assignee by default', function () {
+    it('should verify the assignee by default', function () {
 
         casePage.clickModuleCasesFiles();
         casePage.participantTable();
@@ -183,7 +179,7 @@ describe('case page tests', function() {
 
     //verify adding document to document management
 
-    it('should create new case and verify adding correspondence document', function () {
+    it('should verify adding correspondence document', function () {
 
         casePage.clickModuleCasesFiles();
         casePage.clickExpandFancyTreeTopElement();
@@ -194,13 +190,13 @@ describe('case page tests', function() {
 
     //View document (Click Open)
 
-    it('should verify adding note in document viewer in cases', function () {
+    it('should verify view document', function () {
 
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson").clickNextBtn().initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Documents");
+        casePage.clickModuleCasesFiles();
+        casePage.clickExpandFancyTreeTopElementAndSubLink("Documents");
         casePage.clickDocTreeExpand().rightClickFileTitle().clickDocAction("Open");
-        casePage.moveToTab().clickDocViewNotesLink().submitNote(Objects.basepage.data.note);
-        expect(casePage.returnSavedNoteInGrid()).toEqual(Objects.basepage.data.note, "Note is not saved in document viewer");
+        casePage.moveToTab().switchToDocIframes();
+        casePage.returnDoc();
 
     });
 
@@ -208,8 +204,8 @@ describe('case page tests', function() {
 
     it('should verify sending document through email', function () {
 
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson").clickNextBtn().initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Documents");
+        casePage.clickModuleCasesFiles();
+        casePage.clickExpandFancyTreeTopElementAndSubLink("Documents");
         casePage.clickDocTreeExpand().rightClickFileTitle().clickDocAction("Email");
         casePage.sendEmail(Objects.basepage.data.email);
     });
@@ -221,11 +217,14 @@ describe('case page tests', function() {
     it('Verify text details add verify if is saved', function() {
 
         casePage.clickModuleCasesFiles();
-        casePage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Details");
+        casePage.clickExpandFancyTreeTopElementAndSubLink("Details");
         casePage.insertDetailsTextAreaText(Objects.taskspage.data.detailsTextArea);
         casePage.clickSaveDetailsButton();
         casePage.clickRefreshButton();
         expect(casePage.returnDetailsTextArea()).toEqual(Objects.taskspage.data.detailsTextArea, 'After refresh the details text is not saved');
 
     });
+
+
+
  });

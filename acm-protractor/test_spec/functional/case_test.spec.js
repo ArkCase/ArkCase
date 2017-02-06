@@ -840,4 +840,14 @@ describe('case page tests', function() {
 
     });
 
+    it('should verify adding note in document viewer in cases', function () {
+
+        casePage.clickModuleCasesFiles();
+        casePage.clickExpandFancyTreeTopElementAndSubLink("Documents");
+        casePage.clickDocTreeExpand().rightClickFileTitle().clickDocAction("Open");
+        casePage.moveToTab().clickDocViewNotesLink().submitNote(Objects.basepage.data.note);
+        expect(casePage.returnSavedNoteInGrid()).toEqual(Objects.basepage.data.note, "Note is not saved in document viewer");
+
+    });
+
 });
