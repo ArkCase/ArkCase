@@ -1,10 +1,7 @@
 package com.armedia.acm.plugins.casefile.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import com.armedia.acm.auth.AcmGrantedAuthority;
+import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
@@ -22,7 +19,6 @@ import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mule.api.MuleException;
@@ -40,14 +36,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.Assert.*;
+
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(name = "spring", locations = { "/spring/spring-library-acm-encryption.xml",
+@ContextConfiguration(name = "spring", locations = {"/spring/spring-library-acm-encryption.xml",
         "/spring/spring-library-activiti-configuration.xml", "/spring/spring-library-audit-service.xml",
         "/spring/spring-library-authentication-token.xml", "/spring/spring-library-business-process.xml",
         "/spring/spring-library-case-file-dao.xml", "/spring/spring-library-case-file-rules.xml",
@@ -60,7 +57,7 @@ import java.util.List;
         "/spring/spring-library-object-history.xml", "/spring/spring-library-particpants.xml", "/spring/spring-library-person.xml",
         "/spring/spring-library-profile.xml", "/spring/spring-library-property-file-manager.xml", "/spring/spring-library-search.xml",
         "/spring/spring-library-task.xml", "/spring/spring-library-user-service.xml", "/spring/spring-library-notification.xml",
-        "/spring/spring-library-service-data.xml" })
+        "/spring/spring-library-service-data.xml"})
 @TransactionConfiguration(defaultRollback = true)
 public class MergeCaseFileServiceIT
 {
@@ -97,7 +94,7 @@ public class MergeCaseFileServiceIT
     @Test
     @Transactional
     public void mergeCaseFilesTest() throws MergeCaseFilesException, MuleException, AcmUserActionFailedException,
-            AcmCreateObjectFailedException, IOException, AcmObjectNotFoundException, PipelineProcessException
+            AcmCreateObjectFailedException, IOException, AcmObjectNotFoundException, PipelineProcessException, AcmAccessControlException
     {
         auditAdapter.setUserId("auditUser");
 
@@ -195,7 +192,7 @@ public class MergeCaseFileServiceIT
     @Test
     @Transactional
     public void mergeCaseFilesParticipantSameAssigneeTest() throws MergeCaseFilesException, MuleException, AcmUserActionFailedException,
-            AcmCreateObjectFailedException, IOException, AcmObjectNotFoundException, PipelineProcessException
+            AcmCreateObjectFailedException, IOException, AcmObjectNotFoundException, PipelineProcessException, AcmAccessControlException
     {
         auditAdapter.setUserId("auditUser");
         String roleAdd = "ROLE_ADMINISTRATOR";
@@ -268,7 +265,7 @@ public class MergeCaseFileServiceIT
     @Test
     @Transactional
     public void mergeCaseFilesParticipantDifferentAssigneeTest() throws MergeCaseFilesException, MuleException,
-            AcmUserActionFailedException, AcmCreateObjectFailedException, IOException, AcmObjectNotFoundException, PipelineProcessException
+            AcmUserActionFailedException, AcmCreateObjectFailedException, IOException, AcmObjectNotFoundException, PipelineProcessException, AcmAccessControlException
     {
         auditAdapter.setUserId("auditUser");
         String roleAdd = "ROLE_ADMINISTRATOR";
