@@ -12,6 +12,7 @@ import com.armedia.acm.spring.SpringContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.DirContextAdapter;
+import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.naming.Name;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class LdapUserService
 {
@@ -39,15 +41,16 @@ public class LdapUserService
 
         Map<String, String> roleToGroup = ldapSyncConfig.getRoleToGroupMap();
         Map<String, List<String>> groupToRoleMap = LdapSyncService.reverseRoleToGroupMap(roleToGroup);
-        Name dn = buildDnForUser(user.getFirstName(), ldapSyncConfig);
+
+        Name dn = buildDnForUser(user.getUserId(), ldapSyncConfig.getUserSearchBase());
         user.setFullName(String.format("%s %s", user.getFirstName(), user.getLastName()));
         user.setDistinguishedName(dn.toString());
-        String sAMAccountName = buildSAMAccountName(user.getFirstName());
-        user.setUserId(sAMAccountName);
-        user.setUserDirectoryName(sAMAccountName);
+        user.setUserDirectoryName(ldapSyncConfig.getDirectoryName());
+
         AcmGroup group = getGroupDao().findByName(groupName);
         user.addGroup(group);
-        log.debug("Saving User in database...");
+
+        log.debug("Saving User:{} in database...", user.getUserId());
         AcmUser ldapUser = getUserDao().save(user);
         log.debug("User saved");
 
@@ -55,7 +58,7 @@ public class LdapUserService
         userRoles.forEach(role ->
         {
             AcmUserRole userRole = new AcmUserRole();
-            userRole.setUserId(sAMAccountName);
+            userRole.setUserId(ldapUser.getUserId());
             userRole.setRoleName(role);
             userRole.setUserRoleState("VALID");
             log.debug("Saving AcmUserRole: {}", userRole);
@@ -64,22 +67,80 @@ public class LdapUserService
         log.debug("User roles saved");
 
         LdapTemplate ldapTemplate = getLdapDao().buildLdapTemplate(ldapSyncConfig);
-        DirContextAdapter context = createContextForUser(user, password,
-                group.getDistinguishedName(), sAMAccountName);
+        DirContextAdapter context = createContextForNewUser(user, password,
+                group.getDistinguishedName());
         log.debug("Save in LDAP...");
         ldapTemplate.bind(context);
         return ldapUser;
     }
 
-    private DirContextAdapter createContextForUser(AcmUser user, String password, String groupDn, String sAMAccountName)
+    @Transactional
+    public AcmUser editLdapUser(AcmUser acmUser)
+    {
+        AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).get("armedia_sync");
+        log.debug("Saving edited User:{} in database...", acmUser.getUserId());
+        AcmUser existingUser = getUserDao().findByUserId(acmUser.getUserId());
+        existingUser.setFirstName(acmUser.getFirstName());
+        existingUser.setLastName(acmUser.getLastName());
+        existingUser.setFullName(String.format("%s %s", acmUser.getFirstName(), acmUser.getLastName()));
+        existingUser.setMail(acmUser.getMail());
+        acmUser = getUserDao().saveAcmUser(existingUser);
+
+        LdapTemplate ldapTemplate = getLdapDao().buildLdapTemplate(ldapSyncConfig);
+
+        DirContextOperations context = ldapTemplate.lookupContext("samaccountname=petko,ou=users");
+        context = createContextForEditUser(acmUser, context);
+        log.debug("Modify User in LDAP...");
+        ldapTemplate.modifyAttributes(context);
+        return acmUser;
+    }
+
+    @Transactional
+    public List<AcmUser> addExistingLdapUsersToGroup(List<AcmUser> acmUsers, String groupName)
+    {
+        AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).get("armedia_sync");
+
+        AcmGroup ldapGroup = getGroupDao().findByName(groupName);
+
+        List<AcmUser> ldapUsers = acmUsers.stream().map(user ->
+        {
+            AcmUser existingUser = getUserDao().findByUserId(user.getUserId());
+            log.debug("Adding Group:{} to User:{}", groupName, user.getUserId());
+            existingUser.addGroup(ldapGroup);
+            log.debug("Saving edited User:{} in database...", user.getUserId());
+            AcmUser savedUser = getUserDao().saveAcmUser(existingUser);
+
+            LdapTemplate ldapTemplate = getLdapDao().buildLdapTemplate(ldapSyncConfig);
+
+            // FIXME: savedUser.getDistinguishedName()!
+            DirContextOperations context = ldapTemplate.lookupContext("samaccountname=petko,ou=users");
+            context.addAttributeValue("memberOf", ldapGroup.getDistinguishedName());
+            log.debug("Modify User in LDAP...");
+            ldapTemplate.modifyAttributes(context);
+            log.debug("LDAP change made");
+            return savedUser;
+        }).collect(Collectors.toList());
+        return ldapUsers;
+    }
+
+    private DirContextOperations createContextForEditUser(AcmUser user, DirContextOperations context)
+    {
+        context.setAttributeValue("cn", String.format("%s %s", user.getFirstName(), user.getLastName()));
+        context.setAttributeValue("givenName", user.getFirstName());
+        context.setAttributeValue("sn", user.getLastName());
+        context.setAttributeValue("mail", user.getMail());
+        return context;
+    }
+
+    private DirContextAdapter createContextForNewUser(AcmUser user, String password, String groupDn)
     {
         DirContextAdapter context = new DirContextAdapter(user.getDistinguishedName());
         context.setAttributeValues("objectClass", new String[]{"top", "person", "inetOrgPerson",
                 "organizationalPerson", "simulatedMicrosoftSecurityPrincipal", "uacPerson"});
-        context.setAttributeValue("cn", user.getFirstName());
-        context.setAttributeValue("sn", user.getLastName());
-        context.setAttributeValue("sAMAccountName", sAMAccountName);
+        context.setAttributeValue("cn", String.format("%s %s", user.getFirstName(), user.getLastName()));
         context.setAttributeValue("givenName", user.getFirstName());
+        context.setAttributeValue("sn", user.getLastName());
+        context.setAttributeValue("sAMAccountName", user.getUserId());
         context.setAttributeValue("mail", user.getMail());
         context.setAttributeValue("memberOf", groupDn);
         context.setAttributeValue("userAccountControl", "1");
@@ -87,14 +148,9 @@ public class LdapUserService
         return context;
     }
 
-    private String buildSAMAccountName(String firstName)
+    private Name buildDnForUser(String userId, String userSearchBase)
     {
-        return firstName.toLowerCase().replaceAll("\\s+", "-");
-    }
-
-    private Name buildDnForUser(String cn, AcmLdapSyncConfig ldapSyncConfig)
-    {
-        String dnPath = String.format("cn=%s,%s", cn, ldapSyncConfig.getUserSearchBase());
+        String dnPath = String.format("sAMAccountName=%s,%s", userId, userSearchBase);
         return new DistinguishedName(dnPath);
     }
 

@@ -1,5 +1,6 @@
 package com.armedia.acm.services.users.web.api;
 
+import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.ldap.LdapUserCreateRequest;
@@ -10,8 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.ldap.InvalidAttributeValueException;
+import org.springframework.ldap.NameAlreadyBoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -43,22 +47,55 @@ public class LdapUserAPIController
         return Collections.singletonMap("enableEditingLdapUsers", enableEditingLdapUsers);
     }
 
-    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/add/{groupName}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<AcmUser> addLdapUsersToGroup(
+            @RequestBody List<AcmUser> members, @PathVariable String groupName,
+            HttpServletResponse response) throws AcmUserActionFailedException
+    {
+        try
+        {
+            return ldapUserService.addExistingLdapUsersToGroup(members, groupName);
+        } catch (Exception e)
+        {
+            log.error("Adding members to LDAP group:{} failed!", groupName, e);
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            throw new AcmUserActionFailedException("add LDAP user to group", null, null, "Adding members to LDAP group failed!", e);
+        }
+    }
+
+    @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmUser addLdapUser(
             @RequestBody LdapUserCreateRequest ldapUserCreateRequest,
-            HttpServletResponse response) throws AcmUserActionFailedException
+            HttpServletResponse response) throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
         try
         {
             return ldapUserService.createLdapUser(ldapUserCreateRequest.getAcmUser(),
                     ldapUserCreateRequest.getGroupName(), ldapUserCreateRequest.getPassword());
+        } catch (NameAlreadyBoundException e)
+        {
+            log.error("Duplicate username: {}", ldapUserCreateRequest.getAcmUser().getUserId());
+            log.error("NameAlreadyBoundException", e);
+            AcmAppErrorJsonMsg error = new AcmAppErrorJsonMsg("Username is already taken!", "USER",
+                    "username", e);
+            error.putExtra("user", ldapUserCreateRequest.getAcmUser());
+            throw error;
         } catch (Exception e)
         {
             log.error("Creating LDAP user failed!", e);
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             throw new AcmUserActionFailedException("create LDAP user", null, null, "Creating LDAP user failed!", e);
         }
+    }
+
+    @RequestMapping(value = "/edit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public AcmUser editLdapUser(
+            @RequestBody AcmUser acmUser) throws AcmUserActionFailedException
+    {
+        return ldapUserService.editLdapUser(acmUser);
     }
 
     @RequestMapping(value = "/changePassword", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
