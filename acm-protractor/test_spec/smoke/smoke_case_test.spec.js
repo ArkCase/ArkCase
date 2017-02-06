@@ -45,7 +45,7 @@ describe('case page tests', function() {
 
     });
 
-    //Create New Case, make sure the new object is created
+    // Create New Case, make sure the new object is created
 
     it('should create new case ', function() {
 
@@ -55,6 +55,24 @@ describe('case page tests', function() {
         casePage.switchToDefaultContent();
         casePage.waitForCaseTitle();
         expect(casePage.returnCaseTitle()).toEqual(Objects.casepage.data.caseTitle, "Case title is not correct");
+    });
+
+    //Create a task associated to case
+
+    it('should  add task from tasks table verify the task', function () {
+
+        casePage.clickModuleCasesFiles();
+        casePage.clickTasksLinkBtn();
+        casePage.clickAddTaskButton();
+        taskPage.insertSubject(Objects.taskpage.data.Subject).insertDueDateToday().clickSave();
+        taskPage.clickCaseTitleInTasks();
+        casePage.clickExpandFancyTreeTopElementAndSubLink("Tasks").waitForTasksTable();
+        expect(casePage.returnTaskTableTitle()).toContain(Objects.taskpage.data.Subject, "Task subject is not correct");
+        expect(casePage.returnTaskTableAssignee()).toEqual(Objects.casepage.data.assigneeSamuel, "Task assignee is not correct");
+        expect(casePage.returnTaskTableCreatedDate()).toEqual(utils.returnToday("/"), "Task created date is not correct");
+        expect(casePage.returnTaskTablePriority()).toEqual(Objects.casepage.data.priorityMedium, "Task priority is not correct");
+        expect(casePage.returnTaskTableDueDate()).toEqual(utils.returnToday("/"), "Task due date is not correct");
+        expect(casePage.returnTaskTableStatus()).toEqual("ACTIVE", "Task status is not correct");
     });
 
     //verify that case type is correct on new created case
@@ -69,11 +87,15 @@ describe('case page tests', function() {
 
     it('should create new case and change case status to closed, verify the automated task in tasks table and approve', function () {
 
-        casePage.clickModuleCasesFiles();
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
+        casePage.clickNextBtn();
+        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
+        casePage.switchToDefaultContent();
+        casePage.waitForCaseTitle();
         casePage.waitForChangeCaseButton();
         casePage.clickChangeCaseBtn();
         casePage.switchToIframes().selectCaseStatus("Closed");
-        casePage.selectApprover(Objects.casepage.data.approverSamuel).chnageCaseSubmit();
+        casePage.selectApprover(Objects.casepage.data.approverSamuel).chnageCaseSubmit("Closed");
         casePage.clickTasksLinkBtn().waitForTasksTable();
         expect(casePage.returnAutomatedTask()).toContain(Objects.casepage.data.automatedTaskTitle);
         casePage.clickTaskTitle();
@@ -125,20 +147,16 @@ describe('case page tests', function() {
 
     it('should create new case and verify the assignee by default', function () {
 
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
         casePage.clickModuleCasesFiles();
         casePage.participantTable();
         expect(casePage.returnParticipantTypeFirstRow()).toEqual("*", "Participant type in first row is not correct");
         expect(casePage.returnParticipantNameFirstRow()).toEqual("*", "Participant name in first row is not correct");
-        expect(casePage.returnParticipantTypeSecondRow()).toEqual("assignee", "Participant type in second row is not correct");
-        expect(casePage.returnParticipantNameSecondRow()).toEqual("Ann Administrator", "Participant name in second row is not correct");
-        expect(casePage.returnParticipantTypeThirdRow()).toEqual("owning group", "Participant type in third row is not correct");
-        expect(casePage.returnParticipantNameThirdRow()).toEqual("ACM_INVESTIGATOR_DEV", "Participant row in third row is not correct");
-        expect(casePage.returnParticipantTypeForthRow()).toEqual("reader", "Participant type in forth row is not correct");
-        expect(casePage.returnParticipantNameForthRow()).toEqual("Samuel Supervisor", "Participant name in forth row is not correct");
+        expect(casePage.returnParticipantTypeSecondRow()).toEqual("assignee", "assignee label is not correct");
+        expect(casePage.returnParticipantNameSecondRow()).toEqual("", "assignee should be empty");
+        expect(casePage.returnParticipantTypeThirdRow()).toEqual("owning group", "owning group label is not correct");
+        expect(casePage.returnParticipantNameThirdRow()).toEqual("ACM_INVESTIGATOR_DEV", "owning group is not correct");
+        expect(casePage.returnParticipantTypeForthRow()).toEqual("reader", "reader label is not correct");
+        expect(casePage.returnParticipantNameForthRow()).toEqual("Samuel Supervisor", "reader value is not current user");
     });
 
     //verify assigned to, owning group and due date
@@ -147,7 +165,7 @@ describe('case page tests', function() {
 
         casePage.clickModuleCasesFiles();
         expect(casePage.returnDueDate()).toEqual(utils.returnDate("/", 180), "Default due date is not correct");
-        expect(casePage.returnAssignee()).toEqual(Objects.taskspage.data.administrator, "Asignee is not correct");
+        expect(casePage.returnAssignee()).toEqual("", "Asignee by default should be empty");
         expect(casePage.returnOwningGroup()).toEqual(Objects.casepage.data.owningGroup, "Default owning group is not correct");
 
     });
@@ -161,25 +179,6 @@ describe('case page tests', function() {
         casePage.addNote(Objects.casepage.data.note);
         casePage.deleteNote();
     });
-
-    //Create a task associated to case
-
-    it('should  add task from tasks table verify the task', function () {
-
-        casePage.clickModuleCasesFiles();
-        casePage.clickTasksLinkBtn();
-        casePage.clickAddTaskButton();
-        taskPage.insertSubject(Objects.taskpage.data.Subject).insertDueDateToday().clickSave();
-        taskPage.clickCaseTitleInTasks();
-        casePage.clickTasksLinkBtn().waitForTasksTable();
-        expect(casePage.returnTaskTableTitle()).toContain(Objects.taskpage.data.Subject, "Task subject is not correct");
-        expect(casePage.returnTaskTableAssignee()).toEqual(Objects.casepage.data.assigneeSamuel, "Task assignee is not correct");
-        expect(casePage.returnTaskTableCreatedDate()).toEqual(utils.returnToday("/"), "Task created date is not correct");
-        expect(casePage.returnTaskTablePriority()).toEqual(Objects.casepage.data.priorityMedium, "Task priority is not correct");
-        expect(casePage.returnTaskTableDueDate()).toEqual(utils.returnToday("/"), "Task due date is not correct");
-        expect(casePage.returnTaskTableStatus()).toEqual("ACTIVE", "Task status is not correct");
-    });
-
 
 
     //verify adding document to document management
@@ -229,4 +228,4 @@ describe('case page tests', function() {
         expect(casePage.returnDetailsTextArea()).toEqual(Objects.taskspage.data.detailsTextArea, 'After refresh the details text is not saved');
 
     });
-});
+ });
