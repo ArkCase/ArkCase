@@ -15,7 +15,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
@@ -71,6 +70,9 @@ public class AcmUser implements Serializable, AcmLdapUser
 
     @Column(name = "cm_distinguished_name")
     private String distinguishedName;
+
+    @Column(name = "cm_uid")
+    private String uid;
 
     @Transient
     private Set<String> ldapGroups = new HashSet<>();
@@ -329,5 +331,15 @@ public class AcmUser implements Serializable, AcmLdapUser
     public void setDistinguishedName(String distinguishedName)
     {
         this.distinguishedName = distinguishedName;
+    }
+
+    public void setUid(String uid)
+    {
+        this.uid = uid;
+    }
+
+    public String getUid()
+    {
+        return uid;
     }
 }

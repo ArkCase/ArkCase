@@ -403,4 +403,10 @@
              <column name="cm_distinguished_name" type="VARCHAR(255)"/>
          </addColumn>
      </changeSet>
+
+    <changeSet id="20-add-uid-to-acm-user" author="david.miller">
+        <addColumn tableName="acm_user">
+            <column name="cm_uid" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
