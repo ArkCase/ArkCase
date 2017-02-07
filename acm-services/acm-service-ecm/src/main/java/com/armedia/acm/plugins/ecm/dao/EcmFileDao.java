@@ -62,7 +62,9 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
         if (!excludeDocumentTypes.isEmpty())
             query.setParameter("fileTypes", excludeDocumentTypes);
 
-        return query.executeUpdate();
+        int retval = query.executeUpdate();
+
+        return retval;
     }
 
     public EcmFile findForContainerAttachmentFolderAndFileType(Long containerId, Long folderId, String fileType)

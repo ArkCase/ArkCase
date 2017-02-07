@@ -64,7 +64,8 @@ import static org.junit.Assert.*;
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-acm-encryption.xml",
         "/spring/spring-library-user-service.xml",
-        "/spring/spring-library-authentication-token.xml"
+        "/spring/spring-library-authentication-token.xml",
+        "/spring/spring-library-activiti-configuration.xml"
 })
 public class ExchangeWebServicesOutlookDaoIT
 {
