@@ -17,7 +17,7 @@ exports.config = {
     framework: 'jasmine2',
     //next 3 lines are for run on selenium GRID, the path should be changed to take drivers from ACM configuraion project
     //not working for safari browser, should be investigated why? 
-    //seleniumAddress: 'http://localhost:4444/wd/hub',        
+    //seleniumAddress: 'http://localhost:4444/wd/hub',
     //seleniumArgs: '-Dwebdriver.ie.driver='+process.env['USERPROFILE']+'/AppData/Roaming/npm/node_modules/protractor/selenium/IEDriverServer_x64_2.52.0.exe',
     //seleniumArgs: '-Dwebdriver.safari.driver='+process.env['USERPROFILE']+'/AppData/Roaming/npm/node_modules/protractor/selenium/SafariDriver.safariextz',
     // Capabilities to be passed to the webdriver instance.
@@ -41,19 +41,20 @@ exports.config = {
 
     specs: [
 
-           '../test_spec/verification_test.spec.js',
-           '../test_spec/dashboard_test.spec.js',
-           '../test_spec/task_test.spec.js',
-           '../test_spec/case_test.spec.js',
-           '../test_spec/complaint_test.spec.js',
-           '../test_spec/user_test.spec.js',
-           '../test_spec/notification_test.js',
-           '../test_spec/admin_test.js',
-           '../test_spec/report_test.spec.js',
-           '../test_spec/audit_test.spec.js',
-           '../test_spec/preference_test.spec.js'
-
+        //any test can be run with command "protractor conf.js, just place it here"
+       
     ],
+        //any suite can be run with command "protractor conf.js --suite=selected"
+
+      
+    suites: {
+
+        smoke: ['../test_spec/smoke/*.spec.js'],
+        regression: ['../test_spec/regression/*.spec.js'],
+        functional: ['../test_spec/functional/*.spec.js'],
+        all: ['../test_spec/*/*.spec.js'],
+        selected: [ '../test_spec/smoke/smoke_case_test.spec.js'],
+    },
 
     jasmineNodeOpts: {
         showColors: true,

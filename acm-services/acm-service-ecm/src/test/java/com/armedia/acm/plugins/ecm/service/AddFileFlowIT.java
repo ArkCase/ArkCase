@@ -9,6 +9,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
+import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,6 +24,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -55,7 +57,7 @@ public class AddFileFlowIT
     {
         assertNotNull(testFolderId);
 
-        log.debug("Found folder id '" + testFolderId + "'");
+        log.debug("Found folder id '{}'", testFolderId);
 
         Resource uploadFile = new ClassPathResource("/spring/spring-library-ecm-plugin-test-mule.xml");
         InputStream is = uploadFile.getInputStream();
@@ -78,24 +80,21 @@ public class AddFileFlowIT
         assertNotNull(found.getContentStreamMimeType());
         assertNotNull(found.getVersionLabel());
 
+        log.debug("doc id: {}", found.getVersionSeriesId());
+
         MuleMessage downloadedFile = muleContextManager.send("vm://downloadFileFlow.in", found.getVersionSeriesId(), null);
         ContentStream filePayload = (ContentStream) downloadedFile.getPayload();
 
         assertNotNull(filePayload);
 
-        InputStream payloadStream = null;
-        try
+        try ( InputStream foundIs = filePayload.getStream(); InputStream originalIs = uploadFile.getInputStream() )
         {
-            payloadStream = filePayload.getStream();
-            assertTrue(payloadStream.available() > 0);
+            List<String> downloadedLines = IOUtils.readLines(foundIs);
+            List<String> originalLines = IOUtils.readLines(originalIs);
+            assertNotNull(downloadedLines);
+            assertTrue(!downloadedLines.isEmpty());
 
-            assertEquals(uploadFile.contentLength(), payloadStream.available());
-        } finally
-        {
-            if (payloadStream != null)
-            {
-                payloadStream.close();
-            }
+            assertEquals(originalLines, downloadedLines);
         }
     }
 }

@@ -99,5 +99,68 @@
     ],
     "paginationPageSize": 10,
     "start": 0
+  },
+  "dialogObjectPicker": {
+    "enableFiltering": false,
+    "multiSelect": false,
+    "showFacets": false,
+    "columnDefs": [
+      {
+        "name": "name",
+        "displayName": "frevvo.dialogObjectPicker.table.columns.name",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "object_type_s",
+        "displayName": "frevvo.dialogObjectPicker.table.columns.type",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "title_parseable",
+        "displayName": "frevvo.dialogObjectPicker.table.columns.title",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "object_id_s",
+        "displayName": "frevvo.dialogObjectPicker.table.columns.id",
+        "headerCellFilter": "translate"
+      }
+    ],
+    "paginationPageSizes": [
+      5,
+      10,
+      20,
+      50
+    ],
+    "paginationPageSize": 10,
+    "start": 0
+  },
+  "timesheetCustomPicker": {
+    "otherTypeChargeCodes": [
+      {
+        "name": "LEAP",
+        "type": "OTHER"
+      },
+      {
+        "name": "Training",
+        "type": "OTHER"
+      },
+      {
+        "name": "Conference",
+        "type": "OTHER"
+      }
+    ],
+    "columnDefs": [
+      {
+        "name": "name",
+        "displayName": "frevvo.dialogObjectPicker.table.columns.name",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "type",
+        "displayName": "frevvo.dialogObjectPicker.table.columns.type",
+        "headerCellFilter": "translate"
+      }
+    ]
   }
 }

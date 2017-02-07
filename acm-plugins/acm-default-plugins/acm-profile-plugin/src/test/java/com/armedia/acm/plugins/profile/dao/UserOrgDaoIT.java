@@ -35,7 +35,8 @@ import static org.junit.Assert.assertNotNull;
         "/spring/spring-library-authentication-token.xml",
         "/spring/spring-library-user-service.xml",
         "/spring/spring-library-data-access-control.xml",
-        "/spring/spring-library-particpants.xml"
+        "/spring/spring-library-particpants.xml",
+        "/spring/spring-library-activiti-configuration.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class UserOrgDaoIT extends EasyMockSupport
