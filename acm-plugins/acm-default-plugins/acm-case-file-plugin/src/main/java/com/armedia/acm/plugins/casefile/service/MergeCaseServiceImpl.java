@@ -20,6 +20,7 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
 import com.armedia.acm.services.participants.service.AcmParticipantService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +47,8 @@ public class MergeCaseServiceImpl implements MergeCaseService
 
     @Override
     @Transactional
-    public CaseFile mergeCases(Authentication auth, String ipAddress, MergeCaseOptions mergeCaseOptions) throws PipelineProcessException, MergeCaseFilesException, AcmUserActionFailedException, AcmCreateObjectFailedException
+    public CaseFile mergeCases(Authentication auth, String ipAddress, MergeCaseOptions mergeCaseOptions)
+            throws PipelineProcessException, MergeCaseFilesException, AcmUserActionFailedException, AcmCreateObjectFailedException
     {
 
         CaseFile source = caseFileDao.find(mergeCaseOptions.getSourceCaseFileId());
@@ -58,13 +60,14 @@ public class MergeCaseServiceImpl implements MergeCaseService
         if (target == null)
             throw new AcmCaseFileNotFound("Target Case File with id = " + mergeCaseOptions.getTargetCaseFileId() + " not found");
         log.info("Going to merge {} into {}", source.getCaseNumber(), target.getCaseNumber());
-        //merge details
-        //        String sourceDetails = StringUtils.isEmpty(source.getDetails()) ? "" : String.format(MERGE_TEXT_SEPPARATOR, source.getTitle(), source.getCaseNumber()) + source.getDetails();
-        //        target.setDetails(!StringUtils.isEmpty(target.getDetails()) ?
-        //                target.getDetails() + sourceDetails :
-        //                sourceDetails);
+        // merge details
+        // String sourceDetails = StringUtils.isEmpty(source.getDetails()) ? "" : String.format(MERGE_TEXT_SEPPARATOR,
+        // source.getTitle(), source.getCaseNumber()) + source.getDetails();
+        // target.setDetails(!StringUtils.isEmpty(target.getDetails()) ?
+        // target.getDetails() + sourceDetails :
+        // sourceDetails);
 
-        //merge folders and documents
+        // merge folders and documents
         mergeFoldersAndDocuments(source, target);
 
         ObjectAssociation childObjectSource = new ObjectAssociation();
@@ -87,25 +90,23 @@ public class MergeCaseServiceImpl implements MergeCaseService
 
         source.setStatus("CLOSED");
 
-        //set current user as assignee
+        // set current user as assignee
         handleParticipants(auth, target);
-
 
         saveCaseService.saveCase(source, auth, ipAddress);
         target = saveCaseService.saveCase(target, auth, ipAddress);
-
 
         return target;
     }
 
     private void handleParticipants(Authentication auth, CaseFile target) throws MergeCaseFilesException
     {
-        //1. if current user is already assignee do nothing
-        //2. change case file assignee into follower
-        //2.1. if current user is follower, change is into assignee
-        //2.2. if current user is not participant, than add it as assignee
+        // 1. if current user is already assignee do nothing
+        // 2. change case file assignee into follower
+        // 2.1. if current user is follower, change is into assignee
+        // 2.2. if current user is not participant, than add it as assignee
 
-        //set assignee as follower if exists
+        // set assignee as follower if exists
         if (target.getParticipants() != null)
         {
             AcmParticipant foundAssignee = null;
@@ -128,17 +129,20 @@ public class MergeCaseServiceImpl implements MergeCaseService
                 if (foundAssignee.getParticipantLdapId().equals(auth.getName()))
                     return;
                 foundAssignee.setParticipantType(ParticipantTypes.FOLLOWER);
-                AcmParticipant addedAssignee = acmParticipantService.saveParticipant(auth.getName(), ParticipantTypes.ASSIGNEE, target.getId(), target.getObjectType());
+                AcmParticipant addedAssignee = acmParticipantService.saveParticipant(auth.getName(), ParticipantTypes.ASSIGNEE,
+                        target.getId(), target.getObjectType());
                 target.getParticipants().add(addedAssignee);
             } else
             {
-                AcmParticipant addedAssignee = acmParticipantService.saveParticipant(auth.getName(), ParticipantTypes.ASSIGNEE, target.getId(), target.getObjectType());
+                AcmParticipant addedAssignee = acmParticipantService.saveParticipant(auth.getName(), ParticipantTypes.ASSIGNEE,
+                        target.getId(), target.getObjectType());
                 target.getParticipants().add(addedAssignee);
             }
         } else
         {
-            //there are no participants in target case file, just add current user as assignee
-            AcmParticipant addedAssignee = acmParticipantService.saveParticipant(auth.getName(), ParticipantTypes.ASSIGNEE, target.getId(), target.getObjectType());
+            // there are no participants in target case file, just add current user as assignee
+            AcmParticipant addedAssignee = acmParticipantService.saveParticipant(auth.getName(), ParticipantTypes.ASSIGNEE, target.getId(),
+                    target.getObjectType());
             List<AcmParticipant> participants = new ArrayList<>();
             participants.add(addedAssignee);
             target.setParticipants(participants);
@@ -147,31 +151,32 @@ public class MergeCaseServiceImpl implements MergeCaseService
 
     private boolean hasBeenMerged(CaseFile source)
     {
-        //if folder has parent, that means that has been merged
-        return source.getContainer().getFolder().getParentFolderId() != null;
+        // if folder has parent, that means that has been merged
+        return source.getContainer().getFolder().getParentFolder() != null;
     }
 
     private void mergeFoldersAndDocuments(CaseFile source, CaseFile target) throws MergeCaseFilesException
     {
         try
         {
-            //remove source ROOT folder from acm_container from db, when source will be saved new ROOT folder will be created
+            // remove source ROOT folder from acm_container from db, when source will be saved new ROOT folder will be
+            // created
             AcmFolder sourceRootFolder = source.getContainer().getFolder();
 
-            //move source ROOT folder into target ROOT folder
+            // move source ROOT folder into target ROOT folder
             sourceRootFolder.setName(String.format("%s(%s)", source.getTitle(), source.getCaseNumber()));
             acmFolderService.moveRootFolder(sourceRootFolder, target.getContainer().getFolder());
 
-            //change source case file documents with target's container id
+            // change source case file documents with target's container id
             long documentsUpdated = ecmFileDao.changeContainer(source.getContainer(), target.getContainer(), excludeDocumentTypesList);
-            log.info("moved {} documents  from container id={} to container id={}", documentsUpdated, source.getContainer().getId(), target.getContainer().getId());
+            log.info("moved {} documents  from container id={} to container id={}", documentsUpdated, source.getContainer().getId(),
+                    target.getContainer().getId());
 
         } catch (AcmFolderException | AcmUserActionFailedException | AcmObjectNotFoundException e)
         {
             throw new MergeCaseFilesException("Error merging case files. Exception in moving documents and folders.", e);
         }
     }
-
 
     public void setSaveCaseService(SaveCaseService saveCaseService)
     {
@@ -215,8 +220,7 @@ public class MergeCaseServiceImpl implements MergeCaseService
 
     public void setExcludeDocumentTypes(String excludeDocumentTypes)
     {
-        this.excludeDocumentTypesList = !StringUtils.isEmpty(excludeDocumentTypes) ?
-                Arrays.asList(excludeDocumentTypes.trim().replaceAll(",[\\s]*", ",").split(",")) :
-                new ArrayList<>();
+        this.excludeDocumentTypesList = !StringUtils.isEmpty(excludeDocumentTypes)
+                ? Arrays.asList(excludeDocumentTypes.trim().replaceAll(",[\\s]*", ",").split(",")) : new ArrayList<>();
     }
 }

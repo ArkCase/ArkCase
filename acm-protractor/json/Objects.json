@@ -1,5 +1,5 @@
 {
-    "siteurl": "http://core.arkcase.dev.armedia.com/arkcase/login",
+    "siteurl": "https://core.arkcase.dev.armedia.com/arkcase/login",
     "loginpage": {
         "locators": {
             "username": "j_username",
@@ -9,7 +9,7 @@
         "data": {
             "supervisoruser": {
 
-                "username": "sally-acm",
+                "username": "samuel-acm",
                 "password": "AcMd3v$"
             },
             "adminuser": {
@@ -34,13 +34,13 @@
             "root": ".//span[@title='root']",
             "newCorrespondence": ".//li[@data-command='subMenuCorrespondenceForms']",
             "docRow": "//table/tbody/tr[3]",
-            "docTitle": "//table/tbody/tr[3]/td[3]/span/span[3]",
+            "docTitle": "//table/tbody/tr[2]/td[3]/span/span[3]",
             "docExtension": "//table/tbody/tr[3]/td[4]",
             "docType": "//table/tbody/tr[3]/td[5]",
             "docCreated": "//table/tbody/tr[3]/td[6]",
             "docModified": "//table/tbody/tr[3]/td[7]",
             "docAuthor": "//table/tbody/tr[3]/td[8]",
-            "docVersion": "//table/tbody/tr[3]/td[9]/span/select/option",
+            "docVersion": "//table/tbody/tr[2]/td[9]/span/select/option",
             "docStatus": "//table/tbody/tr[3]/td[10]",
             "deleteDoc": ".//li[@data-command='remove']",
             "downloadDoc": ".//li[@data-command='download']",
@@ -70,13 +70,23 @@
             "noteColumnValue": ".ui-grid-cell-contents.ng-binding.ng-scope",
             "restrictCheckbox": "restricted",
             "restrictCheckboxDisabled": ".//input[@ng-model='restricted'][@disabled='disabled']",
-            "notificationMessage": "[ng-show='!$messageTemplate']"
-
-
+            "notificationMessage": "[ng-show='!$messageTemplate']",
+            "docVersionDropDownList": ".docversion.inline",
+            "emailRecepient": "//textarea",
+            "sendEmailButton": "Send Email",
+            "sugestedTag": "[ng-click='addSuggestionByIndex($index)']",
+            "fadeElement": "//*[@animate='animate']",
+            "timeCanvasData":"[chart-data='time.data']",
+            "owningGroupDropDown": ".//*[@class='editable-controls form-group']/..//select",
+            "owningGroupConfirmBtn": ".//*[@class='editable-controls form-group']/..//button[1]",
+            "assigneeNameModelInput": "participant.selectedAssigneeName"
         },
         "data": {
             "reportTitle": "Report of Investigation Title",
-            "note": "NoteText"
+            "note": "NoteText",
+            "email": "sanja.paskova@armedia.com",
+            "owningGroupAdministratorDev":"ACM_ADMINISTRATOR_DEV",
+            "IanInvestigator":"Ian Investigator"
 
         }
 
@@ -115,7 +125,9 @@
             "chooseFilesBtn": ".//*[@class='form-group row note-group-select-from-files']/input",
             "associateNumberInput": "associateNumber",
             "taskState": ".//*[@class='clearfix']/div[2]/div[6]/div",
-            "editSubmitButton": ".btn.btn-primary.btn-sm"
+            "editSubmitButton": ".btn.btn-primary.btn-sm",
+            "groupTask": "groupToggle",
+            "selectGroup": "chosenGroup"
         },
 
         "data": {
@@ -138,7 +150,7 @@
         "locators": {
 
             "priority": ".//*[@class='clearfix']/div[2]/div[3]/div/a",
-            "assignee": ".//*[@class='clearfix']/div[2]/div[2]/div/a",
+            "assignee": "[ng-click='showAssigneePicker()']",
             "assigneeDropDown": "$data",
             "selectAssignee": ".//*[.='Ann Administrator']",
             "assigneeBtn": ".//*[@class='clearfix']/div[2]/div[2]/div/form/div/span/button[1]",
@@ -268,7 +280,8 @@
             "documentWordTitle": "ArkCaseTesting",
             "documentExcelWordTitle": "caseSummary",
             "documentPdfTitle": "caseSummary",
-            "documentTitleInput": "folder"
+            "documentTitleInput": "folder",
+            "owningGroup": "ACM_ANALYST_DEV"
 
         }
     },
@@ -295,7 +308,9 @@
             "chnageWidgetLocationBtn": ".//*[@class='panel-title ng-binding ng-scope']/span/a[2]/i",
             "editWidgetConfigurationBtn": ".//*[@class='panel-title ng-binding ng-scope']/span/a[5]/i",
             "removeWidgetBtn": ".//*[@class='panel-title ng-binding ng-scope']/span/a[7]",
-            "myTasks": "My Tasks"
+            "myTasks": "My Tasks",
+            "dashboardTitleInput": "dashboardTitle",
+            "dashboardTitle": "//*[@class='module-header']/h3/span"
 
         },
 
@@ -307,7 +322,8 @@
             "widgetTitleTeamWorkload": "Team Workload",
             "widgetTitleWeather": "Weather",
             "widgetTitleNews": "News",
-            "widgetTitleMyTasks": "My Tasks"
+            "widgetTitleMyTasks": "My Tasks",
+            "DashbordTitle": "Dashbord Title"
         }
     },
 
@@ -439,7 +455,6 @@
             "complaintTitleLink": ".//a[@editable-text='objectInfo.complaintTitle']",
             "complaintType": ".//a[@editable-select='objectInfo.complaintType']",
             "complaintPriority": ".//a[@editable-select='objectInfo.priority']",
-            "complaintTitle": ".//a[@editable-text='objectInfo.complaintTitle']",
             "locationsLinkBtn": ".//*[@class='fa fa-location-arrow']",
             "addLocationBtn": "[ng-click='addNew()']",
             "locationTypeDropDown": "location.type",
@@ -457,7 +472,8 @@
             "searchButton": ".//input[@value='Search']",
             "caseTitle": "caseTitle",
             "caseCreatedDate": "caseCreationDate",
-            "casePriority": "casePriority"
+            "casePriority": "casePriority",
+            "selectParticipantType": ".//*[@class='c-table clearfix']/..//tbody/tr/td[4]"
         },
         "data": {
             "firstName": "ComplaintFirstName",
@@ -466,7 +482,8 @@
             "title": "ComplaintTitle",
             "description": "Description",
             "approver": "samuel",
-            "titleComplaint": "NewComplaint"
+            "titleComplaint": "NewComplaint",
+            "automaticTaskNameCloseComplaint": "Review Request to Close Complaint"
         }
     },
     "casepage": {
@@ -606,7 +623,7 @@
             "searchForUserInput": "//*[@class='modal-search-header']/..//input",
             "searchUserBtn": "Search",
             "OkBtn": "OK",
-            "searchedUserName":".//*[@class='ui-grid-canvas']/div/div[1]/div[4]",
+            "searchedUserName":".//*[@class='ui-grid-canvas']/div/div[1]/div[2]",
             "participantLinkBtn": ".//*[@class='fa fa-users']",
             "participantTableRow": ".//*[@class='ui-grid-cell-contents ng-binding ng-scope']",
             "participantTable": ".//*[@class='panel panel-success panel-grid']",
@@ -622,7 +639,11 @@
             "claimButton": "[ng-click='claim(objectInfo)']",
             "unclaimButton": "[ng-click='unclaim(objectInfo)']",
             "addParticipantBtn": "[ng-click='addNew()']",
-            "searchField": "searchQuery"
+            "searchField": "searchQuery",
+            "tagPriority": ".//*[@class='ui-grid-cell-contents ui-grid-header-cell-primary-focus']",
+            "participantTypeConflictMessage": "[extid='warningParticipantTypeConflict']",
+            "addParticipantTypeSecondRowbtn": "//table/tbody/..//td[2]/span",
+            "selectParticipantTypeSecondRow": "//table/tbody/tr[2]/td[5]"
 
         },
 
@@ -708,20 +729,21 @@
             "timetrackingTitle": ".//*[@class='f-message decorator']/..//div/b",
             "saveBtn": "//input[@name='actionType'][@value='Save']",
             "newTimesheetBtn": "New Timesheet",
-            "editTimesheetBtn": "Edit Timesheet",
+            "editTimesheetBtn": "[ui-sref='frevvo.edit-timesheet(editTimesheetParams)']",
             "caseFileModule": "a[href*='#!/cases//main']",
             "complaintsModule": "a[href*='#!/complaints//main']",
             "timesheetsPageTitle": ".//*[@class='module-header']/..//h3/span",
             "nextWeekBtn": "Next Week",
-            "periodInput": "periodUI",
-            "timeTrackingModule": "a[href*='#!/time-tracking//main']"
-
-
-
+            "periodInput": ".//*[@class='input f-date']",
+            "timeTrackingModule": "a[href*='#!/time-tracking//main']",
+            "timeTrackingDate": ".//*[@class='f-control Three columns  f-output  s-valid  s-prepend   s-linked Message s-new-line s-color-None']",
+            "chargeCodeAlertMessage":".//*[@class='f-status f-table-status s-alert']",
+            "timeTotal": "rowTotal"
         },
         "data": {
 
-            "date": "1"
+            "date": "1",
+            "tagname": "milan"
         }
     },
 
@@ -759,7 +781,13 @@
     },
     "notificationPage": {
         "locators": {
-            "notificationCol": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid"
+            "notificationCol": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
+            "notificationModule": "[href='#!/notifications']",
+            "facets": "[ng-if='field.count > 0']",
+             "notificationsInput": "searchQuery",
+             "searchBtn": "[ng-click='queryExistingItems()']",
+              "sort": ".//*[@class='ng-scope sortable']"
+
 
         },
         "data": {
@@ -771,11 +799,25 @@
             "ListBox": "selectedObject",
             "notAuthorizedListBox": "selectedNotAuthorized",
             "authorizedListBox": "selectedAuthorized",
-            "LDAPCol" : "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid"
+            "Col" : "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
+            "tableRow": ".//*[@class='ui-grid-cell-contents ng-binding ng-scope']"
         },
         "data":{
             "ArmediaDirectoryName": "armedia",
-            "ArmediaLDAPUrl": "ldaps://arm-pr-w8x-ad03.armedia.com:636"
+            "ArmediaLDAPUrl": "ldaps://arm-pr-w8x-ad03.armedia.com:636",
+            "formName": "Report of Investigation",
+            "applicationName": "ACM - Armedia Case Management",
+            "description": "Report of Investigation",
+            "caseTarget": "CASE_FILE",
+            "complaintTarget": "COMPLAINT",
+            "complaintBussinesProcessName": "Complaint review and approval process",
+            "complaintBPDescription": "",
+            "complaintBPModified": "07/11/2016",
+            "complaintBPAuthor": "",
+            "docApprovalBussinesProcessName": "ACM Document Approval Process",
+            "docApprovalBPDescription": "",
+            "docApprovalBPModified": "07/11/2016",
+            "docApprovalBPAuthor": ""
         }
     },
     "reportPage": {
@@ -865,12 +907,13 @@
             "auditReportColumn6Title": "//table/tbody/tr[2]/td[7]",
             "auditReportColumn7Title": "//table/tbody/tr[2]/td[8]",
             "dateValue": "//table/tbody/tr[4]/td[2]",
-            "userValue": "//table/tbody/tr[4]/td[3]",
-            "nameValue": "//table/tbody/tr[4]/td[4]",
-            "resultValue": "//table/tbody/tr[4]/td[5]",
+            "userValue": "//table/tbody/tr[3]/td[3]",
+            "nameValue": "//table/tbody/tr[3]/td[4]",
+            "resultValue": "//table/tbody/tr[4]/td[3]",
             "ipAddressValue": "//table/tbody/tr[4]/td[6]",
-            "objectIdValue": "//table/tbody/tr[4]/td[7]",
-            "objectTypeValue": "//table/tbody/tr[4]/td[8]"
+            "objectIdValue": "//table/tbody/tr[4]/td[5]",
+            "objectTypeValue": "//table/tbody/tr[4]/td[6]",
+            "objectIdValueSecondRow": "//table/tbody/tr[6]/td[5]"
         },
         "data":{
             "auditReportColumn1Title": "Date",
@@ -889,8 +932,10 @@
      "subscriptionsModule": "a[href='#!/subscriptions']",
      "subscriptionsInput": "searchQuery",
      "subscriptionsTitle": ".//*[@class='module-header']",
-     "searchBtn": "[ng-click='queryExistingItems()']"
-
+     "searchBtn": "[ng-click='queryExistingItems()']",
+     "facets": "[ng-if='field.count > 0']",
+     "resultTable": "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
+     "sort": ".//*[@class='ng-scope sortable']"
     
 
 

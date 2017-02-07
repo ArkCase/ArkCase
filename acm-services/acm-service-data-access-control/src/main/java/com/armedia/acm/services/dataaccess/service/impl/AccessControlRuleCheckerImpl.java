@@ -13,7 +13,7 @@ import org.springframework.security.core.GrantedAuthority;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -361,14 +361,27 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
             // no required properties
             return true;
         }
-        Optional<Entry<String, Object>> result = requiredProperties.entrySet().stream().filter(requiredProperty ->
-        {
-            String key = requiredProperty.getKey();
-            Object value = targetObjectProperties.get(key);
-            Object expectedValue = requiredProperty.getValue();
-            return value == null || (expectedValue.getClass().isArray() ? !Arrays.asList(expectedValue).contains(value) : !value.equals(expectedValue));
-        }).peek(entry -> log.warn("Object property [{}] does not match expected value [{} != {}]", entry.getKey(),
-                targetObjectProperties.get(entry.getKey()), entry.getValue())).findFirst();
+        Optional<Entry<String, Object>> result = requiredProperties.entrySet().stream()
+                .filter(requiredProperty ->
+                {
+                    String key = requiredProperty.getKey();
+                    Object value = targetObjectProperties.get(key);
+                    Object expectedValue = requiredProperty.getValue();
+                    if (value == null)
+                    {
+                        return true;
+                    } else if (expectedValue.getClass().isAssignableFrom(ArrayList.class))
+                    {
+                        ArrayList<String> list = (ArrayList<String>) expectedValue;
+                        return !list.contains(value);
+                    } else if (expectedValue.getClass().isAssignableFrom(String.class))
+                    {
+                        String str = (String) expectedValue;
+                        return !str.equals(value);
+                    }
+                    return false;
+                }).peek(entry -> log.warn("Object property [{}] does not match expected value [{} != {}]", entry.getKey(),
+                        targetObjectProperties.get(entry.getKey()), entry.getValue())).findFirst();
 
         return !result.isPresent();
     }

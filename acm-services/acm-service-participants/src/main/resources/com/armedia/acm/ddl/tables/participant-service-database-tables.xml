@@ -14,7 +14,9 @@
     <property name="cmParticipantTypeLength" value="255" dbms="mysql,mssql"/>
 
     <!-- copied this change set from the users service when we moved participants from user into its own module -->
-    <changeSet id="07-users-add-participant-table" author="dmiller" logicalFilePath="/com/armedia/acm/ddl/tables/user-service-database-tables.xml">
+    <changeSet id="07-users-add-participant-table" author="dmiller"
+               logicalFilePath="/com/armedia/acm/ddl/tables/user-service-database-tables.xml"
+               dbms="oracle,postgresql,mssql">
         <createTable tableName="acm_participant">
             <column name="cm_participant_id" type="${idType}">
                 <constraints primaryKey="true" primaryKeyName="pk_cm_participant"/>
@@ -50,7 +52,44 @@
         </createIndex>
     </changeSet>
 
-    <changeSet id="participants-01-privilege-table" author="dmiller" logicalFilePath="">
+    <changeSet id="07-users-add-participant-table" author="dmiller"
+               logicalFilePath="/com/armedia/acm/ddl/tables/user-service-database-tables.xml" dbms="mysql">
+        <createTable tableName="acm_participant">
+            <column name="cm_participant_id" type="${idType}">
+                <constraints primaryKey="true" primaryKeyName="pk_cm_participant"/>
+            </column>
+            <column name="cm_object_type" type="VARCHAR(${cmObjectTypeLength})">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_object_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_participant_type" type="VARCHAR(${cmParticipantTypeLength})">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_participant_ldap_id" type="VARCHAR(${cmParticipantLdapIdLength})">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_participant_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_participant_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_participant_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_participant_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createIndex tableName="acm_participant" indexName="idx_acm_participant_object">
+            <column name="cm_object_id"/>
+            <column name="cm_object_type"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="participants-01-privilege-table" author="dmiller" logicalFilePath="" dbms="oracle,postgresql,mssql">
         <createTable tableName="acm_participant_privilege">
             <column name="cm_privilege_id" type="${idType}">
                 <constraints primaryKey="true" primaryKeyName="pk_acm_participant_privilege"/>
@@ -62,6 +101,41 @@
                 <constraints nullable="false"/>
             </column>
             <column name="cm_privilege_modified" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_privilege_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_participant_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_object_action" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_access_type" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_access_reason" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createIndex tableName="acm_participant_privilege" indexName="idx_privilege_part_id">
+            <column name="cm_participant_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="participants-01-privilege-table" author="dmiller" logicalFilePath="" dbms="mysql">
+        <createTable tableName="acm_participant_privilege">
+            <column name="cm_privilege_id" type="${idType}">
+                <constraints primaryKey="true" primaryKeyName="pk_acm_participant_privilege"/>
+            </column>
+            <column name="cm_privilege_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_privilege_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_privilege_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_privilege_modifier" type="VARCHAR(1024)">

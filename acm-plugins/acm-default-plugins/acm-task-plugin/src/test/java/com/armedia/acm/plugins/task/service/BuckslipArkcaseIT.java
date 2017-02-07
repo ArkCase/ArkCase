@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.task.service;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.task.model.AcmTask;
+import com.armedia.acm.services.users.model.AcmUser;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
@@ -75,11 +76,21 @@ public class BuckslipArkcaseIT
 
     private String processId;
 
+    AcmUser samuel = new AcmUser();
+    AcmUser ian = new AcmUser();
+    AcmUser ann = new AcmUser();
+    AcmUser albert = new AcmUser();
+
     private transient final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Before
     public void setUp() throws Exception
     {
+        samuel.setUserId("samuel-acm");
+        ian.setUserId("ian-acm");
+        ann.setUserId("ann-acm");
+        albert.setUserId("albert-acm");
+
         auditPropertyEntityAdapter.setUserId("TEST");
 
         deployProcessIfNeeded();
@@ -104,9 +115,9 @@ public class BuckslipArkcaseIT
         String objectNumber = "20170116_101";
         String documentType = "Concert Contract";
         List<String> futureApprovers = new ArrayList<>();
-        futureApprovers.add("jerry");
-        futureApprovers.add("bob");
-        futureApprovers.add("phil");
+        futureApprovers.add("ann-acm");
+        futureApprovers.add("samuel-acm");
+        futureApprovers.add("ian-acm");
 
         Map<String, Object> processVariables = new HashMap<>();
         processVariables.put("OBJECT_ID", objectId);
@@ -141,35 +152,35 @@ public class BuckslipArkcaseIT
     {
         assertNotNull(processId);
 
-        // should have a task for Jerry... complete with 'CONCUR' outcome
+        // should have a task for ann-acm... complete with 'CONCUR' outcome
         AcmTask acmTask = findAcmTaskForProcess();
         assertNotNull(acmTask);
-        assertEquals("jerry", acmTask.getAssignee());
+        assertEquals("ann-acm", acmTask.getAssignee());
         assertEquals(2, acmTask.getBuckslipFutureApprovers().size());
-        assertTrue(acmTask.getBuckslipFutureApprovers().contains("bob"));
-        assertTrue(acmTask.getBuckslipFutureApprovers().contains("phil"));
+        assertTrue(acmTask.getBuckslipFutureApprovers().contains(samuel));
+        assertTrue(acmTask.getBuckslipFutureApprovers().contains(ian));
         assertEquals("[]", acmTask.getBuckslipPastApprovers());
-        Principal assignee = new UsernamePasswordAuthenticationToken("jerry", "jerry");
+        Principal assignee = new UsernamePasswordAuthenticationToken("ann-acm", "ann-acm");
         taskDao.completeTask(assignee, acmTask.getTaskId(), "buckslipOutcome", "CONCUR");
 
-        // should have a task for Bob... complete with 'CONCUR' outcome
+        // should have a task for samuel-acm... complete with 'CONCUR' outcome
         acmTask = findAcmTaskForProcess();
         assertNotNull(acmTask);
-        assertEquals("bob", acmTask.getAssignee());
+        assertEquals("samuel-acm", acmTask.getAssignee());
         assertEquals(1, acmTask.getBuckslipFutureApprovers().size());
-        assertTrue(acmTask.getBuckslipFutureApprovers().contains("phil"));
-        assertTrue(acmTask.getBuckslipPastApprovers().contains("jerry"));
-        assignee = new UsernamePasswordAuthenticationToken("bob", "bob");
+        assertTrue(acmTask.getBuckslipFutureApprovers().contains(ian));
+        assertTrue(acmTask.getBuckslipPastApprovers().contains("ann-acm"));
+        assignee = new UsernamePasswordAuthenticationToken("samuel-acm", "samuel-acm");
         taskDao.completeTask(assignee, acmTask.getTaskId(), "buckslipOutcome", "CONCUR");
 
-        // should have a task for Phil... complete with 'NON_CONCUR' outcome
+        // should have a task for ian-acm... complete with 'NON_CONCUR' outcome
         acmTask = findAcmTaskForProcess();
         assertNotNull(acmTask);
-        assertEquals("phil", acmTask.getAssignee());
+        assertEquals("ian-acm", acmTask.getAssignee());
         assertEquals(0, acmTask.getBuckslipFutureApprovers().size());
-        assertTrue(acmTask.getBuckslipPastApprovers().contains("jerry"));
-        assertTrue(acmTask.getBuckslipPastApprovers().contains("bob"));
-        assignee = new UsernamePasswordAuthenticationToken("phil", "phil");
+        assertTrue(acmTask.getBuckslipPastApprovers().contains("ann-acm"));
+        assertTrue(acmTask.getBuckslipPastApprovers().contains("samuel-acm"));
+        assignee = new UsernamePasswordAuthenticationToken("ian-acm", "ian-acm");
 
         ObjectConverter converter = ObjectConverter.createJSONConverter();
         String jsonTask = converter.getMarshaller().marshal(acmTask);
@@ -183,7 +194,7 @@ public class BuckslipArkcaseIT
     }
 
     /**
-     * Same as buckslipNoApproverChanges except we add a new approver while Bob is the current approver
+     * Same as buckslipNoApproverChanges except we add a new approver while samuel-acm is the current approver
      *
      * @throws Exception
      */
@@ -192,52 +203,53 @@ public class BuckslipArkcaseIT
     {
         assertNotNull(processId);
 
-        // should have a task for Jerry... complete with 'CONCUR' outcome
+        // should have a task for ann-acm... complete with 'CONCUR' outcome
+
         AcmTask acmTask = findAcmTaskForProcess();
         assertNotNull(acmTask);
-        assertEquals("jerry", acmTask.getAssignee());
+        assertEquals("ann-acm", acmTask.getAssignee());
         assertEquals(2, acmTask.getBuckslipFutureApprovers().size());
-        assertTrue(acmTask.getBuckslipFutureApprovers().contains("bob"));
-        assertTrue(acmTask.getBuckslipFutureApprovers().contains("phil"));
+        assertTrue(acmTask.getBuckslipFutureApprovers().contains(ian));
+        assertTrue(acmTask.getBuckslipFutureApprovers().contains(samuel));
         assertEquals("[]", acmTask.getBuckslipPastApprovers());
-        Principal assignee = new UsernamePasswordAuthenticationToken("jerry", "jerry");
+        Principal assignee = new UsernamePasswordAuthenticationToken("ann-acm", "ann-acm");
         taskDao.completeTask(assignee, acmTask.getTaskId(), "buckslipOutcome", "CONCUR");
 
-        // should have a task for Bob... complete with 'CONCUR' outcome
+        // should have a task for samuel-acm... complete with 'CONCUR' outcome
         acmTask = findAcmTaskForProcess();
         assertNotNull(acmTask);
-        assertEquals("bob", acmTask.getAssignee());
+        assertEquals("samuel-acm", acmTask.getAssignee());
         assertEquals(1, acmTask.getBuckslipFutureApprovers().size());
-        assertTrue(acmTask.getBuckslipFutureApprovers().contains("phil"));
-        assertTrue(acmTask.getBuckslipPastApprovers().contains("jerry"));
+        assertTrue(acmTask.getBuckslipFutureApprovers().contains(ian));
+        assertTrue(acmTask.getBuckslipPastApprovers().contains("ann-acm"));
 
-        // add the approver 'bill'
-        acmTask.getBuckslipFutureApprovers().add("bill");
+        // add the approver 'albert-acm'
+        acmTask.getBuckslipFutureApprovers().add(albert);
         taskDao.save(acmTask);
 
-        assignee = new UsernamePasswordAuthenticationToken("bob", "bob");
+        assignee = new UsernamePasswordAuthenticationToken("samuel-acm", "samuel-acm");
         taskDao.completeTask(assignee, acmTask.getTaskId(), "buckslipOutcome", "CONCUR");
 
-        // should have a task for Phil... complete with 'NON_CONCUR' outcome
+        // should have a task for ian-acm... complete with 'NON_CONCUR' outcome
         acmTask = findAcmTaskForProcess();
         assertNotNull(acmTask);
-        assertEquals("phil", acmTask.getAssignee());
+        assertEquals("ian-acm", acmTask.getAssignee());
         assertEquals(1, acmTask.getBuckslipFutureApprovers().size());
-        assertTrue(acmTask.getBuckslipFutureApprovers().contains("bill"));
-        assertTrue(acmTask.getBuckslipPastApprovers().contains("jerry"));
-        assertTrue(acmTask.getBuckslipPastApprovers().contains("bob"));
-        assignee = new UsernamePasswordAuthenticationToken("phil", "phil");
+        assertTrue(acmTask.getBuckslipFutureApprovers().contains(albert));
+        assertTrue(acmTask.getBuckslipPastApprovers().contains("ann-acm"));
+        assertTrue(acmTask.getBuckslipPastApprovers().contains("samuel-acm"));
+        assignee = new UsernamePasswordAuthenticationToken("ian-acm", "ian-acm");
         taskDao.completeTask(assignee, acmTask.getTaskId(), "buckslipOutcome", "NON_CONCUR");
 
-        // should have a task for Bill... complete with 'NON_CONCUR' outcome
+        // should have a task for albert-acm... complete with 'NON_CONCUR' outcome
         acmTask = findAcmTaskForProcess();
         assertNotNull(acmTask);
-        assertEquals("bill", acmTask.getAssignee());
+        assertEquals("albert-acm", acmTask.getAssignee());
         assertEquals(0, acmTask.getBuckslipFutureApprovers().size());
-        assertTrue(acmTask.getBuckslipPastApprovers().contains("jerry"));
-        assertTrue(acmTask.getBuckslipPastApprovers().contains("bob"));
-        assertTrue(acmTask.getBuckslipPastApprovers().contains("phil"));
-        assignee = new UsernamePasswordAuthenticationToken("bill", "bill");
+        assertTrue(acmTask.getBuckslipPastApprovers().contains("ann-acm"));
+        assertTrue(acmTask.getBuckslipPastApprovers().contains("samuel-acm"));
+        assertTrue(acmTask.getBuckslipPastApprovers().contains("ian-acm"));
+        assignee = new UsernamePasswordAuthenticationToken("albert-acm", "albert-acm");
         taskDao.completeTask(assignee, acmTask.getTaskId(), "buckslipOutcome", "NON_CONCUR");
 
         // no more tasks
@@ -246,7 +258,7 @@ public class BuckslipArkcaseIT
     }
 
     /**
-     * Same as buckslipNoApproverChanges except we remove Phil while Jerry is the current approver
+     * Same as buckslipNoApproverChanges except we remove ian-acm while ann-acm is the current approver
      *
      * @throws Exception
      */
@@ -255,29 +267,38 @@ public class BuckslipArkcaseIT
     {
         assertNotNull(processId);
 
-        // should have a task for Jerry... complete with 'CONCUR' outcome
+        AcmUser samuel = new AcmUser();
+        samuel.setUserId("samuel-acm");
+        AcmUser ian = new AcmUser();
+        ian.setUserId("ian-acm");
+        AcmUser ann = new AcmUser();
+        ann.setUserId("ann-acm");
+        AcmUser albert = new AcmUser();
+        albert.setUserId("albert-acm");
+
+        // should have a task for ann-acm... complete with 'CONCUR' outcome
         AcmTask acmTask = findAcmTaskForProcess();
         assertNotNull(acmTask);
-        assertEquals("jerry", acmTask.getAssignee());
+        assertEquals("ann-acm", acmTask.getAssignee());
         assertEquals(2, acmTask.getBuckslipFutureApprovers().size());
-        assertTrue(acmTask.getBuckslipFutureApprovers().contains("bob"));
-        assertTrue(acmTask.getBuckslipFutureApprovers().contains("phil"));
+        assertTrue(acmTask.getBuckslipFutureApprovers().contains(samuel));
+        assertTrue(acmTask.getBuckslipFutureApprovers().contains(ian));
         assertEquals("[]", acmTask.getBuckslipPastApprovers());
 
-        // remove Phil
-        acmTask.getBuckslipFutureApprovers().remove("phil");
+        // remove ian-acm
+        acmTask.getBuckslipFutureApprovers().remove(ian);
         taskDao.save(acmTask);
 
-        Principal assignee = new UsernamePasswordAuthenticationToken("jerry", "jerry");
+        Principal assignee = new UsernamePasswordAuthenticationToken("ann-acm", "ann-acm");
         taskDao.completeTask(assignee, acmTask.getTaskId(), "buckslipOutcome", "CONCUR");
 
-        // should have a task for Bob... complete with 'CONCUR' outcome
+        // should have a task for samuel-acm... complete with 'CONCUR' outcome
         acmTask = findAcmTaskForProcess();
         assertNotNull(acmTask);
-        assertEquals("bob", acmTask.getAssignee());
+        assertEquals("samuel-acm", acmTask.getAssignee());
         assertEquals(0, acmTask.getBuckslipFutureApprovers().size());
-        assertTrue(acmTask.getBuckslipPastApprovers().contains("jerry"));
-        assignee = new UsernamePasswordAuthenticationToken("bob", "bob");
+        assertTrue(acmTask.getBuckslipPastApprovers().contains("ann-acm"));
+        assignee = new UsernamePasswordAuthenticationToken("samuel-acm", "samuel-acm");
         taskDao.completeTask(assignee, acmTask.getTaskId(), "buckslipOutcome", "CONCUR");
 
 
