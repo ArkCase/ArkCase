@@ -25,7 +25,9 @@ var dashboardTitle = element(by.xpath(Objects.dashboardpage.locators.dashboardTi
 var EC = protractor.ExpectedConditions;
 var DashboardPage = function() {
     this.clickEditButton = function() {
-        editBtn.click();
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.dashboardpage.locators.editBtn))), 10000, "Edit button in the dashboard page is not displayed").then(function() {
+            editBtn.click();
+        });
         return this;
     };
     this.clickAddWidgetButton = function() {
@@ -92,7 +94,7 @@ var DashboardPage = function() {
                     dashboardTitleInput.clear().then(function() {
                         dashboardTitleInput.sendKeys(title).then(function() {
                             closeBtn.click().then(function() {
-                                saveChangesBtn.click();
+                                browser.executeScript('arguments[0].click()', saveChangesBtn);
                             });
                         });
                     });
