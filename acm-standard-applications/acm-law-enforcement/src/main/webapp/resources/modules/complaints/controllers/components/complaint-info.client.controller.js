@@ -3,10 +3,11 @@
 angular.module('complaints').controller('Complaints.InfoController', ['$scope', '$stateParams', '$translate', '$timeout'
     , 'UtilService', 'Util.DateService', 'ConfigService', 'Object.LookupService', 'Complaint.LookupService', 'Complaint.InfoService'
     , 'Object.ModelService', 'Helper.ObjectBrowserService', 'MessageService', 'ObjectService', 'Helper.UiGridService', '$modal'
-    , 'Object.ParticipantService', '$q'
+    , 'Object.ParticipantService', '$q', '$filter', 'SearchService', 'Search.QueryBuilderService'
     , function ($scope, $stateParams, $translate, $timeout
         , Util, UtilDateService, ConfigService, ObjectLookupService, ComplaintLookupService, ComplaintInfoService
-        , ObjectModelService, HelperObjectBrowserService, MessageService, ObjectService, HelperUiGridService, $modal, ObjectParticipantService, $q) {
+        , ObjectModelService, HelperObjectBrowserService, MessageService, ObjectService, HelperUiGridService, $modal, ObjectParticipantService, $q, $filter
+        , SearchService, SearchQueryBuilder) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -106,12 +107,101 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             });
         };
 
+        $scope.openGroupPickerModal = function () {
+            var participant = {
+                        id: '',
+                        participantLdapId: '',
+                        config: $scope.config
+                    };
+            showGroupModal(participant, false);
+        };
+
+        var showGroupModal = function (participant, isEdit) {
+            var modalScope = $scope.$new();
+            modalScope.participant = participant || {};
+
+            var modalInstance = $modal.open({
+                scope: modalScope,
+                animation: true,
+                templateUrl: "modules/complaints/views/components/complaint-group-picker-modal.client.view.html",
+                controller: "Complaints.GroupPickerController",
+                size: 'md',
+                backdrop: 'static',
+                resolve: {
+                    owningGroup: function () {
+                        return $scope.owningGroup;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (chosenGroup) {
+                $scope.participant = {};
+                 
+                if (chosenGroup.participant.participantLdapId != '' && chosenGroup.participant.participantLdapId != null) {
+                    $scope.participant.participantLdapId = chosenGroup.participant.participantLdapId;
+                    $scope.participant.object_type_s = chosenGroup.participant.object_type_s;
+
+                    var currentAssignee = $scope.assignee;
+                    var chosenOwningGroup = chosenGroup.participant.participantLdapId;
+                    $scope.assigneeOptions = [];
+                    $scope.iscurrentAssigneeInOwningGroup = false;
+                    var size = 20;
+                    var start = 0;
+                    var searchQuery = '*';
+                    var filter = 'fq=fq="object_type_s": USER' + '&fq="groups_id_ss": ' + chosenOwningGroup;
+                    
+                    var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuery(searchQuery, filter, size, start);
+                    if (query) {
+                        SearchService.queryFilteredSearch({
+                            query: query
+                        },
+                        function (data) {
+                            var returnedUsers = data.response.docs;
+                            // Going through th collection of returnedUsers to see if there is a match with the current assignee
+                            // if there is a match that means the current assignee is within that owning group hence no 
+                            // changes to the current assignee is needed
+                            _.each(returnedUsers, function (returnedUser) {
+                                console.log(returnedUser.object_id_s);
+                                if (currentAssignee === returnedUser.object_id_s) {
+                                    $scope.iscurrentAssigneeInOwningGroup = true;
+                                }
+                            });
+                            console.log($scope.iscurrentAssigneeInOwningGroup);
+
+                            if ($scope.participant.participantLdapId && $scope.iscurrentAssigneeInOwningGroup) {
+                                $scope.owningGroup = chosenGroup.participant.selectedAssigneeName;
+                                $scope.updateOwningGroup();
+                            } else {
+                                $scope.owningGroup = chosenGroup.participant.selectedAssigneeName;
+                                $scope.assignee = '';
+                                var assigneeParticipantType = 'assignee';
+                                // Filterinng through the array to get the Assignee ParticipantType 
+                                var foundAssigneeParticipantType = $filter('filter')($scope.objectInfo.participants, 
+                                    { participantType: assigneeParticipantType  }, true)[0];
+                    
+                                // Get the index of the foundAssigneeParticipantType object in the array
+                                var indexOfFoundAssigneeParticipantType = $scope.objectInfo.participants.indexOf(foundAssigneeParticipantType);
+                                // Setting the participantLdapId of assigne to '' only when there is no current assignee or when 
+                                // reassigning the Complaint to a group for which the current assignee is not a member
+                                $scope.objectInfo.participants[indexOfFoundAssigneeParticipantType].participantLdapId = '';
+
+                                $scope.updateOwningGroup();
+                                $scope.updateAssignee(); 
+                            }    
+                        });
+                    }
+                }
+            }, function(error) {    
+            });
+        };
+
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
             $scope.dateInfo = $scope.dateInfo || {};
             $scope.dateInfo.dueDate = UtilDateService.isoToDate($scope.objectInfo.dueDate);
             $scope.assignee = ObjectModelService.getAssignee(objectInfo);
             $scope.owningGroup = ObjectModelService.getGroup(objectInfo);
+
             //if (previousId != objectId) {
             ComplaintLookupService.getApprovers($scope.owningGroup, $scope.assignee).then(
                 function (approvers) {

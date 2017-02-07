@@ -11,7 +11,7 @@
         </div>
         <div class="row">
             <div class="col-xs-9 col-md-3">
-                <div class="h4 font-bold">
+                <div class="h4 font-bold no-margin">
                     <a href="#" editable-number="objectInfo.percentComplete" onbeforesave="validatePercentComplete($data)" onaftersave="saveTask()" permission="editTask" permission-properties="objectInfo" permission-action="disable">
                         {{ objectInfo.percentComplete }}
                     </a>
@@ -36,14 +36,6 @@
                 </div>
                 <small class="text-muted">Owning Group</small>
             </div>
-            <!-- <div class="col-xs-9 col-md-3">
-                <div class="h4 font-bold no-margin">
-                    <a href="#" editable-select="owningGroup" onaftersave="updateOwningGroup()"
-                       permission="editTask" permission-properties="objectInfo" permission-action="disable"
-                       e-ng-options="o.value as o.text for o in owningGroups"> {{owningGroup || 'Unknown'}}</a>
-                </div>
-                <small class="text-muted">Owning Group</small>
-            </div> -->
             <div class="col-xs-9 col-md-3">
                 <div class="h4 font-bold no-margin">
                     <a href="#" editable-select="objectInfo.priority" onaftersave="saveTask()"
