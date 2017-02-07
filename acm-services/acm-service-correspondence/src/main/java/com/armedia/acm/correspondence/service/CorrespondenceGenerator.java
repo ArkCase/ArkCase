@@ -6,6 +6,7 @@ import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
 import com.armedia.acm.correspondence.utils.PoiWordGenerator;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
@@ -15,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,7 +28,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Created by armdev on 12/15/14.
@@ -49,71 +50,58 @@ public class CorrespondenceGenerator
     protected static final String CORRESPONDENCE_CATEGORY = "Correspondence";
 
     /**
-     * Generate correspondence based on the supplied template, and store the correspondence in the ECM repository
-     * under the supplied parent object.
+     * Generate correspondence based on the supplied template, and store the correspondence in the ECM repository under
+     * the supplied parent object.
      *
-     * @param user User who has caused the correspondence to be generated.
-     * @param parentObjectType Parent object type, e.g. CASE_FILE, COMPLAINT, TASK.
-     * @param parentObjectId Parent object ID
-     * @param targetFolderCmisId CMIS object ID of the folder in which to file the correspondence; usually the folder
-     *                           belonging to the parent object.
-     * @param template Correspondence template (which stores information on the Word template file name, JPA query
-     *                 to find the correspondence data fields, etc).
-     * @param queryArguments Actual arguments to pass to the JPA query.  Currently only an object ID is supported.
-     * @param correspondenceOutputStream Output stream to write the template to; the correspondenceOutputStream and
-     *                                   correspondenceInputStream must be based on the same object, e.g. the same
-     *                                   Java File object.
-     * @param correspondenceInputStream Input stream used to upload the correspondence into the CMIS repository.  The
-     *                                  correspondenceOutputStream and correspondenceInputStream must be based on the
-     *                                  same object, e.g. the same Java File object.
+     * @param user
+     *            User who has caused the correspondence to be generated.
+     * @param parentObjectType
+     *            Parent object type, e.g. CASE_FILE, COMPLAINT, TASK.
+     * @param parentObjectId
+     *            Parent object ID
+     * @param targetFolderCmisId
+     *            CMIS object ID of the folder in which to file the correspondence; usually the folder belonging to the
+     *            parent object.
+     * @param template
+     *            Correspondence template (which stores information on the Word template file name, JPA query to find
+     *            the correspondence data fields, etc).
+     * @param queryArguments
+     *            Actual arguments to pass to the JPA query. Currently only an object ID is supported.
+     * @param correspondenceOutputStream
+     *            Output stream to write the template to; the correspondenceOutputStream and correspondenceInputStream
+     *            must be based on the same object, e.g. the same Java File object.
+     * @param correspondenceInputStream
+     *            Input stream used to upload the correspondence into the CMIS repository. The
+     *            correspondenceOutputStream and correspondenceInputStream must be based on the same object, e.g. the
+     *            same Java File object.
      * @return
-     * @throws IOException If the correspondence could be be written to the correspondenceOutputStream.
-     * @throws AcmCreateObjectFailedException If the correspondence could not be uploaded to the ECM repository.
+     * @throws IOException
+     *             If the correspondence could be be written to the correspondenceOutputStream.
+     * @throws AcmCreateObjectFailedException
+     *             If the correspondence could not be uploaded to the ECM repository.
      */
-    public EcmFile generateCorrespondence(
-            Authentication user,
-            String parentObjectType,
-            Long parentObjectId,
-            String targetFolderCmisId,
-            CorrespondenceTemplate template,
-            Object[] queryArguments,
-            OutputStream correspondenceOutputStream,
+    public EcmFile generateCorrespondence(Authentication user, String parentObjectType, Long parentObjectId, String targetFolderCmisId,
+            CorrespondenceTemplate template, Object[] queryArguments, OutputStream correspondenceOutputStream,
             InputStream correspondenceInputStream) throws IOException, AcmCreateObjectFailedException, AcmUserActionFailedException
     {
-        List<Object[]> results = query(template, queryArguments);
+        Map<String, Object> queryResult = query(template, queryArguments);
 
-        if ( results == null || results.isEmpty() )
+        if (queryResult == null || queryResult.isEmpty())
         {
             throw new IllegalStateException("Database query returned no results");
         }
 
-        Object[] firstResult = results.get(0);
-
-        if ( firstResult.length > template.getTemplateSubstitutionVariables().size() )
-        {
-            throw new IllegalStateException("Must have at least as many query columns as substitution variables.");
-        }
-
-        Map<String, String> substitutions = prepareSubstitutionMap(template, firstResult);
+        Map<String, String> substitutions = prepareSubstitutionMap(template, queryResult);
 
         Resource templateFile = new FileSystemResource(getCorrespondenceFolderName() + File.separator + template.getTemplateFilename());
 
-        log.debug("Generating correspondence from template '" + templateFile.getFile().getAbsolutePath() + "'" );
+        log.debug("Generating correspondence from template '" + templateFile.getFile().getAbsolutePath() + "'");
 
         getWordGenerator().generate(templateFile, correspondenceOutputStream, substitutions);
 
         String fileName = generateUniqueFilename(template);
-        EcmFile retval = ecmFileService.upload(
-                template.getDocumentType()+".docx",
-                template.getDocumentType(),
-                CORRESPONDENCE_CATEGORY,
-                correspondenceInputStream,
-                WORD_MIME_TYPE,
-                fileName,
-                user,
-                targetFolderCmisId,
-                parentObjectType,
-                parentObjectId);
+        EcmFile retval = ecmFileService.upload(template.getDocumentType() + ".docx", template.getDocumentType(), CORRESPONDENCE_CATEGORY,
+                correspondenceInputStream, WORD_MIME_TYPE, fileName, user, targetFolderCmisId, parentObjectType, parentObjectId);
 
         return retval;
     }
@@ -124,56 +112,57 @@ public class CorrespondenceGenerator
         return template.getDocumentType() + " " + sdf.format(new Date()) + ".docx";
     }
 
-    private Map<String, String> prepareSubstitutionMap(CorrespondenceTemplate template, Object[] firstResult)
+    private Map<String, String> prepareSubstitutionMap(CorrespondenceTemplate template, Map<String, Object> queryResult)
     {
         Map<String, String> retval = new HashMap<>();
 
-        List<String> substitutionVariables = template.getTemplateSubstitutionVariables().entrySet().stream().map(entry -> entry.getValue()).collect(Collectors.toList());
-
-        Object[] withFormattedDates = formatArrayMembers(firstResult, Date.class, new SimpleDateFormat(template.getDateFormatString()));
-        Object[] withFormattedNumbers = formatArrayMembers(withFormattedDates, Number.class, new DecimalFormat(template.getNumberFormatString()));
-
-        for ( int a = 0; a < firstResult.length; a++ )
+        for (String key : template.getTemplateSubstitutionVariables().keySet())
         {
-            Object column = withFormattedNumbers[a];
+            Object value = queryResult.get(key);
+            value = formatValue(value, Date.class, new SimpleDateFormat(template.getDateFormatString()));
+            value = formatValue(value, Number.class, new DecimalFormat(template.getNumberFormatString()));
 
-            String columnValue = column == null ? null : column.toString();
+            String columnValue = value == null ? null : value.toString();
 
-            retval.put(substitutionVariables.get(a), columnValue);
+            retval.put(template.getTemplateSubstitutionVariables().get(key), columnValue);
         }
 
         return retval;
     }
 
-    private Object[] formatArrayMembers(Object[] result, Class toBeFormatted, Format format)
+    private Object formatValue(Object result, Class toBeFormatted, Format format)
     {
-        Object[] retval = new Object[result.length];
-        System.arraycopy(result, 0, retval, 0, result.length);
 
-        for ( int a = 0; a < retval.length; a++ )
+        if (result != null && toBeFormatted.isAssignableFrom(result.getClass()))
         {
-            if ( retval[a] != null && toBeFormatted.isAssignableFrom(retval[a].getClass()) )
-            {
-                retval[a] = format.format(retval[a]);
-            }
+            result = format.format(result);
         }
 
-        return retval;
+        return result;
     }
 
-    private List<Object[]> query(CorrespondenceTemplate template, Object[] queryArguments)
+    private Map<String, Object> query(CorrespondenceTemplate template, Object[] queryArguments)
     {
         Query select = getEntityManager().createQuery(template.getQuery().getJpaQuery());
 
-        for ( int a = 0; a < queryArguments.length; a++ )
+        for (int a = 0; a < queryArguments.length; a++)
         {
             // parameter indexes are 1-based
             select = select.setParameter(a + 1, queryArguments[a]);
         }
 
-        List<Object[]> results = (List<Object[]>) select.getResultList();
+        List<Object[]> results = select.getResultList();
 
-        return results;
+        Map<String, Object> resultMap = new HashMap<>();
+        List<String> queryFields = template.getQuery().getFieldNames();
+        Object[] queryValues = results.get(0);
+
+        for (int i = 0; i < queryValues.length; i++)
+        {
+            resultMap.put(queryFields.get(i), queryValues[i]);
+        }
+
+        return resultMap;
     }
 
     public void setEntityManager(EntityManager entityManager)
