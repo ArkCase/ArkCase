@@ -99,6 +99,13 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         AcmContainer container = getOrCreateContainer(parentObjectType, parentObjectId);
 
+        // TODO: disgusting hack here.  getOrCreateContainer is transactional, and may update the container or the
+        // container folder, e.g. by adding participants.  If it does, the object we get back won't have those changes,
+        // so we could get a unique constraint violation later on.  Hence the need to update the object
+        // here.  BETTER SOLUTION: split "getOrCreateContainer" into a readonly get, and then a writable create if the
+        // get doesn't find anything.  Or else find some other way not to have to refresh the object here.
+        getContainerFolderDao().getEm().refresh(container);
+
         EcmFileAddedEvent event = null;
 
         try
@@ -136,6 +143,12 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
 
         AcmContainer container = getOrCreateContainer(parentObjectType, parentObjectId);
+        // TODO: disgusting hack here.  getOrCreateContainer is transactional, and may update the container or the
+        // container folder, e.g. by adding participants.  If it does, the object we get back won't have those changes,
+        // so we could get a unique constraint violation later on.  Hence the need to update the object
+        // here.  BETTER SOLUTION: split "getOrCreateContainer" into a readonly get, and then a writable create if the
+        // get doesn't find anything.  Or else find some other way not to have to refresh the object here.
+        getContainerFolderDao().getEm().refresh(container);
 
         EcmFileAddedEvent event = null;
         try

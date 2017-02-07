@@ -9,10 +9,10 @@
     <Loggers>
         <!-- INFO and above to console and log file; com.armedia debug and above to log file -->
         <Logger name="com.armedia" level="debug" additivity="false">
-            <AppenderRef ref="Console" level="info"/>
+            <AppenderRef ref="Console"/>
         </Logger>
         <Root level="info" additivity="false">
-            <AppenderRef ref="Console" level="info"/>
+            <AppenderRef ref="Console"/>
         </Root>
     </Loggers>
 </Configuration>
