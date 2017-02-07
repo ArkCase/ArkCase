@@ -15,11 +15,13 @@ public class AcmLdapSyncConfig extends AcmLdapConfig
     private String userSearchBase;
     private String userSearchFilter;
     private String allUsersFilter;
+    private String allUsersSortingAttribute;
     private String allUsersSearchBase;
     private String groupSearchFilterForUser;
     private int syncPageSize = 500;
     private String allUsersPageFilter;
     private String groupSearchPageFilter;
+    private String groupsSortingAttribute;
 
     public Map<String, String> getRoleToGroupMap()
     {
@@ -111,6 +113,16 @@ public class AcmLdapSyncConfig extends AcmLdapConfig
         this.allUsersFilter = allUsersFilter;
     }
 
+    public String getAllUsersSortingAttribute()
+    {
+        return allUsersSortingAttribute;
+    }
+
+    public void setAllUsersSortingAttribute(String allUsersSortingAttribute)
+    {
+        this.allUsersSortingAttribute = allUsersSortingAttribute;
+    }
+
     public String getAllUsersSearchBase()
     {
         return allUsersSearchBase;
@@ -149,5 +161,15 @@ public class AcmLdapSyncConfig extends AcmLdapConfig
     public void setGroupSearchPageFilter(String groupSearchPageFilter)
     {
         this.groupSearchPageFilter = groupSearchPageFilter;
+    }
+
+    public String getGroupsSortingAttribute()
+    {
+        return groupsSortingAttribute;
+    }
+
+    public void setGroupsSortingAttribute(String groupsSortingAttribute)
+    {
+        this.groupsSortingAttribute = groupsSortingAttribute;
     }
 }
