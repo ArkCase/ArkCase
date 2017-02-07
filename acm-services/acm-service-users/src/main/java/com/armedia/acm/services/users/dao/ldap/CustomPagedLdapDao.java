@@ -1,11 +1,11 @@
 package com.armedia.acm.services.users.dao.ldap;
 
-
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.LdapGroup;
 import com.armedia.acm.services.users.model.ldap.AcmGroupContextMapper;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.AcmUserGroupsContextMapper;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +15,7 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.AggregateDirContextProcessor;
 
 import javax.naming.directory.SearchControls;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,11 +36,10 @@ public class CustomPagedLdapDao implements SpringLdapDao
         searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
         if (attributes != null)
         {
-            String[] allAttributes = ArrayUtils.addAll(attributes,
-                    syncConfig.getUserIdAttributeName(), syncConfig.getMailAttributeName());
+            String[] allAttributes = ArrayUtils.addAll(attributes, syncConfig.getUserIdAttributeName(), syncConfig.getMailAttributeName());
             searchControls.setReturningAttributes(allAttributes);
         }
-        AggregateDirContextProcessor sortedAndPaged = buildSortedAndPagesProcessor(syncConfig, syncConfig.getUserIdAttributeName());
+        AggregateDirContextProcessor sortedAndPaged = buildSortedAndPagesProcessor(syncConfig, syncConfig.getAllUsersSortingAttribute());
 
         AcmUserGroupsContextMapper userGroupsContextMapper = new AcmUserGroupsContextMapper();
         userGroupsContextMapper.setUserIdAttributeName(syncConfig.getUserIdAttributeName());
@@ -61,7 +61,8 @@ public class CustomPagedLdapDao implements SpringLdapDao
                 if (skipFirst)
                 {
                     acmUsers.addAll(found.subList(1, found.size()));
-                } else
+                }
+                else
                 {
                     acmUsers.addAll(found);
                 }
@@ -78,7 +79,7 @@ public class CustomPagedLdapDao implements SpringLdapDao
 
                     // A change to the search filter requires us to rebuild the search controls... even though
                     // the controls will have the same values as before.
-                    sortedAndPaged = buildSortedAndPagesProcessor(syncConfig, syncConfig.getUserIdAttributeName());
+                    sortedAndPaged = buildSortedAndPagesProcessor(syncConfig, syncConfig.getAllUsersSortingAttribute());
                     log.debug("Search filter now: {}", searchFilter);
                 }
             }
@@ -115,9 +116,11 @@ public class CustomPagedLdapDao implements SpringLdapDao
     {
         SearchControls searchControls = new SearchControls();
         searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-        searchControls.setReturningAttributes(new String[]{"cn", "memberOf"});
+        searchControls.setReturningAttributes(new String[] {
+                "cn",
+                "memberOf" });
 
-        AggregateDirContextProcessor sortedAndPaged = buildSortedAndPagesProcessor(config, "cn");
+        AggregateDirContextProcessor sortedAndPaged = buildSortedAndPagesProcessor(config, config.getGroupsSortingAttribute());
         AcmGroupContextMapper acmGroupContextMapper = new AcmGroupContextMapper();
 
         boolean searchGroups = true;
@@ -129,13 +132,14 @@ public class CustomPagedLdapDao implements SpringLdapDao
         {
 
             log.debug("search filter: {}", searchFilter);
-            List<LdapGroup> found = template.search(config.getGroupSearchBase(), searchFilter, searchControls,
-                    acmGroupContextMapper, sortedAndPaged);
+            List<LdapGroup> found = template.search(config.getGroupSearchBase(), searchFilter, searchControls, acmGroupContextMapper,
+                    sortedAndPaged);
 
             if (skipFirst)
             {
                 acmGroups.addAll(found.subList(1, found.size()));
-            } else
+            }
+            else
             {
                 acmGroups.addAll(found);
             }
@@ -153,7 +157,7 @@ public class CustomPagedLdapDao implements SpringLdapDao
 
                 // A change to the search filter requires us to rebuild the search controls... even though
                 // the controls will have the same values as before.
-                sortedAndPaged = buildSortedAndPagesProcessor(config, "cn");
+                sortedAndPaged = buildSortedAndPagesProcessor(config, config.getGroupsSortingAttribute());
                 log.trace("Search filter now: {}", searchFilter);
             }
         }
