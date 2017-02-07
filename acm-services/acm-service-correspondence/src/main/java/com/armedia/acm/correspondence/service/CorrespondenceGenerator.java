@@ -155,13 +155,22 @@ public class CorrespondenceGenerator
 
         Map<String, Object> resultMap = new HashMap<>();
         List<String> queryFields = template.getQuery().getFieldNames();
-        Object[] queryValues = results.get(0);
-
-        for (int i = 0; i < queryValues.length; i++)
+        if (results != null && !results.isEmpty() && queryFields != null && !queryFields.isEmpty())
         {
-            resultMap.put(queryFields.get(i), queryValues[i]);
-        }
+            Object[] queryValues = results.get(0);
+            if (queryValues != null)
+            {
+                if (queryValues.length != queryFields.size())
+                {
+                    throw new IllegalStateException("Query must have as many columns as defined fieldNames.");
+                }
 
+                for (int i = 0; i < queryValues.length; i++)
+                {
+                    resultMap.put(queryFields.get(i), queryValues[i]);
+                }
+            }
+        }
         return resultMap;
     }
 
