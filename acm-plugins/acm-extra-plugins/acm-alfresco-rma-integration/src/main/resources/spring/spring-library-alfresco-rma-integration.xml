@@ -42,6 +42,11 @@
         <property name="alfrescoRecordsService" ref="alfrescoRecordsService"/>
     </bean>
 
+    <bean id="acmCaseFileClosedListener"
+          class="com.armedia.acm.plugins.alfrescorma.service.AcmCaseFileClosedListener">
+        <property name="alfrescoRecordsService" ref="alfrescoRecordsService"/>
+    </bean>
+
     <bean id="acmFileDeclarationListener"
           class="com.armedia.acm.plugins.alfrescorma.service.AcmFileDeclareRequestListener">
         <property name="muleContextManager" ref="muleContextManager"/>

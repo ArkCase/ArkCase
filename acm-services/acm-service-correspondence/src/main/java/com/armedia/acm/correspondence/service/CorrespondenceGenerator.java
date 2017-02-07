@@ -26,6 +26,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by armdev on 12/15/14.
@@ -127,7 +128,7 @@ public class CorrespondenceGenerator
     {
         Map<String, String> retval = new HashMap<>();
 
-        List<String> substitutionVariables = template.getTemplateSubstitutionVariables();
+        List<String> substitutionVariables = template.getTemplateSubstitutionVariables().entrySet().stream().map(entry -> entry.getValue()).collect(Collectors.toList());
 
         Object[] withFormattedDates = formatArrayMembers(firstResult, Date.class, new SimpleDateFormat(template.getDateFormatString()));
         Object[] withFormattedNumbers = formatArrayMembers(withFormattedDates, Number.class, new DecimalFormat(template.getNumberFormatString()));
@@ -162,7 +163,7 @@ public class CorrespondenceGenerator
 
     private List<Object[]> query(CorrespondenceTemplate template, Object[] queryArguments)
     {
-        Query select = getEntityManager().createQuery(template.getJpaQuery());
+        Query select = getEntityManager().createQuery(template.getQuery().getJpaQuery());
 
         for ( int a = 0; a < queryArguments.length; a++ )
         {

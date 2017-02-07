@@ -133,7 +133,46 @@
           "visible": true,
           "headerCellFilter": "translate"
         }
-      ]
+      ],
+      "queryObjectTypes": [
+        {
+          "name": "Case File",
+          "id": "CASE_FILE"
+        },
+        {
+          "name": "Complaint",
+          "id": "COMPLAINT"
+        }
+      ],
+      "dialogQuerySelect": {
+        "enableFiltering": false,
+        "multiSelect": false,
+        "columnDefs": [
+          {
+            "name": "beanId",
+            "displayName": "admin.correspondenceManagement.templates.querySelect.table.columns.beanId",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "jpaQuery",
+            "displayName": "admin.correspondenceManagement.templates.querySelect.table.columns.jpaQuery",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "queryType",
+            "displayName": "admin.correspondenceManagement.templates.querySelect.table.columns.queryType",
+            "headerCellFilter": "translate"
+          }
+        ],
+        "paginationPageSizes": [
+          5,
+          10,
+          20,
+          50
+        ],
+        "paginationPageSize": 10,
+        "start": 0
+      }
     },
     {
       "id": "labelsConfig",

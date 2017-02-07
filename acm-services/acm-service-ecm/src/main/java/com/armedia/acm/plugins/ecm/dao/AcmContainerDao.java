@@ -16,7 +16,6 @@ import java.util.List;
 /**
  * Created by armdev on 3/11/15.
  */
-@Repository
 public class AcmContainerDao extends AcmAbstractDao<AcmContainer>
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
@@ -31,7 +30,7 @@ public class AcmContainerDao extends AcmAbstractDao<AcmContainer>
         try
         {
             AcmContainer found = query.getSingleResult();
-            log.info("Found existing folder " + found.getId() + "for object " + objectType + " id " + objectId);
+            log.debug("Found existing container '{}' for object '{}' with id '{}'", found.getId(), objectType, objectId);
             return found;
         } catch (NoResultException e)
         {

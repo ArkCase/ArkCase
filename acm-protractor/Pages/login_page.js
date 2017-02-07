@@ -29,9 +29,9 @@ var LoginPage = function() {
         this.clickLogin();
     };
     this.clickFullNameLink = function() {
-        browser.wait(EC.presenceOf(element(by.css('.fullname'))), 30000).then(function() {
-            browser.wait(EC.visibilityOf(element(by.css('.fullname'))), 30000).then(function () {
-                browser.wait(EC.elementToBeClickable(element(by.css('.fullname'))), 30000).then(function () {
+        browser.wait(EC.presenceOf(element(by.css('.fullname'))), 30000, "Full name link is not present in DOM").then(function() {
+            browser.wait(EC.visibilityOf(element(by.css('.fullname'))), 30000, "Full name link is not visible").then(function () {
+                browser.wait(EC.elementToBeClickable(element(by.css('.fullname'))), 30000, "Full name link is not clickable").then(function () {
                     browser.executeScript('arguments[0].click()', fullnameLink);
                 });
             });
@@ -40,7 +40,7 @@ var LoginPage = function() {
     };
 
     this.clickLogout = function() {
-        browser.wait(EC.visibilityOf(element(by.linkText("Logout"))), 30000).then(function() {
+        browser.wait(EC.visibilityOf(element(by.linkText("Logout"))), 30000, "Logout link is not visible").then(function() {
             logoutLink.click().then(function() {
                 browser.ignoresynchronization = true;
                 browser.sleep(10000);

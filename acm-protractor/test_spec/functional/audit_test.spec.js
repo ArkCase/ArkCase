@@ -65,7 +65,7 @@ describe('audit tests', function() {
         auditPage.switchToAuditframes();
         auditPage.validateAuditReportTitles(Objects.auditPage.data.auditReportColumn1Title, Objects.auditPage.data.auditReportColumn2Title, Objects.auditPage.data.auditReportColumn3Title, Objects.auditPage.data.auditReportColumn4Title, Objects.auditPage.data.auditReportColumn5Title, Objects.auditPage.data.auditReportColumn6Title, Objects.auditPage.data.auditReportColumn7Title);
         auditPage.validateAuditReportValues(utils.returnToday("/"), Objects.taskspage.data.assigneeSamuel, "Case Viewed", "success", caseid, "CASE_FILE" );
-        expect(auditPage.returnObjectIdValue()).not.toEqual(auditPage.returnSecondRowObjectIdValue());
+        expect(auditPage.returnObjectIdValue()).not.toEqual(auditPage.returnSecondRowObjectIdValue(), "There is not more that 1 record in audit report for one id");
         auditPage.switchToDefaultContent();
 
     });
@@ -79,7 +79,7 @@ describe('audit tests', function() {
         auditPage.switchToAuditframes();
         auditPage.validateAuditReportTitles(Objects.auditPage.data.auditReportColumn1Title, Objects.auditPage.data.auditReportColumn2Title, Objects.auditPage.data.auditReportColumn3Title, Objects.auditPage.data.auditReportColumn4Title, Objects.auditPage.data.auditReportColumn5Title, Objects.auditPage.data.auditReportColumn6Title, Objects.auditPage.data.auditReportColumn7Title);
         auditPage.validateAuditReportValues(utils.returnToday("/"), Objects.taskspage.data.assigneeSamuel, "Find Complaint", "success", complaintId, "COMPLAINT" );
-        expect(auditPage.returnObjectIdValue()).not.toEqual(auditPage.returnSecondRowObjectIdValue());
+        expect(auditPage.returnObjectIdValue()).not.toEqual(auditPage.returnSecondRowObjectIdValue(), "There is not more that 1 record in audit report for one id");
         auditPage.switchToDefaultContent();
 
     });

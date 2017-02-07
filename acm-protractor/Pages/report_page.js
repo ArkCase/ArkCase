@@ -54,9 +54,9 @@ var reportAreaIFrame = element(by.id(Objects.reportPage.locators.reportAreaIFram
 var ReportPage = function() {
 
     this.selectReport = function(report) {
-        browser.wait(EC.presenceOf(element(by.id(Objects.reportPage.locators.reportDropDownList))), 30000).then(function () {
-            browser.wait(EC.visibilityOf(element(by.id(Objects.reportPage.locators.reportDropDownList))), 30000).then(function () {
-                browser.wait((EC.textToBePresentInElement(element(by.id(Objects.reportPage.locators.reportDropDownList)), report)), 30000).then(function () {
+        browser.wait(EC.presenceOf(element(by.id(Objects.reportPage.locators.reportDropDownList))), 30000, "Report drop down list is not present in DOM").then(function () {
+            browser.wait(EC.visibilityOf(element(by.id(Objects.reportPage.locators.reportDropDownList))), 30000, "Report drop down list is not visible").then(function () {
+                browser.wait((EC.textToBePresentInElement(element(by.id(Objects.reportPage.locators.reportDropDownList)), report)), 30000, report + " is not present in report drop down list").then(function () {
                     reportDropDownList.selectByText(report);
                 });
             });
@@ -64,20 +64,20 @@ var ReportPage = function() {
         return this;
     };
     this.selectState = function (state) {
-        browser.wait(EC.visibilityOf(element(by.id(Objects.reportPage.locators.stateDropDownList))), 30000).then(function () {
+        browser.wait(EC.visibilityOf(element(by.id(Objects.reportPage.locators.stateDropDownList))), 30000, "State drop down list is not visible").then(function () {
             stateDropDownList.selectByText(state);
         });
         return this;
     };
     this.insertDateFrom = function (datefrom) {
-        browser.wait(EC.visibilityOf(element(by.id(Objects.reportPage.locators.dateFrom))), 30000).then(function () {
+        browser.wait(EC.visibilityOf(element(by.id(Objects.reportPage.locators.dateFrom))), 30000, "Date from field is not visible").then(function () {
             dateFrom.clear();
             dateFrom.sendKeys(datefrom);
         });
         return this;
     };
     this.insertDateTo = function (dateto) {
-        browser.wait(EC.visibilityOf(element(by.id(Objects.reportPage.locators.dateTo))), 30000).then(function () {
+        browser.wait(EC.visibilityOf(element(by.id(Objects.reportPage.locators.dateTo))), 30000, "Date to field is not visible").then(function () {
             dateTo.clear();
             dateTo.sendKeys(dateto);
         });
@@ -119,8 +119,8 @@ var ReportPage = function() {
         return CDCAddToExistingCaseValue.getText();
     };
     this.returnCDCNoFurtherActionValue = function () {
-        browser.wait(EC.presenceOf(element(by.xpath(Objects.reportPage.locators.CDCNoFurtherActionValue))), 30000).then(function() {
-            browser.wait(EC.visibilityOf(element(by.xpath(Objects.reportPage.locators.CDCNoFurtherActionValue))), 30000).then(function () {
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.reportPage.locators.CDCNoFurtherActionValue))), 30000, "CDC No further action value is not present in DOM").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.reportPage.locators.CDCNoFurtherActionValue))), 30000, "CDC No further action value is not visible").then(function () {
                 return CDCNoFurtherActionValue.getText();
             });
         });
@@ -136,15 +136,15 @@ var ReportPage = function() {
     };
     this.switchToReportframes = function() {
         browser.ignoreSynchronization = true;
-        browser.wait(EC.visibilityOf(element(by.name(Objects.reportPage.locators.reportsIFrame))), 120000);
+        browser.wait(EC.visibilityOf(element(by.name(Objects.reportPage.locators.reportsIFrame))), 120000, "Reports iframe is not visible");
             browser.switchTo().frame(browser.driver.findElement(by.name("reports-iframe"))).then(function () {
                 browser.switchTo().frame(browser.driver.findElement(by.id("reportContent")));
             });
         return this;
     };
     this.validateCaseReportTitles = function(reportTitle, casenumberTitle, statusTitle, caseTitle, incidentDateTitle, priorityTitle, dueDateTitle, typeTitle) {
-        browser.wait(EC.presenceOf(element(by.xpath(Objects.reportPage.locators.summaryReportTitle))), 30000).then(function() {
-            browser.wait(EC.visibilityOf(element(by.xpath(Objects.reportPage.locators.summaryReportTitle))), 30000).then(function () {
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.reportPage.locators.summaryReportTitle))), 30000, "Summary report title is not present in DOM").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.reportPage.locators.summaryReportTitle))), 30000, "Summary report title is not visible").then(function () {
                 expect(summaryReportTitle.getText()).toBe(reportTitle);
                 expect(caseNumberColumnTitle.getText()).toEqual(casenumberTitle);
                 expect(caseStatusColumnTitle.getText()).toEqual(statusTitle);
@@ -157,8 +157,8 @@ var ReportPage = function() {
         });
     };
     this.validateComplaintReportTitles = function(reportTitle, complaintTitle, statusTitle, typeTitle, priorityTitle, createDateTitle, IncidenDateTitle) {
-        browser.wait(EC.presenceOf(element(by.xpath(Objects.reportPage.locators.summaryReportTitle))), 30000).then(function() {
-            browser.wait(EC.visibilityOf(element(by.xpath(Objects.reportPage.locators.summaryReportTitle))), 30000).then(function() {
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.reportPage.locators.summaryReportTitle))), 30000, "Summary report title is not present in DOM").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.reportPage.locators.summaryReportTitle))), 30000, "Summary report title is not visible").then(function() {
                 expect(summaryReportTitle.getText()).toBe(reportTitle);
                 expect(complaintTitleColumnTitle.getText()).toBe(complaintTitle)
                 expect(complaintStatusColumnTitle.getText()).toEqual(statusTitle);
@@ -171,8 +171,8 @@ var ReportPage = function() {
 
     };
     this.validateCDCReportTitles = function (dispositionTitle, countTitle, ATECTitle, NFATitle, OITitle, RETitle) {
-        browser.wait(EC.presenceOf(element(by.xpath(Objects.reportPage.locators.CDCDispositionTitle))), 30000).then(function() {
-            browser.wait(EC.visibilityOf(element(by.xpath(Objects.reportPage.locators.CDCDispositionTitle))), 30000).then(function() {
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.reportPage.locators.CDCDispositionTitle))), 30000, "CDC report title is not present in DOM").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.reportPage.locators.CDCDispositionTitle))), 30000, "CDC report title is not visible").then(function() {
                 expect(CDCDispositionTitle.getText()).toBe(dispositionTitle);
                 expect(CDCCountTitle.getText()).toBe(countTitle)
                 expect(CDCAddToExistingCaseTitle.getText()).toEqual(ATECTitle);
@@ -183,8 +183,8 @@ var ReportPage = function() {
         })
     };
     this.validateComplaintReportValues = function (title, status, type, priority, createDate, IncidentDate) {
-        browser.wait(EC.presenceOf(element(by.xpath(Objects.reportPage.locators.caseTitleValue))), 30000).then(function() {
-            browser.wait(EC.visibilityOf(element(by.xpath(Objects.reportPage.locators.caseTitleValue))), 30000).then(function() {
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.reportPage.locators.caseTitleValue))), 30000, "Case title value is not present in DOM").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.reportPage.locators.caseTitleValue))), 30000, "Case title value is not visible").then(function() {
                 expect(complaintTitleValue.getText()).toBe(title);
                 expect(complaintStatusValue.getText()).toEqual(status);
                 expect(complaintTypeValue.getText()).toEqual(type);
@@ -195,8 +195,8 @@ var ReportPage = function() {
         })
     };
     this.validateCaseReportValues = function(caseNumber, status, title, incidentDate, priority, dueDate, type) {
-        browser.wait(EC.presenceOf(element(by.xpath(Objects.reportPage.locators.caseStatusValue))), 30000).then(function() {
-            browser.wait(EC.visibilityOf(element(by.xpath(Objects.reportPage.locators.caseStatusValue))), 30000).then(function() {
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.reportPage.locators.caseStatusValue))), 30000, "Case Status value is not present in DOM").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.reportPage.locators.caseStatusValue))), 30000, "Case status value is not visible").then(function() {
                 expect(caseNumberValue.getText()).toEqual(caseNumber);
                 expect(caseStatusValue.getText()).toEqual(status);
                 expect(caseTitleValue.getText()).toEqual(title);
@@ -209,8 +209,8 @@ var ReportPage = function() {
 
     };
     this.validateCDCReportValues = function (ATECNumber, NFANumber, OINumber, RENumber) {
-        browser.wait(EC.presenceOf(element(by.xpath(Objects.reportPage.locators.CDCAddToExistingCaseValue))), 30000).then(function() {
-            browser.wait(EC.visibilityOf(element(by.xpath(Objects.reportPage.locators.CDCAddToExistingCaseValue))), 30000).then(function() {
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.reportPage.locators.CDCAddToExistingCaseValue))), 30000, "CDC Add to  exisiting case value is not present in DOM").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.reportPage.locators.CDCAddToExistingCaseValue))), 30000, "CDC Add to existing case value is not visible").then(function() {
                 expect(this.returnCDCAddToExistingCaseValue()).toEqual(ATECNumber);
                 expect(this.returnCDCNoFurtherActionValue()).toEqual(NFANumber);
                 expect(this.returnCDCOpenInvestigationValue()).toEqual(OINumber);

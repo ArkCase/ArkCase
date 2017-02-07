@@ -10,6 +10,7 @@ public class PersonAssociationAddEvent extends PersonAssociationPersistenceEvent
         super(source);
         setParentObjectId(parentId);
         setParentObjectType(parentType);
+        setEventDescription("Person created (" + source.getPerson().getFullName() + ")");
     }
 
     @Override

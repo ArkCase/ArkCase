@@ -1,5 +1,9 @@
 package com.armedia.acm.plugins.casefile.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import com.armedia.acm.auth.AcmGrantedAuthority;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
@@ -18,6 +22,7 @@ import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mule.api.MuleException;
@@ -35,47 +40,44 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
-
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(name = "spring",
-        locations = {
-                "/spring/spring-library-acm-encryption.xml",
-                "/spring/spring-library-activiti-configuration.xml",
-                "/spring/spring-library-audit-service.xml",
-                "/spring/spring-library-authentication-token.xml",
-                "/spring/spring-library-business-process.xml",
-                "/spring/spring-library-case-file-dao.xml",
-                "/spring/spring-library-case-file-rules.xml",
-                "/spring/spring-library-case-file-save.xml",
-                "/spring/spring-library-case-file-split-merge.xml",
-                "/spring/spring-library-context-holder.xml",
-                "/spring/spring-library-data-access-control.xml",
-                "/spring/spring-library-data-source.xml",
-                "/spring/spring-library-ecm-file.xml",
-                "/spring/spring-library-event.xml",
-                "/spring/spring-library-folder-watcher.xml",
-                "/spring/spring-library-merge-case-test-IT.xml",
-                "/spring/spring-library-ms-outlook-integration.xml",
-                "/spring/spring-library-ms-outlook-plugin.xml",
-                "/spring/spring-library-note.xml",
-                "/spring/spring-library-object-association-plugin.xml",
-                "/spring/spring-library-object-history.xml",
-                "/spring/spring-library-particpants.xml",
-                "/spring/spring-library-person.xml",
-                "/spring/spring-library-profile.xml",
-                "/spring/spring-library-property-file-manager.xml",
-                "/spring/spring-library-search.xml",
-                "/spring/spring-library-task.xml",
-                "/spring/spring-library-user-service.xml",
-                "/spring/spring-library-notification.xml",
-                "/spring/spring-library-service-data.xml"
-        })
+@ContextConfiguration(name = "spring", locations = {
+        "/spring/spring-library-acm-encryption.xml",
+        "/spring/spring-library-activiti-configuration.xml",
+        "/spring/spring-library-audit-service.xml",
+        "/spring/spring-library-authentication-token.xml",
+        "/spring/spring-library-business-process.xml",
+        "/spring/spring-library-case-file-dao.xml",
+        "/spring/spring-library-case-file-rules.xml",
+        "/spring/spring-library-case-file-save.xml",
+        "/spring/spring-library-case-file-split-merge.xml",
+        "/spring/spring-library-context-holder.xml",
+        "/spring/spring-library-data-access-control.xml",
+        "/spring/spring-library-data-source.xml",
+        "/spring/spring-library-ecm-file.xml",
+        "/spring/spring-library-event.xml",
+        "/spring/spring-library-folder-watcher.xml",
+        "/spring/spring-library-merge-case-test-IT.xml",
+        "/spring/spring-library-ms-outlook-integration.xml",
+        "/spring/spring-library-ms-outlook-plugin.xml",
+        "/spring/spring-library-note.xml",
+        "/spring/spring-library-object-association-plugin.xml",
+        "/spring/spring-library-object-history.xml",
+        "/spring/spring-library-particpants.xml",
+        "/spring/spring-library-person.xml",
+        "/spring/spring-library-profile.xml",
+        "/spring/spring-library-property-file-manager.xml",
+        "/spring/spring-library-search.xml",
+        "/spring/spring-library-task.xml",
+        "/spring/spring-library-user-service.xml",
+        "/spring/spring-library-notification.xml",
+        "/spring/spring-library-service-data.xml" })
 @TransactionConfiguration(defaultRollback = true)
 public class MergeCaseFileServiceIT
 {
@@ -111,7 +113,8 @@ public class MergeCaseFileServiceIT
 
     @Test
     @Transactional
-    public void mergeCaseFilesTest() throws MergeCaseFilesException, MuleException, AcmUserActionFailedException, AcmCreateObjectFailedException, IOException, AcmObjectNotFoundException, PipelineProcessException
+    public void mergeCaseFilesTest() throws MergeCaseFilesException, MuleException, AcmUserActionFailedException,
+            AcmCreateObjectFailedException, IOException, AcmObjectNotFoundException, PipelineProcessException
     {
         auditAdapter.setUserId("auditUser");
 
@@ -121,7 +124,6 @@ public class MergeCaseFileServiceIT
         auth = new UsernamePasswordAuthenticationToken("ann-acm", "ann-acm", Arrays.asList(authority));
         ipAddress = "127.0.0.1";
 
-
         Resource dammyDocument = new ClassPathResource("/documents/textDammydocument.txt");
         assertTrue(dammyDocument.exists());
 
@@ -130,7 +132,7 @@ public class MergeCaseFileServiceIT
         assertNotNull(acmFolderService);
         assertNotNull(mergeCaseService);
 
-        //create source case file
+        // create source case file
         CaseFile sourceCaseFile = new CaseFile();
         sourceCaseFile.setCaseType("caseType");
         sourceCaseFile.setTitle("title");
@@ -138,46 +140,29 @@ public class MergeCaseFileServiceIT
         CaseFile sourceSaved = saveCaseService.saveCase(sourceCaseFile, auth, ipAddress);
         sourceId = sourceSaved.getId();
 
-        //create target case file
+        // create target case file
         CaseFile targetCaseFile = new CaseFile();
         targetCaseFile.setCaseType("caseType");
         targetCaseFile.setTitle("title");
-
 
         CaseFile targetSaved = saveCaseService.saveCase(targetCaseFile, auth, ipAddress);
 
         targetId = targetSaved.getId();
 
-
-        //verify that case files are saved
+        // verify that case files are saved
         assertNotNull(sourceId);
         assertNotNull(targetId);
 
+        // upload in root folder
+        ecmFileService.upload("dammyDocument1.txt", "attachment", "Document", dammyDocument.getInputStream(), "text/plain",
+                "dammyDocument1.txt", auth, sourceSaved.getContainer().getFolder().getCmisFolderId(),
+                sourceSaved.getContainer().getContainerObjectType(), sourceSaved.getContainer().getContainerObjectId());
 
-        //upload in root folder
-        ecmFileService.upload("dammyDocument1.txt",
-                "attachment",
-                "Document",
-                dammyDocument.getInputStream(),
-                "text/plain",
-                "dammyDocument1.txt",
-                auth,
-                sourceSaved.getContainer().getFolder().getCmisFolderId(),
-                sourceSaved.getContainer().getContainerObjectType(),
-                sourceSaved.getContainer().getContainerObjectId());
-
-        //create folder and add document to this folder
+        // create folder and add document to this folder
         AcmFolder folderInSourceCase = acmFolderService.addNewFolder(sourceSaved.getContainer().getFolder().getId(), "some_folder");
 
-        ecmFileService.upload("dammyDocument.txt",
-                "attachment",
-                "Document",
-                dammyDocument.getInputStream(),
-                "text/plain",
-                "dammyDocument.txt",
-                auth,
-                folderInSourceCase.getCmisFolderId(),
-                sourceSaved.getContainer().getContainerObjectType(),
+        ecmFileService.upload("dammyDocument.txt", "attachment", "Document", dammyDocument.getInputStream(), "text/plain",
+                "dammyDocument.txt", auth, folderInSourceCase.getCmisFolderId(), sourceSaved.getContainer().getContainerObjectType(),
                 sourceSaved.getContainer().getContainerObjectId());
         MergeCaseOptions mergeCaseOptions = new MergeCaseOptions();
         mergeCaseOptions.setSourceCaseFileId(sourceId);
@@ -220,13 +205,14 @@ public class MergeCaseFileServiceIT
         assertNotNull(targetOa.getTargetId());
         assertEquals(targetOa.getTargetId().longValue(), sourceCase.getId().longValue());
 
-        assertEquals(sourceCase.getContainer().getFolder().getParentFolderId(), targetCase.getContainer().getFolder().getId());
+        assertEquals(sourceCase.getContainer().getFolder().getParentFolder().getId(), targetCase.getContainer().getFolder().getId());
 
     }
 
     @Test
     @Transactional
-    public void mergeCaseFilesParticipantSameAssigneeTest() throws MergeCaseFilesException, MuleException, AcmUserActionFailedException, AcmCreateObjectFailedException, IOException, AcmObjectNotFoundException, PipelineProcessException
+    public void mergeCaseFilesParticipantSameAssigneeTest() throws MergeCaseFilesException, MuleException, AcmUserActionFailedException,
+            AcmCreateObjectFailedException, IOException, AcmObjectNotFoundException, PipelineProcessException
     {
         auditAdapter.setUserId("auditUser");
         String roleAdd = "ROLE_ADMINISTRATOR";
@@ -240,7 +226,7 @@ public class MergeCaseFileServiceIT
         assertNotNull(acmFolderService);
         assertNotNull(mergeCaseService);
 
-        //create source case file
+        // create source case file
         CaseFile sourceCaseFile = new CaseFile();
         sourceCaseFile.setCaseType("caseType");
         sourceCaseFile.setTitle("title");
@@ -248,7 +234,7 @@ public class MergeCaseFileServiceIT
         CaseFile sourceSaved = saveCaseService.saveCase(sourceCaseFile, auth, ipAddress);
         sourceId = sourceSaved.getId();
 
-        //create target case file
+        // create target case file
         CaseFile targetCaseFile = new CaseFile();
         targetCaseFile.setCaseType("caseType");
         targetCaseFile.setTitle("title");
@@ -266,8 +252,7 @@ public class MergeCaseFileServiceIT
 
         targetId = targetSaved.getId();
 
-
-        //verify that case files are saved
+        // verify that case files are saved
         assertNotNull(sourceId);
         assertNotNull(targetId);
 
@@ -299,7 +284,8 @@ public class MergeCaseFileServiceIT
 
     @Test
     @Transactional
-    public void mergeCaseFilesParticipantDifferentAssigneeTest() throws MergeCaseFilesException, MuleException, AcmUserActionFailedException, AcmCreateObjectFailedException, IOException, AcmObjectNotFoundException, PipelineProcessException
+    public void mergeCaseFilesParticipantDifferentAssigneeTest() throws MergeCaseFilesException, MuleException,
+            AcmUserActionFailedException, AcmCreateObjectFailedException, IOException, AcmObjectNotFoundException, PipelineProcessException
     {
         auditAdapter.setUserId("auditUser");
         String roleAdd = "ROLE_ADMINISTRATOR";
@@ -313,7 +299,7 @@ public class MergeCaseFileServiceIT
         assertNotNull(acmFolderService);
         assertNotNull(mergeCaseService);
 
-        //create source case file
+        // create source case file
         CaseFile sourceCaseFile = new CaseFile();
         sourceCaseFile.setCaseType("caseType");
         sourceCaseFile.setTitle("title");
@@ -321,7 +307,7 @@ public class MergeCaseFileServiceIT
         CaseFile sourceSaved = saveCaseService.saveCase(sourceCaseFile, auth, ipAddress);
         sourceId = sourceSaved.getId();
 
-        //create target case file
+        // create target case file
         CaseFile targetCaseFile = new CaseFile();
         targetCaseFile.setCaseType("caseType");
         targetCaseFile.setTitle("title");
@@ -339,8 +325,7 @@ public class MergeCaseFileServiceIT
 
         targetId = targetSaved.getId();
 
-
-        //verify that case files are saved
+        // verify that case files are saved
         assertNotNull(sourceId);
         assertNotNull(targetId);
 
@@ -358,7 +343,7 @@ public class MergeCaseFileServiceIT
         assertNotNull(foundAssignee);
         assertEquals("ian-acm", foundAssignee.getParticipantLdapId());
 
-        //merge case files
+        // merge case files
         MergeCaseOptions mergeCaseOptions = new MergeCaseOptions();
         mergeCaseOptions.setSourceCaseFileId(sourceId);
         mergeCaseOptions.setTargetCaseFileId(targetId);

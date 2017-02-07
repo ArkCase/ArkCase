@@ -234,7 +234,8 @@
     "COMPLAINT": "Complaint",
     "TASK": "Task",
     "TIMESHEET": "Timesheet",
-    "COSTSHEET": "Costsheet"
+    "COSTSHEET": "Costsheet",
+    "FILE": "File"
   },
   "frevvo.dialogUserPicker": {
     "header": "Choose User",

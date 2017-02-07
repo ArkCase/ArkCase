@@ -9,6 +9,7 @@ public class PersonAssociationDeletedEvent extends PersonAssociationPersistenceE
         super(source);
         setParentObjectId(parentId);
         setParentObjectType(parentType);
+        setEventDescription("Person deleted (" + source.getPerson().getFullName() + ")");
     }
 
     @Override

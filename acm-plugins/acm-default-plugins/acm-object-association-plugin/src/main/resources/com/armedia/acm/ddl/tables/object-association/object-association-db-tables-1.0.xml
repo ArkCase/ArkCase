@@ -4,7 +4,7 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="01-create-object-association-table" author="dmiller">
+    <changeSet id="01-create-object-association-table" author="dmiller" dbms="oracle,postgresql,mssql">
         <createTable tableName="acm_object_association">
             <column name="cm_association_id" type="${idType}">
                 <constraints
@@ -21,6 +21,56 @@
                 <constraints nullable="false"/>
             </column>
             <column name="cm_object_assn_modified" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_object_assn_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_parent_type" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_parent_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_parent_name" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_target_type" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_target_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_target_name" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="acm_object_association" indexName="idx_object_assn_parent_id">
+            <column name="cm_parent_id"/>
+        </createIndex>
+        <createIndex tableName="acm_object_association" indexName="idx_object_assn_target_id">
+            <column name="cm_target_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="01-create-object-association-table" author="dmiller" dbms="mysql">
+        <createTable tableName="acm_object_association">
+            <column name="cm_association_id" type="${idType}">
+                <constraints
+                        primaryKey="true"
+                        primaryKeyName="pk_object_association"/>
+            </column>
+            <column name="cm_association_status" type="VARCHAR(128)" defaultValue="ACTIVE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_object_assn_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_object_assn_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_object_assn_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_object_assn_modifier" type="VARCHAR(1024)">

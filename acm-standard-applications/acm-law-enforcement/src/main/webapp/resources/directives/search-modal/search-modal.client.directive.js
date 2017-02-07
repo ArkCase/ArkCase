@@ -52,7 +52,8 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 searchControl: '=?',    //=? : two way binding but property is optional
                 onItemsSelected: '=?',   //=? : two way binding but property is optional
                 onNoDataMessage: '@',
-                draggable: '@'
+                draggable: '@',
+                onDblClickRow: '=?'
             },
 
             link: function (scope, el, attrs) {
@@ -96,10 +97,12 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 scope.selectedItem = null;
                 scope.selectedItems = [];
                 scope.queryExistingItems = function () {
+
                     if (scope.extraFilter) {
                         scope.filters = scope.filters + scope.extraFilter + '*' + scope.searchQuery + '*';
                     }
-                    var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuery(scope.searchQuery + '*', scope.filters, scope.pageSize, scope.start);
+                    var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuerySorted(scope.searchQuery + '*', scope.filters, scope.pageSize, scope.start, scope.sort);
+
                     if (query) {
                         scope.showNoData = false;
                         SearchService.queryFilteredSearch({
@@ -176,6 +179,7 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 if (scope.config()) {
                     scope.pageSize = scope.config().paginationPageSize;
                     scope.start = scope.config().start;
+                    scope.sort = Util.goodValue(scope.config().sort, "");
                     scope.gridOptions = {
                         enableColumnResizing: true,
                         enableRowSelection: true,
@@ -209,6 +213,20 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                                 }
                             });
 
+                            // Get the sorting info from UI grid
+                            gridApi.core.on.sortChanged(scope, function (grid, sortColumns) {
+                                if (sortColumns.length > 0) {
+                                    var sortColArr = [];
+                                    _.each(sortColumns, function (col) {
+                                        sortColArr.push((col.colDef.sortField || col.colDef.name) + " " + col.sort.direction);
+                                    });
+                                    scope.sort = sortColArr.join(',');
+                                }
+                                else {
+                                    scope.sort = "";
+                                }
+                                scope.queryExistingItems();
+                            });
 
                             gridApi.pagination.on.paginationChanged(scope, function (newPage, pageSize) {
                                 scope.start = (newPage - 1) * pageSize;   //newPage is 1-based index
@@ -217,6 +235,21 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                             });
                         }
                     };
+
+                    /* Allows for overriding the default row template
+                     * Used to add ng-dblClick etc properties to the template
+                     * Default rowTemplate =
+                     * "<div ng-repeat=\"(colRenderIndex, col) in colContainer.renderedColumns track by col.uid\"
+                     *       ui-grid-one-bind-id-grid=\"rowRenderIndex + '-' + col.uid + '-cell'\"
+                     *       class=\"ui-grid-cell\"
+                     *       ng-class=\"{ 'ui-grid-row-header-cell': col.isRowHeader }\"
+                     *       role=\"{{col.isRowHeader ? 'rowheader' : 'gridcell'}}\" ui-grid-cell>
+                     *  </div>"
+                     */
+                    if (scope.config().rowTemplate) {
+                        scope.gridOptions.rowTemplate = scope.config().rowTemplate;
+                    }
+
                     if (scope.gridOptions) {
                         if (scope.filter) {
                             scope.filters = 'fq=' + scope.filter;
@@ -229,7 +262,7 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
 
                 // Perform initial request to get list of documents if defaultFilter is defined
                 if (scope.defaultFilter) {
-                    var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuery(scope.searchQuery + '*', scope.defaultFilter, scope.pageSize, 0);
+                    var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuerySorted(scope.searchQuery + '*', scope.defaultFilter, scope.pageSize, 0, scope.sort);
                     if (query) {
                         scope.showNoData = true;
                         SearchService.queryFilteredSearch({

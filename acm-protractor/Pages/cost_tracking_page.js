@@ -31,12 +31,12 @@ var costTrackingPage = function() {
         var titleType = element(by.linkText(title));
         browser.wait(EC.visibilityOf(element.all(by.xpath(Objects.costsheetPage.locators.expensesDropDown)).get(1)), 30000, "Expenses type is not displayed").then(function() {
             typeDropDown.click().then(function() {
-                browser.wait(EC.textToBePresentInElement((costType), type), 10000).then(function() {
+                browser.wait(EC.textToBePresentInElement((costType), type), 10000, type + " is not present in type drop down list").then(function() {
                     costType.click();
                 }).then(function() {
                     codeDropDown.click();
                 }).then(function() {
-                    browser.wait(EC.textToBePresentInElement((codeType), code), 10000);
+                    browser.wait(EC.textToBePresentInElement((codeType), code), 10000, code + " is not present in code drop down list");
                 }).then(function() {
                     codeType.click();
                 }).then(function() {
@@ -44,7 +44,7 @@ var costTrackingPage = function() {
                 }).then(function() {
                     titleDropDown.click();
                 }).then(function() {
-                    browser.wait(EC.textToBePresentInElement((titleType), title), 10000);
+                    browser.wait(EC.textToBePresentInElement((titleType), title), 10000, title + " is not present in title drop down list");
                 }).then(function() {
                     titleType.click();
                 }).then(function() {
