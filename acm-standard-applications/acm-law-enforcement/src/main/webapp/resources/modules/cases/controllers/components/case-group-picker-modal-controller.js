@@ -1,10 +1,10 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.AssigneePickerController', ['$scope', '$modal', '$modalInstance',
+angular.module('cases').controller('Cases.GroupPickerController', ['$scope', '$modal', '$modalInstance',
     '$translate', 'UtilService', 'ConfigService', '$q', 'owningGroup',
     function ($scope, $modal, $modalInstance, $translate, Util, ConfigService, $q, owningGroup) {
 
-        var promiseConfig = ConfigService.getModuleConfig("complaints");
+        var promiseConfig = ConfigService.getModuleConfig("cases");
 
         $q.all([promiseConfig]).then(function (data) {
             var foundComponent = data[0].components.filter(function(component) { return component.title === 'Participants'; });
@@ -19,18 +19,18 @@ angular.module('complaints').controller('Complaints.AssigneePickerController', [
         $scope.onClickCancel = function () {
             $modalInstance.dismiss('cancel');
         };
-        $scope.pickAssignee = function () {
+        $scope.pickGroup = function () {
 
             var params = {};
             $scope.owningGroup = owningGroup;
 
-            params.header = $translate.instant("complaints.comp.assigneePickerModal.searchAssigneeHeader");
-            params.filter = '"Object Type": USER' + '&fq="Group": ' + $scope.owningGroup;
+            params.header = $translate.instant("cases.comp.groupPickerModal.searchGroupHeader");
+            params.filter = 'fq="object_type_s": GROUP';
             params.extraFilter = '&fq="name": ';
             params.config = Util.goodMapValue($scope.config, "dialogUserPicker");
 
             var modalInstance = $modal.open({
-                templateUrl: "modules/complaints/views/components/complaint-assignee-picker-search-modal.client.view.html",
+                templateUrl: "modules/cases/views/components/case-group-picker-search-modal.client.view.html",
                 controller: ['$scope', '$modalInstance', 'params', function ($scope, $modalInstance, params) {
                     $scope.modalInstance = $modalInstance;
                     $scope.header = params.header;

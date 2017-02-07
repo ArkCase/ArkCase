@@ -25,14 +25,6 @@
                         <input type="text" id="assignee" ng-model="userOrGroupName" class="input-md form-control"
                                placeholder="{{ 'tasks.newTask.assignee.placeholder' | translate }}" id="assignee"
                                style="background-color: white;" ng-click="userOrGroupSearch()" readonly >
-                        <!-- <select ng-model="chosenGroup"
-                                ng-hide="!groupTask"
-                                ng-options="option.text as option.value for option in assignableGroups"
-                                ng-change="groupChange()"
-                                ng-required="groupTask"
-                                class="form-control input-sm">
-                            <option translate disabled value="">tasks.newTask.group.placeholder</option>
-                        </select> -->
                     </div>
                     <div class="col-sm-2">
                         <label class="control-label">{{ 'tasks.newTask.associateType.label' | translate }}
