@@ -7,7 +7,6 @@ import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.web.api.MDCConstants;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -16,7 +15,6 @@ import org.springframework.security.core.GrantedAuthority;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,7 +60,7 @@ public class AcmLoginSuccessOperations
         HttpSession session = request.getSession(true);
         session.setAttribute("acm_username", userId);
 
-        if (log.isDebugEnabled())
+        if ( log.isDebugEnabled() )
         {
             log.debug("Session 'acm_username' set to '" + userId + "'");
         }
@@ -88,15 +86,17 @@ public class AcmLoginSuccessOperations
     {
         switch (getAcmApplication().getAlfrescoUserIdLdapAttribute().toLowerCase())
         {
-        case "samaccountname":
-            return acmUser.getsAMAccountName();
-        case "userprincipalname":
-            return acmUser.getUserPrincipalName();
-        case "dn":
-        case "distinguishedname":
-            return acmUser.getDistinguishedName();
-        default:
-            return acmUser.getsAMAccountName();
+            case "samaccountname":
+                return acmUser.getsAMAccountName();
+            case "userprincipalname":
+                return acmUser.getUserPrincipalName();
+            case "uid":
+                return acmUser.getUid();
+            case "dn":
+            case "distinguishedname":
+                return acmUser.getDistinguishedName();
+            default:
+                return acmUser.getsAMAccountName();
         }
     }
 
@@ -106,14 +106,14 @@ public class AcmLoginSuccessOperations
 
         HttpSession session = request.getSession(true);
 
-        if (authentication.getDetails() != null && authentication.getDetails() instanceof AcmAuthenticationDetails)
+        if ( authentication.getDetails() != null && authentication.getDetails() instanceof AcmAuthenticationDetails )
         {
             ipAddress = ((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress();
         }
 
         session.setAttribute("acm_ip_address", ipAddress);
 
-        if (log.isDebugEnabled())
+        if ( log.isDebugEnabled() )
         {
             log.debug("Session 'acm_ip_address' set to '" + ipAddress + "'");
         }
@@ -123,9 +123,9 @@ public class AcmLoginSuccessOperations
     {
         List<String> allPrivileges = new ArrayList<>();
 
-        if (authentication.getAuthorities() != null)
+        if ( authentication.getAuthorities() != null )
         {
-            for (GrantedAuthority authority : authentication.getAuthorities())
+            for ( GrantedAuthority authority : authentication.getAuthorities() )
             {
                 List<String> privileges = getAcmPluginManager().getPrivilegesForRole(authority.getAuthority());
                 allPrivileges.addAll(privileges);
@@ -135,7 +135,7 @@ public class AcmLoginSuccessOperations
         // we have to put a map in the session because of how JSTL works. It's easier to check for
         // a map entry than to see if an element exists in a list.
         Map<String, Boolean> privilegeMap = new HashMap<>();
-        for (String privilege : allPrivileges)
+        for ( String privilege : allPrivileges )
         {
             privilegeMap.put(privilege, Boolean.TRUE);
         }
@@ -144,7 +144,7 @@ public class AcmLoginSuccessOperations
 
         session.setAttribute("acm_privileges", privilegeMap);
 
-        if (log.isDebugEnabled())
+        if ( log.isDebugEnabled() )
         {
             log.debug("Added " + privilegeMap.size() + " privileges to user session.");
         }
@@ -164,14 +164,13 @@ public class AcmLoginSuccessOperations
             json = om.writeValueAsString(getAcmApplication().getObjectTypes());
             json = json == null || "null".equals(json) ? "[]" : json;
             session.setAttribute("acm_object_types", json);
-        }
-        catch (IOException e)
+        } catch (IOException e)
         {
             log.error(e.getMessage());
             session.setAttribute("acm_object_types", "[]");
         }
 
-        if (log.isDebugEnabled())
+        if ( log.isDebugEnabled() )
         {
             log.debug("Added ACM application named '" + getAcmApplication().getApplicationName() + "' to user session.");
         }
