@@ -8,7 +8,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "ACM_USER_ROLE")
+@Table(name = "acm_user_role")
 @IdClass(AcmUserRolePrimaryKey.class)
 public class AcmUserRole
 {

@@ -209,6 +209,24 @@
       "username": "Username"
     }
   },
+  "tasks.objectSearch": {
+    "id": "objectSearch",
+    "title": "Object Search",
+    "search": {
+      "btn": "Search",
+      "placeholder": "Search for the case or complaint to this task."
+    },
+    "cancelButton": "Cancel",
+    "confirmButton": "Confirm",
+    "enabled": true,
+    "userFacetFilter": "\"Object Type\": ",
+    "objectGridColumns": {
+      "name": "Number",
+      "type": "Type",
+      "title": "Title",
+      "username": "Assignee"
+    }
+  },
   "tasks.comp.addreference": {
     "title": "Add Reference",
     "cancelButton": "Cancel",
@@ -257,5 +275,25 @@
     "btnCancelText": "Cancel",
     "btnSaveText": "Save",
     "searchAssigneeHeader": "Search Assignee"
+  },
+  "tasks.comp.approvalRouting": {
+    "title": "Future Approvers",
+    "addNewTooltip": "Add new approver",
+    "noBuckslipMessage":"No Data",
+    "button": {
+      "save.tooltip": "Save Changes"
+    },
+    "table.columns": {
+      "fullName": "Full Name"
+    }
+  },
+  "tasks.comp.pastApprovals": {
+    "title": "Past Approvers",
+    "noBuckslipMessage":"No Data",
+    "table.columns": {
+      "approvalDate": "Approval Date",
+      "approverId": "Approver",
+      "approverDecision": "Approver Decision"
+    }
   }
 }

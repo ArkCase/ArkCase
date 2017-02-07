@@ -8,11 +8,11 @@
     </Appenders>
     <Loggers>
         <!-- INFO and above to console and log file; com.armedia debug and above to log file -->
-        <Logger name="com.armedia.acm.drools" additivity="debug">
-            <AppenderRef ref="Console" level="debug"/>
+        <Logger name="com.armedia.acm.drools" level="debug" additivity="false">
+            <AppenderRef ref="Console" />
         </Logger>
-        <Logger name="com.armedia" level="info" additivity="false">
-            <AppenderRef ref="Console" level="info"/>
+        <Logger name="com.armedia" level="debug" additivity="false">
+            <AppenderRef ref="Console"/>
         </Logger>
         <Root level="info" additivity="false">
             <AppenderRef ref="Console" level="info"/>

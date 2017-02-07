@@ -18,9 +18,12 @@ angular.module('admin').service('Admin.CMTemplatesService', ['$http', 'Upload',
     function ($http, Upload) {
         return ({
             retrieveTemplatesList: retrieveTemplatesList,
+            retrieveQuerySelectList: retrieveQuerySelectList,
             fullDownloadPath: fullDownloadPath,
-            uploadTemplate: uploadTemplate
-
+            uploadTemplate: uploadTemplate,
+            getTemplateData: getTemplateData,
+            saveTemplateData: saveTemplateData,
+            deleteTemplate: deleteTemplate
         });
 
         /**
@@ -37,6 +40,81 @@ angular.module('admin').service('Admin.CMTemplatesService', ['$http', 'Upload',
             return $http({
                 method: "GET",
                 url: "api/latest/plugin/admin/template/list"
+            });
+        };
+
+        /**
+         * @ngdoc method
+         * @name retrieveQuerySelectList
+         * @methodOf admin.service:Admin.CMTemplatesService
+         *
+         * @description
+         * Performs retrieving correspondence management templates query select list.
+         *
+         * @param {string} objectType Object Type
+         *
+         * @returns {HttpPromise} Future info about widgets
+         */
+        function retrieveQuerySelectList(objectType) {
+            return $http({
+                method: "GET",
+                url: 'api/latest/plugin/admin/queries/' + objectType
+            });
+        };
+
+        /**
+         * @ngdoc method
+         * @name getTemplateData
+         * @methodOf admin.service:Admin.CMTemplatesService
+         *
+         * @description
+         * Get query and mapped fields for template.
+         *
+         * @param {string} fileName FileName
+         *
+         * @returns {HttpPromise} Future info about widgets
+         */
+        function getTemplateData(fileName) {
+            return $http({
+                method: "GET",
+                url: 'api/latest/plugin/admin/template/' + fileName
+            });
+        };
+
+        /**
+         * @ngdoc method
+         * @name saveTemplateData
+         * @methodOf admin.service:Admin.CMTemplatesService
+         *
+         * @description
+         * Saving query and mapped fields for template.
+         *
+         * @param {object} template Contains template data
+         * @returns {HttpPromise} Future info about widgets
+         */
+        function saveTemplateData(template) {
+            return $http({
+                method: "PUT",
+                url: 'api/latest/plugin/admin/template',
+                data: template
+            });
+        };
+
+        /**
+         * @ngdoc method
+         * @name saveTemplateData
+         * @methodOf admin.service:Admin.CMTemplatesService
+         *
+         * @description
+         * Saving query and mapped fields for template.
+         *
+         * @param {string} fileName FileName
+         * @returns {HttpPromise} Future info about widgets
+         */
+        function deleteTemplate(fileName) {
+            return $http({
+                method: "DELETE",
+                url: 'api/latest/plugin/admin/template/' + fileName
             });
         };
 

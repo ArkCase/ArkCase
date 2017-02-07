@@ -11,6 +11,7 @@ import com.armedia.acm.plugins.objectassociation.model.ObjectAssociationConstant
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.search.model.SearchConstants;
+import com.armedia.acm.services.users.model.AcmUser;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -97,7 +98,7 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
 
     private boolean buckslipTask;
 
-    private List<String> buckslipFutureApprovers;
+    private List<AcmUser> buckslipFutureApprovers;
 
     private String buckslipPastApprovers;
 
@@ -561,12 +562,12 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
         this.buckslipTask = buckslipTask;
     }
 
-    public List<String> getBuckslipFutureApprovers()
+    public List<AcmUser> getBuckslipFutureApprovers()
     {
         return buckslipFutureApprovers;
     }
 
-    public void setBuckslipFutureApprovers(List<String> buckslipFutureApprovers)
+    public void setBuckslipFutureApprovers(List<AcmUser> buckslipFutureApprovers)
     {
         this.buckslipFutureApprovers = buckslipFutureApprovers;
     }

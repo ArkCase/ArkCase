@@ -1,16 +1,8 @@
-/**
- * 
- */
 package com.armedia.acm.form.time.model;
-
-import java.util.List;
-import java.util.Map;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
-
-import com.armedia.acm.frevvo.model.Details;
-import com.armedia.acm.frevvo.model.Options;
+import java.util.List;
 
 /**
  * @author riste.tutureski
@@ -24,9 +16,7 @@ public class TimeItem {
 	private Long objectId;
 	
 	private String code;
-	private Map<String, Options> codeOptions;
-	private Map<String, Map<String, Details>> codeDetails;
-	
+
 	private Long sundayId;
 	private Double sunday;
 	
@@ -75,31 +65,13 @@ public class TimeItem {
 		this.objectId = objectId;
 	}
 
-	@XmlElement(name="code")
+	@XmlElement(name="objectNumber")
 	public String getCode() {
 		return code;
 	}
 	
 	public void setCode(String code) {
 		this.code = code;
-	}
-
-	@XmlTransient
-	public Map<String, Options> getCodeOptions() {
-		return codeOptions;
-	}
-
-	public void setCodeOptions(Map<String, Options> codeOptions) {
-		this.codeOptions = codeOptions;
-	}
-
-	@XmlTransient
-	public Map<String, Map<String, Details>> getCodeDetails() {
-		return codeDetails;
-	}
-
-	public void setCodeDetails(Map<String, Map<String, Details>> codeDetails) {
-		this.codeDetails = codeDetails;
 	}
 
 	@XmlElement(name="sundayId")
