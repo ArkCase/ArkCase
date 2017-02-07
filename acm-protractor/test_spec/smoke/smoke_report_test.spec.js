@@ -81,7 +81,8 @@ describe('reports tests', function() {
 
         complaintPage.navigateToPage("Reports");
         reportPage.runReport("COMPLAINT DISPOSITION COUNT", "Draft", utils.returnToday("/"), utils.returnToday("/"));
-        reportPage.switchToReportframes().validateCDCReportTitles(Objects.reportPage.data.CDCReportDispositionTitle, Objects.reportPage.data.CDCReportCountTitle, Objects.reportPage.data.CDCFirstRowTitle, Objects.reportPage.data.CDCSecondRowTitle, Objects.reportPage.data.CDCThirdRowTitle, Objects.reportPage.data.CDCForthRowTitle);
+        reportPage.switchToReportframes();
+        reportPage.validateCDCReportTitles(Objects.reportPage.data.CDCReportDispositionTitle, Objects.reportPage.data.CDCReportCountTitle, Objects.reportPage.data.CDCFirstRowTitle, Objects.reportPage.data.CDCSecondRowTitle, Objects.reportPage.data.CDCThirdRowTitle, Objects.reportPage.data.CDCForthRowTitle);
         var closedNoFurtherAction = reportPage.returnCDCNoFurtherActionValue();
         var closedAddToExistingCase = reportPage.returnCDCAddToExistingCaseValue();
         var closedOpenInvestigation = reportPage.returnCDCOpenInvestigationValue();

@@ -1501,7 +1501,9 @@ var BasePage = function() {
         return this;
     };
     this.returnDetailsTextArea = function() {
-        return detailsTextArea.getText();
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.detailsTextArea))), 30000, "Details text area is not visible").then(function() {
+            return detailsTextArea.getText();
+        });
     };
     this.clickInsertLinkInDetails = function() {
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.detailsLinkBtn))), 30000, "Details link button is not visible").then(function() {
@@ -2057,7 +2059,14 @@ var BasePage = function() {
             });
         });
         return this;
-    }
+    };
+
+    this.waitForComplaintID = function() {
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.caseID))), 60000, "Case ID is not present").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.caseID))), 60000, "Case ID is not displayed");
+        });
+        return this;
+    };
 }
 
 module.exports = new BasePage();

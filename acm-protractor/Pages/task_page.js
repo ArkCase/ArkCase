@@ -229,7 +229,7 @@ var TaskPage = function() {
         return tasksTitle.getText();
     }
     this.returnStartDateInput = function() {
-        return startDate.getText();
+        return StartDateInput.getText();
     }
     this.returnDueDateInput = function() {
         return DueDateInput.getText();

@@ -51,9 +51,9 @@ describe('Create new task ', function() {
 
    //Complete the adhoc task, Make sure the automated task is created and approve it
 
-   it('should create new task click complete button and verify task state', function() {
+   it('should complete the task and verify task state', function() {
 
-        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "High", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+        taskPage.clickModuleTasks();
         taskPage.clickCompleteButton();
         expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateClosed, "After complete task status is not changed into closed");
 
@@ -61,10 +61,10 @@ describe('Create new task ', function() {
 
    //verify workflow table data on new created task
 
-    it('should create new task and verify workflow table data', function() {
+    it('should verify workflow table data on new created task', function() {
 
-        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
-        taskPage.workflowLink.click();
+        taskPage.clickModuleTasks();
+        taskPage.clickExpandFancyTreeTopElementAndSubLink("Workflow");
         expect(taskPage.returnWorkflowTitle()).toEqual(Objects.taskspage.data.workflowTitle, "Workflow title is not correct");
         expect(taskPage.returnWorkflowParticipant()).toEqual(Objects.taskspage.data.supervisor, "Workflow participant is not correct");
         expect(taskPage.returnWorkflowStatus()).toEqual(Objects.taskspage.data.workflowStatus, "Workflow status is not correct");
@@ -74,10 +74,10 @@ describe('Create new task ', function() {
 
     //verify history data on new created task
 
-    it('should create new task and verify history table data', function() {
+    it('should verify history table data on new created task', function() {
 
-        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "High", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
-        taskPage.clickHistoryLink();
+        taskPage.clickModuleTasks();
+        taskPage.clickExpandFancyTreeTopElementAndSubLink("History");
         expect(taskPage.returnHistoryTableTitle()).toEqual(Objects.taskspage.data.historyTableTitle, "History title is not correct");
         expect(taskPage.returnHistoryEventName()).toEqual(Objects.taskspage.data.historyEventName, "History event name is not correct");
         expect(taskPage.returnHistoryUser()).toEqual(Objects.taskspage.data.supervisor, "History user is not correct");
