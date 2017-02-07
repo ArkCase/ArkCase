@@ -52,7 +52,7 @@ public class AcmFolderDao extends AcmAbstractDao<AcmFolder> {
     }
 
     public List<AcmFolder> findSubFolders(Long parentFolderId) {
-        String jpql = "SELECT e FROM AcmFolder e WHERE e.parentFolderId=:parentFolderId";
+        String jpql = "SELECT e FROM AcmFolder e WHERE e.parentFolder.id = :parentFolderId";
 
         TypedQuery<AcmFolder> query = getEm().createQuery(jpql, getPersistenceClass());
         query.setParameter("parentFolderId", parentFolderId);
