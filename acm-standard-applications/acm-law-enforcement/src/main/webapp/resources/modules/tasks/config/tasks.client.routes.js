@@ -81,6 +81,11 @@ angular.module('tasks').config(['$stateProvider',
                 templateUrl: 'modules/tasks/views/components/task-rejcomments.client.view.html'
             })
 
+            .state('tasks.parentdocs', {
+                url: '/:type/:id/parentdocs',
+                templateUrl: 'modules/tasks/views/components/task-parentdocs.client.view.html'
+            })
+
             .state('tasks.attachments', {
                 url: '/:type/:id/attachments',
                 templateUrl: 'modules/tasks/views/components/task-attachments.client.view.html'
@@ -114,6 +119,11 @@ angular.module('tasks').config(['$stateProvider',
             .state('tasks.tags', {
                 url: '/:type/:id/tags',
                 templateUrl: 'modules/tasks/views/components/task-tags.client.view.html'
+            })
+
+            .state('tasks.approvalrouting', {
+                url: '/:type/:id/approvals',
+                templateUrl: 'modules/tasks/views/components/task-approval-routing.client.view.html'
             })
     }
 ]);

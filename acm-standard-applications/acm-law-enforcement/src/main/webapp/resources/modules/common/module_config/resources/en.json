@@ -222,7 +222,8 @@
       "error.groupType": "The owning group cannot be a person.",
       "error.userType": " User type cannot be a group.",
       "error.assigneeUnique": "Only one assignee is allowed.",
-      "error.owninggroupUnique": "Only one owning group is allowed."
+      "error.owninggroupUnique": "Only one owning group is allowed.",
+      "error.noAccessCombo": "The combination of No Access and Assignee is not allowed."
     }
   },
   "common.comp.acmLogin": {
@@ -233,7 +234,8 @@
     "COMPLAINT": "Complaint",
     "TASK": "Task",
     "TIMESHEET": "Timesheet",
-    "COSTSHEET": "Costsheet"
+    "COSTSHEET": "Costsheet",
+    "FILE": "File"
   },
   "frevvo.dialogUserPicker": {
     "header": "Choose User",

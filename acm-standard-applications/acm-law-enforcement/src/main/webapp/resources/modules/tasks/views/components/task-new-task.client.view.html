@@ -49,7 +49,8 @@
                             <select ng-model="config.data.attachedToObjectType"
                              		ng-change="updateAssocParentType()"
                                     ng-options="attachedToObjectType.id as attachedToObjectType.name for attachedToObjectType in config.attachedToObjectType"
-                                    class="form-control input-md">
+                                    class="form-control input-md"
+                                    ng-click="inputClear()">
                             </select>
                         </label>
                     </div>
@@ -59,7 +60,8 @@
                                class="input-md form-control"
                                placeholder="{{ 'tasks.newTask.associateNumber.placeholder' | translate }}"
                                id="complaintId"
-                               ng-disabled="config.data.attachedToObjectType==='' ">      
+                               ng-disabled="config.data.attachedToObjectType==='' "
+                               ng-click="objectSearch()">      
                     </div>
                 </div>
                 <div class="row">

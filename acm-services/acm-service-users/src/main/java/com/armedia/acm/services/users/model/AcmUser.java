@@ -22,7 +22,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "ACM_USER")
+@Table(name = "acm_user")
 public class AcmUser implements Serializable, AcmLdapUser
 {
     private static final long serialVersionUID = 3399640646540732944L;

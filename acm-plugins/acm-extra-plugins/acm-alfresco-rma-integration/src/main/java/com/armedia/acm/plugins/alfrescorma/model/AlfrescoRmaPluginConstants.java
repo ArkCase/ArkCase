@@ -16,6 +16,8 @@ public interface AlfrescoRmaPluginConstants
 
     String CASE_CLOSED_EVENT = "com.armedia.acm.casefile.closed";
 
+    String CASE_STATUS_CHANGED_EVENT = "com.armedia.acm.casefile.status.changed";
+
     String CASE_CLOSE_INTEGRATION_KEY = "alfresco_rma_declare_records_on_case_close";
     String COMPLAINT_CLOSE_INTEGRATION_KEY = "alfresco_rma_declare_records_on_complaint_close";
     String COMPLAINT_FOLDER_INTEGRATION_KEY = "alfresco_rma_create_record_folder_on_complaint_create";
