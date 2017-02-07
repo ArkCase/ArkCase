@@ -43,7 +43,7 @@ angular.module('services').factory('Helper.NoteService', ['UtilService', 'Object
              * @param {String} noteType type of the note
              * @returns {Object} note metadata used to populate a row in the notes table
              */
-            createNote: function (parentObjId, parentObjType, parentObjVersion, creator, author, noteType) {
+            createNote: function (parentObjId, parentObjType, parentObjVersion, creator, noteType, author) {
                 noteType = noteType || "GENERAL";
                 return {
                     parentId: parentObjId,
