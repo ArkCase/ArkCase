@@ -20,6 +20,13 @@ angular.module('cost-tracking').controller('CostTracking.SummaryController', ['$
             }
         });
 
+        ConfigService.getModuleConfig("common").then(function (moduleConfig) {
+            var customization = Util.goodMapValue(moduleConfig, "customization", {});
+            if (customization) {
+                $scope.customization = customization;
+            }
+        });
+
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
         var onConfigRetrieved = function (config) {
