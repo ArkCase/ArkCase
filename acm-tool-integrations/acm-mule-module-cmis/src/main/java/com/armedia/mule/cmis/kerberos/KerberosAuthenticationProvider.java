@@ -26,7 +26,7 @@ public class KerberosAuthenticationProvider extends AbstractAuthenticationProvid
 {
     private static final long serialVersionUID = 1L;
 
-    private static final Logger LOG = LoggerFactory.getLogger(KerberosHttpInvoker.class);
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     private static final String WSSE_NAMESPACE = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd";
     private static final String WSU_NAMESPACE = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd";
