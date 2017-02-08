@@ -7,6 +7,7 @@ import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserRole;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
@@ -94,7 +95,8 @@ public class LdapSyncDatabaseHelper
         {
             Set<AcmUser> currentUsers = group.getMembers();
             // keep users from other LDAP directories as members
-            Set<AcmUser> keepUsers = currentUsers.stream().filter(p -> !directoryName.equals(p.getUserDirectoryName())).collect(Collectors.toSet());
+            Set<AcmUser> keepUsers = currentUsers.stream().filter(p -> !directoryName.equals(p.getUserDirectoryName()))
+                    .collect(Collectors.toSet());
             users.addAll(keepUsers);
 
             group.setMembers(users);
@@ -123,7 +125,7 @@ public class LdapSyncDatabaseHelper
             }
 
             user.setUserDirectoryName(directoryName);
-            AcmUser saved = getUserDao().saveAcmUser(user);
+            AcmUser saved = getUserDao().save(user);
             retval.add(saved);
         }
         return retval;

@@ -1717,6 +1717,10 @@
                         <groupId>org.apache.poi</groupId>
                         <artifactId>poi</artifactId>
                     </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.httpcomponents</groupId>
+                        <artifactId>httpcore</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
 
