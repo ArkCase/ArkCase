@@ -335,7 +335,7 @@
               "width": 150
             },
             {
-              "name": "creator",
+              "name": "author",
               "displayName": "complaints.comp.notes.table.columns.creator",
               "headerCellFilter": "translate",
               "enableCellEdit": false,
