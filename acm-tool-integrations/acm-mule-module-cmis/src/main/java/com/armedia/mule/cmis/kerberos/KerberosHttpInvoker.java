@@ -1,5 +1,7 @@
 package com.armedia.mule.cmis.kerberos;
 
+import com.armedia.mule.cmis.basic.auth.HttpInvokerUtil;
+
 import org.apache.chemistry.opencmis.client.bindings.impl.ClientVersion;
 import org.apache.chemistry.opencmis.client.bindings.impl.CmisBindingsHelper;
 import org.apache.chemistry.opencmis.client.bindings.spi.AbstractAuthenticationProvider;
@@ -62,7 +64,7 @@ import java.util.stream.Collectors;
  */
 public class KerberosHttpInvoker implements HttpInvoker
 {
-    private static final Logger LOG = LoggerFactory.getLogger(KerberosHttpInvoker.class);
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     private static final String APP_CONFIGURATION_ENTRY_NAME = "MuleAlfrescoLogin";
 
@@ -217,6 +219,8 @@ public class KerberosHttpInvoker implements HttpInvoker
 
         if (authProvider != null)
         {
+            request.setHeader(HttpInvokerUtil.EXTERNAL_AUTH_KEY, HttpInvokerUtil.getExternalUserIdValue());
+
             Map<String, List<String>> httpHeaders = authProvider.getHTTPHeaders(url.toString());
             if (httpHeaders != null)
             {
