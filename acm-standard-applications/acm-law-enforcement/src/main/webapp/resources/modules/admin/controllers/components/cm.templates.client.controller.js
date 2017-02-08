@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$modal', 'Admin.CMTemplatesService',
-    'Helper.UiGridService', 'MessageService',
-    function ($scope, $modal, correspondenceService, HelperUiGridService, messageService) {
+    'Helper.UiGridService', 'MessageService', 'LookupService', 'Acm.StoreService',
+    function ($scope, $modal, correspondenceService, HelperUiGridService, messageService, LookupService, Store) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
@@ -36,6 +36,7 @@ angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$m
             delete template.fullPath;
 
             correspondenceService.saveTemplateData(template).then(function () {
+                clearCachedForms(template);
                 messageService.succsessAction();
                 ReloadGrid();
             }, function () {
@@ -45,6 +46,7 @@ angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$m
 
         $scope.deleteRow = function (rowEntity) {
             correspondenceService.deleteTemplate(rowEntity.templateFilename).then(function () {
+                clearCachedForms(rowEntity);
                 ReloadGrid();
                 messageService.succsessAction();
             }, function () {
@@ -211,6 +213,7 @@ angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$m
                 template.templateSubstitutionVariables = tempFields;
 
                 correspondenceService.saveTemplateData(template).then(function () {
+                    clearCachedForms(template);
                     messageService.succsessAction();
                     ReloadGrid();
                 }, function () {
@@ -219,7 +222,16 @@ angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$m
             });
 
         }
-
+        function clearCachedForms(template){
+            var cacheConfigMap = new Store.SessionData(LookupService.SessionCacheNames.CONFIG_MAP);
+            var configMap = cacheConfigMap.get();
+            if (template.queryType == 'CASE_FILE') {
+                delete configMap['caseCorrespondenceForms'];
+            } else if (template.queryType == 'COMPLAINT') {
+                delete configMap['complaintCorrespondenceForms'];
+            }
+            cacheConfigMap.set(configMap);
+        }
         function ReloadGrid() {
             var templatesPromise = correspondenceService.retrieveTemplatesList();
             templatesPromise.then(function (templates) {
