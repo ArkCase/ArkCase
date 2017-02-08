@@ -127,12 +127,12 @@ angular.module('admin').service('Admin.CMTemplatesService', ['$http', 'Upload',
          * @description
          * Performs get full path for download
          *
-         * @param {String} path file path
+         * @param {String} path file name
          *
          * @returns {String} full download path
          */
-        function fullDownloadPath(path) {
-            return 'api/latest/plugin/admin/template?filePath=' + path;
+        function fullDownloadPath(name) {
+            return 'api/latest/plugin/admin/template?fileName=' + name;
         };
 
         /**

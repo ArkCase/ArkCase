@@ -56,7 +56,7 @@ angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$m
 
         function AddFullPath(data) {
             angular.forEach(data, function (row, index) {
-                row.fullPath = correspondenceService.fullDownloadPath(row.path);
+                row.fullPath = correspondenceService.fullDownloadPath(row.templateFilename);
             });
         }
 
