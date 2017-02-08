@@ -40,7 +40,7 @@ describe('edit user profile page', function() {
     it('should navigate to user profile page', function() {
 
         userPage.clickUserNavigation();
-        expect(userPage.returnUserNavigationProfile()).toEqual(Objects.userpage.data.userNavigationProfile);
+        expect(userPage.returnUserNavigationProfile()).toEqual(Objects.userpage.data.userNavigationProfile, "User navigation profile is not correct");
         userPage.clickUserNavigationProfile();
         expect(userPage.returnUserPageHeader()).toEqual(Objects.userpage.data.userPageHeader, "User page header is not correct");
     });

@@ -29,7 +29,6 @@ describe('Create new task ', function() {
     });
 
     afterEach(function() {
-
         loginPage.Logout();
     });
 
@@ -46,16 +45,6 @@ describe('Create new task ', function() {
         taskPage.insertPercentComplete(Objects.taskpage.data.percentCompleteInput).clickSave();
         expect(taskPage.returnTasksTitle()).toEqual(Objects.taskpage.data.tasksTitle, "Task title is not correct");
         expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateActive, "Task status is not correct");
-
-    });
-
-   //Complete the adhoc task, Make sure the automated task is created and approve it
-
-   it('should complete the task and verify task state', function() {
-
-        taskPage.clickModuleTasks();
-        taskPage.clickCompleteButton();
-        expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateClosed, "After complete task status is not changed into closed");
 
     });
 
@@ -82,6 +71,16 @@ describe('Create new task ', function() {
         expect(taskPage.returnHistoryEventName()).toEqual(Objects.taskspage.data.historyEventName, "History event name is not correct");
         expect(taskPage.returnHistoryUser()).toEqual(Objects.taskspage.data.supervisor, "History user is not correct");
         expect(taskPage.returnHistoryDate()).toContain(utils.returnToday("/"), "History date is not correct");
+
+    });
+
+    //Complete the adhoc task, Make sure the automated task is created and approve it
+
+    it('should complete the task and verify task state', function() {
+
+        taskPage.clickModuleTasks();
+        taskPage.clickCompleteButton();
+        expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateClosed, "After complete task status is not changed into closed");
 
     });
 

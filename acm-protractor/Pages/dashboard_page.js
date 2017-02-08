@@ -38,7 +38,9 @@ var DashboardPage = function() {
         return widgetTitle.getText();
     }
     this.removeWidgetButton = function() {
-        removeWidgetBtn.click();
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.dashboardpage.locators.removeWidgetBtn))), 10000, "remove widget button in the dashboard page is not displayed").then(function() {
+            removeWidgetBtn.click();
+        });
         return this;
     }
     this.clickSaveChangesButton = function() {
@@ -48,35 +50,51 @@ var DashboardPage = function() {
     this.addWidget = function(type) {
         switch (type) {
             case "CasesByStatus":
-                casesByStatus.click();
+                browser.wait(EC.visibilityOf(element(by.linkText(Objects.dashboardpage.locators.casesByStatus))), 10000, "Cases by status link is not visible").then(function() {
+                    casesByStatus.click();
+                });
                 return this;
                 break;
             case "MyCases":
-                myCases.click();
+                browser.wait(EC.visibilityOf(element(by.linkText(Objects.dashboardpage.locators.myCases))), 10000, "My cases link is not visible").then(function() {
+                    myCases.click();
+                });
                 return this;
                 break;
             case "MyComplaints":
-                myComplaints.click();
+                browser.wait(EC.visibilityOf(element(by.linkText(Objects.dashboardpage.locators.myComplaints))), 10000, "My complaints link is not visible").then(function() {
+                    myComplaints.click();
+                });
                 return this;
                 break;
             case "NewComplaints":
-                newComplaints.click();
+                browser.wait(EC.visibilityOf(element(by.linkText(Objects.dashboardpage.locators.newComplaints))), 10000, "New complaints link is not visible").then(function() {
+                    newComplaints.click();
+                });
                 return this;
                 break;
             case "TeamWorkload":
-                teamWorkload.click();
+                browser.wait(EC.visibilityOf(element(by.linkText(Objects.dashboardpage.locators.teamWorkload))), 10000, "Team workload link is not visible").then(function() {
+                    teamWorkload.click();
+                });
                 return this;
                 break;
             case "Weather":
-                weather.click();
+                browser.wait(EC.visibilityOf(element(by.linkText(Objects.dashboardpage.locators.weather))), 10000, "Weather link is not visible").then(function() {
+                    weather.click();
+                });
                 return this;
                 break;
             case "News":
-                news.click();
+                browser.wait(EC.visibilityOf(element(by.linkText(Objects.dashboardpage.locators.news))), 10000, "News link is not visible").then(function() {
+                    news.click();
+                });
                 return this;
                 break;
             case "MyTasks":
-                myTasks.click();
+                browser.wait(EC.visibilityOf(element(by.linkText(Objects.dashboardpage.locators.myTasks))), 10000, "My tasks link is not visible").then(function() {
+                    myTasks.click();
+                });
                 return this;
 
             default:
