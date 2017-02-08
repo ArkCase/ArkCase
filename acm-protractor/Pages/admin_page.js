@@ -32,7 +32,7 @@ var AdminPage = function() {
                var xPathStr = "//span[contains(text(),'";
                 var completexPath;
                 completexPath = xPathStr + link + "')]";
-                browser.wait(EC.visibilityOf(element(by.xpath(completexPath))), 30000).then(function() {
+                browser.wait(EC.visibilityOf(element(by.xpath(completexPath))), 30000, "Link " +link+ " is not visible").then(function() {
                     var el = element(by.xpath(completexPath));
                     el.click();
                 });
