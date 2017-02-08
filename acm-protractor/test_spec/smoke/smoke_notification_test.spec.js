@@ -35,6 +35,6 @@ describe('notification page test', function() {
 
     it('should verify that description date/time is equal to modified column date/time', function() {
         notificationPage.navigateToPage("Notifications");
-        expect(notificationPage.returnDescription()).toContain(notificationPage.returnModifiedBy());
+        expect(notificationPage.returnDescription()).toContain(notificationPage.returnModifiedBy(), "In description of notification modified date is not correct");
     });
 });

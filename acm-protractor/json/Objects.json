@@ -1,5 +1,5 @@
 {
-    "siteurl": "http://core.arkcase.dev.armedia.com/arkcase/login",
+    "siteurl": "https://core.arkcase.dev.armedia.com/arkcase/login",
     "loginpage": {
         "locators": {
             "username": "j_username",
@@ -9,7 +9,7 @@
         "data": {
             "supervisoruser": {
 
-                "username": "sally-acm",
+                "username": "samuel-acm",
                 "password": "AcMd3v$"
             },
             "adminuser": {
@@ -72,15 +72,21 @@
             "restrictCheckboxDisabled": ".//input[@ng-model='restricted'][@disabled='disabled']",
             "notificationMessage": "[ng-show='!$messageTemplate']",
             "docVersionDropDownList": ".docversion.inline",
-            "emailRecepient": "recipientsStr",
+            "emailRecepient": "//textarea",
             "sendEmailButton": "Send Email",
-            "sugestedTag": "[ng-click='addSuggestionByIndex($index)']"
-
+            "sugestedTag": "[ng-click='addSuggestionByIndex($index)']",
+            "fadeElement": "//*[@animate='animate']",
+            "timeCanvasData":"[chart-data='time.data']",
+            "owningGroupDropDown": ".//*[@class='editable-controls form-group']/..//select",
+            "owningGroupConfirmBtn": ".//*[@class='editable-controls form-group']/..//button[1]",
+            "assigneeNameModelInput": "participant.selectedAssigneeName"
         },
         "data": {
             "reportTitle": "Report of Investigation Title",
             "note": "NoteText",
-            "email": "sanja.paskova@armedia.com"
+            "email": "sanja.paskova@armedia.com",
+            "owningGroupAdministratorDev":"ACM_ADMINISTRATOR_DEV",
+            "IanInvestigator":"Ian Investigator"
 
         }
 
@@ -119,7 +125,9 @@
             "chooseFilesBtn": ".//*[@class='form-group row note-group-select-from-files']/input",
             "associateNumberInput": "associateNumber",
             "taskState": ".//*[@class='clearfix']/div[2]/div[6]/div",
-            "editSubmitButton": ".btn.btn-primary.btn-sm"
+            "editSubmitButton": ".btn.btn-primary.btn-sm",
+            "groupTask": "groupToggle",
+            "selectGroup": "chosenGroup"
         },
 
         "data": {
@@ -142,7 +150,7 @@
         "locators": {
 
             "priority": ".//*[@class='clearfix']/div[2]/div[3]/div/a",
-            "assignee": ".//*[@class='clearfix']/div[2]/div[2]/div/a",
+            "assignee": "[ng-click='showAssigneePicker()']",
             "assigneeDropDown": "$data",
             "selectAssignee": ".//*[.='Ann Administrator']",
             "assigneeBtn": ".//*[@class='clearfix']/div[2]/div[2]/div/form/div/span/button[1]",
@@ -272,7 +280,8 @@
             "documentWordTitle": "ArkCaseTesting",
             "documentExcelWordTitle": "caseSummary",
             "documentPdfTitle": "caseSummary",
-            "documentTitleInput": "folder"
+            "documentTitleInput": "folder",
+            "owningGroup": "ACM_ANALYST_DEV"
 
         }
     },
@@ -463,7 +472,8 @@
             "searchButton": ".//input[@value='Search']",
             "caseTitle": "caseTitle",
             "caseCreatedDate": "caseCreationDate",
-            "casePriority": "casePriority"
+            "casePriority": "casePriority",
+            "selectParticipantType": ".//*[@class='c-table clearfix']/..//tbody/tr/td[4]"
         },
         "data": {
             "firstName": "ComplaintFirstName",
@@ -613,7 +623,7 @@
             "searchForUserInput": "//*[@class='modal-search-header']/..//input",
             "searchUserBtn": "Search",
             "OkBtn": "OK",
-            "searchedUserName":".//*[@class='ui-grid-canvas']/div/div[1]/div[4]",
+            "searchedUserName":".//*[@class='ui-grid-canvas']/div/div[1]/div[2]",
             "participantLinkBtn": ".//*[@class='fa fa-users']",
             "participantTableRow": ".//*[@class='ui-grid-cell-contents ng-binding ng-scope']",
             "participantTable": ".//*[@class='panel panel-success panel-grid']",
@@ -719,7 +729,7 @@
             "timetrackingTitle": ".//*[@class='f-message decorator']/..//div/b",
             "saveBtn": "//input[@name='actionType'][@value='Save']",
             "newTimesheetBtn": "New Timesheet",
-            "editTimesheetBtn": "Edit Timesheet",
+            "editTimesheetBtn": "[ui-sref='frevvo.edit-timesheet(editTimesheetParams)']",
             "caseFileModule": "a[href*='#!/cases//main']",
             "complaintsModule": "a[href*='#!/complaints//main']",
             "timesheetsPageTitle": ".//*[@class='module-header']/..//h3/span",
@@ -727,9 +737,8 @@
             "periodInput": ".//*[@class='input f-date']",
             "timeTrackingModule": "a[href*='#!/time-tracking//main']",
             "timeTrackingDate": ".//*[@class='f-control Three columns  f-output  s-valid  s-prepend   s-linked Message s-new-line s-color-None']",
-            "chargeCodeAlertMessage":".//*[@class='f-status f-table-status s-alert']"
-
-
+            "chargeCodeAlertMessage":".//*[@class='f-status f-table-status s-alert']",
+            "timeTotal": "rowTotal"
         },
         "data": {
 

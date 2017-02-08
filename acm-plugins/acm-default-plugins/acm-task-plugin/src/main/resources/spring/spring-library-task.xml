@@ -60,6 +60,7 @@
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="priorityLevelToNumberMap" ref="priorityLevelToNumberMap"/>
         <property name="taskEventPublisher" ref="taskEventPublisher"/>
+        <property name="acmUserService" ref="acmUserService"/>
         <property name="requiredFieldsPerOutcomeMap">
             <map>
                 <entry key="APPROVE">
@@ -131,7 +132,7 @@
         <property name="objectAssociationService" ref="objectAssociationService"/>
         <property name="objectAssociationEventPublisher" ref="objectAssociationEventPublisher"/>
     </bean>
-    
+
     <bean id="acmApplicationTaskEventHandler" class="com.armedia.acm.plugins.task.service.impl.AcmApplicationTaskEventHandler">
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="taskDao" ref="acmTaskDao"/>
@@ -147,7 +148,7 @@
              </list>
          </property>
     </bean>
-    
+
     <bean id="acmTaskActivitiEventHandler" class="com.armedia.acm.plugins.task.service.impl.AcmTaskActivitiEventHandler">
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="taskDao" ref="acmTaskDao"/>

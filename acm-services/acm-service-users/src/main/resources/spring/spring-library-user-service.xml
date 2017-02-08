@@ -16,6 +16,11 @@
 
     <bean id="springLdapUserDao" class="com.armedia.acm.services.users.dao.ldap.SpringLdapUserDao"/>
 
+    <bean id="acmUserService" class="com.armedia.acm.services.users.service.AcmUserServiceImpl">
+        <property name="userDao" ref="userJpaDao"/>
+    </bean>
+
+
     <!-- UserDao caching functionality -->
     <bean id="quietUserLookupCacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
         <property name="cacheManager" ref="quietUserLookupConnectionEhCache"/>

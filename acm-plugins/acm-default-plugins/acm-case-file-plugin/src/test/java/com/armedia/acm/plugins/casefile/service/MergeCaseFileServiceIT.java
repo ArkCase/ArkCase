@@ -1,9 +1,5 @@
 package com.armedia.acm.plugins.casefile.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import com.armedia.acm.auth.AcmGrantedAuthority;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
@@ -22,12 +18,14 @@ import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
-
+import com.armedia.acm.web.api.MDCConstants;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -40,27 +38,46 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
+
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(name = "spring", locations = { "/spring/spring-library-acm-encryption.xml",
-        "/spring/spring-library-activiti-configuration.xml", "/spring/spring-library-audit-service.xml",
-        "/spring/spring-library-authentication-token.xml", "/spring/spring-library-business-process.xml",
-        "/spring/spring-library-case-file-dao.xml", "/spring/spring-library-case-file-rules.xml",
-        "/spring/spring-library-case-file-save.xml", "/spring/spring-library-case-file-split-merge.xml",
-        "/spring/spring-library-context-holder.xml", "/spring/spring-library-data-access-control.xml",
-        "/spring/spring-library-data-source.xml", "/spring/spring-library-ecm-file.xml", "/spring/spring-library-event.xml",
-        "/spring/spring-library-folder-watcher.xml", "/spring/spring-library-merge-case-test-IT.xml",
-        "/spring/spring-library-ms-outlook-integration.xml", "/spring/spring-library-ms-outlook-plugin.xml",
-        "/spring/spring-library-note.xml", "/spring/spring-library-object-association-plugin.xml",
-        "/spring/spring-library-object-history.xml", "/spring/spring-library-particpants.xml", "/spring/spring-library-person.xml",
-        "/spring/spring-library-profile.xml", "/spring/spring-library-property-file-manager.xml", "/spring/spring-library-search.xml",
-        "/spring/spring-library-task.xml", "/spring/spring-library-user-service.xml", "/spring/spring-library-notification.xml",
-        "/spring/spring-library-service-data.xml" })
+@ContextConfiguration(name = "spring", locations = {
+        "/spring/spring-library-acm-encryption.xml",
+        "/spring/spring-library-activiti-configuration.xml",
+        "/spring/spring-library-audit-service.xml",
+        "/spring/spring-library-authentication-token.xml",
+        "/spring/spring-library-business-process.xml",
+        "/spring/spring-library-case-file-dao.xml",
+        "/spring/spring-library-case-file-rules.xml",
+        "/spring/spring-library-case-file-save.xml",
+        "/spring/spring-library-case-file-split-merge.xml",
+        "/spring/spring-library-context-holder.xml",
+        "/spring/spring-library-data-access-control.xml",
+        "/spring/spring-library-data-source.xml",
+        "/spring/spring-library-ecm-file.xml",
+        "/spring/spring-library-event.xml",
+        "/spring/spring-library-folder-watcher.xml",
+        "/spring/spring-library-merge-case-test-IT.xml",
+        "/spring/spring-library-ms-outlook-integration.xml",
+        "/spring/spring-library-ms-outlook-plugin.xml",
+        "/spring/spring-library-note.xml",
+        "/spring/spring-library-object-association-plugin.xml",
+        "/spring/spring-library-object-history.xml",
+        "/spring/spring-library-particpants.xml",
+        "/spring/spring-library-person.xml",
+        "/spring/spring-library-profile.xml",
+        "/spring/spring-library-property-file-manager.xml",
+        "/spring/spring-library-search.xml",
+        "/spring/spring-library-task.xml",
+        "/spring/spring-library-user-service.xml",
+        "/spring/spring-library-notification.xml",
+        "/spring/spring-library-service-data.xml"})
 @TransactionConfiguration(defaultRollback = true)
 public class MergeCaseFileServiceIT
 {
@@ -93,6 +110,13 @@ public class MergeCaseFileServiceIT
     private Long targetId;
     private Authentication auth;
     private String ipAddress;
+
+    @Before
+    public void setUp() throws Exception
+    {
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
+    }
 
     @Test
     @Transactional
@@ -169,9 +193,9 @@ public class MergeCaseFileServiceIT
         CaseFile targetCase = caseFileDao.find(targetId);
 
         ObjectAssociation sourceOa = null;
-        for (ObjectAssociation oa : sourceCase.getChildObjects())
+        for ( ObjectAssociation oa : sourceCase.getChildObjects() )
         {
-            if ("MERGED_TO".equals(oa.getCategory()))
+            if ( "MERGED_TO".equals(oa.getCategory()) )
                 sourceOa = oa;
         }
         assertNotNull(sourceOa);
@@ -179,9 +203,9 @@ public class MergeCaseFileServiceIT
         assertEquals(sourceOa.getTargetId().longValue(), targetCase.getId().longValue());
 
         ObjectAssociation targetOa = null;
-        for (ObjectAssociation oa : targetCase.getChildObjects())
+        for ( ObjectAssociation oa : targetCase.getChildObjects() )
         {
-            if ("MERGED_FROM".equals(oa.getCategory()))
+            if ( "MERGED_FROM".equals(oa.getCategory()) )
                 targetOa = oa;
         }
         assertNotNull(targetOa);
@@ -225,7 +249,7 @@ public class MergeCaseFileServiceIT
         AcmParticipant assigneeParticipant = new AcmParticipant();
         assigneeParticipant.setParticipantLdapId(auth.getName());
         assigneeParticipant.setParticipantType(ParticipantTypes.ASSIGNEE);
-        if (targetCaseFile.getParticipants() == null)
+        if ( targetCaseFile.getParticipants() == null )
             targetCaseFile.setParticipants(new ArrayList<>());
         targetCaseFile.getParticipants().add(assigneeParticipant);
 
@@ -249,9 +273,9 @@ public class MergeCaseFileServiceIT
 
         CaseFile targetCase = caseFileDao.find(targetId);
         AcmParticipant foundAssignee = null;
-        for (AcmParticipant ap : targetCase.getParticipants())
+        for ( AcmParticipant ap : targetCase.getParticipants() )
         {
-            if (ParticipantTypes.ASSIGNEE.equals(ap.getParticipantType()))
+            if ( ParticipantTypes.ASSIGNEE.equals(ap.getParticipantType()) )
             {
                 foundAssignee = ap;
                 break;
@@ -298,7 +322,7 @@ public class MergeCaseFileServiceIT
         AcmParticipant assigneeParticipant = new AcmParticipant();
         assigneeParticipant.setParticipantLdapId("ian-acm");
         assigneeParticipant.setParticipantType(ParticipantTypes.ASSIGNEE);
-        if (targetCaseFile.getParticipants() == null)
+        if ( targetCaseFile.getParticipants() == null )
             targetCaseFile.setParticipants(new ArrayList<>());
         targetCaseFile.getParticipants().add(assigneeParticipant);
 
@@ -315,9 +339,9 @@ public class MergeCaseFileServiceIT
         assertEquals(4, targetSaved.getParticipants().size());
 
         AcmParticipant foundAssignee = null;
-        for (AcmParticipant ap : targetSaved.getParticipants())
+        for ( AcmParticipant ap : targetSaved.getParticipants() )
         {
-            if (ParticipantTypes.ASSIGNEE.equals(ap.getParticipantType()))
+            if ( ParticipantTypes.ASSIGNEE.equals(ap.getParticipantType()) )
             {
                 foundAssignee = ap;
                 break;
@@ -340,9 +364,9 @@ public class MergeCaseFileServiceIT
         assertEquals(6, targetCase.getParticipants().size());
 
         foundAssignee = null;
-        for (AcmParticipant ap : targetCase.getParticipants())
+        for ( AcmParticipant ap : targetCase.getParticipants() )
         {
-            if (ParticipantTypes.ASSIGNEE.equals(ap.getParticipantType()))
+            if ( ParticipantTypes.ASSIGNEE.equals(ap.getParticipantType()) )
             {
                 foundAssignee = ap;
                 break;
@@ -352,9 +376,9 @@ public class MergeCaseFileServiceIT
         assertEquals(auth.getName(), foundAssignee.getParticipantLdapId());
 
         AcmParticipant foundPreviousAssignee = null;
-        for (AcmParticipant ap : targetCase.getParticipants())
+        for ( AcmParticipant ap : targetCase.getParticipants() )
         {
-            if (ParticipantTypes.FOLLOWER.equals(ap.getParticipantType()) && "ian-acm".equals(ap.getParticipantLdapId()))
+            if ( ParticipantTypes.FOLLOWER.equals(ap.getParticipantType()) && "ian-acm".equals(ap.getParticipantLdapId()) )
             {
                 foundPreviousAssignee = ap;
                 break;
