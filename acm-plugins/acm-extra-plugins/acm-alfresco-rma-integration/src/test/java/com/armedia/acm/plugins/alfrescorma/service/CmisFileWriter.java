@@ -5,6 +5,8 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.mule.api.MuleMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
@@ -12,13 +14,15 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 /**
  * Created by dmiller on 11/7/2016.
  */
 public class CmisFileWriter
 {
+    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
+
     public Document writeTestFile(MuleContextManager muleContextManager) throws Exception
     {
         // create a file that we can then declare as a record and set metadata on it
@@ -45,6 +49,9 @@ public class CmisFileWriter
         assertNotNull(addFileMessage);
 
         Document found = addFileMessage.getPayload(Document.class);
+
+        LOG.info("Created file with id {}", found.getVersionSeriesId());
+
         return found;
     }
 }

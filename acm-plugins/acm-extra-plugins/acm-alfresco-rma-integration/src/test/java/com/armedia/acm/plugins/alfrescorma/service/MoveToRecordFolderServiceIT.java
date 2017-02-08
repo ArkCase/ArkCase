@@ -1,10 +1,7 @@
 package com.armedia.acm.plugins.alfrescorma.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
-
+import com.armedia.acm.web.api.MDCConstants;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.client.api.Folder;
@@ -13,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
@@ -22,6 +20,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -37,7 +37,9 @@ import java.util.UUID;
         "/spring/spring-library-search.xml",
         "/spring/spring-library-user-service.xml",
         "/spring/spring-library-data-access-control.xml",
-        "/spring/spring-library-particpants.xml" })
+        "/spring/spring-library-particpants.xml",
+        "/spring/spring-library-activiti-configuration.xml"
+})
 public class MoveToRecordFolderServiceIT
 {
     @Autowired
@@ -72,6 +74,9 @@ public class MoveToRecordFolderServiceIT
     @Before
     public void setUp() throws Exception
     {
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
+
         Document testFile = cmisFileWriter.writeTestFile(muleContextManager);
         ecmFileId = testFile.getVersionSeriesId();
     }
@@ -101,8 +106,7 @@ public class MoveToRecordFolderServiceIT
 
         // find a category folder
         Map<String, Object> categoryContext = new HashMap<>();
-        // J1 only works in JSAP extension, when forward-porting to ArkCase use a different path here
-        categoryContext.put("folderPath", "J1");
+        categoryContext.put("folderPath", "Complaints");
         CmisObject cmisObject = findFolderService.service(categoryContext);
         String categoryFolderName = cmisObject.getName();
 

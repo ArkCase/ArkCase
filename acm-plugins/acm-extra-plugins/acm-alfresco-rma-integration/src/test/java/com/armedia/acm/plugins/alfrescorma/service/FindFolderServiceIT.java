@@ -1,9 +1,12 @@
 package com.armedia.acm.plugins.alfrescorma.service;
 
+import com.armedia.acm.web.api.MDCConstants;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Folder;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
@@ -11,8 +14,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -28,13 +32,21 @@ import static org.junit.Assert.assertNotNull;
         "/spring/spring-library-search.xml",
         "/spring/spring-library-user-service.xml",
         "/spring/spring-library-data-access-control.xml",
-        "/spring/spring-library-particpants.xml"
+        "/spring/spring-library-particpants.xml",
+        "/spring/spring-library-activiti-configuration.xml"
 })
 public class FindFolderServiceIT
 {
     @Autowired
     @Qualifier("findFolderService")
     private AlfrescoService<Folder> service;
+
+    @Before
+    public void setUp() throws Exception
+    {
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
+    }
 
     @Test
     public void findCategoryFolder() throws Exception
@@ -43,14 +55,10 @@ public class FindFolderServiceIT
 
         Map<String, Object> context = new HashMap<>();
 
-        // J1 only works in JSAP extension, when forward-porting to ArkCase use a different path here
-        context.put("folderPath", "J1");
+        context.put("folderPath", "Complaints");
 
         CmisObject cmisObject = service.service(context);
 
         assertNotNull(cmisObject);
-
-        System.out.println("id: " + cmisObject.getId());
-
     }
 }

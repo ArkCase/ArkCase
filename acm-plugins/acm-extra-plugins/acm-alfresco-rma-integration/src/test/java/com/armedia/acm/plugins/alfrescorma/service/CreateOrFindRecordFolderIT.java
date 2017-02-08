@@ -1,13 +1,13 @@
 package com.armedia.acm.plugins.alfrescorma.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
+import com.armedia.acm.web.api.MDCConstants;
 import org.apache.chemistry.opencmis.client.api.Folder;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
@@ -16,6 +16,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -31,7 +33,9 @@ import java.util.UUID;
         "/spring/spring-library-search.xml",
         "/spring/spring-library-user-service.xml",
         "/spring/spring-library-data-access-control.xml",
-        "/spring/spring-library-particpants.xml" })
+        "/spring/spring-library-particpants.xml",
+        "/spring/spring-library-activiti-configuration.xml"
+})
 public class CreateOrFindRecordFolderIT
 {
     @Autowired
@@ -44,6 +48,13 @@ public class CreateOrFindRecordFolderIT
 
     private transient final Logger LOG = LoggerFactory.getLogger(getClass());
 
+    @Before
+    public void setUp() throws Exception
+    {
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
+    }
+
     @Test
     public void createOrFindRecordFolder() throws Exception
     {
@@ -51,8 +62,7 @@ public class CreateOrFindRecordFolderIT
 
         Map<String, Object> findFolderContext = new HashMap<>();
 
-        // J1 only works in JSAP extension, when forward-porting to ArkCase use a different path here
-        findFolderContext.put("folderPath", "J1");
+        findFolderContext.put("folderPath", "Complaints");
         Folder categoryFolder = findFolderService.service(findFolderContext);
 
         assertNotNull(categoryFolder);
