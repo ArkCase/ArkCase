@@ -1,7 +1,6 @@
 package com.armedia.acm.services.users.model.ldap;
 
 import com.armedia.acm.services.users.model.AcmUser;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.ContextMapper;
@@ -21,7 +20,11 @@ public class AcmUserGroupsContextMapper implements ContextMapper
             "givenName",
             "dn",
             "distinguishedname",
-            "memberOf" };
+            "memberOf",
+            "sAMAccountName",
+            "userPrincipalName",
+            "uid"};
+
     private Logger log = LoggerFactory.getLogger(getClass());
     private String userIdAttributeName;
     private String mailAttributeName;
@@ -45,10 +48,13 @@ public class AcmUserGroupsContextMapper implements ContextMapper
         // because of how the LDAP query paging works, we can no longer return null for the disabled accounts.
         // so we return them, but mark them DISABLED. The DAO will filter them.
         String uac = MapperUtils.getAttribute(adapter, "userAccountControl");
-        if (isUserDisabled(uac))
+        if ( isUserDisabled(uac) )
         {
             log.debug("User '{}' is disabled and won't be synced", fullName);
             user.setUserState("DISABLED");
+        } else
+        {
+            user.setUserState("VALID");
         }
 
         user.setLastName(MapperUtils.getAttribute(adapter, "sn"));
@@ -57,9 +63,12 @@ public class AcmUserGroupsContextMapper implements ContextMapper
         user.setUserId(MapperUtils.getAttribute(adapter, getUserIdAttributeName()));
         user.setMail(MapperUtils.getAttribute(adapter, getMailAttributeName()));
         user.setDistinguishedName(adapter.getDn().toString());
+        user.setsAMAccountName(MapperUtils.getAttribute(adapter, "samAccountName"));
+        user.setUserPrincipalName(MapperUtils.getAttribute(adapter, "userPrincipalName"));
+        user.setUid(MapperUtils.getAttribute(adapter, "uid"));
 
         Set<String> ldapGroupsForUser = new HashSet<>();
-        if (adapter.attributeExists("memberOf"))
+        if ( adapter.attributeExists("memberOf") )
         {
             String[] groupsUserIsMemberOf = adapter.getStringAttributes("memberOf");
             ldapGroupsForUser = MapperUtils.arrayToSet(groupsUserIsMemberOf, MapperUtils.MEMBER_TO_COMMON_NAME_UPPERCASE);
@@ -75,8 +84,7 @@ public class AcmUserGroupsContextMapper implements ContextMapper
         {
             long userAccountControl = Long.valueOf(uac);
             return (userAccountControl & ACTIVE_DIRECTORY_DISABLED_BIT) == ACTIVE_DIRECTORY_DISABLED_BIT;
-        }
-        catch (NumberFormatException nfe)
+        } catch (NumberFormatException nfe)
         {
             log.warn("user account control value [{}] is not a number!", uac);
             return false;
