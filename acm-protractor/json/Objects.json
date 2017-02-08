@@ -337,7 +337,7 @@
             "userNameConfirmBtn": ".//*[@class='col-xs-8']/h4[2]/form/div/span/button[1]",
             "userNavigation": ".fullname",
             "userNavigationProfile": "Profile",
-            "userPageHeader": ".//*[@class='module-header']/h3",
+            "userPageHeader": ".//*[@class='module-header']/h3/span",
             "userLocation": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[1]/a",
             "userLocationInput": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[1]/form/div/input",
             "userLocationConfirmBtn": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[1]//form/div/span/button[1]",
