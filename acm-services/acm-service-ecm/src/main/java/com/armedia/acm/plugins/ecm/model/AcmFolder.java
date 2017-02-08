@@ -5,9 +5,9 @@ import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.eclipse.persistence.annotations.CloneCopyPolicy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -26,8 +26,6 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,15 +33,12 @@ import java.util.List;
 
 @Entity
 @Table(name = "acm_folder")
-// This custom clone policy is needed because by default EclipseLink ignores transient properties;
-// but we need the @Transient parentFolderParticipants in order to set the folder access control. The custom
-// clone policy preserves this transient policy. Unfortunately standard JPA doesn't support this feature
-// so we have to use an EclipseLink annotation. "copy" refers to the copy method in this class.
-@CloneCopyPolicy(method = "copy", workingCopyMethod = "copy")
 public class AcmFolder implements AcmEntity, Serializable, AcmObject, AcmAssignedObject
 {
 
     private static final long serialVersionUID = -1087924246860797061L;
+
+    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Id
     @TableGenerator(name = "acm_folder_gen", table = "acm_folder_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_folder", initialValue = 100, allocationSize = 1)
@@ -72,7 +67,7 @@ public class AcmFolder implements AcmEntity, Serializable, AcmObject, AcmAssigne
     private String cmisFolderId;
 
     @ManyToOne
-    @JoinColumn(name = "cm_parent_folder_id")
+    @JoinColumn(name = "cm_parent_folder_id", referencedColumnName = "cm_folder_id")
     private AcmFolder parentFolder;
 
     @JsonIgnore
@@ -86,15 +81,8 @@ public class AcmFolder implements AcmEntity, Serializable, AcmObject, AcmAssigne
     private String objectType = AcmFolderConstants.OBJECT_FOLDER_TYPE;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumns({ @JoinColumn(name = "cm_object_id"), @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type") })
+    @JoinColumns({@JoinColumn(name = "cm_object_id", referencedColumnName = "cm_folder_id"), @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type")})
     private List<AcmParticipant> participants = new ArrayList<>();
-
-    // Knowing the parent folder's participants makes the folder assignment rules easier. But, if they are mapped
-    // as oneToMany instead of Transient, EclipseLink will try to persist them, even if the OneToMany annotation
-    // is marked as updateable=false, insertable=false. Persisting the parent's participants causes so much trouble
-    // I made this @Transient
-    @Transient
-    private List<AcmParticipant> parentFolderParticipants = new ArrayList<>();
 
     @PrePersist
     protected void beforeInsert()
@@ -115,27 +103,6 @@ public class AcmFolder implements AcmEntity, Serializable, AcmObject, AcmAssigne
             ap.setObjectId(getId());
             ap.setObjectType(getObjectType());
         }
-    }
-
-    // Since the @CloneCopyPolicy on this class says "copy", EclipseLink will call this method when it needs to
-    // clone an AcmFolder; EclipseLink uses clones extensively, for instance to compute changes between current
-    // database state and an object being saved. This method must return a new AcmFolder, not 'this'.
-    protected AcmFolder copy()
-    {
-        AcmFolder retval = new AcmFolder();
-        retval.setCmisFolderId(getCmisFolderId());
-        retval.setName(getName());
-        retval.setParentFolderParticipants(getParentFolderParticipants());
-        retval.setId(getId());
-        retval.setParentFolder(getParentFolder());
-        retval.setCreated(getCreated());
-        retval.setCreator(getCreator());
-        retval.setModified(getModified());
-        retval.setModifier(getModifier());
-        retval.setParticipants(getParticipants());
-        retval.setStatus(getStatus());
-
-        return retval;
     }
 
     @Override
@@ -253,16 +220,6 @@ public class AcmFolder implements AcmEntity, Serializable, AcmObject, AcmAssigne
     public void setParticipants(List<AcmParticipant> participants)
     {
         this.participants = participants;
-    }
-
-    public List<AcmParticipant> getParentFolderParticipants()
-    {
-        return parentFolderParticipants;
-    }
-
-    public void setParentFolderParticipants(List<AcmParticipant> parentFolderParticipants)
-    {
-        this.parentFolderParticipants = parentFolderParticipants;
     }
 
     @Override
