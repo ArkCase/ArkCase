@@ -10,9 +10,11 @@ import com.armedia.acm.plugins.complaint.model.complaint.MainInformation;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.PersonAlias;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
+import com.armedia.acm.web.api.MDCConstants;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,6 +27,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.UUID;
 
 import static org.junit.Assert.*;
 
@@ -97,6 +100,9 @@ public class ComplaintServiceIT
     {
         auditAdapter.setUserId("auditUser");
 
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
+
         service = new ComplaintService();
         service.setSaveComplaintTransaction(saveComplaintTransaction);
         service.setComplaintEventPublisher(complaintEventPublisher);
@@ -163,9 +169,9 @@ public class ComplaintServiceIT
 
 
         boolean witnessFound = false;
-        for (PersonAssociation pa : acmComplaint.getPersonAssociations())
+        for ( PersonAssociation pa : acmComplaint.getPersonAssociations() )
         {
-            if ("Witness".equals(pa.getPersonType()))
+            if ( "Witness".equals(pa.getPersonType()) )
             {
                 witnessFound = true;
                 verifyContact(frevvoComplaint.getPeople().get(0), pa);

@@ -8,6 +8,8 @@
         <property name="host" value="${alfresco_host}"/>
         <property name="port" value="${alfresco_port}"/>
         <property name="contextRoot" value="${alfresco_contextRoot}"/>
+        <property name="password" value="${alfresco_password}"/>
+        <property name="username" value="${alfresco_user}"/>
     </bean>
 
     <bean id="declareRecordService" class="com.armedia.acm.plugins.alfrescorma.service.DeclareRecordService"
