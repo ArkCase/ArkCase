@@ -40,9 +40,9 @@ exports.config = {
     // }],
 
     specs: [
-
+     
         //any test can be run with command "protractor conf.js, just place it here"
-
+        '../test_spec/smoke/smoke_test.spec.js'
     ],
         //any suite can be run with command "protractor conf.js --suite={suitename}"
 
@@ -53,7 +53,7 @@ exports.config = {
         regression: ['../test_spec/regression/*.spec.js'],
         functional: ['../test_spec/functional/*.spec.js'],
         all: ['../test_spec/*/*.spec.js'],
-        selected: [ '../test_spec/smoke/smoke_dashboard_test.spec.js', '../test_spec/smoke/smoke_user_test.spec.js', '../test_spec/smoke/smoke_task_test.spec.js', '../test_spec/smoke/smoke_case_test.spec.js', '../test_spec/smoke/smoke_complaint_test.spec.js', '../test_spec/smoke/smoke_notification_test.spec.js', '../test_spec/smoke/smoke_report_test.spec.js', '../test_spec/smoke/smoke_audit_test.spec.js'],
+        selected: [ '../test_spec/smoke/smoke_test.spec.js'],
     },
 
     jasmineNodeOpts: {

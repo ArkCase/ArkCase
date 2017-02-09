@@ -6,16 +6,22 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.messaging.Message;
-import org.springframework.messaging.simp.stomp.Reactor11StompCodec;
+import org.springframework.messaging.simp.stomp.Reactor2StompCodec;
 import org.springframework.messaging.simp.stomp.StompBrokerRelayMessageHandler;
 import org.springframework.messaging.simp.stomp.StompDecoder;
 import org.springframework.messaging.simp.stomp.StompEncoder;
-import org.springframework.messaging.tcp.reactor.Reactor11TcpClient;
+import org.springframework.messaging.tcp.reactor.Reactor2TcpClient;
 import org.springframework.web.socket.config.annotation.DelegatingWebSocketMessageBrokerConfiguration;
+import reactor.Environment;
+import reactor.core.config.ConfigurationReader;
+import reactor.core.config.PropertiesConfigurationReader;
+import reactor.fn.Supplier;
+import reactor.io.net.NetStreams;
+import reactor.io.net.Spec;
+import reactor.io.net.config.SslOptions;
 
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -24,15 +30,6 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
-
-import reactor.core.Environment;
-import reactor.core.configuration.ConfigurationReader;
-import reactor.core.configuration.PropertiesConfigurationReader;
-import reactor.function.Supplier;
-import reactor.net.config.SslOptions;
-import reactor.net.netty.tcp.NettyTcpClient;
-import reactor.net.tcp.TcpClient;
-import reactor.net.tcp.spec.TcpClientSpec;
 
 /**
  * Since {@link DelegatingWebSocketMessageBrokerConfiguration} class does not expose the tcpClient property from
@@ -87,9 +84,9 @@ public class StompBrokerRelayMessageHandlerBeanPostProcessor implements BeanPost
         return bean;
     }
 
-    public void setSSLOptions(StompBrokerRelayMessageHandler handler)
+    private void setSSLOptions(StompBrokerRelayMessageHandler handler)
     {
-        Reactor11StompCodec codec = new Reactor11StompCodec(new StompEncoder(), new StompDecoder());
+        Reactor2StompCodec codec = new Reactor2StompCodec(new StompEncoder(), new StompDecoder());
         ConfigurationReader reader = new PropertiesConfigurationReader();
         Environment environment = new Environment(reader);
 
@@ -98,10 +95,15 @@ public class StompBrokerRelayMessageHandlerBeanPostProcessor implements BeanPost
 
         InetSocketAddress socketAddress = new InetSocketAddress(host, port);
 
-        TcpClient<Message<byte[]>, Message<byte[]>> tcpClient = new TcpClientSpec<Message<byte[]>, Message<byte[]>>(NettyTcpClient.class)
-                .env(environment).codec(codec).connect(socketAddress).ssl(sslOptions).get();
-
-        handler.setTcpClient(new Reactor11TcpClient<byte[]>(tcpClient));
+        NetStreams.TcpClientFactory<Message<byte[]>, Message<byte[]>> tcpClientSpecFactory = new NetStreams.TcpClientFactory<Message<byte[]>, Message<byte[]>>()
+        {
+            @Override
+            public Spec.TcpClientSpec<Message<byte[]>, Message<byte[]>> apply(Spec.TcpClientSpec<Message<byte[]>, Message<byte[]>> spec)
+            {
+                return spec.env(environment).codec(codec).connect(socketAddress).ssl(sslOptions);
+            }
+        };
+        handler.setTcpClient(new Reactor2TcpClient<byte[]>(tcpClientSpecFactory));
     }
 
     private Supplier<TrustManager[]> getTrustManager(String trustStore, String trustStorePass, String trustStoreType)
