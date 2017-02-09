@@ -32,7 +32,6 @@ var costTrackingPage = function() {
                 browser.wait(EC.textToBePresentInElement((titleType), title), 10000, title + " is not present in title drop down list").then(function() {
                     titleType.click().then(function() {
                         amountInput.sendKeys(amount);
-                        browser.sleep(5000);
                     });
                 });
             });
