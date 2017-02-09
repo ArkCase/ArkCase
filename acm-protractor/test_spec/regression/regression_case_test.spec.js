@@ -68,18 +68,27 @@ describe('case page tests', function() {
             casePage.clickNewButton();
             timeTrackingPage.navigateToTimeTrackingPage();
             casePage.switchToIframes();
-            timeTrackingPage.submitTimesheetTable("Case", text, "8");
+            timeTrackingPage.selectTimesheetType("Case");
+            timeTrackingPage.clickChargeCode();
+            timeTrackingPage.switchToDefaultContent();
+            timeTrackingPage.searchForObject(text);
+            timeTrackingPage.switchToIframes();
+            timeTrackingPage.submitTimesheetTable("8");
             casePage.selectApprover(Objects.casepage.data.approverSamuel);
             timeTrackingPage.clickSaveBtn();
             timeTrackingPage.clickLastElementInTreeData();
             timeTrackingPage.clickEditTimesheetBtn();
             timeTrackingPage.switchToIframes();
-            timeTrackingPage.submitTimesheetTable("Case", text, "1");
+            timeTrackingPage.selectTimesheetType("Case");
+            timeTrackingPage.clickChargeCode();
+            timeTrackingPage.switchToDefaultContent();
+            timeTrackingPage.searchForObject(text);
+            timeTrackingPage.switchToIframes();
+            timeTrackingPage.submitTimesheetTable("8");
             casePage.selectApprover(Objects.casepage.data.approverSamuel);
             timeTrackingPage.clickSaveBtn();
             casePage.clickModuleCasesFiles();
             casePage.verifyTimeWidgetData("7");
-
         });
     });
 
@@ -135,6 +144,61 @@ describe('case page tests', function() {
         casePage.waitForCasesPage();
         casePage.clickTreeSortersBtn();
         casePage.returnSortByIdDesc(Objects.basepage.data.sortByIdDesc);
+    });
+
+    it('should navigate to cases page and create new cost sheet and verify it in the cost table', function() {
+
+        casePage.clickModuleCasesFiles();
+        casePage.waitForCasesPage();
+        element(by.xpath(Objects.casepage.locators.caseID)).getText().then(function(text) {
+            console.log(text);
+            casePage.clickNewButton();
+            costTrackingPage.navigateToExpensesPage();
+            casePage.switchToIframes();
+            costTrackingPage.selectType("Case");
+            costTrackingPage.populateExpensesTable(Objects.costsheetPage.data.Taxi, Objects.costsheetPage.data.Ammount);
+            costTrackingPage.clickCodeType();
+            costTrackingPage.switchToDefaultContent();
+            costTrackingPage.searchForObject(text);
+            costTrackingPage.switchToIframes();
+            costTrackingPage.clickSaveBtn();
+            casePage.clickModuleCasesFiles();
+            casePage.CostTable();
+            expect(casePage.returncostSheetFormName()).toContain("Costsheet", "Name is not correct on added costsheet on case");
+            expect(casePage.returncostSheetUser()).toEqual(Objects.casepage.data.assigneeSamuel, "User is not correct on added costsheet on case");
+            expect(casePage.returncostSheetModifiedDate()).toEqual(utils.returnToday("/"), "Modified date is not correct on added costsheet on case");
+            expect(casePage.returncostSheetTotalCost()).toEqual(Objects.costsheetPage.data.verifyAmmount, "Total cost is not correct on added costsheet on case");
+            expect(casePage.returncostSheetStatus()).toEqual(Objects.casepage.data.statusDraft, "Status is not correct on added costsheet on case");
+
+        });
+
+    });
+
+    it('should navigate to the csaes page and create new timesheet and verify it in the time table', function() {
+
+        casePage.clickModuleCasesFiles();
+        casePage.waitForCasesPage();
+        element(by.xpath(Objects.casepage.locators.caseID)).getText().then(function(text) {
+            console.log(text);
+            casePage.clickNewButton();
+            timeTrackingPage.navigateToTimeTrackingPage();
+            casePage.switchToIframes();
+            timeTrackingPage.selectTimesheetType("Case");
+            timeTrackingPage.clickChargeCode();
+            timeTrackingPage.switchToDefaultContent();
+            timeTrackingPage.searchForObject(text);
+            casePage.switchToIframes();
+            timeTrackingPage.submitTimesheetTable("8");
+            casePage.selectApprover(Objects.casepage.data.approverSamuel);
+            timeTrackingPage.clickSaveBtn();
+            casePage.clickModuleCasesFiles();
+            casePage.TimeTable();
+            expect(casePage.returnTimesheetFormName()).toContain(Objects.casepage.data.timeSheet, "Name is not correct on added timesheet on case");
+            expect(casePage.returnTimesheetUser()).toEqual(Objects.casepage.data.assigneeSamuel, "User is not correct on added timesheet on case");
+            expect(casePage.returnTimesheetModifiedDate()).toEqual(utils.returnToday("/"), "Modified date is not correct on added timesheet on case");
+            expect(casePage.returnTimesheetStatus()).toEqual(Objects.casepage.data.statusDraft, "Status is not correct on added timesheet on case");
+            expect(casePage.returnTimesheetHours()).toEqual(Objects.casepage.data.totalHours, "Hours is not correct on added timesheet on case");
+        });
     });
 
 });

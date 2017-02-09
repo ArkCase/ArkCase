@@ -382,49 +382,6 @@ describe('Create new complaint ', function() {
 
     });
 
-    it('should Sdd timesheet and verify it in the complaint timesheet table', function() {
-
-        complaintPage.clickModuleComplaints();
-        element(by.xpath(Objects.casepage.locators.caseID)).getText().then(function(text) {
-            console.log(text);
-            complaintPage.clickNewButton();
-            timeTrackingPage.navigateToTimeTrackingPage();
-            complaintPage.switchToIframes();
-            timeTrackingPage.submitTimesheetTable("Complaint", text, "8");
-            complaintPage.selectApprover(Objects.casepage.data.approverSamuel);
-            complaintPage.switchToIframes();
-            timeTrackingPage.clickSaveBtn();
-            complaintPage.clickModuleComplaints();
-            complaintPage.TimeTable();
-            expect(complaintPage.returnTimesheetFormName()).toContain(Objects.casepage.data.timeSheet, "Form name in added timesheet is not correct");
-            expect(complaintPage.returnTimesheetUser()).toEqual(Objects.casepage.data.assigneeSamuel, "Timesheet user in added timesheet is not correct");
-            expect(complaintPage.returnTimesheetModifiedDate()).toEqual(utils.returnToday("/"), "Timesheet modified date in added timesheet is not correct");
-            expect(complaintPage.returnTimesheetStatus()).toEqual(Objects.casepage.data.statusDraft, "Timesheet status in added timesheet is not correct");
-            expect(complaintPage.returnTimesheetHours()).toEqual(Objects.casepage.data.totalHours, "Timesheet total hours in added timesheet are not correct");
-
-        });
-    });
-
-    it('should Add costsheet and verify in complaints costsheet table', function() {
-
-        complaintPage.clickModuleComplaints();
-        element(by.xpath(Objects.casepage.locators.caseID)).getText().then(function(text) {
-            console.log(text);
-            complaintPage.clickNewButton();
-            costTrackingPage.navigateToExpensesPage();
-            complaintPage.switchToIframes();
-            costTrackingPage.submitExpenses("Complaint", text, Objects.costsheetPage.data.Taxi, Objects.costsheetPage.data.taxi, Objects.costsheetPage.data.Ammount);
-            costTrackingPage.clickSaveBtn();
-            complaintPage.clickModuleComplaints();
-            complaintPage.CostTable();
-            expect(complaintPage.returncostSheetFormName()).toContain("Costsheet", "Form name in added costsheet is not correct");
-            expect(complaintPage.returncostSheetUser()).toEqual(Objects.casepage.data.assigneeSamuel, "User in added costsheet is not correct");
-            expect(complaintPage.returncostSheetModifiedDate()).toEqual(utils.returnToday("/"), "Modified date in added costsheet is not correct");
-            expect(complaintPage.returncostSheetTotalCost()).toEqual(Objects.costsheetPage.data.verifyAmmount, "Total cost in added costsheet is not correct");
-            expect(complaintPage.returncostSheetStatus()).toEqual(Objects.casepage.data.statusDraft, "Status in added costsheet is not correct");
-        });
-    });
-
     it('should verify if complaint can be added as reference to itself', function() {
 
         complaintPage.clickModuleComplaints();
