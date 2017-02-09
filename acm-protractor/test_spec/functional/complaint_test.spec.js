@@ -554,4 +554,14 @@ describe('Create new complaint ', function() {
 
         });
     });
+
+    //Add a document to document management
+
+    it('Verify adding correspondence document', function() {
+
+        complaintPage.clickModuleComplaints();
+        complaintPage.clickExpandFancyTreeTopElementAndSubLink("Documents");
+        complaintPage.rightClickRootFolder().addCorrespondence("complaint", "Notice of Investigation");
+        complaintPage.validateDocGridData(true, "Notice of Investigation", ".docx", "Notice of Investigation", utils.returnToday("/"), utils.returnToday("/"), userPage.returnUserNavigationProfile(), "1.0", "ACTIVE");
+    });
 });

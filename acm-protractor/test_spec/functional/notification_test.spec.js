@@ -70,4 +70,11 @@ describe('notification page test', function() {
         });
 
     });
+
+    //Click on the Notification Module and verify that description date/time is equal to modified column date/time
+
+    it('should verify that description date/time is equal to modified column date/time', function() {
+        notificationPage.navigateToPage("Notifications");
+        expect(notificationPage.returnDescription()).toContain(notificationPage.returnModifiedBy(), "In description of notification modified date is not correct");
+    });
 });
