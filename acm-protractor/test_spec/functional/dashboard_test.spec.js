@@ -37,29 +37,9 @@ describe('dashboard page test', function() {
     });
 
     afterEach(function() {
+
         loginPage.Logout();
 
-    });
-
-
-    //Change Dashboard configuration
-
-    using([{ widgetName: "News", widgetTitle: Objects.dashboardpage.data.widgetTitleNews },
-        { widgetName: "MyTasks", widgetTitle: Objects.dashboardpage.data.widgetTitleMyTasks },
-        { widgetName: "MyCases", widgetTitle: Objects.dashboardpage.data.widgetTitleMyCases },
-        { widgetName: "MyComplaints", widgetTitle: Objects.dashboardpage.data.widgetTitleMyComplaints },
-        { widgetName: "NewComplaints", widgetTitle: Objects.dashboardpage.data.widgetTitleNewComplaints },
-        { widgetName: "TeamWorkload", widgetTitle: Objects.dashboardpage.data.widgetTitleTeamWorkload },
-        { widgetName: "CasesByStatus", widgetTitle: Objects.dashboardpage.data.widgetTitleCasesByStatus },
-        { widgetName: "Weather", widgetTitle: Objects.dashboardpage.data.widgetTitleWeather }
-    ], function(data) {
-        it('should add/delete ' + data.widgetName, function() {
-
-            dashPage.clickEditButton().clickAddWidgetButton().addWidget(data.widgetName).clickSaveChangesButton();
-            expect(dashPage.returnWidgetTitle()).toEqual(data.widgetTitle, "Widget title is not correct in widget " + data.widgetName);
-            dashPage.clickEditButton().removeWidgetButton().clickSaveChangesButton();
-
-        });
     });
 
     it('should edit dashboard title', function() {
@@ -80,3 +60,4 @@ describe('dashboard page test', function() {
 
 
 });
+

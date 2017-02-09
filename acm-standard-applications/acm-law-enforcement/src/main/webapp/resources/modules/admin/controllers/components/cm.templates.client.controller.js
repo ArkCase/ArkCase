@@ -232,7 +232,7 @@ angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$m
             var templatesPromise = correspondenceService.retrieveTemplatesList();
             templatesPromise.then(function (templates) {
                 angular.forEach(templates.data, function (row, index) {
-                    row.fileName = correspondenceService.downloadByFilename(row.templateFilename);
+                    row.downloadFileName = correspondenceService.downloadByFilename(row.templateFilename);
                 });
                 $scope.gridOptions.data = templates.data;
             });

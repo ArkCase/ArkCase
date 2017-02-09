@@ -9,7 +9,7 @@
         "data": {
             "supervisoruser": {
 
-                "username": "samuel-acm",
+                "username": "sally-acm",
                 "password": "AcMd3v$"
             },
             "adminuser": {
@@ -81,7 +81,8 @@
             "owningGroupConfirmBtn": ".//*[@class='editable-controls form-group']/..//button[1]",
             "assigneeNameModelInput": "participant.selectedAssigneeName",
             "treeSortersBtn": "[ng-show='treeConfig.sorters']",
-            "sortByIdDesc": "//*[@class='dropdown-menu text-left text-sm treeSorter']//li[4]"
+            "sortByIdDesc": "//*[@class='dropdown-menu text-left text-sm treeSorter']//li[4]",
+            "objectStatus": ".//div[@class='col-xs-6']/h4/node()[2]"
 
 
         },
@@ -329,7 +330,7 @@
             "widgetTitleWeather": "Weather",
             "widgetTitleNews": "News",
             "widgetTitleMyTasks": "My Tasks",
-            "DashbordTitle": "Dashbord Title"
+            "DashbordTitle": "Dashboard Title"
         }
     },
 
@@ -343,7 +344,7 @@
             "userNameConfirmBtn": ".//*[@class='col-xs-8']/h4[2]/form/div/span/button[1]",
             "userNavigation": ".fullname",
             "userNavigationProfile": "Profile",
-            "userPageHeader": ".//*[@class='module-header']/h3",
+            "userPageHeader": ".//*[@class='module-header']/h3/span",
             "userLocation": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[1]/a",
             "userLocationInput": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[1]/form/div/input",
             "userLocationConfirmBtn": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[1]//form/div/span/button[1]",
@@ -649,7 +650,8 @@
             "tagPriority": ".//*[@class='ui-grid-cell-contents ui-grid-header-cell-primary-focus']",
             "participantTypeConflictMessage": "[extid='warningParticipantTypeConflict']",
             "addParticipantTypeSecondRowbtn": "//table/tbody/..//td[2]/span",
-            "selectParticipantTypeSecondRow": "//table/tbody/tr[2]/td[5]"
+            "selectParticipantTypeSecondRow": "//table/tbody/tr[2]/td[5]",
+            "doc": "vvCurrentPage"
 
         },
 
@@ -792,11 +794,12 @@
             "facets": "[ng-if='field.count > 0']",
              "notificationsInput": "searchQuery",
              "searchBtn": "[ng-click='queryExistingItems()']",
-              "sort": ".//*[@class='ng-scope sortable']"
-
+            "sort": ".//*[@class='ng-scope sortable']",
+            "notificationTitle" : "//div[@class='module-header']/h3"
 
         },
         "data": {
+            "notificationsTitle": "Notifications"
 
         }
     },
