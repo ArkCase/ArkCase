@@ -1,6 +1,7 @@
 <div class="modal-header">
     <h3>
-        <span translate>admin.correspondenceManagement.templates.editTemplate</span>
+        <span ng-if="isEdit" translate>admin.correspondenceManagement.templates.editTemplate</span>
+        <span ng-if="!isEdit" translate>admin.correspondenceManagement.templates.addTemplate</span>
     </h3>
 
 </div>
