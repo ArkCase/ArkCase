@@ -92,6 +92,8 @@ angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$m
                                     $scope.template = template.data;
                                     $scope.query.fieldNames = Object.keys($scope.template.templateSubstitutionVariables);
                                     $scope.fieldValues = Object.values($scope.template.templateSubstitutionVariables);
+                                    //we will activate it by default
+                                    $scope.template.activated = true;
                                 });
                             }
                         );
