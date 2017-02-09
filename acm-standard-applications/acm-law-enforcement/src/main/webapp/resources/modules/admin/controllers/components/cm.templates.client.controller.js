@@ -32,8 +32,6 @@ angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$m
 
             var template = angular.copy(rowEntity);
             template.activated = !rowEntity.activated;
-            //there is additional field in the grid which should be removed
-            delete template.fullPath;
 
             correspondenceService.saveTemplateData(template).then(function () {
                 clearCachedForms(template);
@@ -53,12 +51,6 @@ angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$m
                 messageService.errorAction();
             });
         };
-
-        function AddFullPath(data) {
-            angular.forEach(data, function (row, index) {
-                row.fullPath = correspondenceService.fullDownloadPath(row.templateFilename);
-            });
-        }
 
         function showModal(row, isEdit) {
 
@@ -235,7 +227,9 @@ angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$m
         function ReloadGrid() {
             var templatesPromise = correspondenceService.retrieveTemplatesList();
             templatesPromise.then(function (templates) {
-                AddFullPath(templates.data);
+                angular.forEach(templates.data, function (row, index) {
+                    row.fileName = correspondenceService.downloadByFilename(row.templateFilename);
+                });
                 $scope.gridOptions.data = templates.data;
             });
         }
