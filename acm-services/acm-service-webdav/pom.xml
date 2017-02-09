@@ -18,7 +18,6 @@
         <dependency>
             <groupId>io.milton</groupId>
             <artifactId>milton-server-ent</artifactId>
-            <version>${milton.version}</version>
         </dependency>
 
         <dependency>
