@@ -29,17 +29,25 @@ describe("Testing async calls with beforeEach and passing the special done callb
 
 describe('dashboard page test', function() {
 
-        beforeEach(function (done) {
+<<<<<<< Updated upstream:acm-protractor/test_spec/smoke/smoke_dashboard_test.spec.js
+    beforeEach(function(done) {
+=======
+    beforeEach(function (done) {
+>>>>>>> Stashed changes:acm-protractor/test_spec/functional/dashboard_test.spec.js
 
-            loginPage.Login(Objects.loginpage.data.supervisoruser.username, Objects.loginpage.data.supervisoruser.password);
-            testAsync(done);
+        loginPage.Login(Objects.loginpage.data.supervisoruser.username, Objects.loginpage.data.supervisoruser.password);
+        testAsync(done);
 
-        });
+    });
 
-        afterEach(function () {
-            loginPage.Logout();
+<<<<<<< Updated upstream:acm-protractor/test_spec/smoke/smoke_dashboard_test.spec.js
+    afterEach(function() {
+=======
+    afterEach(function () {
+>>>>>>> Stashed changes:acm-protractor/test_spec/functional/dashboard_test.spec.js
+        loginPage.Logout();
 
-        });
+    });
 
 
     //Change Dashboard configuration
@@ -61,10 +69,23 @@ describe('dashboard page test', function() {
 
         });
     });
+
     it('should edit dashboard title', function() {
 
         dashPage.editDashboardTitle(Objects.dashboardpage.data.DashbordTitle);
         expect(dashPage.returnDashboardTitle()).toEqual(Objects.dashboardpage.data.DashbordTitle, "Dashboard title is not updated");
     });
 
+    it('should add my tasks widget and select items per page elements', function() {
+
+        dashPage.clickEditButton().clickAddWidgetButton().addWidget("MyTasks").clickSaveChangesButton();
+        using([{ items: "10", }, { items: "25" }], function(data) {
+            dashPage.selectPageSizeOnWidget(data.items);
+            expect(dashPage.returnItemsPerPage()).toContain(data.items, "Items per page is incorect");
+
+        });
+    });
+
+
 });
+

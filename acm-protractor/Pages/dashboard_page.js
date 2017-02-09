@@ -1,5 +1,7 @@
 var Objects = require('../json/Objects.json');
 var basePage = require('./base_page.js');
+var SelectWrapper = require('../util/select-wrapper.js');
+var EC = protractor.ExpectedConditions;
 var editBtn = element(by.xpath(Objects.dashboardpage.locators.editBtn));
 var addNewWidgetBtn = element(by.xpath(Objects.dashboardpage.locators.addNewWidgetBtn));
 var editDashboardBtn = element(by.xpath(Objects.dashboardpage.locators.editDashboardBtn));
@@ -22,10 +24,16 @@ var removeWidgetBtn = element.all(by.xpath(Objects.dashboardpage.locators.remove
 var myTasks = element(by.linkText(Objects.dashboardpage.locators.myTasks));
 var dashboardTitleInput = element(by.id(Objects.dashboardpage.locators.dashboardTitleInput));
 var dashboardTitle = element(by.xpath(Objects.dashboardpage.locators.dashboardTitle));
-var EC = protractor.ExpectedConditions;
+var pageSize = new SelectWrapper(by.model(Objects.dashboardpage.locators.pageSize));
+var itemesPerPage = element(by.model(Objects.dashboardpage.locators.pageSize));
+
+
+
+
+
 var DashboardPage = function() {
     this.clickEditButton = function() {
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.dashboardpage.locators.editBtn))), 10000, "Edit button in the dashboard page is not displayed").then(function() {
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.dashboardpage.locators.editBtn))), 30000, "Edit button in the dashboard page is not displayed").then(function() {
             editBtn.click();
         });
         return this;
@@ -44,55 +52,55 @@ var DashboardPage = function() {
         return this;
     }
     this.clickSaveChangesButton = function() {
-        saveChangesBtn.click();
+        browser.executeScript('arguments[0].click()', saveChangesBtn);
         return this;
     }
     this.addWidget = function(type) {
         switch (type) {
             case "CasesByStatus":
-                browser.wait(EC.visibilityOf(element(by.linkText(Objects.dashboardpage.locators.casesByStatus))), 10000, "Cases by status link is not visible").then(function() {
+                browser.wait(EC.visibilityOf(element(by.linkText(Objects.dashboardpage.locators.casesByStatus))), 30000, "Cases by status link is not visible").then(function() {
                     casesByStatus.click();
                 });
                 return this;
                 break;
             case "MyCases":
-                browser.wait(EC.visibilityOf(element(by.linkText(Objects.dashboardpage.locators.myCases))), 10000, "My cases link is not visible").then(function() {
+                browser.wait(EC.visibilityOf(element(by.linkText(Objects.dashboardpage.locators.myCases))), 30000, "My cases link is not visible").then(function() {
                     myCases.click();
                 });
                 return this;
                 break;
             case "MyComplaints":
-                browser.wait(EC.visibilityOf(element(by.linkText(Objects.dashboardpage.locators.myComplaints))), 10000, "My complaints link is not visible").then(function() {
+                browser.wait(EC.visibilityOf(element(by.linkText(Objects.dashboardpage.locators.myComplaints))), 30000, "My complaints link is not visible").then(function() {
                     myComplaints.click();
                 });
                 return this;
                 break;
             case "NewComplaints":
-                browser.wait(EC.visibilityOf(element(by.linkText(Objects.dashboardpage.locators.newComplaints))), 10000, "New complaints link is not visible").then(function() {
+                browser.wait(EC.visibilityOf(element(by.linkText(Objects.dashboardpage.locators.newComplaints))), 30000, "New complaints link is not visible").then(function() {
                     newComplaints.click();
                 });
                 return this;
                 break;
             case "TeamWorkload":
-                browser.wait(EC.visibilityOf(element(by.linkText(Objects.dashboardpage.locators.teamWorkload))), 10000, "Team workload link is not visible").then(function() {
+                browser.wait(EC.visibilityOf(element(by.linkText(Objects.dashboardpage.locators.teamWorkload))), 30000, "Team workload link is not visible").then(function() {
                     teamWorkload.click();
                 });
                 return this;
                 break;
             case "Weather":
-                browser.wait(EC.visibilityOf(element(by.linkText(Objects.dashboardpage.locators.weather))), 10000, "Weather link is not visible").then(function() {
+                browser.wait(EC.visibilityOf(element(by.linkText(Objects.dashboardpage.locators.weather))), 30000, "Weather link is not visible").then(function() {
                     weather.click();
                 });
                 return this;
                 break;
             case "News":
-                browser.wait(EC.visibilityOf(element(by.linkText(Objects.dashboardpage.locators.news))), 10000, "News link is not visible").then(function() {
+                browser.wait(EC.visibilityOf(element(by.linkText(Objects.dashboardpage.locators.news))), 30000, "News link is not visible").then(function() {
                     news.click();
                 });
                 return this;
                 break;
             case "MyTasks":
-                browser.wait(EC.visibilityOf(element(by.linkText(Objects.dashboardpage.locators.myTasks))), 10000, "My tasks link is not visible").then(function() {
+                browser.wait(EC.visibilityOf(element(by.linkText(Objects.dashboardpage.locators.myTasks))), 30000, "My tasks link is not visible").then(function() {
                     myTasks.click();
                 });
                 return this;
@@ -106,7 +114,7 @@ var DashboardPage = function() {
 
     this.editDashboardTitle = function(title) {
 
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.dashboardpage.locators.editBtn))), 10000, "Edit button in the dashboard page is not displayed").then(function() {
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.dashboardpage.locators.editBtn))), 30000, "Edit button in the dashboard page is not displayed").then(function() {
             editBtn.click().then(function() {
                 editDashboardBtn.click().then(function() {
                     dashboardTitleInput.clear().then(function() {
@@ -126,6 +134,17 @@ var DashboardPage = function() {
         return dashboardTitle.getText();
     }
 
+    this.selectPageSizeOnWidget = function(size) {
+
+        pageSize.selectByText(size);
+
+    }
+
+    this.returnItemsPerPage = function() {
+
+        browser.wait(EC.visibilityOf(element(by.model(Objects.dashboardpage.locators.pageSize))), 30000, "Items per page in widget is not displayed");
+        return itemesPerPage.getText();
+    }
 
 };
 
