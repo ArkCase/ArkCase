@@ -27,13 +27,13 @@ var deleteNoteBtn = element.all(by.repeater(Objects.casepage.locators.deleteNote
 var editNoteBtn = element.all(by.repeater(Objects.casepage.locators.editNoteBtn)).get(3).all(by.tagName(Objects.casepage.locators.tag)).get(0);
 var addNewTaskBtn = element(by.xpath(Objects.casepage.locators.addNewTaskBtn));
 var tasksLinkBtn = element(by.xpath(Objects.casepage.locators.tasksLink));
-var taskTitle = element(by.xpath(Objects.casepage.locators.taskTitle));
-var createdTaskTitle = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(1)
-var taskAssighnee = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(2);
-var taskCreated = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(3);
-var taskPriority = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(4);
-var taskDueDate = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(5);
-var taskStatus = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(6);
+var taskTitle = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(8)
+var createdTaskTitle = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(8)
+var taskAssighnee = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(9);
+var taskCreated = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(10);
+var taskPriority = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(11);
+var taskDueDate = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(12);
+var taskStatus = element.all(by.repeater(Objects.casepage.locators.taskTableRows)).get(13);
 var tagsLinkBtn = element(by.xpath(Objects.casepage.locators.tagsLinkBtn));
 var addNewTagBtn = element(by.css(Objects.casepage.locators.addNewTagBtn));
 var addTagInput = element(by.model(Objects.casepage.locators.addTagInput));
@@ -247,6 +247,9 @@ var owningGroupDropDown = new SelectWrapper(by.xpath(Objects.basepage.locators.o
 var owningGroupConfirmBtn = element(by.xpath(Objects.basepage.locators.owningGroupConfirmBtn));
 var owningGroup = element(by.xpath(Objects.casepage.locators.owningGroup));
 var assigneeNameModelInput = element(by.model(Objects.basepage.locators.assigneeNameModelInput));
+var treeSortersBtn = element(by.css(Objects.basepage.locators.treeSortersBtn));
+var sortByIdDesc = element(by.xpath(Objects.basepage.locators.sortByIdDesc));
+var objectStatus = element(by.xpath(Objects.basepage.locators.objectStatus));
 
 var BasePage = function() {
 
@@ -404,7 +407,6 @@ var BasePage = function() {
         });
 
         return this;
-
     };
 
     this.returnDocRowAdded = function() {
@@ -534,7 +536,7 @@ var BasePage = function() {
                         editNoteBtn.click().then(function() {
                             noteTextArea.clear().then(function() {
                                 noteTextArea.sendKeys(note).then(function() {
-                                    browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.saveNoteBtn))), 30000,"Save note button is not visible").then(function() {
+                                    browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.saveNoteBtn))), 30000, "Save note button is not visible").then(function() {
                                         saveNoteBtn.click().then(function() {
                                             browser.wait(EC.textToBePresentInElement((addedNoteName), Objects.casepage.data.editnote), 30000, "Edited note is not saved");
                                         });
@@ -570,7 +572,7 @@ var BasePage = function() {
 
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.tagsLinkBtn))), 30000, "Tags link button is not displayed").then(function() {
             tagsLinkBtn.click().then(function() {
-                browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.addNewTagBtn))), 20000, "Add new tag button is not visible" );
+                browser.wait(EC.visibilityOf(element(by.css(Objects.casepage.locators.addNewTagBtn))), 20000, "Add new tag button is not visible");
             });
         });
         return this;
@@ -1317,7 +1319,7 @@ var BasePage = function() {
                 browser.sleep(5000);
                 browser.wait(EC.visibilityOf(element(by.repeater(Objects.casepage.locators.timesheetTableRow))), 30000, "Costsheet table row is not visible").then(function() {
                     element.all(by.repeater(Objects.casepage.locators.timesheetTableRow)).then(function(items) {
-                        expect(items.length).toBe(6, "Cost sheet is not displayed in the cost table");
+                        expect(items.length).not.toBe(0, "Cost sheet is not displayed in the cost table");
                     });
                 });
             });
@@ -1325,7 +1327,7 @@ var BasePage = function() {
     }
     this.clickModuleCasesFiles = function() {
         browser.wait(EC.visibilityOf(element(by.css(Objects.timetrackingPage.locators.caseFileModule))), 30000, "Case module is not visible").then(function() {
-            browser.executeScript('arguments[0].click()', caseFileModule).then(function () {
+            browser.executeScript('arguments[0].click()', caseFileModule).then(function() {
                 browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesTitle))), 30000, "Case title is not visible");
             })
 
@@ -1334,7 +1336,7 @@ var BasePage = function() {
     }
     this.clickModuleComplaints = function() {
         browser.wait(EC.visibilityOf(element(by.css(Objects.timetrackingPage.locators.complaintsModule))), 30000, "Complaints module is not visible").then(function() {
-            browser.executeScript('arguments[0].click()', complaintsModule).then(function () {
+            browser.executeScript('arguments[0].click()', complaintsModule).then(function() {
                 browser.wait(EC.presenceOf(element(by.xpath(Objects.complaintPage.locators.complaintTitleLink))), 30000, "Complaint title is not present in DOM").then(function() {
                     browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.complaintTitleLink))), 30000, "Complaint title is not visible");
                 })
@@ -1501,7 +1503,9 @@ var BasePage = function() {
         return this;
     };
     this.returnDetailsTextArea = function() {
-        return detailsTextArea.getText();
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.detailsTextArea))), 30000, "Details text area is not visible").then(function() {
+            return detailsTextArea.getText();
+        });
     };
     this.clickInsertLinkInDetails = function() {
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.detailsLinkBtn))), 30000, "Details link button is not visible").then(function() {
@@ -1536,8 +1540,8 @@ var BasePage = function() {
         xPathStr = ".//a[@title='";
         var completexPath = xPathStr + link + "']";
         var el = element(by.xpath(completexPath));
-        browser.wait(EC.visibilityOf(element(by.xpath(completexPath))), 30000, "Link "+ link + " is not visible").then(function() {
-            el.click();
+        browser.wait(EC.visibilityOf(element(by.xpath(completexPath))), 30000, "Link " + link + " is not visible").then(function() {
+            browser.executeScript('arguments[0].click()', el);
         });
         return this;
     }
@@ -1683,8 +1687,10 @@ var BasePage = function() {
         return this;
     };
     this.clickDocTreeExpand = function() {
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.docTreeExpand))), 30000, "Expand doc tree element is not visible").then(function() {
-            docTreeExpand.click();
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.basepage.locators.docTreeExpand))), 30000, "Expand doc tree element is not visible").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.docTreeExpand))), 30000, "Expand doc tree element is not visible").then(function() {
+                docTreeExpand.click();
+            });
         });
         return this;
     };
@@ -1935,25 +1941,25 @@ var BasePage = function() {
         docVersionDropDownList.selectByValue(value);
     };
 
-    this.selectRecipient = function (email) {
-               browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchForUserInput))), 30000, "Search user element is not visible").then(function () {
-                   searchForUserInput.click();
-                   searchForUserInput.sendKeys(Objects.casepage.data.approverSamuel);
-                   searchForUserBtn.click().then(function () {
-                       browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.casepage.locators.addedReferenceRow)).get(0)), 30000, "There is no found user visible").then(function () {
-                           searchedUser.click()
-                       });
-                   });
-               });
-        return this;
-    };
-    this.clickSendEmailButton = function () {
-          browser.wait(EC.visibilityOf(element(by.buttonText(Objects.basepage.locators.sendEmailButton))), 30000, "Send Email button is not visible").then(function () {
-                    browser.executeScript('arguments[0].click()', sendEmailButton);
+    this.selectRecipient = function(email) {
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchForUserInput))), 30000, "Search user element is not visible").then(function() {
+            searchForUserInput.click();
+            searchForUserInput.sendKeys(Objects.casepage.data.approverSamuel);
+            searchForUserBtn.click().then(function() {
+                browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.casepage.locators.addedReferenceRow)).get(0)), 30000, "There is no found user visible").then(function() {
+                    searchedUser.click()
                 });
+            });
+        });
         return this;
     };
-    this.sendEmail = function (email) {
+    this.clickSendEmailButton = function() {
+        browser.wait(EC.visibilityOf(element(by.buttonText(Objects.basepage.locators.sendEmailButton))), 30000, "Send Email button is not visible").then(function() {
+            browser.executeScript('arguments[0].click()', sendEmailButton);
+        });
+        return this;
+    };
+    this.sendEmail = function(email) {
         this.selectRecipient(email);
         this.clickSendEmailButton();
         return this;
@@ -2015,13 +2021,13 @@ var BasePage = function() {
         return this;
     };
 
-    this.clickSublink = function (link) {
+    this.clickSublink = function(link) {
         var xPathStr = "//span[contains(text(),'";
         var completexPath;
         completexPath = xPathStr + link + "')]";
         browser.wait(EC.presenceOf(element(by.xpath(completexPath))), 30000, "Sublink " + link + " is not present in DOM").then(function() {
-            browser.wait(EC.visibilityOf(element(by.xpath(completexPath))), 30000, "Sublink " + link + " is not visible").then(function () {
-                browser.wait(EC.elementToBeClickable(element(by.xpath(completexPath))), 30000, "Sublink "+ link + "is not clickable").then(function () {
+            browser.wait(EC.visibilityOf(element(by.xpath(completexPath))), 30000, "Sublink " + link + " is not visible").then(function() {
+                browser.wait(EC.elementToBeClickable(element(by.xpath(completexPath))), 30000, "Sublink " + link + "is not clickable").then(function() {
                     var el = element(by.xpath(completexPath));
                     browser.executeScript('arguments[0].click()', el);
                 });
@@ -2047,8 +2053,6 @@ var BasePage = function() {
         return owningGroup.getText();
     };
 
-
-
     this.editOwningGroup = function(owninggroup) {
 
         owningGroup.click().then(function() {
@@ -2057,6 +2061,70 @@ var BasePage = function() {
             });
         });
         return this;
+    };
+
+    this.waitForComplaintID = function() {
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.caseID))), 60000, "Case ID is not present").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.caseID))), 60000, "Case ID is not displayed");
+        });
+        return this;
+    };
+
+
+    this.clickTreeSortersBtn = function() {
+
+        browser.wait(EC.visibilityOf(element(by.css(Objects.basepage.locators.treeSortersBtn))), 30000, "Tree sorter button is not visible").then(function() {
+            treeSortersBtn.click();
+        });
+        return this;
+    }
+    this.returnSortByIdDesc = function() {
+
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.sortByIdDesc))), 30000, "Sort element by id desc is not visible");
+        return sortByIdDesc.getText();
+    }
+
+    this.searchForObject = function(object) {
+
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchForUserInput))), 10000, "Search for object input is not displayed").then(function() {
+            searchForUserInput.sendKeys(object).then(function() {
+                searchForUserBtn.click().then(function() {
+                    browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchedUserName))), 30000, "Searched object is not displayed").then(function() {
+                        searchedUser.click().then(function() {
+                            okBtn.click();
+                        });
+                    });
+                });
+            });
+        });
+        return this;
+    }
+
+    this.clickOnTask = function(type) {
+        var xPathStart = "//a[contains(text(),'";
+        var completexPath;
+        switch (type) {
+            case "Automatic Task on Creation":
+                completexPath = xPathStart + "Change Case Status']";
+                break;
+            case "Automatic Task on Change Status":
+                completexPath = xPathStart + "Review']";
+                break;
+            case "Ad hoc task":
+                completexPath = xPathStart + "Ad hoc task']";
+                break;
+            default:
+                completexPath = xPathStart + "Ad hoc task']";
+                break;
+        }
+        var el = element(by.xpath(completexPath));
+        el.click();
+        return this;
+
+    }
+
+    this.returnObjectStatus = function() {
+        return objectStatus.getText();
     }
 }
 

@@ -101,23 +101,16 @@
           "headerCellFilter": "translate"
         },
         {
-          "name": "name",
+          "name": "displayName",
+          "displayName": "admin.correspondenceManagement.templates.grid.displayName",
+          "visible": true,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "templateFilename",
           "displayName": "admin.correspondenceManagement.templates.grid.title",
           "visible": true,
-          "cellTemplate": "<a target='_blank' ng-href='{{row.entity.fullPath}}'>{{ row.entity.name}}</a>",
-          "headerCellFilter": "translate"
-        },
-        {
-          "name": "path",
-          "displayName": "admin.correspondenceManagement.templates.grid.path",
-          "visible": false,
-          "headerCellFilter": "translate"
-        },
-        {
-          "name": "created",
-          "displayName": "admin.correspondenceManagement.templates.grid.created",
-          "visible": true,
-          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<a target='_blank' ng-href='{{row.entity.downloadFileName}}'>{{ row.entity.templateFilename}}</a>",
           "headerCellFilter": "translate"
         },
         {
@@ -128,10 +121,17 @@
           "headerCellFilter": "translate"
         },
         {
-          "name": "creator",
-          "displayName": "admin.correspondenceManagement.templates.grid.creator",
+          "name": "modifier",
+          "displayName": "admin.correspondenceManagement.templates.grid.modifier",
           "visible": true,
           "headerCellFilter": "translate"
+        },
+        {
+          "name": "activated",
+          "displayName": "admin.correspondenceManagement.templates.grid.activated",
+          "visible": true,
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div align='center'><span ng-if='!row.entity.activated' class='label label-warning' ng-click='grid.appScope.activate(row.entity)'>Activate</span><span ng-if='row.entity.activated' class='label label-success' ng-click='grid.appScope.activate(row.entity)'>Deactivate</span></div>'"
         }
       ],
       "queryObjectTypes": [

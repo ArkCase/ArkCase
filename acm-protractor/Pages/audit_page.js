@@ -139,13 +139,13 @@ var AuditPage = function() {
     };
 
     this.validateAuditReportValues = function (date, user, name, result, objectId, objectType) {
-        browser.wait(EC.presenceOf(element(by.xpath(Objects.auditPage.locators.dateValue))), 30000, "Date value in report is not present in the DOM").then(function() {
-            browser.wait(EC.visibilityOf(element(by.xpath(Objects.auditPage.locators.dateValue))), 30000, "Date value in report is not visible").then(function() {
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.auditPage.locators.dateValue))), 30000, "The audit report is empty, not present in DOM").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.auditPage.locators.dateValue))), 30000, "The audit report is empty, values not visible").then(function() {
                 expect(dateValue.getText()).toContain(date, "Date value in audit report is not correct");
                 expect(userValue.getText()).toEqual(user, "User value in audit report is not correct");
                 expect(nameValue.getText()).toEqual(name, "Name value in audit report is not correct");
                 expect(resultValue.getText()).toEqual(result, "Result value in audit report is not correct");
-                expect(objectId).toContain(objectIdValue.getText(), "Object id in audit report is not correct");
+                expect(objectId).toContain(objectIdValue.getText(), "The audit report does not display the last viewed case/complaint");
                 expect(objectTypeValue.getText()).toEqual(objectType, "Object type value in audit report is not correct");
             });
         })

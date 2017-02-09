@@ -7,6 +7,9 @@ import static com.armedia.acm.correspondence.service.TemplateMapper.updateTempla
 import com.armedia.acm.correspondence.model.CorrespondenceQuery;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplateConfiguration;
+import com.armedia.acm.correspondence.model.QueryType;
+import com.armedia.acm.services.config.model.AcmConfig;
+import com.armedia.acm.services.config.model.JsonConfig;
 import com.armedia.acm.spring.SpringContextHolder;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,7 +37,6 @@ import java.util.stream.Collectors;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jan 26, 2017
- *
  */
 public class CorrespondenceTemplateManager implements ApplicationListener<ContextRefreshedEvent>
 {
@@ -51,8 +53,11 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
 
     private Pattern camelCase = Pattern.compile("[A-Za-z].*?(?=([A-Z]|\\.))");
 
+    private List<AcmConfig> configList;
+
     /**
-     * @param springContextHolder the springContextHolder to set
+     * @param springContextHolder
+     *            the springContextHolder to set
      */
     public void setSpringContextHolder(SpringContextHolder springContextHolder)
     {
@@ -60,7 +65,8 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
     }
 
     /**
-     * @param correspondenceTemplatesConfiguration the correspondenceTemplatesConfiguration to set
+     * @param correspondenceTemplatesConfiguration
+     *            the correspondenceTemplatesConfiguration to set
      */
     public void setCorrespondenceTemplatesConfiguration(Resource correspondenceTemplatesConfiguration)
     {
@@ -68,7 +74,8 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
     }
 
     /**
-     * @param caseCorrespondenceForms the caseCorrespondenceForms to set
+     * @param caseCorrespondenceForms
+     *            the caseCorrespondenceForms to set
      */
     public void setCaseCorrespondenceForms(Resource caseCorrespondenceForms)
     {
@@ -76,7 +83,8 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
     }
 
     /**
-     * @param complaintCorrespondenceForms the complaintsCorrespondenceForms to set
+     * @param complaintCorrespondenceForms
+     *            the complaintsCorrespondenceForms to set
      */
     public void setComplaintCorrespondenceForms(Resource complaintCorrespondenceForms)
     {
@@ -156,14 +164,16 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
 
         updateConfiguration(templates.values());
         updateLabels(template, templateLabels -> {
-            Optional<TemplateLabel> label = templateLabels.stream().filter(tl -> tl.getTemplate().equals(template.getTemplateFilename()))
-                    .findAny();
-            if (label.isPresent())
+            Optional<TemplateLabel> labelHolder = templateLabels.stream()
+                    .filter(tl -> tl.getTemplate().equals(template.getTemplateFilename())).findAny();
+            if (labelHolder.isPresent())
             {
-                label.get().setLabel(template.getDocumentType());
+                TemplateLabel label = labelHolder.get();
+                label.setLabel(template.getDisplayName());
+                label.setActivated(template.isActivated());
             } else
             {
-                templateLabels.add(new TemplateLabel(template.getTemplateFilename(), template.getDocumentType()));
+                templateLabels.add(new TemplateLabel(template.getTemplateFilename(), template.getDocumentType(), template.isActivated()));
             }
         });
 
@@ -234,7 +244,7 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
     }
 
     /**
-     * @param templates2
+     * @param templates
      * @throws IOException
      */
     private void updateConfiguration(Collection<CorrespondenceTemplate> templates) throws IOException
@@ -271,6 +281,7 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
             break;
         case COMPLAINT:
             file = complaintCorrespondenceForms.getFile();
+            break;
         default:
             throw new IllegalArgumentException();
         }
@@ -285,8 +296,49 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
 
         updater.updateLabels(templateLabels);
 
-        FileUtils.writeStringToFile(file, mapper.writeValueAsString(templateLabels));
-
+        String configValueAsString = mapper.writeValueAsString(templateLabels);
+        FileUtils.writeStringToFile(file, configValueAsString);
+        updateConfig(template.getQuery().getType(), configValueAsString);
     }
 
+    public void setConfigList(List<AcmConfig> configList)
+    {
+        this.configList = configList;
+    }
+
+    /**
+     * updates configList with for given queryType and value
+     *
+     * @param queryType
+     * @param configValue
+     */
+    private void updateConfig(QueryType queryType, String configValue)
+    {
+        if (configList == null || configList.isEmpty())
+        {
+            // couldn't find case and complaints configs
+            return;
+        }
+        AcmConfig casesConfig = configList.stream().filter(config -> "caseCorrespondenceForms".equals(config.getConfigName())).findFirst()
+                .orElse(null);
+        AcmConfig complaintsConfig = configList.stream().filter(config -> "complaintCorrespondenceForms".equals(config.getConfigName()))
+                .findFirst().orElse(null);
+        switch (queryType)
+        {
+        case CASE_FILE:
+            if (casesConfig instanceof JsonConfig)
+            {
+                ((JsonConfig) casesConfig).setJson(configValue);
+            }
+            break;
+        case COMPLAINT:
+            if (complaintsConfig instanceof JsonConfig)
+            {
+                ((JsonConfig) complaintsConfig).setJson(configValue);
+            }
+            break;
+        default:
+            throw new IllegalArgumentException();
+        }
+    }
 }
