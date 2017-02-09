@@ -1,9 +1,15 @@
 package com.armedia.acm.correspondence.service;
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+
 import com.armedia.acm.correspondence.model.CorrespondenceQuery;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
 import com.armedia.acm.correspondence.utils.PoiWordGenerator;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -13,6 +19,7 @@ import org.springframework.security.core.Authentication;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.DecimalFormat;
@@ -24,9 +31,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
 
 /**
  * Created by armdev on 12/15/14.
@@ -97,7 +101,6 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
         correspondenceQuery.setJpaQuery(jpaQuery);
         correspondenceQuery.setFieldNames(fieldNames);
 
-
         correspondenceTemplate = new CorrespondenceTemplate();
         correspondenceTemplate.setDocumentType(doctype);
         correspondenceTemplate.setTemplateFilename(templateName);
@@ -111,14 +114,14 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
     public void generate() throws Exception
     {
         String targetFolderCmisId = "targetFolderCmisId";
-        Object[] queryArgs = { 500L };
+        Object[] queryArgs = {500L};
 
         List<Object[]> results = new ArrayList<>();
 
         Date column1 = new Date();
         String column2 = "Subject Name";
         Number column3 = 123456L;
-        Object[] row = { column1, column2, column3 };
+        Object[] row = {column1, column2, column3};
         results.add(row);
 
         Capture<Resource> captureResourceTemplate = new Capture<>();
@@ -140,38 +143,22 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
         expect(mockQuery.setParameter(1, queryArgs[0])).andReturn(mockQuery);
         expect(mockQuery.getResultList()).andReturn(results);
         mockWordGenerator.generate(capture(captureResourceTemplate), eq(mockOutputStream), eq(substitutions));
-        expect(mockEcmFileService.upload(
-                eq(correspondenceTemplate.getDocumentType()+".docx"),
-                eq(correspondenceTemplate.getDocumentType()),
-                eq(CorrespondenceGenerator.CORRESPONDENCE_CATEGORY),
-                eq(mockInputStream),
-                eq(CorrespondenceGenerator.WORD_MIME_TYPE),
-                capture(filename),
-                eq(mockAuthentication),
-                eq(targetFolderCmisId),
-                eq("CASE_FILE"),
-                eq(500L)
-        )).andReturn(null);
+        expect(mockEcmFileService.upload(eq(correspondenceTemplate.getDocumentType() + ".docx"),
+                eq(correspondenceTemplate.getDocumentType()), eq(CorrespondenceGenerator.CORRESPONDENCE_CATEGORY), eq(mockInputStream),
+                eq(CorrespondenceGenerator.WORD_MIME_TYPE), capture(filename), eq(mockAuthentication), eq(targetFolderCmisId),
+                eq("CASE_FILE"), eq(500L))).andReturn(null);
 
         replayAll();
 
-        unit.generateCorrespondence(
-                mockAuthentication,
-                "CASE_FILE",
-                500L,
-                targetFolderCmisId,
-                correspondenceTemplate,
-                queryArgs,
-                mockOutputStream,
-                mockInputStream);
+        unit.generateCorrespondence(mockAuthentication, "CASE_FILE", 500L, targetFolderCmisId, correspondenceTemplate, queryArgs,
+                mockOutputStream, mockInputStream);
 
         verifyAll();
 
         Resource capturedResource = captureResourceTemplate.getValue();
 
         assertEquals(correspondenceTemplate.getTemplateFilename(), capturedResource.getFilename());
+
     }
-
-
 
 }

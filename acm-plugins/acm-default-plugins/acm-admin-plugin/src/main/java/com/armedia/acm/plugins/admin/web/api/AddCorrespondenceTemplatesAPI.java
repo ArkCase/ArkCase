@@ -1,6 +1,10 @@
 package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.model.TemplateUpload;
+
+import org.apache.poi.POIXMLProperties;
+import org.apache.poi.openxml4j.opc.OPCPackage;
+import org.apache.poi.openxml4j.opc.internal.PackagePropertiesPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -14,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
+
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -34,22 +39,20 @@ public class AddCorrespondenceTemplatesAPI
     private Logger log = LoggerFactory.getLogger(getClass());
     List<Object> templateUploadList = new ArrayList<>();
 
-    @RequestMapping(value = "/template", method = RequestMethod.POST, produces = {
-            MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
-    })
+    @RequestMapping(value = "/template", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE,
+            MediaType.TEXT_PLAIN_VALUE})
     @ResponseBody
     public List<Object> templates(
-            //@RequestParam("files[]") MultipartFile file,
-            HttpServletRequest request,
-            Authentication authentication) throws Exception
+            // @RequestParam("files[]") MultipartFile file,
+            HttpServletRequest request, Authentication authentication) throws Exception
     {
 
         String userHome = System.getProperty("user.home");
         String pathName = userHome + "/.arkcase/acm/correspondenceTemplates";
         try
         {
-            //save files to disk
-            //for multiple files
+            // save files to disk
+            // for multiple files
             MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) request;
             MultiValueMap<String, MultipartFile> attachments = multipartHttpServletRequest.getMultiFileMap();
             if (attachments != null)
@@ -103,14 +106,14 @@ public class AddCorrespondenceTemplatesAPI
         {
             for (File template : templates)
             {
-                //access creation and last modified date via file attributes
+                // access creation and last modified date via file attributes
                 TemplateUpload templateUpload = new TemplateUpload();
                 Path path = Paths.get(pathName + "/" + template.getName());
                 BasicFileAttributes attributes = Files.readAttributes(path, BasicFileAttributes.class);
                 FileTime creationTime = attributes.creationTime();
                 FileTime modifiedTime = attributes.lastModifiedTime();
 
-                //details
+                // details
                 templateUpload.setPath(template.getAbsolutePath());
                 templateUpload.setModified(modifiedTime.toString());
                 templateUpload.setName(template.getName());

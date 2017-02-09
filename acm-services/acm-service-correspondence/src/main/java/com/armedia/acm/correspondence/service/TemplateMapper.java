@@ -19,12 +19,16 @@ public class TemplateMapper
     {
         CorrespondenceTemplate template = new CorrespondenceTemplate();
 
+        template.setDisplayName(configuration.getDisplayName());
         template.setDocumentType(configuration.getDocumentType());
         template.setTemplateFilename(configuration.getTemplateFilename());
         template.setQuery(correspondenceQueryBeansMap.get(configuration.getCorrespondenceQueryBeanId()));
         template.setTemplateSubstitutionVariables(configuration.getTemplateSubstitutionVariables());
         template.setDateFormatString(configuration.getDateFormatString());
         template.setNumberFormatString(configuration.getNumberFormatString());
+        template.setActivated(configuration.isActivated());
+        template.setModifier(configuration.getModifier());
+        template.setModified(configuration.getModified());
 
         return template;
     }
@@ -34,12 +38,16 @@ public class TemplateMapper
     {
         CorrespondenceTemplateConfiguration configuration = new CorrespondenceTemplateConfiguration();
 
+        configuration.setDisplayName(template.getDisplayName());
         configuration.setDocumentType(template.getDocumentType());
         configuration.setTemplateFilename(template.getTemplateFilename());
         configuration.setCorrespondenceQueryBeanId(queryIdLookup.apply(template.getQuery()));
         configuration.setTemplateSubstitutionVariables(template.getTemplateSubstitutionVariables());
         configuration.setDateFormatString(template.getDateFormatString());
         configuration.setNumberFormatString(template.getNumberFormatString());
+        configuration.setActivated(template.isActivated());
+        configuration.setModifier(template.getModifier());
+        configuration.setModified(template.getModified());
 
         return configuration;
     }
@@ -50,12 +58,16 @@ public class TemplateMapper
      */
     public static void updateTemplateState(CorrespondenceTemplate toUpdate, CorrespondenceTemplate updateFrom)
     {
+        toUpdate.setDisplayName(updateFrom.getDisplayName());
         toUpdate.setDocumentType(updateFrom.getDocumentType());
         toUpdate.setTemplateFilename(updateFrom.getTemplateFilename());
         toUpdate.setQuery(updateFrom.getQuery());
         toUpdate.setTemplateSubstitutionVariables(updateFrom.getTemplateSubstitutionVariables());
         toUpdate.setDateFormatString(updateFrom.getDateFormatString());
         toUpdate.setNumberFormatString(updateFrom.getNumberFormatString());
+        toUpdate.setActivated(updateFrom.isActivated());
+        toUpdate.setModifier(updateFrom.getModifier());
+        toUpdate.setModified(updateFrom.getModified());
     }
 
 }
