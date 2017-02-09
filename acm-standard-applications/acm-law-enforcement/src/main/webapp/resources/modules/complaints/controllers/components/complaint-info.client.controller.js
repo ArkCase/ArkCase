@@ -161,12 +161,10 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
                             // if there is a match that means the current assignee is within that owning group hence no 
                             // changes to the current assignee is needed
                             _.each(returnedUsers, function (returnedUser) {
-                                console.log(returnedUser.object_id_s);
                                 if (currentAssignee === returnedUser.object_id_s) {
                                     $scope.iscurrentAssigneeInOwningGroup = true;
                                 }
                             });
-                            console.log($scope.iscurrentAssigneeInOwningGroup);
 
                             if ($scope.participant.participantLdapId && $scope.iscurrentAssigneeInOwningGroup) {
                                 $scope.owningGroup = chosenGroup.participant.selectedAssigneeName;
