@@ -42,7 +42,7 @@ exports.config = {
     specs: [
      
         //any test can be run with command "protractor conf.js, just place it here"
-        '../test_spec/smoke/smoke_test.spec.js'
+
     ],
         //any suite can be run with command "protractor conf.js --suite={suitename}"
 
