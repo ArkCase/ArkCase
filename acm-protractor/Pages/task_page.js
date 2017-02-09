@@ -229,7 +229,7 @@ var TaskPage = function() {
         return tasksTitle.getText();
     }
     this.returnStartDateInput = function() {
-        return startDate.getText();
+        return StartDateInput.getText();
     }
     this.returnDueDateInput = function() {
         return DueDateInput.getText();
@@ -538,7 +538,7 @@ var TaskPage = function() {
 
         browser.wait(EC.presenceOf(element(by.xpath(Objects.taskspage.locators.approveBtn))), 30000, "Approve button is not displayed").then(function() {
             approveBtn.click().then(function() {
-                browser.wait(EC.textToBePresentInElement((taskState), Objects.taskspage.data.taskStateClosed), 10000, "Task state is not changed into Closed");
+                browser.wait(EC.textToBePresentInElement((taskState), Objects.taskspage.data.taskStateClosed), 30000, "Task state is not changed into Closed");
             });
         });
         return this;

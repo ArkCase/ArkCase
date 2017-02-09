@@ -249,6 +249,7 @@ var owningGroup = element(by.xpath(Objects.casepage.locators.owningGroup));
 var assigneeNameModelInput = element(by.model(Objects.basepage.locators.assigneeNameModelInput));
 var treeSortersBtn = element(by.css(Objects.basepage.locators.treeSortersBtn));
 var sortByIdDesc = element(by.xpath(Objects.basepage.locators.sortByIdDesc));
+var objectStatus = element(by.xpath(Objects.basepage.locators.objectStatus));
 
 var BasePage = function() {
 
@@ -1502,7 +1503,9 @@ var BasePage = function() {
         return this;
     };
     this.returnDetailsTextArea = function() {
-        return detailsTextArea.getText();
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.detailsTextArea))), 30000, "Details text area is not visible").then(function() {
+            return detailsTextArea.getText();
+        });
     };
     this.clickInsertLinkInDetails = function() {
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.detailsLinkBtn))), 30000, "Details link button is not visible").then(function() {
@@ -1538,7 +1541,7 @@ var BasePage = function() {
         var completexPath = xPathStr + link + "']";
         var el = element(by.xpath(completexPath));
         browser.wait(EC.visibilityOf(element(by.xpath(completexPath))), 30000, "Link " + link + " is not visible").then(function() {
-            el.click();
+            browser.executeScript('arguments[0].click()', el);
         });
         return this;
     }
@@ -1684,8 +1687,10 @@ var BasePage = function() {
         return this;
     };
     this.clickDocTreeExpand = function() {
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.docTreeExpand))), 30000, "Expand doc tree element is not visible").then(function() {
-            docTreeExpand.click();
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.basepage.locators.docTreeExpand))), 30000, "Expand doc tree element is not visible").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.docTreeExpand))), 30000, "Expand doc tree element is not visible").then(function() {
+                docTreeExpand.click();
+            });
         });
         return this;
     };
@@ -2056,7 +2061,15 @@ var BasePage = function() {
             });
         });
         return this;
-    }
+    };
+
+    this.waitForComplaintID = function() {
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.caseID))), 60000, "Case ID is not present").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.caseID))), 60000, "Case ID is not displayed");
+        });
+        return this;
+    };
+
 
     this.clickTreeSortersBtn = function() {
 
@@ -2070,7 +2083,6 @@ var BasePage = function() {
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.sortByIdDesc))), 30000, "Sort element by id desc is not visible");
         return sortByIdDesc.getText();
     }
-
 
     this.searchForObject = function(object) {
 
@@ -2088,6 +2100,32 @@ var BasePage = function() {
         return this;
     }
 
+    this.clickOnTask = function(type) {
+        var xPathStart = "//a[contains(text(),'";
+        var completexPath;
+        switch (type) {
+            case "Automatic Task on Creation":
+                completexPath = xPathStart + "Change Case Status']";
+                break;
+            case "Automatic Task on Change Status":
+                completexPath = xPathStart + "Review']";
+                break;
+            case "Ad hoc task":
+                completexPath = xPathStart + "Ad hoc task']";
+                break;
+            default:
+                completexPath = xPathStart + "Ad hoc task']";
+                break;
+        }
+        var el = element(by.xpath(completexPath));
+        el.click();
+        return this;
+
+    }
+
+    this.returnObjectStatus = function() {
+        return objectStatus.getText();
+    }
 }
 
 module.exports = new BasePage();

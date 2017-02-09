@@ -34,7 +34,7 @@ public class TemplateDownloadControllerAPI
             MediaType.TEXT_PLAIN_VALUE })
     // called for normal processing - file was found
     @ResponseBody
-    public void downloadTemplate(@RequestParam("fileName") String fileName, HttpServletResponse response, boolean isInline)
+    public void downloadTemplate(@RequestParam("downloadFileName") String fileName, HttpServletResponse response, boolean isInline)
             throws IOException, AcmObjectNotFoundException
     {
 
