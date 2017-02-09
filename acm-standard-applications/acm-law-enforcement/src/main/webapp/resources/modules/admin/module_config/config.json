@@ -124,7 +124,8 @@
           "name": "modifier",
           "displayName": "admin.correspondenceManagement.templates.grid.modifier",
           "visible": true,
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "lookup": "userFullNames"
         },
         {
           "name": "activated",
