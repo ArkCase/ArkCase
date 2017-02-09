@@ -744,7 +744,8 @@
             "timeTrackingModule": "a[href*='#!/time-tracking//main']",
             "timeTrackingDate": ".//*[@class='f-control Three columns  f-output  s-valid  s-prepend   s-linked Message s-new-line s-color-None']",
             "chargeCodeAlertMessage":".//*[@class='f-status f-table-status s-alert']",
-            "timeTotal": "rowTotal"
+            "timeTotal": "rowTotal",
+            "chargeCode": "objectNumber"
         },
         "data": {
 
@@ -767,7 +768,8 @@
             "saveBtn": "Save",
             "expensesDropDown": ".//*[@class='input _frevvo-disable-backspace']",
             "costsheetPageTitle": ".//*[@class='module-header']/..//h3/span",
-            "costTrackingModule": "a[href='#!/cost-tracking//main']"
+            "costTrackingModule": "a[href='#!/cost-tracking//main']",
+            "codeInput": "objectNumber"
 
 
         },
