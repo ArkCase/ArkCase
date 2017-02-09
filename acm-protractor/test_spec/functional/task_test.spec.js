@@ -42,8 +42,8 @@ describe('Create new task ', function() {
         taskPage.insertDueDateToday();
         expect(taskPage.returnDueDateInput()).not.toBeTruthy();
         taskPage.insertPercentComplete(Objects.taskpage.data.percentCompleteInput).clickSave();
-        expect(taskPage.returnTasksTitle()).toEqual(Objects.taskpage.data.tasksTitle);
-        expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateActive);
+        expect(taskPage.returnTasksTitle()).toEqual(Objects.taskpage.data.tasksTitle, "Task title is not correct");
+        expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateActive, "Task status is not correct");
 
     });
 
@@ -52,7 +52,7 @@ describe('Create new task ', function() {
             taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), data.priority, Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea);
             expect(taskPage.returnDueDateText()).not.toBeTruthy();
             taskPage.clickSave();
-            expect(taskPage.returnPriority()).toEqual(data.prioritySaved);
+            expect(taskPage.returnPriority()).toEqual(data.prioritySaved, "priority" + data.priority + " is not updated");
         });
     });
 
@@ -72,69 +72,60 @@ describe('Create new task ', function() {
     it('should create new task with notes verify subject, assignee, start date, note', function() {
 
         taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
-        expect(taskPage.returnTaskSubject()).toEqual(Objects.taskpage.data.Subject);
-        expect(taskPage.returnAssignee()).toEqual(Objects.taskspage.data.assigneeSamuel);
-        expect(taskPage.returnInsertedStartDate()).toEqual(utils.returnToday("/"));
-        expect(taskPage.returnInsertedDueDate()).toEqual(utils.returnToday("/"));
-        expect(taskPage.returnPercent()).toEqual(Objects.taskpage.data.percentCompleteInput);
+        expect(taskPage.returnTaskSubject()).toEqual(Objects.taskpage.data.Subject, "task subject is not correct");
+        expect(taskPage.returnAssignee()).toEqual(Objects.taskspage.data.assigneeSamuel, "task assignee is not correct");
+        expect(taskPage.returnInsertedStartDate()).toEqual(utils.returnToday("/"), "task inserted date is not correct");
+        expect(taskPage.returnInsertedDueDate()).toEqual(utils.returnToday("/"), "task due date is not correct");
+        expect(taskPage.returnPercent()).toEqual(Objects.taskpage.data.percentCompleteInput, "task percent is not correct");
         taskPage.clickDetailsLink();
-        expect(taskPage.returnDetailsTextArea()).toEqual(Objects.taskspage.data.notesTextArea);
-
-    });
-
-
-    it('should create new task click complete button and verify task state', function() {
-
-        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "High", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
-        taskPage.clickCompleteButton();
-        expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateClosed);
+        expect(taskPage.returnDetailsTextArea()).toEqual(Objects.taskspage.data.notesTextArea, "notes text area value is not correct");
 
     });
 
     it('should create new task click delete button and verify task state', function() {
 
-        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+        taskPage.clickModuleTasks();
         taskPage.clickDeleteButton();
-        expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateDelete);
+        expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateDelete, "Task status is not changed into deleted after deleting");
 
     });
 
     it('should create new task with different user', function() {
 
         taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskpage.data.searchUser, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Expedite", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
-        expect(taskPage.returnAssignee()).toEqual(Objects.taskspage.data.administrator);
+        expect(taskPage.returnAssignee()).toEqual(Objects.taskspage.data.administrator, "Task assignee is not correct");
 
     });
 
     it('should create new task add link verify', function() {
 
         taskPage.clickNewButton().clickTaskButton().insertTaskDataLinkNote(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskpage.data.linkInputText, Objects.taskpage.data.linkInputUrl).clickSave();
-        expect(taskPage.returnTasksTitle()).toEqual(Objects.taskpage.data.tasksTitle);
+        expect(taskPage.returnTasksTitle()).toEqual(Objects.taskpage.data.tasksTitle, "Task title is not correct");
         taskPage.clickDetailsLink();
-        expect(taskPage.returnDetailsTextArea()).toEqual(Objects.taskpage.data.linkInputText);
+        expect(taskPage.returnDetailsTextArea()).toEqual(Objects.taskpage.data.linkInputText, "details link is not correct");
 
     });
 
     it('should create new task click subscribe button verify if it is changed to unsubscribe', function() {
 
-        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "High", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+        taskPage.clickModuleTasks();
         taskPage.clickSubscribeButton();
-        expect(taskPage.returnUnsubscribeButtonText()).toEqual(Objects.taskspage.data.unsubscribeBtn);
+        expect(taskPage.returnUnsubscribeButtonText()).toEqual(Objects.taskspage.data.unsubscribeBtn, "Subscribe button text is not changed into unsubscribe after click on subscribe");
 
     });
 
     it('should create new task click unsubscribe button verify if it is changed to subscribe', function() {
 
-        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+        taskPage.clickModuleTasks();
         taskPage.clickSubscribeButton();
-        expect(taskPage.returnUnsubscribeButtonText()).toEqual(Objects.taskspage.data.unsubscribeBtn);
+        expect(taskPage.returnUnsubscribeButtonText()).toEqual(Objects.taskspage.data.unsubscribeBtn, "Subscribe button text is not changed into unsubscribe after click on subscribe");
         taskPage.clickUnsubscribeButton();
-        expect(taskPage.returnSubscribeButtonText()).toEqual(Objects.taskspage.data.subscribeBtn);
+        expect(taskPage.returnSubscribeButtonText()).toEqual(Objects.taskspage.data.subscribeBtn, "Unsubscribe button text is not changed into subscribe after click on unsubscribe");
     });
 
     it('should create new task and add note', function() {
 
-        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+        taskPage.clickModuleTasks();
         taskPage.clickNotesLink();
         expect(taskPage.returnNotesTableTitle()).toEqual(Objects.taskspage.data.notesTableTitle)
         taskPage.clickAddNoteButton();
@@ -150,7 +141,7 @@ describe('Create new task ', function() {
     });
     it('should create new task add note and delete the note', function() {
 
-        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+        taskPage.clickModuleTasks();
         taskPage.clickNotesLink().clickAddNoteButton().insertNoteFromOverviewTab(Objects.taskspage.data.noteTextArea);
         expect(taskPage.addedNoteNameIsPresent()).toBe(true, 'Added note does not exist in the grid');
         taskPage.clickDeleteNoteButton();
@@ -159,11 +150,11 @@ describe('Create new task ', function() {
     });
     it('should create new task add note and edit the note', function() {
 
-        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+        taskPage.clickModuleTasks();
         taskPage.clickNotesLink().clickAddNoteButton().insertNoteFromOverviewTab(Objects.taskspage.data.noteTextArea);
         expect(taskPage.addedNoteNameIsPresent()).toBe(true, 'Added note does not exist in the grid');
         taskPage.clickEditNoteButton();
-        expect(taskPage.returnNotePopUpTitle()).toEqual(Objects.taskspage.data.noteTitleEditRecord);
+        expect(taskPage.returnNotePopUpTitle()).toEqual(Objects.taskspage.data.noteTitleEditRecord, "Note pop up title is not correct");
         taskPage.insertNoteFromOverviewTab(Objects.taskspage.data.noteText);
         expect(taskPage.returnNoteName()).toEqual(Objects.taskspage.data.noteText, 'The note is not updated');
 
@@ -175,7 +166,7 @@ describe('Create new task ', function() {
     using([{ priority: "High", prioritySaved: Objects.taskspage.data.priorityHigh }, { priority: "Expedite", prioritySaved: Objects.taskspage.data.priorityExpedite }], function(data) {
         it('should create new task and edit priority to ' + data.priority, function() {
 
-            taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+            taskPage.clickModuleTasks();
             taskPage.editPriority(data.priority);
             expect(taskPage.returnPriority()).toEqual(data.prioritySaved, "Priority is not updated");
         });
@@ -183,28 +174,28 @@ describe('Create new task ', function() {
 
     it('should create new task and edit percent of completition', function() {
 
-        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Expedite", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+        taskPage.clickModuleTasks();
         taskPage.editPercent(Objects.taskspage.data.percentCompletitionInput);
         expect(taskPage.returnPercent()).toEqual(Objects.taskspage.data.percentCompletitionInput, 'Percent is not updated');
 
     });
     it('should create new task and edit task subject', function() {
 
-        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+        taskPage.clickModuleTasks();
         taskPage.editTaskSubject(Objects.taskspage.data.taskSubjectInput);
         expect(taskPage.returnTaskSubject()).toEqual(Objects.taskspage.data.taskSubjectInput, 'Task subject is not updated');
 
     });
     it('should create new task and edit assignee from samuel to ann', function() {
 
-        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "High", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+        taskPage.clickModuleTasks();
         taskPage.editAssignee("Ann Administrator");
         expect(taskPage.returnAssignee()).toEqual(Objects.taskspage.data.administrator, 'The assignee is not updated');
 
     });
     it('should create new task change assignee and verify is button complete and delete are not displayed', function() {
 
-        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Expedite", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+        taskPage.clickModuleTasks();
         taskPage.editAssignee("Ann Administrator");
         expect(taskPage.returnAssignee()).toEqual(Objects.taskspage.data.administrator, 'The assignee is not updated');
         expect(taskPage.completeButtonIsPresent()).toBe(false, 'Complete button should not be displyed');
@@ -213,7 +204,7 @@ describe('Create new task ', function() {
     });
     it('should create new task add tag and verify added tag', function() {
 
-        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+        taskPage.clickModuleTasks();
         taskPage.clickTagsLink();
         expect(taskPage.returnTagsTableTittle()).toEqual(Objects.taskspage.data.tagsTableTitle);
         taskPage.clickAddTagButton();
@@ -227,11 +218,11 @@ describe('Create new task ', function() {
     });
     it('should create new task add tag and delete added tag', function() {
 
-        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "High", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+        taskPage.clickModuleTasks();
         taskPage.clickTagsLink();
-        expect(taskPage.returnTagsTableTittle()).toEqual(Objects.taskspage.data.tagsTableTitle);
+        expect(taskPage.returnTagsTableTittle()).toEqual(Objects.taskspage.data.tagsTableTitle, "Tags table title is not correct");
         taskPage.clickAddTagButton();
-        expect(taskPage.returnAddTagPopUpTitle()).toEqual(Objects.taskspage.data.addTagPopUpTitle);
+        expect(taskPage.returnAddTagPopUpTitle()).toEqual(Objects.taskspage.data.addTagPopUpTitle, "Add tag pop up title is not correct");
         browser.driver.actions().mouseDown(taskPage.tagTextArea).click().sendKeys(Objects.taskspage.data.tagTextArea).perform();
         taskPage.clickSaveTagButton();
         taskPage.clickDeleteTagButton();
@@ -240,7 +231,7 @@ describe('Create new task ', function() {
     });
     it('should create new task add text task details verify if it saved', function() {
 
-        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Expedite", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+        taskPage.clickModuleTasks();
         taskPage.clickExpandFancyTreeTopElementAndSubLink("Details");
         taskPage.insertDetailsTextAreaText(Objects.taskspage.data.detailsTextArea);
         taskPage.clickSaveDetailsButton();
@@ -252,10 +243,10 @@ describe('Create new task ', function() {
 
     it('should create new task add link from task details', function() {
 
-        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Expedite", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+        taskPage.clickModuleTasks();
         taskPage.clickExpandFancyTreeTopElementAndSubLink("Details");
         taskPage.clickInsertLinkInDetails();
-        expect(taskPage.returnInsertLinkTitle()).toEqual(Objects.taskspage.data.insertLinkTitle);
+        expect(taskPage.returnInsertLinkTitle()).toEqual(Objects.taskspage.data.insertLinkTitle, "Insert link title in details is not correct");
         taskPage.insertDetailsTextAreaLink(Objects.taskspage.data.insertLinkText, Objects.taskspage.data.insertLinkUrl);
         expect(taskPage.returnDetailsTextArea()).toEqual(Objects.taskspage.data.insertLinkText, 'The link is not added');
         taskPage.clickSaveDetailsButton();
@@ -265,15 +256,14 @@ describe('Create new task ', function() {
     it('should navigate to task page and click on header image and verify if redirects to home page', function() {
 
         taskPage.clickNewButton().clickTaskButton();
-        expect(taskPage.returnTaskTitle()).toEqual(Objects.taskspage.data.taskTitle);
+        expect(taskPage.returnTaskTitle()).toEqual(Objects.taskspage.data.taskTitle, "");
         taskPage.clickHeaderImageLink();
         expect(taskPage.returnDashboardTitle()).toEqual(Objects.taskspage.data.dashboardTitle, 'Header image does not redirects to home page');
 
     });
     it('should create new task navigate to attachments section add png document', function() {
 
-        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
-        taskPage.clickAttachmentsLink();
+        taskPage.clickModuleTasks();
         expect(taskPage.returnAttachementsTableTitle()).toEqual(Objects.taskspage.data.attachmentsTableTitle, 'Attachments table title is wrong');
         taskPage.clickRootFolder();
         utils.mouseMoveToRoot();
@@ -283,7 +273,8 @@ describe('Create new task ', function() {
     });
     it('should create new task navigate to attachments section add docx document', function() {
 
-        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "High", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave().clickAttachmentsLink().clickRootFolder();
+        taskPage.clickModuleTasks();
+        taskPage.clickAttachmentsLink().clickRootFolder();
         utils.mouseMoveToRoot();
         taskPage.clickNewDocument().clickOtherDocument();
         utils.uploadDocx();
@@ -293,7 +284,8 @@ describe('Create new task ', function() {
     });
     it('should create new task navigate to attachemnts section add xlsx document', function() {
 
-        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Expedite", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave().clickAttachmentsLink().clickRootFolder();
+        taskPage.clickModuleTasks();
+        taskPage.clickAttachmentsLink().clickRootFolder();
         utils.mouseMoveToRoot();
         taskPage.clickNewDocument().clickOtherDocument();
         utils.uploadXlsx();
@@ -302,7 +294,9 @@ describe('Create new task ', function() {
     });
     it('should create new task navigate to attachemnts section add pdf document', function() {
 
-        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave().clickAttachmentsLink().clickRootFolder();
+
+        taskPage.clickModuleTasks();
+        taskPage.clickAttachmentsLink().clickRootFolder();
         utils.mouseMoveToRoot();
         taskPage.clickNewDocument().clickOtherDocument();
         utils.uploadPdf();
@@ -311,12 +305,13 @@ describe('Create new task ', function() {
     });
     it('should create new task and add new folder in documents section', function() {
 
-        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "High", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave().clickAttachmentsLink().clickRootFolder();
+        taskPage.clickModuleTasks();
+        taskPage.clickAttachmentsLink().clickRootFolder();
         utils.mouseMoveToRoot();
         taskPage.clickNewFolder();
         taskPage.insertDocumentTitle(Objects.taskspage.data.documentTitleInput);
         taskPage.clickAttachmentTitle();
-        expect(taskPage.returnDocumentTitle()).toEqual(Objects.taskspage.data.documentTitleInput);
+        expect(taskPage.returnDocumentTitle()).toEqual(Objects.taskspage.data.documentTitleInput, "Document title is not corrrect");
 
 
     });
@@ -324,17 +319,17 @@ describe('Create new task ', function() {
 
         taskPage.clickModuleTasks();
         //this line was added to verify that issue https://project.armedia.com/jira/browse/AFDP-2797 does not exist any more
-        taskPage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Attachments");
+        taskPage.clickExpandFancyTreeTopElementAndSubLink("Attachments");
         taskPage.editStartDate(utils.returnToday("/"));
-        expect(taskPage.returnStartDateInput()).toEqual(today);
+        expect(taskPage.returnStartDateInput()).toEqual(today, "Start date is not updated");
 
     });
 
     it('should create new task and edit due date', function() {
 
-        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), Objects.taskpage.data.DueDateInput, "Expedite", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
+        taskPage.clickModuleTasks();
         taskPage.editDueDate(utils.returnToday("/"));
-        expect(taskPage.returnInsertedDueDate()).toEqual(today);
+        expect(taskPage.returnInsertedDueDate()).toEqual(today, "Due date is not updated");
 
     });
 
@@ -353,8 +348,8 @@ describe('Create new task ', function() {
 
     it('should create new task, verify checkout, cancel editing ', function() {
 
-        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), Objects.taskpage.data.DueDateInput, "Expedite", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
-        taskPage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Attachments");
+        taskPage.clickModuleTasks();
+        taskPage.clickExpandFancyTreeTopElementAndSubLink("Attachments");
         taskPage.rightClickRootFolder();
         taskPage.addDocument("Notice of Investigation");
         taskPage.validateDocGridData(true, "Notice of Investigation", ".docx", "Notice of Investigation", utils.returnToday("/"), utils.returnToday("/"), userPage.returnUserNavigationProfile(), "1.0", "ACTIVE");
@@ -380,8 +375,8 @@ describe('Create new task ', function() {
 
     it('should create new task, verify checkout, checkin', function() {
 
-        taskPage.clickNewButton().clickTaskButton().insertTaskData(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), Objects.taskpage.data.DueDateInput, "Expedite", Objects.taskpage.data.percentCompleteInput, Objects.taskspage.data.notesTextArea).clickSave();
-        taskPage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Attachments");
+        taskPage.clickModuleTasks();
+        taskPage.clickExpandFancyTreeTopElementAndSubLink("Attachments");
         taskPage.rightClickRootFolder();
         taskPage.addDocument("Notice of Investigation");
         taskPage.validateDocGridData(true, "Notice of Investigation", ".docx", "Notice of Investigation", utils.returnToday("/"), utils.returnToday("/"), userPage.returnUserNavigationProfile(), "1.0", "ACTIVE");

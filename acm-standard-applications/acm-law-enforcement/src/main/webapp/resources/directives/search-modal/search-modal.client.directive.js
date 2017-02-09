@@ -50,7 +50,9 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 searchControl: '=?',    //=? : two way binding but property is optional
                 onItemsSelected: '=?',   //=? : two way binding but property is optional
                 onNoDataMessage: '@',
-                draggable: '@'
+                draggable: '@',
+                onDblClickRow: '=?',
+                customization: '=?'
             },
 
             link: function (scope, el, attrs) {
@@ -227,6 +229,21 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                             });
                         }
                     };
+
+                    /* Allows for overriding the default row template
+                     * Used to add ng-dblClick etc properties to the template
+                     * Default rowTemplate =
+                     * "<div ng-repeat=\"(colRenderIndex, col) in colContainer.renderedColumns track by col.uid\"
+                     *       ui-grid-one-bind-id-grid=\"rowRenderIndex + '-' + col.uid + '-cell'\"
+                     *       class=\"ui-grid-cell\"
+                     *       ng-class=\"{ 'ui-grid-row-header-cell': col.isRowHeader }\"
+                     *       role=\"{{col.isRowHeader ? 'rowheader' : 'gridcell'}}\" ui-grid-cell>
+                     *  </div>"
+                     */
+                    if (scope.config().rowTemplate) {
+                        scope.gridOptions.rowTemplate = scope.config().rowTemplate;
+                    }
+
                     if (scope.gridOptions) {
                         if (scope.filter) {
                             scope.filters = 'fq=' + scope.filter;

@@ -142,6 +142,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
                 newNote.setType(note.getType());
                 newNote.setParentId(taskTo.getId());
                 newNote.setParentType(taskTo.getObjectType());
+                newNote.setAuthor(note.getCreator());
                 noteDao.save(newNote);
             }
         } catch (Exception e)

@@ -123,7 +123,6 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
                         parentFolder.getId(), "Folder was no added under " + parentFolder.getName() + " successfully", null);
             }
             newFolder.setName(newFolderName);
-            newFolder.setParentFolderParticipants(parentFolder.getParticipants());
             newFolder.setParentFolder(parentFolder);
 
             AcmFolder result = getFolderDao().save(newFolder);
@@ -316,7 +315,6 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             folderForMoving.setParentFolder(dstFolder);
             getParticipantDao().removeAllOtherParticipantsForObject(AcmFolderConstants.OBJECT_FOLDER_TYPE, folderForMoving.getId(),
                     new ArrayList<>());
-            folderForMoving.setParentFolderParticipants(dstFolder.getParticipants());
             movedFolder = getFolderDao().save(folderForMoving);
         } catch (PersistenceException | MuleException e)
         {
@@ -499,7 +497,6 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             AcmFolder pFolder = getFolderDao().findByCmisFolderId(parentFolder.getId());
             acmNewFolder.setParentFolder(pFolder);
             acmNewFolder.setName(toCopyFolder.getName());
-            acmNewFolder.setParentFolderParticipants(pFolder.getParticipants());
             copiedFolder = getFolderDao().save(acmNewFolder);
 
         } catch (PersistenceException | MuleException e)
@@ -601,7 +598,6 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         }
         newFolder.setName(folderName);
         newFolder.setParentFolder(folder);
-        newFolder.setParentFolderParticipants(folder.getParticipants());
         AcmFolder result;
         try
         {

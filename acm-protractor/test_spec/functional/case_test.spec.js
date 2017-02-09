@@ -52,39 +52,9 @@ describe('case page tests', function() {
         casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
         casePage.switchToDefaultContent();
         casePage.waitForCaseTitle();
-        expect(casePage.returnCaseTitle()).toEqual(Objects.casepage.data.caseTitle);
+        expect(casePage.returnCaseTitle()).toEqual(Objects.casepage.data.caseTitle, "Case title is not correct in new added case");
         casePage.clickModuleCasesFiles();
-        expect(casePage.returnCaseType()).toEqual(Objects.casepage.data.casesType);
-    });
-
-    it('should create new case and change case status to closed, verify the automated task in tasks table and approve', function() {
-
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.waitForCasesPage();
-        casePage.clickChangeCaseBtn();
-        casePage.switchToIframes().selectCaseStatus("Closed");
-        casePage.selectApprover(Objects.casepage.data.approverSamuel).chnageCaseSubmit();
-        casePage.clickTasksLinkBtn().waitForTasksTable();
-        expect(casePage.returnAutomatedTask()).toContain(Objects.casepage.data.automatedTaskTitle);
-        casePage.clickTaskTitle();
-        taskPage.clickApproveBtn();
-        expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateClosed, 'The task state should be CLOSED');
-    });
-
-    it('should verify the priority filed', function() {
-
-        casePage.clickModuleCasesFiles();
-        expect(casePage.returnPriority()).toEqual(Objects.casepage.data.priorityMedium);
-    });
-
-    it('should   verify the created date', function() {
-
-        casePage.clickModuleCasesFiles();
-        expect(casePage.returnCreatedDate()).toEqual(utils.returnToday("/"));
-
+        expect(casePage.returnCaseType()).toEqual(Objects.casepage.data.casesType, "Case type is not correct in new added case");
     });
 
     using([{ priority: "High", prioritySaved: Objects.casepage.data.priorityHigh }, {
@@ -126,21 +96,21 @@ describe('case page tests', function() {
         taskPage.insertSubject(Objects.taskpage.data.Subject).insertDueDateToday().clickSave();
         taskPage.clickCaseTitleInTasks();
         casePage.clickTasksLinkBtn().waitForTasksTable();
-        expect(casePage.returnTaskTableTitle()).toContain(Objects.taskpage.data.Subject);
-        expect(casePage.returnTaskTableAssignee()).toEqual(Objects.casepage.data.assigneeSamuel);
-        expect(casePage.returnTaskTableCreatedDate()).toEqual(utils.returnToday("/"));
-        expect(casePage.returnTaskTablePriority()).toEqual(Objects.casepage.data.priorityMedium);
-        expect(casePage.returnTaskTableDueDate()).toEqual(utils.returnToday("/"));
-        expect(casePage.returnTaskTableStatus()).toEqual("ACTIVE");
+        expect(casePage.returnTaskTableTitle()).toContain(Objects.taskpage.data.Subject, "Subject on added task to case is not correct in tasks table");
+        expect(casePage.returnTaskTableAssignee()).toEqual(Objects.casepage.data.assigneeSamuel, "Assignee on added task to case is not correct in tasks table");
+        expect(casePage.returnTaskTableCreatedDate()).toEqual(utils.returnToday("/"), "Created date on added task to case is not correct in tasks table ");
+        expect(casePage.returnTaskTablePriority()).toEqual(Objects.casepage.data.priorityMedium, "Priority on added task to case is not correct in tasks table");
+        expect(casePage.returnTaskTableDueDate()).toEqual(utils.returnToday("/"), "Due date on added task to case is not correct in tasks table");
+        expect(casePage.returnTaskTableStatus()).toEqual("ACTIVE", "Status on added task to case is not correct in tasks table");
     });
 
     it('should  verify the people initiator', function() {
 
         casePage.clickModuleCasesFiles();
         casePage.clickPeopleLinkBtn();
-        expect(casePage.returnPeopleType()).toEqual(Objects.casepage.data.peopleTypeInitiaor);
-        expect(casePage.returnPeopleFirstName()).toEqual(Objects.casepage.data.peopleFirstName);
-        expect(casePage.returnPeopleLastName()).toEqual(Objects.casepage.data.peopleLastName);
+        expect(casePage.returnPeopleType()).toEqual(Objects.casepage.data.peopleTypeInitiaor, "Default people type is not correct on added case");
+        expect(casePage.returnPeopleFirstName()).toEqual(Objects.casepage.data.peopleFirstName, "Default people first name is not correct on added case");
+        expect(casePage.returnPeopleLastName()).toEqual(Objects.casepage.data.peopleLastName, "Default people last name is not correct on added case");
     });
 
     it('should create new case add person and verify the added person', function() {
@@ -321,10 +291,10 @@ describe('case page tests', function() {
         casePage.waitForCasesPage();
         casePage.clickPeopleLinkBtn();
         casePage.addAlias(Objects.casepage.data.aliaseFKA, Objects.casepage.data.aliasValue);
-        expect(casePage.returnAliasesType()).toEqual(Objects.casepage.data.aliaseFKA);
-        expect(casePage.returnAliasesValue()).toEqual(Objects.casepage.data.aliasValue);
-        expect(casePage.returnAliasesLastModified()).toEqual(utils.returnToday("/"));
-        expect(casePage.returnAliasesModifiedBy()).toEqual(Objects.casepage.data.assigneeSamuel);
+        expect(casePage.returnAliasesType()).toEqual(Objects.casepage.data.aliaseFKA, "Aliases type is not correct");
+        expect(casePage.returnAliasesValue()).toEqual(Objects.casepage.data.aliasValue, "Aliases value is not correct");
+        expect(casePage.returnAliasesLastModified()).toEqual(utils.returnToday("/"), "Aliases last modified is not correct");
+        expect(casePage.returnAliasesModifiedBy()).toEqual(Objects.casepage.data.assigneeSamuel, "Aliases modified by is not correct");
 
     });
 
@@ -491,9 +461,9 @@ describe('case page tests', function() {
 
         casePage.clickModuleCasesFiles();
         casePage.historyTable();
-        expect(casePage.returnHistoryEventName()).toEqual(Objects.casepage.data.historyEvent);
-        expect(casePage.returnHistoryDate()).toContain(utils.returnToday("/"));
-        expect(casePage.returnHistoryUser()).toEqual(Objects.casepage.data.assigneeSamuel);
+        expect(casePage.returnHistoryEventName()).toEqual(Objects.casepage.data.historyEvent, "History event name for added case is not correct ");
+        expect(casePage.returnHistoryDate()).toContain(utils.returnToday("/"), "History date for added case is not correct");
+        expect(casePage.returnHistoryUser()).toEqual(Objects.casepage.data.assigneeSamuel, "History user for added case is not correct");
     });
 
     it('should create new case and verify adding correspondence document', function() {
@@ -821,7 +791,7 @@ describe('case page tests', function() {
 
         casePage.clickModuleCasesFiles();
         casePage.clickExpandFancyTreeTopElementAndSubLink("Documents").doubleClickRootFolder().rightClickDocument().clickDocAction("Replace").uploadFile().replaceVersion("1.0");
-        expect(casePage.returnDocVersionGrid()).toEqual("1.0");
+        expect(casePage.returnDocVersionGrid()).toEqual("1.0", "The version of document is not reverted to 1.0");
     });
 
     it('should crate new case and try to add owner and no access from participant tab for same user and verify the alert message', function() {
@@ -837,6 +807,16 @@ describe('case page tests', function() {
         casePage.switchToIframes();
         expect(casePage.returnParticipantTypeAlert()).toEqual("This action is not allowed. No Access and Owner is conflict combination.");
         casePage.switchToDefaultContent();
+
+    });
+
+    it('should verify adding note in document viewer in cases', function () {
+
+        casePage.clickModuleCasesFiles();
+        casePage.clickExpandFancyTreeTopElementAndSubLink("Documents");
+        casePage.clickDocTreeExpand().rightClickFileTitle().clickDocAction("Open");
+        casePage.moveToTab().clickDocViewNotesLink().submitNote(Objects.basepage.data.note);
+        expect(casePage.returnSavedNoteInGrid()).toEqual(Objects.basepage.data.note, "Note is not saved in document viewer");
 
     });
 
