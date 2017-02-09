@@ -281,7 +281,8 @@
         "modified": "Modified",
         "creator": "Creator",
         "modifier": "Modifier",
-        "activated": "Active"
+        "activated": "Active",
+        "queryType": "Object Type"
       },
       "templates.fieldNames.label": "Map fields to values from the template",
       "templates.querySelect": {
