@@ -25,7 +25,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -65,7 +64,7 @@ public class Category implements Serializable, AcmObject, AcmEntity
     private Category parent;
 
     @OneToMany(mappedBy = "parent")
-    private List<Category> children = new ArrayList<>();
+    private List<Category> children;
 
     @Column(name = "cm_category_creator", nullable = false, updatable = false)
     private String creator;
@@ -161,7 +160,7 @@ public class Category implements Serializable, AcmObject, AcmEntity
      */
     public List<Category> getChildren()
     {
-        return new ArrayList<>(children);
+        return children;
     }
 
     /**
@@ -169,13 +168,7 @@ public class Category implements Serializable, AcmObject, AcmEntity
      */
     public void setChildren(List<Category> children)
     {
-        if (children == null || children.isEmpty())
-        {
-            this.children.clear();
-        } else
-        {
-            this.children = new ArrayList<>(children);
-        }
+        this.children = children;
     }
 
     /**
