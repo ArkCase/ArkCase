@@ -176,6 +176,7 @@ public class SaveNoteAPIControllerTest extends EasyMockSupport
 
         incomingNote.setId(700L);
         incomingNote.setCreator("testCreator");
+        incomingNote.setAuthor("testCreator");
         incomingNote.setCreated(new Date());
         incomingNote.setNote("Note");
         incomingNote.setParentType(parentType);
