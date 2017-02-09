@@ -180,7 +180,6 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
                                     $scope.iscurrentAssigneeInOwningGroup = true;
                                 }
                             });
-                            console.log($scope.iscurrentAssigneeInOwningGroup);
                             if ($scope.participant.participantLdapId && $scope.iscurrentAssigneeInOwningGroup) {
                                 $scope.owningGroup = chosenGroup.participant.selectedAssigneeName;
                                 $scope.objectInfo.candidateGroups = [$scope.participant.participantLdapId];
@@ -190,7 +189,6 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
                                 $scope.owningGroup = chosenGroup.participant.selectedAssigneeName;
                                 $scope.objectInfo.candidateGroups = [$scope.participant.participantLdapId];
                                 $scope.assignee = '';
-                                console.log($scope.objectInfo.participants);
 
                                 var assigneeParticipantType = 'owning group';
                                 // Filterinng through the array to get the Assignee ParticipantType 
@@ -218,7 +216,6 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
                                     $scope.objectInfo.participants.splice(indexOfFoundAssigneeSecondParticipantType, 1); 
                                 }
                                 
-                                console.log($scope.objectInfo.participants);
                                 //Clear participants as it causes concurrent modification errors when
                                 //there is no assignee, but a participant of type assignee is present
                                 //$scope.objectInfo.participants = null;
@@ -241,14 +238,22 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             $scope.dateInfo.isDeadline = TaskAlertsService.calculateDeadline($scope.dateInfo.dueDate);
             $scope.assignee = ObjectModelService.getAssignee($scope.objectInfo);
 
-            if ($scope.objectInfo.participants && $scope.objectInfo.participants[0].participantType === 'owning group') {
-                $scope.owningGroup = objectInfo.participants[0].participantLdapId;
-            } else if ($scope.objectInfo.participants && $scope.objectInfo.participants[0].participantType === 'assignee') {
-                $scope.owningGroup = 'Find Owning Group';
+            var owningGroupParticipantType = 'owning group';
+            // Filterinng through the array to get the Assignee ParticipantType 
+            var foundOwningGroupParticipantType = $filter('filter')($scope.objectInfo.participants, 
+                { participantType: owningGroupParticipantType  }, true)[0];
+            
+            // Get the index of the foundAssigneeParticipantType object in the array
+            var indexOfFoundOwningGroupParticipantType = $scope.objectInfo.participants.indexOf(foundOwningGroupParticipantType);
+            // Setting the participantLdapId of assigne to '' only when there is no current assignee or when 
+            // reassigning the Complaint to a group for which the current assignee is not a member
+            if ($scope.objectInfo.participants && indexOfFoundOwningGroupParticipantType >= 0) {
+                $scope.owningGroup = objectInfo.participants[indexOfFoundOwningGroupParticipantType].participantLdapId;
             } else {
                 $scope.owningGroup = 'Unknown';
             }
 
+            // The Owning Group for the Parent Object (Case or Complaint) should be diffferent that that of the child (Owning Group for Task)
             // if (ObjectService.ObjectTypes.CASE_FILE == $scope.objectInfo.parentObjectType) {
             //     CaseInfoService.getCaseInfo($scope.objectInfo.parentObjectId).then(
             //         function (caseInfo) {
