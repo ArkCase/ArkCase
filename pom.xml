@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.armedia</groupId>
@@ -75,7 +76,6 @@
         <mule.version>3.7.0</mule.version>
         <mule-cmis-connector.version>1.14.1</mule-cmis-connector.version>
         <!--<mule-cmis-connector.version>2.0.0</mule-cmis-connector.version> -->
-        <oracle.jdbc.version>6</oracle.jdbc.version>
         <org.json.version>20140107</org.json.version>
         <org.mvel.version>2.2.1.Final</org.mvel.version>
         <rome.version>1.0</rome.version>
@@ -95,7 +95,7 @@
         <asm.version>5.0.3</asm.version>
         <org.apache.poi.version>3.10.1</org.apache.poi.version>
         <frevvo.forms.version>6.3</frevvo.forms.version>
-        <java.mail.version>1.5.4</java.mail.version>
+        <java.mail.version>1.5.6</java.mail.version>
         <spring.integration.version>4.2.9.RELEASE</spring.integration.version>
         <com.google.guava.version>18.0</com.google.guava.version>
         <postgresql.version>9.3-1100-jdbc41</postgresql.version>
@@ -579,7 +579,8 @@
                         WEB-INF/lib/workbench-*.jar,
                         WEB-INF/lib/runtime-*.jar,
                         WEB-INF/lib/mule-devkit-*.jar,
-                        WEB-INF/lib/mule-module-devkit-*.jar
+                        WEB-INF/lib/mule-module-devkit-*.jar,
+                        WEB-INF/lib/mail-1.4*.jar
                     </packagingExcludes>
                 </configuration>
             </plugin>
@@ -816,6 +817,53 @@
 
     <dependencyManagement>
         <dependencies>
+
+            <!-- milton -->
+            <dependency>
+                <groupId>io.milton</groupId>
+                <artifactId>milton-server-ent</artifactId>
+                <version>${milton.version}</version>
+            </dependency>
+
+            <!-- frevvo forms -->
+            <dependency>
+                <groupId>com.frevvo</groupId>
+                <artifactId>forms-java</artifactId>
+                <version>${frevvo.forms.version}</version>
+                <classifier>mailfix</classifier>
+            </dependency>
+
+            <!-- Java mail-->
+            <dependency>
+                <groupId>javax.mail</groupId>
+                <artifactId>javax.mail-api</artifactId>
+                <version>${java.mail.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.mail</groupId>
+                <artifactId>imap</artifactId>
+                <version>${java.mail.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.mail</groupId>
+                <artifactId>javax.mail</artifactId>
+                <version>${java.mail.version}</version>
+            </dependency>
+            <!-- exclude the mail.jar 1.4 from the war file -->
+            <dependency>
+                <groupId>javax.mail</groupId>
+                <artifactId>mail</artifactId>
+                <version>(,1.5)</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>javax.mail</groupId>
+                <artifactId>mailapi</artifactId>
+                <version>(,1.5)</version>
+                <scope>provided</scope>
+            </dependency>
 
             <!-- date time -->
             <dependency>
@@ -1220,6 +1268,11 @@
             </dependency>
             <dependency>
                 <groupId>org.mule.transports</groupId>
+                <artifactId>mule-transport-email</artifactId>
+                <version>${mule.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mule.transports</groupId>
                 <artifactId>mule-transport-http</artifactId>
                 <version>${mule.version}</version>
                 <scope>runtime</scope>
@@ -1475,14 +1528,6 @@
                 </exclusions>
             </dependency>
 
-            <!-- jdbc drivers (needed to run liquibase dbDoc reports) -->
-            <dependency>
-                <groupId>com.oracle</groupId>
-                <artifactId>jdbc</artifactId>
-                <version>${oracle.jdbc.version}</version>
-                <scope>provided</scope>
-            </dependency>
-
             <!-- jpa -->
             <dependency>
                 <groupId>org.eclipse.persistence</groupId>
@@ -1706,6 +1751,7 @@
                 <groupId>org.powermock</groupId>
                 <artifactId>powermock-api-easymock</artifactId>
                 <version>${powermock.version}</version>
+                <scope>test</scope>
                 <exclusions>
                     <exclusion>
                         <!-- powermock pulls in an older version of cglib that breaks our unit tests -->
