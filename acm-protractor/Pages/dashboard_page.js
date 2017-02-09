@@ -33,7 +33,9 @@ var itemesPerPage = element(by.model(Objects.dashboardpage.locators.pageSize));
 
 var DashboardPage = function() {
     this.clickEditButton = function() {
-        editBtn.click();
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.dashboardpage.locators.editBtn))), 30000, "Edit button in the dashboard page is not displayed").then(function() {
+            editBtn.click();
+        });
         return this;
     };
     this.clickAddWidgetButton = function() {
@@ -44,45 +46,63 @@ var DashboardPage = function() {
         return widgetTitle.getText();
     }
     this.removeWidgetButton = function() {
-        removeWidgetBtn.click();
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.dashboardpage.locators.removeWidgetBtn))), 10000, "remove widget button in the dashboard page is not displayed").then(function() {
+            removeWidgetBtn.click();
+        });
         return this;
     }
     this.clickSaveChangesButton = function() {
-        saveChangesBtn.click();
+        browser.executeScript('arguments[0].click()', saveChangesBtn);
         return this;
     }
     this.addWidget = function(type) {
         switch (type) {
             case "CasesByStatus":
-                casesByStatus.click();
+                browser.wait(EC.visibilityOf(element(by.linkText(Objects.dashboardpage.locators.casesByStatus))), 30000, "Cases by status link is not visible").then(function() {
+                    casesByStatus.click();
+                });
                 return this;
                 break;
             case "MyCases":
-                myCases.click();
+                browser.wait(EC.visibilityOf(element(by.linkText(Objects.dashboardpage.locators.myCases))), 30000, "My cases link is not visible").then(function() {
+                    myCases.click();
+                });
                 return this;
                 break;
             case "MyComplaints":
-                myComplaints.click();
+                browser.wait(EC.visibilityOf(element(by.linkText(Objects.dashboardpage.locators.myComplaints))), 30000, "My complaints link is not visible").then(function() {
+                    myComplaints.click();
+                });
                 return this;
                 break;
             case "NewComplaints":
-                newComplaints.click();
+                browser.wait(EC.visibilityOf(element(by.linkText(Objects.dashboardpage.locators.newComplaints))), 30000, "New complaints link is not visible").then(function() {
+                    newComplaints.click();
+                });
                 return this;
                 break;
             case "TeamWorkload":
-                teamWorkload.click();
+                browser.wait(EC.visibilityOf(element(by.linkText(Objects.dashboardpage.locators.teamWorkload))), 30000, "Team workload link is not visible").then(function() {
+                    teamWorkload.click();
+                });
                 return this;
                 break;
             case "Weather":
-                weather.click();
+                browser.wait(EC.visibilityOf(element(by.linkText(Objects.dashboardpage.locators.weather))), 30000, "Weather link is not visible").then(function() {
+                    weather.click();
+                });
                 return this;
                 break;
             case "News":
-                news.click();
+                browser.wait(EC.visibilityOf(element(by.linkText(Objects.dashboardpage.locators.news))), 30000, "News link is not visible").then(function() {
+                    news.click();
+                });
                 return this;
                 break;
             case "MyTasks":
-                myTasks.click();
+                browser.wait(EC.visibilityOf(element(by.linkText(Objects.dashboardpage.locators.myTasks))), 30000, "My tasks link is not visible").then(function() {
+                    myTasks.click();
+                });
                 return this;
 
             default:
@@ -94,13 +114,13 @@ var DashboardPage = function() {
 
     this.editDashboardTitle = function(title) {
 
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.dashboardpage.locators.editBtn))), 10000, "Edit button in the dashboard page is not displayed").then(function() {
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.dashboardpage.locators.editBtn))), 30000, "Edit button in the dashboard page is not displayed").then(function() {
             editBtn.click().then(function() {
                 editDashboardBtn.click().then(function() {
                     dashboardTitleInput.clear().then(function() {
                         dashboardTitleInput.sendKeys(title).then(function() {
                             closeBtn.click().then(function() {
-                                saveChangesBtn.click();
+                                browser.executeScript('arguments[0].click()', saveChangesBtn);
                             });
                         });
                     });

@@ -95,6 +95,7 @@ var ReportPage = function() {
             this.selectState(state);
         }
         this.clickGenerateReport();
+        return this;
     };
 
     this.returnCDCDispositionTitle = function () {
