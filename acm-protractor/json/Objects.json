@@ -79,14 +79,19 @@
             "timeCanvasData":"[chart-data='time.data']",
             "owningGroupDropDown": ".//*[@class='editable-controls form-group']/..//select",
             "owningGroupConfirmBtn": ".//*[@class='editable-controls form-group']/..//button[1]",
-            "assigneeNameModelInput": "participant.selectedAssigneeName"
+            "assigneeNameModelInput": "participant.selectedAssigneeName",
+            "treeSortersBtn": "[ng-show='treeConfig.sorters']",
+            "sortByIdDesc": "//*[@class='dropdown-menu text-left text-sm treeSorter']//li[4]"
+
+
         },
         "data": {
             "reportTitle": "Report of Investigation Title",
             "note": "NoteText",
             "email": "sanja.paskova@armedia.com",
             "owningGroupAdministratorDev":"ACM_ADMINISTRATOR_DEV",
-            "IanInvestigator":"Ian Investigator"
+            "IanInvestigator":"Ian Investigator",
+            "sortByIdDesc": "Sort Case ID Desc"
 
         }
 
@@ -310,7 +315,8 @@
             "removeWidgetBtn": ".//*[@class='panel-title ng-binding ng-scope']/span/a[7]",
             "myTasks": "My Tasks",
             "dashboardTitleInput": "dashboardTitle",
-            "dashboardTitle": "//*[@class='module-header']/h3/span"
+            "dashboardTitle": "//*[@class='module-header']/h3/span",
+            "pageSize": "grid.options.paginationPageSize"
 
         },
 
