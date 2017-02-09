@@ -110,7 +110,7 @@
           "name": "templateFilename",
           "displayName": "admin.correspondenceManagement.templates.grid.title",
           "visible": true,
-          "cellTemplate": "<a target='_blank' ng-href='{{row.entity.fileName}}'>{{ row.entity.templateFilename}}</a>",
+          "cellTemplate": "<a target='_blank' ng-href='{{row.entity.downloadFileName}}'>{{ row.entity.templateFilename}}</a>",
           "headerCellFilter": "translate"
         },
         {
