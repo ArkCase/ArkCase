@@ -189,11 +189,17 @@ angular.module('frevvo').controller('FrevvoController', ['$rootScope', '$scope',
                 params.config = Util.goodMapValue($scope.config, "dialogObjectPicker");
                 modalInstance = $modal.open({
                     templateUrl: "modules/frevvo/views/frevvo-object-picker-modal.client.view.html",
-                    controller: ['$scope', '$modalInstance', 'params', function ($scope, $modalInstance, params) {
+                    controller: ['$scope', '$modalInstance', 'ConfigService', 'params', function ($scope, $modalInstance, ConfigService, params) {
                         $scope.modalInstance = $modalInstance;
                         $scope.header = params.header;
                         $scope.filter = params.filter;
                         $scope.config = params.config;
+                        ConfigService.getModuleConfig("common").then(function (moduleConfig) {
+                            var customization = Util.goodMapValue(moduleConfig, "customization", {});
+                            if (customization) {
+                                $scope.customization = customization;
+                            }
+                        });
                     }],
                     animation: true,
                     size: 'lg',

@@ -43,7 +43,7 @@ describe('Time Tracking page tests', function() {
         timeTrackingPage.clickNewButton();
         timeTrackingPage.navigateToTimeTrackingPage();
         timeTrackingPage.switchToIframes();
-        expect(timeTrackingPage.returnTimeTrackingDate()).toEqual(utils.returnTimeTrackingWeek());
+        expect(timeTrackingPage.returnTimeTrackingDate()).toEqual(utils.returnTimeTrackingWeek(), "Time tracking period is not correct");
         timeTrackingPage.switchToDefaultContent();
     });
 
@@ -52,7 +52,7 @@ describe('Time Tracking page tests', function() {
         timeTrackingPage.clickNewButton();
         timeTrackingPage.navigateToTimeTrackingPage();
         timeTrackingPage.switchToIframes();
-        timeTrackingPage.selectTimesheetType("Case")
+        timeTrackingPage.selectTimesheetType("Case");
         expect(timeTrackingPage.returnchargeCodeAlertMessage()).toEqual("You can't leave this empty: Charge Code");
         timeTrackingPage.switchToDefaultContent();
     });
@@ -63,9 +63,9 @@ describe('Time Tracking page tests', function() {
         timeTrackingPage.clickLastElementInTreeData();
         timeTrackingPage.clickTagsLinkBtn();
         timeTrackingPage.addSugestedTag(Objects.timetrackingPage.data.tagname);
-        expect(timeTrackingPage.returnTagName()).toEqual(Objects.timetrackingPage.data.tagname);
-        expect(timeTrackingPage.returntagCratedDate()).toEqual(utils.returnToday("/"));
-        expect(timeTrackingPage.returntagCreatedBy()).toEqual(Objects.casepage.data.assigneeSamuel);
+        expect(timeTrackingPage.returnTagName()).toEqual(Objects.timetrackingPage.data.tagname, "Tag name is not correct");
+        expect(timeTrackingPage.returntagCratedDate()).toEqual(utils.returnToday("/"), "Tag created date is not correct");
+        expect(timeTrackingPage.returntagCreatedBy()).toEqual(Objects.casepage.data.assigneeSamuel, "tag created by is not correct");
         timeTrackingPage.deleteTag();
     });
 });
