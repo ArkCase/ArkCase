@@ -1,5 +1,7 @@
 var Objects = require('../json/Objects.json');
 var basePage = require('./base_page.js');
+var SelectWrapper = require('../util/select-wrapper.js');
+var EC = protractor.ExpectedConditions;
 var editBtn = element(by.xpath(Objects.dashboardpage.locators.editBtn));
 var addNewWidgetBtn = element(by.xpath(Objects.dashboardpage.locators.addNewWidgetBtn));
 var editDashboardBtn = element(by.xpath(Objects.dashboardpage.locators.editDashboardBtn));
@@ -22,7 +24,13 @@ var removeWidgetBtn = element.all(by.xpath(Objects.dashboardpage.locators.remove
 var myTasks = element(by.linkText(Objects.dashboardpage.locators.myTasks));
 var dashboardTitleInput = element(by.id(Objects.dashboardpage.locators.dashboardTitleInput));
 var dashboardTitle = element(by.xpath(Objects.dashboardpage.locators.dashboardTitle));
-var EC = protractor.ExpectedConditions;
+var pageSize = new SelectWrapper(by.model(Objects.dashboardpage.locators.pageSize));
+var itemesPerPage = element(by.model(Objects.dashboardpage.locators.pageSize));
+
+
+
+
+
 var DashboardPage = function() {
     this.clickEditButton = function() {
         editBtn.click();
@@ -106,6 +114,17 @@ var DashboardPage = function() {
         return dashboardTitle.getText();
     }
 
+    this.selectPageSizeOnWidget = function(size) {
+
+        pageSize.selectByText(size);
+
+    }
+
+    this.returnItemsPerPage = function() {
+
+        browser.wait(EC.visibilityOf(element(by.model(Objects.dashboardpage.locators.pageSize))), 30000, "Items per page in widget is not displayed");
+        return itemesPerPage.getText();
+    }
 
 };
 

@@ -317,7 +317,7 @@
               "width": 150
             },
             {
-              "name": "creator",
+              "name": "author",
               "displayName": "cases.comp.notes.table.columns.creator",
               "headerCellFilter": "translate",
               "enableCellEdit": false,
