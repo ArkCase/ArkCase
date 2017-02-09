@@ -22,6 +22,7 @@ import com.armedia.acm.plugins.category.model.CategoryStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -32,7 +33,7 @@ import java.util.Optional;
  *
  */
 @Transactional
-public class CategoryServiceImpl implements CategoryService
+public class CategoryServiceImpl implements CategoryService, ApplicationEventPublisherAware
 {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -49,8 +50,8 @@ public class CategoryServiceImpl implements CategoryService
     @Override
     public Category get(Long id) throws AcmObjectNotFoundException
     {
-        return Optional.of(categoryDao.find(id))
-                .orElseThrow(() -> new AcmObjectNotFoundException("Category", id, String.format("Category with id %n not found.", id)));
+        return Optional.ofNullable(categoryDao.find(id))
+                .orElseThrow(() -> new AcmObjectNotFoundException("Category", id, String.format("Category with id %d not found.", id)));
     }
 
     /*
@@ -62,6 +63,11 @@ public class CategoryServiceImpl implements CategoryService
     @Override
     public Category create(Category category) throws AcmCreateObjectFailedException
     {
+        if (category == null)
+        {
+            throw new AcmCreateObjectFailedException("Category", "Argument was 'null'.", null);
+        }
+
         // what happens if category with same name already exists?
         log.debug("Creating Category with name [{}].", category.getName());
         if (checkNameCollision(category))
@@ -69,13 +75,15 @@ public class CategoryServiceImpl implements CategoryService
             log.error("Name collision while trying to create [{}] Category.", category.getName());
             // throw an exception signaling category name collision.
             throw new AcmCreateObjectFailedException("Category",
-                    "Category with [" + category.getName() + "] name already exists on this level.", null);
+                    String.format("Category with [%s] name already exists on this level.", category.getName()), null);
         }
 
-        log.debug("Created Category with name [{}].", category.getName());
-        eventPublisher.publishEvent(new CategoryEvent(category, CREATE, String.format("Category %s created.", category.getName())));
+        Category saved = categoryDao.save(category);
 
-        return categoryDao.save(category);
+        log.debug("Created Category with name [{}].", saved.getName());
+        eventPublisher.publishEvent(new CategoryEvent(saved, CREATE, String.format("Category %s created.", saved.getName())));
+
+        return saved;
     }
 
     /*
@@ -89,7 +97,7 @@ public class CategoryServiceImpl implements CategoryService
     {
         if (category == null || category.getId() == null)
         {
-            // throw an exception if here?
+            throw new AcmUpdateObjectFailedException("Category", "Argument was 'null' or withoud an 'id'.", null);
         }
 
         // check first if exists? throw an exception if doesn't?
@@ -104,17 +112,15 @@ public class CategoryServiceImpl implements CategoryService
                         category.getName());
                 // throw an exception signaling category name collision.
                 throw new AcmUpdateObjectFailedException("Category",
-                        "Category with [" + category.getName() + "] name already exists on this level.", null);
+                        String.format("Category with [%s] name already exists on this level.", category.getName()), null);
             }
             log.debug("Updating 'name' property of [{}] Category with id [{}] to [{}].", existing.getName(), category.getId(),
                     category.getName());
-            // audit edit category name changed
         }
         if (!category.getDescription().equals(existing.getDescription()))
         {
             log.debug("Updating 'description' property of [{}] Category with id [{}] from [{}] to [{}].", category.getName(),
                     category.getId(), existing.getDescription(), category.getDescription());
-            // audit edit category description changed
         }
 
         Category persisted = categoryDao.save(category);
@@ -144,7 +150,7 @@ public class CategoryServiceImpl implements CategoryService
 
         if (id == null)
         {
-            // throw an exception if here?
+            throw new AcmObjectNotFoundException("Category", null, "Argument was 'null'.");
         }
 
         Category category = get(id);
@@ -164,8 +170,7 @@ public class CategoryServiceImpl implements CategoryService
     {
         if (category == null || category.getId() == null)
         {
-            // throw an exception if here?
-            return;
+            throw new AcmObjectNotFoundException("Category", null, "Argument was 'null' or withoud an 'id'.");
         }
 
         category = get(category.getId());
@@ -186,21 +191,22 @@ public class CategoryServiceImpl implements CategoryService
     {
         if (category == null || category.getId() == null)
         {
-            // throw an exception if here?
-            return;
+            throw new AcmObjectNotFoundException("Category", null, "Argument was 'null' or withoud an 'id'.");
         }
 
         category = get(category.getId());
         setCategoryStatus(category, DEACTIVATED, DEACTIVATE);
 
-        eventPublisher.publishEvent(new CategoryEvent(category, DEACTIVATE, ""));
     }
 
     private void setCategoryStatus(Category category, CategoryStatus status, CategoryEventType eventType) throws AcmObjectNotFoundException
     {
         category.setStatus(status);
         log.debug("{} [{}] Category with id [{}].", getStatusVerb(status), category.getName(), category.getId());
-        setChildrenStatus(category, status);
+        if (!ACTIVATED.equals(status))
+        {
+            setChildrenStatus(category, status);
+        }
         try
         {
             update(category);
@@ -247,6 +253,10 @@ public class CategoryServiceImpl implements CategoryService
     public List<Category> getChildren(Long id) throws AcmObjectNotFoundException
     {
         Category parent = get(id);
+        if (parent == null)
+        {
+            throw new AcmObjectNotFoundException("Category", id, String.format("Category with id %d doesn't exist.", id));
+        }
         return parent.getChildren();
     }
 
@@ -316,10 +326,14 @@ public class CategoryServiceImpl implements CategoryService
         }
     }
 
-    /**
-     * @param eventPublisher the eventPublisher to set
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.springframework.context.ApplicationEventPublisherAware#setApplicationEventPublisher(org.springframework.
+     * context.ApplicationEventPublisher)
      */
-    public void setEventPublisher(ApplicationEventPublisher eventPublisher)
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher eventPublisher)
     {
         this.eventPublisher = eventPublisher;
     }
