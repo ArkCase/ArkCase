@@ -32,6 +32,8 @@ public class CorrespondenceTemplateRequestResponse
 
     private Date modified;
 
+    private String downloadFileName;
+
     /**
      * @return the dislpayName
      */
@@ -41,7 +43,8 @@ public class CorrespondenceTemplateRequestResponse
     }
 
     /**
-     * @param displayName the dislpayName to set
+     * @param displayName
+     *            the dislpayName to set
      */
     public void setDisplayName(String displayName)
     {
@@ -57,7 +60,8 @@ public class CorrespondenceTemplateRequestResponse
     }
 
     /**
-     * @param documentType the documentType to set
+     * @param documentType
+     *            the documentType to set
      */
     public void setDocumentType(String documentType)
     {
@@ -73,7 +77,8 @@ public class CorrespondenceTemplateRequestResponse
     }
 
     /**
-     * @param templateFilename the templateFilename to set
+     * @param templateFilename
+     *            the templateFilename to set
      */
     public void setTemplateFilename(String templateFilename)
     {
@@ -89,7 +94,8 @@ public class CorrespondenceTemplateRequestResponse
     }
 
     /**
-     * @param correspondenceQueryBeanId the correspondenceQueryBeanId to set
+     * @param correspondenceQueryBeanId
+     *            the correspondenceQueryBeanId to set
      */
     public void setCorrespondenceQueryBeanId(String correspondenceQueryBeanId)
     {
@@ -105,7 +111,8 @@ public class CorrespondenceTemplateRequestResponse
     }
 
     /**
-     * @param queryType the queryTpe to set
+     * @param queryType
+     *            the queryTpe to set
      */
     public void setQueryType(String queryType)
     {
@@ -121,7 +128,8 @@ public class CorrespondenceTemplateRequestResponse
     }
 
     /**
-     * @param templateSubstitutionVariables the templateSubstitutionVariables to set
+     * @param templateSubstitutionVariables
+     *            the templateSubstitutionVariables to set
      */
     public void setTemplateSubstitutionVariables(Map<String, String> templateSubstitutionVariables)
     {
@@ -137,7 +145,8 @@ public class CorrespondenceTemplateRequestResponse
     }
 
     /**
-     * @param dateFormatString the dateFormatString to set
+     * @param dateFormatString
+     *            the dateFormatString to set
      */
     public void setDateFormatString(String dateFormatString)
     {
@@ -153,7 +162,8 @@ public class CorrespondenceTemplateRequestResponse
     }
 
     /**
-     * @param numberFormatString the numberFormatString to set
+     * @param numberFormatString
+     *            the numberFormatString to set
      */
     public void setNumberFormatString(String numberFormatString)
     {
@@ -169,7 +179,8 @@ public class CorrespondenceTemplateRequestResponse
     }
 
     /**
-     * @param activated the activated to set
+     * @param activated
+     *            the activated to set
      */
     public void setActivated(boolean activated)
     {
@@ -185,7 +196,8 @@ public class CorrespondenceTemplateRequestResponse
     }
 
     /**
-     * @param modifier the modifier to set
+     * @param modifier
+     *            the modifier to set
      */
     public void setModifier(String modifier)
     {
@@ -201,11 +213,22 @@ public class CorrespondenceTemplateRequestResponse
     }
 
     /**
-     * @param modified the modified to set
+     * @param modified
+     *            the modified to set
      */
     public void setModified(Date modified)
     {
         this.modified = modified;
+    }
+
+    public String getDownloadFileName()
+    {
+        return downloadFileName;
+    }
+
+    public void setDownloadFileName(String downloadFileName)
+    {
+        this.downloadFileName = downloadFileName;
     }
 
 }
