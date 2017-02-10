@@ -1,54 +1,80 @@
 <div class="modal-header">
-    <h3 ng-hide="isEdit">
-        <span translate>admin.correspondenceManagement.templates.addTemplate</span>
-    </h3>
-
-    <h3 ng-show="isEdit">
-        <span translate>admin.correspondenceManagement.templates.editTemplate</span>
+    <h3>
+        <span ng-if="isEdit" translate>admin.correspondenceManagement.templates.editTemplate</span>
+        <span ng-if="!isEdit" translate>admin.correspondenceManagement.templates.addTemplate</span>
     </h3>
 
 </div>
 <div class="modal-body">
-    <div class="well-sm">
-        <div class="row">
-            <label class="control-label">{{ 'admin.correspondenceManagement.templates.modal.objectTypes.label' |
-                translate
-                }}
-                <select ng-model="selectedObjectType"
-                        ng-options="objectType.id as objectType.name for objectType in objectTypes"
-                        ng-change="clearQueryAndFieldNames()"
-                        class="form-control input-md">
-                </select>
-            </label>
-        </div>
-
-        <div class="row">
-            <label for="querySelect_{{::$id}}"><span translate>admin.correspondenceManagement.templates.modal.querySelect.label</span>
-                <span class="required-asterisk">*</span></label>
-            <input id="querySelect_{{::$id}}" class="form-control" type="text"
-                   ng-model="query.beanId"
-                   ng-click="pickQuerySelect()" required>
-            </input>
-        </div>
-        <div ng-show="query.fieldNames.length>0">
-        
-            <br/><div class="row"><strong><span translate>admin.correspondenceManagement.templates.fieldNames.label</span></strong></div><br/>
-
-            <div ng-repeat="item in query.fieldNames">
-                <div class="row">
-                    <div class="col-xs-3"><label>{{item}}</label></div>
-                    <div class="col-xs-6"><input type="text" ng-model="fieldValues[$index]"></div>
+    <form name="templateForm">
+        <div class="well-sm">
+            <div class="row" ng-hide="isEdit">
+                <div class="btn-group">
+                    <button ngf-select ngf-change="upload($files)" class="btn btn-xs btn-link" ngf-multiple="false"
+                            accept=".docx">
+                        <i class="glyphicon glyphicon-plus-sign"></i>
+                        <span translate>admin.correspondenceManagement.templates.addNewTemplate</span>
+                    </button>
+                </div>
+                <div>
+                    <ul>
+                        <li ng-if="selectedFiles.length == 0">
+                            <span>No File Selected</span>
+                        </li>
+                        <li ng-repeat="file in selectedFiles">{{file.name}}</li>
+                    </ul>
                 </div>
             </div>
-            
+            <div class="row">
+                <label class="control-label">{{ 'admin.correspondenceManagement.templates.modal.objectTypes.label' |
+                    translate
+                    }}
+                    <select ng-model="template.queryType"
+                            ng-options="objectType.id as objectType.name for objectType in objectTypes"
+                            ng-change="clearQueryAndFieldNames()"
+                            class="form-control input-md" required>
+                    </select>
+                </label>
+            </div>
+            <div class="row">
+                <label for="displayName_{{::$id}}"><span translate>admin.correspondenceManagement.templates.modal.displayName.label</span>
+                    <span class="required-asterisk">*</span></label>
+                <input id="displayName_{{::$id}}" class="form-control" type="text" ng-model="template.displayName"
+                       required>
+            </div>
+            <div class="row">
+                <label for="querySelect_{{::$id}}"><span translate>admin.correspondenceManagement.templates.modal.querySelect.label</span>
+                    <span class="required-asterisk">*</span></label>
+                <input id="querySelect_{{::$id}}" class="form-control" type="text"
+                       ng-model="query.beanId"
+                       ng-click="pickQuerySelect()" required>
+                </input>
+            </div>
+
+            <div ng-show="query.fieldNames.length>0">
+
+                <br/>
+                <div class="row"><strong><span
+                        translate>admin.correspondenceManagement.templates.fieldNames.label</span></strong></div>
+                <br/>
+
+                <div ng-repeat="item in query.fieldNames">
+                    <div class="row">
+                        <div class="col-xs-3"><label>{{item}}</label></div>
+                        <div class="col-xs-6"><input type="text" ng-model="fieldValues[$index]"></div>
+                    </div>
+                </div>
+
+            </div>
         </div>
-    </div>
+    </form>
 </div>
 <div class="modal-footer">
     <button class="btn btn-secondary" ng-click="onClickCancel()">
         <span translate>admin.correspondenceManagement.templates.modal.btnCancel.text</span>
     </button>
-    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="templateForm.$invalid">
+    <button class="btn btn-primary" ng-click="onClickOk()"
+            ng-disabled="templateForm.$invalid || (!isEdit && selectedFiles.length == 0)">
         <span translate>admin.correspondenceManagement.templates.modal.btnOk.text</span>
     </button>
 </div>

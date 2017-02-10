@@ -9,7 +9,7 @@
         "data": {
             "supervisoruser": {
 
-                "username": "samuel-acm",
+                "username": "sally-acm",
                 "password": "AcMd3v$"
             },
             "adminuser": {
@@ -79,14 +79,20 @@
             "timeCanvasData":"[chart-data='time.data']",
             "owningGroupDropDown": ".//*[@class='editable-controls form-group']/..//select",
             "owningGroupConfirmBtn": ".//*[@class='editable-controls form-group']/..//button[1]",
-            "assigneeNameModelInput": "participant.selectedAssigneeName"
+            "assigneeNameModelInput": "participant.selectedAssigneeName",
+            "treeSortersBtn": "[ng-show='treeConfig.sorters']",
+            "sortByIdDesc": "//*[@class='dropdown-menu text-left text-sm treeSorter']//li[4]",
+            "objectStatus": ".//div[@class='col-xs-6']/h4/node()[2]"
+
+
         },
         "data": {
             "reportTitle": "Report of Investigation Title",
             "note": "NoteText",
             "email": "sanja.paskova@armedia.com",
             "owningGroupAdministratorDev":"ACM_ADMINISTRATOR_DEV",
-            "IanInvestigator":"Ian Investigator"
+            "IanInvestigator":"Ian Investigator",
+            "sortByIdDesc": "Sort Case ID Desc"
 
         }
 
@@ -310,7 +316,8 @@
             "removeWidgetBtn": ".//*[@class='panel-title ng-binding ng-scope']/span/a[7]",
             "myTasks": "My Tasks",
             "dashboardTitleInput": "dashboardTitle",
-            "dashboardTitle": "//*[@class='module-header']/h3/span"
+            "dashboardTitle": "//*[@class='module-header']/h3/span",
+            "pageSize": "grid.options.paginationPageSize"
 
         },
 
@@ -323,7 +330,7 @@
             "widgetTitleWeather": "Weather",
             "widgetTitleNews": "News",
             "widgetTitleMyTasks": "My Tasks",
-            "DashbordTitle": "Dashbord Title"
+            "DashbordTitle": "Dashboard Title"
         }
     },
 
@@ -337,7 +344,7 @@
             "userNameConfirmBtn": ".//*[@class='col-xs-8']/h4[2]/form/div/span/button[1]",
             "userNavigation": ".fullname",
             "userNavigationProfile": "Profile",
-            "userPageHeader": ".//*[@class='module-header']/h3",
+            "userPageHeader": ".//*[@class='module-header']/h3/span",
             "userLocation": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[1]/a",
             "userLocationInput": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[1]/form/div/input",
             "userLocationConfirmBtn": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[1]//form/div/span/button[1]",
@@ -643,7 +650,8 @@
             "tagPriority": ".//*[@class='ui-grid-cell-contents ui-grid-header-cell-primary-focus']",
             "participantTypeConflictMessage": "[extid='warningParticipantTypeConflict']",
             "addParticipantTypeSecondRowbtn": "//table/tbody/..//td[2]/span",
-            "selectParticipantTypeSecondRow": "//table/tbody/tr[2]/td[5]"
+            "selectParticipantTypeSecondRow": "//table/tbody/tr[2]/td[5]",
+            "doc": "vvCurrentPage"
 
         },
 
@@ -738,7 +746,8 @@
             "timeTrackingModule": "a[href*='#!/time-tracking//main']",
             "timeTrackingDate": ".//*[@class='f-control Three columns  f-output  s-valid  s-prepend   s-linked Message s-new-line s-color-None']",
             "chargeCodeAlertMessage":".//*[@class='f-status f-table-status s-alert']",
-            "timeTotal": "rowTotal"
+            "timeTotal": "rowTotal",
+            "chargeCode": "objectNumber"
         },
         "data": {
 
@@ -761,7 +770,8 @@
             "saveBtn": "Save",
             "expensesDropDown": ".//*[@class='input _frevvo-disable-backspace']",
             "costsheetPageTitle": ".//*[@class='module-header']/..//h3/span",
-            "costTrackingModule": "a[href='#!/cost-tracking//main']"
+            "costTrackingModule": "a[href='#!/cost-tracking//main']",
+            "codeInput": "objectNumber"
 
 
         },
@@ -786,11 +796,12 @@
             "facets": "[ng-if='field.count > 0']",
              "notificationsInput": "searchQuery",
              "searchBtn": "[ng-click='queryExistingItems()']",
-              "sort": ".//*[@class='ng-scope sortable']"
-
+            "sort": ".//*[@class='ng-scope sortable']",
+            "notificationTitle" : "//div[@class='module-header']/h3"
 
         },
         "data": {
+            "notificationsTitle": "Notifications"
 
         }
     },

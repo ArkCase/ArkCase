@@ -13,8 +13,7 @@ var searchNotificationInput = element(by.model(Objects.notificationPage.locators
 var searchBtn = element(by.css(Objects.notificationPage.locators.searchBtn));
 var sortObjectType = element.all(by.xpath(Objects.notificationPage.locators.sort)).get(2);
 var sortModifiedBy = element.all(by.xpath(Objects.notificationPage.locators.sort)).get(3);
-
-
+var notificationTitle = element(by.xpath(Objects.notificationPage.locators.notificationTitle));
 
 
 var NotificationPage = function() {
@@ -59,6 +58,10 @@ var NotificationPage = function() {
         return description.getText();
     };
 
+    this.returnModifiedBy = function () {
+        return modifiedBy.getText();
+    }
+
     this.returnModifiedByMonth = function() {
 
         modifiedBy.getText().then(function(text) {
@@ -95,6 +98,11 @@ var NotificationPage = function() {
 
     this.returnParentNnumber = function() {
         return parentNumber.getText();
+    }
+
+    this.vaidateNotificationTitle = function () {
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.notificationPage.locators.notificationTitle))), 30000, "Notification title is not visible");
+            expect(notificationTitle.getText()).toEqual(Objects.notificationPage.data.notificationsTitle, "Notification page is not succesfully opened");
     }
 
 };

@@ -8,7 +8,7 @@ import com.armedia.acm.files.capture.CaptureConstants;
 import com.armedia.acm.files.capture.DocumentObject;
 import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
-
+import com.armedia.acm.web.api.MDCConstants;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs2.FileObject;
@@ -19,11 +19,11 @@ import org.eclipse.persistence.jaxb.dynamic.DynamicJAXBContext;
 import org.eclipse.persistence.jaxb.dynamic.DynamicJAXBContextFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.security.core.Authentication;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.xml.bind.Unmarshaller;
-
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -37,6 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Created by riste.tutureski on 10/8/2015.
@@ -218,6 +219,12 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
             // way to upload file for given object - it creates AcmContainer object that we need for uploading
             AcmMultipartFile file = new AcmMultipartFile(docObject.getDocument().getName(), docObject.getDocument().getName(), contentType,
                     false, docObject.getDocument().length(), bytes, cloneIS, true);
+
+            // since this code is run via a batch job, there is no authenticated user, so we need to specify the user
+            // to be used for CMIS connections.  Similar to the requirement to 'getAuditPropertyEntityAdapter().setUserId',
+            // only this user has to be a real Alfresco user.
+            MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
+            MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
 
             // Upload file
             getEcmFileService().upload(file.getOriginalFilename(), fileType, file, auth, cmisFolderId, objectType, objectId);
