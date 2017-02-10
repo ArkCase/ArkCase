@@ -28,7 +28,7 @@ var complaintID = element(by.xpath(Objects.casepage.locators.caseID));
 var complaintType = element(by.xpath(Objects.complaintPage.locators.complaintType));
 var complaintPriority = element(by.xpath(Objects.complaintPage.locators.complaintPriority));
 var complaintCreateDate = element(by.xpath(Objects.casepage.locators.createdDate));
-var complaintTitleSaved = element(by.xpath(Objects.complaintPage.locators.complaintTitle));
+var complaintTitleSaved = element(by.xpath(Objects.complaintPage.locators.complaintTitleLink));
 var newBtn = element(by.xpath(Objects.basepage.locators.newButton));
 var locationLinkBtn = element(by.xpath(Objects.complaintPage.locators.locationsLinkBtn));
 var addLocationBtn = element(by.css(Objects.complaintPage.locators.addLocationBtn));
@@ -235,6 +235,7 @@ var ComplaintPage = function() {
         browser.wait(EC.presenceOf(element(by.xpath(Objects.complaintPage.locators.complaintTitleLink))), 30000, "Complaint title is not present in DOM").then(function() {
             browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.complaintTitleLink))), 30000, "Complaint title is not visible");
         })
+        return this;
     };
 
     this.addLocation = function(type, street, city, state, zip) {
@@ -350,11 +351,7 @@ var ComplaintPage = function() {
     this.getComplaintId = function() {
         return complaintID.getText();
     };
-    this.waitForComplaintID = function() {
-        browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.caseID))), 60000, "Case ID is not present").then(function() {
-            browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.caseID))), 60000, "Case ID is not displayed");
-        });
-    };
+
     this.returnComplaintType = function() {
         return complaintType.getText();
     };

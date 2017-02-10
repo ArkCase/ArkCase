@@ -41,7 +41,7 @@
     "angular-ui-calendar": "latest",
     "fullcalendar": "latest",
     "angular-chart.js": "~0.8.8",
-    "sockjs-client": "1.0.3",
+    "sockjs-client": "1.1.2",
     "stomp-websocket": "2.3.4",
     "angular-hotkeys": "chieffancypants/angular-hotkeys#^1.7.0"
   },

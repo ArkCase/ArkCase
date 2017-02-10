@@ -8,6 +8,11 @@
         <property name="saveRule" ref="saveCaseFileBusinessRule"/>
     </bean>
 
+    <bean id="caseFileParticipantRulesHandler"
+          class="com.armedia.acm.plugins.casefile.pipeline.presave.CaseFileParticipantRulesHandler">
+        <property name="participantsRule" ref="participantsBusinessRule"/>
+    </bean>
+
     <bean id="saveCaseFileBusinessRule"
           class="com.armedia.acm.plugins.casefile.service.SaveCaseFileBusinessRule">
         <property name="ruleSpreadsheetFilename" value="drools-case-file-rules.xlsx"/>
@@ -22,6 +27,11 @@
     <bean id="splitCaseFileBusinessRule"
           class="com.armedia.acm.plugins.casefile.service.SplitCaseFileBusinessRule">
         <property name="ruleSpreadsheetFilename" value="drools-split-case-file-rules.xlsx"/>
+    </bean>
+
+    <bean id="participantsBusinessRule"
+          class="com.armedia.acm.services.participants.service.ParticipantsBusinessRule">
+        <property name="ruleSpreadsheetFilename" value="drools-participant-assignment-rules.xlsx"/>
     </bean>
 
 </beans>

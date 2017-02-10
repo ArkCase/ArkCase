@@ -19,7 +19,7 @@ angular.module('admin').service('Admin.CMTemplatesService', ['$http', 'Upload',
         return ({
             retrieveTemplatesList: retrieveTemplatesList,
             retrieveQuerySelectList: retrieveQuerySelectList,
-            fullDownloadPath: fullDownloadPath,
+            downloadByFilename: downloadByFilename,
             uploadTemplate: uploadTemplate,
             getTemplateData: getTemplateData,
             saveTemplateData: saveTemplateData,
@@ -39,7 +39,8 @@ angular.module('admin').service('Admin.CMTemplatesService', ['$http', 'Upload',
         function retrieveTemplatesList() {
             return $http({
                 method: "GET",
-                url: "api/latest/plugin/admin/template/list"
+                url: "api/latest/plugin/admin/templates",
+                cache: false
             });
         };
 
@@ -126,12 +127,12 @@ angular.module('admin').service('Admin.CMTemplatesService', ['$http', 'Upload',
          * @description
          * Performs get full path for download
          *
-         * @param {String} path file path
+         * @param {String} path file name
          *
          * @returns {String} full download path
          */
-        function fullDownloadPath(path) {
-            return 'api/latest/plugin/admin/template?filePath=' + path;
+        function downloadByFilename(downloadFileName) {
+            return 'api/latest/plugin/admin/template?downloadFileName=' + downloadFileName;
         };
 
         /**

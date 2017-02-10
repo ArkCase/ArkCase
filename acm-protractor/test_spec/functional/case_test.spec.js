@@ -57,36 +57,6 @@ describe('case page tests', function() {
         expect(casePage.returnCaseType()).toEqual(Objects.casepage.data.casesType, "Case type is not correct in new added case");
     });
 
-    it('should create new case and change case status to closed, verify the automated task in tasks table and approve', function() {
-
-        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
-        casePage.clickNextBtn();
-        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
-        casePage.switchToDefaultContent();
-        casePage.waitForCasesPage();
-        casePage.clickChangeCaseBtn();
-        casePage.switchToIframes().selectCaseStatus("Closed");
-        casePage.selectApprover(Objects.casepage.data.approverSamuel).chnageCaseSubmit();
-        casePage.clickTasksLinkBtn().waitForTasksTable();
-        expect(casePage.returnAutomatedTask()).toContain(Objects.casepage.data.automatedTaskTitle, "Automated task title does not contain title of case");
-        casePage.clickTaskTitle();
-        taskPage.clickApproveBtn();
-        expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateClosed, 'The task state should be CLOSED');
-    });
-
-    it('should verify the priority filed', function() {
-
-        casePage.clickModuleCasesFiles();
-        expect(casePage.returnPriority()).toEqual(Objects.casepage.data.priorityMedium, "Default priority is not Medium and is not filled");
-    });
-
-    it('should   verify the created date', function() {
-
-        casePage.clickModuleCasesFiles();
-        expect(casePage.returnCreatedDate()).toEqual(utils.returnToday("/"), "Created date is not equal to today");
-
-    });
-
     using([{ priority: "High", prioritySaved: Objects.casepage.data.priorityHigh }, {
         priority: "Medium",
         prioritySaved: Objects.casepage.data.priorityMedium
@@ -505,48 +475,7 @@ describe('case page tests', function() {
 
     });
 
-    it('should  add timesheet and verify in cases timesheet table', function() {
-
-        casePage.clickModuleCasesFiles();
-        element(by.xpath(Objects.casepage.locators.caseID)).getText().then(function(text) {
-            console.log(text);
-            casePage.clickNewButton();
-            timeTrackingPage.navigateToTimeTrackingPage();
-            casePage.switchToIframes();
-            timeTrackingPage.submitTimesheetTable("Case", text, "8");
-            casePage.selectApprover(Objects.casepage.data.approverSamuel);
-            casePage.switchToIframes();
-            timeTrackingPage.clickSaveBtn();
-            casePage.clickModuleCasesFiles();
-            casePage.TimeTable();
-            expect(casePage.returnTimesheetFormName()).toContain(Objects.casepage.data.timeSheet, "Name is not correct on added timesheet on case");
-            expect(casePage.returnTimesheetUser()).toEqual(Objects.casepage.data.assigneeSamuel, "User is not correct on added timesheet on case");
-            expect(casePage.returnTimesheetModifiedDate()).toEqual(utils.returnToday("/"), "Modified date is not correct on added timesheet on case");
-            expect(casePage.returnTimesheetStatus()).toEqual(Objects.casepage.data.statusDraft, "Status is not correct on added timesheet on case");
-            expect(casePage.returnTimesheetHours()).toEqual(Objects.casepage.data.totalHours, "Hours is not correct on added timesheet on case");
-        });
-    });
-
-    it('should create costsheet and verify in the cases costsheet table', function() {
-
-        casePage.clickModuleCasesFiles();
-        element(by.xpath(Objects.casepage.locators.caseID)).getText().then(function(text) {
-            console.log(text);
-            casePage.clickNewButton();
-            costTrackingPage.navigateToExpensesPage();
-            casePage.switchToIframes();
-            costTrackingPage.submitExpenses("Case", text, Objects.costsheetPage.data.Taxi, Objects.costsheetPage.data.taxi, Objects.costsheetPage.data.Ammount);
-            costTrackingPage.clickSaveBtn();
-            casePage.clickModuleCasesFiles();
-            casePage.CostTable();
-            expect(casePage.returncostSheetFormName()).toContain("Costsheet", "Name is not correct on added costsheet on case");
-            expect(casePage.returncostSheetUser()).toEqual(Objects.casepage.data.assigneeSamuel, "User is not correct on added costsheet on case");
-            expect(casePage.returncostSheetModifiedDate()).toEqual(utils.returnToday("/"), "Modified date is not correct on added costsheet on case");
-            expect(casePage.returncostSheetTotalCost()).toEqual(Objects.costsheetPage.data.verifyAmmount, "Total cost is not correct on added costsheet on case");
-            expect(casePage.returncostSheetStatus()).toEqual(Objects.casepage.data.statusDraft, "Status is not correct on added costsheet on case");
-        });
-    });
-
+   
     it('should create new case closed it, reinvestigate and verify in the reference table', function() {
 
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
@@ -837,6 +766,16 @@ describe('case page tests', function() {
         casePage.switchToIframes();
         expect(casePage.returnParticipantTypeAlert()).toEqual("This action is not allowed. No Access and Owner is conflict combination.");
         casePage.switchToDefaultContent();
+
+    });
+
+    it('should verify adding note in document viewer in cases', function () {
+
+        casePage.clickModuleCasesFiles();
+        casePage.clickExpandFancyTreeTopElementAndSubLink("Documents");
+        casePage.clickDocTreeExpand().rightClickFileTitle().clickDocAction("Open");
+        casePage.moveToTab().clickDocViewNotesLink().submitNote(Objects.basepage.data.note);
+        expect(casePage.returnSavedNoteInGrid()).toEqual(Objects.basepage.data.note, "Note is not saved in document viewer");
 
     });
 

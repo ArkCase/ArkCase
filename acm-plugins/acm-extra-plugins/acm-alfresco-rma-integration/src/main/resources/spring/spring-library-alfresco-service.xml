@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+    <bean id="alfrescoService" class="com.armedia.acm.plugins.alfrescorma.service.AlfrescoService" abstract="true">
+        <property name="protocol" value="${alfresco_protocol}"/>
+        <property name="host" value="${alfresco_host}"/>
+        <property name="port" value="${alfresco_port}"/>
+        <property name="contextRoot" value="${alfresco_contextRoot}"/>
+        <property name="password" value="${alfresco_password}"/>
+        <property name="username" value="${alfresco_user}"/>
+    </bean>
+
+    <bean id="declareRecordService" class="com.armedia.acm.plugins.alfrescorma.service.DeclareRecordService"
+          parent="alfrescoService"/>
+
+    <bean id="setRecordMetadataService" class="com.armedia.acm.plugins.alfrescorma.service.SetRecordMetadataService"
+          parent="alfrescoService">
+        <property name="alfrescoRmaModuleVersion" value="${alfresco_rma_module_version}"/>
+    </bean>
+
+    <bean id="moveToRecordFolderService" class="com.armedia.acm.plugins.alfrescorma.service.MoveToRecordFolderService"
+          parent="alfrescoService"/>
+
+    <bean id="completeRecordService" class="com.armedia.acm.plugins.alfrescorma.service.CompleteRecordService"
+          parent="alfrescoService"/>
+
+
+</beans>

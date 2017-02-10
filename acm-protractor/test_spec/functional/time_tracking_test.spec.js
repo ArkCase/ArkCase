@@ -52,7 +52,7 @@ describe('Time Tracking page tests', function() {
         timeTrackingPage.clickNewButton();
         timeTrackingPage.navigateToTimeTrackingPage();
         timeTrackingPage.switchToIframes();
-        timeTrackingPage.selectTimesheetType("Case")
+        timeTrackingPage.selectTimesheetType("Case");
         expect(timeTrackingPage.returnchargeCodeAlertMessage()).toEqual("You can't leave this empty: Charge Code");
         timeTrackingPage.switchToDefaultContent();
     });
