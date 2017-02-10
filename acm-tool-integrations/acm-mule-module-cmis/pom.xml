@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <parent>
         <groupId>com.armedia.acm</groupId>
@@ -13,7 +14,8 @@
     <packaging>jar</packaging>
 
     <name>ACM Mule CMIS Connector</name>
-    <description>This plugin adds the ability to Mule to connect to the ECM repository using Kerberos authentication.</description>
+    <description>This plugin adds the ability to Mule to connect to the ECM repository using Kerberos authentication.
+    </description>
 
     <properties>
         <checkstyle.skip>true</checkstyle.skip>
@@ -26,7 +28,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.chemistry.opencmis</groupId>
-            <artifactId>chemistry-opencmis-client-impl</artifactId>           
+            <artifactId>chemistry-opencmis-client-impl</artifactId>
         </dependency>
         <dependency>
             <groupId>org.alfresco.cmis.client</groupId>
@@ -34,11 +36,11 @@
         </dependency>
         <dependency>
             <groupId>org.mule.modules</groupId>
-            <artifactId>mule-module-devkit-support</artifactId>            
+            <artifactId>mule-module-devkit-support</artifactId>
         </dependency>
         <dependency>
-             <groupId>org.mule.tools.devkit</groupId>
-             <artifactId>mule-devkit-annotations</artifactId>
+            <groupId>org.mule.tools.devkit</groupId>
+            <artifactId>mule-devkit-annotations</artifactId>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
@@ -65,7 +67,7 @@
                 <exclusion>
                     <groupId>org.eclipse.core</groupId>
                     <artifactId>expressions</artifactId>
-                </exclusion>                
+                </exclusion>
                 <exclusion>
                     <groupId>org.eclipse.jface</groupId>
                     <artifactId>databinding</artifactId>
