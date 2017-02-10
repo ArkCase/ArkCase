@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 /**
  *
@@ -45,7 +46,7 @@ public class ProtectUrlController
         }
 
         log.debug("Trying to access protected url:[{}] with real url:[{}]", protectedUrlStr, protectedUrl.getOriginalUrl());
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("UTC"));
 
         //verify that url has not being expired
         if (protectedUrl.getValidTo() != null && now.isAfter(protectedUrl.getValidTo()))
