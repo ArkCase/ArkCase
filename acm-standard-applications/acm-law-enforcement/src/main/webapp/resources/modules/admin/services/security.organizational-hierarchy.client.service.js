@@ -62,6 +62,16 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
                 method: 'POST',
                 url: 'api/latest/users/ldap/add/:groupName',
                 isArray: true
+            },
+
+            _createLdapGroup: {
+                method: 'POST',
+                url: 'api/latest/users/ldap/group'
+            },
+
+            _createLdapSubgroup: {
+                method: 'POST',
+                url: 'api/latest/users/ldap/group/:parentGroupName'
             }
         });
 
@@ -84,7 +94,9 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
             isEnabledEditingLdapUsers: isEnabledEditingLdapUsers,
             addMemberToLdapGroup: addMemberToLdapGroup,
             editGroupMember: editGroupMember,
-            addExistingMembersToLdapGroup: addExistingMembersToLdapGroup
+            addExistingMembersToLdapGroup: addExistingMembersToLdapGroup,
+            createLdapGroup: createLdapGroup,
+            createLdapSubgroup: createLdapSubgroup
         });
 
         /**
@@ -398,6 +410,54 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
                 , data: ldapUsers
                 , param: {
                     "groupName": groupName
+                }
+                , onSuccess: function (data) {
+                    return data;
+                }
+            });
+        }
+
+
+        /**
+         * @ngdoc method
+         * @name createLdapGroup
+         * @methodOf admin.service:Admin.OrganizationalHierarchyService
+         *
+         * @description
+         * Performs create ldap group
+         *
+         * param {object} group object to be created
+         *
+         * @returns {HttpPromise} Future info about create ldap group
+         */
+        function createLdapGroup(group) {
+            return Util.serviceCall({
+                service: Service._createLdapGroup
+                , data: group
+                , onSuccess: function (data) {
+                    return data;
+                }
+            });
+        }
+
+        /**
+         * @ngdoc method
+         * @name createLdapSubGroup
+         * @methodOf admin.service:Admin.OrganizationalHierarchyService
+         *
+         * @description
+         * Performs create ldap subgroup
+         *
+         * param {object} group object to be created
+         *
+         * @returns {HttpPromise} Future info about create ldap subgroup
+         */
+        function createLdapSubgroup(group, parentGroupName) {
+            return Util.serviceCall({
+                service: Service._createLdapSubgroup
+                , data: group
+                , param:{
+                    "parentGroupName": parentGroupName
                 }
                 , onSuccess: function (data) {
                     return data;

@@ -74,4 +74,8 @@
         <property name="acmContextHolder" ref="acmContextHolder"/>
         <property name="ldapUserService" ref="ldapUserService"/>
     </bean>
+
+    <bean id="ldapGroupAPIController" class="com.armedia.acm.services.users.web.api.group.LdapGroupAPIController">
+        <property name="ldapGroupService" ref="ldapGroupService"/>
+    </bean>
 </beans>
