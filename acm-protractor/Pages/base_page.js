@@ -250,6 +250,7 @@ var assigneeNameModelInput = element(by.model(Objects.basepage.locators.assignee
 var treeSortersBtn = element(by.css(Objects.basepage.locators.treeSortersBtn));
 var sortByIdDesc = element(by.xpath(Objects.basepage.locators.sortByIdDesc));
 var objectStatus = element(by.xpath(Objects.basepage.locators.objectStatus));
+var doc = element(by.id(Objects.casepage.locators.doc));
 
 var BasePage = function() {
 
@@ -310,44 +311,24 @@ var BasePage = function() {
             case "Witness Interview Request":
                 completexPath = xPathStr + "InterviewRequest.docx']";
                 break;
+            case "Correspondence - Invitation":
+                completexPath = xPathStr + "Correspondence - Invitation.docx']";
+                break;
             default:
-                completexPath = xPathStr + "GeneralRelease.docx']";
+                completexPath = xPathStr + "ClearanceGranted.docx']";
                 break;
         }
-
-        var el = element(by.xpath(completexPath));
-        el.click();
+        browser.wait(EC.visibilityOf(element(by.xpath(completexPath))), 30000, completexPath + "item is not visible").then(function() {
+            var el = element(by.xpath(completexPath));
+            el.click();
+        });
         return this;
     };
     this.addCorrespondence = function(correspondence) {
         this.clickNewCorrespondence();
         this.selectCorrespondence(correspondence);
     };
-    this.returnDocTitleGrid = function() {
 
-        return docTitle.getText();
-    };
-    this.returnDocExtensionGrid = function() {
-        return docExtension.getText();
-    };
-    this.returnDocTypeGrid = function() {
-        return docType.getText();
-    };
-    this.returnDocCreatedGrid = function() {
-        return docCreated.getText();
-    };
-    this.returnDocModifiedGrid = function() {
-        return docModified.getText();
-    };
-    this.returnDocAuthorGrid = function() {
-        return docAuthor.getText();
-    };
-    this.returnDocVersionGrid = function() {
-        return docVersion.getText();
-    };
-    this.returnDocStatusGrid = function() {
-        return docStatus.getText();
-    };
     this.clickDocAction = function(action) {
         browser.waitForAngular().then(function() {
             var xPathStr = ".//li[@data-command='";
@@ -409,25 +390,18 @@ var BasePage = function() {
         return this;
     };
 
-    this.returnDocRowAdded = function() {
-        if (docRow.isPresent()) {
-            return true;
-        } else {
-            return false;
-        }
-    };
     this.validateDocGridData = function(added, doctitle, docextension, doctype, createddate, modifieddate, author, version, status) {
         browser.wait(EC.presenceOf(element(by.xpath(Objects.basepage.locators.docAuthor))), 30000, "Doc Author value is not present in the DOM").then(function() {
             browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.docAuthor))), 30000, "Doc Author value is not visible").then(function() {
-                expect(this.returnDocRowAdded()).toBe(added, "Document is not sucessfully added");
-                expect(this.returnDocTitleGrid()).toEqual(doctitle, "Document title is not correct in grid");
-                expect(this.returnDocExtensionGrid()).toEqual(docextension, "Document extension is not correct in grid");
-                expect(this.returnDocTypeGrid()).toEqual(doctype, "Document type is not correct in grid");
-                expect(this.returnDocCreatedGrid()).toEqual(createddate, "Document created date is not correct in grid");
-                expect(this.returnDocModifiedGrid()).toEqual(modifieddate, "Document modified date is not correct in grid");
-                expect(this.returnDocAuthorGrid()).toEqual(author, "Document author is not correct in grid");
-                expect(this.returnDocVersionGrid()).toEqual(version, "Document version is not correct in grid");
-                expect(this.returnDocStatusGrid()).toEqual(status, "Document status is not correct in grid");
+                expect(docRow.isPresent()).toBe(added, "Document is not sucessfully added");
+                expect(docTitle.getText()).toEqual(doctitle, "Document title is not correct in grid");
+                expect(docExtension.getText()).toEqual(docextension, "Document extension is not correct in grid");
+                expect(docType.getText()).toEqual(doctype, "Document type is not correct in grid");
+                expect(docCreated.getText()).toEqual(createddate, "Document created date is not correct in grid");
+                expect(docModified.getText()).toEqual(modifieddate, "Document modified date is not correct in grid");
+                expect(docAuthor.getText()).toEqual(author, "Document author is not correct in grid");
+                expect(docVersion.getText()).toEqual(version, "Document version is not correct in grid");
+                expect(docStatus.getText()).toEqual(status, "Document status is not correct in grid");
             });
         })
 
@@ -447,9 +421,11 @@ var BasePage = function() {
 
     };
     this.rightClickRootFolder = function() {
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.root))), 30000).then(function() {
-            root.click();
-            browser.actions().click(protractor.Button.RIGHT).perform();
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.taskspage.locators.root))), 30000, "Root folder is not visible").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.root))), 30000, "Root folder is not visible").then(function () {
+                root.click();
+                browser.actions().click(protractor.Button.RIGHT).perform();
+            });
         });
         return this;
     }
@@ -1455,9 +1431,10 @@ var BasePage = function() {
                 completexPath = xPathStr + "Other']";
                 break;
         }
-
         var el = element(by.xpath(completexPath));
-        el.click();
+        el.click().then(function () {
+            util.uploadDocx();
+        })
         return this;
 
     };
@@ -2104,17 +2081,20 @@ var BasePage = function() {
         var xPathStart = "//a[contains(text(),'";
         var completexPath;
         switch (type) {
-            case "Automatic Task on Creation":
-                completexPath = xPathStart + "Change Case Status']";
+            case "Automatic Task on Change Case Status":
+                completexPath = xPathStart + "Review Request to Change Case Status')]";
                 break;
-            case "Automatic Task on Change Status":
+            case "Automatic Task on Creation":
                 completexPath = xPathStart + "Review']";
                 break;
             case "Ad hoc task":
-                completexPath = xPathStart + "Ad hoc task']";
+                completexPath = xPathStart + "Ad hoc task')]";
+                break;
+            case "Automatic Task on Close Complaint":
+                completexPath = xPathStart + "Review Request to Close Complaint')]";
                 break;
             default:
-                completexPath = xPathStart + "Ad hoc task']";
+                completexPath = xPathStart + "Ad hoc task'])";
                 break;
         }
         var el = element(by.xpath(completexPath));
@@ -2126,6 +2106,29 @@ var BasePage = function() {
     this.returnObjectStatus = function() {
         return objectStatus.getText();
     }
+
+    this.returnDocViewOpened = function (added) {
+        browser.wait(EC.presenceOf(element(by.id(Objects.casepage.locators.doc))), 30000, "Document is not present in DOM").then(function () {
+            browser.wait(EC.visibilityOf(element(by.id(Objects.basepage.locators.doc))), 30000, "Doc Author value is not visible").then(function () {
+                expect(doc.isPresent()).toBe(added, "In document view, doc element is not displayed");
+            });
+        });
+    }
+
+    this.switchToDocIframes = function() {
+
+        browser.ignoreSynchronization = true;
+        browser.wait(EC.visibilityOf(element(by.model(Objects.taskspage.locators.notesTextArea))), 30000, "Notes text area is not visible").then(function() {
+            browser.wait(EC.presenceOf(element(by.className("snowbound-iframe"))), 30000, "Document i-frame is not present in DOM").then(function () {
+                browser.wait(EC.visibilityOf(element(by.className("snowbound-iframe"))), 30000, "Document i-frame is not visible").then(function () {
+                    browser.switchTo().frame(browser.driver.findElement(by.className("snowbound-iframe")));
+                })
+            })
+        })
+        return this;
+    };
+
+
 }
 
 module.exports = new BasePage();
