@@ -50,8 +50,7 @@ public class LdapUserAPIController
     @RequestMapping(value = "/add/{groupName}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<AcmUser> addLdapUsersToGroup(
-            @RequestBody List<AcmUser> members, @PathVariable String groupName,
-            HttpServletResponse response) throws AcmUserActionFailedException
+            @RequestBody List<AcmUser> members, @PathVariable String groupName) throws AcmUserActionFailedException
     {
         try
         {
@@ -59,7 +58,6 @@ public class LdapUserAPIController
         } catch (Exception e)
         {
             log.error("Adding members to LDAP group:{} failed!", groupName, e);
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             throw new AcmUserActionFailedException("add LDAP user to group", null, null, "Adding members to LDAP group failed!", e);
         }
     }
@@ -67,17 +65,15 @@ public class LdapUserAPIController
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmUser addLdapUser(
-            @RequestBody LdapUserCreateRequest ldapUserCreateRequest,
-            HttpServletResponse response) throws AcmUserActionFailedException, AcmAppErrorJsonMsg
+            @RequestBody LdapUserCreateRequest ldapUserCreateRequest) throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
         try
         {
             return ldapUserService.createLdapUser(ldapUserCreateRequest.getAcmUser(),
-                    ldapUserCreateRequest.getGroupName(), ldapUserCreateRequest.getPassword());
+                    ldapUserCreateRequest.getGroupNames(), ldapUserCreateRequest.getPassword());
         } catch (NameAlreadyBoundException e)
         {
-            log.error("Duplicate username: {}", ldapUserCreateRequest.getAcmUser().getUserId());
-            log.error("NameAlreadyBoundException", e);
+            log.error("Duplicate username: {}", ldapUserCreateRequest.getAcmUser().getUserId(), e);
             AcmAppErrorJsonMsg error = new AcmAppErrorJsonMsg("Username is already taken!", "USER",
                     "username", e);
             error.putExtra("user", ldapUserCreateRequest.getAcmUser());
@@ -85,7 +81,6 @@ public class LdapUserAPIController
         } catch (Exception e)
         {
             log.error("Creating LDAP user failed!", e);
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             throw new AcmUserActionFailedException("create LDAP user", null, null, "Creating LDAP user failed!", e);
         }
     }

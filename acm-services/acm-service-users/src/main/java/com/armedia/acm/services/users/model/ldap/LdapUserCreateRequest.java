@@ -2,6 +2,8 @@ package com.armedia.acm.services.users.model.ldap;
 
 import com.armedia.acm.services.users.model.AcmUser;
 
+import java.util.List;
+
 /**
  * Ldap User POST JSON request
  */
@@ -9,7 +11,7 @@ public class LdapUserCreateRequest
 {
     private AcmUser acmUser;
     private String password;
-    private String groupName;
+    private List<String> groupNames;
 
     public AcmUser getAcmUser()
     {
@@ -31,13 +33,13 @@ public class LdapUserCreateRequest
         this.password = password;
     }
 
-    public String getGroupName()
+    public List<String> getGroupNames()
     {
-        return groupName;
+        return groupNames;
     }
 
-    public void setGroupName(String groupName)
+    public void setGroupNames(List<String> groupNames)
     {
-        this.groupName = groupName;
+        this.groupNames = groupNames;
     }
 }
