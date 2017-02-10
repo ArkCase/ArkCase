@@ -50,6 +50,15 @@ public class AcmParticipantService
         List<AcmParticipant> allParticipantsFromParentObject = participantDao.findParticipantsForObject(participant.getObjectType(), participant.getObjectId());
         if (allParticipantsFromParentObject != null)
         {
+            for (AcmParticipant someParticipant : allParticipantsFromParentObject)
+            {
+                if (someParticipant.getId().equals(participant.getId()))
+                {
+                    allParticipantsFromParentObject.remove(someParticipant);
+                }
+            }
+            allParticipantsFromParentObject.add(participant);
+
             model.setParticipantList(allParticipantsFromParentObject);
             model.setObjectType(participant.getObjectType());
             model = participantsBusinessRule.applyRules(model);
