@@ -107,13 +107,23 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
                         if ($scope.participant.participantLdapId) {
                             $scope.objectInfo.candidateGroups = [$scope.participant.participantLdapId];
                             $scope.owningGroup = chosenNode.participant.selectedAssigneeName;
-
                             $scope.assignee = null;
-                            //Clear participants as it causes concurrent modification errors when
-                            //there is no assignee, but a participant of type assignee is present
-                            $scope.objectInfo.participants = null;
 
-                            $scope.updateOwningGroup();
+                            var assigneeParticipantType = 'assignee';
+                            // Filterinng through the array to get the Assignee ParticipantType 
+                            var foundAssigneeParticipantType = $filter('filter')($scope.objectInfo.participants, 
+                                { participantType: assigneeParticipantType  }, true)[0];
+                            
+                            // Get the index of the foundAssigneeParticipantType object in the array
+                            var indexOfFoundAssigneeParticipantType = $scope.objectInfo.participants.indexOf(foundAssigneeParticipantType);
+                            // Removing the asignee participantType only when there is no current assignee or when 
+                            // reassigning the Complaint to a group for which the current assignee is not a member
+                            if (indexOfFoundAssigneeParticipantType >= 0) {
+                                $scope.objectInfo.participants.splice(indexOfFoundAssigneeParticipantType, 1); 
+                            }
+
+                            // Seting the owningGroup in the objectInfo before the save
+                            ObjectModelService.setGroup($scope.objectInfo, $scope.owningGroup);
                             $scope.updateAssignee($scope.assignee); 
                         }
                     }
@@ -165,6 +175,8 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
                     var searchQuery = '*';
                     var filter = 'fq=fq="object_type_s": USER' + '&fq="groups_id_ss": ' + chosenOwningGroup;
                     
+                    // Creating a query to get all the users that belong to a particular Owning Group
+                    // this query is need for the search logic below
                     var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuery(searchQuery, filter, size, start);
                     if (query) {
                         SearchService.queryFilteredSearch({
@@ -188,38 +200,23 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
                             } else {
                                 $scope.owningGroup = chosenGroup.participant.selectedAssigneeName;
                                 $scope.objectInfo.candidateGroups = [$scope.participant.participantLdapId];
-                                $scope.assignee = '';
+                                $scope.assignee = null;
 
-                                var assigneeParticipantType = 'owning group';
+                                var assigneeParticipantType = 'assignee';
                                 // Filterinng through the array to get the Assignee ParticipantType 
                                 var foundAssigneeParticipantType = $filter('filter')($scope.objectInfo.participants, 
                                     { participantType: assigneeParticipantType  }, true)[0];
                     
                                 // Get the index of the foundAssigneeParticipantType object in the array
                                 var indexOfFoundAssigneeParticipantType = $scope.objectInfo.participants.indexOf(foundAssigneeParticipantType);
-                                // Setting the participantLdapId of assigne to '' only when there is no current assignee or when 
+                                // Removing the asignee participantType only when there is no current assignee or when 
                                 // reassigning the Complaint to a group for which the current assignee is not a member
                                 if (indexOfFoundAssigneeParticipantType >= 0) {
-                                    $scope.objectInfo.participants[indexOfFoundAssigneeParticipantType].participantLdapId = '';   
-                                }
-
-                                var assigneeSecondParticipantType = 'assignee';
-                                // Filterinng through the array to get the Assignee ParticipantType 
-                                var foundAssigneeSecondParticipantType = $filter('filter')($scope.objectInfo.participants, 
-                                    { participantType: assigneeSecondParticipantType  }, true)[0];
-                    
-                                // Get the index of the foundAssigneeParticipantType object in the array
-                                var indexOfFoundAssigneeSecondParticipantType = $scope.objectInfo.participants.indexOf(foundAssigneeSecondParticipantType);
-                                // Setting the participantLdapId of assigne to '' only when there is no current assignee or when 
-                                // reassigning the Complaint to a group for which the current assignee is not a member
-                                if (indexOfFoundAssigneeSecondParticipantType >= 0) {
-                                    $scope.objectInfo.participants.splice(indexOfFoundAssigneeSecondParticipantType, 1); 
+                                    $scope.objectInfo.participants.splice(indexOfFoundAssigneeParticipantType, 1); 
                                 }
                                 
-                                //Clear participants as it causes concurrent modification errors when
-                                //there is no assignee, but a participant of type assignee is present
-                                //$scope.objectInfo.participants = null;
-                                $scope.updateOwningGroup();
+                                // Seting the owningGroup in the objectInfo before the save
+                                ObjectModelService.setGroup($scope.objectInfo, $scope.owningGroup);
                                 $scope.updateAssignee($scope.assignee); 
                             }    
                         });
@@ -245,28 +242,14 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             
             // Get the index of the foundAssigneeParticipantType object in the array
             var indexOfFoundOwningGroupParticipantType = $scope.objectInfo.participants.indexOf(foundOwningGroupParticipantType);
-            // Setting the participantLdapId of assigne to '' only when there is no current assignee or when 
-            // reassigning the Complaint to a group for which the current assignee is not a member
+            // Assigning $scope.owningGroup the value of the participantLdapId where the participantType equals owning group 
+            // in there are no participantType of type owning group $scope.owningGroup is set to Unknown
             if ($scope.objectInfo.participants && indexOfFoundOwningGroupParticipantType >= 0) {
                 $scope.owningGroup = objectInfo.participants[indexOfFoundOwningGroupParticipantType].participantLdapId;
             } else {
                 $scope.owningGroup = 'Unknown';
             }
 
-            // The Owning Group for the Parent Object (Case or Complaint) should be diffferent that that of the child (Owning Group for Task)
-            // if (ObjectService.ObjectTypes.CASE_FILE == $scope.objectInfo.parentObjectType) {
-            //     CaseInfoService.getCaseInfo($scope.objectInfo.parentObjectId).then(
-            //         function (caseInfo) {
-            //             $scope.owningGroup = ObjectModelService.getGroup(caseInfo);
-            //         }
-            //     );
-            // } else if (ObjectService.ObjectTypes.COMPLAINT == $scope.objectInfo.parentObjectType) {
-            //     ComplaintInfoService.getComplaintInfo($scope.objectInfo.parentObjectId).then(
-            //         function (complaintInfo) {
-            //             $scope.owningGroup = ObjectModelService.getGroup(complaintInfo);
-            //         }
-            //     );
-            // }
         };
 
         $scope.defaultDatePickerFormat = UtilDateService.defaultDatePickerFormat;
@@ -371,28 +354,11 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
                         return error;
                     }
                 ).then(function (taskInfo) {
-                    console.log(taskInfo);
                     //updadateCaseOrComplaintInfo(taskInfo);
                     onObjectInfoRetrieved(taskInfo);
                 });
             }
             return promiseSaveInfo;
-        }
-
-        function updadateCaseOrComplaintInfo (objectInfo) {
-            if (ObjectService.ObjectTypes.CASE_FILE == $scope.objectInfo.parentObjectType) {
-                CaseInfoService.getCaseInfo($scope.objectInfo.parentObjectId).then(
-                    function (caseInfo) {
-                        console.log(caseInfo,objectInfo);
-                    }
-                );
-            } else if (ObjectService.ObjectTypes.COMPLAINT == $scope.objectInfo.parentObjectType) {
-                ComplaintInfoService.getComplaintInfo($scope.objectInfo.parentObjectId).then(
-                    function (complaintInfo) {
-                        console.log(complaintInfo,objectInfo);
-                    }
-                );
-            }
         }
 
     }
