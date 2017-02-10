@@ -1,8 +1,15 @@
 package com.armedia.acm.correspondence.service;
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+
+import com.armedia.acm.correspondence.model.CorrespondenceQuery;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
 import com.armedia.acm.correspondence.utils.PoiWordGenerator;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -12,6 +19,7 @@ import org.springframework.security.core.Authentication;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.DecimalFormat;
@@ -24,9 +32,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
-
 /**
  * Created by armdev on 12/15/14.
  */
@@ -34,6 +39,7 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
 {
     private CorrespondenceGenerator unit;
 
+    private CorrespondenceQuery correspondenceQuery;
     private CorrespondenceTemplate correspondenceTemplate;
 
     private EntityManager mockEntityManager;
@@ -43,6 +49,10 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
     private InputStream mockInputStream;
     private Authentication mockAuthentication;
     private EcmFileService mockEcmFileService;
+
+    private String key1;
+    private String key2;
+    private String key3;
 
     private String var1;
     private String var2;
@@ -73,17 +83,28 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
         String dateFormat = "MM/dd/YYYY";
         String numberFormat = "#,###";
 
+        key1 = "key1";
+        key2 = "key2";
+        key3 = "key3";
+
         var1 = "var1";
         var2 = "var2";
         var3 = "var3";
 
-        List<String> substitutionVars = Arrays.asList(var1, var2, var3);
+        List<String> fieldNames = Arrays.asList(key1, key2, key3);
+        Map<String, String> substitutionVars = new HashMap<>();
+        substitutionVars.put(key1, var1);
+        substitutionVars.put(key2, var2);
+        substitutionVars.put(key3, var3);
 
+        correspondenceQuery = new CorrespondenceQuery();
+        correspondenceQuery.setJpaQuery(jpaQuery);
+        correspondenceQuery.setFieldNames(fieldNames);
 
         correspondenceTemplate = new CorrespondenceTemplate();
         correspondenceTemplate.setDocumentType(doctype);
         correspondenceTemplate.setTemplateFilename(templateName);
-        correspondenceTemplate.setJpaQuery(jpaQuery);
+        correspondenceTemplate.setQuery(correspondenceQuery);
         correspondenceTemplate.setTemplateSubstitutionVariables(substitutionVars);
         correspondenceTemplate.setDateFormatString(dateFormat);
         correspondenceTemplate.setNumberFormatString(numberFormat);
@@ -93,14 +114,14 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
     public void generate() throws Exception
     {
         String targetFolderCmisId = "targetFolderCmisId";
-        Object[] queryArgs = { 500L };
+        Object[] queryArgs = {500L};
 
         List<Object[]> results = new ArrayList<>();
 
         Date column1 = new Date();
         String column2 = "Subject Name";
         Number column3 = 123456L;
-        Object[] row = { column1, column2, column3 };
+        Object[] row = {column1, column2, column3};
         results.add(row);
 
         Capture<Resource> captureResourceTemplate = new Capture<>();
@@ -118,42 +139,26 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
 
         Capture<String> filename = new Capture<>();
 
-        expect(mockEntityManager.createQuery(correspondenceTemplate.getJpaQuery())).andReturn(mockQuery);
+        expect(mockEntityManager.createQuery(correspondenceQuery.getJpaQuery())).andReturn(mockQuery);
         expect(mockQuery.setParameter(1, queryArgs[0])).andReturn(mockQuery);
         expect(mockQuery.getResultList()).andReturn(results);
         mockWordGenerator.generate(capture(captureResourceTemplate), eq(mockOutputStream), eq(substitutions));
-        expect(mockEcmFileService.upload(
-                eq(correspondenceTemplate.getDocumentType()+".docx"),
-                eq(correspondenceTemplate.getDocumentType()),
-                eq(CorrespondenceGenerator.CORRESPONDENCE_CATEGORY),
-                eq(mockInputStream),
-                eq(CorrespondenceGenerator.WORD_MIME_TYPE),
-                capture(filename),
-                eq(mockAuthentication),
-                eq(targetFolderCmisId),
-                eq("CASE_FILE"),
-                eq(500L)
-        )).andReturn(null);
+        expect(mockEcmFileService.upload(eq(correspondenceTemplate.getDocumentType() + ".docx"),
+                eq(correspondenceTemplate.getDocumentType()), eq(CorrespondenceGenerator.CORRESPONDENCE_CATEGORY), eq(mockInputStream),
+                eq(CorrespondenceGenerator.WORD_MIME_TYPE), capture(filename), eq(mockAuthentication), eq(targetFolderCmisId),
+                eq("CASE_FILE"), eq(500L))).andReturn(null);
 
         replayAll();
 
-        unit.generateCorrespondence(
-                mockAuthentication,
-                "CASE_FILE",
-                500L,
-                targetFolderCmisId,
-                correspondenceTemplate,
-                queryArgs,
-                mockOutputStream,
-                mockInputStream);
+        unit.generateCorrespondence(mockAuthentication, "CASE_FILE", 500L, targetFolderCmisId, correspondenceTemplate, queryArgs,
+                mockOutputStream, mockInputStream);
 
         verifyAll();
 
         Resource capturedResource = captureResourceTemplate.getValue();
 
         assertEquals(correspondenceTemplate.getTemplateFilename(), capturedResource.getFilename());
+
     }
-
-
 
 }

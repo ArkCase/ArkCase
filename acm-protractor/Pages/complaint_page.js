@@ -19,11 +19,16 @@ var radioButtonNewInitiator = element(by.xpath(Objects.complaintPage.locators.ra
 var closeComplaintButton = element(by.xpath(Objects.complaintPage.locators.closeComplaintButton));
 var complaintDispositionDDListBox = element(by.xpath(Objects.complaintPage.locators.complaintDispositionDDListBox));
 var closeComplaintDescription = element(by.css(Objects.complaintPage.locators.closeComplaintDescription));
-var selectApprover = element(by.xpath(Objects.casepage.locators.selectApprover));
-var searchForUser = element(by.xpath(Objects.casepage.locators.searchForUser));
+var selectApprover = element(by.name(Objects.casepage.locators.selectApprover));
+var searchForUser = element(by.css(Objects.casepage.locators.searchField));
 var goBtn = element(by.xpath(Objects.casepage.locators.goBtn));
 var addBtn = element(by.xpath(Objects.casepage.locators.addBtn));
 var searchedUser = element(by.xpath(Objects.casepage.locators.searchedUser));
+var complaintID = element(by.xpath(Objects.casepage.locators.caseID));
+var complaintType = element(by.xpath(Objects.complaintPage.locators.complaintType));
+var complaintPriority = element(by.xpath(Objects.complaintPage.locators.complaintPriority));
+var complaintCreateDate = element(by.xpath(Objects.casepage.locators.createdDate));
+var complaintTitleSaved = element(by.xpath(Objects.complaintPage.locators.complaintTitleLink));
 var newBtn = element(by.xpath(Objects.basepage.locators.newButton));
 var locationLinkBtn = element(by.xpath(Objects.complaintPage.locators.locationsLinkBtn));
 var addLocationBtn = element(by.css(Objects.complaintPage.locators.addLocationBtn));
@@ -42,17 +47,26 @@ var deleteLocationBtn = element(by.css(Objects.complaintPage.locators.deleteLoca
 var editLocationBtn = element(by.css(Objects.complaintPage.locators.editLocationBtn));
 var newComplaintBtn = element(by.css(Objects.complaintPage.locators.newComplaintBtn));
 var complaintsTitle = element(by.xpath(Objects.complaintPage.locators.complaintsTitle));
-
-
+var caseNumber = element(by.name(Objects.complaintPage.locators.caseNumber));
+var searchButton = element(by.xpath(Objects.complaintPage.locators.searchButton));
+var caseTitle = element(by.name(Objects.complaintPage.locators.caseTitle));
+var caseCreatedDate = element(by.name(Objects.complaintPage.locators.caseCreatedDate));
+var casePriority = element(by.name(Objects.complaintPage.locators.casePriority));
+var selectParticipantType=element(by.xpath(Objects.complaintPage.locators.selectParticipantType));
+var selectparticipant = element(by.name(Objects.casepage.locators.selectParticipant));
+var searchForUserInput = element(by.xpath(Objects.casepage.locators.searchForUserInput));
+var searchForUserBtn = element(by.buttonText(Objects.casepage.locators.searchUserBtn));
+var searchedUser = element(by.xpath(Objects.casepage.locators.searchedUserName));
+var okBtn = element(by.buttonText(Objects.casepage.locators.OkBtn));
 
 var ComplaintPage = function() {
 
     browser.ignoreSynchronization = true;
     this.clickComplaintButton = function() {
         browser.ignoreSynchronization = false;
-        browser.wait(EC.presenceOf(element(by.linkText(Objects.complaintPage.locators.complaintButton))), 30000).then(function() {
-            browser.wait(EC.visibilityOf(element(by.linkText(Objects.complaintPage.locators.complaintButton))), 30000).then(function() {
-                browser.wait(EC.elementToBeClickable(element(by.linkText(Objects.complaintPage.locators.complaintButton))), 30000).then(function() {
+        browser.wait(EC.presenceOf(element(by.linkText(Objects.complaintPage.locators.complaintButton))), 30000, "New Complaint button is not present in DOM").then(function() {
+            browser.wait(EC.visibilityOf(element(by.linkText(Objects.complaintPage.locators.complaintButton))), 30000, "New complaint button is not visible").then(function() {
+                browser.wait(EC.elementToBeClickable(element(by.linkText(Objects.complaintPage.locators.complaintButton))), 30000, "New complaint button is not clickable").then(function() {
                     complaintButton.click();
                 });
             });
@@ -64,13 +78,13 @@ var ComplaintPage = function() {
 
     this.submitInitiatorInformation = function(name, surname) {
         this.clickRadioBtnNewInitiator();
-        browser.wait(EC.presenceOf(element(by.name(Objects.complaintPage.locators.firstName))), 30000).then(function() {
-            browser.wait(EC.visibilityOf(element(by.name(Objects.complaintPage.locators.firstName))), 30000).then(function() {
-                browser.wait(EC.elementToBeClickable(element(by.name(Objects.complaintPage.locators.firstName))), 30000).then(function() {
+        browser.wait(EC.presenceOf(element(by.name(Objects.complaintPage.locators.firstName))), 30000, "First name field is not present in DOM").then(function() {
+            browser.wait(EC.visibilityOf(element(by.name(Objects.complaintPage.locators.firstName))), 30000, "First name field is not visible").then(function() {
+                browser.wait(EC.elementToBeClickable(element(by.name(Objects.complaintPage.locators.firstName))), 30000, "First name field is not clickable").then(function() {
                     firstName.click().then(function() {
                         firstName.clear();
                         firstName.sendKeys(name).then(function() {
-                            browser.wait(EC.visibilityOf(element(by.name(Objects.complaintPage.locators.lastName))), 30000).then(function() {
+                            browser.wait(EC.visibilityOf(element(by.name(Objects.complaintPage.locators.lastName))), 30000, "Last name field is not visible").then(function() {
                                 lastName.click().then(function() {
                                     lastName.sendKeys(surname);
                                 });
@@ -84,9 +98,9 @@ var ComplaintPage = function() {
     };
 
     this.clickNextButton = function() {
-        browser.wait(EC.presenceOf(element(by.name(Objects.complaintPage.locators.firstName))), 30000).then(function() {
-            browser.wait(EC.visibilityOf(element(by.name(Objects.complaintPage.locators.firstName))), 30000).then(function() {
-                browser.wait(EC.elementToBeClickable(element(by.name(Objects.complaintPage.locators.firstName))), 30000).then(function() {
+        browser.wait(EC.presenceOf(element(by.name(Objects.complaintPage.locators.firstName))), 30000, "First name field is not present in DOM").then(function() {
+            browser.wait(EC.visibilityOf(element(by.name(Objects.complaintPage.locators.firstName))), 30000, "Frist name field is not visible").then(function() {
+                browser.wait(EC.elementToBeClickable(element(by.name(Objects.complaintPage.locators.firstName))), 30000, "First name field is not clickable").then(function() {
                     nextButton.click();
                 });
             });
@@ -94,29 +108,29 @@ var ComplaintPage = function() {
     };
 
     this.selectIncidentCategory = function(category) {
-        browser.wait(EC.presenceOf(element(by.xpath(Objects.complaintPage.locators.incidentCategoryDDListBox))), 30000).then(function() {
-            browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.incidentCategoryDDListBox))), 30000).then(function() {
-                browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.complaintPage.locators.incidentCategoryDDListBox))), 30000).then(function() {
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.complaintPage.locators.incidentCategoryDDListBox))), 30000, "Incident category drop down list is not present in DOM").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.incidentCategoryDDListBox))), 30000, "Incident category drop down list is not visible").then(function() {
+                browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.complaintPage.locators.incidentCategoryDDListBox))), 30000, "Incident cateogyr drop donw list is not clickable").then(function() {
                     incidentCategoryDDListBox.click().then(function() {
-                        browser.wait(EC.visibilityOf(element(by.linkText(category))), 30000).then(function() {
+                        browser.wait(EC.visibilityOf(element(by.linkText(category))), 30000, category + " link is not visible in incident category drop down list").then(function() {
                             var incidentCategory = element(by.linkText(category));
                             incidentCategory.click();
-                        })
-
-
+                        });
                     });
 
-                })
-            })
+                });
+            });
 
-        })
+        });
         return this;
     };
 
     this.insertTitle = function(title) {
-        complaintTitle.click();
-        complaintTitle.clear();
-        complaintTitle.sendKeys(title);
+        browser.wait(EC.visibilityOf(element(By.name(Objects.complaintPage.locators.complaintTitle))), 10000, "Complaint title filed is not displayed").then(function() {
+            complaintTitle.click().then(function() {
+                complaintTitle.sendKeys(title);
+            });
+        });
         return this;
     };
     this.insertIncidentInformation = function(category, title) {
@@ -147,11 +161,17 @@ var ComplaintPage = function() {
         return this;
     };
     this.clickSubmitButton = function() {
-        submitButton.click();
+        browser.wait(EC.invisibilityOf(element(by.xpath(Objects.basepage.locators.fadeElementDeleteNote))), 30000, "Animation element is visible").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.submitButton))), 30000, "Submit button is not visible ").then(function() {
+                browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.complaintPage.locators.submitButton))), 30000, "Submit button is not clickable").then(function() {
+                    submitButton.click();
+                });
+            });
+        });
         return this;
     };
     this.clickRadioBtnNewInitiator = function() {
-        browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.complaintPage.locators.radioButtonNewInitiator))), 30000).then(function() {
+        browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.complaintPage.locators.radioButtonNewInitiator))), 30000, "Radio button for new initiator is not clickable").then(function() {
             radioButtonNewInitiator.click();
         });
         return this;
@@ -169,9 +189,9 @@ var ComplaintPage = function() {
         return this;
     };
     this.clickCloseComplaint = function() {
-        browser.wait(EC.presenceOf(element(by.xpath(Objects.complaintPage.locators.closeComplaintButton))), 30000).then(function() {
-            browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.closeComplaintButton))), 30000).then(function() {
-                browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.complaintPage.locators.closeComplaintButton))), 30000).then(function() {
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.complaintPage.locators.closeComplaintButton))), 30000, "Close complaint button is not present in DOM").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.closeComplaintButton))), 30000, "Close complaint button is not visible").then(function() {
+                browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.complaintPage.locators.closeComplaintButton))), 30000, "Close complaint button is not clickable").then(function() {
                     closeComplaintButton.click();
                 });
             });
@@ -179,13 +199,15 @@ var ComplaintPage = function() {
         return this;
     };
     this.selectComplaintDisposition = function(disposition) {
-        browser.wait(EC.presenceOf(element(by.xpath(Objects.complaintPage.locators.complaintDispositionDDListBox))), 30000).then(function() {
-            browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.complaintDispositionDDListBox))), 30000).then(function() {
-                browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.complaintPage.locators.complaintDispositionDDListBox))), 30000).then(function() {
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.complaintPage.locators.complaintDispositionDDListBox))), 30000, "Complaint disposition drop down list is not present in DOM").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.complaintDispositionDDListBox))), 30000, "Complaint disposition drop down list is not visible").then(function() {
+                browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.complaintPage.locators.complaintDispositionDDListBox))), 30000, "Complaint disposition drop down list is not clickable").then(function() {
                     complaintDispositionDDListBox.click().then(function() {
-                        browser.wait(EC.visibilityOf(element(by.linkText(disposition))), 30000).then(function() {
-                            var complaintDisposition = element(by.linkText(disposition));
-                            complaintDisposition.click();
+                        browser.wait(EC.visibilityOf(element(by.linkText(disposition))), 30000, disposition + " is not visible in complaint disposition drop down list").then(function() {
+                            browser.wait(EC.elementToBeClickable(element(by.linkText(disposition))), 30000, disposition + " is not clickable is complaint disposition drop down list").then(function() {
+                                var complaintDisposition = element(by.linkText(disposition));
+                                complaintDisposition.click();
+                            });
                         });
                     });
                 });
@@ -194,23 +216,34 @@ var ComplaintPage = function() {
         return this;
     };
     this.insertCloseComplaintDescription = function(description) {
-        closeComplaintDescription.sendKeys(description);
+        browser.wait(EC.presenceOf(element(by.css(Objects.complaintPage.locators.closeComplaintDescription))), 30000, "Close complaint description field is not present in DOM").then(function() {
+            closeComplaintDescription.click().then(function() {
+                closeComplaintDescription.sendKeys(description);
+            });
+        });
         return this;
     };
     this.closeComplaint = function(disposition, description, approver) {
         this.selectComplaintDisposition(disposition);
         this.selectApprover(approver);
-        this.insertCloseComplaintDescription(description);
+        //this.insertCloseComplaintDescription(description);
         this.clickSubmitButton();
+        return this;
+    };
+
+    this.waitForComplaintTitle = function() {
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.complaintPage.locators.complaintTitleLink))), 30000, "Complaint title is not present in DOM").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.complaintTitleLink))), 30000, "Complaint title is not visible");
+        })
         return this;
     };
 
     this.addLocation = function(type, street, city, state, zip) {
 
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.locationsLinkBtn))), 30000).then(function() {
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.locationsLinkBtn))), 30000, "Locations link button is not visible").then(function() {
             locationLinkBtn.click().then(function() {
                 browser.sleep(5000);
-                browser.wait(EC.visibilityOf(element(by.css(Objects.complaintPage.locators.addLocationBtn))), 3000).then(function() {
+                browser.wait(EC.visibilityOf(element(by.css(Objects.complaintPage.locators.addLocationBtn))), 3000, "Add location button is not visible").then(function() {
                     addLocationBtn.click().then(function() {
                         browser.wait(EC.visibilityOf(element(by.model(Objects.complaintPage.locators.locationTypeDropDown))), 10000, "Location type drop down is not displayed").then(function() {
                             locationTypeDropDown.selectByText(type).then(function() {
@@ -231,44 +264,38 @@ var ComplaintPage = function() {
                 });
             });
         });
+        return this;
+    };
+    this.deleteLocation = function() {
 
-return this;
-};
-this.waitForComplaintTitle = function() {
-    browser.wait(EC.presenceOf(element(by.xpath(Objects.complaintPage.locators.complaintTitleLink))), 30000).then(function() {
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.complaintTitleLink))), 30000);
-    })
-};
-
-this.deleteLocation = function() {
-
-    browser.wait(EC.visibilityOf(element(by.css(Objects.complaintPage.locators.deleteLocationBtn))), 30000).then(function() {
-        deleteLocationBtn.click().then(function() {
-            browser.sleep(5000);
-            element.all(by.repeater(Objects.complaintPage.locators.addedLocations)).then(function(items) {
-                expect(items.length).toBe(0, "The organization is not deleted");
+        browser.wait(EC.visibilityOf(element(by.css(Objects.complaintPage.locators.deleteLocationBtn))), 30000, "Delete location button is not visible").then(function() {
+            deleteLocationBtn.click().then(function() {
+                browser.sleep(5000);
+                element.all(by.repeater(Objects.complaintPage.locators.addedLocations)).then(function(items) {
+                    expect(items.length).toBe(0, "The organization is not deleted");
+                });
             });
         });
-    });
-    return this;
-}
+        return this;
+    }
 
 
-this.editLocation = function(type, street, city, state, zip) {
+    this.editLocation = function(type, street, city, state, zip) {
 
-    editLocationBtn.click().then(function() {
-        browser.wait(EC.visibilityOf(element(by.model(Objects.complaintPage.locators.locationTypeDropDown))), 10000, "Location type drop down is not displayed").then(function() {
-            locationTypeDropDown.selectByText(type).then(function() {
-                locationStreetInput.clear().then(function() {
-                    locationStreetInput.sendKeys(street).then(function() {
-                        locationCityInput.clear().then(function() {
-                            locationCityInput.sendKeys(city).then(function() {
-                                locationStateInput.clear().then(function() {
-                                    locationStateInput.sendKeys(state).then(function() {
-                                        locationZipInput.clear().then(function() {
-                                            locationZipInput.sendKeys(zip).then(function() {
-                                                saveLocationBtn.click().then(function() {
-                                                    browser.wait(EC.textToBePresentInElement((locationType), type), 10000, "Location is not updated");
+        editLocationBtn.click().then(function() {
+            browser.wait(EC.visibilityOf(element(by.model(Objects.complaintPage.locators.locationTypeDropDown))), 10000, "Location type drop down is not displayed").then(function() {
+                locationTypeDropDown.selectByText(type).then(function() {
+                    locationStreetInput.clear().then(function() {
+                        locationStreetInput.sendKeys(street).then(function() {
+                            locationCityInput.clear().then(function() {
+                                locationCityInput.sendKeys(city).then(function() {
+                                    locationStateInput.clear().then(function() {
+                                        locationStateInput.sendKeys(state).then(function() {
+                                            locationZipInput.clear().then(function() {
+                                                locationZipInput.sendKeys(zip).then(function() {
+                                                    saveLocationBtn.click().then(function() {
+                                                        browser.wait(EC.textToBePresentInElement((locationType), type), 10000, "Location is not updated");
+                                                    });
                                                 });
                                             });
                                         });
@@ -280,50 +307,111 @@ this.editLocation = function(type, street, city, state, zip) {
                 });
             });
         });
-    });
-    return this;
-}
+        return this;
+    }
 
-this.waitForComplaintsPage = function() {
-    browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.complaintsTitle))), 40000, "Complaint title is not displayed");
-}
+    this.waitForComplaintsPage = function() {
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.complaintsTitle))), 40000, "Complaint title is not displayed");
+    }
 
 
-this.returnLocationAddress = function() {
-    return address.getText();
-}
+    this.returnLocationAddress = function() {
+        return address.getText();
+    }
 
-this.returnLocationType = function() {
-    return locationType.getText();
-}
-this.returnLocationCity = function() {
-    return locationCity.getText();
-}
-this.returnLocationState = function() {
-    return locationState.getText();
-}
-this.returnLocationZip = function() {
-    return locationZip.getText();
-}
+    this.returnLocationType = function() {
+        return locationType.getText();
+    }
+    this.returnLocationCity = function() {
+        return locationCity.getText();
+    }
+    this.returnLocationState = function() {
+        return locationState.getText();
+    }
+    this.returnLocationZip = function() {
+        return locationZip.getText();
+    }
 
-this.verifyIfAddLocationsBtnIsDisplayed = function() {
-    expect(addLocationBtn.isDisplayed()).toBe(false, "Add lcaotion button it should not be displayed");
-}
+    this.verifyIfAddLocationsBtnIsDisplayed = function() {
+        expect(addLocationBtn.isDisplayed()).toBe(false, "Add lcaotion button it should not be displayed");
+    }
 
-this.participantsTab = function() {
-    participantsTab.click();
-}
+    this.participantsTab = function() {
+        participantsTab.click();
+    }
 
-this.clickNewComplaintBtn = function() {
+    this.clickNewComplaintBtn = function() {
 
-    browser.wait(EC.visibilityOf(element(by.css(Objects.complaintPage.locators.newComplaintBtn))), 30000).then(function() {
-        newComplaintBtn.click().then(function() {});
-    });
-}
+        browser.wait(EC.visibilityOf(element(by.css(Objects.complaintPage.locators.newComplaintBtn))), 30000, "New complaint button is not visible").then(function() {
+            newComplaintBtn.click().then(function() {});
+        });
+    }
 
-this.returnComplaintsTitle = function() {
-    return complaintsTitle.getText();
-}
+
+    this.getComplaintId = function() {
+        return complaintID.getText();
+    };
+
+    this.returnComplaintType = function() {
+        return complaintType.getText();
+    };
+    this.returnComplaintPriority = function() {
+        return complaintPriority.getText();
+    };
+    this.returnCreatedDate = function() {
+        return complaintCreateDate.getText();
+    };
+    this.returnComplaintTitle = function() {
+        return complaintTitleSaved.getText();
+    };
+    this.returnComplaintsTitle = function() {
+        return complaintsTitle.getText();
+    };
+    this.insertCaseNumber = function(caseid) {
+        caseNumber.click();
+        caseNumber.sendKeys(caseid);
+        return this;
+    };
+    this.clickSearchButton = function() {
+        searchButton.click();
+        return this;
+    };
+    this.returnCaseTitle = function() {
+        return caseTitle.getAttribute("value");
+    };
+    this.returnCaseCreatedDate = function() {
+        return caseCreatedDate.getAttribute("value");
+    };
+    this.returnCasePriority = function() {
+        return casePriority.getAttribute("value");
+    }
+
+    this.selectParticipant = function(type, participant) {
+
+        var participantType = element(by.linkText(type));
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.selectParticipantType))), 10000).then(function() {
+            selectParticipantType.click().then(function() {
+                participantType.click().then(function() {
+                    selectparticipant.click().then(function() {
+                        browser.driver.switchTo().defaultContent();
+                        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchForUserInput))), 10000, "Search for user input is not displayed").then(function() {
+                            searchForUserInput.sendKeys(participant).then(function() {
+                                searchForUserBtn.click().then(function() {
+                                    browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchedUserName))), 30000, "Searched user is not displayed").then(function() {
+                                        searchedUser.click().then(function() {
+                                            okBtn.click();
+                                        });
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+
+        return this;
+    };
 
 };
 ComplaintPage.prototype = basePage;

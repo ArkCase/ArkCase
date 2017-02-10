@@ -26,7 +26,7 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-
+import com.armedia.acm.services.users.service.AcmUserService;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.FlowElement;
 import org.activiti.bpmn.model.FormProperty;
@@ -81,6 +81,7 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
     private AcmContainerDao containerFolderDao;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private TaskEventPublisher taskEventPublisher;
+    private AcmUserService acmUserService;
 
     @Override
     @Transactional
@@ -193,6 +194,12 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
                 }
                 getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_OUTCOME,
                         in.getTaskOutcome().getName());
+            }
+
+            if (in.isBuckslipTask())
+            {
+                getActivitiTaskService().setVariable(activitiTask.getId(), TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_APPROVERS,
+                        acmUserService.extractIdsFromUserList(in.getBuckslipFutureApprovers()));
             }
 
             in.setTaskId(Long.valueOf(activitiTask.getId()));
@@ -492,7 +499,7 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
     @Override
     @Transactional
     public void deleteProcessInstance(String parentId, String processId, String deleteReason, Authentication authentication,
-            String ipAddress) throws AcmTaskException
+                                      String ipAddress) throws AcmTaskException
     {
         if (processId != null)
         {
@@ -1000,7 +1007,7 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
     }
 
     private void findProcessNameAndTaskOutcomes(AcmTask retval, String processDefinitionId, String processInstanceId,
-            String taskDefinitionKey)
+                                                String taskDefinitionKey)
     {
         ProcessDefinition pd = getActivitiRepositoryService().createProcessDefinitionQuery().processDefinitionId(processDefinitionId)
                 .singleResult();
@@ -1302,6 +1309,21 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
             acmTask.setLegacySystemId((String) processVariables.get(TaskConstants.VARIABLE_NAME_LEGACY_SYSTEM_ID));
 
             acmTask.setPendingStatus((String) processVariables.get(TaskConstants.VARIABLE_NAME_PENDING_STATUS));
+
+            if (processVariables.containsKey(TaskConstants.VARIABLE_NAME_IS_BUCKSLIP_WORKFLOW))
+            {
+                Boolean isBuckslipWorkflow = (Boolean) processVariables.get(TaskConstants.VARIABLE_NAME_IS_BUCKSLIP_WORKFLOW);
+                acmTask.setBuckslipTask(isBuckslipWorkflow);
+
+                if (isBuckslipWorkflow != null && isBuckslipWorkflow.booleanValue())
+                {
+                    List<String> futureApprovers = (List<String>) processVariables.get(TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_APPROVERS);
+                    acmTask.setBuckslipFutureApprovers(acmUserService.getUserListForGivenIds(futureApprovers));
+
+                    String pastApprovers = (String) processVariables.get(TaskConstants.VARIABLE_NAME_PAST_APPROVERS);
+                    acmTask.setBuckslipPastApprovers(pastApprovers);
+                }
+            }
         }
     }
 
@@ -1472,5 +1494,10 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
     public String getSupportedNotifiableObjectType()
     {
         return TaskConstants.OBJECT_TYPE;
+    }
+
+    public void setAcmUserService(AcmUserService acmUserService)
+    {
+        this.acmUserService = acmUserService;
     }
 }

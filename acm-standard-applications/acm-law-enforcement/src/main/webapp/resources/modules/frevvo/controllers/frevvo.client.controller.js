@@ -23,11 +23,12 @@ angular.module('frevvo').controller('FrevvoController', ['$rootScope', '$scope',
             }
         });
 
-        $scope.iframeLoaded = function(){
+        $scope.iframeLoaded = function () {
             startInitFrevvoMessaging();
         };
 
         var initFrevvoMessagingPromise;
+
         function startInitFrevvoMessaging() {
             stopInitFrevvoMessaging();
             initFrevvoMessagingPromise = $interval(initFrevvoMessaging, 250);
@@ -55,6 +56,9 @@ angular.module('frevvo').controller('FrevvoController', ['$rootScope', '$scope',
                             if (e.data.action == "open-user-picker") {
                                 pickUser(e.data);
                             }
+                            if (e.data.action == "open-object-picker") {
+                                pickObject(e.data);
+                            }
                         }
                     }
 
@@ -66,14 +70,8 @@ angular.module('frevvo').controller('FrevvoController', ['$rootScope', '$scope',
         }
 
         function getFrevvoIframe() {
-            if (!Util.isEmpty(document) &&
-                !Util.isEmpty(document.getElementById('frevvoFormIframe')) &&
-                !Util.isEmpty(document.getElementById('frevvoFormIframe').contentWindow) &&
-                !Util.isEmpty(document.getElementById('frevvoFormIframe').contentWindow.document) &&
-                !Util.isEmpty(document.getElementById('frevvoFormIframe').contentWindow.document.getElementsByTagName('iframe')) &&
-                document.getElementById('frevvoFormIframe').contentWindow.document.getElementsByTagName('iframe').length > 0 &&
-                !Util.isEmpty(document.getElementById('frevvoFormIframe').contentWindow.document.getElementsByTagName('iframe')[0]) &&
-                !Util.isEmpty(document.getElementById('frevvoFormIframe').contentWindow.document.getElementsByTagName('iframe')[0].contentWindow)
+            if (!Util.isEmpty(document) && !Util.isEmpty(document.getElementById('frevvoFormIframe')) && !Util.isEmpty(document.getElementById('frevvoFormIframe').contentWindow) && !Util.isEmpty(document.getElementById('frevvoFormIframe').contentWindow.document) && !Util.isEmpty(document.getElementById('frevvoFormIframe').contentWindow.document.getElementsByTagName('iframe')) &&
+                document.getElementById('frevvoFormIframe').contentWindow.document.getElementsByTagName('iframe').length > 0 && !Util.isEmpty(document.getElementById('frevvoFormIframe').contentWindow.document.getElementsByTagName('iframe')[0]) && !Util.isEmpty(document.getElementById('frevvoFormIframe').contentWindow.document.getElementsByTagName('iframe')[0].contentWindow)
             ) {
                 return document.getElementById('frevvoFormIframe').contentWindow.document.getElementsByTagName('iframe')[0].contentWindow;
             }
@@ -85,8 +83,7 @@ angular.module('frevvo').controller('FrevvoController', ['$rootScope', '$scope',
             var params = {};
 
             var owningGroup = "";
-            if (!Util.isEmpty(data.data) && !Util.isEmpty(data.data.owningGroup))
-            {
+            if (!Util.isEmpty(data.data) && !Util.isEmpty(data.data.owningGroup)) {
                 owningGroup = '&fq="Group": ' + data.data.owningGroup;
             }
 
@@ -124,5 +121,105 @@ angular.module('frevvo').controller('FrevvoController', ['$rootScope', '$scope',
                 }
             });
         };
+
+        function pickObject(data) {
+            var modalInstance;
+
+            if (!Util.isEmpty(data.data) && !Util.isEmpty(data.data.objectType) && data.data.objectType == 'OTHER') {
+                var customParams = {};
+                customParams.chargeCodes = Util.goodMapValue($scope.config, "timesheetCustomPicker.otherTypeChargeCodes");
+                customParams.columnDefs = Util.goodMapValue($scope.config, "timesheetCustomPicker.columnDefs")
+                customParams.header = $translate.instant("frevvo.timesheetCustomPicker.header");
+                if (!Util.isEmpty(data.data.itemsToExclude)) {
+                    customParams.chargeCodes = _.filter(customParams.chargeCodes, function (code) {
+                        return data.data.itemsToExclude.indexOf(code.name) == -1;
+                    });
+                }
+
+                modalInstance = $modal.open({
+                    templateUrl: "modules/frevvo/views/frevvo-timesheet-custom-modal-picker.view.html",
+                    controller: ['$scope', '$modalInstance', 'customParams', function ($scope, $modalInstance, customParams) {
+                        $scope.modalInstance = $modalInstance;
+                        $scope.header = customParams.header;
+                        $scope.gridOptions = {
+                            enableRowSelection: true,
+                            enableRowHeaderSelection: false,
+                            multiSelect: false,
+                            columnDefs: customParams.columnDefs,
+                            onRegisterApi: function (gridApi) {
+                                $scope.myGridApi = gridApi;
+                                $scope.myGridApi.selection.on.rowSelectionChanged($scope, function (row) {
+                                    $scope.selectedItem = row.entity;
+                                });
+                            }
+                        };
+                        $scope.gridOptions.data = customParams.chargeCodes;
+                        $scope.gridOptions.data.totalItems = customParams.chargeCodes.length;
+                        $scope.onClickOk = function () {
+                            $modalInstance.close($scope.selectedItem);
+                        };
+                        $scope.onClickCancel = function () {
+                            $modalInstance.dismiss('cancel');
+                        }
+                    }],
+                    animation: true,
+                    size: 'lg',
+                    backdrop: 'static',
+                    resolve: {
+                        customParams: customParams
+                    }
+                });
+            }
+            else {
+                var params = {};
+                if (!Util.isEmpty(data.data) && !Util.isEmpty(data.data.objectType)) {
+                    var excludeObjectsFilter = "";
+                    params.filter = '"Object Type":' + data.data.objectType;
+                    if (!Util.isEmpty(data.data) && (data.data.itemsToExclude.length > 0)) {
+                        excludeObjectsFilter = "&-name:";
+                        _.forEach(data.data.itemsToExclude, function (item) {
+                            excludeObjectsFilter += item;
+                        });
+                    }
+                    params.filter += excludeObjectsFilter;
+                }
+
+                params.filter = params.filter.replace(/&/gi, '%26');
+                params.header = $translate.instant("frevvo.dialogObjectPicker.header");
+                params.config = Util.goodMapValue($scope.config, "dialogObjectPicker");
+                modalInstance = $modal.open({
+                    templateUrl: "modules/frevvo/views/frevvo-object-picker-modal.client.view.html",
+                    controller: ['$scope', '$modalInstance', 'ConfigService', 'params', function ($scope, $modalInstance, ConfigService, params) {
+                        $scope.modalInstance = $modalInstance;
+                        $scope.header = params.header;
+                        $scope.filter = params.filter;
+                        $scope.config = params.config;
+                        ConfigService.getModuleConfig("common").then(function (moduleConfig) {
+                            var customization = Util.goodMapValue(moduleConfig, "customization", {});
+                            if (customization) {
+                                $scope.customization = customization;
+                            }
+                        });
+                    }],
+                    animation: true,
+                    size: 'lg',
+                    backdrop: 'static',
+                    resolve: {
+                        params: params
+                    }
+                });
+            }
+
+            modalInstance.result.then(function (selected) {
+                if (!Util.isEmpty(selected)) {
+                    var message = {};
+                    message.source = "arkcase";
+                    message.data = selected;
+                    message.action = "fill-object-picker-data";
+                    message.elementId = data.elementId;
+                    $scope.frevvoMessaging.send(message);
+                }
+            });
+        }
     }
 ]);

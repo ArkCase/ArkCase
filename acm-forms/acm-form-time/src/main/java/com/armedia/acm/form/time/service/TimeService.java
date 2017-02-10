@@ -5,28 +5,22 @@ package com.armedia.acm.form.time.service;
 
 import com.armedia.acm.form.config.xml.ApproverItem;
 import com.armedia.acm.form.time.model.TimeForm;
-import com.armedia.acm.form.time.model.TimeFormConstants;
 import com.armedia.acm.form.time.model.TimeItem;
 import com.armedia.acm.frevvo.config.FrevvoFormChargeAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
-import com.armedia.acm.frevvo.model.Details;
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
-import com.armedia.acm.frevvo.model.Options;
-import com.armedia.acm.frevvo.model.OptionsAndDetailsByType;
 import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
-import com.armedia.acm.services.timesheet.model.AcmTime;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 import com.armedia.acm.services.timesheet.model.TimesheetConstants;
 import com.armedia.acm.services.timesheet.service.TimesheetEventPublisher;
 import com.armedia.acm.services.timesheet.service.TimesheetService;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.google.common.base.Objects;
-
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -39,7 +33,6 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -232,18 +225,17 @@ public class TimeService extends FrevvoFormChargeAbstractService
 
         AcmTimesheet saved = getTimesheetService().save(timesheet, submissionName);
 
-        form = getTimeFactory().asFrevvoTimeForm(saved);
-
         // Take user id and ip address
         String userId = getAuthentication().getName();
         String ipAddress = (String) getRequest().getSession().getAttribute("acm_ip_address");
 
         boolean startWorkflow = getTimesheetService().checkWorkflowStartup(TimesheetConstants.EVENT_TYPE + "." + submissionName.toLowerCase());
 
-        FrevvoUploadedFiles uploadedFiles = null;
-        uploadedFiles = saveAttachments(attachments, saved.getContainer().getFolder().getCmisFolderId(), FrevvoFormName.TIMESHEET.toUpperCase(), saved.getId());
+        FrevvoUploadedFiles uploadedFiles = saveAttachments(attachments, saved.getContainer().getFolder().getCmisFolderId(),
+                FrevvoFormName.TIMESHEET.toUpperCase(), saved.getId());
 
-        getTimesheetEventPublisher().publishEvent(saved, userId, ipAddress, true, submissionName.toLowerCase(), uploadedFiles, startWorkflow);
+        getTimesheetEventPublisher().publishEvent(saved, userId, ipAddress, true, submissionName.toLowerCase(),
+                uploadedFiles, startWorkflow);
 
         return true;
     }
@@ -271,19 +263,10 @@ public class TimeService extends FrevvoFormChargeAbstractService
         List<String> types = convertToList((String) getProperties().get(FrevvoFormName.TIMESHEET + ".types"), ",");
 
         LOG.debug("setting charge codes");
-        // Set charge codes for each type and details for them
-        OptionsAndDetailsByType optionsAndDetailsByType = getCodeOptionsAndDetails(FrevvoFormName.TIMESHEET, types);
-
-        LOG.debug("getting options");
-        Map<String, Options> codeOptions = optionsAndDetailsByType.getOptionsByType();
-        LOG.debug("getting detail maps");
-        Map<String, Map<String, Details>> codeOptionsDetails = optionsAndDetailsByType.getOptionsDetailsByType();
 
         LOG.debug("creating time item");
         TimeItem item = new TimeItem();
         item.setTypeOptions(types);
-        item.setCodeOptions(codeOptions);
-        item.setCodeDetails(codeOptionsDetails);
         form.setItems(Arrays.asList(item));
 
         // Init Statuses
@@ -294,26 +277,9 @@ public class TimeService extends FrevvoFormChargeAbstractService
         // Create JSON and back to the Frevvo form
         JSONObject json = createResponse(form);
 
-        LOG.debug("JSON to return  - " + json.toString());
+        LOG.debug("JSON to return  - {}", json.toString());
 
         return json;
-    }
-
-    @Override
-    public Options getOptions(String type, String source)
-    {
-        Options options = new Options();
-
-        if (TimeFormConstants.OTHER.toUpperCase().equals(type))
-        {
-            List<String> optionsOther = convertToList((String) getProperties().get(FrevvoFormName.TIMESHEET + ".type.other"), ",");
-            options.addAll(optionsOther);
-        } else
-        {
-            options = getCodeOptionsByObjectType(type, source);
-        }
-
-        return options;
     }
 
     @Override

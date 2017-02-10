@@ -18,8 +18,17 @@ import java.util.UUID;
  */
 public class RequestMDCFilter implements Filter
 {
-    private static final String[] HEADERS_TO_TRY = { "X-Forwarded-For", "Proxy-Client-IP", "WL-Proxy-Client-IP", "HTTP_X_FORWARDED_FOR",
-            "HTTP_X_FORWARDED", "HTTP_X_CLUSTER_CLIENT_IP", "HTTP_CLIENT_IP", "HTTP_FORWARDED_FOR", "HTTP_FORWARDED", "HTTP_VIA",
+    private static final String[] HEADERS_TO_TRY = {
+            "X-Forwarded-For",
+            "Proxy-Client-IP",
+            "WL-Proxy-Client-IP",
+            "HTTP_X_FORWARDED_FOR",
+            "HTTP_X_FORWARDED",
+            "HTTP_X_CLUSTER_CLIENT_IP",
+            "HTTP_CLIENT_IP",
+            "HTTP_FORWARDED_FOR",
+            "HTTP_FORWARDED",
+            "HTTP_VIA",
             "REMOTE_ADDR" };
 
     @Override
@@ -34,6 +43,8 @@ public class RequestMDCFilter implements Filter
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY,
                 (String) ((HttpServletRequest) request).getSession().getAttribute("acm_username"));
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY,
+                (String) ((HttpServletRequest) request).getSession().getAttribute("acm_alfresco_username"));
 
         // Pass request back down the filter chain
         chain.doFilter(request, response);

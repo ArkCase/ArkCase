@@ -80,4 +80,13 @@
             </column>
         </addColumn>
     </changeSet>
+
+    <changeSet id="06-acm_note-add-author" author="manoj.dhungana">
+        <addColumn tableName="acm_note">
+            <column name="cm_note_author" type="VARCHAR(128)"/>
+        </addColumn>
+
+        <sql>UPDATE acm_note SET cm_note_author=cm_note_creator</sql>
+
+    </changeSet>
 </databaseChangeLog>

@@ -1,17 +1,10 @@
 package web.api;
 
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.services.subscription.model.AcmSubscription;
 import com.armedia.acm.services.subscription.service.SubscriptionService;
 import com.armedia.acm.services.subscription.web.api.ListSubscriptionByUserAPIController;
-
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,12 +26,16 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 /**
  * Created by marjan.stefanoski on 12.02.2015.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:/spring/spring-web-acm-web.xml",
-        "classpath:/spring/spring-library-subscription-web-api-test.xml" })
+@ContextConfiguration(locations = {"classpath:/spring/spring-web-acm-web.xml",
+        "classpath:/spring/spring-library-subscription-web-api-test.xml"})
 public class ListSubscriptionByUserAPIControllerTest extends EasyMockSupport
 {
 

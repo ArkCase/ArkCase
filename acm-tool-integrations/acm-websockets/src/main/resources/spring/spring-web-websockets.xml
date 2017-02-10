@@ -47,7 +47,15 @@
 
     <websocket:message-broker application-destination-prefix="${acm.websockets.application_destination_prefix}">
         <websocket:stomp-endpoint path="${acm.websockets.stomp_endpoint}">
-            <websocket:sockjs websocket-enabled="true"/>
+            <!--
+                client-library-url: sockjs version must be always aligned with bower dependency;
+                the path is relative to /sockjs/iframe.html, iframe URL created by sockjs
+                (make sure sockjs bower dependency is still copied there, it may change over time)
+            -->
+            <websocket:sockjs
+                    websocket-enabled="true"
+                    client-library-url="../lib/sockjs-client/dist/sockjs.min.js">
+            </websocket:sockjs>
         </websocket:stomp-endpoint>
         <websocket:stomp-broker-relay prefix="/topic,/queue"
                                       relay-host="${acm.websockets.stomp_broker_relay.relay_host}"

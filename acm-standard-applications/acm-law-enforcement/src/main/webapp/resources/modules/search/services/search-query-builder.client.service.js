@@ -33,6 +33,25 @@ angular.module('search').factory('Search.QueryBuilderService', [
 
             /**
              * @ngdoc method
+             * @name buildFacetedSearchQuerySorted
+             * @methodOf service:Search.QueryBuilderService
+             *
+             * @description
+             * Builds URL to pass to the faceted search service
+             *
+             * @param {String} input Search term input by user
+             * @param {String} filters Filters to send to the faceted search service
+             * @param {String} n Total row count
+             * @param {String} start Starting row count
+             * @param {String} sort Sorting specification(sortBy + " " + direction)
+             * @returns {HttpPromise} Future info about cancel status
+             */
+            buildFacetedSearchQuerySorted: function (input, filters, n, start, sort) {
+                return (filters ? (input + "&filters=" + encodeURIComponent(filters) + "&n=" + n + "&start=" + start + "&s=" + sort) : (input + "&n=" + n + "&start=" + start + "&s=" + sort));
+            },
+
+            /**
+             * @ngdoc method
              * @name buildSafeFqFacetedSearchQuery
              * @methodOf service:Search.QueryBuilderService
              *
@@ -48,7 +67,28 @@ angular.module('search').factory('Search.QueryBuilderService', [
              */
             buildSafeFqFacetedSearchQuery: function (input, filters, n, start) {
                 return (filters ? (input + "&filters=" + filters.replace(/&fq=/gi, '%26fq%3D') + "&n=" + n + "&start=" + start) : (input + "&n=" + n + "&start=" + start));
+            },
+
+            /**
+             * @ngdoc method
+             * @name buildSafeFqFacetedSearchQuerySorted
+             * @methodOf service:Search.QueryBuilderService
+             *
+             * @description
+             * Builds URL to pass to the faceted search service.
+             * It doesn't perform whole uri encoding, only encodes '&fq='. Some requests have
+             *
+             * @param {String} input Search term input by user
+             * @param {String} filters Filters to send to the faceted search service
+             * @param {String} n Total row count
+             * @param {String} start Starting row count
+             * @param {String} sort Sorting specification(sortBy + " " + direction)
+             * @returns {HttpPromise} Future info about cancel status
+             */
+            buildSafeFqFacetedSearchQuerySorted: function (input, filters, n, start, sort) {
+                return (filters ? (input + "&filters=" + filters.replace(/&fq=/gi, '%26fq%3D') + "&n=" + n + "&start=" + start + "&s=" + sort) : (input + "&n=" + n + "&start=" + start + "&s=" + sort));
             }
+
         }
     }
 ])
