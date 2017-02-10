@@ -36,7 +36,6 @@ describe(' Complaint page tests ', function() {
     });
 
 
-
     it('Verify if reader is displayed in participants table', function() {
 
         complaintPage.clickModuleComplaints();
@@ -55,17 +54,26 @@ describe(' Complaint page tests ', function() {
             complaintPage.clickNewButton();
             timeTrackingPage.navigateToTimeTrackingPage();
             complaintPage.switchToIframes();
-            timeTrackingPage.submitTimesheetTable("Complaint", text, "8");
-            complaintPage.selectApprover(Objects.casepage.data.approverSamuel);
+            timeTrackingPage.selectTimesheetType("Complaint");
+            timeTrackingPage.clickChargeCode();
+            timeTrackingPage.switchToDefaultContent();
+            timeTrackingPage.searchForObject(text);
+            timeTrackingPage.switchToIframes();
+            timeTrackingPage.submitTimesheetTable("8");
+            casePage.selectApprover(Objects.casepage.data.approverSamuel);
             timeTrackingPage.clickSaveBtn();
             timeTrackingPage.clickEditTimesheetBtn();
             timeTrackingPage.switchToIframes();
-            timeTrackingPage.submitTimesheetTable("Complaint", text, "1");
-            complaintPage.selectApprover(Objects.casepage.data.approverSamuel);
+            timeTrackingPage.selectTimesheetType("Complaint");
+            timeTrackingPage.clickChargeCode();
+            timeTrackingPage.switchToDefaultContent();
+            timeTrackingPage.searchForObject(text);
+            timeTrackingPage.switchToIframes();
+            timeTrackingPage.submitTimesheetTable("1");
+            casePage.selectApprover(Objects.casepage.data.approverSamuel);
             timeTrackingPage.clickSaveBtn();
             complaintPage.clickModuleComplaints();
             complaintPage.verifyTimeWidgetData("7");
-
         });
     });
 
@@ -80,6 +88,58 @@ describe(' Complaint page tests ', function() {
         complaintPage.waitForComplaintsPage();
         complaintPage.editAssignee("bthomas");
         expect(complaintPage.returnAssignee()).toEqual("Bill Thomas", "Assignee is not updated");
+    });
+
+    it('should Add timesheet and verify it in the complaint timesheet table', function() {
+
+        complaintPage.clickModuleComplaints();
+        element(by.xpath(Objects.casepage.locators.caseID)).getText().then(function(text) {
+            console.log(text);
+            complaintPage.clickNewButton();
+            timeTrackingPage.navigateToTimeTrackingPage();
+            complaintPage.switchToIframes();
+            timeTrackingPage.selectTimesheetType("Complaint");
+            timeTrackingPage.clickChargeCode();
+            timeTrackingPage.switchToDefaultContent();
+            timeTrackingPage.searchForObject(text);
+            complaintPage.switchToIframes();
+            timeTrackingPage.submitTimesheetTable("8");
+            complaintPage.selectApprover(Objects.casepage.data.approverSamuel);
+            timeTrackingPage.clickSaveBtn();
+            complaintPage.clickModuleComplaints();
+            complaintPage.TimeTable();
+            expect(complaintPage.returnTimesheetFormName()).toContain(Objects.casepage.data.timeSheet, "Form name in added timesheet is not correct");
+            expect(complaintPage.returnTimesheetUser()).toEqual(Objects.casepage.data.assigneeSamuel, "Timesheet user in added timesheet is not correct");
+            expect(complaintPage.returnTimesheetModifiedDate()).toEqual(utils.returnToday("/"), "Timesheet modified date in added timesheet is not correct");
+            expect(complaintPage.returnTimesheetStatus()).toEqual(Objects.casepage.data.statusDraft, "Timesheet status in added timesheet is not correct");
+            expect(complaintPage.returnTimesheetHours()).toEqual(Objects.casepage.data.totalHours, "Timesheet total hours in added timesheet are not correct");
+
+        });
+    });
+
+    it('should Add costsheet and verify in complaints costsheet table', function() {
+
+        complaintPage.clickModuleComplaints();
+        element(by.xpath(Objects.casepage.locators.caseID)).getText().then(function(text) {
+            console.log(text);
+            complaintPage.clickNewButton();
+            costTrackingPage.navigateToExpensesPage();
+            complaintPage.switchToIframes();
+            costTrackingPage.selectType("Complaint");
+            costTrackingPage.populateExpensesTable(Objects.costsheetPage.data.Taxi, Objects.costsheetPage.data.Ammount);
+            costTrackingPage.clickCodeType();
+            costTrackingPage.switchToDefaultContent();
+            costTrackingPage.searchForObject(text);
+            costTrackingPage.switchToIframes();
+            costTrackingPage.clickSaveBtn();
+            complaintPage.clickModuleComplaints();
+            complaintPage.CostTable();
+            expect(complaintPage.returncostSheetFormName()).toContain("Costsheet", "Form name in added costsheet is not correct");
+            expect(complaintPage.returncostSheetUser()).toEqual(Objects.casepage.data.assigneeSamuel, "User in added costsheet is not correct");
+            expect(complaintPage.returncostSheetModifiedDate()).toEqual(utils.returnToday("/"), "Modified date in added costsheet is not correct");
+            expect(complaintPage.returncostSheetTotalCost()).toEqual(Objects.costsheetPage.data.verifyAmmount, "Total cost in added costsheet is not correct");
+            expect(complaintPage.returncostSheetStatus()).toEqual(Objects.casepage.data.statusDraft, "Status in added costsheet is not correct");
+        });
     });
 
 });

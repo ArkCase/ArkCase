@@ -56,7 +56,8 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
     private List<AcmConfig> configList;
 
     /**
-     * @param springContextHolder the springContextHolder to set
+     * @param springContextHolder
+     *            the springContextHolder to set
      */
     public void setSpringContextHolder(SpringContextHolder springContextHolder)
     {
@@ -64,7 +65,8 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
     }
 
     /**
-     * @param correspondenceTemplatesConfiguration the correspondenceTemplatesConfiguration to set
+     * @param correspondenceTemplatesConfiguration
+     *            the correspondenceTemplatesConfiguration to set
      */
     public void setCorrespondenceTemplatesConfiguration(Resource correspondenceTemplatesConfiguration)
     {
@@ -72,7 +74,8 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
     }
 
     /**
-     * @param caseCorrespondenceForms the caseCorrespondenceForms to set
+     * @param caseCorrespondenceForms
+     *            the caseCorrespondenceForms to set
      */
     public void setCaseCorrespondenceForms(Resource caseCorrespondenceForms)
     {
@@ -80,7 +83,8 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
     }
 
     /**
-     * @param complaintCorrespondenceForms the complaintsCorrespondenceForms to set
+     * @param complaintCorrespondenceForms
+     *            the complaintsCorrespondenceForms to set
      */
     public void setComplaintCorrespondenceForms(Resource complaintCorrespondenceForms)
     {
@@ -189,8 +193,7 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
             CorrespondenceTemplate template = result.get();
             templates.remove(template.getTemplateFilename());
             updateConfiguration(templates.values());
-            updateLabels(template, templateLabels ->
-            {
+            updateLabels(template, templateLabels -> {
                 Optional<TemplateLabel> label = templateLabels.stream()
                         .filter(tl -> tl.getTemplate().equals(template.getTemplateFilename())).findAny();
                 if (label.isPresent())
@@ -209,8 +212,7 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
      */
     Optional<CorrespondenceTemplate> getTemplateByFileName(String templateFileName)
     {
-        return Optional.of(findTemplate(templateFileName).orElseGet(() ->
-        {
+        return Optional.of(findTemplate(templateFileName).orElseGet(() -> {
             CorrespondenceTemplate template = new CorrespondenceTemplate();
             template.setTemplateFilename(templateFileName);
             template.setDocumentType(generateDocumentTypeFromFilename(templateFileName));
@@ -274,13 +276,14 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
         File file;
         switch (template.getQuery().getType())
         {
-            case CASE_FILE:
-                file = caseCorrespondenceForms.getFile();
-                break;
-            case COMPLAINT:
-                file = complaintCorrespondenceForms.getFile();
-            default:
-                throw new IllegalArgumentException();
+        case CASE_FILE:
+            file = caseCorrespondenceForms.getFile();
+            break;
+        case COMPLAINT:
+            file = complaintCorrespondenceForms.getFile();
+            break;
+        default:
+            throw new IllegalArgumentException();
         }
         String resource = FileUtils.readFileToString(file);
 
@@ -298,7 +301,6 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
         updateConfig(template.getQuery().getType(), configValueAsString);
     }
 
-
     public void setConfigList(List<AcmConfig> configList)
     {
         this.configList = configList;
@@ -314,28 +316,29 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
     {
         if (configList == null || configList.isEmpty())
         {
-            //couldn't find case and complaints configs
+            // couldn't find case and complaints configs
             return;
         }
-        AcmConfig casesConfig = configList.stream().
-                filter(config -> "caseCorrespondenceForms".equals(config.getConfigName())).findFirst().orElse(null);
-        AcmConfig complaintsConfig = configList.stream().
-                filter(config -> "complaintCorrespondenceForms".equals(config.getConfigName())).findFirst().orElse(null);
+        AcmConfig casesConfig = configList.stream().filter(config -> "caseCorrespondenceForms".equals(config.getConfigName())).findFirst()
+                .orElse(null);
+        AcmConfig complaintsConfig = configList.stream().filter(config -> "complaintCorrespondenceForms".equals(config.getConfigName()))
+                .findFirst().orElse(null);
         switch (queryType)
         {
-            case CASE_FILE:
-                if (casesConfig instanceof JsonConfig)
-                {
-                    ((JsonConfig) casesConfig).setJson(configValue);
-                }
-                break;
-            case COMPLAINT:
-                if (complaintsConfig instanceof JsonConfig)
-                {
-                    ((JsonConfig) complaintsConfig).setJson(configValue);
-                }
-            default:
-                throw new IllegalArgumentException();
+        case CASE_FILE:
+            if (casesConfig instanceof JsonConfig)
+            {
+                ((JsonConfig) casesConfig).setJson(configValue);
+            }
+            break;
+        case COMPLAINT:
+            if (complaintsConfig instanceof JsonConfig)
+            {
+                ((JsonConfig) complaintsConfig).setJson(configValue);
+            }
+            break;
+        default:
+            throw new IllegalArgumentException();
         }
     }
 }

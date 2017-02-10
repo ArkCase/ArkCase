@@ -6,6 +6,9 @@ var loginPage = require('../../Pages/login_page.js');
 var Objects = require('../../json/Objects.json');
 var using = require(process.env['USERPROFILE'] + '/node_modules/jasmine-data-provider');
 var preferencesPage = require('../../Pages/preference_page.js');
+var casePage = require('../../Pages/case_page.js');
+
+
 var flag = false;
 
 function testAsync(done) {

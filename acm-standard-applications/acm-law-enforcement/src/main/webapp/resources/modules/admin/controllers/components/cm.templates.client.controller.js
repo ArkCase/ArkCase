@@ -5,6 +5,8 @@ angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$m
     function ($scope, $modal, correspondenceService, HelperUiGridService, messageService, LookupService, Store) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+        var promiseUsers = gridHelper.getUsers();
+
 
         //get config and init grid settings
         $scope.config.$promise.then(function (config) {
@@ -12,6 +14,7 @@ angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$m
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
+            gridHelper.setUserNameFilter(promiseUsers);
 
             gridHelper.addButton(config, "edit");
             gridHelper.addButton(config, "delete");
@@ -32,7 +35,7 @@ angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$m
 
             var template = angular.copy(rowEntity);
             template.activated = !rowEntity.activated;
-
+            delete template.fileName;
             correspondenceService.saveTemplateData(template).then(function () {
                 clearCachedForms(template);
                 messageService.succsessAction();
@@ -87,9 +90,10 @@ angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$m
                             function (result) {
                                 correspondenceService.getTemplateData($scope.selectedFiles[0].name).then(function (template) {
                                     $scope.template = template.data;
-                                    $scope.query.beanId = $scope.template.correspondenceQueryBeanId;
                                     $scope.query.fieldNames = Object.keys($scope.template.templateSubstitutionVariables);
                                     $scope.fieldValues = Object.values($scope.template.templateSubstitutionVariables);
+                                    //we will activate it by default
+                                    $scope.template.activated = true;
                                 });
                             }
                         );
@@ -214,7 +218,8 @@ angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$m
             });
 
         }
-        function clearCachedForms(template){
+
+        function clearCachedForms(template) {
             var cacheConfigMap = new Store.SessionData(LookupService.SessionCacheNames.CONFIG_MAP);
             var configMap = cacheConfigMap.get();
             if (template.queryType == 'CASE_FILE') {
@@ -224,11 +229,12 @@ angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$m
             }
             cacheConfigMap.set(configMap);
         }
+
         function ReloadGrid() {
             var templatesPromise = correspondenceService.retrieveTemplatesList();
             templatesPromise.then(function (templates) {
                 angular.forEach(templates.data, function (row, index) {
-                    row.fileName = correspondenceService.downloadByFilename(row.templateFilename);
+                    row.downloadFileName = correspondenceService.downloadByFilename(row.templateFilename);
                 });
                 $scope.gridOptions.data = templates.data;
             });
