@@ -1,6 +1,7 @@
 var Objects = require('../json/Objects.json');
 var utils = require('../util/utils.js');
 var basePage = require('./base_page.js');
+var EC = protractor.ExpectedConditions;
 var userName = element(by.xpath(Objects.userpage.locators.userName));
 var userNameInput = element(by.xpath(Objects.userpage.locators.userNameInput));
 var userNameConfirmBtn = element(by.xpath(Objects.userpage.locators.userNameConfirmBtn));
@@ -68,21 +69,31 @@ var changeProfilePic = element(by.xpath(Objects.userpage.locators.changeProfileP
 
 var UserPage = function(){
 	this.clickUserNavigation = function(){
-		userNavigation.click();
+        //browser.wait(EC.visibilityOf(element(by.css(Objects.userpage.locators.userNavigation))), 30000, "User navigation field is not visible").then(function() {
+            userNavigation.click();
+        //});
 		return this;
 	}
 	this.returnUserNavigationProfile = function(){
-		return userNavigationProfile.getText();
+        //browser.wait(EC.visibilityOf(element(by.linkText(Objects.userpage.locators.userNavigationProfile))), 30000, "User navigation profile field is not visible").then(function() {
+            return userNavigationProfile.getText();
+        //});
 	}
 	this.clickUserNavigationProfile = function(){
-		userNavigationProfile.click();
+        //browser.wait(EC.visibilityOf(element(by.linkText(Objects.userpage.locators.userNavigationProfile))), 30000, "User navigation profile field is not visible").then(function() {
+            userNavigationProfile.click();
+        //});
 		return this;
 	}
 	this.returnUserPageHeader = function(){
-		return userPageHeader.getText();
+        //browser.wait(EC.visibilityOf(element(by.xpath(Objects.userpage.locators.userPageHeader))), 30000, "User page header is not visible").then(function() {
+            return userPageHeader.getText();
+        //});
 	}
 	this.clickUserName = function(){
-		userName.click();
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.userpage.locators.userName))), 30000, "User name field is not visible").then(function() {
+            userName.click();
+        });
 		return this;
 	}
 	this.insertUserName = function(username){

@@ -53,7 +53,8 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 onItemsSelected: '=?',   //=? : two way binding but property is optional
                 onNoDataMessage: '@',
                 draggable: '@',
-                onDblClickRow: '=?'
+                onDblClickRow: '=?',
+                customization: '=?'
             },
 
             link: function (scope, el, attrs) {
