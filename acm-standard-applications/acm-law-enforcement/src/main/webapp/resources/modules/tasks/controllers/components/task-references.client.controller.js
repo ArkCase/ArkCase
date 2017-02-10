@@ -67,14 +67,14 @@ angular.module('tasks').controller('Tasks.ReferencesController', ['$scope', '$st
                 size: 'lg',
                 resolve: {
                     $filter: function () {
-                        var filter = $scope.modalConfig.searchFilter + "&-id:" + $scope.objectInfo.taskId + "-TASK";
+                        var filter = $scope.modalConfig.searchFilter + "&-id:" + $scope.objectInfo.taskId + "-" + ObjectService.ObjectTypes.TASK;
                         if ($scope.gridOptions.data.length > 0) {
                             for (var i = 0; i < $scope.gridOptions.data.length; i++) {
                                 var data = $scope.gridOptions.data[i];
                                 filter += "&-id:" + data.targetId + "-" + data.targetType;
                             }
                         }
-                        filter += "&-parent_ref_s:" + $scope.objectInfo.taskId + "-TASK";
+                        filter += "&-parent_ref_s:" + $scope.objectInfo.taskId + "-" + ObjectService.ObjectTypes.TASK;
                         return filter.replace(/&/gi, '%26');
                     },
                     $config: function () {
