@@ -3,6 +3,7 @@ package com.armedia.acm.web.api;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ApplicationEventMulticaster;
+import org.springframework.core.ResolvableType;
 
 /**
  * {@link ApplicationEventMulticaster} implementation for publishing events to synchronous and asynchronous listeners.
@@ -59,6 +60,13 @@ public class DistributiveEventMulticaster implements ApplicationEventMulticaster
     {
         syncEventMulticaster.multicastEvent(event);
         asyncEventMulticaster.multicastEvent(event);
+    }
+
+    @Override
+    public void multicastEvent(ApplicationEvent event, ResolvableType resolvableType)
+    {
+        syncEventMulticaster.multicastEvent(event, resolvableType);
+        asyncEventMulticaster.multicastEvent(event, resolvableType);
     }
 
     public void setAsyncEventMulticaster(ApplicationEventMulticaster asyncEventMulticaster)

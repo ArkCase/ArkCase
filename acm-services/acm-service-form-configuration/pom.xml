@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.armedia.acm</groupId>
         <artifactId>acm-services</artifactId>
-        <version>3.1.7-SNAPSHOT</version>
+        <version>3.1.9-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -17,7 +17,7 @@
         <dependency>
             <groupId>com.frevvo</groupId>
             <artifactId>forms-java</artifactId>
-            <version>${frevvo.forms.version}</version>
+            <classifier>mailfix</classifier>
         </dependency>
         <!-- spring -->
         

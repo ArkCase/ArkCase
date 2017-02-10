@@ -395,4 +395,18 @@
             <column name="cm_seq_name" value="acm_user_action"></column>
         </insert>
     </changeSet>
+    
+    <changeSet id="19-add-ldap-columns-to-user-table" author="bojan.milenkoski">
+         <addColumn tableName="acm_user">
+             <column name="cm_samaccountname" type="VARCHAR(20)"/>
+             <column name="cm_user_principal_name" type="VARCHAR(255)"/>
+             <column name="cm_distinguished_name" type="VARCHAR(255)"/>
+         </addColumn>
+     </changeSet>
+
+    <changeSet id="20-add-uid-to-acm-user" author="david.miller">
+        <addColumn tableName="acm_user">
+            <column name="cm_uid" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
