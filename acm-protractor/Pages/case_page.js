@@ -46,7 +46,6 @@ var casesTitleStatus = element.all(by.xpath(Objects.casepage.locators.caseTitleS
 var caseTitleWithStatus = element(by.xpath(Objects.casepage.locators.caseTitleWithStatus));
 var submitBtn = element(by.xpath(Objects.casepage.locators.submitBtn));
 var priority = element(by.xpath(Objects.casepage.locators.priority));
-var doc = element(by.id(Objects.casepage.locators.doc));
 
 
 var CasePage = function() {
@@ -239,23 +238,6 @@ var CasePage = function() {
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesTitle))), 30000);
         browser.sleep(10000);
     };
-
-    this.switchToDocIframes = function() {
-
-        browser.ignoreSynchronization = true;
-        browser.wait(EC.visibilityOf(element(by.model(Objects.taskspage.locators.notesTextArea))), 30000, "Notes text area is not visible").then(function() {
-            browser.wait(EC.presenceOf(element(by.className("snowbound-iframe"))), 30000, "Document i-frame is not present in DOM").then(function () {
-                browser.wait(EC.visibilityOf(element(by.className("snowbound-iframe"))), 30000, "Document i-frame is not visible").then(function () {
-                    browser.switchTo().frame(browser.driver.findElement(by.className("snowbound-iframe")));
-                })
-            })
-        })
-        return this;
-    };
-
-    this.returnDoc = function () {
-        browser.wait(EC.presenceOf(element(by.id(Objects.casepage.locators.doc))), 30000, "Document is not present in DOM");
-    }
 
 };
 
