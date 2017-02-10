@@ -70,17 +70,14 @@ public class AcmJpaBatchUpdateService
             Date lastBatchRunDate = getLastBatchRunDate(lastRunDate, solrDateFormat);
             storeCurrentDateForNextBatchRun(solrDateFormat);
 
-            if ( log.isDebugEnabled() )
-            {
-                log.debug("Checking for objects modified since: " + lastBatchRunDate);
-            }
+            log.debug("Checking for objects modified since {}", lastBatchRunDate);
+
 
             Collection<? extends AcmObjectToSolrDocTransformer> transformers = getSpringContextHolder()
                     .getAllBeansOfType(AcmObjectToSolrDocTransformer.class).values();
-            if ( log.isDebugEnabled() )
-            {
-                log.debug(transformers.size() + " object transformers found.");
-            }
+
+            log.debug("{} object transformers found.", transformers.size());
+
 
             for ( AcmObjectToSolrDocTransformer transformer : transformers )
             {
@@ -89,12 +86,12 @@ public class AcmJpaBatchUpdateService
                     sendUpdatedObjectsToSolr(lastBatchRunDate, transformer);
                 } catch (Exception exception)
                 {
-                    log.error("Could not send index updates to SOLR for transformer " + transformer.getClass(), exception);
+                    log.error("Could not send index updates to SOLR for transformer {}", transformer.getClass(), exception);
                 }
             }
         } catch (ParseException e)
         {
-            log.error("Could not send index updates to SOLR: " + e.getMessage(), e);
+            log.error("Could not send index updates to SOLR: {}", e.getMessage(), e);
         }
     }
 
@@ -120,12 +117,8 @@ public class AcmJpaBatchUpdateService
 
     private void sendUpdatedObjectsToSolr(Date lastUpdate, AcmObjectToSolrDocTransformer transformer)
     {
-        boolean debug = log.isDebugEnabled();
+        log.debug("Handling transformer type: {}, last mod date: {}", transformer.getClass().getName(), lastUpdate);
 
-        if ( debug )
-        {
-            log.debug("Handling transformer type: " + transformer.getClass().getName() + "; last mod date: " + lastUpdate);
-        }
 
         int current = 0;
         int batchSize = getBatchSize();
@@ -135,10 +128,9 @@ public class AcmJpaBatchUpdateService
         do
         {
             updatedObjects = transformer.getObjectsModifiedSince(lastUpdate, current, batchSize);
-            if ( debug )
-            {
-                log.debug("Number of objects for " + transformer.getClass().getName() + ": " + updatedObjects.size());
-            }
+
+            log.debug("Number of objects for {} : ", transformer.getClass().getName(), updatedObjects.size());
+
 
             if ( !updatedObjects.isEmpty() )
             {
