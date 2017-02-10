@@ -95,7 +95,7 @@ public class CorrespondenceGenerator
 
         Resource templateFile = new FileSystemResource(getCorrespondenceFolderName() + File.separator + template.getTemplateFilename());
 
-        log.debug("Generating correspondence from template '" + templateFile.getFile().getAbsolutePath() + "'");
+        log.debug("Generating correspondence from template '{}'", templateFile.getFile().getAbsolutePath());
 
         getWordGenerator().generate(templateFile, correspondenceOutputStream, substitutions);
 
