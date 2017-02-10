@@ -45,7 +45,7 @@ angular.module('profile').service('Profile.ChangePasswordService', function ($ht
     function changeLdapPassword(credentials) {
         var request = $http({
             method: "POST",
-            url: "api/v1/users/changePassword",
+            url: "api/latest/users/ldap/changePassword",
             data: credentials
         });
         return (request.then(handleSuccess, handleError));
