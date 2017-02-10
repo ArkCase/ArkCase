@@ -3,7 +3,11 @@
     <div class="btn-group">
         <button class="btn btn-xs btn-link" ng-click="createGroup()">
             <i class="glyphicon glyphicon-plus-sign"></i>
-            <span translate>admin.security.organizationalHierarchy.createGroupDialog.title</span>
+            <span>{{ addAdHocGroupBtn | translate }}</span>
+        </button>
+        <button class="btn btn-xs btn-link" ng-click="createLdapGroup()">
+            <i class="glyphicon glyphicon-plus-sign"></i>
+            {{ addLdapGroupBtn | translate }}
         </button>
     </div>
 </div>
@@ -13,6 +17,7 @@
                          on-delete-members="onDeleteMembers" on-add-sub-group="onAddSubGroup" on-set-supervisor="onSetSupervisor"
                          show-actions="true" show-supervisor="true" show-type="true" enable-editing-ldap-users="enableEditingLdapUsers"
                          on-add-ldap-member="onAddLdapMember" on-edit-ldap-member="onEditLdapMember"
-                         on-add-existing-members-to-ldap-group="addExistingMembersToLdapGroup"/>
+                         on-add-existing-members-to-ldap-group="addExistingMembersToLdapGroup"
+                         on-add-ldap-subgroup="addLdapSubgroup"/>
 </panel-view>
 </div>

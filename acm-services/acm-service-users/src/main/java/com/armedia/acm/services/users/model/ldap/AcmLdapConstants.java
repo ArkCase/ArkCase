@@ -6,4 +6,5 @@ package com.armedia.acm.services.users.model.ldap;
 public interface AcmLdapConstants
 {
     String DEFAULT_AUDIT_USER = "LDAP-SYNC";
+    String GROUP_OBJECT_TYPE ="LDAP_GROUP";
 }

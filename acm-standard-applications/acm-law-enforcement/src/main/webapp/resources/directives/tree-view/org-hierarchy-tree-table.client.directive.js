@@ -22,7 +22,8 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile', 'Mess
                 enableEditingLdapUsers: '=',
                 onAddLdapMember: "=",
                 onEditLdapMember: "=",
-                onAddExistingMembersToLdapGroup: "="
+                onAddExistingMembersToLdapGroup: "=",
+                onAddLdapSubgroup: "="
             },
             link: function (scope, element, attrs) {
                 var $tbl = $("#org");
@@ -77,8 +78,9 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile', 'Mess
                             }
 
                             if (scope.enableEditingLdapUsers && node.data.object_sub_type_s == "LDAP_GROUP") {
-                                $tdList.eq(3).html($compile("<button class='btn btn-link btn-xs' type='button' ng-click='addExistingUser($event)' name='addExistingMembers' title='Add Existing Members'><i class='fa fa-user'></i></button>" +
-                                    "<button class='btn btn-link btn-xs' type='button' ng-click='addLdapUser($event)' name='addMember' title='Add New Member'><i class='fa fa-user-plus'></i></button>")(scope));
+                                $tdList.eq(3).html($compile("<button class='btn btn-link btn-xs' type='button' ng-click='addExistingUserToLdapGroup($event)' name='addExistingMembers' title='Add Existing Members'><i class='fa fa-user'></i></button>" +
+                                    "<button class='btn btn-link btn-xs' type='button' ng-click='addLdapUser($event)' name='addMember' title='Add New Member'><i class='fa fa-user-plus'></i></button>" +
+                                    "<button class='btn btn-link btn-xs' type='button' ng-click='addLdapSubgroup($event)' name='addSubGroup' title='Add LDAP Subgroup'><i class='fa fa-users'></i></button>")(scope));
                             }
 
                             if (scope.enableEditingLdapUsers && node.data.isMember && node.parent.data.object_sub_type_s == "LDAP_GROUP") {
@@ -136,7 +138,7 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile', 'Mess
                     });
                 };
 
-                scope.addExistingUser = function (event) {
+                scope.addExistingUserToLdapGroup = function (event) {
                     var node = $.ui.fancytree.getNode(event);
                     scope.onAddExistingMembersToLdapGroup(node.data).then(function (members) {
                         //success
@@ -152,7 +154,6 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile', 'Mess
                         }
                     });
                 };
-
 
                 scope.addLdapUser = function (event) {
                     var node = $.ui.fancytree.getNode(event);
@@ -184,6 +185,19 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile', 'Mess
                 scope.addSubgroup = function (event) {
                     var node = $.ui.fancytree.getNode(event);
                     scope.onAddSubGroup(node.data).then(function (subGroup) {
+                        //success
+                        node.addNode(subGroup, 'firstChild');
+                        node.setExpanded();
+                        messageService.succsessAction();
+                    }, function () {
+                        //error
+                        messageService.errorAction();
+                    });
+                };
+
+                scope.addLdapSubgroup = function (event) {
+                    var node = $.ui.fancytree.getNode(event);
+                    scope.onAddLdapSubgroup(node.data).then(function (subGroup) {
                         //success
                         node.addNode(subGroup, 'firstChild');
                         node.setExpanded();

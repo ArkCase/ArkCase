@@ -1,25 +1,31 @@
-<div class="modal-header">
-    <h4 class="modal-title">
-        <span translate>admin.security.organizationalHierarchy.createGroupDialog.title</span>
-    </h4>
-</div>
-<div class="modal-body">
-    <div>
-        <span translate>admin.security.organizationalHierarchy.createGroupDialog.name</span>
-        <input type="text" ng-model="adHocGroup.name" class="form-control" required
-               placeholder="{{'admin.security.organizationalHierarchy.createGroupDialog.namePlaceholder'| translate}}">
-
-        <span translate>admin.security.organizationalHierarchy.createGroupDialog.description</span>
-        <textarea type="text" ng-model="adHocGroup.description" class="form-control"
-                  placeholder="{{'admin.security.organizationalHierarchy.createGroupDialog.descriptionPlaceholder'| translate}}">
-        </textarea>
+<form ng-submit="ok()" novalidate name="groupForm">
+    <div class="modal-header">
+        <h4 class="modal-title">
+            <span>{{ header | translate }}</span>
+        </h4>
     </div>
-</div>
-<div class="modal-footer">
-    <button type="button" class="btn btn-secondary" ng-click="cancel()">
-        <span translate>admin.security.organizationalHierarchy.createGroupDialog.btn.cancel</span>
-    </button>
-    <button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="inputInvalid">
-        <span translate>admin.security.organizationalHierarchy.createGroupDialog.btn.ok</span>
-    </button>
-</div>
+    <div class="modal-body">
+        <div class="form-group" ng-class="{ 'has-error' : error }">
+            <label>{{ 'admin.security.organizationalHierarchy.createGroupDialog.name' | translate }}</label>
+            <input type="text" ng-model="group.name" class="form-control" required
+                   placeholder="{{ 'admin.security.organizationalHierarchy.createGroupDialog.namePlaceholder'| translate }}">
+            <p class="help-block" ng-show="error">
+                {{ error }}
+            </p>
+        </div>
+        <div class="form-group">
+            <label>{{ 'admin.security.organizationalHierarchy.createGroupDialog.description' | translate }}</label>
+            <textarea type="text" ng-model="group.description" class="form-control"
+                      placeholder="{{ 'admin.security.organizationalHierarchy.createGroupDialog.descriptionPlaceholder'| translate }}">
+        </textarea>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" ng-click="cancel()">
+            <span translate>admin.security.organizationalHierarchy.createGroupDialog.btn.cancel</span>
+        </button>
+        <button type="submit" class="btn btn-primary" ng-click="ok()" ng-disabled="groupForm.$invalid">
+            <span translate>admin.security.organizationalHierarchy.createGroupDialog.btn.ok</span>
+        </button>
+    </div>
+</form>
