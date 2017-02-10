@@ -11,9 +11,9 @@
  * LookupService contains functions to lookup data (typically static data).
  */
 
-angular.module('services').factory('Object.LookupService', ['$resource', 'Acm.StoreService', 'UtilService'
+angular.module('services').factory('Object.LookupService', ['$q', '$resource', 'Acm.StoreService', 'UtilService'
     , 'LookupService', 'SearchService',
-    function ($resource, Store, Util
+    function ($q, $resource, Store, Util
         , LookupService, SearchService) {
 
         var Service = $resource('api/latest/plugin', {}, {
@@ -462,7 +462,18 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'Acm.St
          * @returns {Object} An array returned by $resource
          */
         Service.getCaseFileCorrespondenceForms = function () {
-            return LookupService.getLookup("caseCorrespondenceForms");
+            var df = $q.defer();
+            var forms = LookupService.getLookup("caseCorrespondenceForms");
+            forms.then(function (forms) {
+                    var activated = _.filter(forms, function (form) {
+                        return form.activated == true;
+                    });
+                    df.resolve(activated);
+                },
+                function (err) {
+                    df.reject(err);
+                });
+            return df.promise;
         };
 
         /**
@@ -476,7 +487,18 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'Acm.St
          * @returns {Object} An array returned by $resource
          */
         Service.getComplaintCorrespondenceForms = function () {
-            return LookupService.getLookup("complaintCorrespondenceForms");
+            var df = $q.defer();
+            var forms = LookupService.getLookup("complaintCorrespondenceForms");
+            forms.then(function (forms) {
+                    var activated = _.filter(forms, function (form) {
+                        return form.activated == true;
+                    });
+                    df.resolve(activated);
+                },
+                function (err) {
+                    df.reject(err);
+                });
+            return df.promise;
         };
 
         /**

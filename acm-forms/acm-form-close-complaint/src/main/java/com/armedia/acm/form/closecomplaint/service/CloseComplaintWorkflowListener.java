@@ -48,7 +48,11 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
         log.debug("Calling business rules");
 
         configuration = getFileWorkflowBusinessRule().applyRules(configuration);
-
+        if (configuration.isBuckslipProcess())
+        {
+            //CloseComplaintWorkflowListener is not handling buckslip process
+            return;
+        }
         log.debug("start process? " + configuration.isStartProcess());
 
         if (configuration.isStartProcess())

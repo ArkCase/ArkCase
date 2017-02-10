@@ -10,7 +10,7 @@
     <property name="cmUserIdLength" value="1024" dbms="postgresql,oracle"/>
     <property name="cmUserIdLength" value="255" dbms="mysql,mssql"/>
 
-    <changeSet id="01-subscription-tables" author="marst">
+    <changeSet id="01-subscription-tables" author="marst" dbms="oracle,postgresql,mssql">
         <createTable tableName="acm_subscription">
             <column name="cm_subscription_id" type="${idType}">
                 <constraints primaryKey="true" primaryKeyName="pk_cm_subscription_id"/>
@@ -76,6 +76,90 @@
                 <constraints nullable="false"/>
             </column>
             <column name="cm_event_modified" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_event_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_event_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="acm_subscription" unique="true" indexName="idx_user_object_type">
+            <column name="cm_user_id" type="VARCHAR(${cmUserIdLength})"/>
+            <column name="cm_object_id" type="${fkIdType}"/>
+            <column name="cm_object_type" type="VARCHAR(${cmObjectTypeLength})"/>
+        </createIndex>
+
+    </changeSet>
+
+    <changeSet id="01-subscription-tables" author="marst" dbms="mysql">
+        <createTable tableName="acm_subscription">
+            <column name="cm_subscription_id" type="${idType}">
+                <constraints primaryKey="true" primaryKeyName="pk_cm_subscription_id"/>
+            </column>
+            <column name="cm_user_id" type="VARCHAR(${cmUserIdLength})">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_object_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_object_type" type="VARCHAR(${cmObjectTypeLength})">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_object_name" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_object_number" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_subscription_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_subscription_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_subscription_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_subscription_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="acm_subscription_event">
+            <column name="cm_event_id" type="${idType}">
+                <constraints primaryKey="true" primaryKeyName="pk_cm_subscription_event"/>
+            </column>
+            <column name="cm_event_object_type" type="VARCHAR(${cmObjectTypeLength})">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_event_object_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_event_user" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_event_date" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_event_subscription_owner" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_event_type" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_event_object_name" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_event_object_number" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_event_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_event_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_event_creator" type="VARCHAR(1024)">

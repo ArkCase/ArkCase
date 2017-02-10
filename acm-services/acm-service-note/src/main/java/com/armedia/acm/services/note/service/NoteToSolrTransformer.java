@@ -55,6 +55,12 @@ public class NoteToSolrTransformer implements AcmObjectToSolrDocTransformer<Note
             solr.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
         }
 
+        AcmUser author = getUserDao().quietFindByUserId(in.getAuthor());
+        if (author != null)
+        {
+            solr.setAdditionalProperty("author_full_name_lcs", author.getFirstName() + " " + author.getLastName());
+        }
+
         solr.setAdditionalProperty("parent_object_type_s", in.getParentType());
         solr.setAdditionalProperty("parent_object_id_i", in.getParentId());
         solr.setAdditionalProperty("parent_number_lcs", in.getParentTitle());
@@ -74,7 +80,7 @@ public class NoteToSolrTransformer implements AcmObjectToSolrDocTransformer<Note
         solrDoc.setName(String.format("%s_%d", NoteConstants.OBJECT_TYPE, in.getId()));
         solrDoc.setObject_id_s(in.getId() + "");
         solrDoc.setCreate_tdt(in.getCreated());
-        solrDoc.setAuthor(in.getCreator());
+        solrDoc.setAuthor(in.getAuthor());
         solrDoc.setLast_modified_tdt(in.getModified());
         solrDoc.setType_s(in.getType());
         solrDoc.setAdditionalProperty("parent_object_type_s", in.getParentType());
@@ -83,6 +89,8 @@ public class NoteToSolrTransformer implements AcmObjectToSolrDocTransformer<Note
         System.out.println("************************** January 18th ************************************************"+in.getParentTitle()+ "**********************************************");
         solrDoc.setParent_ref_s(String.format("%d-%s", in.getParentId(), in.getParentType()));
         solrDoc.setTitle_parseable(in.getNote());
+        solrDoc.setAdditionalProperty("creator_s", in.getCreator());
+
         return solrDoc;
     }
 

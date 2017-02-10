@@ -52,6 +52,11 @@ public class EcmFileWorkflowConfiguration
      */
     private String requestType;
 
+    /**
+     * should enable buckslip process
+     */
+    private boolean buckslipProcess;
+
     public boolean isStartProcess()
     {
         return startProcess;
@@ -130,5 +135,15 @@ public class EcmFileWorkflowConfiguration
     public void setRequestType(String requestType)
     {
         this.requestType = requestType;
+    }
+
+    public boolean isBuckslipProcess()
+    {
+        return buckslipProcess;
+    }
+
+    public void setBuckslipProcess(boolean buckslipProcess)
+    {
+        this.buckslipProcess = buckslipProcess;
     }
 }

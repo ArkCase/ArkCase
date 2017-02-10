@@ -5,7 +5,7 @@ import com.armedia.acm.services.note.model.ApplicationNoteEvent;
 import com.armedia.acm.services.note.model.Note;
 import com.armedia.acm.services.note.model.NoteConstants;
 import com.armedia.acm.services.note.service.NoteEventPublisher;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -86,7 +86,8 @@ public class SaveNoteAPIControllerTest extends EasyMockSupport
         executeTest(incomingNote);
     }
 
-    public void executeTest(Note incomingNote) throws Exception{
+    public void executeTest(Note incomingNote) throws Exception
+    {
         Capture<Note> noteToSave = new Capture<>();
         Capture<ApplicationNoteEvent> capturedEvent = new Capture<>();
 
@@ -117,7 +118,7 @@ public class SaveNoteAPIControllerTest extends EasyMockSupport
         assertEquals(incomingNote.getId(), noteToSave.getValue().getId());
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
     }
-   
+
     @Test
     public void addNote_exception() throws Exception
     {
@@ -166,7 +167,8 @@ public class SaveNoteAPIControllerTest extends EasyMockSupport
         //assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
     }
 
-    public Note createNote(String noteType){
+    public Note createNote(String noteType)
+    {
         Long parentId = 1329L;
         String parentType = "COMPLAINT";
 
@@ -174,6 +176,7 @@ public class SaveNoteAPIControllerTest extends EasyMockSupport
 
         incomingNote.setId(700L);
         incomingNote.setCreator("testCreator");
+        incomingNote.setAuthor("testCreator");
         incomingNote.setCreated(new Date());
         incomingNote.setNote("Note");
         incomingNote.setParentType(parentType);

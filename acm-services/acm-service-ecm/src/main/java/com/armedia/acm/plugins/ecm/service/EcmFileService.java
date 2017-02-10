@@ -4,10 +4,11 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.plugins.ecm.model.*;
-import com.armedia.acm.services.users.model.AcmUser;
-
-import org.apache.chemistry.opencmis.commons.data.ContentStream;
+import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
+import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.mule.api.MuleException;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,8 @@ import java.util.List;
  */
 public interface EcmFileService
 {
+    CmisObject findObjectByPath(String path) throws Exception;
+
     EcmFile upload(
             String originalFileName,
             String fileType,
@@ -127,12 +130,12 @@ public interface EcmFileService
 
 
     AcmCmisObjectList listFileFolderByCategory(Authentication auth,
-                                                 AcmContainer container,
-                                                 String sortBy,
-                                                 String sortDirection,
-                                                 int startRow,
-                                                 int maxRows,
-                                                 String category) throws AcmListObjectsFailedException;;
+                                               AcmContainer container,
+                                               String sortBy,
+                                               String sortDirection,
+                                               int startRow,
+                                               int maxRows,
+                                               String category) throws AcmListObjectsFailedException;
 
     void declareFileAsRecord(Long fileId, Authentication authentication)
             throws AcmObjectNotFoundException;
@@ -151,6 +154,8 @@ public interface EcmFileService
     EcmFile moveFile(Long fileId, Long targetObjectId, String targetObjectType, AcmFolder folder) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException;
 
     void deleteFile(Long fileId) throws AcmUserActionFailedException, AcmObjectNotFoundException;
+
+    void deleteFile(Long fileId, Long parentId, String parentType) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
     EcmFile renameFile(Long fileId, String newFileName) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 

@@ -4,9 +4,9 @@ import com.armedia.acm.plugins.casefile.model.AcmQueue;
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.IOUtils;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.TypeReference;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,11 +26,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
-import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -106,7 +103,9 @@ public class GetNumberOfActiveCaseFilesByQueueAPIControllerTest extends EasyMock
 
         ObjectMapper objectMapper = new ObjectMapper();
 
-        Map<String, Long> resultMap = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<Map<String, Long>>() {});
+        Map<String, Long> resultMap = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<Map<String, Long>>()
+        {
+        });
 
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
         assertEquals(6, resultMap.size());

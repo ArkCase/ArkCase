@@ -110,13 +110,15 @@
           "details",
           "reworkdetails",
           "docsreview",
+          "parentdocs",
           "attachments",
           "notes",
           "references",
           "workflow",
           "history",
           "signatures",
-          "tags"
+          "tags",
+          "approvalrouting"
         ]
       },
       {
@@ -141,6 +143,14 @@
         "icon": "fa fa-search-plus",
         "components": [
           "docsreview"
+        ]
+      },
+      {
+        "type": "p/TASK/patt",
+        "label": "Parent Documents",
+        "icon": "fa fa-file",
+        "components": [
+          "parentdocs"
         ]
       },
       {
@@ -200,11 +210,20 @@
         ]
       },
       {
+        "type": "p/TASK/apr",
+        "label": "Approval Routing",
+        "icon": "fa fa-sort-amount-desc",
+        "components": [
+          "approvalrouting"
+        ]
+      },
+      {
         "type": "p/ADHOC",
         "icon": "fa fa-check-circle",
         "components": [
           "details",
           "rejcomments",
+          "parentdocs",
           "attachments",
           "notes",
           "references",
@@ -228,6 +247,14 @@
         "icon": "fa fa-hand-stop-o",
         "components": [
           "rejcomments"
+        ]
+      },
+      {
+        "type": "p/ADHOC/patt",
+        "label": "Parent Documents",
+        "icon": "fa fa-file",
+        "components": [
+          "parentdocs"
         ]
       },
       {
@@ -399,7 +426,7 @@
             },
             {
               "width": 150,
-              "name": "creator",
+              "name": "author",
               "displayName": "tasks.comp.notes.table.columns.creator",
               "headerCellFilter": "translate",
               "enableCellEdit": false,
@@ -789,6 +816,20 @@
       ]
     },
     {
+      "id": "parentdocs",
+      "title": "Parent Documents",
+      "icon": "fa fa-file",
+      "enabled": true,
+      "type": "empty",
+      "docTree": {
+        "email": {
+          "subjectRegex": "(.*)\\$([^\\s]+)",
+          "objectTypeRegexGroup": 1,
+          "objectNumberRegexGroup": 2
+        }
+      }
+    },
+    {
       "id": "attachments",
       "title": "Attachments",
       "icon": "fa fa-file",
@@ -956,7 +997,7 @@
           "name": "eventType",
           "displayName": "tasks.comp.history.table.columns.eventType",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div ng-if='row.entity.eventDescription'>{{row.entity.eventDescription}}</div><div ng-if='!row.entity.eventDescription'>{{row.entity.eventType}}</div>"
+          "cellTemplate": "<div> <span ng-if='row.entity.parentObjectType'>{{('common.objectTypes.'+row.entity.parentObjectType) | translate}} Updated - </span> {{row.entity.eventDescription || row.entity.eventType}}</div>"
         },
         {
           "name": "eventDate",
@@ -1044,10 +1085,9 @@
     {
       "id": "userSearch",
       "title": "Select users",
-      "enabled": "true",
-      "multi": true,
-      "type": "grid",
       "enableFiltering": false,
+      "multiSelect": false,
+      "showFacets": false,
       "columnDefs": [
         {
           "name": "name",
@@ -1080,6 +1120,43 @@
       "start": 0
     },
     {
+      "id": "objectSearch",
+      "title": "Select object",
+      "enableFiltering": false,
+      "multiSelect": false,
+      "showFacets": false,
+      "columnDefs": [
+        {
+          "name": "name",
+          "displayName": "tasks.objectSearch.objectGridColumns.name",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "object_type_s",
+          "displayName": "tasks.objectSearch.objectGridColumns.type",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "title_parseable",
+          "displayName": "tasks.objectSearch.objectGridColumns.title",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "creator_full_name_lcs",
+          "displayName": "tasks.objectSearch.objectGridColumns.username",
+          "headerCellFilter": "translate"
+        }
+      ],
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
+      "start": 0
+    },
+    {
       "id": "referenceSearchGrid",
       "title": "Reference Search",
       "enabled": "true",
@@ -1088,7 +1165,7 @@
       "emptySearch": false,
       "hideTypeahead": true,
       "showFacets": false,
-      "searchFilter": "\"Object Type\": COMPLAINT|CASE_FILE",
+      "searchFilter": "\"Object Type\": COMPLAINT|CASE_FILE|TASK|FILE",
       "columnDefs": [
         {
           "name": "object_id_s",
@@ -1205,7 +1282,90 @@
       },
       "userSearch": {
         "userFacetFilter": "\"Object Type\": USER"
+      },
+      "objectSearch": {
+        "objectFacetFilter": "\"Object Type\": "
       }
+    },
+    {
+      "id": "approvalrouting",
+      "title": "Approval Routing",
+      "icon": "fa fa-sort-amount-desc",
+      "addNewTooltip": "tasks.comp.approvalRouting.addNewTooltip",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": false,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
+      "columnDefs": [
+        {
+          "name": "order",
+          "displayName": "",
+          "headerCellFilter": "translate",
+          "enableSorting": false,
+          "enableColumnMenu": false,
+          "cellEditableCondition": false,
+          "width": "50",
+          "cellTemplate": ""
+        },
+        {
+          "name": "fullName",
+          "displayName": "tasks.comp.approvalRouting.table.columns.fullName",
+          "cellEditableCondition": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "act",
+          "cellEditableCondition": false,
+          "width": "70",
+          "headerCellTemplate": "<span></span>",
+          "cellTemplate": ""
+        }
+      ],
+      "userSearch": {
+        "userFacetFilter": "\"Object Type\": USER"
+      }
+    },
+    {
+      "id": "pastapprovals",
+      "title": "Past Approvals",
+      "icon": "fa fa-sort-amount-desc",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": false,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
+      "columnDefs": [
+        {
+          "name": "approvalDate",
+          "displayName": "tasks.comp.pastApprovals.table.columns.approvalDate",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.approvalDate | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>",
+          "cellEditableCondition": false
+        },
+        {
+          "name": "approverId",
+          "displayName": "tasks.comp.pastApprovals.table.columns.approverId",
+          "headerCellFilter": "translate",
+          "cellEditableCondition": false
+        },
+        {
+          "name": "approverDecision",
+          "displayName": "tasks.comp.pastApprovals.table.columns.approverDecision",
+          "headerCellFilter": "translate",
+          "cellEditableCondition": false
+        }
+      ]
     }
   ]
 }
