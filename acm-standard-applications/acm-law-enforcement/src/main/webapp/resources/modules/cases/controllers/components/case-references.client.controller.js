@@ -83,6 +83,7 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
                                 filter += "&-id:" + data.targetId + "-" + data.targetType;
                             }
                         }
+                        filter += "&-parent_ref_s:" + $scope.objectInfo.id + "-CASE_FILE";
                         return filter.replace(/&/gi, '%26');
                     },
                     $config: function () {

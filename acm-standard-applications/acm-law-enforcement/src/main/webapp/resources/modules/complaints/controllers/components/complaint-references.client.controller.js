@@ -81,6 +81,7 @@ angular.module('complaints').controller('Complaints.ReferencesController', ['$sc
                                 filter += "&-id:" + data.targetId + "-" + data.targetType;
                             }
                         }
+                        filter += "&-parent_ref_s:" + $scope.objectInfo.complaintId + "-COMPLAINT";
                         return filter.replace(/&/gi, '%26');
                     },
                     $config: function () {

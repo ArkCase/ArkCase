@@ -74,6 +74,7 @@ angular.module('tasks').controller('Tasks.ReferencesController', ['$scope', '$st
                                 filter += "&-id:" + data.targetId + "-" + data.targetType;
                             }
                         }
+                        filter += "&-parent_ref_s:" + $scope.objectInfo.taskId + "-TASK";
                         return filter.replace(/&/gi, '%26');
                     },
                     $config: function () {
