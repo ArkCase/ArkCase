@@ -8,6 +8,7 @@ public class LdapGroup
 {
     private String groupName;
     private String distinguishedName;
+    private String sortableValue;
     private String[] memberDistinguishedNames = {};
     private List<AcmUser> users = new ArrayList<>();
     private Set<String> memberOfGroups;
@@ -60,5 +61,15 @@ public class LdapGroup
     public void setMemberOfGroups(Set<String> memberOfGroups)
     {
         this.memberOfGroups = memberOfGroups;
+    }
+
+    public String getSortableValue()
+    {
+        return sortableValue;
+    }
+
+    public void setSortableValue(String sortableValue)
+    {
+        this.sortableValue = sortableValue;
     }
 }

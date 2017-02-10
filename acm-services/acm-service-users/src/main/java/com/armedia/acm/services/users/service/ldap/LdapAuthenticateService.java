@@ -42,11 +42,11 @@ public class LdapAuthenticateService
 
     public void changeUserPassword(String userName, String password)
     {
-        log.debug("Changing password for user: {}", userName);
+        log.debug("Changing password for user:{}", userName);
         LdapTemplate ldapTemplate = getLdapDao().buildLdapTemplate(getLdapAuthenticateConfig());
         AcmUser acmUser = userDao.findByUserId(userName);
         ldapUserDao.changeUserPassword(acmUser.getDistinguishedName(), password, ldapTemplate, getLdapAuthenticateConfig());
-        log.debug("Password changed successfully for DN: {}", acmUser.getDistinguishedName());
+        log.debug("Password changed successfully for user:{}", userName);
     }
 
     public SpringLdapDao getLdapDao()
