@@ -5,7 +5,6 @@ import com.armedia.acm.services.users.model.LdapGroup;
 import com.armedia.acm.services.users.model.ldap.AcmGroupContextMapper;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.AcmUserGroupsContextMapper;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +14,6 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.AggregateDirContextProcessor;
 
 import javax.naming.directory.SearchControls;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,7 +39,7 @@ public class CustomPagedLdapDao implements SpringLdapDao
         }
         AggregateDirContextProcessor sortedAndPaged = buildSortedAndPagesProcessor(syncConfig, syncConfig.getAllUsersSortingAttribute());
 
-        AcmUserGroupsContextMapper userGroupsContextMapper = new AcmUserGroupsContextMapper();
+        AcmUserGroupsContextMapper userGroupsContextMapper = new AcmUserGroupsContextMapper(syncConfig);
         userGroupsContextMapper.setUserIdAttributeName(syncConfig.getUserIdAttributeName());
         userGroupsContextMapper.setMailAttributeName(syncConfig.getMailAttributeName());
         String searchFilter = syncConfig.getAllUsersFilter();
@@ -61,8 +59,7 @@ public class CustomPagedLdapDao implements SpringLdapDao
                 if (skipFirst)
                 {
                     acmUsers.addAll(found.subList(1, found.size()));
-                }
-                else
+                } else
                 {
                     acmUsers.addAll(found);
                 }
@@ -74,8 +71,7 @@ public class CustomPagedLdapDao implements SpringLdapDao
                 {
                     skipFirst = true;
                     AcmUser lastFound = found.get(found.size() - 1);
-                    String uid = lastFound.getUserId();
-                    searchFilter = String.format(syncConfig.getAllUsersPageFilter(), uid);
+                    searchFilter = String.format(syncConfig.getAllUsersPageFilter(), lastFound.getSortableValue());
 
                     // A change to the search filter requires us to rebuild the search controls... even though
                     // the controls will have the same values as before.
@@ -116,12 +112,12 @@ public class CustomPagedLdapDao implements SpringLdapDao
     {
         SearchControls searchControls = new SearchControls();
         searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-        searchControls.setReturningAttributes(new String[] {
+        searchControls.setReturningAttributes(new String[]{
                 "cn",
-                "memberOf" });
+                "memberOf"});
 
         AggregateDirContextProcessor sortedAndPaged = buildSortedAndPagesProcessor(config, config.getGroupsSortingAttribute());
-        AcmGroupContextMapper acmGroupContextMapper = new AcmGroupContextMapper();
+        AcmGroupContextMapper acmGroupContextMapper = new AcmGroupContextMapper(config);
 
         boolean searchGroups = true;
         boolean skipFirst = false;
@@ -138,8 +134,7 @@ public class CustomPagedLdapDao implements SpringLdapDao
             if (skipFirst)
             {
                 acmGroups.addAll(found.subList(1, found.size()));
-            }
-            else
+            } else
             {
                 acmGroups.addAll(found);
             }
@@ -151,9 +146,7 @@ public class CustomPagedLdapDao implements SpringLdapDao
             {
                 skipFirst = true;
                 LdapGroup lastFound = found.get(found.size() - 1);
-                String cn = lastFound.getGroupName();
-
-                searchFilter = String.format(config.getGroupSearchPageFilter(), cn);
+                searchFilter = String.format(config.getGroupSearchPageFilter(), lastFound.getSortableValue());
 
                 // A change to the search filter requires us to rebuild the search controls... even though
                 // the controls will have the same values as before.

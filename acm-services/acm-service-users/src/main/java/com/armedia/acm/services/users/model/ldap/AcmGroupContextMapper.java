@@ -9,6 +9,12 @@ import java.util.Set;
 
 public class AcmGroupContextMapper implements ContextMapper
 {
+    AcmLdapSyncConfig acmLdapSyncConfig;
+
+    public AcmGroupContextMapper(AcmLdapSyncConfig acmLdapSyncConfig)
+    {
+        this.acmLdapSyncConfig = acmLdapSyncConfig;
+    }
 
     @Override
     public LdapGroup mapFromContext(Object ctx)
@@ -20,6 +26,7 @@ public class AcmGroupContextMapper implements ContextMapper
         // Throughout the application we use the group names in upper case only, so converting here at mapping level
         group.setGroupName(groupName.toUpperCase());
         group.setDistinguishedName(adapter.getDn().toString());
+        group.setSortableValue(MapperUtils.getAttribute(adapter, acmLdapSyncConfig.getGroupsSortingAttribute()));
 
         Set<String> potentialParentGroups = new HashSet<>();
         if (adapter.attributeExists("memberOf"))

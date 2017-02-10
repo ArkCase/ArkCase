@@ -7,9 +7,6 @@
 
     <task:scheduler id="ldapSyncTaskScheduler" pool-size="1"/>
 
-    <bean id="acmUserGroupsContextMapper" class="com.armedia.acm.services.users.model.ldap.AcmUserGroupsContextMapper"/>
-    <bean id="acmGroupContextMapper" class="com.armedia.acm.services.users.model.ldap.AcmGroupContextMapper"/>
-
     <bean id="springLdapPagedDao" class="com.armedia.acm.services.users.dao.ldap.SpringLdapPagedDao"/>
 
     <bean id="customPagedLdapDao" class="com.armedia.acm.services.users.dao.ldap.CustomPagedLdapDao"/>

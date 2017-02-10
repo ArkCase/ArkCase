@@ -23,11 +23,18 @@ public class AcmUserGroupsContextMapper implements ContextMapper
             "memberOf",
             "sAMAccountName",
             "userPrincipalName",
-            "uid"};
+            "uid",
+            "uidNumber"};
 
     private Logger log = LoggerFactory.getLogger(getClass());
     private String userIdAttributeName;
     private String mailAttributeName;
+    private AcmLdapSyncConfig acmLdapSyncConfig;
+
+    public AcmUserGroupsContextMapper(AcmLdapSyncConfig acmLdapSyncConfig)
+    {
+        this.acmLdapSyncConfig = acmLdapSyncConfig;
+    }
 
     @Override
     public AcmUser mapFromContext(Object ctx)
@@ -48,7 +55,7 @@ public class AcmUserGroupsContextMapper implements ContextMapper
         // because of how the LDAP query paging works, we can no longer return null for the disabled accounts.
         // so we return them, but mark them DISABLED. The DAO will filter them.
         String uac = MapperUtils.getAttribute(adapter, "userAccountControl");
-        if ( isUserDisabled(uac) )
+        if (isUserDisabled(uac))
         {
             log.debug("User '{}' is disabled and won't be synced", fullName);
             user.setUserState("DISABLED");
@@ -59,16 +66,16 @@ public class AcmUserGroupsContextMapper implements ContextMapper
 
         user.setLastName(MapperUtils.getAttribute(adapter, "sn"));
         user.setFirstName(MapperUtils.getAttribute(adapter, "givenName"));
-
         user.setUserId(MapperUtils.getAttribute(adapter, getUserIdAttributeName()));
         user.setMail(MapperUtils.getAttribute(adapter, getMailAttributeName()));
-        user.setDistinguishedName(adapter.getDn().toString());
+        user.setDistinguishedName(String.format("%s,%s", adapter.getDn().toString(), acmLdapSyncConfig.getBaseDC()) );
         user.setsAMAccountName(MapperUtils.getAttribute(adapter, "samAccountName"));
         user.setUserPrincipalName(MapperUtils.getAttribute(adapter, "userPrincipalName"));
         user.setUid(MapperUtils.getAttribute(adapter, "uid"));
+        user.setSortableValue(MapperUtils.getAttribute(adapter, acmLdapSyncConfig.getAllUsersSortingAttribute()));
 
         Set<String> ldapGroupsForUser = new HashSet<>();
-        if ( adapter.attributeExists("memberOf") )
+        if (adapter.attributeExists("memberOf"))
         {
             String[] groupsUserIsMemberOf = adapter.getStringAttributes("memberOf");
             ldapGroupsForUser = MapperUtils.arrayToSet(groupsUserIsMemberOf, MapperUtils.MEMBER_TO_COMMON_NAME_UPPERCASE);

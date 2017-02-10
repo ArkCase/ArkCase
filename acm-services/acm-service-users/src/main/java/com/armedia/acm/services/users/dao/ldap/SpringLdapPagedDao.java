@@ -70,7 +70,7 @@ public class SpringLdapPagedDao implements SpringLdapDao
             searchControls.setReturningAttributes(allAttributes);
         }
 
-        AcmUserGroupsContextMapper userGroupsContextMapper = new AcmUserGroupsContextMapper();
+        AcmUserGroupsContextMapper userGroupsContextMapper = new AcmUserGroupsContextMapper(syncConfig);
         userGroupsContextMapper.setUserIdAttributeName(syncConfig.getUserIdAttributeName());
         userGroupsContextMapper.setMailAttributeName(syncConfig.getMailAttributeName());
 
@@ -107,7 +107,7 @@ public class SpringLdapPagedDao implements SpringLdapDao
         searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
         searchControls.setReturningAttributes(new String[]{"cn", "memberOf"});
 
-        AcmGroupContextMapper acmGroupContextMapper = new AcmGroupContextMapper();
+        AcmGroupContextMapper acmGroupContextMapper = new AcmGroupContextMapper(syncConfig);
         String searchBase = syncConfig.getGroupSearchBase();
         List<LdapGroup> acmGroups = fetchLdapPaged(template, searchBase, syncConfig.getGroupSearchFilter(),
                 searchControls, syncConfig.getSyncPageSize(), acmGroupContextMapper);

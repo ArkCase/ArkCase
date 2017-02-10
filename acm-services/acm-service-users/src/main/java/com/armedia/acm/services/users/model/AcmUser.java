@@ -75,6 +75,9 @@ public class AcmUser implements Serializable, AcmLdapUser
     private String uid;
 
     @Transient
+    private String sortableValue;
+
+    @Transient
     private Set<String> ldapGroups = new HashSet<>();
 
     @PrePersist
@@ -333,13 +336,24 @@ public class AcmUser implements Serializable, AcmLdapUser
         this.distinguishedName = distinguishedName;
     }
 
+    public String getUid()
+    {
+        return uid;
+    }
+
     public void setUid(String uid)
     {
         this.uid = uid;
     }
 
-    public String getUid()
+    @JsonIgnore
+    public String getSortableValue()
     {
-        return uid;
+        return sortableValue;
+    }
+
+    public void setSortableValue(String sortableValue)
+    {
+        this.sortableValue = sortableValue;
     }
 }
