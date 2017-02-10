@@ -131,8 +131,8 @@ angular.module('admin').service('Admin.CMTemplatesService', ['$http', 'Upload',
          *
          * @returns {String} full download path
          */
-        function downloadByFilename(fileName) {
-            return 'api/latest/plugin/admin/template?fileName=' + fileName;
+        function downloadByFilename(downloadFileName) {
+            return 'api/latest/plugin/admin/template?downloadFileName=' + downloadFileName;
         };
 
         /**

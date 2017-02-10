@@ -249,6 +249,7 @@ var owningGroup = element(by.xpath(Objects.casepage.locators.owningGroup));
 var assigneeNameModelInput = element(by.model(Objects.basepage.locators.assigneeNameModelInput));
 var treeSortersBtn = element(by.css(Objects.basepage.locators.treeSortersBtn));
 var sortByIdDesc = element(by.xpath(Objects.basepage.locators.sortByIdDesc));
+var objectStatus = element(by.xpath(Objects.basepage.locators.objectStatus));
 
 var BasePage = function() {
 
@@ -1318,7 +1319,7 @@ var BasePage = function() {
                 browser.sleep(5000);
                 browser.wait(EC.visibilityOf(element(by.repeater(Objects.casepage.locators.timesheetTableRow))), 30000, "Costsheet table row is not visible").then(function() {
                     element.all(by.repeater(Objects.casepage.locators.timesheetTableRow)).then(function(items) {
-                        expect(items.length).toBe(6, "Cost sheet is not displayed in the cost table");
+                        expect(items.length).not.toBe(0, "Cost sheet is not displayed in the cost table");
                     });
                 });
             });
@@ -1326,7 +1327,7 @@ var BasePage = function() {
     }
     this.clickModuleCasesFiles = function() {
         browser.wait(EC.visibilityOf(element(by.css(Objects.timetrackingPage.locators.caseFileModule))), 30000, "Case module is not visible").then(function() {
-            browser.executeScript('arguments[0].click()', caseFileModule).then(function () {
+            browser.executeScript('arguments[0].click()', caseFileModule).then(function() {
                 browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesTitle))), 30000, "Case title is not visible");
             })
 
@@ -1335,7 +1336,7 @@ var BasePage = function() {
     }
     this.clickModuleComplaints = function() {
         browser.wait(EC.visibilityOf(element(by.css(Objects.timetrackingPage.locators.complaintsModule))), 30000, "Complaints module is not visible").then(function() {
-            browser.executeScript('arguments[0].click()', complaintsModule).then(function () {
+            browser.executeScript('arguments[0].click()', complaintsModule).then(function() {
                 browser.wait(EC.presenceOf(element(by.xpath(Objects.complaintPage.locators.complaintTitleLink))), 30000, "Complaint title is not present in DOM").then(function() {
                     browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.complaintTitleLink))), 30000, "Complaint title is not visible");
                 })
@@ -1502,7 +1503,9 @@ var BasePage = function() {
         return this;
     };
     this.returnDetailsTextArea = function() {
-        return detailsTextArea.getText();
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.detailsTextArea))), 30000, "Details text area is not visible").then(function() {
+            return detailsTextArea.getText();
+        });
     };
     this.clickInsertLinkInDetails = function() {
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.detailsLinkBtn))), 30000, "Details link button is not visible").then(function() {
@@ -1538,7 +1541,7 @@ var BasePage = function() {
         var completexPath = xPathStr + link + "']";
         var el = element(by.xpath(completexPath));
         browser.wait(EC.visibilityOf(element(by.xpath(completexPath))), 30000, "Link " + link + " is not visible").then(function() {
-            el.click();
+            browser.executeScript('arguments[0].click()', el);
         });
         return this;
     }
@@ -1684,8 +1687,10 @@ var BasePage = function() {
         return this;
     };
     this.clickDocTreeExpand = function() {
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.docTreeExpand))), 30000, "Expand doc tree element is not visible").then(function() {
-            docTreeExpand.click();
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.basepage.locators.docTreeExpand))), 30000, "Expand doc tree element is not visible").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.docTreeExpand))), 30000, "Expand doc tree element is not visible").then(function() {
+                docTreeExpand.click();
+            });
         });
         return this;
     };
@@ -2056,7 +2061,15 @@ var BasePage = function() {
             });
         });
         return this;
-    }
+    };
+
+    this.waitForComplaintID = function() {
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.caseID))), 60000, "Case ID is not present").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.caseID))), 60000, "Case ID is not displayed");
+        });
+        return this;
+    };
+
 
     this.clickTreeSortersBtn = function() {
 
@@ -2071,6 +2084,48 @@ var BasePage = function() {
         return sortByIdDesc.getText();
     }
 
+    this.searchForObject = function(object) {
+
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchForUserInput))), 10000, "Search for object input is not displayed").then(function() {
+            searchForUserInput.sendKeys(object).then(function() {
+                searchForUserBtn.click().then(function() {
+                    browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchedUserName))), 30000, "Searched object is not displayed").then(function() {
+                        searchedUser.click().then(function() {
+                            okBtn.click();
+                        });
+                    });
+                });
+            });
+        });
+        return this;
+    }
+
+    this.clickOnTask = function(type) {
+        var xPathStart = "//a[contains(text(),'";
+        var completexPath;
+        switch (type) {
+            case "Automatic Task on Creation":
+                completexPath = xPathStart + "Change Case Status']";
+                break;
+            case "Automatic Task on Change Status":
+                completexPath = xPathStart + "Review']";
+                break;
+            case "Ad hoc task":
+                completexPath = xPathStart + "Ad hoc task']";
+                break;
+            default:
+                completexPath = xPathStart + "Ad hoc task']";
+                break;
+        }
+        var el = element(by.xpath(completexPath));
+        el.click();
+        return this;
+
+    }
+
+    this.returnObjectStatus = function() {
+        return objectStatus.getText();
+    }
 }
 
 module.exports = new BasePage();
