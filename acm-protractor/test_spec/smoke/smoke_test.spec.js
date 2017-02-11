@@ -208,7 +208,7 @@ describe('edit user profile page', function() {
 
             });
         });
-   });
+  });
 
     describe('case page tests', function () {
 
@@ -224,7 +224,7 @@ describe('edit user profile page', function() {
 
         });
 
-        // Create New Case, make sure the new object is created
+        //Create New Case, make sure the new object is created
 
         it('should create new case ', function () {
 
@@ -311,9 +311,9 @@ describe('edit user profile page', function() {
 
         });
 
-        // close case and make sure the files are declared as records on the Alfresco site
+        //close case and make sure the files are declared as records on the Alfresco site
 
-        it('should create new case and change case status to closed, verify the automated task in tasks table and approve', function () {
+        it('should open case and change case status to closed, verify the automated task in tasks table and approve', function () {
 
             casePage.clickModuleCasesFiles();
             casePage.waitForCaseTitle();
@@ -321,8 +321,7 @@ describe('edit user profile page', function() {
             casePage.clickChangeCaseBtn();
             casePage.switchToIframes().changeCaseSubmit(Objects.casepage.data.approverSamuel, "Closed");
             casePage.clickTasksLinkBtn().waitForTasksTable();
-            expect(casePage.returnAutomatedTask()).toContain(Objects.casepage.data.automatedTaskTitle);
-            casePage.clickTaskTitle();
+            casePage.clickOnTask("Automatic Task on Change Case Status");
             taskPage.clickApproveBtn();
             expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateClosed, 'The task state should be CLOSED');
         });
@@ -362,8 +361,9 @@ describe('edit user profile page', function() {
 
             casePage.clickModuleCasesFiles();
             casePage.clickExpandFancyTreeTopElementAndSubLink("Documents");
-            casePage.rightClickRootFolder().addCorrespondence("case", "Notice of Investigation");
-            casePage.validateDocGridData(true, "Notice of Investigation", ".docx", "Notice of Investigation", utils.returnToday("/"), utils.returnToday("/"), userPage.returnUserNavigationProfile(), "1.0", "ACTIVE");
+            casePage.rightClickRootFolder().addCorrespondence("case", "Clearance Granted");
+            casePage.verifyTheNotificationMessage("Case File ", "The notification message after adding document is not correct");
+            casePage.validateDocGridData(true, "Clearance Granted", ".docx", "Clearance Granted", utils.returnToday("/"), utils.returnToday("/"), Objects.taskspage.data.assigneeSamuel, "1.0", "ACTIVE");
 
         });
 
@@ -375,7 +375,7 @@ describe('edit user profile page', function() {
             casePage.clickExpandFancyTreeTopElementAndSubLink("Documents");
             casePage.clickDocTreeExpand().rightClickFileTitle().clickDocAction("Open");
             casePage.moveToTab().switchToDocIframes();
-            casePage.returnDoc();
+            casePage.returnDocViewOpened(true);
 
         });
 
@@ -389,7 +389,7 @@ describe('edit user profile page', function() {
             casePage.sendEmail(Objects.basepage.data.email);
         });
 
-    });
+   });
     describe('Complaint page tests ', function () {
 
         beforeEach(function (done) {
@@ -478,6 +478,18 @@ describe('edit user profile page', function() {
             complaintPage.sendEmail(Objects.basepage.data.email);
         });
 
+          //Add a document to document management
+
+           it('should open complaint and verify adding new document', function () {
+
+            complaintPage.clickModuleComplaints();
+            complaintPage.clickExpandFancyTreeTopElementAndSubLink("Documents");
+            complaintPage.rightClickRootFolder();
+            complaintPage.addDocument("Notice of Investigation");
+            complaintPage.validateDocGridData(true, "ArkCaseTesting", ".docx", "Notice of Investigation", utils.returnToday("/"), utils.returnToday("/"), userPage.returnUserNavigationProfile(), "1.0", "ACTIVE");
+
+           });
+
         //Close complaint (open case) and approve task and make sure the new case was created
 
         it('should navigate to complaints and close complaint with Open Investigation, approve automatic generated task and validate created case', function () {
@@ -487,8 +499,7 @@ describe('edit user profile page', function() {
             complaintPage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Tasks");
             complaintPage.waitForTasksTable();
             complaintPage.clickRefreshButton();
-            expect(complaintPage.returnAutomatedTask()).toContain(Objects.complaintPage.data.automaticTaskNameCloseComplaint, "Automated task name is not correct");
-            complaintPage.clickTaskTitle();
+            complaintPage.clickOnTask("Automatic Task on Close Complaint");
             taskPage.clickApproveBtn();
             expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateClosed, 'The task state should be CLOSED');
             complaintPage.clickExpandFancyTreeTopElementAndSubLink("Details");
@@ -514,21 +525,11 @@ describe('edit user profile page', function() {
             expect(complaintPage.returnTaskTableStatus()).toEqual("ACTIVE", "Task status is not correct in grid");
         });
 
-        //Add a document to document management
 
-        it('should create new complaint and verify adding new document', function () {
-
-            complaintPage.clickModuleComplaints();
-            complaintPage.clickExpandFancyTreeTopElementAndSubLink("Documents");
-            complaintPage.rightClickRootFolder().addDocument("Notice of Investigation");
-            utils.uploadDocx();
-            complaintPage.validateDocGridData(true, "ArkCaseTesting", ".docx", "Notice of Investigation", utils.returnToday("/"), utils.returnToday("/"), userPage.returnUserNavigationProfile(), "1.0", "ACTIVE");
-
-        });
 
         //Add details on new created complaint
 
-        it('Verify text details add verify if is saved', function () {
+        it('Add text details add verify if is saved', function () {
 
             complaintPage.clickModuleComplaints();
             complaintPage.clickExpandFancyTreeTopElementAndSubLink("Details");
@@ -555,13 +556,13 @@ describe('edit user profile page', function() {
 
         });
 
-        //Click on the Notification Module and verify that description date/time is equal to modified column date/time
+        //Click on the Notification Module and verify that is succesfully opened
 
         it('should verify that notifications module is successfully opened', function() {
             notificationPage.navigateToPage(Objects.notificationPage.data.notificationsTitle);
             notificationPage.vaidateNotificationTitle();
         });
-    });
+     });
     describe('report page tests', function() {
 
         beforeEach(function(done) {
@@ -576,7 +577,7 @@ describe('edit user profile page', function() {
 
         });
 
-        // Run each Report
+       // Run each Report
 
         it('should navigate to case files and verify that case is displayed in case summary drafts report', function() {
 
@@ -591,7 +592,7 @@ describe('edit user profile page', function() {
             reportPage.runReport("CASE SUMMARY", "Draft", createdDate, createdDate);
             reportPage.switchToReportframes();
             reportPage.validateCaseReportTitles(Objects.reportPage.data.CaseSummaryReportTitleName, Objects.reportPage.data.CaseSummaryColumn1Title, Objects.reportPage.data.CaseSummaryColumn2Title, Objects.reportPage.data.CaseSummaryColumn3Title, Objects.reportPage.data.CaseSummaryColumn4Title, Objects.reportPage.data.CaseSummaryColumn5Title, Objects.reportPage.data.CaseSummaryColumn6Title, Objects.reportPage.data.CaseSummaryColumn7Title);
-            reportPage.validateCaseReportValues(caseid, caseStatus, Objects.casepage.data.caseTitle, createdDate, priority, dueDate, caseType);
+            reportPage.validateCaseReportValues(caseid, "DRAFT", Objects.casepage.data.caseTitle, createdDate, priority, dueDate, caseType);
             reportPage.switchToDefaultContent();
 
         });
@@ -607,7 +608,7 @@ describe('edit user profile page', function() {
             reportPage.runReport("COMPLAINT REPORT", "Draft", createdDate, createdDate);
             reportPage.switchToReportframes();
             reportPage.validateComplaintReportTitles(Objects.reportPage.data.ComplaintReportTitleName, Objects.reportPage.data.ComplaintReportColumn1Title, Objects.reportPage.data.CaseSummaryColumn2Title, Objects.reportPage.data.ComplaintReportColumn3Title, Objects.reportPage.data.ComplaintReportColumn4Title, Objects.reportPage.data.ComplaintReportColumn5Title, Objects.reportPage.data.ComplaintReportColumn6Title);
-            reportPage.validateComplaintReportValues(complaintTitle, "Draft", type, priority, createdDate, createdDate);
+            reportPage.validateComplaintReportValues(complaintTitle, "DRAFT", type, priority, createdDate, createdDate);
             reportPage.switchToDefaultContent();
 
         });
@@ -624,8 +625,14 @@ describe('edit user profile page', function() {
             var closedReferExternal = reportPage.returnCDCReferExternalValue();
             reportPage.switchToDefaultContent().navigateToPage("Complaints").waitForComplaintID();
             complaintPage.clickCloseComplaint().switchToIframes().closeComplaint("No Further Action", Objects.complaintPage.data.description, Objects.complaintPage.data.approver);
+            complaintPage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Tasks");
+            complaintPage.waitForTasksTable();
+            complaintPage.clickRefreshButton();
+            complaintPage.clickOnTask("Automatic Task on Close Complaint");
+            taskPage.clickApproveBtn();
+            expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateClosed, 'The task state should be CLOSED');
             complaintPage.navigateToPage("Reports");
-            reportPage.runReport("COMPLAINT DISPOSITION COUNT", "Draft", utils.returnToday("/"), utils.returnToday("/")).switchToReportframes();
+            reportPage.runReport("COMPLAINT DISPOSITION COUNT", "", utils.returnToday("/"), utils.returnToday("/")).switchToReportframes();
             reportPage.validateCDCReportValues(closedAddToExistingCase.toString(), (closedNoFurtherAction + 1).toString(), closedOpenInvestigation.toString(), closedReferExternal.toString());
             reportPage.switchToDefaultContent();
         });
