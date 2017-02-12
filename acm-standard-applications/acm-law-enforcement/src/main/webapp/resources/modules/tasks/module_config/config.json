@@ -426,7 +426,7 @@
             },
             {
               "width": 150,
-              "name": "creator",
+              "name": "author",
               "displayName": "tasks.comp.notes.table.columns.creator",
               "headerCellFilter": "translate",
               "enableCellEdit": false,

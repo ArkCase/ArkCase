@@ -7,6 +7,7 @@
 
     <bean id="acmParticipantService" class="com.armedia.acm.services.participants.service.AcmParticipantService">
         <property name="participantDao" ref="acmParticipantDao"/>
+        <property name="participantsBusinessRule" ref="participantsBusinessRule"/>
     </bean>
 
     <bean id="acmParticipantEventPublisher"
@@ -33,8 +34,14 @@
         <property name="pluginProperties" ref="participantProperties"/>
     </bean>
 
-    <bean id="participantToSolrTransformer" class="com.armedia.acm.services.participants.service.ParticipantToSolrTransformer">
+    <bean id="participantToSolrTransformer"
+          class="com.armedia.acm.services.participants.service.ParticipantToSolrTransformer">
         <property name="acmParticipantDao" ref="acmParticipantDao"/>
         <property name="userDao" ref="userJpaDao"/>
+    </bean>
+
+    <bean id="participantsBusinessRule"
+          class="com.armedia.acm.services.participants.service.ParticipantsBusinessRule">
+        <property name="ruleSpreadsheetFilename" value="drools-participant-assignment-rules.xlsx"/>
     </bean>
 </beans>

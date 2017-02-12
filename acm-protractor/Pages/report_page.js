@@ -95,6 +95,7 @@ var ReportPage = function() {
             this.selectState(state);
         }
         this.clickGenerateReport();
+        return this;
     };
 
     this.returnCDCDispositionTitle = function () {
@@ -138,7 +139,9 @@ var ReportPage = function() {
         browser.ignoreSynchronization = true;
         browser.wait(EC.visibilityOf(element(by.name(Objects.reportPage.locators.reportsIFrame))), 120000, "Reports iframe is not visible");
             browser.switchTo().frame(browser.driver.findElement(by.name("reports-iframe"))).then(function () {
-                browser.switchTo().frame(browser.driver.findElement(by.id("reportContent")));
+                browser.wait(EC.visibilityOf(element(by.id("reportContent"))), 120000, "Reports content is not visible").then(function () {
+                    browser.switchTo().frame(browser.driver.findElement(by.id("reportContent")));
+                })
             });
         return this;
     };
@@ -211,10 +214,10 @@ var ReportPage = function() {
     this.validateCDCReportValues = function (ATECNumber, NFANumber, OINumber, RENumber) {
         browser.wait(EC.presenceOf(element(by.xpath(Objects.reportPage.locators.CDCAddToExistingCaseValue))), 30000, "CDC Add to  exisiting case value is not present in DOM").then(function() {
             browser.wait(EC.visibilityOf(element(by.xpath(Objects.reportPage.locators.CDCAddToExistingCaseValue))), 30000, "CDC Add to existing case value is not visible").then(function() {
-                expect(this.returnCDCAddToExistingCaseValue()).toEqual(ATECNumber);
-                expect(this.returnCDCNoFurtherActionValue()).toEqual(NFANumber);
-                expect(this.returnCDCOpenInvestigationValue()).toEqual(OINumber);
-                expect(this.returnCDCReferExternalValue()).toEqual(RENumber);
+                expect(CDCAddToExistingCaseValue.getText()).toEqual(ATECNumber);
+                expect(CDCNoFurtherActionValue.getText()).toEqual(NFANumber);
+                expect(CDCOpenInvestigationValue.getText()).toEqual(OINumber);
+                expect(CDCReferExternalValue.getText()).toEqual(RENumber);
             });
         })
     };

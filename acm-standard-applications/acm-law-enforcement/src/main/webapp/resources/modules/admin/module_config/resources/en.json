@@ -295,16 +295,20 @@
     "correspondenceManagement": {
       "title": "Correspondence Management",
       "templates": "Correspondence Templates",
-      "templates.addNewTemplate": "Map Fields to Values",
-      "templates.addTemplate": "Map Fields to Values",
-      "templates.editTemplate": "Edit Field Mapping",
+      "templates.addNewTemplate": "Upload Template",
+      "templates.addTemplate": "Add Template",
+      "templates.editTemplate": "Edit Template",
       "templates.grid": {
         "id": "ID",
         "title": "Title",
+        "displayName": "Display Name",
         "path": "Path",
         "created": "Created",
         "modified": "Modified",
-        "creator": "Creator"
+        "creator": "Creator",
+        "modifier": "Modifier",
+        "activated": "Active",
+        "queryType": "Object Type"
       },
       "templates.fieldNames.label": "Map fields to values from the template",
       "templates.querySelect": {
@@ -319,9 +323,10 @@
       },
       "templates.modal": {
         "objectTypes.label": "Object Types",
-        "querySelect.label": "Select Query",
+        "querySelect.label": "Query Select",
+        "displayName.label": "Display Name",
         "btnCancel.text": "Cancel",
-        "btnOk.text": "Map Fields"
+        "btnOk.text": "Save"
       }
     },
     "forms.defaultValue": "Select Target",

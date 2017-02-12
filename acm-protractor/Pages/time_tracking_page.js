@@ -4,7 +4,7 @@ var EC = protractor.ExpectedConditions;
 
 var newTimesheetLinkBtn = element(by.linkText(Objects.timetrackingPage.locators.newTimesheetLink));
 var timesheetTypeDropDown = element.all(by.xpath(Objects.timetrackingPage.locators.timesheetDropDown)).get(2);
-var chargeCodeDropDown = element.all(by.xpath(Objects.timetrackingPage.locators.timesheetDropDown)).get(3);
+var chargeCode = element(by.name(Objects.timetrackingPage.locators.chargeCode));
 var timetrackingTitle = element(by.xpath(Objects.timetrackingPage.locators.timetrackingTitle));
 var sundayInput = element(by.name(Objects.timetrackingPage.locators.sundayInput));
 var mondayInput = element(by.name(Objects.timetrackingPage.locators.mondayInput));
@@ -21,7 +21,7 @@ var nextWeekBtn = element(by.buttonText(Objects.timetrackingPage.locators.nextWe
 var periodInput = element(by.xpath(Objects.timetrackingPage.locators.periodInput));
 var timeTrackingDate = element(by.xpath(Objects.timetrackingPage.locators.timeTrackingDate));
 var chargeCodeAlertMessage = element(by.xpath(Objects.timetrackingPage.locators.chargeCodeAlertMessage));
-var timeTotal=element(by.name(Objects.timetrackingPage.locators.timeTotal));
+var timeTotal = element(by.name(Objects.timetrackingPage.locators.timeTotal));
 
 
 
@@ -38,40 +38,31 @@ var timeTrackingPage = function() {
         });
     }
 
-    this.submitTimesheetTable = function(type, code, hours) {
+    this.submitTimesheetTable = function(hours) {
 
-        var timesheetType = element(by.linkText(type));
-        var chargeCode = element(by.linkText(code));
-        browser.wait(EC.visibilityOf(element.all(by.xpath(Objects.timetrackingPage.locators.timesheetDropDown)).get(2)), 30000, "Timesheet drop down list is no visible").then(function() {
-            browser.sleep(5000);
-            timesheetTypeDropDown.click().then(function() {
-                browser.wait(EC.textToBePresentInElement((timesheetType), type), 10000, type + " is not present in timesheet type drop down list");
-            }).then(function() {
-                timesheetType.click();
-            }).then(function() {
-                chargeCodeDropDown.click();
-            }).then(function() {
-                browser.wait(EC.textToBePresentInElement((chargeCode), code), 10000, "The" + code + "is not present in the dropdown");
-            }).then(function() {
-                chargeCode.click();
-            }).then(function() {
-                sundayInput.click().clear().sendKeys(hours);
-            }).then(function() {
-                mondayInput.click().clear().sendKeys(hours);
-            }).then(function() {
-                tuesdayInput.click().clear().sendKeys(hours);
-            }).then(function() {
-                wednsdayInput.click().clear().sendKeys(hours);
-            }).then(function() {
-                thursdayInput.click().clear().sendKeys(hours);
-            }).then(function() {
-                fridayInput.click().clear().sendKeys(hours);
-            }).then(function() {
-                saturdayInput.click().clear().sendKeys(hours);
+        browser.wait(EC.presenceOf(element(by.name(Objects.timetrackingPage.locators.sundayInput))), 30000, "Sunday input is not present").then(function() {
+            browser.wait(EC.elementToBeClickable(element(by.name(Objects.timetrackingPage.locators.sundayInput))), 30000, "Sunday is not clickable");
+            sundayInput.click().clear().sendKeys(hours).then(function() {
+                mondayInput.click().clear().sendKeys(hours).then(function() {
+                    tuesdayInput.click().clear().sendKeys(hours).then(function() {
+                        wednsdayInput.click().clear().sendKeys(hours).then(function() {
+                            thursdayInput.click().clear().sendKeys(hours).then(function() {
+                                fridayInput.click().clear().sendKeys(hours).then(function() {
+                                    saturdayInput.click().clear().sendKeys(hours).then(function() {});
+                                });
+                            });
+                        });
+                    });
+                });
             });
         });
-
         return this;
+    }
+
+    this.clickChargeCode = function() {
+        browser.wait(EC.elementToBeClickable(element(by.name(Objects.timetrackingPage.locators.chargeCode))), 30000, "Charge Code field is not clickable").then(function() {
+            chargeCode.click();
+        });
     }
 
     this.clickSaveBtn = function() {

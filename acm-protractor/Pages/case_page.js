@@ -53,7 +53,9 @@ var CasePage = function() {
     browser.ignoreSynchronization = true;
 
     this.navigateToNewCasePage = function() {
-        newCaseBtn.click();
+        browser.wait(EC.visibilityOf(element(by.linkText(Objects.casepage.locators.newCaseBtn))), 30000,"New case button is not visible").then(function () {
+            newCaseBtn.click();
+        });
         return this;
     }
 
@@ -162,9 +164,9 @@ var CasePage = function() {
     };
 
     this.selectCaseStatus = function(status) {
-        var caseStatus = element(by.linkText(status));
         browser.wait(EC.visibilityOf(element(by.className(Objects.casepage.locators.changeCaseStatusTitle))), 15000, "Change case status title is not visible").then(function() {
-            changeStatusDropDown.click().then(function() {
+            browser.executeScript('arguments[0].click()', changeStatusDropDown).then(function() {
+                var caseStatus = element(by.linkText(status));
                 browser.wait(EC.textToBePresentInElement((caseStatus), status), 10000, "The option " + status + " Is not displayed").then(function() {
                     caseStatus.click();
                 });
@@ -172,12 +174,15 @@ var CasePage = function() {
         });
     };
 
-    this.chnageCaseSubmit = function(status) {
-        this.selectCaseStatus(status)
-        //this.switchToIframes();
-        browser.executeScript('arguments[0].click()', submitBtn);
+    this.changeCaseSubmit = function(approver, status) {
+        this.selectApprover(approver);
+        this.selectCaseStatus(status);
+        this.clickSubmitButton();
     };
 
+    this.clickSubmitButton = function () {
+        browser.executeScript('arguments[0].click()', submitBtn);
+    };
 
     this.waitForCreatedDate = function() {
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.createdDate))), 20000, "Created date is not visible");
@@ -232,7 +237,7 @@ var CasePage = function() {
 
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesTitle))), 30000);
         browser.sleep(10000);
-    }
+    };
 
 };
 
