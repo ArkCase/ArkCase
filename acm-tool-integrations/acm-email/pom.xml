@@ -2,7 +2,7 @@
     <parent>
         <artifactId>acm-tool-integrations</artifactId>
         <groupId>com.armedia.acm</groupId>
-        <version>3.1.8-SNAPSHOT</version>
+        <version>3.1.9-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -56,19 +56,14 @@
         <dependency>
             <groupId>javax.mail</groupId>
             <artifactId>javax.mail-api</artifactId>
-            <version>${java.mail.version}</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>imap</artifactId>
-            <version>${java.mail.version}</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>
-            <version>${java.mail.version}</version>
         </dependency>
     </dependencies>
 </project>

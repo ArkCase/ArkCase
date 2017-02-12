@@ -6,9 +6,10 @@ import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.spring.SpringContextHolder;
-
+import com.armedia.acm.web.api.MDCConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -17,6 +18,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by armdev on 10/28/14.
@@ -46,15 +48,16 @@ public class AcmJpaBatchUpdateService
 
     public void jpaBatchUpdate() throws AcmEncryptionException
     {
-        if (log.isDebugEnabled())
-        {
-            log.debug("JPA batch update enabled: " + isBatchUpdateBasedOnLastModifiedEnabled());
-        }
+        log.debug("JPA batch update enabled: {}", isBatchUpdateBasedOnLastModifiedEnabled());
 
-        if (!isBatchUpdateBasedOnLastModifiedEnabled())
+        if ( !isBatchUpdateBasedOnLastModifiedEnabled() )
         {
             return;
         }
+
+        // The Alfresco user id to use, to retrieve the files to be indexed
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
 
         getAuditPropertyEntityAdapter().setUserId("SOLR-BATCH-UPDATE");
 
@@ -67,33 +70,28 @@ public class AcmJpaBatchUpdateService
             Date lastBatchRunDate = getLastBatchRunDate(lastRunDate, solrDateFormat);
             storeCurrentDateForNextBatchRun(solrDateFormat);
 
-            if (log.isDebugEnabled())
-            {
-                log.debug("Checking for objects modified since: " + lastBatchRunDate);
-            }
+            log.debug("Checking for objects modified since {}", lastBatchRunDate);
+
 
             Collection<? extends AcmObjectToSolrDocTransformer> transformers = getSpringContextHolder()
                     .getAllBeansOfType(AcmObjectToSolrDocTransformer.class).values();
-            if (log.isDebugEnabled())
-            {
-                log.debug(transformers.size() + " object transformers found.");
-            }
 
-            for (AcmObjectToSolrDocTransformer transformer : transformers)
+            log.debug("{} object transformers found.", transformers.size());
+
+
+            for ( AcmObjectToSolrDocTransformer transformer : transformers )
             {
                 try
                 {
                     sendUpdatedObjectsToSolr(lastBatchRunDate, transformer);
-                }
-                catch (Exception exception)
+                } catch (Exception exception)
                 {
-                    log.error("Could not send index updates to SOLR for transformer " + transformer.getClass(), exception);
+                    log.error("Could not send index updates to SOLR for transformer {}", transformer.getClass(), exception);
                 }
             }
-        }
-        catch (ParseException e)
+        } catch (ParseException e)
         {
-            log.error("Could not send index updates to SOLR: " + e.getMessage(), e);
+            log.error("Could not send index updates to SOLR: {}", e.getMessage(), e);
         }
     }
 
@@ -119,12 +117,8 @@ public class AcmJpaBatchUpdateService
 
     private void sendUpdatedObjectsToSolr(Date lastUpdate, AcmObjectToSolrDocTransformer transformer)
     {
-        boolean debug = log.isDebugEnabled();
+        log.debug("Handling transformer type: {}, last mod date: {}", transformer.getClass().getName(), lastUpdate);
 
-        if (debug)
-        {
-            log.debug("Handling transformer type: " + transformer.getClass().getName() + "; last mod date: " + lastUpdate);
-        }
 
         int current = 0;
         int batchSize = getBatchSize();
@@ -134,12 +128,11 @@ public class AcmJpaBatchUpdateService
         do
         {
             updatedObjects = transformer.getObjectsModifiedSince(lastUpdate, current, batchSize);
-            if (debug)
-            {
-                log.debug("Number of objects for " + transformer.getClass().getName() + ": " + updatedObjects.size());
-            }
 
-            if (!updatedObjects.isEmpty())
+            log.debug("Number of objects for {} : ", transformer.getClass().getName(), updatedObjects.size());
+
+
+            if ( !updatedObjects.isEmpty() )
             {
                 current += batchSize;
 
@@ -148,7 +141,7 @@ public class AcmJpaBatchUpdateService
                 getObjectsToSearchService().updateObjectsInSolr(changelist);
             }
         }
-        while (!updatedObjects.isEmpty());
+        while ( !updatedObjects.isEmpty() );
 
     }
 

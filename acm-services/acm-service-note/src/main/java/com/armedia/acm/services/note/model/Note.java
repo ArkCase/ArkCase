@@ -67,6 +67,10 @@ public class Note implements Serializable, AcmObject, AcmEntity, AcmParentObject
     @Temporal(TemporalType.TIMESTAMP)
     private Date modified;
 
+    @Column(name = "cm_note_author")
+    private String author;
+
+
     @PrePersist
     public void beforeInsert()
     {
@@ -207,6 +211,14 @@ public class Note implements Serializable, AcmObject, AcmEntity, AcmParentObject
     public String getParentObjectType()
     {
         return parentType;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
 }

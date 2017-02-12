@@ -1,6 +1,6 @@
 var logger = require('../../log');
 var casePage = require('../../Pages/case_page.js');
-var userPage = require('../../Pages/user_profile_page.js');
+var complaintPage = require('../../Pages/complaint_page.js');
 var Objects = require('../../json/Objects.json');
 var taskPage = require('../../Pages/task_page.js');
 var utils = require('../../util/utils.js');
@@ -9,10 +9,7 @@ var loginPage = require('../../Pages/login_page.js');
 var flag = false;
 var EC = protractor.ExpectedConditions;
 var timeTrackingPage = require('../../Pages/time_tracking_page.js');
-var costTrackingPage = require('../../Pages/cost_tracking_page.js');
-var using = require(process.env['USERPROFILE'] + '/node_modules/jasmine-data-provider');
-var preferencesPage = require('../../Pages/preference_page.js');
-var auditPage = require('../../Pages/audit_page.js');
+
 
 
 function testAsync(done) {
@@ -33,7 +30,7 @@ function waitUrl(myUrl) {
 }
 
 
-describe('case page tests', function() {
+describe('regression tests', function() {
 
     beforeEach(function(done) {
 
@@ -46,6 +43,8 @@ describe('case page tests', function() {
         loginPage.Logout();
 
     });
+
+    //Case page tests
 
     it('should create new case and try to add owner and no access from participant tab for same user and verify the alert message', function() {
 
@@ -83,7 +82,7 @@ describe('case page tests', function() {
         });
     });
 
- 
+
     it('should create new case with owner  and edit the assignee ', function() {
 
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
@@ -99,7 +98,7 @@ describe('case page tests', function() {
         expect(casePage.returnAssignee()).toEqual(Objects.basepage.data.IanInvestigator, "The assignee is not updated");
     });
 
-       it('should create new case verify the notification message and no access of the object name ', function() {
+    it('should create new case verify the notification message and no access of the object name ', function() {
 
         casePage.clickModuleCasesFiles();
         casePage.waitForCasesPage();
@@ -129,5 +128,70 @@ describe('case page tests', function() {
 
     });
 
+    it('should click on sorter tree button and verify the name of sort by id desc name', function() {
+
+        casePage.clickModuleCasesFiles();
+        casePage.waitForCasesPage();
+        casePage.clickTreeSortersBtn();
+        casePage.returnSortByIdDesc(Objects.basepage.data.sortByIdDesc);
+    });
+
+    //Task page tests
+
+    it('should create new task with selcting group and verify it ', function() {
+
+        taskPage.clickNewButton().clickTaskButton().insertGroupTaskData(Objects.taskspage.data.owningGroup, Objects.taskpage.data.Subject, utils.returnToday("/"), Objects.taskpage.data.DueDateInput, "Expedite", Objects.taskpage.data.percentCompleteInput).clickSave();
+        expect(taskPage.returnAssignee()).toEqual(Objects.taskspage.data.owningGroup, "Assigned group name is not correct");
+
+    });
+
+    //Complaint page tests
+
+    it('Verify if reader is displayed in participants table', function() {
+
+        complaintPage.clickModuleComplaints();
+        complaintPage.participantTable();
+        expect(complaintPage.returnParticipantTypeForthRow()).toEqual("reader", "Participant type is correct in forth row");
+        expect(complaintPage.returnParticipantNameForthRow()).toEqual("Samuel Supervisor", "Participant name is not correct in forth row");
+    });
+
+    it('should create new complaint add/edit timeSheet and verify the time widget data in cases overview page', function() {
+
+
+        complaintPage.clickModuleComplaints();
+        complaintPage.waitForComplaintsPage();
+        element(by.xpath(Objects.casepage.locators.caseID)).getText().then(function(text) {
+            console.log(text);
+            complaintPage.clickNewButton();
+            timeTrackingPage.navigateToTimeTrackingPage();
+            complaintPage.switchToIframes();
+            timeTrackingPage.submitTimesheetTable("Complaint", text, "8");
+            complaintPage.selectApprover(Objects.casepage.data.approverSamuel);
+            timeTrackingPage.clickSaveBtn();
+            timeTrackingPage.clickEditTimesheetBtn();
+            timeTrackingPage.switchToIframes();
+            timeTrackingPage.submitTimesheetTable("Complaint", text, "1");
+            complaintPage.selectApprover(Objects.casepage.data.approverSamuel);
+            timeTrackingPage.clickSaveBtn();
+            complaintPage.clickModuleComplaints();
+            complaintPage.verifyTimeWidgetData("7");
+
+        });
+    });
+
+    it('should edit assignee', function() {
+
+        complaintPage.clickNewButton().clickComplaintButton().switchToIframes().submitInitiatorInformation(Objects.complaintPage.data.firstName, Objects.complaintPage.data.lastName).reenterFirstName(Objects.complaintPage.data.firstName).clickTab("Incident").insertIncidentInformation("Arson", Objects.complaintPage.data.title);
+        complaintPage.participantsTab();
+        complaintPage.selectParticipant("Owner", Objects.casepage.data.approverSamuel);
+        complaintPage.switchToIframes();
+        complaintPage.clickSubmitButton();
+        complaintPage.switchToDefaultContent();
+        complaintPage.waitForComplaintsPage();
+        complaintPage.editAssignee("bthomas");
+        expect(complaintPage.returnAssignee()).toEqual("Bill Thomas", "Assignee is not updated");
+    });
+
 
 });
+
