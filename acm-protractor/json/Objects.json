@@ -387,7 +387,8 @@
             "website": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[3]/a",
             "websiteInput": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[3]/form/div/input",
             "websiteConfirmBtn": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[3]/form/div/span/button[1]",
-            "changeProfilePic": "//*[@id='lnkChangePicture']/u/span"
+            "changeProfilePic": "//*[@id='lnkChangePicture']/u/span",
+            "picture": "picLoading"
 
         },
 
@@ -490,7 +491,8 @@
             "description": "Description",
             "approver": "samuel",
             "titleComplaint": "NewComplaint",
-            "automaticTaskNameCloseComplaint": "Review Request to Close Complaint"
+            "automaticTaskNameCloseComplaint": "Review Request to Close Complaint",
+            "detailsInfoInOpenInvestigationCase": "This case file is based on Complaint"
         }
     },
     "casepage": {

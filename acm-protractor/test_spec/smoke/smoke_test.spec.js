@@ -54,9 +54,9 @@ describe('edit user profile page', function() {
     it('should navigate to user profile page', function () {
 
         userPage.clickUserNavigation();
-        expect(userPage.returnUserNavigationProfile()).toEqual(Objects.userpage.data.userNavigationProfile, "User navigation profile is not correct");
+        userPage.validateUserNavigationProfile(Objects.userpage.data.userNavigationProfile, "User navigation profile is not correct");
         userPage.clickUserNavigationProfile();
-        expect(userPage.returnUserPageHeader()).toEqual(Objects.userpage.data.userPageHeader, "User page header is not correct");
+        userPage.validateUserPageHeader(Objects.userpage.data.userPageHeader, "User page header is not correct");
     });
 
     it('should edit username', function () {
@@ -208,7 +208,7 @@ describe('edit user profile page', function() {
 
             });
         });
-  });
+});
 
     describe('case page tests', function () {
 
@@ -502,8 +502,9 @@ describe('edit user profile page', function() {
             complaintPage.clickOnTask("Automatic Task on Close Complaint");
             taskPage.clickApproveBtn();
             expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateClosed, 'The task state should be CLOSED');
+            complaintPage.clickModuleCasesFiles();
             complaintPage.clickExpandFancyTreeTopElementAndSubLink("Details");
-            expect(complaintPage.returnDetailsTextArea()).toContain(Objects.casepage.data.automatedTaskTitle, "Details text area does not containt automated task title");
+            complaintPage.validateDetailsTextArea(Objects.complaintPage.data.detailsInfoInOpenInvestigationCase, "Details text area does not containt automated task title of complaint closed - the case might be not created");
 
         });
 
@@ -536,7 +537,7 @@ describe('edit user profile page', function() {
             complaintPage.insertDetailsTextAreaText(Objects.taskspage.data.detailsTextArea);
             complaintPage.clickSaveDetailsButton();
             complaintPage.clickRefreshButton();
-            expect(complaintPage.returnDetailsTextArea()).toEqual(Objects.taskspage.data.detailsTextArea, 'After refresh the details text is not saved');
+            complaintPage.validateDetailsTextArea(Objects.taskspage.data.detailsTextArea, 'After refresh the details text is not saved');
 
         });
 
