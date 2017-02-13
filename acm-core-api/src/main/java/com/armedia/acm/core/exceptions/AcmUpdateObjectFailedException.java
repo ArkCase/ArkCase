@@ -10,10 +10,13 @@ public class AcmUpdateObjectFailedException extends Exception
 
     private String objectType;
 
-    public AcmUpdateObjectFailedException(String objectType, String message, Throwable cause)
+    private Long objectId;
+
+    public AcmUpdateObjectFailedException(String objectType, Long objectId, String message, Throwable cause)
     {
         super(message, cause);
         this.objectType = objectType;
+        this.objectId = objectId;
     }
 
     public String getObjectType()
@@ -24,6 +27,23 @@ public class AcmUpdateObjectFailedException extends Exception
     public void setObjectType(String objectType)
     {
         this.objectType = objectType;
+    }
+
+    /**
+     * @return the objectId
+     */
+    public Long getObjectId()
+    {
+        return objectId;
+    }
+
+    /**
+     * @param objectId
+     *            the objectId to set
+     */
+    public void setObjectId(Long objectId)
+    {
+        this.objectId = objectId;
     }
 
     @Override

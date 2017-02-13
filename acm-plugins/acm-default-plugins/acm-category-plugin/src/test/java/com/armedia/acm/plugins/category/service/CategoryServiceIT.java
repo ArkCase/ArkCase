@@ -296,7 +296,7 @@ public class CategoryServiceIT
         expectedException.expect(AcmObjectNotFoundException.class);
         expectedException.expectMessage("Argument was 'null' or withoud an 'id'.");
 
-        categoryService.activate(null);
+        categoryService.activate(null, false);
     }
 
     @Test
@@ -308,7 +308,7 @@ public class CategoryServiceIT
         expectedException.expectMessage("Argument was 'null' or withoud an 'id'.");
         try
         {
-            categoryService.activate(nonExisting);
+            categoryService.activate(nonExisting.getId(), false);
         } finally
         {
 
@@ -330,7 +330,7 @@ public class CategoryServiceIT
         assertThat(child.getStatus(), is(DEACTIVATED));
         assertThat(grandChild.getStatus(), is(DEACTIVATED));
 
-        categoryService.activate(child);
+        categoryService.activate(child.getId(), false);
 
         assertThat(parent.getStatus(), is(ACTIVATED));
         assertThat(child.getStatus(), is(ACTIVATED));
@@ -356,7 +356,7 @@ public class CategoryServiceIT
         expectedException.expectMessage("Argument was 'null' or withoud an 'id'.");
         try
         {
-            categoryService.deactivate(nonExisting);
+            categoryService.deactivate(nonExisting.getId());
         } finally
         {
 
@@ -375,7 +375,7 @@ public class CategoryServiceIT
         assertThat(child.getStatus(), is(DEACTIVATED));
         assertThat(grandChild.getStatus(), is(DEACTIVATED));
 
-        categoryService.deactivate(child);
+        categoryService.deactivate(child.getId());
 
         assertThat(parent.getStatus(), is(ACTIVATED));
         assertThat(child.getStatus(), is(ACTIVATED));
