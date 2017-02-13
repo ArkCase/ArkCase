@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ObjectAssociationService
 {
-    void addReference(Long id, String number, String type, String title, String status, Long parentId, String parentType);
+    void addReference(Long id, String number, String type, String title, String status, Long parentId, String parentType) throws Exception;
 
     AcmAbstractDao<AcmChildObjectEntity> getDaoForChildObjectEntity(String objectType);
 
