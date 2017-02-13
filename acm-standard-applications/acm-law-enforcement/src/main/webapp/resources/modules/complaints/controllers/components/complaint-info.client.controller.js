@@ -172,16 +172,15 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
                             } else {
                                 $scope.owningGroup = chosenGroup.participant.selectedAssigneeName;
                                 $scope.assignee = '';
+
                                 var assigneeParticipantType = 'assignee';
-                                // Filterinng through the array to get the Assignee ParticipantType 
-                                var foundAssigneeParticipantType = $filter('filter')($scope.objectInfo.participants, 
-                                    { participantType: assigneeParticipantType  }, true)[0];
-                    
-                                // Get the index of the foundAssigneeParticipantType object in the array
-                                var indexOfFoundAssigneeParticipantType = $scope.objectInfo.participants.indexOf(foundAssigneeParticipantType);
-                                // Setting the participantLdapId of assigne to '' only when there is no current assignee or when 
-                                // reassigning the Complaint to a group for which the current assignee is not a member
-                                $scope.objectInfo.participants[indexOfFoundAssigneeParticipantType].participantLdapId = '';
+                                // Iterating through the array to find the participant with the ParticipantType eqaul assignee
+                                // then setiing the participantLdapId to empty string
+                                _.each($scope.objectInfo.participants, function(participant) {
+                                    if(participant.participantType == assigneeParticipantType){
+                                        participant.participantLdapId = '';
+                                    }
+                                });
 
                                 $scope.updateOwningGroup();
                                 $scope.updateAssignee(); 
