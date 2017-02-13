@@ -16,7 +16,6 @@ import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
 import com.armedia.acm.plugins.category.dao.CategoryDao;
 import com.armedia.acm.plugins.category.model.Category;
 import com.armedia.acm.plugins.category.model.CategoryEvent;
-import com.armedia.acm.plugins.category.model.CategoryEvent.CategoryEventType;
 import com.armedia.acm.plugins.category.model.CategoryStatus;
 
 import org.slf4j.Logger;
@@ -88,12 +87,12 @@ public class CategoryServiceImpl implements CategoryService, ApplicationEventPub
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.armedia.acm.plugins.category.service.CategoryService#createSubcategory(java.lang.Long,
      * com.armedia.acm.plugins.category.model.Category)
      */
     @Override
-    public Category createSubcategory(Long parentId, Category category) throws AcmCreateObjectFailedException
+    public Category create(Long parentId, Category category) throws AcmCreateObjectFailedException
     {
         try
         {
@@ -118,7 +117,7 @@ public class CategoryServiceImpl implements CategoryService, ApplicationEventPub
     {
         if (category == null || category.getId() == null)
         {
-            throw new AcmUpdateObjectFailedException("Category", "Argument was 'null' or withoud an 'id'.", null);
+            throw new AcmUpdateObjectFailedException("Category", null, "Argument was 'null' or withoud an 'id'.", null);
         }
 
         // check first if exists? throw an exception if doesn't?
@@ -132,8 +131,11 @@ public class CategoryServiceImpl implements CategoryService, ApplicationEventPub
                 log.error("Name collision while trying to update [{}] Category with id [{}] to [{}].", existing.getName(), category.getId(),
                         category.getName());
                 // throw an exception signaling category name collision.
-                throw new AcmUpdateObjectFailedException("Category",
-                        String.format("Category with [%s] name already exists on this level.", category.getName()), null);
+                throw new AcmUpdateObjectFailedException("Category", category.getId(),
+                        String.format(
+                                "Category with id [%d] can not be renamed because a category with [%s] name already exists on this level.",
+                                category.getId(), category.getName()),
+                        null);
             }
             log.debug("Updating 'name' property of [{}] Category with id [{}] to [{}].", existing.getName(), category.getId(),
                     category.getName());
@@ -175,7 +177,7 @@ public class CategoryServiceImpl implements CategoryService, ApplicationEventPub
         }
 
         Category category = get(id);
-        setCategoryStatus(category, DELETED, DELETE);
+        setCategoryStatus(category, DELETED, true);
 
         return category;
     }
@@ -187,15 +189,15 @@ public class CategoryServiceImpl implements CategoryService, ApplicationEventPub
      * Category)
      */
     @Override
-    public void activate(Category category) throws AcmObjectNotFoundException
+    public void activate(Long categoryId, boolean activateChildren) throws AcmObjectNotFoundException
     {
-        if (category == null || category.getId() == null)
+        if (categoryId == null)
         {
-            throw new AcmObjectNotFoundException("Category", null, "Argument was 'null' or withoud an 'id'.");
+            throw new AcmObjectNotFoundException("Category", null, "'id' for Category was 'null'.");
         }
 
-        category = get(category.getId());
-        setCategoryStatus(category, ACTIVATED, ACTIVATE);
+        Category category = get(categoryId);
+        setCategoryStatus(category, ACTIVATED, activateChildren);
 
         activateAncestors(category);
 
@@ -208,36 +210,55 @@ public class CategoryServiceImpl implements CategoryService, ApplicationEventPub
      * Category)
      */
     @Override
-    public void deactivate(Category category) throws AcmObjectNotFoundException
+    public void deactivate(Long categoryId) throws AcmObjectNotFoundException
     {
-        if (category == null || category.getId() == null)
+        if (categoryId == null)
         {
-            throw new AcmObjectNotFoundException("Category", null, "Argument was 'null' or withoud an 'id'.");
+            throw new AcmObjectNotFoundException("Category", null, "'id' for Category was 'null'.");
         }
 
-        category = get(category.getId());
-        setCategoryStatus(category, DEACTIVATED, DEACTIVATE);
+        Category category = get(categoryId);
+        setCategoryStatus(category, DEACTIVATED, true);
 
     }
 
-    private void setCategoryStatus(Category category, CategoryStatus status, CategoryEventType eventType) throws AcmObjectNotFoundException
+    private void setCategoryStatus(Category category, CategoryStatus status, boolean updateChildren) throws AcmObjectNotFoundException
     {
         category.setStatus(status);
         log.debug("{} [{}] Category with id [{}].", getStatusVerb(status), category.getName(), category.getId());
-        if (!ACTIVATED.equals(status))
+        if (updateChildren)
         {
             setChildrenStatus(category, status);
         }
         try
         {
             update(category);
-            eventPublisher.publishEvent(new CategoryEvent(category, eventType, ""));
+            publishCategoryStatusEvent(category, status);
         } catch (AcmUpdateObjectFailedException e)
         {
             log.warn("Failed to update status of Category with [{id}] to " + getStatusVerb(status)
                     + ". Probably attempt to change name while changing status.");
         }
 
+    }
+
+    private void publishCategoryStatusEvent(Category category, CategoryStatus status)
+    {
+        switch (status)
+        {
+        case ACTIVATED:
+            eventPublisher.publishEvent(new CategoryEvent(category, ACTIVATE,
+                    String.format("Activating category %s with id %d/", category.getName(), category.getId())));
+            break;
+        case DEACTIVATED:
+            eventPublisher.publishEvent(new CategoryEvent(category, DEACTIVATE,
+                    String.format("Deactivating category %s with id %d/", category.getName(), category.getId())));
+            break;
+        case DELETED:
+            eventPublisher.publishEvent(new CategoryEvent(category, DELETE,
+                    String.format("Deleting category %s with id %d/", category.getName(), category.getId())));
+            break;
+        }
     }
 
     /*

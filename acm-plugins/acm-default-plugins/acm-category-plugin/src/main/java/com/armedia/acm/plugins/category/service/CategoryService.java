@@ -18,15 +18,15 @@ public interface CategoryService
 
     Category create(Category category) throws AcmCreateObjectFailedException;
 
-    Category createSubcategory(Long parentId, Category category) throws AcmCreateObjectFailedException;
+    Category create(Long parentId, Category category) throws AcmCreateObjectFailedException;
 
     Category update(Category category) throws AcmObjectNotFoundException, AcmUpdateObjectFailedException;
 
     Category delete(Long id) throws AcmObjectNotFoundException;
 
-    void activate(Category category) throws AcmObjectNotFoundException;
+    void activate(Long categoryId, boolean activateChildren) throws AcmObjectNotFoundException;
 
-    void deactivate(Category category) throws AcmObjectNotFoundException;
+    void deactivate(Long categoryId) throws AcmObjectNotFoundException;
 
     List<Category> getRoot();
 

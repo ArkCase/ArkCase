@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
@@ -67,7 +68,7 @@ public class CategoryManagementAPIController
     public Category createSubcategory(@PathVariable(value = "parentCategoryId") Long parentCategoryId, @RequestBody Category childCategory)
             throws AcmCreateObjectFailedException, AcmObjectNotFoundException
     {
-        return categoryService.createSubcategory(parentCategoryId, childCategory);
+        return categoryService.create(parentCategoryId, childCategory);
     }
 
     @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -86,17 +87,18 @@ public class CategoryManagementAPIController
 
     @RequestMapping(value = "/activate", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<Category> activateCategories(@RequestBody List<Category> categories)
+    public List<Category> activateCategories(@RequestBody List<Long> categoryIds,
+            @RequestParam(value = "activateChildren", required = false, defaultValue = "false") boolean activateChildren)
             throws AcmObjectNotFoundException, AcmUpdateObjectFailedException
     {
-        return categories.stream().map(category -> {
+        return categoryIds.stream().map(categoryId -> {
             try
             {
-                categoryService.activate(category);
-                return categoryService.get(category.getId());
+                categoryService.activate(categoryId, activateChildren);
+                return categoryService.get(categoryId);
             } catch (AcmObjectNotFoundException e)
             {
-                log.warn(String.format("Failed to activate %s category with id %d.", category.getName(), category.getId()), e);
+                log.warn(String.format("Failed to activate category with id %d.", categoryId), e);
                 return null;
             }
 
@@ -105,17 +107,17 @@ public class CategoryManagementAPIController
 
     @RequestMapping(value = "/deactivate", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<Category> deactivateCategories(@RequestBody List<Category> categories)
+    public List<Category> deactivateCategories(@RequestBody List<Long> categoryIds)
             throws AcmObjectNotFoundException, AcmUpdateObjectFailedException
     {
-        return categories.stream().map(category -> {
+        return categoryIds.stream().map(categoryId -> {
             try
             {
-                categoryService.deactivate(category);
-                return categoryService.get(category.getId());
+                categoryService.deactivate(categoryId);
+                return categoryService.get(categoryId);
             } catch (AcmObjectNotFoundException e)
             {
-                log.warn(String.format("Failed to deactivate %s category with id %d.", category.getName(), category.getId()), e);
+                log.warn(String.format("Failed to deactivate category with id %d.", categoryId), e);
                 return null;
             }
 
