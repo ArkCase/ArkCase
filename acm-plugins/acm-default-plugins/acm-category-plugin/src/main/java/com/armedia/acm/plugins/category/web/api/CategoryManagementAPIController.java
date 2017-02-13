@@ -8,7 +8,9 @@ import com.armedia.acm.plugins.category.service.CategoryService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,7 +36,7 @@ public class CategoryManagementAPIController
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<Category> getCategories(@PathVariable(value = "templateFileName") String templateFileName)
+    public List<Category> getCategories()
     {
         return categoryService.getRoot();
     }
@@ -60,6 +62,14 @@ public class CategoryManagementAPIController
         return categoryService.create(category);
     }
 
+    @RequestMapping(value = "/{parentCategoryId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Category createSubcategory(@PathVariable(value = "parentCategoryId") Long parentCategoryId, @RequestBody Category childCategory)
+            throws AcmCreateObjectFailedException, AcmObjectNotFoundException
+    {
+        return categoryService.createSubcategory(parentCategoryId, childCategory);
+    }
+
     @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Category updateCategory(@RequestBody Category category) throws AcmObjectNotFoundException, AcmUpdateObjectFailedException
@@ -68,9 +78,10 @@ public class CategoryManagementAPIController
     }
 
     @RequestMapping(value = "/{categoryId}", method = RequestMethod.DELETE)
-    public void deleteCategory(@PathVariable(value = "categoryId") Long categoryId) throws AcmObjectNotFoundException
+    public ResponseEntity<?> deleteCategory(@PathVariable(value = "categoryId") Long categoryId) throws AcmObjectNotFoundException
     {
         categoryService.delete(categoryId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/activate", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)

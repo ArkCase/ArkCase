@@ -18,6 +18,8 @@ public interface CategoryService
 
     Category create(Category category) throws AcmCreateObjectFailedException;
 
+    Category createSubcategory(Long parentId, Category category) throws AcmCreateObjectFailedException;
+
     Category update(Category category) throws AcmObjectNotFoundException, AcmUpdateObjectFailedException;
 
     Category delete(Long id) throws AcmObjectNotFoundException;
