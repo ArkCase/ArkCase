@@ -6,6 +6,9 @@ import static com.armedia.acm.plugins.category.model.Category.FIND_ROOT_CATEGORI
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.category.model.Category;
 
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 /**
@@ -15,6 +18,14 @@ import java.util.List;
 public class CategoryDao extends AcmAbstractDao<Category>
 {
 
+    @Override
+    @Transactional(propagation = Propagation.MANDATORY)
+    public Category find(Long id)
+    {
+        return getEm().find(getPersistenceClass(), id);
+    }
+
+    @Transactional(propagation = Propagation.MANDATORY)
     public List<Category> findAllWithoutParent()
     {
         return getEm().createNamedQuery(FIND_ROOT_CATEGORIES, Category.class).getResultList();
@@ -38,6 +49,7 @@ public class CategoryDao extends AcmAbstractDao<Category>
      * @param id
      * @return
      */
+    @Transactional(propagation = Propagation.MANDATORY)
     public List<Category> getChildren(Long id)
     {
         return getEm().createNamedQuery(FIND_CHILDREN, Category.class).setParameter("parentId", id).getResultList();

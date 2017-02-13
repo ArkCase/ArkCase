@@ -5,6 +5,8 @@ import static com.armedia.acm.plugins.category.model.Category.FIND_ROOT_CATEGORI
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -34,8 +36,8 @@ import java.util.List;
  */
 @Entity
 @Table(name = "acm_category")
-@NamedQueries({@NamedQuery(name = FIND_ROOT_CATEGORIES, query = "SELECT c FROM Category c WHERE c.parent IS NULL"),
-        @NamedQuery(name = FIND_CHILDREN, query = "SELECT c FROM Category c WHERE c.parent = :parentId")})
+@NamedQueries({ @NamedQuery(name = FIND_ROOT_CATEGORIES, query = "SELECT c FROM Category c WHERE c.parent IS NULL"),
+        @NamedQuery(name = FIND_CHILDREN, query = "SELECT c FROM Category c WHERE c.parent = :parentId") })
 public class Category implements Serializable, AcmObject, AcmEntity
 {
 
@@ -59,10 +61,12 @@ public class Category implements Serializable, AcmObject, AcmEntity
     @Column(name = "cm_category_description")
     private String description;
 
+    @JsonBackReference
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cm_category_parent_id")
     private Category parent;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "parent")
     private List<Category> children;
 
@@ -94,7 +98,8 @@ public class Category implements Serializable, AcmObject, AcmEntity
     }
 
     /**
-     * @param id the id to set
+     * @param id
+     *            the id to set
      */
     public void setId(Long id)
     {
@@ -116,7 +121,8 @@ public class Category implements Serializable, AcmObject, AcmEntity
     }
 
     /**
-     * @param name the name to set
+     * @param name
+     *            the name to set
      */
     public void setName(String name)
     {
@@ -132,7 +138,8 @@ public class Category implements Serializable, AcmObject, AcmEntity
     }
 
     /**
-     * @param description the description to set
+     * @param description
+     *            the description to set
      */
     public void setDescription(String description)
     {
@@ -148,7 +155,8 @@ public class Category implements Serializable, AcmObject, AcmEntity
     }
 
     /**
-     * @param parent the parent to set
+     * @param parent
+     *            the parent to set
      */
     public void setParent(Category parent)
     {
@@ -164,7 +172,8 @@ public class Category implements Serializable, AcmObject, AcmEntity
     }
 
     /**
-     * @param children the children to set
+     * @param children
+     *            the children to set
      */
     public void setChildren(List<Category> children)
     {
@@ -181,7 +190,8 @@ public class Category implements Serializable, AcmObject, AcmEntity
     }
 
     /**
-     * @param creator the creator to set
+     * @param creator
+     *            the creator to set
      */
     @Override
     public void setCreator(String creator)
@@ -199,7 +209,8 @@ public class Category implements Serializable, AcmObject, AcmEntity
     }
 
     /**
-     * @param created the created to set
+     * @param created
+     *            the created to set
      */
     @Override
     public void setCreated(Date created)
@@ -217,7 +228,8 @@ public class Category implements Serializable, AcmObject, AcmEntity
     }
 
     /**
-     * @param modifier the modifier to set
+     * @param modifier
+     *            the modifier to set
      */
     @Override
     public void setModifier(String modifier)
@@ -235,7 +247,8 @@ public class Category implements Serializable, AcmObject, AcmEntity
     }
 
     /**
-     * @param modified the modified to set
+     * @param modified
+     *            the modified to set
      */
     @Override
     public void setModified(Date modified)
@@ -252,7 +265,8 @@ public class Category implements Serializable, AcmObject, AcmEntity
     }
 
     /**
-     * @param status the status to set
+     * @param status
+     *            the status to set
      */
     public void setStatus(CategoryStatus status)
     {

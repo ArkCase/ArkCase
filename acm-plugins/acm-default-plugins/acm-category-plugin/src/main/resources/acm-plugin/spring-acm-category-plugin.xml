@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+    <bean id="acmManageCategoriesePluginPrivileges" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivileges">
+        <property name="pluginName" value="Category Management Plugin"/>
+        <property name="privileges">
+            <list>
+                <ref bean="acmCategoryManagementPrivilege"/>
+            </list>
+        </property>
+        <property name="urlPrivileges">
+            <list>
+                <bean id="acmGetCategoriesPrivilege"
+                      class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/service/category/{version}"/>
+                    <property name="requiredPrivilege" ref="acmCategoryManagementPrivilege"/>
+                </bean>
+                <bean id="acmGetCategoryPrivilege"
+                      class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/service/category/{version}/{categoryId}"/>
+                    <property name="requiredPrivilege" ref="acmCategoryManagementPrivilege"/>
+                </bean>
+                <bean id="acmGetCategoryChildrenPrivilege"
+                      class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/service/category/{version}/{categoryId}/children"/>
+                    <property name="requiredPrivilege" ref="acmCategoryManagementPrivilege"/>
+                </bean>
+                <bean id="acmCreateCategoryPrivilege"
+                      class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/service/category/{version}"/>
+                    <property name="requiredPrivilege" ref="acmCategoryManagementPrivilege"/>
+                </bean>
+                <bean id="acmCreateChildCategoryPrivilege"
+                      class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/service/category/{version}/{parentCategoryId}"/>
+                    <property name="requiredPrivilege" ref="acmCategoryManagementPrivilege"/>
+                </bean>
+                <bean id="acmUpdateCategoryPrivilege"
+                      class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="PUT"/>
+                    <property name="url" value="/api/service/category/{version}"/>
+                    <property name="requiredPrivilege" ref="acmCategoryManagementPrivilege"/>
+                </bean>
+                <bean id="acmDeleteCategoryPrivilege"
+                      class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="DELETE"/>
+                    <property name="url" value="/api/service/category/{version}/{categoryId}"/>
+                    <property name="requiredPrivilege" ref="acmCategoryManagementPrivilege"/>
+                </bean>
+                <bean id="acmActivateCategoryPrivilege"
+                      class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="PUT"/>
+                    <property name="url" value="/api/service/category/{version}/activate"/>
+                    <property name="requiredPrivilege" ref="acmCategoryManagementPrivilege"/>
+                </bean>
+                <bean id="acmDeactivateCategoryPrivilege"
+                      class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="PUT"/>
+                    <property name="url" value="/api/service/category/{version}/deactivate"/>
+                    <property name="requiredPrivilege" ref="acmCategoryManagementPrivilege"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+</beans>

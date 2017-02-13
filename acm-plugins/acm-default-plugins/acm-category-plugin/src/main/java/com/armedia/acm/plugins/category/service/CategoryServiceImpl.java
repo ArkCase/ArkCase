@@ -88,6 +88,27 @@ public class CategoryServiceImpl implements CategoryService, ApplicationEventPub
 
     /*
      * (non-Javadoc)
+     * 
+     * @see com.armedia.acm.plugins.category.service.CategoryService#createSubcategory(java.lang.Long,
+     * com.armedia.acm.plugins.category.model.Category)
+     */
+    @Override
+    public Category createSubcategory(Long parentId, Category category) throws AcmCreateObjectFailedException
+    {
+        try
+        {
+            Category parent = get(parentId);
+            category.setParent(parent);
+            return create(category);
+        } catch (AcmObjectNotFoundException e)
+        {
+            throw new AcmCreateObjectFailedException("Category", String.format("Parent Category with [%d] id does not exist.", parentId),
+                    e);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
      *
      * @see
      * com.armedia.acm.plugins.category.service.CategoryService#update(com.armedia.acm.plugins.category.model.Category)
@@ -339,7 +360,8 @@ public class CategoryServiceImpl implements CategoryService, ApplicationEventPub
     }
 
     /**
-     * @param categoryDao the categoryDao to set
+     * @param categoryDao
+     *            the categoryDao to set
      */
     public void setCategoryDao(CategoryDao categoryDao)
     {
