@@ -114,6 +114,12 @@
           "headerCellFilter": "translate"
         },
         {
+          "name": "queryType",
+          "displayName": "admin.correspondenceManagement.templates.grid.queryType",
+          "visible": true,
+          "headerCellFilter": "translate"
+        },
+        {
           "name": "modified",
           "displayName": "admin.correspondenceManagement.templates.grid.modified",
           "visible": true,
@@ -124,7 +130,8 @@
           "name": "modifier",
           "displayName": "admin.correspondenceManagement.templates.grid.modifier",
           "visible": true,
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "lookup": "userFullNames"
         },
         {
           "name": "activated",
