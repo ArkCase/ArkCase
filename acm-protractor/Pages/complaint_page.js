@@ -217,7 +217,7 @@ var ComplaintPage = function() {
     };
     this.insertCloseComplaintDescription = function(description) {
         browser.wait(EC.presenceOf(element(by.css(Objects.complaintPage.locators.closeComplaintDescription))), 30000, "Close complaint description field is not present in DOM").then(function() {
-            closeComplaintDescription.click().then(function() {
+            browser.executeScript('arguments[0].click()', closeComplaintDescription).then(function() {
                 closeComplaintDescription.sendKeys(description);
             });
         });
@@ -226,7 +226,7 @@ var ComplaintPage = function() {
     this.closeComplaint = function(disposition, description, approver) {
         this.selectComplaintDisposition(disposition);
         this.selectApprover(approver);
-        //this.insertCloseComplaintDescription(description);
+        this.insertCloseComplaintDescription(description);
         this.clickSubmitButton();
         return this;
     };

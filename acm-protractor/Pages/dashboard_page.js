@@ -34,7 +34,7 @@ var itemesPerPage = element(by.model(Objects.dashboardpage.locators.pageSize));
 var DashboardPage = function() {
     this.clickEditButton = function() {
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.dashboardpage.locators.editBtn))), 30000, "Edit button in the dashboard page is not displayed").then(function() {
-            editBtn.click();
+            browser.executeScript('arguments[0].click()', editBtn);
         });
         return this;
     };
@@ -47,7 +47,7 @@ var DashboardPage = function() {
     }
     this.removeWidgetButton = function() {
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.dashboardpage.locators.removeWidgetBtn))), 10000, "remove widget button in the dashboard page is not displayed").then(function() {
-            removeWidgetBtn.click();
+            browser.executeScript('arguments[0].click()', removeWidgetBtn);
         });
         return this;
     }
