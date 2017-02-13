@@ -1319,7 +1319,7 @@ var BasePage = function() {
                 browser.sleep(5000);
                 browser.wait(EC.visibilityOf(element(by.repeater(Objects.casepage.locators.timesheetTableRow))), 30000, "Costsheet table row is not visible").then(function() {
                     element.all(by.repeater(Objects.casepage.locators.timesheetTableRow)).then(function(items) {
-                        expect(items.length).toBe(6, "Cost sheet is not displayed in the cost table");
+                        expect(items.length).not.toBe(0, "Cost sheet is not displayed in the cost table");
                     });
                 });
             });
@@ -1327,7 +1327,7 @@ var BasePage = function() {
     }
     this.clickModuleCasesFiles = function() {
         browser.wait(EC.visibilityOf(element(by.css(Objects.timetrackingPage.locators.caseFileModule))), 30000, "Case module is not visible").then(function() {
-            browser.executeScript('arguments[0].click()', caseFileModule).then(function () {
+            browser.executeScript('arguments[0].click()', caseFileModule).then(function() {
                 browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesTitle))), 30000, "Case title is not visible");
             })
 
@@ -1336,7 +1336,7 @@ var BasePage = function() {
     }
     this.clickModuleComplaints = function() {
         browser.wait(EC.visibilityOf(element(by.css(Objects.timetrackingPage.locators.complaintsModule))), 30000, "Complaints module is not visible").then(function() {
-            browser.executeScript('arguments[0].click()', complaintsModule).then(function () {
+            browser.executeScript('arguments[0].click()', complaintsModule).then(function() {
                 browser.wait(EC.presenceOf(element(by.xpath(Objects.complaintPage.locators.complaintTitleLink))), 30000, "Complaint title is not present in DOM").then(function() {
                     browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.complaintTitleLink))), 30000, "Complaint title is not visible");
                 })
@@ -1540,7 +1540,7 @@ var BasePage = function() {
         xPathStr = ".//a[@title='";
         var completexPath = xPathStr + link + "']";
         var el = element(by.xpath(completexPath));
-        browser.wait(EC.visibilityOf(element(by.xpath(completexPath))), 30000, "Link "+ link + " is not visible").then(function() {
+        browser.wait(EC.visibilityOf(element(by.xpath(completexPath))), 30000, "Link " + link + " is not visible").then(function() {
             browser.executeScript('arguments[0].click()', el);
         });
         return this;
@@ -1688,7 +1688,7 @@ var BasePage = function() {
     };
     this.clickDocTreeExpand = function() {
         browser.wait(EC.presenceOf(element(by.xpath(Objects.basepage.locators.docTreeExpand))), 30000, "Expand doc tree element is not visible").then(function() {
-            browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.docTreeExpand))), 30000, "Expand doc tree element is not visible").then(function () {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.docTreeExpand))), 30000, "Expand doc tree element is not visible").then(function() {
                 docTreeExpand.click();
             });
         });
@@ -2064,7 +2064,7 @@ var BasePage = function() {
     };
 
     this.waitForComplaintID = function() {
-        browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.caseID))), 60000, "Case ID is not present").then(function () {
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.caseID))), 60000, "Case ID is not present").then(function() {
             browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.caseID))), 60000, "Case ID is not displayed");
         });
         return this;
@@ -2084,7 +2084,23 @@ var BasePage = function() {
         return sortByIdDesc.getText();
     }
 
-    this.clickOnTask = function (type) {
+    this.searchForObject = function(object) {
+
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchForUserInput))), 10000, "Search for object input is not displayed").then(function() {
+            searchForUserInput.sendKeys(object).then(function() {
+                searchForUserBtn.click().then(function() {
+                    browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchedUserName))), 30000, "Searched object is not displayed").then(function() {
+                        searchedUser.click().then(function() {
+                            okBtn.click();
+                        });
+                    });
+                });
+            });
+        });
+        return this;
+    }
+
+    this.clickOnTask = function(type) {
         var xPathStart = "//a[contains(text(),'";
         var completexPath;
         switch (type) {
@@ -2106,8 +2122,8 @@ var BasePage = function() {
         return this;
 
     }
-    
-    this.returnObjectStatus = function () {
+
+    this.returnObjectStatus = function() {
         return objectStatus.getText();
     }
 }
