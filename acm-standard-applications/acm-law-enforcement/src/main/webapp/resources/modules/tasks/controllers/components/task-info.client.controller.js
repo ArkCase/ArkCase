@@ -110,17 +110,13 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
                             $scope.assignee = null;
 
                             var assigneeParticipantType = 'assignee';
-                            // Filterinng through the array to get the Assignee ParticipantType 
-                            var foundAssigneeParticipantType = $filter('filter')($scope.objectInfo.participants, 
-                                { participantType: assigneeParticipantType  }, true)[0];
-                            
-                            // Get the index of the foundAssigneeParticipantType object in the array
-                            var indexOfFoundAssigneeParticipantType = $scope.objectInfo.participants.indexOf(foundAssigneeParticipantType);
-                            // Removing the asignee participantType only when there is no current assignee or when 
-                            // reassigning the Complaint to a group for which the current assignee is not a member
-                            if (indexOfFoundAssigneeParticipantType >= 0) {
-                                $scope.objectInfo.participants.splice(indexOfFoundAssigneeParticipantType, 1); 
-                            }
+                            // Iterating through the array to find the participant with the ParticipantType eqaul assignee
+                            // then setiing the participantLdapId to empty string
+                            _.each($scope.objectInfo.participants, function(participant) {
+                                if(participant.participantType == assigneeParticipantType){
+                                    participant.participantLdapId = '';
+                                }
+                            });
 
                             // Seting the owningGroup in the objectInfo before the save
                             ObjectModelService.setGroup($scope.objectInfo, $scope.owningGroup);
@@ -203,17 +199,13 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
                                 $scope.assignee = null;
 
                                 var assigneeParticipantType = 'assignee';
-                                // Filterinng through the array to get the Assignee ParticipantType 
-                                var foundAssigneeParticipantType = $filter('filter')($scope.objectInfo.participants, 
-                                    { participantType: assigneeParticipantType  }, true)[0];
-                    
-                                // Get the index of the foundAssigneeParticipantType object in the array
-                                var indexOfFoundAssigneeParticipantType = $scope.objectInfo.participants.indexOf(foundAssigneeParticipantType);
-                                // Removing the asignee participantType only when there is no current assignee or when 
-                                // reassigning the Complaint to a group for which the current assignee is not a member
-                                if (indexOfFoundAssigneeParticipantType >= 0) {
-                                    $scope.objectInfo.participants.splice(indexOfFoundAssigneeParticipantType, 1); 
-                                }
+                                // Iterating through the array to find the participant with the ParticipantType eqaul assignee
+                                // then setiing the participantLdapId to empty string
+                                _.each($scope.objectInfo.participants, function(participant) {
+                                    if(participant.participantType == assigneeParticipantType){
+                                        participant.participantLdapId = '';
+                                    }
+                                });
                                 
                                 // Seting the owningGroup in the objectInfo before the save
                                 ObjectModelService.setGroup($scope.objectInfo, $scope.owningGroup);
@@ -236,19 +228,13 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             $scope.assignee = ObjectModelService.getAssignee($scope.objectInfo);
 
             var owningGroupParticipantType = 'owning group';
-            // Filterinng through the array to get the Assignee ParticipantType 
-            var foundOwningGroupParticipantType = $filter('filter')($scope.objectInfo.participants, 
-                { participantType: owningGroupParticipantType  }, true)[0];
-            
-            // Get the index of the foundAssigneeParticipantType object in the array
-            var indexOfFoundOwningGroupParticipantType = $scope.objectInfo.participants.indexOf(foundOwningGroupParticipantType);
-            // Assigning $scope.owningGroup the value of the participantLdapId where the participantType equals owning group 
-            // in there are no participantType of type owning group $scope.owningGroup is set to Unknown
-            if ($scope.objectInfo.participants && indexOfFoundOwningGroupParticipantType >= 0) {
-                $scope.owningGroup = objectInfo.participants[indexOfFoundOwningGroupParticipantType].participantLdapId;
-            } else {
-                $scope.owningGroup = 'Unknown';
-            }
+            $scope.owningGroup = 'Unknown';
+
+            _.each($scope.objectInfo.participants, function(participant) {
+                if(participant.participantType == owningGroupParticipantType){
+                    $scope.owningGroup = participant.participantLdapId;
+                }
+            });
 
         };
 
@@ -346,7 +332,6 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
                     function (taskInfo) {
                         $scope.$emit("report-object-updated", taskInfo);
                         TaskInfoService.resetTaskCacheById(taskInfo.taskId);
-                        console.log("Task was saved");
                         return TaskInfoService.getTaskInfo(taskInfo.taskId);
                     }
                     , function (error) {
