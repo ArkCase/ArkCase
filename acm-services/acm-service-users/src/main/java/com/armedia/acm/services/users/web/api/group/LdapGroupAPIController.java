@@ -56,8 +56,7 @@ public class LdapGroupAPIController
             return getLdapGroupService().createLdapSubgroup(group, parentGroupName);
         } catch (NameAlreadyBoundException e)
         {
-            log.error("Duplicate sub-group name: {}", group.getName());
-            log.error("NameAlreadyBoundException", e);
+            log.error("Duplicate sub-group name: {}", group.getName(), e);
             AcmAppErrorJsonMsg acmAppErrorJsonMsg = new AcmAppErrorJsonMsg("Group name already exist!",
                     "LDAP_GROUP", "groupName", e);
             acmAppErrorJsonMsg.putExtra("subgroup", group);

@@ -202,9 +202,11 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile', 'Mess
                         node.addNode(subGroup, 'firstChild');
                         node.setExpanded();
                         messageService.succsessAction();
-                    }, function () {
+                    }, function (error) {
                         //error
-                        messageService.errorAction();
+                        if (error != "cancel") {
+                            messageService.errorAction();
+                        }
                     });
                 };
 
@@ -246,7 +248,7 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile', 'Mess
                 };
 
                 var hideColumn = function (index, $id, $tdList) {
-                    var colToHide = $tbl.find($id)
+                    var colToHide = $tbl.find($id);
                     colToHide.hide();
                     $tdList.eq(index).hide();
                 }

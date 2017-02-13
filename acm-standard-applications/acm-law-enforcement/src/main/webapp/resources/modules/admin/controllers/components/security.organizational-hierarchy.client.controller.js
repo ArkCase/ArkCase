@@ -540,7 +540,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
 
         $scope.addLdapSubgroup = function (parentGroup) {
             var deferred = $q.defer();
-            var modalInstance = openLdapSubGroupModal({}, parentGroup);
+            var modalInstance = openLdapSubGroupModal({}, parentGroup.object_id_s);
 
             var onAdd = function (data) {
                 onAddLdapSubGroup(deferred, data);
@@ -562,7 +562,14 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                 newGroup.object_sub_type_s = group.type;
                 newGroup.object_id_s = group.name;
                 newGroup.name = group.name;
+                newGroup.parent_id_s = data.parentGroupName;
                 groupsMap[group.name] = newGroup;
+                if (!groupsMap[newGroup.parent_id_s].child_id_ss) {
+                    groupsMap[newGroup.parent_id_s].child_id_ss = [];
+                }
+                groupsMap[newGroup.parent_id_s].child_id_ss.push(newGroup.object_id_s);
+
+                addToTree(newGroup, true);
                 deferred.resolve(newGroup);
                 messageService.succsessAction();
             }, function (error) {
@@ -603,12 +610,12 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
             });
         }
 
-        function openLdapSubGroupModal(group, parentGroup, errorMessage) {
-            return groupModal(groupController(group, errorMessage, parentGroup, function (scope, modal) {
+        function openLdapSubGroupModal(group, parentGroupName, errorMessage) {
+            return groupModal(groupController(group, errorMessage, parentGroupName, function (scope, modal) {
                 return function () {
                     scope.data = {
                         "subgroup": scope.group,
-                        "parentGroupName": parentGroup.object_id_s
+                        "parentGroupName": parentGroupName
                     };
                     modal.close(scope.data);
                 };
@@ -616,11 +623,9 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
         }
 
         function openCreateGroupModal(group, errorMessage) {
-            return groupModal(groupController(group, errorMessage, {}, function (scope, modal) {
+            return groupModal(groupController(group, errorMessage, "", function (scope, modal) {
                 return function () {
                     modal.close(scope.group);
-                    console.log("GROUP");
-                    console.log(scope.group);
                 };
             }))
         }

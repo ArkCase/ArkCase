@@ -72,12 +72,13 @@ public class LdapGroupService
         log.debug("Saving sub-group:{} with parent-group:{} in database", group.getName(), parentGroup.getName());
         AcmGroup acmGroup = getGroupDao().save(group);
 
-        String parentGroupDnStrippedBase = MapperUtils.stripBaseFromDn(parentGroup.getDistinguishedName(), ldapSyncConfig.getBaseDC());
         log.debug("Saving sub-group:{} with parent-group:{} in LDAP server", group.getDistinguishedName(), parentGroup.getName());
         LdapTemplate ldapTemplate = getLdapDao().buildLdapTemplate(ldapSyncConfig);
-        DirContextAdapter context = createContextForGroup(acmGroup.getName(), groupDnStrippedBase, parentGroupDnStrippedBase);
+        DirContextAdapter context = createContextForGroup(acmGroup.getName(), groupDnStrippedBase, parentGroup.getDistinguishedName());
         ldapTemplate.bind(context);
         log.debug("Sub-group:{} saved", group.getName());
+
+        String parentGroupDnStrippedBase = MapperUtils.stripBaseFromDn(parentGroup.getDistinguishedName(), ldapSyncConfig.getBaseDC());
 
         try
         {
@@ -87,7 +88,8 @@ public class LdapGroupService
             ldapTemplate.modifyAttributes(parentGroupContext);
         } catch (Exception e)
         {
-            log.error("Adding sub-group DN:{} in parent-group DN:{} failed! Rollback LDAP changes", groupDN, parentGroup.getDistinguishedName());
+            log.error("Adding sub-group DN:{} in parent-group DN:{} failed! Rollback LDAP changes", groupDN,
+                    parentGroup.getDistinguishedName());
             ldapTemplate.unbind(parentGroupDnStrippedBase);
             log.debug("Sub-group entry DN:{} deleted", groupDN);
             throw new AcmUserActionFailedException("create new LDAP subgroup", null, null, "Adding new LDAP subgroup failed!", e);
