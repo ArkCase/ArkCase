@@ -43,7 +43,6 @@ exports.config = {
 
         //any test can be run with command "protractor conf.js, just place it here"
 
-
     ],
         //any suite can be run with command "protractor conf.js --suite=selected"
 
@@ -70,7 +69,6 @@ exports.config = {
     },
     onPrepare: function() {
         jasmine.getEnv().addReporter(reporter);
-
         browser.driver.manage().window().maximize();
         browser.driver.get(Objects.siteurl);
         browser.manage().timeouts().setScriptTimeout(90000);

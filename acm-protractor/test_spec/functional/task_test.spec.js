@@ -78,7 +78,7 @@ describe('Create new task ', function() {
         expect(taskPage.returnInsertedDueDate()).toEqual(utils.returnToday("/"), "task due date is not correct");
         expect(taskPage.returnPercent()).toEqual(Objects.taskpage.data.percentCompleteInput, "task percent is not correct");
         taskPage.clickDetailsLink();
-        expect(taskPage.returnDetailsTextArea()).toEqual(Objects.taskspage.data.notesTextArea, "notes text area value is not correct");
+        taskPage.validateDetailsTextArea(Objects.taskspage.data.notesTextArea, "notes text area value is not correct");
 
     });
 
@@ -102,7 +102,7 @@ describe('Create new task ', function() {
         taskPage.clickNewButton().clickTaskButton().insertTaskDataLinkNote(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskpage.data.linkInputText, Objects.taskpage.data.linkInputUrl).clickSave();
         expect(taskPage.returnTasksTitle()).toEqual(Objects.taskpage.data.tasksTitle, "Task title is not correct");
         taskPage.clickDetailsLink();
-        expect(taskPage.returnDetailsTextArea()).toEqual(Objects.taskpage.data.linkInputText, "details link is not correct");
+        taskPage.validateDetailsTextArea(Objects.taskpage.data.linkInputText, "details link is not correct");
 
     });
 
@@ -236,7 +236,7 @@ describe('Create new task ', function() {
         taskPage.insertDetailsTextAreaText(Objects.taskspage.data.detailsTextArea);
         taskPage.clickSaveDetailsButton();
         taskPage.clickRefreshButton();
-        expect(taskPage.returnDetailsTextArea()).toEqual(Objects.taskspage.data.detailsTextArea, 'After refresh the details text is not saved');
+        taskPage.validateDetailsTextArea(Objects.taskspage.data.detailsTextArea, 'After refresh the details text is not saved');
 
 
     });
@@ -248,9 +248,9 @@ describe('Create new task ', function() {
         taskPage.clickInsertLinkInDetails();
         expect(taskPage.returnInsertLinkTitle()).toEqual(Objects.taskspage.data.insertLinkTitle, "Insert link title in details is not correct");
         taskPage.insertDetailsTextAreaLink(Objects.taskspage.data.insertLinkText, Objects.taskspage.data.insertLinkUrl);
-        expect(taskPage.returnDetailsTextArea()).toEqual(Objects.taskspage.data.insertLinkText, 'The link is not added');
+        taskPage.validateDetailsTextAres(Objects.taskspage.data.insertLinkText, 'The link is not added');
         taskPage.clickSaveDetailsButton();
-        expect(taskPage.returnDetailsTextArea()).toEqual(Objects.taskspage.data.insertLinkText, 'The link is not added');
+        taskPage.validateDetailsTextArea(Objects.taskspage.data.insertLinkText, 'The link is not added');
 
     });
     it('should navigate to task page and click on header image and verify if redirects to home page', function() {
