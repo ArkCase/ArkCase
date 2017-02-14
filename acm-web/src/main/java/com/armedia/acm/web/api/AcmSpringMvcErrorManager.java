@@ -7,7 +7,9 @@ import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmNotAuthorizedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmOutlookItemNotFoundException;
+import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,6 +57,13 @@ public class AcmSpringMvcErrorManager
     {
         log.error("List Objects Failed: " + e.getMessage(), e);
         sendResponse(HttpStatus.INTERNAL_SERVER_ERROR, response, e.getMessage());
+    }
+
+    @ExceptionHandler(AcmUpdateObjectFailedException.class)
+    public void handleUpdateObjectFailed(HttpServletResponse response, AcmUpdateObjectFailedException e)
+    {
+        log.error("Update Object Failed: " + e.getMessage(), e);
+        sendResponse(HttpStatus.BAD_REQUEST, response, e.getMessage());
     }
 
     @ExceptionHandler(AcmNotAuthorizedException.class)

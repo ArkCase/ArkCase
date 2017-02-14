@@ -26,7 +26,7 @@
         <module>acm-audit-plugin</module>
         <module>acm-object-lock-plugin</module>
         <module>acm-business-process-plugin</module>
+        <module>acm-category-plugin</module>
   </modules>
-
 
 </project>
