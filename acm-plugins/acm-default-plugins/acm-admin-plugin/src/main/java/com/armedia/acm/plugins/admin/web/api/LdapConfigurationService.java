@@ -74,10 +74,7 @@ public class LdapConfigurationService
             deletePropertiesFileQuietly(dirId);
             deleteLdapFileQuietly(dirId);
 
-            if (log.isErrorEnabled())
-            {
-                log.error(String.format("Can't create LDAP directory '%s'", dirId), e);
-            }
+            log.error("Can't create LDAP directory '{}' ", dirId, e);
             throw new AcmLdapConfigurationException(String.format("Can't create LDAP directory with ID='%s'", dirId), e);
         }
     }
@@ -193,10 +190,7 @@ public class LdapConfigurationService
 
         } catch (Exception e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error(String.format("Can't write LDAP properties file with ID '%s'", dirId), e);
-            }
+            log.error("Can't write LDAP properties file with ID '{}' ", dirId, e);
             throw new AcmLdapConfigurationException("Can't write LDAP properties file ", e);
         }
     }
@@ -238,10 +232,7 @@ public class LdapConfigurationService
             }
         } catch (Exception e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error(String.format("Can't create LDAP file with ID '%s'", dirId), e);
-            }
+            log.error("Can't create LDAP file with ID '{}' ", dirId, e);
             throw new AcmLdapConfigurationException("Can't create LDAP file ", e);
         }
     }
@@ -259,17 +250,24 @@ public class LdapConfigurationService
         HashMap<String, Object> props = new HashMap<>();
         props.put(LdapConfigurationProperties.LDAP_PROP_ID, jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_ID));
         props.put("id", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_ID));
-        props.put("name", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_NAME));
         props.put("base", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_BASE));
-        props.put("directoryName", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_DIR_NAME));
         props.put("authUserDn", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_AUTH_USER_DN));
         props.put("authUserPassword",
                 encryptablePropertyUtils.encryptPropertyValue(jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_AUTH_USER_PASSWORD)));
         props.put("userSearchBase", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_USER_SEARCH_BASE));
-        props.put("userSearchFilter", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_USER_SEARCH_FILTER));
+        props.put("allUsersSearchBase", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_ALL_USERS_SEARCH_BASE));
         props.put("groupSearchBase", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_GROUP_SEARCH_BASE));
+        props.put("userSearchFilter", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_USER_SEARCH_FILTER));
+        props.put("allUsersFilter", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_ALL_USERS_FILTER));
+        props.put("allUsersPageFilter", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_ALL_USERS_PAGE_FILTER));
+        props.put("allUsersSortingAttribute", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_ALL_USERS_SORT_ATTRIBUTE));
         props.put("groupSearchFilterForUser", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_GROUP_SEARCH_FILTER_FOR_USER));
+        props.put("groupSearchFilter", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_GROUP_SEARCH_FILTER));
+        props.put("groupSearchPageFilter", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_GROUP_SEARCH_PAGE_FILTER));
+        props.put("groupsSortingAttribute", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_GROUPS_SORT_ATTRIBUTE));
         props.put("ldapUrl", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_LDAP_URL));
+       //props.put("enableEditingLdapUsers", jsonObj.getBoolean(LdapConfigurationProperties.LDAP_PROP_ENABLE_EDITING_LDAP_USERS));
+        props.put("syncPageSize", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_SYNC_PAGE_SIZE));
         props.put("userIdAttributeName", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_USER_ID_ATTR_NAME));
         props.put("userDomain", jsonObj.has(LdapConfigurationProperties.LDAP_PROP_USER_DOMAIN)
                 ? jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_USER_DOMAIN) : "");
@@ -306,10 +304,7 @@ public class LdapConfigurationService
             FileUtils.forceDelete(new File(fileName));
         } catch (IOException e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error(String.format("Can't delete file %s ", fileName), e);
-            }
+            log.error("Can't delete file {} ", fileName, e);
         }
     }
 
