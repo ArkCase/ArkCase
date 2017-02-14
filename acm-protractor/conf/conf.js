@@ -40,10 +40,10 @@ exports.config = {
     // }],
 
     specs: [
-     
-       
+
         //any test can be run with command "protractor conf.js, just place it here"
-       
+
+
     ],
         //any suite can be run with command "protractor conf.js --suite=selected"
 
@@ -54,7 +54,7 @@ exports.config = {
         regression: ['../test_spec/regression/*.spec.js'],
         functional: ['../test_spec/functional/*.spec.js'],
         all: ['../test_spec/*/*.spec.js'],
-        selected: [ '../test_spec/smoke/smoke_case_test.spec.js'],
+        selected: [ '../test_spec/functional/case_test.spec.js'],
     },
 
     jasmineNodeOpts: {
@@ -70,7 +70,6 @@ exports.config = {
     },
     onPrepare: function() {
         jasmine.getEnv().addReporter(reporter);
-
         browser.driver.manage().window().maximize();
         browser.driver.get(Objects.siteurl);
         browser.manage().timeouts().setScriptTimeout(90000);

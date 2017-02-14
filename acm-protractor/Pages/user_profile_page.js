@@ -67,28 +67,32 @@ var websiteConfirmBtn = element(by.xpath(Objects.userpage.locators.websiteConfir
 
 var changeProfilePic = element(by.xpath(Objects.userpage.locators.changeProfilePic));
 
+
 var UserPage = function(){
 	this.clickUserNavigation = function(){
-        //browser.wait(EC.visibilityOf(element(by.css(Objects.userpage.locators.userNavigation))), 30000, "User navigation field is not visible").then(function() {
-            userNavigation.click();
-        //});
+            browser.wait(EC.visibilityOf(element(by.css(Objects.userpage.locators.userNavigation))), 30000, "User navigation field is not visible").then(function () {
+                userNavigation.click();
+            });
+
 		return this;
 	}
-	this.returnUserNavigationProfile = function(){
-        //browser.wait(EC.visibilityOf(element(by.linkText(Objects.userpage.locators.userNavigationProfile))), 30000, "User navigation profile field is not visible").then(function() {
-            return userNavigationProfile.getText();
-        //});
+	this.validateUserNavigationProfile = function(text, error){
+        browser.wait(EC.visibilityOf(element(by.linkText(Objects.userpage.locators.userNavigationProfile))), 30000, "User navigation profile field is not visible").then(function() {
+            expect(userNavigationProfile.getText()).toEqual(text, error);
+        });
 	}
 	this.clickUserNavigationProfile = function(){
-        //browser.wait(EC.visibilityOf(element(by.linkText(Objects.userpage.locators.userNavigationProfile))), 30000, "User navigation profile field is not visible").then(function() {
+        browser.wait(EC.visibilityOf(element(by.linkText(Objects.userpage.locators.userNavigationProfile))), 30000, "User navigation profile field is not visible").then(function() {
             userNavigationProfile.click();
-        //});
+        });
 		return this;
 	}
-	this.returnUserPageHeader = function(){
-        //browser.wait(EC.visibilityOf(element(by.xpath(Objects.userpage.locators.userPageHeader))), 30000, "User page header is not visible").then(function() {
-            return userPageHeader.getText();
-        //});
+	this.validateUserPageHeader = function(text, error){
+        browser.wait(EC.visibilityOf(element(by.id(Objects.userpage.locators.picture))), 30000, "Picture element is not visible on user profile page"). then(function () {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.userpage.locators.userPageHeader))), 30000, "User page header is not visible").then(function() {
+                expect(userPageHeader.getText()).toEqual(text, error);
+            });
+        })
 	}
 	this.clickUserName = function(){
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.userpage.locators.userName))), 30000, "User name field is not visible").then(function() {
@@ -324,7 +328,9 @@ var UserPage = function(){
 		return state.getText();
 	}
 	this.clickZip = function(){
-		zip.click();
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.userpage.locators.zip))), 30000, "Zip field is not visible").then(function() {
+            zip.click();
+        });
 		return this;
 	}
 	this.insertZip = function(zip){

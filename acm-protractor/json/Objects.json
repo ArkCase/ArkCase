@@ -9,7 +9,7 @@
         "data": {
             "supervisoruser": {
 
-                "username": "sally-acm",
+                "username": "samuel-acm",
                 "password": "AcMd3v$"
             },
             "adminuser": {
@@ -34,13 +34,13 @@
             "root": ".//span[@title='root']",
             "newCorrespondence": ".//li[@data-command='subMenuCorrespondenceForms']",
             "docRow": "//table/tbody/tr[3]",
-            "docTitle": "//table/tbody/tr[2]/td[3]/span/span[3]",
+            "docTitle": "//table/tbody/tr[3]/td[3]/span/span[3]",
             "docExtension": "//table/tbody/tr[3]/td[4]",
             "docType": "//table/tbody/tr[3]/td[5]",
             "docCreated": "//table/tbody/tr[3]/td[6]",
             "docModified": "//table/tbody/tr[3]/td[7]",
             "docAuthor": "//table/tbody/tr[3]/td[8]",
-            "docVersion": "//table/tbody/tr[2]/td[9]/span/select/option",
+            "docVersion": "//table/tbody/tr[3]/td[9]/span/select/option",
             "docStatus": "//table/tbody/tr[3]/td[10]",
             "deleteDoc": ".//li[@data-command='remove']",
             "downloadDoc": ".//li[@data-command='download']",
@@ -387,7 +387,8 @@
             "website": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[3]/a",
             "websiteInput": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[3]/form/div/input",
             "websiteConfirmBtn": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[3]/form/div/span/button[1]",
-            "changeProfilePic": "//*[@id='lnkChangePicture']/u/span"
+            "changeProfilePic": "//*[@id='lnkChangePicture']/u/span",
+            "picture": "picLoading"
 
         },
 
@@ -490,7 +491,8 @@
             "description": "Description",
             "approver": "samuel",
             "titleComplaint": "NewComplaint",
-            "automaticTaskNameCloseComplaint": "Review Request to Close Complaint"
+            "automaticTaskNameCloseComplaint": "Review Request to Close Complaint",
+            "detailsInfoInOpenInvestigationCase": "This case file is based on Complaint"
         }
     },
     "casepage": {
