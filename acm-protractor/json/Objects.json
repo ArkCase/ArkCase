@@ -1,5 +1,5 @@
 {
-    "siteurl": "https://core.arkcase.dev.armedia.com/arkcase/login",
+    "siteurl": "https://cloud.arkcase.com/arkcase/login",
     "loginpage": {
         "locators": {
             "username": "j_username",
@@ -9,7 +9,7 @@
         "data": {
             "supervisoruser": {
 
-                "username": "samuel-acm",
+                "username": "sally-acm",
                 "password": "AcMd3v$"
             },
             "adminuser": {

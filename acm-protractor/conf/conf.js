@@ -43,6 +43,7 @@ exports.config = {
 
         //any test can be run with command "protractor conf.js, just place it here"
 
+
     ],
         //any suite can be run with command "protractor conf.js --suite=selected"
 
@@ -53,7 +54,7 @@ exports.config = {
         regression: ['../test_spec/regression/*.spec.js'],
         functional: ['../test_spec/functional/*.spec.js'],
         all: ['../test_spec/*/*.spec.js'],
-        selected: [ '../test_spec/smoke/smoke_test.spec.js'],
+        selected: [ '../test_spec/functional/case_test.spec.js'],
     },
 
     jasmineNodeOpts: {

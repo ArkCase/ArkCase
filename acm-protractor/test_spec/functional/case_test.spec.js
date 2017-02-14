@@ -88,20 +88,20 @@ describe('case page tests', function() {
         expect(casePage.returnNoteName()).toEqual(Objects.casepage.data.editnote, "The note is not updated");
     });
 
-    it('should  add task from tasks table verify the task', function() {
+    it('should  add add hoc task from tasks table and verify the task', function () {
 
         casePage.clickModuleCasesFiles();
         casePage.clickTasksLinkBtn();
         casePage.clickAddTaskButton();
-        taskPage.insertSubject(Objects.taskpage.data.Subject).insertDueDateToday().clickSave();
+        taskPage.insertSubject(Objects.taskpage.data.Subject).insertDueDate(utils.returnToday("/")).clickSave();
         taskPage.clickCaseTitleInTasks();
-        casePage.clickTasksLinkBtn().waitForTasksTable();
-        expect(casePage.returnTaskTableTitle()).toContain(Objects.taskpage.data.Subject, "Subject on added task to case is not correct in tasks table");
-        expect(casePage.returnTaskTableAssignee()).toEqual(Objects.casepage.data.assigneeSamuel, "Assignee on added task to case is not correct in tasks table");
-        expect(casePage.returnTaskTableCreatedDate()).toEqual(utils.returnToday("/"), "Created date on added task to case is not correct in tasks table ");
-        expect(casePage.returnTaskTablePriority()).toEqual(Objects.casepage.data.priorityMedium, "Priority on added task to case is not correct in tasks table");
-        expect(casePage.returnTaskTableDueDate()).toEqual(utils.returnToday("/"), "Due date on added task to case is not correct in tasks table");
-        expect(casePage.returnTaskTableStatus()).toEqual("ACTIVE", "Status on added task to case is not correct in tasks table");
+        casePage.clickExpandFancyTreeTopElementAndSubLink("Tasks").waitForTasksTable();
+        casePage.validateTaskTableValue("Ad hoc task", "Title", Objects.taskpage.data.Subject);
+        casePage.validateTaskTableValue("Ad hoc task", "Assignee", Objects.casepage.data.assigneeSamuel);
+        casePage.validateTaskTableValue("Ad hoc task", "Created", utils.returnToday("/"));
+        casePage.validateTaskTableValue("Ad hoc task", "Priority", Objects.casepage.data.priorityMedium);
+        casePage.validateTaskTableValue("Ad hoc task", "Due", utils.returnToday("/"));
+        casePage.validateTaskTableValue("Ad hoc task", "Status", "ACTIVE");
     });
 
     it('should  verify the people initiator', function() {
