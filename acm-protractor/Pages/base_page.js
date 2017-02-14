@@ -1479,11 +1479,16 @@ var BasePage = function() {
         refreshBtn.click();
         return this;
     };
-    this.returnDetailsTextArea = function() {
+    this.validateDetailsTextArea = function(text, error) {
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.detailsTextArea))), 30000, "Details text area is not visible").then(function() {
+            expect(detailsTextArea.getText()).toContain(text, error);
+        });
+    };
+    this.returnDetailsTextArea = function () {
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.detailsTextArea))), 30000, "Details text area is not visible").then(function() {
             return detailsTextArea.getText();
         });
-    };
+    }
     this.clickInsertLinkInDetails = function() {
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.detailsLinkBtn))), 30000, "Details link button is not visible").then(function() {
             detailsLinkBtn.click();
