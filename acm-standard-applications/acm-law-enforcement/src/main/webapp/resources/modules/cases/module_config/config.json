@@ -932,10 +932,10 @@
       "paginationPageSize": 5,
       "columnDefs": [
         {
-          "name": "parentName",
+          "name": "targetName",
           "displayName": "cases.comp.references.table.columns.targetName",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.parentName}}</a>"
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity, true)'>{{row.entity.targetName}}</a>"
         },
         {
           "name": "targetTitle",
