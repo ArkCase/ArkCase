@@ -468,8 +468,10 @@ var BasePage = function() {
                 var completexPath;
                 completexPath = xPathStr + link + "')]";
                 browser.wait(EC.visibilityOf(element(by.xpath(completexPath))), 30000, "Sublink " + link + " of top element is not visible").then(function() {
-                    var el = element(by.xpath(completexPath));
-                    el.click();
+                    browser.wait(EC.elementToBeClickable(element(by.xpath(completexPath))), 30000, "Sublink " + link + " of top element is not visible").then(function() {
+                        var el = element(by.xpath(completexPath));
+                        el.click();
+                    });
                 });
             });
         });
@@ -2090,7 +2092,7 @@ var BasePage = function() {
                 completexPath = xPathStart + "Review Request to Change Case Status')]";
                 break;
             case "Automatic Task on Creation":
-                completexPath = xPathStart + "Review']";
+                completexPath = xPathStart + "Review')]";
                 break;
             case "Ad hoc task":
                 completexPath = xPathStart + "Ad hoc task')]";
@@ -2106,6 +2108,62 @@ var BasePage = function() {
         el.click();
         return this;
 
+    }
+
+    this.validateTaskTableValue = function (type, column, expectedValue) {
+        var xPathStart = "//a[contains(text(),'";
+        var completexPath;
+        var xPathEnd;
+        switch (column) {
+            case "Title":
+                xPathEnd = "/div[2]/a";
+                break;
+            case "Assignee":
+                xPathEnd = "/div[3]/div";
+                break;
+            case "Created":
+                xPathEnd = "/div[4]/div";
+                break;
+            case "Priority":
+               xPathEnd = "/div[5]/div";
+                break;
+            case "Due":
+                xPathEnd = "/div[6]/div";
+                break;
+            case "Status":
+                xPathEnd = "/div[7]/div";
+                break;
+            default:
+                xPathEnd = "/div[2]/a";
+                break;
+        }
+        switch (type) {
+            case "Automatic Task on Change Case Status":
+                completexPath = xPathStart + "Review Request to Change Case Status')]/../.." + xPathEnd;
+                break;
+            case "Automatic Task on Creation":
+                completexPath = xPathStart + "Review')]/../.." + xPathEnd;
+                break;
+            case "Ad hoc task":
+                completexPath = xPathStart + "Ad hoc task')]/../.." + xPathEnd;
+                break;
+            case "Automatic Task on Close Complaint":
+                completexPath = xPathStart + "Review Request to Close Complaint')]/../.." + xPathEnd;
+                break;
+            default:
+                completexPath = xPathStart + "Ad hoc task']/../.." + xPathEnd;
+                break;
+        }
+        var el = element(by.xpath(completexPath));
+        browser.wait(EC.visibilityOf(element(by.xpath(completexPath))), 30000, "task is not visible in the grid").then(function () {
+            if (column == "Title") {
+                expect(el.getText()).toContain(expectedValue, "Task table " + column + " value is not correct in the grid");
+            }
+            else
+            {
+                expect(el.getText()).toEqual(expectedValue, "Task table " + column + " value is not correct in the grid");
+            }
+        });
     }
 
     this.returnObjectStatus = function() {
