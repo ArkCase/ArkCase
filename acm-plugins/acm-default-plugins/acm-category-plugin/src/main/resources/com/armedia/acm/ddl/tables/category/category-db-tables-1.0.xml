@@ -1,0 +1,49 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <property name="caseNumberLength" value="1024" dbms="postgresql,oracle"/>
+    <property name="caseNumberLength" value="255" dbms="mysql,mssql"/>
+
+    <changeSet id="01-1-acm-category-table" author="lazo.lazarev">
+        <createTable tableName="acm_category">
+            <column name="cm_category_id" type="${idType}">
+                <constraints primaryKeyName="pk_cm_category_id" primaryKey="true"/>
+            </column>
+            <column name="cm_category_parent_id" type="${idType}"/>
+            <column name="cm_category_name" type="VARCHAR(256)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_category_description" type="VARCHAR(1024)"/>
+            <column name="cm_category_creator" type="VARCHAR(256)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_category_created" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_category_modifier" type="VARCHAR(256)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_category_modified" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_category_status" type="VARCHAR(32)">
+                <constraints checkConstraint="cm_category_status IN('ACTIVATED', 'DEACTIVATED', 'DELETED')"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="01-2-acm-category-id" author="lazo.lazarev">
+        <createTable tableName="acm_category_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_category_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_category"></column>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
