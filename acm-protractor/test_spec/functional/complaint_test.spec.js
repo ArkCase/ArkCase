@@ -69,9 +69,9 @@ describe('Create new complaint ', function() {
         complaintPage.clickInsertLinkInDetails();
         expect(complaintPage.returnInsertLinkTitle()).toEqual(Objects.taskspage.data.insertLinkTitle);
         complaintPage.insertDetailsTextAreaLink(Objects.taskspage.data.insertLinkText, Objects.taskspage.data.insertLinkUrl);
-        expect(complaintPage.returnDetailsTextArea()).toEqual(Objects.taskspage.data.insertLinkText, 'The link is not added');
+        complaintPage.validateDetailsTextArea(Objects.taskspage.data.insertLinkText, 'The link is not added');
         complaintPage.clickSaveDetailsButton();
-        expect(complaintPage.returnDetailsTextArea()).toEqual(Objects.taskspage.data.insertLinkText, 'The link is not mathcing the expected value');
+        complaintPage.validateDetailsTextArea(Objects.taskspage.data.insertLinkText, 'The link is not mathcing the expected value');
 
     });
 
