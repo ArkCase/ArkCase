@@ -44,14 +44,20 @@ public class CategoryManagementAPIController
 
     @RequestMapping(value = "/{categoryId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Category getCategory(@PathVariable(value = "categoryId") Long categoryId) throws AcmObjectNotFoundException
+    public Category getCategory(@PathVariable(value = "categoryId") Long categoryId,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int start,
+            @RequestParam(value = "n", required = false, defaultValue = "10") int n,
+            @RequestParam(value = "s", required = false, defaultValue = "DESC") String s) throws AcmObjectNotFoundException
     {
         return categoryService.get(categoryId);
     }
 
     @RequestMapping(value = "/{categoryId}/children", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<Category> getCategoryChildren(@PathVariable(value = "categoryId") Long categoryId) throws AcmObjectNotFoundException
+    public List<Category> getCategoryChildren(@PathVariable(value = "categoryId") Long categoryId,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int start,
+            @RequestParam(value = "n", required = false, defaultValue = "10") int n,
+            @RequestParam(value = "s", required = false, defaultValue = "DESC") String s) throws AcmObjectNotFoundException
     {
         return categoryService.getChildren(categoryId);
     }
