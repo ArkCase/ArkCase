@@ -1026,7 +1026,7 @@
           "name": "targetName",
           "displayName": "complaints.comp.references.table.columns.targetName",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.targetName}}</a>"
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity, true)'>{{row.entity.targetName}}</a>"
         },
         {
           "name": "targetTitle",
