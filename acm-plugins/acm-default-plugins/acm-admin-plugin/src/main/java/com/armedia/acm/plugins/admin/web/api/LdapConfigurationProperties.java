@@ -13,7 +13,6 @@ public interface LdapConfigurationProperties
     String LDAP_PROP_GROUP_SEARCH_FILTER = "ldapConfig.groupSearchFilter";
     String LDAP_PROP_GROUP_SEARCH_PAGE_FILTER = "ldapConfig.groupSearchPageFilter";
     String LDAP_PROP_GROUPS_SORT_ATTRIBUTE = "ldapConfig.groupsSortingAttribute";
-    String LDAP_PROP_ALL_USERS_SEARCH_BASE = "ldapConfig.allUsersSearchBase";
     String LDAP_PROP_ALL_USERS_FILTER = "ldapConfig.allUsersFilter";
     String LDAP_PROP_ALL_USERS_PAGE_FILTER = "ldapConfig.allUsersPageFilter";
     String LDAP_PROP_ALL_USERS_SORT_ATTRIBUTE = "ldapConfig.allUsersSortingAttribute";
