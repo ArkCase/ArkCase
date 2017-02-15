@@ -92,7 +92,15 @@
             "email": "sanja.paskova@armedia.com",
             "owningGroupAdministratorDev":"ACM_ADMINISTRATOR_DEV",
             "IanInvestigator":"Ian Investigator",
-            "sortByIdDesc": "Sort Case ID Desc"
+            "sortByIdDesc": "Sort Case ID Desc",
+            "docGridColumn1": "Title",
+            "docGridColumn2": "Extension",
+            "docGridColumn3": "Type",
+            "docGridColumn4": "Created",
+            "docGridColumn5": "Modified",
+            "docGridColumn6": "Author",
+            "docGridColumn7": "Version",
+            "docGridColumn8": "Status"
 
         }
 

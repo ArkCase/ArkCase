@@ -310,6 +310,24 @@ describe('edit user profile page', function () {
 
         });
 
+        //verify adding document to document management
+
+        it('should verify adding correspondence document', function () {
+
+            casePage.clickModuleCasesFiles();
+            casePage.clickExpandFancyTreeTopElementAndSubLink("Documents");
+            casePage.rightClickRootFolder().addCorrespondence("case", "Clearance Granted");
+            casePage.verifyTheNotificationMessage("Case File ", "The notification message after adding document is not correct");
+            casePage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn1, "Clearance Granted");
+            casePage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn2, ".docx");
+            casePage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn3, "Clearance Granted");
+            casePage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn4, utils.returnToday("/"));
+            casePage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn5, utils.returnToday("/"));
+            casePage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn6, Objects.taskspage.data.assigneeSamuel);
+            casePage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn7, "1.0");
+            casePage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn8, "ACTIVE");
+        });
+
         //close case and make sure the files are declared as records on the Alfresco site
 
         it('should open case and change case status to closed, verify the automated task in tasks table and approve', function () {
@@ -351,19 +369,6 @@ describe('edit user profile page', function () {
             casePage.clickNotesLink();
             casePage.addNote(Objects.casepage.data.note);
             casePage.deleteNote();
-        });
-
-
-        //verify adding document to document management
-
-        it('should verify adding correspondence document', function () {
-
-            casePage.clickModuleCasesFiles();
-            casePage.clickExpandFancyTreeTopElementAndSubLink("Documents");
-            casePage.rightClickRootFolder().addCorrespondence("case", "Clearance Granted");
-            casePage.verifyTheNotificationMessage("Case File ", "The notification message after adding document is not correct");
-            casePage.validateDocGridData(true, "Clearance Granted", ".docx", "Clearance Granted", utils.returnToday("/"), utils.returnToday("/"), Objects.taskspage.data.assigneeSamuel, "1.0", "ACTIVE");
-
         });
 
         //View document (Click Open)
@@ -485,7 +490,14 @@ describe('edit user profile page', function () {
             complaintPage.clickExpandFancyTreeTopElementAndSubLink("Documents");
             complaintPage.rightClickRootFolder();
             complaintPage.addDocument("Notice of Investigation");
-            complaintPage.validateDocGridData(true, "ArkCaseTesting", ".docx", "Notice of Investigation", utils.returnToday("/"), utils.returnToday("/"), userPage.returnUserNavigationProfile(), "1.0", "ACTIVE");
+            complaintPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn1, "ArkCaseTesting");
+            complaintPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn2, ".docx");
+            complaintPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn3, "Notice Of Investigation");
+            complaintPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn4, utils.returnToday("/"));
+            complaintPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn5, utils.returnToday("/"));
+            complaintPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn6, Objects.taskspage.data.assigneeSamuel);
+            complaintPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn7, "1.0");
+            complaintPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn8, "ACTIVE");
 
         });
 
@@ -539,7 +551,7 @@ describe('edit user profile page', function () {
 
         });
 
-    });
+     });
     describe('notification page test', function () {
 
 
