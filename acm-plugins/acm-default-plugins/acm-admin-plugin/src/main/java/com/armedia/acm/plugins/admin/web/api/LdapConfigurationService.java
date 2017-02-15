@@ -51,14 +51,14 @@ public class LdapConfigurationService
     public void createLdapDirectory(String dirId, Map<String, Object> props) throws AcmLdapConfigurationException
     {
 
-        Pattern pattern = Pattern.compile("^[a-zA-Z0-9]+$");
+        Pattern pattern = Pattern.compile("^[a-zA-Z0-9.]+$");
         Matcher matcher = pattern.matcher(dirId);
         if (!matcher.find())
         {
-            throw new AcmLdapConfigurationException("ID has wrong format. Only numbers and characters symbols are allowed");
+            throw new AcmLdapConfigurationException("ID has wrong format. Only numbers, characters symbols and '.' are allowed");
         }
 
-        // Check if LDAP files are exist
+        // Check if LDAP files exist
         if (propertiesFileExist(dirId) || ldapFileExist(dirId))
         {
             throw new AcmLdapConfigurationException(String.format("LDAP directory with ID='%s' exists", dirId));
@@ -255,7 +255,6 @@ public class LdapConfigurationService
         props.put("authUserPassword",
                 encryptablePropertyUtils.encryptPropertyValue(jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_AUTH_USER_PASSWORD)));
         props.put("userSearchBase", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_USER_SEARCH_BASE));
-        props.put("allUsersSearchBase", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_ALL_USERS_SEARCH_BASE));
         props.put("groupSearchBase", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_GROUP_SEARCH_BASE));
         props.put("userSearchFilter", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_USER_SEARCH_FILTER));
         props.put("allUsersFilter", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_ALL_USERS_FILTER));

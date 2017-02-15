@@ -12,7 +12,7 @@
     <div class="modal-body">
         <div class="form-group" ng-hide="isEdit">
             <label>{{ 'admin.security.ldapConfig.data.id' | translate }}</label>
-            <input class="form-control" type="text" ng-model="dir.id" ng-pattern="/^[a-zA-Z0-9]*$/"
+            <input class="form-control" type="text" ng-model="dir.id" ng-pattern="/^[a-zA-Z0-9.]*$/"
                    placeholder="{{ 'admin.security.ldapConfig.data.placeholders.id' | translate }}" required>
         </div>
         <div class="form-group">
@@ -59,11 +59,6 @@
             <label>{{ 'admin.security.ldapConfig.data.allUsersPageFilter' | translate }}</label>
             <input class="form-control" type="text" ng-model="dir.allUsersPageFilter"
                    placeholder="{{ 'admin.security.ldapConfig.data.placeholders.allUsersPageFilter' | translate }}">
-        </div>
-        <div class="form-group">
-            <label>{{ 'admin.security.ldapConfig.data.allUsersSearchBase' | translate }}</label>
-            <input class="form-control" type="text" ng-model="dir.allUsersSearchBase"
-                   placeholder="{{ 'admin.security.ldapConfig.data.placeholders.allUsersSearchBase' | translate }}" required>
         </div>
         <div class="form-group">
             <label>{{ 'admin.security.ldapConfig.data.groupSearchBase' | translate }}</label>
