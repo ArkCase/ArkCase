@@ -1724,6 +1724,12 @@ var BasePage = function() {
         });
         return this;
     };
+
+    this.waitForDocumentView = function() {
+        browser.wait(EC.visibilityOf(element(by.linkText(Objects.basepage.locators.docViewNotesLink))), 30000, "Document view is not successfully opened");
+        return this;
+    };
+
     this.clickDocViewAddNote = function() {
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.docViewAddNoteButton))), 30000, "Document view add note button is not visible").then(function() {
             docViewAddNoteButton.click();
