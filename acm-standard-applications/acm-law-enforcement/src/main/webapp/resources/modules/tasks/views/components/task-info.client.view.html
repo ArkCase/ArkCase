@@ -10,8 +10,8 @@
 
         </div>
         <div class="row">
-            <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">
+            <div class="col-xs-9 col-md-3">
+                <div class="h4 font-bold no-margin">
                     <a href="#" editable-number="objectInfo.percentComplete" onbeforesave="validatePercentComplete($data)" onaftersave="saveTask()" permission="editTask" permission-properties="objectInfo" permission-action="disable">
                         {{ objectInfo.percentComplete }}
                     </a>
@@ -19,26 +19,25 @@
                 </div>
                 <small class="text-muted">"% of Completion"</small>
             </div>
-            <div class="col-xs-12 col-md-4">
-                <div ng-if="objectInfo.assignee">
-                    <div class="h4 font-bold">
-                        <a href="" class="editable-click no-outline" ng-click="showAssigneePicker()" permission="editTask" permission-properties="objectInfo" permission-action="disable">
+            <div class="col-xs-9 col-md-3">
+                <div>
+                    <div class="h4 font-bold no-margin">
+                        <a href="" class="editable-click no-outline" ng-click="openAssigneePickerModal()" permission="editTask" permission-properties="objectInfo" permission-action="disable">
                             <user-full-name userId="objectInfo.assignee" fallback="None"/>
                         </a>
                     </div>
                     <small class="text-muted">Assignee</small>
                 </div>
-                <div ng-if="objectInfo.candidateGroups[0]">
-                    <div class="h4 font-bold">
-                        <a href="" class="editable-click no-outline" ng-click="showAssigneePicker()"  permission="editTask" permission-properties="objectInfo" permission-action="disable">
-                            {{objectInfo.candidateGroups[0] || 'None'}}
-                        </a>
-                    </div>
-                    <small class="text-muted">Group Bucket</small>
-                </div>
             </div>
-            <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">
+            <div class="col-xs-9 col-md-3">
+                <div class="h4 font-bold no-margin">
+                    <a href="" class="editable-click no-outline" ng-click="openGroupPickerModal()"
+                       permission="editTask" permission-properties="objectInfo" permission-action="disable"> {{owningGroup || 'Unknown'}}</a>
+                </div>
+                <small class="text-muted">Owning Group</small>
+            </div>
+            <div class="col-xs-9 col-md-3">
+                <div class="h4 font-bold no-margin">
                     <a href="#" editable-select="objectInfo.priority" onaftersave="saveTask()"
                        e-ng-options="p.value as p.text for p in priorities" permission="editTask" permission-properties="objectInfo" permission-action="disable">{{ objectInfo.priority ||
                         'Unknown'}}</a>
@@ -46,8 +45,8 @@
                 </div>
                 <small class="text-muted">Priority</small>
             </div>
-            <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">
+            <div class="col-xs-9 col-md-3">
+                <div class="h4 font-bold no-margin">
                     <a href="#" editable-bsdate="dateInfo.taskStartDate"
                        e-datepicker-popup="{{defaultDatePickerFormat}}"
                        e-ng-click="onPickerClick()" e-is-open="picker.opened"
@@ -60,8 +59,8 @@
                 </div>
                 <small class="text-muted">Start Date</small>
             </div>
-            <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">
+            <div class="col-xs-9 col-md-3">
+                <div class="h4 font-bold no-margin">
                     <a href="#" editable-bsdate="dateInfo.dueDate"
                        e-datepicker-popup="{{defaultDatePickerFormat}}"
                        e-ng-click="onPickerClick()" e-is-open="picker.opened"
@@ -80,8 +79,8 @@
                 </div>
                 <small class="text-muted">Due Date</small>
             </div>
-            <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">{{objectInfo.status || 'Unknown'}}</div>
+            <div class="col-xs-9 col-md-3">
+                <div class="h4 font-bold no-margin">{{objectInfo.status || 'Unknown'}}</div>
                 <small class="text-muted">State</small>
             </div>
 
