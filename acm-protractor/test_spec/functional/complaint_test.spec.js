@@ -91,8 +91,15 @@ describe('Create new complaint ', function() {
         complaintPage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Documents");
         complaintPage.rightClickRootFolder().addDocument("Report of Investigation");
         complaintPage.switchToIframes().submitReportOfInvestigation(Objects.basepage.data.reportTitle, Objects.taskspage.data.assigneeSamuel);
-        complaintPage.switchToDefaultContent().validateDocGridData(true, "Report of Investigation", ".pdf", "Report of Investigation", utils.returnToday("/"), utils.returnToday("/"), userPage.returnUserNavigationProfile(), "1.0", "ACTIVE");
-
+        complaintPage.switchToDefaultContent();
+        complaintPage.validateDocGridValue("Report of Investigation", Objects.basepage.data.docGridColumn1, "Report of Investigation");
+        complaintPage.validateDocGridValue("Report of Investigation", Objects.basepage.data.docGridColumn2, ".pdf");
+        complaintPage.validateDocGridValue("Report of Investigation", Objects.basepage.data.docGridColumn3, "Report of Investigation");
+        complaintPage.validateDocGridValue("Report of Investigation", Objects.basepage.data.docGridColumn4, utils.returnToday("/"));
+        complaintPage.validateDocGridValue("Report of Investigation", Objects.basepage.data.docGridColumn5, utils.returnToday("/"));
+        complaintPage.validateDocGridValue("Report of Investigation", Objects.basepage.data.docGridColumn6, Objects.taskspage.data.assigneeSamuel);
+        complaintPage.validateDocGridValue("Report of Investigation", Objects.basepage.data.docGridColumn7, "1.0");
+        complaintPage.validateDocGridValue("Report of Investigation", Objects.basepage.data.docGridColumn8, "ACTIVE");
     });
 
     it('should verify adding notes in document viewer in complaints', function() {
@@ -518,7 +525,15 @@ describe('Create new complaint ', function() {
 
         complaintPage.clickModuleComplaints();
         complaintPage.clickExpandFancyTreeTopElementAndSubLink("Documents");
-        complaintPage.rightClickRootFolder().addCorrespondence("complaint", "Notice of Investigation");
-        complaintPage.validateDocGridData(true, "Notice of Investigation", ".docx", "Notice of Investigation", utils.returnToday("/"), utils.returnToday("/"), userPage.returnUserNavigationProfile(), "1.0", "ACTIVE");
+        complaintPage.rightClickRootFolder().addCorrespondence("complaint", "Clearance Granted");
+        complaintPage.verifyTheNotificationMessage("Case File ", "The notification message after adding document is not correct");
+        complaintPage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn1, "Clearance Granted");
+        complaintPage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn2, ".docx");
+        complaintPage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn3, "Clearance Granted");
+        complaintPage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn4, utils.returnToday("/"));
+        complaintPage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn5, utils.returnToday("/"));
+        complaintPage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn6, Objects.taskspage.data.assigneeSamuel);
+        complaintPage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn7, "1.0");
+        complaintPage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn8, "ACTIVE");
     });
 });

@@ -406,6 +406,46 @@ var BasePage = function() {
         })
 
     }
+
+    this.validateDocGridValue = function (type, column, expectedValue) {
+        var xPathStart = "//span[@title='";
+        var completexPath;
+        var xPathEnd;
+        switch (column) {
+            case "Title":
+                xPathEnd = "/../../../td[3]";
+                break;
+            case "Extension":
+                xPathEnd = "/../../../td[4]";
+                break;
+            case "Type":
+                xPathEnd = "/../../../td[5]";
+                break;
+            case "Created":
+                xPathEnd = "/../../../td[6]";
+                break;
+            case "Modified":
+                xPathEnd = "/../../../td[7]";
+                break;
+            case "Author":
+                xPathEnd = "/../../../td[8]";
+                break;
+            case "Version":
+                xPathEnd = "/../../../td[9]/span/select/option";
+                break;
+            case "Status":
+                xPathEnd = "/../../../td[10]";
+                break;
+            default:
+                xPathEnd = "/../../../td[4]";
+                break;
+        }
+        completexPath = xPathStart + type + "']" + xPathEnd;
+        var el = element(by.xpath(completexPath));
+        browser.wait(EC.visibilityOf(element(by.xpath(completexPath))), 30000, "document is not successfully uploaded").then(function () {
+            expect(el.getText()).toEqual(expectedValue, "Document table " + column + " value is not correct in the grid");
+        });
+    }
     this.switchToIframes = function() {
         browser.ignoreSynchronization = true;
         browser.wait(EC.visibilityOf(element(by.className("new-iframe ng-scope"))), 30000, "Iframe is not visible");
@@ -1684,6 +1724,12 @@ var BasePage = function() {
         });
         return this;
     };
+
+    this.waitForDocumentView = function() {
+        browser.wait(EC.visibilityOf(element(by.linkText(Objects.basepage.locators.docViewNotesLink))), 30000, "Document view is not successfully opened");
+        return this;
+    };
+
     this.clickDocViewAddNote = function() {
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.docViewAddNoteButton))), 30000, "Document view add note button is not visible").then(function() {
             docViewAddNoteButton.click();
