@@ -58,6 +58,7 @@ var searchForUserInput = element(by.xpath(Objects.casepage.locators.searchForUse
 var searchForUserBtn = element(by.buttonText(Objects.casepage.locators.searchUserBtn));
 var searchedUser = element(by.xpath(Objects.casepage.locators.searchedUserName));
 var okBtn = element(by.buttonText(Objects.casepage.locators.OkBtn));
+var detailsTextArea = element(by.xpath(Objects.taskspage.locators.detailsTextArea));
 
 var ComplaintPage = function() {
 

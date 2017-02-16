@@ -39,13 +39,21 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
             $scope.gridOptions.data = Util.goodArray($scope.objectInfo.references);
         };
 
-        $scope.onClickObjLink = function (event, rowEntity) {
+        $scope.onClickObjLink = function (event, rowEntity, targetNameColumnClicked) {
             event.preventDefault();
 
             var targetType = Util.goodMapValue(rowEntity, "targetType");
             var targetId = Util.goodMapValue(rowEntity, "targetId");
-            gridHelper.showObject(targetType, targetId);
+            var parentId = Util.goodMapValue(rowEntity, "parentId");
+            var parentType = Util.goodMapValue(rowEntity, "parentType");
+            var fileName = Util.goodMapValue(rowEntity, "targetName");
 
+            if(targetType == ObjectService.ObjectTypes.FILE && targetNameColumnClicked){
+                gridHelper.openObject(targetId, parentId, parentType, fileName);
+            }else{
+                gridHelper.showObject(targetType, targetId);
+            }
+            
             if (ObjectService.ObjectTypes.CASE_FILE == targetType) {
                 $scope.$emit('request-show-object', {objectId: targetId, objectType: targetType});
             }
@@ -76,13 +84,14 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
                 size: 'lg',
                 resolve: {
                     $filter: function () {
-                    	var filter = $scope.modalConfig.searchFilter + "&-id:" + $scope.objectInfo.id + "-CASE_FILE";
+                        var filter = $scope.modalConfig.searchFilter + "&-id:" + $scope.objectInfo.id + "-" + ObjectService.ObjectTypes.CASE_FILE;
                         if ($scope.gridOptions.data.length > 0) {
                             for (var i = 0; i < $scope.gridOptions.data.length; i++) {
                                 var data = $scope.gridOptions.data[i];
                                 filter += "&-id:" + data.targetId + "-" + data.targetType;
                             }
                         }
+                        filter += "&-parent_ref_s:" + $scope.objectInfo.id + "-" + ObjectService.ObjectTypes.CASE_FILE;
                         return filter.replace(/&/gi, '%26');
                     },
                     $config: function () {

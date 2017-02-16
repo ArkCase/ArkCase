@@ -40,16 +40,16 @@
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
                     <a href="javascript:;" class="editable-click no-outline" ng-click="openAssigneePickerModal()"
-                       permission="editCase" permission-properties="objectInfo" permission-action="disable">{{assignee |
-                        mapKeyValue: assignees:'id':'name' || 'Unknown'}}</a>
+                       permission="editCase" permission-properties="objectInfo" permission-action="disable">
+                       <user-full-name userId="objectInfo.assignee" fallback="None"/>
+                    </a>
                 </div>
                 <small class="text-muted">Assigned To</small>
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    <a href="#" editable-select="owningGroup" onaftersave="updateOwningGroup()"
-                       permission="editCase" permission-properties="objectInfo" permission-action="disable"
-                       e-ng-options="o.value as o.text for o in owningGroups"> {{owningGroup || 'Unknown'}}</a>
+                    <a href="javascript:;" class="editable-click no-outline" ng-click="openGroupPickerModal()"
+                       permission="editCase" permission-properties="objectInfo" permission-action="disable"> {{owningGroup || 'Unknown'}}</a>
                 </div>
                 <small class="text-muted">Owning Group</small>
             </div>
