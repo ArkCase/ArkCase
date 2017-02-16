@@ -2,6 +2,8 @@ package com.armedia.acm.plugins.task.listener;
 
 import com.armedia.acm.plugins.task.model.TaskConstants;
 import com.armedia.acm.services.search.model.SearchConstants;
+import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.DelegateTask;
 import org.activiti.engine.delegate.TaskListener;
@@ -22,6 +24,9 @@ import java.util.List;
 public class BuckslipTaskCompletedListener implements TaskListener
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
+
+    private UserDao userDao;
+
 
     @Override
     public void notify(DelegateTask delegateTask)
@@ -71,10 +76,17 @@ public class BuckslipTaskCompletedListener implements TaskListener
 
     private String addApprover(String approvalsSoFar, String approverId, String outcome)
     {
+        AcmUser user = userDao.findByUserId(approverId);
+
         JSONArray jsonApprovers = new JSONArray(approvalsSoFar);
         JSONObject newApprover = new JSONObject();
 
         newApprover.put("approverId", approverId);
+        if (user != null)
+        {
+            newApprover.put("approverFullName", user.getFullName());
+        }
+
 
         ZonedDateTime date = ZonedDateTime.now(ZoneOffset.UTC);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(SearchConstants.SOLR_DATE_FORMAT);
@@ -85,5 +97,10 @@ public class BuckslipTaskCompletedListener implements TaskListener
 
         jsonApprovers.put(newApprover);
         return jsonApprovers.toString();
+    }
+
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
     }
 }
