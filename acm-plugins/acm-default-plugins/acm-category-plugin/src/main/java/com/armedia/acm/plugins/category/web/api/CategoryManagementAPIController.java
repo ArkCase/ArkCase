@@ -59,11 +59,7 @@ public class CategoryManagementAPIController
         String query = String.format("object_type_s:CATEGORY AND -parent_id_s:*&sort=title_parseable %s", s);
         try
         {
-            String solrResponse = executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, "");
-            JsonNode jsonSolrResponse = parseSolrResponse(solrResponse);
-            SolrResponse<List<Category>> response = new SolrResponse<>();
-            setPagingData(response, jsonSolrResponse);
-            response.setPayload(extractCategories(jsonSolrResponse));
+            SolrResponse<List<Category>> response = generateGetResponse(auth, query, start, n, this::extractCategories);
             return response;
         } catch (MuleException | IOException e)
         {
@@ -81,16 +77,17 @@ public class CategoryManagementAPIController
         String query = String.format("object_type_s:CATEGORY AND object_id_s:%d&sort=title_parseable ASC", categoryId);
         try
         {
-            String solrResponse = executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, 0, 1, "");
-            JsonNode jsonSolrResponse = parseSolrResponse(solrResponse);
-            List<Category> result = extractCategories(jsonSolrResponse);
-            if (result.isEmpty())
-            {
-                throw new AcmObjectNotFoundException("Category", categoryId, String.format("Category with id %d not found.", categoryId));
-            }
-            SolrResponse<Category> response = new SolrResponse<>();
-            setPagingData(response, jsonSolrResponse);
-            response.setPayload(result.get(0));
+            SolrResponse<Category> response = generateGetResponse(auth, query, 0, 1, node -> {
+
+                List<Category> result = extractCategories(node);
+                if (result.isEmpty())
+                {
+                    throw new AcmObjectNotFoundException("Category", categoryId,
+                            String.format("Category with id %d not found.", categoryId));
+                }
+                return result.get(0);
+
+            });
             return response;
         } catch (MuleException | IOException e)
         {
@@ -109,11 +106,7 @@ public class CategoryManagementAPIController
         String query = String.format("object_type_s:CATEGORY AND parent_id_s:%d&sort=title_parseable %s", categoryId, s);
         try
         {
-            String solrResponse = executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, "");
-            JsonNode jsonSolrResponse = parseSolrResponse(solrResponse);
-            SolrResponse<List<Category>> response = new SolrResponse<>();
-            setPagingData(response, jsonSolrResponse);
-            response.setPayload(extractCategories(jsonSolrResponse));
+            SolrResponse<List<Category>> response = generateGetResponse(auth, query, start, n, this::extractCategories);
             return response;
         } catch (MuleException | IOException e)
         {
@@ -199,6 +192,23 @@ public class CategoryManagementAPIController
         throw new UnsupportedOperationException("Not implemented yet.");
     }
 
+    @FunctionalInterface
+    private static interface PayloadProducer<T>
+    {
+        T producecPayload(JsonNode jsonSolrResponse) throws IOException, AcmObjectNotFoundException;
+    }
+
+    private <T> SolrResponse<T> generateGetResponse(Authentication auth, String query, int start, int n, PayloadProducer<T> producer)
+            throws MuleException, IOException, AcmObjectNotFoundException
+    {
+        String solrResponse = executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, "");
+        JsonNode jsonSolrResponse = parseSolrResponse(solrResponse);
+        SolrResponse<T> response = new SolrResponse<>();
+        setPagingData(response, jsonSolrResponse);
+        response.setPayload(producer.producecPayload(jsonSolrResponse));
+        return response;
+    }
+
     /**
      * @param solrResponse
      * @return
@@ -212,9 +222,7 @@ public class CategoryManagementAPIController
     }
 
     /**
-     * @param response
-     * @param solrResponse
-     *            @throws IOException @throws
+     * @param response @param solrResponse @throws IOException @throws
      */
     private void setPagingData(SolrResponse<?> response, JsonNode jsonSolrResponse) throws IOException
     {
