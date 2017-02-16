@@ -60,6 +60,12 @@ public class CategoryToSolrTransformer implements AcmObjectToSolrDocTransformer<
 
         solr.setStatus_lcs(in.getStatus().name());
 
+        if (in.getParent() != null)
+        {
+            solr.setParent_id_s(in.getParent().getId().toString());
+            solr.setParent_type_s("CATEGORY");
+        }
+
         /** Additional properties for full names instead of ID's */
         AcmUser creator = userDao.quietFindByUserId(in.getCreator());
         if (creator != null)

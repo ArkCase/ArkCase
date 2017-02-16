@@ -139,26 +139,21 @@ public class CategoryServiceImpl implements CategoryService, ApplicationEventPub
             }
             log.debug("Updating 'name' property of [{}] Category with id [{}] to [{}].", existing.getName(), category.getId(),
                     category.getName());
-        }
-        if (!category.getDescription().equals(existing.getDescription()))
-        {
-            log.debug("Updating 'description' property of [{}] Category with id [{}] from [{}] to [{}].", category.getName(),
-                    category.getId(), existing.getDescription(), category.getDescription());
-        }
-
-        Category persisted = categoryDao.save(category);
-
-        log.debug("Updated Category with id [{}].", category.getId());
-        if (!category.getName().equals(existing.getName()))
-        {
+            existing.setName(category.getName());
             eventPublisher.publishEvent(new CategoryEvent(category, EDIT,
                     String.format("Category name edited from %s to %s.", existing.getName(), category.getName())));
         }
         if (!category.getDescription().equals(existing.getDescription()))
         {
+            log.debug("Updating 'description' property of [{}] Category with id [{}] from [{}] to [{}].", category.getName(),
+                    category.getId(), existing.getDescription(), category.getDescription());
+            existing.setDescription(category.getDescription());
             eventPublisher.publishEvent(new CategoryEvent(category, EDIT, "Category description changed."));
         }
-        return persisted;
+
+        log.debug("Updated Category with id [{}].", category.getId());
+
+        return existing;
 
     }
 
