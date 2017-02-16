@@ -31,9 +31,10 @@ public class LdapGroupService
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Transactional
-    public AcmGroup createLdapGroup(AcmGroup group)
+    public AcmGroup createLdapGroup(AcmGroup group, String directoryName)
     {
-        AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).get("armedia_sync");
+        AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).
+                get(String.format("%s_sync", directoryName));
 
         String groupDN = buildDnForGroup(group.getName(), ldapSyncConfig);
 
@@ -53,9 +54,10 @@ public class LdapGroupService
     }
 
     @Transactional
-    public AcmGroup createLdapSubgroup(AcmGroup group, String parentGroupName) throws AcmUserActionFailedException
+    public AcmGroup createLdapSubgroup(AcmGroup group, String parentGroupName, String directoryName) throws AcmUserActionFailedException
     {
-        AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).get("armedia_sync");
+        AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).
+                get(String.format("%s_sync", directoryName));
 
         String groupDN = buildDnForGroup(group.getName(), ldapSyncConfig);
         String groupDnStrippedBase = MapperUtils.stripBaseFromDn(groupDN, ldapSyncConfig.getBaseDC());

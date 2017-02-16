@@ -259,7 +259,7 @@ public class LdapSyncService
                 .collect(
                         Collectors.toMap(
                                 LdapGroup::getGroupName,
-                                group -> String.format("%s,%s", group.getDistinguishedName(), getLdapSyncConfig().getBaseDC())
+                                group -> group.getDistinguishedName()
                         )
                 );
     }

@@ -24,14 +24,14 @@ public class LdapGroupAPIController
     private LdapGroupService ldapGroupService;
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(value = "/group", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/group/{directoryName}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmGroup createLdapGroup(@RequestBody AcmGroup group)
+    public AcmGroup createLdapGroup(@RequestBody AcmGroup group, @PathVariable String directoryName)
             throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
         try
         {
-            return getLdapGroupService().createLdapGroup(group);
+            return getLdapGroupService().createLdapGroup(group, directoryName);
         } catch (NameAlreadyBoundException e)
         {
             log.error("Duplicate group name: {}", group.getName(), e);
@@ -46,14 +46,15 @@ public class LdapGroupAPIController
         }
     }
 
-    @RequestMapping(value = "/group/{parentGroupName}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/group/{directoryName}/{parentGroupName}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmGroup createLdapSubgroup(@RequestBody AcmGroup group, @PathVariable String parentGroupName)
+    public AcmGroup createLdapSubgroup(@RequestBody AcmGroup group, @PathVariable String directoryName,
+                                       @PathVariable String parentGroupName)
             throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
         try
         {
-            return getLdapGroupService().createLdapSubgroup(group, parentGroupName);
+            return getLdapGroupService().createLdapSubgroup(group, parentGroupName, directoryName);
         } catch (NameAlreadyBoundException e)
         {
             log.error("Duplicate sub-group name: {}", group.getName(), e);
