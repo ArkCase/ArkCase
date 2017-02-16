@@ -44,34 +44,34 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
 
             _getInternalUsersConfig: {
                 method: 'GET',
-                url: 'api/v1/users/ldap/editingEnabled',
+                url: 'api/v1/users/ldap/editingEnabled/:directoryName',
                 cache: false
             },
 
             _addMemberToLdapGroup: {
                 method: 'POST',
-                url: 'api/latest/users/ldap/add'
+                url: 'api/latest/users/ldap/add/:directoryName'
             },
 
             _editLdapUser: {
                 method: 'POST',
-                url: 'api/latest/users/ldap/edit'
+                url: 'api/latest/users/ldap/edit/:directoryName'
             },
 
             _addExistingMembersToLdapGroup: {
                 method: 'POST',
-                url: 'api/latest/users/ldap/add/:groupName',
+                url: 'api/latest/users/ldap/add/:directoryName/:groupName',
                 isArray: true
             },
 
             _createLdapGroup: {
                 method: 'POST',
-                url: 'api/latest/users/ldap/group'
+                url: 'api/latest/users/ldap/group/:directoryName'
             },
 
             _createLdapSubgroup: {
                 method: 'POST',
-                url: 'api/latest/users/ldap/group/:parentGroupName'
+                url: 'api/latest/users/ldap/group/:directoryName/:parentGroupName'
             }
         });
 
@@ -358,15 +358,18 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
             });
         }
 
-        function isEnabledEditingLdapUsers() {
+        function isEnabledEditingLdapUsers(directoryName) {
             var cacheConfig = new Store.CacheFifo(Service.CacheNames.INTERNAL_USER_CONFIG);
-            var config = cacheConfig.get(Service.CacheNames.KEY);
+            var config = cacheConfig.get(Service.CacheNames.KEY + "." + directoryName);
             return Util.serviceCall({
                 service: Service._getInternalUsersConfig
+                , param: {
+                    directoryName: directoryName
+                }
                 , result: config
                 , onSuccess: function (response) {
                     var config = response.enableEditingLdapUsers;
-                    cacheConfig.put(Service.CacheNames.KEY, config);
+                    cacheConfig.put(Service.CacheNames.KEY + "." + directoryName, config);
                     return config;
                 }
             });
@@ -384,9 +387,12 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
          *
          * @returns {HttpPromise} Future info about add members to ldap group
          */
-        function addMemberToLdapGroup(ldapUser) {
+        function addMemberToLdapGroup(ldapUser, directoryName) {
             return Util.serviceCall({
                 service: Service._addMemberToLdapGroup
+                , param: {
+                    directoryName: directoryName
+                }
                 , data: ldapUser
                 , onSuccess: function (data) {
                     return data;
@@ -394,9 +400,12 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
             });
         }
 
-        function editGroupMember(ldapUser) {
+        function editGroupMember(ldapUser, directoryName) {
             return Util.serviceCall({
                 service: Service._editLdapUser
+                , param: {
+                    directoryName: directoryName
+                }
                 , data: ldapUser
                 , onSuccess: function (data) {
                     return data;
@@ -404,12 +413,13 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
             });
         }
 
-        function addExistingMembersToLdapGroup(ldapUsers, groupName) {
+        function addExistingMembersToLdapGroup(ldapUsers, groupName, directoryName) {
             return Util.serviceCall({
                 service: Service._addExistingMembersToLdapGroup
                 , data: ldapUsers
                 , param: {
-                    "groupName": groupName
+                    groupName: groupName,
+                    directoryName: directoryName
                 }
                 , onSuccess: function (data) {
                     return data;
@@ -430,9 +440,12 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
          *
          * @returns {HttpPromise} Future info about create ldap group
          */
-        function createLdapGroup(group) {
+        function createLdapGroup(group, directoryName) {
             return Util.serviceCall({
                 service: Service._createLdapGroup
+                , param: {
+                    directoryName: directoryName
+                }
                 , data: group
                 , onSuccess: function (data) {
                     return data;
@@ -452,12 +465,13 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
          *
          * @returns {HttpPromise} Future info about create ldap subgroup
          */
-        function createLdapSubgroup(group, parentGroupName) {
+        function createLdapSubgroup(group, parentGroupName, directoryName) {
             return Util.serviceCall({
                 service: Service._createLdapSubgroup
                 , data: group
-                , param:{
-                    "parentGroupName": parentGroupName
+                , param: {
+                    parentGroupName: parentGroupName,
+                    directoryName: directoryName
                 }
                 , onSuccess: function (data) {
                     return data;

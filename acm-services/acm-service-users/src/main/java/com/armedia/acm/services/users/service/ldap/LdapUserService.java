@@ -38,9 +38,10 @@ public class LdapUserService
     private SpringContextHolder acmContextHolder;
 
     @Transactional
-    public AcmUser createLdapUser(AcmUser user, List<String> groupNames, String password) throws AcmUserActionFailedException
+    public AcmUser createLdapUser(AcmUser user, List<String> groupNames, String password, String directoryName) throws AcmUserActionFailedException
     {
-        AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).get("armedia_sync");
+        AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).
+                get(String.format("%s_sync", directoryName));
 
         Map<String, String> roleToGroup = ldapSyncConfig.getRoleToGroupMap();
         Map<String, List<String>> groupToRoleMap = LdapSyncService.reverseRoleToGroupMap(roleToGroup);
@@ -117,9 +118,10 @@ public class LdapUserService
     }
 
     @Transactional
-    public AcmUser editLdapUser(AcmUser acmUser)
+    public AcmUser editLdapUser(AcmUser acmUser, String directoryName)
     {
-        AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).get("armedia_sync");
+        AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).
+                get(String.format("%s_sync", directoryName));
         log.debug("Saving edited User:{} in database", acmUser.getUserId());
         AcmUser existingUser = getUserDao().findByUserId(acmUser.getUserId());
         existingUser.setFirstName(acmUser.getFirstName());
@@ -140,9 +142,10 @@ public class LdapUserService
     }
 
     @Transactional
-    public List<AcmUser> addExistingLdapUsersToGroup(List<AcmUser> acmUsers, String groupName)
+    public List<AcmUser> addExistingLdapUsersToGroup(List<AcmUser> acmUsers, String directoryName, String groupName)
     {
-        AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).get("armedia_sync");
+        AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).
+                get(String.format("%s_sync", directoryName));
 
         AcmGroup ldapGroup = getGroupDao().findByName(groupName);
 
@@ -180,7 +183,7 @@ public class LdapUserService
     {
         DirContextAdapter context = new DirContextAdapter(MapperUtils.stripBaseFromDn(user.getDistinguishedName(), baseDC));
         context.setAttributeValues("objectClass", new String[]{"top", "person", "inetOrgPerson",
-                "organizationalPerson", "posixAccount", "uacPerson"});
+                "organizationalPerson", "posixAccount", "uacPerson", "shadowAccount"});
         context.setAttributeValue("cn", String.format("%s %s", user.getFirstName(), user.getLastName()));
         context.setAttributeValue("givenName", user.getFirstName());
         context.setAttributeValue("sn", user.getLastName());
@@ -194,6 +197,9 @@ public class LdapUserService
         context.setAttributeValue("uidNumber", Long.toString(timestamp));
         context.setAttributeValue("gidNumber", Long.toString(timestamp));
         context.setAttributeValue("homeDirectory", String.format("/home/%s", user.getUserId()));
+        context.setAttributeValue("shadowWarning", "7");
+        context.setAttributeValue("shadowLastChange", "12994");
+        context.setAttributeValue("shadowMax", "99999");
         return context;
     }
 

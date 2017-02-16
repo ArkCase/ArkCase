@@ -1,5 +1,6 @@
 <div ng-controller="Admin.OrganizationalHierarchyController">
 <div class="pull-right well">
+    <select ng-model="directoryServersProp.value" ng-options="s for s in directoryServersProp.values" ng-change="checkEditing()"></select>
     <div class="btn-group">
         <button class="btn btn-xs btn-link" ng-click="createGroup()">
             <i class="glyphicon glyphicon-plus-sign"></i>

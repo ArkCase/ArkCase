@@ -9,7 +9,7 @@ import java.util.Set;
 
 public class AcmGroupContextMapper implements ContextMapper
 {
-    AcmLdapSyncConfig acmLdapSyncConfig;
+    private AcmLdapSyncConfig acmLdapSyncConfig;
 
     public AcmGroupContextMapper(AcmLdapSyncConfig acmLdapSyncConfig)
     {
@@ -25,7 +25,7 @@ public class AcmGroupContextMapper implements ContextMapper
         String groupName = MapperUtils.getAttribute(adapter, "cn");
         // Throughout the application we use the group names in upper case only, so converting here at mapping level
         group.setGroupName(groupName.toUpperCase());
-        group.setDistinguishedName(adapter.getDn().toString());
+        group.setDistinguishedName(String.format("%s,%s", adapter.getDn().toString(), acmLdapSyncConfig.getBaseDC()));
         group.setSortableValue(MapperUtils.getAttribute(adapter, acmLdapSyncConfig.getGroupsSortingAttribute()));
 
         Set<String> potentialParentGroups = new HashSet<>();
