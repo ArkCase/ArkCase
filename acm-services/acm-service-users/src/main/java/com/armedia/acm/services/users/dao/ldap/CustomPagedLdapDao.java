@@ -43,7 +43,7 @@ public class CustomPagedLdapDao implements SpringLdapDao
         userGroupsContextMapper.setUserIdAttributeName(syncConfig.getUserIdAttributeName());
         userGroupsContextMapper.setMailAttributeName(syncConfig.getMailAttributeName());
         String searchFilter = syncConfig.getAllUsersFilter();
-        String searchBase = syncConfig.getAllUsersSearchBase();
+        String searchBase = syncConfig.getUserSearchBase();
         String[] bases = searchBase.split("\\|");
         List<AcmUser> acmUsers = new ArrayList<>();
         for (String base : bases)

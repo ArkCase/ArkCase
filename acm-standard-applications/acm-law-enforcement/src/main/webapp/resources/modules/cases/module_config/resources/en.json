@@ -264,5 +264,12 @@
     "btnCancelText": "Cancel",
     "btnSaveText": "Save",
     "searchAssigneeHeader": "Search Assignee"
+  },
+  "cases.comp.groupPickerModal": {
+    "title": "Change Group",
+    "groupNamelabel": "Group Name",
+    "btnCancelText": "Cancel",
+    "btnSaveText": "Save",
+    "searchGroupHeader": "Search Group"
   }
 }

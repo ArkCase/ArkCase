@@ -45,7 +45,7 @@ var LoginPage = function() {
                 browser.ignoresynchronization = true;
                 browser.sleep(10000);
                 var logoutSucesfullMessage = browser.driver.findElement(by.css(Objects.basepage.locators.logoutSucesfullMessage));
-                expect(logoutSucesfullMessage.getText()).toEqual('You have been logged out successfully.', 'Logout was unsuccessfull');
+                expect(logoutSucesfullMessage.getText()).toEqual('You have been logged out successfully.', 'Logout was unsuccessful');
             });
         });
         return this;

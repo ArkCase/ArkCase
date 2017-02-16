@@ -88,20 +88,20 @@ describe('case page tests', function() {
         expect(casePage.returnNoteName()).toEqual(Objects.casepage.data.editnote, "The note is not updated");
     });
 
-    it('should  add task from tasks table verify the task', function() {
+    it('should  add add hoc task from tasks table and verify the task', function () {
 
         casePage.clickModuleCasesFiles();
         casePage.clickTasksLinkBtn();
         casePage.clickAddTaskButton();
-        taskPage.insertSubject(Objects.taskpage.data.Subject).insertDueDateToday().clickSave();
+        taskPage.insertSubject(Objects.taskpage.data.Subject).insertDueDate(utils.returnToday("/")).clickSave();
         taskPage.clickCaseTitleInTasks();
-        casePage.clickTasksLinkBtn().waitForTasksTable();
-        expect(casePage.returnTaskTableTitle()).toContain(Objects.taskpage.data.Subject, "Subject on added task to case is not correct in tasks table");
-        expect(casePage.returnTaskTableAssignee()).toEqual(Objects.casepage.data.assigneeSamuel, "Assignee on added task to case is not correct in tasks table");
-        expect(casePage.returnTaskTableCreatedDate()).toEqual(utils.returnToday("/"), "Created date on added task to case is not correct in tasks table ");
-        expect(casePage.returnTaskTablePriority()).toEqual(Objects.casepage.data.priorityMedium, "Priority on added task to case is not correct in tasks table");
-        expect(casePage.returnTaskTableDueDate()).toEqual(utils.returnToday("/"), "Due date on added task to case is not correct in tasks table");
-        expect(casePage.returnTaskTableStatus()).toEqual("ACTIVE", "Status on added task to case is not correct in tasks table");
+        casePage.clickExpandFancyTreeTopElementAndSubLink("Tasks").waitForTasksTable();
+        casePage.validateTaskTableValue("Ad hoc task", "Title", Objects.taskpage.data.Subject);
+        casePage.validateTaskTableValue("Ad hoc task", "Assignee", Objects.casepage.data.assigneeSamuel);
+        casePage.validateTaskTableValue("Ad hoc task", "Created", utils.returnToday("/"));
+        casePage.validateTaskTableValue("Ad hoc task", "Priority", Objects.casepage.data.priorityMedium);
+        casePage.validateTaskTableValue("Ad hoc task", "Due", utils.returnToday("/"));
+        casePage.validateTaskTableValue("Ad hoc task", "Status", "ACTIVE");
     });
 
     it('should  verify the people initiator', function() {
@@ -471,7 +471,14 @@ describe('case page tests', function() {
         casePage.clickModuleCasesFiles();
         casePage.clickExpandFancyTreeTopElement();
         casePage.rightClickRootFolder().addCorrespondence("case", "Notice of Investigation");
-        casePage.validateDocGridData(true, "Notice of Investigation", ".docx", "Notice of Investigation", utils.returnToday("/"), utils.returnToday("/"), userPage.returnUserNavigationProfile(), "1.0", "ACTIVE");
+        complaintPage.validateDocGridValue("Notice of Investigation", Objects.basepage.data.docGridColumn1, "Notice of Investigation");
+        complaintPage.validateDocGridValue("Notice of Investigation", Objects.basepage.data.docGridColumn2, ".docx");
+        complaintPage.validateDocGridValue("Notice of Investigation", Objects.basepage.data.docGridColumn3, "Notice Of Investigation");
+        complaintPage.validateDocGridValue("Notice of Investigation", Objects.basepage.data.docGridColumn4, utils.returnToday("/"));
+        complaintPage.validateDocGridValue("Notice of Investigation", Objects.basepage.data.docGridColumn5, utils.returnToday("/"));
+        complaintPage.validateDocGridValue("Notice of Investigation", Objects.basepage.data.docGridColumn6, userPage.returnUserNavigationProfile());
+        complaintPage.validateDocGridValue("Notice of Investigation", Objects.basepage.data.docGridColumn7, "1.0");
+        complaintPage.validateDocGridValue("Notice of Investigation", Objects.basepage.data.docGridColumn8, "ACTIVE");
 
     });
 
@@ -594,8 +601,15 @@ describe('case page tests', function() {
         casePage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Documents");
         casePage.rightClickRootFolder().addDocument("Report of Investigation");
         casePage.switchToIframes().submitReportOfInvestigation(Objects.basepage.data.reportTitle, Objects.taskspage.data.assigneeSamuel);
-        casePage.switchToDefaultContent().validateDocGridData(true, "Report of Investigation", ".pdf", "Report of Investigation", utils.returnToday("/"), utils.returnToday("/"), userPage.returnUserNavigationProfile(), "1.0", "ACTIVE");
-
+        casePage.switchToDefaultContent();
+        casePage.validateDocGridValue("Report of Investigation", Objects.basepage.data.docGridColumn1, "Report of Investigation");
+        casePage.validateDocGridValue("Report of Investigation", Objects.basepage.data.docGridColumn2, ".pdf");
+        casePage.validateDocGridValue("Report of Investigation", Objects.basepage.data.docGridColumn3, "Report of Investigation");
+        casePage.validateDocGridValue("Report of Investigation", Objects.basepage.data.docGridColumn4, utils.returnToday("/"));
+        casePage.validateDocGridValue("Report of Investigation", Objects.basepage.data.docGridColumn5, utils.returnToday("/"));
+        casePage.validateDocGridValue("Report of Investigation", Objects.basepage.data.docGridColumn6, Objects.taskspage.data.assigneeSamuel);
+        casePage.validateDocGridValue("Report of Investigation", Objects.basepage.data.docGridColumn7, "1.0");
+        casePage.validateDocGridValue("Report of Investigation", Objects.basepage.data.docGridColumn8, "ACTIVE");
     });
 
     it('should create new case and select Approver from participant tab and verify it in the paricipant table', function() {
