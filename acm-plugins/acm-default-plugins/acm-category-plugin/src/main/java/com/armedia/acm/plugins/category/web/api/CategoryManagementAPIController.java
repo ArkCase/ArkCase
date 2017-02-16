@@ -8,7 +8,6 @@ import com.armedia.acm.plugins.category.model.CategoryStatus;
 import com.armedia.acm.plugins.category.service.CategoryService;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -202,33 +201,14 @@ public class CategoryManagementAPIController
             throws MuleException, IOException, AcmObjectNotFoundException
     {
         String solrResponse = executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, "");
-        JsonNode jsonSolrResponse = parseSolrResponse(solrResponse);
-        SolrResponse<T> response = new SolrResponse<>();
-        setPagingData(response, jsonSolrResponse);
-        response.setPayload(producer.producecPayload(jsonSolrResponse));
-        return response;
-    }
-
-    /**
-     * @param solrResponse
-     * @return
-     * @throws IOException
-     * @throws JsonProcessingException
-     */
-    private JsonNode parseSolrResponse(String solrResponse) throws IOException
-    {
         ObjectMapper mapper = new ObjectMapper();
-        return mapper.readTree(solrResponse);
-    }
-
-    /**
-     * @param response @param solrResponse @throws IOException @throws
-     */
-    private void setPagingData(SolrResponse<?> response, JsonNode jsonSolrResponse) throws IOException
-    {
+        JsonNode jsonSolrResponse = mapper.readTree(solrResponse);
         JsonNode responseNode = jsonSolrResponse.get("response");
+        SolrResponse<T> response = new SolrResponse<>();
         response.setNumFound(responseNode.get("numFound").asInt());
         response.setStart(responseNode.get("start").asInt());
+        response.setPayload(producer.producecPayload(jsonSolrResponse));
+        return response;
     }
 
     /**
