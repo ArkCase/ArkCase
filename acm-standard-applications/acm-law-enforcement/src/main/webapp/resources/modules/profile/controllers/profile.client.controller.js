@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('profile').controller('ProfileController', ['$scope', 'ConfigService'
-    , 'Admin.OrganizationalHierarchyService', '$modal',
-    function ($scope, ConfigService, OrganizationalHierarchyService, $modal) {
+    , 'Admin.OrganizationalHierarchyService', '$modal', 'Authentication',
+    function ($scope, ConfigService, OrganizationalHierarchyService, $modal, Authentication) {
         $scope.config = ConfigService.getModule({moduleId: 'profile'});
         $scope.$on('req-component-config', onConfigRequest);
         function onConfigRequest(e, componentId) {
@@ -12,10 +12,11 @@ angular.module('profile').controller('ProfileController', ['$scope', 'ConfigServ
             });
         }
 
-        $scope.exposeChangePassword = false;
-
-        OrganizationalHierarchyService.isEnabledEditingLdapUsers().then(function (enableEditingLdapUsers) {
-            $scope.exposeChangePassword = enableEditingLdapUsers;
+        Authentication.queryUserInfo().then(function (userInfo) {
+            var directoryName = userInfo.directoryName;
+            OrganizationalHierarchyService.isEnabledEditingLdapUsers(directoryName).then(function (enableEditingLdapUsers) {
+                $scope.exposeChangePassword = enableEditingLdapUsers;
+            });
         });
 
         $scope.openPasswordDialog = function () {
@@ -69,13 +70,13 @@ angular.module('profile').controller('ChangePasswordModalController', ['$scope',
 
         $scope.changePassword = function () {
             if (!this.newPassword) {
-                openModal({"message":"profile.modal.emptyPassword"});
+                openModal({"message": "profile.modal.emptyPassword"});
             }
             else if (!this.newPasswordAgain) {
-                openModal({"message":"profile.modal.comfirmation"});
+                openModal({"message": "profile.modal.comfirmation"});
             }
             else if (this.newPassword !== this.newPasswordAgain) {
-                openModal({"message":"profile.modal.differentPasswords"});
+                openModal({"message": "profile.modal.differentPasswords"});
                 this.newPassword = '';
                 this.newPasswordAgain = '';
             }
@@ -119,13 +120,13 @@ angular.module('profile').controller('ChangeLdapPasswordModalController', ['$sco
 
         $scope.changePassword = function () {
             if (!this.newPassword) {
-                openModal({"message":"profile.modal.emptyPassword"});
+                openModal({"message": "profile.modal.emptyPassword"});
             }
             else if (!this.newPasswordAgain) {
-                openModal({"message":"profile.modal.comfirmation"});
+                openModal({"message": "profile.modal.comfirmation"});
             }
             else if (this.newPassword !== this.newPasswordAgain) {
-                openModal({"message":"profile.modal.differentPasswords"});
+                openModal({"message": "profile.modal.differentPasswords"});
                 this.newPassword = '';
                 this.newPasswordAgain = '';
             }

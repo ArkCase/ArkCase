@@ -97,17 +97,17 @@ public class LdapUserAPIController
         return ldapUserService.editLdapUser(acmUser, directoryName);
     }
 
-    @RequestMapping(value = "/changePassword/{directoryName}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/changePassword", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Map<String, String> changePassword(
-            @RequestBody Map<String, String> credentials, @PathVariable String directoryName,
-            Authentication authentication, HttpServletResponse response)
+            @RequestBody Map<String, String> credentials, Authentication authentication, HttpServletResponse response)
     {
         try
         {
-            ldapAuthenticateService =
-                    acmContextHolder.getAllBeansOfType(LdapAuthenticateService.class).get(String.format("%_ldapAuthenticateService", directoryName));
             String userId = authentication.getName();
+            String directoryName = ldapUserService.getUserDirectoryName(userId);
+            ldapAuthenticateService = acmContextHolder.getAllBeansOfType(LdapAuthenticateService.class).
+                    get(String.format("%s_ldapAuthenticateService", directoryName));
             ldapAuthenticateService.changeUserPassword(userId, credentials.get("password"));
             return Collections.singletonMap("message", "Password successfully changed");
         } catch (InvalidAttributeValueException e)
