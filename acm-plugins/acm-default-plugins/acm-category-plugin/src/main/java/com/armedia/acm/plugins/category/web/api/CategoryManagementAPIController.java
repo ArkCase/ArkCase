@@ -8,6 +8,7 @@ import com.armedia.acm.plugins.category.model.CategoryStatus;
 import com.armedia.acm.plugins.category.service.CategoryService;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -50,15 +51,20 @@ public class CategoryManagementAPIController
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<Category> getCategories(Authentication auth, @RequestParam(value = "start", required = false, defaultValue = "0") int start,
+    public SolrResponse<List<Category>> getCategories(Authentication auth,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int start,
             @RequestParam(value = "n", required = false, defaultValue = "10") int n,
             @RequestParam(value = "s", required = false, defaultValue = "ASC") String s) throws AcmObjectNotFoundException
     {
-        String query = String.format("object_type_s:CATEGORY AND -parent_id_s:*&sort=queue_order_s %s", s);
+        String query = String.format("object_type_s:CATEGORY AND -parent_id_s:*&sort=title_parseable %s", s);
         try
         {
             String solrResponse = executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, "");
-            return extractCategories(solrResponse);
+            JsonNode jsonSolrResponse = parseSolrResponse(solrResponse);
+            SolrResponse<List<Category>> response = new SolrResponse<>();
+            setPagingData(response, jsonSolrResponse);
+            response.setPayload(extractCategories(jsonSolrResponse));
+            return response;
         } catch (MuleException | IOException e)
         {
             log.error("Error while executing Solr query: {}", query, e);
@@ -69,18 +75,23 @@ public class CategoryManagementAPIController
 
     @RequestMapping(value = "/{categoryId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Category getCategory(Authentication auth, @PathVariable(value = "categoryId") Long categoryId) throws AcmObjectNotFoundException
+    public SolrResponse<Category> getCategory(Authentication auth, @PathVariable(value = "categoryId") Long categoryId)
+            throws AcmObjectNotFoundException
     {
-        String query = String.format("object_type_s:CATEGORY AND object_id_s:%d&sort=queue_order_s ASC", categoryId);
+        String query = String.format("object_type_s:CATEGORY AND object_id_s:%d&sort=title_parseable ASC", categoryId);
         try
         {
             String solrResponse = executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, 0, 1, "");
-            List<Category> result = extractCategories(solrResponse);
+            JsonNode jsonSolrResponse = parseSolrResponse(solrResponse);
+            List<Category> result = extractCategories(jsonSolrResponse);
             if (result.isEmpty())
             {
                 throw new AcmObjectNotFoundException("Category", categoryId, String.format("Category with id %d not found.", categoryId));
             }
-            return result.get(0);
+            SolrResponse<Category> response = new SolrResponse<>();
+            setPagingData(response, jsonSolrResponse);
+            response.setPayload(result.get(0));
+            return response;
         } catch (MuleException | IOException e)
         {
             log.error("Error while executing Solr query: {}", query, e);
@@ -90,16 +101,20 @@ public class CategoryManagementAPIController
 
     @RequestMapping(value = "/{categoryId}/children", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<Category> getCategoryChildren(Authentication auth, @PathVariable(value = "categoryId") Long categoryId,
+    public SolrResponse<List<Category>> getCategoryChildren(Authentication auth, @PathVariable(value = "categoryId") Long categoryId,
             @RequestParam(value = "start", required = false, defaultValue = "0") int start,
             @RequestParam(value = "n", required = false, defaultValue = "10") int n,
             @RequestParam(value = "s", required = false, defaultValue = "ASC") String s) throws AcmObjectNotFoundException
     {
-        String query = String.format("object_type_s:CATEGORY AND parent_id_s:%d&sort=queue_order_s %s", categoryId, s);
+        String query = String.format("object_type_s:CATEGORY AND parent_id_s:%d&sort=title_parseable %s", categoryId, s);
         try
         {
             String solrResponse = executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, "");
-            return extractCategories(solrResponse);
+            JsonNode jsonSolrResponse = parseSolrResponse(solrResponse);
+            SolrResponse<List<Category>> response = new SolrResponse<>();
+            setPagingData(response, jsonSolrResponse);
+            response.setPayload(extractCategories(jsonSolrResponse));
+            return response;
         } catch (MuleException | IOException e)
         {
             log.error("Error while executing Solr query: {}", query, e);
@@ -186,13 +201,35 @@ public class CategoryManagementAPIController
 
     /**
      * @param solrResponse
-     * @return @throws IOException @throws
+     * @return
+     * @throws IOException
+     * @throws JsonProcessingException
      */
-    private List<Category> extractCategories(String solrResponse) throws IOException
+    private JsonNode parseSolrResponse(String solrResponse) throws IOException
     {
         ObjectMapper mapper = new ObjectMapper();
-        JsonNode json = mapper.readTree(solrResponse);
-        JsonNode docsJson = json.get("response").get("docs");
+        return mapper.readTree(solrResponse);
+    }
+
+    /**
+     * @param response
+     * @param solrResponse
+     *            @throws IOException @throws
+     */
+    private void setPagingData(SolrResponse<?> response, JsonNode jsonSolrResponse) throws IOException
+    {
+        JsonNode responseNode = jsonSolrResponse.get("response");
+        response.setNumFound(responseNode.get("numFound").asInt());
+        response.setStart(responseNode.get("start").asInt());
+    }
+
+    /**
+     * @param solrResponse
+     * @return @throws IOException @throws
+     */
+    private List<Category> extractCategories(JsonNode jsonSolrResponse) throws IOException
+    {
+        JsonNode docsJson = jsonSolrResponse.get("response").get("docs");
         List<Category> categories = new ArrayList<>();
         SimpleDateFormat dateParser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         docsJson.forEach(doc -> {
@@ -203,7 +240,13 @@ public class CategoryManagementAPIController
                 category.setId(doc.get("object_id_s").asLong());
                 category.setName(doc.get("name").asText());
                 category.setDescription(doc.get("description_no_html_tags_parseable").asText());
-                // setParent
+                JsonNode parentIdNode = doc.get("parent_id_s");
+                if (parentIdNode != null)
+                {
+                    Category parent = new Category();
+                    parent.setId(parentIdNode.asLong());
+                    category.setParent(parent);
+                }
                 category.setCreator(doc.get("creator_lcs").asText());
                 category.setCreated(dateParser.parse(doc.get("create_date_tdt").asText()));
                 category.setModifier(doc.get("modifier_lcs").asText());
