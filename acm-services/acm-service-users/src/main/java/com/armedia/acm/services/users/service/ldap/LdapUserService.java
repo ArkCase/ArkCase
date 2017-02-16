@@ -1,6 +1,7 @@
 package com.armedia.acm.services.users.service.ldap;
 
 
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
@@ -207,6 +208,16 @@ public class LdapUserService
     {
         String dnPath = String.format("uid=%s,%s,%s", userId, userSearchBase, baseDC);
         return new DistinguishedName(dnPath);
+    }
+
+    public String getUserDirectoryName(String userId) throws AcmObjectNotFoundException
+    {
+        AcmUser user = getUserDao().findByUserId(userId);
+        if (user != null)
+        {
+            return user.getUserDirectoryName();
+        }
+        throw new AcmObjectNotFoundException("USER", null, String.format("User with id:[%s] not found", userId));
     }
 
     public SpringLdapDao getLdapDao()

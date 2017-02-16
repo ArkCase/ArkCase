@@ -48,6 +48,7 @@ public class GetUserInfoAPIController
         retval.setFirstName(user.getFirstName());
         retval.setLastName(user.getLastName());
         retval.setMail(user.getMail());
+        retval.setDirectoryName(user.getUserDirectoryName());
 
         return retval;
     }
