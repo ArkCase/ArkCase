@@ -38,7 +38,7 @@
           "headerCellFilter": "translate"
         },
         {
-          "name": "directoryName",
+          "name": "id",
           "displayName": "admin.security.ldapConfig.data.directoryName",
           "visible": true,
           "headerCellFilter": "translate"
@@ -56,21 +56,9 @@
           "headerCellFilter": "translate"
         },
         {
-          "name": "id",
-          "displayName": "admin.security.ldapConfig.data.id",
-          "visible": false,
-          "headerCellFilter": "translate"
-        },
-        {
           "name": "ldapUrl",
           "displayName": "admin.security.ldapConfig.data.ldapUrl",
           "visible": true,
-          "headerCellFilter": "translate"
-        },
-        {
-          "name": "name",
-          "displayName": "admin.security.ldapConfig.data.name",
-          "visible": false,
           "headerCellFilter": "translate"
         },
         {

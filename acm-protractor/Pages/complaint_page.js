@@ -52,12 +52,13 @@ var searchButton = element(by.xpath(Objects.complaintPage.locators.searchButton)
 var caseTitle = element(by.name(Objects.complaintPage.locators.caseTitle));
 var caseCreatedDate = element(by.name(Objects.complaintPage.locators.caseCreatedDate));
 var casePriority = element(by.name(Objects.complaintPage.locators.casePriority));
-var selectParticipantType=element(by.xpath(Objects.complaintPage.locators.selectParticipantType));
+var selectParticipantType = element(by.xpath(Objects.complaintPage.locators.selectParticipantType));
 var selectparticipant = element(by.name(Objects.casepage.locators.selectParticipant));
 var searchForUserInput = element(by.xpath(Objects.casepage.locators.searchForUserInput));
 var searchForUserBtn = element(by.buttonText(Objects.casepage.locators.searchUserBtn));
 var searchedUser = element(by.xpath(Objects.casepage.locators.searchedUserName));
 var okBtn = element(by.buttonText(Objects.casepage.locators.OkBtn));
+var detailsTextArea = element(by.xpath(Objects.taskspage.locators.detailsTextArea));
 
 var ComplaintPage = function() {
 
@@ -240,21 +241,16 @@ var ComplaintPage = function() {
 
     this.addLocation = function(type, street, city, state, zip) {
 
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.locationsLinkBtn))), 30000, "Locations link button is not visible").then(function() {
-            locationLinkBtn.click().then(function() {
-                browser.sleep(5000);
-                browser.wait(EC.visibilityOf(element(by.css(Objects.complaintPage.locators.addLocationBtn))), 3000, "Add location button is not visible").then(function() {
-                    addLocationBtn.click().then(function() {
-                        browser.wait(EC.visibilityOf(element(by.model(Objects.complaintPage.locators.locationTypeDropDown))), 10000, "Location type drop down is not displayed").then(function() {
-                            locationTypeDropDown.selectByText(type).then(function() {
-                                locationStreetInput.sendKeys(street).then(function() {
-                                    locationCityInput.sendKeys(city).then(function() {
-                                        locationStateInput.sendKeys(state).then(function() {
-                                            locationZipInput.sendKeys(zip).then(function() {
-                                                saveLocationBtn.click().then(function() {
-                                                    browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.complaintPage.locators.addedLocations)).get(0)), 30000, "Location is not added");
-                                                });
-                                            });
+        browser.wait(EC.visibilityOf(element(by.css(Objects.complaintPage.locators.addLocationBtn))), 3000, "Add location button is not visible").then(function() {
+            addLocationBtn.click().then(function() {
+                browser.wait(EC.visibilityOf(element(by.model(Objects.complaintPage.locators.locationTypeDropDown))), 10000, "Location type drop down is not displayed").then(function() {
+                    locationTypeDropDown.selectByText(type).then(function() {
+                        locationStreetInput.sendKeys(street).then(function() {
+                            locationCityInput.sendKeys(city).then(function() {
+                                locationStateInput.sendKeys(state).then(function() {
+                                    locationZipInput.sendKeys(zip).then(function() {
+                                        saveLocationBtn.click().then(function() {
+                                            browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.complaintPage.locators.addedLocations)).get(0)), 30000, "Location is not added");
                                         });
                                     });
                                 });
