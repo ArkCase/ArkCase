@@ -19,10 +19,14 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
             }
         });
 
+        $scope.showBtnChildOutcomes = false;
+        $scope.availableChildOutcomes = [];
+
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
             $scope.restricted = objectInfo.restricted;
             $scope.showCreateAndClose = ($scope.objectInfo.status !== "CLOSED");
+            $scope.showBtnChildOutcomes = false;
             var group = ObjectModelService.getGroup(objectInfo);
             $scope.owningGroup = group;
             var assignee = ObjectModelService.getAssignee(objectInfo);
@@ -99,5 +103,14 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
                 $scope.refresh();
             });
         };
+
+        $scope.onClickChildOutcome = function (name) {
+            $scope.$bus.publish('CHILD_OBJECT_OUTCOME_CLICKED', name);
+        };
+
+        $scope.$bus.subscribe('CHILD_OBJECT_OUTCOMES_FOUND', function (outcomes) {
+            $scope.availableChildOutcomes = outcomes;
+            $scope.showBtnChildOutcomes = true;
+        });
     }
 ]);
