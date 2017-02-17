@@ -64,7 +64,6 @@ public class NoteToSolrTransformer implements AcmObjectToSolrDocTransformer<Note
         solr.setAdditionalProperty("parent_object_type_s", in.getParentType());
         solr.setAdditionalProperty("parent_object_id_i", in.getParentId());
         solr.setAdditionalProperty("parent_number_lcs", in.getParentTitle());
-        System.out.println("************************** January 18th ************************************************"+in.getParentTitle()+ "**********************************************");
         solr.setAdditionalProperty("type_s", in.getType());
         solr.setParent_ref_s(String.format("%d-%s", in.getParentId(), in.getParentType()));
 
@@ -86,7 +85,6 @@ public class NoteToSolrTransformer implements AcmObjectToSolrDocTransformer<Note
         solrDoc.setAdditionalProperty("parent_object_type_s", in.getParentType());
         solrDoc.setAdditionalProperty("parent_object_id_i", in.getParentId());
         solrDoc.setAdditionalProperty("parent_number_lcs", in.getParentTitle());
-        System.out.println("************************** January 18th ************************************************"+in.getParentTitle()+ "**********************************************");
         solrDoc.setParent_ref_s(String.format("%d-%s", in.getParentId(), in.getParentType()));
         solrDoc.setTitle_parseable(in.getNote());
         solrDoc.setAdditionalProperty("creator_s", in.getCreator());

@@ -37,7 +37,7 @@ angular.module('cases').controller('Cases.TagsController', ['$scope', '$q', '$st
 
             modalInstance.result.then(function (tags) {
                 _.forEach(tags, function (tag) {
-                    tag.object_id_s = tag.id.split("-")[0];
+                    tag.object_id_s = tag.id.split("-")[0]; 
                     tag.tags_s = tag.title_parseable;
                     if (tag.id) {
                         if (tag.object_id_s) {
@@ -45,16 +45,21 @@ angular.module('cases').controller('Cases.TagsController', ['$scope', '$q', '$st
                                 return tagAss.id == tag.object_id_s;
                             });
                             if (tagsFound.length == 0) {
-                                ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.CASE_FILE, tag.object_id_s).then(
-                                    function (returnedTag) {
-                                        var tagToAdd = angular.copy(returnedTag);
-                                        tagToAdd.tagName = tag.tags_s;
-                                        tagToAdd.id = returnedTag.tagId;
-                                        $scope.tags.push(tagToAdd);
-                                        $scope.gridOptions.data = $scope.tags;
-                                        $scope.gridOptions.totalItems = $scope.tags.length;
-                                    }
-                                );
+                                CaseInfoService.getCaseInfo($stateParams.id).then(function (data) {
+                                    $scope.parentTitleFromCase = data.caseNumber;
+
+                                    ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.CASE_FILE, 
+                                    $scope.parentTitleFromCase, tag.object_id_s).then(
+                                        function (returnedTag) {
+                                            var tagToAdd = angular.copy(returnedTag);
+                                            tagToAdd.tagName = tag.tags_s;
+                                            tagToAdd.id = returnedTag.tagId;
+                                            $scope.tags.push(tagToAdd);
+                                            $scope.gridOptions.data = $scope.tags;
+                                            $scope.gridOptions.totalItems = $scope.tags.length;
+                                        }
+                                    );
+                                });
                             }
                             else {
                                 messageService.info(tag.tags_s + " " + $translate.instant('cases.comp.tags.message.tagAssociated'));
@@ -64,13 +69,18 @@ angular.module('cases').controller('Cases.TagsController', ['$scope', '$q', '$st
                             }
                         }
                         else {
-                            ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.CASE_FILE, tag.id).then(
-                                function () {
-                                    $scope.tags.push(tag);
-                                    $scope.gridOptions.data = $scope.tags;
-                                    $scope.gridOptions.totalItems = $scope.tags.length;
-                                }
-                            );
+                            CaseInfoService.getCaseInfo($stateParams.id).then(function (data) {
+                                $scope.parentTitleFromCase = data.caseNumber;
+
+                                ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.CASE_FILE, 
+                                    $scope.parentTitleFromCase, tag.id).then(
+                                    function () {
+                                        $scope.tags.push(tag);
+                                        $scope.gridOptions.data = $scope.tags;
+                                        $scope.gridOptions.totalItems = $scope.tags.length;
+                                    }
+                                );
+                            });
                         }
                     }
                 });
