@@ -84,7 +84,7 @@ angular.module('cases').controller('Cases.ApprovalRoutingController', ['$scope',
         });
 
         $scope.onClickTitle = function () {
-            ObjectService.showObject(ObjectService.ObjectTypes.TASK, $scope.objectInfo.objectId);
+            ObjectService.showObject(ObjectService.ObjectTypes.TASK, $scope.objectInfo.taskId);
         };
     }
 
