@@ -28,7 +28,7 @@ angular.module('complaints').controller('Complaints.ApprovalRoutingController', 
         $scope.defaultDatePickerFormat = UtilDateService.defaultDatePickerFormat;
 
         var onObjectInfoRetrieved = function (objectInfo) {
-            var currentObjectId = Util.goodMapValue(objectInfo, "id");
+            var currentObjectId = Util.goodMapValue(objectInfo, "complaintId");
             if (Util.goodPositive(currentObjectId, false)) {
                 //we can change this code with making backend service to return the task and make only one call to server
                 ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.COMPLAINT, currentObjectId, 0, 100, '', '').then(function (data) {
