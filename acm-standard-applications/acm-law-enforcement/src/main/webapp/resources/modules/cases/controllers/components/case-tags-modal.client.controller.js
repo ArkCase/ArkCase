@@ -22,8 +22,10 @@ angular.module('cases').controller('Cases.TagsModalController', ['$scope', '$q',
 
         function checkTag(selectedTag) {
             // Check if tag is created. If not, create new tag
-            selectedTag.object_id_s = selectedTag.id.indexOf("-") >= 0 ? selectedTag.id.split("-")[0] : selectedTag.id;
-            selectedTag.tag_s = selectedTag.title_parseable;
+            if (selectedTag.id) {
+                selectedTag.object_id_s = selectedTag.id.indexOf("-") >= 0 ? selectedTag.id.split("-")[0] : selectedTag.id;
+            }
+            selectedTag.tags_s = selectedTag.title_parseable;
             if (!selectedTag.object_id_s) {
                 var tagsCreated = _.filter($scope.createdTags, function (tag) {
                     return tag.tagName == selectedTag.tags_s || tag.tagDescription == selectedTag.tags_s
@@ -38,6 +40,8 @@ angular.module('cases').controller('Cases.TagsModalController', ['$scope', '$q',
                             });
                             var tagToAdd = angular.copy(tagCreated);
                             tagToAdd.tags_s = selectedTag.tags_s;
+                            tagToAdd.title_parseable = selectedTag.tags_s;
+                            tagToAdd.id = tagToAdd.id+'-TAG';
                             $scope.tags.push(tagToAdd);
                         }
                     )

@@ -44,6 +44,8 @@ public class AssociatedTagToSolrTransformer implements AcmObjectToSolrDocTransfo
 
         solr.setParent_type_s(in.getParentType());
         solr.setParent_id_s(Long.toString(in.getParentId()));
+        solr.setAdditionalProperty("parent_number_lcs", in.getParentTitle());
+        System.out.println("************************** February 15th ************************************************"+in.getParentTitle()+ "**********************************************");
 
         solr.setTag_token_lcs(in.getTag().getTagToken());
 
@@ -83,6 +85,9 @@ public class AssociatedTagToSolrTransformer implements AcmObjectToSolrDocTransfo
         solr.setParent_object_id_s(Long.toString(in.getParentId()));
 
         solr.setParent_object_type_s(in.getParentType());
+
+        solr.setAdditionalProperty("parent_number_lcs", in.getParentTitle());
+        System.out.println("**************************February 15th ************************************************"+in.getParentTitle()+ "**********************************************");
 
         solr.setTag_token_lcs(in.getTag().getTagToken());
 

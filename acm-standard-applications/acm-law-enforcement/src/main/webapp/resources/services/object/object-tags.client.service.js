@@ -185,16 +185,19 @@ angular.module('services').factory('Object.TagsService', ['$resource', '$transla
          *
          * @param {Number} objectId  Object ID
          * @param {String} objectType  Object type
+         * @param {String} parentTitle  Object (which happens to the the parent) title
          * @param {Number} tagId  Tag ID
          *
          * @returns {Object} Promise
          */
-        Service.associateTag = function (objectId, objectType, tagId) {
+        Service.associateTag = function (objectId, objectType, parentTitle, tagId) {
+            console.log(parentTitle);
             return Util.serviceCall({
                 service: Service._associateTag
                 , param: {
                     objectId: objectId,
                     objectType: objectType,
+                    parentTitle: parentTitle,
                     tagId: tagId
                 }
                 , data: {}
