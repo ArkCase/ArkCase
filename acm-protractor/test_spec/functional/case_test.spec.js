@@ -471,7 +471,14 @@ describe('case page tests', function() {
         casePage.clickModuleCasesFiles();
         casePage.clickExpandFancyTreeTopElement();
         casePage.rightClickRootFolder().addCorrespondence("case", "Notice of Investigation");
-        casePage.validateDocGridData(true, "Notice of Investigation", ".docx", "Notice of Investigation", utils.returnToday("/"), utils.returnToday("/"), userPage.returnUserNavigationProfile(), "1.0", "ACTIVE");
+        complaintPage.validateDocGridValue("Notice of Investigation", Objects.basepage.data.docGridColumn1, "Notice of Investigation");
+        complaintPage.validateDocGridValue("Notice of Investigation", Objects.basepage.data.docGridColumn2, ".docx");
+        complaintPage.validateDocGridValue("Notice of Investigation", Objects.basepage.data.docGridColumn3, "Notice Of Investigation");
+        complaintPage.validateDocGridValue("Notice of Investigation", Objects.basepage.data.docGridColumn4, utils.returnToday("/"));
+        complaintPage.validateDocGridValue("Notice of Investigation", Objects.basepage.data.docGridColumn5, utils.returnToday("/"));
+        complaintPage.validateDocGridValue("Notice of Investigation", Objects.basepage.data.docGridColumn6, userPage.returnUserNavigationProfile());
+        complaintPage.validateDocGridValue("Notice of Investigation", Objects.basepage.data.docGridColumn7, "1.0");
+        complaintPage.validateDocGridValue("Notice of Investigation", Objects.basepage.data.docGridColumn8, "ACTIVE");
 
     });
 
@@ -595,8 +602,15 @@ describe('case page tests', function() {
         casePage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Documents");
         casePage.rightClickRootFolder().addDocument("Report of Investigation");
         casePage.switchToIframes().submitReportOfInvestigation(Objects.basepage.data.reportTitle, Objects.taskspage.data.assigneeSamuel);
-        casePage.switchToDefaultContent().validateDocGridData(true, "Report of Investigation", ".pdf", "Report of Investigation", utils.returnToday("/"), utils.returnToday("/"), userPage.returnUserNavigationProfile(), "1.0", "ACTIVE");
-
+        casePage.switchToDefaultContent();
+        casePage.validateDocGridValue("Report of Investigation", Objects.basepage.data.docGridColumn1, "Report of Investigation");
+        casePage.validateDocGridValue("Report of Investigation", Objects.basepage.data.docGridColumn2, ".pdf");
+        casePage.validateDocGridValue("Report of Investigation", Objects.basepage.data.docGridColumn3, "Report of Investigation");
+        casePage.validateDocGridValue("Report of Investigation", Objects.basepage.data.docGridColumn4, utils.returnToday("/"));
+        casePage.validateDocGridValue("Report of Investigation", Objects.basepage.data.docGridColumn5, utils.returnToday("/"));
+        casePage.validateDocGridValue("Report of Investigation", Objects.basepage.data.docGridColumn6, Objects.taskspage.data.assigneeSamuel);
+        casePage.validateDocGridValue("Report of Investigation", Objects.basepage.data.docGridColumn7, "1.0");
+        casePage.validateDocGridValue("Report of Investigation", Objects.basepage.data.docGridColumn8, "ACTIVE");
     });
 
     it('should create new case and select Approver from participant tab and verify it in the paricipant table', function() {

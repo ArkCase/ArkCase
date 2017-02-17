@@ -172,6 +172,7 @@
     "assignee.button": "Choose Assignee",
     "assignee.label": "Assign To",
     "assignee.placeholder": "Please choose assignee by clicking the button above",
+    "assigneeOrGroup.placeholder": "Please choose assignee or group by clicking the button above",
     "priority.placeholder": "Select Priority",
     "priority.label": "Priority",
     "status.placeholder": "Select Status",
@@ -191,17 +192,17 @@
     "groupToggle.label": "Group Task?",
     "group.placeholder": "Please select a group."
   },
-  "tasks.userSearch": {
+  "tasks.userOrGroupSearch": {
     "id": "userSearch",
-    "title": "User Search",
+    "title": "User/Group Search",
     "search": {
       "btn": "Search",
-      "placeholder": "Search for the user to assign to this task."
+      "placeholder": "Search for the user or group to assign to this task."
     },
     "cancelButton": "Cancel",
     "confirmButton": "Confirm",
     "enabled": true,
-    "userFacetFilter": "\"Object Type\": USER",
+    "userOrGroupFacetFilter": "\"object_type_s\":(GROUP OR USER)",
     "assigneeGridColumns": {
       "name": "Name",
       "type": "Type",
@@ -275,6 +276,13 @@
     "btnCancelText": "Cancel",
     "btnSaveText": "Save",
     "searchAssigneeHeader": "Search Assignee"
+  },
+  "tasks.comp.groupPickerModal": {
+    "title": "Change Group",
+    "groupNamelabel": "Group Name",
+    "btnCancelText": "Cancel",
+    "btnSaveText": "Save",
+    "searchGroupHeader": "Search Group"
   },
   "tasks.comp.approvalRouting": {
     "title": "Future Approvers",

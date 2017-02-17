@@ -305,9 +305,27 @@ describe('edit user profile page', function () {
 
             casePage.clickModuleCasesFiles();
             expect(casePage.returnDueDate()).toEqual(utils.returnDate("/", 180), "Default due date is not correct");
-            expect(casePage.returnAssignee()).toEqual("", "Asignee by default should be empty");
+            expect(casePage.returnAssignee()).toEqual("None", "Asignee by default should be none");
             expect(casePage.returnOwningGroup()).toEqual(Objects.casepage.data.owningGroup, "Default owning group is not correct");
 
+        });
+
+        //verify adding document to document management
+
+        it('should verify adding correspondence document', function () {
+
+            casePage.clickModuleCasesFiles();
+            casePage.clickExpandFancyTreeTopElementAndSubLink("Documents");
+            casePage.rightClickRootFolder().addCorrespondence("case", "Clearance Granted");
+            casePage.verifyTheNotificationMessage("Case File ", "The notification message after adding document is not correct");
+            casePage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn1, "Clearance Granted");
+            casePage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn2, ".docx");
+            casePage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn3, "Clearance Granted");
+            casePage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn4, utils.returnToday("/"));
+            casePage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn5, utils.returnToday("/"));
+            casePage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn6, Objects.taskspage.data.assigneeSamuel);
+            casePage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn7, "1.0");
+            casePage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn8, "ACTIVE");
         });
 
         //close case and make sure the files are declared as records on the Alfresco site
@@ -353,29 +371,20 @@ describe('edit user profile page', function () {
             casePage.deleteNote();
         });
 
-
-        //verify adding document to document management
-
-        it('should verify adding correspondence document', function () {
-
-            casePage.clickModuleCasesFiles();
-            casePage.clickExpandFancyTreeTopElementAndSubLink("Documents");
-            casePage.rightClickRootFolder().addCorrespondence("case", "Clearance Granted");
-            casePage.verifyTheNotificationMessage("Case File ", "The notification message after adding document is not correct");
-            casePage.validateDocGridData(true, "Clearance Granted", ".docx", "Clearance Granted", utils.returnToday("/"), utils.returnToday("/"), Objects.taskspage.data.assigneeSamuel, "1.0", "ACTIVE");
-
-        });
-
         //View document (Click Open)
 
         it('should verify view document', function () {
 
             casePage.clickModuleCasesFiles();
             casePage.clickExpandFancyTreeTopElementAndSubLink("Documents");
-            casePage.clickDocTreeExpand().rightClickFileTitle().clickDocAction("Open");
-            casePage.moveToTab().switchToDocIframes();
-            casePage.returnDocViewOpened(true);
-
+            casePage.clickDocTreeExpand().waitForDocGrid();
+            casePage.rightClickFileTitle();
+            casePage.clickDocAction("Open");
+            casePage.moveToTab();
+            casePage.validateDocumentTitleInSnowBView(Objects.basepage.data.defaultCaseFileTitle);
+            casePage.validateDocumentAuthorInSnowBView(Objects.basepage.data.defaultCaseFileAuthor);
+            casePage.validateDocumentStatusInSnowBView(Objects.basepage.data.defaultCaseFileStatus);
+            casePage.validateDocumentCreatedDateInSnowBView(utils.returnToday("/"))
         });
 
         //Email document (Click Email)
@@ -416,7 +425,7 @@ describe('edit user profile page', function () {
             complaintPage.waitForComplaintsPage();
             expect(complaintPage.returnComplaintsTitle()).toEqual(Objects.complaintPage.data.title);
 
-        });
+         });
 
         // verify people initiator on new added complaint
 
@@ -485,7 +494,14 @@ describe('edit user profile page', function () {
             complaintPage.clickExpandFancyTreeTopElementAndSubLink("Documents");
             complaintPage.rightClickRootFolder();
             complaintPage.addDocument("Notice of Investigation");
-            complaintPage.validateDocGridData(true, "ArkCaseTesting", ".docx", "Notice of Investigation", utils.returnToday("/"), utils.returnToday("/"), userPage.returnUserNavigationProfile(), "1.0", "ACTIVE");
+            complaintPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn1, "ArkCaseTesting");
+            complaintPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn2, ".docx");
+            complaintPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn3, "Notice Of Investigation");
+            complaintPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn4, utils.returnToday("/"));
+            complaintPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn5, utils.returnToday("/"));
+            complaintPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn6, Objects.taskspage.data.assigneeSamuel);
+            complaintPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn7, "1.0");
+            complaintPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn8, "ACTIVE");
 
         });
 
@@ -539,7 +555,7 @@ describe('edit user profile page', function () {
 
         });
 
-    });
+     });
     describe('notification page test', function () {
 
 
@@ -591,7 +607,7 @@ describe('edit user profile page', function () {
             reportPage.runReport("CASE SUMMARY", "Draft", createdDate, createdDate);
             reportPage.switchToReportframes();
             reportPage.validateCaseReportTitles(Objects.reportPage.data.CaseSummaryReportTitleName, Objects.reportPage.data.CaseSummaryColumn1Title, Objects.reportPage.data.CaseSummaryColumn2Title, Objects.reportPage.data.CaseSummaryColumn3Title, Objects.reportPage.data.CaseSummaryColumn4Title, Objects.reportPage.data.CaseSummaryColumn5Title, Objects.reportPage.data.CaseSummaryColumn6Title, Objects.reportPage.data.CaseSummaryColumn7Title);
-            reportPage.validateCaseReportValues(caseid, "DRAFT", Objects.casepage.data.caseTitle, createdDate, priority, dueDate, caseType);
+            reportPage.validateCaseReportValues(caseid, "ACTIVE", Objects.complaintPage.data.title, createdDate, priority, dueDate, caseType);
             reportPage.switchToDefaultContent();
 
         });

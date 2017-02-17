@@ -46,7 +46,7 @@ public class SpringLdapPagedDaoTest extends EasyMockSupport
         syncConfig.setUserIdAttributeName("samAccountName");
         syncConfig.setMailAttributeName("mail");
         syncConfig.setBaseDC("dc=dead,dc=net");
-        syncConfig.setAllUsersSearchBase("CN=bandMembers");
+        syncConfig.setUserSearchBase("CN=bandMembers");
         syncConfig.setAllUsersFilter("allUsersFilter");
         syncConfig.setSyncPageSize(100);
     }
@@ -68,7 +68,7 @@ public class SpringLdapPagedDaoTest extends EasyMockSupport
         acmUsers.add(jgarcia);
 
         expect(mockLdapTemplate.search(
-                eq(syncConfig.getAllUsersSearchBase()),
+                eq(syncConfig.getUserSearchBase()),
                 eq(syncConfig.getAllUsersFilter()),
                 anyObject(SearchControls.class),
                 anyObject(AcmUserGroupsContextMapper.class),
@@ -105,7 +105,7 @@ public class SpringLdapPagedDaoTest extends EasyMockSupport
         acmUsers.add(jgarcia);
 
         expect(mockLdapTemplate.search(
-                eq(syncConfig.getAllUsersSearchBase()),
+                eq(syncConfig.getUserSearchBase()),
                 eq(syncConfig.getAllUsersFilter()),
                 anyObject(SearchControls.class),
                 anyObject(AcmUserGroupsContextMapper.class),

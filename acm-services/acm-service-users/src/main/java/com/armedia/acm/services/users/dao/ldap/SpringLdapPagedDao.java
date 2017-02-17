@@ -74,7 +74,14 @@ public class SpringLdapPagedDao implements SpringLdapDao
         userGroupsContextMapper.setUserIdAttributeName(syncConfig.getUserIdAttributeName());
         userGroupsContextMapper.setMailAttributeName(syncConfig.getMailAttributeName());
 
-        String searchBase = syncConfig.getAllUsersSearchBase();
+        String searchBase = syncConfig.getUserSearchBase();
+
+        // Spring LDAP authentication doesn't support multiple search bases divided by "|"
+        // this is custom implementation if we want to sync users from  different search bases
+        // Note: - add new property in AcmLdapSyncConfig if you want to define multiple search bases and use that instead
+        // - users synced from different search base other than the one defined in property "userSearchBase" won't be
+        // able to log in
+        // Multiple search bases is supported in some of the upper spring security versions
         String[] bases = searchBase.split("\\|");
         List<AcmUser> acmUsers = new ArrayList<>();
         for (String base : bases)
