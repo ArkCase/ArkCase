@@ -57,31 +57,40 @@ describe('regression tests', function() {
         casePage.switchToDefaultContent();
     });
 
-    it('should create new case add/edit timeSheet and verify the time widget data in cases overview page', function() {
+    it('should create new case and add/edit timesheet and verify it in the in Complaints overview page', function() {
 
-
-        casePage.clickModuleCasesFiles();
+        casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
+        casePage.clickNextBtn();
+        casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName).clickSubmitBtn();
+        casePage.switchToDefaultContent();
         casePage.waitForCasesPage();
         element(by.xpath(Objects.casepage.locators.caseID)).getText().then(function(text) {
             console.log(text);
             casePage.clickNewButton();
             timeTrackingPage.navigateToTimeTrackingPage();
             casePage.switchToIframes();
-            timeTrackingPage.submitTimesheetTable("Case", text, "8");
+            timeTrackingPage.selectTimesheetType("Case");
+            timeTrackingPage.clickChargeCode();
+            casePage.switchToDefaultContent();
+            timeTrackingPage.searchForObject(text);
+            casePage.switchToIframes();
+            timeTrackingPage.submitTimesheetTable("8");
             casePage.selectApprover(Objects.casepage.data.approverSamuel);
             timeTrackingPage.clickSaveBtn();
-            timeTrackingPage.clickLastElementInTreeData();
             timeTrackingPage.clickEditTimesheetBtn();
             timeTrackingPage.switchToIframes();
-            timeTrackingPage.submitTimesheetTable("Case", text, "1");
-            casePage.selectApprover(Objects.casepage.data.approverSamuel);
+            timeTrackingPage.selectTimesheetType("Case");
+            timeTrackingPage.clickChargeCode();
+            complaintPage.switchToDefaultContent();
+            timeTrackingPage.searchForObject(text);
+            complaintPage.switchToIframes();
+            timeTrackingPage.submitTimesheetTable("8");
             timeTrackingPage.clickSaveBtn();
             casePage.clickModuleCasesFiles();
-            casePage.verifyTimeWidgetData("7");
+            complaintPage.verifyTimeWidgetData("7");
 
         });
     });
-
 
     it('should create new case with owner  and edit the assignee ', function() {
 
@@ -155,23 +164,34 @@ describe('regression tests', function() {
         expect(complaintPage.returnParticipantNameForthRow()).toEqual("Samuel Supervisor", "Participant name is not correct in forth row");
     });
 
-    it('should create new complaint add/edit timeSheet and verify the time widget data in cases overview page', function() {
+    it('should create new complaint add/edit timeSheet and verify the time widget data in Complaints overview page', function() {
 
-
-        complaintPage.clickModuleComplaints();
+        complaintPage.clickNewButton().clickComplaintButton().switchToIframes();
+        complaintPage.submitInitiatorInformation(Objects.complaintPage.data.firstName, Objects.complaintPage.data.lastName).reenterFirstName(Objects.complaintPage.data.firstName).clickTab("Incident").insertIncidentInformation("Arson", Objects.complaintPage.data.title);
+        complaintPage.clickSubmitBtn();
+        complaintPage.switchToDefaultContent();
         complaintPage.waitForComplaintsPage();
         element(by.xpath(Objects.casepage.locators.caseID)).getText().then(function(text) {
             console.log(text);
             complaintPage.clickNewButton();
             timeTrackingPage.navigateToTimeTrackingPage();
             complaintPage.switchToIframes();
-            timeTrackingPage.submitTimesheetTable("Complaint", text, "8");
+            timeTrackingPage.selectTimesheetType("Complaint");
+            timeTrackingPage.clickChargeCode();
+            complaintPage.switchToDefaultContent();
+            timeTrackingPage.searchForObject(text);
+            complaintPage.switchToIframes();
+            timeTrackingPage.submitTimesheetTable("8");
             complaintPage.selectApprover(Objects.casepage.data.approverSamuel);
             timeTrackingPage.clickSaveBtn();
             timeTrackingPage.clickEditTimesheetBtn();
             timeTrackingPage.switchToIframes();
-            timeTrackingPage.submitTimesheetTable("Complaint", text, "1");
-            complaintPage.selectApprover(Objects.casepage.data.approverSamuel);
+            timeTrackingPage.selectTimesheetType("Complaint");
+            timeTrackingPage.clickChargeCode();
+            complaintPage.switchToDefaultContent();
+            timeTrackingPage.searchForObject(text);
+            complaintPage.switchToIframes();
+            timeTrackingPage.submitTimesheetTable("8");
             timeTrackingPage.clickSaveBtn();
             complaintPage.clickModuleComplaints();
             complaintPage.verifyTimeWidgetData("7");

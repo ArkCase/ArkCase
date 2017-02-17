@@ -537,8 +537,12 @@ var TaskPage = function() {
     this.clickApproveBtn = function() {
 
         browser.wait(EC.presenceOf(element(by.xpath(Objects.taskspage.locators.approveBtn))), 30000, "Approve button is not displayed").then(function() {
-            approveBtn.click().then(function() {
-                browser.wait(EC.textToBePresentInElement((taskState), Objects.taskspage.data.taskStateClosed), 30000, "Task state is not changed into Closed");
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.approveBtn))), 30000, "Approve button is not displayed").then(function() {
+                browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.taskspage.locators.approveBtn))), 30000, "Approve button is not clickable").then(function() {
+                    approveBtn.click().then(function() {
+                        browser.wait(EC.textToBePresentInElement((taskState), Objects.taskspage.data.taskStateClosed), 30000, "Task state is not changed into Closed");
+                    });
+                });
             });
         });
         return this;
