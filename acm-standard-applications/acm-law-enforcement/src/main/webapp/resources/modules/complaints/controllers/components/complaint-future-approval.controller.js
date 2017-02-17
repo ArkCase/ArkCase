@@ -1,13 +1,13 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.FutureApprovalRoutingController', ['$scope', '$stateParams', '$q', '$translate', '$modal'
+angular.module('complaints').controller('Complaints.FutureApprovalRoutingController', ['$scope', '$stateParams', '$q', '$translate', '$modal'
     , 'UtilService', 'Util.DateService', 'ConfigService', 'ObjectService', 'LookupService', 'Object.LookupService'
-    , 'Task.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Authentication'
-    , 'PermissionsService', 'Profile.UserInfoService'
+    , 'Complaint.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Authentication'
+    , 'PermissionsService', 'Profile.UserInfoService', 'Object.TaskService', 'Task.InfoService'
     , function ($scope, $stateParams, $q, $translate, $modal
         , Util, UtilDateService, ConfigService, ObjectService, LookupService, ObjectLookupService
-        , TaskInfoService, HelperUiGridService, HelperObjectBrowserService, Authentication
-        , PermissionsService, UserInfoService) {
+        , ComplaintInfoService, HelperUiGridService, HelperObjectBrowserService, Authentication
+        , PermissionsService, UserInfoService, ObjectTaskService, TaskInfoService) {
 
         $scope.userSearchConfig = null;
         $scope.gridOptions = $scope.gridOptions || {};
@@ -19,21 +19,16 @@ angular.module('tasks').controller('Tasks.FutureApprovalRoutingController', ['$s
         new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
-            , moduleId: "tasks"
+            , moduleId: "complaints"
             , componentId: "approvalrouting"
-            , retrieveObjectInfo: TaskInfoService.getTaskInfo
-            , validateObjectInfo: TaskInfoService.validateTaskInfo
             , onConfigRetrieved: function (componentConfig) {
                 return onConfigRetrieved(componentConfig);
-            }
-            , onObjectInfoRetrieved: function (objectInfo) {
-                onObjectInfoRetrieved(objectInfo);
             }
         });
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
-        ConfigService.getModuleConfig("tasks").then(function (moduleConfig) {
+        ConfigService.getModuleConfig("complaints").then(function (moduleConfig) {
             $scope.userSearchConfig = _.find(moduleConfig.components, {id: "userSearch"});
             return moduleConfig;
         });
@@ -53,11 +48,12 @@ angular.module('tasks').controller('Tasks.FutureApprovalRoutingController', ['$s
             gridHelper.disableGridScrolling(config);
         };
 
-        var onObjectInfoRetrieved = function (objectInfo) {
+        $scope.$bus.subscribe('buckslip-task-object-updated', function (objectInfo) {
+
             $scope.taskInfo = objectInfo;
 
             //set future approvers info
-            if (!Util.isArrayEmpty(objectInfo.buckslipFutureApprovers)) {
+            if (!Util.isArrayEmpty($scope.taskInfo.buckslipFutureApprovers)) {
                 var data = [];
                 _.forEach(objectInfo.buckslipFutureApprovers, function (userProfile) {
                     data.push(convertProfileToUser(userProfile));
@@ -67,16 +63,17 @@ angular.module('tasks').controller('Tasks.FutureApprovalRoutingController', ['$s
             } else {
                 $scope.gridOptions.data = [];
                 $scope.gridOptions.noData = true;
-                $scope.noDataMessage = $translate.instant('tasks.comp.approvalRouting.noBuckslipMessage');
+                $scope.noDataMessage = $translate.instant('complaints.comp.approvalRouting.noBuckslipMessage');
             }
             $scope.oldData = angular.copy($scope.gridOptions.data);
-        };
+
+        });
 
         $scope.userSearch = function () {
             var modalInstance = $modal.open({
                 animation: $scope.animationsEnabled,
-                templateUrl: 'modules/tasks/views/components/task-user-search.client.view.html',
-                controller: 'Tasks.UserSearchController',
+                templateUrl: 'modules/complaints/views/components/complaint-user-search.client.view.html',
+                controller: 'Complaints.UserSearchController',
                 size: 'lg',
                 resolve: {
                     $filter: function () {
@@ -166,22 +163,20 @@ angular.module('tasks').controller('Tasks.FutureApprovalRoutingController', ['$s
 
         $scope.saveTask = function () {
             var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
-            if (TaskInfoService.validateTaskInfo($scope.objectInfo)) {
+            if (TaskInfoService.validateTaskInfo($scope.taskInfo)) {
 
                 $scope.taskInfo.buckslipFutureApprovers = $scope.gridOptions.data;
                 promiseSaveInfo = TaskInfoService.saveTaskInfo($scope.taskInfo);
                 promiseSaveInfo.then(
                     function (taskInfo) {
-                        $scope.$emit("report-object-updated", taskInfo);
-                        return TaskInfoService.getTaskInfo(taskInfo.taskId);
+                        $scope.$bus.publish('buckslip-task-object-updated', taskInfo);
+                        return taskInfo;
                     }
                     , function (error) {
                         $scope.$emit("report-object-update-failed", error);
                         return error;
                     }
-                ).then(function (taskInfo) {
-                    onObjectInfoRetrieved(taskInfo);
-                });
+                )
             }
             return promiseSaveInfo;
         };
@@ -265,5 +260,4 @@ angular.module('tasks').controller('Tasks.FutureApprovalRoutingController', ['$s
             return user;
         }
     }
-])
-;
+]);
