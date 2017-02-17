@@ -576,6 +576,7 @@ describe('case page tests', function() {
             casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Arson");
             casePage.clickNextBtn();
             casePage.initiatorInformation(Objects.casepage.data.firstName, Objects.casepage.data.lastName);
+            casePage.clickParticipantTab();
             casePage.selectParticipant(data.participant, "Sally");
             casePage.switchToIframes();
             casePage.clickSubmitBtn();
