@@ -43,9 +43,8 @@ var LoginPage = function() {
         browser.wait(EC.visibilityOf(element(by.linkText("Logout"))), 30000, "Logout link is not visible").then(function() {
             logoutLink.click().then(function() {
                 browser.ignoresynchronization = true;
-               browser.wait(EC.visibilityOf(browser.driver.findElement(by.id(Objects.loginpage.locators.username))),30000, "Logout page is not displayed");
                 var logoutSucesfullMessage = browser.driver.findElement(by.css(Objects.basepage.locators.logoutSucesfullMessage));
-                expect(logoutSucesfullMessage.getText()).toEqual('You have been logged out successfully.', 'Logout was unsuccessful');
+                expect(logoutSucesfullMessage.getText()).toEqual('You have been logged out successfully.');
             });
         });
         return this;
