@@ -84,7 +84,7 @@ angular.module('complaints').controller('Complaints.ApprovalRoutingController', 
         });
 
         $scope.onClickTitle = function () {
-            ObjectService.showObject(ObjectService.ObjectTypes.TASK, $scope.objectInfo.objectId);
+            ObjectService.showObject(ObjectService.ObjectTypes.TASK, $scope.objectInfo.taskId);
         };
     }
 ]);
