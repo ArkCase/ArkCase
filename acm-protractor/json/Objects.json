@@ -83,11 +83,14 @@
             "treeSortersBtn": "[ng-show='treeConfig.sorters']",
             "sortByIdDesc": "//*[@class='dropdown-menu text-left text-sm treeSorter']//li[4]",
             "objectStatus": ".//div[@class='col-xs-6']/h4/node()[2]",
+            "editNoteBtn": "[ng-click='grid.appScope.editRow(row.entity)']",
+            "documentNoteName": "//*[@class='panel-body']/..//div[2]/div[1]/div/div/div/div/div/div/div[1]",
             "docTitleSnowBView": ".//div[@class='row']/div[1]/div",
             "docAssigneeSnowBView": ".//div[@class='row']/div[2]/div",
             "docCreatedDateSnowBView": ".//div[@class='row']/div[3]/div",
             "docTypeSnowBView": ".//div[@class='row']/div[4]/div",
             "docStatusSnowBView": ".//div[@class='row']/div[5]/div"
+
 
 
         },
@@ -621,7 +624,7 @@
             "searchForUserInput": "//*[@class='modal-search-header']/..//input",
             "searchUserBtn": "Search",
             "OkBtn": "OK",
-            "searchedUserName":".//*[@class='ui-grid-canvas']/div/div[1]/div[2]",
+            "searchedUserName":".//*[@class='modal-columns']/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div",
             "participantLinkBtn": ".//*[@class='fa fa-users']",
             "participantTableRow": ".//*[@class='ui-grid-cell-contents ng-binding ng-scope']",
             "participantTable": ".//*[@class='panel panel-success panel-grid']",
@@ -699,7 +702,7 @@
             "tagname": "tag1",
             "unsubscribeBtn": "Unsubscribe",
             "subscribeBtn": "Subscribe",
-            "caseName": "NewCaseNew",
+            "caseName": "EditCase",
             "referenceCaseName": "Reference case",
             "referenceType": "CASE_FILE",
             "referenceStatusDraft": "DRAFT",
@@ -743,7 +746,7 @@
         "data": {
 
             "date": "1",
-            "tagname": "milan"
+            "tagname": "Text 1"
         }
     },
 

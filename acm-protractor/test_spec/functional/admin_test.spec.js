@@ -87,7 +87,6 @@ describe('Validate that group in which is logged in user is in authorized group'
         expect(adminPage.returnDocApprovalBPAuthor()).toEqual(Objects.adminPage.data.docApprovalBPAuthor, "Document approval business process author ia not correct");
     });
 
-
 });
 
 
