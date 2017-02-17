@@ -17,7 +17,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
         $scope.addLdapGroupBtn = "admin.security.organizationalHierarchy.createGroupDialog.ldapGroup.title";
 
         LdapConfigService.retrieveDirectories().then(function (directories) {
-            var directoryServers = _.map(directories.data, "ldapConfig.name");
+            var directoryServers = _.map(directories.data, "ldapConfig.id");
             $scope.directoryServersProp = {
                 "value": directoryServers[0]
                 , "values": directoryServers
