@@ -125,12 +125,15 @@ public class LdapSyncDatabaseHelper
             }
 
             user.setUserDirectoryName(directoryName);
+
             // append ad-hoc groups
-            AcmUser existing = getUserDao().findByUserId(user.getUserId());
-            existing.getGroups()
-                    .stream()
-                    .filter(g -> "ADHOC_GROUP".equals(g.getType()))
-                    .forEach(g -> user.addGroup(g));
+           Optional.ofNullable(getUserDao().findByUserId(user.getUserId()))
+                   .ifPresent(acmUser -> acmUser.getGroups()
+                       .stream()
+                       .filter(g -> "ADHOC_GROUP".equals(g.getType()))
+                       .forEach(user::addGroup)
+           );
+
             AcmUser saved = getUserDao().save(user);
             retval.add(saved);
         }
