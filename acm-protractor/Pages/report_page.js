@@ -200,13 +200,14 @@ var ReportPage = function() {
     this.validateCaseReportValues = function(caseNumber, status, title, incidentDate, priority, dueDate, type) {
         browser.wait(EC.presenceOf(element(by.xpath(Objects.reportPage.locators.caseStatusValue))), 30000, "Case Status value is not present in DOM").then(function() {
             browser.wait(EC.visibilityOf(element(by.xpath(Objects.reportPage.locators.caseStatusValue))), 30000, "Case status value is not visible").then(function() {
-                expect(caseNumberValue.getText()).toEqual(caseNumber);
-                expect(caseStatusValue.getText()).toEqual(status);
-                expect(caseTitleValue.getText()).toEqual(title);
-                expect(caseIncidentDateValue.getText()).toEqual(incidentDate);
-                expect(casePriorityValue.getText()).toEqual(priority);
-                expect(caseDuedateValue.getText()).toEqual(dueDate);
-                expect(caseTypeValue.getText()).toEqual(type);
+                    expect(caseNumberValue.getText()).toEqual(caseNumber);
+                    expect(caseStatusValue.getText()).toEqual(status);
+                    expect(caseTitleValue.getText()).toEqual(title);
+                    expect(caseIncidentDateValue.getText()).toEqual(incidentDate);
+                    expect(casePriorityValue.getText()).toEqual(priority);
+                    expect(caseDuedateValue.getText()).toEqual(dueDate);
+                    expect(caseTypeValue.getText()).toEqual(type);
+
             });
         })
 

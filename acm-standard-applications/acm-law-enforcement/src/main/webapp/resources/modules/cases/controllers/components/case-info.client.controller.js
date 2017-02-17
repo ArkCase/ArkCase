@@ -3,10 +3,11 @@
 angular.module('cases').controller('Cases.InfoController', ['$scope', '$stateParams', '$translate', '$timeout'
     , 'UtilService', 'Util.DateService', 'ConfigService', 'Object.LookupService', 'Case.LookupService', 'Case.InfoService'
     , 'Object.ModelService', 'Helper.ObjectBrowserService', 'MessageService', 'ObjectService', 'Helper.UiGridService', '$modal'
-    , 'Object.ParticipantService', '$q'
+    , 'Object.ParticipantService', '$q', '$filter', 'SearchService', 'Search.QueryBuilderService'
     , function ($scope, $stateParams, $translate, $timeout
         , Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService
-        , ObjectModelService, HelperObjectBrowserService, MessageService, ObjectService, HelperUiGridService, $modal, ObjectParticipantService, $q) {
+        , ObjectModelService, HelperObjectBrowserService, MessageService, ObjectService, HelperUiGridService, $modal, ObjectParticipantService, $q, $filter
+        , SearchService, SearchQueryBuilder) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -95,6 +96,90 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
                     $scope.participant.participantLdapId = data.participant.participantLdapId;
                     $scope.assignee = data.participant.participantLdapId;
                     $scope.updateAssignee();
+                }
+            }, function(error) {    
+            });
+        };
+
+        $scope.openGroupPickerModal = function () {
+            var participant = {
+                        id: '',
+                        participantLdapId: '',
+                        config: $scope.config
+                    };
+            showGroupModal(participant);
+        };
+
+        var showGroupModal = function (participant) {
+            var modalScope = $scope.$new();
+            modalScope.participant = participant || {};
+
+            var modalInstance = $modal.open({
+                scope: modalScope,
+                animation: true,
+                templateUrl: "modules/cases/views/components/case-group-picker-modal.client.view.html",
+                controller: "Cases.GroupPickerController",
+                size: 'md',
+                backdrop: 'static',
+                resolve: {
+                    owningGroup: function () {
+                        return $scope.owningGroup;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (chosenGroup) {
+                $scope.participant = {};
+                 
+                if (chosenGroup.participant.participantLdapId != '' && chosenGroup.participant.participantLdapId != null) {
+                    $scope.participant.participantLdapId = chosenGroup.participant.participantLdapId;
+                    $scope.participant.object_type_s = chosenGroup.participant.object_type_s;
+
+                    var currentAssignee = $scope.assignee;
+                    var chosenOwningGroup = chosenGroup.participant.participantLdapId;
+                    $scope.iscurrentAssigneeInOwningGroup = false;
+                    var size = 20;
+                    var start = 0;
+                    var searchQuery = '*';
+                    var filter = 'fq=fq="object_type_s": USER' + '&fq="groups_id_ss": ' + chosenOwningGroup;
+                    
+                    var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuery(searchQuery, filter, size, start);
+                    if (query) {
+                        SearchService.queryFilteredSearch({
+                            query: query
+                        },
+                        function (data) {
+                            var returnedUsers = data.response.docs;
+                            // Going through th collection of returnedUsers to see if there is a match with the current assignee
+                            // if there is a match that means the current assignee is within that owning group hence no 
+                            // changes to the current assignee is needed
+                            _.each(returnedUsers, function (returnedUser) {
+                                if (currentAssignee === returnedUser.object_id_s) {
+                                    $scope.iscurrentAssigneeInOwningGroup = true;
+                                }
+                            });
+
+                            if ($scope.participant.participantLdapId && $scope.iscurrentAssigneeInOwningGroup) {
+                                $scope.owningGroup = chosenGroup.participant.selectedAssigneeName;
+                                $scope.updateOwningGroup();
+                            } else {
+                                $scope.owningGroup = chosenGroup.participant.selectedAssigneeName;
+                                $scope.assignee = '';
+
+                                var assigneeParticipantType = 'assignee';
+                                // Iterating through the array to find the participant with the ParticipantType eqaul assignee
+                                // then setiing the participantLdapId to empty string
+                                _.each($scope.objectInfo.participants, function(participant) {
+                                    if(participant.participantType == assigneeParticipantType){
+                                        participant.participantLdapId = '';
+                                    }
+                                });
+
+                                $scope.updateOwningGroup();
+                                $scope.updateAssignee(); 
+                            }    
+                        });
+                    }
                 }
             }, function(error) {    
             });

@@ -246,7 +246,7 @@ var selectParticipantSecondRow = element.all(by.name(Objects.casepage.locators.s
 var timeCanvasData = element(by.css(Objects.basepage.locators.timeCanvasData));
 var owningGroupDropDown = new SelectWrapper(by.xpath(Objects.basepage.locators.owningGroupDropDown));
 var owningGroupConfirmBtn = element(by.xpath(Objects.basepage.locators.owningGroupConfirmBtn));
-var owningGroup = element(by.xpath(Objects.casepage.locators.owningGroup));
+var owningGroup = element(by.css(Objects.casepage.locators.owningGroup));
 var assigneeNameModelInput = element(by.model(Objects.basepage.locators.assigneeNameModelInput));
 var treeSortersBtn = element(by.css(Objects.basepage.locators.treeSortersBtn));
 var sortByIdDesc = element(by.xpath(Objects.basepage.locators.sortByIdDesc));
@@ -254,6 +254,11 @@ var objectStatus = element(by.xpath(Objects.basepage.locators.objectStatus));
 var doc = element(by.id(Objects.casepage.locators.doc));
 var fullnameLink = element(by.css(Objects.basepage.locators.fullnameLink));
 var documentNoteName = element.all(by.xpath(Objects.basepage.locators.documentNoteName)).get(1);
+var docTitleSnowBView = element(by.xpath(Objects.basepage.locators.docTitleSnowBView));
+var docAssigneeSnowBView = element(by.xpath(Objects.basepage.locators.docAssigneeSnowBView));
+var docCreatedDateSnowBView = element(by.xpath(Objects.basepage.locators.docCreatedDateSnowBView));
+var docTypeSnowBView = element(by.xpath(Objects.basepage.locators.docTypeSnowBView));
+var docStatusSnowBView = element(by.xpath(Objects.basepage.locators.docStatusSnowBView));
 
 
 var BasePage = function() {
@@ -410,6 +415,46 @@ var BasePage = function() {
         })
 
     }
+
+    this.validateDocGridValue = function (type, column, expectedValue) {
+        var xPathStart = "//span[@title='";
+        var completexPath;
+        var xPathEnd;
+        switch (column) {
+            case "Title":
+                xPathEnd = "/../../../td[3]";
+                break;
+            case "Extension":
+                xPathEnd = "/../../../td[4]";
+                break;
+            case "Type":
+                xPathEnd = "/../../../td[5]";
+                break;
+            case "Created":
+                xPathEnd = "/../../../td[6]";
+                break;
+            case "Modified":
+                xPathEnd = "/../../../td[7]";
+                break;
+            case "Author":
+                xPathEnd = "/../../../td[8]";
+                break;
+            case "Version":
+                xPathEnd = "/../../../td[9]/span/select/option";
+                break;
+            case "Status":
+                xPathEnd = "/../../../td[10]";
+                break;
+            default:
+                xPathEnd = "/../../../td[4]";
+                break;
+        }
+        completexPath = xPathStart + type + "']" + xPathEnd;
+        var el = element(by.xpath(completexPath));
+        browser.wait(EC.visibilityOf(element(by.xpath(completexPath))), 30000, "document is not successfully uploaded").then(function () {
+            expect(el.getText()).toEqual(expectedValue, "Document table " + column + " value is not correct in the grid");
+        });
+    }
     this.switchToIframes = function() {
         browser.ignoreSynchronization = true;
         browser.wait(EC.visibilityOf(element(by.className("new-iframe ng-scope"))), 30000, "Iframe is not visible");
@@ -464,16 +509,18 @@ var BasePage = function() {
     }
 
     this.clickExpandFancyTreeTopElementAndSubLink = function(link) {
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.fancyTreeExpandTop))), 30000, "Fancy tree top element expand is not visible").then(function() {
-            browser.sleep(5000);
-            fancyTreeExpandTop.click().then(function() {
-                var xPathStr = "//span[contains(text(),'";
-                var completexPath;
-                completexPath = xPathStr + link + "')]";
-                browser.wait(EC.visibilityOf(element(by.xpath(completexPath))), 30000, "Sublink " + link + " of top element is not visible").then(function() {
-                    browser.wait(EC.elementToBeClickable(element(by.xpath(completexPath))), 30000, "Sublink " + link + " of top element is not visible").then(function() {
-                        var el = element(by.xpath(completexPath));
-                        el.click();
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.fancyTreeExpandTop))), 30000, "Fancy tree top element expand is not present in DOM").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.fancyTreeExpandTop))), 30000, "Fancy tree top element expand is not visible").then(function () {
+                browser.sleep(5000);
+                fancyTreeExpandTop.click().then(function () {
+                    var xPathStr = "//span[contains(text(),'";
+                    var completexPath;
+                    completexPath = xPathStr + link + "')]";
+                    browser.wait(EC.visibilityOf(element(by.xpath(completexPath))), 30000, "Sublink " + link + " of top element is not visible").then(function () {
+                        browser.wait(EC.elementToBeClickable(element(by.xpath(completexPath))), 30000, "Sublink " + link + " of top element is not visible").then(function () {
+                            var el = element(by.xpath(completexPath));
+                            el.click();
+                        });
                     });
                 });
             });
@@ -1698,7 +1745,9 @@ var BasePage = function() {
     this.clickDocTreeExpand = function() {
         browser.wait(EC.presenceOf(element(by.xpath(Objects.basepage.locators.docTreeExpand))), 30000, "Expand doc tree element is not visible").then(function() {
             browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.docTreeExpand))), 30000, "Expand doc tree element is not visible").then(function() {
-                docTreeExpand.click();
+                docTreeExpand.click().then(function () {
+                    browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.docTitle))), 30000, "There is not documents in the grid");
+                })
             });
         });
         return this;
@@ -1709,6 +1758,12 @@ var BasePage = function() {
         });
         return this;
     };
+
+    this.waitForDocumentView = function() {
+        browser.wait(EC.visibilityOf(element(by.linkText(Objects.basepage.locators.docViewNotesLink))), 30000, "Document view is not successfully opened");
+        return this;
+    };
+
     this.clickDocViewAddNote = function() {
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.docViewAddNoteButton))), 30000, "Document view add note button is not visible").then(function() {
             docViewAddNoteButton.click();
@@ -2228,8 +2283,33 @@ var BasePage = function() {
         })
         return this;
     };
+    this.validateDocumentTitleInSnowBView = function (title) {
+            browser.wait(EC.textToBePresentInElement((docTitleSnowBView), title), 30000, "Title of document is not visible").then(function () {
+                    expect(docTitleSnowBView.getText()).toEqual(title);
+            });
+    };
+    this.validateDocumentAuthorInSnowBView = function (author) {
+             expect(docAssigneeSnowBView.getText()).toEqual(author);
+    };
+    this.validateDocumentCreatedDateInSnowBView = function (date) {
+        browser.wait(EC.textToBePresentInElement((docCreatedDateSnowBView), date), 30000, "Document created date is not visible").then(function() {
+              expect(docCreatedDateSnowBView.getText()).toEqual(date);
+            });
+    };
+
+    this.validateDocumentStatusInSnowBView = function (status) {
+        browser.wait(EC.textToBePresentInElement((docStatusSnowBView), status), 30000, "Status of document is not visible").then(function () {
+            expect(docStatusSnowBView.getText()).toEqual(status);
+        });
+    };
+
+    this.waitForDocGrid = function() {
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.basepage.locators.docTitle))), 60000, "Document title is not present in DOM").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.docTitle))), 60000, "Document title is not visible");
+        });
+    }
 
 
-}
+};
 
 module.exports = new BasePage();

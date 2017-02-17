@@ -35,76 +35,83 @@ describe('Create new complaint ', function() {
         loginPage.Logout();
 
     });
-    
-        it('should create new complaint ', function() {
 
-            complaintPage.clickNewButton().clickComplaintButton().switchToIframes().submitInitiatorInformation(Objects.complaintPage.data.firstName, Objects.complaintPage.data.lastName).reenterFirstName(Objects.complaintPage.data.firstName).clickTab("Incident").insertIncidentInformation("Arson", Objects.complaintPage.data.title).clickSubmitButton();
-            complaintPage.switchToDefaultContent();
-            complaintPage.waitForComplaintsPage();
-            expect(complaintPage.returnComplaintsTitle()).toEqual(Objects.complaintPage.data.title, "Title is not correct on new created complaint");
+    it('should create new complaint ', function() {
 
-        });
+        complaintPage.clickNewButton().clickComplaintButton().switchToIframes().submitInitiatorInformation(Objects.complaintPage.data.firstName, Objects.complaintPage.data.lastName).reenterFirstName(Objects.complaintPage.data.firstName).clickTab("Incident").insertIncidentInformation("Arson", Objects.complaintPage.data.title).clickSubmitButton();
+        complaintPage.switchToDefaultContent();
+        complaintPage.waitForComplaintsPage();
+        expect(complaintPage.returnComplaintsTitle()).toEqual(Objects.complaintPage.data.title, "Title is not correct on new created complaint");
 
-        it('Add/delete note', function() {
+    });
 
-            complaintPage.clickModuleComplaints();
-            complaintPage.clickNotesLink();
-            complaintPage.addNote(Objects.casepage.data.note);
-            complaintPage.deleteNote();
-        });
+    it('Add/delete note', function() {
 
-        it('Add new note and edit added note', function() {
+        complaintPage.clickModuleComplaints();
+        complaintPage.clickNotesLink();
+        complaintPage.addNote(Objects.casepage.data.note);
+        complaintPage.deleteNote();
+    });
 
-            complaintPage.clickModuleComplaints();
-            complaintPage.clickNotesLink();
-            complaintPage.addNote(Objects.casepage.data.note);
-            complaintPage.editNote(Objects.casepage.data.editnote);
-            expect(complaintPage.returnNoteName()).toEqual(Objects.casepage.data.editnote, "The note is not sucessfully edited");
-        });
+    it('Add new note and edit added note', function() {
 
-        it('Add link from details', function() {
+        complaintPage.clickModuleComplaints();
+        complaintPage.clickNotesLink();
+        complaintPage.addNote(Objects.casepage.data.note);
+        complaintPage.editNote(Objects.casepage.data.editnote);
+        expect(complaintPage.returnNoteName()).toEqual(Objects.casepage.data.editnote, "The note is not sucessfully edited");
+    });
 
-            complaintPage.clickModuleComplaints();
-            complaintPage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Details");
-            complaintPage.clickInsertLinkInDetails();
-            expect(complaintPage.returnInsertLinkTitle()).toEqual(Objects.taskspage.data.insertLinkTitle);
-            complaintPage.insertDetailsTextAreaLink(Objects.taskspage.data.insertLinkText, Objects.taskspage.data.insertLinkUrl);
-            complaintPage.validateDetailsTextArea(Objects.taskspage.data.insertLinkText, 'The link is not added');
-            complaintPage.clickSaveDetailsButton();
-            complaintPage.validateDetailsTextArea(Objects.taskspage.data.insertLinkText, 'The link is not mathcing the expected value');
+    it('Add link from details', function() {
 
-        });
+        complaintPage.clickModuleComplaints();
+        complaintPage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Details");
+        complaintPage.clickInsertLinkInDetails();
+        expect(complaintPage.returnInsertLinkTitle()).toEqual(Objects.taskspage.data.insertLinkTitle);
+        complaintPage.insertDetailsTextAreaLink(Objects.taskspage.data.insertLinkText, Objects.taskspage.data.insertLinkUrl);
+        complaintPage.validateDetailsTextArea(Objects.taskspage.data.insertLinkText, 'The link is not added');
+        complaintPage.clickSaveDetailsButton();
+        complaintPage.validateDetailsTextArea(Objects.taskspage.data.insertLinkText, 'The link is not mathcing the expected value');
 
-        it('should create new complaint and add picture from details', function() {
+    });
 
-            complaintPage.clickModuleComplaints();
-            complaintPage.clickExpandFancyTreeTopElementAndSubLink("Details");
-            complaintPage.clickDetailsAddPicture();
-            complaintPage.uploadPicture();
-            expect(complaintPage.returnDetailsUploadedImage(), "Image is not succesfully added in details");
+    it('should create new complaint and add picture from details', function() {
 
-        });
+        complaintPage.clickModuleComplaints();
+        complaintPage.clickExpandFancyTreeTopElementAndSubLink("Details");
+        complaintPage.clickDetailsAddPicture();
+        complaintPage.uploadPicture();
+        expect(complaintPage.returnDetailsUploadedImage(), "Image is not succesfully added in details");
 
-        it('Verify adding new Report of Investigation document', function() {
+    });
 
-            complaintPage.clickModuleComplaints();
-            complaintPage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Documents");
-            complaintPage.rightClickRootFolder().addDocument("Report of Investigation");
-            complaintPage.switchToIframes().submitReportOfInvestigation(Objects.basepage.data.reportTitle, Objects.taskspage.data.assigneeSamuel);
-            complaintPage.switchToDefaultContent().validateDocGridData(true, "Report of Investigation", ".pdf", "Report of Investigation", utils.returnToday("/"), utils.returnToday("/"), Objects.casepage.data.approverSamuel, "1.0", "ACTIVE");
+    it('Verify adding new Report of Investigation document', function() {
 
-        });
+        complaintPage.clickModuleComplaints();
+        complaintPage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Documents");
+        complaintPage.rightClickRootFolder().addDocument("Report of Investigation");
+        complaintPage.switchToIframes().submitReportOfInvestigation(Objects.basepage.data.reportTitle, Objects.taskspage.data.assigneeSamuel);
+        complaintPage.switchToDefaultContent();
+        complaintPage.validateDocGridValue("Report of Investigation", Objects.basepage.data.docGridColumn1, "Report of Investigation");
+        complaintPage.validateDocGridValue("Report of Investigation", Objects.basepage.data.docGridColumn2, ".pdf");
+        complaintPage.validateDocGridValue("Report of Investigation", Objects.basepage.data.docGridColumn3, "Report of Investigation");
+        complaintPage.validateDocGridValue("Report of Investigation", Objects.basepage.data.docGridColumn4, utils.returnToday("/"));
+        complaintPage.validateDocGridValue("Report of Investigation", Objects.basepage.data.docGridColumn5, utils.returnToday("/"));
+        complaintPage.validateDocGridValue("Report of Investigation", Objects.basepage.data.docGridColumn6, Objects.taskspage.data.assigneeSamuel);
+        complaintPage.validateDocGridValue("Report of Investigation", Objects.basepage.data.docGridColumn7, "1.0");
+        complaintPage.validateDocGridValue("Report of Investigation", Objects.basepage.data.docGridColumn8, "ACTIVE");
+    });
 
-        it('should verify adding notes in document viewer in complaints', function() {
+    it('should verify adding notes in document viewer in complaints', function() {
 
-                complaintPage.clickModuleComplaints();
-                complaintPage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Documents");
-                complaintPage.clickDocTreeExpand().rightClickFileTitle().clickDocAction("Open");
-                complaintPage.moveToTab().clickDocViewNotesLink();
-                complaintPage.addNote(Objects.casepage.data.note);
-                expect(complaintPage.returnDocumentNoteName()).toEqual(Objects.casepage.data.note, "Note is not succesfulluly added in document viewer in complaints");
+        complaintPage.clickModuleComplaints();
+        complaintPage.switchToDefaultContent().clickExpandFancyTreeTopElementAndSubLink("Documents");
+        complaintPage.clickDocTreeExpand().rightClickFileTitle().clickDocAction("Open");
+        complaintPage.moveToTab().clickDocViewNotesLink();
+        complaintPage.addNote(Objects.casepage.data.note);
+        expect(complaintPage.returnDocumentNoteName()).toEqual(Objects.casepage.data.note, "Note is not succesfulluly added in document viewer in complaints");
 
-        });
+    });
 
     using([{ priority: "High", prioritySaved: Objects.casepage.data.priorityHigh }, {
         priority: "Medium",
@@ -304,7 +311,7 @@ describe('Create new complaint ', function() {
         expect(complaintPage.returnAliasesModifiedBy()).toEqual(Objects.casepage.data.assigneeSamuel, "Alias modified by is not updated");
 
     });
-  
+
     it('should create new complaint and click subscribe button and verify if unubscribe btn is displayed', function() {
 
         complaintPage.clickNewButton().clickComplaintButton().switchToIframes().submitInitiatorInformation(Objects.complaintPage.data.firstName, Objects.complaintPage.data.lastName).reenterFirstName(Objects.complaintPage.data.firstName).clickTab("Incident").insertIncidentInformation("Arson", Objects.complaintPage.data.title).clickSubmitButton();
@@ -325,7 +332,7 @@ describe('Create new complaint ', function() {
         expect(complaintPage.returnSubscribeBtnText()).toEqual(Objects.casepage.data.subscribeBtn, "Unsubscribe button text is not changed into subscribe after click on unsubscribe");
 
     });
-  
+
     it('Edit due date', function() {
 
         complaintPage.clickModuleComplaints();
@@ -334,7 +341,7 @@ describe('Create new complaint ', function() {
         expect(complaintPage.returnDueDate()).toEqual(utils.returnToday("/"), "Due date is not updated");
     });
 
-  */
+    * /
     it('should create new complaint and add location', function() {
 
         complaintPage.clickNewButton().clickComplaintButton().switchToIframes().submitInitiatorInformation(Objects.complaintPage.data.firstName, Objects.complaintPage.data.lastName).reenterFirstName(Objects.complaintPage.data.firstName).clickTab("Incident").insertIncidentInformation("Arson", Objects.complaintPage.data.title).clickSubmitButton();
@@ -547,8 +554,17 @@ describe('Create new complaint ', function() {
 
         complaintPage.clickModuleComplaints();
         complaintPage.clickExpandFancyTreeTopElementAndSubLink("Documents");
-        complaintPage.rightClickRootFolder().addCorrespondence("complaint", "Notice of Investigation");
-        complaintPage.validateDocGridData(true, "Notice of Investigation", ".docx", "Notice of Investigation", utils.returnToday("/"), utils.returnToday("/"), Objects.csaepage.data.approverSamuel, "1.0", "ACTIVE");
+        complaintPage.rightClickRootFolder().addCorrespondence("complaint", "Clearance Granted");
+        complaintPage.verifyTheNotificationMessage("Case File ", "The notification message after adding document is not correct");
+        complaintPage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn1, "Clearance Granted");
+        complaintPage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn2, ".docx");
+        complaintPage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn3, "Clearance Granted");
+        complaintPage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn4, utils.returnToday("/"));
+        complaintPage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn5, utils.returnToday("/"));
+        complaintPage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn6, Objects.taskspage.data.assigneeSamuel);
+        complaintPage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn7, "1.0");
+        complaintPage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn8, "ACTIVE");
+
     });
 
 });
