@@ -3,7 +3,7 @@ var basePage = require('./base_page.js');
 var logs = require(process.env['USERPROFILE'] + '/node_modules/winston');
 var fullnameLink = element(by.css(Objects.basepage.locators.fullnameLink));
 var logoutLink = element(by.linkText(Objects.basepage.locators.logoutLink));
-//var logoutSucesfullMessage = element(by.css(Objects.basepage.locators.logoutSucesfullMessage));
+var logoutSucesfullMessage = element(by.css(Objects.basepage.locators.logoutSucesfullMessage));
 var EC = protractor.ExpectedConditions;
 
 var LoginPage = function() {
@@ -30,8 +30,8 @@ var LoginPage = function() {
     };
     this.clickFullNameLink = function() {
         browser.wait(EC.presenceOf(element(by.css('.fullname'))), 30000, "Full name link is not present in DOM").then(function() {
-            browser.wait(EC.visibilityOf(element(by.css('.fullname'))), 30000, "Full name link is not visible").then(function () {
-                browser.wait(EC.elementToBeClickable(element(by.css('.fullname'))), 30000, "Full name link is not clickable").then(function () {
+            browser.wait(EC.visibilityOf(element(by.css('.fullname'))), 30000, "Full name link is not visible").then(function() {
+                browser.wait(EC.elementToBeClickable(element(by.css('.fullname'))), 30000, "Full name link is not clickable").then(function() {
                     browser.executeScript('arguments[0].click()', fullnameLink);
                 });
             });
@@ -43,8 +43,7 @@ var LoginPage = function() {
         browser.wait(EC.visibilityOf(element(by.linkText("Logout"))), 30000, "Logout link is not visible").then(function() {
             logoutLink.click().then(function() {
                 browser.ignoresynchronization = true;
-                var logoutSucesfullMessage = browser.driver.findElement(by.css(Objects.basepage.locators.logoutSucesfullMessage));
-                expect(logoutSucesfullMessage.getText()).toEqual('You have been logged out successfully.');
+                browser.wait(EC.visibilityOf(element(by.id(Objects.loginpage.locators.username))), 20000, "Username field in the login page is not displayed after logout is clicked");
             });
         });
         return this;
