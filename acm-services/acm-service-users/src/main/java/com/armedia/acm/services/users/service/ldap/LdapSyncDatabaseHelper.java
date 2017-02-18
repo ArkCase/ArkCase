@@ -126,18 +126,20 @@ public class LdapSyncDatabaseHelper
 
             user.setUserDirectoryName(directoryName);
 
-            // append ad-hoc groups
-           Optional.ofNullable(getUserDao().findByUserId(user.getUserId()))
-                   .ifPresent(acmUser -> acmUser.getGroups()
-                       .stream()
-                       .filter(g -> "ADHOC_GROUP".equals(g.getType()))
-                       .forEach(user::addGroup)
-           );
+            preserveUserMetadata(user);
 
             AcmUser saved = getUserDao().save(user);
             retval.add(saved);
         }
         return retval;
+    }
+
+    protected void preserveUserMetadata(AcmUser user)
+    {
+        AcmUser existing = getUserDao().findByUserId(user.getUserId());
+        if(existing != null) {
+            existing.getGroups().stream().filter(g -> "ADHOC_GROUP".equalsIgnoreCase(g.getType())).forEach(user::addGroup);
+        }
     }
 
     protected void persistApplicationRoles(Set<String> applicationRoles, String roleType, Map<String, String> childParentPair)
