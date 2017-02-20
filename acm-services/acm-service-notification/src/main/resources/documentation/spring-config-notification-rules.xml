@@ -26,7 +26,7 @@
 					  	a.objectTitle AS objectTitle,
 					  	NULL AS relatedObjectId,
 					 	NULL AS relatedObjectType,
-					 	a.created AS actionDate
+						a.created AS actionDate
 					FROM 
 						AcmAssignment a, AcmUser u 
 					WHERE 
@@ -293,6 +293,8 @@
 			</value>
 		</property>
 	</bean>
+	
+	
 
 	<bean id="caseStatusChangedRule"
 		  class="com.armedia.acm.services.notification.model.BasicNotificationRule">
@@ -345,8 +347,8 @@
 				    	'user' AS notificationType,
 				    	a.objectId AS objectId,
        			    	a.objectType AS objectType,
-				    	CONCAT(a.objectType, "_", a.objectId) AS objectName,
-				    	CONCAT(a.objectType, "_", a.objectId) AS objectTitle,
+				    	'' AS objectName,
+				    	'' AS objectTitle,
 				    	a.parentObjectId AS relatedObjectId,
 						a.parentObjectType AS relatedObjectType,
 						a.eventDate AS actionDate
@@ -520,8 +522,8 @@
                     	'user' AS notificationType,
                     	a.objectId AS objectId,
                     	a.objectType AS objectType,
-                    	CONCAT(a.objectType, '_', a.objectId) AS objectName,
-                    	CONCAT(a.objectType, '_', a.objectId) AS objectTitle,
+                    	CONCAT(a.objectType, '-', a.objectId) AS objectName,
+                    	CONCAT(a.objectType, '-', a.objectId) AS objectTitle,
                     	NULL AS parentId,
 						NULL AS parentType,
 						a.eventDate AS actionDate
@@ -555,8 +557,8 @@
                     	'user' AS notificationType,
                     	a.objectId AS objectId,
                     	a.objectType AS objectType,
-                    	CONCAT(a.objectType, '_', a.objectId) AS objectName,
-                    	CONCAT(a.objectType, '_', a.objectId) AS objectTitle,
+                    	CONCAT(a.objectType, '-', a.objectId) AS objectName,
+                    	CONCAT(a.objectType, '-', a.objectId) AS objectTitle,
                     	NULL AS parentId,
 						NULL AS parentType,
 						a.eventDate AS actionDate
@@ -590,8 +592,8 @@
                     	'user' AS notificationType,
                     	a.objectId AS objectId,
                     	a.objectType AS objectType,
-                    	CONCAT(a.objectType, '_', a.objectId) AS objectName,
-                    	CONCAT(a.objectType, '_', a.objectId) AS objectTitle,
+                    	CONCAT(a.objectType, '-', a.objectId) AS objectName,
+                    	CONCAT(a.objectType, '-', a.objectId) AS objectTitle,
                     	NULL AS parentId,
 						NULL AS parentType,
 						a.eventDate AS actionDate
@@ -625,8 +627,8 @@
 			    		'user' AS notificationType,
 			    		a.objectId AS objectId,
 			    		a.objectType AS objectType,
-			    		CONCAT(a.objectType, "_", a.objectId) AS objectName,
-			    		CONCAT(a.objectType, "_", a.objectId) AS objectTitle,
+			    		'' AS objectName,
+			    		'' AS objectTitle,
 			    		a.parentObjectId AS relatedObjectId,
 						a.parentObjectType AS relatedObjectType,
 						a.eventDate AS actionDate
@@ -694,8 +696,8 @@
 						'user' AS notificationType,
 						a.objectId AS objectId,
 				    	a.objectType AS objectType,
-						CONCAT(a.objectType, '_', a.objectId) AS objectName,
-						CONCAT(a.objectType, '_', a.objectId) AS objectTitle,
+						'' AS objectName,
+						'' AS objectTitle,
 						a.parentObjectId AS relatedObjectId,
 						a.parentObjectType AS relatedObjectType,
 						a.eventDate AS actionDate
@@ -764,8 +766,8 @@
 						'user' AS notificationType,
 						a.objectId AS objectId,
 				    	a.objectType AS objectType,
-						CONCAT(a.objectType, '_', a.objectId) AS objectName,
-						CONCAT(a.objectType, '_', a.objectId) AS objectTitle,
+						'' AS objectName,
+						'' AS objectTitle,
 						a.parentObjectId AS relatedObjectId,
 						a.parentObjectType AS relatedObjectType,
 						a.eventDate AS actionDate
@@ -834,8 +836,8 @@
                     	'user' AS notificationType,
                     	a.objectId AS objectId,
                     	a.objectType AS objectType,
-                    	CONCAT('CALENDAR_EVENT_', a.objectId) AS objectName,
-                    	CONCAT('CALENDAR_EVENT_', a.objectId) AS objectTitle,
+                    	'' AS objectName,
+                    	'' AS objectTitle,
                     	a.parentObjectId AS relatedObjectId,
 						a.parentObjectType AS relatedObjectType,
 						a.eventDate AS actionDate
@@ -892,20 +894,43 @@
 			</value>
 		</property>
 	</bean>
-
-	<!-- Senders Definition -->
-	<bean id="notificationSenderFactory" class="com.armedia.acm.services.notification.service.NotificationSenderFactory"> 
-            <property name="propertyFileManager" ref="propertyFileManager"/>
-            <property name="notificationPropertyFileLocation" ref="notificationPropertyFileLocation" />
-            <property name="smtpNotificationSender" ref="smtpNotificationSender"/>
-            <property name="microsoftExchangeNotificationSender" ref="microsoftExchangeNotificationSender"/>
-            <property name="notificationSenderMap">  
-                <map>  
-                    <entry key="smtp" value-ref="smtpNotificationSender"></entry>  
-                    <entry key="outlook" value-ref="microsoftExchangeNotificationSender"></entry>  
-                </map>  
-            </property>
+	
+	<bean id="mailWithAttachmentIsSentRule"
+		  class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+		<property name="globalRule" value="true" />
+		<property name="queryType" value="CREATE" />
+		<property name="executor" ref="noopExecutor" />
+		<property name="usersNotified" ref="participantsNotified"/>
+		<property name="jpaQuery">
+			<value>
+				<![CDATA[
+                	SELECT 
+  						CONCAT('${objectTypeLabel}:', c.complaintNumber, ' status changed') AS title,
+  						CONCAT('${objectTypeLabel}:', c.complaintNumber, ' status changed') AS note,
+  						'user' AS notificationType,
+  						a.objectId AS objectId,
+  						a.objectType AS objectType,
+  						c.complaintNumber AS objectName,
+  						c.complaintTitle AS objectTitle,
+  						a.parentObjectId AS relatedObjectId,
+			    		a.parentObjectType AS relatedObjectType,
+			    		a.eventDate AS actionDate
+					FROM
+  						AuditEvent a
+  					JOIN AcmUser u ON a.userId = u.userId
+  					JOIN Complaint c ON a.objectId = c.complaintId
+					WHERE
+  						a.eventDate >= :lastRunDate
+  					AND
+  						a.fullEventType = 'com.armedia.acm.smtp.event.sent'
+					ORDER BY
+  						a.eventDate
+                ]]>
+			</value>
+		</property>
 	</bean>
+
+	<!-- notificationSenderFactory is defined in spring-library-notification.xml now; do not define it here. -->
 
 	<!-- Task Scheduler -->
 	<task:scheduler id="notificationTaskScheduler"
@@ -919,7 +944,6 @@
 	<bean id="notificationFormatter"
 		class="com.armedia.acm.services.notification.service.NotificationFormatter">
 		<property name="notificationProperties" ref="notificationProperties" />
-		<property name="acmAppConfiguration" ref="acmApplication" />
 	</bean>
 	<bean id="notificationService"
 		class="com.armedia.acm.services.notification.service.NotificationServiceImpl">
