@@ -120,10 +120,5 @@ angular.module('tasks').config(['$stateProvider',
                 url: '/:type/:id/tags',
                 templateUrl: 'modules/tasks/views/components/task-tags.client.view.html'
             })
-
-            .state('tasks.approvalrouting', {
-                url: '/:type/:id/approvals',
-                templateUrl: 'modules/tasks/views/components/task-approval-routing.client.view.html'
-            })
     }
 ]);
