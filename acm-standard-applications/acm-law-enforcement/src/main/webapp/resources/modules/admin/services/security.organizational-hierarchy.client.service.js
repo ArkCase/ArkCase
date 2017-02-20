@@ -55,7 +55,7 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
 
             _editLdapUser: {
                 method: 'POST',
-                url: 'api/latest/users/ldap/edit/:directoryName'
+                url: 'api/latest/users/ldap/edit'
             },
 
             _addExistingMembersToLdapGroup: {
@@ -400,12 +400,9 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
             });
         }
 
-        function editGroupMember(ldapUser, directoryName) {
+        function editGroupMember(ldapUser) {
             return Util.serviceCall({
                 service: Service._editLdapUser
-                , param: {
-                    directoryName: directoryName
-                }
                 , data: ldapUser
                 , onSuccess: function (data) {
                     return data;

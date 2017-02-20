@@ -89,12 +89,12 @@ public class LdapUserAPIController
         }
     }
 
-    @RequestMapping(value = "/edit/{directoryName}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/edit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmUser editLdapUser(
-            @RequestBody AcmUser acmUser, @PathVariable String directoryName) throws AcmUserActionFailedException
+            @RequestBody AcmUser acmUser) throws AcmUserActionFailedException
     {
-        return ldapUserService.editLdapUser(acmUser, directoryName);
+        return ldapUserService.editLdapUser(acmUser);
     }
 
     @RequestMapping(value = "/changePassword", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)

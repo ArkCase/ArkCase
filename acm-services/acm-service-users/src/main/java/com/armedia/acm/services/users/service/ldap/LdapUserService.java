@@ -119,10 +119,8 @@ public class LdapUserService
     }
 
     @Transactional
-    public AcmUser editLdapUser(AcmUser acmUser, String directoryName)
+    public AcmUser editLdapUser(AcmUser acmUser)
     {
-        AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).
-                get(String.format("%s_sync", directoryName));
         log.debug("Saving edited User:{} in database", acmUser.getUserId());
         AcmUser existingUser = getUserDao().findByUserId(acmUser.getUserId());
         existingUser.setFirstName(acmUser.getFirstName());
@@ -132,6 +130,8 @@ public class LdapUserService
         acmUser = getUserDao().save(existingUser);
         log.debug("User:{} saved", acmUser.getUserId());
 
+        AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).
+                get(String.format("%s_sync", acmUser.getUserDirectoryName()));
         LdapTemplate ldapTemplate = getLdapDao().buildLdapTemplate(ldapSyncConfig);
 
         DirContextOperations context = ldapTemplate.lookupContext(MapperUtils.stripBaseFromDn(acmUser.getDistinguishedName(), ldapSyncConfig.getBaseDC()));

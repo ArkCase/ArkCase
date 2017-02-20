@@ -16,20 +16,22 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
         $scope.addAdHocGroupBtn = "admin.security.organizationalHierarchy.createGroupDialog.adHocGroup.title";
         $scope.addLdapGroupBtn = "admin.security.organizationalHierarchy.createGroupDialog.ldapGroup.title";
 
+        $scope.enableEditingLdapUsers = false;
+        $scope.ldapEditingEnabledPerDirectoryServer = {};
+
         LdapConfigService.retrieveDirectories().then(function (directories) {
-            var directoryServers = _.map(directories.data, "ldapConfig.id");
-            $scope.directoryServersProp = {
-                "value": directoryServers[0]
-                , "values": directoryServers
-            };
-            $scope.checkEditing();
+            $scope.directoryServers = _.map(directories.data, "ldapConfig.id");
+            $scope.userPickedDirectoryServerConfig = "";
+            _.forEach(directories.data, function (ds) {
+                var directoryName = ds["ldapConfig.id"];
+                var enabledEditing = ds["ldapConfig.enableEditingLdapUsers"];
+                $scope.ldapEditingEnabledPerDirectoryServer[directoryName] = enabledEditing === "true";
+            });
         });
 
         $scope.checkEditing = function () {
-            organizationalHierarchyService.isEnabledEditingLdapUsers($scope.directoryServersProp.value)
-                .then(function (isEnabledEditingLdapUsers) {
-                    $scope.enableEditingLdapUsers = isEnabledEditingLdapUsers;
-                });
+            // checks if editing users or groups is enabled for the selected directory server
+            $scope.enableEditingLdapUsers = $scope.ldapEditingEnabledPerDirectoryServer[$scope.userPickedDirectoryServerConfig];
         };
 
         $scope.config.$promise.then(function (config) {
@@ -289,7 +291,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
         }
 
         function onLdapUserAdd(data, deferred, group) {
-            organizationalHierarchyService.addMemberToLdapGroup(data, $scope.directoryServersProp.value).then(function (member) {
+            organizationalHierarchyService.addMemberToLdapGroup(data, group.directory_name_s).then(function (member) {
                 //saving success
                 //map members
                 var unmappedMember = unMapMember(member);
@@ -305,8 +307,9 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                         deferred.reject("cancel");
                         return [];
                     });
+                } else {
+                    deferred.reject();
                 }
-                deferred.reject();
             });
         }
 
@@ -354,7 +357,8 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                     mappedMembers.push(mapMember(membersSelected));
                 }
 
-                organizationalHierarchyService.addExistingMembersToLdapGroup(mappedMembers, group.object_id_s)
+                organizationalHierarchyService
+                    .addExistingMembersToLdapGroup(mappedMembers, group.object_id_s, group.directory_name_s)
                     .then(function (members) {
                         //saving success
                         //map members
@@ -396,13 +400,14 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
             });
 
             modalInstance.result.then(function (user) {
-                organizationalHierarchyService.editGroupMember(user, $scope.directoryServersProp.value).then(function (member) {
-                    var unmappedMember = unMapMember(member);
-                    deferred.resolve(unmappedMember);
-                }, function () {
-                    //saving error
-                    deferred.reject();
-                });
+                organizationalHierarchyService.editGroupMember(user)
+                    .then(function (member) {
+                        var unmappedMember = unMapMember(member);
+                        deferred.resolve(unmappedMember);
+                    }, function () {
+                        //saving error
+                        deferred.reject();
+                    });
             }, function () {
                 // Cancel button was clicked
                 deferred.reject("cancel");
@@ -548,7 +553,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
 
         $scope.addLdapSubgroup = function (parentGroup) {
             var deferred = $q.defer();
-            var modalInstance = openLdapSubGroupModal({}, parentGroup.object_id_s);
+            var modalInstance = openLdapSubGroupModal({}, parentGroup);
 
             var onAdd = function (data) {
                 onAddLdapSubGroup(deferred, data);
@@ -564,7 +569,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
 
         function onAddLdapSubGroup(deferred, data) {
             //button ok
-            organizationalHierarchyService.createLdapSubgroup(data.subgroup, data.parentGroupName, $scope.directoryServersProp.value)
+            organizationalHierarchyService.createLdapSubgroup(data.subgroup, data.parentGroupName, data.parentGroupDirectoryName)
                 .then(function (group) {
                     //added successfully
                     var newGroup = {};
@@ -572,6 +577,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                     newGroup.object_id_s = group.name;
                     newGroup.name = group.name;
                     newGroup.parent_id_s = data.parentGroupName;
+                    newGroup.directory_name_s = data.parentGroupDirectoryName;
                     groupsMap[group.name] = newGroup;
                     if (!groupsMap[newGroup.parent_id_s].child_id_ss) {
                         groupsMap[newGroup.parent_id_s].child_id_ss = [];
@@ -587,14 +593,18 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                         var onAdd = function (data) {
                             onAddLdapSubGroup(deferred, data);
                         };
-                        openLdapSubGroupModal(error.data.extra.subgroup, data.parentGroupName, error.data.message)
+                        var parentGroup = {
+                            "object_id_s": data.parentGroupName,
+                            "directory_name_s": data.parentGroupDirectoryName
+                        };
+                        openLdapSubGroupModal(error.data.extra.subgroup, parentGroup, error.data.message)
                             .result.then(onAdd, function () {
                             //cancel button clicked
                             deferred.reject('cancel');
                         });
                     }
+                    messageService.errorAction();
                 });
-
         }
 
         var groupController = function (group, errorMessage, parentGroup, onOK) {
@@ -619,12 +629,13 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
             });
         }
 
-        function openLdapSubGroupModal(group, parentGroupName, errorMessage) {
-            return groupModal(groupController(group, errorMessage, parentGroupName, function (scope, modal) {
+        function openLdapSubGroupModal(group, parentGroup, errorMessage) {
+            return groupModal(groupController(group, errorMessage, parentGroup, function (scope, modal) {
                 return function () {
                     scope.data = {
                         "subgroup": scope.group,
-                        "parentGroupName": parentGroupName
+                        "parentGroupName": parentGroup.object_id_s,
+                        "parentGroupDirectoryName": parentGroup.directory_name_s
                     };
                     modal.close(scope.data);
                 };
@@ -632,7 +643,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
         }
 
         function openCreateGroupModal(group, errorMessage) {
-            return groupModal(groupController(group, errorMessage, "", function (scope, modal) {
+            return groupModal(groupController(group, errorMessage, {}, function (scope, modal) {
                 return function () {
                     modal.close(scope.group);
                 };
@@ -641,28 +652,30 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
 
         function onLdapGroupAdd(data, deferred) {
             //button ok
-            organizationalHierarchyService.createLdapGroup(data, $scope.directoryServersProp.value).then(function (group) {
-                //added successfully
-                var newGroup = {};
-                newGroup.object_sub_type_s = group.type;
-                newGroup.object_id_s = group.name;
-                newGroup.name = group.name;
-                groupsMap[group.name] = newGroup;
-                addToTree(newGroup, true);
-                messageService.succsessAction();
-            }, function (error) {
-                if (error.data.extra) {
-                    var onAdd = function (data) {
-                        onLdapGroupAdd(data, deferred);
-                    };
-                    openCreateGroupModal(error.data.extra.group, error.data.message)
-                        .result.then(onAdd, function () {
-                        deferred.reject("cancel");
-                        return [];
-                    });
-                }
-                messageService.errorAction();
-            });
+            organizationalHierarchyService.createLdapGroup(data, $scope.userPickedDirectoryServerConfig)
+                .then(function (group) {
+                    //added successfully
+                    var newGroup = {};
+                    newGroup.object_sub_type_s = group.type;
+                    newGroup.object_id_s = group.name;
+                    newGroup.name = group.name;
+                    newGroup.directory_name_s = group.directoryName;
+                    groupsMap[group.name] = newGroup;
+                    addToTree(newGroup, true);
+                    messageService.succsessAction();
+                }, function (error) {
+                    if (error.data.extra) {
+                        var onAdd = function (data) {
+                            onLdapGroupAdd(data, deferred);
+                        };
+                        openCreateGroupModal(error.data.extra.group, error.data.message)
+                            .result.then(onAdd, function () {
+                            deferred.reject("cancel");
+                            return [];
+                        });
+                    }
+                    messageService.errorAction();
+                });
         }
 
         $scope.createLdapGroup = function () {
