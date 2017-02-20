@@ -44,9 +44,9 @@ public class LdapSyncDatabaseHelper
             getUserDao().markAllUsersInvalid(directoryName);
             getUserDao().markAllRolesInvalid(directoryName);
 
-            persistApplicationRoles(allRoles, ROLE_TYPE_APPLICATION_ROLE, null, null);
+            persistApplicationRoles(directoryName, allRoles, ROLE_TYPE_APPLICATION_ROLE, null, null);
         }
-        persistApplicationRoles(usersByLdapGroup.keySet(), ROLE_TYPE_LDAP_GROUP, childParentPair, groupDNPairs);
+        persistApplicationRoles(directoryName, usersByLdapGroup.keySet(), ROLE_TYPE_LDAP_GROUP, childParentPair, groupDNPairs);
 
         persistUsers(directoryName, users);
 
@@ -132,7 +132,7 @@ public class LdapSyncDatabaseHelper
         return retval;
     }
 
-    protected void persistApplicationRoles(Set<String> applicationRoles, String roleType,
+    protected void persistApplicationRoles(String directoryName, Set<String> applicationRoles, String roleType,
                                            Map<String, String> childParentPair, Map<String, String> groupDNPairs)
     {
         for (String role : applicationRoles)
@@ -155,6 +155,7 @@ public class LdapSyncDatabaseHelper
                     if (parentGroup == null)
                     {
                         parentGroup = new AcmGroup();
+                        parentGroup.setDirectoryName(directoryName);
                     }
 
                     parentGroup.setName(parentName);
@@ -177,6 +178,7 @@ public class LdapSyncDatabaseHelper
                 if (group == null)
                 {
                     group = new AcmGroup();
+                    group.setDirectoryName(directoryName);
 
                 }
                 group.setName(role);

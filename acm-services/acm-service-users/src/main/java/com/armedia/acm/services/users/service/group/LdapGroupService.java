@@ -42,6 +42,7 @@ public class LdapGroupService
         group.setType(AcmLdapConstants.GROUP_OBJECT_TYPE);
         group.setDescription(group.getDescription());
         group.setDistinguishedName(groupDN);
+        group.setDirectoryName(directoryName);
         log.debug("Saving Group:{} with DN:{} in database", group.getName(), group.getDistinguishedName());
         AcmGroup acmGroup = getGroupDao().save(group);
 
@@ -70,6 +71,7 @@ public class LdapGroupService
         group.setDescription(group.getDescription());
         group.setDistinguishedName(groupDN);
         group.setParentGroup(parentGroup);
+        group.setDirectoryName(directoryName);
 
         log.debug("Saving sub-group:{} with parent-group:{} in database", group.getName(), parentGroup.getName());
         AcmGroup acmGroup = getGroupDao().save(group);

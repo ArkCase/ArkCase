@@ -77,14 +77,20 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile', 'Mess
                                 $tdList.eq(3).append($compile("<button class='btn btn-link btn-xs' type='button' ng-click='removeUserBtn($event)' name='removeMember' title='Remove Member'><i class='fa fa-trash-o'></i></button>")(scope));
                             }
 
-                            if (scope.enableEditingLdapUsers && node.data.object_sub_type_s == "LDAP_GROUP") {
-                                $tdList.eq(3).html($compile("<button class='btn btn-link btn-xs' type='button' ng-click='addExistingUserToLdapGroup($event)' name='addExistingMembers' title='Add Existing Members'><i class='fa fa-user'></i></button>" +
-                                    "<button class='btn btn-link btn-xs' type='button' ng-click='addLdapUser($event)' name='addMember' title='Add New Member'><i class='fa fa-user-plus'></i></button>" +
-                                    "<button class='btn btn-link btn-xs' type='button' ng-click='addLdapSubgroup($event)' name='addSubGroup' title='Add LDAP Subgroup'><i class='fa fa-users'></i></button>")(scope));
+                            if (node.data.object_sub_type_s == "LDAP_GROUP") {
+                                // check if editing is allowed for the directory server this group belongs
+                                if (scope.enableEditingLdapUsers[node.data.directory_name_s]) {
+                                    $tdList.eq(3).html($compile("<button class='btn btn-link btn-xs' type='button' ng-click='addExistingUserToLdapGroup($event)' name='addExistingMembers' title='Add Existing Members'><i class='fa fa-user'></i></button>" +
+                                        "<button class='btn btn-link btn-xs' type='button' ng-click='addLdapUser($event)' name='addMember' title='Add New Member'><i class='fa fa-user-plus'></i></button>" +
+                                        "<button class='btn btn-link btn-xs' type='button' ng-click='addLdapSubgroup($event)' name='addSubGroup' title='Add LDAP Subgroup'><i class='fa fa-users'></i></button>")(scope));
+                                }
                             }
 
-                            if (scope.enableEditingLdapUsers && node.data.isMember && node.parent.data.object_sub_type_s == "LDAP_GROUP") {
-                                $tdList.eq(3).html($compile("<button class='btn btn-link btn-xs' type='button' ng-click='editLdapUser($event)' name='editMember' title='Edit Member'><i class='fa fa-pencil'></i></button>")(scope));
+                            if (node.data.isMember && node.parent.data.object_sub_type_s == "LDAP_GROUP") {
+                                // check if editing is allowed for the directory server this sub-group belongs
+                                if (scope.enableEditingLdapUsers[node.parent.data.directory_name_s]) {
+                                    $tdList.eq(3).html($compile("<button class='btn btn-link btn-xs' type='button' ng-click='editLdapUser($event)' name='editMember' title='Edit Member'><i class='fa fa-pencil'></i></button>")(scope));
+                                }
                             }
                         }
                     }

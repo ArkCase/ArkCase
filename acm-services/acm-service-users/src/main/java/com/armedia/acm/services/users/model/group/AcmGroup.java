@@ -74,6 +74,9 @@ public class AcmGroup implements Serializable, AcmEntity
     @Column(name = "cm_distinguished_name")
     private String distinguishedName;
 
+    @Column(name = "cm_directory_name")
+    private String directoryName;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "parentGroup")
     @JsonIgnore
     private List<AcmGroup> childGroups;
@@ -242,6 +245,16 @@ public class AcmGroup implements Serializable, AcmEntity
     public void setDistinguishedName(String distinguishedName)
     {
         this.distinguishedName = distinguishedName;
+    }
+
+    public String getDirectoryName()
+    {
+        return directoryName;
+    }
+
+    public void setDirectoryName(String directoryName)
+    {
+        this.directoryName = directoryName;
     }
 
     public List<AcmGroup> getChildGroups()

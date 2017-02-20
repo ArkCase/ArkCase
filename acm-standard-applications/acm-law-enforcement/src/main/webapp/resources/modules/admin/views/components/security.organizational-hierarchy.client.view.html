@@ -1,24 +1,31 @@
 <div ng-controller="Admin.OrganizationalHierarchyController">
-<div class="pull-right well">
-    <select ng-model="directoryServersProp.value" ng-options="s for s in directoryServersProp.values" ng-change="checkEditing()"></select>
-    <div class="btn-group">
-        <button class="btn btn-xs btn-link" ng-click="createGroup()">
-            <i class="glyphicon glyphicon-plus-sign"></i>
-            <span>{{ addAdHocGroupBtn | translate }}</span>
-        </button>
-        <button class="btn btn-xs btn-link" ng-click="createLdapGroup()">
-            <i class="glyphicon glyphicon-plus-sign"></i>
-            {{ addLdapGroupBtn | translate }}
-        </button>
+    <div class="pull-right well">
+        <select id="selectDirectories" class="custom-select" ng-model="userPickedDirectoryServerConfig"
+                ng-change="checkEditing()" ng-options="ds as ds for ds in directoryServers">
+            <option value="">{{ 'admin.security.organizationalHierarchy.createGroupDialog.selectDirectory'
+                | translate }}
+            </option>
+        </select>
+        <div class="btn-group">
+            <button class="btn btn-xs btn-link" ng-click="createGroup()">
+                <i class="glyphicon glyphicon-plus-sign"></i>
+                <span>{{ addAdHocGroupBtn | translate }}</span>
+            </button>
+            <button class="btn btn-xs btn-link" ng-click="createLdapGroup()" ng-if="enableEditingLdapUsers">
+                <i class="glyphicon glyphicon-plus-sign"></i>
+                {{ addLdapGroupBtn | translate }}
+            </button>
+        </div>
     </div>
-</div>
-<panel-view header="{{'admin.security.organizationalHierarchy.title' | translate}}" collapsible="false">
+    <panel-view header="{{'admin.security.organizationalHierarchy.title' | translate}}" collapsible="false">
         <tree-table-view tree-data="data" on-lazy-load="onLazyLoad" config="cfg" on-add-members="onAddMembers"
                          on-load-more="onLoadMore" total-groups="totalGroups" on-delete-group="onDeleteGroup"
-                         on-delete-members="onDeleteMembers" on-add-sub-group="onAddSubGroup" on-set-supervisor="onSetSupervisor"
-                         show-actions="true" show-supervisor="true" show-type="true" enable-editing-ldap-users="enableEditingLdapUsers"
+                         on-delete-members="onDeleteMembers" on-add-sub-group="onAddSubGroup"
+                         on-set-supervisor="onSetSupervisor"
+                         show-actions="true" show-supervisor="true" show-type="true"
+                         enable-editing-ldap-users="ldapEditingEnabledPerDirectoryServer"
                          on-add-ldap-member="onAddLdapMember" on-edit-ldap-member="onEditLdapMember"
                          on-add-existing-members-to-ldap-group="addExistingMembersToLdapGroup"
                          on-add-ldap-subgroup="addLdapSubgroup"/>
-</panel-view>
+    </panel-view>
 </div>

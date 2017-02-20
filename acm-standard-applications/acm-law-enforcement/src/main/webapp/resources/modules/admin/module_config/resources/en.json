@@ -87,6 +87,7 @@
         "adHocGroup": {
           "title": "Add Ad-Hoc Group"
         },
+        "selectDirectory": "--Choose Directory Config--",
         "name": "Name",
         "namePlaceholder": "Enter group name",
         "description": "Description",
