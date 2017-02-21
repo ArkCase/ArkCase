@@ -101,7 +101,7 @@ public class AcmFileSystemLockManager implements LockManager
             AcmFileResource fileResource = (AcmFileResource) resource;
             // Add authentication to WebDav map
             Authentication authentication = fileResource.getResourceFactory().getSecurityManager()
-                    .addAuthenticationForTicket(fileResource.getAcmTicket());
+                    .getAuthenticationForTicket(fileResource.getAcmTicket());
             // Create lock in Arkcase DB
             getObjectLockService().createLock(fileResource.getId(), fileResource.getFileType(), fileResource.getLockType(), true,
                     authentication);
