@@ -48,6 +48,7 @@ describe('Create new complaint ', function() {
     it('Add/delete note', function() {
 
         complaintPage.clickModuleComplaints();
+        complaintPage.waitForComplaintsPage();
         complaintPage.clickNotesLink();
         complaintPage.addNote(Objects.casepage.data.note);
         complaintPage.deleteNote();
@@ -56,6 +57,7 @@ describe('Create new complaint ', function() {
     it('Add new note and edit added note', function() {
 
         complaintPage.clickModuleComplaints();
+        complaintPage.waitForComplaintsPage();
         complaintPage.clickNotesLink();
         complaintPage.addNote(Objects.casepage.data.note);
         complaintPage.editNote(Objects.casepage.data.editnote);
@@ -341,7 +343,6 @@ describe('Create new complaint ', function() {
         expect(complaintPage.returnDueDate()).toEqual(utils.returnToday("/"), "Due date is not updated");
     });
 
-    * /
     it('should create new complaint and add location', function() {
 
         complaintPage.clickNewButton().clickComplaintButton().switchToIframes().submitInitiatorInformation(Objects.complaintPage.data.firstName, Objects.complaintPage.data.lastName).reenterFirstName(Objects.complaintPage.data.firstName).clickTab("Incident").insertIncidentInformation("Arson", Objects.complaintPage.data.title).clickSubmitButton();
@@ -539,7 +540,7 @@ describe('Create new complaint ', function() {
             complaintPage.switchToDefaultContent();
             timeTrackingPage.searchForObject(text);
             complaintPage.switchToIframes();
-            timeTrackingPage.submitTimesheetTable("8");
+            timeTrackingPage.submitTimesheetTable("1");
             timeTrackingPage.clickSaveBtn();
             complaintPage.clickModuleComplaints();
             complaintPage.verifyTimeWidgetData("7");

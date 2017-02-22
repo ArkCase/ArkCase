@@ -13,8 +13,6 @@ public interface AcmWebDAVSecurityManager extends SecurityManager
 
     Authentication getAuthenticationForTicket(String acmTicket);
 
-    Authentication addAuthenticationForTicket(String acmTicket);
-
     void removeAuthenticationForTicket(String acmTicket);
 
 }

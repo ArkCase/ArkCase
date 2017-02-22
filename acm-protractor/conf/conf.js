@@ -41,7 +41,7 @@ exports.config = {
 
     specs: [
 
-        //    '../test_spec/functional/functional_test.spec.js',
+      
 
         '../test_spec/functional/functional_test.spec.js'
         //'..//test_spec/functional/functional_test.spec.js'
