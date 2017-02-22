@@ -53,7 +53,7 @@ var CasePage = function() {
     browser.ignoreSynchronization = true;
 
     this.navigateToNewCasePage = function() {
-        browser.wait(EC.visibilityOf(element(by.linkText(Objects.casepage.locators.newCaseBtn))), 30000,"New case button is not visible").then(function () {
+        browser.wait(EC.visibilityOf(element(by.linkText(Objects.casepage.locators.newCaseBtn))), 30000, "New case button is not visible").then(function() {
             newCaseBtn.click();
         });
         return this;
@@ -62,7 +62,7 @@ var CasePage = function() {
     this.switchToIframes = function() {
 
         browser.ignoreSynchronization = true;
-        browser.wait(EC.visibilityOf(element(by.className("new-iframe ng-scope"))), 30000,"First iframe is not visible");
+        browser.wait(EC.visibilityOf(element(by.className("new-iframe ng-scope"))), 30000, "First iframe is not visible");
         browser.switchTo().frame(browser.driver.findElement(by.className("new-iframe ng-scope"))).then(function() {
             browser.switchTo().frame(browser.driver.findElement(By.className("frevvo-form")));
         });
@@ -72,12 +72,10 @@ var CasePage = function() {
 
         browser.wait(EC.visibilityOf(element(by.name(Objects.casepage.locators.caseTitle))), 30000, "Case Title is not visible");
         var caseType = element(by.linkText(type));
-        caseTitle.click().then(function() {
-            caseTitle.sendKeys(title).then(function() {
-                caseTypeDropDown.click().then(function() {
-                    browser.wait(EC.textToBePresentInElement((caseType), type), 10000, "Selected " + type + "is not present in type drop down list").then(function() {
-                        caseType.click();
-                    });
+        caseTitle.click().clear().sendKeys(title).then(function() {
+            caseTypeDropDown.click().then(function() {
+                browser.wait(EC.textToBePresentInElement((caseType), type), 10000, "Selected " + type + "is not present in type drop down list").then(function() {
+                    caseType.click();
                 });
             });
         });
@@ -113,14 +111,11 @@ var CasePage = function() {
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesTitle))), 30000, "Case title is not visible");
     }
 
-    this.waitForCaseType = function() {
+    this.waitForCaseType = function(caseType) {
 
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesType))), 30000, "Case type is not displayed");
-    }
-
-    this.waitForCaseTitle = function() {
-
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesTitle))), 60000, "Case title is not displayed");
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesType))), 30000, "Case type is not displayed").then(function() {
+            browser.wait(EC.textToBePresentInElement((casesType), caseType), 10000, caseType + " is not present in case type");
+        });
     }
 
     this.returnCasesPageTitle = function() {
@@ -133,6 +128,7 @@ var CasePage = function() {
 
         return casesTitle.getText();
     };
+
     this.caseTitleStatus = function(titleStatus) {
 
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.caseTitleStatus))), 30000, "Case title status is not visible").then(function() {
@@ -180,7 +176,7 @@ var CasePage = function() {
         this.clickSubmitButton();
     };
 
-    this.clickSubmitButton = function () {
+    this.clickSubmitButton = function() {
         browser.executeScript('arguments[0].click()', submitBtn);
     };
 
@@ -238,6 +234,24 @@ var CasePage = function() {
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesTitle))), 30000);
         browser.sleep(10000);
     };
+
+
+    this.switchToDocIframes = function() {
+
+        browser.ignoreSynchronization = true;
+        browser.wait(EC.visibilityOf(element(by.model(Objects.taskspage.locators.notesTextArea))), 30000, "Notes text area is not visible").then(function() {
+            browser.wait(EC.presenceOf(element(by.className("snowbound-iframe"))), 30000, "Document i-frame is not present in DOM").then(function() {
+                browser.wait(EC.visibilityOf(element(by.className("snowbound-iframe"))), 30000, "Document i-frame is not visible").then(function() {
+                    browser.switchTo().frame(browser.driver.findElement(by.className("snowbound-iframe")));
+                })
+            })
+        })
+        return this;
+    };
+
+    this.returnDoc = function() {
+        browser.wait(EC.presenceOf(element(by.id(Objects.casepage.locators.doc))), 30000, "Document is not present in DOM");
+    }
 
 };
 

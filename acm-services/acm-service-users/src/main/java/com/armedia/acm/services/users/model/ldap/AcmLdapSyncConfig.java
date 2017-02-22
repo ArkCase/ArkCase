@@ -2,9 +2,7 @@ package com.armedia.acm.services.users.model.ldap;
 
 import java.util.Map;
 
-/**
- * Created by armdev on 5/28/14.
- */
+
 public class AcmLdapSyncConfig extends AcmLdapConfig
 {
     private String groupSearchBase;
@@ -16,7 +14,6 @@ public class AcmLdapSyncConfig extends AcmLdapConfig
     private String userSearchFilter;
     private String allUsersFilter;
     private String allUsersSortingAttribute;
-    private String allUsersSearchBase;
     private String groupSearchFilterForUser;
     private int syncPageSize = 500;
     private String allUsersPageFilter;
@@ -121,16 +118,6 @@ public class AcmLdapSyncConfig extends AcmLdapConfig
     public void setAllUsersSortingAttribute(String allUsersSortingAttribute)
     {
         this.allUsersSortingAttribute = allUsersSortingAttribute;
-    }
-
-    public String getAllUsersSearchBase()
-    {
-        return allUsersSearchBase;
-    }
-
-    public void setAllUsersSearchBase(String allUsersSearchBase)
-    {
-        this.allUsersSearchBase = allUsersSearchBase;
     }
 
     public int getSyncPageSize()

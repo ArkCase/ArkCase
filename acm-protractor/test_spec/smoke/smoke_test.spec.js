@@ -19,32 +19,30 @@ var flag = false;
 var EC = protractor.ExpectedConditions;
 
 
-
-
 function testAsync(done) {
 
-    setTimeout(function() {
+    setTimeout(function () {
         flag = true;
         done();
     }, 20000);
 }
 //Specs
-describe("Testing async calls with beforeEach and passing the special done callback around", function() {
+describe("Testing async calls with beforeEach and passing the special done callback around", function () {
 
-    beforeEach(function(done) {
+    beforeEach(function (done) {
         // Make an async call, passing the special done callback
 
         testAsync(done);
     });
 
-    it("Should be true if the async call has completed", function() {
+    it("Should be true if the async call has completed", function () {
         expect(flag).toEqual(true);
     });
 
 });
 
 
-describe('edit user profile page', function() {
+describe('edit user profile page', function () {
 
     loginPage.Login(Objects.loginpage.data.supervisoruser.username, Objects.loginpage.data.supervisoruser.password);
     logger.log('Info', 'User succesfully logged in as supervisor');
@@ -174,6 +172,7 @@ describe('edit user profile page', function() {
 
     });
 
+
     describe('dashboard page test', function () {
 
         beforeEach(function (done) {
@@ -208,7 +207,7 @@ describe('edit user profile page', function() {
 
             });
         });
-});
+    });
 
     describe('case page tests', function () {
 
@@ -306,9 +305,27 @@ describe('edit user profile page', function() {
 
             casePage.clickModuleCasesFiles();
             expect(casePage.returnDueDate()).toEqual(utils.returnDate("/", 180), "Default due date is not correct");
-            expect(casePage.returnAssignee()).toEqual("", "Asignee by default should be empty");
+            expect(casePage.returnAssignee()).toEqual("None", "Asignee by default should be none");
             expect(casePage.returnOwningGroup()).toEqual(Objects.casepage.data.owningGroup, "Default owning group is not correct");
 
+        });
+
+        //verify adding document to document management
+
+        it('should verify adding correspondence document', function () {
+
+            casePage.clickModuleCasesFiles();
+            casePage.clickExpandFancyTreeTopElementAndSubLink("Documents");
+            casePage.rightClickRootFolder().addCorrespondence("case", "Clearance Granted");
+            casePage.verifyTheNotificationMessage("Case File ", "The notification message after adding document is not correct");
+            casePage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn1, "Clearance Granted");
+            casePage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn2, ".docx");
+            casePage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn3, "Clearance Granted");
+            casePage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn4, utils.returnToday("/"));
+            casePage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn5, utils.returnToday("/"));
+            casePage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn6, Objects.taskspage.data.assigneeSamuel);
+            casePage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn7, "1.0");
+            casePage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn8, "ACTIVE");
         });
 
         //close case and make sure the files are declared as records on the Alfresco site
@@ -336,12 +353,12 @@ describe('edit user profile page', function() {
             taskPage.insertSubject(Objects.taskpage.data.Subject).insertDueDate(utils.returnToday("/")).clickSave();
             taskPage.clickCaseTitleInTasks();
             casePage.clickExpandFancyTreeTopElementAndSubLink("Tasks").waitForTasksTable();
-            expect(casePage.returnTaskTableTitle()).toContain(Objects.taskpage.data.Subject, "Task subject is not correct");
-            expect(casePage.returnTaskTableAssignee()).toEqual(Objects.casepage.data.assigneeSamuel, "Task assignee is not correct");
-            expect(casePage.returnTaskTableCreatedDate()).toEqual(utils.returnToday("/"), "Task created date is not correct");
-            expect(casePage.returnTaskTablePriority()).toEqual(Objects.casepage.data.priorityMedium, "Task priority is not correct");
-            expect(casePage.returnTaskTableDueDate()).toEqual(utils.returnToday("/"), "Task due date is not correct");
-            expect(casePage.returnTaskTableStatus()).toEqual("ACTIVE", "Task status is not correct");
+            casePage.validateTaskTableValue("Ad hoc task", "Title", Objects.taskpage.data.Subject);
+            casePage.validateTaskTableValue("Ad hoc task", "Assignee", Objects.casepage.data.assigneeSamuel);
+            casePage.validateTaskTableValue("Ad hoc task", "Created", utils.returnToday("/"));
+            casePage.validateTaskTableValue("Ad hoc task", "Priority", Objects.casepage.data.priorityMedium);
+            casePage.validateTaskTableValue("Ad hoc task", "Due", utils.returnToday("/"));
+            casePage.validateTaskTableValue("Ad hoc task", "Status", "ACTIVE");
         });
 
         //verify Add Notes
@@ -354,29 +371,20 @@ describe('edit user profile page', function() {
             casePage.deleteNote();
         });
 
-
-        //verify adding document to document management
-
-        it('should verify adding correspondence document', function () {
-
-            casePage.clickModuleCasesFiles();
-            casePage.clickExpandFancyTreeTopElementAndSubLink("Documents");
-            casePage.rightClickRootFolder().addCorrespondence("case", "Clearance Granted");
-            casePage.verifyTheNotificationMessage("Case File ", "The notification message after adding document is not correct");
-            casePage.validateDocGridData(true, "Clearance Granted", ".docx", "Clearance Granted", utils.returnToday("/"), utils.returnToday("/"), Objects.taskspage.data.assigneeSamuel, "1.0", "ACTIVE");
-
-        });
-
         //View document (Click Open)
 
         it('should verify view document', function () {
 
             casePage.clickModuleCasesFiles();
             casePage.clickExpandFancyTreeTopElementAndSubLink("Documents");
-            casePage.clickDocTreeExpand().rightClickFileTitle().clickDocAction("Open");
-            casePage.moveToTab().switchToDocIframes();
-            casePage.returnDocViewOpened(true);
-
+            casePage.clickDocTreeExpand().waitForDocGrid();
+            casePage.rightClickFileTitle();
+            casePage.clickDocAction("Open");
+            casePage.moveToTab();
+            casePage.validateDocumentTitleInSnowBView(Objects.basepage.data.defaultCaseFileTitle);
+            casePage.validateDocumentAuthorInSnowBView(Objects.basepage.data.defaultCaseFileAuthor);
+            casePage.validateDocumentStatusInSnowBView(Objects.basepage.data.defaultCaseFileStatus);
+            casePage.validateDocumentCreatedDateInSnowBView(utils.returnToday("/"))
         });
 
         //Email document (Click Email)
@@ -389,7 +397,7 @@ describe('edit user profile page', function() {
             casePage.sendEmail(Objects.basepage.data.email);
         });
 
-   });
+    });
     describe('Complaint page tests ', function () {
 
         beforeEach(function (done) {
@@ -417,7 +425,7 @@ describe('edit user profile page', function() {
             complaintPage.waitForComplaintsPage();
             expect(complaintPage.returnComplaintsTitle()).toEqual(Objects.complaintPage.data.title);
 
-        });
+         });
 
         // verify people initiator on new added complaint
 
@@ -478,17 +486,24 @@ describe('edit user profile page', function() {
             complaintPage.sendEmail(Objects.basepage.data.email);
         });
 
-          //Add a document to document management
+        //Add a document to document management
 
-           it('should open complaint and verify adding new document', function () {
+        it('should open complaint and verify adding new document', function () {
 
             complaintPage.clickModuleComplaints();
             complaintPage.clickExpandFancyTreeTopElementAndSubLink("Documents");
             complaintPage.rightClickRootFolder();
             complaintPage.addDocument("Notice of Investigation");
-            complaintPage.validateDocGridData(true, "ArkCaseTesting", ".docx", "Notice of Investigation", utils.returnToday("/"), utils.returnToday("/"), userPage.returnUserNavigationProfile(), "1.0", "ACTIVE");
+            complaintPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn1, "ArkCaseTesting");
+            complaintPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn2, ".docx");
+            complaintPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn3, "Notice Of Investigation");
+            complaintPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn4, utils.returnToday("/"));
+            complaintPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn5, utils.returnToday("/"));
+            complaintPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn6, Objects.taskspage.data.assigneeSamuel);
+            complaintPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn7, "1.0");
+            complaintPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn8, "ACTIVE");
 
-           });
+        });
 
         //Close complaint (open case) and approve task and make sure the new case was created
 
@@ -518,14 +533,13 @@ describe('edit user profile page', function() {
             taskPage.insertSubject(Objects.taskpage.data.Subject).insertDueDateToday().clickSave();
             taskPage.clickComplaintTitleInTasks();
             complaintPage.clickTasksLinkBtn().waitForTasksTable();
-            expect(complaintPage.returnTaskTableTitle()).toContain(Objects.taskpage.data.Subject, "Task subject is not correct in the grid");
-            expect(complaintPage.returnTaskTableAssignee()).toEqual(Objects.casepage.data.assigneeSamuel, "Asignee is not correct in grid");
-            expect(complaintPage.returnTaskTableCreatedDate()).toEqual(utils.returnToday("/"), "Created date is not correct in grid");
-            expect(complaintPage.returnTaskTablePriority()).toEqual(Objects.casepage.data.priorityMedium, "Priority is not correct in grid");
-            expect(complaintPage.returnTaskTableDueDate()).toEqual(utils.returnToday("/"), "Task due date is not correct in grid");
-            expect(complaintPage.returnTaskTableStatus()).toEqual("ACTIVE", "Task status is not correct in grid");
+            complaintPage.validateTaskTableValue("Ad hoc task", "Title", Objects.taskpage.data.Subject);
+            complaintPage.validateTaskTableValue("Ad hoc task", "Assignee", Objects.casepage.data.assigneeSamuel);
+            complaintPage.validateTaskTableValue("Ad hoc task", "Created", utils.returnToday("/"));
+            complaintPage.validateTaskTableValue("Ad hoc task", "Priority", Objects.casepage.data.priorityMedium);
+            complaintPage.validateTaskTableValue("Ad hoc task", "Due", utils.returnToday("/"));
+            complaintPage.validateTaskTableValue("Ad hoc task", "Status", "ACTIVE");
         });
-
 
 
         //Add details on new created complaint
@@ -541,46 +555,46 @@ describe('edit user profile page', function() {
 
         });
 
-    });
-    describe('notification page test', function() {
+     });
+    describe('notification page test', function () {
 
 
-        beforeEach(function(done) {
+        beforeEach(function (done) {
 
             loginPage.Login(Objects.loginpage.data.supervisoruser.username, Objects.loginpage.data.supervisoruser.password);
             testAsync(done);
 
         });
 
-        afterEach(function() {
+        afterEach(function () {
             loginPage.Logout();
 
         });
 
         //Click on the Notification Module and verify that is succesfully opened
 
-        it('should verify that notifications module is successfully opened', function() {
+        it('should verify that notifications module is successfully opened', function () {
             notificationPage.navigateToPage(Objects.notificationPage.data.notificationsTitle);
             notificationPage.vaidateNotificationTitle();
         });
-     });
-    describe('report page tests', function() {
+    });
+    describe('report page tests', function () {
 
-        beforeEach(function(done) {
+        beforeEach(function (done) {
 
             loginPage.Login(Objects.loginpage.data.supervisoruser.username, Objects.loginpage.data.supervisoruser.password);
             testAsync(done);
 
         });
 
-        afterEach(function() {
+        afterEach(function () {
             loginPage.Logout();
 
         });
 
-       // Run each Report
+        // Run each Report
 
-        it('should navigate to case files and verify that case is displayed in case summary drafts report', function() {
+        it('should navigate to case files and verify that case is displayed in case summary drafts report', function () {
 
             casePage.navigateToPage("Case Files");
             casePage.waitForCaseID();
@@ -593,12 +607,12 @@ describe('edit user profile page', function() {
             reportPage.runReport("CASE SUMMARY", "Draft", createdDate, createdDate);
             reportPage.switchToReportframes();
             reportPage.validateCaseReportTitles(Objects.reportPage.data.CaseSummaryReportTitleName, Objects.reportPage.data.CaseSummaryColumn1Title, Objects.reportPage.data.CaseSummaryColumn2Title, Objects.reportPage.data.CaseSummaryColumn3Title, Objects.reportPage.data.CaseSummaryColumn4Title, Objects.reportPage.data.CaseSummaryColumn5Title, Objects.reportPage.data.CaseSummaryColumn6Title, Objects.reportPage.data.CaseSummaryColumn7Title);
-            reportPage.validateCaseReportValues(caseid, "DRAFT", Objects.casepage.data.caseTitle, createdDate, priority, dueDate, caseType);
+            reportPage.validateCaseReportValues(caseid, "ACTIVE", Objects.complaintPage.data.title, createdDate, priority, dueDate, caseType);
             reportPage.switchToDefaultContent();
 
         });
 
-        it('should navigate to complaints and verify that complaint draft is displayed in complaint drafts report ', function() {
+        it('should navigate to complaints and verify that complaint draft is displayed in complaint drafts report ', function () {
 
             complaintPage.navigateToPage("Complaints").waitForComplaintID();
             var createdDate = complaintPage.returnCreatedDate();
@@ -614,7 +628,7 @@ describe('edit user profile page', function() {
 
         });
 
-        it('should navigate to complaints, close it with No further action and verify that is displayed in complaint disposition count report', function() {
+        it('should navigate to complaints, close it with No further action and verify that is displayed in complaint disposition count report', function () {
 
             complaintPage.navigateToPage("Reports");
             reportPage.runReport("COMPLAINT DISPOSITION COUNT", "Draft", utils.returnToday("/"), utils.returnToday("/"));
@@ -639,23 +653,23 @@ describe('edit user profile page', function() {
         });
 
     });
-    describe('audit page tests', function() {
+    describe('audit page tests', function () {
 
-        beforeEach(function(done) {
+        beforeEach(function (done) {
 
             loginPage.Login(Objects.loginpage.data.supervisoruser.username, Objects.loginpage.data.supervisoruser.password);
             testAsync(done);
 
         });
 
-        afterEach(function() {
+        afterEach(function () {
             loginPage.Logout();
 
         });
 
         //Run audit report
 
-        it('should navigate to case files and verify that case is displayed in audit case report', function() {
+        it('should navigate to case files and verify that case is displayed in audit case report', function () {
 
             casePage.navigateToPage("Case Files").waitForCaseID();
             var caseid = casePage.getCaseId();
@@ -664,12 +678,12 @@ describe('edit user profile page', function() {
             auditPage.runReport("Case Files", caseid, utils.returnToday("/"), utils.returnToday("/"));
             auditPage.switchToAuditframes();
             auditPage.validateAuditReportTitles(Objects.auditPage.data.auditReportColumn1Title, Objects.auditPage.data.auditReportColumn2Title, Objects.auditPage.data.auditReportColumn3Title, Objects.auditPage.data.auditReportColumn4Title, Objects.auditPage.data.auditReportColumn5Title, Objects.auditPage.data.auditReportColumn6Title, Objects.auditPage.data.auditReportColumn7Title);
-            auditPage.validateAuditReportValues(utils.returnToday("/"), Objects.taskspage.data.assigneeSamuel, "Case Viewed", "success", caseid, "CASE_FILE" );
+            auditPage.validateAuditReportValues(utils.returnToday("/"), Objects.taskspage.data.assigneeSamuel, "Case Viewed", "success", caseid, "CASE_FILE");
             auditPage.switchToDefaultContent();
 
         });
 
-     });
+    });
 
 });
 
