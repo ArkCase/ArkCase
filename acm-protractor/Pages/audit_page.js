@@ -150,6 +150,14 @@ var AuditPage = function() {
             });
         })
     };
+    this.validateAuditReportIsNotEmpty = function (date) {
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.auditPage.locators.dateValue))), 30000, "The audit report is empty for chosed filter, not present in DOM").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.auditPage.locators.dateValue))), 30000, "The audit report is empty for chosed filter, values not visible").then(function () {
+                expect(dateValue.getText()).not.toEqual("", "Audit report is empty");
+            });
+        });
+
+    }
 
 };
 
