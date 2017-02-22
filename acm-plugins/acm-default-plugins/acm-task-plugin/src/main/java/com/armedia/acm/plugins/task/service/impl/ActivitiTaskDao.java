@@ -1199,12 +1199,9 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
             acmTask.setAdhocTask(true);
         }
 
-        // if the task already has an assignee, we don't care about the candidate group.
-        if (acmTask.getAssignee() == null || acmTask.getAssignee().isEmpty())
-        {
-            List<String> candidateGroups = findCandidateGroups(activitiTask.getId());
-            acmTask.setCandidateGroups(candidateGroups);
-        }
+        // Because of the update to Task Module we need the candidateGroups regardless of if the assignee is null or not
+        List<String> candidateGroups = findCandidateGroups(activitiTask.getId());
+        acmTask.setCandidateGroups(candidateGroups);
 
         log.trace("Activiti task id '{}' for object type '{}', object id '{}', object number '{}' found for user '{}'", acmTask.getTaskId(),
                 acmTask.getAttachedToObjectType(), acmTask.getAttachedToObjectId(), acmTask.getAttachedToObjectName(),

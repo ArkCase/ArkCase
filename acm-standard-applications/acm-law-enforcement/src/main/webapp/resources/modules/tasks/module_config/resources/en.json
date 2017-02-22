@@ -210,6 +210,23 @@
       "username": "Username"
     }
   },
+  "tasks.owningGroupSearch": {
+    "id": "owningGroupSearch",
+    "title": "Search for this user's Owning Group(s)",
+    "search": {
+      "btn": "Search",
+      "placeholder": "Search for the Owning Group(s) this user is a member of."
+    },
+    "cancelButton": "Cancel",
+    "confirmButton": "Confirm",
+    "enabled": true,
+    "assigneeGridColumns": {
+      "name": "Name",
+      "type": "Type",
+      "title": "Title",
+      "username": "Username"
+    }
+  },
   "tasks.objectSearch": {
     "id": "objectSearch",
     "title": "Object Search",
