@@ -59,15 +59,6 @@ var CasePage = function() {
         return this;
     }
 
-    this.switchToIframes = function() {
-
-        browser.ignoreSynchronization = true;
-        browser.wait(EC.visibilityOf(element(by.className("new-iframe ng-scope"))), 30000, "First iframe is not visible");
-        browser.switchTo().frame(browser.driver.findElement(by.className("new-iframe ng-scope"))).then(function() {
-            browser.switchTo().frame(browser.driver.findElement(By.className("frevvo-form")));
-        });
-        return this;
-    }
     this.submitGeneralInformation = function(title, type) {
 
         browser.wait(EC.visibilityOf(element(by.name(Objects.casepage.locators.caseTitle))), 30000, "Case Title is not visible");
@@ -141,6 +132,10 @@ var CasePage = function() {
 
         return casesType.getText();
 
+    };
+
+    this.returnCaseStatus = function () {
+        return casesTitleStatus.getText();
     };
 
     this.waitForChangeCaseButton = function() {

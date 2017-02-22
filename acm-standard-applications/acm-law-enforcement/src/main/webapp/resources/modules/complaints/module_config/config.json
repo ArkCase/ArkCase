@@ -124,7 +124,8 @@
           "time",
           "cost",
           "tags",
-          "calendar"
+          "calendar",
+          "approvalrouting"
         ]
       },
       {
@@ -229,6 +230,14 @@
         "icon": "fa fa-calendar",
         "components": [
           "calendar"
+        ]
+      },
+      {
+        "type": "p/COMPLAINT/apr",
+        "label": "Approval Routing",
+        "icon": "fa fa-sort-amount-desc",
+        "components": [
+          "approvalrouting"
         ]
       }
     ]
@@ -1035,6 +1044,12 @@
           "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.targetTitle}}</a>"
         },
         {
+          "name": "parentName",
+          "displayName": "complaints.comp.references.table.columns.parentName",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity, true)'>{{row.entity.parentName}}</a>"
+        },
+        {
           "name": "modified",
           "displayName": "complaints.comp.references.table.columns.modified",
           "headerCellFilter": "translate",
@@ -1287,6 +1302,124 @@
       "filter": "",
       "filterName": "",
       "reportFileName": "search"
+    },
+    {
+      "id": "approvalrouting",
+      "title": "Approval Routing",
+      "icon": "fa fa-sort-amount-desc",
+      "addNewTooltip": "complaints.comp.approvalRouting.addNewTooltip",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": false,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
+      "columnDefs": [
+        {
+          "name": "order",
+          "displayName": "",
+          "headerCellFilter": "translate",
+          "enableSorting": false,
+          "enableColumnMenu": false,
+          "cellEditableCondition": false,
+          "width": "50",
+          "cellTemplate": ""
+        },
+        {
+          "name": "fullName",
+          "displayName": "complaints.comp.approvalRouting.table.columns.fullName",
+          "cellEditableCondition": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "act",
+          "cellEditableCondition": false,
+          "width": "70",
+          "headerCellTemplate": "<span></span>",
+          "cellTemplate": ""
+        }
+      ],
+      "userSearch": {
+        "userFacetFilter": "\"Object Type\": USER",
+        "userFacetExtraFilter": "&fq=\"name\": "
+      }
+    },
+    {
+      "id": "pastapprovals",
+      "title": "Past Approvals",
+      "icon": "fa fa-sort-amount-desc",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": false,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
+      "columnDefs": [
+        {
+          "name": "approvalDate",
+          "displayName": "complaints.comp.pastApprovals.table.columns.approvalDate",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.approvalDate | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>",
+          "cellEditableCondition": false
+        },
+        {
+          "name": "approverId",
+          "displayName": "complaints.comp.pastApprovals.table.columns.approverId",
+          "headerCellFilter": "translate",
+          "cellEditableCondition": false
+        },
+        {
+          "name": "approverDecision",
+          "displayName": "complaints.comp.pastApprovals.table.columns.approverDecision",
+          "headerCellFilter": "translate",
+          "cellEditableCondition": false
+        }
+      ]
+    },
+    {
+      "id": "userSearch",
+      "title": "Select users",
+      "enableFiltering": false,
+      "multiSelect": false,
+      "showFacets": false,
+      "columnDefs": [
+        {
+          "name": "name",
+          "displayName": "complaints.userOrGroupSearch.assigneeGridColumns.name",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "object_type_s",
+          "displayName": "complaints.userOrGroupSearch.assigneeGridColumns.type",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "title",
+          "displayName": "complaints.userOrGroupSearch.assigneeGridColumns.title",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "object_id_s",
+          "displayName": "complaints.userOrGroupSearch.assigneeGridColumns.username",
+          "headerCellFilter": "translate"
+        }
+      ],
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
+      "start": 0
     }
   ]
 }

@@ -21,6 +21,9 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
             }
         });
 
+        $scope.showBtnChildOutcomes = false;
+        $scope.availableChildOutcomes = [];
+
 
         ConfigService.getModuleConfig("cases").then(function (moduleConfig) {
             $scope.caseFileSearchConfig = _.find(moduleConfig.components, {id: "merge"});
@@ -28,6 +31,7 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.restricted = objectInfo.restricted;
+            $scope.showBtnChildOutcomes = false;
 
             var group = ObjectModelService.getGroup(objectInfo);
             $scope.owningGroup = group;
@@ -164,6 +168,15 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
                 $scope.refresh();
             });
         };
+
+        $scope.onClickChildOutcome = function (name) {
+            $scope.$bus.publish('CHILD_OBJECT_OUTCOME_CLICKED', name);
+        };
+
+        $scope.$bus.subscribe('CHILD_OBJECT_OUTCOMES_FOUND', function (outcomes) {
+            $scope.availableChildOutcomes = outcomes;
+            $scope.showBtnChildOutcomes = true;
+        });
     }
 ]);
 
