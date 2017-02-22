@@ -264,5 +264,50 @@
     "btnCancelText": "Cancel",
     "btnSaveText": "Save",
     "searchAssigneeHeader": "Search Assignee"
+  },
+  "cases.comp.groupPickerModal": {
+    "title": "Change Group",
+    "groupNamelabel": "Group Name",
+    "btnCancelText": "Cancel",
+    "btnSaveText": "Save",
+    "searchGroupHeader": "Search Group"
+  },
+  "cases.comp.approvalRouting": {
+    "title": "Future Approvers",
+    "addNewTooltip": "Add new approver",
+    "noBuckslipMessage": "No Data",
+    "button": {
+      "save.tooltip": "Save Changes"
+    },
+    "table.columns": {
+      "fullName": "Full Name"
+    }
+  },
+  "cases.comp.pastApprovals": {
+    "title": "Past Approvers",
+    "noBuckslipMessage": "No Data",
+    "table.columns": {
+      "approvalDate": "Approval Date",
+      "approverId": "Approver",
+      "approverDecision": "Approver Decision"
+    }
+  },
+  "cases.userOrGroupSearch": {
+    "id": "userSearch",
+    "title": "User/Group Search",
+    "search": {
+      "btn": "Search",
+      "placeholder": "Search for the user or group."
+    },
+    "cancelButton": "Cancel",
+    "confirmButton": "Confirm",
+    "enabled": true,
+    "userOrGroupFacetFilter": "\"object_type_s\":(GROUP OR USER)",
+    "assigneeGridColumns": {
+      "name": "Name",
+      "type": "Type",
+      "title": "Title",
+      "username": "Username"
+    }
   }
 }

@@ -82,6 +82,9 @@ angular.module('tasks').controller('Tasks.FutureApprovalRoutingController', ['$s
                     $filter: function () {
                         return $scope.config.userSearch.userFacetFilter;
                     },
+                    $extraFilter: function () {
+                        return $scope.config.userSearch.userFacetExtraFilter;
+                    },
                     $config: function () {
                         return $scope.userSearchConfig;
                     }

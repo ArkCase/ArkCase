@@ -265,7 +265,29 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                                 scope.facets.push({"name": key, "fields": value});
                             }
                         });
+
+                        //allow predetermined order of facets, defined in config
+                        if (Util.goodMapValue(scope.config, 'preferredFacetOrder', false)
+                            && Util.isArray(scope.config.preferredFacetOrder)) {
+                            sortFacets(scope.facets, scope.config.preferredFacetOrder);
+                        }
                     }
+                }
+
+                function sortFacets(facets, facetOrder) {
+                    facets.sort(function (a, b) {
+                        var aPos = _.indexOf(facetOrder, a.name);
+                        var bPos = _.indexOf(facetOrder, b.name);
+
+                        //Handle possibility of facet not being on ordered list
+                        if (aPos == -1 && bPos != -1) {
+                            return 1;
+                        } else if (aPos != -1 && bPos == -1) {
+                            return -1;
+                        }
+
+                        return aPos - bPos;
+                    })
                 }
 
                 scope.selectFacet = function (checked, facet, field) {
