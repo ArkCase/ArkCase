@@ -44,6 +44,9 @@ var LoginPage = function() {
             logoutLink.click().then(function() {
                 browser.ignoresynchronization = true;
                 browser.wait(EC.visibilityOf(element(by.id(Objects.loginpage.locators.username))), 20000, "Username field in the login page is not displayed after logout is clicked");
+                // var logoutSucesfullMessage = browser.driver.findElement(by.css(Objects.basepage.locators.logoutSucesfullMessage));
+                // expect(logoutSucesfullMessage.getText()).toEqual('You have been logged out successfully.');
+
             });
         });
         return this;
