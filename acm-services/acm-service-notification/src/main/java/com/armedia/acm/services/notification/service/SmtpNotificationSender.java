@@ -150,7 +150,7 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
                     {
                         sentEvents.add(new SmtpEventSentEvent(ecmFile, user.getUserId(), ecmFile.getParentObjectId(),
                                 ecmFile.getParentObjectType()));
-                        sentEvents.add(new SmtpEventSentEvent(ecmFile, user.getUserId(), ecmFile.getParentObjectId(), ecmFile.getObjectType()));
+                        sentEvents.add(new SmtpEventSentEvent(ecmFile, user.getUserId(), ecmFile.getId(), ecmFile.getObjectType()));
                     }
                 }
                 MuleMessage received = getMuleContextManager().send(flow, in.getMessageBody(), attachments, messageProps);
@@ -181,8 +181,7 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
     }
 
     @Override
-    public List<EmailWithEmbeddedLinksResultDTO> sendEmailWithEmbeddedLinks(EmailWithEmbeddedLinksDTO in, Authentication authentication,
-                                                                            AcmUser user) throws Exception
+    public List<EmailWithEmbeddedLinksResultDTO> sendEmailWithEmbeddedLinks(EmailWithEmbeddedLinksDTO in, Authentication authentication, AcmUser user) throws Exception
     {
         in.setTemplate(notificationTemplate);
         List<EmailWithEmbeddedLinksResultDTO> emailResultList = new ArrayList<>();
