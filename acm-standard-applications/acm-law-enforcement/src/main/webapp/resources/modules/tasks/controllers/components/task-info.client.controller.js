@@ -228,14 +228,21 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             $scope.assignee = ObjectModelService.getAssignee($scope.objectInfo);
 
             var owningGroupParticipantType = 'owning group';
-            $scope.owningGroup = 'Unknown';
+            if ($scope.owningGroup == 'Unknown') {
+                $scope.owningGroup = 'Unknown';
+            }
 
-            _.each($scope.objectInfo.participants, function(participant) {
-                if(participant.participantType == owningGroupParticipantType){
-                    $scope.owningGroup = participant.participantLdapId;
-                }
-            });
-
+            // If when creating a new Task a Group Task is created check the candidateGroups array for the Owning Group 
+            if ($scope.objectInfo.candidateGroups.length > 0) {
+                $scope.owningGroup = $scope.objectInfo.candidateGroups[0];
+            } else if ($scope.objectInfo.participants.length > 0 ) {
+                // If the owning group gets updated, check the participants aaray for the current Owning group
+                _.each($scope.objectInfo.participants, function(participant) {
+                    if(participant.participantType == owningGroupParticipantType){
+                        $scope.owningGroup = participant.participantLdapId;
+                    }
+                });
+            }      
         };
 
         $scope.defaultDatePickerFormat = UtilDateService.defaultDatePickerFormat;
