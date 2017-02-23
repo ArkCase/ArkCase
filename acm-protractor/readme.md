@@ -83,3 +83,26 @@ Install ```jasmine-data-provider``` simple data provider for jasmine
 > npm install jasmine-data-provider
 
 ````
+Install ```jasmine-reporters``` to create Xml Report
+````
+> npm i jasmine-reporters
+
+````
+
+Install ```protractor-html-reporter``` to create Html Report
+````
+> npm i protractor-html-reporter
+
+````
+
+Configure the html reporter to attach screenshots of expect failure
+````
+Navigate to the process.env['USERPROFILE'] + '/node_modules/protractor-html-reporter/lib')
+
+> open protractor-xml2html-reporter.js
+
+Navigate to the //get test cases screenshots names (on failure only) section and in the "if (report.modifiedSuiteName)" function replace the code in the IF and ELSE with :
+
+" screenshotsNamesOnFailure.push(report.browser +'-'+ suite.name.substring(suite.name.indexOf(".")+1) + ' ' + testCasesNames[j] + '-'+'expect failure-0'+'.png');""
+
+````
