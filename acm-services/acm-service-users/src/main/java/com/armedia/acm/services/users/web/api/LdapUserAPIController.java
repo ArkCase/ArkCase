@@ -3,7 +3,7 @@ package com.armedia.acm.services.users.web.api;
 import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.users.model.ldap.LdapUserCreateRequest;
+import com.armedia.acm.services.users.model.ldap.LdapUser;
 import com.armedia.acm.services.users.service.ldap.LdapAuthenticateService;
 import com.armedia.acm.services.users.service.ldap.LdapUserService;
 import com.armedia.acm.spring.SpringContextHolder;
@@ -69,7 +69,7 @@ public class LdapUserAPIController
     @RequestMapping(value = "/add/{directoryName}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmUser addLdapUser(
-            @RequestBody LdapUserCreateRequest ldapUserCreateRequest, @PathVariable String directoryName) throws AcmUserActionFailedException, AcmAppErrorJsonMsg
+            @RequestBody LdapUser ldapUserCreateRequest, @PathVariable String directoryName) throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
         try
         {

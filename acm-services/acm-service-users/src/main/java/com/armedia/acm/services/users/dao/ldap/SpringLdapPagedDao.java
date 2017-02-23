@@ -71,8 +71,6 @@ public class SpringLdapPagedDao implements SpringLdapDao
         }
 
         AcmUserGroupsContextMapper userGroupsContextMapper = new AcmUserGroupsContextMapper(syncConfig);
-        userGroupsContextMapper.setUserIdAttributeName(syncConfig.getUserIdAttributeName());
-        userGroupsContextMapper.setMailAttributeName(syncConfig.getMailAttributeName());
 
         String searchBase = syncConfig.getUserSearchBase();
 
@@ -100,7 +98,7 @@ public class SpringLdapPagedDao implements SpringLdapDao
         if (userDomain != null && !userDomain.trim().isEmpty())
         {
             String userDomainSuffix = "@" + userDomain;
-            acmUsers.stream().forEach(u -> u.setUserId(u.getUserId() + userDomainSuffix));
+            acmUsers.forEach(u -> u.setUserId(u.getUserId() + userDomainSuffix));
         }
 
         log.info("LDAP sync number of enabled users: {}", acmUsers.size());

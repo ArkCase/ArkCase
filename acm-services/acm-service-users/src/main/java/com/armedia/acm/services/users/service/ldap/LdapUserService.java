@@ -50,7 +50,7 @@ public class LdapUserService
         Name dn = buildDnForUser(user.getUserId(), ldapSyncConfig.getUserSearchBase(), ldapSyncConfig.getBaseDC());
         user.setFullName(String.format("%s %s", user.getFirstName(), user.getLastName()));
         user.setDistinguishedName(dn.toString());
-        user.setUserDirectoryName(ldapSyncConfig.getDirectoryName());
+        user.setUserDirectoryName(directoryName);
         user.setUserState("VALID");
         user.setUid(user.getUserId());
 

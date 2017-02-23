@@ -28,8 +28,6 @@ public class SpringLdapUserDao
         searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
 
         AcmUserGroupsContextMapper userGroupsContextMapper = new AcmUserGroupsContextMapper(config);
-        userGroupsContextMapper.setUserIdAttributeName(config.getUserIdAttributeName());
-        userGroupsContextMapper.setMailAttributeName(config.getMailAttributeName());
 
         if (attributes != null)
         {
