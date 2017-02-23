@@ -153,6 +153,7 @@
     "title": "References",
     "table.columns": {
       "targetName": "Number",
+      "parentName": "Parent",
       "targetTitle": "Title",
       "modified": "Modified",
       "targetType": "Reference Type",

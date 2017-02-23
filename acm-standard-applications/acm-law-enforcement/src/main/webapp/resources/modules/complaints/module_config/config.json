@@ -1044,6 +1044,12 @@
           "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.targetTitle}}</a>"
         },
         {
+          "name": "parentName",
+          "displayName": "complaints.comp.references.table.columns.parentName",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity, true)'>{{row.entity.parentName}}</a>"
+        },
+        {
           "name": "modified",
           "displayName": "complaints.comp.references.table.columns.modified",
           "headerCellFilter": "translate",
