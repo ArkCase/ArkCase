@@ -117,6 +117,10 @@
     <!-- pre-save handlers -->
     <bean id="complaintContainerHandler"
           class="com.armedia.acm.plugins.complaint.pipeline.presave.ComplaintContainerHandler"/>
+    <bean id="complaintParticipantRulesHandler"
+          class="com.armedia.acm.plugins.complaint.pipeline.presave.ComplaintParticipantRulesHandler">
+        <property name="participantsRule" ref="participantsBusinessRule"/>
+    </bean>
     <!-- post-save handlers -->
     <bean id="complaintRulesHandler" class="com.armedia.acm.plugins.complaint.pipeline.postsave.ComplaintRulesHandler">
         <property name="saveRule" ref="saveComplaintBusinessRule"/>
@@ -135,6 +139,7 @@
         <property name="preSaveHandlers">
             <list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
                 <ref bean="complaintContainerHandler"/>
+                <ref bean="complaintParticipantRulesHandler"/>
             </list>
         </property>
         <property name="postSaveHandlers">
@@ -232,6 +237,11 @@
         <property name="loadingDocumentsSeconds" value="${ephesoft.load.documents.seconds}"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="OXMFilePath" value="${user.home}/.arkcase/acm${capture.oxm.file.path}"/>
+    </bean>
+
+    <bean id="participantsBusinessRule"
+          class="com.armedia.acm.services.participants.service.ParticipantsBusinessRule">
+        <property name="ruleSpreadsheetFilename" value="drools-participant-assignment-rules.xlsx"/>
     </bean>
 
 </beans>

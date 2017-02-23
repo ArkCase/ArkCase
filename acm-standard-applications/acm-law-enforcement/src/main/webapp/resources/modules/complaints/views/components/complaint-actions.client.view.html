@@ -2,7 +2,8 @@
     <div class="col-xs-4">
         <div class="checkbox">
             <label>
-                <input type="checkbox" ng-model="restricted" ng-click="onClickRestrict($event)" permission="restrictComplaint"
+                <input type="checkbox" ng-model="restricted" ng-click="onClickRestrict($event)"
+                       permission="restrictComplaint"
                        permission-properties="objectInfo" permission-action="disabled">
                 <span translate>complaints.comp.actions.restrict</span>
             </label>
@@ -15,10 +16,15 @@
                 <i class="fa fa-edit"></i>
                 <span translate>complaints.comp.actions.new.button</span>
             </a>
-            <a class="btn btn-sm btn-default" ui-sref="frevvo.close-complaint(closeParams)" ng-show="showCreateAndClose">
+            <a class="btn btn-sm btn-default" ui-sref="frevvo.close-complaint(closeParams)"
+               ng-show="showCreateAndClose">
                 <i class="fa fa-times"></i>
                 <span translate>complaints.comp.actions.close.button</span>
             </a>
+            <button class="btn btn-sm btn-default" ng-click="onClickChildOutcome(outcome.name)"
+                    ng-repeat="outcome in availableChildOutcomes" ng-show="showBtnChildOutcomes">
+                {{outcome.description}}
+            </button>
             <button class="btn btn-sm btn-default" ng-show="showBtnUnsubscribe" ng-click="unsubscribe(objectInfo)">
                 <i class="fa fa-bullhorn"></i>
                 <span translate>complaints.comp.actions.unsubscribe.button</span>

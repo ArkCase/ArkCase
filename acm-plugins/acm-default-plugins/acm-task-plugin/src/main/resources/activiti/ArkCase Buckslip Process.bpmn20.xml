@@ -42,8 +42,9 @@
         <userTask id="sid-1627C673-1EF1-452E-91FE-23D39A530835" name="Review ${documentType}"
                   activiti:assignee="${currentApprover}">
             <extensionElements>
-                <activiti:taskListener event="complete"
-                                       class="com.armedia.acm.plugins.task.listener.BuckslipTaskCompletedListener"></activiti:taskListener>
+                <activiti:taskListener event="complete" delegateExpression="#{buckslipTaskCompletedListener}">
+
+                </activiti:taskListener>
                 <activiti:formProperty id="buckslipOutcome" name="Buckslip Outcome" type="enum" required="true">
                     <activiti:value id="CONCUR" name="Concur"></activiti:value>
                     <activiti:value id="NON_CONCUR" name="Non-Concur"></activiti:value>

@@ -117,8 +117,7 @@
           "workflow",
           "history",
           "signatures",
-          "tags",
-          "approvalrouting"
+          "tags"
         ]
       },
       {
@@ -207,14 +206,6 @@
         "icon": "fa fa-tags",
         "components": [
           "tags"
-        ]
-      },
-      {
-        "type": "p/TASK/apr",
-        "label": "Approval Routing",
-        "icon": "fa fa-sort-amount-desc",
-        "components": [
-          "approvalrouting"
         ]
       },
       {
@@ -1329,7 +1320,8 @@
         }
       ],
       "userSearch": {
-        "userFacetFilter": "\"Object Type\": USER"
+        "userFacetFilter": "\"Object Type\": USER",
+        "userFacetExtraFilter": "&fq=\"name\": "
       }
     },
     {
@@ -1355,8 +1347,8 @@
           "cellEditableCondition": false
         },
         {
-          "name": "approverId",
-          "displayName": "tasks.comp.pastApprovals.table.columns.approverId",
+          "name": "approverFullName",
+          "displayName": "tasks.comp.pastApprovals.table.columns.approverFullName",
           "headerCellFilter": "translate",
           "cellEditableCondition": false
         },

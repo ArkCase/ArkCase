@@ -42,6 +42,8 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
 
     private StartBusinessProcessService startBusinessProcessService;
 
+    private SaveCaseFileBusinessRule saveCaseFileBusinessRule;
+
     public CaseFileDao getCaseFileDao()
     {
         return caseFileDao;
@@ -122,13 +124,23 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         this.startBusinessProcessService = startBusinessProcessService;
     }
 
+    public SaveCaseFileBusinessRule getSaveCaseFileBusinessRule()
+    {
+        return saveCaseFileBusinessRule;
+    }
+
+    public void setSaveCaseFileBusinessRule(SaveCaseFileBusinessRule saveCaseFileBusinessRule)
+    {
+        this.saveCaseFileBusinessRule = saveCaseFileBusinessRule;
+    }
+
     @Override
     @Transactional
     public CaseFileEnqueueResponse enqueueCaseFile(Long caseId, String nextQueue, CaseFilePipelineContext context)
     {
         // since we will make changes to this CaseFile, we should not detach it; the caseFileDao detaches
         // the object, so we won't use the dao.find() method here.
-        CaseFile caseFile = caseFileDao.getEm().find(CaseFile.class, caseId);
+        CaseFile caseFile = getCaseFileDao().getEm().find(CaseFile.class, caseId);
 
         context.setNewCase(false);
         context.setEnqueueName(nextQueue);
@@ -174,15 +186,15 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         LeaveCurrentQueueModel<CaseFile, CaseFilePipelineContext> leaveModel = new LeaveCurrentQueueModel<>();
         leaveModel.setBusinessObject(caseFile);
         leaveModel.setPipelineContext(context);
-        leaveModel = leaveCurrentQueueBusinessRule.applyRules(leaveModel);
+        leaveModel = getLeaveCurrentQueueBusinessRule().applyRules(leaveModel);
 
         return leaveModel.getCannotLeaveReasons();
     }
 
     private List<String> verifyNextPossibleQueues(CaseFilePipelineContext context, CaseFile caseFile)
     {
-        NextPossibleQueuesModel<CaseFile, CaseFilePipelineContext> nextPossibleQueuesModel = queueService.nextPossibleQueues(caseFile,
-                context, caseFileNextPossibleQueuesBusinessRule);
+        NextPossibleQueuesModel<CaseFile, CaseFilePipelineContext> nextPossibleQueuesModel = getQueueService().nextPossibleQueues(caseFile,
+                context, getCaseFileNextPossibleQueuesBusinessRule());
         return nextPossibleQueuesModel.getNextPossibleQueues();
     }
 
@@ -191,7 +203,7 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         EnterQueueModel<CaseFile, CaseFilePipelineContext> enterModel = new EnterQueueModel<>();
         enterModel.setBusinessObject(caseFile);
         enterModel.setPipelineContext(context);
-        enterModel = enterQueueBusinessRule.applyRules(enterModel);
+        enterModel = getEnterQueueBusinessRule().applyRules(enterModel);
 
         return enterModel.getCannotEnterReasons();
     }
@@ -201,13 +213,13 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         OnLeaveQueueModel<CaseFile, CaseFilePipelineContext> onLeaveModel = new OnLeaveQueueModel<>();
         onLeaveModel.setBusinessObject(caseFile);
         onLeaveModel.setPipelineContext(context);
-        onLeaveModel = onLeaveQueueBusinessRule.applyRules(onLeaveModel);
+        onLeaveModel = getOnLeaveQueueBusinessRule().applyRules(onLeaveModel);
 
         String leaveProcessName = onLeaveModel.getBusinessProcessName();
         if (leaveProcessName != null && !leaveProcessName.isEmpty())
         {
             Map<String, Object> processVariables = createProcessVariables(caseFile);
-            startBusinessProcessService.startBusinessProcess(leaveProcessName, processVariables);
+            getStartBusinessProcessService().startBusinessProcess(leaveProcessName, processVariables);
         }
     }
 
@@ -216,7 +228,7 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         OnEnterQueueModel<CaseFile, CaseFilePipelineContext> onEnterModel = new OnEnterQueueModel<>();
         onEnterModel.setBusinessObject(caseFile);
         onEnterModel.setPipelineContext(context);
-        onEnterModel = onEnterQueueBusinessRule.applyRules(onEnterModel);
+        onEnterModel = getOnEnterQueueBusinessRule().applyRules(onEnterModel);
 
         String enterProcessName = onEnterModel.getBusinessProcessName();
 
@@ -224,7 +236,8 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         if (enterProcessName != null && !enterProcessName.isEmpty())
         {
             Map<String, Object> processVariables = createProcessVariables(caseFile);
-            startBusinessProcessService.startBusinessProcess(enterProcessName, processVariables);
+            getStartBusinessProcessService().startBusinessProcess(enterProcessName, processVariables);
+            getSaveCaseFileBusinessRule().applyRules(caseFile);
         }
     }
 
