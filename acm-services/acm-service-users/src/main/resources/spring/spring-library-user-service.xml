@@ -82,12 +82,47 @@
         <property name="userDao" ref="userJpaDao"/>
         <property name="groupDao" ref="groupDao"/>
         <property name="acmContextHolder" ref="acmContextHolder"/>
+        <property name="userTransformer" ref="ldapUserTransformer"/>
     </bean>
 
     <bean id="ldapGroupService" class="com.armedia.acm.services.users.service.group.LdapGroupService">
         <property name="groupDao" ref="groupDao"/>
         <property name="ldapDao" ref="springLdapPagedDao"/>
         <property name="userDao" ref="userJpaDao"/>
+        <property name="acmContextHolder" ref="acmContextHolder"/>
+    </bean>
+
+    <bean id="ldapAddUserPropertiesFile"
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <!-- note: must leave "file:" at the start of the file name for spring
+        to be able to read the file; otherwise it will try to read from the
+        classpath -->
+        <property name="location" value="file:${user.home}/.arkcase/acm/spring/spring-config-ldap-add-user.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
+        <property name="properties">
+            <props>
+                <prop key="cn">FULL_NAME</prop>
+                <prop key="givenName">FIRST_NAME</prop>
+                <prop key="sn">LAST_NAME</prop>
+                <prop key="uid">USER_ID</prop>
+                <prop key="mail">MAIL</prop>
+                <prop key="memberOf">MEMBER_OF</prop>
+                <prop key="userAccountControl">VALID</prop>
+                <prop key="userPassword">USER_PASSWORD</prop>
+                <prop key="uidNumber">UID_NUMBER</prop>
+                <prop key="gidNumber">GID_NUMBER</prop>
+                <prop key="shadowWarning">SHADOW_WARN</prop>
+                <prop key="shadowLastChange">SHADOW_LAST_CHANGE</prop>
+                <prop key="shadowMax">SHADOW_MAX</prop>
+                <prop key="homeDirectory">HOME_DIRECTORY</prop>
+                <prop key="objectClass">OBJECT_CLASS</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="ldapUserTransformer" class="com.armedia.acm.services.users.service.ldap.LdapUserTransformer">
+        <property name="ldapAddUserPropertiesFile" ref="ldapAddUserPropertiesFile"/>
         <property name="acmContextHolder" ref="acmContextHolder"/>
     </bean>
 </beans>
