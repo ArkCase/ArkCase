@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="addCorrespondenceTemplate" class="com.armedia.acm.plugins.admin.web.api.AddCorrespondenceTemplatesAPI">
@@ -148,11 +148,19 @@
                   value="#{ systemProperties ['user.home'] }/.arkcase/acm/spring/ldap-config-templates/"/>
         <property name="ldapTemplateFile" value="spring-config-ldap.xml.ftl"/>
         <property name="ldapTemplatePropertiesFile" value="spring-config-ldap.properties.ftl"/>
-
+        <property name="openLdapUserPropertiesTemplate" value="spring-config-user-openldap.properties.ftl"/>
+        <property name="openLdapUserFileTemplate" value="spring-config-user-openldap.xml.ftl"/>
+        <property name="openLdapUserPropertiesTemplateName" value="spring-config-user-%s-openldap.properties"/>
+        <property name="openLdapUserFileTemplateName" value="spring-config-user-%s-openldap.xml"/>
+        <property name="activeDirectoryUserPropertiesTemplate" value="spring-config-user-ad.properties.ftl"/>
+        <property name="activeDirectoryUserFileTemplate" value="spring-config-user-ad.xml.ftl"/>
+        <property name="activeDirectoryUserPropertiesTemplateName" value="spring-config-user-%s-ad.properties"/>
+        <property name="activeDirectoryUserFileTemplateName" value="spring-config-user-%s-ad.xml"/>
         <property name="ldapConfigurationLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/spring/"/>
         <property name="ldapFile" value="spring-config-%s-ldap.xml"/>
         <property name="ldapPropertiesFile" value="spring-config-%s-ldap.properties"/>
         <property name="ldapPropertiesFileRegex" value="^spring[-d]config[-d][a-zA-Z0-9]+[-d]ldap.properties$"/>
+        <property name="ldapUserPropertiesFile" ref="ldapAddUserPropertiesFile"/>
     </bean>
 
     <bean id="ldapConfigurationRetrieveDirectories"
@@ -327,5 +335,10 @@
     <bean id="getPlainFormTargetsAPIController"
           class="com.armedia.acm.plugins.admin.web.api.GetPlainFormTargetsAPIController">
         <property name="plainConfigurationFormFactory" ref="plainConfigurationFormFactory"/>
+    </bean>
+
+    <bean id="ldapDirectoryServerTemplateConfigAPIController"
+          class="com.armedia.acm.plugins.admin.web.api.LdapTemplateConfigurationAPIController">
+        <property name="ldapConfigurationService" ref="ldapConfigurationService"/>
     </bean>
 </beans>

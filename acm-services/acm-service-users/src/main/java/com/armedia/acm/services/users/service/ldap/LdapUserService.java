@@ -38,8 +38,11 @@ public class LdapUserService
 
     private SpringContextHolder acmContextHolder;
 
+    private LdapUserTransformer userTransformer;
+
     @Transactional
-    public AcmUser createLdapUser(AcmUser user, List<String> groupNames, String password, String directoryName) throws AcmUserActionFailedException
+    public AcmUser createLdapUser(AcmUser user, List<String> groupNames, String password, String directoryName)
+            throws AcmUserActionFailedException
     {
         AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).
                 get(String.format("%s_sync", directoryName));
@@ -68,7 +71,8 @@ public class LdapUserService
 
         saveUserRolesInDb(ldapUser.getUserId(), ldapUser.getGroups(), groupToRoleMap);
 
-        DirContextAdapter context = createContextForNewUser(user, password, ldapSyncConfig.getBaseDC());
+        DirContextAdapter context = userTransformer.createContextForNewUser(directoryName, user, password,
+                ldapSyncConfig.getBaseDC());
         log.debug("Save User:{} with DN:{} in LDAP", ldapUser.getUserId(), ldapUser.getDistinguishedName());
         ldapTemplate.bind(context);
 
@@ -180,30 +184,6 @@ public class LdapUserService
         return context;
     }
 
-    private DirContextAdapter createContextForNewUser(AcmUser user, String password, String baseDC)
-    {
-        DirContextAdapter context = new DirContextAdapter(MapperUtils.stripBaseFromDn(user.getDistinguishedName(), baseDC));
-        context.setAttributeValues("objectClass", new String[]{"top", "person", "inetOrgPerson",
-                "organizationalPerson", "posixAccount", "uacPerson", "shadowAccount"});
-        context.setAttributeValue("cn", String.format("%s %s", user.getFirstName(), user.getLastName()));
-        context.setAttributeValue("givenName", user.getFirstName());
-        context.setAttributeValue("sn", user.getLastName());
-        context.setAttributeValue("uid", user.getUserId());
-        context.setAttributeValue("mail", user.getMail());
-        user.getGroups().forEach(group ->
-                context.setAttributeValue("memberOf", group.getDistinguishedName()));
-        context.setAttributeValue("userAccountControl", "1");
-        context.setAttributeValue("userPassword", password);
-        long timestamp = System.currentTimeMillis();
-        context.setAttributeValue("uidNumber", Long.toString(timestamp));
-        context.setAttributeValue("gidNumber", Long.toString(timestamp));
-        context.setAttributeValue("homeDirectory", String.format("/home/%s", user.getUserId()));
-        context.setAttributeValue("shadowWarning", "7");
-        context.setAttributeValue("shadowLastChange", "12994");
-        context.setAttributeValue("shadowMax", "99999");
-        return context;
-    }
-
     private Name buildDnForUser(String userId, String userSearchBase, String baseDC)
     {
         String dnPath = String.format("uid=%s,%s,%s", userId, userSearchBase, baseDC);
@@ -260,4 +240,13 @@ public class LdapUserService
         this.acmContextHolder = acmContextHolder;
     }
 
+    public LdapUserTransformer getUserTransformer()
+    {
+        return userTransformer;
+    }
+
+    public void setUserTransformer(LdapUserTransformer userTransformer)
+    {
+        this.userTransformer = userTransformer;
+    }
 }

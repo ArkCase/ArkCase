@@ -62,7 +62,9 @@
       "insert.success": "Successfully inserted new row.",
       "insert.error": "Error inserting new row.",
       "update.success": "Successfully updated row.",
-      "update.error": "Error updating row."
+      "update.error": "Error updating row.",
+      "insert.template.success": "Successfully created template",
+      "insert.template.error": "Error creating the template"
     },
     "security.ldapConfig.dialog": {
       "cancel": "Cancel",
