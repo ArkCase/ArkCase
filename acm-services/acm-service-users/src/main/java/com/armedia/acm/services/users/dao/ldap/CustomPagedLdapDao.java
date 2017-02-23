@@ -40,8 +40,7 @@ public class CustomPagedLdapDao implements SpringLdapDao
         AggregateDirContextProcessor sortedAndPaged = buildSortedAndPagesProcessor(syncConfig, syncConfig.getAllUsersSortingAttribute());
 
         AcmUserGroupsContextMapper userGroupsContextMapper = new AcmUserGroupsContextMapper(syncConfig);
-        userGroupsContextMapper.setUserIdAttributeName(syncConfig.getUserIdAttributeName());
-        userGroupsContextMapper.setMailAttributeName(syncConfig.getMailAttributeName());
+
         String searchFilter = syncConfig.getAllUsersFilter();
         String searchBase = syncConfig.getUserSearchBase();
         String[] bases = searchBase.split("\\|");

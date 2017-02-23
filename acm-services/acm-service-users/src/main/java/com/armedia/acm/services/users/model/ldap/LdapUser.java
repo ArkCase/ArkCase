@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Ldap User POST JSON request
  */
-public class LdapUserCreateRequest
+public class LdapUser
 {
     private AcmUser acmUser;
     private String password;

@@ -27,8 +27,6 @@ public class AcmUserGroupsContextMapper implements ContextMapper
             "uidNumber"};
 
     private Logger log = LoggerFactory.getLogger(getClass());
-    private String userIdAttributeName;
-    private String mailAttributeName;
     private AcmLdapSyncConfig acmLdapSyncConfig;
 
     public AcmUserGroupsContextMapper(AcmLdapSyncConfig acmLdapSyncConfig)
@@ -66,9 +64,9 @@ public class AcmUserGroupsContextMapper implements ContextMapper
 
         user.setLastName(MapperUtils.getAttribute(adapter, "sn"));
         user.setFirstName(MapperUtils.getAttribute(adapter, "givenName"));
-        user.setUserId(MapperUtils.getAttribute(adapter, getUserIdAttributeName()));
-        user.setMail(MapperUtils.getAttribute(adapter, getMailAttributeName()));
-        user.setDistinguishedName(String.format("%s,%s", adapter.getDn().toString(), acmLdapSyncConfig.getBaseDC()) );
+        user.setUserId(MapperUtils.getAttribute(adapter, acmLdapSyncConfig.getUserIdAttributeName()));
+        user.setMail(MapperUtils.getAttribute(adapter, acmLdapSyncConfig.getMailAttributeName()));
+        user.setDistinguishedName(String.format("%s,%s", adapter.getDn().toString(), acmLdapSyncConfig.getBaseDC()));
         user.setsAMAccountName(MapperUtils.getAttribute(adapter, "samAccountName"));
         user.setUserPrincipalName(MapperUtils.getAttribute(adapter, "userPrincipalName"));
         user.setUid(MapperUtils.getAttribute(adapter, "uid"));
@@ -96,26 +94,6 @@ public class AcmUserGroupsContextMapper implements ContextMapper
             log.warn("user account control value [{}] is not a number!", uac);
             return false;
         }
-    }
-
-    public String getUserIdAttributeName()
-    {
-        return userIdAttributeName;
-    }
-
-    public void setUserIdAttributeName(String userIdAttributeName)
-    {
-        this.userIdAttributeName = userIdAttributeName;
-    }
-
-    public String getMailAttributeName()
-    {
-        return mailAttributeName;
-    }
-
-    public void setMailAttributeName(String mailAttributeName)
-    {
-        this.mailAttributeName = mailAttributeName;
     }
 
 }
