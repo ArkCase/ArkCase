@@ -120,11 +120,11 @@ var ReportPage = function() {
         return CDCAddToExistingCaseValue.getText();
     };
     this.returnCDCNoFurtherActionValue = function () {
-        browser.wait(EC.presenceOf(element(by.xpath(Objects.reportPage.locators.CDCNoFurtherActionValue))), 30000, "CDC No further action value is not present in DOM").then(function() {
-            browser.wait(EC.visibilityOf(element(by.xpath(Objects.reportPage.locators.CDCNoFurtherActionValue))), 30000, "CDC No further action value is not visible").then(function () {
+        // browser.wait(EC.presenceOf(element(by.xpath(Objects.reportPage.locators.CDCNoFurtherActionValue))), 30000, "CDC No further action value is not present in DOM").then(function() {
+        //     browser.wait(EC.visibilityOf(element(by.xpath(Objects.reportPage.locators.CDCNoFurtherActionValue))), 30000, "CDC No further action value is not visible").then(function () {
                 return CDCNoFurtherActionValue.getText();
-            });
-        });
+        //     });
+        // });
     };
     this.returnCDCOpenInvestigationValue = function () {
         return CDCOpenInvestigationValue.getText();
@@ -159,6 +159,7 @@ var ReportPage = function() {
             });
         });
     };
+
     this.validateComplaintReportTitles = function(reportTitle, complaintTitle, statusTitle, typeTitle, priorityTitle, createDateTitle, IncidenDateTitle) {
         browser.wait(EC.presenceOf(element(by.xpath(Objects.reportPage.locators.summaryReportTitle))), 30000, "Summary report title is not present in DOM").then(function() {
             browser.wait(EC.visibilityOf(element(by.xpath(Objects.reportPage.locators.summaryReportTitle))), 30000, "Summary report title is not visible").then(function() {
@@ -188,43 +189,54 @@ var ReportPage = function() {
     this.validateComplaintReportValues = function (title, status, type, priority, createDate, IncidentDate) {
         browser.wait(EC.presenceOf(element(by.xpath(Objects.reportPage.locators.caseTitleValue))), 30000, "Case title value is not present in DOM").then(function() {
             browser.wait(EC.visibilityOf(element(by.xpath(Objects.reportPage.locators.caseTitleValue))), 30000, "Case title value is not visible").then(function() {
-                expect(complaintTitleValue.getText()).toBe(title);
-                expect(complaintStatusValue.getText()).toEqual(status);
-                expect(complaintTypeValue.getText()).toEqual(type);
-                expect(complaintPriorityValue.getText()).toEqual(priority);
-                expect(complaintCreatedDateValue.getText()).toEqual(createDate);
-                expect(complaintIncidentDateValue.getText()).toEqual(IncidentDate);
+                expect(complaintTitleValue.getText()).toBe(title, "Title of complaint is not correct");
+                expect(complaintStatusValue.getText()).toEqual(status, "Status of complaint is not correct");
+                expect(complaintTypeValue.getText()).toEqual(type, "Complaint type is not correct");
+                expect(complaintPriorityValue.getText()).toEqual(priority, "Complaint priority is not correct");
+                expect(complaintCreatedDateValue.getText()).toEqual(createDate, "Complaint created date is not correct");
+                expect(complaintIncidentDateValue.getText()).toEqual(IncidentDate, "Complaint incident date is not correct");
             });
         })
+    };
+    this.validateComplaintReportisNotEmpty = function () {
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.reportPage.locators.caseTitleValue))), 30000, "Case title value is not present in DOM").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.reportPage.locators.caseTitleValue))), 30000, "Case title value is not visible").then(function () {
+                expect(complaintTitleValue.getText()).not.toBe("", "Complaint report is empty");
+            });
+        });
     };
     this.validateCaseReportValues = function(caseNumber, status, title, incidentDate, priority, dueDate, type) {
         browser.wait(EC.presenceOf(element(by.xpath(Objects.reportPage.locators.caseStatusValue))), 30000, "Case Status value is not present in DOM").then(function() {
             browser.wait(EC.visibilityOf(element(by.xpath(Objects.reportPage.locators.caseStatusValue))), 30000, "Case status value is not visible").then(function() {
-                    expect(caseNumberValue.getText()).toEqual(caseNumber);
-                    expect(caseStatusValue.getText()).toEqual(status);
-                    expect(caseTitleValue.getText()).toEqual(title);
-                    expect(caseIncidentDateValue.getText()).toEqual(incidentDate);
-                    expect(casePriorityValue.getText()).toEqual(priority);
-                    expect(caseDuedateValue.getText()).toEqual(dueDate);
-                    expect(caseTypeValue.getText()).toEqual(type);
+                    expect(caseNumberValue.getText()).toEqual(caseNumber, "Case id is not correct");
+                    expect(caseStatusValue.getText()).toEqual(status, "Case status is not correct");
+                    expect(caseTitleValue.getText()).toEqual(title, "Case title is not correct");
+                    expect(caseIncidentDateValue.getText()).toEqual(incidentDate, "Case incident date is not correct");
+                    expect(casePriorityValue.getText()).toEqual(priority, "Case priority is not correct");
+                    expect(caseDuedateValue.getText()).toEqual(dueDate, "Case due date is not correct");
+                    expect(caseTypeValue.getText()).toEqual(type, "Case type is not correct");
 
             });
         })
 
+    };
+    this.validateCaseReportisNotEmpty = function () {
+        browser.wait(EC.presenceOf(element(by.xpath(Objects.reportPage.locators.caseStatusValue))), 30000, "Case Status value is not present in DOM").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.reportPage.locators.caseStatusValue))), 30000, "Case status value is not visible").then(function () {
+                expect(caseNumberValue.getText()).not.toBe("", "Case report is empty");
+            });
+        });
     };
     this.validateCDCReportValues = function (ATECNumber, NFANumber, OINumber, RENumber) {
         browser.wait(EC.presenceOf(element(by.xpath(Objects.reportPage.locators.CDCAddToExistingCaseValue))), 30000, "CDC Add to  exisiting case value is not present in DOM").then(function() {
             browser.wait(EC.visibilityOf(element(by.xpath(Objects.reportPage.locators.CDCAddToExistingCaseValue))), 30000, "CDC Add to existing case value is not visible").then(function() {
-                expect(CDCAddToExistingCaseValue.getText()).toEqual(ATECNumber);
-                expect(CDCNoFurtherActionValue.getText()).toEqual(NFANumber);
-                expect(CDCOpenInvestigationValue.getText()).toEqual(OINumber);
-                expect(CDCReferExternalValue.getText()).toEqual(RENumber);
+                expect(CDCAddToExistingCaseValue.getText()).toEqual(ATECNumber, "Add to existing case number is not correct");
+                //expect(CDCNoFurtherActionValue.getText()).toEqual(NFANumber, "No further action number is not correct");
+                expect(CDCOpenInvestigationValue.getText()).toEqual(OINumber, "Open investigation number is not correct");
+                expect(CDCReferExternalValue.getText()).toEqual(RENumber, "Refer external number is not correct ");
             });
         })
     };
-
-
-
 };
 
 

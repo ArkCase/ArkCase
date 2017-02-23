@@ -77,4 +77,5 @@ describe('notification page test', function() {
         notificationPage.navigateToPage("Notifications");
         expect(notificationPage.returnDescription()).toContain(notificationPage.returnModifiedBy(), "In description of notification modified date is not correct");
     });
+
 });

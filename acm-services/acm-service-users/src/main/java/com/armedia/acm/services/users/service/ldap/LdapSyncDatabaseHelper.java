@@ -126,10 +126,22 @@ public class LdapSyncDatabaseHelper
             }
 
             user.setUserDirectoryName(directoryName);
+
+            preserveUserMetadata(user);
+
             AcmUser saved = getUserDao().save(user);
             retval.add(saved);
         }
         return retval;
+    }
+
+    protected void preserveUserMetadata(AcmUser user)
+    {
+        AcmUser existing = getUserDao().findByUserId(user.getUserId());
+        if (existing != null)
+        {
+            existing.getGroups().stream().filter(g -> "ADHOC_GROUP".equalsIgnoreCase(g.getType())).forEach(user::addGroup);
+        }
     }
 
     protected void persistApplicationRoles(String directoryName, Set<String> applicationRoles, String roleType,
