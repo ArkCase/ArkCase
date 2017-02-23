@@ -29,6 +29,7 @@
         <property name="wordGenerator" ref="poiWordGenerator"/>
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="correspondenceFolderName" value="${user.home}/.arkcase/acm/correspondenceTemplates"/>
+        <property name="springContextHolder" ref="acmContextHolder"/>
     </bean>
 
     <bean id="correspondenceService" class="com.armedia.acm.correspondence.service.CorrespondenceService">

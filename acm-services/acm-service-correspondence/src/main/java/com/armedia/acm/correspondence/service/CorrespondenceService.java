@@ -68,7 +68,7 @@ public class CorrespondenceService
             FileInputStream fisForUploadToEcm = new FileInputStream(file);
 
             EcmFile retval = getCorrespondenceGenerator().generateCorrespondence(authentication, parentObjectType, parentObjectId,
-                    targetCmisFolderId, template, new Object[] {parentObjectId}, fosToWriteFile, fisForUploadToEcm);
+                    targetCmisFolderId, template, new Object[] { parentObjectId }, fosToWriteFile, fisForUploadToEcm);
 
             log.debug("Correspondence CMIS ID: " + retval.getVersionSeriesId());
 
@@ -87,7 +87,7 @@ public class CorrespondenceService
 
     private CorrespondenceTemplate findTemplate(String templateName)
     {
-        Collection<CorrespondenceTemplate> templates = templateManager.getTemplates();
+        Collection<CorrespondenceTemplate> templates = templateManager.getActiveVersionTemplates();
         for (CorrespondenceTemplate template : templates)
         {
             if (templateName.equalsIgnoreCase(template.getTemplateFilename()))
@@ -130,6 +130,24 @@ public class CorrespondenceService
     }
 
     /**
+     * @param queryType
+     * @return
+     */
+    public CorrespondenceQuery getQueryByType(String queryType)
+    {
+        for (CorrespondenceQuery correspondenceQuery : getAllQueries().values())
+        {
+            if (correspondenceQuery.getType().toString().equals(queryType))
+            {
+                return correspondenceQuery;
+            }
+        }
+        return null;
+        // return getAllQueries().values().stream().filter(entry ->
+        // entry.getType().equals(queryType)).collect(Collectors.toList());
+    }
+
+    /**
      * @param queryBeanId
      * @return
      */
@@ -144,7 +162,7 @@ public class CorrespondenceService
      */
     public String getQueryId(CorrespondenceQuery query)
     {
-        return templateManager.getQueryId(query);
+        return "";// templateManager.getQueryId(query);
     }
 
     /**
@@ -152,26 +170,43 @@ public class CorrespondenceService
      */
     public List<CorrespondenceTemplate> getAllTemplates()
     {
-        return templateManager.getTemplates();
+        return templateManager.getAllTemplates();
+    }
+
+    /**
+     * @return
+     */
+    public List<CorrespondenceTemplate> getActiveVersionTemplates()
+    {
+        return templateManager.getActiveVersionTemplates();
+    }
+
+    /**
+     * @param templateId
+     * @return
+     */
+    public Optional<CorrespondenceTemplate> getTemplateById(String templateId)
+    {
+        return templateManager.getTemplateById(templateId);
     }
 
     /**
      * @param templateFileName
      * @return
      */
-    public Optional<CorrespondenceTemplate> getTemplateByFileName(String templateFileName)
+    public Optional<CorrespondenceTemplate> getTemplateByIdAndFilename(String templateId, String templateFilename)
     {
-        return templateManager.getTemplateByFileName(templateFileName);
+        return templateManager.getTemplateByIdAndFilename(templateId, templateFilename);
     }
 
     /**
-     * @param templateFileName
+     * @param templateId
      * @return
      * @throws IOException
      */
-    public Optional<CorrespondenceTemplate> deleteTemplate(String templateFileName) throws IOException
+    public Optional<CorrespondenceTemplate> deleteTemplate(String templateId) throws IOException
     {
-        return templateManager.deleteTemplate(templateFileName);
+        return templateManager.deleteTemplate(templateId);
     }
 
     /**
@@ -214,7 +249,8 @@ public class CorrespondenceService
     }
 
     /**
-     * @param templateManager the templateManager to set
+     * @param templateManager
+     *            the templateManager to set
      */
     public void setTemplateManager(CorrespondenceTemplateManager templateManager)
     {

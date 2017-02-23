@@ -1,7 +1,6 @@
 package com.armedia.acm.plugins.admin.model;
 
 import java.util.Date;
-import java.util.Map;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jan 27, 2017
@@ -9,6 +8,12 @@ import java.util.Map;
  */
 public class CorrespondenceTemplateRequestResponse
 {
+
+    private String templateId;
+
+    private String templateVersion;
+
+    private boolean templateVersionActive;
 
     private String displayName;
 
@@ -18,9 +23,7 @@ public class CorrespondenceTemplateRequestResponse
 
     private String correspondenceQueryBeanId;
 
-    private String queryType;
-
-    private Map<String, String> templateSubstitutionVariables;
+    private String objectType;
 
     private String dateFormatString;
 
@@ -33,6 +36,36 @@ public class CorrespondenceTemplateRequestResponse
     private Date modified;
 
     private String downloadFileName;
+
+    public String getTemplateId()
+    {
+        return templateId;
+    }
+
+    public void setTemplateId(String templateId)
+    {
+        this.templateId = templateId;
+    }
+
+    public String getTemplateVersion()
+    {
+        return templateVersion;
+    }
+
+    public void setTemplateVersion(String templateVersion)
+    {
+        this.templateVersion = templateVersion;
+    }
+
+    public boolean isTemplateVersionActive()
+    {
+        return templateVersionActive;
+    }
+
+    public void setTemplateVersionActive(boolean templateVersionActive)
+    {
+        this.templateVersionActive = templateVersionActive;
+    }
 
     /**
      * @return the dislpayName
@@ -103,37 +136,20 @@ public class CorrespondenceTemplateRequestResponse
     }
 
     /**
-     * @return the queryTpe
+     * @return the objectType
      */
-    public String getQueryType()
+    public String getObjectType()
     {
-        return queryType;
+        return objectType;
     }
 
     /**
-     * @param queryType
-     *            the queryTpe to set
+     * @param objectType
+     *            the objectType to set
      */
-    public void setQueryType(String queryType)
+    public void setObjectType(String objectType)
     {
-        this.queryType = queryType;
-    }
-
-    /**
-     * @return the templateSubstitutionVariables
-     */
-    public Map<String, String> getTemplateSubstitutionVariables()
-    {
-        return templateSubstitutionVariables;
-    }
-
-    /**
-     * @param templateSubstitutionVariables
-     *            the templateSubstitutionVariables to set
-     */
-    public void setTemplateSubstitutionVariables(Map<String, String> templateSubstitutionVariables)
-    {
-        this.templateSubstitutionVariables = templateSubstitutionVariables;
+        this.objectType = objectType;
     }
 
     /**
