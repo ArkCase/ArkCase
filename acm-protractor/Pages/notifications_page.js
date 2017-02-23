@@ -106,9 +106,12 @@ var NotificationPage = function() {
         return parentNumber.getText();
     }
 
-    this.vaidateNotificationTitle = function() {
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.notificationPage.locators.notificationTitle))), 30000, "Notification title is not visible");
-        expect(notificationTitle.getText()).toEqual(Objects.notificationPage.data.notificationsTitle, "Notification page is not succesfully opened");
+    this.vaidateNotificationTitle = function () {
+        browser.wait(EC.visibilityOf(element(by.model(Objects.notificationPage.locators.notificationsInput))), 30000, "Search input for notification is not displayed").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.notificationPage.locators.notificationTitle))), 30000, "Notification title is not visible");
+            expect(notificationTitle.getText()).toEqual(Objects.notificationPage.data.notificationsTitle, "Notification page is not succesfully opened");
+        });
+
     }
 
 };

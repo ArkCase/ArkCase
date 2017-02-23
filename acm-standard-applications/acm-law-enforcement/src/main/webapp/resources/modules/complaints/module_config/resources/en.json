@@ -170,6 +170,7 @@
     "table.columns": {
       "targetName": "Number",
       "targetTitle": "Title",
+      "parentName": "Parent",
       "modified": "Modified",
       "targetType": "Reference Type",
       "status": "Status"
