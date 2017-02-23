@@ -270,7 +270,9 @@
       "title": "Correspondence Management",
       "templates": "Correspondence Templates",
       "templates.addNewTemplate": "Upload Template",
-      "templates.addTemplate": "Add Template",
+      "templates.addTemplate": "Upload",
+      "templates.versionTemplate": "Versions",
+      "templates.deleteTemplate": "Delete",
       "templates.editTemplate": "Edit Template",
       "templates.grid": {
         "id": "ID",
@@ -282,7 +284,7 @@
         "creator": "Creator",
         "modifier": "Modifier",
         "activated": "Active",
-        "queryType": "Object Type"
+        "objectType": "Object Type"
       },
       "templates.fieldNames.label": "Map fields to values from the template",
       "templates.querySelect": {
@@ -292,7 +294,7 @@
         "table.columns": {
           "beanId": "Bean ID",
           "jpaQuery": "JPA Query",
-          "queryType": "Query Type"
+          "objectType": "Query Type"
         }
       },
       "templates.modal": {
@@ -300,7 +302,7 @@
         "querySelect.label": "Query Select",
         "displayName.label": "Display Name",
         "btnCancel.text": "Cancel",
-        "btnOk.text": "Save"
+        "btnOk.text": "Upload Template"
       }
     },
     "forms.defaultValue": "Select Target",

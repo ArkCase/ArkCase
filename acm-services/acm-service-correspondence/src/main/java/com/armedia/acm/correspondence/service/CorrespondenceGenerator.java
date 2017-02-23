@@ -2,10 +2,12 @@ package com.armedia.acm.correspondence.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.correspondence.model.CorrespondenceQuery;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
 import com.armedia.acm.correspondence.utils.PoiWordGenerator;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.spring.SpringContextHolder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -42,6 +43,8 @@ public class CorrespondenceGenerator
     private EcmFileService ecmFileService;
 
     private String correspondenceFolderName;
+
+    private SpringContextHolder springContextHolder;
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -116,16 +119,17 @@ public class CorrespondenceGenerator
     {
         Map<String, String> retval = new HashMap<>();
 
-        for (String key : template.getTemplateSubstitutionVariables().keySet())
-        {
-            Object value = queryResult.get(key);
-            value = formatValue(value, Date.class, new SimpleDateFormat(template.getDateFormatString()));
-            value = formatValue(value, Number.class, new DecimalFormat(template.getNumberFormatString()));
-
-            String columnValue = value == null ? null : value.toString();
-
-            retval.put(template.getTemplateSubstitutionVariables().get(key), columnValue);
-        }
+        // TODO: Implement mapping mechanism
+        /*
+         * for (String key : template.getTemplateSubstitutionVariables().keySet()) { Object value =
+         * queryResult.get(key); value = formatValue(value, Date.class, new
+         * SimpleDateFormat(template.getDateFormatString())); value = formatValue(value, Number.class, new
+         * DecimalFormat(template.getNumberFormatString()));
+         * 
+         * String columnValue = value == null ? null : value.toString();
+         * 
+         * retval.put(template.getTemplateSubstitutionVariables().get(key), columnValue); }
+         */
 
         return retval;
     }
@@ -143,7 +147,11 @@ public class CorrespondenceGenerator
 
     private Map<String, Object> query(CorrespondenceTemplate template, Object[] queryArguments)
     {
-        Query select = getEntityManager().createQuery(template.getQuery().getJpaQuery());
+        Map<String, CorrespondenceQuery> correspondenceQueryBeansMap = springContextHolder.getAllBeansOfType(CorrespondenceQuery.class);
+        CorrespondenceQuery correspondenceQuery = correspondenceQueryBeansMap.values().stream()
+                .filter(cQuery -> cQuery.getType().toString().equals(template.getObjectType())).findFirst().get();
+
+        Query select = getEntityManager().createQuery(correspondenceQuery.getJpaQuery());
 
         for (int a = 0; a < queryArguments.length; a++)
         {
@@ -154,7 +162,7 @@ public class CorrespondenceGenerator
         List<Object[]> results = select.getResultList();
 
         Map<String, Object> resultMap = new HashMap<>();
-        List<String> queryFields = template.getQuery().getFieldNames();
+        List<String> queryFields = correspondenceQuery.getFieldNames();
         if (results != null && !results.isEmpty() && queryFields != null && !queryFields.isEmpty())
         {
             Object[] queryValues = results.get(0);
@@ -212,5 +220,14 @@ public class CorrespondenceGenerator
     public void setCorrespondenceFolderName(String correspondenceFolderName)
     {
         this.correspondenceFolderName = correspondenceFolderName;
+    }
+
+    /**
+     * @param springContextHolder
+     *            the springContextHolder to set
+     */
+    public void setSpringContextHolder(SpringContextHolder springContextHolder)
+    {
+        this.springContextHolder = springContextHolder;
     }
 }

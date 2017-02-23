@@ -1,7 +1,6 @@
 package com.armedia.acm.correspondence.model;
 
 import java.util.Date;
-import java.util.Map;
 
 /**
  * This POJO stores the parameters to generate a new Word document based on a Word template.
@@ -9,6 +8,11 @@ import java.util.Map;
 public class CorrespondenceTemplate
 {
 
+    private String templateId;
+
+    private String templateVersion;
+
+    private boolean templateVersionActive;
     /**
      * The display name for the template, by default set to the value of <code>documentType</code>.
      */
@@ -25,23 +29,7 @@ public class CorrespondenceTemplate
      */
     private String templateFilename;
 
-    /**
-     * Text of the JPA query to retrieve the data needed by the template. This query must return a column for each
-     * template substitution variable. It must be a valid JPA query.
-     */
-    private CorrespondenceQuery query;
-
-    /**
-     * Each entry must exactly match a field names form the query (key in this map) and substitution variable in the
-     * Word template (value in this map);
-     * <p/>
-     * Suppose the Word template includes the substitution variable text &quot;${Create Date}&quot; and &quot;${Subject
-     * Name}&quot;. In this case, the jpaQuery should return both the Create Date and the Subject Name. If &quot;Subject
-     * Name&quot; is the first column returned, and &quot;Create Date&quot; is the second column, then this list
-     * <strong>must</strong> include ${Subject Name} and ${Create Date} in that order.
-     *
-     */
-    private Map<String, String> templateSubstitutionVariables;
+    private String objectType;
 
     /**
      * The date format that should be applied to any date. All date columns will be displayed in the generated
@@ -61,6 +49,36 @@ public class CorrespondenceTemplate
 
     private Date modified;
 
+    public String getTemplateId()
+    {
+        return templateId;
+    }
+
+    public void setTemplateId(String templateId)
+    {
+        this.templateId = templateId;
+    }
+
+    public String getTemplateVersion()
+    {
+        return templateVersion;
+    }
+
+    public void setTemplateVersion(String templateVersion)
+    {
+        this.templateVersion = templateVersion;
+    }
+
+    public boolean isTemplateVersionActive()
+    {
+        return templateVersionActive;
+    }
+
+    public void setTemplateVersionActive(boolean templateVersionActive)
+    {
+        this.templateVersionActive = templateVersionActive;
+    }
+
     /**
      * @return the dislpayName
      */
@@ -70,7 +88,8 @@ public class CorrespondenceTemplate
     }
 
     /**
-     * @param displayName the dislpayName to set
+     * @param displayName
+     *            the dislpayName to set
      */
     public void setDisplayName(String displayName)
     {
@@ -97,24 +116,14 @@ public class CorrespondenceTemplate
         this.templateFilename = templateFilename;
     }
 
-    public CorrespondenceQuery getQuery()
+    public String getObjectType()
     {
-        return query;
+        return objectType;
     }
 
-    public void setQuery(CorrespondenceQuery query)
+    public void setObjectType(String objectType)
     {
-        this.query = query;
-    }
-
-    public Map<String, String> getTemplateSubstitutionVariables()
-    {
-        return templateSubstitutionVariables;
-    }
-
-    public void setTemplateSubstitutionVariables(Map<String, String> templateSubstitutionVariables)
-    {
-        this.templateSubstitutionVariables = templateSubstitutionVariables;
+        this.objectType = objectType;
     }
 
     public String getDateFormatString()
@@ -146,7 +155,8 @@ public class CorrespondenceTemplate
     }
 
     /**
-     * @param activated the activated to set
+     * @param activated
+     *            the activated to set
      */
     public void setActivated(boolean activated)
     {
@@ -162,7 +172,8 @@ public class CorrespondenceTemplate
     }
 
     /**
-     * @param modifier the modifier to set
+     * @param modifier
+     *            the modifier to set
      */
     public void setModifier(String modifier)
     {
@@ -178,10 +189,12 @@ public class CorrespondenceTemplate
     }
 
     /**
-     * @param modified the modified to set
+     * @param modified
+     *            the modified to set
      */
     public void setModified(Date modified)
     {
         this.modified = modified;
     }
+
 }

@@ -93,6 +93,8 @@
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
+      "enableRowSelection": true,
+      "enableRowHeaderSelection": true,
       "columnDefs": [
         {
           "name": "id",
@@ -110,12 +112,12 @@
           "name": "templateFilename",
           "displayName": "admin.correspondenceManagement.templates.grid.title",
           "visible": true,
-          "cellTemplate": "<a target='_blank' ng-href='{{row.entity.downloadFileName}}'>{{ row.entity.templateFilename}}</a>",
+          "cellTemplate": "<a target='_blank' ng-href='{{row.entity.downloadFileName}}'><span ng-if=\"row.entity.templateFilename.indexOf('_') > 0\">{{row.entity.templateFilename.substring(row.entity.templateFilename.indexOf('_') + 1)}}</span><span ng-if=\"row.entity.templateFilename.indexOf('_') == -1\">{{row.entity.templateFilename}}</span></a>",
           "headerCellFilter": "translate"
         },
         {
-          "name": "queryType",
-          "displayName": "admin.correspondenceManagement.templates.grid.queryType",
+          "name": "objectType",
+          "displayName": "admin.correspondenceManagement.templates.grid.objectType",
           "visible": true,
           "headerCellFilter": "translate"
         },
@@ -141,7 +143,7 @@
           "cellTemplate": "<div align='center'><span ng-if='!row.entity.activated' class='label label-warning' ng-click='grid.appScope.activate(row.entity)'>Activate</span><span ng-if='row.entity.activated' class='label label-success' ng-click='grid.appScope.activate(row.entity)'>Deactivate</span></div>'"
         }
       ],
-      "queryObjectTypes": [
+      "objectTypes": [
         {
           "name": "Case File",
           "id": "CASE_FILE"
@@ -150,36 +152,7 @@
           "name": "Complaint",
           "id": "COMPLAINT"
         }
-      ],
-      "dialogQuerySelect": {
-        "enableFiltering": false,
-        "multiSelect": false,
-        "columnDefs": [
-          {
-            "name": "beanId",
-            "displayName": "admin.correspondenceManagement.templates.querySelect.table.columns.beanId",
-            "headerCellFilter": "translate"
-          },
-          {
-            "name": "jpaQuery",
-            "displayName": "admin.correspondenceManagement.templates.querySelect.table.columns.jpaQuery",
-            "headerCellFilter": "translate"
-          },
-          {
-            "name": "queryType",
-            "displayName": "admin.correspondenceManagement.templates.querySelect.table.columns.queryType",
-            "headerCellFilter": "translate"
-          }
-        ],
-        "paginationPageSizes": [
-          5,
-          10,
-          20,
-          50
-        ],
-        "paginationPageSize": 10,
-        "start": 0
-      }
+      ]
     },
     {
       "id": "labelsConfig",

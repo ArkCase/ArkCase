@@ -2,9 +2,6 @@ package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.model.TemplateUpload;
 
-import org.apache.poi.POIXMLProperties;
-import org.apache.poi.openxml4j.opc.OPCPackage;
-import org.apache.poi.openxml4j.opc.internal.PackagePropertiesPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -25,7 +22,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -33,14 +32,14 @@ import java.util.Map;
  * Created by manoj.dhungana on 12/4/2014.
  */
 @Controller
-@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+@RequestMapping({ "/api/v1/plugin/admin", "/api/latest/plugin/admin" })
 public class AddCorrespondenceTemplatesAPI
 {
     private Logger log = LoggerFactory.getLogger(getClass());
     List<Object> templateUploadList = new ArrayList<>();
 
-    @RequestMapping(value = "/template", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE,
-            MediaType.TEXT_PLAIN_VALUE})
+    @RequestMapping(value = "/template", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE,
+            MediaType.TEXT_PLAIN_VALUE })
     @ResponseBody
     public List<Object> templates(
             // @RequestParam("files[]") MultipartFile file,
@@ -86,6 +85,53 @@ public class AddCorrespondenceTemplatesAPI
         return getUploadedTemplates();
     }
 
+    @RequestMapping(value = "/template/timestamp", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE,
+            MediaType.TEXT_PLAIN_VALUE })
+    @ResponseBody
+    public List<Object> templateTimestamp(
+            // @RequestParam("files[]") MultipartFile file,
+            HttpServletRequest request, Authentication authentication) throws Exception
+    {
+
+        String userHome = System.getProperty("user.home");
+        String pathName = userHome + "/.arkcase/acm/correspondenceTemplates";
+        try
+        {
+            // save files to disk
+            // for multiple files
+            MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) request;
+            MultiValueMap<String, MultipartFile> attachments = multipartHttpServletRequest.getMultiFileMap();
+            if (attachments != null)
+            {
+                for (Map.Entry<String, List<MultipartFile>> entry : attachments.entrySet())
+                {
+
+                    final List<MultipartFile> attachmentsList = entry.getValue();
+
+                    if (attachmentsList != null && !attachmentsList.isEmpty())
+                    {
+
+                        getUploadedTemplates().clear();
+                        for (final MultipartFile attachment : attachmentsList)
+                        {
+                            if (log.isInfoEnabled())
+                            {
+                                log.info("Adding new template : " + attachment.getOriginalFilename());
+                            }
+                            String fileName = createTimestampFileName(attachment.getOriginalFilename());
+                            saveMultipartToDisk(attachment, pathName, fileName);
+                            retrieveTemplateDetails(authentication, pathName, fileName);
+                        }
+                    }
+                }
+            }
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return getUploadedTemplates();
+    }
+
     public void saveMultipartToDisk(MultipartFile file, String pathName) throws Exception
     {
         File dir = new File(pathName);
@@ -94,6 +140,17 @@ public class AddCorrespondenceTemplatesAPI
             dir.mkdirs();
         }
         File multipartFile = new File(pathName + "/" + file.getOriginalFilename());
+        file.transferTo(multipartFile);
+    }
+
+    public void saveMultipartToDisk(MultipartFile file, String pathName, String fileName) throws Exception
+    {
+        File dir = new File(pathName);
+        if (!dir.exists())
+        {
+            dir.mkdirs();
+        }
+        File multipartFile = new File(pathName + "/" + fileName);
         file.transferTo(multipartFile);
     }
 
@@ -124,6 +181,27 @@ public class AddCorrespondenceTemplatesAPI
         }
     }
 
+    public void retrieveTemplateDetails(Authentication authentication, String pathName, String fileName) throws Exception
+    {
+
+        File template = new File(pathName, fileName);
+
+        // access creation and last modified date via file attributes
+        TemplateUpload templateUpload = new TemplateUpload();
+        Path path = Paths.get(pathName + "/" + template.getName());
+        BasicFileAttributes attributes = Files.readAttributes(path, BasicFileAttributes.class);
+        FileTime creationTime = attributes.creationTime();
+        FileTime modifiedTime = attributes.lastModifiedTime();
+
+        // details
+        templateUpload.setPath(template.getAbsolutePath());
+        templateUpload.setModified(modifiedTime.toString());
+        templateUpload.setName(template.getName());
+        templateUpload.setCreator(authentication.getName());
+        templateUpload.setCreated(creationTime.toString());
+        getUploadedTemplates().add(templateUpload);
+    }
+
     public List<Object> getUploadedTemplates()
     {
         return templateUploadList;
@@ -133,4 +211,12 @@ public class AddCorrespondenceTemplatesAPI
     {
         this.templateUploadList = templateUploadList;
     }
+
+    public String createTimestampFileName(String fileName)
+    {
+        SimpleDateFormat timestampFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+        String timestampName = timestampFormat.format(new Date());
+        return timestampName + "_" + fileName;
+    }
+
 }

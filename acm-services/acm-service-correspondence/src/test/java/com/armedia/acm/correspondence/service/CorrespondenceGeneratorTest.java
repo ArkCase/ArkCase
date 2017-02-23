@@ -104,8 +104,8 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
         correspondenceTemplate = new CorrespondenceTemplate();
         correspondenceTemplate.setDocumentType(doctype);
         correspondenceTemplate.setTemplateFilename(templateName);
-        correspondenceTemplate.setQuery(correspondenceQuery);
-        correspondenceTemplate.setTemplateSubstitutionVariables(substitutionVars);
+        // correspondenceTemplate.setQuery(correspondenceQuery);
+        // correspondenceTemplate.setTemplateSubstitutionVariables(substitutionVars);
         correspondenceTemplate.setDateFormatString(dateFormat);
         correspondenceTemplate.setNumberFormatString(numberFormat);
     }
@@ -114,14 +114,14 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
     public void generate() throws Exception
     {
         String targetFolderCmisId = "targetFolderCmisId";
-        Object[] queryArgs = {500L};
+        Object[] queryArgs = { 500L };
 
         List<Object[]> results = new ArrayList<>();
 
         Date column1 = new Date();
         String column2 = "Subject Name";
         Number column3 = 123456L;
-        Object[] row = {column1, column2, column3};
+        Object[] row = { column1, column2, column3 };
         results.add(row);
 
         Capture<Resource> captureResourceTemplate = new Capture<>();

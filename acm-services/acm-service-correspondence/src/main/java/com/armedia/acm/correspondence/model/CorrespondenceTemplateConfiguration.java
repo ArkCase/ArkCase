@@ -1,7 +1,6 @@
 package com.armedia.acm.correspondence.model;
 
 import java.util.Date;
-import java.util.Map;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jan 26, 2017
@@ -10,15 +9,19 @@ import java.util.Map;
 public class CorrespondenceTemplateConfiguration
 {
 
+    private String templateId;
+
+    private String templateVersion;
+
+    private boolean templateVersionActive;
+
     private String displayName;
 
     private String documentType;
 
     private String templateFilename;
 
-    private String correspondenceQueryBeanId;
-
-    private Map<String, String> templateSubstitutionVariables;
+    private String objectType;
 
     private String dateFormatString;
 
@@ -30,6 +33,36 @@ public class CorrespondenceTemplateConfiguration
 
     private Date modified;
 
+    public String getTemplateId()
+    {
+        return templateId;
+    }
+
+    public void setTemplateId(String templateId)
+    {
+        this.templateId = templateId;
+    }
+
+    public String getTemplateVersion()
+    {
+        return templateVersion;
+    }
+
+    public void setTemplateVersion(String templateVersion)
+    {
+        this.templateVersion = templateVersion;
+    }
+
+    public boolean isTemplateVersionActive()
+    {
+        return templateVersionActive;
+    }
+
+    public void setTemplateVersionActive(boolean templateVersionActive)
+    {
+        this.templateVersionActive = templateVersionActive;
+    }
+
     /**
      * @return the dislpayName
      */
@@ -39,7 +72,8 @@ public class CorrespondenceTemplateConfiguration
     }
 
     /**
-     * @param displayName the dislpayName to set
+     * @param displayName
+     *            the dislpayName to set
      */
     public void setDisplayName(String displayName)
     {
@@ -55,7 +89,8 @@ public class CorrespondenceTemplateConfiguration
     }
 
     /**
-     * @param documentType the documentType to set
+     * @param documentType
+     *            the documentType to set
      */
     public void setDocumentType(String documentType)
     {
@@ -71,43 +106,22 @@ public class CorrespondenceTemplateConfiguration
     }
 
     /**
-     * @param templateFilename the templateFilename to set
+     * @param templateFilename
+     *            the templateFilename to set
      */
     public void setTemplateFilename(String templateFilename)
     {
         this.templateFilename = templateFilename;
     }
 
-    /**
-     * @return the correspondenceQueryBeanId
-     */
-    public String getCorrespondenceQueryBeanId()
+    public String getObjectType()
     {
-        return correspondenceQueryBeanId;
+        return objectType;
     }
 
-    /**
-     * @param correspondenceQueryBeanId the correspondenceQueryBeanId to set
-     */
-    public void setCorrespondenceQueryBeanId(String correspondenceQueryBeanId)
+    public void setObjectType(String objectType)
     {
-        this.correspondenceQueryBeanId = correspondenceQueryBeanId;
-    }
-
-    /**
-     * @return the templateSubstitutionVariables
-     */
-    public Map<String, String> getTemplateSubstitutionVariables()
-    {
-        return templateSubstitutionVariables;
-    }
-
-    /**
-     * @param templateSubstitutionVariables the templateSubstitutionVariables to set
-     */
-    public void setTemplateSubstitutionVariables(Map<String, String> templateSubstitutionVariables)
-    {
-        this.templateSubstitutionVariables = templateSubstitutionVariables;
+        this.objectType = objectType;
     }
 
     /**
@@ -119,7 +133,8 @@ public class CorrespondenceTemplateConfiguration
     }
 
     /**
-     * @param dateFormatString the dateFormatString to set
+     * @param dateFormatString
+     *            the dateFormatString to set
      */
     public void setDateFormatString(String dateFormatString)
     {
@@ -135,7 +150,8 @@ public class CorrespondenceTemplateConfiguration
     }
 
     /**
-     * @param numberFormatString the numberFormatString to set
+     * @param numberFormatString
+     *            the numberFormatString to set
      */
     public void setNumberFormatString(String numberFormatString)
     {
@@ -151,7 +167,8 @@ public class CorrespondenceTemplateConfiguration
     }
 
     /**
-     * @param activated the activated to set
+     * @param activated
+     *            the activated to set
      */
     public void setActivated(boolean activated)
     {
@@ -167,7 +184,8 @@ public class CorrespondenceTemplateConfiguration
     }
 
     /**
-     * @param modifier the modifier to set
+     * @param modifier
+     *            the modifier to set
      */
     public void setModifier(String modifier)
     {
@@ -183,7 +201,8 @@ public class CorrespondenceTemplateConfiguration
     }
 
     /**
-     * @param modified the modified to set
+     * @param modified
+     *            the modified to set
      */
     public void setModified(Date modified)
     {
