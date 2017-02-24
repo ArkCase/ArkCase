@@ -185,15 +185,36 @@ public class CorrespondenceService
      * @param templateId
      * @return
      */
-    public Optional<CorrespondenceTemplate> getTemplateById(String templateId)
+    public List<CorrespondenceTemplate> getTemplateVersionsById(String templateId)
     {
-        return templateManager.getTemplateById(templateId);
+        return templateManager.getTemplateVersionsById(templateId);
     }
 
     /**
-     * @param templateFileName
+     * @param templateId
      * @return
      */
+    public Optional<CorrespondenceTemplate> getActiveTemplateById(String templateId)
+    {
+        return templateManager.getActiveTemplateById(templateId);
+    }
+
+    /**
+     * @param templateId
+     * @param templateVersion
+     * @return
+     */
+    public Optional<CorrespondenceTemplate> getTemplateByIdAndVersion(String templateId, String templateVersion)
+    {
+        return templateManager.getTemplateByIdAndVersion(templateId, templateVersion);
+    }
+
+    /**
+     * @param templateId
+     * @param templateFilename
+     * @return
+     */
+
     public Optional<CorrespondenceTemplate> getTemplateByIdAndFilename(String templateId, String templateFilename)
     {
         return templateManager.getTemplateByIdAndFilename(templateId, templateFilename);
@@ -204,9 +225,20 @@ public class CorrespondenceService
      * @return
      * @throws IOException
      */
-    public Optional<CorrespondenceTemplate> deleteTemplate(String templateId) throws IOException
+    public Optional<CorrespondenceTemplate> deleteActiveVersionTemplate(String templateId) throws IOException
     {
-        return templateManager.deleteTemplate(templateId);
+        return templateManager.deleteActiveVersionTemplate(templateId);
+    }
+
+    /**
+     * @param templateId
+     * @param templateVersion
+     * @return
+     * @throws IOException
+     */
+    public Optional<CorrespondenceTemplate> deleteTemplateByIdAndVersion(String templateId, String templateVersion) throws IOException
+    {
+        return templateManager.deleteTemplateByIdAndVersion(templateId, templateVersion);
     }
 
     /**

@@ -87,7 +87,7 @@ angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$m
             $scope.selectedRows = $scope.gridApi.selection.getSelectedRows();
             if ($scope.selectedRows.length > 0) {
                 angular.forEach($scope.selectedRows, function (row, index) {
-                    correspondenceService.deleteTemplateByIdAndFilename(row.templateId, row.templateFilename).then(function () {
+                    correspondenceService.deleteTemplate(row.templateId).then(function () {
                         clearCachedForms(row);
                         ReloadGrid();
                         messageService.succsessAction();

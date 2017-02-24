@@ -26,7 +26,7 @@ angular.module('admin').service('Admin.CMTemplatesService', ['$http', 'Upload',
             getTemplateData: getTemplateData,
             saveTemplateData: saveTemplateData,
             deleteTemplate: deleteTemplate,
-            deleteTemplateByIdAndFilename : deleteTemplateByIdAndFilename
+            deleteTemplateByIdAndVersion : deleteTemplateByIdAndVersion
         });
 
         /**
@@ -169,13 +169,13 @@ angular.module('admin').service('Admin.CMTemplatesService', ['$http', 'Upload',
          * Saving query and mapped fields for template.
          *
          * @param {string} templateId Id of template
-         * @param {string} templateFilename File name of template
+         * @param {string} templateVersion File name of template
          * @returns {HttpPromise} Future info about widgets
          */
-        function deleteTemplateByIdAndFilename(templateId, templateFilename) {
+        function deleteTemplateByIdAndVersion(templateId, templateVersion) {
             return $http({
                 method: "DELETE",
-                url: 'api/latest/plugin/admin/template/' + templateId + '/' + templateFilename
+                url: 'api/latest/plugin/admin/template/' + templateId + '/' + templateVersion
             });
         };
         

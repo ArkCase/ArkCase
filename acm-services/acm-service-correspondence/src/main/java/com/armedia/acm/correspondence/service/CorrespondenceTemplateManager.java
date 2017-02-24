@@ -202,13 +202,17 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
      * @return
      * @throws IOException
      */
-    Optional<CorrespondenceTemplate> deleteTemplate(String templateId) throws IOException
+    Optional<CorrespondenceTemplate> deleteActiveVersionTemplate(String templateId) throws IOException
     {
         Optional<CorrespondenceTemplate> optTemplate = findActiveVersionTemplate(templateId);
         if (optTemplate.isPresent())
         {
             CorrespondenceTemplate template = optTemplate.get();
-            templates.remove(template.getTemplateId());
+            templates.get(template.getTemplateId()).remove(template.getTemplateVersion());
+            if (templates.get(template.getTemplateId()).isEmpty())
+            {
+                templates.remove(template.getTemplateId());
+            }
             updateConfiguration(getAllTemplates());
             updateLabels(template, templateLabels -> {
                 Optional<TemplateLabel> label = templateLabels.stream()
@@ -218,6 +222,39 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
                     templateLabels.remove(label.get());
                 }
             });
+            return optTemplate;
+        }
+
+        return Optional.empty();
+    }
+
+    /**
+     * @param templateId
+     * @param templateVersion
+     * @return
+     * @throws IOException
+     */
+    Optional<CorrespondenceTemplate> deleteTemplateByIdAndVersion(String templateId, String templateVersion) throws IOException
+    {
+        Optional<CorrespondenceTemplate> optTemplate = findTemplateByIdAndVersion(templateId, templateVersion);
+        if (optTemplate.isPresent())
+        {
+            CorrespondenceTemplate template = optTemplate.get();
+            templates.get(template.getTemplateId()).remove(template.getTemplateVersion());
+            if (templates.get(template.getTemplateId()).isEmpty())
+            {
+                templates.remove(template.getTemplateId());
+            }
+            updateConfiguration(getAllTemplates());
+            updateLabels(template, templateLabels -> {
+                Optional<TemplateLabel> label = templateLabels.stream()
+                        .filter(tl -> tl.getTemplate().equals(template.getTemplateFilename())).findAny();
+                if (label.isPresent())
+                {
+                    templateLabels.remove(label.get());
+                }
+            });
+            return optTemplate;
         }
 
         return Optional.empty();
@@ -289,9 +326,28 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
      * @param templateId
      * @return
      */
-    Optional<CorrespondenceTemplate> getTemplateById(String templateId)
+    Optional<CorrespondenceTemplate> getActiveTemplateById(String templateId)
     {
         return findActiveVersionTemplate(templateId);
+    }
+
+    /**
+     * @param templateId
+     * @return
+     */
+    List<CorrespondenceTemplate> getTemplateVersionsById(String templateId)
+    {
+        return new ArrayList<>(templates.get(templateId).values());
+    }
+
+    /**
+     * @param templateId
+     * @param templateVersion
+     * @return
+     */
+    Optional<CorrespondenceTemplate> getTemplateByIdAndVersion(String templateId, String templateVersion)
+    {
+        return findTemplateByIdAndVersion(templateId, templateVersion);
     }
 
     private Optional<CorrespondenceTemplate> findTemplateByIdAndVersion(String templateId, String templateVersion)
