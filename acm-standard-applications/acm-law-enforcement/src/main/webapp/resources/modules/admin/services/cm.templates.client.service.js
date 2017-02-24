@@ -24,6 +24,7 @@ angular.module('admin').service('Admin.CMTemplatesService', ['$http', 'Upload',
             uploadTemplate: uploadTemplate,
             uploadTemplateWithTimestamp: uploadTemplateWithTimestamp,
             getTemplateData: getTemplateData,
+            getTemplateVersionData: getTemplateVersionData,
             saveTemplateData: saveTemplateData,
             deleteTemplate: deleteTemplate,
             deleteTemplateByIdAndVersion : deleteTemplateByIdAndVersion
@@ -123,6 +124,25 @@ angular.module('admin').service('Admin.CMTemplatesService', ['$http', 'Upload',
             });
         };        
 
+        /**
+         * @ngdoc method
+         * @name getTemplateVersionData
+         * @methodOf admin.service:Admin.CMTemplatesService
+         *
+         * @description
+         * Get query and mapped fields for template.
+         *
+         * @param {string} templateId Id of template
+         *
+         * @returns {HttpPromise} Future info about widgets
+         */
+        function getTemplateVersionData(templateId) {
+            return $http({
+                method: "GET",
+                url: 'api/latest/plugin/admin/template/versions/' + templateId
+            });
+        };        
+        
         /**
          * @ngdoc method
          * @name saveTemplateData

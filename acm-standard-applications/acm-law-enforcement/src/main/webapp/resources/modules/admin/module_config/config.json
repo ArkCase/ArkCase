@@ -155,6 +155,61 @@
       ]
     },
     {
+      "id": "correspondenceManagementTemplateVersions",
+      "title": "Correspondance Management Template Versions grid",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": false,
+      "columnDefs": [
+        {
+          "name": "templateVersion",
+          "displayName": "admin.correspondenceManagement.templates.grid.version",
+          "visible": true,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "displayName",
+          "displayName": "admin.correspondenceManagement.templates.grid.displayName",
+          "visible": true,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "templateFilename",
+          "displayName": "admin.correspondenceManagement.templates.grid.title",
+          "visible": true,
+          "cellTemplate": "<a target='_blank' ng-href='{{row.entity.downloadFileName}}'><span ng-if=\"row.entity.templateFilename.indexOf('_') > 0\">{{row.entity.templateFilename.substring(row.entity.templateFilename.indexOf('_') + 1)}}</span><span ng-if=\"row.entity.templateFilename.indexOf('_') == -1\">{{row.entity.templateFilename}}</span></a>",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "objectType",
+          "displayName": "admin.correspondenceManagement.templates.grid.objectType",
+          "visible": true,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "modified",
+          "displayName": "admin.correspondenceManagement.templates.grid.modified",
+          "visible": true,
+          "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "modifier",
+          "displayName": "admin.correspondenceManagement.templates.grid.modifier",
+          "visible": true,
+          "headerCellFilter": "translate",
+          "lookup": "userFullNames"
+        },
+        {
+          "name": "activated",
+          "displayName": "admin.correspondenceManagement.templates.grid.activated",
+          "visible": true,
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div align='center'><span ng-if='!row.entity.activated' class='label label-warning' ng-click='grid.appScope.activate(row.entity)'>Activate</span><span ng-if='row.entity.activated' class='label label-success' ng-click='grid.appScope.activate(row.entity)'>Deactivate</span></div>'"
+        }
+      ]
+    },
+    {
       "id": "labelsConfig",
       "title": "Application - Labels Config grid",
       "enabled": true,

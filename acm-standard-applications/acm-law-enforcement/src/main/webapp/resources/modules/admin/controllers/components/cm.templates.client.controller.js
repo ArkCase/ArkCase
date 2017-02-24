@@ -7,9 +7,11 @@ angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$m
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
         $scope.selectedRows = {};
+        $scope.correspondenceManagementTemplateVersions = undefined;
 
         //get config and init grid settings
         $scope.config.$promise.then(function (config) {
+            $scope.correspondenceManagementTemplateVersions = _.find(config.components, {id: 'correspondenceManagementTemplateVersions'});
             var config = _.find(config.components, {id: 'correspondenceManagementTemplates'});
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
@@ -80,7 +82,37 @@ angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$m
         };
         
         $scope.versionTemplate = function () {
-            // TODO: Version modal
+            $scope.selectedRows = $scope.gridApi.selection.getSelectedRows();
+            if ($scope.selectedRows.length > 0) {
+                var templateVersionsPromise = correspondenceService.getTemplateVersionData($scope.selectedRows[0].templateId);
+                var colDefs = $scope.correspondenceManagementTemplateVersions.columnDefs;
+
+                templateVersionsPromise.then(function (templateVersionData) {
+                    var modalInstance = $modal.open({
+                        animation: true,
+                        templateUrl: 'modules/admin/views/components/cm.template-versions.modal.client.view.html',
+                        controller: function ($scope, $modalInstance) {
+
+                            $scope.gridOptions = {
+                                    enableColumnResizing: true,
+                                    enableRowSelection: true,
+                                    pinSelectionCheckbox: true,
+                                    enableColumnMenus: false,
+                                    enableRowHeaderSelection: false,
+                                    multiSelect: false,
+                                    noUnselect: false,
+                                    columnDefs: colDefs,
+                                    data: templateVersionData.data
+                            };
+                            $scope.onClickOk = function () {
+                                $modalInstance.dismiss('cancel');
+                            };
+                        },
+                        size: 'lg'
+                    });
+                });
+            }
+
         }
         
         $scope.deleteTemplate = function () {
