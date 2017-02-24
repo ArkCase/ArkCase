@@ -285,7 +285,8 @@
         "creator": "Creator",
         "modifier": "Modifier",
         "activated": "Active",
-        "objectType": "Object Type"
+        "objectType": "Object Type",
+        "version": "Version"
       },
       "templates.fieldNames.label": "Map fields to values from the template",
       "templates.querySelect": {
@@ -304,6 +305,9 @@
         "displayName.label": "Display Name",
         "btnCancel.text": "Cancel",
         "btnOk.text": "Upload Template"
+      },
+      "templates.version.modal": {
+        "btnOk.text": "OK"
       }
     },
     "forms.defaultValue": "Select Target",
