@@ -12,6 +12,7 @@ var taskPage = require('../../Pages/task_page.js');
 var notificationPage = require('../../Pages/notifications_page.js');
 var reportPage = require('../../Pages/report_page.js');
 var timeTrackingPage = require('../../Pages/time_tracking_page.js');
+var adminPage = require('../../Pages/admin_page.js');
 var costTrackingPage = require('../../Pages/cost_tracking_page.js');
 var preferencesPage = require('../../Pages/preference_page.js');
 var using = require(process.env['USERPROFILE'] + '/node_modules/jasmine-data-provider');
@@ -54,7 +55,7 @@ describe('edit user profile page', function () {
         userPage.clickUserNavigation();
         userPage.validateUserNavigationProfile(Objects.userpage.data.userNavigationProfile, "User navigation profile is not correct");
         userPage.clickUserNavigationProfile();
-        userPage.validateUserPageHeader(Objects.userpage.data.userPageHeader, "User page header is not correct");
+        userPage.validatePageHeader(Objects.userpage.data.pageHeader, "User page header is not correct");
     });
 
     it('should edit username', function () {
@@ -451,7 +452,7 @@ describe('edit user profile page', function () {
 
         });
 
-        //Create New Complaint, Make sure new object is created
+//Create New Complaint, Make sure new object is created
 
         it('should create new complaint ', function () {
 
@@ -755,7 +756,7 @@ describe('edit user profile page', function () {
             expect(taskPage.returnTaskState()).toEqual(Objects.taskspage.data.taskStateClosed, 'The task state should be CLOSED');
             complaintPage.navigateToPage("Reports");
             reportPage.runReport("COMPLAINT DISPOSITION COUNT", "", utils.returnToday("/"), utils.returnToday("/")).switchToReportframes();
-            reportPage.validateCDCReportValues(closedAddToExistingCase, (parseInt(closedNoFurtherAction, 10) + 1).toString(), closedOpenInvestigation, closedReferExternal);
+            reportPage.validateCDCReportValues(closedAddToExistingCase, closedNoFurtherAction, closedOpenInvestigation, closedReferExternal);
             reportPage.switchToDefaultContent();
         });
 
@@ -792,7 +793,77 @@ describe('edit user profile page', function () {
         });
 
     });
+    describe('Admin tests', function () {
 
+        beforeEach(function (done) {
+
+            loginPage.Login(Objects.loginpage.data.adminuser.username, Objects.loginpage.data.adminuser.password);
+            testAsync(done);
+
+        });
+
+        afterEach(function () {
+
+            loginPage.Logout();
+
+        });
+
+        //Change logo
+
+        it('Change logo', function () {
+            adminPage.navigateToPage("Admin").clickSubLink("Logo");
+            adminPage.uploadLogo();
+            expect(adminPage.HeaderUploaded()).toEqual("ArkCaseLogo.png", "Logo was not uploaded successfully");
+            adminPage.clickSaveButton();
+            adminPage.verifyTheNotificationMessage("Custom logo files updated. Refresh browser page to see result.", "The notification message after uploading is not displayed");
+        });
+
+        //Change label configuration
+
+        it('Change label in admin configuration', function () {
+
+            adminPage.navigateToPage("Admin").clickSubLink("Label Configuration");
+            adminPage.selectModuleInLabelConfig("admin");
+            adminPage.filterLabelId(Objects.adminPage.data.labelId);
+            adminPage.updateLabel(Objects.adminPage.data.LabelUpdate);
+            browser.refresh();
+            adminPage.validateResetModuleButtonText(Objects.adminPage.data.LabelUpdate);
+
+        });
+
+        //change dashboard permissions
+
+        it('Change dashboard permissions', function () {
+            adminPage.navigateToPage("Admin").clickSubLink("Dashboard Configuration");
+            adminPage.ChooseListBoxValue("News Widget");
+            var groups = utils.readGroupsFromJson("ann-acm");
+            for (var i in groups) {
+                adminPage.addAuthorization(groups[i]);
+            }
+        });
+
+        //remove module authorization
+
+        it('Remove authorization to module', function () {
+            adminPage.navigateToPage("Admin").clickSubLink("Modules");
+            adminPage.ChooseListBoxValue("Audit");
+            adminPage.removeAuthorization("ROLE_ADMINISTRATOR");
+            browser.refresh();
+            expect(adminPage.validateModulePresent("Audit")).toBeFalsy("Authorization to user to view module audit is not succesfully removed")
+        });
+
+        //add module authorization
+
+        it('Add authorization to module', function () {
+            adminPage.navigateToPage("Admin").clickSubLink("Modules");
+            adminPage.ChooseListBoxValue("Audit");
+            adminPage.addAuthorization("ROLE_ADMINISTRATOR");
+            browser.refresh();
+            expect(adminPage.validateModulePresent("Audit")).toBeTruthy("Authorization to user to view module audit is not succesfully added")
+
+        });
+
+    });
 });
 
 
