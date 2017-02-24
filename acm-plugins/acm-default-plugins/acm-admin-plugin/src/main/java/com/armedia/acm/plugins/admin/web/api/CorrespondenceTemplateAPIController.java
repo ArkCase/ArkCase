@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -55,7 +56,7 @@ public class CorrespondenceTemplateAPIController
     @ResponseBody
     public CorrespondenceTemplateRequestResponse getTemplate(@PathVariable(value = "templateId") String templateId)
     {
-        return mapTemplateToResponse(correspondenceService.getTemplateById(templateId));
+        return mapTemplateToResponse(correspondenceService.getActiveTemplateById(templateId));
     }
 
     @RequestMapping(value = "/template/{templateId}/{templateFilename:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -66,31 +67,56 @@ public class CorrespondenceTemplateAPIController
         return mapTemplateToResponse(correspondenceService.getTemplateByIdAndFilename(templateId, templateFilename));
     }
 
+    @RequestMapping(value = "/template/versions/{templateId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<CorrespondenceTemplateRequestResponse> getTemplateVersionsById(@PathVariable(value = "templateId") String templateId)
+    {
+        return correspondenceService.getTemplateVersionsById(templateId).stream().map(t -> mapTemplateToResponse(Optional.of(t)))
+                .collect(Collectors.toList());
+    }
+
     @RequestMapping(value = "/template/{templateId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public CorrespondenceTemplateRequestResponse deleteTemplate(@PathVariable(value = "templateId") String templateId) throws IOException
+    public List<CorrespondenceTemplateRequestResponse> deleteTemplate(@PathVariable(value = "templateId") String templateId)
+            throws IOException
     {
+        List<CorrespondenceTemplateRequestResponse> deleteResponse = new ArrayList<>();
         File templatesDir = new File(System.getProperty("user.home") + "/.arkcase/acm/correspondenceTemplates");
-        File template = new File(templatesDir, templateId);
-        if (FileUtils.deleteQuietly(template))
+        List<CorrespondenceTemplate> templates = correspondenceService.getTemplateVersionsById(templateId);
+        String msg = "";
+        for (CorrespondenceTemplate template : templates)
         {
-            return mapTemplateToResponse(correspondenceService.deleteTemplate(templateId));
+            File templateFile = new File(templatesDir, template.getTemplateFilename());
+            if (FileUtils.deleteQuietly(templateFile))
+            {
+                deleteResponse.add(mapTemplateToResponse(
+                        correspondenceService.deleteTemplateByIdAndVersion(template.getTemplateId(), template.getTemplateVersion())));
+            } else
+            {
+                msg += templateFile + ";";
+            }
+        }
+
+        if (msg.isEmpty())
+        {
+            return deleteResponse;
         } else
         {
-            throw new CorrespondenceTemplateNotFoundException();
+            throw new CorrespondenceTemplateNotFoundException(msg);
         }
     }
 
-    @RequestMapping(value = "/template/{templateId}/{templateFilename:.+}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/template/{templateId}/{templateVersion:.+}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public CorrespondenceTemplateRequestResponse deleteTemplateByIdAndFilename(@PathVariable(value = "templateId") String templateId,
-            @PathVariable(value = "templateFilename") String templateFilename) throws IOException
+    public CorrespondenceTemplateRequestResponse deleteTemplateByIdAndVersion(@PathVariable(value = "templateId") String templateId,
+            @PathVariable(value = "templateVersion") String templateVersion) throws IOException
     {
         File templatesDir = new File(System.getProperty("user.home") + "/.arkcase/acm/correspondenceTemplates");
-        File template = new File(templatesDir, templateFilename);
-        if (FileUtils.deleteQuietly(template))
+        File templateFile = new File(templatesDir,
+                correspondenceService.getTemplateByIdAndVersion(templateId, templateVersion).get().getTemplateFilename());
+        if (FileUtils.deleteQuietly(templateFile))
         {
-            return mapTemplateToResponse(correspondenceService.deleteTemplate(templateId));
+            return mapTemplateToResponse(correspondenceService.deleteTemplateByIdAndVersion(templateId, templateVersion));
         } else
         {
             throw new CorrespondenceTemplateNotFoundException();
