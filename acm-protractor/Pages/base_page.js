@@ -259,7 +259,8 @@ var docAssigneeSnowBView = element(by.xpath(Objects.basepage.locators.docAssigne
 var docCreatedDateSnowBView = element(by.xpath(Objects.basepage.locators.docCreatedDateSnowBView));
 var docTypeSnowBView = element(by.xpath(Objects.basepage.locators.docTypeSnowBView));
 var docStatusSnowBView = element(by.xpath(Objects.basepage.locators.docStatusSnowBView));
-
+var pageHeader = element(by.xpath(Objects.userpage.locators.pageHeader));
+var auditModule = element(by.css(Objects.basepage.locators.auditModule));
 
 var BasePage = function() {
 
@@ -1605,8 +1606,10 @@ var BasePage = function() {
         xPathStr = ".//a[@title='";
         var completexPath = xPathStr + link + "']";
         var el = element(by.xpath(completexPath));
-        browser.wait(EC.visibilityOf(element(by.xpath(completexPath))), 30000, "Link " + link + " is not visible").then(function() {
-            browser.executeScript('arguments[0].click()', el);
+        browser.wait(EC.presenceOf(element(by.xpath(completexPath))), 30000, "Link " + link + " is not present in DOM").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(completexPath))), 30000, "Link " + link + " is not visible").then(function () {
+                browser.executeScript('arguments[0].click()', el);
+            });
         });
         return this;
     }
@@ -2328,6 +2331,21 @@ var BasePage = function() {
         browser.wait(EC.presenceOf(element(by.xpath(Objects.basepage.locators.docTitle))), 60000, "Document title is not present in DOM").then(function() {
             browser.wait(EC.visibilityOf(element(by.xpath(Objects.basepage.locators.docTitle))), 60000, "Document title is not visible");
         });
+    };
+
+    this.validatePageHeader = function(text, error){
+        browser.wait(EC.visibilityOf(element(by.id(Objects.userpage.locators.picture))), 30000, "Picture element is not visible on user profile page"). then(function () {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.userpage.locators.pageHeader))), 30000, "User page header is not visible").then(function() {
+                expect(pageHeader.getText()).toEqual(text, error);
+            });
+        })
+    };
+
+    this.validateModulePresent = function (module) {
+        xPathStr = ".//a[@title='";
+        var completexPath = xPathStr + module + "']";
+        var el = element(by.xpath(completexPath));
+        return el.isPresent();
     }
 
 

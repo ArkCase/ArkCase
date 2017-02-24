@@ -43,6 +43,9 @@ exports.config = {
     specs: [
 
 
+        // '../test_spec/functional/functional_test.spec.js'
+
+
         //any test can be run with command "protractor conf.js, just place it here"
       
 
