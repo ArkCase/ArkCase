@@ -6,7 +6,6 @@ var userName = element(by.binding(Objects.userpage.locators.userName));
 
 var userNavigation = element(by.css(Objects.userpage.locators.userNavigation));
 var userNavigationProfile = element(by.linkText(Objects.userpage.locators.userNavigationProfile));
-var userPageHeader = element(by.xpath(Objects.userpage.locators.userPageHeader));
 
 var userLocation = element(by.binding(Objects.userpage.locators.userLocation));
 var inputField = element(by.model(Objects.userpage.locators.inputField));
@@ -28,7 +27,6 @@ var website = element(by.binding(Objects.userpage.locators.website));
 
 var changeProfilePic = element(by.xpath(Objects.userpage.locators.changeProfilePic));
 
-
 var UserPage = function(){
 	this.clickUserNavigation = function(){
             browser.wait(EC.visibilityOf(element(by.css(Objects.userpage.locators.userNavigation))), 30000, "User navigation field is not visible").then(function () {
@@ -48,13 +46,7 @@ var UserPage = function(){
         });
 		return this;
 	}
-	this.validateUserPageHeader = function(text, error){
-        browser.wait(EC.visibilityOf(element(by.id(Objects.userpage.locators.picture))), 30000, "Picture element is not visible on user profile page"). then(function () {
-            browser.wait(EC.visibilityOf(element(by.xpath(Objects.userpage.locators.userPageHeader))), 30000, "User page header is not visible").then(function() {
-                expect(userPageHeader.getText()).toEqual(text, error);
-            });
-        })
-	}
+
 	this.clickUserName = function(){
         browser.wait(EC.visibilityOf(element(by.binding(Objects.userpage.locators.userName))), 30000, "User name field is not visible").then(function() {
             userName.click();
