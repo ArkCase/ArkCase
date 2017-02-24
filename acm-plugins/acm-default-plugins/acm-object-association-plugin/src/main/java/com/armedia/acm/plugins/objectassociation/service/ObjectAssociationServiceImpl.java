@@ -18,8 +18,16 @@ public class ObjectAssociationServiceImpl implements ObjectAssociationService
     private ObjectAssociationDao objectAssociationDao;
 
     @Override
-    public void addReference(Long id, String number, String type, String title, String status, Long parentId, String parentType)
+    public void addReference(Long id, String number, String type, String title, String status, Long parentId, String parentType) throws Exception
     {
+        if (id.equals(parentId) && type.equals(parentType))
+        {
+            throw new Exception("Cannot reference the object itself.");
+        }
+        if (findByParentTypeAndId(parentType, parentId).stream().filter(o -> (o.getTargetId().equals(id) && o.getTargetType().equals(type))).findAny().isPresent())
+        {
+            throw new Exception("Selected object is already referenced.");
+        }
         AcmAbstractDao<AcmChildObjectEntity> dao = getDaoForChildObjectEntity(parentType);
         if (dao != null)
         {

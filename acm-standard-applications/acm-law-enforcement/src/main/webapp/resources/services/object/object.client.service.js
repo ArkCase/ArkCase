@@ -82,7 +82,28 @@ angular.module('services').factory('ObjectService', ['$state', '$window', '$log'
                     }
                 );
             }
-
+            
+            /**
+             * @ngdoc method
+             * @name openObject
+             * @methodOf services:Object.ObjectService
+             *
+             * @param {String} parentType, Lookup parent Type of the file.
+             * @param {String} fileName, Lookup name.
+             * @param {Number} targetId, target id of the file.
+             * @param {Number} parentId,  parent id of the file.
+             *
+             * @description
+             * Go to a page state that show the specified ArkCase File viewer
+             * from referenced files from Case, Complain or Task.
+             */
+            , openObject: function (targetId, parentId, parentType, fileName) {
+                var baseUrl = window.location.href.split('!')[0];
+                var urlArgs = targetId + "/" + parentId + "/" + parentType + "/" + fileName + "/" + targetId;
+ 
+                window.open(baseUrl + '!/viewer/' + urlArgs);
+            }
+            
         };
     }
 ]);

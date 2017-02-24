@@ -238,6 +238,16 @@ public class AcmTaskServiceImpl implements AcmTaskService
         objectAssociation.setAssociationType(ObjectAssociationConstants.OBJECT_TYPE);
 
         Long parentId = reference.getParentId();
+
+        if (reference.getReferenceId().equals(parentId) && reference.getReferenceType().equals(reference.getParentType()))
+        {
+            throw new AcmCreateObjectFailedException(ObjectAssociationConstants.OBJECT_TYPE, "Cannot reference the task itself.", null);
+        }
+        if (findChildObjects(parentId).stream().filter(o -> (o.getTargetId().equals(reference.getReferenceId()) && o.getTargetType().equals(reference.getReferenceType()))).findAny().isPresent())
+        {
+            throw new AcmCreateObjectFailedException(ObjectAssociationConstants.OBJECT_TYPE, "Selected object is already referenced.", null);
+        }
+
         log.info("Saving reference to Task with id=[{}]", reference.getParentId());
         try
         {

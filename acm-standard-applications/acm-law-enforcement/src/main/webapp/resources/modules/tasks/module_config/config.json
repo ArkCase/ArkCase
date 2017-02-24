@@ -117,8 +117,7 @@
           "workflow",
           "history",
           "signatures",
-          "tags",
-          "approvalrouting"
+          "tags"
         ]
       },
       {
@@ -207,14 +206,6 @@
         "icon": "fa fa-tags",
         "components": [
           "tags"
-        ]
-      },
-      {
-        "type": "p/TASK/apr",
-        "label": "Approval Routing",
-        "icon": "fa fa-sort-amount-desc",
-        "components": [
-          "approvalrouting"
         ]
       },
       {
@@ -904,7 +895,7 @@
           "name": "targetName",
           "displayName": "tasks.comp.references.table.columns.targetName",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.targetName}}</a>"
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity, true)'>{{row.entity.targetName}}</a>"
         },
         {
           "name": "targetTitle",
@@ -1091,22 +1082,22 @@
       "columnDefs": [
         {
           "name": "name",
-          "displayName": "tasks.userSearch.assigneeGridColumns.name",
+          "displayName": "tasks.userOrGroupSearch.assigneeGridColumns.name",
           "headerCellFilter": "translate"
         },
         {
           "name": "object_type_s",
-          "displayName": "tasks.userSearch.assigneeGridColumns.type",
+          "displayName": "tasks.userOrGroupSearch.assigneeGridColumns.type",
           "headerCellFilter": "translate"
         },
         {
           "name": "title",
-          "displayName": "tasks.userSearch.assigneeGridColumns.title",
+          "displayName": "tasks.userOrGroupSearch.assigneeGridColumns.title",
           "headerCellFilter": "translate"
         },
         {
           "name": "object_id_s",
-          "displayName": "tasks.userSearch.assigneeGridColumns.username",
+          "displayName": "tasks.userOrGroupSearch.assigneeGridColumns.username",
           "headerCellFilter": "translate"
         }
       ],
@@ -1280,8 +1271,9 @@
         "taskStartDate": "",
         "title": ""
       },
-      "userSearch": {
-        "userFacetFilter": "\"Object Type\": USER"
+      "userOrGroupSearch": {
+        "userOrGroupFacetFilter": "fq=\"object_type_s\":(GROUP OR USER)",
+        "userOrGroupFacetExtraFilter": "&fq=\"name\": "
       },
       "objectSearch": {
         "objectFacetFilter": "\"Object Type\": "
@@ -1328,7 +1320,8 @@
         }
       ],
       "userSearch": {
-        "userFacetFilter": "\"Object Type\": USER"
+        "userFacetFilter": "\"Object Type\": USER",
+        "userFacetExtraFilter": "&fq=\"name\": "
       }
     },
     {
@@ -1354,8 +1347,8 @@
           "cellEditableCondition": false
         },
         {
-          "name": "approverId",
-          "displayName": "tasks.comp.pastApprovals.table.columns.approverId",
+          "name": "approverFullName",
+          "displayName": "tasks.comp.pastApprovals.table.columns.approverFullName",
           "headerCellFilter": "translate",
           "cellEditableCondition": false
         },

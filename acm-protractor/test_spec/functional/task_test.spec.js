@@ -78,7 +78,7 @@ describe('Create new task ', function() {
         expect(taskPage.returnInsertedDueDate()).toEqual(utils.returnToday("/"), "task due date is not correct");
         expect(taskPage.returnPercent()).toEqual(Objects.taskpage.data.percentCompleteInput, "task percent is not correct");
         taskPage.clickDetailsLink();
-        expect(taskPage.returnDetailsTextArea()).toEqual(Objects.taskspage.data.notesTextArea, "notes text area value is not correct");
+        taskPage.validateDetailsTextArea(Objects.taskspage.data.notesTextArea, "notes text area value is not correct");
 
     });
 
@@ -102,9 +102,10 @@ describe('Create new task ', function() {
         taskPage.clickNewButton().clickTaskButton().insertTaskDataLinkNote(Objects.taskspage.data.assigneeSamuel, Objects.taskpage.data.Subject, utils.returnToday("/"), utils.returnToday("/"), "Low", Objects.taskpage.data.percentCompleteInput, Objects.taskpage.data.linkInputText, Objects.taskpage.data.linkInputUrl).clickSave();
         expect(taskPage.returnTasksTitle()).toEqual(Objects.taskpage.data.tasksTitle, "Task title is not correct");
         taskPage.clickDetailsLink();
-        expect(taskPage.returnDetailsTextArea()).toEqual(Objects.taskpage.data.linkInputText, "details link is not correct");
+        taskPage.validateDetailsTextArea(Objects.taskpage.data.linkInputText, "details link is not correct");
 
     });
+
 
     it('should create new task click subscribe button verify if it is changed to unsubscribe', function() {
 
@@ -236,7 +237,7 @@ describe('Create new task ', function() {
         taskPage.insertDetailsTextAreaText(Objects.taskspage.data.detailsTextArea);
         taskPage.clickSaveDetailsButton();
         taskPage.clickRefreshButton();
-        expect(taskPage.returnDetailsTextArea()).toEqual(Objects.taskspage.data.detailsTextArea, 'After refresh the details text is not saved');
+        taskPage.validateDetailsTextArea(Objects.taskspage.data.detailsTextArea, 'After refresh the details text is not saved');
 
 
     });
@@ -248,9 +249,9 @@ describe('Create new task ', function() {
         taskPage.clickInsertLinkInDetails();
         expect(taskPage.returnInsertLinkTitle()).toEqual(Objects.taskspage.data.insertLinkTitle, "Insert link title in details is not correct");
         taskPage.insertDetailsTextAreaLink(Objects.taskspage.data.insertLinkText, Objects.taskspage.data.insertLinkUrl);
-        expect(taskPage.returnDetailsTextArea()).toEqual(Objects.taskspage.data.insertLinkText, 'The link is not added');
+        taskPage.validateDetailsTextAres(Objects.taskspage.data.insertLinkText, 'The link is not added');
         taskPage.clickSaveDetailsButton();
-        expect(taskPage.returnDetailsTextArea()).toEqual(Objects.taskspage.data.insertLinkText, 'The link is not added');
+        taskPage.validateDetailsTextArea(Objects.taskspage.data.insertLinkText, 'The link is not added');
 
     });
     it('should navigate to task page and click on header image and verify if redirects to home page', function() {
@@ -352,7 +353,14 @@ describe('Create new task ', function() {
         taskPage.clickExpandFancyTreeTopElementAndSubLink("Attachments");
         taskPage.rightClickRootFolder();
         taskPage.addDocument("Notice of Investigation");
-        taskPage.validateDocGridData(true, "Notice of Investigation", ".docx", "Notice of Investigation", utils.returnToday("/"), utils.returnToday("/"), userPage.returnUserNavigationProfile(), "1.0", "ACTIVE");
+        taskPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn1, "ArkCaseTesting");
+        taskPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn2, ".docx");
+        taskPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn3, "Notice Of Investigation");
+        taskPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn4, utils.returnToday("/"));
+        taskPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn5, utils.returnToday("/"));
+        taskPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn6, Objects.taskspage.data.assigneeSamuel);
+        taskPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn7, "1.0");
+        taskPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn8, "ACTIVE");
         expect(taskPage.lockIconIsPresent()).not.toBeTruthy();
         taskPage.rightClickDocument();
         expect(taskPage.validateChekoutEnabled()).toBeTruthy();
@@ -379,7 +387,14 @@ describe('Create new task ', function() {
         taskPage.clickExpandFancyTreeTopElementAndSubLink("Attachments");
         taskPage.rightClickRootFolder();
         taskPage.addDocument("Notice of Investigation");
-        taskPage.validateDocGridData(true, "Notice of Investigation", ".docx", "Notice of Investigation", utils.returnToday("/"), utils.returnToday("/"), userPage.returnUserNavigationProfile(), "1.0", "ACTIVE");
+        taskPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn1, "ArkCaseTesting");
+        taskPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn2, ".docx");
+        taskPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn3, "Notice Of Investigation");
+        taskPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn4, utils.returnToday("/"));
+        taskPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn5, utils.returnToday("/"));
+        taskPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn6, Objects.taskspage.data.assigneeSamuel);
+        taskPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn7, "1.0");
+        taskPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn8, "ACTIVE");
         taskPage.rightClickDocument().clickCheckOut();
         expect(taskPage.lockIconIsPresent()).toBeTruthy();
         taskPage.clickCheckin();
