@@ -1,10 +1,9 @@
 //var HtmlScreenshotReporter = require(process.env['USERPROFILE'] + '/node_modules/protractor-jasmine2-screenshot-reporter');
 var utils = require('../util/utils.js');
 var Objects = require('../json/Objects.json');
-var folderName = ('target');
+var folderName = ('target/screenshots_' + utils.returnToday("_"));
 var jasmineReporters = require(process.env['USERPROFILE'] + '/node_modules/jasmine-reporters');
 var HTMLReport = require(process.env['USERPROFILE'] + '/node_modules/protractor-html-reporter');
-
 
 
 exports.config = {
@@ -45,7 +44,7 @@ exports.config = {
 
 
         //any test can be run with command "protractor conf.js, just place it here"
-
+      
 
     ],
     //any suite can be run with command "protractor conf.js --suite=selected"
@@ -71,7 +70,7 @@ exports.config = {
         package: (process.env['USERPROFILE'] + '/node_modules/jasmine2-protractor-utils'),
         disableHTMLReport: true,
         disableScreenshot: false,
-        screenshotPath: 'target/',
+        screenshotPath: 'target/screenshots_' + utils.returnToday("_"),
         screenshotOnExpectFailure: true,
         screenshotOnSpecFailure: false,
         clearFoldersBeforeTest: true
@@ -103,7 +102,7 @@ exports.config = {
 
             testConfig = {
                 reportTitle: 'Arkcase Test Report',
-                outputPath: './target',
+                outputPath: './target/screenshots_' + utils.returnToday("_"),
                 screenshotPath: './',
                 testBrowser: browserName,
                 browserVersion: browserVersion,
@@ -112,7 +111,7 @@ exports.config = {
 
 
             };
-            new HTMLReport().from('target/xmlresults.xml', testConfig);
+            new HTMLReport().from('target/screenshots_' + utils.returnToday("_") + '/xmlresults.xml', testConfig);
         });
     }
 

@@ -40,7 +40,9 @@ describe('Create new complaint ', function() {
 
 
     it('should create new complaint ', function() {
-        complaintPage.clickModuleComplaints();
+
+        complaintPage.clickNewButton().clickComplaintButton().switchToIframes().submitInitiatorInformation(Objects.complaintPage.data.firstName, Objects.complaintPage.data.lastName).reenterFirstName(Objects.complaintPage.data.firstName).clickTab("Incident").insertIncidentInformation("Arson", Objects.complaintPage.data.title).clickSubmitButton();
+        complaintPage.switchToDefaultContent();
         complaintPage.waitForComplaintsPage();
         expect(complaintPage.returnComplaintsTitle()).toEqual(Objects.complaintPage.data.title, "Title is not correct on new created complaint");
 
@@ -562,6 +564,5 @@ describe('Create new complaint ', function() {
         complaintPage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn7, "1.0");
         complaintPage.validateDocGridValue("Clearance Granted", Objects.basepage.data.docGridColumn8, "ACTIVE");
 
-    });
-
+    }); * /
 });
