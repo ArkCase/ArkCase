@@ -51,9 +51,14 @@ var NotificationPage = function() {
 
 
     this.returnObjectType = function() {
-
+     
         return objectType.getText();
     }
+
+   this.waitForSorting=function(type){
+     browser.wait(EC.textToBePresentInElement((objectType), type), 10000, type + "Is not present in the table first row after sorting");
+   }
+
 
     this.returnDescription = function() {
         return description.getText();

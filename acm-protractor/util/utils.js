@@ -133,13 +133,13 @@ var helpers = function helpers() {
     this.previousWeek = function() {
 
         var now = new Date();
-        var day1 = ("0" + now.getDate()).slice(-2) - 1;
-        var day2 = ("0" + now.getDate()).slice(-2) - 2;
-        var day3 = ("0" + now.getDate()).slice(-2) - 3;
-        var day4 = ("0" + now.getDate()).slice(-2) - 4;
-        var day5 = ("0" + now.getDate()).slice(-2) - 5;
-        var day6 = ("0" + now.getDate()).slice(-2) - 6;
-        var day7 = ("0" + now.getDate()).slice(-2) - 7;
+        var day1 = ("0" + now.getDate()).slice(-2);
+        var day2 = ("0" + now.getDate()).slice(-2) - 1;
+        var day3 = ("0" + now.getDate()).slice(-2) - 2;
+        var day4 = ("0" + now.getDate()).slice(-2) - 3;
+        var day5 = ("0" + now.getDate()).slice(-2) - 4;
+        var day6 = ("0" + now.getDate()).slice(-2) - 5;
+        var day7 = ("0" + now.getDate()).slice(-2) - 6;
         var week = "" + [day1, day2, day3, day4, day5, day6, day7] + "";
         return week;
 
