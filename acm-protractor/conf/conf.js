@@ -47,7 +47,7 @@ exports.config = {
 
 
         //any test can be run with command "protractor conf.js, just place it here"
-      
+      '../test_spec/functional/complaint_test.spec.js'
 
     ],
     //any suite can be run with command "protractor conf.js --suite=selected"

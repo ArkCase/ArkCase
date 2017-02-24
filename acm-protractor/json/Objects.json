@@ -90,7 +90,12 @@
             "docCreatedDateSnowBView": ".//div[@class='row']/div[3]/div",
             "docTypeSnowBView": ".//div[@class='row']/div[4]/div",
             "docStatusSnowBView": ".//div[@class='row']/div[5]/div",
-            "auditModule": "a[href*='#!/audit']"
+            "auditModule": "a[href*='#!/audit']",
+            "loadPending": ".pending"
+
+
+
+
         },
         "data": {
             "reportTitle": "Report of Investigation Title",

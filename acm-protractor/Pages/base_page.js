@@ -262,6 +262,7 @@ var docStatusSnowBView = element(by.xpath(Objects.basepage.locators.docStatusSno
 var pageHeader = element(by.xpath(Objects.userpage.locators.pageHeader));
 var auditModule = element(by.css(Objects.basepage.locators.auditModule));
 
+
 var BasePage = function() {
 
     this.navigateToURL = function(url) {
@@ -413,8 +414,7 @@ var BasePage = function() {
                 expect(docVersion.getText()).toEqual(version, "Document version is not correct in grid");
                 expect(docStatus.getText()).toEqual(status, "Document status is not correct in grid");
             });
-        })
-
+        });
     }
 
     this.validateDocGridValue = function(type, column, expectedValue) {
@@ -452,18 +452,21 @@ var BasePage = function() {
         }
         completexPath = xPathStart + type + "']" + xPathEnd;
         var el = element(by.xpath(completexPath));
+        
         browser.wait(EC.visibilityOf(element(by.xpath(completexPath))), 30000, "document is not successfully uploaded").then(function() {
-            expect(el.getText()).toEqual(expectedValue, "Document table " + column + " value is not correct in the grid");
+            browser.wait(EC.invisibilityOf(element(by.css(Objects.basepage.locators.loadPending))), 30000, "document is still uploading").then(function() {
+                expect(el.getText()).toEqual(expectedValue, "Document table " + column + " value is not correct in the grid");
+            });
         });
     }
     this.switchToIframes = function() {
         browser.ignoreSynchronization = true;
-        browser.wait(EC.presenceOf(element(by.className("new-iframe ng-scope"))), 30000, "Iframe is not present in DOM").then(function () {
-        browser.wait(EC.visibilityOf(element(by.className("new-iframe ng-scope"))), 30000, "Iframe is not visible").then(function () {
-            browser.switchTo().frame(browser.driver.findElement(by.className("new-iframe ng-scope"))).then(function () {
-                browser.switchTo().frame(browser.driver.findElement(By.className("frevvo-form")));
+        browser.wait(EC.presenceOf(element(by.className("new-iframe ng-scope"))), 30000, "Iframe is not present in DOM").then(function() {
+            browser.wait(EC.visibilityOf(element(by.className("new-iframe ng-scope"))), 30000, "Iframe is not visible").then(function() {
+                browser.switchTo().frame(browser.driver.findElement(by.className("new-iframe ng-scope"))).then(function() {
+                    browser.switchTo().frame(browser.driver.findElement(By.className("frevvo-form")));
+                });
             });
-        });
         })
         return this;
     };
@@ -597,14 +600,14 @@ var BasePage = function() {
     }
 
     this.deleteNote = function() {
-            browser.wait(EC.presenceOf(element.all(by.repeater(Objects.casepage.locators.deleteNoteBtn)).get(3).all(by.tagName(Objects.casepage.locators.tag)).get(1)), 30000, "Delete note button is not present in DOM").then(function() {
-                browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.casepage.locators.deleteNoteBtn)).get(3).all(by.tagName(Objects.casepage.locators.tag)).get(1)), 30000, "Delete note button is not visible").then(function() {
-                    browser.wait(EC.elementToBeClickable(element.all(by.repeater(Objects.casepage.locators.deleteNoteBtn)).get(3).all(by.tagName(Objects.casepage.locators.tag)).get(1)), 30000, "Delete note button is not clickable").then(function() {
-                        browser.executeScript('arguments[0].click()', deleteNoteBtn);
-                    });
+        browser.wait(EC.presenceOf(element.all(by.repeater(Objects.casepage.locators.deleteNoteBtn)).get(3).all(by.tagName(Objects.casepage.locators.tag)).get(1)), 30000, "Delete note button is not present in DOM").then(function() {
+            browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.casepage.locators.deleteNoteBtn)).get(3).all(by.tagName(Objects.casepage.locators.tag)).get(1)), 30000, "Delete note button is not visible").then(function() {
+                browser.wait(EC.elementToBeClickable(element.all(by.repeater(Objects.casepage.locators.deleteNoteBtn)).get(3).all(by.tagName(Objects.casepage.locators.tag)).get(1)), 30000, "Delete note button is not clickable").then(function() {
+                    browser.executeScript('arguments[0].click()', deleteNoteBtn);
                 });
-
             });
+
+        });
         return this;
     };
 
@@ -767,7 +770,7 @@ var BasePage = function() {
         return this;
     }
 
-    this.waitTable = function () {
+    this.waitTable = function() {
         browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.historyTable))), 30000, "Table is not displayed").then(function() {
             browser.wait(EC.visibilityOf(element(by.repeater(Objects.casepage.locators.historyTableRow))), 30000, "Table data is not displayed");
         });
@@ -1380,24 +1383,24 @@ var BasePage = function() {
     }
     this.clickModuleCasesFiles = function() {
         browser.wait(EC.presenceOf(element(by.css(Objects.timetrackingPage.locators.caseFileModule))), 30000, "Case module is not present in DOM").then(function() {
-        browser.wait(EC.visibilityOf(element(by.css(Objects.timetrackingPage.locators.caseFileModule))), 30000, "Case module is not visible").then(function() {
-            browser.executeScript('arguments[0].click()', caseFileModule).then(function () {
-                browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesTitle))), 30000, "Case title is not visible");
-            })
-        });
+            browser.wait(EC.visibilityOf(element(by.css(Objects.timetrackingPage.locators.caseFileModule))), 30000, "Case module is not visible").then(function() {
+                browser.executeScript('arguments[0].click()', caseFileModule).then(function() {
+                    browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesTitle))), 30000, "Case title is not visible");
+                })
+            });
         })
         return this;
     }
     this.clickModuleComplaints = function() {
-       // browser.wait(EC.presenceOf(element(by.css(Objects.timetrackingPage.locators.complaintsModule))), 30000, "Complaints module is not present in DOM").then(function() {
-            browser.wait(EC.visibilityOf(element(by.css(Objects.timetrackingPage.locators.complaintsModule))), 30000, "Complaints module is not visible").then(function () {
-                browser.executeScript('arguments[0].click()', complaintsModule).then(function () {
-                    browser.wait(EC.presenceOf(element(by.xpath(Objects.complaintPage.locators.complaintTitleLink))), 30000, "Complaint title is not present in DOM").then(function () {
-                        browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.complaintTitleLink))), 30000, "Complaint title is not visible");
-                    })
-
+        // browser.wait(EC.presenceOf(element(by.css(Objects.timetrackingPage.locators.complaintsModule))), 30000, "Complaints module is not present in DOM").then(function() {
+        browser.wait(EC.visibilityOf(element(by.css(Objects.timetrackingPage.locators.complaintsModule))), 30000, "Complaints module is not visible").then(function() {
+            browser.executeScript('arguments[0].click()', complaintsModule).then(function() {
+                browser.wait(EC.presenceOf(element(by.xpath(Objects.complaintPage.locators.complaintTitleLink))), 30000, "Complaint title is not present in DOM").then(function() {
+                    browser.wait(EC.visibilityOf(element(by.xpath(Objects.complaintPage.locators.complaintTitleLink))), 30000, "Complaint title is not visible");
                 })
-            });
+
+            })
+        });
         //});
         return this;
     }
@@ -1435,13 +1438,13 @@ var BasePage = function() {
     };
     this.waitForTasksTable = function() {
         browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.tasksTable))), 30000, "Tasks table is not present in DOM").then(function() {
-        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.tasksTable))), 30000, "Tasks table is not visible").then(function() {
-            refreshBtn.click().then(function () {
-                browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.taskTitle))), 30000, "After 30 second task is not shown in the task table").then(function () {
-                    refreshBtn.click();
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.tasksTable))), 30000, "Tasks table is not visible").then(function() {
+                refreshBtn.click().then(function() {
+                    browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.taskTitle))), 30000, "After 30 second task is not shown in the task table").then(function() {
+                        refreshBtn.click();
+                    });
                 });
             });
-        });
         });
         return this;
 
@@ -2347,8 +2350,6 @@ var BasePage = function() {
         var el = element(by.xpath(completexPath));
         return el.isPresent();
     }
-
-
 };
 
 module.exports = new BasePage();
