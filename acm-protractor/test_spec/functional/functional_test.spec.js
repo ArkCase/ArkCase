@@ -687,7 +687,7 @@ describe('case page tests', function() {
         casePage.moveToTab().clickDocViewNotesLink();
         casePage.addNote(Objects.casepage.data.note);
         expect(casePage.returnDocumentNoteName()).toEqual(Objects.casepage.data.note, "Note is not succcessfully saved in document viewer");
-         casePage.swithToMainTab();
+        casePage.swithToMainTab();
 
     });
 
@@ -898,7 +898,7 @@ describe('Complaints Tests ', function() {
         complaintPage.moveToTab().clickDocViewNotesLink();
         complaintPage.addNote(Objects.casepage.data.note);
         expect(complaintPage.returnDocumentNoteName()).toEqual(Objects.casepage.data.note, "Note is not succesfulluly added in document viewer in complaints");
-         complaintPage.swithToMainTab();
+        complaintPage.swithToMainTab();
     });
 
     using([{ priority: "High", prioritySaved: Objects.casepage.data.priorityHigh }, {
@@ -1612,8 +1612,7 @@ describe('Tasks tests ', function() {
 
         taskPage.clickModuleTasks();
         taskPage.clickAttachmentsLink().clickRootFolder();
-        utils.mouseMove
-ToRoot();
+        utils.mouseMoveToRoot();
         taskPage.clickNewFolder();
         taskPage.insertDocumentTitle(Objects.taskspage.data.documentTitleInput);
         taskPage.clickAttachmentTitle();
