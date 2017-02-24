@@ -2059,6 +2059,7 @@ describe('notification page test', function() {
             notificationPage.navigateToPage("Notifications");
             notificationPage.selectNotification(data.parentType)
             notificationPage.clicksortObjectType();
+            notificationPage.waitForSorting(data.expected);
             expect(notificationPage.returnObjectType()).toEqual(data.expected, "Object type is not correct in result table");
         });
 
