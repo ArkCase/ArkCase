@@ -6,6 +6,7 @@ var helpers = function helpers() {
     var uplaodPathDocx = home + '\\.arkcase\\seleniumTests\\filesForUpload\\ArkCaseTesting.docx';
     var uploadPathPdf = home + '\\.arkcase\\seleniumTests\\filesForUpload\\caseSummary.pdf';
     var uplaodPathXlsx = home + '\\.arkcase\\seleniumTests\\filesForUpload\\caseSummary.xlsx';
+    var uploadPathLogo = home + '\\.arkcase\\seleniumTests\\filesForUpload\\ArkCaseLogo.png';
     var Users = require('../json/Users.json');
 
     this.uploadPng = function() {
@@ -40,6 +41,16 @@ var helpers = function helpers() {
             browser.sleep(5000);
 
         },
+
+        this.uploadLogo = function() {
+
+            sleep(2000);
+            robot.typeStringDelayed(uploadPathLogo, 14000);
+            robot.keyTap("enter");
+            browser.sleep(5000);
+
+        },
+
         this.mouseMoveToRoot = function() {
 
             robot.moveMouse(853, 508);
