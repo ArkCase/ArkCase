@@ -43,12 +43,20 @@ angular.module('complaints').controller('Complaints.ReferencesController', ['$sc
             $scope.gridOptions.data = references;
         };
 
-        $scope.onClickObjLink = function (event, rowEntity) {
+        $scope.onClickObjLink = function (event, rowEntity, targetNameColumnClicked) {
             event.preventDefault();
 
             var targetType = Util.goodMapValue(rowEntity, "targetType");
             var targetId = Util.goodMapValue(rowEntity, "targetId");
-            gridHelper.showObject(targetType, targetId);
+            var parentId = Util.goodMapValue(rowEntity, "parentId");
+            var parentType = Util.goodMapValue(rowEntity, "parentType");
+            var fileName = Util.goodMapValue(rowEntity, "targetName");
+
+            if(targetType == ObjectService.ObjectTypes.FILE && targetNameColumnClicked){
+                gridHelper.openObject(targetId, parentId, parentType, fileName);
+            }else{
+                gridHelper.showObject(targetType, targetId);
+            }
 
             if (ObjectService.ObjectTypes.COMPLAINT == targetType) {
                 $scope.$emit('request-show-object', {objectId: targetId, objectType: targetType});
@@ -74,13 +82,14 @@ angular.module('complaints').controller('Complaints.ReferencesController', ['$sc
                 size: 'lg',
                 resolve: {
                     $filter: function () {
-                    	var filter = $scope.modalConfig.searchFilter + "&-id:" + $scope.objectInfo.complaintId + "-COMPLAINT";
+                        var filter = $scope.modalConfig.searchFilter + "&-id:" + $scope.objectInfo.complaintId + "-" + ObjectService.ObjectTypes.COMPLAINT;
                         if ($scope.gridOptions.data.length > 0) {
                             for (var i = 0; i < $scope.gridOptions.data.length; i++) {
                                 var data = $scope.gridOptions.data[i];
                                 filter += "&-id:" + data.targetId + "-" + data.targetType;
                             }
                         }
+                        filter += "&-parent_ref_s:" + $scope.objectInfo.complaintId + "-" + ObjectService.ObjectTypes.COMPLAINT;
                         return filter.replace(/&/gi, '%26');
                     },
                     $config: function () {

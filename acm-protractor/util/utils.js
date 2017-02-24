@@ -13,6 +13,7 @@ var helpers = function helpers() {
             sleep(2000);
             robot.typeStringDelayed(uplaodPathPng, 14000);
             robot.keyTap("enter");
+            browser.sleep(5000);
         },
 
         this.uploadPdf = function() {
@@ -20,6 +21,7 @@ var helpers = function helpers() {
             sleep(2000);
             robot.typeStringDelayed(uploadPathPdf, 14000);
             robot.keyTap("enter");
+            browser.sleep(5000);
         },
 
         this.uploadXlsx = function() {
@@ -27,6 +29,7 @@ var helpers = function helpers() {
             sleep(2000);
             robot.typeStringDelayed(uplaodPathXlsx, 14000);
             robot.keyTap("enter");
+            browser.sleep(5000);
         },
 
         this.uploadDocx = function() {
@@ -34,6 +37,7 @@ var helpers = function helpers() {
             sleep(2000);
             robot.typeStringDelayed(uplaodPathDocx, 14000);
             robot.keyTap("enter");
+            browser.sleep(5000);
 
         },
         this.mouseMoveToRoot = function() {
