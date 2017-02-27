@@ -316,6 +316,14 @@ describe('case page tests', function() {
 
     });
 
+    it('Edit assignee', function() {
+
+        casePage.clickModuleComplaints();
+        casePage.waitForCasesPage();
+        casePage.editAssignee("Sally Supervisor");
+        expect(casePage.returnAssignee()).toEqual("Sally Supervisor", "Assignee is not updated");
+    });
+
     it('should create new case and add/delete alias', function() {
 
         casePage.clickNewButton().navigateToNewCasePage().switchToIframes().submitGeneralInformation(Objects.casepage.data.caseTitle, "Agricultural");
@@ -918,9 +926,11 @@ describe('Complaints Tests ', function() {
     it('Edit assignee', function() {
 
         complaintPage.clickModuleComplaints();
-        complaintPage.editAssignee("bthomas");
-        expect(complaintPage.returnAssignee()).toEqual("Bill Thomas", "Assignee is not updated");
+        complaintPage.waitForComplaintsPage();
+        complaintPage.editAssignee("Sally Supervisor");
+        expect(complaintPage.returnAssignee()).toEqual("Sally Supervisor", "Assignee is not updated");
     });
+
 
     it('should create new complaint and add person', function() {
 
@@ -1497,17 +1507,17 @@ describe('Tasks tests ', function() {
         expect(taskPage.returnTaskSubject()).toEqual(Objects.taskspage.data.taskSubjectInput, 'Task subject is not updated');
 
     });
-    it('should create new task and edit assignee from samuel to ann', function() {
+    it('should create new task and edit assignee from samuel to sally', function() {
 
         taskPage.clickModuleTasks();
-        taskPage.editAssignee("Ann Administrator");
-        expect(taskPage.returnAssignee()).toEqual(Objects.taskspage.data.administrator, 'The assignee is not updated');
+        taskPage.editAssignee("Sally Supervisor");
+        expect(taskPage.returnAssignee()).toEqual(Objects.basepage.data.sally, 'The assignee is not updated');
     });
     it('should create new task change assignee and verify is button complete and delete are not displayed', function() {
 
         taskPage.clickModuleTasks();
-        taskPage.editAssignee("Ann Administrator");
-        expect(taskPage.returnAssignee()).toEqual(Objects.taskspage.data.administrator, 'The assignee is not updated');
+        taskPage.editAssignee("Sally Supervisor");
+        expect(taskPage.returnAssignee()).toEqual(Objects.basepage.data.sally, 'The assignee is not updated');
         expect(taskPage.completeButtonIsPresent()).toBe(false, 'Complete button should not be displyed');
         expect(taskPage.deleteButtonIsPresent()).toBe(false, 'Delete  button should not be displyed');
 
@@ -1827,6 +1837,7 @@ describe('Subscriptions page tests', function() {
             subscriptionPage.clickSubcriptionsModule();
             subscriptionPage.selectSubscription(data.parentType);
             subscriptionPage.clickParentTypeSort();
+            subscriptionPage.waitForSorting(data.expected);
             expect(subscriptionPage.returnResultParentType()).toEqual(data.expected, "result parent is not correct for " + data.parentType);
 
         });
