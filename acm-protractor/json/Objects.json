@@ -115,7 +115,8 @@
             "defaultCaseFileTitle": "Case File",
             "defaultCaseFileType": "Case File",
             "defaultCaseFileAuthor": "Samuel Supervisor",
-            "defaultCaseFileStatus": "ACTIVE"
+            "defaultCaseFileStatus": "ACTIVE",
+            "sally": "Sally Supervisor"
 
         }
 
