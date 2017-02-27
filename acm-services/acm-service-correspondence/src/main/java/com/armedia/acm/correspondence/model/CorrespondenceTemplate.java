@@ -14,9 +14,9 @@ public class CorrespondenceTemplate
 
     private boolean templateVersionActive;
     /**
-     * The display name for the template, by default set to the value of <code>documentType</code>.
+     * The label for the template, by default set to the value of <code>documentType</code>.
      */
-    private String displayName;
+    private String label;
 
     /**
      * The document type of the generated correspondence, e.g. &quot;Report of Investigation&quot;
@@ -80,20 +80,20 @@ public class CorrespondenceTemplate
     }
 
     /**
-     * @return the dislpayName
+     * @return the label
      */
-    public String getDisplayName()
+    public String getLabel()
     {
-        return displayName;
+        return label;
     }
 
     /**
-     * @param displayName
-     *            the dislpayName to set
+     * @param label
+     *            the label to set
      */
-    public void setDisplayName(String displayName)
+    public void setLabel(String label)
     {
-        this.displayName = displayName;
+        this.label = label;
     }
 
     public String getDocumentType()

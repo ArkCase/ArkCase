@@ -6,7 +6,6 @@ import static com.armedia.acm.correspondence.service.TemplateMapper.mapTemplateF
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplateConfiguration;
 import com.armedia.acm.services.config.model.AcmConfig;
-import com.armedia.acm.services.config.model.JsonConfig;
 import com.armedia.acm.spring.SpringContextHolder;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,10 +40,6 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
 
     private Resource correspondenceTemplatesConfiguration;
 
-    private Resource caseCorrespondenceForms;
-
-    private Resource complaintCorrespondenceForms;
-
     private Map<String, Map<String, CorrespondenceTemplate>> templates = new ConcurrentHashMap<>();
 
     private Pattern camelCase = Pattern.compile("[A-Za-z].*?(?=([A-Z]|\\.))");
@@ -67,24 +62,6 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
     public void setCorrespondenceTemplatesConfiguration(Resource correspondenceTemplatesConfiguration)
     {
         this.correspondenceTemplatesConfiguration = correspondenceTemplatesConfiguration;
-    }
-
-    /**
-     * @param caseCorrespondenceForms
-     *            the caseCorrespondenceForms to set
-     */
-    public void setCaseCorrespondenceForms(Resource caseCorrespondenceForms)
-    {
-        this.caseCorrespondenceForms = caseCorrespondenceForms;
-    }
-
-    /**
-     * @param complaintCorrespondenceForms
-     *            the complaintsCorrespondenceForms to set
-     */
-    public void setComplaintCorrespondenceForms(Resource complaintCorrespondenceForms)
-    {
-        this.complaintCorrespondenceForms = complaintCorrespondenceForms;
     }
 
     /*
@@ -150,6 +127,29 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
         return list;
     }
 
+    /**
+     * @param objectType
+     * @return the templates
+     */
+    List<CorrespondenceTemplate> getActivatedActiveVersionTemplatesByObjectType(String objectType)
+    {
+        List<CorrespondenceTemplate> list = new ArrayList<CorrespondenceTemplate>();
+
+        templates.values().stream().forEach(versionMap -> {
+            Optional<CorrespondenceTemplate> template = versionMap.values().stream().filter(ct -> ct.isTemplateVersionActive())
+                    .filter(ct -> ct.getObjectType().equals(objectType)).filter(ct -> ct.isActivated()).findFirst();
+            if (template.isPresent())
+            {
+                list.add(template.get());
+            }
+        });
+
+        return list;
+    }
+
+    /**
+     * @return the templates
+     */
     List<CorrespondenceTemplate> getAllTemplates()
     {
         List<CorrespondenceTemplate> list = new ArrayList<CorrespondenceTemplate>();
@@ -180,19 +180,13 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
         }
 
         updateConfiguration(getAllTemplates());
-        updateLabels(template, templateLabels -> {
-            Optional<TemplateLabel> labelHolder = templateLabels.stream()
-                    .filter(tl -> tl.getTemplate().equals(template.getTemplateFilename())).findAny();
-            if (labelHolder.isPresent())
-            {
-                TemplateLabel label = labelHolder.get();
-                label.setLabel(template.getDisplayName());
-                label.setActivated(template.isActivated());
-            } else
-            {
-                templateLabels.add(new TemplateLabel(template.getTemplateFilename(), template.getDocumentType(), template.isActivated()));
-            }
-        });
+        /*
+         * updateLabels(template, templateLabels -> { Optional<TemplateLabel> labelHolder = templateLabels.stream()
+         * .filter(tl -> tl.getTemplate().equals(template.getTemplateFilename())).findAny(); if
+         * (labelHolder.isPresent()) { TemplateLabel label = labelHolder.get(); label.setLabel(template.getLabel());
+         * label.setActivated(template.isActivated()); } else { templateLabels.add(new
+         * TemplateLabel(template.getTemplateFilename(), template.getDocumentType(), template.isActivated())); } });
+         */
 
         return Optional.of(template);
     }
@@ -214,14 +208,11 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
                 templates.remove(template.getTemplateId());
             }
             updateConfiguration(getAllTemplates());
-            updateLabels(template, templateLabels -> {
-                Optional<TemplateLabel> label = templateLabels.stream()
-                        .filter(tl -> tl.getTemplate().equals(template.getTemplateFilename())).findAny();
-                if (label.isPresent())
-                {
-                    templateLabels.remove(label.get());
-                }
-            });
+            /*
+             * updateLabels(template, templateLabels -> { Optional<TemplateLabel> label = templateLabels.stream()
+             * .filter(tl -> tl.getTemplate().equals(template.getTemplateFilename())).findAny(); if (label.isPresent())
+             * { templateLabels.remove(label.get()); } });
+             */
             return optTemplate;
         }
 
@@ -246,14 +237,11 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
                 templates.remove(template.getTemplateId());
             }
             updateConfiguration(getAllTemplates());
-            updateLabels(template, templateLabels -> {
-                Optional<TemplateLabel> label = templateLabels.stream()
-                        .filter(tl -> tl.getTemplate().equals(template.getTemplateFilename())).findAny();
-                if (label.isPresent())
-                {
-                    templateLabels.remove(label.get());
-                }
-            });
+            /*
+             * updateLabels(template, templateLabels -> { Optional<TemplateLabel> label = templateLabels.stream()
+             * .filter(tl -> tl.getTemplate().equals(template.getTemplateFilename())).findAny(); if (label.isPresent())
+             * { templateLabels.remove(label.get()); } });
+             */
             return optTemplate;
         }
 
@@ -376,7 +364,7 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
         List<String> matches = new LinkedList<>();
         while (matcher.find())
         {
-            matches.add((matcher.group()));
+            matches.add((matcher.group().trim()));
         }
         return matches.stream().collect(Collectors.joining(" "));
     }
@@ -397,87 +385,6 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
         File file = correspondenceTemplatesConfiguration.getFile();
         FileUtils.writeStringToFile(file, configurationsOutput);
 
-    }
-
-    @FunctionalInterface
-    private static interface LabelsUpdater
-    {
-        void updateLabels(List<TemplateLabel> templateLabels);
-    }
-
-    /**
-     * @param template
-     * @throws IOException
-     */
-    private void updateLabels(CorrespondenceTemplate template, LabelsUpdater updater) throws IOException
-    {
-        File file;
-        switch (template.getObjectType())
-        {
-        case "CASE_FILE":
-            file = caseCorrespondenceForms.getFile();
-            break;
-        case "COMPLAINT":
-            file = complaintCorrespondenceForms.getFile();
-            break;
-        default:
-            throw new IllegalArgumentException();
-        }
-        String resource = FileUtils.readFileToString(file);
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.enable(SerializationFeature.INDENT_OUTPUT);
-
-        List<TemplateLabel> templateLabels = mapper.readValue(resource, new TypeReference<List<TemplateLabel>>()
-        {
-        });
-
-        updater.updateLabels(templateLabels);
-
-        String configValueAsString = mapper.writeValueAsString(templateLabels);
-        FileUtils.writeStringToFile(file, configValueAsString);
-        updateConfig(template.getObjectType(), configValueAsString);
-    }
-
-    public void setConfigList(List<AcmConfig> configList)
-    {
-        this.configList = configList;
-    }
-
-    /**
-     * updates configList with for given queryType and value
-     *
-     * @param objectType
-     * @param configValue
-     */
-    private void updateConfig(String objectType, String configValue)
-    {
-        if (configList == null || configList.isEmpty())
-        {
-            // couldn't find case and complaints configs
-            return;
-        }
-        AcmConfig casesConfig = configList.stream().filter(config -> "caseCorrespondenceForms".equals(config.getConfigName())).findFirst()
-                .orElse(null);
-        AcmConfig complaintsConfig = configList.stream().filter(config -> "complaintCorrespondenceForms".equals(config.getConfigName()))
-                .findFirst().orElse(null);
-        switch (objectType)
-        {
-        case "CASE_FILE":
-            if (casesConfig instanceof JsonConfig)
-            {
-                ((JsonConfig) casesConfig).setJson(configValue);
-            }
-            break;
-        case "COMPLAINT":
-            if (complaintsConfig instanceof JsonConfig)
-            {
-                ((JsonConfig) complaintsConfig).setJson(configValue);
-            }
-            break;
-        default:
-            throw new IllegalArgumentException();
-        }
     }
 
     public Map<String, CorrespondenceTemplate> getVersionToTemplateMap(CorrespondenceTemplate correspondenceTemplate)

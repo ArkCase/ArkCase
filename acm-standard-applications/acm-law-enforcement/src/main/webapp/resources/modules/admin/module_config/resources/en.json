@@ -278,7 +278,7 @@
       "templates.grid": {
         "id": "ID",
         "title": "Title",
-        "displayName": "Display Name",
+        "label": "Display Name",
         "path": "Path",
         "created": "Created",
         "modified": "Modified",
@@ -302,7 +302,7 @@
       "templates.modal": {
         "objectTypes.label": "Object Types",
         "querySelect.label": "Query Select",
-        "displayName.label": "Display Name",
+        "label.label": "Display Name",
         "btnCancel.text": "Cancel",
         "btnOk.text": "Upload Template"
       },

@@ -182,6 +182,15 @@ public class CorrespondenceService
     }
 
     /**
+     * @param objectType
+     * @return
+     */
+    public List<CorrespondenceTemplate> getActivatedActiveVersionTemplatesByObjectType(String objectType)
+    {
+        return templateManager.getActivatedActiveVersionTemplatesByObjectType(objectType);
+    }
+
+    /**
      * @param templateId
      * @return
      */

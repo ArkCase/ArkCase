@@ -17,7 +17,7 @@ public class TemplateMapper
         template.setTemplateId(configuration.getTemplateId());
         template.setTemplateVersion(configuration.getTemplateVersion());
         template.setTemplateVersionActive(configuration.isTemplateVersionActive());
-        template.setDisplayName(configuration.getDisplayName());
+        template.setLabel(configuration.getLabel());
         template.setDocumentType(configuration.getDocumentType());
         template.setTemplateFilename(configuration.getTemplateFilename());
         template.setObjectType(configuration.getObjectType());
@@ -37,7 +37,7 @@ public class TemplateMapper
         configuration.setTemplateId(template.getTemplateId());
         configuration.setTemplateVersion(template.getTemplateVersion());
         configuration.setTemplateVersionActive(template.isTemplateVersionActive());
-        configuration.setDisplayName(template.getDisplayName());
+        configuration.setLabel(template.getLabel());
         configuration.setDocumentType(template.getDocumentType());
         configuration.setTemplateFilename(template.getTemplateFilename());
         configuration.setObjectType(template.getObjectType());
@@ -60,7 +60,7 @@ public class TemplateMapper
         toUpdate.setTemplateId(updateFrom.getTemplateId());
         toUpdate.setTemplateVersion(updateFrom.getTemplateVersion());
         toUpdate.setTemplateVersionActive(updateFrom.isTemplateVersionActive());
-        toUpdate.setDisplayName(updateFrom.getDisplayName());
+        toUpdate.setLabel(updateFrom.getLabel());
         toUpdate.setDocumentType(updateFrom.getDocumentType());
         toUpdate.setTemplateFilename(updateFrom.getTemplateFilename());
         toUpdate.setObjectType(updateFrom.getObjectType());

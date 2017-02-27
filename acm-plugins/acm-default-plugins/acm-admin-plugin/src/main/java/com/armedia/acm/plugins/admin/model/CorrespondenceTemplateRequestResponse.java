@@ -15,7 +15,7 @@ public class CorrespondenceTemplateRequestResponse
 
     private boolean templateVersionActive;
 
-    private String displayName;
+    private String label;
 
     private String documentType;
 
@@ -68,20 +68,20 @@ public class CorrespondenceTemplateRequestResponse
     }
 
     /**
-     * @return the dislpayName
+     * @return the label
      */
-    public String getDisplayName()
+    public String getLabel()
     {
-        return displayName;
+        return label;
     }
 
     /**
-     * @param displayName
-     *            the dislpayName to set
+     * @param label
+     *            the label to set
      */
-    public void setDisplayName(String displayName)
+    public void setLabel(String label)
     {
-        this.displayName = displayName;
+        this.label = label;
     }
 
     /**
