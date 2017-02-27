@@ -25,6 +25,7 @@ var LoginPage = function() {
         browser.ignoresynchronization = true;
         browser.executeScript('window.sessionStorage.clear();');
         browser.executeScript('window.localStorage.clear();');
+        browser.driver.executeScript('window.focus();')
         this.insertUserName(username);
         this.insertPassword(password);
         this.clickLogin();
