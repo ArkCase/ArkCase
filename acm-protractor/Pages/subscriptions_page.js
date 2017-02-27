@@ -45,11 +45,16 @@ var subscriptionPage = function() {
     this.clickParentTypeSort = function() {
         parentTypeSort.click();
     }
-    
+
     this.clikmodifiedBySort = function() {
         modifiedBySort.click();
 
     }
+
+    this.waitForSorting = function(type) {
+        browser.wait(EC.textToBePresentInElement((resultParentType), type), 10000, type + "Is not present in the table first row after sorting");
+    }
+
 
     this.returnModifiedByMonth = function() {
 
