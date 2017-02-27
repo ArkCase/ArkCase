@@ -3,11 +3,11 @@
 angular.module('tasks').controller('Tasks.ParentDocsController', ['$scope', '$stateParams', '$q', '$modal'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Task.InfoService', 'Helper.ObjectBrowserService'
     , 'Authentication', 'DocTreeService', 'PermissionsService', 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin'
-    , 'Case.InfoService', 'Complaint.InfoService', 'CostTracking.InfoService', 'TimeTracking.InfoService'
+    , 'Case.InfoService', 'Complaint.InfoService', 'CostTracking.InfoService', 'TimeTracking.InfoService', 'Admin.CMTemplatesService'
     , function ($scope, $stateParams, $q, $modal
         , Util, ConfigService, ObjectService, ObjectLookupService, TaskInfoService, HelperObjectBrowserService
         , Authentication, DocTreeService, PermissionsService, DocTreeExtWebDAV, DocTreeExtCheckin
-        , CaseInfoService, ComplaintInfoService, CostTrackingInfoService, TimeTrackingInfoService) {
+        , CaseInfoService, ComplaintInfoService, CostTrackingInfoService, TimeTrackingInfoService, CorrespondenceService) {
 
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -55,7 +55,8 @@ angular.module('tasks').controller('Tasks.ParentDocsController', ['$scope', '$st
                         function (complaintInfo) {
                             $scope.parentInfo = complaintInfo;
                         });
-                    promiseCorrespondenceForms = ObjectLookupService.getComplaintCorrespondenceForms();
+                    //promiseCorrespondenceForms = ObjectLookupService.getComplaintCorrespondenceForms();
+                    var promiseCorrespondenceForms = CorrespondenceService.getActivatedTemplatesData(ObjectService.ObjectTypes.COMPLAINT);
                     $scope.treeConfig.email.emailSubject = "Complaint $complaintNumber";
                     break;
                 case ObjectService.ObjectTypes.CASE_FILE:
@@ -63,7 +64,8 @@ angular.module('tasks').controller('Tasks.ParentDocsController', ['$scope', '$st
                         function (caseInfo) {
                             $scope.parentInfo = caseInfo;
                         });
-                    promiseCorrespondenceForms = ObjectLookupService.getCaseFileCorrespondenceForms();
+                    //promiseCorrespondenceForms = ObjectLookupService.getCaseFileCorrespondenceForms();
+                    var promiseCorrespondenceForms = CorrespondenceService.getActivatedTemplatesData(ObjectService.ObjectTypes.CASE_FILE);
                     $scope.treeConfig.email.emailSubject = "Case $caseNumber";
                     break;
                 case ObjectService.ObjectTypes.COSTSHEET:

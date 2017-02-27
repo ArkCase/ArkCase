@@ -52,6 +52,15 @@ public class CorrespondenceTemplateAPIController
                 .collect(Collectors.toList());
     }
 
+    @RequestMapping(value = "/templates/activated/{objectType}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<CorrespondenceTemplateRequestResponse> getActivatedActiveVersionTemplatesByObjectType(
+            @PathVariable(value = "objectType") String objectType)
+    {
+        return correspondenceService.getActivatedActiveVersionTemplatesByObjectType(objectType).stream()
+                .map(t -> mapTemplateToResponse(Optional.of(t))).collect(Collectors.toList());
+    }
+
     @RequestMapping(value = "/template/{templateId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public CorrespondenceTemplateRequestResponse getTemplate(@PathVariable(value = "templateId") String templateId)
@@ -150,7 +159,7 @@ public class CorrespondenceTemplateAPIController
         response.setTemplateId(template.getTemplateId());
         response.setTemplateVersion(template.getTemplateVersion());
         response.setTemplateVersionActive(template.isTemplateVersionActive());
-        response.setDisplayName(template.getDisplayName());
+        response.setLabel(template.getLabel());
         response.setDocumentType(template.getDocumentType());
         response.setTemplateFilename(template.getTemplateFilename());
         response.setObjectType(template.getObjectType());
@@ -174,7 +183,7 @@ public class CorrespondenceTemplateAPIController
         template.setTemplateId(request.getTemplateId());
         template.setTemplateVersion(request.getTemplateVersion());
         template.setTemplateVersionActive(request.isTemplateVersionActive());
-        template.setDisplayName(request.getDisplayName());
+        template.setLabel(request.getLabel());
         template.setDocumentType(request.getDocumentType());
         template.setTemplateFilename(request.getTemplateFilename());
         template.setObjectType(request.getObjectType());

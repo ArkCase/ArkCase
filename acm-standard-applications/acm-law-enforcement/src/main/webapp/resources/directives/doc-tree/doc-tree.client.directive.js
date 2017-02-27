@@ -1868,8 +1868,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                         item.data.uploadFile = true;
                                     }
                                 }
-                                else if (!Util.isEmpty(subTypes[i].template)) {
-                                    item.cmd = "template/" + subTypes[i].template;
+                                else if (!Util.isEmpty(subTypes[i].templateFilename)) {
+                                    item.cmd = "template/" + subTypes[i].templateFilename;
                                     item.data = {};
                                     item.data.label = subTypes[i].label;
                                 }

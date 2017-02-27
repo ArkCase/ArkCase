@@ -103,8 +103,8 @@
           "headerCellFilter": "translate"
         },
         {
-          "name": "displayName",
-          "displayName": "admin.correspondenceManagement.templates.grid.displayName",
+          "name": "label",
+          "displayName": "admin.correspondenceManagement.templates.grid.label",
           "visible": true,
           "headerCellFilter": "translate"
         },
@@ -168,8 +168,8 @@
           "headerCellFilter": "translate"
         },
         {
-          "name": "displayName",
-          "displayName": "admin.correspondenceManagement.templates.grid.displayName",
+          "name": "label",
+          "displayName": "admin.correspondenceManagement.templates.grid.label",
           "visible": true,
           "headerCellFilter": "translate"
         },

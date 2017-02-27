@@ -24,6 +24,7 @@ angular.module('admin').service('Admin.CMTemplatesService', ['$http', 'Upload',
             uploadTemplate: uploadTemplate,
             uploadTemplateWithTimestamp: uploadTemplateWithTimestamp,
             getTemplateData: getTemplateData,
+            getActivatedTemplatesData : getActivatedTemplatesData,
             getTemplateVersionData: getTemplateVersionData,
             saveTemplateData: saveTemplateData,
             deleteTemplate: deleteTemplate,
@@ -110,7 +111,7 @@ angular.module('admin').service('Admin.CMTemplatesService', ['$http', 'Upload',
          * @methodOf admin.service:Admin.CMTemplatesService
          *
          * @description
-         * Get query and mapped fields for template.
+         * Get data for template.
          *
          * @param {string} templateId Id of template
          * @param {string} fileName File name of template
@@ -130,7 +131,7 @@ angular.module('admin').service('Admin.CMTemplatesService', ['$http', 'Upload',
          * @methodOf admin.service:Admin.CMTemplatesService
          *
          * @description
-         * Get query and mapped fields for template.
+         * Get version data for template.
          *
          * @param {string} templateId Id of template
          *
@@ -142,6 +143,25 @@ angular.module('admin').service('Admin.CMTemplatesService', ['$http', 'Upload',
                 url: 'api/latest/plugin/admin/template/versions/' + templateId
             });
         };        
+
+        /**
+         * @ngdoc method
+         * @name getActivatedTemplatesData
+         * @methodOf admin.service:Admin.CMTemplatesService
+         *
+         * @description
+         * Get activated templates data.
+         *
+         * @param {string} objectType type of Object
+         *
+         * @returns {HttpPromise} Future info about widgets
+         */
+        function getActivatedTemplatesData(objectType) {
+            return $http({
+                method: "GET",
+                url: 'api/latest/plugin/admin/templates/activated/' + objectType
+            });
+        };
         
         /**
          * @ngdoc method
