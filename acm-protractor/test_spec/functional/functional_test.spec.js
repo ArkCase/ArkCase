@@ -1125,6 +1125,7 @@ describe('Complaints Tests ', function() {
 
     });
 
+
     it('Edit due date', function() {
 
         complaintPage.clickModuleComplaints();
@@ -2214,4 +2215,4 @@ describe('audit tests', function() {
 
     });
 
-});
+}); 
