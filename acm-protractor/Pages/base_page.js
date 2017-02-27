@@ -452,7 +452,7 @@ var BasePage = function() {
         }
         completexPath = xPathStart + type + "']" + xPathEnd;
         var el = element(by.xpath(completexPath));
-        
+
         browser.wait(EC.visibilityOf(element(by.xpath(completexPath))), 30000, "document is not successfully uploaded").then(function() {
             browser.wait(EC.invisibilityOf(element(by.css(Objects.basepage.locators.loadPending))), 30000, "document is still uploading").then(function() {
                 expect(el.getText()).toEqual(expectedValue, "Document table " + column + " value is not correct in the grid");
@@ -1610,7 +1610,7 @@ var BasePage = function() {
         var completexPath = xPathStr + link + "']";
         var el = element(by.xpath(completexPath));
         browser.wait(EC.presenceOf(element(by.xpath(completexPath))), 30000, "Link " + link + " is not present in DOM").then(function() {
-            browser.wait(EC.visibilityOf(element(by.xpath(completexPath))), 30000, "Link " + link + " is not visible").then(function () {
+            browser.wait(EC.visibilityOf(element(by.xpath(completexPath))), 30000, "Link " + link + " is not visible").then(function() {
                 browser.executeScript('arguments[0].click()', el);
             });
         });
@@ -1934,11 +1934,40 @@ var BasePage = function() {
     this.returnPriority = function() {
         return priorityLink.getText();
     };
+
+
+/*
     this.editAssignee = function(assignee) {
         assigneeLink.click().then(function() {
             browser.wait(EC.presenceOf(element(by.xpath(Objects.casepage.locators.assigneeDropDown))), 5000, "Assignee drop down is not present in DOM").then(function() {
                 assigneeDropDown.selectByText(assignee).then(function() {
                     assigneeBtn.click();
+                });
+            });
+        });
+        return this;
+    }
+*/
+    this.editAssignee = function(assignee) {
+
+        assigneeLink.click().then(function() {
+            browser.wait(EC.visibilityOf(element(by.model(Objects.basepage.locators.assigneeNameModelInput))), 30000, "Change assignee popup is not displayed").then(function() {
+                assigneeNameModelInput.click().then(function() {
+                    browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchForUserInput))), 10000, "Search for object input is not displayed").then(function() {
+                        searchForUserInput.sendKeys(assignee).then(function() {
+                            searchForUserBtn.click().then(function() {
+                                browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.searchedUserName))), 30000, "Searched object is not displayed").then(function() {
+                                    searchedUser.click().then(function() {
+                                        okBtn.click().then(function() {
+                                            browser.wait(EC.invisibilityOf(element(by.xpath(Objects.casepage.locators.searchForUserInput))), 30000, "Sarch object modal is still visible after clickiing the ok button").then(function() {
+                                                saveButton.click();
+                                            });
+                                        });
+                                    });
+                                });
+                            });
+                        });
+                    });
                 });
             });
         });
@@ -2336,15 +2365,15 @@ var BasePage = function() {
         });
     };
 
-    this.validatePageHeader = function(text, error){
-        browser.wait(EC.visibilityOf(element(by.id(Objects.userpage.locators.picture))), 30000, "Picture element is not visible on user profile page"). then(function () {
+    this.validatePageHeader = function(text, error) {
+        browser.wait(EC.visibilityOf(element(by.id(Objects.userpage.locators.picture))), 30000, "Picture element is not visible on user profile page").then(function() {
             browser.wait(EC.visibilityOf(element(by.xpath(Objects.userpage.locators.pageHeader))), 30000, "User page header is not visible").then(function() {
                 expect(pageHeader.getText()).toEqual(text, error);
             });
         })
     };
 
-    this.validateModulePresent = function (module) {
+    this.validateModulePresent = function(module) {
         xPathStr = ".//a[@title='";
         var completexPath = xPathStr + module + "']";
         var el = element(by.xpath(completexPath));
