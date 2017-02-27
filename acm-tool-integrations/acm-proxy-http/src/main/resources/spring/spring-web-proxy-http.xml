@@ -13,6 +13,8 @@
             <props>
                 <!-- TODO: parameterize the URLs -->
                 <prop key="targetUri">https://acm-arkcase/</prop>
+                <prop key="http.protocol.handle-redirects">true</prop>
+                <prop key="preserveCookies">true</prop>
             </props>
         </property>
     </bean>
@@ -24,6 +26,8 @@
             <props>
                 <!-- TODO: parameterize the URLs -->
                 <prop key="targetUri">https://acm-arkcase/</prop>
+                <prop key="http.protocol.handle-redirects">true</prop>
+                <prop key="preserveCookies">true</prop>
             </props>
         </property>
     </bean>
