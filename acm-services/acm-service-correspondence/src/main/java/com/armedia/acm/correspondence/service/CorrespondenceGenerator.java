@@ -7,6 +7,7 @@ import com.armedia.acm.correspondence.utils.PoiWordGenerator;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 
+import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
@@ -125,7 +126,7 @@ public class CorrespondenceGenerator
             String columnValue = value == null ? null : value.toString();
 
             // Remove all HTML elements
-            columnValue = columnValue.replaceAll("\\<.*?>","");
+            columnValue = Jsoup.parse(columnValue).text();
 
             retval.put(template.getTemplateSubstitutionVariables().get(key), columnValue);
         }
