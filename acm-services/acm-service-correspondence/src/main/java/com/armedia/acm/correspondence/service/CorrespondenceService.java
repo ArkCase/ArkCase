@@ -2,6 +2,7 @@ package com.armedia.acm.correspondence.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
 import com.armedia.acm.correspondence.model.CorrespondenceQuery;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
 import com.armedia.acm.correspondence.model.QueryType;
@@ -31,6 +32,7 @@ public class CorrespondenceService
     private CorrespondenceEventPublisher eventPublisher;
 
     private CorrespondenceTemplateManager templateManager;
+    private CorrespondenceMergeFieldManager mergeFieldManager;
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -250,6 +252,21 @@ public class CorrespondenceService
         return templateManager.deleteTemplateByIdAndVersion(templateId, templateVersion);
     }
 
+    public List<CorrespondenceMergeField> getActiveVersionMergeFields() throws IOException
+    {
+        return mergeFieldManager.getActiveVersionMergeFields();
+    }
+
+    public List<CorrespondenceMergeField> getMergeFieldsByType(String objectType) throws IOException
+    {
+        return mergeFieldManager.getActiveVersionMergeFieldsByType(objectType);
+    }
+
+    public String getActiveMergingVersion() throws IOException
+    {
+        return mergeFieldManager.getActiveMergingVersion();
+    }
+
     /**
      * @param mapRequestToTemplate
      * @throws IOException
@@ -296,6 +313,15 @@ public class CorrespondenceService
     public void setTemplateManager(CorrespondenceTemplateManager templateManager)
     {
         this.templateManager = templateManager;
+    }
+
+    /**
+     * @param mergeFieldManager
+     *            the mergeFieldManager to set
+     */
+    public void setMergeFieldManager(CorrespondenceMergeFieldManager mergeFieldManager)
+    {
+        this.mergeFieldManager = mergeFieldManager;
     }
 
 }

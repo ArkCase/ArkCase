@@ -1,11 +1,10 @@
 package com.armedia.acm.correspondence.service;
 
-import static com.armedia.acm.correspondence.service.TemplateMapper.mapConfigurationFromTemplate;
-import static com.armedia.acm.correspondence.service.TemplateMapper.mapTemplateFromConfiguration;
+import static com.armedia.acm.correspondence.service.CorrespondenceMapper.mapConfigurationFromTemplate;
+import static com.armedia.acm.correspondence.service.CorrespondenceMapper.mapTemplateFromConfiguration;
 
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplateConfiguration;
-import com.armedia.acm.services.config.model.AcmConfig;
 import com.armedia.acm.spring.SpringContextHolder;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,8 +42,6 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
     private Map<String, Map<String, CorrespondenceTemplate>> templates = new ConcurrentHashMap<>();
 
     private Pattern camelCase = Pattern.compile("[A-Za-z].*?(?=([A-Z]|\\.))");
-
-    private List<AcmConfig> configList;
 
     /**
      * @param springContextHolder

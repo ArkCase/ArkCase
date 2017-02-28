@@ -88,8 +88,35 @@
       ]
     },
     {
+      "id": "correspondenceManagementMergeFields",
+      "title": "Correspondence Management Merge Fields grid",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": false,
+      "columnDefs": [
+        {
+          "name": "fieldId",
+          "displayName": "admin.correspondenceManagement.mergefields.grid.fieldId",
+          "visible": true,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "fieldValue",
+          "displayName": "admin.correspondenceManagement.mergefields.grid.fieldValue",
+          "visible": true,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "fieldDescription",
+          "displayName": "admin.correspondenceManagement.mergefields.grid.fieldDescription",
+          "visible": true,
+          "headerCellFilter": "translate"
+        }
+      ]
+    },
+    {
       "id": "correspondenceManagementTemplates",
-      "title": "Correspondance Management Templates grid",
+      "title": "Correspondence Management Templates grid",
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
@@ -595,7 +622,8 @@
       "expanded": "true",
       "children": [
         {
-          "title": "admin.correspondenceManagement.fieldsConfiguration"
+          "title": "admin.correspondenceManagement.mergefields",
+          "templateName": "cm.mergefields"
         },
         {
           "title": "admin.correspondenceManagement.templates",
