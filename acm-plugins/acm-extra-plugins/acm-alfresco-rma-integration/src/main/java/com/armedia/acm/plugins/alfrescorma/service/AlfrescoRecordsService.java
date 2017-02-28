@@ -101,7 +101,7 @@ public class AlfrescoRecordsService implements InitializingBean
 
             writeRecordMetadata(receiveDate, originatorOrg, cmisObjectId, originator);
 
-            Folder categoryFolder = findFolder(container.getObjectType());
+            Folder categoryFolder = findFolder(container.getContainerObjectType());
 
             String recordFolderId = createOrFindRecordFolder(recordFolderName, categoryFolder);
 
