@@ -238,6 +238,8 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
             Map<String, Object> processVariables = createProcessVariables(caseFile);
             processVariables.put("NEW_QUEUE_NAME", onEnterModel.getBusinessObjectNewQueueName());
             processVariables.put("NEW_OBJECT_STATUS", onEnterModel.getBusinessObjectNewStatus());
+            processVariables.put("ASSIGNEES", onEnterModel.getTaskAssignees());
+            processVariables.put("TASK_NAME", onEnterModel.getTaskName());
             getStartBusinessProcessService().startBusinessProcess(enterProcessName, processVariables);
             getSaveCaseFileBusinessRule().applyRules(caseFile);
         }

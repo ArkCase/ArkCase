@@ -2,6 +2,8 @@ package com.armedia.acm.plugins.businessprocess.model;
 
 import com.armedia.acm.services.pipeline.AbstractPipelineContext;
 
+import java.util.List;
+
 public class OnEnterQueueModel<T, P extends AbstractPipelineContext>
 {
 
@@ -22,6 +24,18 @@ public class OnEnterQueueModel<T, P extends AbstractPipelineContext>
      * Activiti business process that can be used for many such queue workflows.
      */
     private String businessObjectNewQueueName;
+
+    /**
+     * Sometimes we want to create a set of users tasks on entering a queue.  This property allows for a generic
+     * Activiti business process to create a set of tasks.
+     */
+    private List<String> taskAssignees;
+
+    /**
+     * Sometimes we want to create a set of users tasks on entering a queue.  This property allows for a generic
+     * Activiti business process to create a set of tasks.
+     */
+    private String taskName;
 
     public T getBusinessObject()
     {
@@ -71,5 +85,25 @@ public class OnEnterQueueModel<T, P extends AbstractPipelineContext>
     public void setBusinessObjectNewQueueName(String businessObjectNewQueueName)
     {
         this.businessObjectNewQueueName = businessObjectNewQueueName;
+    }
+
+    public List<String> getTaskAssignees()
+    {
+        return taskAssignees;
+    }
+
+    public void setTaskAssignees(List<String> taskAssignees)
+    {
+        this.taskAssignees = taskAssignees;
+    }
+
+    public String getTaskName()
+    {
+        return taskName;
+    }
+
+    public void setTaskName(String taskName)
+    {
+        this.taskName = taskName;
     }
 }
