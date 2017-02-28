@@ -26,6 +26,7 @@ angular.module('cases').controller('Cases.AssigneePickerController', ['$scope', 
 
             params.header = $translate.instant("cases.comp.assigneePickerModal.searchAssigneeHeader");
             params.filter = '"Object Type": USER' + '&fq="Group": ' + $scope.owningGroup;
+            params.extraFilter = '&fq="name": ';
             params.config = Util.goodMapValue($scope.config, "dialogUserPicker");
 
             var modalInstance = $modal.open({
@@ -34,6 +35,7 @@ angular.module('cases').controller('Cases.AssigneePickerController', ['$scope', 
                     $scope.modalInstance = $modalInstance;
                     $scope.header = params.header;
                     $scope.filter = params.filter;
+                    $scope.extraFilter = params.extraFilter;
                     $scope.config = params.config;
                 }],
                 animation: true,

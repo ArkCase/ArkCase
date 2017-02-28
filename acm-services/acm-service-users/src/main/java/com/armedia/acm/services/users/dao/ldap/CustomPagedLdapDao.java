@@ -5,7 +5,6 @@ import com.armedia.acm.services.users.model.LdapGroup;
 import com.armedia.acm.services.users.model.ldap.AcmGroupContextMapper;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.AcmUserGroupsContextMapper;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +14,6 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.AggregateDirContextProcessor;
 
 import javax.naming.directory.SearchControls;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,7 +43,7 @@ public class CustomPagedLdapDao implements SpringLdapDao
         userGroupsContextMapper.setUserIdAttributeName(syncConfig.getUserIdAttributeName());
         userGroupsContextMapper.setMailAttributeName(syncConfig.getMailAttributeName());
         String searchFilter = syncConfig.getAllUsersFilter();
-        String searchBase = syncConfig.getAllUsersSearchBase();
+        String searchBase = syncConfig.getUserSearchBase();
         String[] bases = searchBase.split("\\|");
         List<AcmUser> acmUsers = new ArrayList<>();
         for (String base : bases)
@@ -61,8 +59,7 @@ public class CustomPagedLdapDao implements SpringLdapDao
                 if (skipFirst)
                 {
                     acmUsers.addAll(found.subList(1, found.size()));
-                }
-                else
+                } else
                 {
                     acmUsers.addAll(found);
                 }
@@ -116,9 +113,9 @@ public class CustomPagedLdapDao implements SpringLdapDao
     {
         SearchControls searchControls = new SearchControls();
         searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-        searchControls.setReturningAttributes(new String[] {
+        searchControls.setReturningAttributes(new String[]{
                 "cn",
-                "memberOf" });
+                "memberOf"});
 
         AggregateDirContextProcessor sortedAndPaged = buildSortedAndPagesProcessor(config, config.getGroupsSortingAttribute());
         AcmGroupContextMapper acmGroupContextMapper = new AcmGroupContextMapper();
@@ -138,8 +135,7 @@ public class CustomPagedLdapDao implements SpringLdapDao
             if (skipFirst)
             {
                 acmGroups.addAll(found.subList(1, found.size()));
-            }
-            else
+            } else
             {
                 acmGroups.addAll(found);
             }

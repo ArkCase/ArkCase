@@ -44,10 +44,11 @@ var subscriptionPage = function() {
 
     this.clickParentTypeSort = function() {
         parentTypeSort.click();
-
     }
+    
     this.clikmodifiedBySort = function() {
         modifiedBySort.click();
+
     }
 
     this.returnModifiedByMonth = function() {
