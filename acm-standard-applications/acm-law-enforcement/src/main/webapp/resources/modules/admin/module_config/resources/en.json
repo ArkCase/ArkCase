@@ -268,7 +268,6 @@
     },
     "correspondenceManagement": {
       "title": "Correspondence Management",
-      "fieldsConfiguration": "Merge Fields Configuration",
       "templates": "Correspondence Templates",
       "templates.addNewTemplate": "Upload Template",
       "templates.addTemplate": "Upload",
@@ -308,6 +307,14 @@
       },
       "templates.version.modal": {
         "btnOk.text": "OK"
+      },
+      "mergefields": "Merge Fields Configuration",
+      "mergefields.saveMergeFields": "Save",
+      "mergefields.versionMergeFields": "Versions",
+      "mergefields.grid": {
+      "fieldId": "ID",
+      "fieldValue": "Value",
+      "fieldDescription": "Description"
       }
     },
     "forms.defaultValue": "Select Target",
