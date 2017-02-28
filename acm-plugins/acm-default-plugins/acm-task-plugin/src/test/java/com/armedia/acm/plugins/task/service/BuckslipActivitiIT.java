@@ -1,5 +1,8 @@
 package com.armedia.acm.plugins.task.service;
 
+import com.armedia.acm.plugins.task.listener.BuckslipTaskCompletedListener;
+import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
@@ -8,6 +11,10 @@ import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
+import org.easymock.Capture;
+import org.easymock.EasyMock;
+import org.easymock.EasyMockSupport;
+import org.easymock.IAnswer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,7 +35,7 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/spring/spring-library-task-activiti-test.xml"})
-public class BuckslipActivitiIT
+public class BuckslipActivitiIT extends EasyMockSupport
 {
     @Autowired
     private ProcessEngine pe;
@@ -45,7 +52,11 @@ public class BuckslipActivitiIT
     @Autowired
     private HistoryService hs;
 
+    @Autowired
+    private BuckslipTaskCompletedListener buckslipTaskCompletedListener;
+
     private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private UserDao userDaoMock;
 
     @Before
     public void setUp() throws Exception
@@ -54,6 +65,8 @@ public class BuckslipActivitiIT
         repo.createDeployment()
                 .addClasspathResource("activiti/ArkCase Buckslip Process.bpmn20.xml")
                 .deploy();
+        userDaoMock = createMock(UserDao.class);
+        buckslipTaskCompletedListener.setUserDao(userDaoMock);
     }
 
     @After
@@ -65,6 +78,16 @@ public class BuckslipActivitiIT
     @Test
     public void basicPath_noApproverChanges() throws Exception
     {
+        Capture<String> userIdCapture = EasyMock.newCapture();
+        EasyMock.expect(userDaoMock.findByUserId(EasyMock.capture(userIdCapture))).andAnswer(() ->
+        {
+            AcmUser user = new AcmUser();
+            user.setFullName(userIdCapture.getValue()+" lastName");
+            return user;
+        }).anyTimes();
+
+        replayAll();
+
         final String completedApprovalsKey = "pastApprovers";
         Long objectId = 500L;
         String objectType = "rockBand";
@@ -119,6 +142,8 @@ public class BuckslipActivitiIT
         // should not be a current process any more
         List<ProcessInstance> pis = rt.createProcessInstanceQuery().processInstanceId(pi.getId()).list();
         assertEquals(0, pis.size());
+
+
     }
 
     private void completeTask(Task task, String outcome)
@@ -130,6 +155,16 @@ public class BuckslipActivitiIT
     @Test
     public void removeAnApprover() throws Exception
     {
+        Capture<String> userIdCapture = EasyMock.newCapture();
+        EasyMock.expect(userDaoMock.findByUserId(EasyMock.capture(userIdCapture))).andAnswer(() ->
+        {
+            AcmUser user = new AcmUser();
+            user.setFullName(userIdCapture.getValue()+" lastName");
+            return user;
+        }).anyTimes();
+
+        replayAll();
+
         final String completedApprovalsKey = "pastApprovers";
         Long objectId = 500L;
         String objectType = "rockBand";
@@ -192,10 +227,19 @@ public class BuckslipActivitiIT
     }
 
 
-
     @Test
     public void addAnApprover() throws Exception
     {
+        Capture<String> userIdCapture = EasyMock.newCapture();
+        EasyMock.expect(userDaoMock.findByUserId(EasyMock.capture(userIdCapture))).andAnswer(() ->
+        {
+            AcmUser user = new AcmUser();
+            user.setFullName(userIdCapture.getValue()+" lastName");
+            return user;
+        }).anyTimes();
+
+        replayAll();
+
         final String completedApprovalsKey = "pastApprovers";
         Long objectId = 500L;
         String objectType = "rockBand";
