@@ -124,6 +124,9 @@ public class CorrespondenceGenerator
 
             String columnValue = value == null ? null : value.toString();
 
+            // Remove all HTML elements
+            columnValue = columnValue.replaceAll("\\<.*?>","");
+
             retval.put(template.getTemplateSubstitutionVariables().get(key), columnValue);
         }
 
