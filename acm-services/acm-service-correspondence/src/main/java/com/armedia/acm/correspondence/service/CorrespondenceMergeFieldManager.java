@@ -17,11 +17,13 @@ import org.apache.commons.io.FileUtils;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.io.Resource;
+import org.springframework.security.core.Authentication;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -100,6 +102,43 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
     {
         return mergeFieldsVersions.stream().filter(mergeFieldVersion -> mergeFieldVersion.isMergingActiveVersion())
                 .filter(mergeFieldVersion -> mergeFieldVersion.getMergingType().equals(objectType)).findFirst().get();
+    }
+
+    private Double getNewVersionByType(String objectType)
+    {
+        return mergeFieldsVersions.stream().filter(mergeFieldVersion -> mergeFieldVersion.getMergingType().equals(objectType))
+                .map(mergeFieldVersion -> mergeFieldVersion.getMergingVersion()).mapToDouble(version -> Double.parseDouble(version))
+                .reduce(0, (a, b) -> Double.max(a, b) + 1);
+    }
+
+    public boolean saveMergeFieldsData(List<CorrespondenceMergeField> newMergeFields, Authentication auth) throws IOException
+    {
+        String objectType = newMergeFields.get(0).getFieldType();
+        String newVersion = getNewVersionByType(objectType).toString();
+
+        getActiveMergingVersionByType(objectType).setMergingActiveVersion(false);
+
+        CorrespondenceMergeFieldVersion newMergeFieldsVersion = new CorrespondenceMergeFieldVersion();
+        newMergeFieldsVersion.setMergingVersion(newVersion);
+        newMergeFieldsVersion.setMergingActiveVersion(true);
+        newMergeFieldsVersion.setMergingType(objectType);
+        newMergeFieldsVersion.setModifier(auth.getName());
+        newMergeFieldsVersion.setModified(new Date());
+        mergeFieldsVersions.add(newMergeFieldsVersion);
+        updateMergeFieldVersionConfiguration(mergeFieldsVersions);
+
+        newMergeFields.stream().forEach(mergeField -> {
+            CorrespondenceMergeField newMergeField = new CorrespondenceMergeField();
+            newMergeField.setFieldVersion(newVersion);
+            newMergeField.setFieldId(mergeField.getFieldId());
+            newMergeField.setFieldDescription(mergeField.getFieldDescription());
+            newMergeField.setFieldType(mergeField.getFieldType());
+            newMergeField.setFieldValue(mergeField.getFieldValue());
+            mergeFields.add(newMergeField);
+        });
+        updateMergeFieldConfiguration(mergeFields);
+
+        return true;
     }
 
     /**

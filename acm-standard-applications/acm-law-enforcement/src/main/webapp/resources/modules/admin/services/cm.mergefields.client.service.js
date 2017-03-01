@@ -21,7 +21,8 @@ angular.module('admin').service('Admin.CMMergeFieldsService', ['$http',
             retrieveMergeFieldsList: retrieveMergeFieldsList,
             retrieveMergeFieldsVersionsList : retrieveMergeFieldsVersionsList,
             retrieveMergeFieldsVersionsByType : retrieveMergeFieldsVersionsByType,
-            retrieveActiveMergeFieldsByType : retrieveActiveMergeFieldsByType
+            retrieveActiveMergeFieldsByType : retrieveActiveMergeFieldsByType,
+            saveMergeFieldsData : saveMergeFieldsData
         });
 
         /**

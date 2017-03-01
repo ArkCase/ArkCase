@@ -2,9 +2,7 @@ package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
 import com.armedia.acm.correspondence.model.CorrespondenceMergeFieldVersion;
-import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
 import com.armedia.acm.correspondence.service.CorrespondenceService;
-import com.armedia.acm.plugins.admin.model.CorrespondenceTemplateRequestResponse;
 
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -16,9 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author sasko.tanaskoski
@@ -63,61 +59,9 @@ public class CorrespondenceMergeFieldAPIController
 
     @RequestMapping(value = "/mergefields", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public CorrespondenceTemplateRequestResponse saveMergeFieldsData(@RequestBody CorrespondenceMergeField[] request, Authentication auth)
-            throws IOException
+    public boolean saveMergeFieldsData(@RequestBody List<CorrespondenceMergeField> mergeFields, Authentication auth) throws IOException
     {
-        // return mapTemplateToResponse(correspondenceService.saveMergeFieldsData(request, auth));
-        return null;
-    }
-
-    /**
-     * @param templateHolder
-     * @return
-     */
-    private CorrespondenceTemplateRequestResponse mapTemplateToResponse(Optional<CorrespondenceTemplate> templateHolder)
-    {
-        CorrespondenceTemplate template = templateHolder.orElseThrow(CorrespondenceTemplateNotFoundException::new);
-
-        CorrespondenceTemplateRequestResponse response = new CorrespondenceTemplateRequestResponse();
-
-        response.setTemplateId(template.getTemplateId());
-        response.setTemplateVersion(template.getTemplateVersion());
-        response.setTemplateVersionActive(template.isTemplateVersionActive());
-        response.setLabel(template.getLabel());
-        response.setDocumentType(template.getDocumentType());
-        response.setTemplateFilename(template.getTemplateFilename());
-        response.setObjectType(template.getObjectType());
-        response.setDateFormatString(template.getDateFormatString());
-        response.setNumberFormatString(template.getNumberFormatString());
-        response.setActivated(template.isActivated());
-        response.setModifier(template.getModifier());
-        response.setModified(template.getModified());
-
-        return response;
-    }
-
-    /**
-     * @param request
-     * @return
-     */
-    private CorrespondenceTemplate mapRequestToTemplate(CorrespondenceTemplateRequestResponse request, Authentication auth)
-    {
-        CorrespondenceTemplate template = new CorrespondenceTemplate();
-
-        template.setTemplateId(request.getTemplateId());
-        template.setTemplateVersion(request.getTemplateVersion());
-        template.setTemplateVersionActive(request.isTemplateVersionActive());
-        template.setLabel(request.getLabel());
-        template.setDocumentType(request.getDocumentType());
-        template.setTemplateFilename(request.getTemplateFilename());
-        template.setObjectType(request.getObjectType());
-        template.setDateFormatString(request.getDateFormatString());
-        template.setNumberFormatString(request.getNumberFormatString());
-        template.setActivated(request.isActivated());
-        template.setModifier(auth.getName());
-        template.setModified(new Date());
-
-        return template;
+        return correspondenceService.saveMergeFieldsData(mergeFields, auth);
     }
 
     /**
