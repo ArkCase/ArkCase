@@ -112,6 +112,43 @@
           "visible": true,
           "headerCellFilter": "translate"
         }
+      ],
+      "objectTypes": [
+        {
+          "name": "Case File",
+          "id": "CASE_FILE"
+        },
+        {
+          "name": "Complaint",
+          "id": "COMPLAINT"
+        }
+      ]
+    },
+    {
+      "id": "correspondenceManagementMergeFieldsVersions",
+      "title": "Correspondence Management Merge Fields version grid",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": false,
+      "columnDefs": [
+        {
+          "name": "mergingVersion",
+          "displayName": "admin.correspondenceManagement.mergefields.version.grid.mergingVersion",
+          "visible": true,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "modified",
+          "displayName": "admin.correspondenceManagement.mergefields.version.grid.modified",
+          "visible": true,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "modifier",
+          "displayName": "admin.correspondenceManagement.mergefields.version.grid.modifier",
+          "visible": true,
+          "headerCellFilter": "translate"
+        }
       ]
     },
     {
