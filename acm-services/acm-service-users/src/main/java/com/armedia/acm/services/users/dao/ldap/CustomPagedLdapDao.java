@@ -64,7 +64,10 @@ public class CustomPagedLdapDao implements SpringLdapDao
                     acmUsers.addAll(found);
                 }
 
-                log.debug("Users found: {}", found.size());
+
+                String usersFound = found.stream().map(u -> u.getDistinguishedName()).collect(Collectors.joining("\n"));
+
+                log.debug("Users found: {}. DNs: {}", found.size(), usersFound);
 
                 searchUsers = syncConfig.getSyncPageSize() == found.size();
                 if (searchUsers)
