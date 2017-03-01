@@ -28,14 +28,13 @@ public class AuthenticationTokenService
     {
         String key = UUID.randomUUID().toString();
         getAuthenticationTokenCache().put(key, auth);
-        storeTokenForAuthenticationPerSession(auth);
+        storeTokenForAuthenticationPerSession(key);
         return key;
     }
 
-    public void storeTokenForAuthenticationPerSession(Authentication authentication)
+    public void storeTokenForAuthenticationPerSession(String token)
     {
         String sessionId = RequestContextHolder.currentRequestAttributes().getSessionId();
-        String token = getTokenForAuthentication(authentication);
         Cache.ValueWrapper valueWrapper = getAuthenticationTokenCache().get(sessionId);
         Set<String> tokens;
         if (valueWrapper != null)
