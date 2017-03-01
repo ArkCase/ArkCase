@@ -38,6 +38,7 @@ angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$m
                     $scope.selectedRows = $scope.gridApi.selection.getSelectedRows();
                     if ($scope.selectedRows.length > 0) {
                         $scope.template.objectType = $scope.selectedRows[0].objectType;
+                        $scope.template.label = $scope.selectedRows[0].label;
                     }
 
                     $scope.upload = function upload(files) {
