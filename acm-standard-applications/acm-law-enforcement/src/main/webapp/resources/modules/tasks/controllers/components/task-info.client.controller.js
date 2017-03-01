@@ -228,9 +228,7 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             $scope.assignee = ObjectModelService.getAssignee($scope.objectInfo);
 
             var owningGroupParticipantType = 'owning group';
-            if ($scope.owningGroup == 'Unknown') {
-                $scope.owningGroup = 'Unknown';
-            }
+            $scope.owningGroup = 'Unknown';
 
             // If when creating a new Task a Group Task is created check the candidateGroups array for the Owning Group 
             if ($scope.objectInfo.candidateGroups.length > 0) {
