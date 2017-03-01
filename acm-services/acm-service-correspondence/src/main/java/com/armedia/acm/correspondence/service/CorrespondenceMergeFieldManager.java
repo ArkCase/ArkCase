@@ -74,22 +74,32 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
         }
     }
 
-    public List<CorrespondenceMergeField> getActiveVersionMergeFields()
+    public List<CorrespondenceMergeField> getMergeFields()
     {
-        return mergeFields.stream().filter(mergeField -> mergeField.getFieldVersion().equals(getActiveMergingVersion()))
-                .collect(Collectors.toList());
+        return mergeFields;
+    }
+
+    public List<CorrespondenceMergeFieldVersion> getMergeFieldVersions()
+    {
+        return mergeFieldsVersions;
+    }
+
+    public List<CorrespondenceMergeFieldVersion> getMergeFieldVersionsByType(String objectType)
+    {
+        return mergeFieldsVersions.stream().filter(version -> version.getMergingType().equals(objectType)).collect(Collectors.toList());
     }
 
     public List<CorrespondenceMergeField> getActiveVersionMergeFieldsByType(String objectType)
     {
-        return mergeFields.stream().filter(mergeField -> mergeField.getFieldVersion().equals(getActiveMergingVersion()))
+        return mergeFields.stream()
+                .filter(mergeField -> mergeField.getFieldVersion().equals(getActiveMergingVersionByType(objectType).getMergingVersion()))
                 .filter(mergeField -> mergeField.getFieldType().equals(objectType)).collect(Collectors.toList());
     }
 
-    public String getActiveMergingVersion()
+    public CorrespondenceMergeFieldVersion getActiveMergingVersionByType(String objectType)
     {
         return mergeFieldsVersions.stream().filter(mergeFieldVersion -> mergeFieldVersion.isMergingActiveVersion())
-                .map(version -> version.getMergingVersion()).findFirst().get();
+                .filter(mergeFieldVersion -> mergeFieldVersion.getMergingType().equals(objectType)).findFirst().get();
     }
 
     /**

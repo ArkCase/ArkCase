@@ -3,6 +3,7 @@ package com.armedia.acm.correspondence.service;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
+import com.armedia.acm.correspondence.model.CorrespondenceMergeFieldVersion;
 import com.armedia.acm.correspondence.model.CorrespondenceQuery;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
 import com.armedia.acm.correspondence.model.QueryType;
@@ -252,9 +253,24 @@ public class CorrespondenceService
         return templateManager.deleteTemplateByIdAndVersion(templateId, templateVersion);
     }
 
-    public List<CorrespondenceMergeField> getActiveVersionMergeFields() throws IOException
+    public List<CorrespondenceMergeField> getMergeFields()
     {
-        return mergeFieldManager.getActiveVersionMergeFields();
+        return mergeFieldManager.getMergeFields();
+    }
+
+    public List<CorrespondenceMergeFieldVersion> getMergeFieldVersions()
+    {
+        return mergeFieldManager.getMergeFieldVersions();
+    }
+
+    public List<CorrespondenceMergeFieldVersion> getMergeFieldVersionsByType(String objectType)
+    {
+        return mergeFieldManager.getMergeFieldVersionsByType(objectType);
+    }
+
+    public List<CorrespondenceMergeField> getActiveVersionMergeFieldsByType(String objectType) throws IOException
+    {
+        return mergeFieldManager.getActiveVersionMergeFieldsByType(objectType);
     }
 
     public List<CorrespondenceMergeField> getMergeFieldsByType(String objectType) throws IOException
@@ -262,9 +278,9 @@ public class CorrespondenceService
         return mergeFieldManager.getActiveVersionMergeFieldsByType(objectType);
     }
 
-    public String getActiveMergingVersion() throws IOException
+    public CorrespondenceMergeFieldVersion getActiveMergingVersion(String objectType) throws IOException
     {
-        return mergeFieldManager.getActiveMergingVersion();
+        return mergeFieldManager.getActiveMergingVersionByType(objectType);
     }
 
     /**

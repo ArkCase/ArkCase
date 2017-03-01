@@ -18,7 +18,10 @@
 angular.module('admin').service('Admin.CMMergeFieldsService', ['$http',
     function ($http) {
         return ({
-            retrieveMergeFieldsList: retrieveMergeFieldsList
+            retrieveMergeFieldsList: retrieveMergeFieldsList,
+            retrieveMergeFieldsVersionsList : retrieveMergeFieldsVersionsList,
+            retrieveMergeFieldsVersionsByType : retrieveMergeFieldsVersionsByType,
+            retrieveActiveMergeFieldsByType : retrieveActiveMergeFieldsByType
         });
 
         /**
@@ -34,9 +37,71 @@ angular.module('admin').service('Admin.CMMergeFieldsService', ['$http',
         function retrieveMergeFieldsList() {
             return $http({
                 method: "GET",
-                url: "api/latest/plugin/admin/mergefields",
+                url: 'api/latest/plugin/admin/mergefields',
                 cache: false
             });
         };
 
+        /**
+         * @ngdoc method
+         * @name retrieveMergeFieldsVersionsList
+         * @methodOf admin.service:Admin.CMMergeFieldsService
+         *
+         * @description
+         * Performs retrieving correspondence management merge fields versions.
+         *
+         * @returns {HttpPromise} Future info about widgets
+         */
+        function retrieveMergeFieldsVersionsList() {
+            return $http({
+                method: "GET",
+                url: 'api/latest/plugin/admin/mergefields/versions',
+                cache: false
+            });
+        };
+
+        /**
+         * @ngdoc method
+         * @name retrieveMergeFieldsVersionsByType
+         * @methodOf admin.service:Admin.CMMergeFieldsService
+         *
+         * @description
+         * Performs retrieving correspondence management merge fields versions for selected type.
+         *
+         * @returns {HttpPromise} Future info about widgets
+         */
+        function retrieveMergeFieldsVersionsByType(objectType) {
+            return $http({
+                method: "GET",
+                url: 'api/latest/plugin/admin/mergefields/versions/' + objectType,
+                cache: false
+            });
+        };
+        
+        /**
+         * @ngdoc method
+         * @name retrieveActiveMergeFieldsByType
+         * @methodOf admin.service:Admin.CMMergeFieldsService
+         *
+         * @description
+         * Performs retrieving correspondence management active version merge fields for selected type.
+         *
+         * @returns {HttpPromise} Future info about widgets
+         */
+        function retrieveActiveMergeFieldsByType(objectType) {
+            return $http({
+                method: "GET",
+                url: 'api/latest/plugin/admin/mergefields/active/' + objectType,
+                cache: false
+            });
+        };
+        
+        function saveMergeFieldsData(mergeFieldsData) {
+            return $http({
+                method: "PUT",
+                url: 'api/latest/plugin/admin/mergefields',
+                data: mergeFieldsData
+            });
+        }
+        
     }]);
