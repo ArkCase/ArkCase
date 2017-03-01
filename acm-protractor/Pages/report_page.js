@@ -84,7 +84,7 @@ var ReportPage = function() {
         return this;
     };
     this.clickGenerateReport = function () {
-        generateButton.click();
+        browser.executeScript('arguments[0].click()', generateButton);
         return this;
     };
     this.runReport = function (report, state, datefrom, dateto) {
@@ -231,7 +231,11 @@ var ReportPage = function() {
         browser.wait(EC.presenceOf(element(by.xpath(Objects.reportPage.locators.CDCAddToExistingCaseValue))), 30000, "CDC Add to  exisiting case value is not present in DOM").then(function() {
             browser.wait(EC.visibilityOf(element(by.xpath(Objects.reportPage.locators.CDCAddToExistingCaseValue))), 30000, "CDC Add to existing case value is not visible").then(function() {
                 expect(CDCAddToExistingCaseValue.getText()).toEqual(ATECNumber, "Add to existing case number is not correct");
-                //expect(CDCNoFurtherActionValue.getText()).toEqual(NFANumber, "No further action number is not correct");
+                var text = CDCAddToExistingCaseValue.getText();
+                CDCAddToExistingCaseValue.getText().then(function (text) {
+                    console.log('text', text);
+                })
+                expect(CDCNoFurtherActionValue.getText()).toEqual(NFANumber, "No further action number is not correct");
                 expect(CDCOpenInvestigationValue.getText()).toEqual(OINumber, "Open investigation number is not correct");
                 expect(CDCReferExternalValue.getText()).toEqual(RENumber, "Refer external number is not correct ");
             });
