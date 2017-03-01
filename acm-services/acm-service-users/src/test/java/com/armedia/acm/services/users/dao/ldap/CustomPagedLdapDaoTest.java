@@ -251,6 +251,7 @@ public class CustomPagedLdapDaoTest extends EasyMockSupport
     {
         AcmUser user = new AcmUser();
         user.setUserId(userid);
+        user.setDistinguishedName("dn: " + userid);
         return user;
     }
 
