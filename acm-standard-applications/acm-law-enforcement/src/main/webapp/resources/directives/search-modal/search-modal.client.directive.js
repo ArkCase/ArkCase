@@ -74,7 +74,7 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 scope.searchPlaceholder = Util.goodValue(scope.searchPlaceholder, $translate.instant("common.directive.searchModal.edtPlaceholder"));
                 scope.showHeaderFooter = !Util.isEmpty(scope.modalInstance);
                 scope.disableSearchControls = (scope.disableSearch === 'true') ? true : false;
-                scope.findGroups = (scope.findGroups === 'true') ? true : false;
+                scope.findGroups = scope.findGroups === 'true';
                 if (scope.searchQuery) {
                     scope.searchQuery = scope.searchQuery;
                 } else {
