@@ -40,7 +40,8 @@
             </extensionElements>
         </exclusiveGateway>
         <userTask id="sid-1627C673-1EF1-452E-91FE-23D39A530835" name="Review ${documentType}"
-                  activiti:assignee="${currentApprover}">
+                  activiti:assignee="${currentApprover}"
+                  activiti:dueDate="${taskDueDateExpression}">
             <extensionElements>
                 <activiti:taskListener event="complete" delegateExpression="#{buckslipTaskCompletedListener}">
 

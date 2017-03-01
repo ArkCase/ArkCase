@@ -25,6 +25,7 @@ var ipAddressValue = element(by.xpath(Objects.auditPage.locators.ipAddressValue)
 var objectIdValue = element(by.xpath(Objects.auditPage.locators.objectIdValue));
 var objectTypeValue = element(by.xpath(Objects.auditPage.locators.objectTypeValue));
 var objectIdValueSecondRow = element(by.xpath(Objects.auditPage.locators.objectIdValueSecondRow));
+var resetModuleButtonText = element(by.xpath())
 
 var AuditPage = function() {
 
