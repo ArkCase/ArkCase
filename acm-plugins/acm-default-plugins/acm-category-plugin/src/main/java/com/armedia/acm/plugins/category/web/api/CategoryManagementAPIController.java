@@ -194,7 +194,7 @@ public class CategoryManagementAPIController
     @FunctionalInterface
     private static interface PayloadProducer<T>
     {
-        T producecPayload(JsonNode jsonSolrResponse) throws IOException, AcmObjectNotFoundException;
+        T producePayload(JsonNode jsonSolrResponse) throws IOException, AcmObjectNotFoundException;
     }
 
     private <T> SolrResponse<T> generateGetResponse(Authentication auth, String query, int start, int n, PayloadProducer<T> producer)
@@ -207,7 +207,7 @@ public class CategoryManagementAPIController
         SolrResponse<T> response = new SolrResponse<>();
         response.setNumFound(responseNode.get("numFound").asInt());
         response.setStart(responseNode.get("start").asInt());
-        response.setPayload(producer.producecPayload(jsonSolrResponse));
+        response.setPayload(producer.producePayload(jsonSolrResponse));
         return response;
     }
 
