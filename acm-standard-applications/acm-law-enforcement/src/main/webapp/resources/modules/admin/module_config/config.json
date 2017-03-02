@@ -141,6 +141,7 @@
           "name": "modified",
           "displayName": "admin.correspondenceManagement.mergefields.version.grid.modified",
           "visible": true,
+          "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
           "headerCellFilter": "translate"
         },
         {
