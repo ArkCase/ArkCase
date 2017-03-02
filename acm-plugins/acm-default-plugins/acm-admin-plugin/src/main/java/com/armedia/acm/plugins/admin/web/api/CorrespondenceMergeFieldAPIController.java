@@ -65,6 +65,14 @@ public class CorrespondenceMergeFieldAPIController
         return correspondenceService.saveMergeFieldsData(mergeFields, auth);
     }
 
+    @RequestMapping(value = "/mergefields/version/active", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public CorrespondenceMergeFieldVersion setActiveMergingVersion(@RequestBody CorrespondenceMergeFieldVersion mergeFieldVersion,
+            Authentication auth) throws IOException
+    {
+        return correspondenceService.setActiveMergingVersion(mergeFieldVersion, auth);
+    }
+
     /**
      * @param correspondenceService
      *            the correspondenceService to set
