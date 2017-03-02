@@ -289,6 +289,12 @@ public class CorrespondenceService
         return mergeFieldManager.saveMergeFieldsData(mergeFields, auth);
     }
 
+    public CorrespondenceMergeFieldVersion setActiveMergingVersion(CorrespondenceMergeFieldVersion mergeFieldVersion, Authentication auth)
+            throws IOException
+    {
+        return mergeFieldManager.setActiveMergingVersion(mergeFieldVersion, auth);
+    }
+
     /**
      * @param mapRequestToTemplate
      * @throws IOException

@@ -144,6 +144,20 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
         return result;
     }
 
+    public CorrespondenceMergeFieldVersion setActiveMergingVersion(CorrespondenceMergeFieldVersion mergeFieldVersion, Authentication auth)
+            throws IOException
+    {
+        String objectType = mergeFieldVersion.getMergingType();
+        getActiveMergingVersionByType(objectType).setMergingActiveVersion(false);
+        CorrespondenceMergeFieldVersion activeVersion = mergeFieldsVersions.stream()
+                .filter(version -> version.getMergingVersion().equals(mergeFieldVersion.getMergingVersion())).findFirst().get();
+        activeVersion.setModified(new Date());
+        activeVersion.setModifier(auth.getName());
+        activeVersion.setMergingActiveVersion(true);
+        updateMergeFieldVersionConfiguration(mergeFieldsVersions);
+        return activeVersion;
+    }
+
     /**
      * @param mergeFields
      * @throws IOException

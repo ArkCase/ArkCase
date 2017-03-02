@@ -319,7 +319,8 @@
       "mergefields.version.grid": {
         "mergingVersion": "Version",
         "modified": "Modified",
-        "modifier": "Modifier"
+        "modifier": "Modifier",
+        "mergingActiveVersion": "Active"
       },
       "mergefields.version.modal": {
         "btnLoadVersion.text": "Load Version",

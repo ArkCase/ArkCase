@@ -51,7 +51,7 @@ angular.module('admin').controller('Admin.CMMergeFieldsController', ['$scope', '
                         $scope.gridOptions = {
                                 enableColumnResizing: true,
                                 enableRowSelection: true,
-                                pinSelectionCheckbox: true,
+                                pinSelectionCheckbox: false,
                                 enableColumnMenus: false,
                                 enableRowHeaderSelection: false,
                                 multiSelect: false,
@@ -59,8 +59,21 @@ angular.module('admin').controller('Admin.CMMergeFieldsController', ['$scope', '
                                 columnDefs: colDefs,
                                 data: mergeFieldVersionsData.data
                         };
+                        
+                        $scope.gridOptions.onRegisterApi = function(gridApi) {
+                            $scope.modalGridApi = gridApi;
+                        };
+                        
                         $scope.onClickLoadVersion = function () {
-                           
+                            var selectedRow = $scope.modalGridApi.selection.getSelectedRows();
+                            if (selectedRow.length == 1) {
+                                correspondenceMergeFieldsService.setActiveMergingVersion(selectedRow[0]).then(function () {
+                                    messageService.succsessAction();
+                                    $modalInstance.close();
+                                }, function () {
+                                    messageService.errorAction();
+                                });
+                            }
                         };
                         $scope.onClickCancel = function () {
                             $modalInstance.dismiss('cancel');

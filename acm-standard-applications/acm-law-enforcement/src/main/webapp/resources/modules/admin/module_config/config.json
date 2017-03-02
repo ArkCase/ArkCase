@@ -148,6 +148,12 @@
           "displayName": "admin.correspondenceManagement.mergefields.version.grid.modifier",
           "visible": true,
           "headerCellFilter": "translate"
+        },
+        {
+          "name": "mergingActiveVersion",
+          "displayName": "admin.correspondenceManagement.mergefields.version.grid.mergingActiveVersion",
+          "visible": true,
+          "headerCellFilter": "translate"
         }
       ]
     },

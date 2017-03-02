@@ -22,7 +22,8 @@ angular.module('admin').service('Admin.CMMergeFieldsService', ['$http',
             retrieveMergeFieldsVersionsList : retrieveMergeFieldsVersionsList,
             retrieveMergeFieldsVersionsByType : retrieveMergeFieldsVersionsByType,
             retrieveActiveMergeFieldsByType : retrieveActiveMergeFieldsByType,
-            saveMergeFieldsData : saveMergeFieldsData
+            saveMergeFieldsData : saveMergeFieldsData,
+            setActiveMergingVersion : setActiveMergingVersion
         });
 
         /**
@@ -96,7 +97,18 @@ angular.module('admin').service('Admin.CMMergeFieldsService', ['$http',
                 cache: false
             });
         };
-        
+
+        /**
+         * @ngdoc method
+         * @name saveMergeFieldsData
+         * @methodOf admin.service:Admin.CMMergeFieldsService
+         *
+         * @description
+         * Saving query and mapped fields for merge fields.
+         *
+         * @param {object} mergefieldsData Contains merge field data
+         * @returns {HttpPromise} Future info about widgets
+         */        
         function saveMergeFieldsData(mergeFieldsData) {
             return $http({
                 method: "PUT",
@@ -104,5 +116,23 @@ angular.module('admin').service('Admin.CMMergeFieldsService', ['$http',
                 data: mergeFieldsData
             });
         }
-        
+
+        /**
+         * @ngdoc method
+         * @name setActiveMergingVersion
+         * @methodOf admin.service:Admin.CMMergeFieldsService
+         *
+         * @description
+         * Set selected merge field version as active.
+         *
+         * @param {object} mergeFieldVersionData Contains merge field version data
+         * @returns {HttpPromise} Future info about widgets
+         */        
+        function setActiveMergingVersion(mergeFieldVersionData) {
+            return $http({
+                method: "PUT",
+                url: 'api/latest/plugin/admin/mergefields/version/active',
+                data: mergeFieldVersionData
+            });
+        }
     }]);
