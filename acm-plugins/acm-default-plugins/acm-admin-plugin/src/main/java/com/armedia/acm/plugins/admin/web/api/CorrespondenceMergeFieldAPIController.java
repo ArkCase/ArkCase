@@ -59,7 +59,8 @@ public class CorrespondenceMergeFieldAPIController
 
     @RequestMapping(value = "/mergefields", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public boolean saveMergeFieldsData(@RequestBody List<CorrespondenceMergeField> mergeFields, Authentication auth) throws IOException
+    public List<CorrespondenceMergeField> saveMergeFieldsData(@RequestBody List<CorrespondenceMergeField> mergeFields, Authentication auth)
+            throws IOException
     {
         return correspondenceService.saveMergeFieldsData(mergeFields, auth);
     }
