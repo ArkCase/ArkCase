@@ -106,10 +106,9 @@ public class CorrespondenceGenerator
 
         getWordGenerator().generate(templateFile, correspondenceOutputStream, substitutions);
 
-        // String fileName = generateUniqueFilename(template);
+        String fileName = generateUniqueFilename(template);
         EcmFile retval = ecmFileService.upload(template.getDocumentType() + ".docx", template.getDocumentType(), CORRESPONDENCE_CATEGORY,
-                correspondenceInputStream, WORD_MIME_TYPE, template.getTemplateFilename(), user, targetFolderCmisId, parentObjectType,
-                parentObjectId);
+                correspondenceInputStream, WORD_MIME_TYPE, fileName, user, targetFolderCmisId, parentObjectType, parentObjectId);
 
         return retval;
     }
