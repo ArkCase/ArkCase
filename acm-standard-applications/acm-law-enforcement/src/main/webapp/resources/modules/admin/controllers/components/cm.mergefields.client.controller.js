@@ -57,13 +57,12 @@ angular.module('admin').controller('Admin.CMMergeFieldsController', ['$scope', '
                                 multiSelect: false,
                                 noUnselect: false,
                                 columnDefs: colDefs,
-                                data: mergeFieldVersionsData.data
+                                data: mergeFieldVersionsData.data,
+                                onRegisterApi: function (gridApi) {
+                                    $scope.modalGridApi = gridApi;
+                                }
                         };
-                        
-                        $scope.gridOptions.onRegisterApi = function(gridApi) {
-                            $scope.modalGridApi = gridApi;
-                        };
-                        
+                                                
                         $scope.onClickLoadVersion = function () {
                             var selectedRow = $scope.modalGridApi.selection.getSelectedRows();
                             if (selectedRow.length == 1) {

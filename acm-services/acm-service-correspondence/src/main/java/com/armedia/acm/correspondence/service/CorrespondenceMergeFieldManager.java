@@ -150,7 +150,8 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
         String objectType = mergeFieldVersion.getMergingType();
         getActiveMergingVersionByType(objectType).setMergingActiveVersion(false);
         CorrespondenceMergeFieldVersion activeVersion = mergeFieldsVersions.stream()
-                .filter(version -> version.getMergingVersion().equals(mergeFieldVersion.getMergingVersion())).findFirst().get();
+                .filter(version -> version.getMergingVersion().equals(mergeFieldVersion.getMergingVersion()))
+                .filter(version -> version.getMergingType().equals(objectType)).findFirst().get();
         activeVersion.setModified(new Date());
         activeVersion.setModifier(auth.getName());
         activeVersion.setMergingActiveVersion(true);
