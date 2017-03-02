@@ -2,6 +2,7 @@ package com.armedia.acm.correspondence.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
 import com.armedia.acm.correspondence.model.CorrespondenceQuery;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
 import com.armedia.acm.correspondence.utils.PoiWordGenerator;
@@ -23,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -45,6 +47,8 @@ public class CorrespondenceGenerator
     private String correspondenceFolderName;
 
     private SpringContextHolder springContextHolder;
+
+    private CorrespondenceService correspondenceService;
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -102,9 +106,10 @@ public class CorrespondenceGenerator
 
         getWordGenerator().generate(templateFile, correspondenceOutputStream, substitutions);
 
-        String fileName = generateUniqueFilename(template);
+        // String fileName = generateUniqueFilename(template);
         EcmFile retval = ecmFileService.upload(template.getDocumentType() + ".docx", template.getDocumentType(), CORRESPONDENCE_CATEGORY,
-                correspondenceInputStream, WORD_MIME_TYPE, fileName, user, targetFolderCmisId, parentObjectType, parentObjectId);
+                correspondenceInputStream, WORD_MIME_TYPE, template.getTemplateFilename(), user, targetFolderCmisId, parentObjectType,
+                parentObjectId);
 
         return retval;
     }
@@ -115,21 +120,20 @@ public class CorrespondenceGenerator
         return template.getDocumentType() + " " + sdf.format(new Date()) + ".docx";
     }
 
-    private Map<String, String> prepareSubstitutionMap(CorrespondenceTemplate template, Map<String, Object> queryResult)
+    private Map<String, String> prepareSubstitutionMap(CorrespondenceTemplate template, Map<String, Object> queryResult) throws IOException
     {
         Map<String, String> retval = new HashMap<>();
 
-        // TODO: Implement mapping mechanism
-        /*
-         * for (String key : template.getTemplateSubstitutionVariables().keySet()) { Object value =
-         * queryResult.get(key); value = formatValue(value, Date.class, new
-         * SimpleDateFormat(template.getDateFormatString())); value = formatValue(value, Number.class, new
-         * DecimalFormat(template.getNumberFormatString()));
-         * 
-         * String columnValue = value == null ? null : value.toString();
-         * 
-         * retval.put(template.getTemplateSubstitutionVariables().get(key), columnValue); }
-         */
+        List<CorrespondenceMergeField> mergeFields = getCorrespondenceService().getActiveVersionMergeFieldsByType(template.getObjectType());
+
+        for (CorrespondenceMergeField mergeField : mergeFields)
+        {
+            Object value = queryResult.get(mergeField.getFieldId());
+            value = formatValue(value, Date.class, new SimpleDateFormat(template.getDateFormatString()));
+            value = formatValue(value, Number.class, new DecimalFormat(template.getNumberFormatString()));
+            String columnValue = value == null ? null : value.toString();
+            retval.put(mergeField.getFieldValue(), columnValue);
+        }
 
         return retval;
     }
@@ -229,5 +233,15 @@ public class CorrespondenceGenerator
     public void setSpringContextHolder(SpringContextHolder springContextHolder)
     {
         this.springContextHolder = springContextHolder;
+    }
+
+    public CorrespondenceService getCorrespondenceService()
+    {
+        return correspondenceService;
+    }
+
+    public void setCorrespondenceService(CorrespondenceService correspondenceService)
+    {
+        this.correspondenceService = correspondenceService;
     }
 }

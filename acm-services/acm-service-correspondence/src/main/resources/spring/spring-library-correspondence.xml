@@ -30,6 +30,7 @@
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="correspondenceFolderName" value="${user.home}/.arkcase/acm/correspondenceTemplates"/>
         <property name="springContextHolder" ref="acmContextHolder"/>
+        <property name="correspondenceService" ref="correspondenceService"/>
     </bean>
 
     <bean id="correspondenceService" class="com.armedia.acm.correspondence.service.CorrespondenceService">
