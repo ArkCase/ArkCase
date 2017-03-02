@@ -74,7 +74,7 @@ public class GetNumberOfActiveCaseFilesByQueueAPIControllerTest extends EasyMock
         AcmQueue distribution = new AcmQueue(5L, "Distribution", 5);
         AcmQueue nonCompliance = new AcmQueue(6L, "Non-Compliance", 6);
 
-        String queuesQuery = "object_type_s:QUEUE&sort=queue_order_s ASC";
+        String queuesQuery = "object_type_s:QUEUE&sort=" + SearchConstants.PROPERTY_QUEUE_ORDER + " ASC";
         String facetQuery = "object_type_s:CASE_FILE AND " + SearchConstants.PROPERTY_QUEUE_NAME_S + ":*&rows=1&fl=id&wt=json&indent=true&facet=true&facet.field=" + SearchConstants.PROPERTY_QUEUE_NAME_S;
 
         InputStream queuesIputStream = getClass().getClassLoader().getResourceAsStream("SolrQueuesResponseGetNumberOfCaseFilesByQueueTest.json");
