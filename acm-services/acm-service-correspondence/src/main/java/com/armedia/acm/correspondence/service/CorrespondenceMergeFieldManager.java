@@ -118,13 +118,13 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
 
         getActiveMergingVersionByType(objectType).setMergingActiveVersion(false);
 
-        CorrespondenceMergeFieldVersion newMergeFieldsVersion = new CorrespondenceMergeFieldVersion();
-        newMergeFieldsVersion.setMergingVersion(newVersion);
-        newMergeFieldsVersion.setMergingActiveVersion(true);
-        newMergeFieldsVersion.setMergingType(objectType);
-        newMergeFieldsVersion.setModifier(auth.getName());
-        newMergeFieldsVersion.setModified(new Date());
-        mergeFieldsVersions.add(newMergeFieldsVersion);
+        CorrespondenceMergeFieldVersion newMergeFieldVersion = new CorrespondenceMergeFieldVersion();
+        newMergeFieldVersion.setMergingVersion(newVersion);
+        newMergeFieldVersion.setMergingActiveVersion(true);
+        newMergeFieldVersion.setMergingType(objectType);
+        newMergeFieldVersion.setModifier(auth.getName());
+        newMergeFieldVersion.setModified(new Date());
+        mergeFieldsVersions.add(newMergeFieldVersion);
         updateMergeFieldVersionConfiguration(mergeFieldsVersions);
 
         newMergeFields.stream().forEach(mergeField -> {
