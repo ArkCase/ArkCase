@@ -111,8 +111,10 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
                 .reduce(0, (a, b) -> Double.max(a, b) + 1);
     }
 
-    public boolean saveMergeFieldsData(List<CorrespondenceMergeField> newMergeFields, Authentication auth) throws IOException
+    public List<CorrespondenceMergeField> saveMergeFieldsData(List<CorrespondenceMergeField> newMergeFields, Authentication auth)
+            throws IOException
     {
+        List<CorrespondenceMergeField> result = new ArrayList<CorrespondenceMergeField>();
         String objectType = newMergeFields.get(0).getFieldType();
         String newVersion = getNewVersionByType(objectType).toString();
 
@@ -134,11 +136,12 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
             newMergeField.setFieldDescription(mergeField.getFieldDescription());
             newMergeField.setFieldType(mergeField.getFieldType());
             newMergeField.setFieldValue(mergeField.getFieldValue());
+            result.add(newMergeField);
             mergeFields.add(newMergeField);
         });
         updateMergeFieldConfiguration(mergeFields);
 
-        return true;
+        return result;
     }
 
     /**

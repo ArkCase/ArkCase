@@ -283,7 +283,8 @@ public class CorrespondenceService
         return mergeFieldManager.getActiveMergingVersionByType(objectType);
     }
 
-    public boolean saveMergeFieldsData(List<CorrespondenceMergeField> mergeFields, Authentication auth) throws IOException
+    public List<CorrespondenceMergeField> saveMergeFieldsData(List<CorrespondenceMergeField> mergeFields, Authentication auth)
+            throws IOException
     {
         return mergeFieldManager.saveMergeFieldsData(mergeFields, auth);
     }

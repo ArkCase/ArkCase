@@ -91,14 +91,6 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
                     templates.put(template.getTemplateId(), getVersionToTemplateMap(template));
                 }
             });
-            /*
-             * for (CorrespondenceTemplateConfiguration configuration : templateConfigurations) { CorrespondenceTemplate
-             * template = mapTemplateFromConfiguration(configuration); if
-             * (templates.containsKey(template.getTemplateId())) {
-             * templates.get(template.getTemplateId()).put(template.getTemplateVersion(), template); } else {
-             * templates.put(template.getTemplateId(), getVersionToTemplateMap(template)); } }
-             */
-
         } catch (IOException ioe)
         {
             throw new IllegalStateException(ioe);
@@ -170,21 +162,12 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
                 existing.setTemplateVersionActive(false);
                 existing.setActivated(false);
             }
-            // updateTemplateState(existing, template);
         } else
         {
             templates.put(template.getTemplateId(), getVersionToTemplateMap(template));
         }
 
         updateConfiguration(getAllTemplates());
-        /*
-         * updateLabels(template, templateLabels -> { Optional<TemplateLabel> labelHolder = templateLabels.stream()
-         * .filter(tl -> tl.getTemplate().equals(template.getTemplateFilename())).findAny(); if
-         * (labelHolder.isPresent()) { TemplateLabel label = labelHolder.get(); label.setLabel(template.getLabel());
-         * label.setActivated(template.isActivated()); } else { templateLabels.add(new
-         * TemplateLabel(template.getTemplateFilename(), template.getDocumentType(), template.isActivated())); } });
-         */
-
         return Optional.of(template);
     }
 
@@ -205,11 +188,6 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
                 templates.remove(template.getTemplateId());
             }
             updateConfiguration(getAllTemplates());
-            /*
-             * updateLabels(template, templateLabels -> { Optional<TemplateLabel> label = templateLabels.stream()
-             * .filter(tl -> tl.getTemplate().equals(template.getTemplateFilename())).findAny(); if (label.isPresent())
-             * { templateLabels.remove(label.get()); } });
-             */
             return optTemplate;
         }
 
@@ -234,11 +212,6 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
                 templates.remove(template.getTemplateId());
             }
             updateConfiguration(getAllTemplates());
-            /*
-             * updateLabels(template, templateLabels -> { Optional<TemplateLabel> label = templateLabels.stream()
-             * .filter(tl -> tl.getTemplate().equals(template.getTemplateFilename())).findAny(); if (label.isPresent())
-             * { templateLabels.remove(label.get()); } });
-             */
             return optTemplate;
         }
 
@@ -281,30 +254,6 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
         }
 
         return Optional.of(template);
-        /*
-         * CorrespondenceTemplate template = new CorrespondenceTemplate();
-         * 
-         * if (null == templateId || templateId.equals("0") || templateId.equals("undefined")) {
-         * template.setTemplateId(Integer .toString(templates.keySet().stream().mapToInt(id ->
-         * Integer.parseInt(id)).reduce(0, (a, b) -> Integer.max(a, b)) + 1)); template.setTemplateVersion("1.0");
-         * template.setTemplateVersionActive(true); template.setActivated(true);
-         * template.setTemplateFilename(templateFilename);
-         * template.setDocumentType(generateDocumentTypeFromFilename(templateFilename));
-         * template.setDateFormatString("MM/dd/yyyy"); template.setNumberFormatString("###,###,###"); } else {
-         * CorrespondenceTemplate existingTemplate = findActiveVersionTemplate(templateId);
-         * 
-         * template.setTemplateId(existingTemplate.getTemplateId());
-         * template.setTemplateVersion(Double.toString(templates.get(templateId).keySet().stream() .mapToDouble(key ->
-         * Double.parseDouble(key)).reduce(0, (a, b) -> Double.max(a, b) + 1)));
-         * template.setTemplateVersionActive(true); template.setActivated(true);
-         * template.setTemplateFilename(templateFilename);
-         * template.setDateFormatString(existingTemplate.getDateFormatString());
-         * template.setNumberFormatString(existingTemplate.getNumberFormatString());
-         * template.setDocumentType(existingTemplate.getDocumentType());
-         * template.setObjectType(existingTemplate.getObjectType());
-         * 
-         * } return template;
-         */
     }
 
     /**
