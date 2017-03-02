@@ -135,6 +135,7 @@
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="objectAssociationService" ref="objectAssociationService"/>
         <property name="objectAssociationEventPublisher" ref="objectAssociationEventPublisher"/>
+        <property name="acmParticipantDao" ref="acmParticipantDao"/>
     </bean>
 
     <bean id="acmApplicationTaskEventHandler" class="com.armedia.acm.plugins.task.service.impl.AcmApplicationTaskEventHandler">
