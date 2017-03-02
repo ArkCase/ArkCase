@@ -123,10 +123,8 @@ public class CorrespondenceGenerator
             value = formatValue(value, Date.class, new SimpleDateFormat(template.getDateFormatString()));
             value = formatValue(value, Number.class, new DecimalFormat(template.getNumberFormatString()));
 
-            String columnValue = value == null ? null : value.toString();
-
-            // Remove all HTML elements
-            columnValue = Jsoup.parse(columnValue).text();
+            // Remove all HTML elements if the value is not null
+            String columnValue = value == null ? null : Jsoup.parse(value.toString()).text();
 
             retval.put(template.getTemplateSubstitutionVariables().get(key), columnValue);
         }
