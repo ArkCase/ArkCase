@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('admin').controller('Admin.CMMergeFieldsController', ['$scope', '$modal', 'Admin.CMMergeFieldsService',
+angular.module('admin').controller('Admin.CMMergeFieldsController', ['$scope', '$rootScope', '$modal', 'Admin.CMMergeFieldsService',
     'Helper.UiGridService', 'MessageService', 'LookupService', 'Acm.StoreService',
-    function ($scope, $modal, correspondenceMergeFieldsService, HelperUiGridService, messageService, LookupService, Store) {
+    function ($scope, $rootScope, $modal, correspondenceMergeFieldsService, HelperUiGridService, messageService, LookupService, Store) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
@@ -38,6 +38,10 @@ angular.module('admin').controller('Admin.CMMergeFieldsController', ['$scope', '
             });
         }
         
+        $scope.$on('reloadMergeFieldGrid', function(){
+            ReloadGrid();
+        });
+        
         $scope.showVersion = function () {
             var mergeFieldVersionsPromise = correspondenceMergeFieldsService.retrieveMergeFieldsVersionsByType($scope.mergingType);
             var colDefs = $scope.correspondenceManagementMergeFieldsVersions.columnDefs;
@@ -68,6 +72,7 @@ angular.module('admin').controller('Admin.CMMergeFieldsController', ['$scope', '
                             if (selectedRow.length == 1) {
                                 correspondenceMergeFieldsService.setActiveMergingVersion(selectedRow[0]).then(function () {
                                     messageService.succsessAction();
+                                    $rootScope.$broadcast('reloadMergeFieldGrid');
                                     $modalInstance.close();
                                 }, function () {
                                     messageService.errorAction();
