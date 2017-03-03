@@ -104,13 +104,15 @@
           "name": "fieldValue",
           "displayName": "admin.correspondenceManagement.mergefields.grid.fieldValue",
           "visible": true,
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a href='#' editable-text='row.entity.fieldValue'>{{ row.entity.fieldValue}}</a>"
         },
         {
           "name": "fieldDescription",
           "displayName": "admin.correspondenceManagement.mergefields.grid.fieldDescription",
           "visible": true,
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a href='#' editable-text='row.entity.fieldDescription'>{{ row.entity.fieldDescription}}</a>"
         }
       ],
       "objectTypes": [
