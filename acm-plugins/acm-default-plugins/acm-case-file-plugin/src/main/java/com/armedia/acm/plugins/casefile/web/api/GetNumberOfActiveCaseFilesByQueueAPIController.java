@@ -32,7 +32,6 @@ public class GetNumberOfActiveCaseFilesByQueueAPIController
     private Logger LOG = LoggerFactory.getLogger(getClass());
 
     private ExecuteSolrQuery executeSolrQuery;
-    private SearchResults searchResults;
 
     /**
      * REST api for retrieving active case files by queue
@@ -46,10 +45,10 @@ public class GetNumberOfActiveCaseFilesByQueueAPIController
     {
         LOG.debug("Get number of active Case Files by queue.");
 
-        setSearchResults(new SearchResults());
+        SearchResults searchResults = new SearchResults();
 
-        List<Object> queues = getQueues(authentication);
-        List<Object> facet = getFacet(authentication);
+        List<Object> queues = getQueues(authentication, searchResults);
+        List<Object> facet = getFacet(authentication, searchResults);
 
         return getNumberOfActiveCaseFilesByQueue(queues, facet);
     }
@@ -65,7 +64,7 @@ public class GetNumberOfActiveCaseFilesByQueueAPIController
     private String getSolrQueuesResponse(Authentication authentication, int start, int n)
     {
         String solrResponse = null;
-        String query = "object_type_s:QUEUE&sort=queue_order_s ASC";
+        String query = "object_type_s:QUEUE&sort=" + SearchConstants.PROPERTY_QUEUE_ORDER + " ASC";
 
         try
         {
@@ -120,7 +119,7 @@ public class GetNumberOfActiveCaseFilesByQueueAPIController
      * @param authentication
      * @return
      */
-    private List<Object> getQueues(Authentication authentication)
+    private List<Object> getQueues(Authentication authentication, SearchResults searchResults)
     {
         final List<Object> queuesValues = new ArrayList<>();
 
@@ -134,11 +133,11 @@ public class GetNumberOfActiveCaseFilesByQueueAPIController
             if (solrResponse != null)
             {
                 // Get documents found
-                JSONArray docs = getSearchResults().getDocuments(solrResponse);
+                JSONArray docs = searchResults.getDocuments(solrResponse);
                 if (docs != null && docs.length() > 0)
                 {
                     start += n;
-                    queuesValues.addAll(getSearchResults().getListForField(docs, SearchConstants.PROPERTY_QUEUE_NAME_S));
+                    queuesValues.addAll(searchResults.getListForField(docs, SearchConstants.PROPERTY_QUEUE_NAME_S));
                 } else
                 {
                     // Skip looping if there is no more results
@@ -160,7 +159,7 @@ public class GetNumberOfActiveCaseFilesByQueueAPIController
      * @param authentication - authentication object
      * @return - list of facet results
      */
-    private List<Object> getFacet(Authentication authentication)
+    private List<Object> getFacet(Authentication authentication, SearchResults searchResults)
     {
         final List<Object> facetValues = new ArrayList<>();
 
@@ -169,11 +168,11 @@ public class GetNumberOfActiveCaseFilesByQueueAPIController
         if (solrFacetResponse != null)
         {
             // Get facet search values
-            JSONObject facetFields = getSearchResults().getFacetFields(solrFacetResponse);
+            JSONObject facetFields = searchResults.getFacetFields(solrFacetResponse);
             if (facetFields != null)
             {
                 // Add all results in the list
-                facetValues.addAll(getSearchResults().extractObjectList(facetFields, SearchConstants.PROPERTY_QUEUE_NAME_S));
+                facetValues.addAll(searchResults.extractObjectList(facetFields, SearchConstants.PROPERTY_QUEUE_NAME_S));
             }
         }
 
@@ -220,13 +219,4 @@ public class GetNumberOfActiveCaseFilesByQueueAPIController
         this.executeSolrQuery = executeSolrQuery;
     }
 
-    public SearchResults getSearchResults()
-    {
-        return searchResults;
-    }
-
-    public void setSearchResults(SearchResults searchResults)
-    {
-        this.searchResults = searchResults;
-    }
 }
