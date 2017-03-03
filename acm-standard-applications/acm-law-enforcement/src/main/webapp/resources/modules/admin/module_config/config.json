@@ -137,7 +137,8 @@
           "name": "mergingVersion",
           "displayName": "admin.correspondenceManagement.mergefields.version.grid.mergingVersion",
           "visible": true,
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "sort" : {"direction": "desc"}
         },
         {
           "name": "modified",
@@ -156,7 +157,8 @@
           "name": "mergingActiveVersion",
           "displayName": "admin.correspondenceManagement.mergefields.version.grid.mergingActiveVersion",
           "visible": true,
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div align='center'><span ng-if='!row.entity.mergingActiveVersion' class='label label-warning'>Deactivated</span><span ng-if='row.entity.mergingActiveVersion' class='label label-success'>Activated</span></div>'"
         }
       ]
     },
@@ -213,7 +215,7 @@
           "displayName": "admin.correspondenceManagement.templates.grid.activated",
           "visible": true,
           "headerCellFilter": "translate",
-          "cellTemplate": "<div align='center'><span ng-if='!row.entity.activated' class='label label-warning' ng-click='grid.appScope.activate(row.entity)'>Activate</span><span ng-if='row.entity.activated' class='label label-success' ng-click='grid.appScope.activate(row.entity)'>Deactivate</span></div>'"
+          "cellTemplate": "<div align='center'><span ng-if='!row.entity.activated' class='label label-warning' ng-click='grid.appScope.activate(row.entity)'>Deactivated</span><span ng-if='row.entity.activated' class='label label-success' ng-click='grid.appScope.activate(row.entity)'>Activated</span></div>'"
         }
       ],
       "objectTypes": [
@@ -238,7 +240,8 @@
           "name": "templateVersion",
           "displayName": "admin.correspondenceManagement.templates.grid.version",
           "visible": true,
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "sort" : {"direction": "desc"}
         },
         {
           "name": "label",
@@ -278,7 +281,7 @@
           "displayName": "admin.correspondenceManagement.templates.grid.activated",
           "visible": true,
           "headerCellFilter": "translate",
-          "cellTemplate": "<div align='center'><span ng-if='!row.entity.activated' class='label label-warning' ng-click='grid.appScope.activate(row.entity)'>Activate</span><span ng-if='row.entity.activated' class='label label-success' ng-click='grid.appScope.activate(row.entity)'>Deactivate</span></div>'"
+          "cellTemplate": "<div align='center'><span ng-if='!row.entity.activated' class='label label-warning' ng-click='grid.appScope.activate(row.entity)'>Deactivated</span><span ng-if='row.entity.activated' class='label label-success' ng-click='grid.appScope.activate(row.entity)'>Activated</span></div>'"
         }
       ]
     },
