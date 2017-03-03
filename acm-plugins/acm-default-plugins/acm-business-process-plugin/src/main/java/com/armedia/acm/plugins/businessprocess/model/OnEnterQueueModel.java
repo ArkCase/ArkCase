@@ -29,13 +29,15 @@ public class OnEnterQueueModel<T, P extends AbstractPipelineContext>
      * Sometimes we want to create a set of users tasks on entering a queue.  This property allows for a generic
      * Activiti business process to create a set of tasks.
      */
-    private List<String> taskAssignees;
+    private String taskAssignees;
 
     /**
      * Sometimes we want to create a set of users tasks on entering a queue.  This property allows for a generic
      * Activiti business process to create a set of tasks.
      */
     private String taskName;
+
+    private String taskOwningGroup;
 
     public T getBusinessObject()
     {
@@ -87,16 +89,6 @@ public class OnEnterQueueModel<T, P extends AbstractPipelineContext>
         this.businessObjectNewQueueName = businessObjectNewQueueName;
     }
 
-    public List<String> getTaskAssignees()
-    {
-        return taskAssignees;
-    }
-
-    public void setTaskAssignees(List<String> taskAssignees)
-    {
-        this.taskAssignees = taskAssignees;
-    }
-
     public String getTaskName()
     {
         return taskName;
@@ -105,5 +97,25 @@ public class OnEnterQueueModel<T, P extends AbstractPipelineContext>
     public void setTaskName(String taskName)
     {
         this.taskName = taskName;
+    }
+
+    public String getTaskOwningGroup()
+    {
+        return taskOwningGroup;
+    }
+
+    public void setTaskOwningGroup(String taskOwningGroup)
+    {
+        this.taskOwningGroup = taskOwningGroup;
+    }
+
+    public String getTaskAssignees()
+    {
+        return taskAssignees;
+    }
+
+    public void setTaskAssignees(String taskAssignees)
+    {
+        this.taskAssignees = taskAssignees;
     }
 }
