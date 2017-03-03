@@ -253,4 +253,11 @@
 		</addColumn>
 	</changeSet>
 
+	<changeSet id="13-acm_tag-add-parent-title" author="john.faniyi">
+		<addColumn tableName="acm_tag">
+			<column name="cm_tag_parent_title" type="VARCHAR(1024)">
+			</column>
+		</addColumn>
+	</changeSet>
+
 </databaseChangeLog>

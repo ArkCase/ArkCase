@@ -45,16 +45,21 @@ angular.module('tasks').controller('Tasks.TagsController', ['$scope', '$q', '$st
                                 return tagAss.id == tag.object_id_s;
                             });
                             if (tagsFound.length == 0) {
-                                ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.TASK, tag.object_id_s).then(
-                                    function (returnedTag) {
-                                        var tagToAdd = angular.copy(returnedTag);
-                                        tagToAdd.tagName = tag.tags_s;
-                                        tagToAdd.id = returnedTag.tagId;
-                                        $scope.tags.push(tagToAdd);
-                                        $scope.gridOptions.data = $scope.tags;
-                                        $scope.gridOptions.totalItems = $scope.tags.length;
-                                    }
-                                );
+                                TaskInfoService.getTaskInfo($stateParams.id).then(function (data) {
+                                $scope.parentTitleFromTask = data.parentObjectName;
+
+                                    ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.TASK, 
+                                    $scope.parentTitleFromTask, tag.object_id_s).then(
+                                        function (returnedTag) {
+                                            var tagToAdd = angular.copy(returnedTag);
+                                            tagToAdd.tagName = tag.tags_s;
+                                            tagToAdd.id = returnedTag.tagId;
+                                            $scope.tags.push(tagToAdd);
+                                            $scope.gridOptions.data = $scope.tags;
+                                            $scope.gridOptions.totalItems = $scope.tags.length;
+                                        }
+                                    );
+                                });
                             }
                             else {
                                 messageService.info(tag.tags_s + " " + $translate.instant('tasks.comp.tags.message.tagAssociated'));
@@ -64,13 +69,18 @@ angular.module('tasks').controller('Tasks.TagsController', ['$scope', '$q', '$st
                             }
                         }
                         else {
-                            ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.TASK, tag.id).then(
-                                function () {
-                                    $scope.tags.push(tag);
-                                    $scope.gridOptions.data = $scope.tags;
-                                    $scope.gridOptions.totalItems = $scope.tags.length;
-                                }
-                            );
+                            TaskInfoService.getTaskInfo($stateParams.id).then(function (data) {
+                            $scope.parentTitleFromTask = data.taskNumber;
+
+                                ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.TASK, 
+                                $scope.parentTitleFromTask, tag.id).then(
+                                    function () {
+                                        $scope.tags.push(tag);
+                                        $scope.gridOptions.data = $scope.tags;
+                                        $scope.gridOptions.totalItems = $scope.tags.length;
+                                    }
+                                );
+                            });
                         }
                     }
                 });
