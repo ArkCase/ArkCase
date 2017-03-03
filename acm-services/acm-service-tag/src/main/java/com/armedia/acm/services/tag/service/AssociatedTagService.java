@@ -97,22 +97,24 @@ public class AssociatedTagService {
         return getAssociatedTagDao().deleteAssociateTag(acmAssociatedTag.getTag().getId(), acmAssociatedTag.getParentId(),acmAssociatedTag.getParentType());
     }
 
-    public AcmAssociatedTag saveAssociateTag(String objectType, Long objectId, AcmTag tag) {
+    public AcmAssociatedTag saveAssociateTag(String objectType, Long objectId, String parentTitle, AcmTag tag) {
 
         //TODO check if exists objectId with objectType if not throw exception
 
         AcmAssociatedTag acmAssociatedTag = new AcmAssociatedTag();
         acmAssociatedTag.setParentType(objectType);
         acmAssociatedTag.setParentId(objectId);
+        acmAssociatedTag.setParentTitle(parentTitle);
         acmAssociatedTag.setTag(tag);
         return getAssociatedTagDao().save(acmAssociatedTag);
     }
 
-    public AcmAssociatedTag saveAssociateTag(String objectType, Long objectId, Long tagId) throws AcmObjectNotFoundException {
+    public AcmAssociatedTag saveAssociateTag(String objectType, Long objectId, String parentTitle, Long tagId) throws AcmObjectNotFoundException {
 
         AcmAssociatedTag acmAssociatedTag = new AcmAssociatedTag();
         acmAssociatedTag.setParentType(objectType);
         acmAssociatedTag.setParentId(objectId);
+        acmAssociatedTag.setParentTitle(parentTitle);
         AcmTag tag;
         try {
             tag = getTagDao().find(tagId);

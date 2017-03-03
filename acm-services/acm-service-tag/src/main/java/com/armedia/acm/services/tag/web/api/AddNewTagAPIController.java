@@ -38,10 +38,11 @@ public class AddNewTagAPIController {
             @RequestParam(value="name", required = true) String name,
             @RequestParam(value="desc", required = true) String desc,
             @RequestParam(value="text", required = true) String text,
+            @RequestParam(value="parent", required = true) String parent,
             Authentication authentication) throws AcmCreateObjectFailedException {
 
         if ( log.isInfoEnabled() ) {
-            log.info("Creating new tag with text:"+text+" description: " + desc + "and name: "+name );
+            log.info("Creating new tag with text:"+text+" description: " + desc + " name: "+name + " and parent title: "+ parent);
         }
             AcmTag returnedTag = getTagService().getTagByTextOrDescOrName(text, desc, name);
 
@@ -53,7 +54,7 @@ public class AddNewTagAPIController {
         } else {
             AcmTag addedTag = null;
             try {
-                addedTag = getTagService().saveTag(name, desc, text);
+                addedTag = getTagService().saveTag(name, desc, text, parent);
                 getTagEventPublisher().publishTagCreatedEvent(addedTag, authentication, true);
                 return addedTag;
             } catch (Exception e) {

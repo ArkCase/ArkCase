@@ -1,7 +1,9 @@
 'use strict';
 
-angular.module('cases').controller('Tasks.TagsModalController', ['$scope', '$q', '$modalInstance', 'ConfigService', 'Object.TagsService', 'Tags.TagsService', 'MessageService', '$translate', 'Search.AutoSuggestService',
-    function ($scope, $q, $modalInstance, ConfigService, ObjectTagsService, TagsService, messageService, $translate, AutoSuggestService) {
+angular.module('cases').controller('Tasks.TagsModalController', ['$scope', '$q', 'stateParams', '$modalInstance', 'ConfigService', 'Object.TagsService', 
+    'Tags.TagsService', 'MessageService', '$translate', 'Search.AutoSuggestService', 'Task.InfoService',
+    function ($scope, $q, stateParams, $modalInstance, ConfigService, ObjectTagsService, TagsService, messageService, $translate, AutoSuggestService,
+        TaskInfoService) {
 
         $scope.tags = [];
         $scope.modalInstance = $modalInstance;
@@ -28,17 +30,23 @@ angular.module('cases').controller('Tasks.TagsModalController', ['$scope', '$q',
                         || tag.tagText == selectedTag.title_parseable;
                 });
                 if (tagsCreated.length == 0) {
-                    ObjectTagsService.createTag(selectedTag.title_parseable, selectedTag.title_parseable, selectedTag.title_parseable).then(
-                        function (tagCreated) {
-                            //add newly created tag 
-                            _.remove($scope.tags, function (tag) {
-                                return selectedTag.title_parseable == tag.title_parseable;
-                            });
-                            var tagToAdd = angular.copy(tagCreated);
-                            tagToAdd.title_parseable = selectedTag.title_parseable;
-                            $scope.tags.push(tagToAdd);
-                        }
-                    )
+                    TaskInfoService.getTaskInfo($stateParams.id).then(function (data) {
+                    $scope.parentTitleFromTask = data.parentObjectName;
+
+                        ObjectTagsService.createTag(selectedTag.title_parseable, selectedTag.title_parseable, selectedTag.title_parseable, $scope.parentTitleFromTask).then(
+                            function (tagCreated) {
+                                //add newly created tag 
+                                _.remove($scope.tags, function (tag) {
+                                    return selectedTag.title_parseable == tag.title_parseable;
+                                });
+                                var tagToAdd = angular.copy(tagCreated);
+                                tagToAdd.title_parseable = selectedTag.title_parseable;
+                                tagToAdd.id = tagToAdd.id+'-TAG';
+                                tagToAdd.parentTitle = $scope.parentTitleFromTask;
+                                $scope.tags.push(tagToAdd);
+                            }
+                        )
+                    });
                 }
                 else {
                     messageService.info($translate.instant('tasks.comp.tags.message.tagExists'));

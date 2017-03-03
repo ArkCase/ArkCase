@@ -45,16 +45,21 @@ angular.module('complaints').controller('Complaints.TagsController', ['$scope', 
                                 return tagAss.id == tag.object_id_s;
                             });
                             if (tagsFound.length == 0) {
-                                ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.COMPLAINT, tag.object_id_s).then(
-                                    function (returnedTag) {
-                                        var tagToAdd = angular.copy(returnedTag);
-                                        tagToAdd.tagName = tag.tags_s;
-                                        tagToAdd.id = returnedTag.tagId;
-                                        $scope.tags.push(tagToAdd);
-                                        $scope.gridOptions.data = $scope.tags;
-                                        $scope.gridOptions.totalItems = $scope.tags.length;
-                                    }
-                                );
+                                ComplaintInfoService.getComplaintInfo($stateParams.id).then(function (data) {
+                                $scope.parentTitleFromComplaint = data.complaintNumber;
+
+                                    ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.COMPLAINT, 
+                                    $scope.parentTitleFromComplaint, tag.object_id_s).then(
+                                        function (returnedTag) {
+                                            var tagToAdd = angular.copy(returnedTag);
+                                            tagToAdd.tagName = tag.tags_s;
+                                            tagToAdd.id = returnedTag.tagId;
+                                            $scope.tags.push(tagToAdd);
+                                            $scope.gridOptions.data = $scope.tags;
+                                            $scope.gridOptions.totalItems = $scope.tags.length;
+                                        }
+                                    );
+                                });
                             }
                             else {
                                 messageService.info(tag.tags_s + " " + $translate.instant('complaints.comp.tags.message.tagAssociated'));
@@ -64,13 +69,18 @@ angular.module('complaints').controller('Complaints.TagsController', ['$scope', 
                             }
                         }
                         else {
-                            ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.COMPLAINT, tag.id).then(
-                                function () {
-                                    $scope.tags.push(tag);
-                                    $scope.gridOptions.data = $scope.tags;
-                                    $scope.gridOptions.totalItems = $scope.tags.length;
-                                }
-                            );
+                            ComplaintInfoService.getComplaintInfo($stateParams.id).then(function (data) {
+                                $scope.parentTitleFromComplaint = data.complaintNumber;
+
+                                ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.COMPLAINT, 
+                                $scope.parentTitleFromComplaint, tag.id).then(
+                                    function () {
+                                        $scope.tags.push(tag);
+                                        $scope.gridOptions.data = $scope.tags;
+                                        $scope.gridOptions.totalItems = $scope.tags.length;
+                                    }
+                                );
+                            });
                         }
                     }
                 });

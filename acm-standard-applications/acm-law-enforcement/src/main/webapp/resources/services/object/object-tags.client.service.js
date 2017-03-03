@@ -67,6 +67,7 @@ angular.module('services').factory('Object.TagsService', ['$resource', '$transla
              * @param {Object} params Map of input parameter
              * @param {String} params.objectId  Object ID
              * @param {String} params.objectType  Object type
+             * @param {String} params.parentTitle  Parent Title
              * @param {String} params.tagId  Tag ID
              * @param {Function} onSuccess (Optional)Callback function of success query
              * @param {Function} onError (Optional) Callback function when fail
@@ -75,7 +76,7 @@ angular.module('services').factory('Object.TagsService', ['$resource', '$transla
              */
             _associateTag: {
                 method: 'PUT',
-                url: 'api/latest/service/tag/:objectId/:objectType/:tagId'
+                url: 'api/latest/service/tag/:objectId/:objectType/:parentTitle/:tagId'
             },
 
             /**
@@ -97,7 +98,7 @@ angular.module('services').factory('Object.TagsService', ['$resource', '$transla
              */
             _createTag: {
                 method: 'PUT',
-                url: 'api/latest/service/tag?name=:tagName&desc=:tagDesc&text=:tagText'
+                url: 'api/latest/service/tag?name=:tagName&desc=:tagDesc&text=:tagText&parent=:tagParentTitle'
             },
 
             /**
@@ -191,7 +192,6 @@ angular.module('services').factory('Object.TagsService', ['$resource', '$transla
          * @returns {Object} Promise
          */
         Service.associateTag = function (objectId, objectType, parentTitle, tagId) {
-            console.log(parentTitle);
             return Util.serviceCall({
                 service: Service._associateTag
                 , param: {
@@ -223,13 +223,14 @@ angular.module('services').factory('Object.TagsService', ['$resource', '$transla
          *
          * @returns {Object} Promise
          */
-        Service.createTag = function (tagName, tagDesc, tagText) {
+        Service.createTag = function (tagName, tagDesc, tagText, tagParentTitle) {
             return Util.serviceCall({
                 service: Service._createTag
                 , param: {
                     tagName: tagName,
                     tagDesc: tagDesc,
-                    tagText: tagText
+                    tagText: tagText,
+                    tagParentTitle: tagParentTitle
                 }
                 , data: {}
                 , onSuccess: function (data) {
