@@ -18,6 +18,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.HashSet;
 import java.util.List;
@@ -238,6 +239,39 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         List<AcmGroup> result = query.getResultList();
 
         return result.isEmpty() ? null : result.get(0);
+    }
+
+    @Transactional
+    public AcmGroup findByMatchingName(String name)
+    {
+        CriteriaBuilder builder = this.getEm().getCriteriaBuilder();
+        CriteriaQuery query = builder.createQuery(AcmGroup.class);
+        Root group = query.from(AcmGroup.class);
+        query.select(group);
+        query.where(builder.and(new Predicate[]{builder.like(group.get("name"), name)}));
+
+        TypedQuery dbQuery = this.getEm().createQuery(query);
+        AcmGroup retval = null;
+
+
+        try
+        {
+            retval = (AcmGroup) dbQuery.getSingleResult();
+        } catch (Exception var8)
+        {
+            if (var8 instanceof NoResultException)
+            {
+                this.LOG.info("There is no any group with name = " + name);
+            } else if (var8 instanceof NonUniqueResultException)
+            {
+                this.LOG.info("There is no unique group found with name = " + name + ". More than one group has this name.");
+            } else
+            {
+                this.LOG.error("Error while retrieving group by group name = " + name, var8);
+            }
+        }
+
+        return retval;
     }
 
     @Override
