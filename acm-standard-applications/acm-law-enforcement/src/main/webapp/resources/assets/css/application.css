@@ -1288,3 +1288,7 @@ a.no-outline:hover, a.no-outline:focus {
 .ui-grid-pinned-container .ui-grid-cell .ui-grid-cell-contents .ui-grid-selection-row-header-buttons {
     padding: 0;
 }
+
+.ui-grid-cell.ui-grid-disable-selection.ui-grid-row-header-cell {
+    pointer-events: all !important;
+}

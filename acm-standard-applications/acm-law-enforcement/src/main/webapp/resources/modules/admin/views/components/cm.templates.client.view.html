@@ -1,7 +1,7 @@
 <div ng-controller="Admin.CMTemplatesController">
     <div class="pull-right well">
         <div class="btn-group">
-            <button class="btn btn-xs btn-link" ng-click="addTemplate()">
+            <button class="btn btn-xs btn-link" ng-click="addTemplate()" ng-disabled="selectedRows.length > 1">
                 <i class="glyphicon glyphicon-plus-sign"></i>
                 <span translate>admin.correspondenceManagement.templates.addTemplate</span>
             </button>
@@ -9,7 +9,7 @@
     </div>
     <div class="pull-right well">
         <div class="btn-group">
-            <button class="btn btn-xs btn-link" ng-click="versionTemplate()">
+            <button class="btn btn-xs btn-link" ng-click="versionTemplate()" ng-disabled="selectedRows.length != 1">
                 <i class="glyphicon glyphicon-info-sign"></i>
                 <span translate>admin.correspondenceManagement.templates.versionTemplate</span>
             </button>
@@ -17,7 +17,7 @@
     </div>
     <div class="pull-right well">
         <div class="btn-group">
-            <button class="btn btn-xs btn-link" ng-click="deleteTemplate()">
+            <button class="btn btn-xs btn-link" ng-click="deleteTemplate()" ng-disabled="selectedRows.length < 1">
                 <i class="glyphicon glyphicon-minus-sign"></i>
                 <span translate>admin.correspondenceManagement.templates.deleteTemplate</span>
             </button>

@@ -40,7 +40,6 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
 
         var promiseFormTypes = ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.COMPLAINT);
         var promiseFileTypes = ObjectLookupService.getFileTypes();
-        //var promiseCorrespondenceForms = ObjectLookupService.getComplaintCorrespondenceForms();
         var promiseCorrespondenceForms = CorrespondenceService.getActivatedTemplatesData(ObjectService.ObjectTypes.COMPLAINT);
         var onConfigRetrieved = function (config) {
             $scope.treeConfig = config.docTree;
