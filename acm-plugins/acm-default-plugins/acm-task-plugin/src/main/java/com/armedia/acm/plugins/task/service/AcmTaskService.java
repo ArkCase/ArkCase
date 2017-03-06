@@ -33,4 +33,7 @@ public interface AcmTaskService
     List<ObjectAssociation> findChildObjects(Long taskId);
 
     AcmTask retrieveTask(Long id);
+
+    void createTasks(String taskAssignees, String taskName, String owningGroup, String parentType,
+                     Long parentId);
 }

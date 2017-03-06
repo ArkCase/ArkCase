@@ -92,6 +92,7 @@
             <list value-type="java.lang.String">
                 <value>/stomp</value>
                 <value>/api</value>
+                <value>/views/loggedout.jsp</value>
             </list>
         </property>
     </bean>
