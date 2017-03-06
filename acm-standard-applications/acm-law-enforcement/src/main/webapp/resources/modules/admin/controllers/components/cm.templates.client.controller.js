@@ -8,16 +8,31 @@ angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$m
         var promiseUsers = gridHelper.getUsers();
         $scope.selectedRows = {};
         $scope.correspondenceManagementTemplateVersions = undefined;
+        
+        $scope.gridOptions = {
+            enableRowSelection: true,
+            enableFiltering: false,
+            enableRowHeaderSelection: true,
+            enableFullRowSelection: true,
+            data: [],
+            onRegisterApi: function(gridApi) {
+                $scope.gridApi = gridApi;
+                gridApi.selection.on.rowSelectionChanged($scope,function(row) {
+                    $scope.selectedRows = gridApi.selection.getSelectedRows();
+                });
+ 
+                gridApi.selection.on.rowSelectionChangedBatch($scope,function(rows) {
+                    $scope.selectedRows = gridApi.selection.getSelectedRows();
+                });
+           }
+        };
 
         //get config and init grid settings
         $scope.config.$promise.then(function (config) {
             $scope.correspondenceManagementTemplateVersions = _.find(config.components, {id: 'correspondenceManagementTemplateVersions'});
             var config = _.find(config.components, {id: 'correspondenceManagementTemplates'});
-            gridHelper.setColumnDefs(config);
-            gridHelper.setBasicOptions(config);
-            gridHelper.disableGridScrolling(config);
+            $scope.gridOptions.columnDefs = config.columnDefs;
             gridHelper.setUserNameFilter(promiseUsers);
-
             $scope.config = config;
             ReloadGrid();
         });
@@ -35,7 +50,6 @@ angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$m
                     $scope.objectTypes = $scope.config.objectTypes;
                     $scope.selectedFiles = [];
                     $scope.template = {};
-                    $scope.selectedRows = $scope.gridApi.selection.getSelectedRows();
                     if ($scope.selectedRows.length > 0) {
                         $scope.template.objectType = $scope.selectedRows[0].objectType;
                         $scope.template.label = $scope.selectedRows[0].label;
@@ -83,8 +97,6 @@ angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$m
         };
         
         $scope.versionTemplate = function () {
-            $scope.selectedRows = $scope.gridApi.selection.getSelectedRows();
-            if ($scope.selectedRows.length > 0) {
                 var templateVersionsPromise = correspondenceService.getTemplateVersionData($scope.selectedRows[0].templateId);
                 var colDefs = $scope.correspondenceManagementTemplateVersions.columnDefs;
 
@@ -94,14 +106,13 @@ angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$m
                         templateUrl: 'modules/admin/views/components/cm.template-versions.modal.client.view.html',
                         controller: function ($scope, $modalInstance) {
 
+                            angular.forEach(templateVersionData.data, function (row, index) {
+                                row.downloadFileName = correspondenceService.downloadByFilename(row.templateFilename);
+                            });
+                            
                             $scope.gridOptions = {
                                     enableColumnResizing: true,
                                     enableRowSelection: true,
-                                    pinSelectionCheckbox: true,
-                                    enableColumnMenus: false,
-                                    enableRowHeaderSelection: false,
-                                    multiSelect: false,
-                                    noUnselect: false,
                                     columnDefs: colDefs,
                                     data: templateVersionData.data
                             };
@@ -112,13 +123,11 @@ angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$m
                         size: 'lg'
                     });
                 });
-            }
 
         }
         
         $scope.deleteTemplate = function () {
-            $scope.selectedRows = $scope.gridApi.selection.getSelectedRows();
-            if ($scope.selectedRows.length > 0) {
+
                 angular.forEach($scope.selectedRows, function (row, index) {
                     correspondenceService.deleteTemplate(row.templateId).then(function () {
                         clearCachedForms(row);
@@ -128,7 +137,6 @@ angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$m
                         messageService.errorAction();
                     });
                 });
-            }
             
         };
 

@@ -55,8 +55,7 @@ angular.module('tasks').controller('Tasks.ParentDocsController', ['$scope', '$st
                         function (complaintInfo) {
                             $scope.parentInfo = complaintInfo;
                         });
-                    //promiseCorrespondenceForms = ObjectLookupService.getComplaintCorrespondenceForms();
-                    var promiseCorrespondenceForms = CorrespondenceService.getActivatedTemplatesData(ObjectService.ObjectTypes.COMPLAINT);
+                    promiseCorrespondenceForms = CorrespondenceService.getActivatedTemplatesData(ObjectService.ObjectTypes.COMPLAINT);
                     $scope.treeConfig.email.emailSubject = "Complaint $complaintNumber";
                     break;
                 case ObjectService.ObjectTypes.CASE_FILE:
@@ -64,8 +63,7 @@ angular.module('tasks').controller('Tasks.ParentDocsController', ['$scope', '$st
                         function (caseInfo) {
                             $scope.parentInfo = caseInfo;
                         });
-                    //promiseCorrespondenceForms = ObjectLookupService.getCaseFileCorrespondenceForms();
-                    var promiseCorrespondenceForms = CorrespondenceService.getActivatedTemplatesData(ObjectService.ObjectTypes.CASE_FILE);
+                    promiseCorrespondenceForms = CorrespondenceService.getActivatedTemplatesData(ObjectService.ObjectTypes.CASE_FILE);
                     $scope.treeConfig.email.emailSubject = "Case $caseNumber";
                     break;
                 case ObjectService.ObjectTypes.COSTSHEET:

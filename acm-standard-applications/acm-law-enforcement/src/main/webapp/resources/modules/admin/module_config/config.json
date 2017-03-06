@@ -134,6 +134,13 @@
       "enableFiltering": false,
       "columnDefs": [
         {
+          "name": "mergingActiveVersion",
+          "displayName": "admin.correspondenceManagement.mergefields.version.grid.mergingActiveVersion",
+          "visible": true,
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div align='center'><span ng-if='!row.entity.mergingActiveVersion' class='label label-warning'>No</span><span ng-if='row.entity.mergingActiveVersion' class='label label-success'>Yes</span></div>'"
+        },
+        {
           "name": "mergingVersion",
           "displayName": "admin.correspondenceManagement.mergefields.version.grid.mergingVersion",
           "visible": true,
@@ -152,13 +159,6 @@
           "displayName": "admin.correspondenceManagement.mergefields.version.grid.modifier",
           "visible": true,
           "headerCellFilter": "translate"
-        },
-        {
-          "name": "mergingActiveVersion",
-          "displayName": "admin.correspondenceManagement.mergefields.version.grid.mergingActiveVersion",
-          "visible": true,
-          "headerCellFilter": "translate",
-          "cellTemplate": "<div align='center'><span ng-if='!row.entity.mergingActiveVersion' class='label label-warning'>Deactivated</span><span ng-if='row.entity.mergingActiveVersion' class='label label-success'>Activated</span></div>'"
         }
       ]
     },
@@ -170,6 +170,7 @@
       "enableFiltering": false,
       "enableRowSelection": true,
       "enableRowHeaderSelection": true,
+      "enableFullRowSelection": true,
       "columnDefs": [
         {
           "name": "id",
@@ -237,6 +238,13 @@
       "enableFiltering": false,
       "columnDefs": [
         {
+          "name": "templateVersionActive",
+          "displayName": "admin.correspondenceManagement.templates.grid.templateVersionActive",
+          "visible": true,
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div align='center'><span ng-if='!row.entity.templateVersionActive' class='label label-warning'>No</span><span ng-if='row.entity.templateVersionActive' class='label label-success'>Yes</span></div>'"
+        },
+        {
           "name": "templateVersion",
           "displayName": "admin.correspondenceManagement.templates.grid.version",
           "visible": true,
@@ -275,13 +283,6 @@
           "visible": true,
           "headerCellFilter": "translate",
           "lookup": "userFullNames"
-        },
-        {
-          "name": "activated",
-          "displayName": "admin.correspondenceManagement.templates.grid.activated",
-          "visible": true,
-          "headerCellFilter": "translate",
-          "cellTemplate": "<div align='center'><span ng-if='!row.entity.activated' class='label label-warning' ng-click='grid.appScope.activate(row.entity)'>Deactivated</span><span ng-if='row.entity.activated' class='label label-success' ng-click='grid.appScope.activate(row.entity)'>Activated</span></div>'"
         }
       ]
     },
