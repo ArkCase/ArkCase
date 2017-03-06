@@ -1,5 +1,5 @@
 'use strict';
-angular.module('profile').service('Profile.ChangePasswordService', function ($http, $q, $modal, $resource) {
+angular.module('profile').service('Profile.ChangePasswordService', function ($http, $q, $modal) {
     return ({
         changePassword: changePassword,
         changeLdapPassword: changeLdapPassword
