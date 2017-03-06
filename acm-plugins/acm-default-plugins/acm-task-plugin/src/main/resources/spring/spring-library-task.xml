@@ -135,6 +135,7 @@
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="objectAssociationService" ref="objectAssociationService"/>
         <property name="objectAssociationEventPublisher" ref="objectAssociationEventPublisher"/>
+        <property name="acmParticipantDao" ref="acmParticipantDao"/>
     </bean>
 
     <bean id="acmApplicationTaskEventHandler" class="com.armedia.acm.plugins.task.service.impl.AcmApplicationTaskEventHandler">
@@ -177,6 +178,7 @@
         <property name="smtpNotificationSender" ref="smtpNotificationSender"/>
         <property name="messageSubject" value="${upcoming.tasks.notification.subject}"/>
         <property name="messageBodyTemplate" value="${upcoming.tasks.notification.body.template}"/>
+        <property name="userDao" ref="userJpaDao"/>
     </bean>
 
     <bean id="overdueTasksNotifier" class="com.armedia.acm.plugins.task.service.impl.OverdueTasksNotifier">
@@ -185,6 +187,7 @@
         <property name="smtpNotificationSender" ref="smtpNotificationSender"/>
         <property name="messageSubject" value="${overdue.tasks.notification.subject}"/>
         <property name="messageBodyTemplate" value="${overdue.tasks.notification.body.template}"/>
+        <property name="userDao" ref="userJpaDao"/>
     </bean>
 
     <task:scheduler id="dueTasksNotifierScheduler" pool-size="1"/>
