@@ -1,0 +1,39 @@
+{
+  "reports": {
+    "title": "Отчеты",
+    "menus": {
+      "leftnav.item": "Отчеты"
+    },
+    "selectReport" : {
+      "label": "ru_Report",
+      "placeholder": "ru_Select Report"
+    },
+    "selectState" : {
+      "label": "ru_State",
+      "placeholder": "ru_Select State"
+    },
+    "startDate": {
+      "label": "ru_From"
+    },
+    "endDate" : {
+      "label": "ru_To"
+    },
+
+    "dropdown": {
+      "turnaround": "ru_Turnaround Time by Requester",
+      "requester": "ru_Requester Type Summary",
+      "pending": "ru_Pending Orders Report",
+      "associate": "ru_Associate Productivity Report",
+      "origination": "ru_Origination Count",
+      "transfers": "ru_Transfers Report",
+      "exceptions": "ru_Exceptions Report (Non-Compliance)"
+    },
+    "datepicker":{
+      "close": "ru_Done"
+    },
+    "btn": {
+      "generateReport": "ru_Generate report"
+    }
+  }
+}
+

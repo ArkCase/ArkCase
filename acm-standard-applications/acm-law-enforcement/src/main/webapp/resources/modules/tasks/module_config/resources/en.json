@@ -5,6 +5,10 @@
     "progressLoading": "Loading task ",
     "progressError": "Failed to load task"
   },
+  "tasks.menus": {
+    "leftnav.item": "Tasks",
+    "topbar.item": "Task"
+  },
   "tasks.comp.info": {
     "taskId": "Task id:",
     "percentage.label": "% of Completion",

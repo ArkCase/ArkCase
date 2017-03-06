@@ -4,6 +4,9 @@
     "search.btn": "Search",
     "export.btn": "Export",
     "search.placeholder": "Search for notifications",
+    "menus": {
+      "leftnav.item": "Notifications"
+    },
     "comp":{
       "grid": {
         "columns": {

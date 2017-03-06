@@ -5,7 +5,7 @@
     {
       "menuId": "leftnav",
       "menuItemURL": "subscriptions",
-      "menuItemTitle": "Subscriptions",
+      "menuItemTitle": "subscriptions.menus.leftnav.item",
       "moduleId": "subscription",
       "iconClass": "fa fa-bullhorn",
       "position": 100
