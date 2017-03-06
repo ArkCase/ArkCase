@@ -23,7 +23,7 @@ public class LabelManagementUpdateSettings
     private LabelManagementService labelManagementService;
 
     @RequestMapping(value = "/labelmanagement/settings", method = RequestMethod.PUT, produces = {
-            MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
+            MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
     @ResponseBody
     public String updateSettings(@RequestBody String settings) throws AcmLabelManagementException
