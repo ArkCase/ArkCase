@@ -3,7 +3,7 @@
     "status": 0,
     "QTime": 2,
     "params": {
-      "sort": "queue_order_s ASC",
+      "sort": "queue_order_i ASC",
       "indent": "true",
       "q": "object_type_s:QUEUE",
       "_": "1443184803112",
@@ -29,7 +29,7 @@
         "protected_object_b": false,
         "hidden_b": false,
         "queue_name_s": "Transcribe",
-        "queue_order_s": "1",
+        "queue_order_i": 1,
         "queue_id_s": "1",
         "_version_": 1513286516748583000
       },
@@ -49,7 +49,7 @@
         "protected_object_b": false,
         "hidden_b": false,
         "queue_name_s": "Transcribe",
-        "queue_order_s": "1",
+        "queue_order_i": 1,
         "queue_id_s": "1",
         "_version_": 1513286516748583000
       },
@@ -68,7 +68,7 @@
         "protected_object_b": false,
         "hidden_b": false,
         "queue_name_s": "Fulfill Order",
-        "queue_order_s": "2",
+        "queue_order_i": 2,
         "queue_id_s": "2",
         "_version_": 1513286516750680000
       },
@@ -87,7 +87,7 @@
         "protected_object_b": false,
         "hidden_b": false,
         "queue_name_s": "QC Order",
-        "queue_order_s": "3",
+        "queue_order_i": 3,
         "queue_id_s": "3",
         "_version_": 1513286516755923000
       },
@@ -106,7 +106,7 @@
         "protected_object_b": false,
         "hidden_b": false,
         "queue_name_s": "Billing",
-        "queue_order_s": "4",
+        "queue_order_i": 4,
         "queue_id_s": "4",
         "_version_": 1513286516756971500
       },
@@ -125,7 +125,7 @@
         "protected_object_b": false,
         "hidden_b": false,
         "queue_name_s": "Distribution",
-        "queue_order_s": "5",
+        "queue_order_i": 5,
         "queue_id_s": "5",
         "_version_": 1513286516756971500
       },
@@ -144,7 +144,7 @@
         "protected_object_b": false,
         "hidden_b": false,
         "queue_name_s": "Non-Compliance",
-        "queue_order_s": "7",
+        "queue_order_i": 7,
         "queue_id_s": "7",
         "_version_": 1513286516758020000
       }
