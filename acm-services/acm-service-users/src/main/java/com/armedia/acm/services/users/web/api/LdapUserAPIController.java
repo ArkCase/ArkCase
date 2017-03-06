@@ -4,15 +4,14 @@ import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.ldap.LdapUser;
+import com.armedia.acm.services.users.service.ldap.LdapAuthenticateManager;
 import com.armedia.acm.services.users.service.ldap.LdapAuthenticateService;
 import com.armedia.acm.services.users.service.ldap.LdapUserService;
-import com.armedia.acm.spring.SpringContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.ldap.InvalidAttributeValueException;
 import org.springframework.ldap.NameAlreadyBoundException;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,39 +25,35 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping(value = {"/api/v1/users/ldap", "/api/latest/users/ldap"})
-public class LdapUserAPIController
+@RequestMapping(value = {"/api/v1/ldap/", "/api/latest/ldap/"})
+public class LdapUserAPIController extends SecureLdapController
 {
-    private SpringContextHolder acmContextHolder;
-
-    private LdapAuthenticateService ldapAuthenticateService;
-
     private LdapUserService ldapUserService;
+
+    private LdapAuthenticateManager ldapAuthenticateManager;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(value = "/editingEnabled/{directoryName}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{directory:.+}/editingEnabled", method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Map<String, Boolean> isEditingLdapUsersEnabled(@PathVariable String directoryName)
+    public Map<String, Boolean> isEditingLdapUsersEnabled(@PathVariable String directory)
     {
-        ldapAuthenticateService =
-                acmContextHolder.getAllBeansOfType(LdapAuthenticateService.class).get(String.format("%s_ldapAuthenticateService", directoryName));
-        boolean enableEditingLdapUsers = false;
-        if (ldapAuthenticateService != null)
-        {
-            enableEditingLdapUsers = ldapAuthenticateService.getLdapAuthenticateConfig().getEnableEditingLdapUsers();
-        }
+        boolean enableEditingLdapUsers = isLdapManagementEnabled(directory, acmContextHolder);
         return Collections.singletonMap("enableEditingLdapUsers", enableEditingLdapUsers);
     }
 
-    @RequestMapping(value = "/add/{directoryName}/{groupName}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{directory:.+}/groups/{groupName:.+}/users", method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<AcmUser> addLdapUsersToGroup(
-            @RequestBody List<AcmUser> members, @PathVariable String directoryName, @PathVariable String groupName) throws AcmUserActionFailedException
+            @RequestBody List<AcmUser> members, @PathVariable String directory, @PathVariable String groupName)
+            throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
+        checkIfLdapManagementIsAllowed(directory);
         try
         {
-            return ldapUserService.addExistingLdapUsersToGroup(members, directoryName, groupName);
+            return ldapUserService.addExistingLdapUsersToGroup(members, directory, groupName);
         } catch (Exception e)
         {
             log.error("Adding members to LDAP group:{} failed!", groupName, e);
@@ -66,15 +61,16 @@ public class LdapUserAPIController
         }
     }
 
-    @RequestMapping(value = "/add/{directoryName}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{directory:.+}/users", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmUser addLdapUser(
-            @RequestBody LdapUser ldapUserCreateRequest, @PathVariable String directoryName) throws AcmUserActionFailedException, AcmAppErrorJsonMsg
+            @RequestBody LdapUser ldapUserCreateRequest, @PathVariable String directory) throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
+        checkIfLdapManagementIsAllowed(directory);
         try
         {
             return ldapUserService.createLdapUser(ldapUserCreateRequest.getAcmUser(),
-                    ldapUserCreateRequest.getGroupNames(), ldapUserCreateRequest.getPassword(), directoryName);
+                    ldapUserCreateRequest.getGroupNames(), ldapUserCreateRequest.getPassword(), directory);
         } catch (NameAlreadyBoundException e)
         {
             log.error("Duplicate username: {}", ldapUserCreateRequest.getAcmUser().getUserId(), e);
@@ -89,25 +85,34 @@ public class LdapUserAPIController
         }
     }
 
-    @RequestMapping(value = "/edit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "{directory:.+}/users/{userId:.+}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmUser editLdapUser(
-            @RequestBody AcmUser acmUser) throws AcmUserActionFailedException
+    public AcmUser editLdapUser(@RequestBody AcmUser acmUser, @PathVariable String userId,
+                                @PathVariable String directory) throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
-        return ldapUserService.editLdapUser(acmUser);
-    }
-
-    @RequestMapping(value = "/changePassword", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public Map<String, String> changePassword(
-            @RequestBody Map<String, String> credentials, Authentication authentication, HttpServletResponse response)
-    {
+        checkIfLdapManagementIsAllowed(directory);
         try
         {
-            String userId = authentication.getName();
-            String directoryName = ldapUserService.getUserDirectoryName(userId);
-            ldapAuthenticateService = acmContextHolder.getAllBeansOfType(LdapAuthenticateService.class).
-                    get(String.format("%s_ldapAuthenticateService", directoryName));
+            return ldapUserService.editLdapUser(acmUser, userId, directory);
+        } catch (Exception e)
+        {
+            log.error("Editing LDAP user failed!", e);
+            throw new AcmUserActionFailedException("edit LDAP user", null, null, "Editing LDAP user failed!", e);
+        }
+    }
+
+    @RequestMapping(value = "/{directory:.+}/users/{userId:.+}/password",
+            method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String, String> changePassword(
+            @RequestBody Map<String, String> credentials, @PathVariable String directory, @PathVariable String userId,
+            HttpServletResponse response) throws AcmAppErrorJsonMsg
+    {
+        checkIfLdapManagementIsAllowed(directory);
+        try
+        {
+            LdapAuthenticateService ldapAuthenticateService = acmContextHolder.getAllBeansOfType(LdapAuthenticateService.class).
+                    get(String.format("%s_ldapAuthenticateService", directory));
             ldapAuthenticateService.changeUserPassword(userId, credentials.get("password"));
             return Collections.singletonMap("message", "Password successfully changed");
         } catch (InvalidAttributeValueException e)
@@ -115,6 +120,10 @@ public class LdapUserAPIController
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             log.error("Changing password failed!", e);
             return Collections.singletonMap("message", e.getExplanation());
+        } catch (AcmUserActionFailedException e)
+        {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return Collections.singletonMap("message", e.getMessage());
         } catch (Exception e)
         {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -123,15 +132,6 @@ public class LdapUserAPIController
         }
     }
 
-    public SpringContextHolder getAcmContextHolder()
-    {
-        return acmContextHolder;
-    }
-
-    public void setAcmContextHolder(SpringContextHolder acmContextHolder)
-    {
-        this.acmContextHolder = acmContextHolder;
-    }
 
     public LdapUserService getLdapUserService()
     {
@@ -141,5 +141,15 @@ public class LdapUserAPIController
     public void setLdapUserService(LdapUserService ldapUserService)
     {
         this.ldapUserService = ldapUserService;
+    }
+
+    public LdapAuthenticateManager getLdapAuthenticateManager()
+    {
+        return ldapAuthenticateManager;
+    }
+
+    public void setLdapAuthenticateManager(LdapAuthenticateManager ldapAuthenticateManager)
+    {
+        this.ldapAuthenticateManager = ldapAuthenticateManager;
     }
 }

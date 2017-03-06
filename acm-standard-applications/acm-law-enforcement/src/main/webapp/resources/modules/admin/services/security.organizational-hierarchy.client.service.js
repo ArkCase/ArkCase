@@ -44,34 +44,34 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
 
             _getInternalUsersConfig: {
                 method: 'GET',
-                url: 'api/v1/users/ldap/editingEnabled/:directoryName',
+                url: 'api/latest/ldap/:directoryName/editingEnabled',
                 cache: false
             },
 
             _addMemberToLdapGroup: {
                 method: 'POST',
-                url: 'api/latest/users/ldap/add/:directoryName'
+                url: 'api/latest/ldap/:directoryName/users'
             },
 
             _editLdapUser: {
                 method: 'POST',
-                url: 'api/latest/users/ldap/edit'
+                url: 'api/latest/ldap/:directoryName/users/:userId'
             },
 
             _addExistingMembersToLdapGroup: {
                 method: 'POST',
-                url: 'api/latest/users/ldap/add/:directoryName/:groupName',
+                url: 'api/latest/ldap/:directoryName/groups/:groupName/users',
                 isArray: true
             },
 
             _createLdapGroup: {
                 method: 'POST',
-                url: 'api/latest/users/ldap/group/:directoryName'
+                url: 'api/latest/ldap/:directoryName/groups'
             },
 
             _createLdapSubgroup: {
                 method: 'POST',
-                url: 'api/latest/users/ldap/group/:directoryName/:parentGroupName'
+                url: 'api/latest/ldap/:directoryName/groups/:parentGroupName'
             }
         });
 
@@ -359,18 +359,13 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
         }
 
         function isEnabledEditingLdapUsers(directoryName) {
-            var cacheConfig = new Store.CacheFifo(Service.CacheNames.INTERNAL_USER_CONFIG);
-            var config = cacheConfig.get(Service.CacheNames.KEY + "." + directoryName);
             return Util.serviceCall({
                 service: Service._getInternalUsersConfig
                 , param: {
                     directoryName: directoryName
                 }
-                , result: config
                 , onSuccess: function (response) {
-                    var config = response.enableEditingLdapUsers;
-                    cacheConfig.put(Service.CacheNames.KEY + "." + directoryName, config);
-                    return config;
+                    return response.enableEditingLdapUsers;
                 }
             });
         }
@@ -403,6 +398,10 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
         function editGroupMember(ldapUser) {
             return Util.serviceCall({
                 service: Service._editLdapUser
+                , param: {
+                    directoryName: ldapUser.userDirectoryName,
+                    userId: ldapUser.userId
+                }
                 , data: ldapUser
                 , onSuccess: function (data) {
                     return data;
