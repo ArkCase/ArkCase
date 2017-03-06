@@ -55,7 +55,7 @@ public class CustomPagedLdapDao implements SpringLdapDao
                 // the context mapper will return null for disabled users
                 List<AcmUser> found = template.search(base, searchFilter, searchControls, userGroupsContextMapper, sortedAndPaged);
 
-                if (skipFirst)
+                if (skipFirst && !found.isEmpty())
                 {
                     acmUsers.addAll(found.subList(1, found.size()));
                 } else
@@ -63,7 +63,10 @@ public class CustomPagedLdapDao implements SpringLdapDao
                     acmUsers.addAll(found);
                 }
 
-                log.debug("Users found: {}", found.size());
+
+                String usersFound = found.stream().map(u -> u.getDistinguishedName()).collect(Collectors.joining("\n"));
+
+                log.debug("Users found: {}. DNs: {}", found.size(), usersFound);
 
                 searchUsers = syncConfig.getSyncPageSize() == found.size();
                 if (searchUsers)
@@ -130,7 +133,7 @@ public class CustomPagedLdapDao implements SpringLdapDao
             List<LdapGroup> found = template.search(config.getGroupSearchBase(), searchFilter, searchControls, acmGroupContextMapper,
                     sortedAndPaged);
 
-            if (skipFirst)
+            if (skipFirst && !found.isEmpty())
             {
                 acmGroups.addAll(found.subList(1, found.size()));
             } else
