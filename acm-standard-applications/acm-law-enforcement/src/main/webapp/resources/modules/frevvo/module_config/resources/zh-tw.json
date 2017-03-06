@@ -1,0 +1,27 @@
+{
+  "frevvo": {
+    "title": "zh-tw_Frevvo",
+    "errorForm": "zh-tw_Frevvo form not specified"
+  },
+  "frevvo.dialogUserPicker": {
+    "header": "zh-tw_Choose User",
+    "table.columns": {
+      "name": "zh-tw_Name",
+      "type": "zh-tw_Type",
+      "title": "zh-tw_Title",
+      "id": "zh-tw_Username"
+    }
+  },
+  "frevvo.dialogObjectPicker": {
+    "header": "zh-tw_Search for object",
+    "table.columns": {
+      "name": "zh-tw_Name",
+      "type": "zh-tw_Type",
+      "title": "zh-tw_Title",
+      "id": "zh-tw_ID"
+    }
+  },
+  "frevvo.timesheetCustomPicker": {
+    "header": "zh-tw_Select charge code"
+  }
+}

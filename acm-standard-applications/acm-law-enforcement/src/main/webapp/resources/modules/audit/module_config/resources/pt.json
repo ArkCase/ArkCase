@@ -1,0 +1,26 @@
+{
+  "audit": {
+    "title": "pt_Audit",
+    "menus": {
+      "leftnav.item": "pt_Audit"
+    },
+    "navigation": {
+      "label": {
+        "reportName": "pt_Report Name",
+        "inputID": "pt_ID",
+        "dateFrom": "pt_From",
+        "dateTo": "pt_To"
+      },
+      "placeholder": {
+        "selectAudit": "pt_ALL",
+        "inputId": "pt_#"
+      },
+      "button": {
+        "generateAuditReport.btn": "pt_Generate Audit Report"
+      }
+    },
+    "datepickers":{
+      "close": "pt_Done"
+    }
+  }
+}

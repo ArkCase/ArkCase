@@ -1,0 +1,24 @@
+{
+  "tags": {
+    "title": "Знаки опасности",
+    "search.btn": "ru_Search",
+    "search.placeholder": "ru_Search for tags",
+    "menus": {
+      "leftnav.item": "Знаки опасности"
+    },
+    "comp":{
+      "grid": {
+        "columns": {
+          "id": "ru_ID",
+          "name": "ru_Name",
+          "type": "ru_Type",
+          "title": "ru_Title",
+          "parent": "ru_Parent",
+          "assignee": "ru_Assignee",
+          "modified": "ru_Modified"
+        }
+      }
+    }
+  }
+}
+
