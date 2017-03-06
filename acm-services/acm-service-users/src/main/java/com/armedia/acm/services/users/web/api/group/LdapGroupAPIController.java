@@ -4,7 +4,9 @@ package com.armedia.acm.services.users.web.api.group;
 import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.model.ldap.AcmLdapConstants;
 import com.armedia.acm.services.users.service.group.LdapGroupService;
+import com.armedia.acm.services.users.web.api.SecureLdapController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -18,25 +20,28 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 
 @Controller
-@RequestMapping({"/api/v1/users/ldap", "/api/latest/users/ldap"})
-public class LdapGroupAPIController
+@RequestMapping({"/api/v1/ldap", "/api/latest/ldap"})
+public class LdapGroupAPIController extends SecureLdapController
 {
     private LdapGroupService ldapGroupService;
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(value = "/group/{directoryName}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{directory:.+}/groups", method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmGroup createLdapGroup(@RequestBody AcmGroup group, @PathVariable String directoryName)
+    public AcmGroup createLdapGroup(@RequestBody AcmGroup group, @PathVariable String directory)
             throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
+
+        checkIfLdapManagementIsAllowed(directory);
         try
         {
-            return getLdapGroupService().createLdapGroup(group, directoryName);
+            return getLdapGroupService().createLdapGroup(group, directory);
         } catch (NameAlreadyBoundException e)
         {
             log.error("Duplicate group name: {}", group.getName(), e);
-            AcmAppErrorJsonMsg acmAppErrorJsonMsg = new AcmAppErrorJsonMsg("Group name already exist!",
-                    "LDAP_GROUP", "groupName", e);
+            AcmAppErrorJsonMsg acmAppErrorJsonMsg = new AcmAppErrorJsonMsg("Group name already exists!",
+                    AcmLdapConstants.GROUP_OBJECT_TYPE, "groupName", e);
             acmAppErrorJsonMsg.putExtra("group", group);
             throw acmAppErrorJsonMsg;
         } catch (Exception e)
@@ -46,19 +51,22 @@ public class LdapGroupAPIController
         }
     }
 
-    @RequestMapping(value = "/group/{directoryName}/{parentGroupName}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{directory:.+}/groups/{parentGroupName:.+}", method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmGroup createLdapSubgroup(@RequestBody AcmGroup group, @PathVariable String directoryName,
+    public AcmGroup createLdapSubgroup(@RequestBody AcmGroup group, @PathVariable String directory,
                                        @PathVariable String parentGroupName)
             throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
+
+        checkIfLdapManagementIsAllowed(directory);
         try
         {
-            return getLdapGroupService().createLdapSubgroup(group, parentGroupName, directoryName);
+            return getLdapGroupService().createLdapSubgroup(group, parentGroupName, directory);
         } catch (NameAlreadyBoundException e)
         {
             log.error("Duplicate sub-group name: {}", group.getName(), e);
-            AcmAppErrorJsonMsg acmAppErrorJsonMsg = new AcmAppErrorJsonMsg("Group name already exist!",
+            AcmAppErrorJsonMsg acmAppErrorJsonMsg = new AcmAppErrorJsonMsg("Group name already exists!",
                     "LDAP_GROUP", "groupName", e);
             acmAppErrorJsonMsg.putExtra("subgroup", group);
             throw acmAppErrorJsonMsg;
@@ -79,4 +87,5 @@ public class LdapGroupAPIController
     {
         this.ldapGroupService = ldapGroupService;
     }
+
 }

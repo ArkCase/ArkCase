@@ -414,7 +414,7 @@
     <changeSet id="21-add-ldap-columns-to-group-table" author="nadica.cuculova">
         <addColumn tableName="acm_group">
             <column name="cm_distinguished_name" type="VARCHAR(255)"/>
-            <column name="cm_directory_name" type="VARCHAR(${cmUserDirectoryNameLength})">
+            <column name="cm_directory_name" type="VARCHAR(${cmUserDirectoryNameLength})" defaultValue="armedia">
                 <constraints nullable="false"/>
             </column>
         </addColumn>

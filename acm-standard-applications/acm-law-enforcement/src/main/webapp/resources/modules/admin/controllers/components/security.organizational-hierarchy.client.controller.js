@@ -16,23 +16,19 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
         $scope.addAdHocGroupBtn = "admin.security.organizationalHierarchy.createGroupDialog.adHocGroup.title";
         $scope.addLdapGroupBtn = "admin.security.organizationalHierarchy.createGroupDialog.ldapGroup.title";
 
-        $scope.enableEditingLdapUsers = false;
         $scope.ldapEditingEnabledPerDirectoryServer = {};
 
         LdapConfigService.retrieveDirectories().then(function (directories) {
-            $scope.directoryServers = _.map(directories.data, "ldapConfig.id");
-            $scope.userPickedDirectoryServerConfig = "";
-            _.forEach(directories.data, function (ds) {
-                var directoryName = ds["ldapConfig.id"];
-                var enabledEditing = ds["ldapConfig.enableEditingLdapUsers"];
-                $scope.ldapEditingEnabledPerDirectoryServer[directoryName] = enabledEditing === "true";
+            $scope.directoryServers = _.map(directories.data, function (ds) {
+                var dirId = ds["ldapConfig.id"];
+                var dirEnabled = ds["ldapConfig.enableEditingLdapUsers"] === "true";
+                $scope.ldapEditingEnabledPerDirectoryServer[dirId] = dirEnabled;
+                return {
+                    id: dirId,
+                    enabled: dirEnabled
+                }
             });
         });
-
-        $scope.checkEditing = function () {
-            // checks if editing users or groups is enabled for the selected directory server
-            $scope.enableEditingLdapUsers = $scope.ldapEditingEnabledPerDirectoryServer[$scope.userPickedDirectoryServerConfig];
-        };
 
         $scope.config.$promise.then(function (config) {
             $scope.cfg = _.find(config.components, {id: 'usersPicker'});
@@ -487,6 +483,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
             mapped["modified"] = member.modified_date_tdt;
             mapped["userState"] = member.status_lcs;
             mapped["mail"] = member.email_lcs;
+            mapped["userDirectoryName"] = member.directory_name_s;
             return mapped;
         }
 
@@ -500,6 +497,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
             member.modified_date_tdt = mapped["modified"];
             member.status_lcs = mapped["userState"];
             member.email_lcs = mapped["mail"];
+            member.directory_name_s = mapped["userDirectoryName"];
             member.title = member.name;
             member.isMember = true;
             return member;
@@ -607,13 +605,15 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                 });
         }
 
-        var groupController = function (group, errorMessage, parentGroup, onOK) {
+        var groupController = function (seeDirectorySelect, group, errorMessage, parentGroup, onOK, directoryServers) {
             return function ($scope, $modalInstance) {
                 $scope.header = "admin.security.organizationalHierarchy.createGroupDialog.ldapGroup.title";
+                $scope.addGroupModal = seeDirectorySelect;
                 $scope.group = group;
                 $scope.error = errorMessage;
-
-                $scope.ok = onOK($scope, $modalInstance);
+                $scope.directoryServers = directoryServers;
+                $scope.selectedConfig = {};
+                $scope.ok = onOK($scope, $modalInstance, $scope.selectedConfig);
                 $scope.cancel = function () {
                     $modalInstance.dismiss('cancel');
                 };
@@ -630,7 +630,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
         }
 
         function openLdapSubGroupModal(group, parentGroup, errorMessage) {
-            return groupModal(groupController(group, errorMessage, parentGroup, function (scope, modal) {
+            return groupModal(groupController(false, group, errorMessage, parentGroup, function (scope, modal) {
                 return function () {
                     scope.data = {
                         "subgroup": scope.group,
@@ -643,16 +643,20 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
         }
 
         function openCreateGroupModal(group, errorMessage) {
-            return groupModal(groupController(group, errorMessage, {}, function (scope, modal) {
+            return groupModal(groupController(true, group, errorMessage, {}, function (scope, modal) {
                 return function () {
-                    modal.close(scope.group);
+                    scope.data = {
+                        "group": scope.group,
+                        "selectedDirectory": scope.selectedConfig.directory
+                    };
+                    modal.close(scope.data);
                 };
-            }))
+            }, $scope.directoryServers))
         }
 
         function onLdapGroupAdd(data, deferred) {
             //button ok
-            organizationalHierarchyService.createLdapGroup(data, $scope.userPickedDirectoryServerConfig)
+            organizationalHierarchyService.createLdapGroup(data.group, data.selectedDirectory.id)
                 .then(function (group) {
                     //added successfully
                     var newGroup = {};

@@ -91,9 +91,9 @@ angular.module('profile').controller('ChangePasswordModalController', ['$scope',
     }
 ]);
 
-angular.module('profile').controller('ChangeLdapPasswordModalController', ['$scope', '$modalInstance',
-    'Profile.ChangePasswordService', '$modal',
-    function ($scope, $modalInstance, ChangePasswordService, $modal) {
+angular.module('profile').controller('ChangeLdapPasswordModalController', ['$scope', '$modalInstance'
+    , '$modal', 'Profile.ChangePasswordService', 'Authentication',
+    function ($scope, $modalInstance, $modal, ChangePasswordService, Authentication) {
         $scope.close = function () {
             $modalInstance.dismiss('cancel');
         };
@@ -102,6 +102,10 @@ angular.module('profile').controller('ChangeLdapPasswordModalController', ['$sco
             $scope.newPassword = '';
             $scope.newPasswordAgain = '';
         };
+
+        Authentication.queryUserInfo().then(function (userInfo) {
+            $scope.userInfo = userInfo;
+        });
 
 
         function openModal(params) {
@@ -131,7 +135,7 @@ angular.module('profile').controller('ChangeLdapPasswordModalController', ['$sco
                 this.newPasswordAgain = '';
             }
             else {
-                var data = {"password": this.newPassword};
+                var data = {"password": this.newPassword, "userInfo": $scope.userInfo};
                 ChangePasswordService.changeLdapPassword(data);
                 $modalInstance.close('done');
                 this.newPassword = '';

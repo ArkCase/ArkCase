@@ -88,6 +88,7 @@
           "title": "Add Ad-Hoc Group"
         },
         "selectDirectory": "--Choose Directory Config--",
+        "disabledGroupWarning": "Adding new LDAP groups is not allowed for this directory!",
         "name": "Name",
         "namePlaceholder": "Enter group name",
         "description": "Description",

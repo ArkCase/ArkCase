@@ -1,5 +1,5 @@
 'use strict';
-angular.module('profile').service('Profile.ChangePasswordService', function ($http, $q, $modal) {
+angular.module('profile').service('Profile.ChangePasswordService', function ($http, $q, $modal, $resource) {
     return ({
         changePassword: changePassword,
         changeLdapPassword: changeLdapPassword
@@ -45,8 +45,10 @@ angular.module('profile').service('Profile.ChangePasswordService', function ($ht
     function changeLdapPassword(credentials) {
         var request = $http({
             method: "POST",
-            url: "api/latest/users/ldap/changePassword",
-            data: credentials
+            url: 'api/latest/ldap/' + credentials.userInfo.directoryName + '/users/' + credentials.userInfo.userId + '/password',
+            data: {
+                "password": credentials.password
+            }
         });
         return (request.then(handleSuccess, handleError));
     }
