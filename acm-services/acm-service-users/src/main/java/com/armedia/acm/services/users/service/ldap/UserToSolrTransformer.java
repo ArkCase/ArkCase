@@ -49,6 +49,8 @@ public class UserToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmU
         // Add groups
         solr.setGroups_id_ss(getGroupIds(in));
 
+        solr.setAdditionalProperty("directory_name_s", in.getUserDirectoryName());
+
         // TODO find a way to add Organization
         // TODO find a way to add Application Title
         // TODO find a way to add Location

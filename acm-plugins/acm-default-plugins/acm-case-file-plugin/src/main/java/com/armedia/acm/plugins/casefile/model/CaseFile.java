@@ -46,7 +46,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     @Column(name = "cm_case_id")
     private Long id;
 
-    @Column(name = "cm_case_number", insertable = true, updatable = false)
+    @Column(name = "cm_case_number")
     private String caseNumber;
 
     @Column(name = "cm_case_type")
