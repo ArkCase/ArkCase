@@ -70,9 +70,7 @@ public class SpringLdapPagedDao implements SpringLdapDao
             searchControls.setReturningAttributes(allAttributes);
         }
 
-        AcmUserGroupsContextMapper userGroupsContextMapper = new AcmUserGroupsContextMapper();
-        userGroupsContextMapper.setUserIdAttributeName(syncConfig.getUserIdAttributeName());
-        userGroupsContextMapper.setMailAttributeName(syncConfig.getMailAttributeName());
+        AcmUserGroupsContextMapper userGroupsContextMapper = new AcmUserGroupsContextMapper(syncConfig);
 
         String searchBase = syncConfig.getUserSearchBase();
 
@@ -100,7 +98,7 @@ public class SpringLdapPagedDao implements SpringLdapDao
         if (userDomain != null && !userDomain.trim().isEmpty())
         {
             String userDomainSuffix = "@" + userDomain;
-            acmUsers.stream().forEach(u -> u.setUserId(u.getUserId() + userDomainSuffix));
+            acmUsers.forEach(u -> u.setUserId(u.getUserId() + userDomainSuffix));
         }
 
         log.info("LDAP sync number of enabled users: {}", acmUsers.size());
@@ -114,7 +112,7 @@ public class SpringLdapPagedDao implements SpringLdapDao
         searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
         searchControls.setReturningAttributes(new String[]{"cn", "memberOf"});
 
-        AcmGroupContextMapper acmGroupContextMapper = new AcmGroupContextMapper();
+        AcmGroupContextMapper acmGroupContextMapper = new AcmGroupContextMapper(syncConfig);
         String searchBase = syncConfig.getGroupSearchBase();
         List<LdapGroup> acmGroups = fetchLdapPaged(template, searchBase, syncConfig.getGroupSearchFilter(),
                 searchControls, syncConfig.getSyncPageSize(), acmGroupContextMapper);

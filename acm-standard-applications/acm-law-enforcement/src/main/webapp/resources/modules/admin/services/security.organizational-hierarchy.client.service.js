@@ -14,8 +14,8 @@
  *
  * The Admin.OrganizationalHierarchyService provides Organizational Hierarchy REST calls functionality
  */
-angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http', 'UtilService', '$resource',
-    function ($http, Util, $resource) {
+angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http', 'UtilService', 'Acm.StoreService', '$resource',
+    function ($http, Util, Store, $resource) {
         var Service = $resource('api/latest/users/group', {}, {
             /**
              * @ngdoc method
@@ -39,11 +39,46 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
             _getFilteredTopLevelGroups: {
                 method: 'GET',
                 url: 'api/v1/service/functionalaccess/groups/toplevel',
-                cache: false,
-                isArray: false
-            }
+                cache: false
+            },
 
+            _getInternalUsersConfig: {
+                method: 'GET',
+                url: 'api/latest/ldap/:directoryName/editingEnabled',
+                cache: false
+            },
+
+            _addMemberToLdapGroup: {
+                method: 'POST',
+                url: 'api/latest/ldap/:directoryName/users'
+            },
+
+            _editLdapUser: {
+                method: 'POST',
+                url: 'api/latest/ldap/:directoryName/users/:userId'
+            },
+
+            _addExistingMembersToLdapGroup: {
+                method: 'POST',
+                url: 'api/latest/ldap/:directoryName/groups/:groupName/users',
+                isArray: true
+            },
+
+            _createLdapGroup: {
+                method: 'POST',
+                url: 'api/latest/ldap/:directoryName/groups'
+            },
+
+            _createLdapSubgroup: {
+                method: 'POST',
+                url: 'api/latest/ldap/:directoryName/groups/:parentGroupName'
+            }
         });
+
+        Service.CacheNames = {
+            INTERNAL_USER_CONFIG: "INTERNAL_USER_CONFIG",
+            KEY: "enableEditingLdapUsers"
+        };
 
         return ({
             getGroups: getGroups,
@@ -56,6 +91,12 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
             removeGroup: removeGroup,
             setSupervisor: setSupervisor,
             getFilteredTopLevelGroups: getFilteredTopLevelGroups,
+            isEnabledEditingLdapUsers: isEnabledEditingLdapUsers,
+            addMemberToLdapGroup: addMemberToLdapGroup,
+            editGroupMember: editGroupMember,
+            addExistingMembersToLdapGroup: addExistingMembersToLdapGroup,
+            createLdapGroup: createLdapGroup,
+            createLdapSubgroup: createLdapSubgroup
         });
 
         /**
@@ -317,4 +358,120 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
             });
         }
 
+        function isEnabledEditingLdapUsers(directoryName) {
+            return Util.serviceCall({
+                service: Service._getInternalUsersConfig
+                , param: {
+                    directoryName: directoryName
+                }
+                , onSuccess: function (response) {
+                    return response.enableEditingLdapUsers;
+                }
+            });
+        }
+
+        /**
+         * @ngdoc method
+         * @name addMembersToLdapGroup
+         * @methodOf admin.service:Admin.OrganizationalHierarchyService
+         *
+         * @description
+         * Performs adding members to ldap group
+         *
+         * ldapUser {object} Ldap AcmUser object to be created
+         *
+         * @returns {HttpPromise} Future info about add members to ldap group
+         */
+        function addMemberToLdapGroup(ldapUser, directoryName) {
+            return Util.serviceCall({
+                service: Service._addMemberToLdapGroup
+                , param: {
+                    directoryName: directoryName
+                }
+                , data: ldapUser
+                , onSuccess: function (data) {
+                    return data;
+                }
+            });
+        }
+
+        function editGroupMember(ldapUser) {
+            return Util.serviceCall({
+                service: Service._editLdapUser
+                , param: {
+                    directoryName: ldapUser.userDirectoryName,
+                    userId: ldapUser.userId
+                }
+                , data: ldapUser
+                , onSuccess: function (data) {
+                    return data;
+                }
+            });
+        }
+
+        function addExistingMembersToLdapGroup(ldapUsers, groupName, directoryName) {
+            return Util.serviceCall({
+                service: Service._addExistingMembersToLdapGroup
+                , data: ldapUsers
+                , param: {
+                    groupName: groupName,
+                    directoryName: directoryName
+                }
+                , onSuccess: function (data) {
+                    return data;
+                }
+            });
+        }
+
+
+        /**
+         * @ngdoc method
+         * @name createLdapGroup
+         * @methodOf admin.service:Admin.OrganizationalHierarchyService
+         *
+         * @description
+         * Performs create ldap group
+         *
+         * param {object} group object to be created
+         *
+         * @returns {HttpPromise} Future info about create ldap group
+         */
+        function createLdapGroup(group, directoryName) {
+            return Util.serviceCall({
+                service: Service._createLdapGroup
+                , param: {
+                    directoryName: directoryName
+                }
+                , data: group
+                , onSuccess: function (data) {
+                    return data;
+                }
+            });
+        }
+
+        /**
+         * @ngdoc method
+         * @name createLdapSubGroup
+         * @methodOf admin.service:Admin.OrganizationalHierarchyService
+         *
+         * @description
+         * Performs create ldap subgroup
+         *
+         * param {object} group object to be created
+         *
+         * @returns {HttpPromise} Future info about create ldap subgroup
+         */
+        function createLdapSubgroup(group, parentGroupName, directoryName) {
+            return Util.serviceCall({
+                service: Service._createLdapSubgroup
+                , data: group
+                , param: {
+                    parentGroupName: parentGroupName,
+                    directoryName: directoryName
+                }
+                , onSuccess: function (data) {
+                    return data;
+                }
+            });
+        }
     }]);

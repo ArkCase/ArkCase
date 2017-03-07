@@ -84,13 +84,20 @@
         "createAdHocGroup": "createAdHocGroup"
       },
       "createGroupDialog": {
-        "title": "Add Ad-Hoc Group",
+        "ldapGroup": {
+          "title": "Add LDAP Group"
+        },
+        "adHocGroup": {
+          "title": "Add Ad-Hoc Group"
+        },
+        "selectDirectory": "--Choose Directory Config--",
+        "disabledGroupWarning": "Adding new LDAP groups is not allowed for this directory!",
         "name": "Name",
         "namePlaceholder": "Enter group name",
         "description": "Description",
         "descriptionPlaceholder": "Enter Description",
         "btn": {
-          "ok": "Add Ad-Hoc Group",
+          "ok": "Add Group",
           "cancel": "Cancel"
         }
       },
@@ -113,6 +120,27 @@
           "ok": "Add",
           "searchPlaceholder": "Enter to search for members."
         }
+      },
+      "createUserDialog": {
+        "addLdapMember": {
+          "title": "Add Ldap Member",
+          "btn": {
+            "cancel": "Cancel",
+            "ok": "Add Ldap User"
+          }
+        },
+        "editLdapMember": {
+          "title": "Edit Ldap Member",
+          "btn": {
+            "cancel": "Cancel",
+            "ok": "Edit Ldap User"
+          }
+        },
+        "username": "Username",
+        "firstName": "FirstName",
+        "lastName": "LastName",
+        "email": "Email",
+        "password": "Password"
       },
       "addMembersGridColumns": {
         "name": "Name",
