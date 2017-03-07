@@ -16,30 +16,40 @@
 
 package com.armedia.acm.proxy.http;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
+import org.apache.http.HeaderElement;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.GzipCompressingEntity;
+import org.apache.http.client.entity.GzipDecompressingEntity;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.AbortableHttpRequest;
 import org.apache.http.client.params.ClientPNames;
 import org.apache.http.client.params.CookiePolicy;
 import org.apache.http.client.utils.URIUtils;
-import org.apache.http.entity.InputStreamEntity;
+import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
 import org.apache.http.message.BasicHttpRequest;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.message.HeaderGroup;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -47,15 +57,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.Closeable;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.net.HttpCookie;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Enumeration;
 import java.util.Formatter;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * HTTP proxy which can be used to proxy services which ArkCase is using in IFRAME
@@ -100,6 +116,25 @@ public class ProxyServlet extends HttpServlet
      * A boolean parameter name to keep COOKIES as-is
      */
     public static final String P_PRESERVECOOKIES = "preserveCookies";
+
+    /**
+     * A String parameter name to match urls which content needs to be rewritten
+     */
+    public static final String RESPONSE_URL_MATCHERS = "responseUrlMatchers";
+    /**
+     * Patterns and replacements for replacing String in the response content, replaced with comma.
+     * Example: "/asd/:/aaa/asd, /bbb/:/ccc/"
+     */
+    public static final String P_RESPONSE_CONTENT_REWRITE_PAIRS = "responseContentRewritePairs";
+
+    /**
+     * List containing urls which need to be matched for rewriting strings in the content.
+     */
+    protected List<String> overrideContentUrlPatterns;
+    /**
+     * Patterns and replacements for replacing String in the response content
+     */
+    private List<String> responseContentRewritePairs;
 
     /**
      * The parameter name for the target (destination) URI to proxy to.
@@ -182,6 +217,25 @@ public class ProxyServlet extends HttpServlet
         {
             this.doPreserveCookies = Boolean.parseBoolean(preserveCookiesString);
         }
+
+        String overrideContentUrlPatternsString = getConfigParam(RESPONSE_URL_MATCHERS);
+        String responseContentRewritePairsString = getConfigParam(P_RESPONSE_CONTENT_REWRITE_PAIRS);
+        if (responseContentRewritePairsString == null)
+        {
+            responseContentRewritePairsString = "";
+        }
+        responseContentRewritePairs = Arrays.stream(responseContentRewritePairsString.split(",[ ]*")).collect(Collectors.toList());
+        if (!StringUtils.isEmpty(overrideContentUrlPatternsString))
+        {
+            overrideContentUrlPatterns =
+                    Pattern.compile(",", Pattern.LITERAL)
+                            .splitAsStream(overrideContentUrlPatternsString)
+                            .collect(Collectors.toList());
+        } else
+        {
+            overrideContentUrlPatterns = new ArrayList<>();
+        }
+
         initTarget();//sets target*
 
         HttpParams hcParams = new BasicHttpParams();
@@ -189,6 +243,7 @@ public class ProxyServlet extends HttpServlet
         hcParams.setBooleanParameter(ClientPNames.HANDLE_REDIRECTS, false); // See #70
         readConfigParam(hcParams, ClientPNames.HANDLE_REDIRECTS, Boolean.class);
         proxyClient = createHttpClient(hcParams);
+        //proxyClient.getParams().setParameter(ConnRoutePNames.FORCED_ROUTE, new HttpHost("127.0.0.1", 8889));
     }
 
     protected void initTarget() throws ServletException
@@ -400,10 +455,34 @@ public class ProxyServlet extends HttpServlet
     {
         HttpEntityEnclosingRequest eProxyRequest =
                 new BasicHttpEntityEnclosingRequest(method, proxyRequestUri);
+
+        HttpEntity entity;
+
+        //because of reason that media type is for_url_encoded
+        //inputStream of the request is empty i.e. already consumed
+        //so we need to send those parameters to the proxyRequest
+        if (servletRequest.getContentType().contains(MediaType.APPLICATION_FORM_URLENCODED_VALUE))
+        {
+            List<NameValuePair> params = new LinkedList<>();
+            servletRequest.getParameterMap().entrySet().stream().forEach(entry ->
+            {
+                List<NameValuePair> keyParams = Arrays.stream(entry.getValue()).map(value ->
+                {
+                    NameValuePair nameValuePair = new BasicNameValuePair(entry.getKey(), value);
+                    return nameValuePair;
+                }).collect(Collectors.toList());
+                params.addAll(keyParams);
+            });
+            entity = new UrlEncodedFormEntity(params);
+        } else
+        {
+            String requestBody = IOUtils.toString(servletRequest.getInputStream(), servletRequest.getCharacterEncoding());
+            entity = new ByteArrayEntity(requestBody.getBytes());
+        }
+
         // Add the input entity (streamed)
         //  note: we don't bother ensuring we close the servletInputStream since the container handles it
-        eProxyRequest.setEntity(
-                new InputStreamEntity(servletRequest.getInputStream(), getContentLength(servletRequest)));
+        eProxyRequest.setEntity(entity);
         return eProxyRequest;
     }
 
@@ -511,7 +590,11 @@ public class ProxyServlet extends HttpServlet
                 headerValue = getRealCookie(headerValue);
             }
             logger.warn("Copying response header [{}: {}]", headerName, headerValue);
-            proxyRequest.addHeader(headerName, headerValue);
+            //don't add header if value is empty
+            if (!StringUtils.isEmpty(headerValue))
+            {
+                proxyRequest.addHeader(headerName, headerValue);
+            }
         }
     }
 
@@ -582,7 +665,6 @@ public class ProxyServlet extends HttpServlet
     {
         List<HttpCookie> cookies = HttpCookie.parse(headerValue);
         String path = servletRequest.getContextPath(); // path starts with / or is empty string
-        path += servletRequest.getServletPath(); // servlet path starts with / or is empty string
         if (path.isEmpty())
         {
             path = "/";
@@ -595,7 +677,7 @@ public class ProxyServlet extends HttpServlet
             Cookie servletCookie = new Cookie(proxyCookieName, cookie.getValue());
             servletCookie.setComment(cookie.getComment());
             servletCookie.setMaxAge((int) cookie.getMaxAge());
-            servletCookie.setPath(path); //set to the path of the proxy servlet
+            servletCookie.setPath(path + cookie.getPath()); //set to the path of the proxy servlet with context path as prefix
             // don't set cookie domain
             servletCookie.setSecure(cookie.getSecure());
             servletCookie.setVersion(cookie.getVersion());
@@ -647,11 +729,62 @@ public class ProxyServlet extends HttpServlet
                                       HttpRequest proxyRequest, HttpServletRequest servletRequest)
             throws IOException
     {
+        //check if url is eligible for content processing
+        String found = overrideContentUrlPatterns.stream().filter(pattern -> servletRequest.getRequestURI().matches(pattern)).findFirst().orElse(null);
+
         HttpEntity entity = proxyResponse.getEntity();
         if (entity != null)
         {
-            OutputStream servletOutputStream = servletResponse.getOutputStream();
-            entity.writeTo(servletOutputStream);
+            boolean isGzip = false;
+            Header ceheader = entity.getContentEncoding();
+            if (ceheader != null)
+            {
+                HeaderElement[] codecs = ceheader.getElements();
+                for (int i = 0; i < codecs.length; i++)
+                {
+                    if (codecs[i].getName().equalsIgnoreCase("gzip"))
+                    {
+                        //we need to decompress entity
+                        entity = new GzipDecompressingEntity(entity);
+                        isGzip = true;
+                    }
+                }
+            }
+
+            if (found != null)
+            {
+                //this response resource needs to be processed(override all matches in body)
+                String responseString = IOUtils.toString(entity.getContent());
+
+                //replace all given patterns with according replacement
+                for (String pair : responseContentRewritePairs)
+                {
+                    String[] pairsArray = pair.split(":");
+                    if (pairsArray.length != 2)
+                    {
+                        logger.warn("Error split pair(pattern, replacement) for [{}]", pair);
+                        continue;
+                    }
+                    responseString = responseString.replaceAll(pairsArray[0], pairsArray[1]);
+                }
+                servletResponse.setContentLength(responseString.length());
+                StringEntity stringEntity = new StringEntity(responseString);
+                if (isGzip)
+                {
+                    //we need to encode to gzip before sending it back
+                    GzipCompressingEntity gzipCompressingEntity = new GzipCompressingEntity(stringEntity);
+                    gzipCompressingEntity.writeTo(servletResponse.getOutputStream());
+                } else
+                {
+                    //write processed entity to the output stream
+                    stringEntity.writeTo(servletResponse.getOutputStream());
+                }
+            } else
+            {
+                //no need for processing, just write entity in the response
+                OutputStream servletOutputStream = servletResponse.getOutputStream();
+                entity.writeTo(servletOutputStream);
+            }
         }
     }
 
