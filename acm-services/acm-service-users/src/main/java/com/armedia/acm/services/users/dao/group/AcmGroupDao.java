@@ -257,20 +257,16 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         try
         {
             retval = (AcmGroup) dbQuery.getSingleResult();
-        } catch (Exception var8)
+        } catch (NoResultException e)
         {
-            if (var8 instanceof NoResultException)
-            {
-                this.LOG.info("There is no any group with name = " + name);
-            } else if (var8 instanceof NonUniqueResultException)
-            {
-                this.LOG.info("There is no unique group found with name = " + name + ". More than one group has this name.");
-            } else
-            {
-                this.LOG.error("Error while retrieving group by group name = " + name, var8);
-            }
+            LOG.info("There is no any group with name = {}" + name);
+        } catch (NonUniqueResultException e)
+        {
+            LOG.info("There is no unique group found with name = {}" + name + ". More than one group has this name.");
+        } catch (Exception e)
+        {
+            LOG.error("Error while retrieving group by group name = {}" + name, e);
         }
-
         return retval;
     }
 
