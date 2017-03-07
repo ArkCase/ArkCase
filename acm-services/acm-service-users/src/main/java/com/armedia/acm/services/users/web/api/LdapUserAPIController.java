@@ -30,8 +30,6 @@ public class LdapUserAPIController extends SecureLdapController
 {
     private LdapUserService ldapUserService;
 
-    private LdapAuthenticateManager ldapAuthenticateManager;
-
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/{directory:.+}/editingEnabled", method = RequestMethod.GET,
@@ -39,7 +37,7 @@ public class LdapUserAPIController extends SecureLdapController
     @ResponseBody
     public Map<String, Boolean> isEditingLdapUsersEnabled(@PathVariable String directory)
     {
-        boolean enableEditingLdapUsers = isLdapManagementEnabled(directory, acmContextHolder);
+        boolean enableEditingLdapUsers = isLdapManagementEnabled(directory);
         return Collections.singletonMap("enableEditingLdapUsers", enableEditingLdapUsers);
     }
 
@@ -111,7 +109,7 @@ public class LdapUserAPIController extends SecureLdapController
         checkIfLdapManagementIsAllowed(directory);
         try
         {
-            LdapAuthenticateService ldapAuthenticateService = acmContextHolder.getAllBeansOfType(LdapAuthenticateService.class).
+            LdapAuthenticateService ldapAuthenticateService = getAcmContextHolder().getAllBeansOfType(LdapAuthenticateService.class).
                     get(String.format("%s_ldapAuthenticateService", directory));
             ldapAuthenticateService.changeUserPassword(userId, credentials.get("password"));
             return Collections.singletonMap("message", "Password successfully changed");
@@ -143,13 +141,4 @@ public class LdapUserAPIController extends SecureLdapController
         this.ldapUserService = ldapUserService;
     }
 
-    public LdapAuthenticateManager getLdapAuthenticateManager()
-    {
-        return ldapAuthenticateManager;
-    }
-
-    public void setLdapAuthenticateManager(LdapAuthenticateManager ldapAuthenticateManager)
-    {
-        this.ldapAuthenticateManager = ldapAuthenticateManager;
-    }
 }
