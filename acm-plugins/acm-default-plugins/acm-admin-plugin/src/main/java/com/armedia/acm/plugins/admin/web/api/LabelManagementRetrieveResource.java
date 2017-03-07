@@ -23,9 +23,8 @@ public class LabelManagementRetrieveResource
 {
     private Logger log = LoggerFactory.getLogger(getClass());
     private LabelManagementService labelManagementService;
-
     @RequestMapping(value = "/labelmanagement/resource", method = RequestMethod.GET, produces = {
-            MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
+            MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
     @ResponseBody
     public String retrieveResource(

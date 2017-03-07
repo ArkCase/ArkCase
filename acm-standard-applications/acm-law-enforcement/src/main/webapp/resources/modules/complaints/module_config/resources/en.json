@@ -5,6 +5,10 @@
     "progressLoading": "Loading complaint ",
     "progressError": "Failed to load complaint "
   },
+  "complaints.menus": {
+    "leftnav.item": "Complaints",
+    "topbar.item": "Complaint"
+  },
   "complaints.comp.info": {
     "complaintId": "Complaint id:",
     "complaintNumber": "Complaint ID:",

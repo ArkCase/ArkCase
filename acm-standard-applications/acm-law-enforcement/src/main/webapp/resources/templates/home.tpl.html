@@ -1,12 +1,12 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
     <title>{{title}}</title>
 
     <!-- General META -->
-    <meta charset="ISO 8859-1">
-    <meta http-equiv="Content-Type" content="text/html; charset=ISO 8859-1">
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -36,7 +36,6 @@
 </head>
 
 <body class="ng-cloak">
-
 <header data-ng-include="'modules/core/views/header.client.view.html'" class="navbar-arkcase"></header>
 <div ng-controller="PageController" ng-class="isLeftMenuCollapsed ? 'page-wrapper collapsed' : 'page-wrapper uncollapsed'">
     <div style="display:table-row">
@@ -52,7 +51,7 @@
 
 <!--Vendors JavaScript Files-->
 {% for jsFile in jsFiles%}
-<script type="text/javascript" src="{{jsFile}}"></script>
+<script type="text/javascript" charset="utf-8" src="{{jsFile}}"></script>
 {% endfor %}
 
 </body>

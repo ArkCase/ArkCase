@@ -7,7 +7,7 @@
     {
       "menuId": "leftnav",
       "menuItemURL": "tasks.main",
-      "menuItemTitle": "Tasks",
+      "menuItemTitle": "tasks.menus.leftnav.item",
       "moduleId": "task",
       "iconClass": "fa fa-check-circle",
       "position": 60
@@ -15,7 +15,7 @@
     {
       "menuId": "topbar",
       "menuItemURL": "newTask",
-      "menuItemTitle": "Task",
+      "menuItemTitle": "tasks.menus.topbar.item",
       "moduleId": "task",
       "iconClass": "fa fa-check-circle",
       "position": 30

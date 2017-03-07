@@ -1,0 +1,23 @@
+{
+  "tags": {
+    "title": "es_Tags",
+    "search.btn": "es_Search",
+    "search.placeholder": "es_Search for tags",
+    "menus": {
+      "leftnav.item": "es_Tags"
+    },
+    "comp":{
+      "grid": {
+        "columns": {
+          "id": "es_ID",
+          "name": "es_Name",
+          "type": "es_Type",
+          "title": "es_Title",
+          "parent": "es_Parent",
+          "assignee": "es_Assignee",
+          "modified": "es_Modified"
+        }
+      }
+    }
+  }
+}

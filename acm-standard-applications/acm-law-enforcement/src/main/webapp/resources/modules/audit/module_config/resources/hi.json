@@ -1,0 +1,26 @@
+{
+  "audit": {
+    "title": "hi_Audit",
+    "menus": {
+      "leftnav.item": "hi_Audit"
+    },
+    "navigation": {
+      "label": {
+        "reportName": "hi_Report Name",
+        "inputID": "hi_ID",
+        "dateFrom": "hi_From",
+        "dateTo": "hi_To"
+      },
+      "placeholder": {
+        "selectAudit": "hi_ALL",
+        "inputId": "hi_#"
+      },
+      "button": {
+        "generateAuditReport.btn": "hi_Generate Audit Report"
+      }
+    },
+    "datepickers":{
+      "close": "hi_Done"
+    }
+  }
+}

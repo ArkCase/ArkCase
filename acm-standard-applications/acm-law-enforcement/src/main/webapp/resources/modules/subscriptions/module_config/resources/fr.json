@@ -1,0 +1,22 @@
+{
+  "subscriptions": {
+    "title": "fr_Subscriptions",
+    "search.btn": "fr_Search",
+    "export.btn": "fr_Export",
+    "search.placeholder": "fr_Search for subscriptions",
+    "menus": {
+      "leftnav.item": "fr_Subscriptions"
+    },
+    "comp":{
+      "grid": {
+        "columns": {
+          "id": "fr_ID",
+          "event": "fr_Event",
+          "parentName": "fr_Parent Name",
+          "parentType": "fr_Parent Type",
+          "modified": "fr_Modified"
+        }
+      }
+    }
+  }
+}

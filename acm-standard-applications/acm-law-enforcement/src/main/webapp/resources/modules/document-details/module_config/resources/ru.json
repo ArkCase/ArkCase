@@ -1,0 +1,92 @@
+{
+  "documentDetails": {
+    "title": "ru_Document details",
+    "creator": "ru_Creator",
+    "created": "ru_Created",
+    "assignee": "ru_Assignee",
+    "fileType": "ru_File type",
+    "status": "ru_Status",
+    "name": "ru_Name",
+    "comp.eventHistory": {
+      "title": "ru_Event History",
+      "table.columns": {
+        "eventType": "ru_Event Name",
+        "eventDate": "ru_Created",
+        "userId": "ru_User"
+      }
+    },
+    "comp.tags": {
+      "title": "ru_Tags",
+      "table.columns": {
+        "tag": "ru_Tag"
+      },
+      "modal": {
+        "title": "ru_Tag",
+        "search": "ru_Search for Tag",
+        "buttons": {
+          "cancel": "ru_Cancel",
+          "ok": "ru_Add Tag"
+        }
+      },
+      "message.tagExists": "ru_Tag with that name or description or text already exists",
+      "message.tagAssociated": "ru_already associated",
+      "message.delete.success": "ru_Tag deleted successfully",
+      "message.delete.error": "ru_Error deleting tag"
+    },
+    "comp.participants": {
+      "title": "ru_Participants",
+      "table.columns": {
+        "name": "ru_Name",
+        "type": "ru_Type"
+      },
+      "message.delete.success": "ru_Successfully deleted row.",
+      "message.delete.error": "ru_Error deleting row.",
+      "role": {
+        "title": "ru_Change participant Role",
+        "dropdownLabel": "ru_Available Roles",
+        "buttons": {
+          "cancel": "ru_Cancel",
+          "ok": "ru_Change Role"
+        }
+      }
+    },
+    "comp.notes": {
+      "title": "ru_Notes",
+      "table.columns": {
+        "note": "ru_Note",
+        "tag": "ru_Document Version",
+        "created": "ru_Created",
+        "creator": "ru_Author"
+      }
+    },
+    "comp.versionHistory": {
+      "title": "ru_Version History",
+      "table.columns": {
+        "creator": "ru_User",
+        "created": "ru_Created",
+        "versionTag": "ru_Version"
+      }
+    },
+    "userSearch": {
+      "id": "ru_userSearch",
+      "title": "ru_Add New Participant",
+      "search": {
+        "btn": "ru_Go!",
+        "placeholder": "ru_Enter to search for a participant"
+      },
+      "cancelButton": "ru_Cancel",
+      "confirmButton": "ru_Select",
+      "enabled": true,
+      "userFacetFilter": "ru_\"Object Type\": USER",
+      "userGridColumns": {
+        "name": "ru_Name",
+        "type": "ru_Type",
+        "title": "ru_Title",
+        "parent": "ru_Parent",
+        "assignee": "ru_Assignee",
+        "modified": "ru_Modified"
+      },
+      "dropdownLabel": "ru_Participant Type"
+    }
+  }
+}

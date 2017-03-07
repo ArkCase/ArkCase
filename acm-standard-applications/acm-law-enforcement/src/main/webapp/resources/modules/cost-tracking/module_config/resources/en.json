@@ -5,6 +5,10 @@
     "progressLoading": "Loading costsheet ",
     "progressError": "Failed to load costsheet"
   },
+  "costTracking.menus": {
+    "leftnav.item": "Cost Tracking",
+    "topbar.item": "Costsheet"
+  },
   "costTracking.tree": {
   },
   "costTracking.comp.info": {

@@ -1,0 +1,24 @@
+{
+  "tags": {
+    "title": "Etiketten",
+    "search.btn": "de_Search",
+    "search.placeholder": "de_Search for tags",
+    "menus": {
+      "leftnav.item": "Etiketten"
+    },
+    "comp":{
+      "grid": {
+        "columns": {
+          "id": "de_ID",
+          "name": "de_Name",
+          "type": "de_Type",
+          "title": "de_Title",
+          "parent": "de_Parent",
+          "assignee": "de_Assignee",
+          "modified": "de_Modified"
+        }
+      }
+    }
+  }
+}
+
