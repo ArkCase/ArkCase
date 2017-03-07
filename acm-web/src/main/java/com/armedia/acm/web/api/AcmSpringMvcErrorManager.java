@@ -97,10 +97,11 @@ public class AcmSpringMvcErrorManager
     public Map<String, Object> handleJsonMessageError(HttpServletResponse response, AcmAppErrorJsonMsg e)
     {
         log.error("AcmAppErrorJsonMsg", e);
-        Map<String, Object> result = new HashMap();
+        Map<String, Object> result = new HashMap<>();
         result.put("message", e.getMessage());
         result.put("field", e.getField());
         result.put("objectType", e.getObjectType());
+        result.put("extra", e.getExtra());
         return result;
     }
 

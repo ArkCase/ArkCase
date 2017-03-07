@@ -15,6 +15,7 @@ public class AcmUserInfoDTO
     private String lastName;
     private List<String> authorities;
     private Set<String> privileges;
+    private String directoryName;
 
     public String getUserId()
     {
@@ -84,5 +85,15 @@ public class AcmUserInfoDTO
     public void setPrivileges(Set<String> privileges)
     {
         this.privileges = privileges;
+    }
+
+    public String getDirectoryName()
+    {
+        return directoryName;
+    }
+
+    public void setDirectoryName(String directoryName)
+    {
+        this.directoryName = directoryName;
     }
 }
