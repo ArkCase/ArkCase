@@ -18,6 +18,8 @@
  * @param {String} searchPlaceholder - (Optional)label for the input placeholder. If not specified, default value is used
  * @param {Object} filter - filter required to send to the faceted search by default (e.g. for client : "\"Object Sub Type\":CLIENT")
  * @param {Object} extraFilter - (Optional) extra filter to send to the faceted search if search against the "name" property
+ * @param {Object} searchQuery - (Optional) Used in the scenario where the search string is pre-populated or determined before the Modal opens
+ * @param {Object} findGroups - (Optional) Used in the scenario where the solr search for for the Owning Group(s) a user is a member of
  * @param {String} defaultFilter  - (Optional) Used to  retrieve data by default.
  * @param {Boolean} disableSearch  - (Optional) Used to disable search controls (input, filter and search button).
  * @param {Object} config - config of the parent scope used mostly for the UI-grid and to retrieve other params
@@ -45,6 +47,8 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 searchPlaceholder: '@',
                 filter: '@',
                 extraFilter: '@',
+                searchQuery: '@',
+                findGroups: '@',
                 defaultFilter: '@',
                 disableSearch: '@',
                 config: '&',            //& : one way binding (read-only, can return key, value pair via a getter function)
@@ -70,7 +74,12 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 scope.searchPlaceholder = Util.goodValue(scope.searchPlaceholder, $translate.instant("common.directive.searchModal.edtPlaceholder"));
                 scope.showHeaderFooter = !Util.isEmpty(scope.modalInstance);
                 scope.disableSearchControls = (scope.disableSearch === 'true') ? true : false;
-                scope.searchQuery = '';
+                scope.findGroups = scope.findGroups === 'true';
+                if (scope.searchQuery) {
+                    scope.searchQuery = scope.searchQuery;
+                } else {
+                    scope.searchQuery = '';
+                }
                 scope.minSearchLength = 3;
                 if (typeof(scope.config().showFacets) === 'undefined') {
                     scope.config.showFacets = true;
@@ -99,11 +108,17 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 scope.selectedItems = [];
                 scope.queryExistingItems = function () {
 
+                    var query = '';
                     if (scope.extraFilter) {
                         scope.filters = scope.filters + scope.extraFilter + '*' + scope.searchQuery + '*';
                     }
-                    var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuerySorted(scope.searchQuery + '*', scope.filters, scope.pageSize, scope.start, scope.sort);
 
+                    if (scope.findGroups) {
+                        query = SearchQueryBuilder.buildSafeFqFacetedSearchQuerySorted('*', scope.filters, scope.pageSize, scope.start, scope.sort);
+                    } else {
+                        query = SearchQueryBuilder.buildSafeFqFacetedSearchQuerySorted(scope.searchQuery + '*', scope.filters, scope.pageSize, scope.start, scope.sort);
+                    }
+                    
                     if (query) {
                         scope.showNoData = false;
                         SearchService.queryFilteredSearch({
