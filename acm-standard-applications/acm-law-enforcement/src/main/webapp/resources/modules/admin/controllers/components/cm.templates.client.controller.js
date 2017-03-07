@@ -17,11 +17,11 @@ angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$m
             data: [],
             onRegisterApi: function(gridApi) {
                 $scope.gridApi = gridApi;
-                gridApi.selection.on.rowSelectionChanged($scope,function(row) {
+                gridApi.selection.on.rowSelectionChanged($scope, function(row) {
                     $scope.selectedRows = gridApi.selection.getSelectedRows();
                 });
  
-                gridApi.selection.on.rowSelectionChangedBatch($scope,function(rows) {
+                gridApi.selection.on.rowSelectionChangedBatch($scope, function(rows) {
                     $scope.selectedRows = gridApi.selection.getSelectedRows();
                 });
            }

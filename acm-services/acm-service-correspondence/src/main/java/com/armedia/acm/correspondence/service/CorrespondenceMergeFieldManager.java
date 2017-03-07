@@ -9,6 +9,8 @@ import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
 import com.armedia.acm.correspondence.model.CorrespondenceMergeFieldConfiguration;
 import com.armedia.acm.correspondence.model.CorrespondenceMergeFieldVersion;
 import com.armedia.acm.correspondence.model.CorrespondenceMergeFieldVersionConfiguration;
+import com.armedia.acm.correspondence.model.CorrespondenceQuery;
+import com.armedia.acm.spring.SpringContextHolder;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -25,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -37,6 +40,8 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
     private Resource correspondenceMergeFieldsVersionConfiguration;
     private Resource correspondenceMergeFieldsConfiguration;
 
+    private SpringContextHolder springContextHolder;
+
     private List<CorrespondenceMergeField> mergeFields = new ArrayList<>();
     private List<CorrespondenceMergeFieldVersion> mergeFieldsVersions = new ArrayList<>();
 
@@ -46,7 +51,15 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
         try
         {
             File file = correspondenceMergeFieldsVersionConfiguration.getFile();
+            if (!file.exists())
+            {
+                file.createNewFile();
+            }
             String resource = FileUtils.readFileToString(file);
+            if (resource.isEmpty())
+            {
+                resource = "[]";
+            }
 
             ObjectMapper mapper = new ObjectMapper();
 
@@ -58,8 +71,33 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
             mergeFieldsVersions = new ArrayList<CorrespondenceMergeFieldVersion>(mergeFieldsVersionConfigurations.stream()
                     .map(configuration -> mapMergeFieldVersionFromConfiguration(configuration)).collect(Collectors.toList()));
 
+            if (mergeFieldsVersions.isEmpty())
+            {
+                Map<String, CorrespondenceQuery> correspondenceQueryBeansMap = springContextHolder
+                        .getAllBeansOfType(CorrespondenceQuery.class);
+                correspondenceQueryBeansMap.values().stream().forEach(cq -> {
+                    if (cq.getType() != null)
+                    {
+                        CorrespondenceMergeFieldVersion defaultMergeFieldVersion = new CorrespondenceMergeFieldVersion();
+                        defaultMergeFieldVersion.setMergingActiveVersion(true);
+                        defaultMergeFieldVersion.setMergingVersion("1.0");
+                        defaultMergeFieldVersion.setMergingType(cq.getType().name());
+                        defaultMergeFieldVersion.setModified(new Date());
+                        mergeFieldsVersions.add(defaultMergeFieldVersion);
+                    }
+                });
+                updateMergeFieldVersionConfiguration(mergeFieldsVersions);
+            }
             file = correspondenceMergeFieldsConfiguration.getFile();
+            if (!file.exists())
+            {
+                file.createNewFile();
+            }
             resource = FileUtils.readFileToString(file);
+            if (resource.isEmpty())
+            {
+                resource = "[]";
+            }
 
             mapper = new ObjectMapper();
 
@@ -70,6 +108,28 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
 
             mergeFields = new ArrayList<CorrespondenceMergeField>(mergeFieldsConfigurations.stream()
                     .map(configuration -> mapMergeFieldFromConfiguration(configuration)).collect(Collectors.toList()));
+
+            if (mergeFields.isEmpty())
+            {
+                Map<String, CorrespondenceQuery> correspondenceQueryBeansMap = springContextHolder
+                        .getAllBeansOfType(CorrespondenceQuery.class);
+                correspondenceQueryBeansMap.values().stream().forEach(cq -> {
+                    if (!cq.getFieldNames().isEmpty())
+                    {
+                        for (String fieldName : cq.getFieldNames())
+                        {
+                            CorrespondenceMergeField defaultMergeField = new CorrespondenceMergeField();
+                            defaultMergeField.setFieldVersion("1.0");
+                            defaultMergeField.setFieldId(fieldName);
+                            defaultMergeField.setFieldDescription(fieldName + " place holder");
+                            defaultMergeField.setFieldType(cq.getType().name());
+                            defaultMergeField.setFieldValue(fieldName);
+                            mergeFields.add(defaultMergeField);
+                        }
+                    }
+                });
+                updateMergeFieldConfiguration(mergeFields);
+            }
         } catch (IOException ioe)
         {
             throw new IllegalStateException(ioe);
@@ -203,6 +263,16 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
     public void setCorrespondenceMergeFieldsConfiguration(Resource correspondenceMergeFieldsConfiguration)
     {
         this.correspondenceMergeFieldsConfiguration = correspondenceMergeFieldsConfiguration;
+    }
+
+    public SpringContextHolder getSpringContextHolder()
+    {
+        return springContextHolder;
+    }
+
+    public void setSpringContextHolder(SpringContextHolder springContextHolder)
+    {
+        this.springContextHolder = springContextHolder;
     }
 
 }
