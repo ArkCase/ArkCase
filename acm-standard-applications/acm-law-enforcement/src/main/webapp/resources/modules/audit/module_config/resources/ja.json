@@ -1,0 +1,26 @@
+{
+  "audit": {
+    "title": "ja_Audit",
+    "menus": {
+      "leftnav.item": "ja_Audit"
+    },
+    "navigation": {
+      "label": {
+        "reportName": "ja_Report Name",
+        "inputID": "ja_ID",
+        "dateFrom": "ja_From",
+        "dateTo": "ja_To"
+      },
+      "placeholder": {
+        "selectAudit": "ja_ALL",
+        "inputId": "ja_#"
+      },
+      "button": {
+        "generateAuditReport.btn": "ja_Generate Audit Report"
+      }
+    },
+    "datepickers":{
+      "close": "ja_Done"
+    }
+  }
+}

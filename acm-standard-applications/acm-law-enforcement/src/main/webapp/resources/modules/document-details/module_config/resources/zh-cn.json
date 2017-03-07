@@ -1,0 +1,92 @@
+{
+  "documentDetails": {
+    "title": "zh-cn_Document details",
+    "creator": "zh-cn_Creator",
+    "created": "zh-cn_Created",
+    "assignee": "zh-cn_Assignee",
+    "fileType": "zh-cn_File type",
+    "status": "zh-cn_Status",
+    "name": "zh-cn_Name",
+    "comp.eventHistory": {
+      "title": "zh-cn_Event History",
+      "table.columns": {
+        "eventType": "zh-cn_Event Name",
+        "eventDate": "zh-cn_Created",
+        "userId": "zh-cn_User"
+      }
+    },
+    "comp.tags": {
+      "title": "zh-cn_Tags",
+      "table.columns": {
+        "tag": "zh-cn_Tag"
+      },
+      "modal": {
+        "title": "zh-cn_Tag",
+        "search": "zh-cn_Search for Tag",
+        "buttons": {
+          "cancel": "zh-cn_Cancel",
+          "ok": "zh-cn_Add Tag"
+        }
+      },
+      "message.tagExists": "zh-cn_Tag with that name or description or text already exists",
+      "message.tagAssociated": "zh-cn_already associated",
+      "message.delete.success": "zh-cn_Tag deleted successfully",
+      "message.delete.error": "zh-cn_Error deleting tag"
+    },
+    "comp.participants": {
+      "title": "zh-cn_Participants",
+      "table.columns": {
+        "name": "zh-cn_Name",
+        "type": "zh-cn_Type"
+      },
+      "message.delete.success": "zh-cn_Successfully deleted row.",
+      "message.delete.error": "zh-cn_Error deleting row.",
+      "role": {
+        "title": "zh-cn_Change participant Role",
+        "dropdownLabel": "zh-cn_Available Roles",
+        "buttons": {
+          "cancel": "zh-cn_Cancel",
+          "ok": "zh-cn_Change Role"
+        }
+      }
+    },
+    "comp.notes": {
+      "title": "zh-cn_Notes",
+      "table.columns": {
+        "note": "zh-cn_Note",
+        "tag": "zh-cn_Document Version",
+        "created": "zh-cn_Created",
+        "creator": "zh-cn_Author"
+      }
+    },
+    "comp.versionHistory": {
+      "title": "zh-cn_Version History",
+      "table.columns": {
+        "creator": "zh-cn_User",
+        "created": "zh-cn_Created",
+        "versionTag": "zh-cn_Version"
+      }
+    },
+    "userSearch": {
+      "id": "zh-cn_userSearch",
+      "title": "zh-cn_Add New Participant",
+      "search": {
+        "btn": "zh-cn_Go!",
+        "placeholder": "zh-cn_Enter to search for a participant"
+      },
+      "cancelButton": "zh-cn_Cancel",
+      "confirmButton": "zh-cn_Select",
+      "enabled": true,
+      "userFacetFilter": "zh-cn_\"Object Type\": USER",
+      "userGridColumns": {
+        "name": "zh-cn_Name",
+        "type": "zh-cn_Type",
+        "title": "zh-cn_Title",
+        "parent": "zh-cn_Parent",
+        "assignee": "zh-cn_Assignee",
+        "modified": "zh-cn_Modified"
+      },
+      "dropdownLabel": "zh-cn_Participant Type"
+    }
+  }
+}

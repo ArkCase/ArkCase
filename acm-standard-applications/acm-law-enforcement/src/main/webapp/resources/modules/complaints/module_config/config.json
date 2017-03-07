@@ -7,7 +7,7 @@
     {
       "menuId": "leftnav",
       "menuItemURL": "complaints.main",
-      "menuItemTitle": "Complaints",
+      "menuItemTitle": "complaints.menus.leftnav.item",
       "moduleId": "complaint",
       "iconClass": "fa fa-exclamation-triangle",
       "position": 40
@@ -15,7 +15,7 @@
     {
       "menuId": "topbar",
       "menuItemURL": "frevvo.new-complaint",
-      "menuItemTitle": "Complaint",
+      "menuItemTitle": "complaints.menus.topbar.item",
       "moduleId": "complaint",
       "iconClass": "fa fa-exclamation-triangle",
       "position": 10

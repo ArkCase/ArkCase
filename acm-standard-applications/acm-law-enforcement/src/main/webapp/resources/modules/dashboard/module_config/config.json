@@ -5,7 +5,7 @@
     {
       "menuId": "leftnav",
       "menuItemURL": "dashboard",
-      "menuItemTitle": "Dashboard",
+      "menuItemTitle": "dashboard.menus.leftnav.item",
       "moduleId": "dashboard",
       "iconClass": "fa fa-dashboard",
       "position": 0

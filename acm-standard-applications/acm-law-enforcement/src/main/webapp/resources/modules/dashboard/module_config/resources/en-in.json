@@ -1,0 +1,224 @@
+{
+  "dashboard": {
+    "title": "en-in_Dashboard",
+    "menus": {
+      "leftnav.item": "en-in_Dashboard"
+    },
+    "widgets": {
+      "casesByQueue": {
+        "title": "en-in_Active Case Files by Queue",
+        "description": "en-in_Displays active case files by queue",
+        "xAxis": "en-in_Queues",
+        "yAxis": "en-in_Number of Case Files",
+        "noDataMessage": "en-in_Currently there are no cases info"
+      },
+      "casesByStatus": {
+        "title": "en-in_Cases By Status",
+        "description": "en-in_Displays cases by status",
+        "timePeriod": {
+          "label": "en-in_Select Time Period",
+          "lastWeek": "en-in_Last Week",
+          "lastMonth": "en-in_Last Month",
+          "lastYear": "en-in_Last Year",
+          "all": "en-in_All"
+        },
+        "noDataMessage": "en-in_Currently there are no cases info"
+      },
+      "myCases": {
+        "title": "en-in_My Cases",
+        "description": "en-in_Displays my cases",
+        "noDataMessage": "en-in_Currently there are no cases info",
+        "table": {
+          "header": {
+            "caseId": "en-in_ID",
+            "title": "en-in_Title",
+            "priority": "en-in_Priority",
+            "status": "en-in_Status"
+          }
+        }
+      },
+      "myComplaints": {
+        "title": "en-in_My Complaints",
+        "description": "en-in_Displays my complaints",
+        "table": {
+          "header": {
+            "number": "en-in_ID",
+            "title": "en-in_Title",
+            "priority": "en-in_Priority",
+            "created": "en-in_Created",
+            "status": "en-in_Status"
+          },
+          "noDataMessage": "en-in_Currently there are no complaints info"
+        }
+      },
+      "myTasks": {
+        "title": "en-in_My Tasks",
+        "description": "en-in_Displays my tasks",
+        "rowNumbers.label": "en-in_Default Row Numbers",
+        "rowNumbers.placeholder": "en-in_Enter Default Row Numbers",
+        "table": {
+          "header": {
+            "taskId": "en-in_ID",
+            "title": "en-in_Title",
+            "priority": "en-in_Priority",
+            "dueDate": "en-in_Due",
+            "status": "en-in_Status",
+            "objectId": "en-in_Object ID"
+          },
+          "overdue.tooltip": "en-in_Task is Overdue",
+          "deadline.tooltip": "en-in_Deadline is Approaching"
+        },
+        "noDataMessage": "en-in_Currently there are no tasks info"
+      },
+      "newComplaints": {
+        "title": "en-in_New Complaints",
+        "description": "en-in_Displays new complaints",
+        "dueDate": {
+          "label": "en-in_Select Due Date Period",
+          "pastDue": "en-in_Past Due",
+          "dueTomorrow": "en-in_Due Tomorrow",
+          "dueWeek": "en-in_Due in 7 Days",
+          "dueMonth": "en-in_Due in Month",
+          "all": "en-in_All"
+        },
+        "noDataMessage": "en-in_Currently there are no complaints info"
+      },
+      "newCases": {
+        "title": "en-in_New Cases",
+        "description": "en-in_Displays new cases",
+        "noDataMessage": "en-in_Currently there are no cases info"
+      },
+      "teamWorkload": {
+        "title": "en-in_Team Workload",
+        "description": "en-in_Displays team workload",
+        "dueDate": {
+          "label": "en-in_Select Due Date Period",
+          "pastDue": "en-in_Past Due",
+          "dueTomorrow": "en-in_Due Tomorrow",
+          "dueWeek": "en-in_Due in 7 Days",
+          "dueMonth": "en-in_Due in Month",
+          "all": "en-in_All"
+        },
+        "noDataMessage": "en-in_Currently there are no team tasks info"
+      },
+      "weather": {
+        "description": "en-in_Displays weather",
+        "label": {
+          "current": "en-in_Current:",
+          "enterLocation": "en-in_Enter Location",
+          "description": "en-in_Display the current temperature of a city",
+          "location": "en-in_Location",
+          "insertLocationInConfiguration": "en-in_Please insert a location in the widget configuration"
+        },
+        "title": "en-in_Weather",
+        "noDataMessage": "en-in_Currently there are no weather info"
+      },
+      "news": {
+        "description": "en-in_Displays news",
+        "label": {
+          "enterFeedUrl": "en-in_Enter Feed url",
+          "description": "en-in_Displays a RSS/Atom feed",
+          "feedUrl": "en-in_Feed Url",
+          "insertUrl": "en-in_Please insert a feed url in the widget configuration"
+        },
+        "title": "en-in_News",
+        "noDataMessage": "en-in_Currently there is no RSS/info"
+      },
+      "details": {
+        "title": "en-in_Details",
+        "description": "en-in_Displays case details",
+        "noDataMessage": "en-in_Currently there are no details"
+      },
+      "people": {
+        "title": "en-in_People",
+        "description": "en-in_Displays people details",
+        "noDataMessage": "en-in_Currently there are no people to display"
+      },
+      "documents": {
+        "title": "en-in_Documents",
+        "description": "en-in_Displays chart of documents by folder",
+        "noDataMessage": "en-in_Currently there are no documents to display"
+      },
+      "locations": {
+        "title": "en-in_Locations",
+        "description": "en-in_Displays location details",
+        "noDataMessage": "en-in_Currently there are no locations to display"
+      },
+      "tasks": {
+        "title": "en-in_Tasks",
+        "description": "en-in_Displays task details",
+        "noDataMessage": "en-in_Currently there are no tasks to display"
+      },
+      "participants": {
+        "title": "en-in_Participants",
+        "description": "en-in_Displays participant details",
+        "noDataMessage": "en-in_Currently there are no participant to display"
+      },
+      "references": {
+        "title": "en-in_References",
+        "description": "en-in_Displays reference details",
+        "noDataMessage": "en-in_Currently there are no references to display"
+      },
+      "history": {
+        "title": "en-in_History",
+        "description": "en-in_Displays chart of history events",
+        "noDataMessage": "en-in_Currently there are no events to display"
+      },
+      "notes": {
+        "title": "en-in_Notes",
+        "description": "en-in_Displays note details",
+        "noDataMessage": "en-in_Currently there are no notes to display"
+      },
+      "time": {
+        "title": "en-in_Time",
+        "description": "en-in_Displays chart for hours per user",
+        "noDataMessage": "en-in_Currently there is no time information to display"
+      },
+      "cost": {
+        "title": "en-in_Cost",
+        "description": "en-in_Displays chart for cost per user",
+        "noDataMessage": "en-in_Currently there is no cost information to display"
+      },
+      "calendar": {
+        "title": "en-in_Calendar",
+        "description": "en-in_Displays chart of scheduled events per day",
+        "noDataMessage": "en-in_Currently there are no events to display"
+      },
+      "reworkDetails": {
+        "title": "en-in_Rework Details",
+        "description": "en-in_Shows most recent rework details",
+        "noDataMessage": "en-in_Currently there no are no rework details to display"
+      },
+      "docReview": {
+        "title": "en-in_Documents Under Review",
+        "description": "en-in_Shows documents under review",
+        "noDataMessage": "en-in_Currently there no are no documents under review to display"
+      },
+      "workflow": {
+        "title": "en-in_Workflow Overview",
+        "description": "en-in_Overview of pending workflows",
+        "noDataMessage": "en-in_Currently there are no workflows to display"
+      },
+      "signature": {
+        "title": "en-in_eSignature",
+        "description": "en-in_eSignature widget",
+        "noDataMessage": "en-in_Currently there are no eSignatures to display"
+      },
+      "person": {
+        "title": "en-in_Person",
+        "description": "en-in_Person widget for Cost and Time modules",
+        "noDataMessage": "en-in_Currently there are no persons to display"
+      },
+      "hoursSummary": {
+        "title": "en-in_Hours Summary",
+        "description": "en-in_Displays a summary of hours worked",
+        "noDataMessage": "en-in_Currently there is no summary to display"
+      },
+      "expenses": {
+        "title": "en-in_Expenses",
+        "description": "en-in_Displays a cost-to-user graph",
+        "noDataMessage": "en-in_Currently no expense data to display"
+      }
+    }
+  }
+}

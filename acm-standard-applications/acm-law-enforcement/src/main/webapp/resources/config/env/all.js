@@ -91,7 +91,8 @@ module.exports = {
                 'lib/angular-chart.js/dist/angular-chart.min.js',
                 'lib/sockjs-client/dist/sockjs.min.js',
                 'lib/stomp-websocket/lib/stomp.min.js',
-                'lib/angular-hotkeys/build/hotkeys.js'
+                'lib/angular-hotkeys/build/hotkeys.js',
+                'lib/angular-dynamic-locale/dist/tmhDynamicLocale.min.js'
             ]
         },
         css: [
