@@ -1,7 +1,8 @@
 'use strict';
 
-angular.module('profile').controller('ProfileController', ['$scope', 'ConfigService', 'Profile.ChangePasswordService', '$modal',
-    function ($scope, ConfigService, ChangePasswordService, $modal) {
+angular.module('profile').controller('ProfileController', ['$scope', 'ConfigService'
+    , 'Admin.OrganizationalHierarchyService', '$modal', 'Authentication',
+    function ($scope, ConfigService, OrganizationalHierarchyService, $modal, Authentication) {
         $scope.config = ConfigService.getModule({moduleId: 'profile'});
         $scope.$on('req-component-config', onConfigRequest);
         function onConfigRequest(e, componentId) {
@@ -10,6 +11,14 @@ angular.module('profile').controller('ProfileController', ['$scope', 'ConfigServ
                 $scope.$broadcast('component-config', componentId, componentConfig);
             });
         }
+
+        Authentication.queryUserInfo().then(function (userInfo) {
+            var directoryName = userInfo.directoryName;
+            OrganizationalHierarchyService.isEnabledEditingLdapUsers(directoryName).then(function (enableEditingLdapUsers) {
+                $scope.exposeChangePassword = enableEditingLdapUsers;
+            });
+        });
+
         $scope.openPasswordDialog = function () {
             $modal.open({
                 templateUrl: 'modules/profile/views/components/modalTemplates/profile-modal-changePassword.client.view.html',
@@ -18,6 +27,14 @@ angular.module('profile').controller('ProfileController', ['$scope', 'ConfigServ
                 size: 'sm'
             });
         };
+        $scope.openChangeLdapPasswordDialog = function () {
+            $modal.open({
+                templateUrl: 'modules/profile/views/components/modalTemplates/profile-modal-changePassword.client.view.html',
+                controller: 'ChangeLdapPasswordModalController',
+                backdrop: false,
+                size: 'sm'
+            });
+        }
     }
 ]);
 angular.module('profile').run(function (editableOptions, editableThemes) {
@@ -36,36 +53,90 @@ angular.module('profile').controller('ChangePasswordModalController', ['$scope',
             $scope.newPassword = '';
             $scope.newPasswordAgain = '';
         };
+
+        function openModal(params) {
+            $modal.open({
+                templateUrl: 'modules/profile/views/components/modalTemplates/profile-modal-password-info.client.view.html',
+                controller: ['$scope', 'params', function ($scope, params) {
+                    $scope.message = params.message;
+                }],
+                resolve: {
+                    params: params
+                },
+                backdrop: false,
+                size: 'sm'
+            });
+        }
+
         $scope.changePassword = function () {
             if (!this.newPassword) {
-                $modal.open({
-                    templateUrl: 'modules/profile/views/components/modalTemplates/profile-modal-emptyPassword.client.view.html',
-                    controller: 'ChangePasswordModalController',
-                    backdrop: false,
-                    size: 'sm'
-                });
+                openModal({"message": "profile.modal.emptyPassword"});
             }
             else if (!this.newPasswordAgain) {
-                $modal.open({
-                    templateUrl: 'modules/profile/views/components/modalTemplates/profile-modal-emptyPasswordAgain.client.view.html',
-                    controller: 'ChangePasswordModalController',
-                    backdrop: false,
-                    size: 'sm'
-                });
+                openModal({"message": "profile.modal.comfirmation"});
             }
             else if (this.newPassword !== this.newPasswordAgain) {
-                $modal.open({
-                    templateUrl: 'modules/profile/views/components/modalTemplates/profile-modal-differentPasswords.client.view.html',
-                    controller: 'ChangePasswordModalController',
-                    backdrop: false,
-                    size: 'sm'
-                });
+                openModal({"message": "profile.modal.differentPasswords"});
                 this.newPassword = '';
                 this.newPasswordAgain = '';
             }
             else {
-                var data = '{"outlookPassword":' + '"' + this.newPassword + '"}';
+                var data = {"outlookPassword": this.newPassword};
                 ChangePasswordService.changePassword(data);
+                $modalInstance.close('done');
+                this.newPassword = '';
+                this.newPasswordAgain = '';
+            }
+        };
+    }
+]);
+
+angular.module('profile').controller('ChangeLdapPasswordModalController', ['$scope', '$modalInstance'
+    , '$modal', 'Profile.ChangePasswordService', 'Authentication',
+    function ($scope, $modalInstance, $modal, ChangePasswordService, Authentication) {
+        $scope.close = function () {
+            $modalInstance.dismiss('cancel');
+        };
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+            $scope.newPassword = '';
+            $scope.newPasswordAgain = '';
+        };
+
+        Authentication.queryUserInfo().then(function (userInfo) {
+            $scope.userInfo = userInfo;
+        });
+
+
+        function openModal(params) {
+            $modal.open({
+                templateUrl: 'modules/profile/views/components/modalTemplates/profile-modal-password-info.client.view.html',
+                controller: ['$scope', 'params', function ($scope, params) {
+                    $scope.message = params.message;
+                }],
+                resolve: {
+                    params: params
+                },
+                backdrop: false,
+                size: 'sm'
+            });
+        }
+
+        $scope.changePassword = function () {
+            if (!this.newPassword) {
+                openModal({"message": "profile.modal.emptyPassword"});
+            }
+            else if (!this.newPasswordAgain) {
+                openModal({"message": "profile.modal.comfirmation"});
+            }
+            else if (this.newPassword !== this.newPasswordAgain) {
+                openModal({"message": "profile.modal.differentPasswords"});
+                this.newPassword = '';
+                this.newPasswordAgain = '';
+            }
+            else {
+                var data = {"password": this.newPassword, "userInfo": $scope.userInfo};
+                ChangePasswordService.changeLdapPassword(data);
                 $modalInstance.close('done');
                 this.newPassword = '';
                 this.newPasswordAgain = '';
