@@ -70,15 +70,17 @@
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
 
-    <bean id="ldapUserAPIController" class="com.armedia.acm.services.users.web.api.LdapUserAPIController">
+    <bean id="ldapUserAPIController" class="com.armedia.acm.services.users.web.api.LdapUserAPIController"
+          parent="secureLdapController">
         <property name="ldapUserService" ref="ldapUserService"/>
     </bean>
 
-    <bean id="ldapGroupAPIController" class="com.armedia.acm.services.users.web.api.group.LdapGroupAPIController">
+    <bean id="ldapGroupAPIController" class="com.armedia.acm.services.users.web.api.group.LdapGroupAPIController"
+          parent="secureLdapController">
         <property name="ldapGroupService" ref="ldapGroupService"/>
     </bean>
 
-    <bean id="baseLdapController" class="com.armedia.acm.services.users.web.api.SecureLdapController">
+    <bean id="secureLdapController" class="com.armedia.acm.services.users.web.api.SecureLdapController">
         <property name="acmContextHolder" ref="acmContextHolder"/>
     </bean>
 </beans>
