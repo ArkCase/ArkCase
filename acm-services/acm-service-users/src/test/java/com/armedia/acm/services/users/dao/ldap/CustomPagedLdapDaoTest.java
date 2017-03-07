@@ -252,6 +252,7 @@ public class CustomPagedLdapDaoTest extends EasyMockSupport
         AcmUser user = new AcmUser();
         user.setUserId(userid);
         user.setDistinguishedName("dn: " + userid);
+        user.setSortableValue(userid);
         return user;
     }
 
@@ -259,6 +260,7 @@ public class CustomPagedLdapDaoTest extends EasyMockSupport
     {
         LdapGroup group = new LdapGroup();
         group.setGroupName(groupName);
+        group.setSortableValue(groupName);
         return group;
     }
 }
