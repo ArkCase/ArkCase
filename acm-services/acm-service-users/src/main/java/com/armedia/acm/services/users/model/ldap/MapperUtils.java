@@ -50,4 +50,14 @@ public class MapperUtils
         }
         return null;
     }
+
+    public static String stripBaseFromDn(String dn, String base)
+    {
+        if (dn.endsWith(base))
+        {
+            base = "," + base;
+            dn = dn.substring(0, dn.indexOf(base));
+        }
+        return dn;
+    }
 }

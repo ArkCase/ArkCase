@@ -28,8 +28,9 @@ angular.module('admin').controller('Admin.LdapConfigController', ['$scope', 'Adm
             reloadGrid();
         });
 
-        $scope.editRow = function (rowEtity) {
-            showModal(angular.copy(rowEtity), true);
+        $scope.editRow = function (rowEntity) {
+            rowEntity.enableEditingLdapUsers = rowEntity.enableEditingLdapUsers === "true";
+            showModal(angular.copy(rowEntity), true);
         };
 
         $scope.deleteRow = function (rowEntity) {

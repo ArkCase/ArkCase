@@ -1,7 +1,10 @@
 'use strict';
 
-angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['$scope', 'Admin.OrganizationalHierarchyService', '$q', '$modal', 'MessageService', '$translate', 'Admin.ModalDialogService', 'UtilService',
-    function ($scope, organizationalHierarchyService, $q, $modal, messageService, $translate, modalDialogService, Util) {
+angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['$scope'
+    , 'Admin.OrganizationalHierarchyService', '$q', '$modal', 'MessageService', '$translate', 'Admin.ModalDialogService'
+    , 'UtilService', 'Admin.LdapConfigService',
+    function ($scope, organizationalHierarchyService, $q, $modal, messageService, $translate, modalDialogService, Util
+        , LdapConfigService) {
 
         var UUIDRegExString = ".*-UUID-[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}";
 
@@ -9,6 +12,23 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
 
         $scope.data = [];
         var groupsMap = {};
+
+        $scope.addAdHocGroupBtn = "admin.security.organizationalHierarchy.createGroupDialog.adHocGroup.title";
+        $scope.addLdapGroupBtn = "admin.security.organizationalHierarchy.createGroupDialog.ldapGroup.title";
+
+        $scope.ldapEditingEnabledPerDirectoryServer = {};
+
+        LdapConfigService.retrieveDirectories().then(function (directories) {
+            $scope.directoryServers = _.map(directories.data, function (ds) {
+                var dirId = ds["ldapConfig.id"];
+                var dirEnabled = ds["ldapConfig.enableEditingLdapUsers"] === "true";
+                $scope.ldapEditingEnabledPerDirectoryServer[dirId] = dirEnabled;
+                return {
+                    id: dirId,
+                    enabled: dirEnabled
+                }
+            });
+        });
 
         $scope.config.$promise.then(function (config) {
             $scope.cfg = _.find(config.components, {id: 'usersPicker'});
@@ -78,7 +98,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
         };
 
         $scope.onAddSubGroup = function (parent) {
-            var deffered = $q.defer();
+            var deferred = $q.defer();
             var modalInstance = $modal.open({
                 animation: true,
                 templateUrl: 'modules/admin/views/components/security.organizational-hierarchy.create-group.dialog.html',
@@ -128,20 +148,20 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                     groupsMap[newGroup.parent_id_s].child_id_ss.push(newGroup.object_id_s);
 
                     addToTree(newGroup, true);
-                    deffered.resolve(newGroup);
+                    deferred.resolve(newGroup);
                 }, function () {
                     //error adding group
-                    deffered.reject();
+                    deferred.reject();
                 });
             }, function (result) {
                 //button cancel, nothing to do.
-                deffered.reject();
+                deferred.reject();
             });
-            return deffered.promise;
+            return deferred.promise;
         };
 
         $scope.onDeleteGroup = function (group) {
-            var deffered = $q.defer();
+            var deferred = $q.defer();
             var modalOptions = {
                 closeButtonText: $translate.instant('admin.security.organizationalHierarchy.dialog.group.confirm.delete.cancelBtn'),
                 actionButtonText: $translate.instant('admin.security.organizationalHierarchy.dialog.group.confirm.delete.deleteBtn'),
@@ -151,19 +171,19 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
             modalDialogService.showModal({}, modalOptions).then(function () {
                 //ok btn
                 organizationalHierarchyService.removeGroup(group).then(function (payload) {
-                    deffered.resolve(payload);
+                    deferred.resolve(payload);
                 }, function (payload) {
-                    deffered.reject(payload);
+                    deferred.reject(payload);
                 });
             }, function () {
                 //cancel btn
-                deffered.reject();
+                deferred.reject();
             });
-            return deffered.promise;
+            return deferred.promise;
         };
 
         $scope.onDeleteMembers = function (group, members) {
-            var deffered = $q.defer();
+            var deferred = $q.defer();
             members = [].concat(members);
             var modalOptions = {
                 closeButtonText: $translate.instant('admin.security.organizationalHierarchy.dialog.member.confirm.delete.cancelBtn'),
@@ -175,19 +195,19 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
             modalDialogService.showModal({}, modalOptions).then(function () {
                 //ok btn
                 organizationalHierarchyService.removeMembers(group, members).then(function (payload) {
-                    deffered.resolve(payload);
+                    deferred.resolve(payload);
                 }, function (payload) {
-                    deffered.reject(payload);
+                    deferred.reject(payload);
                 });
             }, function () {
                 //cancel btn
-                deffered.reject();
+                deferred.reject();
             });
-            return deffered.promise;
+            return deferred.promise;
         };
 
         $scope.onAddMembers = function (group) {
-            var deffered = $q.defer();
+            var deferred = $q.defer();
             var modalInstance = $modal.open({
                 animation: $scope.animationsEnabled,
                 templateUrl: 'modules/admin/views/components/security.org-hierarchy.users-picker.client.view.html',
@@ -230,17 +250,166 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                         if (mappedMembersMap[unmappedMember.object_id_s])
                             unmappedMembers.push(unmappedMember);
                     }
-                    deffered.resolve(unmappedMembers);
+                    deferred.resolve(unmappedMembers);
                 }, function (payload) {
                     //saving error
-                    deffered.reject();
+                    deferred.reject();
                 });
             }, function () {
                 // Cancel button was clicked
-                deffered.reject();
+                deferred.reject();
                 return [];
             });
-            return deffered.promise;
+            return deferred.promise;
+        };
+
+        function openCreateUserModal(user, group, error) {
+            return $modal.open({
+                animation: $scope.animationsEnabled,
+                templateUrl: 'modules/admin/views/components/security.organizational-hierarchy.create-user.dialog.html',
+                controller: ['$scope', '$modalInstance', function ($scope, $modalInstance) {
+                    $scope.addUser = true;
+                    $scope.header = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.title";
+                    $scope.okBtn = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.btn.ok";
+                    $scope.cancelBtn = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.btn.cancel";
+                    $scope.error = error;
+                    $scope.user = user;
+                    $scope.data = {
+                        "acmUser": $scope.user,
+                        "groupNames": [group.object_id_s]
+                    };
+                    $scope.ok = function () {
+                        $modalInstance.close($scope.data);
+                    };
+                }],
+                size: 'sm'
+            });
+        }
+
+        function onLdapUserAdd(data, deferred, group) {
+            organizationalHierarchyService.addMemberToLdapGroup(data, group.directory_name_s).then(function (member) {
+                //saving success
+                //map members
+                var unmappedMember = unMapMember(member);
+                deferred.resolve(unmappedMember);
+            }, function (error) {
+                // showing error
+                if (error.data.extra) {
+                    var onAdd = function (data) {
+                        return onLdapUserAdd(data, deferred, group);
+                    };
+                    openCreateUserModal(error.data.extra.user, group, error.data.message)
+                        .result.then(onAdd, function () {
+                        deferred.reject("cancel");
+                        return [];
+                    });
+                } else {
+                    deferred.reject();
+                }
+            });
+        }
+
+        $scope.onAddLdapMember = function (group) {
+            var deferred = $q.defer();
+            var modalInstance = openCreateUserModal({}, group);
+            var onAdd = function (data) {
+                return onLdapUserAdd(data, deferred, group)
+            };
+
+            modalInstance.result.then(onAdd, function () {
+                // Cancel button was clicked
+                deferred.reject("cancel");
+                return [];
+            });
+            return deferred.promise;
+        };
+
+        $scope.addExistingMembersToLdapGroup = function (group) {
+            var deferred = $q.defer();
+            var modalInstance = $modal.open({
+                animation: $scope.animationsEnabled,
+                templateUrl: 'modules/admin/views/components/security.org-hierarchy.users-picker.client.view.html',
+                controller: 'Admin.UsersPicker',
+                size: 'lg',
+                resolve: {
+                    $config: function () {
+                        return $scope.cfg;
+                    },
+                    $filter: function () {
+                        return "\"Object Type\": USER%26directory_name_s:" + group.directory_name_s;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (membersSelected) {
+                //ok button clicked
+                var mappedMembers = [];
+                if (Util.isArray(membersSelected)) {
+                    for (var i = 0; i < membersSelected.length; i++) {
+                        mappedMembers.push(mapMember(membersSelected[i]));
+                    }
+                }
+                else {
+                    mappedMembers.push(mapMember(membersSelected));
+                }
+
+                organizationalHierarchyService
+                    .addExistingMembersToLdapGroup(mappedMembers, group.object_id_s, group.directory_name_s)
+                    .then(function (members) {
+                        //saving success
+                        //map members
+
+                        var unmappedMembers = [];
+                        for (var i = 0; i < members.length; i++) {
+                            var unmappedMember = unMapMember(members[i]);
+                            unmappedMembers.push(unmappedMember);
+                        }
+                        deferred.resolve(unmappedMembers);
+                    }, function () {
+                        //saving error
+                        deferred.reject();
+                    });
+            }, function () {
+                // Cancel button was clicked
+                deferred.reject();
+                return [];
+            });
+            return deferred.promise;
+        };
+
+        $scope.onEditLdapMember = function (member) {
+            var deferred = $q.defer();
+            var modalInstance = $modal.open({
+                animation: $scope.animationsEnabled,
+                templateUrl: 'modules/admin/views/components/security.organizational-hierarchy.create-user.dialog.html',
+                controller: ['$scope', '$modalInstance', function ($scope, $modalInstance) {
+                    $scope.addUser = false;
+                    $scope.header = "admin.security.organizationalHierarchy.createUserDialog.editLdapMember.title";
+                    $scope.okBtn = "admin.security.organizationalHierarchy.createUserDialog.editLdapMember.btn.ok";
+                    $scope.cancelBtn = "admin.security.organizationalHierarchy.createUserDialog.editLdapMember.btn.cancel";
+                    $scope.user = mapMember(member);
+                    $scope.ok = function () {
+                        $modalInstance.close($scope.user);
+                    };
+                }],
+                size: 'sm'
+            });
+
+            modalInstance.result.then(function (user) {
+                organizationalHierarchyService.editGroupMember(user)
+                    .then(function (member) {
+                        var unmappedMember = unMapMember(member);
+                        deferred.resolve(unmappedMember);
+                    }, function () {
+                        //saving error
+                        deferred.reject();
+                    });
+            }, function () {
+                // Cancel button was clicked
+                deferred.reject("cancel");
+                return [];
+            });
+            return deferred.promise;
         };
 
         $scope.onLazyLoad = function (event, groupNode) {
@@ -304,7 +473,6 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
             return groupsMap[id];
         }
 
-
         function mapMember(member) {
             var mapped = {};
             mapped["userId"] = member.object_id_s;
@@ -315,6 +483,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
             mapped["modified"] = member.modified_date_tdt;
             mapped["userState"] = member.status_lcs;
             mapped["mail"] = member.email_lcs;
+            mapped["userDirectoryName"] = member.directory_name_s;
             return mapped;
         }
 
@@ -328,6 +497,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
             member.modified_date_tdt = mapped["modified"];
             member.status_lcs = mapped["userState"];
             member.email_lcs = mapped["mail"];
+            member.directory_name_s = mapped["userDirectoryName"];
             member.title = member.name;
             member.isMember = true;
             return member;
@@ -338,19 +508,11 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                 animation: true,
                 templateUrl: 'modules/admin/views/components/security.organizational-hierarchy.create-group.dialog.html',
                 controller: function ($scope, $modalInstance) {
-                    $scope.inputValid = true;
-                    $scope.adHocGroup = {};
+                    $scope.header = "admin.security.organizationalHierarchy.createGroupDialog.adHocGroup.title";
+                    $scope.group = {};
 
-                    //watch the input to enable/disable ok button
-                    $scope.$watch('adHocGroup.name', function (newValue) {
-                        if (newValue) {
-                            $scope.inputValid = false;
-                        } else {
-                            $scope.inputValid = true;
-                        }
-                    }, true);
                     $scope.ok = function () {
-                        $modalInstance.close($scope.adHocGroup);
+                        $modalInstance.close($scope.group);
                     };
                     $scope.cancel = function () {
                         $modalInstance.dismiss('cancel');
@@ -373,20 +535,167 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                     //name that should be displayed in UI should not be unique across different tree levels,
                     // so the UUID part is removed!
 
-
                     newGroup.name = UUIDRegEx.test(payload.data.name) ? payload.data.name.substring(0, payload.data.name.lastIndexOf("-UUID-")) : payload.data.name;
-
 
                     groupsMap[payload.data.name] = newGroup;
                     addToTree(newGroup, true);
                     messageService.succsessAction();
                 }, function () {
                     //error adding group
-                	messageService.errorAction();
+                    messageService.errorAction();
                 });
             }, function (result) {
                 //button cancel, nothing to do.
             });
+        };
+
+        $scope.addLdapSubgroup = function (parentGroup) {
+            var deferred = $q.defer();
+            var modalInstance = openLdapSubGroupModal({}, parentGroup);
+
+            var onAdd = function (data) {
+                onAddLdapSubGroup(deferred, data);
+            };
+            //handle the result
+            modalInstance.result.then(onAdd, function () {
+                //button cancel, nothing to do.
+                deferred.reject("cancel");
+                return [];
+            });
+            return deferred.promise;
+        };
+
+        function onAddLdapSubGroup(deferred, data) {
+            //button ok
+            organizationalHierarchyService.createLdapSubgroup(data.subgroup, data.parentGroupName, data.parentGroupDirectoryName)
+                .then(function (group) {
+                    //added successfully
+                    var newGroup = {};
+                    newGroup.object_sub_type_s = group.type;
+                    newGroup.object_id_s = group.name;
+                    newGroup.name = group.name;
+                    newGroup.parent_id_s = data.parentGroupName;
+                    newGroup.directory_name_s = data.parentGroupDirectoryName;
+                    groupsMap[group.name] = newGroup;
+                    if (!groupsMap[newGroup.parent_id_s].child_id_ss) {
+                        groupsMap[newGroup.parent_id_s].child_id_ss = [];
+                    }
+                    groupsMap[newGroup.parent_id_s].child_id_ss.push(newGroup.object_id_s);
+
+                    addToTree(newGroup, true);
+                    deferred.resolve(newGroup);
+                    messageService.succsessAction();
+                }, function (error) {
+                    //error adding group
+                    if (error.data.extra) {
+                        var onAdd = function (data) {
+                            onAddLdapSubGroup(deferred, data);
+                        };
+                        var parentGroup = {
+                            "object_id_s": data.parentGroupName,
+                            "directory_name_s": data.parentGroupDirectoryName
+                        };
+                        openLdapSubGroupModal(error.data.extra.subgroup, parentGroup, error.data.message)
+                            .result.then(onAdd, function () {
+                            //cancel button clicked
+                            deferred.reject('cancel');
+                        });
+                    }
+                    messageService.errorAction();
+                });
+        }
+
+        var groupController = function (seeDirectorySelect, group, errorMessage, parentGroup, onOK, directoryServers) {
+            return function ($scope, $modalInstance) {
+                $scope.header = "admin.security.organizationalHierarchy.createGroupDialog.ldapGroup.title";
+                $scope.addGroupModal = seeDirectorySelect;
+                $scope.group = group;
+                $scope.error = errorMessage;
+                $scope.directoryServers = directoryServers;
+                $scope.selectedConfig = {};
+                $scope.ok = onOK($scope, $modalInstance, $scope.selectedConfig);
+                $scope.cancel = function () {
+                    $modalInstance.dismiss('cancel');
+                };
+            };
+        };
+
+        function groupModal(controllerFunction) {
+            return $modal.open({
+                animation: true,
+                templateUrl: 'modules/admin/views/components/security.organizational-hierarchy.create-group.dialog.html',
+                controller: ['$scope', '$modalInstance', controllerFunction],
+                size: 'sm'
+            });
+        }
+
+        function openLdapSubGroupModal(group, parentGroup, errorMessage) {
+            return groupModal(groupController(false, group, errorMessage, parentGroup, function (scope, modal) {
+                return function () {
+                    scope.data = {
+                        "subgroup": scope.group,
+                        "parentGroupName": parentGroup.object_id_s,
+                        "parentGroupDirectoryName": parentGroup.directory_name_s
+                    };
+                    modal.close(scope.data);
+                };
+            }))
+        }
+
+        function openCreateGroupModal(group, errorMessage) {
+            return groupModal(groupController(true, group, errorMessage, {}, function (scope, modal) {
+                return function () {
+                    scope.data = {
+                        "group": scope.group,
+                        "selectedDirectory": scope.selectedConfig.directory
+                    };
+                    modal.close(scope.data);
+                };
+            }, $scope.directoryServers))
+        }
+
+        function onLdapGroupAdd(data, deferred) {
+            //button ok
+            organizationalHierarchyService.createLdapGroup(data.group, data.selectedDirectory.id)
+                .then(function (group) {
+                    //added successfully
+                    var newGroup = {};
+                    newGroup.object_sub_type_s = group.type;
+                    newGroup.object_id_s = group.name;
+                    newGroup.name = group.name;
+                    newGroup.directory_name_s = group.directoryName;
+                    groupsMap[group.name] = newGroup;
+                    addToTree(newGroup, true);
+                    messageService.succsessAction();
+                }, function (error) {
+                    if (error.data.extra) {
+                        var onAdd = function (data) {
+                            onLdapGroupAdd(data, deferred);
+                        };
+                        openCreateGroupModal(error.data.extra.group, error.data.message)
+                            .result.then(onAdd, function () {
+                            deferred.reject("cancel");
+                            return [];
+                        });
+                    }
+                    messageService.errorAction();
+                });
+        }
+
+        $scope.createLdapGroup = function () {
+            var deferred = $q.defer();
+            var modalInstance = openCreateGroupModal({});
+
+            var onAdd = function (data) {
+                onLdapGroupAdd(data, deferred);
+            };
+
+            modalInstance.result.then(onAdd, function () {
+                // Cancel button was clicked
+                deferred.reject("cancel");
+                return [];
+            });
+            return deferred.promise;
         };
 
         function formatMembers(members) {
@@ -398,7 +707,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
         }
 
         $scope.onSetSupervisor = function (group) {
-            var deffered = $q.defer();
+            var deferred = $q.defer();
             var modalInstance = $modal.open({
                 animation: $scope.animationsEnabled,
                 templateUrl: 'modules/admin/views/components/security.org-hierarchy.user-picker.client.view.html',
@@ -418,17 +727,18 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                 //ok button clicked
                 organizationalHierarchyService.setSupervisor(group, mapMember(memberSelected)).then(function (payload) {
                     //saving success
-                    deffered.resolve(payload.data);
+                    deferred.resolve(payload.data);
                 }, function (payload) {
                     //saving error
-                    deffered.reject();
+                    deferred.reject();
                 });
             }, function () {
                 // Cancel button was clicked
-                deffered.reject();
+                deferred.reject();
                 return [];
             });
-            return deffered.promise;
+            return deferred.promise;
         };
     }
-]);
+])
+;
