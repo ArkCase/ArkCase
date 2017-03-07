@@ -72,7 +72,15 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
         try
         {
             File file = correspondenceTemplatesConfiguration.getFile();
+            if (!file.exists())
+            {
+                file.createNewFile();
+            }
             String resource = FileUtils.readFileToString(file);
+            if (resource.isEmpty())
+            {
+                resource = "[]";
+            }
 
             ObjectMapper mapper = new ObjectMapper();
 

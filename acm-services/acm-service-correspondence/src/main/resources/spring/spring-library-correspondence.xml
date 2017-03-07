@@ -49,6 +49,7 @@
     <bean id="correspondenceMergeFieldManager" class="com.armedia.acm.correspondence.service.CorrespondenceMergeFieldManager">
         <property name="correspondenceMergeFieldsConfiguration" value="file:${user.home}/.arkcase/acm/correspondence-merge-fields.json"/>
         <property name="correspondenceMergeFieldsVersionConfiguration" value="file:${user.home}/.arkcase/acm/correspondence-merge-fields-version.json"/>
+        <property name="springContextHolder" ref="acmContextHolder"/>
     </bean>
 
     <bean id="correspondenceEventPublisher" class="com.armedia.acm.correspondence.service.CorrespondenceEventPublisher"/>
