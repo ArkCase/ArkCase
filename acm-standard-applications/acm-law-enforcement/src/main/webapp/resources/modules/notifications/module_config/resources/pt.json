@@ -1,0 +1,23 @@
+{
+  "notifications": {
+    "title": "pt_Notifications",
+    "search.btn": "pt_Search",
+    "export.btn": "pt_Export",
+    "search.placeholder": "pt_Search for notifications",
+    "menus": {
+      "leftnav.item": "pt_Notifications"
+    },
+    "comp":{
+      "grid": {
+        "columns": {
+          "id": "pt_ID",
+          "description": "pt_Description",
+          "objNumber": "pt_Object Number",
+          "parentNumber": "pt_Parent Number",
+          "objType": "pt_Object Type",
+          "modified": "pt_Modified"
+        }
+      }
+    }
+  }
+}

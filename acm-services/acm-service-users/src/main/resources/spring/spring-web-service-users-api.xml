@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="getUserInfoAPIController" class="com.armedia.acm.services.users.web.api.GetUserInfoAPIController"/>
@@ -70,4 +70,17 @@
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
 
+    <bean id="ldapUserAPIController" class="com.armedia.acm.services.users.web.api.LdapUserAPIController"
+          parent="secureLdapController">
+        <property name="ldapUserService" ref="ldapUserService"/>
+    </bean>
+
+    <bean id="ldapGroupAPIController" class="com.armedia.acm.services.users.web.api.group.LdapGroupAPIController"
+          parent="secureLdapController">
+        <property name="ldapGroupService" ref="ldapGroupService"/>
+    </bean>
+
+    <bean id="secureLdapController" class="com.armedia.acm.services.users.web.api.SecureLdapController">
+        <property name="acmContextHolder" ref="acmContextHolder"/>
+    </bean>
 </beans>

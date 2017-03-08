@@ -1,0 +1,69 @@
+{
+  "timeTracking": {
+    "title": "Отслеживание времени",
+    "progressNoTimesheet": "ru_[ No timesheet is selected ]",
+    "progressLoading": "ru_Loading timesheet ",
+    "progressError": "ru_Failed to load timesheet"
+  },
+  "timeTracking.menus": {
+    "leftnav.item": "Отслеживание времени",
+    "topbar.item": "Время лист"
+  },
+  "timeTracking.tree": {
+  },
+  "timeTracking.comp.actions": {
+    "new.button": "ru_New Timesheet",
+    "edit.button": "ru_Edit Timesheet"
+  },
+  "timeTracking.comp.details": {
+    "title": "ru_Details",
+    "informSaved": "ru_Timesheet details saved",
+    "table.columns": {
+      "title": "ru_Details",
+      "modified": "ru_Date Last Modified",
+      "modifier": "ru_User Last Modified"
+    }
+  },
+  "timeTracking.comp.people": {
+    "title": "ru_Person",
+    "table.columns": {
+      "fullName": "ru_Full Name",
+      "userId": "ru_Username"
+    }
+  },
+  "timeTracking.comp.summary": {
+    "title": "ru_Hours Summary",
+    "table.columns": {
+      "code": "ru_Parent ID",
+      "type": "ru_Parent Type",
+      "value": "ru_Total Hours",
+      "date": "ru_Date Charged",
+      "modified": "ru_Modified Date"
+    }
+  },
+  "timeTracking.comp.tags": {
+    "title": "ru_Tags",
+    "table.columns": {
+      "tag": "ru_Tag",
+      "created": "ru_Created",
+      "createdBy": "ru_Created By"
+    },
+    "modal": {
+    "title": "ru_Tag",
+    "search": "ru_Search for Tag",
+    "buttons": {
+          "cancel": "ru_Cancel",
+          "ok": "ru_Add Tag"
+     }
+    },
+    "message": {
+      "tagExists": "ru_Tag with that name or description or text already exists",
+      "tagAssociated": "ru_already associated",
+      "delete": {
+        "success": "ru_Tag deleted successfully",
+        "error": "ru_Error deleting tag"
+      }
+    }
+  }
+}
+

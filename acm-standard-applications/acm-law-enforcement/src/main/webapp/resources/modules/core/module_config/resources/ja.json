@@ -1,0 +1,23 @@
+{
+  "core": {
+    "userInfo": {
+      "addedMenu": {
+        "help": "ja_Help",
+        "logout": "ja_Logout"
+      }
+    },
+    "leftNav": {
+      "title": "ja_Navigation"
+    },
+    "topBar": {
+      "new": "ja_New",
+      "toggle.btn": "ja_Toggle navigation",
+      "search.placeholder": "ja_Search ArkCase"
+    },
+    "loginWarning": {
+      "btnOK.text": "ja_OK",
+      "btnCancel.text": "ja_Cancel",
+      "checkbox_warning.label": "ja_I acknowledge this warning."
+    }
+  }
+}

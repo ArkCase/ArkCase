@@ -1,0 +1,24 @@
+{
+  "search": {
+    "title": "hi_Search",
+    "search.btn": "hi_Search",
+    "export.btn": "hi_Export",
+    "search.placeholder": "hi_Type in to search",
+    "menus": {
+      "leftnav.item": "hi_Search"
+    },
+    "comp":{
+      "grid": {
+        "columns": {
+          "id": "hi_ID",
+          "name": "hi_Name",
+          "type": "hi_Type",
+          "title": "hi_Title",
+          "parent": "hi_Parent",
+          "assignee": "hi_Assignee",
+          "modified": "hi_Modified"
+        }
+      }
+    }
+  }
+}

@@ -474,6 +474,23 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
                 return ObjectService.showObject(objTypeKey, objId);
 
             }
+            
+            /**
+             * @ngdoc method
+             * @name openObject
+             * @methodOf services:Helper.UiGridService
+             *
+             * @param {String} parentType, Lookup parent Type of the file.
+             * @param {String} fileName Lookup name.
+             * @param {Number} targetId, target id of the file.
+             * @param {Number} parentId,  parent id of the file.
+             *
+             * @description
+             * Go to a page state that show the specified ArkCase File viewer.
+             */
+            , openObject: function (targetId, parentId, parentType, fileName) {
+                return ObjectService.openObject(targetId, parentId, parentType, fileName);
+            }
 
             /**
              * @ngdoc method

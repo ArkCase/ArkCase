@@ -1,0 +1,318 @@
+{
+  "cases": {
+    "title": "fr_Cases",
+    "progressNoCase": "fr_[ No case file data ]",
+    "progressLoading": "fr_Loading case file ",
+    "progressError": "fr_Failed to load case file"
+  },
+  "cases.menus": {
+    "leftnav.item": "fr_Case Files",
+    "topbar.item": "fr_Case"
+  },
+  "cases.error": {
+    "invalidData": "fr_"
+  },
+  "cases.comp.info": {
+    "caseId": "fr_Case id:",
+    "caseNumber": "fr_Case Number:",
+    "courtRoomName": "fr_Court Room Name:"
+  },
+  "cases.comp.actions": {
+    "restrict": "fr_Restrict?",
+    "new.button": "fr_New",
+    "edit.button": "fr_Edit",
+    "status.button": "fr_Change Case Status",
+    "reinvestigate.button": "fr_Reinvestigate",
+    "subscribe.button": "fr_Subscribe",
+    "unsubscribe.button": "fr_Unsubscribe",
+    "merge.button": "fr_Merge",
+    "claim.button": "fr_Claim",
+    "unclaim.button": "fr_Unclaim",
+    "split.button": "fr_Split"
+  },
+  "cases.comp.details": {
+    "title": "fr_Details",
+    "informSaved": "fr_Case details saved",
+    "table.columns": {
+      "title": "fr_Details",
+      "modified": "fr_Date Last Modified",
+      "modifier": "fr_User Last Modified"
+    }
+  },
+  "cases.comp.documents": {
+    "title": "fr_Documents"
+  },
+  "cases.comp.people": {
+    "title": "fr_People",
+    "table.columns": {
+      "entity": "fr_Entity",
+      "type": "fr_Type",
+      "firstName": "fr_FirstName",
+      "lastName": "fr_LastName"
+    },
+    "contactMethods": {
+      "title": "fr_ContactMethods",
+      "table.columns": {
+        "type": "fr_Type",
+        "value": "fr_Value",
+        "created": "fr_Date Added",
+        "creator": "fr_Added By",
+        "modified": "fr_Last Modified",
+        "modifier": "fr_Modified By"
+      }
+    },
+    "organizations": {
+      "title": "fr_Organizations",
+      "table.columns": {
+        "type": "fr_Type",
+        "value": "fr_Value",
+        "created": "fr_Date Added",
+        "creator": "fr_Added By",
+        "modified": "fr_Last Modified",
+        "modifier": "fr_Modified By"
+      }
+    },
+    "addresses": {
+      "title": "fr_Locations",
+      "table.columns": {
+        "type": "fr_Type",
+        "streetAddress": "fr_Address",
+        "city": "fr_City",
+        "state": "fr_State",
+        "zip": "fr_Zip",
+        "country": "fr_Country",
+        "created": "fr_Date Added",
+        "creator": "fr_Added By",
+        "modified": "fr_Last Modified",
+        "modifier": "fr_Modified By"
+      }
+    },
+    "aliases": {
+      "title": "fr_Aliases",
+      "table.columns": {
+        "type": "fr_Type",
+        "value": "fr_Value",
+        "created": "fr_Date Added",
+        "creator": "fr_Added By",
+        "modified": "fr_Last Modified",
+        "modifier": "fr_Modified By"
+      }
+    },
+    "securityTags": {
+      "title": "fr_Security Tags",
+      "table.columns": {
+        "type": "fr_Type",
+        "value": "fr_Value",
+        "created": "fr_Date Added",
+        "creator": "fr_Added By",
+        "modified": "fr_Last Modified",
+        "modifier": "fr_Modified By"
+      }
+    }
+  },
+  "cases.comp.participants": {
+    "title": "fr_Participants",
+    "table.columns": {
+      "type": "fr_Type",
+      "name": "fr_Name"
+    },
+    "dialogUserPicker": {
+      "header": "fr_Choose User",
+      "table.columns": {
+        "name": "fr_Name",
+        "type": "fr_Type",
+        "title": "fr_Title",
+        "id": "fr_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "fr_Choose Group",
+      "table.columns": {
+        "name": "fr_Name"
+      }
+    }
+  },
+  "cases.comp.notes": {
+    "title": "fr_Notes",
+    "table.columns": {
+      "note": "fr_Note",
+      "created": "fr_Created",
+      "creator": "fr_Author"
+    }
+  },
+  "cases.comp.tasks": {
+    "title": "fr_Tasks",
+    "table.columns": {
+      "title": "fr_Title",
+      "assignee": "fr_Assignee",
+      "created": "fr_Created",
+      "priority": "fr_Priority",
+      "due": "fr_Due",
+      "status": "fr_Status"
+    },
+    "table.overdue.tooltip": "fr_Task is Overdue",
+    "table.deadline.tooltip": "fr_Deadline is Approaching"
+  },
+  "cases.comp.references": {
+    "title": "fr_References",
+    "table.columns": {
+      "targetName": "fr_Number",
+      "parentName": "fr_Parent",
+      "targetTitle": "fr_Title",
+      "modified": "fr_Modified",
+      "targetType": "fr_Reference Type",
+      "status": "fr_Status"
+    }
+  },
+  "cases.comp.history": {
+    "title": "fr_History",
+    "table.columns": {
+      "eventType": "fr_Event Name",
+      "eventDate": "fr_Date",
+      "userId": "fr_User"
+    }
+  },
+  "cases.comp.time": {
+    "title": "fr_Time",
+    "table.columns": {
+      "name": "fr_Form Name",
+      "user": "fr_User",
+      "tally": "fr_Total Hours",
+      "modified": "fr_Modified Date",
+      "status": "fr_Status"
+    },
+    "formNamePrefix": "fr_Timesheet"
+  },
+  "cases.comp.cost": {
+    "title": "fr_Cost",
+    "table.columns": {
+      "name": "fr_Form Name",
+      "user": "fr_User",
+      "tally": "fr_Total Cost",
+      "modified": "fr_Modified Date",
+      "status": "fr_Status"
+    },
+    "formNamePrefix": "fr_Costsheet"
+  },
+  "cases.comp.tags": {
+    "title": "fr_Tags",
+    "table.columns": {
+      "tag": "fr_Tag",
+      "created": "fr_Created",
+      "createdBy": "fr_Created By"
+    },
+    "modal": {
+      "title": "fr_Tag",
+      "search": "fr_Search for Tag",
+      "buttons": {
+        "cancel": "fr_Cancel",
+        "ok": "fr_Add Tag"
+      }
+    },
+    "message": {
+      "tagExists": "fr_Tag with that name or description or text already exists",
+      "tagAssociated": "fr_already associated",
+      "delete": {
+        "success": "fr_Tag deleted successfully",
+        "error": "fr_Error deleting tag"
+      }
+    }
+  },
+  "cases.comp.calendar": {
+    "title": "fr_Calendar"
+  },
+  "cases.comp.merge": {
+    "id": "fr_merge",
+    "title": "fr_Merge",
+    "cancel.btn": "fr_Cancel",
+    "merge.btn": "fr_Merge",
+    "search.placeholder": "fr_Search for case file.",
+    "search.btn": "fr_Search",
+    "enabled": true,
+    "table.columns": {
+      "incident": "fr_Type",
+      "name": "fr_Name",
+      "assignee": "fr_Assignee",
+      "title": "fr_Title",
+      "parent": "fr_Parent",
+      "modified": "fr_Modified"
+    }
+  },
+  "cases.comp.split": {
+    "title": "fr_Split",
+    "cancel": "fr_Cancel",
+    "split": "fr_Split"
+  },
+  "cases.comp.addreference": {
+    "title": "fr_Add Reference",
+    "cancelButton": "fr_Cancel",
+    "confirmButton": "fr_Add",
+    "search": {
+      "placeholder": "fr_Search for case, complaint, file, task",
+      "btn": "fr_Search"
+    },
+    "grid": {
+      "columns": {
+        "id": "fr_Id",
+        "name": "fr_Name",
+        "type": "fr_Type",
+        "title": "fr_Title",
+        "parent": "fr_Parent",
+        "assignee": "fr_Assignee",
+        "modified": "fr_Modified"
+      }
+    }
+  },
+  "cases.comp.assigneePickerModal": {
+    "title": "fr_Change Assignee",
+    "assigneeNamelabel": "fr_Assignee Name",
+    "btnCancelText": "fr_Cancel",
+    "btnSaveText": "fr_Save",
+    "searchAssigneeHeader": "fr_Search Assignee"
+  },
+  "cases.comp.groupPickerModal": {
+    "title": "fr_Change Group",
+    "groupNamelabel": "fr_Group Name",
+    "btnCancelText": "fr_Cancel",
+    "btnSaveText": "fr_Save",
+    "searchGroupHeader": "fr_Search Group"
+  },
+  "cases.comp.approvalRouting": {
+    "title": "fr_Future Approvers",
+    "addNewTooltip": "fr_Add new approver",
+    "noBuckslipMessage": "fr_No Data",
+    "button": {
+      "save.tooltip": "fr_Save Changes"
+    },
+    "table.columns": {
+      "fullName": "fr_Full Name"
+    }
+  },
+  "cases.comp.pastApprovals": {
+    "title": "fr_Past Approvers",
+    "noBuckslipMessage": "fr_No Data",
+    "table.columns": {
+      "approvalDate": "fr_Approval Date",
+      "approverId": "fr_Approver",
+      "approverDecision": "fr_Approver Decision"
+    }
+  },
+  "cases.userOrGroupSearch": {
+    "id": "fr_userSearch",
+    "title": "fr_User/Group Search",
+    "search": {
+      "btn": "fr_Search",
+      "placeholder": "fr_Search for the user or group."
+    },
+    "cancelButton": "fr_Cancel",
+    "confirmButton": "fr_Confirm",
+    "enabled": true,
+    "userOrGroupFacetFilter": "fr_\"object_type_s\":(GROUP OR USER)",
+    "assigneeGridColumns": {
+      "name": "fr_Name",
+      "type": "fr_Type",
+      "title": "fr_Title",
+      "username": "fr_Username"
+    }
+  }
+}

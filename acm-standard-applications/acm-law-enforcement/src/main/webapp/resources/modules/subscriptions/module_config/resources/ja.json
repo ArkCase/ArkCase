@@ -1,0 +1,22 @@
+{
+  "subscriptions": {
+    "title": "ja_Subscriptions",
+    "search.btn": "ja_Search",
+    "export.btn": "ja_Export",
+    "search.placeholder": "ja_Search for subscriptions",
+    "menus": {
+      "leftnav.item": "ja_Subscriptions"
+    },
+    "comp":{
+      "grid": {
+        "columns": {
+          "id": "ja_ID",
+          "event": "ja_Event",
+          "parentName": "ja_Parent Name",
+          "parentType": "ja_Parent Type",
+          "modified": "ja_Modified"
+        }
+      }
+    }
+  }
+}

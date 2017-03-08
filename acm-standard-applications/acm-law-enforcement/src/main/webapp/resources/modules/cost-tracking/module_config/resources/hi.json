@@ -1,0 +1,76 @@
+{
+  "costTracking": {
+    "title": "hi_Cost Tracking",
+    "progressNoCostsheet": "hi_[ No costsheet is selected ]",
+    "progressLoading": "hi_Loading costsheet ",
+    "progressError": "hi_Failed to load costsheet"
+  },
+  "costTracking.menus": {
+    "leftnav.item": "hi_Cost Tracking",
+    "topbar.item": "hi_Costsheet"
+  },
+  "costTracking.tree": {
+  },
+  "costTracking.comp.info": {
+    "incidentDate": "hi_Incident Date",
+    "priority": "hi_Priority",
+    "assignedTo": "hi_Assigned To",
+    "subjectType": "hi_Subject Type",
+    "state": "hi_State"
+  },
+  "costTracking.comp.actions": {
+    "new.button": "hi_New Costsheet",
+    "edit.button": "hi_Edit Costsheet"
+  },
+  "costTracking.comp.details": {
+    "title": "hi_Details",
+    "informSaved": "hi_Costsheet details saved",
+    "table.columns": {
+      "title": "hi_Details",
+      "modified": "hi_Date Last Modified",
+      "modifier": "hi_User Last Modified"
+    }
+  },
+  "costTracking.comp.people": {
+    "title": "hi_Person",
+    "table.columns": {
+      "fullName": "hi_Full Name",
+      "userId": "hi_Username"
+    }
+  },
+  "costTracking.comp.summary": {
+    "title": "hi_Cost Summary",
+    "table.columns": {
+      "parentId": "hi_ID",
+      "parentNumber": "hi_Parent ID",
+      "parentType": "hi_Parent Type",
+      "value": "hi_Total Cost",
+      "title": "hi_Title",
+      "description": "hi_Description"
+    }
+  },
+  "costTracking.comp.tags": {
+    "title": "hi_Tags",
+    "table.columns": {
+      "tag": "hi_Tag",
+      "created": "hi_Created",
+      "createdBy": "hi_Created By"
+    },
+    "modal": {
+    "title": "hi_Tag",
+    "search": "hi_Search for Tag",
+    "buttons": {
+          "cancel": "hi_Cancel",
+          "ok": "hi_Add Tag"
+     }
+    },
+    "message": {
+      "tagExists": "hi_Tag with that name or description or text already exists",
+      "tagAssociated": "hi_already associated",
+      "delete": {
+        "success": "hi_Tag deleted successfully",
+        "error": "hi_Error deleting tag"
+      }
+    }
+  }
+}

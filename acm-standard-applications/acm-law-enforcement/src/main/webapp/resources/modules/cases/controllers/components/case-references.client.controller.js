@@ -39,13 +39,21 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
             $scope.gridOptions.data = Util.goodArray($scope.objectInfo.references);
         };
 
-        $scope.onClickObjLink = function (event, rowEntity) {
+        $scope.onClickObjLink = function (event, rowEntity, targetNameColumnClicked) {
             event.preventDefault();
 
             var targetType = Util.goodMapValue(rowEntity, "targetType");
             var targetId = Util.goodMapValue(rowEntity, "targetId");
-            gridHelper.showObject(targetType, targetId);
+            var parentId = Util.goodMapValue(rowEntity, "parentId");
+            var parentType = Util.goodMapValue(rowEntity, "parentType");
+            var fileName = Util.goodMapValue(rowEntity, "targetName");
 
+            if(targetType == ObjectService.ObjectTypes.FILE && targetNameColumnClicked){
+                gridHelper.openObject(targetId, parentId, parentType, fileName);
+            }else{
+                gridHelper.showObject(targetType, targetId);
+            }
+            
             if (ObjectService.ObjectTypes.CASE_FILE == targetType) {
                 $scope.$emit('request-show-object', {objectId: targetId, objectType: targetType});
             }

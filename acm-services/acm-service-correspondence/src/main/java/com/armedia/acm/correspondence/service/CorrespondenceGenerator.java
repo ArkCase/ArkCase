@@ -10,6 +10,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.spring.SpringContextHolder;
 
+import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
@@ -130,8 +131,11 @@ public class CorrespondenceGenerator
             Object value = queryResult.get(mergeField.getFieldId());
             value = formatValue(value, Date.class, new SimpleDateFormat(template.getDateFormatString()));
             value = formatValue(value, Number.class, new DecimalFormat(template.getNumberFormatString()));
-            String columnValue = value == null ? null : value.toString();
+
+            // Remove all HTML elements if the value is not null
+            String columnValue = value == null ? null : Jsoup.parse(value.toString()).text();
             retval.put(mergeField.getFieldValue(), columnValue);
+
         }
 
         return retval;
