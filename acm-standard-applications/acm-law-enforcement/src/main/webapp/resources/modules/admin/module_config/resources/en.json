@@ -365,6 +365,83 @@
       "target": "Target"
     },
     "forms.message.delete.success": "Successfully deleted row.",
-    "forms.message.delete.error": "Error deleting row."
+    "forms.message.delete.error": "Error deleting row.",
+    "documentManagement": {
+      "title": "Document Management",
+      "cmisConfiguration": "CMIS Configuration",
+      "cmisConfiguration.addNewConfig": "Add New CMIS Config",
+      "cmisConfiguration.addNewConfig.modal": {
+        "header": {
+          "new": "New CMIS Configuration",
+          "edit": "Edit CMIS Configuration"
+        },
+        "dialog": {
+          "cancel": "Cancel",
+          "ok": "OK"
+        }
+      },
+      "cmisConfiguration.data": {
+        "id": {
+          "label": "CMIS ID",
+          "placeholder": "CMIS ID"
+        },
+        "baseUrl": {
+          "label": "Base URL",
+          "placeholder": "Base URL"
+        },
+        "username": {
+          "label": "Username",
+          "placeholder": "Username"
+        },
+        "password": {
+          "label": "Password",
+          "placeholder": "Password"
+        },
+        "useAlfrescoExtension": {
+          "label": "Use Alfresco Extension",
+          "placeholder": "Use Alfresco Extension"
+        },
+        "endpoint": {
+          "label": "Endpoint",
+          "placeholder": "Endpoint"
+        },
+        "maxIdle": {
+          "label": "Maximum Idle",
+          "placeholder": "Maximum Idle"
+        },
+        "maxActive": {
+          "label": "Maximum Active",
+          "placeholder": "Maximum Active"
+        },
+        "maxWait": {
+          "label": "Maximum Wait",
+          "placeholder": "Maximum Wait"
+        },
+        "minEvictionMillis": {
+          "label": "Minimum Eviction Milliseconds",
+          "placeholder": "Minimum Eviction Milliseconds"
+        },
+        "evictionCheckIntervalMillis": {
+          "label": "Eviction Check Interval Milliseconds",
+          "placeholder": "Eviction Check Interval Milliseconds"
+        },
+        "reconnectCount": {
+          "label": "Reconnect Count",
+          "placeholder": "Reconnect Count"
+        },
+        "reconnectFrequency": {
+          "label": "Reconnect Frequency",
+          "placeholder": "Reconnect Frequency"
+        },
+        "repositoryId": {
+          "label": "Repository Id",
+          "placeholder": "Repository Id"
+        },
+        "versioningState": {
+          "label": "Versioning State",
+          "placeholder": "Versioning State"
+        }
+      }
+    }
   }
 }

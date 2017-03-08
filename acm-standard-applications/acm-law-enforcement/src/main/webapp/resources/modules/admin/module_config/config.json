@@ -422,6 +422,105 @@
         "LDAP_GROUP",
         "ADHOC_GROUP"
       ]
+    },
+    {
+      "id": "cmisConfiguration",
+      "title": "CMIS Configuration Grid",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": false,
+      "columnDefs": [
+        {
+          "name": "id",
+          "displayName": "admin.documentManagement.cmisConfiguration.data.id.label",
+          "visible": true,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "baseUrl",
+          "displayName": "admin.documentManagement.cmisConfiguration.data.baseUrl.label",
+          "visible": true,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "username",
+          "displayName": "admin.documentManagement.cmisConfiguration.data.username.label",
+          "visible": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "password",
+          "displayName": "admin.documentManagement.cmisConfiguration.data.password.label",
+          "visible": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "useAlfrescoExtension",
+          "displayName": "admin.documentManagement.cmisConfiguration.data.useAlfrescoExtension.label",
+          "visible": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "endpoint",
+          "displayName": "admin.documentManagement.cmisConfiguration.data.endpoint.label",
+          "visible": true,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "maxIdle",
+          "displayName": "admin.documentManagement.cmisConfiguration.data.maxIdle.label",
+          "visible": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "maxActive",
+          "displayName": "admin.documentManagement.cmisConfiguration.data.maxActive.label",
+          "visible": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "maxWait",
+          "displayName": "admin.documentManagement.cmisConfiguration.data.maxWait.label",
+          "visible": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "minEvictionMillis",
+          "displayName": "admin.documentManagement.cmisConfiguration.data.minEvictionMillis.label",
+          "visible": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "evictionCheckIntervalMillis",
+          "displayName": "admin.documentManagement.cmisConfiguration.data.evictionCheckIntervalMillis.label",
+          "visible": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "reconnectCount",
+          "displayName": "admin.documentManagement.cmisConfiguration.data.reconnectCount.label",
+          "visible": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "reconnectFrequency",
+          "displayName": "admin.documentManagement.cmisConfiguration.data.reconnectFrequency.label",
+          "visible": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "repositoryId",
+          "displayName": "admin.documentManagement.cmisConfiguration.data.repositoryId.label",
+          "visible": true,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "versioningState",
+          "displayName": "admin.documentManagement.cmisConfiguration.data.versioningState.label",
+          "visible": false,
+          "headerCellFilter": "translate"
+        }
+      ]
     }
   ],
   "adminTree": [
@@ -557,6 +656,17 @@
         {
           "title": "admin.correspondenceManagement.templates",
           "templateName": "cm.templates"
+        }
+      ]
+    },
+    {
+      "title": "admin.documentManagement.title",
+      "folder": "true",
+      "expanded": "true",
+      "children": [
+        {
+          "title": "admin.documentManagement.cmisConfiguration",
+          "templateName": "cmis.configuration"
         }
       ]
     }
