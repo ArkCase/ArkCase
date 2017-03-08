@@ -259,13 +259,13 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
             retval = (AcmGroup) dbQuery.getSingleResult();
         } catch (NoResultException e)
         {
-            LOG.info("There is no any group with name = {}" + name);
+            LOG.info("There is no any group with name = {}", name);
         } catch (NonUniqueResultException e)
         {
-            LOG.info("There is no unique group found with name = {}" + name + ". More than one group has this name.");
+            LOG.info("There is no unique group found with name = {}. More than one group has this name.", name);
         } catch (Exception e)
         {
-            LOG.error("Error while retrieving group by group name = {}" + name, e);
+            LOG.error("Error while retrieving group by group name = {}", name, e);
         }
         return retval;
     }
