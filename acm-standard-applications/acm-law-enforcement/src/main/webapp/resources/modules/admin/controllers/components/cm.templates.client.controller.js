@@ -6,7 +6,7 @@ angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$m
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
-        $scope.selectedRows = {};
+        $scope.selectedRows = [];
         $scope.correspondenceManagementTemplateVersions = undefined;
         
         $scope.gridOptions = {
@@ -17,11 +17,11 @@ angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$m
             data: [],
             onRegisterApi: function(gridApi) {
                 $scope.gridApi = gridApi;
-                gridApi.selection.on.rowSelectionChanged($scope, function(row) {
+                gridApi.selection.on.rowSelectionChanged($scope, function (row) {
                     $scope.selectedRows = gridApi.selection.getSelectedRows();
                 });
  
-                gridApi.selection.on.rowSelectionChangedBatch($scope, function(rows) {
+                gridApi.selection.on.rowSelectionChangedBatch($scope, function (rows) {
                     $scope.selectedRows = gridApi.selection.getSelectedRows();
                 });
            }
@@ -170,6 +170,7 @@ angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$m
                     row.downloadFileName = correspondenceService.downloadByFilename(row.templateFilename);
                 });
                 $scope.gridOptions.data = templates.data;
+                $scope.selectedRows = [];
             });
         }
 

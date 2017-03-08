@@ -4,6 +4,10 @@ package com.armedia.acm.correspondence.model;
  * @author sasko.tanaskoski
  *
  */
+
+/**
+ * This POJO is used for storing mergeField parameters to file
+ */
 public class CorrespondenceMergeFieldConfiguration
 {
 
