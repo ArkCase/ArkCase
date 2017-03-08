@@ -45,6 +45,11 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
     private List<CorrespondenceMergeField> mergeFields = new ArrayList<>();
     private List<CorrespondenceMergeFieldVersion> mergeFieldsVersions = new ArrayList<>();
 
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
+     */
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event)
     {
@@ -73,21 +78,9 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
 
             if (mergeFieldsVersions.isEmpty())
             {
-                Map<String, CorrespondenceQuery> correspondenceQueryBeansMap = springContextHolder
-                        .getAllBeansOfType(CorrespondenceQuery.class);
-                correspondenceQueryBeansMap.values().stream().forEach(cq -> {
-                    if (cq.getType() != null)
-                    {
-                        CorrespondenceMergeFieldVersion defaultMergeFieldVersion = new CorrespondenceMergeFieldVersion();
-                        defaultMergeFieldVersion.setMergingActiveVersion(true);
-                        defaultMergeFieldVersion.setMergingVersion("1.0");
-                        defaultMergeFieldVersion.setMergingType(cq.getType().name());
-                        defaultMergeFieldVersion.setModified(new Date());
-                        mergeFieldsVersions.add(defaultMergeFieldVersion);
-                    }
-                });
-                updateMergeFieldVersionConfiguration(mergeFieldsVersions);
+                createDefaultMergeFieldVersionRecords();
             }
+
             file = correspondenceMergeFieldsConfiguration.getFile();
             if (!file.exists())
             {
@@ -111,24 +104,7 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
 
             if (mergeFields.isEmpty())
             {
-                Map<String, CorrespondenceQuery> correspondenceQueryBeansMap = springContextHolder
-                        .getAllBeansOfType(CorrespondenceQuery.class);
-                correspondenceQueryBeansMap.values().stream().forEach(cq -> {
-                    if (!cq.getFieldNames().isEmpty())
-                    {
-                        for (String fieldName : cq.getFieldNames())
-                        {
-                            CorrespondenceMergeField defaultMergeField = new CorrespondenceMergeField();
-                            defaultMergeField.setFieldVersion("1.0");
-                            defaultMergeField.setFieldId(fieldName);
-                            defaultMergeField.setFieldDescription(fieldName + " place holder");
-                            defaultMergeField.setFieldType(cq.getType().name());
-                            defaultMergeField.setFieldValue(fieldName);
-                            mergeFields.add(defaultMergeField);
-                        }
-                    }
-                });
-                updateMergeFieldConfiguration(mergeFields);
+                createDefaultMergeFieldRescords();
             }
         } catch (IOException ioe)
         {
@@ -136,21 +112,35 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
         }
     }
 
+    /**
+     * @return mergeFields
+     */
     public List<CorrespondenceMergeField> getMergeFields()
     {
         return mergeFields;
     }
 
+    /**
+     * @return mergeFieldVersions
+     */
     public List<CorrespondenceMergeFieldVersion> getMergeFieldVersions()
     {
         return mergeFieldsVersions;
     }
 
+    /**
+     * @param objectType
+     * @return mergeFieldVersions
+     */
     public List<CorrespondenceMergeFieldVersion> getMergeFieldVersionsByType(String objectType)
     {
         return mergeFieldsVersions.stream().filter(version -> version.getMergingType().equals(objectType)).collect(Collectors.toList());
     }
 
+    /**
+     * @param objectType
+     * @return mergeFields
+     */
     public List<CorrespondenceMergeField> getActiveVersionMergeFieldsByType(String objectType)
     {
         return mergeFields.stream()
@@ -158,12 +148,20 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
                 .filter(mergeField -> mergeField.getFieldType().equals(objectType)).collect(Collectors.toList());
     }
 
+    /**
+     * @param objectType
+     * @return mergeFieldVersion
+     */
     public CorrespondenceMergeFieldVersion getActiveMergingVersionByType(String objectType)
     {
         return mergeFieldsVersions.stream().filter(mergeFieldVersion -> mergeFieldVersion.isMergingActiveVersion())
                 .filter(mergeFieldVersion -> mergeFieldVersion.getMergingType().equals(objectType)).findFirst().get();
     }
 
+    /**
+     * @param objectType
+     * @return version
+     */
     private Double getNewVersionByType(String objectType)
     {
         return mergeFieldsVersions.stream().filter(mergeFieldVersion -> mergeFieldVersion.getMergingType().equals(objectType))
@@ -171,6 +169,12 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
                 .reduce(0, (a, b) -> Double.max(a, b) + 1);
     }
 
+    /**
+     * @param newMergeFields
+     * @param auth
+     * @return mergeFields
+     * @throws IOException
+     */
     public List<CorrespondenceMergeField> saveMergeFieldsData(List<CorrespondenceMergeField> newMergeFields, Authentication auth)
             throws IOException
     {
@@ -204,6 +208,12 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
         return result;
     }
 
+    /**
+     * @param mergeFieldversion
+     * @param auth
+     * @return mergeFieldVersion
+     * @throws IOException
+     */
     public CorrespondenceMergeFieldVersion setActiveMergingVersion(CorrespondenceMergeFieldVersion mergeFieldVersion, Authentication auth)
             throws IOException
     {
@@ -255,11 +265,57 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
 
     }
 
+    private void createDefaultMergeFieldRescords() throws IOException
+    {
+        Map<String, CorrespondenceQuery> correspondenceQueryBeansMap = springContextHolder.getAllBeansOfType(CorrespondenceQuery.class);
+        correspondenceQueryBeansMap.values().stream().forEach(cq -> {
+            if (!cq.getFieldNames().isEmpty())
+            {
+                for (String fieldName : cq.getFieldNames())
+                {
+                    CorrespondenceMergeField defaultMergeField = new CorrespondenceMergeField();
+                    defaultMergeField.setFieldVersion("1.0");
+                    defaultMergeField.setFieldId(fieldName);
+                    defaultMergeField.setFieldDescription(fieldName + " place holder");
+                    defaultMergeField.setFieldType(cq.getType().name());
+                    defaultMergeField.setFieldValue(fieldName);
+                    mergeFields.add(defaultMergeField);
+                }
+            }
+        });
+        updateMergeFieldConfiguration(mergeFields);
+    }
+
+    private void createDefaultMergeFieldVersionRecords() throws IOException
+    {
+        Map<String, CorrespondenceQuery> correspondenceQueryBeansMap = springContextHolder.getAllBeansOfType(CorrespondenceQuery.class);
+        correspondenceQueryBeansMap.values().stream().forEach(cq -> {
+            if (cq.getType() != null)
+            {
+                CorrespondenceMergeFieldVersion defaultMergeFieldVersion = new CorrespondenceMergeFieldVersion();
+                defaultMergeFieldVersion.setMergingActiveVersion(true);
+                defaultMergeFieldVersion.setMergingVersion("1.0");
+                defaultMergeFieldVersion.setMergingType(cq.getType().name());
+                defaultMergeFieldVersion.setModified(new Date());
+                mergeFieldsVersions.add(defaultMergeFieldVersion);
+            }
+        });
+        updateMergeFieldVersionConfiguration(mergeFieldsVersions);
+    }
+
+    /**
+     * @param correspondenceMergeFieldsVersionConfiguration
+     *            the correspondenceMergeFieldsVersionConfiguration to set
+     */
     public void setCorrespondenceMergeFieldsVersionConfiguration(Resource correspondenceMergeFieldsVersionConfiguration)
     {
         this.correspondenceMergeFieldsVersionConfiguration = correspondenceMergeFieldsVersionConfiguration;
     }
 
+    /**
+     * @param correspondenceMergeFieldsConfiguration
+     *            the correspondenceMergeFieldsConfiguration to set
+     */
     public void setCorrespondenceMergeFieldsConfiguration(Resource correspondenceMergeFieldsConfiguration)
     {
         this.correspondenceMergeFieldsConfiguration = correspondenceMergeFieldsConfiguration;
@@ -270,6 +326,10 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
         return springContextHolder;
     }
 
+    /**
+     * @param springContextHolder
+     *            the springContextHolder to set
+     */
     public void setSpringContextHolder(SpringContextHolder springContextHolder)
     {
         this.springContextHolder = springContextHolder;

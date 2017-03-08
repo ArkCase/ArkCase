@@ -6,6 +6,10 @@ import java.util.Date;
  * @author sasko.tanaskoski
  *
  */
+
+/**
+ * This POJO is used for storing mergeFieldVersion parameters to file
+ */
 public class CorrespondenceMergeFieldVersionConfiguration
 {
 

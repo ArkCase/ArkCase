@@ -22,9 +22,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
-import java.text.SimpleDateFormat;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +37,6 @@ import java.util.Map;
 public class AddCorrespondenceTemplatesAPI
 {
     private Logger log = LoggerFactory.getLogger(getClass());
-    List<Object> templateUploadList = new ArrayList<>();
 
     @RequestMapping(value = "/template", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE,
             MediaType.TEXT_PLAIN_VALUE })
@@ -45,7 +45,7 @@ public class AddCorrespondenceTemplatesAPI
             // @RequestParam("files[]") MultipartFile file,
             HttpServletRequest request, Authentication authentication) throws Exception
     {
-
+        List<Object> templateUploadList = new ArrayList<>();
         String userHome = System.getProperty("user.home");
         String pathName = userHome + "/.arkcase/acm/correspondenceTemplates";
         try
@@ -64,25 +64,20 @@ public class AddCorrespondenceTemplatesAPI
                     if (attachmentsList != null && !attachmentsList.isEmpty())
                     {
 
-                        getUploadedTemplates().clear();
                         for (final MultipartFile attachment : attachmentsList)
                         {
-                            if (log.isInfoEnabled())
-                            {
-                                log.info("Adding new template : " + attachment.getOriginalFilename());
-                            }
-
+                            log.info("Adding new template : {}", attachment.getOriginalFilename());
                             saveMultipartToDisk(attachment, pathName);
                         }
                     }
                 }
             }
-            retrieveTemplateDetails(authentication, pathName);
+            retrieveTemplateDetails(authentication, pathName, templateUploadList);
         } catch (Exception e)
         {
             e.printStackTrace();
         }
-        return getUploadedTemplates();
+        return templateUploadList;
     }
 
     @RequestMapping(value = "/template/timestamp", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE,
@@ -93,6 +88,7 @@ public class AddCorrespondenceTemplatesAPI
             HttpServletRequest request, Authentication authentication) throws Exception
     {
 
+        List<Object> templateUploadList = new ArrayList<>();
         String userHome = System.getProperty("user.home");
         String pathName = userHome + "/.arkcase/acm/correspondenceTemplates";
         try
@@ -110,17 +106,12 @@ public class AddCorrespondenceTemplatesAPI
 
                     if (attachmentsList != null && !attachmentsList.isEmpty())
                     {
-
-                        getUploadedTemplates().clear();
                         for (final MultipartFile attachment : attachmentsList)
                         {
-                            if (log.isInfoEnabled())
-                            {
-                                log.info("Adding new template : " + attachment.getOriginalFilename());
-                            }
+                            log.info("Adding new template : {}", attachment.getOriginalFilename());
                             String fileName = createTimestampFileName(attachment.getOriginalFilename());
                             saveMultipartToDisk(attachment, pathName, fileName);
-                            retrieveTemplateDetails(authentication, pathName, fileName);
+                            retrieveTemplateDetails(authentication, pathName, fileName, templateUploadList);
                         }
                     }
                 }
@@ -129,7 +120,7 @@ public class AddCorrespondenceTemplatesAPI
         {
             e.printStackTrace();
         }
-        return getUploadedTemplates();
+        return templateUploadList;
     }
 
     public void saveMultipartToDisk(MultipartFile file, String pathName) throws Exception
@@ -154,7 +145,7 @@ public class AddCorrespondenceTemplatesAPI
         file.transferTo(multipartFile);
     }
 
-    public void retrieveTemplateDetails(Authentication authentication, String pathName) throws Exception
+    public void retrieveTemplateDetails(Authentication authentication, String pathName, List<Object> uploadList) throws Exception
     {
 
         File templateFolder = new File(pathName);
@@ -176,12 +167,13 @@ public class AddCorrespondenceTemplatesAPI
                 templateUpload.setName(template.getName());
                 templateUpload.setCreator(authentication.getName());
                 templateUpload.setCreated(creationTime.toString());
-                getUploadedTemplates().add(templateUpload);
+                uploadList.add(templateUpload);
             }
         }
     }
 
-    public void retrieveTemplateDetails(Authentication authentication, String pathName, String fileName) throws Exception
+    public void retrieveTemplateDetails(Authentication authentication, String pathName, String fileName, List<Object> uploadList)
+            throws Exception
     {
 
         File template = new File(pathName, fileName);
@@ -199,23 +191,14 @@ public class AddCorrespondenceTemplatesAPI
         templateUpload.setName(template.getName());
         templateUpload.setCreator(authentication.getName());
         templateUpload.setCreated(creationTime.toString());
-        getUploadedTemplates().add(templateUpload);
-    }
-
-    public List<Object> getUploadedTemplates()
-    {
-        return templateUploadList;
-    }
-
-    public void setUploadedTemplates(List<Object> templateUploadList)
-    {
-        this.templateUploadList = templateUploadList;
+        uploadList.add(templateUpload);
     }
 
     public String createTimestampFileName(String fileName)
     {
-        SimpleDateFormat timestampFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-        String timestampName = timestampFormat.format(new Date());
+        ZonedDateTime date = ZonedDateTime.now(ZoneOffset.UTC);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        String timestampName = formatter.format(date);
         return timestampName + "_" + fileName;
     }
 

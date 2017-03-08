@@ -253,42 +253,79 @@ public class CorrespondenceService
         return templateManager.deleteTemplateByIdAndVersion(templateId, templateVersion);
     }
 
+    /**
+     * @return
+     */
     public List<CorrespondenceMergeField> getMergeFields()
     {
         return mergeFieldManager.getMergeFields();
     }
 
+    /**
+     * @return
+     */
     public List<CorrespondenceMergeFieldVersion> getMergeFieldVersions()
     {
         return mergeFieldManager.getMergeFieldVersions();
     }
 
+    /**
+     * @param objectType
+     * @return
+     */
     public List<CorrespondenceMergeFieldVersion> getMergeFieldVersionsByType(String objectType)
     {
         return mergeFieldManager.getMergeFieldVersionsByType(objectType);
     }
 
+    /**
+     * @param objectType
+     * @return
+     * @throws IOException
+     */
     public List<CorrespondenceMergeField> getActiveVersionMergeFieldsByType(String objectType) throws IOException
     {
         return mergeFieldManager.getActiveVersionMergeFieldsByType(objectType);
     }
 
+    /**
+     * @param objectType
+     * @return
+     * @throws IOException
+     */
     public List<CorrespondenceMergeField> getMergeFieldsByType(String objectType) throws IOException
     {
         return mergeFieldManager.getActiveVersionMergeFieldsByType(objectType);
     }
 
+    /**
+     * @param objectType
+     * @return
+     * @throws IOException
+     */
     public CorrespondenceMergeFieldVersion getActiveMergingVersion(String objectType) throws IOException
     {
         return mergeFieldManager.getActiveMergingVersionByType(objectType);
     }
 
+    /**
+     * @param mergeFields
+     * @param auth
+     * @return
+     * @throws IOException
+     */
     public List<CorrespondenceMergeField> saveMergeFieldsData(List<CorrespondenceMergeField> mergeFields, Authentication auth)
             throws IOException
     {
         return mergeFieldManager.saveMergeFieldsData(mergeFields, auth);
     }
 
+    /**
+     * @param mergeFieldVersion
+     * @param auth
+     * @return
+     * @throws IOException
+     */
     public CorrespondenceMergeFieldVersion setActiveMergingVersion(CorrespondenceMergeFieldVersion mergeFieldVersion, Authentication auth)
             throws IOException
     {
