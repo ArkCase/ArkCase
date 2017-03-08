@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('admin').controller('Admin.CMISConfigurationController', ['$scope', '$modal', 'Helper.UiGridService',
-    function ($scope, $modal, HelperUiGridService) {
+    'Admin.CmisConfigService',
+    function ($scope, $modal, HelperUiGridService, CmisConfigService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
