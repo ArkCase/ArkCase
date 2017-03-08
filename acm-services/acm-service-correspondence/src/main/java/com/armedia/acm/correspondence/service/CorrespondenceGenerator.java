@@ -224,6 +224,10 @@ public class CorrespondenceGenerator
         return correspondenceFolderName;
     }
 
+    /**
+     * @param correspondenceFolderName
+     *            the correspondenceFolderName to set
+     */
     public void setCorrespondenceFolderName(String correspondenceFolderName)
     {
         this.correspondenceFolderName = correspondenceFolderName;
@@ -243,6 +247,10 @@ public class CorrespondenceGenerator
         return correspondenceService;
     }
 
+    /**
+     * @param correspondenceService
+     *            the correspondenceService to set
+     */
     public void setCorrespondenceService(CorrespondenceService correspondenceService)
     {
         this.correspondenceService = correspondenceService;

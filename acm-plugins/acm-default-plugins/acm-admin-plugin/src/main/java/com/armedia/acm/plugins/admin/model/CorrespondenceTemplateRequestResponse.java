@@ -37,31 +37,52 @@ public class CorrespondenceTemplateRequestResponse
 
     private String downloadFileName;
 
+    /**
+     * @return the templateId
+     */
     public String getTemplateId()
     {
         return templateId;
     }
 
+    /**
+     * @param templateId
+     *            the templateId to set
+     */
     public void setTemplateId(String templateId)
     {
         this.templateId = templateId;
     }
 
+    /**
+     * @return the templateVersion
+     */
     public String getTemplateVersion()
     {
         return templateVersion;
     }
 
+    /**
+     * @param templateVersion
+     *            the templateVersion to set
+     */
     public void setTemplateVersion(String templateVersion)
     {
         this.templateVersion = templateVersion;
     }
 
+    /**
+     * @return the templateVersionActive
+     */
     public boolean isTemplateVersionActive()
     {
         return templateVersionActive;
     }
 
+    /**
+     * @param templateVersionActive
+     *            the templateVersionActive to set
+     */
     public void setTemplateVersionActive(boolean templateVersionActive)
     {
         this.templateVersionActive = templateVersionActive;
@@ -237,11 +258,18 @@ public class CorrespondenceTemplateRequestResponse
         this.modified = modified;
     }
 
+    /**
+     * @return the downloadFileName
+     */
     public String getDownloadFileName()
     {
         return downloadFileName;
     }
 
+    /**
+     * @param downloadFileName
+     *            the downloadFileName to set
+     */
     public void setDownloadFileName(String downloadFileName)
     {
         this.downloadFileName = downloadFileName;
