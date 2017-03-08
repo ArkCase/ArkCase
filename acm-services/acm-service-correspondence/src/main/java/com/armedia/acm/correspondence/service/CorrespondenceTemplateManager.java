@@ -3,6 +3,7 @@ package com.armedia.acm.correspondence.service;
 import static com.armedia.acm.correspondence.service.CorrespondenceMapper.mapConfigurationFromTemplate;
 import static com.armedia.acm.correspondence.service.CorrespondenceMapper.mapTemplateFromConfiguration;
 
+import com.armedia.acm.correspondence.model.CorrespondenceQuery;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplateConfiguration;
 import com.armedia.acm.spring.SpringContextHolder;
@@ -23,6 +24,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
@@ -145,6 +147,25 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
     }
 
     /**
+     * @param query
+     * @return
+     */
+    String getQueryId(CorrespondenceQuery query)
+    {
+        Map<String, CorrespondenceQuery> queryBeans = springContextHolder.getAllBeansOfType(CorrespondenceQuery.class);
+        if (queryBeans.values().contains(query))
+        {
+            Optional<Entry<String, CorrespondenceQuery>> searchResult = queryBeans.entrySet().stream()
+                    .filter(entry -> entry.getValue().equals(query)).findFirst();
+            if (searchResult.isPresent())
+            {
+                return searchResult.get().getKey();
+            }
+        }
+        return null;
+    }
+
+    /**
      * @return the templates
      */
     List<CorrespondenceTemplate> getAllTemplates()
@@ -158,6 +179,11 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
         return list;
     }
 
+    /**
+     * @param template
+     * @return
+     * @throws IOException
+     */
     Optional<CorrespondenceTemplate> updateTemplate(CorrespondenceTemplate template) throws IOException
     {
         Optional<CorrespondenceTemplate> optExisting = findActiveVersionTemplate(template.getTemplateId());
@@ -292,11 +318,20 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
         return findTemplateByIdAndVersion(templateId, templateVersion);
     }
 
+    /**
+     * @param templateId
+     * @param templateVersion
+     * @return
+     */
     private Optional<CorrespondenceTemplate> findTemplateByIdAndVersion(String templateId, String templateVersion)
     {
         return Optional.ofNullable(templates.get(templateId).get(templateVersion));
     }
 
+    /**
+     * @param templateId
+     * @return
+     */
     private Optional<CorrespondenceTemplate> findActiveVersionTemplate(String templateId)
     {
         if (templates.get(templateId) != null)
@@ -341,7 +376,7 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
 
     }
 
-    public Map<String, CorrespondenceTemplate> getVersionToTemplateMap(CorrespondenceTemplate correspondenceTemplate)
+    private Map<String, CorrespondenceTemplate> getVersionToTemplateMap(CorrespondenceTemplate correspondenceTemplate)
     {
         Map<String, CorrespondenceTemplate> versionToTempateMap = new HashMap<String, CorrespondenceTemplate>();
         versionToTempateMap.put(correspondenceTemplate.getTemplateVersion(), correspondenceTemplate);

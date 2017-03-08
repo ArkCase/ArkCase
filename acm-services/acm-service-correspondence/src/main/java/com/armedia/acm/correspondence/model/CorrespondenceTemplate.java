@@ -8,13 +8,22 @@ import java.util.Date;
 public class CorrespondenceTemplate
 {
 
+    /**
+     * The template id of the generated correspondence
+     */
     private String templateId;
 
+    /**
+     * The template version of the generated correspondence
+     */
     private String templateVersion;
 
+    /**
+     * The active version flag of the generated correspondence
+     */
     private boolean templateVersionActive;
     /**
-     * The label for the template, by default set to the value of <code>documentType</code>.
+     * The label for the template, by default should be set to the value of <code>documentType</code>.
      */
     private String label;
 
@@ -29,6 +38,9 @@ public class CorrespondenceTemplate
      */
     private String templateFilename;
 
+    /**
+     * The type of the template for generated correspondence, CASE_FILE, COMPLAINT etc.
+     */
     private String objectType;
 
     /**
@@ -49,31 +61,52 @@ public class CorrespondenceTemplate
 
     private Date modified;
 
+    /**
+     * @return the templateId
+     */
     public String getTemplateId()
     {
         return templateId;
     }
 
+    /**
+     * @param templateId
+     *            the templateId to set
+     */
     public void setTemplateId(String templateId)
     {
         this.templateId = templateId;
     }
 
+    /**
+     * @return the templateVersion
+     */
     public String getTemplateVersion()
     {
         return templateVersion;
     }
 
+    /**
+     * @param templateVersion
+     *            the templateVersion to set
+     */
     public void setTemplateVersion(String templateVersion)
     {
         this.templateVersion = templateVersion;
     }
 
+    /**
+     * @return the templateVersionActive
+     */
     public boolean isTemplateVersionActive()
     {
         return templateVersionActive;
     }
 
+    /**
+     * @param templateVersionActive
+     *            the templateVersionActive to set
+     */
     public void setTemplateVersionActive(boolean templateVersionActive)
     {
         this.templateVersionActive = templateVersionActive;
@@ -96,51 +129,86 @@ public class CorrespondenceTemplate
         this.label = label;
     }
 
+    /**
+     * @return the documentType
+     */
     public String getDocumentType()
     {
         return documentType;
     }
 
+    /**
+     * @param documentType
+     *            the documentType to set
+     */
     public void setDocumentType(String documentType)
     {
         this.documentType = documentType;
     }
 
+    /**
+     * @return the templateFilename
+     */
     public String getTemplateFilename()
     {
         return templateFilename;
     }
 
+    /**
+     * @param templateFilename
+     *            the templateFilename to set
+     */
     public void setTemplateFilename(String templateFilename)
     {
         this.templateFilename = templateFilename;
     }
 
+    /**
+     * @return the objectType
+     */
     public String getObjectType()
     {
         return objectType;
     }
 
+    /**
+     * @param objectType
+     *            the objectType to set
+     */
     public void setObjectType(String objectType)
     {
         this.objectType = objectType;
     }
 
+    /**
+     * @return the dateFormatString
+     */
     public String getDateFormatString()
     {
         return dateFormatString;
     }
 
+    /**
+     * @param dateFormatString
+     *            the dateFormatString to set
+     */
     public void setDateFormatString(String dateFormatString)
     {
         this.dateFormatString = dateFormatString;
     }
 
+    /**
+     * @return the numberFormatString
+     */
     public String getNumberFormatString()
     {
         return numberFormatString;
     }
 
+    /**
+     * @param numberFormatString
+     *            the numberFormatString to set
+     */
     public void setNumberFormatString(String numberFormatString)
     {
         this.numberFormatString = numberFormatString;

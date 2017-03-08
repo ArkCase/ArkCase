@@ -165,7 +165,7 @@ public class CorrespondenceService
      */
     public String getQueryId(CorrespondenceQuery query)
     {
-        return "";// templateManager.getQueryId(query);
+        return templateManager.getQueryId(query);
     }
 
     /**
