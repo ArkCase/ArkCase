@@ -1292,3 +1292,9 @@ a.no-outline:hover, a.no-outline:focus {
 .ui-grid-cell.ui-grid-disable-selection.ui-grid-row-header-cell {
     pointer-events: all !important;
 }
+
+.no-margin {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    font-size: 15px;
+}

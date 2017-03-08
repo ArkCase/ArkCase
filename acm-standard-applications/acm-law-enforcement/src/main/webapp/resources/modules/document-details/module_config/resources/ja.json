@@ -1,0 +1,92 @@
+{
+  "documentDetails": {
+    "title": "ja_Document details",
+    "creator": "ja_Creator",
+    "created": "ja_Created",
+    "assignee": "ja_Assignee",
+    "fileType": "ja_File type",
+    "status": "ja_Status",
+    "name": "ja_Name",
+    "comp.eventHistory": {
+      "title": "ja_Event History",
+      "table.columns": {
+        "eventType": "ja_Event Name",
+        "eventDate": "ja_Created",
+        "userId": "ja_User"
+      }
+    },
+    "comp.tags": {
+      "title": "ja_Tags",
+      "table.columns": {
+        "tag": "ja_Tag"
+      },
+      "modal": {
+        "title": "ja_Tag",
+        "search": "ja_Search for Tag",
+        "buttons": {
+          "cancel": "ja_Cancel",
+          "ok": "ja_Add Tag"
+        }
+      },
+      "message.tagExists": "ja_Tag with that name or description or text already exists",
+      "message.tagAssociated": "ja_already associated",
+      "message.delete.success": "ja_Tag deleted successfully",
+      "message.delete.error": "ja_Error deleting tag"
+    },
+    "comp.participants": {
+      "title": "ja_Participants",
+      "table.columns": {
+        "name": "ja_Name",
+        "type": "ja_Type"
+      },
+      "message.delete.success": "ja_Successfully deleted row.",
+      "message.delete.error": "ja_Error deleting row.",
+      "role": {
+        "title": "ja_Change participant Role",
+        "dropdownLabel": "ja_Available Roles",
+        "buttons": {
+          "cancel": "ja_Cancel",
+          "ok": "ja_Change Role"
+        }
+      }
+    },
+    "comp.notes": {
+      "title": "ja_Notes",
+      "table.columns": {
+        "note": "ja_Note",
+        "tag": "ja_Document Version",
+        "created": "ja_Created",
+        "creator": "ja_Author"
+      }
+    },
+    "comp.versionHistory": {
+      "title": "ja_Version History",
+      "table.columns": {
+        "creator": "ja_User",
+        "created": "ja_Created",
+        "versionTag": "ja_Version"
+      }
+    },
+    "userSearch": {
+      "id": "ja_userSearch",
+      "title": "ja_Add New Participant",
+      "search": {
+        "btn": "ja_Go!",
+        "placeholder": "ja_Enter to search for a participant"
+      },
+      "cancelButton": "ja_Cancel",
+      "confirmButton": "ja_Select",
+      "enabled": true,
+      "userFacetFilter": "ja_\"Object Type\": USER",
+      "userGridColumns": {
+        "name": "ja_Name",
+        "type": "ja_Type",
+        "title": "ja_Title",
+        "parent": "ja_Parent",
+        "assignee": "ja_Assignee",
+        "modified": "ja_Modified"
+      },
+      "dropdownLabel": "ja_Participant Type"
+    }
+  }
+}

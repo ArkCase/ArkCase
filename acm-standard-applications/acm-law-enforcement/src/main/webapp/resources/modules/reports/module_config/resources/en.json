@@ -1,7 +1,9 @@
 {
   "reports": {
     "title": "Reports",
-
+    "menus": {
+      "leftnav.item": "Reports"
+    },
     "selectReport" : {
       "label": "Report",
       "placeholder": "Select Report"

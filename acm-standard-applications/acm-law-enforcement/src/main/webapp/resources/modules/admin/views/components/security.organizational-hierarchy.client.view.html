@@ -1,18 +1,25 @@
 <div ng-controller="Admin.OrganizationalHierarchyController">
-<div class="pull-right well">
-    <div class="btn-group">
-        <button class="btn btn-xs btn-link" ng-click="createGroup()">
-            <i class="glyphicon glyphicon-plus-sign"></i>
-            <span translate>admin.security.organizationalHierarchy.createGroupDialog.title</span>
-        </button>
+    <div class="pull-right well">
+        <div class="btn-group">
+            <button class="btn btn-xs btn-link" ng-click="createGroup()">
+                <i class="glyphicon glyphicon-plus-sign"></i>
+                <span>{{ addAdHocGroupBtn | translate }}</span>
+            </button>
+            <button class="btn btn-xs btn-link" ng-click="createLdapGroup()">
+                <i class="glyphicon glyphicon-plus-sign"></i>
+                {{ addLdapGroupBtn | translate }}
+            </button>
+        </div>
     </div>
-</div>
-<panel-view header="{{'admin.security.organizationalHierarchy.title' | translate}}" collapsible="false">
+    <panel-view header="{{'admin.security.organizationalHierarchy.title' | translate}}" collapsible="false">
         <tree-table-view tree-data="data" on-lazy-load="onLazyLoad" config="cfg" on-add-members="onAddMembers"
-                         on-load-more="onLoadMore" total-groups="totalGroups"
-                         on-delete-group="onDeleteGroup" on-delete-members="onDeleteMembers"
-                         on-add-sub-group="onAddSubGroup" on-set-supervisor="onSetSupervisor"
-                         show-actions="true"
-                         show-supervisor="true" show-type="true"/>
-</panel-view>
+                         on-load-more="onLoadMore" total-groups="totalGroups" on-delete-group="onDeleteGroup"
+                         on-delete-members="onDeleteMembers" on-add-sub-group="onAddSubGroup"
+                         on-set-supervisor="onSetSupervisor"
+                         show-actions="true" show-supervisor="true" show-type="true"
+                         enable-editing-ldap-users="ldapEditingEnabledPerDirectoryServer"
+                         on-add-ldap-member="onAddLdapMember" on-edit-ldap-member="onEditLdapMember"
+                         on-add-existing-members-to-ldap-group="addExistingMembersToLdapGroup"
+                         on-add-ldap-subgroup="addLdapSubgroup"/>
+    </panel-view>
 </div>

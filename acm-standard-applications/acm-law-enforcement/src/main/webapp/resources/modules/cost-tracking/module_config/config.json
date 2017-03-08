@@ -7,7 +7,7 @@
     {
       "menuId": "leftnav",
       "menuItemURL": "cost-tracking.main",
-      "menuItemTitle": "Cost Tracking",
+      "menuItemTitle": "costTracking.menus.leftnav.item",
       "moduleId": "cost",
       "iconClass": "fa fa-money",
       "position": 120
@@ -15,7 +15,7 @@
     {
       "menuId": "topbar",
       "menuItemURL": "frevvo.new-costsheet",
-      "menuItemTitle": "Costsheet",
+      "menuItemTitle": "costTracking.menus.topbar.item",
       "moduleId": "cost",
       "iconClass": "fa fa-money",
       "position": 50

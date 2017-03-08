@@ -70,11 +70,16 @@ public class SpringLdapPagedDao implements SpringLdapDao
             searchControls.setReturningAttributes(allAttributes);
         }
 
-        AcmUserGroupsContextMapper userGroupsContextMapper = new AcmUserGroupsContextMapper();
-        userGroupsContextMapper.setUserIdAttributeName(syncConfig.getUserIdAttributeName());
-        userGroupsContextMapper.setMailAttributeName(syncConfig.getMailAttributeName());
+        AcmUserGroupsContextMapper userGroupsContextMapper = new AcmUserGroupsContextMapper(syncConfig);
 
-        String searchBase = syncConfig.getAllUsersSearchBase();
+        String searchBase = syncConfig.getUserSearchBase();
+
+        // Spring LDAP authentication doesn't support multiple search bases divided by "|"
+        // this is custom implementation if we want to sync users from  different search bases
+        // Note: - add new property in AcmLdapSyncConfig if you want to define multiple search bases and use that instead
+        // - users synced from different search base other than the one defined in property "userSearchBase" won't be
+        // able to log in
+        // Multiple search bases is supported in some of the upper spring security versions
         String[] bases = searchBase.split("\\|");
         List<AcmUser> acmUsers = new ArrayList<>();
         for (String base : bases)
@@ -93,7 +98,7 @@ public class SpringLdapPagedDao implements SpringLdapDao
         if (userDomain != null && !userDomain.trim().isEmpty())
         {
             String userDomainSuffix = "@" + userDomain;
-            acmUsers.stream().forEach(u -> u.setUserId(u.getUserId() + userDomainSuffix));
+            acmUsers.forEach(u -> u.setUserId(u.getUserId() + userDomainSuffix));
         }
 
         log.info("LDAP sync number of enabled users: {}", acmUsers.size());
@@ -107,7 +112,7 @@ public class SpringLdapPagedDao implements SpringLdapDao
         searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
         searchControls.setReturningAttributes(new String[]{"cn", "memberOf"});
 
-        AcmGroupContextMapper acmGroupContextMapper = new AcmGroupContextMapper();
+        AcmGroupContextMapper acmGroupContextMapper = new AcmGroupContextMapper(syncConfig);
         String searchBase = syncConfig.getGroupSearchBase();
         List<LdapGroup> acmGroups = fetchLdapPaged(template, searchBase, syncConfig.getGroupSearchFilter(),
                 searchControls, syncConfig.getSyncPageSize(), acmGroupContextMapper);

@@ -5,7 +5,7 @@
     {
       "menuId": "leftnav",
       "menuItemURL": "tags",
-      "menuItemTitle": "Tags",
+      "menuItemTitle": "tags.menus.leftnav.item",
       "moduleId": "tag",
       "iconClass": "fa fa-tags",
       "position": 110

@@ -51,9 +51,10 @@ angular
                             urlTemplate: 'api/latest/plugin/admin/labelmanagement/resource?ns={part}&lang={lang}'
                         });
 
-                $translateProvider
-                    .preferredLanguage(ACM_SETTINGS.LANG);
+                $translateProvider.preferredLanguage(ACM_SETTINGS.LANG);
                 // $translateProvider.useSanitizeValueStrategy('sanitize');
+                $translateProvider.useSanitizeValueStrategy('escape');
+
 
                 // Add HTTP error interceptor
                 function httpInterceptor($q, $window, $rootScope,

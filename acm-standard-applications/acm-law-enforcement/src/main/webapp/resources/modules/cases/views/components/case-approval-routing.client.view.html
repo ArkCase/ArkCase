@@ -1,0 +1,44 @@
+<div ng-controller="Cases.ApprovalRoutingController">
+    <div class="clearfix">
+        <div class="row">
+            <div class="col-xs-6">
+                <h4><a ng-click="onClickTitle()">{{objectInfo.title || "Unknown"}}</a>
+                </h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-9 col-md-3">
+                <div class="h4 font-bold no-margin">
+                    <user-full-name userId="objectInfo.assignee" fallback="None"/>
+                </div>
+                <small class="text-muted">Assignee</small>
+            </div>
+            <div class="col-xs-9 col-md-3">
+                <div class="h4 font-bold no-margin">{{owningGroup || 'Unknown'}}</div>
+                <small class="text-muted">Owning Group</small>
+            </div>
+            <div class="col-xs-9 col-md-3">
+                <div class="h4 font-bold no-margin">{{ objectInfo.priority || 'Unknown'}}</div>
+                <small class="text-muted">Priority</small>
+            </div>
+            <div class="col-xs-9 col-md-3">
+                <div class="h4 font-bold no-margin">{{ (dateInfo.taskStartDate | date: ('common.defaultDateUIFormat' |
+                    translate)) || 'Unknown'}}
+                </div>
+                <small class="text-muted">Start Date</small>
+            </div>
+            <div class="col-xs-9 col-md-3">
+                <div class="h4 font-bold no-margin">{{ (dateInfo.dueDate | date: ('common.defaultDateUIFormat' |
+                    translate)) || 'Unknown' }}
+                </div>
+                <small class="text-muted">Due Date</small>
+            </div>
+            <div class="col-xs-9 col-md-3">
+                <div class="h4 font-bold no-margin">{{objectInfo.status || 'Unknown'}}</div>
+                <small class="text-muted">State</small>
+            </div>
+        </div>
+    </div>
+    <div ng-include="'modules/cases/views/components/case-future-approvals.client.view.html'"></div>
+    <div ng-include="'modules/cases/views/components/case-past-approvals.client.view.html'"></div>
+</div>

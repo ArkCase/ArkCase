@@ -9,12 +9,15 @@ import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.model.group.AcmGroupStatus;
+import com.armedia.acm.services.users.model.group.AcmGroupType;
 import com.armedia.acm.services.users.model.group.GroupConstants;
 import org.mule.api.MuleException;
 import org.mule.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -109,6 +112,47 @@ public class GroupServiceImpl implements GroupService
     public boolean isUUIDPresentInTheGroupName(String str)
     {
         return pattern.matcher(str).matches();
+    }
+
+    @Override
+    @Transactional
+    public void createOrUpdateAdHocGroup(String genericGroupName, String clientId, String clientName, AcmGroup acmGroup)
+    {
+        if (acmGroup == null)
+        {
+            acmGroup = new AcmGroup();
+            acmGroup.setName(genericGroupName + " " + clientId + " " + clientName);
+            acmGroup.setStatus(AcmGroupStatus.ACTIVE);
+            acmGroup.setType(AcmGroupType.ADHOC_GROUP);
+            checkAndSaveAdHocGroup(acmGroup);
+        } else
+        {
+            AcmGroup newGroup = new AcmGroup();
+
+            // create new ad-hoc group and copy the properties from the original found group.
+            newGroup.setSupervisor(acmGroup.getSupervisor());
+            newGroup.setType(acmGroup.getType());
+            newGroup.setStatus(acmGroup.getStatus());
+            newGroup.setDescription(acmGroup.getDescription());
+            newGroup.setChildGroups(acmGroup.getChildGroups());
+            newGroup.setCreator(acmGroup.getCreator());
+            newGroup.setMembers(acmGroup.getMembers());
+            newGroup.setParentGroup(acmGroup.getParentGroup());
+
+            // Get the UUID from the original group and concatenate it with the new name of the group.
+            String[] split = acmGroup.getName().split("-UUID-");
+            String uuid = split[1];
+            newGroup.setName(genericGroupName + " " + clientId + " " + clientName + "-UUID-" + uuid);
+
+            AcmGroup saved = getGroupDao().save(newGroup);
+
+            if (saved != null)
+            {
+                // after saving the group, remove the members and delete the original group
+                getGroupDao().removeMembersFromGroup(acmGroup.getName(), acmGroup.getMembers());
+                getGroupDao().deleteAcmGroupByName(acmGroup.getName());
+            }
+        }
     }
 
     public UserDao getUserDao()

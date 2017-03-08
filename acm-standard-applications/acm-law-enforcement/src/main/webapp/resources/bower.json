@@ -43,7 +43,8 @@
     "angular-chart.js": "~0.8.8",
     "sockjs-client": "1.1.2",
     "stomp-websocket": "2.3.4",
-    "angular-hotkeys": "chieffancypants/angular-hotkeys#^1.7.0"
+    "angular-hotkeys": "chieffancypants/angular-hotkeys#^1.7.0",
+    "angular-dynamic-locale": "^0.1.32"
   },
   "resolutions": {
     "angular": "~1.4.7",

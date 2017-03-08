@@ -1,0 +1,23 @@
+{
+  "notifications": {
+    "title": "zh-tw_Notifications",
+    "search.btn": "zh-tw_Search",
+    "export.btn": "zh-tw_Export",
+    "search.placeholder": "zh-tw_Search for notifications",
+    "menus": {
+      "leftnav.item": "zh-tw_Notifications"
+    },
+    "comp":{
+      "grid": {
+        "columns": {
+          "id": "zh-tw_ID",
+          "description": "zh-tw_Description",
+          "objNumber": "zh-tw_Object Number",
+          "parentNumber": "zh-tw_Parent Number",
+          "objType": "zh-tw_Object Type",
+          "modified": "zh-tw_Modified"
+        }
+      }
+    }
+  }
+}

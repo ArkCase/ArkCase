@@ -106,6 +106,7 @@ describe('Create new task ', function() {
 
     });
 
+
     it('should create new task click subscribe button verify if it is changed to unsubscribe', function() {
 
         taskPage.clickModuleTasks();
@@ -352,7 +353,14 @@ describe('Create new task ', function() {
         taskPage.clickExpandFancyTreeTopElementAndSubLink("Attachments");
         taskPage.rightClickRootFolder();
         taskPage.addDocument("Notice of Investigation");
-        taskPage.validateDocGridData(true, "Notice of Investigation", ".docx", "Notice of Investigation", utils.returnToday("/"), utils.returnToday("/"), userPage.returnUserNavigationProfile(), "1.0", "ACTIVE");
+        taskPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn1, "ArkCaseTesting");
+        taskPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn2, ".docx");
+        taskPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn3, "Notice Of Investigation");
+        taskPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn4, utils.returnToday("/"));
+        taskPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn5, utils.returnToday("/"));
+        taskPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn6, Objects.taskspage.data.assigneeSamuel);
+        taskPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn7, "1.0");
+        taskPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn8, "ACTIVE");
         expect(taskPage.lockIconIsPresent()).not.toBeTruthy();
         taskPage.rightClickDocument();
         expect(taskPage.validateChekoutEnabled()).toBeTruthy();
@@ -379,7 +387,14 @@ describe('Create new task ', function() {
         taskPage.clickExpandFancyTreeTopElementAndSubLink("Attachments");
         taskPage.rightClickRootFolder();
         taskPage.addDocument("Notice of Investigation");
-        taskPage.validateDocGridData(true, "Notice of Investigation", ".docx", "Notice of Investigation", utils.returnToday("/"), utils.returnToday("/"), userPage.returnUserNavigationProfile(), "1.0", "ACTIVE");
+        taskPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn1, "ArkCaseTesting");
+        taskPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn2, ".docx");
+        taskPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn3, "Notice Of Investigation");
+        taskPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn4, utils.returnToday("/"));
+        taskPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn5, utils.returnToday("/"));
+        taskPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn6, Objects.taskspage.data.assigneeSamuel);
+        taskPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn7, "1.0");
+        taskPage.validateDocGridValue("ArkCaseTesting", Objects.basepage.data.docGridColumn8, "ACTIVE");
         taskPage.rightClickDocument().clickCheckOut();
         expect(taskPage.lockIconIsPresent()).toBeTruthy();
         taskPage.clickCheckin();

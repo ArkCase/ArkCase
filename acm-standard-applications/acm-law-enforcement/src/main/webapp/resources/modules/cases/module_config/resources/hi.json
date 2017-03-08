@@ -1,0 +1,318 @@
+{
+  "cases": {
+    "title": "hi_Cases",
+    "progressNoCase": "hi_[ No case file data ]",
+    "progressLoading": "hi_Loading case file ",
+    "progressError": "hi_Failed to load case file"
+  },
+  "cases.menus": {
+    "leftnav.item": "hi_Case Files",
+    "topbar.item": "hi_Case"
+  },
+  "cases.error": {
+    "invalidData": "hi_"
+  },
+  "cases.comp.info": {
+    "caseId": "hi_Case id:",
+    "caseNumber": "hi_Case Number:",
+    "courtRoomName": "hi_Court Room Name:"
+  },
+  "cases.comp.actions": {
+    "restrict": "hi_Restrict?",
+    "new.button": "hi_New",
+    "edit.button": "hi_Edit",
+    "status.button": "hi_Change Case Status",
+    "reinvestigate.button": "hi_Reinvestigate",
+    "subscribe.button": "hi_Subscribe",
+    "unsubscribe.button": "hi_Unsubscribe",
+    "merge.button": "hi_Merge",
+    "claim.button": "hi_Claim",
+    "unclaim.button": "hi_Unclaim",
+    "split.button": "hi_Split"
+  },
+  "cases.comp.details": {
+    "title": "hi_Details",
+    "informSaved": "hi_Case details saved",
+    "table.columns": {
+      "title": "hi_Details",
+      "modified": "hi_Date Last Modified",
+      "modifier": "hi_User Last Modified"
+    }
+  },
+  "cases.comp.documents": {
+    "title": "hi_Documents"
+  },
+  "cases.comp.people": {
+    "title": "hi_People",
+    "table.columns": {
+      "entity": "hi_Entity",
+      "type": "hi_Type",
+      "firstName": "hi_FirstName",
+      "lastName": "hi_LastName"
+    },
+    "contactMethods": {
+      "title": "hi_ContactMethods",
+      "table.columns": {
+        "type": "hi_Type",
+        "value": "hi_Value",
+        "created": "hi_Date Added",
+        "creator": "hi_Added By",
+        "modified": "hi_Last Modified",
+        "modifier": "hi_Modified By"
+      }
+    },
+    "organizations": {
+      "title": "hi_Organizations",
+      "table.columns": {
+        "type": "hi_Type",
+        "value": "hi_Value",
+        "created": "hi_Date Added",
+        "creator": "hi_Added By",
+        "modified": "hi_Last Modified",
+        "modifier": "hi_Modified By"
+      }
+    },
+    "addresses": {
+      "title": "hi_Locations",
+      "table.columns": {
+        "type": "hi_Type",
+        "streetAddress": "hi_Address",
+        "city": "hi_City",
+        "state": "hi_State",
+        "zip": "hi_Zip",
+        "country": "hi_Country",
+        "created": "hi_Date Added",
+        "creator": "hi_Added By",
+        "modified": "hi_Last Modified",
+        "modifier": "hi_Modified By"
+      }
+    },
+    "aliases": {
+      "title": "hi_Aliases",
+      "table.columns": {
+        "type": "hi_Type",
+        "value": "hi_Value",
+        "created": "hi_Date Added",
+        "creator": "hi_Added By",
+        "modified": "hi_Last Modified",
+        "modifier": "hi_Modified By"
+      }
+    },
+    "securityTags": {
+      "title": "hi_Security Tags",
+      "table.columns": {
+        "type": "hi_Type",
+        "value": "hi_Value",
+        "created": "hi_Date Added",
+        "creator": "hi_Added By",
+        "modified": "hi_Last Modified",
+        "modifier": "hi_Modified By"
+      }
+    }
+  },
+  "cases.comp.participants": {
+    "title": "hi_Participants",
+    "table.columns": {
+      "type": "hi_Type",
+      "name": "hi_Name"
+    },
+    "dialogUserPicker": {
+      "header": "hi_Choose User",
+      "table.columns": {
+        "name": "hi_Name",
+        "type": "hi_Type",
+        "title": "hi_Title",
+        "id": "hi_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "hi_Choose Group",
+      "table.columns": {
+        "name": "hi_Name"
+      }
+    }
+  },
+  "cases.comp.notes": {
+    "title": "hi_Notes",
+    "table.columns": {
+      "note": "hi_Note",
+      "created": "hi_Created",
+      "creator": "hi_Author"
+    }
+  },
+  "cases.comp.tasks": {
+    "title": "hi_Tasks",
+    "table.columns": {
+      "title": "hi_Title",
+      "assignee": "hi_Assignee",
+      "created": "hi_Created",
+      "priority": "hi_Priority",
+      "due": "hi_Due",
+      "status": "hi_Status"
+    },
+    "table.overdue.tooltip": "hi_Task is Overdue",
+    "table.deadline.tooltip": "hi_Deadline is Approaching"
+  },
+  "cases.comp.references": {
+    "title": "hi_References",
+    "table.columns": {
+      "targetName": "hi_Number",
+      "parentName": "hi_Parent",
+      "targetTitle": "hi_Title",
+      "modified": "hi_Modified",
+      "targetType": "hi_Reference Type",
+      "status": "hi_Status"
+    }
+  },
+  "cases.comp.history": {
+    "title": "hi_History",
+    "table.columns": {
+      "eventType": "hi_Event Name",
+      "eventDate": "hi_Date",
+      "userId": "hi_User"
+    }
+  },
+  "cases.comp.time": {
+    "title": "hi_Time",
+    "table.columns": {
+      "name": "hi_Form Name",
+      "user": "hi_User",
+      "tally": "hi_Total Hours",
+      "modified": "hi_Modified Date",
+      "status": "hi_Status"
+    },
+    "formNamePrefix": "hi_Timesheet"
+  },
+  "cases.comp.cost": {
+    "title": "hi_Cost",
+    "table.columns": {
+      "name": "hi_Form Name",
+      "user": "hi_User",
+      "tally": "hi_Total Cost",
+      "modified": "hi_Modified Date",
+      "status": "hi_Status"
+    },
+    "formNamePrefix": "hi_Costsheet"
+  },
+  "cases.comp.tags": {
+    "title": "hi_Tags",
+    "table.columns": {
+      "tag": "hi_Tag",
+      "created": "hi_Created",
+      "createdBy": "hi_Created By"
+    },
+    "modal": {
+      "title": "hi_Tag",
+      "search": "hi_Search for Tag",
+      "buttons": {
+        "cancel": "hi_Cancel",
+        "ok": "hi_Add Tag"
+      }
+    },
+    "message": {
+      "tagExists": "hi_Tag with that name or description or text already exists",
+      "tagAssociated": "hi_already associated",
+      "delete": {
+        "success": "hi_Tag deleted successfully",
+        "error": "hi_Error deleting tag"
+      }
+    }
+  },
+  "cases.comp.calendar": {
+    "title": "hi_Calendar"
+  },
+  "cases.comp.merge": {
+    "id": "hi_merge",
+    "title": "hi_Merge",
+    "cancel.btn": "hi_Cancel",
+    "merge.btn": "hi_Merge",
+    "search.placeholder": "hi_Search for case file.",
+    "search.btn": "hi_Search",
+    "enabled": true,
+    "table.columns": {
+      "incident": "hi_Type",
+      "name": "hi_Name",
+      "assignee": "hi_Assignee",
+      "title": "hi_Title",
+      "parent": "hi_Parent",
+      "modified": "hi_Modified"
+    }
+  },
+  "cases.comp.split": {
+    "title": "hi_Split",
+    "cancel": "hi_Cancel",
+    "split": "hi_Split"
+  },
+  "cases.comp.addreference": {
+    "title": "hi_Add Reference",
+    "cancelButton": "hi_Cancel",
+    "confirmButton": "hi_Add",
+    "search": {
+      "placeholder": "hi_Search for case, complaint, file, task",
+      "btn": "hi_Search"
+    },
+    "grid": {
+      "columns": {
+        "id": "hi_Id",
+        "name": "hi_Name",
+        "type": "hi_Type",
+        "title": "hi_Title",
+        "parent": "hi_Parent",
+        "assignee": "hi_Assignee",
+        "modified": "hi_Modified"
+      }
+    }
+  },
+  "cases.comp.assigneePickerModal": {
+    "title": "hi_Change Assignee",
+    "assigneeNamelabel": "hi_Assignee Name",
+    "btnCancelText": "hi_Cancel",
+    "btnSaveText": "hi_Save",
+    "searchAssigneeHeader": "hi_Search Assignee"
+  },
+  "cases.comp.groupPickerModal": {
+    "title": "hi_Change Group",
+    "groupNamelabel": "hi_Group Name",
+    "btnCancelText": "hi_Cancel",
+    "btnSaveText": "hi_Save",
+    "searchGroupHeader": "hi_Search Group"
+  },
+  "cases.comp.approvalRouting": {
+    "title": "hi_Future Approvers",
+    "addNewTooltip": "hi_Add new approver",
+    "noBuckslipMessage": "hi_No Data",
+    "button": {
+      "save.tooltip": "hi_Save Changes"
+    },
+    "table.columns": {
+      "fullName": "hi_Full Name"
+    }
+  },
+  "cases.comp.pastApprovals": {
+    "title": "hi_Past Approvers",
+    "noBuckslipMessage": "hi_No Data",
+    "table.columns": {
+      "approvalDate": "hi_Approval Date",
+      "approverId": "hi_Approver",
+      "approverDecision": "hi_Approver Decision"
+    }
+  },
+  "cases.userOrGroupSearch": {
+    "id": "hi_userSearch",
+    "title": "hi_User/Group Search",
+    "search": {
+      "btn": "hi_Search",
+      "placeholder": "hi_Search for the user or group."
+    },
+    "cancelButton": "hi_Cancel",
+    "confirmButton": "hi_Confirm",
+    "enabled": true,
+    "userOrGroupFacetFilter": "hi_\"object_type_s\":(GROUP OR USER)",
+    "assigneeGridColumns": {
+      "name": "hi_Name",
+      "type": "hi_Type",
+      "title": "hi_Title",
+      "username": "hi_Username"
+    }
+  }
+}

@@ -1,0 +1,342 @@
+{
+  "admin": {
+    "title": "fr_Admin",
+    "security.title": "fr_Security",
+    "security.functionalAccessControl": "fr_Functional Access Control",
+    "security.functionalAccessControl.applicationRole": "fr_Application Role",
+    "security.ldapConfig": "fr_LDAP Configuration",
+    "security.ldapConfig.addNewDirectory": "fr_Add New Directory",
+    "security.ldapConfig.table.ldapUrl": "fr_LDAP Url",
+    "security.ldapConfig.table.directoryName": "fr_Directory Name",
+    "security.ldapConfig.data": {
+      "addNewDirectory": "fr_Add New Directory",
+      "editRecord": "fr_Edit Record",
+      "id": "fr_ID",
+      "ldapUrl": "fr_LDAP Url",
+      "base": "fr_Base",
+      "directoryName": "fr_Directory Name",
+      "authUserDn": "fr_Auth User Dn",
+      "authUserPassword": "fr_Auth User Password",
+      "userSearchBase": "fr_Users Search Base",
+      "userSearchFilter": "fr_User Search Filter",
+      "allUsersFilter": "fr_All Users Filter",
+      "allUsersPageFilter": "fr_All Users Page Filter",
+      "allUsersSortingAttribute": "fr_Sorting attribute for users",
+      "groupSearchBase": "fr_Group Search Base",
+      "groupSearchFilterForUser": "fr_Group Search Filter For User",
+      "userIdAttributeName": "fr_User Id Attribute Name",
+      "userDomain": "fr_User domain",
+      "userDomainNote": "fr_(Note: Fill in the user domain for SSO scenario. For LDAP authentication leave it blank)",
+      "syncPageSize": "fr_Sync Page Size",
+      "groupSearchFilter": "fr_Group Search Filter",
+      "groupsSortingAttribute": "fr_Sorting attribute for groups",
+      "groupSearchPageFilter": "fr_Group Search Page Filter",
+      "enableEditingLdapUsers": "fr_Enable managing users and groups",
+      "cancel": "fr_Cancel",
+      "ok": "fr_OK"
+    },
+    "menus": {
+      "leftnav.item": "fr_Admin"
+    },
+    "security.ldapConfig.data.placeholders": {
+      "id": "fr_Enter directory name",
+      "ldapUrl": "fr_Enter connection URL",
+      "base": "fr_Enter base domain component (e.g. dc=example,dc=com)",
+      "authUserDn": "fr_Enter user DN for authentication (e.g. cn=John Doe,ou=users,dc=example,dc=com)",
+      "authUserPassword": "fr_Enter password for authentication user",
+      "userSearchBase": "fr_Enter users search base (e.g. ou=users)",
+      "userSearchFilter": "fr_Enter search filter for single user (e.g. (&(objectClass=person)(uid=%s))",
+      "allUsersFilter": "fr_Enter search filter for all users (e.g. (objectClass=person))",
+      "allUsersPageFilter": "fr_Enter filter including sort-attribute(e.g. (&(objectClass=person)(uidNumber>=%s)))",
+      "allUsersSortingAttribute": "fr_Enter sorting attribute for users (e.g. 'uidNumber')",
+      "groupSearchBase": "fr_Enter search base for groups (e.g. ou=groups)",
+      "groupSearchFilterForUser": "fr_Enter search filter for user in group (e.g. (&(objectClass=group)(member=%s)))",
+      "userIdAttributeName": "fr_Enter attribute used for user id (e.g. 'uid')",
+      "userDomain": "fr_Enter user domain",
+      "syncPageSize": "fr_Enter paging size",
+      "groupSearchFilter": "fr_Enter search filter for groups (e.g. (objectClass=group))",
+      "groupsSortingAttribute": "fr_Enter attribute for sorting groups (e.g. 'gidNumber')",
+      "groupSearchPageFilter": "fr_Enter filter including sort-attribute (e.g. (&(objectClass=group)(gidNumber>=%s)))",
+      "enableEditingLdapUsers": "fr_Check if managing users and groups to your DS is allowed"
+    },
+    "security.ldapConfig.messages": {
+      "delete.success": "fr_Successfully deleted row.",
+      "delete.error": "fr_Error deleting row.",
+      "insert.success": "fr_Successfully inserted new row.",
+      "insert.error": "fr_Error inserting new row.",
+      "update.success": "fr_Successfully updated row.",
+      "update.error": "fr_Error updating row."
+    },
+    "security.ldapConfig.dialog": {
+      "cancel": "fr_Cancel",
+      "ok": "fr_OK",
+      "confirm.delete": {
+        "deleteBtn": "fr_Delete",
+        "cancelBtn": "fr_Cancel",
+        "headerText": "fr_Are you sure?",
+        "bodyText": "fr_This record will be deleted. Are you sure?"
+      }
+    },
+    "admin.security.addNew": "fr_Add New Directory",
+    "security.organizationalHierarchy": {
+      "title": "fr_Organizational Hierarchy",
+      "btn": {
+        "createAdHocGroup": "fr_createAdHocGroup"
+      },
+      "createGroupDialog": {
+        "title": "fr_Add Ad-Hoc Group",
+        "name": "fr_Name",
+        "namePlaceholder": "fr_Enter group name",
+        "description": "fr_Description",
+        "descriptionPlaceholder": "fr_Enter Description",
+        "btn": {
+          "ok": "fr_Add Ad-Hoc Group",
+          "cancel": "fr_Cancel"
+        }
+      },
+      "addSubGroupDialog": {
+        "title": "fr_Add Subgroup to",
+        "name": "fr_Name",
+        "namePlaceholder": "fr_Enter group name",
+        "description": "fr_Description",
+        "descriptionPlaceholder": "fr_Enter Description",
+        "btn": {
+          "ok": "fr_Add Ad-Hoc Group",
+          "cancel": "fr_Cancel"
+        }
+      },
+      "addMembers": {
+        "title": "fr_Add Members",
+        "btn": {
+          "search": "fr_Go!",
+          "cancel": "fr_Cancel",
+          "ok": "fr_Add",
+          "searchPlaceholder": "fr_Enter to search for members."
+        }
+      },
+      "addMembersGridColumns": {
+        "name": "fr_Name",
+        "type": "fr_Type",
+        "title": "fr_Title",
+        "parent": "fr_Parent",
+        "assignee": "fr_Assignee",
+        "modified": "fr_Modified"
+      },
+      "addSupervisor": {
+        "title": "fr_Add Supervisor",
+        "btn": {
+          "search": "fr_Go!",
+          "cancel": "fr_Cancel",
+          "ok": "fr_Add",
+          "searchPlaceholder": "fr_Enter to search for supervisor."
+        }
+      },
+      "addSupervisorGridColumns": {
+        "name": "fr_Name",
+        "type": "fr_Type",
+        "title": "fr_Title",
+        "parent": "fr_Parent",
+        "assignee": "fr_Assignee",
+        "modified": "fr_Modified"
+      },
+      "dialog.group": {
+        "confirm.delete": {
+          "cancelBtn": "fr_Cancel",
+          "deleteBtn": "fr_Delete",
+          "headerText": "fr_You are about to delete group: ",
+          "bodyText": "fr_Are you sure?"
+        }
+      },
+      "dialog.member": {
+        "confirm.delete": {
+          "cancelBtn": "fr_Cancel",
+          "deleteBtn": "fr_Delete",
+          "headerText": "fr_You are about to delete member: ",
+          "bodyText": "fr_Are you sure?"
+        }
+      },
+      "messages": {
+        "delete": {
+          "group": {
+            "success": "fr_success",
+            "error": "fr_error"
+          },
+          "member": {
+            "success": "fr_success",
+            "error": "fr_error"
+          }
+        }
+      }
+    },
+    "security.selectPrivileges": "fr_Create Role/Select Privileges",
+    "security.selectPrivileges.applicationRole": "fr_Application Role",
+    "security.selectPrivileges.createRole": "fr_Create Role",
+    "security.selectPrivileges.editRole": "fr_Edit Role",
+    "security.selectPrivileges.applyChanges": "fr_Apply Changes",
+    "security.selectPrivileges.enterRoleName": "fr_Enter the role name in the box below.",
+    "security.selectPrivileges.cancel": "fr_Cancel",
+    "security.selectPrivileges.name": "fr_Name",
+    "security.modules": "fr_Modules",
+    "security.modules.module": "fr_Module",
+    "dashboard.title": "fr_Dashboard",
+    "dashboard.config": "fr_Dashboard Configuration",
+    "dashboard.widgets": "fr_Widgets",
+    "reports.title": "fr_Reports",
+    "reports.config": "fr_Reports Configuration",
+    "forms.title": "fr_Forms",
+    "forms.config": "fr_Form Configuration",
+    "workflows.title": "fr_Workflows",
+    "workflows.config": "fr_Workflow Configuration",
+    "workflows.config.activate": {
+      "error": "fr_Cant make this process active!",
+      "success": "fr_Process succesfully activated."
+    },
+    "workflows.config.showHistory.dialog": {
+      "title": "fr_History",
+      "body": "fr_Below is a history of previous BPMN files. To reinstate a previous workflow, select the workflow and click Make Active",
+      "cancel": "fr_Cancel",
+      "activate": "fr_Make Active"
+    },
+    "workflows.config.grid": {
+      "businessProcess": "fr_Business Process",
+      "description": "fr_Description",
+      "active": "fr_Active",
+      "modified": "fr_Modified",
+      "creator": "fr_Author"
+    },
+    "workflows.config.btn": {
+      "createNew": "fr_Create New Model",
+      "uploadNew": "fr_Upload New BPMN"
+    },
+    "workflows.config.links": {
+      "download": "fr_Download",
+      "replaceFile": "fr_Replace File",
+      "versionHistory": "fr_Version History"
+    },
+    "workflows.config.upload": {
+      "success": "fr_Successfully uploaded new process definition",
+      "error": "fr_Error uploading new process definition"
+    },
+    "formWorkflows.title": "fr_Form/Workflow Link",
+    "formWorkflows.link": "fr_Link Forms/Workflows",
+    "formWorkflows.link.undo": "fr_Undo",
+    "formWorkflows.link.saveChanges": "fr_Save Changes",
+    "formWorkflows.link.editRole.save.success": "fr_Link Forms/Workflows configuration saved successfully",
+    "formWorkflows.link.editRole.save.error": "fr_Can't save Link Forms/Workflows configuration",
+    "application": {
+      "title": "fr_Application",
+      "labels.config": {
+        "defaultLabel": "fr_Default",
+        "applyBtn": "fr_Apply",
+        "resetModule": "fr_Reset Module",
+        "resetModule.confirm": "fr_Are you sure you want reset custom resources for current module?",
+        "resetModule.title": "fr_Reset current module (delete custom resources)",
+        "resetAll": "fr_Reset All",
+        "resetAll.confirm": "fr_Are you sure you want reset all custom resources for all modules?",
+        "resetAll.title": "fr_Reset all resources (delete all custom resources)",
+        "refreshAll": "fr_Refresh All",
+        "refreshAll.title": "fr_Refresh all resources (keep custom resources)",
+        "title": "fr_Label Configuration",
+        "filterBy": "fr_Filter By Id",
+        "filterByValue": "fr_Filter By Value",
+        "data": {
+          "description": "fr_Description",
+          "defaultValue": "fr_Default Value",
+          "id": "fr_ID",
+          "value": "fr_Value"
+        }
+      },
+      "module.config": {
+        "title": "fr_Module Configuration"
+      },
+      "userName.config": {
+        "title": "fr_Username Display Configuration",
+        "userId.label": "fr_Use User Identifier",
+        "userName.label": "fr_Use Full Username",
+        "apply": "fr_Apply",
+        "modal.title": "fr_Information",
+        "modal.info": "fr_Settings will take effect after refresh",
+        "modal.ok": "fr_OK"
+      },
+      "login.config": {
+        "title": "fr_Login Configuration",
+        "idleLimit.label": "fr_Login idle limit (in milliseconds)",
+        "inform": "fr_Settings will take effect for all new user sessions",
+        "apply.label": "fr_Apply"
+      },
+      "auditHistory.config": {
+        "title": "fr_Audit History",
+        "historyDays.label": "fr_Keep Audit and Notification events (in days)",
+        "inform": "fr_Setting successfully saved",
+        "apply.label": "fr_Apply"
+      }
+    },
+    "branding.title": "fr_Branding",
+    "branding.logo": "fr_Logo",
+    "branding.logo.messages": {
+      "upload.success": "fr_Custom logo files updated. Refresh browser page to see result.",
+      "upload.error": "fr_Error uploading custom logo files."
+    },
+    "branding.logo.header.title": "fr_Header",
+    "branding.logo.login.title": "fr_Login Page",
+    "branding.logo.warningMessage": "fr_Only PNG format is allowed. Recommended ratio is 1 to 4. Minimum height is 50px.",
+    "branding.logo.btn": {
+      "chooseHeader": "fr_Choose Header logo",
+      "chooseLogin": "fr_Choose Login logo",
+      "saveFiles": "fr_Save"
+    },
+    "branding": {
+      "customCss": "fr_Custom CSS",
+      "customCss.save.success": "fr_Custom CSS updated. Refresh browser page to see result.",
+      "customCss.save.error": "fr_Error saving Custom CSS.",
+      "customCss.save": "fr_Save"
+    },
+    "correspondenceManagement": {
+      "title": "fr_Correspondence Management",
+      "templates": "fr_Correspondence Templates",
+      "templates.addNewTemplate": "fr_Upload Template",
+      "templates.addTemplate": "fr_Add Template",
+      "templates.editTemplate": "fr_Edit Template",
+      "templates.grid": {
+        "id": "fr_ID",
+        "title": "fr_Title",
+        "displayName": "fr_Display Name",
+        "path": "fr_Path",
+        "created": "fr_Created",
+        "modified": "fr_Modified",
+        "creator": "fr_Creator",
+        "modifier": "fr_Modifier",
+        "activated": "fr_Active",
+        "queryType": "fr_Object Type"
+      },
+      "templates.fieldNames.label": "fr_Map fields to values from the template",
+      "templates.querySelect": {
+        "header.text": "fr_Select Query",
+        "btnCancel.text": "fr_Cancel",
+        "btnOk.text": "fr_Select Query",
+        "table.columns": {
+          "beanId": "fr_Bean ID",
+          "jpaQuery": "fr_JPA Query",
+          "queryType": "fr_Query Type"
+        }
+      },
+      "templates.modal": {
+        "objectTypes.label": "fr_Object Types",
+        "querySelect.label": "fr_Query Select",
+        "displayName.label": "fr_Display Name",
+        "btnCancel.text": "fr_Cancel",
+        "btnOk.text": "fr_Save"
+      }
+    },
+    "forms.defaultValue": "fr_Select Target",
+    "forms.addForm": "fr_Add Plain Form",
+    "forms.data": {
+      "name": "fr_Form Name",
+      "applicationName": "fr_Application name",
+      "description": "fr_Description",
+      "target": "fr_Target"
+    },
+    "forms.message.delete.success": "fr_Successfully deleted row.",
+    "forms.message.delete.error": "fr_Error deleting row."
+  }
+}

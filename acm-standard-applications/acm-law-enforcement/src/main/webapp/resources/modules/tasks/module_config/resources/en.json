@@ -5,6 +5,10 @@
     "progressLoading": "Loading task ",
     "progressError": "Failed to load task"
   },
+  "tasks.menus": {
+    "leftnav.item": "Tasks",
+    "topbar.item": "Task"
+  },
   "tasks.comp.info": {
     "taskId": "Task id:",
     "percentage.label": "% of Completion",
@@ -172,6 +176,7 @@
     "assignee.button": "Choose Assignee",
     "assignee.label": "Assign To",
     "assignee.placeholder": "Please choose assignee by clicking the button above",
+    "assigneeOrGroup.placeholder": "Please choose assignee or group by clicking the button above",
     "priority.placeholder": "Select Priority",
     "priority.label": "Priority",
     "status.placeholder": "Select Status",
@@ -191,17 +196,34 @@
     "groupToggle.label": "Group Task?",
     "group.placeholder": "Please select a group."
   },
-  "tasks.userSearch": {
+  "tasks.userOrGroupSearch": {
     "id": "userSearch",
-    "title": "User Search",
+    "title": "User/Group Search",
     "search": {
       "btn": "Search",
-      "placeholder": "Search for the user to assign to this task."
+      "placeholder": "Search for the user or group to assign to this task."
     },
     "cancelButton": "Cancel",
     "confirmButton": "Confirm",
     "enabled": true,
-    "userFacetFilter": "\"Object Type\": USER",
+    "userOrGroupFacetFilter": "\"object_type_s\":(GROUP OR USER)",
+    "assigneeGridColumns": {
+      "name": "Name",
+      "type": "Type",
+      "title": "Title",
+      "username": "Username"
+    }
+  },
+  "tasks.owningGroupSearch": {
+    "id": "owningGroupSearch",
+    "title": "Search for this user's group(s)",
+    "search": {
+      "btn": "Search",
+      "placeholder": "Search for the group(s) this user is a member of."
+    },
+    "cancelButton": "Cancel",
+    "confirmButton": "Confirm",
+    "enabled": true,
     "assigneeGridColumns": {
       "name": "Name",
       "type": "Type",
@@ -276,6 +298,13 @@
     "btnSaveText": "Save",
     "searchAssigneeHeader": "Search Assignee"
   },
+  "tasks.comp.groupPickerModal": {
+    "title": "Change Group",
+    "groupNamelabel": "Group Name",
+    "btnCancelText": "Cancel",
+    "btnSaveText": "Save",
+    "searchGroupHeader": "Search Group"
+  },
   "tasks.comp.approvalRouting": {
     "title": "Future Approvers",
     "addNewTooltip": "Add new approver",
@@ -293,6 +322,7 @@
     "table.columns": {
       "approvalDate": "Approval Date",
       "approverId": "Approver",
+      "approverFullName": "Full Name",
       "approverDecision": "Approver Decision"
     }
   }
