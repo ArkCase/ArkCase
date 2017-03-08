@@ -35,7 +35,6 @@ import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserActionName;
-
 import org.activiti.engine.RuntimeService;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -44,7 +43,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.PersistenceException;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -236,7 +234,7 @@ public class CaseFileService extends FrevvoFormAbstractService
         this.identificationDao = personIdentificationDao;
     }
 
-    private InitiatorPerson initInitiator()
+    protected InitiatorPerson initInitiator()
     {
         InitiatorPerson initiator = new InitiatorPerson();
 
@@ -251,7 +249,7 @@ public class CaseFileService extends FrevvoFormAbstractService
         return initiator;
     }
 
-    private List<Person> initPeople()
+    protected List<Person> initPeople()
     {
         List<Person> people = new ArrayList<>();
 
