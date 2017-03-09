@@ -139,7 +139,7 @@ public class ProxyServlet extends HttpServlet
     /**
      * List containing urls which need to be matched for rewriting strings in the content.
      */
-    protected List<String> overrideContentUrlPatterns;
+    protected List<String> responseUrlMatchers;
 
     /**
      * Patterns and replacements for replacing String in the response content
@@ -155,7 +155,7 @@ public class ProxyServlet extends HttpServlet
     /**
      * List containing patterns for urls which need to be skipped
      */
-    protected List<String> skipOverrideContentPatterns;
+    protected List<String> skipResponseUrlMatchers;
 
     /**
      * The parameter name for the target (destination) URI to proxy to.
@@ -242,8 +242,8 @@ public class ProxyServlet extends HttpServlet
         //make sure that parameters are not null
         skipResponseContentTypes = parseCsvAsList(getConfigParam(P_SKIP_RESPONSE_CONTENT_TYPES));
         responseContentRewritePairs = parseCsvAsList(getConfigParam(P_RESPONSE_CONTENT_REWRITE_PAIRS));
-        overrideContentUrlPatterns = parseCsvAsList(getConfigParam(P_RESPONSE_URL_MATCHERS));
-        skipOverrideContentPatterns = parseCsvAsList(getConfigParam(P_SKIP_RESPONSE_URL_MATCHERS));
+        responseUrlMatchers = parseCsvAsList(getConfigParam(P_RESPONSE_URL_MATCHERS));
+        skipResponseUrlMatchers = parseCsvAsList(getConfigParam(P_SKIP_RESPONSE_URL_MATCHERS));
 
         initTarget();//sets target*
 
@@ -744,7 +744,7 @@ public class ProxyServlet extends HttpServlet
         boolean shouldBeProcessed = false;
 
         //check if request url needs to be skipped
-        for (String pattern : skipOverrideContentPatterns)
+        for (String pattern : skipResponseUrlMatchers)
         {
             if (servletRequest.getRequestURI().matches(pattern))
             {
@@ -754,7 +754,7 @@ public class ProxyServlet extends HttpServlet
         }
 
         //check if url is eligible for content processing
-        for (String pattern : overrideContentUrlPatterns)
+        for (String pattern : responseUrlMatchers)
         {
             if (servletRequest.getRequestURI().matches(pattern))
             {
