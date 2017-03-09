@@ -126,15 +126,22 @@ public class ProxyServlet extends HttpServlet
      * Example: "/asd/:/aaa/asd, /bbb/:/ccc/"
      */
     public static final String P_RESPONSE_CONTENT_REWRITE_PAIRS = "responseContentRewritePairs";
+    public static final String P_SKIP_RESPONSE_CONTENT_TYPES = "skipResponseContentTypes";
 
     /**
      * List containing urls which need to be matched for rewriting strings in the content.
      */
     protected List<String> overrideContentUrlPatterns;
+
     /**
      * Patterns and replacements for replacing String in the response content
      */
     private List<String> responseContentRewritePairs;
+
+    /**
+     * List containing content types which needs to be skipped for processing
+     */
+    protected List<String> skipResponseContentTypes;
 
     /**
      * The parameter name for the target (destination) URI to proxy to.
@@ -218,23 +225,26 @@ public class ProxyServlet extends HttpServlet
             this.doPreserveCookies = Boolean.parseBoolean(preserveCookiesString);
         }
 
+        String skipResponseContentTypesString = getConfigParam(P_SKIP_RESPONSE_CONTENT_TYPES);
         String overrideContentUrlPatternsString = getConfigParam(RESPONSE_URL_MATCHERS);
         String responseContentRewritePairsString = getConfigParam(P_RESPONSE_CONTENT_REWRITE_PAIRS);
+
+        //make sure that parameters are not null
         if (responseContentRewritePairsString == null)
         {
             responseContentRewritePairsString = "";
         }
-        responseContentRewritePairs = Arrays.stream(responseContentRewritePairsString.split(",[ ]*")).collect(Collectors.toList());
-        if (!StringUtils.isEmpty(overrideContentUrlPatternsString))
+        if (skipResponseContentTypesString == null)
         {
-            overrideContentUrlPatterns =
-                    Pattern.compile(",", Pattern.LITERAL)
-                            .splitAsStream(overrideContentUrlPatternsString)
-                            .collect(Collectors.toList());
-        } else
-        {
-            overrideContentUrlPatterns = new ArrayList<>();
+            skipResponseContentTypesString = "";
         }
+        if (overrideContentUrlPatternsString == null)
+        {
+            overrideContentUrlPatternsString = "";
+        }
+        skipResponseContentTypes = parseCsvAsList(skipResponseContentTypesString);
+        responseContentRewritePairs = parseCsvAsList(responseContentRewritePairsString);
+        overrideContentUrlPatterns = parseCsvAsList(overrideContentUrlPatternsString);
 
         initTarget();//sets target*
 
@@ -243,8 +253,9 @@ public class ProxyServlet extends HttpServlet
         hcParams.setBooleanParameter(ClientPNames.HANDLE_REDIRECTS, false); // See #70
         readConfigParam(hcParams, ClientPNames.HANDLE_REDIRECTS, Boolean.class);
         proxyClient = createHttpClient(hcParams);
-        //proxyClient.getParams().setParameter(ConnRoutePNames.FORCED_ROUTE, new HttpHost("127.0.0.1", 8889));
     }
+
+
 
     protected void initTarget() throws ServletException
     {
@@ -458,7 +469,7 @@ public class ProxyServlet extends HttpServlet
 
         HttpEntity entity;
 
-        //because of reason that media type is for_url_encoded
+        //because of reason that media type is form_url_encoded
         //inputStream of the request is empty i.e. already consumed
         //so we need to send those parameters to the proxyRequest
         if (servletRequest.getContentType().contains(MediaType.APPLICATION_FORM_URLENCODED_VALUE))
@@ -476,6 +487,7 @@ public class ProxyServlet extends HttpServlet
             entity = new UrlEncodedFormEntity(params);
         } else
         {
+            //if not form_url_encoded than process as is
             String requestBody = IOUtils.toString(servletRequest.getInputStream(), servletRequest.getCharacterEncoding());
             entity = new ByteArrayEntity(requestBody.getBytes());
         }
@@ -733,26 +745,40 @@ public class ProxyServlet extends HttpServlet
         String found = overrideContentUrlPatterns.stream().filter(pattern -> servletRequest.getRequestURI().matches(pattern)).findFirst().orElse(null);
 
         HttpEntity entity = proxyResponse.getEntity();
+
+
+        boolean shouldSkip = false;
+        for (String pattern : skipResponseContentTypes)
+        {
+            if (pattern.contains(pattern))
+            {
+                shouldSkip = true;
+                break;
+            }
+        }
+
         if (entity != null)
         {
-            boolean isGzip = false;
-            Header ceheader = entity.getContentEncoding();
-            if (ceheader != null)
+
+            if (found != null && !shouldSkip)
             {
-                HeaderElement[] codecs = ceheader.getElements();
-                for (int i = 0; i < codecs.length; i++)
+                //if response is gzip than decompress it for processing
+                boolean isGzip = false;
+                Header ceheader = entity.getContentEncoding();
+                if (ceheader != null)
                 {
-                    if (codecs[i].getName().equalsIgnoreCase("gzip"))
+                    HeaderElement[] codecs = ceheader.getElements();
+                    for (int i = 0; i < codecs.length; i++)
                     {
-                        //we need to decompress entity
-                        entity = new GzipDecompressingEntity(entity);
-                        isGzip = true;
+                        if (codecs[i].getName().equalsIgnoreCase("gzip"))
+                        {
+                            //we need to decompress entity
+                            entity = new GzipDecompressingEntity(entity);
+                            isGzip = true;
+                        }
                     }
                 }
-            }
 
-            if (found != null)
-            {
                 //this response resource needs to be processed(override all matches in body)
                 String responseString = IOUtils.toString(entity.getContent());
 
@@ -767,7 +793,7 @@ public class ProxyServlet extends HttpServlet
                     }
                     responseString = responseString.replaceAll(pairsArray[0], pairsArray[1]);
                 }
-                servletResponse.setContentLength(responseString.length());
+
                 StringEntity stringEntity = new StringEntity(responseString);
                 if (isGzip)
                 {
@@ -776,6 +802,8 @@ public class ProxyServlet extends HttpServlet
                     gzipCompressingEntity.writeTo(servletResponse.getOutputStream());
                 } else
                 {
+                    //set new content length
+                    servletResponse.setContentLength(responseString.length());
                     //write processed entity to the output stream
                     stringEntity.writeTo(servletResponse.getOutputStream());
                 }
@@ -869,9 +897,9 @@ public class ProxyServlet extends HttpServlet
             }
             // Context path starts with a / if it is not blank
             curUrl.append(servletRequest.getContextPath());
-            // Servlet path starts with a / if it is not blank
-            curUrl.append(servletRequest.getServletPath());
-            curUrl.append(theUrl, targetUri.length(), theUrl.length());
+
+            String requestUri = theUrl.substring(targetUri.length());
+            curUrl.append(requestUri.startsWith("/") ? requestUri : "/" + requestUri);
             theUrl = curUrl.toString();
         }
         return theUrl;
@@ -953,4 +981,17 @@ public class ProxyServlet extends HttpServlet
         asciiQueryChars.set((int) '%');//leave existing percent escapes in place
     }
 
+    /**
+     * parse csv. Null and empty String is allowed.
+     * @param csv String that contains values separated with comma ","
+     * @return List
+     */
+    private List<String> parseCsvAsList(String csv)
+    {
+        if (StringUtils.isEmpty(csv))
+        {
+            return new ArrayList<>();
+        }
+        return Arrays.asList(csv.split(",[ ]*"));
+    }
 }
