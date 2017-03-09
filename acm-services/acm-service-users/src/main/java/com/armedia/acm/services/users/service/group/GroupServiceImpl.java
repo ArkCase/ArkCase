@@ -135,7 +135,7 @@ public class GroupServiceImpl implements GroupService
         newGroup.setMembers(acmGroup.getMembers());
         newGroup.setParentGroup(acmGroup.getParentGroup());
 
-        AcmGroup saved = groupDao.save(newGroup);
+        AcmGroup saved = getGroupDao().save(newGroup);
 
         // after saving the group, remove the members and delete the original group
         // new set is created to avoid ConcurrentModificationException
