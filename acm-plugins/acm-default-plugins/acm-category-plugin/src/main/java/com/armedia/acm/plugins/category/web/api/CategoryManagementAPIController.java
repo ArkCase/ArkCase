@@ -7,9 +7,13 @@ import com.armedia.acm.plugins.category.model.Category;
 import com.armedia.acm.plugins.category.model.CategoryStatus;
 import com.armedia.acm.plugins.category.service.CategoryService;
 import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.model.solr.GetResponseGenerator;
+import com.armedia.acm.services.search.model.solr.PayloadProducer;
+import com.armedia.acm.services.search.model.solr.ResponseHeader;
+import com.armedia.acm.services.search.model.solr.ResponseHeaderProducer;
+import com.armedia.acm.services.search.model.solr.SolrSearchResponse;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -32,6 +36,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -50,7 +55,7 @@ public class CategoryManagementAPIController
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public SolrResponse<List<Category>> getCategories(Authentication auth,
+    public SolrSearchResponse<ResponseHeader, List<Category>> getCategories(Authentication auth,
             @RequestParam(value = "start", required = false, defaultValue = "0") int start,
             @RequestParam(value = "n", required = false, defaultValue = "10") int n,
             @RequestParam(value = "s", required = false, defaultValue = "ASC") String s) throws AcmObjectNotFoundException
@@ -58,7 +63,8 @@ public class CategoryManagementAPIController
         String query = String.format("object_type_s:CATEGORY AND -parent_id_s:*&sort=title_parseable %s", s);
         try
         {
-            SolrResponse<List<Category>> response = generateGetResponse(auth, query, start, n, this::extractCategories);
+            SolrSearchResponse<ResponseHeader, List<Category>> response = generateGetResponse(auth, query, start, n,
+                    Optional.<ResponseHeaderProducer<ResponseHeader>> empty(), this::extractCategories);
             return response;
         } catch (MuleException | IOException e)
         {
@@ -70,23 +76,24 @@ public class CategoryManagementAPIController
 
     @RequestMapping(value = "/{categoryId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public SolrResponse<Category> getCategory(Authentication auth, @PathVariable(value = "categoryId") Long categoryId)
-            throws AcmObjectNotFoundException
+    public SolrSearchResponse<ResponseHeader, Category> getCategory(Authentication auth,
+            @PathVariable(value = "categoryId") Long categoryId) throws AcmObjectNotFoundException
     {
         String query = String.format("object_type_s:CATEGORY AND object_id_s:%d&sort=title_parseable ASC", categoryId);
         try
         {
-            SolrResponse<Category> response = generateGetResponse(auth, query, 0, 1, node -> {
+            SolrSearchResponse<ResponseHeader, Category> response = generateGetResponse(auth, query, 0, 1,
+                    Optional.<ResponseHeaderProducer<ResponseHeader>> empty(), node -> {
 
-                List<Category> result = extractCategories(node);
-                if (result.isEmpty())
-                {
-                    throw new AcmObjectNotFoundException("Category", categoryId,
-                            String.format("Category with id %d not found.", categoryId));
-                }
-                return result.get(0);
+                        List<Category> result = extractCategories(node);
+                        if (result.isEmpty())
+                        {
+                            throw new AcmObjectNotFoundException("Category", categoryId,
+                                    String.format("Category with id %d not found.", categoryId));
+                        }
+                        return result.get(0);
 
-            });
+                    });
             return response;
         } catch (MuleException | IOException e)
         {
@@ -97,7 +104,8 @@ public class CategoryManagementAPIController
 
     @RequestMapping(value = "/{categoryId}/children", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public SolrResponse<List<Category>> getCategoryChildren(Authentication auth, @PathVariable(value = "categoryId") Long categoryId,
+    public SolrSearchResponse<ResponseHeader, List<Category>> getCategoryChildren(Authentication auth,
+            @PathVariable(value = "categoryId") Long categoryId,
             @RequestParam(value = "start", required = false, defaultValue = "0") int start,
             @RequestParam(value = "n", required = false, defaultValue = "10") int n,
             @RequestParam(value = "s", required = false, defaultValue = "ASC") String s) throws AcmObjectNotFoundException
@@ -105,7 +113,8 @@ public class CategoryManagementAPIController
         String query = String.format("object_type_s:CATEGORY AND parent_id_s:%d&sort=title_parseable %s", categoryId, s);
         try
         {
-            SolrResponse<List<Category>> response = generateGetResponse(auth, query, start, n, this::extractCategories);
+            SolrSearchResponse<ResponseHeader, List<Category>> response = generateGetResponse(auth, query, start, n,
+                    Optional.<ResponseHeaderProducer<ResponseHeader>> empty(), this::extractCategories);
             return response;
         } catch (MuleException | IOException e)
         {
@@ -191,24 +200,12 @@ public class CategoryManagementAPIController
         throw new UnsupportedOperationException("Not implemented yet.");
     }
 
-    @FunctionalInterface
-    private static interface PayloadProducer<T>
-    {
-        T producePayload(JsonNode jsonSolrResponse) throws IOException, AcmObjectNotFoundException;
-    }
-
-    private <T> SolrResponse<T> generateGetResponse(Authentication auth, String query, int start, int n, PayloadProducer<T> producer)
+    private <K extends ResponseHeader, T> SolrSearchResponse<K, T> generateGetResponse(Authentication auth, String query, int start, int n,
+            Optional<ResponseHeaderProducer<K>> headerProducer, PayloadProducer<T> payloadProducer)
             throws MuleException, IOException, AcmObjectNotFoundException
     {
         String solrResponse = executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, "");
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode jsonSolrResponse = mapper.readTree(solrResponse);
-        JsonNode responseNode = jsonSolrResponse.get("response");
-        SolrResponse<T> response = new SolrResponse<>();
-        response.setNumFound(responseNode.get("numFound").asInt());
-        response.setStart(responseNode.get("start").asInt());
-        response.setPayload(producer.producePayload(jsonSolrResponse));
-        return response;
+        return GetResponseGenerator.generateGetResponse(solrResponse, headerProducer, payloadProducer);
     }
 
     /**
@@ -238,14 +235,14 @@ public class CategoryManagementAPIController
                 category.setCreator(doc.get("creator_lcs").asText());
                 category.setCreated(dateParser.parse(doc.get("create_date_tdt").asText()));
                 category.setModifier(doc.get("modifier_lcs").asText());
-                category.setModified(dateParser.parse(doc.get("modified_date_" + "tdt").asText()));
+                category.setModified(dateParser.parse(doc.get("modified_date_tdt").asText()));
                 category.setStatus(CategoryStatus.valueOf(doc.get("status_lcs").asText()));
 
                 categories.add(category);
             } catch (ParseException e)
             {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                log.error("Error while parsing date: {} or {}", doc.get("create_date_tdt").asText(), doc.get("modified_date_tdt").asText(),
+                        e);
             }
         });
         return categories;

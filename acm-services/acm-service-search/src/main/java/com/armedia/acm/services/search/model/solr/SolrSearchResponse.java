@@ -1,20 +1,40 @@
-/**
- *
- */
-package com.armedia.acm.plugins.category.web.api;
+package com.armedia.acm.services.search.model.solr;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Feb 16, 2017
  *
  */
-public class SolrResponse<T>
+@JsonInclude(Include.NON_NULL)
+public class SolrSearchResponse<K extends ResponseHeader, T>
 {
+
+    private K header;
 
     private int numFound;
 
     private int start;
 
     private T payload;
+
+    /**
+     * @return the header
+     */
+    public K getHeader()
+    {
+        return header;
+    }
+
+    /**
+     * @param header
+     *            the header to set
+     */
+    public void setHeader(K header)
+    {
+        this.header = header;
+    }
 
     /**
      * @return the numFound
