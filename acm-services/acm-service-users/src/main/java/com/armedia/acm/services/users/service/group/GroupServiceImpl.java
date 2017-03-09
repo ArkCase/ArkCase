@@ -137,13 +137,10 @@ public class GroupServiceImpl implements GroupService
 
         AcmGroup saved = groupDao.save(newGroup);
 
-        if (saved != null)
-        {
-            // after saving the group, remove the members and delete the original group
-            // new set is created to avoid ConcurrentModificationException
-            getGroupDao().removeMembersFromGroup(acmGroup.getName(), new HashSet<>(acmGroup.getMembers()));
-            getGroupDao().markGroupDelete(acmGroup.getName());
-        }
+        // after saving the group, remove the members and delete the original group
+        // new set is created to avoid ConcurrentModificationException
+        getGroupDao().removeMembersFromGroup(acmGroup.getName(), new HashSet<>(acmGroup.getMembers()));
+        getGroupDao().markGroupDelete(acmGroup.getName());
     }
 
     public UserDao getUserDao()
