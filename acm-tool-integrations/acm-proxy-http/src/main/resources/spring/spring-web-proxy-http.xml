@@ -14,7 +14,6 @@
                 <!-- TODO: parameterize the URLs -->
                 <prop key="targetUri">https://acm-arkcase/</prop>
                 <prop key="http.protocol.handle-redirects">true</prop>
-                <prop key="preserveCookies">true</prop>
                 <!-- resource names regex patterns separated with comma "," if multiple.
                 Will be processed and override urls inside the response-->
                 <prop key="responseUrlMatchers">^.*config\.js$</prop>
@@ -32,7 +31,6 @@
                 <!-- TODO: parameterize the URLs -->
                 <prop key="targetUri">https://acm-arkcase/</prop>
                 <prop key="http.protocol.handle-redirects">true</prop>
-                <prop key="preserveCookies">false</prop>
                 <!-- resource names regex patterns separated with comma "," if multiple.
                 Will be processed and override urls inside the response-->
                 <prop key="responseUrlMatchers">^.*$</prop>
@@ -49,13 +47,14 @@
             <props>
                 <!-- TODO: parameterize the URLs -->
                 <prop key="targetUri">https://acm-arkcase/</prop>
-                <prop key="http.protocol.handle-redirects">true</prop>
-                <prop key="preserveCookies">true</prop>
+                <prop key="http.protocol.handle-redirects">false</prop>
                 <!-- resource names regex patterns separated with comma "," if multiple.
                 Will be processed and override urls inside the response-->
                 <prop key="responseUrlMatchers">^.*$</prop>
                 <!-- given pairs for replacement pattern1:replacement1,pattern2:replacement2-->
                 <prop key="responseContentRewritePairs">/frevvo/:/arkcase/frevvo/,%2Ffrevvo%2F:%2Farkcase%2Ffrevvo%2F</prop>
+                <!-- comma delimited content types which need to be skip for processing-->
+                <prop key="skipResponseContentTypes">application/x-font-ttf, application/x-font-woff</prop>
             </props>
         </property>
     </bean>
