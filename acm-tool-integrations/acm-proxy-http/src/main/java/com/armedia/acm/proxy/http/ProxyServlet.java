@@ -57,7 +57,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.Closeable;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Constructor;
@@ -70,7 +69,6 @@ import java.util.Enumeration;
 import java.util.Formatter;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -120,13 +118,23 @@ public class ProxyServlet extends HttpServlet
     /**
      * A String parameter name to match urls which content needs to be rewritten
      */
-    public static final String RESPONSE_URL_MATCHERS = "responseUrlMatchers";
+    public static final String P_RESPONSE_URL_MATCHERS = "responseUrlMatchers";
     /**
      * Patterns and replacements for replacing String in the response content, replaced with comma.
      * Example: "/asd/:/aaa/asd, /bbb/:/ccc/"
      */
     public static final String P_RESPONSE_CONTENT_REWRITE_PAIRS = "responseContentRewritePairs";
+
+    /**
+     * A String parameter name to skip response content types
+     */
     public static final String P_SKIP_RESPONSE_CONTENT_TYPES = "skipResponseContentTypes";
+
+    /**
+     * A String parameter name to skip url matches
+     */
+    public static final String P_SKIP_RESPONSE_URL_MATCHERS = "skipResponseUrlMatchers";
+
 
     /**
      * List containing urls which need to be matched for rewriting strings in the content.
@@ -142,6 +150,12 @@ public class ProxyServlet extends HttpServlet
      * List containing content types which needs to be skipped for processing
      */
     protected List<String> skipResponseContentTypes;
+
+
+    /**
+     * List containing patterns for urls which need to be skipped
+     */
+    protected List<String> skipOverrideContentPatterns;
 
     /**
      * The parameter name for the target (destination) URI to proxy to.
@@ -225,26 +239,11 @@ public class ProxyServlet extends HttpServlet
             this.doPreserveCookies = Boolean.parseBoolean(preserveCookiesString);
         }
 
-        String skipResponseContentTypesString = getConfigParam(P_SKIP_RESPONSE_CONTENT_TYPES);
-        String overrideContentUrlPatternsString = getConfigParam(RESPONSE_URL_MATCHERS);
-        String responseContentRewritePairsString = getConfigParam(P_RESPONSE_CONTENT_REWRITE_PAIRS);
-
         //make sure that parameters are not null
-        if (responseContentRewritePairsString == null)
-        {
-            responseContentRewritePairsString = "";
-        }
-        if (skipResponseContentTypesString == null)
-        {
-            skipResponseContentTypesString = "";
-        }
-        if (overrideContentUrlPatternsString == null)
-        {
-            overrideContentUrlPatternsString = "";
-        }
-        skipResponseContentTypes = parseCsvAsList(skipResponseContentTypesString);
-        responseContentRewritePairs = parseCsvAsList(responseContentRewritePairsString);
-        overrideContentUrlPatterns = parseCsvAsList(overrideContentUrlPatternsString);
+        skipResponseContentTypes = parseCsvAsList(getConfigParam(P_SKIP_RESPONSE_CONTENT_TYPES));
+        responseContentRewritePairs = parseCsvAsList(getConfigParam(P_RESPONSE_CONTENT_REWRITE_PAIRS));
+        overrideContentUrlPatterns = parseCsvAsList(getConfigParam(P_RESPONSE_URL_MATCHERS));
+        skipOverrideContentPatterns = parseCsvAsList(getConfigParam(P_SKIP_RESPONSE_URL_MATCHERS));
 
         initTarget();//sets target*
 
@@ -254,7 +253,6 @@ public class ProxyServlet extends HttpServlet
         readConfigParam(hcParams, ClientPNames.HANDLE_REDIRECTS, Boolean.class);
         proxyClient = createHttpClient(hcParams);
     }
-
 
 
     protected void initTarget() throws ServletException
@@ -741,26 +739,46 @@ public class ProxyServlet extends HttpServlet
                                       HttpRequest proxyRequest, HttpServletRequest servletRequest)
             throws IOException
     {
-        //check if url is eligible for content processing
-        String found = overrideContentUrlPatterns.stream().filter(pattern -> servletRequest.getRequestURI().matches(pattern)).findFirst().orElse(null);
 
-        HttpEntity entity = proxyResponse.getEntity();
+        boolean shouldBeSkipped = false;
+        boolean shouldBeProcessed = false;
 
-
-        boolean shouldSkip = false;
-        for (String pattern : skipResponseContentTypes)
+        //check if request url needs to be skipped
+        for (String pattern : skipOverrideContentPatterns)
         {
-            if (pattern.contains(pattern))
+            if (servletRequest.getRequestURI().matches(pattern))
             {
-                shouldSkip = true;
+                shouldBeSkipped = true;
                 break;
             }
         }
 
+        //check if url is eligible for content processing
+        for (String pattern : overrideContentUrlPatterns)
+        {
+            if (servletRequest.getRequestURI().matches(pattern))
+            {
+                shouldBeProcessed = true;
+                break;
+            }
+        }
+
+        //get response entity
+        HttpEntity entity = proxyResponse.getEntity();
+
         if (entity != null)
         {
+            //check if content needs to be skipped depending on content type
+            for (String pattern : skipResponseContentTypes)
+            {
+                if (entity.getContentType().toString().contains(pattern))
+                {
+                    shouldBeSkipped = true;
+                    break;
+                }
+            }
 
-            if (found != null && !shouldSkip)
+            if (shouldBeProcessed && !shouldBeSkipped)
             {
                 //if response is gzip than decompress it for processing
                 boolean isGzip = false;
@@ -983,6 +1001,7 @@ public class ProxyServlet extends HttpServlet
 
     /**
      * parse csv. Null and empty String is allowed.
+     *
      * @param csv String that contains values separated with comma ","
      * @return List
      */
