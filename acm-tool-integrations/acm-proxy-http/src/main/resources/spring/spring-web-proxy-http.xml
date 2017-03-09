@@ -34,8 +34,13 @@
                 <!-- resource names regex patterns separated with comma "," if multiple.
                 Will be processed and override urls inside the response-->
                 <prop key="responseUrlMatchers">^.*$</prop>
+                <!-- resource names regex patterns separated with comma "," if multiple.
+                Will be processed and override urls inside the response-->
+                <prop key="skipResponseUrlMatchers">.*ttf$, .*woff$</prop>
                 <!-- given pairs for replacement pattern1:replacement1,pattern2:replacement2-->
                 <prop key="responseContentRewritePairs">(?&lt;=['"])/pentaho/:/arkcase/pentaho/</prop>
+                <!-- comma delimited content types which need to be skip for processing-->
+                <prop key="skipResponseContentTypes">application/x-font-ttf, application/x-font-woff</prop>
             </props>
         </property>
     </bean>
