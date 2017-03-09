@@ -7,6 +7,7 @@ import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import org.mule.api.MuleException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+
 import java.util.Set;
 
 /**
@@ -57,10 +58,8 @@ public interface GroupService
 
     /**
      * Creates or updates ad-hoc group based on the client info coming in from CRM
-     * @param clientId
-     * @param clientName
-     * @param genericGroupName
-     * @param acmGroup
+     * @param acmGroup group we want to rename
+     * @param newName group new name
      */
-    void createOrUpdateAdHocGroup(String genericGroupName, String clientId, String clientName, AcmGroup acmGroup);
+    void renameGroup(AcmGroup acmGroup, String newName);
 }
