@@ -58,7 +58,10 @@ public class CategoryToSolrTransformer implements AcmObjectToSolrDocTransformer<
         solr.setModified_date_tdt(in.getModified());
         solr.setModifier_lcs(in.getModifier());
 
-        solr.setStatus_lcs(in.getStatus().name());
+        if (in.getStatus() != null)
+        {
+            solr.setStatus_lcs(in.getStatus().name());
+        }
 
         if (in.getParent() != null)
         {
@@ -105,7 +108,10 @@ public class CategoryToSolrTransformer implements AcmObjectToSolrDocTransformer<
         solr.setModifier_s(in.getModifier());
         solr.setLast_modified_tdt(in.getModified());
 
-        solr.setStatus_s(in.getStatus().name());
+        if (in.getStatus() != null)
+        {
+            solr.setStatus_s(in.getStatus().name());
+        }
 
         return solr;
     }
