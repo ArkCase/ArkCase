@@ -120,6 +120,7 @@ public class UserOrgServiceImpl implements UserOrgService
         profileDTO.setZip(userOrgInfo.getZip());
         profileDTO.setEcmFileId(userOrgInfo.getEcmFileId());
         profileDTO.setTitle(userOrgInfo.getTitle());
+        profileDTO.setPrefLocale(userOrgInfo.getPrefLocale());
 
         return profileDTO;
     }
@@ -200,6 +201,7 @@ public class UserOrgServiceImpl implements UserOrgService
         userOrg.setMobilePhoneNumber(profile.getMobilePhoneNumber());
         userOrg.setEcmFileId(profile.getEcmFileId());
         userOrg.setTitle(profile.getTitle());
+        userOrg.setPrefLocale(profile.getPrefLocale());
 
         userOrg = updateUserOrgOrganization(profile.getCompanyName(), userOrg);
 
