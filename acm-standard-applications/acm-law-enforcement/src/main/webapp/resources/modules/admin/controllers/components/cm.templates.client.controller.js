@@ -7,7 +7,7 @@ angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$m
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
         $scope.selectedRows = [];
-        $scope.correspondenceManagementTemplateVersions = undefined;
+        $scope.configVersions = {};
         
         $scope.gridOptions = {
             enableRowSelection: true,
@@ -29,12 +29,18 @@ angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$m
 
         //get config and init grid settings
         $scope.config.$promise.then(function (config) {
-            $scope.correspondenceManagementTemplateVersions = _.find(config.components, {id: 'correspondenceManagementTemplateVersions'});
+            var configVersions = _.find(config.components, {id: 'correspondenceManagementTemplateVersions'});
             var config = _.find(config.components, {id: 'correspondenceManagementTemplates'});
-            $scope.gridOptions.columnDefs = config.columnDefs;
-            gridHelper.setUserNameFilter(promiseUsers);
-            $scope.config = config;
-            ReloadGrid();
+            promiseUsers.then(function (data) {
+                gridHelper.setUserNameFilterToConfig(promiseUsers, config);
+                $scope.config = config;
+                $scope.gridOptions.columnDefs = config.columnDefs;
+                
+                gridHelper.setUserNameFilterToConfig(promiseUsers, configVersions);
+                $scope.configVersions = configVersions;
+                
+                ReloadGrid();
+            });
         });
         
 
@@ -97,11 +103,13 @@ angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$m
         };
         
         $scope.versionTemplate = function () {
+                var modalScope = $scope.$new();
+                modalScope.config = $scope.configVersions;
                 var templateVersionsPromise = correspondenceService.getTemplateVersionData($scope.selectedRows[0].templateId);
-                var colDefs = $scope.correspondenceManagementTemplateVersions.columnDefs;
 
                 templateVersionsPromise.then(function (templateVersionData) {
                     var modalInstance = $modal.open({
+                        scope: modalScope,
                         animation: true,
                         templateUrl: 'modules/admin/views/components/cm.template-versions.modal.client.view.html',
                         controller: function ($scope, $modalInstance) {
@@ -113,7 +121,7 @@ angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$m
                             $scope.gridOptions = {
                                     enableColumnResizing: true,
                                     enableRowSelection: true,
-                                    columnDefs: colDefs,
+                                    columnDefs: $scope.config.columnDefs,
                                     data: templateVersionData.data
                             };
                             $scope.onClickOk = function () {
@@ -123,7 +131,6 @@ angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$m
                         size: 'lg'
                     });
                 });
-
         }
         
         $scope.deleteTemplate = function () {

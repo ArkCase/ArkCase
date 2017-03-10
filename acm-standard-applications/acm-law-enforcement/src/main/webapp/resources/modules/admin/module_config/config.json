@@ -126,14 +126,16 @@
           "displayName": "admin.correspondenceManagement.mergefields.version.grid.mergingActiveVersion",
           "visible": true,
           "headerCellFilter": "translate",
-          "cellTemplate": "<div align='center'><span ng-if='!row.entity.mergingActiveVersion' class='label label-warning'>No</span><span ng-if='row.entity.mergingActiveVersion' class='label label-success'>Yes</span></div>'"
+          "cellTemplate": "<div align='center'><span ng-if='!row.entity.mergingActiveVersion' class='label label-warning'>No</span><span ng-if='row.entity.mergingActiveVersion' class='label label-success'>Yes</span></div>'",
+          "width": 70
         },
         {
           "name": "mergingVersion",
           "displayName": "admin.correspondenceManagement.mergefields.version.grid.mergingVersion",
           "visible": true,
           "headerCellFilter": "translate",
-          "sort" : {"direction": "desc"}
+          "sort" : {"direction": "desc"},
+          "width": 80
         },
         {
           "name": "modified",
@@ -146,7 +148,8 @@
           "name": "modifier",
           "displayName": "admin.correspondenceManagement.mergefields.version.grid.modifier",
           "visible": true,
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "lookup": "userFullNames"
         }
       ]
     },
@@ -183,14 +186,16 @@
           "name": "objectType",
           "displayName": "admin.correspondenceManagement.templates.grid.objectType",
           "visible": true,
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "width": 120
         },
         {
           "name": "modified",
           "displayName": "admin.correspondenceManagement.templates.grid.modified",
           "visible": true,
           "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "width": 120
         },
         {
           "name": "modifier",
@@ -204,7 +209,8 @@
           "displayName": "admin.correspondenceManagement.templates.grid.activated",
           "visible": true,
           "headerCellFilter": "translate",
-          "cellTemplate": "<div align='center'><span ng-if='!row.entity.activated' class='label label-warning' ng-click='grid.appScope.activate(row.entity)'>Deactivated</span><span ng-if='row.entity.activated' class='label label-success' ng-click='grid.appScope.activate(row.entity)'>Activated</span></div>'"
+          "cellTemplate": "<div align='center'><span ng-if='!row.entity.activated' class='label label-warning' ng-click='grid.appScope.activate(row.entity)'>Deactivated</span><span ng-if='row.entity.activated' class='label label-success' ng-click='grid.appScope.activate(row.entity)'>Activated</span></div>'",
+          "width": 120
         }
       ],
       "objectTypes": [
@@ -230,14 +236,16 @@
           "displayName": "admin.correspondenceManagement.templates.grid.templateVersionActive",
           "visible": true,
           "headerCellFilter": "translate",
-          "cellTemplate": "<div align='center'><span ng-if='!row.entity.templateVersionActive' class='label label-warning'>No</span><span ng-if='row.entity.templateVersionActive' class='label label-success'>Yes</span></div>'"
+          "cellTemplate": "<div align='center'><span ng-if='!row.entity.templateVersionActive' class='label label-warning'>No</span><span ng-if='row.entity.templateVersionActive' class='label label-success'>Yes</span></div>'",
+          "width": 70
         },
         {
           "name": "templateVersion",
           "displayName": "admin.correspondenceManagement.templates.grid.version",
           "visible": true,
           "headerCellFilter": "translate",
-          "sort" : {"direction": "desc"}
+          "sort" : {"direction": "desc"},
+          "width": 80
         },
         {
           "name": "label",
@@ -256,14 +264,16 @@
           "name": "objectType",
           "displayName": "admin.correspondenceManagement.templates.grid.objectType",
           "visible": true,
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "width": 100
         },
         {
           "name": "modified",
           "displayName": "admin.correspondenceManagement.templates.grid.modified",
           "visible": true,
           "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "width": 100
         },
         {
           "name": "modifier",
