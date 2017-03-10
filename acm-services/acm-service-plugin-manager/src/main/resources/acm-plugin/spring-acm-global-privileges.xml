@@ -853,7 +853,7 @@
             </list>
         </property>
     </bean>
-    
+
     <!--Category Management Plugin-->
     <bean id="acmCategoryManagementPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
         <property name="privilegeName" value="acm-manage-categories"/>
