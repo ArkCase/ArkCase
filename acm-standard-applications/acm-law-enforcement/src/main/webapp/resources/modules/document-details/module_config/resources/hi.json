@@ -1,0 +1,92 @@
+{
+  "documentDetails": {
+    "title": "hi_Document details",
+    "creator": "hi_Creator",
+    "created": "hi_Created",
+    "assignee": "hi_Assignee",
+    "fileType": "hi_File type",
+    "status": "hi_Status",
+    "name": "hi_Name",
+    "comp.eventHistory": {
+      "title": "hi_Event History",
+      "table.columns": {
+        "eventType": "hi_Event Name",
+        "eventDate": "hi_Created",
+        "userId": "hi_User"
+      }
+    },
+    "comp.tags": {
+      "title": "hi_Tags",
+      "table.columns": {
+        "tag": "hi_Tag"
+      },
+      "modal": {
+        "title": "hi_Tag",
+        "search": "hi_Search for Tag",
+        "buttons": {
+          "cancel": "hi_Cancel",
+          "ok": "hi_Add Tag"
+        }
+      },
+      "message.tagExists": "hi_Tag with that name or description or text already exists",
+      "message.tagAssociated": "hi_already associated",
+      "message.delete.success": "hi_Tag deleted successfully",
+      "message.delete.error": "hi_Error deleting tag"
+    },
+    "comp.participants": {
+      "title": "hi_Participants",
+      "table.columns": {
+        "name": "hi_Name",
+        "type": "hi_Type"
+      },
+      "message.delete.success": "hi_Successfully deleted row.",
+      "message.delete.error": "hi_Error deleting row.",
+      "role": {
+        "title": "hi_Change participant Role",
+        "dropdownLabel": "hi_Available Roles",
+        "buttons": {
+          "cancel": "hi_Cancel",
+          "ok": "hi_Change Role"
+        }
+      }
+    },
+    "comp.notes": {
+      "title": "hi_Notes",
+      "table.columns": {
+        "note": "hi_Note",
+        "tag": "hi_Document Version",
+        "created": "hi_Created",
+        "creator": "hi_Author"
+      }
+    },
+    "comp.versionHistory": {
+      "title": "hi_Version History",
+      "table.columns": {
+        "creator": "hi_User",
+        "created": "hi_Created",
+        "versionTag": "hi_Version"
+      }
+    },
+    "userSearch": {
+      "id": "hi_userSearch",
+      "title": "hi_Add New Participant",
+      "search": {
+        "btn": "hi_Go!",
+        "placeholder": "hi_Enter to search for a participant"
+      },
+      "cancelButton": "hi_Cancel",
+      "confirmButton": "hi_Select",
+      "enabled": true,
+      "userFacetFilter": "hi_\"Object Type\": USER",
+      "userGridColumns": {
+        "name": "hi_Name",
+        "type": "hi_Type",
+        "title": "hi_Title",
+        "parent": "hi_Parent",
+        "assignee": "hi_Assignee",
+        "modified": "hi_Modified"
+      },
+      "dropdownLabel": "hi_Participant Type"
+    }
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "costTracking": {
+    "title": "Kostenverfolgung",
+    "progressNoCostsheet": "de_[ No costsheet is selected ]",
+    "progressLoading": "de_Loading costsheet ",
+    "progressError": "de_Failed to load costsheet"
+  },
+  "costTracking.menus": {
+    "leftnav.item": "Kostenverfolgung",
+    "topbar.item": "Kostenverfolgung"
+  },
+  "costTracking.tree": {
+  },
+  "costTracking.comp.info": {
+    "incidentDate": "de_Incident Date",
+    "priority": "de_Priority",
+    "assignedTo": "de_Assigned To",
+    "subjectType": "de_Subject Type",
+    "state": "de_State"
+  },
+  "costTracking.comp.actions": {
+    "new.button": "de_New Costsheet",
+    "edit.button": "de_Edit Costsheet"
+  },
+  "costTracking.comp.details": {
+    "title": "de_Details",
+    "informSaved": "de_Costsheet details saved",
+    "table.columns": {
+      "title": "de_Details",
+      "modified": "de_Date Last Modified",
+      "modifier": "de_User Last Modified"
+    }
+  },
+  "costTracking.comp.people": {
+    "title": "de_Person",
+    "table.columns": {
+      "fullName": "de_Full Name",
+      "userId": "de_Username"
+    }
+  },
+  "costTracking.comp.summary": {
+    "title": "de_Cost Summary",
+    "table.columns": {
+      "parentId": "de_ID",
+      "parentNumber": "de_Parent ID",
+      "parentType": "de_Parent Type",
+      "value": "de_Total Cost",
+      "title": "de_Title",
+      "description": "de_Description"
+    }
+  },
+  "costTracking.comp.tags": {
+    "title": "de_Tags",
+    "table.columns": {
+      "tag": "de_Tag",
+      "created": "de_Created",
+      "createdBy": "de_Created By"
+    },
+    "modal": {
+    "title": "de_Tag",
+    "search": "de_Search for Tag",
+    "buttons": {
+          "cancel": "de_Cancel",
+          "ok": "de_Add Tag"
+     }
+    },
+    "message": {
+      "tagExists": "de_Tag with that name or description or text already exists",
+      "tagAssociated": "de_already associated",
+      "delete": {
+        "success": "de_Tag deleted successfully",
+        "error": "de_Error deleting tag"
+      }
+    }
+  }
+}
+

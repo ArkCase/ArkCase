@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('cases').run(['Menus', 'ConfigService',
-    function (Menus, ConfigService) {
+angular.module('cases').run(['Menus', 'ConfigService','$translate',
+    function (Menus, ConfigService, $translate) {
         var config = ConfigService.getModule({moduleId: 'cases'});
         config.$promise.then(function (config) {
             if (config.menus) {

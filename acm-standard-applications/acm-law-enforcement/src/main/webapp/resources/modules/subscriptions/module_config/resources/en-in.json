@@ -1,0 +1,22 @@
+{
+  "subscriptions": {
+    "title": "en-in_Subscriptions",
+    "search.btn": "en-in_Search",
+    "export.btn": "en-in_Export",
+    "search.placeholder": "en-in_Search for subscriptions",
+    "menus": {
+      "leftnav.item": "en-in_Subscriptions"
+    },
+    "comp":{
+      "grid": {
+        "columns": {
+          "id": "en-in_ID",
+          "event": "en-in_Event",
+          "parentName": "en-in_Parent Name",
+          "parentType": "en-in_Parent Type",
+          "modified": "en-in_Modified"
+        }
+      }
+    }
+  }
+}

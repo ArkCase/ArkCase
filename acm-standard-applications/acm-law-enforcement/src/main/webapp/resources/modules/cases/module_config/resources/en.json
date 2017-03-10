@@ -5,6 +5,10 @@
     "progressLoading": "Loading case file ",
     "progressError": "Failed to load case file"
   },
+  "cases.menus": {
+    "leftnav.item": "Case Files",
+    "topbar.item": "Case"
+  },
   "cases.error": {
     "invalidData": ""
   },

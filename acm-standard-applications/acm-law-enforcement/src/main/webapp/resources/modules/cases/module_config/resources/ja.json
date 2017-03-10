@@ -1,0 +1,318 @@
+{
+  "cases": {
+    "title": "ja_Cases",
+    "progressNoCase": "ja_[ No case file data ]",
+    "progressLoading": "ja_Loading case file ",
+    "progressError": "ja_Failed to load case file"
+  },
+  "cases.menus": {
+    "leftnav.item": "ja_Case Files",
+    "topbar.item": "ja_Case"
+  },
+  "cases.error": {
+    "invalidData": "ja_"
+  },
+  "cases.comp.info": {
+    "caseId": "ja_Case id:",
+    "caseNumber": "ja_Case Number:",
+    "courtRoomName": "ja_Court Room Name:"
+  },
+  "cases.comp.actions": {
+    "restrict": "ja_Restrict?",
+    "new.button": "ja_New",
+    "edit.button": "ja_Edit",
+    "status.button": "ja_Change Case Status",
+    "reinvestigate.button": "ja_Reinvestigate",
+    "subscribe.button": "ja_Subscribe",
+    "unsubscribe.button": "ja_Unsubscribe",
+    "merge.button": "ja_Merge",
+    "claim.button": "ja_Claim",
+    "unclaim.button": "ja_Unclaim",
+    "split.button": "ja_Split"
+  },
+  "cases.comp.details": {
+    "title": "ja_Details",
+    "informSaved": "ja_Case details saved",
+    "table.columns": {
+      "title": "ja_Details",
+      "modified": "ja_Date Last Modified",
+      "modifier": "ja_User Last Modified"
+    }
+  },
+  "cases.comp.documents": {
+    "title": "ja_Documents"
+  },
+  "cases.comp.people": {
+    "title": "ja_People",
+    "table.columns": {
+      "entity": "ja_Entity",
+      "type": "ja_Type",
+      "firstName": "ja_FirstName",
+      "lastName": "ja_LastName"
+    },
+    "contactMethods": {
+      "title": "ja_ContactMethods",
+      "table.columns": {
+        "type": "ja_Type",
+        "value": "ja_Value",
+        "created": "ja_Date Added",
+        "creator": "ja_Added By",
+        "modified": "ja_Last Modified",
+        "modifier": "ja_Modified By"
+      }
+    },
+    "organizations": {
+      "title": "ja_Organizations",
+      "table.columns": {
+        "type": "ja_Type",
+        "value": "ja_Value",
+        "created": "ja_Date Added",
+        "creator": "ja_Added By",
+        "modified": "ja_Last Modified",
+        "modifier": "ja_Modified By"
+      }
+    },
+    "addresses": {
+      "title": "ja_Locations",
+      "table.columns": {
+        "type": "ja_Type",
+        "streetAddress": "ja_Address",
+        "city": "ja_City",
+        "state": "ja_State",
+        "zip": "ja_Zip",
+        "country": "ja_Country",
+        "created": "ja_Date Added",
+        "creator": "ja_Added By",
+        "modified": "ja_Last Modified",
+        "modifier": "ja_Modified By"
+      }
+    },
+    "aliases": {
+      "title": "ja_Aliases",
+      "table.columns": {
+        "type": "ja_Type",
+        "value": "ja_Value",
+        "created": "ja_Date Added",
+        "creator": "ja_Added By",
+        "modified": "ja_Last Modified",
+        "modifier": "ja_Modified By"
+      }
+    },
+    "securityTags": {
+      "title": "ja_Security Tags",
+      "table.columns": {
+        "type": "ja_Type",
+        "value": "ja_Value",
+        "created": "ja_Date Added",
+        "creator": "ja_Added By",
+        "modified": "ja_Last Modified",
+        "modifier": "ja_Modified By"
+      }
+    }
+  },
+  "cases.comp.participants": {
+    "title": "ja_Participants",
+    "table.columns": {
+      "type": "ja_Type",
+      "name": "ja_Name"
+    },
+    "dialogUserPicker": {
+      "header": "ja_Choose User",
+      "table.columns": {
+        "name": "ja_Name",
+        "type": "ja_Type",
+        "title": "ja_Title",
+        "id": "ja_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "ja_Choose Group",
+      "table.columns": {
+        "name": "ja_Name"
+      }
+    }
+  },
+  "cases.comp.notes": {
+    "title": "ja_Notes",
+    "table.columns": {
+      "note": "ja_Note",
+      "created": "ja_Created",
+      "creator": "ja_Author"
+    }
+  },
+  "cases.comp.tasks": {
+    "title": "ja_Tasks",
+    "table.columns": {
+      "title": "ja_Title",
+      "assignee": "ja_Assignee",
+      "created": "ja_Created",
+      "priority": "ja_Priority",
+      "due": "ja_Due",
+      "status": "ja_Status"
+    },
+    "table.overdue.tooltip": "ja_Task is Overdue",
+    "table.deadline.tooltip": "ja_Deadline is Approaching"
+  },
+  "cases.comp.references": {
+    "title": "ja_References",
+    "table.columns": {
+      "targetName": "ja_Number",
+      "parentName": "ja_Parent",
+      "targetTitle": "ja_Title",
+      "modified": "ja_Modified",
+      "targetType": "ja_Reference Type",
+      "status": "ja_Status"
+    }
+  },
+  "cases.comp.history": {
+    "title": "ja_History",
+    "table.columns": {
+      "eventType": "ja_Event Name",
+      "eventDate": "ja_Date",
+      "userId": "ja_User"
+    }
+  },
+  "cases.comp.time": {
+    "title": "ja_Time",
+    "table.columns": {
+      "name": "ja_Form Name",
+      "user": "ja_User",
+      "tally": "ja_Total Hours",
+      "modified": "ja_Modified Date",
+      "status": "ja_Status"
+    },
+    "formNamePrefix": "ja_Timesheet"
+  },
+  "cases.comp.cost": {
+    "title": "ja_Cost",
+    "table.columns": {
+      "name": "ja_Form Name",
+      "user": "ja_User",
+      "tally": "ja_Total Cost",
+      "modified": "ja_Modified Date",
+      "status": "ja_Status"
+    },
+    "formNamePrefix": "ja_Costsheet"
+  },
+  "cases.comp.tags": {
+    "title": "ja_Tags",
+    "table.columns": {
+      "tag": "ja_Tag",
+      "created": "ja_Created",
+      "createdBy": "ja_Created By"
+    },
+    "modal": {
+      "title": "ja_Tag",
+      "search": "ja_Search for Tag",
+      "buttons": {
+        "cancel": "ja_Cancel",
+        "ok": "ja_Add Tag"
+      }
+    },
+    "message": {
+      "tagExists": "ja_Tag with that name or description or text already exists",
+      "tagAssociated": "ja_already associated",
+      "delete": {
+        "success": "ja_Tag deleted successfully",
+        "error": "ja_Error deleting tag"
+      }
+    }
+  },
+  "cases.comp.calendar": {
+    "title": "ja_Calendar"
+  },
+  "cases.comp.merge": {
+    "id": "ja_merge",
+    "title": "ja_Merge",
+    "cancel.btn": "ja_Cancel",
+    "merge.btn": "ja_Merge",
+    "search.placeholder": "ja_Search for case file.",
+    "search.btn": "ja_Search",
+    "enabled": true,
+    "table.columns": {
+      "incident": "ja_Type",
+      "name": "ja_Name",
+      "assignee": "ja_Assignee",
+      "title": "ja_Title",
+      "parent": "ja_Parent",
+      "modified": "ja_Modified"
+    }
+  },
+  "cases.comp.split": {
+    "title": "ja_Split",
+    "cancel": "ja_Cancel",
+    "split": "ja_Split"
+  },
+  "cases.comp.addreference": {
+    "title": "ja_Add Reference",
+    "cancelButton": "ja_Cancel",
+    "confirmButton": "ja_Add",
+    "search": {
+      "placeholder": "ja_Search for case, complaint, file, task",
+      "btn": "ja_Search"
+    },
+    "grid": {
+      "columns": {
+        "id": "ja_Id",
+        "name": "ja_Name",
+        "type": "ja_Type",
+        "title": "ja_Title",
+        "parent": "ja_Parent",
+        "assignee": "ja_Assignee",
+        "modified": "ja_Modified"
+      }
+    }
+  },
+  "cases.comp.assigneePickerModal": {
+    "title": "ja_Change Assignee",
+    "assigneeNamelabel": "ja_Assignee Name",
+    "btnCancelText": "ja_Cancel",
+    "btnSaveText": "ja_Save",
+    "searchAssigneeHeader": "ja_Search Assignee"
+  },
+  "cases.comp.groupPickerModal": {
+    "title": "ja_Change Group",
+    "groupNamelabel": "ja_Group Name",
+    "btnCancelText": "ja_Cancel",
+    "btnSaveText": "ja_Save",
+    "searchGroupHeader": "ja_Search Group"
+  },
+  "cases.comp.approvalRouting": {
+    "title": "ja_Future Approvers",
+    "addNewTooltip": "ja_Add new approver",
+    "noBuckslipMessage": "ja_No Data",
+    "button": {
+      "save.tooltip": "ja_Save Changes"
+    },
+    "table.columns": {
+      "fullName": "ja_Full Name"
+    }
+  },
+  "cases.comp.pastApprovals": {
+    "title": "ja_Past Approvers",
+    "noBuckslipMessage": "ja_No Data",
+    "table.columns": {
+      "approvalDate": "ja_Approval Date",
+      "approverId": "ja_Approver",
+      "approverDecision": "ja_Approver Decision"
+    }
+  },
+  "cases.userOrGroupSearch": {
+    "id": "ja_userSearch",
+    "title": "ja_User/Group Search",
+    "search": {
+      "btn": "ja_Search",
+      "placeholder": "ja_Search for the user or group."
+    },
+    "cancelButton": "ja_Cancel",
+    "confirmButton": "ja_Confirm",
+    "enabled": true,
+    "userOrGroupFacetFilter": "ja_\"object_type_s\":(GROUP OR USER)",
+    "assigneeGridColumns": {
+      "name": "ja_Name",
+      "type": "ja_Type",
+      "title": "ja_Title",
+      "username": "ja_Username"
+    }
+  }
+}

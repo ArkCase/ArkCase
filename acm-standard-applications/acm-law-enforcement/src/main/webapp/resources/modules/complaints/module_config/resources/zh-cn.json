@@ -1,0 +1,312 @@
+{
+  "complaints": {
+    "title": "投诉",
+    "progressNoComplaint": "zh-cn_[ No complaint data ]",
+    "progressLoading": "zh-cn_Loading complaint ",
+    "progressError": "zh-cn_Failed to load complaint "
+  },
+  "complaints.menus": {
+    "leftnav.item": "投诉",
+    "topbar.item": "投诉"
+  },
+  "complaints.comp.info": {
+    "complaintId": "zh-cn_Complaint id:",
+    "complaintNumber": "zh-cn_Complaint ID:",
+    "courtRoomName": "zh-cn_Court Room Name:"
+  },
+  "complaints.comp.actions": {
+    "restrict": "zh-cn_Restrict?",
+    "new.button": "zh-cn_New Complaint",
+    "close.button": "zh-cn_Close Complaint",
+    "subscribe.button": "zh-cn_Subscribe",
+    "unsubscribe.button": "zh-cn_Unsubscribe",
+    "claim.button": "zh-cn_Claim",
+    "unclaim.button": "zh-cn_Unclaim"
+  },
+  "complaints.comp.details": {
+    "title": "zh-cn_Details",
+    "informSaved": "zh-cn_Complaint details saved",
+    "table.columns": {
+      "title": "zh-cn_Details",
+      "modified": "zh-cn_Date Last Modified",
+      "modifier": "zh-cn_User Last Modified"
+    }
+  },
+  "complaints.comp.documents": {
+    "title": "zh-cn_Documents"
+  },
+  "complaints.comp.people": {
+    "title": "zh-cn_People",
+    "table.columns": {
+      "entity": "zh-cn_Entity",
+      "type": "zh-cn_Type",
+      "firstName": "zh-cn_FirstName",
+      "lastName": "zh-cn_LastName"
+    },
+    "contactMethods": {
+      "title": "zh-cn_ContactMethods",
+      "table.columns": {
+        "type": "zh-cn_Type",
+        "value": "zh-cn_Value",
+        "created": "zh-cn_Date Added",
+        "creator": "zh-cn_Added By",
+        "modified": "zh-cn_Last Modified",
+        "modifier": "zh-cn_Modified By"
+      }
+    },
+    "organizations": {
+      "title": "zh-cn_Organizations",
+      "table.columns": {
+        "type": "zh-cn_Type",
+        "value": "zh-cn_Value",
+        "created": "zh-cn_Date Added",
+        "creator": "zh-cn_Added By",
+        "modified": "zh-cn_Last Modified",
+        "modifier": "zh-cn_Modified By"
+      }
+    },
+    "addresses": {
+      "title": "zh-cn_Locations",
+      "table.columns": {
+        "type": "zh-cn_Type",
+        "streetAddress": "zh-cn_Address",
+        "city": "zh-cn_City",
+        "state": "zh-cn_State",
+        "zip": "zh-cn_Zip",
+        "country": "zh-cn_Country",
+        "created": "zh-cn_Date Added",
+        "creator": "zh-cn_Added By",
+        "modified": "zh-cn_Last Modified",
+        "modifier": "zh-cn_Modified By"
+      }
+    },
+    "aliases": {
+      "title": "zh-cn_Aliases",
+      "table.columns": {
+        "type": "zh-cn_Type",
+        "value": "zh-cn_Value",
+        "created": "zh-cn_Date Added",
+        "creator": "zh-cn_Added By",
+        "modified": "zh-cn_Last Modified",
+        "modifier": "zh-cn_Modified By"
+      }
+    },
+    "securityTags": {
+      "title": "zh-cn_Security Tags",
+      "table.columns": {
+        "type": "zh-cn_Type",
+        "value": "zh-cn_Value",
+        "created": "zh-cn_Date Added",
+        "creator": "zh-cn_Added By",
+        "modified": "zh-cn_Last Modified",
+        "modifier": "zh-cn_Modified By"
+      }
+    }
+  },
+  "complaints.comp.participants": {
+    "title": "zh-cn_Participants",
+    "table.columns": {
+      "type": "zh-cn_Type",
+      "name": "zh-cn_Name"
+    },
+    "dialogUserPicker": {
+      "header": "zh-cn_Choose User",
+      "table.columns": {
+        "name": "zh-cn_Name",
+        "type": "zh-cn_Type",
+        "title": "zh-cn_Title",
+        "id": "zh-cn_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "zh-cn_Choose Group",
+      "table.columns": {
+        "name": "zh-cn_Name"
+      }
+    }
+  },
+  "complaints.comp.locations": {
+    "title": "zh-cn_Locations",
+    "table.columns": {
+      "address": "zh-cn_Address",
+      "type": "zh-cn_Type",
+      "city": "zh-cn_City",
+      "state": "zh-cn_State",
+      "zip": "zh-cn_Zip",
+      "modified": "zh-cn_Date Last Modified",
+      "modifier": "zh-cn_User Last Modified"
+    },
+    "modal": {
+      "addLocation": "zh-cn_Add Location",
+      "editLocation": "zh-cn_Edit Record",
+      "type.label": "zh-cn_Type",
+      "street.label": "zh-cn_Street",
+      "city.label": "zh-cn_City",
+      "state.label": "zh-cn_State",
+      "zip.label": "zh-cn_Zip",
+      "btnOk.text": "zh-cn_Save",
+      "btnCancel.text": "zh-cn_Cancel"
+    }
+  },
+  "complaints.comp.notes": {
+    "title": "zh-cn_Notes",
+    "table.columns": {
+      "note": "zh-cn_Note",
+      "created": "zh-cn_Created",
+      "creator": "zh-cn_Author"
+    }
+  },
+  "complaints.comp.tasks": {
+    "title": "zh-cn_Tasks",
+    "table.columns": {
+      "title": "zh-cn_Title",
+      "assignee": "zh-cn_Assignee",
+      "created": "zh-cn_Created",
+      "priority": "zh-cn_Priority",
+      "due": "zh-cn_Due",
+      "status": "zh-cn_Status"
+    },
+    "table.overdue.tooltip": "zh-cn_Task is Overdue",
+    "table.deadline.tooltip": "zh-cn_Deadline is Approaching"
+  },
+  "complaints.comp.references": {
+    "title": "zh-cn_References",
+    "table.columns": {
+      "targetName": "zh-cn_Number",
+      "targetTitle": "zh-cn_Title",
+      "parentName": "zh-cn_Parent",
+      "modified": "zh-cn_Modified",
+      "targetType": "zh-cn_Reference Type",
+      "status": "zh-cn_Status"
+    }
+  },
+  "complaints.comp.history": {
+    "title": "zh-cn_History",
+    "table.columns": {
+      "eventType": "zh-cn_Event Name",
+      "eventDate": "zh-cn_Date",
+      "userId": "zh-cn_User"
+    }
+  },
+  "complaints.comp.time": {
+    "title": "zh-cn_Time",
+    "table.columns": {
+      "name": "zh-cn_Form Name",
+      "user": "zh-cn_User",
+      "tally": "zh-cn_Total Hours",
+      "modified": "zh-cn_Modified Date",
+      "status": "zh-cn_Status"
+    },
+    "formNamePrefix": "zh-cn_Timesheet"
+  },
+  "complaints.comp.cost": {
+    "title": "zh-cn_Cost",
+    "table.columns": {
+      "name": "zh-cn_Form Name",
+      "user": "zh-cn_User",
+      "tally": "zh-cn_Total Cost",
+      "modified": "zh-cn_Modified Date",
+      "status": "zh-cn_Status"
+    },
+    "formNamePrefix": "zh-cn_Costsheet"
+  },
+  "complaints.comp.tags": {
+    "title": "zh-cn_Tags",
+    "table.columns": {
+      "tag": "zh-cn_Tag",
+      "created": "zh-cn_Created",
+      "createdBy": "zh-cn_Created By"
+    },
+    "modal": {
+      "title": "zh-cn_Tag",
+      "search": "zh-cn_Search for Tag",
+      "buttons": {
+        "cancel": "zh-cn_Cancel",
+        "ok": "zh-cn_Add Tag"
+      }
+    },
+    "message": {
+      "tagExists": "zh-cn_Tag with that name or description or text already exists",
+      "tagAssociated": "zh-cn_already associated",
+      "delete": {
+        "success": "zh-cn_Tag deleted successfully",
+        "error": "zh-cn_Error deleting tag"
+      }
+    }
+  },
+  "complaints.comp.calendar": {
+    "title": "zh-cn_Calendar"
+  },
+  "complaints.comp.addreference": {
+    "title": "zh-cn_Add Reference",
+    "cancelButton": "zh-cn_Cancel",
+    "confirmButton": "zh-cn_Add",
+    "search": {
+      "placeholder": "zh-cn_Search for case, complaint, file, task",
+      "btn": "zh-cn_Search"
+    },
+    "grid": {
+      "columns": {
+        "id": "zh-cn_Id",
+        "name": "zh-cn_Name",
+        "type": "zh-cn_Type",
+        "title": "zh-cn_Title",
+        "parent": "zh-cn_Parent",
+        "assignee": "zh-cn_Assignee",
+        "modified": "zh-cn_Modified"
+      }
+    }
+  },
+  "complaints.comp.assigneePickerModal": {
+    "title": "zh-cn_Change Assignee",
+    "assigneeNamelabel": "zh-cn_Assignee Name",
+    "btnCancelText": "zh-cn_Cancel",
+    "btnSaveText": "zh-cn_Save",
+    "searchAssigneeHeader": "zh-cn_Search Assignee"
+  },
+  "complaints.comp.groupPickerModal": {
+    "title": "zh-cn_Change Group",
+    "groupNamelabel": "zh-cn_Group Name",
+    "btnCancelText": "zh-cn_Cancel",
+    "btnSaveText": "zh-cn_Save",
+    "searchGroupHeader": "zh-cn_Search Group"
+  },
+  "complaints.comp.approvalRouting": {
+    "title": "zh-cn_Future Approvers",
+    "addNewTooltip": "zh-cn_Add new approver",
+    "noBuckslipMessage": "zh-cn_No Data",
+    "button": {
+      "save.tooltip": "zh-cn_Save Changes"
+    },
+    "table.columns": {
+      "fullName": "zh-cn_Full Name"
+    }
+  },
+  "complaints.comp.pastApprovals": {
+    "title": "zh-cn_Past Approvers",
+    "noBuckslipMessage": "zh-cn_No Data",
+    "table.columns": {
+      "approvalDate": "zh-cn_Approval Date",
+      "approverId": "zh-cn_Approver",
+      "approverDecision": "zh-cn_Approver Decision"
+    }
+  },
+  "complaints.userOrGroupSearch": {
+    "id": "zh-cn_userSearch",
+    "title": "zh-cn_User/Group Search",
+    "search": {
+      "btn": "zh-cn_Search",
+      "placeholder": "zh-cn_Search for the user or group."
+    },
+    "cancelButton": "zh-cn_Cancel",
+    "confirmButton": "zh-cn_Confirm",
+    "enabled": true,
+    "userOrGroupFacetFilter": "zh-cn_\"object_type_s\":(GROUP OR USER)",
+    "assigneeGridColumns": {
+      "name": "zh-cn_Name",
+      "type": "zh-cn_Type",
+      "title": "zh-cn_Title",
+      "username": "zh-cn_Username"
+    }
+  }
+}

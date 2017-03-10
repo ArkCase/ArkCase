@@ -1,0 +1,76 @@
+{
+  "costTracking": {
+    "title": "es_Cost Tracking",
+    "progressNoCostsheet": "es_[ No costsheet is selected ]",
+    "progressLoading": "es_Loading costsheet ",
+    "progressError": "es_Failed to load costsheet"
+  },
+  "costTracking.menus": {
+    "leftnav.item": "es_Cost Tracking",
+    "topbar.item": "es_Costsheet"
+  },
+  "costTracking.tree": {
+  },
+  "costTracking.comp.info": {
+    "incidentDate": "es_Incident Date",
+    "priority": "es_Priority",
+    "assignedTo": "es_Assigned To",
+    "subjectType": "es_Subject Type",
+    "state": "es_State"
+  },
+  "costTracking.comp.actions": {
+    "new.button": "es_New Costsheet",
+    "edit.button": "es_Edit Costsheet"
+  },
+  "costTracking.comp.details": {
+    "title": "es_Details",
+    "informSaved": "es_Costsheet details saved",
+    "table.columns": {
+      "title": "es_Details",
+      "modified": "es_Date Last Modified",
+      "modifier": "es_User Last Modified"
+    }
+  },
+  "costTracking.comp.people": {
+    "title": "es_Person",
+    "table.columns": {
+      "fullName": "es_Full Name",
+      "userId": "es_Username"
+    }
+  },
+  "costTracking.comp.summary": {
+    "title": "es_Cost Summary",
+    "table.columns": {
+      "parentId": "es_ID",
+      "parentNumber": "es_Parent ID",
+      "parentType": "es_Parent Type",
+      "value": "es_Total Cost",
+      "title": "es_Title",
+      "description": "es_Description"
+    }
+  },
+  "costTracking.comp.tags": {
+    "title": "es_Tags",
+    "table.columns": {
+      "tag": "es_Tag",
+      "created": "es_Created",
+      "createdBy": "es_Created By"
+    },
+    "modal": {
+    "title": "es_Tag",
+    "search": "es_Search for Tag",
+    "buttons": {
+          "cancel": "es_Cancel",
+          "ok": "es_Add Tag"
+     }
+    },
+    "message": {
+      "tagExists": "es_Tag with that name or description or text already exists",
+      "tagAssociated": "es_already associated",
+      "delete": {
+        "success": "es_Tag deleted successfully",
+        "error": "es_Error deleting tag"
+      }
+    }
+  }
+}

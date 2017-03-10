@@ -35,6 +35,9 @@
       "cancel": "Cancel",
       "ok": "OK"
     },
+    "menus": {
+      "leftnav.item": "Admin"
+    },
     "security.ldapConfig.data.placeholders": {
       "id": "Enter directory name",
       "ldapUrl": "Enter connection URL",
