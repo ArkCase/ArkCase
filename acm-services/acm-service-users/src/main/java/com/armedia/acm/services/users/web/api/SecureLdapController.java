@@ -16,7 +16,7 @@ public class SecureLdapController
 
     protected void checkIfLdapManagementIsAllowed(String directory) throws AcmAppErrorJsonMsg
     {
-        if (!isLdapManagementEnabled(directory, acmContextHolder))
+        if (!isLdapManagementEnabled(directory))
         {
             log.warn("Updates on {} LDAP directory are not allowed!", directory);
             throw new AcmAppErrorJsonMsg(String.format("Updates on %s LDAP directory are not allowed!",
@@ -24,7 +24,7 @@ public class SecureLdapController
         }
     }
 
-    protected boolean isLdapManagementEnabled(String directory, SpringContextHolder acmContextHolder)
+    protected boolean isLdapManagementEnabled(String directory)
     {
         AcmLdapAuthenticateConfig acmLdapAuthenticateConfig = acmContextHolder.getAllBeansOfType(AcmLdapAuthenticateConfig.class).
                 get(String.format("%s_authenticate", directory));

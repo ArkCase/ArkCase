@@ -1,0 +1,24 @@
+{
+  "search": {
+    "title": "Поиск",
+    "search.btn": "ru_Search",
+    "export.btn": "ru_Export",
+    "search.placeholder": "ru_Type in to search",
+    "menus": {
+      "leftnav.item": "Поиск"
+    },
+    "comp":{
+      "grid": {
+        "columns": {
+          "id": "ru_ID",
+          "name": "ru_Name",
+          "type": "ru_Type",
+          "title": "ru_Title",
+          "parent": "ru_Parent",
+          "assignee": "ru_Assignee",
+          "modified": "ru_Modified"
+        }
+      }
+    }
+  }
+}

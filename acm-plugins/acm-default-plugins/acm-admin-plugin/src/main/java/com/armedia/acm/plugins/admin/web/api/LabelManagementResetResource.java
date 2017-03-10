@@ -28,7 +28,7 @@ public class LabelManagementResetResource
     private LabelManagementService labelManagementService;
 
     @RequestMapping(value = "/labelmanagement/admin-resource/reset", method = RequestMethod.POST, produces = {
-            MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
+            MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
     @ResponseBody
     public String updateResource(@RequestBody String resource) throws IOException, AcmLabelManagementException

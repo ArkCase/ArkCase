@@ -1,0 +1,8 @@
+{
+  "preference": {
+    "title": "zh-tw_Preferences",
+    "menus": {
+      "usermenu.item": "zh-tw_Preferences"
+    }
+  }
+}

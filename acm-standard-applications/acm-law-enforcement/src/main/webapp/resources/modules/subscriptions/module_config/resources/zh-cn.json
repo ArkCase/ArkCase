@@ -1,0 +1,22 @@
+{
+  "subscriptions": {
+    "title": "订阅",
+    "search.btn": "zh-cn_Search",
+    "export.btn": "zh-cn_Export",
+    "search.placeholder": "zh-cn_Search for subscriptions",
+    "menus": {
+      "leftnav.item": "订阅"
+    },
+    "comp":{
+      "grid": {
+        "columns": {
+          "id": "zh-cn_ID",
+          "event": "zh-cn_Event",
+          "parentName": "zh-cn_Parent Name",
+          "parentType": "zh-cn_Parent Type",
+          "modified": "zh-cn_Modified"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "subscriptions": {
+    "title": "hi_Subscriptions",
+    "search.btn": "hi_Search",
+    "export.btn": "hi_Export",
+    "search.placeholder": "hi_Search for subscriptions",
+    "menus": {
+      "leftnav.item": "hi_Subscriptions"
+    },
+    "comp":{
+      "grid": {
+        "columns": {
+          "id": "hi_ID",
+          "event": "hi_Event",
+          "parentName": "hi_Parent Name",
+          "parentType": "hi_Parent Type",
+          "modified": "hi_Modified"
+        }
+      }
+    }
+  }
+}

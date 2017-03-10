@@ -23,7 +23,7 @@ public class LabelConfigurationRetrieveSettings {
     private String settingsFileLocation;
 
     @RequestMapping(value = "/labelconfiguration/settings", method = RequestMethod.GET, produces = {
-            MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
+            MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
     @ResponseBody
     public void retrieveSettings(

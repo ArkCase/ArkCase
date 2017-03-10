@@ -1,0 +1,250 @@
+{
+  "common": {
+    "select.option.none": "de_(Select One)",
+    "defaultDateFormat": "de_MM/DD/YYYY",
+    "defaultTimeFormat": "de_hh:mm:ss",
+    "defaultDateTimeFormat": "de_MM/DD/YYYY hh:mm",
+    "defaultDatePickerFormat": "de_MM/dd/yyyy",
+    "defaultDateUIFormat": "de_MM/dd/yyyy",
+    "defaultDateTimeUIFormat": "de_MM/dd/yyyy HH:mm"
+  },
+  "common.service": {
+    "error.invalidData": "de_Invalid data"
+  },
+  "common.objects": {
+    "progressNoData": "de_[ No data ]",
+    "progressLoading": "de_Loading data ",
+    "progressError": "de_Failed to load data "
+  },
+  "common.frevvo": {
+    "defaultDateFormat": "de_YYYY-MM-DD"
+  },
+  "common.service.messageService": {
+    "authorizationError": "de_You are not authorized to take this action",
+    "actionMessages": {
+      "success": "de_Action was successful",
+      "error": "de_Action error"
+    }
+  },
+  "common.directive.docTree": {
+    "btnRefresh": "de_Refresh",
+    "waitUploading": "de_Uploading...",
+    "confirmVersion": "de_Are you sure to set back to older version?",
+    "declareSuccessful": "de_Declare successful. Refreshing Document Tree...",
+    "prevItems": "de_ items above...",
+    "prevItemsTooltip": "de_Review previous items",
+    "moreItems": "de_ more items...",
+    "moreItemsTooltip": "de_Load more items",
+    "moreItemsBegin": "de_More items...",
+    "email": {
+      "defaultTitle": "de_ArkCase Documents",
+      "headerForLinks": "de_Please follow the links below to view the document(s). Links expire in 3 days.",
+      "footerForLinks": "de_Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com",
+      "subjectForAttachment": "de_Documents from ArkCase",
+      "bodyForAttachment": "de_Please find attached the documents sent to you from ArkCase.",
+      "headerForAttachment": "de_Hello,",
+      "footerForAttachment": "de_Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com"
+    },
+    "menu": {
+      "noop": "de_(Select Item)",
+      "editWithWebDAV": "de_Edit"
+    },
+    "table.columns": {
+      "title": "de_Title",
+      "type": "de_Type",
+      "created": "de_Created",
+      "modified": "de_Modified",
+      "author": "de_Author",
+      "version": "de_Version",
+      "status": "de_Status"
+    },
+    "dndDialog": {
+      "title": "de_Drag and Drop",
+      "radReplace.text": "de_Replace document (If more then one files are dropped, only first one is used)",
+      "radUploadToParent.text": "de_Create document(s) in parent folder",
+      "selFileTypes.label": "de_File Type:",
+      "optFileType.prompt": "de_[choose file type]",
+      "btnCancel.text": "de_Cancel",
+      "btnOk.text": "de_OK"
+    },
+    "emailDialog": {
+      "title": "de_Email",
+      "recipients": "de_Recipients:",
+      "btnCancel.text": "de_Cancel",
+      "btnOk.text": "de_Send Email",
+      "gridColumns": {
+        "name": "de_Name",
+        "email": "de_Email"
+      }
+    },
+    "comment": {
+      "title": "de_Checkin New Document",
+      "addComent": "de_Detailed Note",
+      "btnCancel.text": "de_Cancel",
+      "btnOk.text": "de_Checkin",
+      "chooseFiles": "de_Choose Files",
+      "noFiles": "de_No Files Selected"
+    },
+    "error": {
+      "nodeTitle": "de_(Error)"
+    },
+    "lockedTitle": "de_This document is locked by "
+  },
+  "common.directive.objectTree": {
+    "btnPrev.title": "de_ records above...",
+    "btnPrev.toolTip": "de_Review previous records",
+    "btnNext.titleUnknownSize": "de_More records...",
+    "btnNext.title": "de_ more records...",
+    "btnNext.toolTip": "de_Load more records",
+    "edtQuery.placeHolder": "de_Search",
+    "btnQuery.text": "de_Go!",
+    "errorNode.title": "de_(Error)",
+    "errorNode.toolTip": "de_(Error)",
+    "noAccessNode.title": "de_(No Access)",
+    "noAccessNode.toolTip": "de_(No Access)"
+  },
+  "common.directive.simplePager": {
+    "rowCountLabel": "de_items per page",
+    "pagerCountMiddleLabel": "de_ of ",
+    "pagerCountLabel": "de_ items"
+  },
+  "common.directive.objectAuthorizationRoles": {
+    "choose": "de_Choose",
+    "not_authorized": "de_Not Authorized",
+    "tooltip.move_right": "de_Move Right",
+    "tooltip.move_left": "de_Move Left",
+    "authorized": "de_Authorized"
+  },
+  "common.directive.searchModal": {
+    "header": "de_Search",
+    "btnSearch.text": "de_Search",
+    "btnOk.text": "de_OK",
+    "btnCancel.text": "de_Cancel",
+    "edtPlaceholder": "de_Type in to search",
+    "noData.text": "de_No Results"
+  },
+  "common.directive.coreNotes": {
+    "title": "de_Notes",
+    "modal.addNote": "de_Add Note",
+    "modal.editNote": "de_Edit Record",
+    "modal.notes.label": "de_Note",
+    "modal.btnOk.text": "de_Save",
+    "modal.btnCancel.text": "de_Cancel"
+  },
+  "common.directive.corePeople": {
+    "title": "de_People",
+    "contactMethods": {
+      "title": "de_Contact Methods",
+      "modal": {
+        "addContactMethod": "de_Add Contact Method",
+        "editContactMethod": "de_Edit Record",
+        "contactMethodTypes.label": "de_Contact Method Types",
+        "value.label": "de_Value",
+        "btnCancel.text": "de_Cancel",
+        "btnOk.text": "de_Save"
+      }
+    },
+    "organizations": {
+      "title": "de_Organizations",
+      "modal": {
+        "addOrganization": "de_Add Organization",
+        "editOrganization": "de_Edit Record",
+        "organizationTypes.label": "de_Organization Types",
+        "selectExisting.label": "de_Select Existing",
+        "addNew.label": "de_Add New",
+        "value.label": "de_Value",
+        "btnCancel.text": "de_Cancel",
+        "btnOk.text": "de_Save",
+        "dialogOrganizationPicker": {
+          "header": "de_Choose Organization",
+          "table.columns": {
+            "type": "de_Organization Type",
+            "name": "de_Value"
+          }
+        }
+      }
+    },
+    "addresses": {
+      "title": "de_Addresses",
+      "modal": {
+        "addAddress": "de_Add Address",
+        "editAddress": "de_Edit Record",
+        "addressTypes.label": "de_Address Types",
+        "street.label": "de_Street",
+        "city.label": "de_City",
+        "zip.label": "de_Zip",
+        "state.label": "de_State",
+        "country.label": "de_Country",
+        "btnCancel.text": "de_Cancel",
+        "btnOk.text": "de_Save"
+      }
+    },
+    "aliases": {
+      "title": "de_Aliases",
+      "modal": {
+        "addAlias": "de_Add Alias",
+        "editAlias": "de_Edit Record",
+        "aliasTypes.label": "de_Alias Types",
+        "value.label": "de_Value",
+        "btnCancel.text": "de_Cancel",
+        "btnOk.text": "de_Save"
+      }
+    },
+    "people": {
+      "title": "de_People",
+      "modal": {
+        "addPeople": "de_Add Person",
+        "editPeople": "de_Edit Record",
+        "personTypes.label": "de_Person Types",
+        "givenName.label": "de_First Name",
+        "familyName.label": "de_Last Name",
+        "btnCancel.text": "de_Cancel",
+        "btnOk.text": "de_Save"
+      }
+    }
+  },
+  "common.directive.coreCalendar": {
+    "title": "de_Calendar",
+    "start.label": "de_Start: ",
+    "end.label": "de_End: "de_
+  },
+  "common.directive.coreParticipants": {
+    "title": "de_Participants",
+    "modal.addParticipant.label": "de_Add Participant",
+    "modal.editParticipant.label": "de_Edit Record",
+    "modal.participantType.label": "de_Participant Type ",
+    "modal.participantName.label": "de_Participant Name",
+    "modal.btnOk.text": "de_Save",
+    "modal.btnCancel.text": "de_Cancel",
+    "modal.dialogUserPicker.header": "de_Search User",
+    "modal.dialogGroupPicker.header": "de_Search Group",
+    "message": {
+      "error.groupType": "de_The owning group cannot be a person.",
+      "error.userType": "de_ User type cannot be a group.",
+      "error.assigneeUnique": "de_Only one assignee is allowed.",
+      "error.owninggroupUnique": "de_Only one owning group is allowed.",
+      "error.noAccessCombo": "de_The combination of No Access and Assignee is not allowed."
+    }
+  },
+  "common.comp.acmLogin": {
+    "confirmLogout": "de_For your protection, application is about to logout. Click Cancel to stay logged in."
+  },
+  "common.objectTypes": {
+    "CASE_FILE": "de_Case File",
+    "COMPLAINT": "de_Complaint",
+    "TASK": "de_Task",
+    "TIMESHEET": "de_Timesheet",
+    "COSTSHEET": "de_Costsheet",
+    "FILE": "de_File"
+  },
+  "frevvo.dialogUserPicker": {
+    "header": "de_Choose User",
+    "table.columns": {
+      "name": "de_Name",
+      "type": "de_Type",
+      "title": "de_Title",
+      "id": "de_Username"
+    }
+  },
+  "common.objects.objectWasCreatedMessage": "de_{{objectTypeString}} with id {{objectId}} was created."
+}

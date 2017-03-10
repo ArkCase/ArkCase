@@ -1,0 +1,77 @@
+{
+  "costTracking": {
+    "title": "Отслеживание затрат",
+    "progressNoCostsheet": "ru_[ No costsheet is selected ]",
+    "progressLoading": "ru_Loading costsheet ",
+    "progressError": "ru_Failed to load costsheet"
+  },
+  "costTracking.menus": {
+    "leftnav.item": "Отслеживание затрат",
+    "topbar.item": "Стоимость лист"
+  },
+  "costTracking.tree": {
+  },
+  "costTracking.comp.info": {
+    "incidentDate": "ru_Incident Date",
+    "priority": "ru_Priority",
+    "assignedTo": "ru_Assigned To",
+    "subjectType": "ru_Subject Type",
+    "state": "ru_State"
+  },
+  "costTracking.comp.actions": {
+    "new.button": "ru_New Costsheet",
+    "edit.button": "ru_Edit Costsheet"
+  },
+  "costTracking.comp.details": {
+    "title": "ru_Details",
+    "informSaved": "ru_Costsheet details saved",
+    "table.columns": {
+      "title": "ru_Details",
+      "modified": "ru_Date Last Modified",
+      "modifier": "ru_User Last Modified"
+    }
+  },
+  "costTracking.comp.people": {
+    "title": "ru_Person",
+    "table.columns": {
+      "fullName": "ru_Full Name",
+      "userId": "ru_Username"
+    }
+  },
+  "costTracking.comp.summary": {
+    "title": "ru_Cost Summary",
+    "table.columns": {
+      "parentId": "ru_ID",
+      "parentNumber": "ru_Parent ID",
+      "parentType": "ru_Parent Type",
+      "value": "ru_Total Cost",
+      "title": "ru_Title",
+      "description": "ru_Description"
+    }
+  },
+  "costTracking.comp.tags": {
+    "title": "ru_Tags",
+    "table.columns": {
+      "tag": "ru_Tag",
+      "created": "ru_Created",
+      "createdBy": "ru_Created By"
+    },
+    "modal": {
+    "title": "ru_Tag",
+    "search": "ru_Search for Tag",
+    "buttons": {
+          "cancel": "ru_Cancel",
+          "ok": "ru_Add Tag"
+     }
+    },
+    "message": {
+      "tagExists": "ru_Tag with that name or description or text already exists",
+      "tagAssociated": "ru_already associated",
+      "delete": {
+        "success": "ru_Tag deleted successfully",
+        "error": "ru_Error deleting tag"
+      }
+    }
+  }
+}
+

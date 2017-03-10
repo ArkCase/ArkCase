@@ -1,0 +1,24 @@
+{
+  "search": {
+    "title": "pt_Search",
+    "search.btn": "pt_Search",
+    "export.btn": "pt_Export",
+    "search.placeholder": "pt_Type in to search",
+    "menus": {
+      "leftnav.item": "pt_Search"
+    },
+    "comp":{
+      "grid": {
+        "columns": {
+          "id": "pt_ID",
+          "name": "pt_Name",
+          "type": "pt_Type",
+          "title": "pt_Title",
+          "parent": "pt_Parent",
+          "assignee": "pt_Assignee",
+          "modified": "pt_Modified"
+        }
+      }
+    }
+  }
+}
