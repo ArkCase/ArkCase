@@ -6,6 +6,7 @@
 
        <bean id="manageCategoriesAPIController" class="com.armedia.acm.plugins.category.web.api.CategoryManagementAPIController">
               <property name="categoryService" ref="categoryService"/>
+              <property name="executeSolrQuery" ref="executeSolrQuery"/>
        </bean>
 
 </beans>
