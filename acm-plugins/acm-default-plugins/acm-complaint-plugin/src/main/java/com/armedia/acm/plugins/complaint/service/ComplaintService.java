@@ -182,7 +182,6 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
             String tagName = acmComplaint.getTag();
             AcmTag complaintTag = getTagService().saveTag(tagName, tagName, tagName, acmComplaint.getComplaintTitle());
             getAssociatedTagService().saveAssociateTag("COMPLAINT", acmComplaint.getComplaintId(), acmComplaint.getComplaintTitle(), complaintTag);
-            System.out.println("************************** March 1st ***** the Complaint title is ***********************************"+acmComplaint.getComplaintTitle()+ "**********************************************");
         }
 
         getComplaintEventPublisher().publishComplaintEvent(acmComplaint, getAuthentication(), isNew, true);
