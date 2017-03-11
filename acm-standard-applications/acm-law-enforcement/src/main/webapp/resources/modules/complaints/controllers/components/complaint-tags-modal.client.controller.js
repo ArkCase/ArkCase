@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.TagsModalController', ['$scope', '$q', 'stateParams', '$modalInstance', 'ConfigService', 
+angular.module('complaints').controller('Complaints.TagsModalController', ['$scope', '$q', '$stateParams', '$modalInstance', 'ConfigService',
     'Object.TagsService', 'Tags.TagsService', 'MessageService', '$translate', 'Search.AutoSuggestService', 'Complaint.InfoService',
-    function ($scope, $q, stateParams, $modalInstance, ConfigService, ObjectTagsService, TagsService, messageService, $translate, AutoSuggestService,
+    function ($scope, $q, $stateParams, $modalInstance, ConfigService, ObjectTagsService, TagsService, messageService, $translate, AutoSuggestService,
         ComplaintInfoService) {
 
         $scope.tags = [];

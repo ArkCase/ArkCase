@@ -32,7 +32,7 @@
           "name": "name",
           "displayName": "search.comp.grid.columns.name",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a arkcase-href object-data='row.entity' is-parent='false' data-toggle='tooltip' data-placement='bottom' title={{row.entity.name}}>{{row.entity.name}}<\/a>"
+          "cellTemplate": "<a arkcase-href object-data='row.entity' is-parent='false' data-toggle='tooltip' data-placement='bottom' ng-class='{\"no-link\": row.entity.object_type_s == \"TAG\" || row.entity.object_type_s == \"NOTE\"}' title={{row.entity.name}}>{{row.entity.name}}<\/a>"
         },
         {
           "name": "object_type_s",

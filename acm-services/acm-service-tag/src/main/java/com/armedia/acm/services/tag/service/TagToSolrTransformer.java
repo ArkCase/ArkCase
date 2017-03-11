@@ -48,7 +48,6 @@ public class TagToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmTa
 
         solr.setAdditionalProperty("tags_s", in.getTagName());
         solr.setAdditionalProperty("parent_number_lcs", in.getTagParentTitle());
-        System.out.println("************************** March 3rd ************************************************"+in.getTagParentTitle()+ "**********************************************");
 
         /** Additional properties for full names instead of ID's */
         AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
@@ -86,8 +85,6 @@ public class TagToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmTa
 
         solr.setAdditionalProperty("tags_s", in.getTagName());
         solr.setAdditionalProperty("parent_number_lcs", in.getTagParentTitle());
-        System.out.println("************************** March 3rd ************************************************"+in.getTagParentTitle()+ "**********************************************");
-
 
         return solr;
     }
