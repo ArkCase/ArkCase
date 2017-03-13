@@ -50,7 +50,7 @@ angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$m
             var modalInstance = $modal.open({
                 scope: modalScope,
                 animation: true,
-                templateUrl: 'modules/admin/views/components/add-edit-template.modal.client.view.html',
+                templateUrl: 'modules/admin/views/components/correspondence-management-add-edit-template.modal.client.view.html',
                 controller: ['$scope', '$modalInstance', 'Admin.CMTemplatesService', function ($scope, $modalInstance, correspondenceService) {
 
                     $scope.objectTypes = $scope.config.objectTypes;
@@ -111,7 +111,7 @@ angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$m
                     var modalInstance = $modal.open({
                         scope: modalScope,
                         animation: true,
-                        templateUrl: 'modules/admin/views/components/cm.template-versions.modal.client.view.html',
+                        templateUrl: 'modules/admin/views/components/correspondence-management-template-versions.modal.client.view.html',
                         controller: function ($scope, $modalInstance) {
 
                             angular.forEach(templateVersionData.data, function (row, index) {

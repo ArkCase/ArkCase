@@ -671,11 +671,11 @@
       "children": [
         {
           "title": "admin.correspondenceManagement.mergefields",
-          "templateName": "cm.mergefields"
+          "templateName": "correspondence-management-mergefields"
         },
         {
           "title": "admin.correspondenceManagement.templates",
-          "templateName": "cm.templates"
+          "templateName": "correspondence-management-templates"
         }
       ]
     }
