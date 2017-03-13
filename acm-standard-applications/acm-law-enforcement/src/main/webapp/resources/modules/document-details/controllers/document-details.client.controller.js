@@ -2,8 +2,7 @@
 
 angular.module('document-details').controller('DocumentDetailsController', ['$scope', '$stateParams', '$sce', '$log', '$q'
     , '$timeout', 'TicketService', 'ConfigService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService'
-    , 'Object.ModelService', 'Case.InfoService',
-    function ($scope, $stateParams, $sce, $log, $q, $timeout
+    , function ($scope, $stateParams, $sce, $log, $q, $timeout
         , TicketService, ConfigService, LookupService, SnowboundService, Authentication, EcmService) {
 
         $scope.acmTicket = '';
@@ -29,6 +28,12 @@ angular.module('document-details').controller('DocumentDetailsController', ['$sc
                 selectedIds: $stateParams['selectedIds']
             };
             var viewerUrl = SnowboundService.buildSnowboundUrl($scope.ecmFileProperties, $scope.acmTicket, $scope.userId, fileInfo);
+
+            // make GET Request to test decryption for the query string on server side
+            var queryString = viewerUrl.split("?")[1];
+            var encryptedString = SnowboundService.encryptSnowboundUrlQueryString(queryString, $scope.ecmFileProperties);
+            EcmService.getSnowboundURL({credentials: encryptedString});
+
             $scope.documentViewerUrl = $sce.trustAsResourceUrl(viewerUrl);
         };
 

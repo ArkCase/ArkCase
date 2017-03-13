@@ -57,6 +57,16 @@
         <url-pattern>/webdav/*</url-pattern>
     </filter-mapping>
 
+    <filter>
+        <filter-name>snowboundDecryptionFilter</filter-name>
+        <filter-class>com.armedia.acm.plugins.ecm.web.SnowboundDecryptionFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>snowboundDecryptionFilter</filter-name>
+        <url-pattern>/api/latest/viewer</url-pattern>
+    </filter-mapping>
+
     <!--
 		SPRING SECURITY
 	-->
