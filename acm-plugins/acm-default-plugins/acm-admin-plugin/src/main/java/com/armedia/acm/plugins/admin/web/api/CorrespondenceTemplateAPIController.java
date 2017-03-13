@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +30,7 @@ import java.util.stream.Collectors;
  *
  */
 @Controller
-@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+@RequestMapping({ "/api/v1/plugin/admin", "/api/latest/plugin/admin" })
 public class CorrespondenceTemplateAPIController
 {
 
@@ -43,23 +44,88 @@ public class CorrespondenceTemplateAPIController
                 .collect(Collectors.toList());
     }
 
-    @RequestMapping(value = "/template/{templateFileName:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/templates/active", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public CorrespondenceTemplateRequestResponse getTemplate(@PathVariable(value = "templateFileName") String templateFileName)
+    public List<CorrespondenceTemplateRequestResponse> getActiveVersionTemplates()
     {
-        return mapTemplateToResponse(correspondenceService.getTemplateByFileName(templateFileName));
+        return correspondenceService.getActiveVersionTemplates().stream().map(t -> mapTemplateToResponse(Optional.of(t)))
+                .collect(Collectors.toList());
     }
 
-    @RequestMapping(value = "/template/{templateFileName:.+}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/templates/activated/{objectType}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public CorrespondenceTemplateRequestResponse deleteTemplate(@PathVariable(value = "templateFileName") String templateFileName)
+    public List<CorrespondenceTemplateRequestResponse> getActivatedActiveVersionTemplatesByObjectType(
+            @PathVariable(value = "objectType") String objectType)
+    {
+        return correspondenceService.getActivatedActiveVersionTemplatesByObjectType(objectType).stream()
+                .map(t -> mapTemplateToResponse(Optional.of(t))).collect(Collectors.toList());
+    }
+
+    @RequestMapping(value = "/template/{templateId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public CorrespondenceTemplateRequestResponse getTemplate(@PathVariable(value = "templateId") String templateId)
+    {
+        return mapTemplateToResponse(correspondenceService.getActiveTemplateById(templateId));
+    }
+
+    @RequestMapping(value = "/template/{templateId}/{templateFilename:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public CorrespondenceTemplateRequestResponse getTemplateByIdAndFilename(@PathVariable(value = "templateId") String templateId,
+            @PathVariable(value = "templateFilename") String templateFilename)
+    {
+        return mapTemplateToResponse(correspondenceService.getTemplateByIdAndFilename(templateId, templateFilename));
+    }
+
+    @RequestMapping(value = "/template/versions/{templateId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<CorrespondenceTemplateRequestResponse> getTemplateVersionsById(@PathVariable(value = "templateId") String templateId)
+    {
+        return correspondenceService.getTemplateVersionsById(templateId).stream().map(t -> mapTemplateToResponse(Optional.of(t)))
+                .collect(Collectors.toList());
+    }
+
+    @RequestMapping(value = "/template/{templateId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<CorrespondenceTemplateRequestResponse> deleteTemplate(@PathVariable(value = "templateId") String templateId)
             throws IOException
     {
+        List<CorrespondenceTemplateRequestResponse> deleteResponse = new ArrayList<>();
         File templatesDir = new File(System.getProperty("user.home") + "/.arkcase/acm/correspondenceTemplates");
-        File template = new File(templatesDir, templateFileName);
-        if (FileUtils.deleteQuietly(template))
+        List<CorrespondenceTemplate> templates = correspondenceService.getTemplateVersionsById(templateId);
+        String msg = "";
+        for (CorrespondenceTemplate template : templates)
         {
-            return mapTemplateToResponse(correspondenceService.deleteTemplate(templateFileName));
+            File templateFile = new File(templatesDir, template.getTemplateFilename());
+            if (FileUtils.deleteQuietly(templateFile))
+            {
+                deleteResponse.add(mapTemplateToResponse(
+                        correspondenceService.deleteTemplateByIdAndVersion(template.getTemplateId(), template.getTemplateVersion())));
+            } else
+            {
+                msg += templateFile + ";";
+            }
+        }
+
+        if (msg.isEmpty())
+        {
+            return deleteResponse;
+        } else
+        {
+            throw new CorrespondenceTemplateNotFoundException(msg);
+        }
+    }
+
+    @RequestMapping(value = "/template/{templateId}/{templateVersion:.+}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public CorrespondenceTemplateRequestResponse deleteTemplateByIdAndVersion(@PathVariable(value = "templateId") String templateId,
+            @PathVariable(value = "templateVersion") String templateVersion) throws IOException
+    {
+        File templatesDir = new File(System.getProperty("user.home") + "/.arkcase/acm/correspondenceTemplates");
+        File templateFile = new File(templatesDir,
+                correspondenceService.getTemplateByIdAndVersion(templateId, templateVersion).get().getTemplateFilename());
+        if (FileUtils.deleteQuietly(templateFile))
+        {
+            return mapTemplateToResponse(correspondenceService.deleteTemplateByIdAndVersion(templateId, templateVersion));
         } else
         {
             throw new CorrespondenceTemplateNotFoundException();
@@ -90,15 +156,13 @@ public class CorrespondenceTemplateAPIController
 
         CorrespondenceTemplateRequestResponse response = new CorrespondenceTemplateRequestResponse();
 
-        response.setDisplayName(template.getDisplayName());
+        response.setTemplateId(template.getTemplateId());
+        response.setTemplateVersion(template.getTemplateVersion());
+        response.setTemplateVersionActive(template.isTemplateVersionActive());
+        response.setLabel(template.getLabel());
         response.setDocumentType(template.getDocumentType());
         response.setTemplateFilename(template.getTemplateFilename());
-        if (template.getQuery() != null)
-        {
-            response.setCorrespondenceQueryBeanId(correspondenceService.getQueryId(template.getQuery()));
-            response.setQueryType(template.getQuery().getType().name());
-        }
-        response.setTemplateSubstitutionVariables(template.getTemplateSubstitutionVariables());
+        response.setObjectType(template.getObjectType());
         response.setDateFormatString(template.getDateFormatString());
         response.setNumberFormatString(template.getNumberFormatString());
         response.setActivated(template.isActivated());
@@ -116,12 +180,13 @@ public class CorrespondenceTemplateAPIController
     {
         CorrespondenceTemplate template = new CorrespondenceTemplate();
 
-        template.setDisplayName(request.getDisplayName());
+        template.setTemplateId(request.getTemplateId());
+        template.setTemplateVersion(request.getTemplateVersion());
+        template.setTemplateVersionActive(request.isTemplateVersionActive());
+        template.setLabel(request.getLabel());
         template.setDocumentType(request.getDocumentType());
         template.setTemplateFilename(request.getTemplateFilename());
-        template.setQuery(correspondenceService.getQueryByBeanId(request.getCorrespondenceQueryBeanId())
-                .orElseThrow(CorrespondenceTemplateNotFoundException::new));
-        template.setTemplateSubstitutionVariables(request.getTemplateSubstitutionVariables());
+        template.setObjectType(request.getObjectType());
         template.setDateFormatString(request.getDateFormatString());
         template.setNumberFormatString(request.getNumberFormatString());
         template.setActivated(request.isActivated());
@@ -132,7 +197,8 @@ public class CorrespondenceTemplateAPIController
     }
 
     /**
-     * @param correspondenceService the correspondenceService to set
+     * @param correspondenceService
+     *            the correspondenceService to set
      */
     public void setCorrespondenceService(CorrespondenceService correspondenceService)
     {
