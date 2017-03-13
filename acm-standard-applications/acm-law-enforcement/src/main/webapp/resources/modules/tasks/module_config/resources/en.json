@@ -5,6 +5,10 @@
     "progressLoading": "Loading task ",
     "progressError": "Failed to load task"
   },
+  "tasks.menus": {
+    "leftnav.item": "Tasks",
+    "topbar.item": "Task"
+  },
   "tasks.comp.info": {
     "taskId": "Task id:",
     "percentage.label": "% of Completion",
@@ -203,6 +207,23 @@
     "confirmButton": "Confirm",
     "enabled": true,
     "userOrGroupFacetFilter": "\"object_type_s\":(GROUP OR USER)",
+    "assigneeGridColumns": {
+      "name": "Name",
+      "type": "Type",
+      "title": "Title",
+      "username": "Username"
+    }
+  },
+  "tasks.owningGroupSearch": {
+    "id": "owningGroupSearch",
+    "title": "Search for this user's group(s)",
+    "search": {
+      "btn": "Search",
+      "placeholder": "Search for the group(s) this user is a member of."
+    },
+    "cancelButton": "Cancel",
+    "confirmButton": "Confirm",
+    "enabled": true,
     "assigneeGridColumns": {
       "name": "Name",
       "type": "Type",

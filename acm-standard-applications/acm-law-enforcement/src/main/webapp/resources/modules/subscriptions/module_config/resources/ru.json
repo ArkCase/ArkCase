@@ -1,0 +1,22 @@
+{
+  "subscriptions": {
+    "title": "Подписки",
+    "search.btn": "ru_Search",
+    "export.btn": "ru_Export",
+    "search.placeholder": "ru_Search for subscriptions",
+    "menus": {
+      "leftnav.item": "Подписки"
+    },
+    "comp":{
+      "grid": {
+        "columns": {
+          "id": "ru_ID",
+          "event": "ru_Event",
+          "parentName": "ru_Parent Name",
+          "parentType": "ru_Parent Type",
+          "modified": "ru_Modified"
+        }
+      }
+    }
+  }
+}

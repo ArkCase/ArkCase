@@ -1,0 +1,8 @@
+{
+  "preference": {
+    "title": "hi_Preferences",
+    "menus": {
+      "usermenu.item": "hi_Preferences"
+    }
+  }
+}

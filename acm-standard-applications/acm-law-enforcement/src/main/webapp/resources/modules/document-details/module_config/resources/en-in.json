@@ -1,0 +1,92 @@
+{
+  "documentDetails": {
+    "title": "en-in_Document details",
+    "creator": "en-in_Creator",
+    "created": "en-in_Created",
+    "assignee": "en-in_Assignee",
+    "fileType": "en-in_File type",
+    "status": "en-in_Status",
+    "name": "en-in_Name",
+    "comp.eventHistory": {
+      "title": "en-in_Event History",
+      "table.columns": {
+        "eventType": "en-in_Event Name",
+        "eventDate": "en-in_Created",
+        "userId": "en-in_User"
+      }
+    },
+    "comp.tags": {
+      "title": "en-in_Tags",
+      "table.columns": {
+        "tag": "en-in_Tag"
+      },
+      "modal": {
+        "title": "en-in_Tag",
+        "search": "en-in_Search for Tag",
+        "buttons": {
+          "cancel": "en-in_Cancel",
+          "ok": "en-in_Add Tag"
+        }
+      },
+      "message.tagExists": "en-in_Tag with that name or description or text already exists",
+      "message.tagAssociated": "en-in_already associated",
+      "message.delete.success": "en-in_Tag deleted successfully",
+      "message.delete.error": "en-in_Error deleting tag"
+    },
+    "comp.participants": {
+      "title": "en-in_Participants",
+      "table.columns": {
+        "name": "en-in_Name",
+        "type": "en-in_Type"
+      },
+      "message.delete.success": "en-in_Successfully deleted row.",
+      "message.delete.error": "en-in_Error deleting row.",
+      "role": {
+        "title": "en-in_Change participant Role",
+        "dropdownLabel": "en-in_Available Roles",
+        "buttons": {
+          "cancel": "en-in_Cancel",
+          "ok": "en-in_Change Role"
+        }
+      }
+    },
+    "comp.notes": {
+      "title": "en-in_Notes",
+      "table.columns": {
+        "note": "en-in_Note",
+        "tag": "en-in_Document Version",
+        "created": "en-in_Created",
+        "creator": "en-in_Author"
+      }
+    },
+    "comp.versionHistory": {
+      "title": "en-in_Version History",
+      "table.columns": {
+        "creator": "en-in_User",
+        "created": "en-in_Created",
+        "versionTag": "en-in_Version"
+      }
+    },
+    "userSearch": {
+      "id": "en-in_userSearch",
+      "title": "en-in_Add New Participant",
+      "search": {
+        "btn": "en-in_Go!",
+        "placeholder": "en-in_Enter to search for a participant"
+      },
+      "cancelButton": "en-in_Cancel",
+      "confirmButton": "en-in_Select",
+      "enabled": true,
+      "userFacetFilter": "en-in_\"Object Type\": USER",
+      "userGridColumns": {
+        "name": "en-in_Name",
+        "type": "en-in_Type",
+        "title": "en-in_Title",
+        "parent": "en-in_Parent",
+        "assignee": "en-in_Assignee",
+        "modified": "en-in_Modified"
+      },
+      "dropdownLabel": "en-in_Participant Type"
+    }
+  }
+}

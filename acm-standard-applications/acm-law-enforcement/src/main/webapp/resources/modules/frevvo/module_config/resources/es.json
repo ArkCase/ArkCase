@@ -1,0 +1,27 @@
+{
+  "frevvo": {
+    "title": "es_Frevvo",
+    "errorForm": "es_Frevvo form not specified"
+  },
+  "frevvo.dialogUserPicker": {
+    "header": "es_Choose User",
+    "table.columns": {
+      "name": "es_Name",
+      "type": "es_Type",
+      "title": "es_Title",
+      "id": "es_Username"
+    }
+  },
+  "frevvo.dialogObjectPicker": {
+    "header": "es_Search for object",
+    "table.columns": {
+      "name": "es_Name",
+      "type": "es_Type",
+      "title": "es_Title",
+      "id": "es_ID"
+    }
+  },
+  "frevvo.timesheetCustomPicker": {
+    "header": "es_Select charge code"
+  }
+}

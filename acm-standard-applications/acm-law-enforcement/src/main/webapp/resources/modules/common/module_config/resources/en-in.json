@@ -1,0 +1,250 @@
+{
+  "common": {
+    "select.option.none": "en-in_(Select One)",
+    "defaultDateFormat": "en-in_MM/DD/YYYY",
+    "defaultTimeFormat": "en-in_hh:mm:ss",
+    "defaultDateTimeFormat": "en-in_MM/DD/YYYY hh:mm",
+    "defaultDatePickerFormat": "en-in_MM/dd/yyyy",
+    "defaultDateUIFormat": "en-in_MM/dd/yyyy",
+    "defaultDateTimeUIFormat": "en-in_MM/dd/yyyy HH:mm"
+  },
+  "common.service": {
+    "error.invalidData": "en-in_Invalid data"
+  },
+  "common.objects": {
+    "progressNoData": "en-in_[ No data ]",
+    "progressLoading": "en-in_Loading data ",
+    "progressError": "en-in_Failed to load data "
+  },
+  "common.frevvo": {
+    "defaultDateFormat": "en-in_YYYY-MM-DD"
+  },
+  "common.service.messageService": {
+    "authorizationError": "en-in_You are not authorized to take this action",
+    "actionMessages": {
+      "success": "en-in_Action was successful",
+      "error": "en-in_Action error"
+    }
+  },
+  "common.directive.docTree": {
+    "btnRefresh": "en-in_Refresh",
+    "waitUploading": "en-in_Uploading...",
+    "confirmVersion": "en-in_Are you sure to set back to older version?",
+    "declareSuccessful": "en-in_Declare successful. Refreshing Document Tree...",
+    "prevItems": "en-in_ items above...",
+    "prevItemsTooltip": "en-in_Review previous items",
+    "moreItems": "en-in_ more items...",
+    "moreItemsTooltip": "en-in_Load more items",
+    "moreItemsBegin": "en-in_More items...",
+    "email": {
+      "defaultTitle": "en-in_ArkCase Documents",
+      "headerForLinks": "en-in_Please follow the links below to view the document(s). Links expire in 3 days.",
+      "footerForLinks": "en-in_Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com",
+      "subjectForAttachment": "en-in_Documents from ArkCase",
+      "bodyForAttachment": "en-in_Please find attached the documents sent to you from ArkCase.",
+      "headerForAttachment": "en-in_Hello,",
+      "footerForAttachment": "en-in_Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com"
+    },
+    "menu": {
+      "noop": "en-in_(Select Item)",
+      "editWithWebDAV": "en-in_Edit"
+    },
+    "table.columns": {
+      "title": "en-in_Title",
+      "type": "en-in_Type",
+      "created": "en-in_Created",
+      "modified": "en-in_Modified",
+      "author": "en-in_Author",
+      "version": "en-in_Version",
+      "status": "en-in_Status"
+    },
+    "dndDialog": {
+      "title": "en-in_Drag and Drop",
+      "radReplace.text": "en-in_Replace document (If more then one files are dropped, only first one is used)",
+      "radUploadToParent.text": "en-in_Create document(s) in parent folder",
+      "selFileTypes.label": "en-in_File Type:",
+      "optFileType.prompt": "en-in_[choose file type]",
+      "btnCancel.text": "en-in_Cancel",
+      "btnOk.text": "en-in_OK"
+    },
+    "emailDialog": {
+      "title": "en-in_Email",
+      "recipients": "en-in_Recipients:",
+      "btnCancel.text": "en-in_Cancel",
+      "btnOk.text": "en-in_Send Email",
+      "gridColumns": {
+        "name": "en-in_Name",
+        "email": "en-in_Email"
+      }
+    },
+    "comment": {
+      "title": "en-in_Checkin New Document",
+      "addComent": "en-in_Detailed Note",
+      "btnCancel.text": "en-in_Cancel",
+      "btnOk.text": "en-in_Checkin",
+      "chooseFiles": "en-in_Choose Files",
+      "noFiles": "en-in_No Files Selected"
+    },
+    "error": {
+      "nodeTitle": "en-in_(Error)"
+    },
+    "lockedTitle": "en-in_This document is locked by "
+  },
+  "common.directive.objectTree": {
+    "btnPrev.title": "en-in_ records above...",
+    "btnPrev.toolTip": "en-in_Review previous records",
+    "btnNext.titleUnknownSize": "en-in_More records...",
+    "btnNext.title": "en-in_ more records...",
+    "btnNext.toolTip": "en-in_Load more records",
+    "edtQuery.placeHolder": "en-in_Search",
+    "btnQuery.text": "en-in_Go!",
+    "errorNode.title": "en-in_(Error)",
+    "errorNode.toolTip": "en-in_(Error)",
+    "noAccessNode.title": "en-in_(No Access)",
+    "noAccessNode.toolTip": "en-in_(No Access)"
+  },
+  "common.directive.simplePager": {
+    "rowCountLabel": "en-in_items per page",
+    "pagerCountMiddleLabel": "en-in_ of ",
+    "pagerCountLabel": "en-in_ items"
+  },
+  "common.directive.objectAuthorizationRoles": {
+    "choose": "en-in_Choose",
+    "not_authorized": "en-in_Not Authorized",
+    "tooltip.move_right": "en-in_Move Right",
+    "tooltip.move_left": "en-in_Move Left",
+    "authorized": "en-in_Authorized"
+  },
+  "common.directive.searchModal": {
+    "header": "en-in_Search",
+    "btnSearch.text": "en-in_Search",
+    "btnOk.text": "en-in_OK",
+    "btnCancel.text": "en-in_Cancel",
+    "edtPlaceholder": "en-in_Type in to search",
+    "noData.text": "en-in_No Results"
+  },
+  "common.directive.coreNotes": {
+    "title": "en-in_Notes",
+    "modal.addNote": "en-in_Add Note",
+    "modal.editNote": "en-in_Edit Record",
+    "modal.notes.label": "en-in_Note",
+    "modal.btnOk.text": "en-in_Save",
+    "modal.btnCancel.text": "en-in_Cancel"
+  },
+  "common.directive.corePeople": {
+    "title": "en-in_People",
+    "contactMethods": {
+      "title": "en-in_Contact Methods",
+      "modal": {
+        "addContactMethod": "en-in_Add Contact Method",
+        "editContactMethod": "en-in_Edit Record",
+        "contactMethodTypes.label": "en-in_Contact Method Types",
+        "value.label": "en-in_Value",
+        "btnCancel.text": "en-in_Cancel",
+        "btnOk.text": "en-in_Save"
+      }
+    },
+    "organizations": {
+      "title": "en-in_Organizations",
+      "modal": {
+        "addOrganization": "en-in_Add Organization",
+        "editOrganization": "en-in_Edit Record",
+        "organizationTypes.label": "en-in_Organization Types",
+        "selectExisting.label": "en-in_Select Existing",
+        "addNew.label": "en-in_Add New",
+        "value.label": "en-in_Value",
+        "btnCancel.text": "en-in_Cancel",
+        "btnOk.text": "en-in_Save",
+        "dialogOrganizationPicker": {
+          "header": "en-in_Choose Organization",
+          "table.columns": {
+            "type": "en-in_Organization Type",
+            "name": "en-in_Value"
+          }
+        }
+      }
+    },
+    "addresses": {
+      "title": "en-in_Addresses",
+      "modal": {
+        "addAddress": "en-in_Add Address",
+        "editAddress": "en-in_Edit Record",
+        "addressTypes.label": "en-in_Address Types",
+        "street.label": "en-in_Street",
+        "city.label": "en-in_City",
+        "zip.label": "en-in_Zip",
+        "state.label": "en-in_State",
+        "country.label": "en-in_Country",
+        "btnCancel.text": "en-in_Cancel",
+        "btnOk.text": "en-in_Save"
+      }
+    },
+    "aliases": {
+      "title": "en-in_Aliases",
+      "modal": {
+        "addAlias": "en-in_Add Alias",
+        "editAlias": "en-in_Edit Record",
+        "aliasTypes.label": "en-in_Alias Types",
+        "value.label": "en-in_Value",
+        "btnCancel.text": "en-in_Cancel",
+        "btnOk.text": "en-in_Save"
+      }
+    },
+    "people": {
+      "title": "en-in_People",
+      "modal": {
+        "addPeople": "en-in_Add Person",
+        "editPeople": "en-in_Edit Record",
+        "personTypes.label": "en-in_Person Types",
+        "givenName.label": "en-in_First Name",
+        "familyName.label": "en-in_Last Name",
+        "btnCancel.text": "en-in_Cancel",
+        "btnOk.text": "en-in_Save"
+      }
+    }
+  },
+  "common.directive.coreCalendar": {
+    "title": "en-in_Calendar",
+    "start.label": "en-in_Start: ",
+    "end.label": "en-in_End: "en-in_
+  },
+  "common.directive.coreParticipants": {
+    "title": "en-in_Participants",
+    "modal.addParticipant.label": "en-in_Add Participant",
+    "modal.editParticipant.label": "en-in_Edit Record",
+    "modal.participantType.label": "en-in_Participant Type ",
+    "modal.participantName.label": "en-in_Participant Name",
+    "modal.btnOk.text": "en-in_Save",
+    "modal.btnCancel.text": "en-in_Cancel",
+    "modal.dialogUserPicker.header": "en-in_Search User",
+    "modal.dialogGroupPicker.header": "en-in_Search Group",
+    "message": {
+      "error.groupType": "en-in_The owning group cannot be a person.",
+      "error.userType": "en-in_ User type cannot be a group.",
+      "error.assigneeUnique": "en-in_Only one assignee is allowed.",
+      "error.owninggroupUnique": "en-in_Only one owning group is allowed.",
+      "error.noAccessCombo": "en-in_The combination of No Access and Assignee is not allowed."
+    }
+  },
+  "common.comp.acmLogin": {
+    "confirmLogout": "en-in_For your protection, application is about to logout. Click Cancel to stay logged in."
+  },
+  "common.objectTypes": {
+    "CASE_FILE": "en-in_Case File",
+    "COMPLAINT": "en-in_Complaint",
+    "TASK": "en-in_Task",
+    "TIMESHEET": "en-in_Timesheet",
+    "COSTSHEET": "en-in_Costsheet",
+    "FILE": "en-in_File"
+  },
+  "frevvo.dialogUserPicker": {
+    "header": "en-in_Choose User",
+    "table.columns": {
+      "name": "en-in_Name",
+      "type": "en-in_Type",
+      "title": "en-in_Title",
+      "id": "en-in_Username"
+    }
+  },
+  "common.objects.objectWasCreatedMessage": "en-in_{{objectTypeString}} with id {{objectId}} was created."
+}

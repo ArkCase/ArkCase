@@ -109,6 +109,7 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService', 'Admin.Modu
         // Add menu item object
         this.addMenuItems = function (menuObjects) {
             var context = this;
+
             $q.all([appModulesPromise, userRolesPromise]).then(function (data) {
                 var appModules = data[0].data;
                 var userRoles = data[1].authorities;

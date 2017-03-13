@@ -1,6 +1,9 @@
 {
   "audit": {
     "title": "Audit",
+    "menus": {
+      "leftnav.item": "Audit"
+    },
     "navigation": {
       "label": {
         "reportName": "Report Name",

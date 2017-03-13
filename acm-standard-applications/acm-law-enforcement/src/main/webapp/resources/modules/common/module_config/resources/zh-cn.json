@@ -1,0 +1,250 @@
+{
+  "common": {
+    "select.option.none": "zh-cn_(Select One)",
+    "defaultDateFormat": "zh-cn_MM/DD/YYYY",
+    "defaultTimeFormat": "zh-cn_hh:mm:ss",
+    "defaultDateTimeFormat": "zh-cn_MM/DD/YYYY hh:mm",
+    "defaultDatePickerFormat": "zh-cn_MM/dd/yyyy",
+    "defaultDateUIFormat": "zh-cn_MM/dd/yyyy",
+    "defaultDateTimeUIFormat": "zh-cn_MM/dd/yyyy HH:mm"
+  },
+  "common.service": {
+    "error.invalidData": "zh-cn_Invalid data"
+  },
+  "common.objects": {
+    "progressNoData": "zh-cn_[ No data ]",
+    "progressLoading": "zh-cn_Loading data ",
+    "progressError": "zh-cn_Failed to load data "
+  },
+  "common.frevvo": {
+    "defaultDateFormat": "zh-cn_YYYY-MM-DD"
+  },
+  "common.service.messageService": {
+    "authorizationError": "zh-cn_You are not authorized to take this action",
+    "actionMessages": {
+      "success": "zh-cn_Action was successful",
+      "error": "zh-cn_Action error"
+    }
+  },
+  "common.directive.docTree": {
+    "btnRefresh": "zh-cn_Refresh",
+    "waitUploading": "zh-cn_Uploading...",
+    "confirmVersion": "zh-cn_Are you sure to set back to older version?",
+    "declareSuccessful": "zh-cn_Declare successful. Refreshing Document Tree...",
+    "prevItems": "zh-cn_ items above...",
+    "prevItemsTooltip": "zh-cn_Review previous items",
+    "moreItems": "zh-cn_ more items...",
+    "moreItemsTooltip": "zh-cn_Load more items",
+    "moreItemsBegin": "zh-cn_More items...",
+    "email": {
+      "defaultTitle": "zh-cn_ArkCase Documents",
+      "headerForLinks": "zh-cn_Please follow the links below to view the document(s). Links expire in 3 days.",
+      "footerForLinks": "zh-cn_Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com",
+      "subjectForAttachment": "zh-cn_Documents from ArkCase",
+      "bodyForAttachment": "zh-cn_Please find attached the documents sent to you from ArkCase.",
+      "headerForAttachment": "zh-cn_Hello,",
+      "footerForAttachment": "zh-cn_Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com"
+    },
+    "menu": {
+      "noop": "zh-cn_(Select Item)",
+      "editWithWebDAV": "zh-cn_Edit"
+    },
+    "table.columns": {
+      "title": "zh-cn_Title",
+      "type": "zh-cn_Type",
+      "created": "zh-cn_Created",
+      "modified": "zh-cn_Modified",
+      "author": "zh-cn_Author",
+      "version": "zh-cn_Version",
+      "status": "zh-cn_Status"
+    },
+    "dndDialog": {
+      "title": "zh-cn_Drag and Drop",
+      "radReplace.text": "zh-cn_Replace document (If more then one files are dropped, only first one is used)",
+      "radUploadToParent.text": "zh-cn_Create document(s) in parent folder",
+      "selFileTypes.label": "zh-cn_File Type:",
+      "optFileType.prompt": "zh-cn_[choose file type]",
+      "btnCancel.text": "zh-cn_Cancel",
+      "btnOk.text": "zh-cn_OK"
+    },
+    "emailDialog": {
+      "title": "zh-cn_Email",
+      "recipients": "zh-cn_Recipients:",
+      "btnCancel.text": "zh-cn_Cancel",
+      "btnOk.text": "zh-cn_Send Email",
+      "gridColumns": {
+        "name": "zh-cn_Name",
+        "email": "zh-cn_Email"
+      }
+    },
+    "comment": {
+      "title": "zh-cn_Checkin New Document",
+      "addComent": "zh-cn_Detailed Note",
+      "btnCancel.text": "zh-cn_Cancel",
+      "btnOk.text": "zh-cn_Checkin",
+      "chooseFiles": "zh-cn_Choose Files",
+      "noFiles": "zh-cn_No Files Selected"
+    },
+    "error": {
+      "nodeTitle": "zh-cn_(Error)"
+    },
+    "lockedTitle": "zh-cn_This document is locked by "
+  },
+  "common.directive.objectTree": {
+    "btnPrev.title": "zh-cn_ records above...",
+    "btnPrev.toolTip": "zh-cn_Review previous records",
+    "btnNext.titleUnknownSize": "zh-cn_More records...",
+    "btnNext.title": "zh-cn_ more records...",
+    "btnNext.toolTip": "zh-cn_Load more records",
+    "edtQuery.placeHolder": "zh-cn_Search",
+    "btnQuery.text": "zh-cn_Go!",
+    "errorNode.title": "zh-cn_(Error)",
+    "errorNode.toolTip": "zh-cn_(Error)",
+    "noAccessNode.title": "zh-cn_(No Access)",
+    "noAccessNode.toolTip": "zh-cn_(No Access)"
+  },
+  "common.directive.simplePager": {
+    "rowCountLabel": "zh-cn_items per page",
+    "pagerCountMiddleLabel": "zh-cn_ of ",
+    "pagerCountLabel": "zh-cn_ items"
+  },
+  "common.directive.objectAuthorizationRoles": {
+    "choose": "zh-cn_Choose",
+    "not_authorized": "zh-cn_Not Authorized",
+    "tooltip.move_right": "zh-cn_Move Right",
+    "tooltip.move_left": "zh-cn_Move Left",
+    "authorized": "zh-cn_Authorized"
+  },
+  "common.directive.searchModal": {
+    "header": "zh-cn_Search",
+    "btnSearch.text": "zh-cn_Search",
+    "btnOk.text": "zh-cn_OK",
+    "btnCancel.text": "zh-cn_Cancel",
+    "edtPlaceholder": "zh-cn_Type in to search",
+    "noData.text": "zh-cn_No Results"
+  },
+  "common.directive.coreNotes": {
+    "title": "zh-cn_Notes",
+    "modal.addNote": "zh-cn_Add Note",
+    "modal.editNote": "zh-cn_Edit Record",
+    "modal.notes.label": "zh-cn_Note",
+    "modal.btnOk.text": "zh-cn_Save",
+    "modal.btnCancel.text": "zh-cn_Cancel"
+  },
+  "common.directive.corePeople": {
+    "title": "zh-cn_People",
+    "contactMethods": {
+      "title": "zh-cn_Contact Methods",
+      "modal": {
+        "addContactMethod": "zh-cn_Add Contact Method",
+        "editContactMethod": "zh-cn_Edit Record",
+        "contactMethodTypes.label": "zh-cn_Contact Method Types",
+        "value.label": "zh-cn_Value",
+        "btnCancel.text": "zh-cn_Cancel",
+        "btnOk.text": "zh-cn_Save"
+      }
+    },
+    "organizations": {
+      "title": "zh-cn_Organizations",
+      "modal": {
+        "addOrganization": "zh-cn_Add Organization",
+        "editOrganization": "zh-cn_Edit Record",
+        "organizationTypes.label": "zh-cn_Organization Types",
+        "selectExisting.label": "zh-cn_Select Existing",
+        "addNew.label": "zh-cn_Add New",
+        "value.label": "zh-cn_Value",
+        "btnCancel.text": "zh-cn_Cancel",
+        "btnOk.text": "zh-cn_Save",
+        "dialogOrganizationPicker": {
+          "header": "zh-cn_Choose Organization",
+          "table.columns": {
+            "type": "zh-cn_Organization Type",
+            "name": "zh-cn_Value"
+          }
+        }
+      }
+    },
+    "addresses": {
+      "title": "zh-cn_Addresses",
+      "modal": {
+        "addAddress": "zh-cn_Add Address",
+        "editAddress": "zh-cn_Edit Record",
+        "addressTypes.label": "zh-cn_Address Types",
+        "street.label": "zh-cn_Street",
+        "city.label": "zh-cn_City",
+        "zip.label": "zh-cn_Zip",
+        "state.label": "zh-cn_State",
+        "country.label": "zh-cn_Country",
+        "btnCancel.text": "zh-cn_Cancel",
+        "btnOk.text": "zh-cn_Save"
+      }
+    },
+    "aliases": {
+      "title": "zh-cn_Aliases",
+      "modal": {
+        "addAlias": "zh-cn_Add Alias",
+        "editAlias": "zh-cn_Edit Record",
+        "aliasTypes.label": "zh-cn_Alias Types",
+        "value.label": "zh-cn_Value",
+        "btnCancel.text": "zh-cn_Cancel",
+        "btnOk.text": "zh-cn_Save"
+      }
+    },
+    "people": {
+      "title": "zh-cn_People",
+      "modal": {
+        "addPeople": "zh-cn_Add Person",
+        "editPeople": "zh-cn_Edit Record",
+        "personTypes.label": "zh-cn_Person Types",
+        "givenName.label": "zh-cn_First Name",
+        "familyName.label": "zh-cn_Last Name",
+        "btnCancel.text": "zh-cn_Cancel",
+        "btnOk.text": "zh-cn_Save"
+      }
+    }
+  },
+  "common.directive.coreCalendar": {
+    "title": "zh-cn_Calendar",
+    "start.label": "zh-cn_Start: ",
+    "end.label": "zh-cn_End: "zh-cn_
+  },
+  "common.directive.coreParticipants": {
+    "title": "zh-cn_Participants",
+    "modal.addParticipant.label": "zh-cn_Add Participant",
+    "modal.editParticipant.label": "zh-cn_Edit Record",
+    "modal.participantType.label": "zh-cn_Participant Type ",
+    "modal.participantName.label": "zh-cn_Participant Name",
+    "modal.btnOk.text": "zh-cn_Save",
+    "modal.btnCancel.text": "zh-cn_Cancel",
+    "modal.dialogUserPicker.header": "zh-cn_Search User",
+    "modal.dialogGroupPicker.header": "zh-cn_Search Group",
+    "message": {
+      "error.groupType": "zh-cn_The owning group cannot be a person.",
+      "error.userType": "zh-cn_ User type cannot be a group.",
+      "error.assigneeUnique": "zh-cn_Only one assignee is allowed.",
+      "error.owninggroupUnique": "zh-cn_Only one owning group is allowed.",
+      "error.noAccessCombo": "zh-cn_The combination of No Access and Assignee is not allowed."
+    }
+  },
+  "common.comp.acmLogin": {
+    "confirmLogout": "zh-cn_For your protection, application is about to logout. Click Cancel to stay logged in."
+  },
+  "common.objectTypes": {
+    "CASE_FILE": "zh-cn_Case File",
+    "COMPLAINT": "zh-cn_Complaint",
+    "TASK": "zh-cn_Task",
+    "TIMESHEET": "zh-cn_Timesheet",
+    "COSTSHEET": "zh-cn_Costsheet",
+    "FILE": "zh-cn_File"
+  },
+  "frevvo.dialogUserPicker": {
+    "header": "zh-cn_Choose User",
+    "table.columns": {
+      "name": "zh-cn_Name",
+      "type": "zh-cn_Type",
+      "title": "zh-cn_Title",
+      "id": "zh-cn_Username"
+    }
+  },
+  "common.objects.objectWasCreatedMessage": "zh-cn_{{objectTypeString}} with id {{objectId}} was created."
+}

@@ -5,7 +5,7 @@
     {
       "menuId": "leftnav",
       "menuItemURL": "search",
-      "menuItemTitle": "Search",
+      "menuItemTitle": "search.menus.leftnav.item",
       "moduleId": "search",
       "iconClass": "fa fa-search",
       "position": 70

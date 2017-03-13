@@ -1,0 +1,23 @@
+{
+  "core": {
+    "userInfo": {
+      "addedMenu": {
+        "help": "zh-tw_Help",
+        "logout": "zh-tw_Logout"
+      }
+    },
+    "leftNav": {
+      "title": "zh-tw_Navigation"
+    },
+    "topBar": {
+      "new": "zh-tw_New",
+      "toggle.btn": "zh-tw_Toggle navigation",
+      "search.placeholder": "zh-tw_Search ArkCase"
+    },
+    "loginWarning": {
+      "btnOK.text": "zh-tw_OK",
+      "btnCancel.text": "zh-tw_Cancel",
+      "checkbox_warning.label": "zh-tw_I acknowledge this warning."
+    }
+  }
+}

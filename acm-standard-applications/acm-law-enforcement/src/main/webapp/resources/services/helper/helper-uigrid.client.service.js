@@ -103,10 +103,11 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
                 that.scope.config = config;
 
                 that.scope.gridOptions.enableColumnResizing = true;
-                that.scope.gridOptions.enableRowSelection = false;
-                that.scope.gridOptions.enableRowHeaderSelection = false;
-                that.scope.gridOptions.multiSelect = false;
-                that.scope.gridOptions.noUnselect = false;
+                that.scope.gridOptions.enableRowSelection = config.enableRowSelection;
+                that.scope.gridOptions.enableRowHeaderSelection = config.enableRowHeaderSelection;
+                that.scope.gridOptions.enableFullRowSelection = config.enableFullRowSelection;
+                that.scope.gridOptions.multiSelect = config.multiSelect;
+                that.scope.gridOptions.noUnselect = config.noUnselect;
 
                 that.scope.gridOptions.paginationPageSizes = config.paginationPageSizes;
                 that.scope.gridOptions.paginationPageSize = config.paginationPageSize;

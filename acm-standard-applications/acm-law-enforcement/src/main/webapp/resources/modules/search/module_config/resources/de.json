@@ -1,0 +1,24 @@
+{
+  "search": {
+    "title": "Suche",
+    "search.btn": "Suche",
+    "export.btn": "de_Export",
+    "search.placeholder": "de_Type in to search",
+    "menus": {
+      "leftnav.item": "Suche"
+    },
+    "comp":{
+      "grid": {
+        "columns": {
+          "id": "de_ID",
+          "name": "de_Name",
+          "type": "de_Type",
+          "title": "de_Title",
+          "parent": "de_Parent",
+          "assignee": "de_Assignee",
+          "modified": "de_Modified"
+        }
+      }
+    }
+  }
+}

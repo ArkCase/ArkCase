@@ -51,6 +51,45 @@ public class LdapSyncService
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
+    public static Map<String, List<String>> reverseRoleToGroupMap(Map<String, String> roleToGroup)
+    {
+
+        Map<String, List<String>> groupToRoleMap = new HashMap<>();
+        List<String> roles;
+        for (Map.Entry<String, String> roleMapEntry : roleToGroup.entrySet())
+        {
+            String role = roleMapEntry.getKey();
+            if (role != null && !role.trim().isEmpty())
+            {
+                role = role.trim().toUpperCase();
+                String groupList = roleMapEntry.getValue();
+                if (groupList != null && !groupList.trim().isEmpty())
+                {
+                    String[] groups = groupList.split(",");
+                    for (String group : groups)
+                    {
+                        group = group.trim();
+                        if (!group.isEmpty())
+                        {
+                            group = group.toUpperCase();
+                            if (groupToRoleMap.containsKey(group))
+                            {
+                                roles = groupToRoleMap.get(group);
+                            } else
+                            {
+                                roles = new ArrayList<>();
+                            }
+                            roles.add(role);
+                            groupToRoleMap.put(group, roles);
+                        }
+
+                    }
+                }
+            }
+        }
+        return groupToRoleMap;
+    }
+
     // this method is used by scheduled jobs in Spring beans loaded dynamically from the ACM configuration
     // folder ($HOME/.acm).
     @Transactional
@@ -107,14 +146,14 @@ public class LdapSyncService
         Map<String, Set<AcmUser>> usersByLdapGroup = getUsersByLdapGroup(acmGroups, acmUsers);
         Map<String, Set<AcmUser>> usersByApplicationRole = getUsersByApplicationRole(usersByLdapGroup);
         Map<String, String> childParentPair = populateGroupParentPairs(acmGroups);
-
+        Map<String, String> groupNameDistinguishedNamePair = populateGroupNameDistinguishedNamePair(acmGroups);
 
         Set<String> applicationRoles = new HashSet<>();
         Map<String, String> roleToGroup = getLdapSyncConfig().getRoleToGroupMap();
         applicationRoles.addAll(roleToGroup.keySet());
 
         getLdapSyncDatabaseHelper().updateDatabase(getDirectoryName(), applicationRoles, acmUsers, usersByApplicationRole,
-                usersByLdapGroup, childParentPair, singleUser);
+                usersByLdapGroup, childParentPair, groupNameDistinguishedNamePair, singleUser);
     }
 
     public Map<String, Set<AcmUser>> getUsersByLdapGroup(List<LdapGroup> ldapGroups, List<AcmUser> ldapUsers)
@@ -214,6 +253,17 @@ public class LdapSyncService
         return filteredUsers;
     }
 
+    public Map<String, String> populateGroupNameDistinguishedNamePair(List<LdapGroup> ldapGroups)
+    {
+        return ldapGroups.stream()
+                .collect(
+                        Collectors.toMap(
+                                LdapGroup::getGroupName,
+                                group -> group.getDistinguishedName()
+                        )
+                );
+    }
+
     public Map<String, String> populateGroupParentPairs(List<LdapGroup> ldapGroups)
     {
         Map<String, String> groupParentPairs = new TreeMap<>();
@@ -223,7 +273,7 @@ public class LdapSyncService
             if (!groupParents.isEmpty())
             {
                 // find only groups with parent groups and return child-parent group pairs
-                groupParents.stream()
+                groupParents
                         .forEach(groupParent -> groupParentPairs.put(group.getGroupName(), groupParent));
             }
         }
@@ -253,46 +303,6 @@ public class LdapSyncService
             }
         });
         return usersByApplicationRole;
-    }
-
-
-    protected Map<String, List<String>> reverseRoleToGroupMap(Map<String, String> roleToGroup)
-    {
-
-        Map<String, List<String>> groupToRoleMap = new HashMap<>();
-        List<String> roles;
-        for (Map.Entry<String, String> roleMapEntry : roleToGroup.entrySet())
-        {
-            String role = roleMapEntry.getKey();
-            if (role != null && !role.trim().isEmpty())
-            {
-                role = role.trim().toUpperCase();
-                String groupList = roleMapEntry.getValue();
-                if (groupList != null && !groupList.trim().isEmpty())
-                {
-                    String[] groups = groupList.split(",");
-                    for (String group : groups)
-                    {
-                        group = group.trim();
-                        if (!group.isEmpty())
-                        {
-                            group = group.toUpperCase();
-                            if (groupToRoleMap.containsKey(group))
-                            {
-                                roles = groupToRoleMap.get(group);
-                            } else
-                            {
-                                roles = new ArrayList<>();
-                            }
-                            roles.add(role);
-                            groupToRoleMap.put(group, roles);
-                        }
-
-                    }
-                }
-            }
-        }
-        return groupToRoleMap;
     }
 
     public SpringLdapDao getLdapDao()

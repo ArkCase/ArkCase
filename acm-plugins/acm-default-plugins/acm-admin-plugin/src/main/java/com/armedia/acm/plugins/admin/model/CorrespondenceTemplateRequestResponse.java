@@ -1,7 +1,6 @@
 package com.armedia.acm.plugins.admin.model;
 
 import java.util.Date;
-import java.util.Map;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jan 27, 2017
@@ -10,7 +9,13 @@ import java.util.Map;
 public class CorrespondenceTemplateRequestResponse
 {
 
-    private String displayName;
+    private String templateId;
+
+    private String templateVersion;
+
+    private boolean templateVersionActive;
+
+    private String label;
 
     private String documentType;
 
@@ -18,9 +23,7 @@ public class CorrespondenceTemplateRequestResponse
 
     private String correspondenceQueryBeanId;
 
-    private String queryType;
-
-    private Map<String, String> templateSubstitutionVariables;
+    private String objectType;
 
     private String dateFormatString;
 
@@ -35,20 +38,71 @@ public class CorrespondenceTemplateRequestResponse
     private String downloadFileName;
 
     /**
-     * @return the dislpayName
+     * @return the templateId
      */
-    public String getDisplayName()
+    public String getTemplateId()
     {
-        return displayName;
+        return templateId;
     }
 
     /**
-     * @param displayName
-     *            the dislpayName to set
+     * @param templateId
+     *            the templateId to set
      */
-    public void setDisplayName(String displayName)
+    public void setTemplateId(String templateId)
     {
-        this.displayName = displayName;
+        this.templateId = templateId;
+    }
+
+    /**
+     * @return the templateVersion
+     */
+    public String getTemplateVersion()
+    {
+        return templateVersion;
+    }
+
+    /**
+     * @param templateVersion
+     *            the templateVersion to set
+     */
+    public void setTemplateVersion(String templateVersion)
+    {
+        this.templateVersion = templateVersion;
+    }
+
+    /**
+     * @return the templateVersionActive
+     */
+    public boolean isTemplateVersionActive()
+    {
+        return templateVersionActive;
+    }
+
+    /**
+     * @param templateVersionActive
+     *            the templateVersionActive to set
+     */
+    public void setTemplateVersionActive(boolean templateVersionActive)
+    {
+        this.templateVersionActive = templateVersionActive;
+    }
+
+    /**
+     * @return the label
+     */
+    public String getLabel()
+    {
+        return label;
+    }
+
+    /**
+     * @param label
+     *            the label to set
+     */
+    public void setLabel(String label)
+    {
+        this.label = label;
     }
 
     /**
@@ -103,37 +157,20 @@ public class CorrespondenceTemplateRequestResponse
     }
 
     /**
-     * @return the queryTpe
+     * @return the objectType
      */
-    public String getQueryType()
+    public String getObjectType()
     {
-        return queryType;
+        return objectType;
     }
 
     /**
-     * @param queryType
-     *            the queryTpe to set
+     * @param objectType
+     *            the objectType to set
      */
-    public void setQueryType(String queryType)
+    public void setObjectType(String objectType)
     {
-        this.queryType = queryType;
-    }
-
-    /**
-     * @return the templateSubstitutionVariables
-     */
-    public Map<String, String> getTemplateSubstitutionVariables()
-    {
-        return templateSubstitutionVariables;
-    }
-
-    /**
-     * @param templateSubstitutionVariables
-     *            the templateSubstitutionVariables to set
-     */
-    public void setTemplateSubstitutionVariables(Map<String, String> templateSubstitutionVariables)
-    {
-        this.templateSubstitutionVariables = templateSubstitutionVariables;
+        this.objectType = objectType;
     }
 
     /**
@@ -221,11 +258,18 @@ public class CorrespondenceTemplateRequestResponse
         this.modified = modified;
     }
 
+    /**
+     * @return the downloadFileName
+     */
     public String getDownloadFileName()
     {
         return downloadFileName;
     }
 
+    /**
+     * @param downloadFileName
+     *            the downloadFileName to set
+     */
     public void setDownloadFileName(String downloadFileName)
     {
         this.downloadFileName = downloadFileName;
