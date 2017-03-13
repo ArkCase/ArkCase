@@ -84,7 +84,14 @@
         "createAdHocGroup": "en-in_createAdHocGroup"
       },
       "createGroupDialog": {
-        "title": "en-in_Add Ad-Hoc Group",
+        "ldapGroup": {
+          "title": "en-in_Add LDAP Group"
+        },
+        "adHocGroup": {
+          "title": "en-in_Add Ad-Hoc Group"
+        },
+        "selectDirectory": "en-in_--Choose Directory Config--",
+        "disabledGroupWarning": "en-in_Adding new LDAP groups is not allowed for this directory!",
         "name": "en-in_Name",
         "namePlaceholder": "en-in_Enter group name",
         "description": "en-in_Description",
@@ -113,6 +120,27 @@
           "ok": "en-in_Add",
           "searchPlaceholder": "en-in_Enter to search for members."
         }
+      },
+      "createUserDialog": {
+        "addLdapMember": {
+          "title": "en-in_Add Ldap Member",
+          "btn": {
+            "cancel": "en-in_Cancel",
+            "ok": "en-in_Add Ldap User"
+          }
+        },
+        "editLdapMember": {
+          "title": "en-in_Edit Ldap Member",
+          "btn": {
+            "cancel": "en-in_Cancel",
+            "ok": "en-in_Edit Ldap User"
+          }
+        },
+        "username": "en-in_Username",
+        "firstName": "en-in_FirstName",
+        "lastName": "en-in_LastName",
+        "email": "en-in_Email",
+        "password": "en-in_Password"
       },
       "addMembersGridColumns": {
         "name": "en-in_Name",
@@ -295,19 +323,23 @@
       "title": "en-in_Correspondence Management",
       "templates": "en-in_Correspondence Templates",
       "templates.addNewTemplate": "en-in_Upload Template",
-      "templates.addTemplate": "en-in_Add Template",
+      "templates.addTemplate": "en-in_Upload",
+      "templates.versionTemplate": "en-in_Versions",
+      "templates.deleteTemplate": "en-in_Delete",
       "templates.editTemplate": "en-in_Edit Template",
       "templates.grid": {
         "id": "en-in_ID",
         "title": "en-in_Title",
-        "displayName": "en-in_Display Name",
+        "label": "en-in_Display Name",
         "path": "en-in_Path",
         "created": "en-in_Created",
         "modified": "en-in_Modified",
         "creator": "en-in_Creator",
         "modifier": "en-in_Modifier",
-        "activated": "en-in_Active",
-        "queryType": "en-in_Object Type"
+        "activated": "en-in_Status",
+        "objectType": "en-in_Object Type",
+        "version": "en-in_Version",
+        "templateVersionActive" : "en-in_Active"
       },
       "templates.fieldNames.label": "en-in_Map fields to values from the template",
       "templates.querySelect": {
@@ -323,9 +355,30 @@
       "templates.modal": {
         "objectTypes.label": "en-in_Object Types",
         "querySelect.label": "en-in_Query Select",
-        "displayName.label": "en-in_Display Name",
+        "label.label": "en-in_Display Name",
         "btnCancel.text": "en-in_Cancel",
-        "btnOk.text": "en-in_Save"
+        "btnOk.text": "en-in_Upload Template"
+      },
+      "templates.version.modal": {
+        "btnOk.text": "en-in_OK"
+      },
+      "mergefields": "en-in_Merge Fields Configuration",
+      "mergefields.saveMergeFields": "en-in_Save",
+      "mergefields.versionMergeFields": "en-in_Versions",
+      "mergefields.grid": {
+      "fieldId": "en-in_ID",
+      "fieldValue": "en-in_Value",
+      "fieldDescription": "en-in_Description"
+      },
+      "mergefields.version.grid": {
+        "mergingVersion": "en-in_Version",
+        "modified": "en-in_Modified",
+        "modifier": "en-in_Modifier",
+        "mergingActiveVersion": "en-in_Active"
+      },
+      "mergefields.version.modal": {
+        "btnLoadVersion.text": "en-in_Load Version",
+        "btnCancel.text": "en-in_Cancel"
       }
     },
     "forms.defaultValue": "en-in_Select Target",

@@ -84,7 +84,14 @@
         "createAdHocGroup": "zh-tw_createAdHocGroup"
       },
       "createGroupDialog": {
-        "title": "zh-tw_Add Ad-Hoc Group",
+        "ldapGroup": {
+          "title": "zh-tw_Add LDAP Group"
+        },
+        "adHocGroup": {
+          "title": "zh-tw_Add Ad-Hoc Group"
+        },
+        "selectDirectory": "zh-tw_--Choose Directory Config--",
+        "disabledGroupWarning": "zh-tw_Adding new LDAP groups is not allowed for this directory!",
         "name": "zh-tw_Name",
         "namePlaceholder": "zh-tw_Enter group name",
         "description": "zh-tw_Description",
@@ -113,6 +120,27 @@
           "ok": "zh-tw_Add",
           "searchPlaceholder": "zh-tw_Enter to search for members."
         }
+      },
+      "createUserDialog": {
+        "addLdapMember": {
+          "title": "zh-tw_Add Ldap Member",
+          "btn": {
+            "cancel": "zh-tw_Cancel",
+            "ok": "zh-tw_Add Ldap User"
+          }
+        },
+        "editLdapMember": {
+          "title": "zh-tw_Edit Ldap Member",
+          "btn": {
+            "cancel": "zh-tw_Cancel",
+            "ok": "zh-tw_Edit Ldap User"
+          }
+        },
+        "username": "zh-tw_Username",
+        "firstName": "zh-tw_FirstName",
+        "lastName": "zh-tw_LastName",
+        "email": "zh-tw_Email",
+        "password": "zh-tw_Password"
       },
       "addMembersGridColumns": {
         "name": "zh-tw_Name",
@@ -295,19 +323,23 @@
       "title": "zh-tw_Correspondence Management",
       "templates": "zh-tw_Correspondence Templates",
       "templates.addNewTemplate": "zh-tw_Upload Template",
-      "templates.addTemplate": "zh-tw_Add Template",
+      "templates.addTemplate": "zh-tw_Upload",
+      "templates.versionTemplate": "zh-tw_Versions",
+      "templates.deleteTemplate": "zh-tw_Delete",
       "templates.editTemplate": "zh-tw_Edit Template",
       "templates.grid": {
         "id": "zh-tw_ID",
         "title": "zh-tw_Title",
-        "displayName": "zh-tw_Display Name",
+        "label": "zh-tw_Display Name",
         "path": "zh-tw_Path",
         "created": "zh-tw_Created",
         "modified": "zh-tw_Modified",
         "creator": "zh-tw_Creator",
         "modifier": "zh-tw_Modifier",
-        "activated": "zh-tw_Active",
-        "queryType": "zh-tw_Object Type"
+        "activated": "zh-tw_Status",
+        "objectType": "zh-tw_Object Type",
+        "version": "zh-tw_Version",
+        "templateVersionActive" : "zh-tw_Active"
       },
       "templates.fieldNames.label": "zh-tw_Map fields to values from the template",
       "templates.querySelect": {
@@ -323,9 +355,30 @@
       "templates.modal": {
         "objectTypes.label": "zh-tw_Object Types",
         "querySelect.label": "zh-tw_Query Select",
-        "displayName.label": "zh-tw_Display Name",
+        "label.label": "zh-tw_Display Name",
         "btnCancel.text": "zh-tw_Cancel",
-        "btnOk.text": "zh-tw_Save"
+        "btnOk.text": "zh-tw_Upload Template"
+      },
+      "templates.version.modal": {
+        "btnOk.text": "zh-tw_OK"
+      },
+      "mergefields": "zh-tw_Merge Fields Configuration",
+      "mergefields.saveMergeFields": "zh-tw_Save",
+      "mergefields.versionMergeFields": "zh-tw_Versions",
+      "mergefields.grid": {
+      "fieldId": "zh-tw_ID",
+      "fieldValue": "zh-tw_Value",
+      "fieldDescription": "zh-tw_Description"
+      },
+      "mergefields.version.grid": {
+        "mergingVersion": "zh-tw_Version",
+        "modified": "zh-tw_Modified",
+        "modifier": "zh-tw_Modifier",
+        "mergingActiveVersion": "zh-tw_Active"
+      },
+      "mergefields.version.modal": {
+        "btnLoadVersion.text": "zh-tw_Load Version",
+        "btnCancel.text": "zh-tw_Cancel"
       }
     },
     "forms.defaultValue": "zh-tw_Select Target",
