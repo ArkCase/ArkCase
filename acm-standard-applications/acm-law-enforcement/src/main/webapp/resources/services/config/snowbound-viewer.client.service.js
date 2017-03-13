@@ -62,6 +62,38 @@ angular.module('services').factory('SnowboundService', [
                     "&refreshCacheTimestamp=" + randomUrlArgToCauseIframeRefresh + "&documentName=" + file.name +
                     "&parentObjectId=" + file.containerId + "&parentObjectType=" + file.containerType + "&selectedIds=" + file.selectedIds;
             }
+
+            /**
+             * @ngdoc method
+             * @name encryptSnowboundUrlQueryString
+             * @methodOf services.service:SnowboundService
+             *
+             * @param {String} queryString part of Snowbound viewer URL
+             * @param {JSON} ecmFileProperties properties from the ecmFileService.properties configuration file
+             *
+             * @description
+             * This method takes the configuration from ecmFileService.properties and takes
+             * given encryption key and iv to provide AES encrypted string
+             */
+            , encryptSnowboundUrlQueryString: function (queryString, ecmFileProperties) {
+                var key = ecmFileProperties['ecm.viewer.snowbound.encryptionKey'];
+                var iv = ecmFileProperties['ecm.viewer.snowbound.encryptionIv'];
+
+                if (key && iv) {
+                    var encryptionKey = CryptoJS.enc.Base64.parse(key);
+                    var encryptionIv = CryptoJS.enc.Base64.parse(iv);
+                    try {
+                        var encrypted = CryptoJS.AES.encrypt(queryString, encryptionKey,
+                            {mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7, iv: encryptionIv});
+                        var base64Encoded = encrypted.ciphertext.toString(CryptoJS.enc.Base64);
+                        return encodeURIComponent(base64Encoded);
+                    }
+                    catch (e){
+                        console.log("Error on encryption, returning plain query string");
+                    }
+                }
+                return queryString;
+            }
         }
     }
 ]);
