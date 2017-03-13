@@ -35,6 +35,7 @@ public class CorrespondenceTemplateAPIController
 {
 
     private CorrespondenceService correspondenceService;
+    private String correspondenceFolderName;
 
     @RequestMapping(value = "/templates", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -90,12 +91,11 @@ public class CorrespondenceTemplateAPIController
             throws IOException
     {
         List<CorrespondenceTemplateRequestResponse> deleteResponse = new ArrayList<>();
-        File templatesDir = new File(System.getProperty("user.home") + "/.arkcase/acm/correspondenceTemplates");
         List<CorrespondenceTemplate> templates = correspondenceService.getTemplateVersionsById(templateId);
         String msg = "";
         for (CorrespondenceTemplate template : templates)
         {
-            File templateFile = new File(templatesDir, template.getTemplateFilename());
+            File templateFile = new File(getCorrespondenceFolderName(), template.getTemplateFilename());
             if (FileUtils.deleteQuietly(templateFile))
             {
                 deleteResponse.add(mapTemplateToResponse(
@@ -203,6 +203,16 @@ public class CorrespondenceTemplateAPIController
     public void setCorrespondenceService(CorrespondenceService correspondenceService)
     {
         this.correspondenceService = correspondenceService;
+    }
+
+    public String getCorrespondenceFolderName()
+    {
+        return correspondenceFolderName;
+    }
+
+    public void setCorrespondenceFolderName(String correspondenceFolderName)
+    {
+        this.correspondenceFolderName = correspondenceFolderName;
     }
 
 }
