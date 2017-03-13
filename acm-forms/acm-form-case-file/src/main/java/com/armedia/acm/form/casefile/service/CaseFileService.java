@@ -276,7 +276,7 @@ public class CaseFileService extends FrevvoFormAbstractService
         return people;
     }
 
-    private JSONObject initParticipantsAndGroupsInfo()
+    protected JSONObject initParticipantsAndGroupsInfo()
     {
         CaseFileForm form = new CaseFileForm();
 
