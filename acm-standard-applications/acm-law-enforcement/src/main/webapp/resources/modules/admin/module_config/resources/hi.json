@@ -1,0 +1,395 @@
+{
+  "admin": {
+    "title": "hi_Admin",
+    "security.title": "hi_Security",
+    "security.functionalAccessControl": "hi_Functional Access Control",
+    "security.functionalAccessControl.applicationRole": "hi_Application Role",
+    "security.ldapConfig": "hi_LDAP Configuration",
+    "security.ldapConfig.addNewDirectory": "hi_Add New Directory",
+    "security.ldapConfig.table.ldapUrl": "hi_LDAP Url",
+    "security.ldapConfig.table.directoryName": "hi_Directory Name",
+    "security.ldapConfig.data": {
+      "addNewDirectory": "hi_Add New Directory",
+      "editRecord": "hi_Edit Record",
+      "id": "hi_ID",
+      "ldapUrl": "hi_LDAP Url",
+      "base": "hi_Base",
+      "directoryName": "hi_Directory Name",
+      "authUserDn": "hi_Auth User Dn",
+      "authUserPassword": "hi_Auth User Password",
+      "userSearchBase": "hi_Users Search Base",
+      "userSearchFilter": "hi_User Search Filter",
+      "allUsersFilter": "hi_All Users Filter",
+      "allUsersPageFilter": "hi_All Users Page Filter",
+      "allUsersSortingAttribute": "hi_Sorting attribute for users",
+      "groupSearchBase": "hi_Group Search Base",
+      "groupSearchFilterForUser": "hi_Group Search Filter For User",
+      "userIdAttributeName": "hi_User Id Attribute Name",
+      "userDomain": "hi_User domain",
+      "userDomainNote": "hi_(Note: Fill in the user domain for SSO scenario. For LDAP authentication leave it blank)",
+      "syncPageSize": "hi_Sync Page Size",
+      "groupSearchFilter": "hi_Group Search Filter",
+      "groupsSortingAttribute": "hi_Sorting attribute for groups",
+      "groupSearchPageFilter": "hi_Group Search Page Filter",
+      "enableEditingLdapUsers": "hi_Enable managing users and groups",
+      "cancel": "hi_Cancel",
+      "ok": "hi_OK"
+    },
+    "menus": {
+      "leftnav.item": "hi_Admin"
+    },
+    "security.ldapConfig.data.placeholders": {
+      "id": "hi_Enter directory name",
+      "ldapUrl": "hi_Enter connection URL",
+      "base": "hi_Enter base domain component (e.g. dc=example,dc=com)",
+      "authUserDn": "hi_Enter user DN for authentication (e.g. cn=John Doe,ou=users,dc=example,dc=com)",
+      "authUserPassword": "hi_Enter password for authentication user",
+      "userSearchBase": "hi_Enter users search base (e.g. ou=users)",
+      "userSearchFilter": "hi_Enter search filter for single user (e.g. (&(objectClass=person)(uid=%s))",
+      "allUsersFilter": "hi_Enter search filter for all users (e.g. (objectClass=person))",
+      "allUsersPageFilter": "hi_Enter filter including sort-attribute(e.g. (&(objectClass=person)(uidNumber>=%s)))",
+      "allUsersSortingAttribute": "hi_Enter sorting attribute for users (e.g. 'uidNumber')",
+      "groupSearchBase": "hi_Enter search base for groups (e.g. ou=groups)",
+      "groupSearchFilterForUser": "hi_Enter search filter for user in group (e.g. (&(objectClass=group)(member=%s)))",
+      "userIdAttributeName": "hi_Enter attribute used for user id (e.g. 'uid')",
+      "userDomain": "hi_Enter user domain",
+      "syncPageSize": "hi_Enter paging size",
+      "groupSearchFilter": "hi_Enter search filter for groups (e.g. (objectClass=group))",
+      "groupsSortingAttribute": "hi_Enter attribute for sorting groups (e.g. 'gidNumber')",
+      "groupSearchPageFilter": "hi_Enter filter including sort-attribute (e.g. (&(objectClass=group)(gidNumber>=%s)))",
+      "enableEditingLdapUsers": "hi_Check if managing users and groups to your DS is allowed"
+    },
+    "security.ldapConfig.messages": {
+      "delete.success": "hi_Successfully deleted row.",
+      "delete.error": "hi_Error deleting row.",
+      "insert.success": "hi_Successfully inserted new row.",
+      "insert.error": "hi_Error inserting new row.",
+      "update.success": "hi_Successfully updated row.",
+      "update.error": "hi_Error updating row."
+    },
+    "security.ldapConfig.dialog": {
+      "cancel": "hi_Cancel",
+      "ok": "hi_OK",
+      "confirm.delete": {
+        "deleteBtn": "hi_Delete",
+        "cancelBtn": "hi_Cancel",
+        "headerText": "hi_Are you sure?",
+        "bodyText": "hi_This record will be deleted. Are you sure?"
+      }
+    },
+    "admin.security.addNew": "hi_Add New Directory",
+    "security.organizationalHierarchy": {
+      "title": "hi_Organizational Hierarchy",
+      "btn": {
+        "createAdHocGroup": "hi_createAdHocGroup"
+      },
+      "createGroupDialog": {
+        "ldapGroup": {
+          "title": "hi_Add LDAP Group"
+        },
+        "adHocGroup": {
+          "title": "hi_Add Ad-Hoc Group"
+        },
+        "selectDirectory": "hi_--Choose Directory Config--",
+        "disabledGroupWarning": "hi_Adding new LDAP groups is not allowed for this directory!",
+        "name": "hi_Name",
+        "namePlaceholder": "hi_Enter group name",
+        "description": "hi_Description",
+        "descriptionPlaceholder": "hi_Enter Description",
+        "btn": {
+          "ok": "hi_Add Ad-Hoc Group",
+          "cancel": "hi_Cancel"
+        }
+      },
+      "addSubGroupDialog": {
+        "title": "hi_Add Subgroup to",
+        "name": "hi_Name",
+        "namePlaceholder": "hi_Enter group name",
+        "description": "hi_Description",
+        "descriptionPlaceholder": "hi_Enter Description",
+        "btn": {
+          "ok": "hi_Add Ad-Hoc Group",
+          "cancel": "hi_Cancel"
+        }
+      },
+      "addMembers": {
+        "title": "hi_Add Members",
+        "btn": {
+          "search": "hi_Go!",
+          "cancel": "hi_Cancel",
+          "ok": "hi_Add",
+          "searchPlaceholder": "hi_Enter to search for members."
+        }
+      },
+      "createUserDialog": {
+        "addLdapMember": {
+          "title": "hi_Add Ldap Member",
+          "btn": {
+            "cancel": "hi_Cancel",
+            "ok": "hi_Add Ldap User"
+          }
+        },
+        "editLdapMember": {
+          "title": "hi_Edit Ldap Member",
+          "btn": {
+            "cancel": "hi_Cancel",
+            "ok": "hi_Edit Ldap User"
+          }
+        },
+        "username": "hi_Username",
+        "firstName": "hi_FirstName",
+        "lastName": "hi_LastName",
+        "email": "hi_Email",
+        "password": "hi_Password"
+      },
+      "addMembersGridColumns": {
+        "name": "hi_Name",
+        "type": "hi_Type",
+        "title": "hi_Title",
+        "parent": "hi_Parent",
+        "assignee": "hi_Assignee",
+        "modified": "hi_Modified"
+      },
+      "addSupervisor": {
+        "title": "hi_Add Supervisor",
+        "btn": {
+          "search": "hi_Go!",
+          "cancel": "hi_Cancel",
+          "ok": "hi_Add",
+          "searchPlaceholder": "hi_Enter to search for supervisor."
+        }
+      },
+      "addSupervisorGridColumns": {
+        "name": "hi_Name",
+        "type": "hi_Type",
+        "title": "hi_Title",
+        "parent": "hi_Parent",
+        "assignee": "hi_Assignee",
+        "modified": "hi_Modified"
+      },
+      "dialog.group": {
+        "confirm.delete": {
+          "cancelBtn": "hi_Cancel",
+          "deleteBtn": "hi_Delete",
+          "headerText": "hi_You are about to delete group: ",
+          "bodyText": "hi_Are you sure?"
+        }
+      },
+      "dialog.member": {
+        "confirm.delete": {
+          "cancelBtn": "hi_Cancel",
+          "deleteBtn": "hi_Delete",
+          "headerText": "hi_You are about to delete member: ",
+          "bodyText": "hi_Are you sure?"
+        }
+      },
+      "messages": {
+        "delete": {
+          "group": {
+            "success": "hi_success",
+            "error": "hi_error"
+          },
+          "member": {
+            "success": "hi_success",
+            "error": "hi_error"
+          }
+        }
+      }
+    },
+    "security.selectPrivileges": "hi_Create Role/Select Privileges",
+    "security.selectPrivileges.applicationRole": "hi_Application Role",
+    "security.selectPrivileges.createRole": "hi_Create Role",
+    "security.selectPrivileges.editRole": "hi_Edit Role",
+    "security.selectPrivileges.applyChanges": "hi_Apply Changes",
+    "security.selectPrivileges.enterRoleName": "hi_Enter the role name in the box below.",
+    "security.selectPrivileges.cancel": "hi_Cancel",
+    "security.selectPrivileges.name": "hi_Name",
+    "security.modules": "hi_Modules",
+    "security.modules.module": "hi_Module",
+    "dashboard.title": "hi_Dashboard",
+    "dashboard.config": "hi_Dashboard Configuration",
+    "dashboard.widgets": "hi_Widgets",
+    "reports.title": "hi_Reports",
+    "reports.config": "hi_Reports Configuration",
+    "forms.title": "hi_Forms",
+    "forms.config": "hi_Form Configuration",
+    "workflows.title": "hi_Workflows",
+    "workflows.config": "hi_Workflow Configuration",
+    "workflows.config.activate": {
+      "error": "hi_Cant make this process active!",
+      "success": "hi_Process succesfully activated."
+    },
+    "workflows.config.showHistory.dialog": {
+      "title": "hi_History",
+      "body": "hi_Below is a history of previous BPMN files. To reinstate a previous workflow, select the workflow and click Make Active",
+      "cancel": "hi_Cancel",
+      "activate": "hi_Make Active"
+    },
+    "workflows.config.grid": {
+      "businessProcess": "hi_Business Process",
+      "description": "hi_Description",
+      "active": "hi_Active",
+      "modified": "hi_Modified",
+      "creator": "hi_Author"
+    },
+    "workflows.config.btn": {
+      "createNew": "hi_Create New Model",
+      "uploadNew": "hi_Upload New BPMN"
+    },
+    "workflows.config.links": {
+      "download": "hi_Download",
+      "replaceFile": "hi_Replace File",
+      "versionHistory": "hi_Version History"
+    },
+    "workflows.config.upload": {
+      "success": "hi_Successfully uploaded new process definition",
+      "error": "hi_Error uploading new process definition"
+    },
+    "formWorkflows.title": "hi_Form/Workflow Link",
+    "formWorkflows.link": "hi_Link Forms/Workflows",
+    "formWorkflows.link.undo": "hi_Undo",
+    "formWorkflows.link.saveChanges": "hi_Save Changes",
+    "formWorkflows.link.editRole.save.success": "hi_Link Forms/Workflows configuration saved successfully",
+    "formWorkflows.link.editRole.save.error": "hi_Can't save Link Forms/Workflows configuration",
+    "application": {
+      "title": "hi_Application",
+      "labels.config": {
+        "defaultLabel": "hi_Default",
+        "applyBtn": "hi_Apply",
+        "resetModule": "hi_Reset Module",
+        "resetModule.confirm": "hi_Are you sure you want reset custom resources for current module?",
+        "resetModule.title": "hi_Reset current module (delete custom resources)",
+        "resetAll": "hi_Reset All",
+        "resetAll.confirm": "hi_Are you sure you want reset all custom resources for all modules?",
+        "resetAll.title": "hi_Reset all resources (delete all custom resources)",
+        "refreshAll": "hi_Refresh All",
+        "refreshAll.title": "hi_Refresh all resources (keep custom resources)",
+        "title": "hi_Label Configuration",
+        "filterBy": "hi_Filter By Id",
+        "filterByValue": "hi_Filter By Value",
+        "data": {
+          "description": "hi_Description",
+          "defaultValue": "hi_Default Value",
+          "id": "hi_ID",
+          "value": "hi_Value"
+        }
+      },
+      "module.config": {
+        "title": "hi_Module Configuration"
+      },
+      "userName.config": {
+        "title": "hi_Username Display Configuration",
+        "userId.label": "hi_Use User Identifier",
+        "userName.label": "hi_Use Full Username",
+        "apply": "hi_Apply",
+        "modal.title": "hi_Information",
+        "modal.info": "hi_Settings will take effect after refresh",
+        "modal.ok": "hi_OK"
+      },
+      "login.config": {
+        "title": "hi_Login Configuration",
+        "idleLimit.label": "hi_Login idle limit (in milliseconds)",
+        "inform": "hi_Settings will take effect for all new user sessions",
+        "apply.label": "hi_Apply"
+      },
+      "auditHistory.config": {
+        "title": "hi_Audit History",
+        "historyDays.label": "hi_Keep Audit and Notification events (in days)",
+        "inform": "hi_Setting successfully saved",
+        "apply.label": "hi_Apply"
+      }
+    },
+    "branding.title": "hi_Branding",
+    "branding.logo": "hi_Logo",
+    "branding.logo.messages": {
+      "upload.success": "hi_Custom logo files updated. Refresh browser page to see result.",
+      "upload.error": "hi_Error uploading custom logo files."
+    },
+    "branding.logo.header.title": "hi_Header",
+    "branding.logo.login.title": "hi_Login Page",
+    "branding.logo.warningMessage": "hi_Only PNG format is allowed. Recommended ratio is 1 to 4. Minimum height is 50px.",
+    "branding.logo.btn": {
+      "chooseHeader": "hi_Choose Header logo",
+      "chooseLogin": "hi_Choose Login logo",
+      "saveFiles": "hi_Save"
+    },
+    "branding": {
+      "customCss": "hi_Custom CSS",
+      "customCss.save.success": "hi_Custom CSS updated. Refresh browser page to see result.",
+      "customCss.save.error": "hi_Error saving Custom CSS.",
+      "customCss.save": "hi_Save"
+    },
+    "correspondenceManagement": {
+      "title": "hi_Correspondence Management",
+      "templates": "hi_Correspondence Templates",
+      "templates.addNewTemplate": "hi_Upload Template",
+      "templates.addTemplate": "hi_Upload",
+      "templates.versionTemplate": "hi_Versions",
+      "templates.deleteTemplate": "hi_Delete",
+      "templates.editTemplate": "hi_Edit Template",
+      "templates.grid": {
+        "id": "hi_ID",
+        "title": "hi_Title",
+        "label": "hi_Display Name",
+        "path": "hi_Path",
+        "created": "hi_Created",
+        "modified": "hi_Modified",
+        "creator": "hi_Creator",
+        "modifier": "hi_Modifier",
+        "activated": "hi_Status",
+        "objectType": "hi_Object Type",
+        "version": "hi_Version",
+        "templateVersionActive" : "hi_Active"
+      },
+      "templates.fieldNames.label": "hi_Map fields to values from the template",
+      "templates.querySelect": {
+        "header.text": "hi_Select Query",
+        "btnCancel.text": "hi_Cancel",
+        "btnOk.text": "hi_Select Query",
+        "table.columns": {
+          "beanId": "hi_Bean ID",
+          "jpaQuery": "hi_JPA Query",
+          "queryType": "hi_Query Type"
+        }
+      },
+      "templates.modal": {
+        "objectTypes.label": "hi_Object Types",
+        "querySelect.label": "hi_Query Select",
+        "label.label": "hi_Display Name",
+        "btnCancel.text": "hi_Cancel",
+        "btnOk.text": "hi_Upload Template"
+      },
+      "templates.version.modal": {
+        "btnOk.text": "hi_OK"
+      },
+      "mergefields": "hi_Merge Fields Configuration",
+      "mergefields.saveMergeFields": "hi_Save",
+      "mergefields.versionMergeFields": "hi_Versions",
+      "mergefields.grid": {
+      "fieldId": "hi_ID",
+      "fieldValue": "hi_Value",
+      "fieldDescription": "hi_Description"
+      },
+      "mergefields.version.grid": {
+        "mergingVersion": "hi_Version",
+        "modified": "hi_Modified",
+        "modifier": "hi_Modifier",
+        "mergingActiveVersion": "hi_Active"
+      },
+      "mergefields.version.modal": {
+        "btnLoadVersion.text": "hi_Load Version",
+        "btnCancel.text": "hi_Cancel"
+      }
+    },
+    "forms.defaultValue": "hi_Select Target",
+    "forms.addForm": "hi_Add Plain Form",
+    "forms.data": {
+      "name": "hi_Form Name",
+      "applicationName": "hi_Application name",
+      "description": "hi_Description",
+      "target": "hi_Target"
+    },
+    "forms.message.delete.success": "hi_Successfully deleted row.",
+    "forms.message.delete.error": "hi_Error deleting row."
+  }
+}

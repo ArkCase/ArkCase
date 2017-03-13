@@ -1,0 +1,8 @@
+{
+  "preference": {
+    "title": "en-in_Preferences",
+    "menus": {
+      "usermenu.item": "en-in_Preferences"
+    }
+  }
+}

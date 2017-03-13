@@ -1,0 +1,38 @@
+{
+  "reports": {
+    "title": "zh-tw_Reports",
+    "menus": {
+      "leftnav.item": "zh-tw_Reports"
+    },
+    "selectReport" : {
+      "label": "zh-tw_Report",
+      "placeholder": "zh-tw_Select Report"
+    },
+    "selectState" : {
+      "label": "zh-tw_State",
+      "placeholder": "zh-tw_Select State"
+    },
+    "startDate": {
+      "label": "zh-tw_From"
+    },
+    "endDate" : {
+      "label": "zh-tw_To"
+    },
+
+    "dropdown": {
+      "turnaround": "zh-tw_Turnaround Time by Requester",
+      "requester": "zh-tw_Requester Type Summary",
+      "pending": "zh-tw_Pending Orders Report",
+      "associate": "zh-tw_Associate Productivity Report",
+      "origination": "zh-tw_Origination Count",
+      "transfers": "zh-tw_Transfers Report",
+      "exceptions": "zh-tw_Exceptions Report (Non-Compliance)"
+    },
+    "datepicker":{
+      "close": "zh-tw_Done"
+    },
+    "btn": {
+      "generateReport": "zh-tw_Generate report"
+    }
+  }
+}

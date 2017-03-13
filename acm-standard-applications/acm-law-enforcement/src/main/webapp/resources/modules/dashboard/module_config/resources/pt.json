@@ -1,0 +1,224 @@
+{
+  "dashboard": {
+    "title": "pt_Dashboard",
+    "menus": {
+      "leftnav.item": "pt_Dashboard"
+    },
+    "widgets": {
+      "casesByQueue": {
+        "title": "pt_Active Case Files by Queue",
+        "description": "pt_Displays active case files by queue",
+        "xAxis": "pt_Queues",
+        "yAxis": "pt_Number of Case Files",
+        "noDataMessage": "pt_Currently there are no cases info"
+      },
+      "casesByStatus": {
+        "title": "pt_Cases By Status",
+        "description": "pt_Displays cases by status",
+        "timePeriod": {
+          "label": "pt_Select Time Period",
+          "lastWeek": "pt_Last Week",
+          "lastMonth": "pt_Last Month",
+          "lastYear": "pt_Last Year",
+          "all": "pt_All"
+        },
+        "noDataMessage": "pt_Currently there are no cases info"
+      },
+      "myCases": {
+        "title": "pt_My Cases",
+        "description": "pt_Displays my cases",
+        "noDataMessage": "pt_Currently there are no cases info",
+        "table": {
+          "header": {
+            "caseId": "pt_ID",
+            "title": "pt_Title",
+            "priority": "pt_Priority",
+            "status": "pt_Status"
+          }
+        }
+      },
+      "myComplaints": {
+        "title": "pt_My Complaints",
+        "description": "pt_Displays my complaints",
+        "table": {
+          "header": {
+            "number": "pt_ID",
+            "title": "pt_Title",
+            "priority": "pt_Priority",
+            "created": "pt_Created",
+            "status": "pt_Status"
+          },
+          "noDataMessage": "pt_Currently there are no complaints info"
+        }
+      },
+      "myTasks": {
+        "title": "pt_My Tasks",
+        "description": "pt_Displays my tasks",
+        "rowNumbers.label": "pt_Default Row Numbers",
+        "rowNumbers.placeholder": "pt_Enter Default Row Numbers",
+        "table": {
+          "header": {
+            "taskId": "pt_ID",
+            "title": "pt_Title",
+            "priority": "pt_Priority",
+            "dueDate": "pt_Due",
+            "status": "pt_Status",
+            "objectId": "pt_Object ID"
+          },
+          "overdue.tooltip": "pt_Task is Overdue",
+          "deadline.tooltip": "pt_Deadline is Approaching"
+        },
+        "noDataMessage": "pt_Currently there are no tasks info"
+      },
+      "newComplaints": {
+        "title": "pt_New Complaints",
+        "description": "pt_Displays new complaints",
+        "dueDate": {
+          "label": "pt_Select Due Date Period",
+          "pastDue": "pt_Past Due",
+          "dueTomorrow": "pt_Due Tomorrow",
+          "dueWeek": "pt_Due in 7 Days",
+          "dueMonth": "pt_Due in Month",
+          "all": "pt_All"
+        },
+        "noDataMessage": "pt_Currently there are no complaints info"
+      },
+      "newCases": {
+        "title": "pt_New Cases",
+        "description": "pt_Displays new cases",
+        "noDataMessage": "pt_Currently there are no cases info"
+      },
+      "teamWorkload": {
+        "title": "pt_Team Workload",
+        "description": "pt_Displays team workload",
+        "dueDate": {
+          "label": "pt_Select Due Date Period",
+          "pastDue": "pt_Past Due",
+          "dueTomorrow": "pt_Due Tomorrow",
+          "dueWeek": "pt_Due in 7 Days",
+          "dueMonth": "pt_Due in Month",
+          "all": "pt_All"
+        },
+        "noDataMessage": "pt_Currently there are no team tasks info"
+      },
+      "weather": {
+        "description": "pt_Displays weather",
+        "label": {
+          "current": "pt_Current:",
+          "enterLocation": "pt_Enter Location",
+          "description": "pt_Display the current temperature of a city",
+          "location": "pt_Location",
+          "insertLocationInConfiguration": "pt_Please insert a location in the widget configuration"
+        },
+        "title": "pt_Weather",
+        "noDataMessage": "pt_Currently there are no weather info"
+      },
+      "news": {
+        "description": "pt_Displays news",
+        "label": {
+          "enterFeedUrl": "pt_Enter Feed url",
+          "description": "pt_Displays a RSS/Atom feed",
+          "feedUrl": "pt_Feed Url",
+          "insertUrl": "pt_Please insert a feed url in the widget configuration"
+        },
+        "title": "pt_News",
+        "noDataMessage": "pt_Currently there is no RSS/info"
+      },
+      "details": {
+        "title": "pt_Details",
+        "description": "pt_Displays case details",
+        "noDataMessage": "pt_Currently there are no details"
+      },
+      "people": {
+        "title": "pt_People",
+        "description": "pt_Displays people details",
+        "noDataMessage": "pt_Currently there are no people to display"
+      },
+      "documents": {
+        "title": "pt_Documents",
+        "description": "pt_Displays chart of documents by folder",
+        "noDataMessage": "pt_Currently there are no documents to display"
+      },
+      "locations": {
+        "title": "pt_Locations",
+        "description": "pt_Displays location details",
+        "noDataMessage": "pt_Currently there are no locations to display"
+      },
+      "tasks": {
+        "title": "pt_Tasks",
+        "description": "pt_Displays task details",
+        "noDataMessage": "pt_Currently there are no tasks to display"
+      },
+      "participants": {
+        "title": "pt_Participants",
+        "description": "pt_Displays participant details",
+        "noDataMessage": "pt_Currently there are no participant to display"
+      },
+      "references": {
+        "title": "pt_References",
+        "description": "pt_Displays reference details",
+        "noDataMessage": "pt_Currently there are no references to display"
+      },
+      "history": {
+        "title": "pt_History",
+        "description": "pt_Displays chart of history events",
+        "noDataMessage": "pt_Currently there are no events to display"
+      },
+      "notes": {
+        "title": "pt_Notes",
+        "description": "pt_Displays note details",
+        "noDataMessage": "pt_Currently there are no notes to display"
+      },
+      "time": {
+        "title": "pt_Time",
+        "description": "pt_Displays chart for hours per user",
+        "noDataMessage": "pt_Currently there is no time information to display"
+      },
+      "cost": {
+        "title": "pt_Cost",
+        "description": "pt_Displays chart for cost per user",
+        "noDataMessage": "pt_Currently there is no cost information to display"
+      },
+      "calendar": {
+        "title": "pt_Calendar",
+        "description": "pt_Displays chart of scheduled events per day",
+        "noDataMessage": "pt_Currently there are no events to display"
+      },
+      "reworkDetails": {
+        "title": "pt_Rework Details",
+        "description": "pt_Shows most recent rework details",
+        "noDataMessage": "pt_Currently there no are no rework details to display"
+      },
+      "docReview": {
+        "title": "pt_Documents Under Review",
+        "description": "pt_Shows documents under review",
+        "noDataMessage": "pt_Currently there no are no documents under review to display"
+      },
+      "workflow": {
+        "title": "pt_Workflow Overview",
+        "description": "pt_Overview of pending workflows",
+        "noDataMessage": "pt_Currently there are no workflows to display"
+      },
+      "signature": {
+        "title": "pt_eSignature",
+        "description": "pt_eSignature widget",
+        "noDataMessage": "pt_Currently there are no eSignatures to display"
+      },
+      "person": {
+        "title": "pt_Person",
+        "description": "pt_Person widget for Cost and Time modules",
+        "noDataMessage": "pt_Currently there are no persons to display"
+      },
+      "hoursSummary": {
+        "title": "pt_Hours Summary",
+        "description": "pt_Displays a summary of hours worked",
+        "noDataMessage": "pt_Currently there is no summary to display"
+      },
+      "expenses": {
+        "title": "pt_Expenses",
+        "description": "pt_Displays a cost-to-user graph",
+        "noDataMessage": "pt_Currently no expense data to display"
+      }
+    }
+  }
+}

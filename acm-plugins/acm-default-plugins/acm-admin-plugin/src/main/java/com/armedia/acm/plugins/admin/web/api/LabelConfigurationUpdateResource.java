@@ -77,7 +77,7 @@ public class LabelConfigurationUpdateResource {
                     }
                 }
 
-                FileUtils.writeStringToFile(file, adminResourceObj.toString(4));
+                FileUtils.writeStringToFile(file, adminResourceObj.toString(4), "UTF-8");
 
                 // Generate and save resource file.
                 generateResourceNode(adminResourceObj);
@@ -85,7 +85,7 @@ public class LabelConfigurationUpdateResource {
                 // Save generated resource
                 String resourceFileName = String.format(resourcesFilesLocation, lang, ns);
                 File resourceFile = FileUtils.getFile(resourceFileName);
-                FileUtils.writeStringToFile(resourceFile, adminResourceObj.toString(4));
+                FileUtils.writeStringToFile(resourceFile, adminResourceObj.toString(4), "UTF-8");
             }
         } catch (Exception e) {
             if (log.isErrorEnabled()) {

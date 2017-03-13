@@ -1,0 +1,24 @@
+{
+  "core": {
+    "userInfo": {
+      "addedMenu": {
+        "help": "Помощь",
+        "logout": "Выйти"
+      }
+    },
+    "leftNav": {
+      "title": "Навигация"
+    },
+    "topBar": {
+      "new": "Новый",
+      "toggle.btn": "Изменить направление",
+      "search.placeholder": "Поиск ArkCase"
+    },
+    "loginWarning": {
+      "btnOK.text": "Подтвердить",
+      "btnCancel.text": "Отменить",
+      "checkbox_warning.label": "Я признаю это предупреждение."
+    }
+  }
+}
+

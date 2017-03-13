@@ -1,0 +1,250 @@
+{
+  "common": {
+    "select.option.none": "ja_(Select One)",
+    "defaultDateFormat": "ja_MM/DD/YYYY",
+    "defaultTimeFormat": "ja_hh:mm:ss",
+    "defaultDateTimeFormat": "ja_MM/DD/YYYY hh:mm",
+    "defaultDatePickerFormat": "ja_MM/dd/yyyy",
+    "defaultDateUIFormat": "ja_MM/dd/yyyy",
+    "defaultDateTimeUIFormat": "ja_MM/dd/yyyy HH:mm"
+  },
+  "common.service": {
+    "error.invalidData": "ja_Invalid data"
+  },
+  "common.objects": {
+    "progressNoData": "ja_[ No data ]",
+    "progressLoading": "ja_Loading data ",
+    "progressError": "ja_Failed to load data "
+  },
+  "common.frevvo": {
+    "defaultDateFormat": "ja_YYYY-MM-DD"
+  },
+  "common.service.messageService": {
+    "authorizationError": "ja_You are not authorized to take this action",
+    "actionMessages": {
+      "success": "ja_Action was successful",
+      "error": "ja_Action error"
+    }
+  },
+  "common.directive.docTree": {
+    "btnRefresh": "ja_Refresh",
+    "waitUploading": "ja_Uploading...",
+    "confirmVersion": "ja_Are you sure to set back to older version?",
+    "declareSuccessful": "ja_Declare successful. Refreshing Document Tree...",
+    "prevItems": "ja_ items above...",
+    "prevItemsTooltip": "ja_Review previous items",
+    "moreItems": "ja_ more items...",
+    "moreItemsTooltip": "ja_Load more items",
+    "moreItemsBegin": "ja_More items...",
+    "email": {
+      "defaultTitle": "ja_ArkCase Documents",
+      "headerForLinks": "ja_Please follow the links below to view the document(s). Links expire in 3 days.",
+      "footerForLinks": "ja_Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com",
+      "subjectForAttachment": "ja_Documents from ArkCase",
+      "bodyForAttachment": "ja_Please find attached the documents sent to you from ArkCase.",
+      "headerForAttachment": "ja_Hello,",
+      "footerForAttachment": "ja_Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com"
+    },
+    "menu": {
+      "noop": "ja_(Select Item)",
+      "editWithWebDAV": "ja_Edit"
+    },
+    "table.columns": {
+      "title": "ja_Title",
+      "type": "ja_Type",
+      "created": "ja_Created",
+      "modified": "ja_Modified",
+      "author": "ja_Author",
+      "version": "ja_Version",
+      "status": "ja_Status"
+    },
+    "dndDialog": {
+      "title": "ja_Drag and Drop",
+      "radReplace.text": "ja_Replace document (If more then one files are dropped, only first one is used)",
+      "radUploadToParent.text": "ja_Create document(s) in parent folder",
+      "selFileTypes.label": "ja_File Type:",
+      "optFileType.prompt": "ja_[choose file type]",
+      "btnCancel.text": "ja_Cancel",
+      "btnOk.text": "ja_OK"
+    },
+    "emailDialog": {
+      "title": "ja_Email",
+      "recipients": "ja_Recipients:",
+      "btnCancel.text": "ja_Cancel",
+      "btnOk.text": "ja_Send Email",
+      "gridColumns": {
+        "name": "ja_Name",
+        "email": "ja_Email"
+      }
+    },
+    "comment": {
+      "title": "ja_Checkin New Document",
+      "addComent": "ja_Detailed Note",
+      "btnCancel.text": "ja_Cancel",
+      "btnOk.text": "ja_Checkin",
+      "chooseFiles": "ja_Choose Files",
+      "noFiles": "ja_No Files Selected"
+    },
+    "error": {
+      "nodeTitle": "ja_(Error)"
+    },
+    "lockedTitle": "ja_This document is locked by "
+  },
+  "common.directive.objectTree": {
+    "btnPrev.title": "ja_ records above...",
+    "btnPrev.toolTip": "ja_Review previous records",
+    "btnNext.titleUnknownSize": "ja_More records...",
+    "btnNext.title": "ja_ more records...",
+    "btnNext.toolTip": "ja_Load more records",
+    "edtQuery.placeHolder": "ja_Search",
+    "btnQuery.text": "ja_Go!",
+    "errorNode.title": "ja_(Error)",
+    "errorNode.toolTip": "ja_(Error)",
+    "noAccessNode.title": "ja_(No Access)",
+    "noAccessNode.toolTip": "ja_(No Access)"
+  },
+  "common.directive.simplePager": {
+    "rowCountLabel": "ja_items per page",
+    "pagerCountMiddleLabel": "ja_ of ",
+    "pagerCountLabel": "ja_ items"
+  },
+  "common.directive.objectAuthorizationRoles": {
+    "choose": "ja_Choose",
+    "not_authorized": "ja_Not Authorized",
+    "tooltip.move_right": "ja_Move Right",
+    "tooltip.move_left": "ja_Move Left",
+    "authorized": "ja_Authorized"
+  },
+  "common.directive.searchModal": {
+    "header": "ja_Search",
+    "btnSearch.text": "ja_Search",
+    "btnOk.text": "ja_OK",
+    "btnCancel.text": "ja_Cancel",
+    "edtPlaceholder": "ja_Type in to search",
+    "noData.text": "ja_No Results"
+  },
+  "common.directive.coreNotes": {
+    "title": "ja_Notes",
+    "modal.addNote": "ja_Add Note",
+    "modal.editNote": "ja_Edit Record",
+    "modal.notes.label": "ja_Note",
+    "modal.btnOk.text": "ja_Save",
+    "modal.btnCancel.text": "ja_Cancel"
+  },
+  "common.directive.corePeople": {
+    "title": "ja_People",
+    "contactMethods": {
+      "title": "ja_Contact Methods",
+      "modal": {
+        "addContactMethod": "ja_Add Contact Method",
+        "editContactMethod": "ja_Edit Record",
+        "contactMethodTypes.label": "ja_Contact Method Types",
+        "value.label": "ja_Value",
+        "btnCancel.text": "ja_Cancel",
+        "btnOk.text": "ja_Save"
+      }
+    },
+    "organizations": {
+      "title": "ja_Organizations",
+      "modal": {
+        "addOrganization": "ja_Add Organization",
+        "editOrganization": "ja_Edit Record",
+        "organizationTypes.label": "ja_Organization Types",
+        "selectExisting.label": "ja_Select Existing",
+        "addNew.label": "ja_Add New",
+        "value.label": "ja_Value",
+        "btnCancel.text": "ja_Cancel",
+        "btnOk.text": "ja_Save",
+        "dialogOrganizationPicker": {
+          "header": "ja_Choose Organization",
+          "table.columns": {
+            "type": "ja_Organization Type",
+            "name": "ja_Value"
+          }
+        }
+      }
+    },
+    "addresses": {
+      "title": "ja_Addresses",
+      "modal": {
+        "addAddress": "ja_Add Address",
+        "editAddress": "ja_Edit Record",
+        "addressTypes.label": "ja_Address Types",
+        "street.label": "ja_Street",
+        "city.label": "ja_City",
+        "zip.label": "ja_Zip",
+        "state.label": "ja_State",
+        "country.label": "ja_Country",
+        "btnCancel.text": "ja_Cancel",
+        "btnOk.text": "ja_Save"
+      }
+    },
+    "aliases": {
+      "title": "ja_Aliases",
+      "modal": {
+        "addAlias": "ja_Add Alias",
+        "editAlias": "ja_Edit Record",
+        "aliasTypes.label": "ja_Alias Types",
+        "value.label": "ja_Value",
+        "btnCancel.text": "ja_Cancel",
+        "btnOk.text": "ja_Save"
+      }
+    },
+    "people": {
+      "title": "ja_People",
+      "modal": {
+        "addPeople": "ja_Add Person",
+        "editPeople": "ja_Edit Record",
+        "personTypes.label": "ja_Person Types",
+        "givenName.label": "ja_First Name",
+        "familyName.label": "ja_Last Name",
+        "btnCancel.text": "ja_Cancel",
+        "btnOk.text": "ja_Save"
+      }
+    }
+  },
+  "common.directive.coreCalendar": {
+    "title": "ja_Calendar",
+    "start.label": "ja_Start: ",
+    "end.label": "ja_End: "ja_
+  },
+  "common.directive.coreParticipants": {
+    "title": "ja_Participants",
+    "modal.addParticipant.label": "ja_Add Participant",
+    "modal.editParticipant.label": "ja_Edit Record",
+    "modal.participantType.label": "ja_Participant Type ",
+    "modal.participantName.label": "ja_Participant Name",
+    "modal.btnOk.text": "ja_Save",
+    "modal.btnCancel.text": "ja_Cancel",
+    "modal.dialogUserPicker.header": "ja_Search User",
+    "modal.dialogGroupPicker.header": "ja_Search Group",
+    "message": {
+      "error.groupType": "ja_The owning group cannot be a person.",
+      "error.userType": "ja_ User type cannot be a group.",
+      "error.assigneeUnique": "ja_Only one assignee is allowed.",
+      "error.owninggroupUnique": "ja_Only one owning group is allowed.",
+      "error.noAccessCombo": "ja_The combination of No Access and Assignee is not allowed."
+    }
+  },
+  "common.comp.acmLogin": {
+    "confirmLogout": "ja_For your protection, application is about to logout. Click Cancel to stay logged in."
+  },
+  "common.objectTypes": {
+    "CASE_FILE": "ja_Case File",
+    "COMPLAINT": "ja_Complaint",
+    "TASK": "ja_Task",
+    "TIMESHEET": "ja_Timesheet",
+    "COSTSHEET": "ja_Costsheet",
+    "FILE": "ja_File"
+  },
+  "frevvo.dialogUserPicker": {
+    "header": "ja_Choose User",
+    "table.columns": {
+      "name": "ja_Name",
+      "type": "ja_Type",
+      "title": "ja_Title",
+      "id": "ja_Username"
+    }
+  },
+  "common.objects.objectWasCreatedMessage": "ja_{{objectTypeString}} with id {{objectId}} was created."
+}

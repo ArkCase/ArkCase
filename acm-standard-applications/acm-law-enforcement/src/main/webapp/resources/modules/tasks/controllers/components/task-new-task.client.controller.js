@@ -4,7 +4,8 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
     , 'ConfigService', 'UtilService', 'TicketService', 'LookupService', 'Frevvo.FormService', 'Task.NewTaskService'
     , 'Authentication', 'Util.DateService', 'Dialog.BootboxService', 'ObjectService', 'Object.LookupService', 'Admin.FunctionalAccessControlService'
     , function ($scope, $state, $stateParams, $sce, $q, $modal, ConfigService, Util, TicketService, LookupService
-        , FrevvoFormService, TaskNewTaskService, Authentication, UtilDateService, DialogService, ObjectService, ObjectLookupService, AdminFunctionalAccessControlService) {
+        , FrevvoFormService, TaskNewTaskService, Authentication, UtilDateService, DialogService, ObjectService, ObjectLookupService 
+        , AdminFunctionalAccessControlService) {
 
         $scope.config = null;
         $scope.userSearchConfig = null;
@@ -136,10 +137,10 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
                     if (chosenUserOrGroup.object_type_s === 'USER') {  // Selected a user
                         $scope.config.data.assignee = chosenUserOrGroup.object_id_s;
                         $scope.userOrGroupName = chosenUserOrGroup.name;
+                        $scope.pickOwningGroup(chosenUserOrGroup.object_id_s, chosenUserOrGroup.name);
 
                        return; 
                     } else if (chosenUserOrGroup.object_type_s === 'GROUP') {
-
                         $scope.config.data.assignee = null;
                         $scope.config.data.candidateGroups = [chosenUserOrGroup.object_id_s];
                         $scope.userOrGroupName = chosenUserOrGroup.name;
@@ -154,6 +155,37 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             });
 
         };
+
+        $scope.pickOwningGroup = function (assigneeLdapId, asigneeName) { 
+            var modalInstance = $modal.open({
+                animation: $scope.animationsEnabled,
+                templateUrl: 'modules/tasks/views/components/task-group-search.client.view.html',
+                controller: 'Tasks.GroupSearchController',
+                size: 'lg',
+                resolve: {
+                    $filter: function () {
+                        return $scope.config.groupSearch.groupFacetFilter + assigneeLdapId +$scope.config.groupSearch.groupFacetExtraFilter;
+                    },
+                    $searchValue: function () {
+                        return asigneeName;
+                    },
+                    $config: function () {
+                        return $scope.userSearchConfig;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (chosenUserOrGroup) {
+                $scope.config.data.candidateGroups = [chosenUserOrGroup.object_id_s];
+                $scope.testId = chosenUserOrGroup.object_id_s;
+
+                return;
+            }, function () {
+                // Cancel button was clicked.
+                return [];
+            });
+
+        }
         
         $scope.objectSearch = function () {
             var modalInstance = $modal.open({

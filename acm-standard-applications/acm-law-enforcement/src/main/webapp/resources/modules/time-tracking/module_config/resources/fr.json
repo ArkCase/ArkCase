@@ -1,0 +1,68 @@
+{
+  "timeTracking": {
+    "title": "fr_Time Tracking",
+    "progressNoTimesheet": "fr_[ No timesheet is selected ]",
+    "progressLoading": "fr_Loading timesheet ",
+    "progressError": "fr_Failed to load timesheet"
+  },
+  "timeTracking.menus": {
+    "leftnav.item": "fr_Time Tracking",
+    "topbar.item": "fr_Timesheet"
+  },
+  "timeTracking.tree": {
+  },
+  "timeTracking.comp.actions": {
+    "new.button": "fr_New Timesheet",
+    "edit.button": "fr_Edit Timesheet"
+  },
+  "timeTracking.comp.details": {
+    "title": "fr_Details",
+    "informSaved": "fr_Timesheet details saved",
+    "table.columns": {
+      "title": "fr_Details",
+      "modified": "fr_Date Last Modified",
+      "modifier": "fr_User Last Modified"
+    }
+  },
+  "timeTracking.comp.people": {
+    "title": "fr_Person",
+    "table.columns": {
+      "fullName": "fr_Full Name",
+      "userId": "fr_Username"
+    }
+  },
+  "timeTracking.comp.summary": {
+    "title": "fr_Hours Summary",
+    "table.columns": {
+      "code": "fr_Parent ID",
+      "type": "fr_Parent Type",
+      "value": "fr_Total Hours",
+      "date": "fr_Date Charged",
+      "modified": "fr_Modified Date"
+    }
+  },
+  "timeTracking.comp.tags": {
+    "title": "fr_Tags",
+    "table.columns": {
+      "tag": "fr_Tag",
+      "created": "fr_Created",
+      "createdBy": "fr_Created By"
+    },
+    "modal": {
+    "title": "fr_Tag",
+    "search": "fr_Search for Tag",
+    "buttons": {
+          "cancel": "fr_Cancel",
+          "ok": "fr_Add Tag"
+     }
+    },
+    "message": {
+      "tagExists": "fr_Tag with that name or description or text already exists",
+      "tagAssociated": "fr_already associated",
+      "delete": {
+        "success": "fr_Tag deleted successfully",
+        "error": "fr_Error deleting tag"
+      }
+    }
+  }
+}

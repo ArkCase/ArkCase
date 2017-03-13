@@ -3,9 +3,12 @@
     "title": "User Profile",
     "unknown":"Unknown"
   },
+  "profile.menus": {
+    "usermenu.item": "Profile"
+  },
    "profile.subscriptions" : {
-    "title":"Subscriptions",
-    "unsubscribeSelect":"Unsubscribe Selected",
+    "title": "Subscriptions",
+    "unsubscribeSelect": "Unsubscribe Selected",
     "table.columns": {
       "title": "Title",
       "created":"Created",

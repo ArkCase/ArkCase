@@ -5,6 +5,10 @@
     "progressLoading": "Loading timesheet ",
     "progressError": "Failed to load timesheet"
   },
+  "timeTracking.menus": {
+    "leftnav.item": "Time Tracking",
+    "topbar.item": "Timesheet"
+  },
   "timeTracking.tree": {
   },
   "timeTracking.comp.actions": {

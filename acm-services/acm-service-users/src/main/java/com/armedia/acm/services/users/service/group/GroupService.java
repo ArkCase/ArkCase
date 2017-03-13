@@ -55,4 +55,11 @@ public interface GroupService
      * @return true or false
      */
     boolean isUUIDPresentInTheGroupName(String str);
+
+    /**
+     * Creates or updates ad-hoc group based on the client info coming in from CRM
+     * @param acmGroup group we want to rename
+     * @param newName group new name
+     */
+    void renameGroup(AcmGroup acmGroup, String newName);
 }
