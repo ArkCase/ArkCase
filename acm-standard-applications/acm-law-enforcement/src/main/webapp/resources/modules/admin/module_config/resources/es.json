@@ -84,7 +84,14 @@
         "createAdHocGroup": "es_createAdHocGroup"
       },
       "createGroupDialog": {
-        "title": "es_Add Ad-Hoc Group",
+        "ldapGroup": {
+          "title": "es_Add LDAP Group"
+        },
+        "adHocGroup": {
+          "title": "es_Add Ad-Hoc Group"
+        },
+        "selectDirectory": "es_--Choose Directory Config--",
+        "disabledGroupWarning": "es_Adding new LDAP groups is not allowed for this directory!",
         "name": "es_Name",
         "namePlaceholder": "es_Enter group name",
         "description": "es_Description",
@@ -113,6 +120,27 @@
           "ok": "es_Add",
           "searchPlaceholder": "es_Enter to search for members."
         }
+      },
+      "createUserDialog": {
+        "addLdapMember": {
+          "title": "es_Add Ldap Member",
+          "btn": {
+            "cancel": "es_Cancel",
+            "ok": "es_Add Ldap User"
+          }
+        },
+        "editLdapMember": {
+          "title": "es_Edit Ldap Member",
+          "btn": {
+            "cancel": "es_Cancel",
+            "ok": "es_Edit Ldap User"
+          }
+        },
+        "username": "es_Username",
+        "firstName": "es_FirstName",
+        "lastName": "es_LastName",
+        "email": "es_Email",
+        "password": "es_Password"
       },
       "addMembersGridColumns": {
         "name": "es_Name",
@@ -295,19 +323,23 @@
       "title": "es_Correspondence Management",
       "templates": "es_Correspondence Templates",
       "templates.addNewTemplate": "es_Upload Template",
-      "templates.addTemplate": "es_Add Template",
+      "templates.addTemplate": "es_Upload",
+      "templates.versionTemplate": "es_Versions",
+      "templates.deleteTemplate": "es_Delete",
       "templates.editTemplate": "es_Edit Template",
       "templates.grid": {
         "id": "es_ID",
         "title": "es_Title",
-        "displayName": "es_Display Name",
+        "label": "es_Display Name",
         "path": "es_Path",
         "created": "es_Created",
         "modified": "es_Modified",
         "creator": "es_Creator",
         "modifier": "es_Modifier",
-        "activated": "es_Active",
-        "queryType": "es_Object Type"
+        "activated": "es_Status",
+        "objectType": "es_Object Type",
+        "version": "es_Version",
+        "templateVersionActive" : "es_Active"
       },
       "templates.fieldNames.label": "es_Map fields to values from the template",
       "templates.querySelect": {
@@ -323,9 +355,30 @@
       "templates.modal": {
         "objectTypes.label": "es_Object Types",
         "querySelect.label": "es_Query Select",
-        "displayName.label": "es_Display Name",
+        "label.label": "es_Display Name",
         "btnCancel.text": "es_Cancel",
-        "btnOk.text": "es_Save"
+        "btnOk.text": "es_Upload Template"
+      },
+      "templates.version.modal": {
+        "btnOk.text": "es_OK"
+      },
+      "mergefields": "es_Merge Fields Configuration",
+      "mergefields.saveMergeFields": "es_Save",
+      "mergefields.versionMergeFields": "es_Versions",
+      "mergefields.grid": {
+      "fieldId": "es_ID",
+      "fieldValue": "es_Value",
+      "fieldDescription": "es_Description"
+      },
+      "mergefields.version.grid": {
+        "mergingVersion": "es_Version",
+        "modified": "es_Modified",
+        "modifier": "es_Modifier",
+        "mergingActiveVersion": "es_Active"
+      },
+      "mergefields.version.modal": {
+        "btnLoadVersion.text": "es_Load Version",
+        "btnCancel.text": "es_Cancel"
       }
     },
     "forms.defaultValue": "es_Select Target",
