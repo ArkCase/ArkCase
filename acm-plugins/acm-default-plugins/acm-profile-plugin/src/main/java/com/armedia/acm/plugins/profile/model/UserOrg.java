@@ -80,9 +80,6 @@ public class UserOrg implements Serializable
     @Column(name = "cm_object_type")
     private String objectType = UserOrgConstants.OBJECT_TYPE;
 
-    @Column(name = "cm_pref_locale")
-    private String prefLocale;
-
 
     /**
      * This field is only used when the profile is created. Usually it will be null.  Use the container folder
@@ -336,11 +333,4 @@ public class UserOrg implements Serializable
 
     public String getObjectType() {return objectType;}
 
-    public String getPrefLocale() {
-        return prefLocale;
-    }
-
-    public void setPrefLocale(String prefLocale) {
-        this.prefLocale = prefLocale;
-    }
 }

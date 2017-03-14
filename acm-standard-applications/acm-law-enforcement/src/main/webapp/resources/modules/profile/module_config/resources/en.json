@@ -38,11 +38,6 @@
   "profile.groups":{
     "title":"Groups"
   },
-  "profile.locale":{
-    "title":"Language and Regional Settings",
-    "locale": "Prefered locale: "
-
-  },
    "profile.buttons":{
        "password":"Change Password",
        "message":"Enter your new password.",
