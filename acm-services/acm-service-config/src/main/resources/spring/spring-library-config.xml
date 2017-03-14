@@ -31,24 +31,6 @@
         </constructor-arg>
     </bean>
 
-    <bean id="caseCorrespondenceFormsJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
-        <constructor-arg type="java.io.InputStream">
-            <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File"
-                                 value="${user.home}/.arkcase/acm/lookups/caseCorrespondenceForms.json"/>
-            </bean>
-        </constructor-arg>
-    </bean>
-
-    <bean id="complaintCorrespondenceFormsJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
-        <constructor-arg type="java.io.InputStream">
-            <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File"
-                                 value="${user.home}/.arkcase/acm/lookups/complaintCorrespondenceForms.json"/>
-            </bean>
-        </constructor-arg>
-    </bean>
-
     <bean id="fileTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
         <constructor-arg type="java.io.InputStream">
             <bean class="java.io.FileInputStream" destroy-method="close">
@@ -321,16 +303,6 @@
                     <property name="configName" value="contactMethodTypes"/>
                     <property name="configDescription" value="Contact Method Types"/>
                     <property name="json" ref="contactMethodTypesJsonConfig"/>
-                </bean>
-                <bean class="com.armedia.acm.services.config.model.JsonConfig">
-                    <property name="configName" value="caseCorrespondenceForms"/>
-                    <property name="configDescription" value="Case Correspondence Forms"/>
-                    <property name="json" ref="caseCorrespondenceFormsJsonConfig"/>
-                </bean>
-                <bean class="com.armedia.acm.services.config.model.JsonConfig">
-                    <property name="configName" value="complaintCorrespondenceForms"/>
-                    <property name="configDescription" value="Complaint Correspondence Forms"/>
-                    <property name="json" ref="complaintCorrespondenceFormsJsonConfig"/>
                 </bean>
                 <bean class="com.armedia.acm.services.config.model.JsonConfig">
                     <property name="configName" value="fileTypes"/>

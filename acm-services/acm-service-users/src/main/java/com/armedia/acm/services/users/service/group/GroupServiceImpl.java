@@ -9,8 +9,6 @@ import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
-import com.armedia.acm.services.users.model.group.AcmGroupStatus;
-import com.armedia.acm.services.users.model.group.AcmGroupType;
 import com.armedia.acm.services.users.model.group.GroupConstants;
 import org.mule.api.MuleException;
 import org.mule.util.UUID;
@@ -114,45 +112,35 @@ public class GroupServiceImpl implements GroupService
         return pattern.matcher(str).matches();
     }
 
+    /**
+     * Creates or updates ad-hoc group based on the client info coming in from CRM
+     *
+     * @param acmGroup group we want to rename
+     * @param newName  group new name
+     */
     @Override
     @Transactional
-    public void createOrUpdateAdHocGroup(String genericGroupName, String clientId, String clientName, AcmGroup acmGroup)
+    public void renameGroup(AcmGroup acmGroup, String newName)
     {
-        if (acmGroup == null)
-        {
-            acmGroup = new AcmGroup();
-            acmGroup.setName(genericGroupName + " " + clientId + " " + clientName);
-            acmGroup.setStatus(AcmGroupStatus.ACTIVE);
-            acmGroup.setType(AcmGroupType.ADHOC_GROUP);
-            checkAndSaveAdHocGroup(acmGroup);
-        } else
-        {
-            AcmGroup newGroup = new AcmGroup();
+        AcmGroup newGroup = new AcmGroup();
 
-            // create new ad-hoc group and copy the properties from the original found group.
-            newGroup.setSupervisor(acmGroup.getSupervisor());
-            newGroup.setType(acmGroup.getType());
-            newGroup.setStatus(acmGroup.getStatus());
-            newGroup.setDescription(acmGroup.getDescription());
-            newGroup.setChildGroups(acmGroup.getChildGroups());
-            newGroup.setCreator(acmGroup.getCreator());
-            newGroup.setMembers(acmGroup.getMembers());
-            newGroup.setParentGroup(acmGroup.getParentGroup());
+        newGroup.setName(String.format("%s-UUID-%s", newName, UUID.getUUID()));
+        // copy the properties from the original found group.
+        newGroup.setSupervisor(acmGroup.getSupervisor());
+        newGroup.setType(acmGroup.getType());
+        newGroup.setStatus(acmGroup.getStatus());
+        newGroup.setDescription(acmGroup.getDescription());
+        newGroup.setChildGroups(acmGroup.getChildGroups());
+        newGroup.setCreator(acmGroup.getCreator());
+        newGroup.setMembers(acmGroup.getMembers());
+        newGroup.setParentGroup(acmGroup.getParentGroup());
 
-            // Get the UUID from the original group and concatenate it with the new name of the group.
-            String[] split = acmGroup.getName().split("-UUID-");
-            String uuid = split[1];
-            newGroup.setName(genericGroupName + " " + clientId + " " + clientName + "-UUID-" + uuid);
+        AcmGroup saved = getGroupDao().save(newGroup);
 
-            AcmGroup saved = getGroupDao().save(newGroup);
-
-            if (saved != null)
-            {
-                // after saving the group, remove the members and delete the original group
-                getGroupDao().removeMembersFromGroup(acmGroup.getName(), acmGroup.getMembers());
-                getGroupDao().deleteAcmGroupByName(acmGroup.getName());
-            }
-        }
+        // after saving the group, remove the members and delete the original group
+        // new set is created to avoid ConcurrentModificationException
+        getGroupDao().removeMembersFromGroup(acmGroup.getName(), new HashSet<>(acmGroup.getMembers()));
+        getGroupDao().markGroupDelete(acmGroup.getName());
     }
 
     public UserDao getUserDao()
