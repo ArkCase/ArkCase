@@ -75,7 +75,7 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     @Column(name = "cm_file_modifier")
     private String modifier;
 
-    @Column(name = "cm_file_cmis_repository_id")
+    @Column(name = "cm_file_cmis_repository_id", nullable = false)
     private String cmisRepositoryId;
 
     @Column(name = "cm_version_series_id")
