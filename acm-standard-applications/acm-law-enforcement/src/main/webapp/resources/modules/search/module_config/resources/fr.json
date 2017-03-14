@@ -1,0 +1,24 @@
+{
+  "search": {
+    "title": "fr_Search",
+    "search.btn": "fr_Search",
+    "export.btn": "fr_Export",
+    "search.placeholder": "fr_Type in to search",
+    "menus": {
+      "leftnav.item": "fr_Search"
+    },
+    "comp":{
+      "grid": {
+        "columns": {
+          "id": "fr_ID",
+          "name": "fr_Name",
+          "type": "fr_Type",
+          "title": "fr_Title",
+          "parent": "fr_Parent",
+          "assignee": "fr_Assignee",
+          "modified": "fr_Modified"
+        }
+      }
+    }
+  }
+}

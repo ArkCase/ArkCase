@@ -5,10 +5,13 @@ import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 
+import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
 import com.armedia.acm.correspondence.model.CorrespondenceQuery;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
+import com.armedia.acm.correspondence.model.QueryType;
 import com.armedia.acm.correspondence.utils.PoiWordGenerator;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.spring.SpringContextHolder;
 
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
@@ -49,6 +52,8 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
     private InputStream mockInputStream;
     private Authentication mockAuthentication;
     private EcmFileService mockEcmFileService;
+    private SpringContextHolder mockSpringContextHolder;
+    private CorrespondenceService mockCorrespondenceService;
 
     private String key1;
     private String key2;
@@ -70,12 +75,16 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
         mockInputStream = createMock(InputStream.class);
         mockAuthentication = createMock(Authentication.class);
         mockEcmFileService = createMock(EcmFileService.class);
+        mockSpringContextHolder = createMock(SpringContextHolder.class);
+        mockCorrespondenceService = createMock(CorrespondenceService.class);
 
         unit = new CorrespondenceGenerator();
         unit.setEntityManager(mockEntityManager);
         unit.setWordGenerator(mockWordGenerator);
         unit.setEcmFileService(mockEcmFileService);
         unit.setCorrespondenceFolderName(correspondenceFolder);
+        unit.setSpringContextHolder(mockSpringContextHolder);
+        unit.setCorrespondenceService(mockCorrespondenceService);
 
         String doctype = "doctype";
         String templateName = "templateName";
@@ -92,6 +101,7 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
         var3 = "var3";
 
         List<String> fieldNames = Arrays.asList(key1, key2, key3);
+
         Map<String, String> substitutionVars = new HashMap<>();
         substitutionVars.put(key1, var1);
         substitutionVars.put(key2, var2);
@@ -100,12 +110,12 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
         correspondenceQuery = new CorrespondenceQuery();
         correspondenceQuery.setJpaQuery(jpaQuery);
         correspondenceQuery.setFieldNames(fieldNames);
+        correspondenceQuery.setType(QueryType.CASE_FILE);
 
         correspondenceTemplate = new CorrespondenceTemplate();
         correspondenceTemplate.setDocumentType(doctype);
         correspondenceTemplate.setTemplateFilename(templateName);
-        correspondenceTemplate.setQuery(correspondenceQuery);
-        correspondenceTemplate.setTemplateSubstitutionVariables(substitutionVars);
+        correspondenceTemplate.setObjectType("CASE_FILE");
         correspondenceTemplate.setDateFormatString(dateFormat);
         correspondenceTemplate.setNumberFormatString(numberFormat);
     }
@@ -114,14 +124,15 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
     public void generate() throws Exception
     {
         String targetFolderCmisId = "targetFolderCmisId";
-        Object[] queryArgs = {500L};
+        Object[] queryArgs = { 500L };
 
         List<Object[]> results = new ArrayList<>();
 
         Date column1 = new Date();
         String column2 = "Subject Name";
         Number column3 = 123456L;
-        Object[] row = {column1, column2, column3};
+
+        Object[] row = { column1, column2, column3 };
         results.add(row);
 
         Capture<Resource> captureResourceTemplate = new Capture<>();
@@ -137,12 +148,41 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
         substitutions.put(var2, column2);
         substitutions.put(var3, expectedNumber);
 
+        List<CorrespondenceMergeField> mergeFields = new ArrayList<>();
+        CorrespondenceMergeField mergeField = new CorrespondenceMergeField();
+        mergeField.setFieldId(key1);
+        mergeField.setFieldValue(var1);
+        mergeField.setFieldType("CASE_FILE");
+        mergeFields.add(mergeField);
+
+        mergeField = new CorrespondenceMergeField();
+        mergeField.setFieldId(key2);
+        mergeField.setFieldValue(var2);
+        mergeField.setFieldType("CASE_FILE");
+        mergeFields.add(mergeField);
+
+        mergeField = new CorrespondenceMergeField();
+        mergeField.setFieldId(key3);
+        mergeField.setFieldValue(var3);
+        mergeField.setFieldType("CASE_FILE");
+        mergeFields.add(mergeField);
+
+        Map<String, CorrespondenceQuery> correspondenceQueryBeansMap = new HashMap<>();
+        correspondenceQueryBeansMap.put("caseFileCorrespondenceQueryBean", correspondenceQuery);
+
         Capture<String> filename = new Capture<>();
 
+        expect(mockSpringContextHolder.getAllBeansOfType(CorrespondenceQuery.class)).andReturn(correspondenceQueryBeansMap);
+        correspondenceQueryBeansMap.values().stream()
+                .filter(cQuery -> cQuery.getType().toString().equals(correspondenceTemplate.getObjectType())).findFirst().get();
         expect(mockEntityManager.createQuery(correspondenceQuery.getJpaQuery())).andReturn(mockQuery);
         expect(mockQuery.setParameter(1, queryArgs[0])).andReturn(mockQuery);
         expect(mockQuery.getResultList()).andReturn(results);
+
+        expect(mockCorrespondenceService.getActiveVersionMergeFieldsByType(correspondenceTemplate.getObjectType())).andReturn(mergeFields);
+
         mockWordGenerator.generate(capture(captureResourceTemplate), eq(mockOutputStream), eq(substitutions));
+
         expect(mockEcmFileService.upload(eq(correspondenceTemplate.getDocumentType() + ".docx"),
                 eq(correspondenceTemplate.getDocumentType()), eq(CorrespondenceGenerator.CORRESPONDENCE_CATEGORY), eq(mockInputStream),
                 eq(CorrespondenceGenerator.WORD_MIME_TYPE), capture(filename), eq(mockAuthentication), eq(targetFolderCmisId),

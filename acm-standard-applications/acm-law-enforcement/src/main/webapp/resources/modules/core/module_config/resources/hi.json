@@ -1,0 +1,23 @@
+{
+  "core": {
+    "userInfo": {
+      "addedMenu": {
+        "help": "hi_Help",
+        "logout": "hi_Logout"
+      }
+    },
+    "leftNav": {
+      "title": "hi_Navigation"
+    },
+    "topBar": {
+      "new": "hi_New",
+      "toggle.btn": "hi_Toggle navigation",
+      "search.placeholder": "hi_Search ArkCase"
+    },
+    "loginWarning": {
+      "btnOK.text": "hi_OK",
+      "btnCancel.text": "hi_Cancel",
+      "checkbox_warning.label": "hi_I acknowledge this warning."
+    }
+  }
+}

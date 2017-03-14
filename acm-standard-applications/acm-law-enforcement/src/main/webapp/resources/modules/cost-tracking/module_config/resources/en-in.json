@@ -1,0 +1,76 @@
+{
+  "costTracking": {
+    "title": "en-in_Cost Tracking",
+    "progressNoCostsheet": "en-in_[ No costsheet is selected ]",
+    "progressLoading": "en-in_Loading costsheet ",
+    "progressError": "en-in_Failed to load costsheet"
+  },
+  "costTracking.menus": {
+    "leftnav.item": "en-in_Cost Tracking",
+    "topbar.item": "en-in_Costsheet"
+  },
+  "costTracking.tree": {
+  },
+  "costTracking.comp.info": {
+    "incidentDate": "en-in_Incident Date",
+    "priority": "en-in_Priority",
+    "assignedTo": "en-in_Assigned To",
+    "subjectType": "en-in_Subject Type",
+    "state": "en-in_State"
+  },
+  "costTracking.comp.actions": {
+    "new.button": "en-in_New Costsheet",
+    "edit.button": "en-in_Edit Costsheet"
+  },
+  "costTracking.comp.details": {
+    "title": "en-in_Details",
+    "informSaved": "en-in_Costsheet details saved",
+    "table.columns": {
+      "title": "en-in_Details",
+      "modified": "en-in_Date Last Modified",
+      "modifier": "en-in_User Last Modified"
+    }
+  },
+  "costTracking.comp.people": {
+    "title": "en-in_Person",
+    "table.columns": {
+      "fullName": "en-in_Full Name",
+      "userId": "en-in_Username"
+    }
+  },
+  "costTracking.comp.summary": {
+    "title": "en-in_Cost Summary",
+    "table.columns": {
+      "parentId": "en-in_ID",
+      "parentNumber": "en-in_Parent ID",
+      "parentType": "en-in_Parent Type",
+      "value": "en-in_Total Cost",
+      "title": "en-in_Title",
+      "description": "en-in_Description"
+    }
+  },
+  "costTracking.comp.tags": {
+    "title": "en-in_Tags",
+    "table.columns": {
+      "tag": "en-in_Tag",
+      "created": "en-in_Created",
+      "createdBy": "en-in_Created By"
+    },
+    "modal": {
+    "title": "en-in_Tag",
+    "search": "en-in_Search for Tag",
+    "buttons": {
+          "cancel": "en-in_Cancel",
+          "ok": "en-in_Add Tag"
+     }
+    },
+    "message": {
+      "tagExists": "en-in_Tag with that name or description or text already exists",
+      "tagAssociated": "en-in_already associated",
+      "delete": {
+        "success": "en-in_Tag deleted successfully",
+        "error": "en-in_Error deleting tag"
+      }
+    }
+  }
+}

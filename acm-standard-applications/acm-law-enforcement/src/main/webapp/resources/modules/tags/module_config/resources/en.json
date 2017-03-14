@@ -3,6 +3,9 @@
     "title": "Tags",
     "search.btn": "Search",
     "search.placeholder": "Search for tags",
+    "menus": {
+      "leftnav.item": "Tags"
+    },
     "comp":{
       "grid": {
         "columns": {

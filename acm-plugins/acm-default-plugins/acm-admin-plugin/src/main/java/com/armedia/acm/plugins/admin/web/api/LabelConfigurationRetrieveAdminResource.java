@@ -40,7 +40,7 @@ public class LabelConfigurationRetrieveAdminResource {
             File file = FileUtils.getFile(fileName);
 
             // Convert Resources json format to array of objects
-            String resource = FileUtils.readFileToString(file);
+            String resource = FileUtils.readFileToString(file, "UTF-8");
 
             JSONObject resObject = new JSONObject(resource);
 

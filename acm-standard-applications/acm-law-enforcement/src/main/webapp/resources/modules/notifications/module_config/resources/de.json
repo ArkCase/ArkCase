@@ -1,0 +1,23 @@
+{
+  "notifications": {
+    "title": "Benachrichtigungen",
+    "search.btn": "de_Search",
+    "export.btn": "de_Export",
+    "search.placeholder": "de_Search for notifications",
+    "menus": {
+      "leftnav.item": "Benachrichtigungen"
+    },
+    "comp":{
+      "grid": {
+        "columns": {
+          "id": "de_ID",
+          "description": "de_Description",
+          "objNumber": "de_Object Number",
+          "parentNumber": "de_Parent Number",
+          "objType": "de_Object Type",
+          "modified": "de_Modified"
+        }
+      }
+    }
+  }
+}

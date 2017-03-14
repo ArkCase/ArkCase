@@ -1,0 +1,395 @@
+{
+  "admin": {
+    "title": "管理",
+    "security.title": "zh-cn_Security",
+    "security.functionalAccessControl": "zh-cn_Functional Access Control",
+    "security.functionalAccessControl.applicationRole": "zh-cn_Application Role",
+    "security.ldapConfig": "zh-cn_LDAP Configuration",
+    "security.ldapConfig.addNewDirectory": "zh-cn_Add New Directory",
+    "security.ldapConfig.table.ldapUrl": "zh-cn_LDAP Url",
+    "security.ldapConfig.table.directoryName": "zh-cn_Directory Name",
+    "security.ldapConfig.data": {
+      "addNewDirectory": "zh-cn_Add New Directory",
+      "editRecord": "zh-cn_Edit Record",
+      "id": "zh-cn_ID",
+      "ldapUrl": "zh-cn_LDAP Url",
+      "base": "zh-cn_Base",
+      "directoryName": "zh-cn_Directory Name",
+      "authUserDn": "zh-cn_Auth User Dn",
+      "authUserPassword": "zh-cn_Auth User Password",
+      "userSearchBase": "zh-cn_Users Search Base",
+      "userSearchFilter": "zh-cn_User Search Filter",
+      "allUsersFilter": "zh-cn_All Users Filter",
+      "allUsersPageFilter": "zh-cn_All Users Page Filter",
+      "allUsersSortingAttribute": "zh-cn_Sorting attribute for users",
+      "groupSearchBase": "zh-cn_Group Search Base",
+      "groupSearchFilterForUser": "zh-cn_Group Search Filter For User",
+      "userIdAttributeName": "zh-cn_User Id Attribute Name",
+      "userDomain": "zh-cn_User domain",
+      "userDomainNote": "zh-cn_(Note: Fill in the user domain for SSO scenario. For LDAP authentication leave it blank)",
+      "syncPageSize": "zh-cn_Sync Page Size",
+      "groupSearchFilter": "zh-cn_Group Search Filter",
+      "groupsSortingAttribute": "zh-cn_Sorting attribute for groups",
+      "groupSearchPageFilter": "zh-cn_Group Search Page Filter",
+      "enableEditingLdapUsers": "zh-cn_Enable managing users and groups",
+      "cancel": "zh-cn_Cancel",
+      "ok": "zh-cn_OK"
+    },
+    "menus": {
+      "leftnav.item": "管理"
+    },
+    "security.ldapConfig.data.placeholders": {
+      "id": "zh-cn_Enter directory name",
+      "ldapUrl": "zh-cn_Enter connection URL",
+      "base": "zh-cn_Enter base domain component (e.g. dc=example,dc=com)",
+      "authUserDn": "zh-cn_Enter user DN for authentication (e.g. cn=John Doe,ou=users,dc=example,dc=com)",
+      "authUserPassword": "zh-cn_Enter password for authentication user",
+      "userSearchBase": "zh-cn_Enter users search base (e.g. ou=users)",
+      "userSearchFilter": "zh-cn_Enter search filter for single user (e.g. (&(objectClass=person)(uid=%s))",
+      "allUsersFilter": "zh-cn_Enter search filter for all users (e.g. (objectClass=person))",
+      "allUsersPageFilter": "zh-cn_Enter filter including sort-attribute(e.g. (&(objectClass=person)(uidNumber>=%s)))",
+      "allUsersSortingAttribute": "zh-cn_Enter sorting attribute for users (e.g. 'uidNumber')",
+      "groupSearchBase": "zh-cn_Enter search base for groups (e.g. ou=groups)",
+      "groupSearchFilterForUser": "zh-cn_Enter search filter for user in group (e.g. (&(objectClass=group)(member=%s)))",
+      "userIdAttributeName": "zh-cn_Enter attribute used for user id (e.g. 'uid')",
+      "userDomain": "zh-cn_Enter user domain",
+      "syncPageSize": "zh-cn_Enter paging size",
+      "groupSearchFilter": "zh-cn_Enter search filter for groups (e.g. (objectClass=group))",
+      "groupsSortingAttribute": "zh-cn_Enter attribute for sorting groups (e.g. 'gidNumber')",
+      "groupSearchPageFilter": "zh-cn_Enter filter including sort-attribute (e.g. (&(objectClass=group)(gidNumber>=%s)))",
+      "enableEditingLdapUsers": "zh-cn_Check if managing users and groups to your DS is allowed"
+    },
+    "security.ldapConfig.messages": {
+      "delete.success": "zh-cn_Successfully deleted row.",
+      "delete.error": "zh-cn_Error deleting row.",
+      "insert.success": "zh-cn_Successfully inserted new row.",
+      "insert.error": "zh-cn_Error inserting new row.",
+      "update.success": "zh-cn_Successfully updated row.",
+      "update.error": "zh-cn_Error updating row."
+    },
+    "security.ldapConfig.dialog": {
+      "cancel": "zh-cn_Cancel",
+      "ok": "zh-cn_OK",
+      "confirm.delete": {
+        "deleteBtn": "zh-cn_Delete",
+        "cancelBtn": "zh-cn_Cancel",
+        "headerText": "zh-cn_Are you sure?",
+        "bodyText": "zh-cn_This record will be deleted. Are you sure?"
+      }
+    },
+    "admin.security.addNew": "zh-cn_Add New Directory",
+    "security.organizationalHierarchy": {
+      "title": "zh-cn_Organizational Hierarchy",
+      "btn": {
+        "createAdHocGroup": "zh-cn_createAdHocGroup"
+      },
+      "createGroupDialog": {
+        "ldapGroup": {
+          "title": "zh-cn_Add LDAP Group"
+        },
+        "adHocGroup": {
+          "title": "zh-cn_Add Ad-Hoc Group"
+        },
+        "selectDirectory": "zh-cn_--Choose Directory Config--",
+        "disabledGroupWarning": "zh-cn_Adding new LDAP groups is not allowed for this directory!",
+        "name": "zh-cn_Name",
+        "namePlaceholder": "zh-cn_Enter group name",
+        "description": "zh-cn_Description",
+        "descriptionPlaceholder": "zh-cn_Enter Description",
+        "btn": {
+          "ok": "zh-cn_Add Ad-Hoc Group",
+          "cancel": "zh-cn_Cancel"
+        }
+      },
+      "addSubGroupDialog": {
+        "title": "zh-cn_Add Subgroup to",
+        "name": "zh-cn_Name",
+        "namePlaceholder": "zh-cn_Enter group name",
+        "description": "zh-cn_Description",
+        "descriptionPlaceholder": "zh-cn_Enter Description",
+        "btn": {
+          "ok": "zh-cn_Add Ad-Hoc Group",
+          "cancel": "zh-cn_Cancel"
+        }
+      },
+      "addMembers": {
+        "title": "zh-cn_Add Members",
+        "btn": {
+          "search": "zh-cn_Go!",
+          "cancel": "zh-cn_Cancel",
+          "ok": "zh-cn_Add",
+          "searchPlaceholder": "zh-cn_Enter to search for members."
+        }
+      },
+      "createUserDialog": {
+        "addLdapMember": {
+          "title": "zh-cn_Add Ldap Member",
+          "btn": {
+            "cancel": "zh-cn_Cancel",
+            "ok": "zh-cn_Add Ldap User"
+          }
+        },
+        "editLdapMember": {
+          "title": "zh-cn_Edit Ldap Member",
+          "btn": {
+            "cancel": "zh-cn_Cancel",
+            "ok": "zh-cn_Edit Ldap User"
+          }
+        },
+        "username": "zh-cn_Username",
+        "firstName": "zh-cn_FirstName",
+        "lastName": "zh-cn_LastName",
+        "email": "zh-cn_Email",
+        "password": "zh-cn_Password"
+      },
+      "addMembersGridColumns": {
+        "name": "zh-cn_Name",
+        "type": "zh-cn_Type",
+        "title": "zh-cn_Title",
+        "parent": "zh-cn_Parent",
+        "assignee": "zh-cn_Assignee",
+        "modified": "zh-cn_Modified"
+      },
+      "addSupervisor": {
+        "title": "zh-cn_Add Supervisor",
+        "btn": {
+          "search": "zh-cn_Go!",
+          "cancel": "zh-cn_Cancel",
+          "ok": "zh-cn_Add",
+          "searchPlaceholder": "zh-cn_Enter to search for supervisor."
+        }
+      },
+      "addSupervisorGridColumns": {
+        "name": "zh-cn_Name",
+        "type": "zh-cn_Type",
+        "title": "zh-cn_Title",
+        "parent": "zh-cn_Parent",
+        "assignee": "zh-cn_Assignee",
+        "modified": "zh-cn_Modified"
+      },
+      "dialog.group": {
+        "confirm.delete": {
+          "cancelBtn": "zh-cn_Cancel",
+          "deleteBtn": "zh-cn_Delete",
+          "headerText": "zh-cn_You are about to delete group: ",
+          "bodyText": "zh-cn_Are you sure?"
+        }
+      },
+      "dialog.member": {
+        "confirm.delete": {
+          "cancelBtn": "zh-cn_Cancel",
+          "deleteBtn": "zh-cn_Delete",
+          "headerText": "zh-cn_You are about to delete member: ",
+          "bodyText": "zh-cn_Are you sure?"
+        }
+      },
+      "messages": {
+        "delete": {
+          "group": {
+            "success": "zh-cn_success",
+            "error": "zh-cn_error"
+          },
+          "member": {
+            "success": "zh-cn_success",
+            "error": "zh-cn_error"
+          }
+        }
+      }
+    },
+    "security.selectPrivileges": "zh-cn_Create Role/Select Privileges",
+    "security.selectPrivileges.applicationRole": "zh-cn_Application Role",
+    "security.selectPrivileges.createRole": "zh-cn_Create Role",
+    "security.selectPrivileges.editRole": "zh-cn_Edit Role",
+    "security.selectPrivileges.applyChanges": "zh-cn_Apply Changes",
+    "security.selectPrivileges.enterRoleName": "zh-cn_Enter the role name in the box below.",
+    "security.selectPrivileges.cancel": "zh-cn_Cancel",
+    "security.selectPrivileges.name": "zh-cn_Name",
+    "security.modules": "zh-cn_Modules",
+    "security.modules.module": "zh-cn_Module",
+    "dashboard.title": "zh-cn_Dashboard",
+    "dashboard.config": "zh-cn_Dashboard Configuration",
+    "dashboard.widgets": "zh-cn_Widgets",
+    "reports.title": "zh-cn_Reports",
+    "reports.config": "zh-cn_Reports Configuration",
+    "forms.title": "zh-cn_Forms",
+    "forms.config": "zh-cn_Form Configuration",
+    "workflows.title": "zh-cn_Workflows",
+    "workflows.config": "zh-cn_Workflow Configuration",
+    "workflows.config.activate": {
+      "error": "zh-cn_Cant make this process active!",
+      "success": "zh-cn_Process succesfully activated."
+    },
+    "workflows.config.showHistory.dialog": {
+      "title": "zh-cn_History",
+      "body": "zh-cn_Below is a history of previous BPMN files. To reinstate a previous workflow, select the workflow and click Make Active",
+      "cancel": "zh-cn_Cancel",
+      "activate": "zh-cn_Make Active"
+    },
+    "workflows.config.grid": {
+      "businessProcess": "zh-cn_Business Process",
+      "description": "zh-cn_Description",
+      "active": "zh-cn_Active",
+      "modified": "zh-cn_Modified",
+      "creator": "zh-cn_Author"
+    },
+    "workflows.config.btn": {
+      "createNew": "zh-cn_Create New Model",
+      "uploadNew": "zh-cn_Upload New BPMN"
+    },
+    "workflows.config.links": {
+      "download": "zh-cn_Download",
+      "replaceFile": "zh-cn_Replace File",
+      "versionHistory": "zh-cn_Version History"
+    },
+    "workflows.config.upload": {
+      "success": "zh-cn_Successfully uploaded new process definition",
+      "error": "zh-cn_Error uploading new process definition"
+    },
+    "formWorkflows.title": "zh-cn_Form/Workflow Link",
+    "formWorkflows.link": "zh-cn_Link Forms/Workflows",
+    "formWorkflows.link.undo": "zh-cn_Undo",
+    "formWorkflows.link.saveChanges": "zh-cn_Save Changes",
+    "formWorkflows.link.editRole.save.success": "zh-cn_Link Forms/Workflows configuration saved successfully",
+    "formWorkflows.link.editRole.save.error": "zh-cn_Can't save Link Forms/Workflows configuration",
+    "application": {
+      "title": "zh-cn_Application",
+      "labels.config": {
+        "defaultLabel": "zh-cn_Default",
+        "applyBtn": "zh-cn_Apply",
+        "resetModule": "zh-cn_Reset Module",
+        "resetModule.confirm": "zh-cn_Are you sure you want reset custom resources for current module?",
+        "resetModule.title": "zh-cn_Reset current module (delete custom resources)",
+        "resetAll": "zh-cn_Reset All",
+        "resetAll.confirm": "zh-cn_Are you sure you want reset all custom resources for all modules?",
+        "resetAll.title": "zh-cn_Reset all resources (delete all custom resources)",
+        "refreshAll": "zh-cn_Refresh All",
+        "refreshAll.title": "zh-cn_Refresh all resources (keep custom resources)",
+        "title": "zh-cn_Label Configuration",
+        "filterBy": "zh-cn_Filter By Id",
+        "filterByValue": "zh-cn_Filter By Value",
+        "data": {
+          "description": "zh-cn_Description",
+          "defaultValue": "zh-cn_Default Value",
+          "id": "zh-cn_ID",
+          "value": "zh-cn_Value"
+        }
+      },
+      "module.config": {
+        "title": "zh-cn_Module Configuration"
+      },
+      "userName.config": {
+        "title": "zh-cn_Username Display Configuration",
+        "userId.label": "zh-cn_Use User Identifier",
+        "userName.label": "zh-cn_Use Full Username",
+        "apply": "zh-cn_Apply",
+        "modal.title": "zh-cn_Information",
+        "modal.info": "zh-cn_Settings will take effect after refresh",
+        "modal.ok": "zh-cn_OK"
+      },
+      "login.config": {
+        "title": "zh-cn_Login Configuration",
+        "idleLimit.label": "zh-cn_Login idle limit (in milliseconds)",
+        "inform": "zh-cn_Settings will take effect for all new user sessions",
+        "apply.label": "zh-cn_Apply"
+      },
+      "auditHistory.config": {
+        "title": "zh-cn_Audit History",
+        "historyDays.label": "zh-cn_Keep Audit and Notification events (in days)",
+        "inform": "zh-cn_Setting successfully saved",
+        "apply.label": "zh-cn_Apply"
+      }
+    },
+    "branding.title": "zh-cn_Branding",
+    "branding.logo": "zh-cn_Logo",
+    "branding.logo.messages": {
+      "upload.success": "zh-cn_Custom logo files updated. Refresh browser page to see result.",
+      "upload.error": "zh-cn_Error uploading custom logo files."
+    },
+    "branding.logo.header.title": "zh-cn_Header",
+    "branding.logo.login.title": "zh-cn_Login Page",
+    "branding.logo.warningMessage": "zh-cn_Only PNG format is allowed. Recommended ratio is 1 to 4. Minimum height is 50px.",
+    "branding.logo.btn": {
+      "chooseHeader": "zh-cn_Choose Header logo",
+      "chooseLogin": "zh-cn_Choose Login logo",
+      "saveFiles": "zh-cn_Save"
+    },
+    "branding": {
+      "customCss": "zh-cn_Custom CSS",
+      "customCss.save.success": "zh-cn_Custom CSS updated. Refresh browser page to see result.",
+      "customCss.save.error": "zh-cn_Error saving Custom CSS.",
+      "customCss.save": "zh-cn_Save"
+    },
+    "correspondenceManagement": {
+      "title": "zh-cn_Correspondence Management",
+      "templates": "zh-cn_Correspondence Templates",
+      "templates.addNewTemplate": "zh-cn_Upload Template",
+      "templates.addTemplate": "zh-cn_Upload",
+      "templates.versionTemplate": "zh-cn_Versions",
+      "templates.deleteTemplate": "zh-cn_Delete",
+      "templates.editTemplate": "zh-cn_Edit Template",
+      "templates.grid": {
+        "id": "zh-cn_ID",
+        "title": "zh-cn_Title",
+        "label": "zh-cn_Display Name",
+        "path": "zh-cn_Path",
+        "created": "zh-cn_Created",
+        "modified": "zh-cn_Modified",
+        "creator": "zh-cn_Creator",
+        "modifier": "zh-cn_Modifier",
+        "activated": "zh-cn_Status",
+        "objectType": "zh-cn_Object Type",
+        "version": "zh-cn_Version",
+        "templateVersionActive" : "zh-cn_Active"
+      },
+      "templates.fieldNames.label": "zh-cn_Map fields to values from the template",
+      "templates.querySelect": {
+        "header.text": "zh-cn_Select Query",
+        "btnCancel.text": "zh-cn_Cancel",
+        "btnOk.text": "zh-cn_Select Query",
+        "table.columns": {
+          "beanId": "zh-cn_Bean ID",
+          "jpaQuery": "zh-cn_JPA Query",
+          "queryType": "zh-cn_Query Type"
+        }
+      },
+      "templates.modal": {
+        "objectTypes.label": "zh-cn_Object Types",
+        "querySelect.label": "zh-cn_Query Select",
+        "label.label": "zh-cn_Display Name",
+        "btnCancel.text": "zh-cn_Cancel",
+        "btnOk.text": "zh-cn_Upload Template"
+      },
+      "templates.version.modal": {
+        "btnOk.text": "zh-cn_OK"
+      },
+      "mergefields": "zh-cn_Merge Fields Configuration",
+      "mergefields.saveMergeFields": "zh-cn_Save",
+      "mergefields.versionMergeFields": "zh-cn_Versions",
+      "mergefields.grid": {
+      "fieldId": "zh-cn_ID",
+      "fieldValue": "zh-cn_Value",
+      "fieldDescription": "zh-cn_Description"
+      },
+      "mergefields.version.grid": {
+        "mergingVersion": "zh-cn_Version",
+        "modified": "zh-cn_Modified",
+        "modifier": "zh-cn_Modifier",
+        "mergingActiveVersion": "zh-cn_Active"
+      },
+      "mergefields.version.modal": {
+        "btnLoadVersion.text": "zh-cn_Load Version",
+        "btnCancel.text": "zh-cn_Cancel"
+      }
+    },
+    "forms.defaultValue": "zh-cn_Select Target",
+    "forms.addForm": "zh-cn_Add Plain Form",
+    "forms.data": {
+      "name": "zh-cn_Form Name",
+      "applicationName": "zh-cn_Application name",
+      "description": "zh-cn_Description",
+      "target": "zh-cn_Target"
+    },
+    "forms.message.delete.success": "zh-cn_Successfully deleted row.",
+    "forms.message.delete.error": "zh-cn_Error deleting row."
+  }
+}

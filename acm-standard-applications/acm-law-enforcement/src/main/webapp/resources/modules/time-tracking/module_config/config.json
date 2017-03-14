@@ -7,7 +7,7 @@
     {
       "menuId": "leftnav",
       "menuItemURL": "time-tracking.main",
-      "menuItemTitle": "Time Tracking",
+      "menuItemTitle": "timeTracking.menus.leftnav.item",
       "moduleId": "time",
       "iconClass": "fa fa-clock-o",
       "position": 130
@@ -15,7 +15,7 @@
     {
       "menuId": "topbar",
       "menuItemURL": "frevvo.new-timesheet",
-      "menuItemTitle": "Timesheet",
+      "menuItemTitle": "timeTracking.menus.topbar.item",
       "moduleId": "time",
       "iconClass": "fa fa-clock-o",
       "position": 40

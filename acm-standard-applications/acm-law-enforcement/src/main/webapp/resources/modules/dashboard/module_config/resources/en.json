@@ -1,6 +1,9 @@
 {
   "dashboard": {
     "title": "Dashboard",
+    "menus": {
+      "leftnav.item": "Dashboard"
+    },
     "widgets": {
       "casesByQueue": {
         "title": "Active Case Files by Queue",

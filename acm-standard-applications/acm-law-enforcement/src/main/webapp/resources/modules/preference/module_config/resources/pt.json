@@ -1,0 +1,8 @@
+{
+  "preference": {
+    "title": "pt_Preferences",
+    "menus": {
+      "usermenu.item": "pt_Preferences"
+    }
+  }
+}

@@ -1,0 +1,395 @@
+{
+  "admin": {
+    "title": "es_Admin",
+    "security.title": "es_Security",
+    "security.functionalAccessControl": "es_Functional Access Control",
+    "security.functionalAccessControl.applicationRole": "es_Application Role",
+    "security.ldapConfig": "es_LDAP Configuration",
+    "security.ldapConfig.addNewDirectory": "es_Add New Directory",
+    "security.ldapConfig.table.ldapUrl": "es_LDAP Url",
+    "security.ldapConfig.table.directoryName": "es_Directory Name",
+    "security.ldapConfig.data": {
+      "addNewDirectory": "es_Add New Directory",
+      "editRecord": "es_Edit Record",
+      "id": "es_ID",
+      "ldapUrl": "es_LDAP Url",
+      "base": "es_Base",
+      "directoryName": "es_Directory Name",
+      "authUserDn": "es_Auth User Dn",
+      "authUserPassword": "es_Auth User Password",
+      "userSearchBase": "es_Users Search Base",
+      "userSearchFilter": "es_User Search Filter",
+      "allUsersFilter": "es_All Users Filter",
+      "allUsersPageFilter": "es_All Users Page Filter",
+      "allUsersSortingAttribute": "es_Sorting attribute for users",
+      "groupSearchBase": "es_Group Search Base",
+      "groupSearchFilterForUser": "es_Group Search Filter For User",
+      "userIdAttributeName": "es_User Id Attribute Name",
+      "userDomain": "es_User domain",
+      "userDomainNote": "es_(Note: Fill in the user domain for SSO scenario. For LDAP authentication leave it blank)",
+      "syncPageSize": "es_Sync Page Size",
+      "groupSearchFilter": "es_Group Search Filter",
+      "groupsSortingAttribute": "es_Sorting attribute for groups",
+      "groupSearchPageFilter": "es_Group Search Page Filter",
+      "enableEditingLdapUsers": "es_Enable managing users and groups",
+      "cancel": "es_Cancel",
+      "ok": "es_OK"
+    },
+    "menus": {
+      "leftnav.item": "es_Admin"
+    },
+    "security.ldapConfig.data.placeholders": {
+      "id": "es_Enter directory name",
+      "ldapUrl": "es_Enter connection URL",
+      "base": "es_Enter base domain component (e.g. dc=example,dc=com)",
+      "authUserDn": "es_Enter user DN for authentication (e.g. cn=John Doe,ou=users,dc=example,dc=com)",
+      "authUserPassword": "es_Enter password for authentication user",
+      "userSearchBase": "es_Enter users search base (e.g. ou=users)",
+      "userSearchFilter": "es_Enter search filter for single user (e.g. (&(objectClass=person)(uid=%s))",
+      "allUsersFilter": "es_Enter search filter for all users (e.g. (objectClass=person))",
+      "allUsersPageFilter": "es_Enter filter including sort-attribute(e.g. (&(objectClass=person)(uidNumber>=%s)))",
+      "allUsersSortingAttribute": "es_Enter sorting attribute for users (e.g. 'uidNumber')",
+      "groupSearchBase": "es_Enter search base for groups (e.g. ou=groups)",
+      "groupSearchFilterForUser": "es_Enter search filter for user in group (e.g. (&(objectClass=group)(member=%s)))",
+      "userIdAttributeName": "es_Enter attribute used for user id (e.g. 'uid')",
+      "userDomain": "es_Enter user domain",
+      "syncPageSize": "es_Enter paging size",
+      "groupSearchFilter": "es_Enter search filter for groups (e.g. (objectClass=group))",
+      "groupsSortingAttribute": "es_Enter attribute for sorting groups (e.g. 'gidNumber')",
+      "groupSearchPageFilter": "es_Enter filter including sort-attribute (e.g. (&(objectClass=group)(gidNumber>=%s)))",
+      "enableEditingLdapUsers": "es_Check if managing users and groups to your DS is allowed"
+    },
+    "security.ldapConfig.messages": {
+      "delete.success": "es_Successfully deleted row.",
+      "delete.error": "es_Error deleting row.",
+      "insert.success": "es_Successfully inserted new row.",
+      "insert.error": "es_Error inserting new row.",
+      "update.success": "es_Successfully updated row.",
+      "update.error": "es_Error updating row."
+    },
+    "security.ldapConfig.dialog": {
+      "cancel": "es_Cancel",
+      "ok": "es_OK",
+      "confirm.delete": {
+        "deleteBtn": "es_Delete",
+        "cancelBtn": "es_Cancel",
+        "headerText": "es_Are you sure?",
+        "bodyText": "es_This record will be deleted. Are you sure?"
+      }
+    },
+    "admin.security.addNew": "es_Add New Directory",
+    "security.organizationalHierarchy": {
+      "title": "es_Organizational Hierarchy",
+      "btn": {
+        "createAdHocGroup": "es_createAdHocGroup"
+      },
+      "createGroupDialog": {
+        "ldapGroup": {
+          "title": "es_Add LDAP Group"
+        },
+        "adHocGroup": {
+          "title": "es_Add Ad-Hoc Group"
+        },
+        "selectDirectory": "es_--Choose Directory Config--",
+        "disabledGroupWarning": "es_Adding new LDAP groups is not allowed for this directory!",
+        "name": "es_Name",
+        "namePlaceholder": "es_Enter group name",
+        "description": "es_Description",
+        "descriptionPlaceholder": "es_Enter Description",
+        "btn": {
+          "ok": "es_Add Ad-Hoc Group",
+          "cancel": "es_Cancel"
+        }
+      },
+      "addSubGroupDialog": {
+        "title": "es_Add Subgroup to",
+        "name": "es_Name",
+        "namePlaceholder": "es_Enter group name",
+        "description": "es_Description",
+        "descriptionPlaceholder": "es_Enter Description",
+        "btn": {
+          "ok": "es_Add Ad-Hoc Group",
+          "cancel": "es_Cancel"
+        }
+      },
+      "addMembers": {
+        "title": "es_Add Members",
+        "btn": {
+          "search": "es_Go!",
+          "cancel": "es_Cancel",
+          "ok": "es_Add",
+          "searchPlaceholder": "es_Enter to search for members."
+        }
+      },
+      "createUserDialog": {
+        "addLdapMember": {
+          "title": "es_Add Ldap Member",
+          "btn": {
+            "cancel": "es_Cancel",
+            "ok": "es_Add Ldap User"
+          }
+        },
+        "editLdapMember": {
+          "title": "es_Edit Ldap Member",
+          "btn": {
+            "cancel": "es_Cancel",
+            "ok": "es_Edit Ldap User"
+          }
+        },
+        "username": "es_Username",
+        "firstName": "es_FirstName",
+        "lastName": "es_LastName",
+        "email": "es_Email",
+        "password": "es_Password"
+      },
+      "addMembersGridColumns": {
+        "name": "es_Name",
+        "type": "es_Type",
+        "title": "es_Title",
+        "parent": "es_Parent",
+        "assignee": "es_Assignee",
+        "modified": "es_Modified"
+      },
+      "addSupervisor": {
+        "title": "es_Add Supervisor",
+        "btn": {
+          "search": "es_Go!",
+          "cancel": "es_Cancel",
+          "ok": "es_Add",
+          "searchPlaceholder": "es_Enter to search for supervisor."
+        }
+      },
+      "addSupervisorGridColumns": {
+        "name": "es_Name",
+        "type": "es_Type",
+        "title": "es_Title",
+        "parent": "es_Parent",
+        "assignee": "es_Assignee",
+        "modified": "es_Modified"
+      },
+      "dialog.group": {
+        "confirm.delete": {
+          "cancelBtn": "es_Cancel",
+          "deleteBtn": "es_Delete",
+          "headerText": "es_You are about to delete group: ",
+          "bodyText": "es_Are you sure?"
+        }
+      },
+      "dialog.member": {
+        "confirm.delete": {
+          "cancelBtn": "es_Cancel",
+          "deleteBtn": "es_Delete",
+          "headerText": "es_You are about to delete member: ",
+          "bodyText": "es_Are you sure?"
+        }
+      },
+      "messages": {
+        "delete": {
+          "group": {
+            "success": "es_success",
+            "error": "es_error"
+          },
+          "member": {
+            "success": "es_success",
+            "error": "es_error"
+          }
+        }
+      }
+    },
+    "security.selectPrivileges": "es_Create Role/Select Privileges",
+    "security.selectPrivileges.applicationRole": "es_Application Role",
+    "security.selectPrivileges.createRole": "es_Create Role",
+    "security.selectPrivileges.editRole": "es_Edit Role",
+    "security.selectPrivileges.applyChanges": "es_Apply Changes",
+    "security.selectPrivileges.enterRoleName": "es_Enter the role name in the box below.",
+    "security.selectPrivileges.cancel": "es_Cancel",
+    "security.selectPrivileges.name": "es_Name",
+    "security.modules": "es_Modules",
+    "security.modules.module": "es_Module",
+    "dashboard.title": "es_Dashboard",
+    "dashboard.config": "es_Dashboard Configuration",
+    "dashboard.widgets": "es_Widgets",
+    "reports.title": "es_Reports",
+    "reports.config": "es_Reports Configuration",
+    "forms.title": "es_Forms",
+    "forms.config": "es_Form Configuration",
+    "workflows.title": "es_Workflows",
+    "workflows.config": "es_Workflow Configuration",
+    "workflows.config.activate": {
+      "error": "es_Cant make this process active!",
+      "success": "es_Process succesfully activated."
+    },
+    "workflows.config.showHistory.dialog": {
+      "title": "es_History",
+      "body": "es_Below is a history of previous BPMN files. To reinstate a previous workflow, select the workflow and click Make Active",
+      "cancel": "es_Cancel",
+      "activate": "es_Make Active"
+    },
+    "workflows.config.grid": {
+      "businessProcess": "es_Business Process",
+      "description": "es_Description",
+      "active": "es_Active",
+      "modified": "es_Modified",
+      "creator": "es_Author"
+    },
+    "workflows.config.btn": {
+      "createNew": "es_Create New Model",
+      "uploadNew": "es_Upload New BPMN"
+    },
+    "workflows.config.links": {
+      "download": "es_Download",
+      "replaceFile": "es_Replace File",
+      "versionHistory": "es_Version History"
+    },
+    "workflows.config.upload": {
+      "success": "es_Successfully uploaded new process definition",
+      "error": "es_Error uploading new process definition"
+    },
+    "formWorkflows.title": "es_Form/Workflow Link",
+    "formWorkflows.link": "es_Link Forms/Workflows",
+    "formWorkflows.link.undo": "es_Undo",
+    "formWorkflows.link.saveChanges": "es_Save Changes",
+    "formWorkflows.link.editRole.save.success": "es_Link Forms/Workflows configuration saved successfully",
+    "formWorkflows.link.editRole.save.error": "es_Can't save Link Forms/Workflows configuration",
+    "application": {
+      "title": "es_Application",
+      "labels.config": {
+        "defaultLabel": "es_Default",
+        "applyBtn": "es_Apply",
+        "resetModule": "es_Reset Module",
+        "resetModule.confirm": "es_Are you sure you want reset custom resources for current module?",
+        "resetModule.title": "es_Reset current module (delete custom resources)",
+        "resetAll": "es_Reset All",
+        "resetAll.confirm": "es_Are you sure you want reset all custom resources for all modules?",
+        "resetAll.title": "es_Reset all resources (delete all custom resources)",
+        "refreshAll": "es_Refresh All",
+        "refreshAll.title": "es_Refresh all resources (keep custom resources)",
+        "title": "es_Label Configuration",
+        "filterBy": "es_Filter By Id",
+        "filterByValue": "es_Filter By Value",
+        "data": {
+          "description": "es_Description",
+          "defaultValue": "es_Default Value",
+          "id": "es_ID",
+          "value": "es_Value"
+        }
+      },
+      "module.config": {
+        "title": "es_Module Configuration"
+      },
+      "userName.config": {
+        "title": "es_Username Display Configuration",
+        "userId.label": "es_Use User Identifier",
+        "userName.label": "es_Use Full Username",
+        "apply": "es_Apply",
+        "modal.title": "es_Information",
+        "modal.info": "es_Settings will take effect after refresh",
+        "modal.ok": "es_OK"
+      },
+      "login.config": {
+        "title": "es_Login Configuration",
+        "idleLimit.label": "es_Login idle limit (in milliseconds)",
+        "inform": "es_Settings will take effect for all new user sessions",
+        "apply.label": "es_Apply"
+      },
+      "auditHistory.config": {
+        "title": "es_Audit History",
+        "historyDays.label": "es_Keep Audit and Notification events (in days)",
+        "inform": "es_Setting successfully saved",
+        "apply.label": "es_Apply"
+      }
+    },
+    "branding.title": "es_Branding",
+    "branding.logo": "es_Logo",
+    "branding.logo.messages": {
+      "upload.success": "es_Custom logo files updated. Refresh browser page to see result.",
+      "upload.error": "es_Error uploading custom logo files."
+    },
+    "branding.logo.header.title": "es_Header",
+    "branding.logo.login.title": "es_Login Page",
+    "branding.logo.warningMessage": "es_Only PNG format is allowed. Recommended ratio is 1 to 4. Minimum height is 50px.",
+    "branding.logo.btn": {
+      "chooseHeader": "es_Choose Header logo",
+      "chooseLogin": "es_Choose Login logo",
+      "saveFiles": "es_Save"
+    },
+    "branding": {
+      "customCss": "es_Custom CSS",
+      "customCss.save.success": "es_Custom CSS updated. Refresh browser page to see result.",
+      "customCss.save.error": "es_Error saving Custom CSS.",
+      "customCss.save": "es_Save"
+    },
+    "correspondenceManagement": {
+      "title": "es_Correspondence Management",
+      "templates": "es_Correspondence Templates",
+      "templates.addNewTemplate": "es_Upload Template",
+      "templates.addTemplate": "es_Upload",
+      "templates.versionTemplate": "es_Versions",
+      "templates.deleteTemplate": "es_Delete",
+      "templates.editTemplate": "es_Edit Template",
+      "templates.grid": {
+        "id": "es_ID",
+        "title": "es_Title",
+        "label": "es_Display Name",
+        "path": "es_Path",
+        "created": "es_Created",
+        "modified": "es_Modified",
+        "creator": "es_Creator",
+        "modifier": "es_Modifier",
+        "activated": "es_Status",
+        "objectType": "es_Object Type",
+        "version": "es_Version",
+        "templateVersionActive" : "es_Active"
+      },
+      "templates.fieldNames.label": "es_Map fields to values from the template",
+      "templates.querySelect": {
+        "header.text": "es_Select Query",
+        "btnCancel.text": "es_Cancel",
+        "btnOk.text": "es_Select Query",
+        "table.columns": {
+          "beanId": "es_Bean ID",
+          "jpaQuery": "es_JPA Query",
+          "queryType": "es_Query Type"
+        }
+      },
+      "templates.modal": {
+        "objectTypes.label": "es_Object Types",
+        "querySelect.label": "es_Query Select",
+        "label.label": "es_Display Name",
+        "btnCancel.text": "es_Cancel",
+        "btnOk.text": "es_Upload Template"
+      },
+      "templates.version.modal": {
+        "btnOk.text": "es_OK"
+      },
+      "mergefields": "es_Merge Fields Configuration",
+      "mergefields.saveMergeFields": "es_Save",
+      "mergefields.versionMergeFields": "es_Versions",
+      "mergefields.grid": {
+      "fieldId": "es_ID",
+      "fieldValue": "es_Value",
+      "fieldDescription": "es_Description"
+      },
+      "mergefields.version.grid": {
+        "mergingVersion": "es_Version",
+        "modified": "es_Modified",
+        "modifier": "es_Modifier",
+        "mergingActiveVersion": "es_Active"
+      },
+      "mergefields.version.modal": {
+        "btnLoadVersion.text": "es_Load Version",
+        "btnCancel.text": "es_Cancel"
+      }
+    },
+    "forms.defaultValue": "es_Select Target",
+    "forms.addForm": "es_Add Plain Form",
+    "forms.data": {
+      "name": "es_Form Name",
+      "applicationName": "es_Application name",
+      "description": "es_Description",
+      "target": "es_Target"
+    },
+    "forms.message.delete.success": "es_Successfully deleted row.",
+    "forms.message.delete.error": "es_Error deleting row."
+  }
+}

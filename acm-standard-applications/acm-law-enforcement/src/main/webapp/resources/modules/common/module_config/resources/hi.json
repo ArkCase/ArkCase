@@ -1,0 +1,250 @@
+{
+  "common": {
+    "select.option.none": "hi_(Select One)",
+    "defaultDateFormat": "hi_MM/DD/YYYY",
+    "defaultTimeFormat": "hi_hh:mm:ss",
+    "defaultDateTimeFormat": "hi_MM/DD/YYYY hh:mm",
+    "defaultDatePickerFormat": "hi_MM/dd/yyyy",
+    "defaultDateUIFormat": "hi_MM/dd/yyyy",
+    "defaultDateTimeUIFormat": "hi_MM/dd/yyyy HH:mm"
+  },
+  "common.service": {
+    "error.invalidData": "hi_Invalid data"
+  },
+  "common.objects": {
+    "progressNoData": "hi_[ No data ]",
+    "progressLoading": "hi_Loading data ",
+    "progressError": "hi_Failed to load data "
+  },
+  "common.frevvo": {
+    "defaultDateFormat": "hi_YYYY-MM-DD"
+  },
+  "common.service.messageService": {
+    "authorizationError": "hi_You are not authorized to take this action",
+    "actionMessages": {
+      "success": "hi_Action was successful",
+      "error": "hi_Action error"
+    }
+  },
+  "common.directive.docTree": {
+    "btnRefresh": "hi_Refresh",
+    "waitUploading": "hi_Uploading...",
+    "confirmVersion": "hi_Are you sure to set back to older version?",
+    "declareSuccessful": "hi_Declare successful. Refreshing Document Tree...",
+    "prevItems": "hi_ items above...",
+    "prevItemsTooltip": "hi_Review previous items",
+    "moreItems": "hi_ more items...",
+    "moreItemsTooltip": "hi_Load more items",
+    "moreItemsBegin": "hi_More items...",
+    "email": {
+      "defaultTitle": "hi_ArkCase Documents",
+      "headerForLinks": "hi_Please follow the links below to view the document(s). Links expire in 3 days.",
+      "footerForLinks": "hi_Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com",
+      "subjectForAttachment": "hi_Documents from ArkCase",
+      "bodyForAttachment": "hi_Please find attached the documents sent to you from ArkCase.",
+      "headerForAttachment": "hi_Hello,",
+      "footerForAttachment": "hi_Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com"
+    },
+    "menu": {
+      "noop": "hi_(Select Item)",
+      "editWithWebDAV": "hi_Edit"
+    },
+    "table.columns": {
+      "title": "hi_Title",
+      "type": "hi_Type",
+      "created": "hi_Created",
+      "modified": "hi_Modified",
+      "author": "hi_Author",
+      "version": "hi_Version",
+      "status": "hi_Status"
+    },
+    "dndDialog": {
+      "title": "hi_Drag and Drop",
+      "radReplace.text": "hi_Replace document (If more then one files are dropped, only first one is used)",
+      "radUploadToParent.text": "hi_Create document(s) in parent folder",
+      "selFileTypes.label": "hi_File Type:",
+      "optFileType.prompt": "hi_[choose file type]",
+      "btnCancel.text": "hi_Cancel",
+      "btnOk.text": "hi_OK"
+    },
+    "emailDialog": {
+      "title": "hi_Email",
+      "recipients": "hi_Recipients:",
+      "btnCancel.text": "hi_Cancel",
+      "btnOk.text": "hi_Send Email",
+      "gridColumns": {
+        "name": "hi_Name",
+        "email": "hi_Email"
+      }
+    },
+    "comment": {
+      "title": "hi_Checkin New Document",
+      "addComent": "hi_Detailed Note",
+      "btnCancel.text": "hi_Cancel",
+      "btnOk.text": "hi_Checkin",
+      "chooseFiles": "hi_Choose Files",
+      "noFiles": "hi_No Files Selected"
+    },
+    "error": {
+      "nodeTitle": "hi_(Error)"
+    },
+    "lockedTitle": "hi_This document is locked by "
+  },
+  "common.directive.objectTree": {
+    "btnPrev.title": "hi_ records above...",
+    "btnPrev.toolTip": "hi_Review previous records",
+    "btnNext.titleUnknownSize": "hi_More records...",
+    "btnNext.title": "hi_ more records...",
+    "btnNext.toolTip": "hi_Load more records",
+    "edtQuery.placeHolder": "hi_Search",
+    "btnQuery.text": "hi_Go!",
+    "errorNode.title": "hi_(Error)",
+    "errorNode.toolTip": "hi_(Error)",
+    "noAccessNode.title": "hi_(No Access)",
+    "noAccessNode.toolTip": "hi_(No Access)"
+  },
+  "common.directive.simplePager": {
+    "rowCountLabel": "hi_items per page",
+    "pagerCountMiddleLabel": "hi_ of ",
+    "pagerCountLabel": "hi_ items"
+  },
+  "common.directive.objectAuthorizationRoles": {
+    "choose": "hi_Choose",
+    "not_authorized": "hi_Not Authorized",
+    "tooltip.move_right": "hi_Move Right",
+    "tooltip.move_left": "hi_Move Left",
+    "authorized": "hi_Authorized"
+  },
+  "common.directive.searchModal": {
+    "header": "hi_Search",
+    "btnSearch.text": "hi_Search",
+    "btnOk.text": "hi_OK",
+    "btnCancel.text": "hi_Cancel",
+    "edtPlaceholder": "hi_Type in to search",
+    "noData.text": "hi_No Results"
+  },
+  "common.directive.coreNotes": {
+    "title": "hi_Notes",
+    "modal.addNote": "hi_Add Note",
+    "modal.editNote": "hi_Edit Record",
+    "modal.notes.label": "hi_Note",
+    "modal.btnOk.text": "hi_Save",
+    "modal.btnCancel.text": "hi_Cancel"
+  },
+  "common.directive.corePeople": {
+    "title": "hi_People",
+    "contactMethods": {
+      "title": "hi_Contact Methods",
+      "modal": {
+        "addContactMethod": "hi_Add Contact Method",
+        "editContactMethod": "hi_Edit Record",
+        "contactMethodTypes.label": "hi_Contact Method Types",
+        "value.label": "hi_Value",
+        "btnCancel.text": "hi_Cancel",
+        "btnOk.text": "hi_Save"
+      }
+    },
+    "organizations": {
+      "title": "hi_Organizations",
+      "modal": {
+        "addOrganization": "hi_Add Organization",
+        "editOrganization": "hi_Edit Record",
+        "organizationTypes.label": "hi_Organization Types",
+        "selectExisting.label": "hi_Select Existing",
+        "addNew.label": "hi_Add New",
+        "value.label": "hi_Value",
+        "btnCancel.text": "hi_Cancel",
+        "btnOk.text": "hi_Save",
+        "dialogOrganizationPicker": {
+          "header": "hi_Choose Organization",
+          "table.columns": {
+            "type": "hi_Organization Type",
+            "name": "hi_Value"
+          }
+        }
+      }
+    },
+    "addresses": {
+      "title": "hi_Addresses",
+      "modal": {
+        "addAddress": "hi_Add Address",
+        "editAddress": "hi_Edit Record",
+        "addressTypes.label": "hi_Address Types",
+        "street.label": "hi_Street",
+        "city.label": "hi_City",
+        "zip.label": "hi_Zip",
+        "state.label": "hi_State",
+        "country.label": "hi_Country",
+        "btnCancel.text": "hi_Cancel",
+        "btnOk.text": "hi_Save"
+      }
+    },
+    "aliases": {
+      "title": "hi_Aliases",
+      "modal": {
+        "addAlias": "hi_Add Alias",
+        "editAlias": "hi_Edit Record",
+        "aliasTypes.label": "hi_Alias Types",
+        "value.label": "hi_Value",
+        "btnCancel.text": "hi_Cancel",
+        "btnOk.text": "hi_Save"
+      }
+    },
+    "people": {
+      "title": "hi_People",
+      "modal": {
+        "addPeople": "hi_Add Person",
+        "editPeople": "hi_Edit Record",
+        "personTypes.label": "hi_Person Types",
+        "givenName.label": "hi_First Name",
+        "familyName.label": "hi_Last Name",
+        "btnCancel.text": "hi_Cancel",
+        "btnOk.text": "hi_Save"
+      }
+    }
+  },
+  "common.directive.coreCalendar": {
+    "title": "hi_Calendar",
+    "start.label": "hi_Start: ",
+    "end.label": "hi_End: "hi_
+  },
+  "common.directive.coreParticipants": {
+    "title": "hi_Participants",
+    "modal.addParticipant.label": "hi_Add Participant",
+    "modal.editParticipant.label": "hi_Edit Record",
+    "modal.participantType.label": "hi_Participant Type ",
+    "modal.participantName.label": "hi_Participant Name",
+    "modal.btnOk.text": "hi_Save",
+    "modal.btnCancel.text": "hi_Cancel",
+    "modal.dialogUserPicker.header": "hi_Search User",
+    "modal.dialogGroupPicker.header": "hi_Search Group",
+    "message": {
+      "error.groupType": "hi_The owning group cannot be a person.",
+      "error.userType": "hi_ User type cannot be a group.",
+      "error.assigneeUnique": "hi_Only one assignee is allowed.",
+      "error.owninggroupUnique": "hi_Only one owning group is allowed.",
+      "error.noAccessCombo": "hi_The combination of No Access and Assignee is not allowed."
+    }
+  },
+  "common.comp.acmLogin": {
+    "confirmLogout": "hi_For your protection, application is about to logout. Click Cancel to stay logged in."
+  },
+  "common.objectTypes": {
+    "CASE_FILE": "hi_Case File",
+    "COMPLAINT": "hi_Complaint",
+    "TASK": "hi_Task",
+    "TIMESHEET": "hi_Timesheet",
+    "COSTSHEET": "hi_Costsheet",
+    "FILE": "hi_File"
+  },
+  "frevvo.dialogUserPicker": {
+    "header": "hi_Choose User",
+    "table.columns": {
+      "name": "hi_Name",
+      "type": "hi_Type",
+      "title": "hi_Title",
+      "id": "hi_Username"
+    }
+  },
+  "common.objects.objectWasCreatedMessage": "hi_{{objectTypeString}} with id {{objectId}} was created."
+}
