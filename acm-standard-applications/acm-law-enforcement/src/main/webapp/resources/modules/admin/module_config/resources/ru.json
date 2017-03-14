@@ -390,6 +390,17 @@
       "target": "ru_Target"
     },
     "forms.message.delete.success": "ru_Successfully deleted row.",
-    "forms.message.delete.error": "ru_Error deleting row."
+    "forms.message.delete.error": "ru_Error deleting row.",
+    "calendarManagement": {
+      "title": "ru_Calendar Management",
+      "config": "ru_Calendar Configuration",
+      "calendarConfigForm": {
+        "btnUserBasedCalendarRadio": "ru_User Based Calendar",
+        "btnSystemBasedCalendarRadio": "ru_System Based Calendar",
+        "emailPlaceholder": "ru_Enter Email",
+        "passwordPlaceholder": "ru_Enter Password",
+        "btnApply": "ru_Apply"
+      }
+    }
   }
 }

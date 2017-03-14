@@ -390,6 +390,17 @@
       "target": "ja_Target"
     },
     "forms.message.delete.success": "ja_Successfully deleted row.",
-    "forms.message.delete.error": "ja_Error deleting row."
+    "forms.message.delete.error": "ja_Error deleting row.",
+    "calendarManagement": {
+      "title": "ja_Calendar Management",
+      "config": "ja_Calendar Configuration",
+      "calendarConfigForm": {
+        "btnUserBasedCalendarRadio": "ja_User Based Calendar",
+        "btnSystemBasedCalendarRadio": "ja_System Based Calendar",
+        "emailPlaceholder": "ja_Enter Email",
+        "passwordPlaceholder": "ja_Enter Password",
+        "btnApply": "ja_Apply"
+      }
+    }
   }
 }

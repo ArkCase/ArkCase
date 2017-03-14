@@ -390,6 +390,17 @@
       "target": "hi_Target"
     },
     "forms.message.delete.success": "hi_Successfully deleted row.",
-    "forms.message.delete.error": "hi_Error deleting row."
+    "forms.message.delete.error": "hi_Error deleting row.",
+    "calendarManagement": {
+      "title": "hi_Calendar Management",
+      "config": "hi_Calendar Configuration",
+      "calendarConfigForm": {
+        "btnUserBasedCalendarRadio": "hi_User Based Calendar",
+        "btnSystemBasedCalendarRadio": "hi_System Based Calendar",
+        "emailPlaceholder": "hi_Enter Email",
+        "passwordPlaceholder": "hi_Enter Password",
+        "btnApply": "hi_Apply"
+      }
+    }
   }
 }
