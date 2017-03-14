@@ -63,7 +63,7 @@ public class AcmFolder implements AcmEntity, Serializable, AcmObject, AcmAssigne
     @Column(name = "cm_folder_name")
     private String name;
 
-    @Column(name = "cm_folder_cmis_repository_id")
+    @Column(name = "cm_folder_cmis_repository_id", nullable = false)
     private String cmisRepositoryId;
 
     @Column(name = "cm_cmis_folder_id")
