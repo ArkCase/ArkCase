@@ -1,0 +1,225 @@
+{
+  "dashboard": {
+    "title": "Обзор",
+    "menus": {
+      "leftnav.item": "Обзор"
+    },
+    "widgets": {
+      "casesByQueue": {
+        "title": "ru_Active Case Files by Queue",
+        "description": "ru_Displays active case files by queue",
+        "xAxis": "ru_Queues",
+        "yAxis": "ru_Number of Case Files",
+        "noDataMessage": "ru_Currently there are no cases info"
+      },
+      "casesByStatus": {
+        "title": "ru_Cases By Status",
+        "description": "ru_Displays cases by status",
+        "timePeriod": {
+          "label": "ru_Select Time Period",
+          "lastWeek": "ru_Last Week",
+          "lastMonth": "ru_Last Month",
+          "lastYear": "ru_Last Year",
+          "all": "ru_All"
+        },
+        "noDataMessage": "ru_Currently there are no cases info"
+      },
+      "myCases": {
+        "title": "ru_My Cases",
+        "description": "ru_Displays my cases",
+        "noDataMessage": "ru_Currently there are no cases info",
+        "table": {
+          "header": {
+            "caseId": "ru_ID",
+            "title": "ru_Title",
+            "priority": "ru_Priority",
+            "status": "ru_Status"
+          }
+        }
+      },
+      "myComplaints": {
+        "title": "ru_My Complaints",
+        "description": "ru_Displays my complaints",
+        "table": {
+          "header": {
+            "number": "ru_ID",
+            "title": "ru_Title",
+            "priority": "ru_Priority",
+            "created": "ru_Created",
+            "status": "ru_Status"
+          },
+          "noDataMessage": "ru_Currently there are no complaints info"
+        }
+      },
+      "myTasks": {
+        "title": "ru_My Tasks",
+        "description": "ru_Displays my tasks",
+        "rowNumbers.label": "ru_Default Row Numbers",
+        "rowNumbers.placeholder": "ru_Enter Default Row Numbers",
+        "table": {
+          "header": {
+            "taskId": "ru_ID",
+            "title": "ru_Title",
+            "priority": "ru_Priority",
+            "dueDate": "ru_Due",
+            "status": "ru_Status",
+            "objectId": "ru_Object ID"
+          },
+          "overdue.tooltip": "ru_Task is Overdue",
+          "deadline.tooltip": "ru_Deadline is Approaching"
+        },
+        "noDataMessage": "ru_Currently there are no tasks info"
+      },
+      "newComplaints": {
+        "title": "ru_New Complaints",
+        "description": "ru_Displays new complaints",
+        "dueDate": {
+          "label": "ru_Select Due Date Period",
+          "pastDue": "ru_Past Due",
+          "dueTomorrow": "ru_Due Tomorrow",
+          "dueWeek": "ru_Due in 7 Days",
+          "dueMonth": "ru_Due in Month",
+          "all": "ru_All"
+        },
+        "noDataMessage": "ru_Currently there are no complaints info"
+      },
+      "newCases": {
+        "title": "ru_New Cases",
+        "description": "ru_Displays new cases",
+        "noDataMessage": "ru_Currently there are no cases info"
+      },
+      "teamWorkload": {
+        "title": "ru_Team Workload",
+        "description": "ru_Displays team workload",
+        "dueDate": {
+          "label": "ru_Select Due Date Period",
+          "pastDue": "ru_Past Due",
+          "dueTomorrow": "ru_Due Tomorrow",
+          "dueWeek": "ru_Due in 7 Days",
+          "dueMonth": "ru_Due in Month",
+          "all": "ru_All"
+        },
+        "noDataMessage": "ru_Currently there are no team tasks info"
+      },
+      "weather": {
+        "description": "ru_Displays weather",
+        "label": {
+          "current": "ru_Current:",
+          "enterLocation": "ru_Enter Location",
+          "description": "ru_Display the current temperature of a city",
+          "location": "ru_Location",
+          "insertLocationInConfiguration": "ru_Please insert a location in the widget configuration"
+        },
+        "title": "ru_Weather",
+        "noDataMessage": "ru_Currently there are no weather info"
+      },
+      "news": {
+        "description": "ru_Displays news",
+        "label": {
+          "enterFeedUrl": "ru_Enter Feed url",
+          "description": "ru_Displays a RSS/Atom feed",
+          "feedUrl": "ru_Feed Url",
+          "insertUrl": "ru_Please insert a feed url in the widget configuration"
+        },
+        "title": "ru_News",
+        "noDataMessage": "ru_Currently there is no RSS/info"
+      },
+      "details": {
+        "title": "ru_Details",
+        "description": "ru_Displays case details",
+        "noDataMessage": "ru_Currently there are no details"
+      },
+      "people": {
+        "title": "ru_People",
+        "description": "ru_Displays people details",
+        "noDataMessage": "ru_Currently there are no people to display"
+      },
+      "documents": {
+        "title": "ru_Documents",
+        "description": "ru_Displays chart of documents by folder",
+        "noDataMessage": "ru_Currently there are no documents to display"
+      },
+      "locations": {
+        "title": "ru_Locations",
+        "description": "ru_Displays location details",
+        "noDataMessage": "ru_Currently there are no locations to display"
+      },
+      "tasks": {
+        "title": "ru_Tasks",
+        "description": "ru_Displays task details",
+        "noDataMessage": "ru_Currently there are no tasks to display"
+      },
+      "participants": {
+        "title": "ru_Participants",
+        "description": "ru_Displays participant details",
+        "noDataMessage": "ru_Currently there are no participant to display"
+      },
+      "references": {
+        "title": "ru_References",
+        "description": "ru_Displays reference details",
+        "noDataMessage": "ru_Currently there are no references to display"
+      },
+      "history": {
+        "title": "ru_History",
+        "description": "ru_Displays chart of history events",
+        "noDataMessage": "ru_Currently there are no events to display"
+      },
+      "notes": {
+        "title": "ru_Notes",
+        "description": "ru_Displays note details",
+        "noDataMessage": "ru_Currently there are no notes to display"
+      },
+      "time": {
+        "title": "ru_Time",
+        "description": "ru_Displays chart for hours per user",
+        "noDataMessage": "ru_Currently there is no time information to display"
+      },
+      "cost": {
+        "title": "ru_Cost",
+        "description": "ru_Displays chart for cost per user",
+        "noDataMessage": "ru_Currently there is no cost information to display"
+      },
+      "calendar": {
+        "title": "ru_Calendar",
+        "description": "ru_Displays chart of scheduled events per day",
+        "noDataMessage": "ru_Currently there are no events to display"
+      },
+      "reworkDetails": {
+        "title": "ru_Rework Details",
+        "description": "ru_Shows most recent rework details",
+        "noDataMessage": "ru_Currently there no are no rework details to display"
+      },
+      "docReview": {
+        "title": "ru_Documents Under Review",
+        "description": "ru_Shows documents under review",
+        "noDataMessage": "ru_Currently there no are no documents under review to display"
+      },
+      "workflow": {
+        "title": "ru_Workflow Overview",
+        "description": "ru_Overview of pending workflows",
+        "noDataMessage": "ru_Currently there are no workflows to display"
+      },
+      "signature": {
+        "title": "ru_eSignature",
+        "description": "ru_eSignature widget",
+        "noDataMessage": "ru_Currently there are no eSignatures to display"
+      },
+      "person": {
+        "title": "ru_Person",
+        "description": "ru_Person widget for Cost and Time modules",
+        "noDataMessage": "ru_Currently there are no persons to display"
+      },
+      "hoursSummary": {
+        "title": "ru_Hours Summary",
+        "description": "ru_Displays a summary of hours worked",
+        "noDataMessage": "ru_Currently there is no summary to display"
+      },
+      "expenses": {
+        "title": "ru_Expenses",
+        "description": "ru_Displays a cost-to-user graph",
+        "noDataMessage": "ru_Currently no expense data to display"
+      }
+    }
+  }
+}
+

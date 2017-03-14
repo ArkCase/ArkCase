@@ -26,7 +26,7 @@ public class LabelManagementRetrieveNamespaces
     private LabelManagementService labelManagementService;
 
     @RequestMapping(value = "/labelmanagement/namespaces", method = RequestMethod.GET, produces = {
-            MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
+            MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
     @ResponseBody
     public List<ModuleConfig> retrieveNamespaces(

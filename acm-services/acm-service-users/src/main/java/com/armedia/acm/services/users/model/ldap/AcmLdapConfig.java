@@ -10,6 +10,7 @@ public class AcmLdapConfig
     private String mailAttributeName;
     private boolean ignorePartialResultException;
     private String referral;
+    private String directoryName;
 
     public String getAuthUserPassword()
     {
@@ -89,5 +90,15 @@ public class AcmLdapConfig
     public void setBaseDC(String baseDC)
     {
         this.baseDC = baseDC;
+    }
+
+    public String getDirectoryName()
+    {
+        return directoryName;
+    }
+
+    public void setDirectoryName(String directoryName)
+    {
+        this.directoryName = directoryName;
     }
 }

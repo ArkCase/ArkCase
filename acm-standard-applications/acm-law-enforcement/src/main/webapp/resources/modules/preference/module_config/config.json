@@ -5,7 +5,7 @@
     {
       "menuId": "usermenu",
       "menuItemURL": "preference",
-      "menuItemTitle": "Preferences",
+      "menuItemTitle": "preference.menus.usermenu.item",
       "moduleId": "none",
       "iconClass": "glyphicon glyphicon-asterisk",
       "position": 120

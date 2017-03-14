@@ -1,0 +1,55 @@
+<div class="modal-header">
+    <h3>
+        <span translate>admin.correspondenceManagement.templates.addTemplate</span>
+    </h3>
+
+</div>
+<div class="modal-body">
+    <form name="templateForm">
+        <div class="well-sm">
+            <div class="row">
+                <div class="btn-group">
+                    <button ngf-select ngf-change="upload($files)" class="btn btn-xs btn-link" ngf-multiple="false"
+                            accept=".docx">
+                        <i class="glyphicon glyphicon-plus-sign"></i>
+                        <span translate>admin.correspondenceManagement.templates.addNewTemplate</span>
+                    </button>
+                </div>
+                <div>
+                    <ul>
+                        <li ng-if="selectedFiles.length == 0">
+                            <span>No File Selected</span>
+                        </li>
+                        <li ng-repeat="file in selectedFiles">{{file.name}}</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <label class="control-label">{{ 'admin.correspondenceManagement.templates.modal.objectTypes.label' |
+                    translate
+                    }}
+                    <select ng-model="template.objectType"
+                            ng-disabled="selectedRows.length > 0"
+                            ng-options="objectType.id as objectType.name for objectType in objectTypes"
+                            class="form-control input-md" required>
+                    </select>
+                </label>
+            </div>
+            <div class="row">
+                <label for="label_{{::$id}}"><span translate>admin.correspondenceManagement.templates.modal.label.label</span>
+                    <span class="required-asterisk">*</span></label>
+                <input id="label_{{::$id}}" class="form-control" type="text" ng-model="template.label"
+                       required>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-secondary" ng-click="onClickCancel()">
+        <span translate>admin.correspondenceManagement.templates.modal.btnCancel.text</span>
+    </button>
+    <button class="btn btn-primary" ng-click="onClickOk(selectedFiles)"
+            ng-disabled="templateForm.$invalid || selectedFiles.length == 0">
+        <span translate>admin.correspondenceManagement.templates.modal.btnOk.text</span>
+    </button>
+</div>

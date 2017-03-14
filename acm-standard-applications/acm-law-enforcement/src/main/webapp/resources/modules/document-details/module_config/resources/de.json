@@ -1,0 +1,92 @@
+{
+  "documentDetails": {
+    "title": "de_Document details",
+    "creator": "de_Creator",
+    "created": "de_Created",
+    "assignee": "de_Assignee",
+    "fileType": "de_File type",
+    "status": "de_Status",
+    "name": "de_Name",
+    "comp.eventHistory": {
+      "title": "de_Event History",
+      "table.columns": {
+        "eventType": "de_Event Name",
+        "eventDate": "de_Created",
+        "userId": "de_User"
+      }
+    },
+    "comp.tags": {
+      "title": "de_Tags",
+      "table.columns": {
+        "tag": "de_Tag"
+      },
+      "modal": {
+        "title": "de_Tag",
+        "search": "de_Search for Tag",
+        "buttons": {
+          "cancel": "de_Cancel",
+          "ok": "de_Add Tag"
+        }
+      },
+      "message.tagExists": "de_Tag with that name or description or text already exists",
+      "message.tagAssociated": "de_already associated",
+      "message.delete.success": "de_Tag deleted successfully",
+      "message.delete.error": "de_Error deleting tag"
+    },
+    "comp.participants": {
+      "title": "de_Participants",
+      "table.columns": {
+        "name": "de_Name",
+        "type": "de_Type"
+      },
+      "message.delete.success": "de_Successfully deleted row.",
+      "message.delete.error": "de_Error deleting row.",
+      "role": {
+        "title": "de_Change participant Role",
+        "dropdownLabel": "de_Available Roles",
+        "buttons": {
+          "cancel": "de_Cancel",
+          "ok": "de_Change Role"
+        }
+      }
+    },
+    "comp.notes": {
+      "title": "de_Notes",
+      "table.columns": {
+        "note": "de_Note",
+        "tag": "de_Document Version",
+        "created": "de_Created",
+        "creator": "de_Author"
+      }
+    },
+    "comp.versionHistory": {
+      "title": "de_Version History",
+      "table.columns": {
+        "creator": "de_User",
+        "created": "de_Created",
+        "versionTag": "de_Version"
+      }
+    },
+    "userSearch": {
+      "id": "de_userSearch",
+      "title": "de_Add New Participant",
+      "search": {
+        "btn": "de_Go!",
+        "placeholder": "de_Enter to search for a participant"
+      },
+      "cancelButton": "de_Cancel",
+      "confirmButton": "de_Select",
+      "enabled": true,
+      "userFacetFilter": "de_\"Object Type\": USER",
+      "userGridColumns": {
+        "name": "de_Name",
+        "type": "de_Type",
+        "title": "de_Title",
+        "parent": "de_Parent",
+        "assignee": "de_Assignee",
+        "modified": "de_Modified"
+      },
+      "dropdownLabel": "de_Participant Type"
+    }
+  }
+}

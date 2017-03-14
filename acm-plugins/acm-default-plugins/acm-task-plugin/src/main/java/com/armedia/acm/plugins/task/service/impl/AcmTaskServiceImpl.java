@@ -27,9 +27,13 @@ import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
 import com.armedia.acm.services.note.dao.NoteDao;
 import com.armedia.acm.services.note.model.Note;
+import com.armedia.acm.services.participants.dao.AcmParticipantDao;
+import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.services.participants.model.ParticipantConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
+import com.armedia.acm.web.api.MDCConstants;
 import org.activiti.engine.ActivitiException;
 import org.apache.commons.beanutils.BeanUtils;
 import org.json.JSONArray;
@@ -37,13 +41,17 @@ import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.InvocationTargetException;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -62,8 +70,70 @@ public class AcmTaskServiceImpl implements AcmTaskService
     private SearchResults searchResults = new SearchResults();
     private AcmFolderService acmFolderService;
     private EcmFileService ecmFileService;
+    private AcmParticipantDao acmParticipantDao;
     private ObjectAssociationService objectAssociationService;
     private ObjectAssociationEventPublisher objectAssociationEventPublisher;
+
+    @Override
+    public void createTasks(String taskAssignees, String taskName, String owningGroup, String parentType,
+                            Long parentId)
+    {
+        if ( taskAssignees == null || taskAssignees.trim().isEmpty() || taskName == null || taskName.trim().isEmpty()
+                || owningGroup == null || owningGroup.trim().isEmpty() || parentType == null || parentType.trim().isEmpty()
+                || parentId == null)
+        {
+            log.error("Cannot create tasks - invalid input: assignees [{}], task name [{}], owning group [{}], " +
+                            "parent type: [{}], parentId [{}]",
+                    taskAssignees, taskName, owningGroup, parentType, parentId);
+            return;
+        }
+
+        String user = MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY);
+        user = user == null ? "ACTIVITI_SYSTEM" : user;
+
+        Date dueDate = Date.from(LocalDate.now().plusDays(3).atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+        for ( String assignee : taskAssignees.split(","))
+        {
+            assignee = assignee.trim();
+
+            AcmTask task = new AcmTask();
+            task.setAssignee(assignee);
+            task.setTitle(taskName);
+            task.setParentObjectId(parentId);
+            task.setParentObjectType(parentType);
+            task.setPriority(TaskConstants.DEFAULT_PRIORITY_WORD);
+            task.setOwner(assignee);
+            task.setStatus(TaskConstants.STATE_ACTIVE);
+            task.setParticipants(new ArrayList<>());
+            task.setDueDate(dueDate);
+
+
+            try
+            {
+
+                task = taskDao.createAdHocTask(task);
+
+                AcmParticipant group = new AcmParticipant();
+                group.setParticipantType("owning group");
+                group.setParticipantLdapId(owningGroup);
+                group.setObjectId(task.getId());
+                group.setObjectType(TaskConstants.OBJECT_TYPE);
+
+                group = getAcmParticipantDao().save(group);
+
+                task.getParticipants().add(group);
+
+                AcmApplicationTaskEvent event = new AcmApplicationTaskEvent(task, "create", user, true, "");
+                taskEventPublisher.publishTaskEvent(event);
+            }
+            catch (AcmTaskException ate)
+            {
+                log.error("Could not save task: {}", ate.getMessage(), ate);
+            }
+
+        }
+    }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -376,5 +446,15 @@ public class AcmTaskServiceImpl implements AcmTaskService
     public void setObjectAssociationEventPublisher(ObjectAssociationEventPublisher objectAssociationEventPublisher)
     {
         this.objectAssociationEventPublisher = objectAssociationEventPublisher;
+    }
+
+    public AcmParticipantDao getAcmParticipantDao()
+    {
+        return acmParticipantDao;
+    }
+
+    public void setAcmParticipantDao(AcmParticipantDao acmParticipantDao)
+    {
+        this.acmParticipantDao = acmParticipantDao;
     }
 }
