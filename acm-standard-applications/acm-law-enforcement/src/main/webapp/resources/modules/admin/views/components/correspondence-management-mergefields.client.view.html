@@ -1,0 +1,33 @@
+<div ng-controller="Admin.CMMergeFieldsController">
+	<div class="pull-right well">
+        <div class="btn-group">
+            <button class="btn btn-xs btn-link" ng-click="save()">
+                <i class="fa fa-save"></i>
+                <span translate>admin.correspondenceManagement.mergefields.saveMergeFields</span>
+            </button>
+        </div>
+    </div>
+    <div class="pull-right well">
+        <div class="btn-group">
+            <button class="btn btn-xs btn-link" ng-click="showVersion()">
+                <i class="glyphicon glyphicon-info-sign"></i>
+                <span translate>admin.correspondenceManagement.mergefields.versionMergeFields</span>
+            </button>
+        </div>
+    </div>
+    <div class="pull-right well">
+        <select ng-model="mergingType"
+            ng-options="objectType.id as objectType.name for objectType in objectTypes"
+            ng-change="changeType()"
+            class="form-control input-md" required>
+        </select>
+    </div>
+    <panel-view header="{{'admin.correspondenceManagement.mergefields' | translate}}" collapsible="false">
+        <div ui-grid="gridOptions"
+             ui-grid-resize-columns
+             adjust-table-height="gridOptions.data.length"
+             ui-grid-auto-resize
+             class="grid">
+        </div>
+    </panel-view>
+</div>
