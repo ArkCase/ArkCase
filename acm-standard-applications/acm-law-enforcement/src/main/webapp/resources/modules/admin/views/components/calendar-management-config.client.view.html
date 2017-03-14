@@ -1,0 +1,41 @@
+<panel-view header="{{'admin.calendarManagement.config' | translate}}" collapsible="false">
+	<div ng-controller="Admin.CalendarManagementConfigController">
+		<div class="row">
+			<div class="col-lg-12 form-group radio">
+				<label>
+					<input type="radio" ng-model="calendarConfigDataModel.calendarType" value="USER_BASED">
+					<span translate>
+						admin.calendarManagement.calendarConfigForm.btnUserBasedCalendarRadio
+					</span>
+				</label>
+			</div>
+			<div class="col-lg-12 form-group radio">
+				<label>
+					<input type="radio" ng-model="calendarConfigDataModel.calendarType" value="SYSTEM_BASED">
+					<span translate>
+						admin.calendarManagement.calendarConfigForm.btnSystemBasedCalendarRadio
+					</span>
+				</label>
+			</div>
+			<div class="col-lg-12">
+				<form name="calendarManagementForm">
+					<div class="row">
+						<fieldset ng-if="calendarConfigDataModel.calendarType === 'SYSTEM_BASED'">
+							<div class="col-lg-6 form-group">
+								<input placeholder="{{'admin.calendarManagement.calendarConfigForm.emailPlaceholder' | translate}}" ng-model="calendarConfigDataModel.systemEmail" class="form-control" required>
+							</div>
+							<div class="col-lg-6 form-group">
+								<input type="password" placeholder="{{'admin.calendarManagement.calendarConfigForm.passwordPlaceholder' | translate}}" ng-model="calendarConfigDataModel.password" class="form-control" required/>
+							</div>
+						</fieldset>
+					</div>
+				</form>
+			</div>
+			<div class="col-lg-12 form-group">
+				<button ng-click="applyChanges()" class="btn btn-sm btn-primary" ng-disabled="calendarManagementForm.$invalid" translate>
+					admin.calendarManagement.calendarConfigForm.btnApply
+				</button>
+			</div>
+		</div>
+	</div>
+</panel-view>

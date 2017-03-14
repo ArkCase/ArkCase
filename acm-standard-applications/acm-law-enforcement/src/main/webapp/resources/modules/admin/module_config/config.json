@@ -678,6 +678,17 @@
           "templateName": "correspondence-management-templates"
         }
       ]
+    },
+    {
+      "title": "admin.calendarManagement.title",
+      "folder": "true",
+      "expanded": "true",
+      "children": [
+        {
+          "title": "admin.calendarManagement.config",
+          "templateName": "calendar-management-config"
+        }
+      ]
     }
   ]
 }

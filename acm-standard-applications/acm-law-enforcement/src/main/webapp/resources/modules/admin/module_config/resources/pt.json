@@ -390,6 +390,17 @@
       "target": "pt_Target"
     },
     "forms.message.delete.success": "pt_Successfully deleted row.",
-    "forms.message.delete.error": "pt_Error deleting row."
+    "forms.message.delete.error": "pt_Error deleting row.",
+    "calendarManagement": {
+      "title": "pt_Calendar Management",
+      "config": "pt_Calendar Configuration",
+      "calendarConfigForm": {
+        "btnUserBasedCalendarRadio": "pt_User Based Calendar",
+        "btnSystemBasedCalendarRadio": "pt_System Based Calendar",
+        "emailPlaceholder": "pt_Enter Email",
+        "passwordPlaceholder": "pt_Enter Password",
+        "btnApply": "pt_Apply"
+      }
+    }
   }
 }
