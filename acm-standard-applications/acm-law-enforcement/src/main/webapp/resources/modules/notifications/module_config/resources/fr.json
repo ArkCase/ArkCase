@@ -1,7 +1,7 @@
 {
   "notifications": {
     "title": "Notifications",
-    "search.btn": "fr_Search",
+    "search.btn": "Recherche",
     "export.btn": "fr_Export",
     "search.placeholder": "fr_Search for notifications",
     "menus": {

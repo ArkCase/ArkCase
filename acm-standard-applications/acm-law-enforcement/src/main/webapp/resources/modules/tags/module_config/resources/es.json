@@ -1,7 +1,7 @@
 {
   "tags": {
     "title": "Etiquetas",
-    "search.btn": "es_Search",
+    "search.btn": "Búsqueda",
     "search.placeholder": "es_Search for tags",
     "menus": {
       "leftnav.item": "Etiquetas"
