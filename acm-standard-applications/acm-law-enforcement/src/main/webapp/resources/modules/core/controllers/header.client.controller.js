@@ -102,6 +102,7 @@ angular.module('core').controller('HeaderController', ['$scope', '$q', '$state',
         };
 
         $scope.updateLocales = function($event) {
+            $event.preventDefault();
             LocaleService.getSettings().then(function(data){
                 $scope.localeDropdownOptions = Util.goodMapValue(data, "languages", []);
 
@@ -110,8 +111,6 @@ angular.module('core').controller('HeaderController', ['$scope', '$q', '$state',
                 cacheLocale.set(lastLocale);
                 return data;
             });
-
-            $event.preventDefault();
         }
     }
 ]);
