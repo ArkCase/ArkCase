@@ -789,5 +789,14 @@
         </sql>
     </changeSet>
 
+    <changeSet id="files-42-add-file-and-folder-discriminator" author="ilinpetar">
+        <addColumn tableName="acm_file">
+            <column name="cm_file_cmis_repository_id" type="VARCHAR(255)" value="alfresco"/>
+        </addColumn>
+        <addColumn tableName="acm_folder">
+            <column name="cm_folder_cmis_repository_id" type="VARCHAR(255)" value="alfresco"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
 
