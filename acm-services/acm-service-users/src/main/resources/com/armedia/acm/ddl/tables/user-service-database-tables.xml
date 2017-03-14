@@ -422,6 +422,7 @@
 
     <changeSet id="22-remove-directory-name-constraint" author="ilinpetar">
         <comment>Directory name is not applicable to ad-hoc groups</comment>
-        <dropNotNullConstraint tableName="acm_group" columnName="cm_directory_name"/>
+        <dropNotNullConstraint tableName="acm_group" columnName="cm_directory_name" columnDataType="VARCHAR(255)"/>
     </changeSet>
+
 </databaseChangeLog>
