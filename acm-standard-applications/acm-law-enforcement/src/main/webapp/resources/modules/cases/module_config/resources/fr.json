@@ -1,13 +1,13 @@
 {
   "cases": {
-    "title": "fr_Cases",
+    "title": "Cas",
     "progressNoCase": "fr_[ No case file data ]",
     "progressLoading": "fr_Loading case file ",
     "progressError": "fr_Failed to load case file"
   },
   "cases.menus": {
-    "leftnav.item": "fr_Case Files",
-    "topbar.item": "fr_Case"
+    "leftnav.item": "Dossiers de Cas",
+    "topbar.item": "Cas"
   },
   "cases.error": {
     "invalidData": "fr_"

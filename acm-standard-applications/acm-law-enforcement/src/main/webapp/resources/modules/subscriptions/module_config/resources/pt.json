@@ -1,11 +1,11 @@
 {
   "subscriptions": {
-    "title": "pt_Subscriptions",
-    "search.btn": "pt_Search",
+    "title": "Inscriçãos",
+    "search.btn": "Pesquisa",
     "export.btn": "pt_Export",
     "search.placeholder": "pt_Search for subscriptions",
     "menus": {
-      "leftnav.item": "pt_Subscriptions"
+      "leftnav.item": "Inscriçãos"
     },
     "comp":{
       "grid": {

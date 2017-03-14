@@ -1,16 +1,16 @@
 {
   "profile": {
-    "title": "en-in_User Profile",
+    "title": "User Profile",
     "unknown":"Unknown"
   },
   "profile.menus": {
-    "usermenu.item": "en-in_Profile"
+    "usermenu.item": "Profile"
   },
    "profile.subscriptions" : {
     "title":"Subscriptions",
     "unsubscribeSelect":"Unsubscribe Selected",
     "table.columns": {
-      "title": "en-in_Title",
+      "title": "Title",
       "created":"Created",
       "parentId":"Parent ID",
       "userId":"User ID"
@@ -47,7 +47,7 @@
    "profile.picture":{
        "title":"Change Picture",
        "email":"Email Address",
-       "uploadImgError": "en-in_You have uploaded an invalid image file type"
+       "uploadImgError": "You have uploaded an invalid image file type"
    },
    "profile.modal":{
        "title":"Info",

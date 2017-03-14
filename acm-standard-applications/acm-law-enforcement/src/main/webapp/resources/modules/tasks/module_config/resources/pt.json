@@ -1,13 +1,13 @@
 {
   "tasks": {
-    "title": "pt_Tasks",
+    "title": "Tarefas",
     "progressNoTask": "pt_[ No task data ]",
     "progressLoading": "pt_Loading task ",
     "progressError": "pt_Failed to load task"
   },
   "tasks.menus": {
-    "leftnav.item": "pt_Tasks",
-    "topbar.item": "pt_Task"
+    "leftnav.item": "Tarefas",
+    "topbar.item": "Tarefa"
   },
   "tasks.comp.info": {
     "taskId": "pt_Task id:",

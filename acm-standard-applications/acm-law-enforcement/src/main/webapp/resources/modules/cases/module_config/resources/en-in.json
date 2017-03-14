@@ -1,318 +1,318 @@
 {
   "cases": {
-    "title": "en-in_Cases",
-    "progressNoCase": "en-in_[ No case file data ]",
-    "progressLoading": "en-in_Loading case file ",
-    "progressError": "en-in_Failed to load case file"
+    "title": "Cases",
+    "progressNoCase": "[ No case file data ]",
+    "progressLoading": "Loading case file ",
+    "progressError": "Failed to load case file"
   },
   "cases.menus": {
-    "leftnav.item": "en-in_Case Files",
-    "topbar.item": "en-in_Case"
+    "leftnav.item": "Case Files",
+    "topbar.item": "Case"
   },
   "cases.error": {
-    "invalidData": "en-in_"
+    "invalidData": ""
   },
   "cases.comp.info": {
-    "caseId": "en-in_Case id:",
-    "caseNumber": "en-in_Case Number:",
-    "courtRoomName": "en-in_Court Room Name:"
+    "caseId": "Case id:",
+    "caseNumber": "Case Number:",
+    "courtRoomName": "Court Room Name:"
   },
   "cases.comp.actions": {
-    "restrict": "en-in_Restrict?",
-    "new.button": "en-in_New",
-    "edit.button": "en-in_Edit",
-    "status.button": "en-in_Change Case Status",
-    "reinvestigate.button": "en-in_Reinvestigate",
-    "subscribe.button": "en-in_Subscribe",
-    "unsubscribe.button": "en-in_Unsubscribe",
-    "merge.button": "en-in_Merge",
-    "claim.button": "en-in_Claim",
-    "unclaim.button": "en-in_Unclaim",
-    "split.button": "en-in_Split"
+    "restrict": "Restrict?",
+    "new.button": "New",
+    "edit.button": "Edit",
+    "status.button": "Change Case Status",
+    "reinvestigate.button": "Reinvestigate",
+    "subscribe.button": "Subscribe",
+    "unsubscribe.button": "Unsubscribe",
+    "merge.button": "Merge",
+    "claim.button": "Claim",
+    "unclaim.button": "Unclaim",
+    "split.button": "Split"
   },
   "cases.comp.details": {
-    "title": "en-in_Details",
-    "informSaved": "en-in_Case details saved",
+    "title": "Details",
+    "informSaved": "Case details saved",
     "table.columns": {
-      "title": "en-in_Details",
-      "modified": "en-in_Date Last Modified",
-      "modifier": "en-in_User Last Modified"
+      "title": "Details",
+      "modified": "Date Last Modified",
+      "modifier": "User Last Modified"
     }
   },
   "cases.comp.documents": {
-    "title": "en-in_Documents"
+    "title": "Documents"
   },
   "cases.comp.people": {
-    "title": "en-in_People",
+    "title": "People",
     "table.columns": {
-      "entity": "en-in_Entity",
-      "type": "en-in_Type",
-      "firstName": "en-in_FirstName",
-      "lastName": "en-in_LastName"
+      "entity": "Entity",
+      "type": "Type",
+      "firstName": "FirstName",
+      "lastName": "LastName"
     },
     "contactMethods": {
-      "title": "en-in_ContactMethods",
+      "title": "ContactMethods",
       "table.columns": {
-        "type": "en-in_Type",
-        "value": "en-in_Value",
-        "created": "en-in_Date Added",
-        "creator": "en-in_Added By",
-        "modified": "en-in_Last Modified",
-        "modifier": "en-in_Modified By"
+        "type": "Type",
+        "value": "Value",
+        "created": "Date Added",
+        "creator": "Added By",
+        "modified": "Last Modified",
+        "modifier": "Modified By"
       }
     },
     "organizations": {
-      "title": "en-in_Organizations",
+      "title": "Organizations",
       "table.columns": {
-        "type": "en-in_Type",
-        "value": "en-in_Value",
-        "created": "en-in_Date Added",
-        "creator": "en-in_Added By",
-        "modified": "en-in_Last Modified",
-        "modifier": "en-in_Modified By"
+        "type": "Type",
+        "value": "Value",
+        "created": "Date Added",
+        "creator": "Added By",
+        "modified": "Last Modified",
+        "modifier": "Modified By"
       }
     },
     "addresses": {
-      "title": "en-in_Locations",
+      "title": "Locations",
       "table.columns": {
-        "type": "en-in_Type",
-        "streetAddress": "en-in_Address",
-        "city": "en-in_City",
-        "state": "en-in_State",
-        "zip": "en-in_Zip",
-        "country": "en-in_Country",
-        "created": "en-in_Date Added",
-        "creator": "en-in_Added By",
-        "modified": "en-in_Last Modified",
-        "modifier": "en-in_Modified By"
+        "type": "Type",
+        "streetAddress": "Address",
+        "city": "City",
+        "state": "State",
+        "zip": "Zip",
+        "country": "Country",
+        "created": "Date Added",
+        "creator": "Added By",
+        "modified": "Last Modified",
+        "modifier": "Modified By"
       }
     },
     "aliases": {
-      "title": "en-in_Aliases",
+      "title": "Aliases",
       "table.columns": {
-        "type": "en-in_Type",
-        "value": "en-in_Value",
-        "created": "en-in_Date Added",
-        "creator": "en-in_Added By",
-        "modified": "en-in_Last Modified",
-        "modifier": "en-in_Modified By"
+        "type": "Type",
+        "value": "Value",
+        "created": "Date Added",
+        "creator": "Added By",
+        "modified": "Last Modified",
+        "modifier": "Modified By"
       }
     },
     "securityTags": {
-      "title": "en-in_Security Tags",
+      "title": "Security Tags",
       "table.columns": {
-        "type": "en-in_Type",
-        "value": "en-in_Value",
-        "created": "en-in_Date Added",
-        "creator": "en-in_Added By",
-        "modified": "en-in_Last Modified",
-        "modifier": "en-in_Modified By"
+        "type": "Type",
+        "value": "Value",
+        "created": "Date Added",
+        "creator": "Added By",
+        "modified": "Last Modified",
+        "modifier": "Modified By"
       }
     }
   },
   "cases.comp.participants": {
-    "title": "en-in_Participants",
+    "title": "Participants",
     "table.columns": {
-      "type": "en-in_Type",
-      "name": "en-in_Name"
+      "type": "Type",
+      "name": "Name"
     },
     "dialogUserPicker": {
-      "header": "en-in_Choose User",
+      "header": "Choose User",
       "table.columns": {
-        "name": "en-in_Name",
-        "type": "en-in_Type",
-        "title": "en-in_Title",
-        "id": "en-in_Username"
+        "name": "Name",
+        "type": "Type",
+        "title": "Title",
+        "id": "Username"
       }
     },
     "dialogGroupPicker": {
-      "header": "en-in_Choose Group",
+      "header": "Choose Group",
       "table.columns": {
-        "name": "en-in_Name"
+        "name": "Name"
       }
     }
   },
   "cases.comp.notes": {
-    "title": "en-in_Notes",
+    "title": "Notes",
     "table.columns": {
-      "note": "en-in_Note",
-      "created": "en-in_Created",
-      "creator": "en-in_Author"
+      "note": "Note",
+      "created": "Created",
+      "creator": "Author"
     }
   },
   "cases.comp.tasks": {
-    "title": "en-in_Tasks",
+    "title": "Tasks",
     "table.columns": {
-      "title": "en-in_Title",
-      "assignee": "en-in_Assignee",
-      "created": "en-in_Created",
-      "priority": "en-in_Priority",
-      "due": "en-in_Due",
-      "status": "en-in_Status"
+      "title": "Title",
+      "assignee": "Assignee",
+      "created": "Created",
+      "priority": "Priority",
+      "due": "Due",
+      "status": "Status"
     },
-    "table.overdue.tooltip": "en-in_Task is Overdue",
-    "table.deadline.tooltip": "en-in_Deadline is Approaching"
+    "table.overdue.tooltip": "Task is Overdue",
+    "table.deadline.tooltip": "Deadline is Approaching"
   },
   "cases.comp.references": {
-    "title": "en-in_References",
+    "title": "References",
     "table.columns": {
-      "targetName": "en-in_Number",
-      "parentName": "en-in_Parent",
-      "targetTitle": "en-in_Title",
-      "modified": "en-in_Modified",
-      "targetType": "en-in_Reference Type",
-      "status": "en-in_Status"
+      "targetName": "Number",
+      "parentName": "Parent",
+      "targetTitle": "Title",
+      "modified": "Modified",
+      "targetType": "Reference Type",
+      "status": "Status"
     }
   },
   "cases.comp.history": {
-    "title": "en-in_History",
+    "title": "History",
     "table.columns": {
-      "eventType": "en-in_Event Name",
-      "eventDate": "en-in_Date",
-      "userId": "en-in_User"
+      "eventType": "Event Name",
+      "eventDate": "Date",
+      "userId": "User"
     }
   },
   "cases.comp.time": {
-    "title": "en-in_Time",
+    "title": "Time",
     "table.columns": {
-      "name": "en-in_Form Name",
-      "user": "en-in_User",
-      "tally": "en-in_Total Hours",
-      "modified": "en-in_Modified Date",
-      "status": "en-in_Status"
+      "name": "Form Name",
+      "user": "User",
+      "tally": "Total Hours",
+      "modified": "Modified Date",
+      "status": "Status"
     },
-    "formNamePrefix": "en-in_Timesheet"
+    "formNamePrefix": "Timesheet"
   },
   "cases.comp.cost": {
-    "title": "en-in_Cost",
+    "title": "Cost",
     "table.columns": {
-      "name": "en-in_Form Name",
-      "user": "en-in_User",
-      "tally": "en-in_Total Cost",
-      "modified": "en-in_Modified Date",
-      "status": "en-in_Status"
+      "name": "Form Name",
+      "user": "User",
+      "tally": "Total Cost",
+      "modified": "Modified Date",
+      "status": "Status"
     },
-    "formNamePrefix": "en-in_Costsheet"
+    "formNamePrefix": "Costsheet"
   },
   "cases.comp.tags": {
-    "title": "en-in_Tags",
+    "title": "Tags",
     "table.columns": {
-      "tag": "en-in_Tag",
-      "created": "en-in_Created",
-      "createdBy": "en-in_Created By"
+      "tag": "Tag",
+      "created": "Created",
+      "createdBy": "Created By"
     },
     "modal": {
-      "title": "en-in_Tag",
-      "search": "en-in_Search for Tag",
+      "title": "Tag",
+      "search": "Search for Tag",
       "buttons": {
-        "cancel": "en-in_Cancel",
-        "ok": "en-in_Add Tag"
+        "cancel": "Cancel",
+        "ok": "Add Tag"
       }
     },
     "message": {
-      "tagExists": "en-in_Tag with that name or description or text already exists",
-      "tagAssociated": "en-in_already associated",
+      "tagExists": "Tag with that name or description or text already exists",
+      "tagAssociated": "already associated",
       "delete": {
-        "success": "en-in_Tag deleted successfully",
-        "error": "en-in_Error deleting tag"
+        "success": "Tag deleted successfully",
+        "error": "Error deleting tag"
       }
     }
   },
   "cases.comp.calendar": {
-    "title": "en-in_Calendar"
+    "title": "Calendar"
   },
   "cases.comp.merge": {
-    "id": "en-in_merge",
-    "title": "en-in_Merge",
-    "cancel.btn": "en-in_Cancel",
-    "merge.btn": "en-in_Merge",
-    "search.placeholder": "en-in_Search for case file.",
-    "search.btn": "en-in_Search",
+    "id": "merge",
+    "title": "Merge",
+    "cancel.btn": "Cancel",
+    "merge.btn": "Merge",
+    "search.placeholder": "Search for case file.",
+    "search.btn": "Search",
     "enabled": true,
     "table.columns": {
-      "incident": "en-in_Type",
-      "name": "en-in_Name",
-      "assignee": "en-in_Assignee",
-      "title": "en-in_Title",
-      "parent": "en-in_Parent",
-      "modified": "en-in_Modified"
+      "incident": "Type",
+      "name": "Name",
+      "assignee": "Assignee",
+      "title": "Title",
+      "parent": "Parent",
+      "modified": "Modified"
     }
   },
   "cases.comp.split": {
-    "title": "en-in_Split",
-    "cancel": "en-in_Cancel",
-    "split": "en-in_Split"
+    "title": "Split",
+    "cancel": "Cancel",
+    "split": "Split"
   },
   "cases.comp.addreference": {
-    "title": "en-in_Add Reference",
-    "cancelButton": "en-in_Cancel",
-    "confirmButton": "en-in_Add",
+    "title": "Add Reference",
+    "cancelButton": "Cancel",
+    "confirmButton": "Add",
     "search": {
-      "placeholder": "en-in_Search for case, complaint, file, task",
-      "btn": "en-in_Search"
+      "placeholder": "Search for case, complaint, file, task",
+      "btn": "Search"
     },
     "grid": {
       "columns": {
-        "id": "en-in_Id",
-        "name": "en-in_Name",
-        "type": "en-in_Type",
-        "title": "en-in_Title",
-        "parent": "en-in_Parent",
-        "assignee": "en-in_Assignee",
-        "modified": "en-in_Modified"
+        "id": "Id",
+        "name": "Name",
+        "type": "Type",
+        "title": "Title",
+        "parent": "Parent",
+        "assignee": "Assignee",
+        "modified": "Modified"
       }
     }
   },
   "cases.comp.assigneePickerModal": {
-    "title": "en-in_Change Assignee",
-    "assigneeNamelabel": "en-in_Assignee Name",
-    "btnCancelText": "en-in_Cancel",
-    "btnSaveText": "en-in_Save",
-    "searchAssigneeHeader": "en-in_Search Assignee"
+    "title": "Change Assignee",
+    "assigneeNamelabel": "Assignee Name",
+    "btnCancelText": "Cancel",
+    "btnSaveText": "Save",
+    "searchAssigneeHeader": "Search Assignee"
   },
   "cases.comp.groupPickerModal": {
-    "title": "en-in_Change Group",
-    "groupNamelabel": "en-in_Group Name",
-    "btnCancelText": "en-in_Cancel",
-    "btnSaveText": "en-in_Save",
-    "searchGroupHeader": "en-in_Search Group"
+    "title": "Change Group",
+    "groupNamelabel": "Group Name",
+    "btnCancelText": "Cancel",
+    "btnSaveText": "Save",
+    "searchGroupHeader": "Search Group"
   },
   "cases.comp.approvalRouting": {
-    "title": "en-in_Future Approvers",
-    "addNewTooltip": "en-in_Add new approver",
-    "noBuckslipMessage": "en-in_No Data",
+    "title": "Future Approvers",
+    "addNewTooltip": "Add new approver",
+    "noBuckslipMessage": "No Data",
     "button": {
-      "save.tooltip": "en-in_Save Changes"
+      "save.tooltip": "Save Changes"
     },
     "table.columns": {
-      "fullName": "en-in_Full Name"
+      "fullName": "Full Name"
     }
   },
   "cases.comp.pastApprovals": {
-    "title": "en-in_Past Approvers",
-    "noBuckslipMessage": "en-in_No Data",
+    "title": "Past Approvers",
+    "noBuckslipMessage": "No Data",
     "table.columns": {
-      "approvalDate": "en-in_Approval Date",
-      "approverId": "en-in_Approver",
-      "approverDecision": "en-in_Approver Decision"
+      "approvalDate": "Approval Date",
+      "approverId": "Approver",
+      "approverDecision": "Approver Decision"
     }
   },
   "cases.userOrGroupSearch": {
-    "id": "en-in_userSearch",
-    "title": "en-in_User/Group Search",
+    "id": "userSearch",
+    "title": "User/Group Search",
     "search": {
-      "btn": "en-in_Search",
-      "placeholder": "en-in_Search for the user or group."
+      "btn": "Search",
+      "placeholder": "Search for the user or group."
     },
-    "cancelButton": "en-in_Cancel",
-    "confirmButton": "en-in_Confirm",
+    "cancelButton": "Cancel",
+    "confirmButton": "Confirm",
     "enabled": true,
-    "userOrGroupFacetFilter": "en-in_\"object_type_s\":(GROUP OR USER)",
+    "userOrGroupFacetFilter": "\"object_type_s\":(GROUP OR USER)",
     "assigneeGridColumns": {
-      "name": "en-in_Name",
-      "type": "en-in_Type",
-      "title": "en-in_Title",
-      "username": "en-in_Username"
+      "name": "Name",
+      "type": "Type",
+      "title": "Title",
+      "username": "Username"
     }
   }
 }

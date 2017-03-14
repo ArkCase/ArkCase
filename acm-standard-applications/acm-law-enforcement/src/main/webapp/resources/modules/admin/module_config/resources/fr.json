@@ -1,6 +1,6 @@
 {
   "admin": {
-    "title": "fr_Admin",
+    "title": "Administration",
     "security.title": "fr_Security",
     "security.functionalAccessControl": "fr_Functional Access Control",
     "security.functionalAccessControl.applicationRole": "fr_Application Role",
@@ -36,7 +36,7 @@
       "ok": "fr_OK"
     },
     "menus": {
-      "leftnav.item": "fr_Admin"
+      "leftnav.item": "Administration"
     },
     "security.ldapConfig.data.placeholders": {
       "id": "fr_Enter directory name",

@@ -1,7 +1,7 @@
 {
   "search": {
-    "title": "es_Search",
-    "search.btn": "es_Search",
+    "title": "Búsqueda",
+    "search.btn": "Búsqueda",
     "export.btn": "es_Export",
     "search.placeholder": "es_Type in to search",
     "menus": {

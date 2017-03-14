@@ -1,13 +1,13 @@
 {
   "complaints": {
-    "title": "zh-tw_Complaints",
+    "title": "投訴",
     "progressNoComplaint": "zh-tw_[ No complaint data ]",
     "progressLoading": "zh-tw_Loading complaint ",
     "progressError": "zh-tw_Failed to load complaint "
   },
   "complaints.menus": {
-    "leftnav.item": "zh-tw_Complaints",
-    "topbar.item": "zh-tw_Complaint"
+    "leftnav.item": "投訴",
+    "topbar.item": "投訴"
   },
   "complaints.comp.info": {
     "complaintId": "zh-tw_Complaint id:",

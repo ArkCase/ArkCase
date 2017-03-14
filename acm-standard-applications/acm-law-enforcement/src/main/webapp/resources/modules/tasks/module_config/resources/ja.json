@@ -1,13 +1,13 @@
 {
   "tasks": {
-    "title": "ja_Tasks",
+    "title": "仕事",
     "progressNoTask": "ja_[ No task data ]",
     "progressLoading": "ja_Loading task ",
     "progressError": "ja_Failed to load task"
   },
   "tasks.menus": {
-    "leftnav.item": "ja_Tasks",
-    "topbar.item": "ja_Task"
+    "leftnav.item": "仕事",
+    "topbar.item": "仕事"
   },
   "tasks.comp.info": {
     "taskId": "ja_Task id:",

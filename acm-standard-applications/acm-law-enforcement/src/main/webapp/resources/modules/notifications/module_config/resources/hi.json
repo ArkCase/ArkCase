@@ -1,11 +1,11 @@
 {
   "notifications": {
-    "title": "hi_Notifications",
+    "title": "सूचनाएं",
     "search.btn": "hi_Search",
     "export.btn": "hi_Export",
     "search.placeholder": "hi_Search for notifications",
     "menus": {
-      "leftnav.item": "hi_Notifications"
+      "leftnav.item": "सूचनाएं"
     },
     "comp":{
       "grid": {

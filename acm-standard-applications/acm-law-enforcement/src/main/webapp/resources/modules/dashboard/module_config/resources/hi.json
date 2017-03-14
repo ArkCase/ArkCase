@@ -1,8 +1,8 @@
 {
   "dashboard": {
-    "title": "hi_Dashboard",
+    "title": "डैशबोर्ड",
     "menus": {
-      "leftnav.item": "hi_Dashboard"
+      "leftnav.item": "डैशबोर्ड"
     },
     "widgets": {
       "casesByQueue": {
