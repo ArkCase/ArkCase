@@ -1,13 +1,13 @@
 {
   "cases": {
-    "title": "zh-tw_Cases",
+    "title": "案件",
     "progressNoCase": "zh-tw_[ No case file data ]",
     "progressLoading": "zh-tw_Loading case file ",
     "progressError": "zh-tw_Failed to load case file"
   },
   "cases.menus": {
-    "leftnav.item": "zh-tw_Case Files",
-    "topbar.item": "zh-tw_Case"
+    "leftnav.item": "案件",
+    "topbar.item": "案件"
   },
   "cases.error": {
     "invalidData": "zh-tw_"

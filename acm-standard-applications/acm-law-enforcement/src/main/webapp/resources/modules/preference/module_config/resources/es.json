@@ -1,6 +1,6 @@
 {
   "preference": {
-    "title": "es_Preferences",
+    "title": "Preferencias",
     "menus": {
       "usermenu.item": "es_Preferences"
     }

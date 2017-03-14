@@ -1,13 +1,13 @@
 {
   "timeTracking": {
-    "title": "pt_Time Tracking",
+    "title": "Controle de Tempo",
     "progressNoTimesheet": "pt_[ No timesheet is selected ]",
     "progressLoading": "pt_Loading timesheet ",
     "progressError": "pt_Failed to load timesheet"
   },
   "timeTracking.menus": {
-    "leftnav.item": "pt_Time Tracking",
-    "topbar.item": "pt_Timesheet"
+    "leftnav.item": "Controle de Tempo",
+    "topbar.item": "Quadro de Horários"
   },
   "timeTracking.tree": {
   },

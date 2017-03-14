@@ -1,13 +1,13 @@
 {
   "costTracking": {
-    "title": "hi_Cost Tracking",
+    "title": "लागत ट्रैकिंग",
     "progressNoCostsheet": "hi_[ No costsheet is selected ]",
     "progressLoading": "hi_Loading costsheet ",
     "progressError": "hi_Failed to load costsheet"
   },
   "costTracking.menus": {
-    "leftnav.item": "hi_Cost Tracking",
-    "topbar.item": "hi_Costsheet"
+    "leftnav.item": "लागत ट्रैकिंग",
+    "topbar.item": "कॉस्टशीट"
   },
   "costTracking.tree": {
   },

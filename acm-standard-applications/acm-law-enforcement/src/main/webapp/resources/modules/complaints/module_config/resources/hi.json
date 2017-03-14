@@ -1,13 +1,13 @@
 {
   "complaints": {
-    "title": "hi_Complaints",
+    "title": "शिकायतें",
     "progressNoComplaint": "hi_[ No complaint data ]",
     "progressLoading": "hi_Loading complaint ",
     "progressError": "hi_Failed to load complaint "
   },
   "complaints.menus": {
-    "leftnav.item": "hi_Complaints",
-    "topbar.item": "hi_Complaint"
+    "leftnav.item": "शिकायतें",
+    "topbar.item": "शिकायत"
   },
   "complaints.comp.info": {
     "complaintId": "hi_Complaint id:",

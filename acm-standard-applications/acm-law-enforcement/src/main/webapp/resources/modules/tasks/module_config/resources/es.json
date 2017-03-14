@@ -1,13 +1,13 @@
 {
   "tasks": {
-    "title": "es_Tasks",
+    "title": "Tareas",
     "progressNoTask": "es_[ No task data ]",
     "progressLoading": "es_Loading task ",
     "progressError": "es_Failed to load task"
   },
   "tasks.menus": {
-    "leftnav.item": "es_Tasks",
-    "topbar.item": "es_Task"
+    "leftnav.item": "Tareas",
+    "topbar.item": "Tarea"
   },
   "tasks.comp.info": {
     "taskId": "es_Task id:",

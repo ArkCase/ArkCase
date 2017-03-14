@@ -105,6 +105,14 @@
         </constructor-arg>
     </bean>
 
+    <bean id="localeSettingsJson" class="org.apache.commons.io.IOUtils" factory-method="toString">
+        <constructor-arg type="java.io.InputStream">
+            <bean class="java.io.FileInputStream" destroy-method="close">
+                <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/resources/settings/settings.json"/>
+            </bean>
+        </constructor-arg>
+    </bean>
+
     <bean id="configList" class="java.util.ArrayList">
         <constructor-arg>
             <list>
@@ -359,6 +367,12 @@
                     <property name="configDescription" value="Security Field Types"/>
                     <property name="json" ref="securityFieldTypesJsonConfig"/>
                 </bean>
+                <bean class="com.armedia.acm.services.config.model.JsonConfig">
+                    <property name="configName" value="localeSettings"/>
+                    <property name="configDescription" value="Locale Setting"/>
+                    <property name="json" ref="localeSettingsJson"/>
+                </bean>
+
             </list>
         </constructor-arg>
     </bean>

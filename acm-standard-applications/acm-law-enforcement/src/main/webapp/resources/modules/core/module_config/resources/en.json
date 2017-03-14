@@ -12,7 +12,8 @@
     "topBar": {
       "new": "New",
       "toggle.btn": "Toggle navigation",
-      "search.placeholder": "Search ArkCase"
+      "search.placeholder": "Search ArkCase",
+      "locale.updateList": "Update"
     },
     "loginWarning": {
       "btnOK.text": "OK",

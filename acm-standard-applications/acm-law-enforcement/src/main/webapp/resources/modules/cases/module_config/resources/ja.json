@@ -1,13 +1,13 @@
 {
   "cases": {
-    "title": "ja_Cases",
+    "title": "案件",
     "progressNoCase": "ja_[ No case file data ]",
     "progressLoading": "ja_Loading case file ",
     "progressError": "ja_Failed to load case file"
   },
   "cases.menus": {
-    "leftnav.item": "ja_Case Files",
-    "topbar.item": "ja_Case"
+    "leftnav.item": "案件文書",
+    "topbar.item": "案件"
   },
   "cases.error": {
     "invalidData": "ja_"

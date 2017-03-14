@@ -1,8 +1,8 @@
 {
   "reports": {
-    "title": "zh-tw_Reports",
+    "title": "報告",
     "menus": {
-      "leftnav.item": "zh-tw_Reports"
+      "leftnav.item": "報告"
     },
     "selectReport" : {
       "label": "zh-tw_Report",
