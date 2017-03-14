@@ -29,7 +29,6 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import javax.activation.DataHandler;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,24 +39,6 @@ public class MuleContextManager implements ApplicationContextAware
     private transient Logger log = LoggerFactory.getLogger(getClass());
     private String muleConfigFilePattern;
     private List<String> specificConfigFiles;
-
-    /**
-     * Map of CMIS configurations.
-     */
-    private Map<String, String> cmisConfigurations = new HashMap<>();
-
-    /**
-     * Register CMIS configuration with the registry.
-     * Invoked from bean configuration files ($HOME/.arkcase/acm/cmis/mule-config-*-cmis.xml)
-     *
-     * @param configId        unique configuration identifier
-     * @param versioningState versioning state value associated with this config (NONE, MINIR, MAJOR)
-     */
-    public void registerCmisConfig(String configId, String versioningState)
-    {
-        cmisConfigurations.put(configId, versioningState);
-        log.error("Configuration [{}] added with versioningState value [{}]", configId, versioningState);
-    }
 
     public void dispatch(String endpoint, Object payload, Map<String, Object> messageProperties) throws MuleException
     {
