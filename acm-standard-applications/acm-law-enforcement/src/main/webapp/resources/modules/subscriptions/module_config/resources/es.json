@@ -1,7 +1,7 @@
 {
   "subscriptions": {
     "title": "Suscripciones",
-    "search.btn": "es_Search",
+    "search.btn": "Búsqueda",
     "export.btn": "es_Export",
     "search.placeholder": "es_Search for subscriptions",
     "menus": {

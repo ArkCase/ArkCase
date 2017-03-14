@@ -5,7 +5,7 @@
     "export.btn": "es_Export",
     "search.placeholder": "es_Type in to search",
     "menus": {
-      "leftnav.item": "es_Search"
+      "leftnav.item": "Búsqueda"
     },
     "comp":{
       "grid": {

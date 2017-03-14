@@ -2,7 +2,7 @@
   "preference": {
     "title": "Preferencias",
     "menus": {
-      "usermenu.item": "es_Preferences"
+      "usermenu.item": "Preferencias"
     }
   }
 }
