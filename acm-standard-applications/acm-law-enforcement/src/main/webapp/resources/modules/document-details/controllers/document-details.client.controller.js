@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('document-details').controller('DocumentDetailsController', ['$scope', '$stateParams', '$sce', '$log', '$q'
-    , '$timeout', 'TicketService', 'ConfigService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService'
-    , function ($scope, $stateParams, $sce, $log, $q, $timeout
+    , '$timeout', '$http', 'TicketService', 'ConfigService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService'
+    , function ($scope, $stateParams, $sce, $log, $q, $timeout, $http
         , TicketService, ConfigService, LookupService, SnowboundService, Authentication, EcmService) {
 
         $scope.acmTicket = '';
@@ -32,7 +32,9 @@ angular.module('document-details').controller('DocumentDetailsController', ['$sc
             // make GET Request to test decryption for the query string on server side
             var queryString = viewerUrl.split("?")[1];
             var encryptedString = SnowboundService.encryptSnowboundUrlQueryString(queryString, $scope.ecmFileProperties);
-            EcmService.getSnowboundURL({credentials: encryptedString});
+            var url = "api/latest/viewer?" + encryptedString;
+            console.log("URL: " + url);
+            EcmService.get(url);
 
             $scope.documentViewerUrl = $sce.trustAsResourceUrl(viewerUrl);
         };

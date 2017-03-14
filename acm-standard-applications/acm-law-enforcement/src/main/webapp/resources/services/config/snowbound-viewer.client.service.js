@@ -9,8 +9,8 @@
  *
  * This service contains functionality for Snowbound Viewer management.
  */
-angular.module('services').factory('SnowboundService', [
-    function () {
+angular.module('services').factory('SnowboundService', ['$log',
+    function ($log) {
         return {
 
             /**
@@ -76,20 +76,14 @@ angular.module('services').factory('SnowboundService', [
              * given encryption key and iv to provide AES encrypted string
              */
             , encryptSnowboundUrlQueryString: function (queryString, ecmFileProperties) {
-                var key = ecmFileProperties['ecm.viewer.snowbound.encryptionKey'];
-                var iv = ecmFileProperties['ecm.viewer.snowbound.encryptionIv'];
-
-                if (key && iv) {
-                    var encryptionKey = CryptoJS.enc.Base64.parse(key);
-                    var encryptionIv = CryptoJS.enc.Base64.parse(iv);
+                var encryptionKey = ecmFileProperties['ecm.viewer.snowbound.encryptionKey'];
+                if (encryptionKey) {
                     try {
-                        var encrypted = CryptoJS.AES.encrypt(queryString, encryptionKey,
-                            {mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7, iv: encryptionIv});
-                        var base64Encoded = encrypted.ciphertext.toString(CryptoJS.enc.Base64);
-                        return encodeURIComponent(base64Encoded);
+                        var encrypted = CryptoJS.AES.encrypt(queryString, encryptionKey);
+                        return encrypted.toString();
                     }
-                    catch (e){
-                        console.log("Error on encryption, returning plain query string");
+                    catch (e) {
+                        $log.warn("Error on encryption, returning plain query string");
                     }
                 }
                 return queryString;
