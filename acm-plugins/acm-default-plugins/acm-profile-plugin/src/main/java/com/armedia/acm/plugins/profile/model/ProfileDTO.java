@@ -28,7 +28,6 @@ public class ProfileDTO
     private String title;
     private List<String> groups;
     private Long userOrgId;
-    private String prefLocale;
 
     public String getUserId()
     {
@@ -260,11 +259,4 @@ public class ProfileDTO
         this.userOrgId = userOrgId;
     }
 
-    public String getPrefLocale() {
-        return prefLocale;
-    }
-
-    public void setPrefLocale(String prefLocale) {
-        this.prefLocale = prefLocale;
-    }
 }

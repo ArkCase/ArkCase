@@ -156,11 +156,5 @@
         </insert>
     </changeSet>
 
-    <changeSet id="userorg-12-add-pref-locale" author="jwu">
-        <addColumn tableName="acm_user_org">
-            <column name="cm_pref_locale" type="VARCHAR(16)" defaultValue="en"/>
-        </addColumn>
-    </changeSet>
-
 </databaseChangeLog>
 
