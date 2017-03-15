@@ -11,6 +11,9 @@
   },
   "timeTracking.tree": {
   },
+  "timeTracking.comp.info": {
+    "lastModified.label": "hi_Last Modified"
+  },
   "timeTracking.comp.actions": {
     "new.button": "hi_New Timesheet",
     "edit.button": "hi_Edit Timesheet"
@@ -49,12 +52,12 @@
       "createdBy": "hi_Created By"
     },
     "modal": {
-    "title": "hi_Tag",
-    "search": "hi_Search for Tag",
-    "buttons": {
-          "cancel": "hi_Cancel",
-          "ok": "hi_Add Tag"
-     }
+      "title": "hi_Tag",
+      "search": "hi_Search for Tag",
+      "buttons": {
+        "cancel": "hi_Cancel",
+        "ok": "hi_Add Tag"
+      }
     },
     "message": {
       "tagExists": "hi_Tag with that name or description or text already exists",

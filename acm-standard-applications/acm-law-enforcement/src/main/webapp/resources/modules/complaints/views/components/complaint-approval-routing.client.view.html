@@ -11,31 +11,32 @@
                 <div class="h4 font-bold no-margin">
                     <user-full-name userId="objectInfo.assignee" fallback="None"/>
                 </div>
-                <small class="text-muted">Assignee</small>
+                <small class="text-muted"><span translate>complaints.comp.approvalRouting.assignee.label</span></small>
             </div>
             <div class="col-xs-9 col-md-3">
                 <div class="h4 font-bold no-margin">{{owningGroup || 'Unknown'}}</div>
-                <small class="text-muted">Owning Group</small>
+                <small class="text-muted"><span translate>complaints.comp.approvalRouting.owningGroup.label</span>
+                </small>
             </div>
             <div class="col-xs-9 col-md-3">
                 <div class="h4 font-bold no-margin">{{ objectInfo.priority || 'Unknown'}}</div>
-                <small class="text-muted">Priority</small>
+                <small class="text-muted"><span translate>complaints.comp.approvalRouting.priority.label</span></small>
             </div>
             <div class="col-xs-9 col-md-3">
                 <div class="h4 font-bold no-margin">{{ (dateInfo.taskStartDate | date: ('common.defaultDateUIFormat' |
                     translate)) || 'Unknown'}}
                 </div>
-                <small class="text-muted">Start Date</small>
+                <small class="text-muted"><span translate>complaints.comp.approvalRouting.startDate.label</span></small>
             </div>
             <div class="col-xs-9 col-md-3">
                 <div class="h4 font-bold no-margin">{{ (dateInfo.dueDate | date: ('common.defaultDateUIFormat' |
                     translate)) || 'Unknown' }}
                 </div>
-                <small class="text-muted">Due Date</small>
+                <small class="text-muted"><span translate>complaints.comp.approvalRouting.dueDate.label</span></small>
             </div>
             <div class="col-xs-9 col-md-3">
                 <div class="h4 font-bold no-margin">{{objectInfo.status || 'Unknown'}}</div>
-                <small class="text-muted">State</small>
+                <small class="text-muted"><span translate>complaints.comp.approvalRouting.state.label</span></small>
             </div>
         </div>
     </div>

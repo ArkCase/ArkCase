@@ -17,7 +17,7 @@
                 exchange-pattern="request-response"/>
 
         <enricher target="#[flowVars['folder']]">
-            <cmis:get-object-by-id objectId="#[message.inboundProperties.parentFolderId]"/>
+            <cmis:get-object-by-id config-ref="#[message.inboundProperties.configRef]" objectId="#[message.inboundProperties.parentFolderId]"/>
         </enricher>
 
 

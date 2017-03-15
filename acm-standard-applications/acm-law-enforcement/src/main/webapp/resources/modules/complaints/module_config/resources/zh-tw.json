@@ -12,7 +12,13 @@
   "complaints.comp.info": {
     "complaintId": "zh-tw_Complaint id:",
     "complaintNumber": "zh-tw_Complaint ID:",
-    "courtRoomName": "zh-tw_Court Room Name:"
+    "courtRoomName": "zh-tw_Court Room Name:",
+    "type.label": "Type",
+    "created.label": "Created Date",
+    "priority.label": "Priority",
+    "assignee.label": "Assigned To",
+    "owningGroup.label": "Owning Group",
+    "dueDate.label": "Due Date"
   },
   "complaints.comp.actions": {
     "restrict": "zh-tw_Restrict?",
@@ -280,7 +286,13 @@
     },
     "table.columns": {
       "fullName": "zh-tw_Full Name"
-    }
+    },
+    "assignee.label": "zh-tw_Assignee",
+    "owningGroup.label": "zh-tw_Owning Group",
+    "priority.label": "zh-tw_Priority",
+    "startDate.label": "zh-tw_Start Date",
+    "dueDate.label": "zh-tw_Due Date",
+    "state.label": "zh-tw_State"
   },
   "complaints.comp.pastApprovals": {
     "title": "zh-tw_Past Approvers",

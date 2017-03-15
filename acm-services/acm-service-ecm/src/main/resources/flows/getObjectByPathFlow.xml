@@ -18,7 +18,7 @@
                 address="vm://getObjectByPath.in"
                 exchange-pattern="request-response"/>
 
-        <cmis:get-object-by-path config-ref="acmCmisConnector" path="#[message.payload]"/>
+        <cmis:get-object-by-path config-ref="#[message.inboundProperties.configRef]" path="#[message.payload]"/>
 
         <catch-exception-strategy>
             <logger level="ERROR" category="com.armedia.acm.plugins.ecm"
