@@ -1,20 +1,8 @@
 package com.armedia.acm.webdav;
 
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-
-import org.apache.chemistry.opencmis.commons.data.ContentStream;
-import org.apache.commons.io.IOUtils;
-import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Date;
-import java.util.Map;
-
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import io.milton.common.ContentTypeUtils;
 import io.milton.common.RangeUtils;
 import io.milton.http.Range;
@@ -26,6 +14,19 @@ import io.milton.http.http11.auth.DigestResponse;
 import io.milton.resource.DigestResource;
 import io.milton.resource.PropFindableResource;
 import io.milton.resource.ReplaceableResource;
+import org.apache.chemistry.opencmis.commons.data.ContentStream;
+import org.apache.commons.io.IOUtils;
+import org.mule.api.MuleException;
+import org.mule.api.MuleMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity
@@ -38,15 +39,17 @@ public class AcmFileResource extends AcmFileSystemResource implements PropFindab
     private String fileType;
     private String lockType;
     private String acmTicket;
+    private CmisConfigUtils cmisConfigUtils;
 
     public AcmFileResource(String host, EcmFile acmFile, String fileType, String lockType, String acmTicket,
-            AcmFileSystemResourceFactory resourceFactory)
+                           AcmFileSystemResourceFactory resourceFactory, CmisConfigUtils cmisConfigUtils)
     {
         super(host, resourceFactory);
         this.acmFile = acmFile;
         this.fileType = fileType;
         this.lockType = lockType;
         this.acmTicket = acmTicket;
+        this.cmisConfigUtils = cmisConfigUtils;
     }
 
     public Long getId()
@@ -110,8 +113,11 @@ public class AcmFileResource extends AcmFileSystemResource implements PropFindab
 
         try
         {
+            Map<String, Object> messageProps = new HashMap<>();
+            messageProps.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(acmFile.getCmisRepositoryId()));
+
             MuleMessage downloadedFile = getResourceFactory().getMuleContextManager().send("vm://downloadFileFlow.in",
-                    getResourceFactory().getCmisFileId(acmFile));
+                    getResourceFactory().getCmisFileId(acmFile), messageProps);
             if (downloadedFile.getPayload() instanceof ContentStream)
             {
                 ContentStream filePayload = (ContentStream) downloadedFile.getPayload();
@@ -173,5 +179,4 @@ public class AcmFileResource extends AcmFileSystemResource implements PropFindab
     {
         return getResourceFactory().getSecurityManager().isDigestAllowed();
     }
-
 }

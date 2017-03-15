@@ -15,7 +15,13 @@
   "cases.comp.info": {
     "caseId": "zh-tw_Case id:",
     "caseNumber": "zh-tw_Case Number:",
-    "courtRoomName": "zh-tw_Court Room Name:"
+    "courtRoomName": "zh-tw_Court Room Name:",
+    "type.label": "zh-tw_Type",
+    "created.label": "zh-tw_Created Date",
+    "priority.label": "zh-tw_Priority",
+    "assignee.label": "zh-tw_Assigned To",
+    "owningGroup.label": "zh-tw_Owning Group",
+    "dueDate.label": "zh-tw_Due Date"
   },
   "cases.comp.actions": {
     "restrict": "zh-tw_Restrict?",
@@ -286,7 +292,13 @@
     },
     "table.columns": {
       "fullName": "zh-tw_Full Name"
-    }
+    },
+    "assignee.label": "zh-tw_Assignee",
+    "owningGroup.label": "zh-tw_Owning Group",
+    "priority.label": "zh-tw_Priority",
+    "startDate.label": "zh-tw_Start Date",
+    "dueDate.label": "zh-tw_Due Date",
+    "state.label": "zh-tw_State"
   },
   "cases.comp.pastApprovals": {
     "title": "zh-tw_Past Approvers",
