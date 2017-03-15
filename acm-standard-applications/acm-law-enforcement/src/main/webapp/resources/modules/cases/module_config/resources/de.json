@@ -15,7 +15,13 @@
   "cases.comp.info": {
     "caseId": "de_Case id:",
     "caseNumber": "de_Case Number:",
-    "courtRoomName": "de_Court Room Name:"
+    "courtRoomName": "de_Court Room Name:",
+    "type.label": "de_Type",
+    "created.label": "de_Created Date",
+    "priority.label": "de_Priority",
+    "assignee.label": "de_Assigned To",
+    "owningGroup.label": "de_Owning Group",
+    "dueDate.label": "de_Due Date"
   },
   "cases.comp.actions": {
     "restrict": "de_Restrict?",
@@ -286,7 +292,13 @@
     },
     "table.columns": {
       "fullName": "de_Full Name"
-    }
+    },
+    "assignee.label": "de_Assignee",
+    "owningGroup.label": "de_Owning Group",
+    "priority.label": "de_Priority",
+    "startDate.label": "de_Start Date",
+    "dueDate.label": "de_Due Date",
+    "state.label": "de_State"
   },
   "cases.comp.pastApprovals": {
     "title": "de_Past Approvers",
