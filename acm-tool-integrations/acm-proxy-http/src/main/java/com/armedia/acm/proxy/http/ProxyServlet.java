@@ -67,8 +67,10 @@ import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Enumeration;
 import java.util.Formatter;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -194,6 +196,8 @@ public class ProxyServlet extends HttpServlet
     protected String targetUri;
     protected URI targetUriObj;//new URI(targetUri)
     protected HttpHost targetHost;//URIUtils.extractHost(targetUriObj);
+
+    private HashMap<String, Pattern> compiledPatterns = new HashMap<>();
 
     private HttpClient proxyClient;
 
@@ -757,7 +761,7 @@ public class ProxyServlet extends HttpServlet
         //check if request url needs to be skipped
         for (String pattern : skipResponseUrlMatchers)
         {
-            if (servletRequest.getRequestURI().matches(pattern))
+            if (matches(pattern, servletRequest.getRequestURI()))
             {
                 shouldBeSkipped = true;
                 break;
@@ -767,7 +771,7 @@ public class ProxyServlet extends HttpServlet
         //check if url is eligible for content processing
         for (String pattern : responseUrlMatchers)
         {
-            if (servletRequest.getRequestURI().matches(pattern))
+            if (matches(pattern, servletRequest.getRequestURI()))
             {
                 shouldBeProcessed = true;
                 break;
@@ -782,7 +786,7 @@ public class ProxyServlet extends HttpServlet
             //check if content needs to be skipped depending on content type
             for (String pattern : skipResponseContentTypes)
             {
-                if (entity.getContentType().getValue().matches(pattern))
+                if (matches(pattern, entity.getContentType().getValue()))
                 {
                     shouldBeSkipped = true;
                     break;
@@ -900,7 +904,7 @@ public class ProxyServlet extends HttpServlet
             String pattern = splitPair[0];
             String params = splitPair[1];
 
-            if (servletRequest.getRequestURI().matches(pattern))
+            if (matches(pattern, servletRequest.getRequestURI()))
             {
                 queryString += (queryString.length() > 0 ? "&" : "") + params;
             }
@@ -1039,5 +1043,27 @@ public class ProxyServlet extends HttpServlet
             return new ArrayList<>();
         }
         return Arrays.asList(csv.split(",[ ]*"));
+    }
+
+    /**
+     * checks if value matches given pattern.
+     * it compiles pattern and keep in memory for further use
+     *
+     * @param patternStr String regex pattern
+     * @param value      String value that should be tested if matches against pattern
+     * @return boolean
+     */
+    private boolean matches(String patternStr, String value)
+    {
+        Pattern pattern;
+        if (compiledPatterns.containsKey(patternStr))
+        {
+            pattern = compiledPatterns.get(patternStr);
+        } else
+        {
+            pattern = Pattern.compile(patternStr);
+            compiledPatterns.put(patternStr, pattern);
+        }
+        return pattern.matcher(value).matches();
     }
 }
