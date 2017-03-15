@@ -135,6 +135,11 @@ public class ProxyServlet extends HttpServlet
      */
     public static final String P_SKIP_RESPONSE_URL_MATCHERS = "skipResponseUrlMatchers";
 
+    /**
+     * A String parameter name to append params for given url matcher
+     */
+    public static final String P_APPEND_URL_PARAMS = "appendUrlParams";
+
 
     /**
      * List containing urls which need to be matched for rewriting strings in the content.
@@ -156,6 +161,11 @@ public class ProxyServlet extends HttpServlet
      * List containing patterns for urls which need to be skipped
      */
     protected List<String> skipResponseUrlMatchers;
+
+    /**
+     * List containing patterns and parameters for urls which need to be added
+     */
+    protected List<String> appendUrlParams;
 
     /**
      * The parameter name for the target (destination) URI to proxy to.
@@ -244,6 +254,7 @@ public class ProxyServlet extends HttpServlet
         responseContentRewritePairs = parseCsvAsList(getConfigParam(P_RESPONSE_CONTENT_REWRITE_PAIRS));
         responseUrlMatchers = parseCsvAsList(getConfigParam(P_RESPONSE_URL_MATCHERS));
         skipResponseUrlMatchers = parseCsvAsList(getConfigParam(P_SKIP_RESPONSE_URL_MATCHERS));
+        appendUrlParams = parseCsvAsList(getConfigParam(P_APPEND_URL_PARAMS));
 
         initTarget();//sets target*
 
@@ -771,7 +782,7 @@ public class ProxyServlet extends HttpServlet
             //check if content needs to be skipped depending on content type
             for (String pattern : skipResponseContentTypes)
             {
-                if (entity.getContentType().toString().contains(pattern))
+                if (entity.getContentType().getValue().matches(pattern))
                 {
                     shouldBeSkipped = true;
                     break;
@@ -878,6 +889,22 @@ public class ProxyServlet extends HttpServlet
 
     protected String rewriteQueryStringFromRequest(HttpServletRequest servletRequest, String queryString)
     {
+        for (String pair : appendUrlParams)
+        {
+            String[] splitPair = pair.split(":");
+            if (splitPair.length != 2)
+            {
+                logger.warn("Invalid pair [{}] for appending parameters.", pair);
+                continue;
+            }
+            String pattern = splitPair[0];
+            String params = splitPair[1];
+
+            if (servletRequest.getRequestURI().matches(pattern))
+            {
+                queryString += (queryString.length() > 0 ? "&" : "") + params;
+            }
+        }
         return queryString;
     }
 
