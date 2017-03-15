@@ -28,10 +28,5 @@
             <property name="userOrgService" ref="acmUserOrgService"/>
             <property name="outlookService" ref="outlookService"/>
         </bean>
-        
-        <bean id="propertyFileCalendarAdminService" class="com.armedia.acm.plugins.outlook.service.impl.PropertyFileCalendarAdminService">
-            <property name="calendarPropertiesResource" value="file:${user.home}/.arkcase/acm/calendarService.properties"/>
-            <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-        </bean>
 
 </beans>

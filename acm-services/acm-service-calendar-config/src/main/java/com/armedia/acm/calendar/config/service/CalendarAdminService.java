@@ -1,6 +1,4 @@
-package com.armedia.acm.plugins.outlook.service;
-
-import com.armedia.acm.plugins.outlook.web.api.CalendarConfiguration;
+package com.armedia.acm.calendar.config.service;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Mar 9, 2017
@@ -9,7 +7,7 @@ import com.armedia.acm.plugins.outlook.web.api.CalendarConfiguration;
 public interface CalendarAdminService
 {
 
-    CalendarConfiguration readConfiguration();
+    CalendarConfiguration readConfiguration(boolean includePassword) throws CalendarConfigurationException;
 
     void writeConfiguration(CalendarConfiguration configuration) throws CalendarConfigurationException;
 

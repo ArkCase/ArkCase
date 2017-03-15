@@ -39,10 +39,7 @@
           class="com.armedia.acm.plugins.outlook.web.api.CreateCalendarAppointmentAPIController">
         <property name="outlookService" ref="outlookService"/>
         <property name="userOrgService" ref="acmUserOrgService"/>
-    </bean>
-    
-    <bean id="calendarManagementAPIController" class="com.armedia.acm.plugins.outlook.web.api.CalendarManagementAPIController">
-        <property name="calendarService" ref="propertyFileCalendarAdminService"/>
+        <property name="calendarAdminService" ref="propertyFileCalendarAdminService"/>
     </bean>
     
 </beans>

@@ -1,4 +1,4 @@
-package com.armedia.acm.plugins.outlook.web.api;
+package com.armedia.acm.calendar.config.service;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
