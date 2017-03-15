@@ -11,6 +11,9 @@
   },
   "timeTracking.tree": {
   },
+  "timeTracking.comp.info": {
+    "lastModified.label": "en-in_Last Modified"
+  },
   "timeTracking.comp.actions": {
     "new.button": "en-in_New Timesheet",
     "edit.button": "en-in_Edit Timesheet"
@@ -49,12 +52,12 @@
       "createdBy": "en-in_Created By"
     },
     "modal": {
-    "title": "en-in_Tag",
-    "search": "en-in_Search for Tag",
-    "buttons": {
-          "cancel": "en-in_Cancel",
-          "ok": "en-in_Add Tag"
-     }
+      "title": "en-in_Tag",
+      "search": "en-in_Search for Tag",
+      "buttons": {
+        "cancel": "en-in_Cancel",
+        "ok": "en-in_Add Tag"
+      }
     },
     "message": {
       "tagExists": "en-in_Tag with that name or description or text already exists",
