@@ -206,7 +206,20 @@
   "common.directive.coreCalendar": {
     "title": "ja_Calendar",
     "start.label": "ja_Start: ",
-    "end.label": "ja_End: "ja_
+    "end.label": "ja_End: ",
+    "btnAddEvent": "ja_Add Event",
+    "addEventModal": {
+      "title": "ja_Add Event",
+      "btnCancel": "ja_Cancel",
+      "btnAdd": "ja_Add",
+      "form": {
+        "lblStartDate": "ja_Start Date",
+        "lblEndDate": "ja_End Date",
+        "lblSubject": "ja_Subject",
+        "lblAllDayEvent": "ja_All Day Event",
+        "btnDatePickerClose": "ja_Close"
+      }
+    }
   },
   "common.directive.coreParticipants": {
     "title": "ja_Participants",

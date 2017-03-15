@@ -30,8 +30,8 @@
  </example>
  */
 angular.module('directives').directive('coreCalendar', ['$compile', '$translate', 'uiCalendarConfig',
-    'Object.CalendarService', 'UtilService',
-    function ($compile, $translate, uiCalendarConfig, CalendarService, Util) {
+    'Object.CalendarService', 'UtilService', '$modal',
+    function ($compile, $translate, uiCalendarConfig, CalendarService, Util, $modal) {
         return {
             restrict: 'E',
             scope: {
@@ -69,13 +69,38 @@ angular.module('directives').directive('coreCalendar', ['$compile', '$translate'
                 };
 
 
+                /* Add Event Modal */
+                var addEvent = function() {
+                    var modalInstance = $modal.open({
+                        animation: true,
+                        templateUrl: 'directives/core-calendar/core-calendar-add-event-modal.client.view.html',
+                        controller: 'Directives.CoreCalendarAddEventModalController',
+                        size: 'lg',
+                        backdrop: 'static'
+                    });
+
+                    modalInstance.result.then(function (data) {
+                        //TO DO modal close
+                    }, function () {
+                      // TO DO modal dismiss
+                    });
+                };
+
                 /* Calendar config object */
                 scope.uiConfig = {
                     calendar: {
+                        customButtons: {
+                            addEvent: {
+                                text: $translate.instant('common.directive.coreCalendar.btnAddEvent'),
+                                click: function() {
+                                    addEvent();
+                                }
+                            }
+                        },
                         height: 450,
                         editable: false,
                         header: {
-                            left: 'month agendaWeek agendaDay',
+                            left: 'month agendaWeek agendaDay addEvent',
                             center: 'title',
                             right: 'today prev,next'
                         },

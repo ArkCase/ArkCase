@@ -89,6 +89,23 @@ angular.module('services').factory('Object.CalendarService', ['$resource', 'Util
                 }
             });
         };
+        
+        /**
+         * @ngdoc method
+         * @name addEvent
+         * @methodOf services:Object.CalendarService
+         *
+         * @description
+         * Add new event to the calendar.
+         *
+         * @param {Object} eventData  the data of the calendar event
+         *
+         * @returns {Object} Promise
+         */
+        Service.addEvent = function(eventData) {
+            //TO DO
+            //implement http call when backend service is ready
+        };
 
         return Service;
     }
