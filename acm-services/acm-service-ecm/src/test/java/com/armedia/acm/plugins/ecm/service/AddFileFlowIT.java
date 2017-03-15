@@ -35,7 +35,6 @@ import static org.junit.Assert.*;
         "/spring/spring-library-data-source.xml",
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-add-file-mule.xml",
-        "/spring/spring-library-cmis-configuration.xml",
         "/spring/spring-library-audit-service.xml"})
 public class AddFileFlowIT
 {
@@ -54,7 +53,9 @@ public class AddFileFlowIT
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
         
         String testPath = "/acm/test/folder";
-        MuleMessage message = muleContextManager.send("vm://getTestFolderId.in", testPath, null);
+        Map<String, Object> messageProperties = new HashMap<>();
+        messageProperties.put("configRef", muleContextManager.getMuleContext().getRegistry().lookupObject("alfresco"));
+        MuleMessage message = muleContextManager.send("vm://getTestFolderId.in", testPath, messageProperties);
         String folderId = message.getPayloadAsString();
 
         testFolderId = folderId;
@@ -62,7 +63,7 @@ public class AddFileFlowIT
     }
 
     @Test
-    public void muleAddFile() throws Exception
+    public void muleAddFileAlfresco() throws Exception
     {
         assertNotNull(testFolderId);
 
@@ -80,6 +81,8 @@ public class AddFileFlowIT
         messageProperties.put("cmisFolderId", testFolderId);
         messageProperties.put("inputStream", is);
 
+        messageProperties.put("configRef", muleContextManager.getMuleContext().getRegistry().lookupObject("alfresco"));
+        messageProperties.put("versioningState", "MAJOR");
         MuleMessage message = muleContextManager.send("vm://addFile.in", ecmFile, messageProperties);
 
         assertNotNull(message);
@@ -91,12 +94,65 @@ public class AddFileFlowIT
 
         log.debug("doc id: {}", found.getVersionSeriesId());
 
-        MuleMessage downloadedFile = muleContextManager.send("vm://downloadFileFlow.in", found.getVersionSeriesId(), null);
+        MuleMessage downloadedFile = muleContextManager.send("vm://downloadFileFlow.in", found.getVersionSeriesId(), messageProperties);
         ContentStream filePayload = (ContentStream) downloadedFile.getPayload();
 
         assertNotNull(filePayload);
 
         try ( InputStream foundIs = filePayload.getStream(); InputStream originalIs = uploadFile.getInputStream() )
+        {
+            List<String> downloadedLines = IOUtils.readLines(foundIs);
+            List<String> originalLines = IOUtils.readLines(originalIs);
+            assertNotNull(downloadedLines);
+            assertTrue(!downloadedLines.isEmpty());
+
+            assertEquals(originalLines, downloadedLines);
+        }
+    }
+
+    @Test
+    public void muleAddFileOpencmis() throws Exception
+    {
+        String testPath = "/acm/test/folder";
+        Map<String, Object> messageProperties = new HashMap<>();
+        messageProperties.put("configRef", muleContextManager.getMuleContext().getRegistry().lookupObject("opencmis"));
+        MuleMessage message = muleContextManager.send("vm://getTestFolderId.in", testPath, messageProperties);
+        testFolderId = message.getPayloadAsString();
+        assertNotNull(testFolderId);
+
+        log.debug("Found folder id '{}'", testFolderId);
+
+        Resource uploadFile = new ClassPathResource("/spring/spring-library-ecm-plugin-test-mule.xml");
+        InputStream is = uploadFile.getInputStream();
+
+        EcmFile ecmFile = new EcmFile();
+
+        ecmFile.setFileName("spring-library-ecm-plugin-test-mule.xml-" + System.currentTimeMillis());
+        ecmFile.setFileActiveVersionMimeType("text/plain");
+
+        messageProperties = new HashMap<>();
+        messageProperties.put("cmisFolderId", testFolderId);
+        messageProperties.put("inputStream", is);
+
+        messageProperties.put("configRef", muleContextManager.getMuleContext().getRegistry().lookupObject("opencmis"));
+        messageProperties.put("versioningState", "NONE");
+        message = muleContextManager.send("vm://addFile.in", ecmFile, messageProperties);
+
+        assertNotNull(message);
+
+        Document found = message.getPayload(Document.class);
+        assertNotNull(found.getVersionSeriesId());
+        assertNotNull(found.getContentStreamMimeType());
+        assertNotNull(found.getVersionLabel());
+
+        log.debug("doc id: {}", found.getVersionSeriesId());
+
+        MuleMessage downloadedFile = muleContextManager.send("vm://downloadFileFlow.in", found.getVersionSeriesId(), messageProperties);
+        ContentStream filePayload = (ContentStream) downloadedFile.getPayload();
+
+        assertNotNull(filePayload);
+
+        try (InputStream foundIs = filePayload.getStream(); InputStream originalIs = uploadFile.getInputStream())
         {
             List<String> downloadedLines = IOUtils.readLines(foundIs);
             List<String> originalLines = IOUtils.readLines(originalIs);
