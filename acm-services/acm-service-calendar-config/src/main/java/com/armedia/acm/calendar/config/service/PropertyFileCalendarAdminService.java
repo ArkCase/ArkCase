@@ -75,7 +75,7 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService
     @Override
     public void writeConfiguration(CalendarConfiguration configuration) throws CalendarConfigurationException
     {
-        Properties calendarProperties = loadProperties();
+        Properties calendarProperties = new Properties();
 
         if (configuration.getCalendarType().equals(CalendarType.SYSTEM_BASED))
         {
@@ -94,14 +94,11 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService
                 log.error("Could not encrypt password for calendar configuration.");
                 throw new CalendarConfigurationException("Could not encrypt password for calendar configuration.", e);
             }
-        } else
-        {
-            calendarProperties.remove(CalendarPropertyKeys.SYSTEM_EMAIL.name());
-            calendarProperties.remove(CalendarPropertyKeys.PASSWORD.name());
         }
         calendarProperties.setProperty(CalendarPropertyKeys.CALENDAR_TYPE.name(), configuration.getCalendarType().name());
 
         Lock writeLock = lock.writeLock();
+        writeLock.lock();
 
         try
         {
@@ -122,6 +119,7 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService
     {
         Properties calendarProperties = new Properties();
         Lock readLock = lock.readLock();
+        readLock.lock();
         try
         {
             calendarProperties.load(calendarPropertiesResource.getInputStream());

@@ -868,4 +868,14 @@
         </property>
     </bean>
 
+    <!--Calendar Management Plugin-->
+    <bean id="acmCalendarConfigPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+        <property name="privilegeName" value="acm-config-calendar"/>
+        <property name="applicationRolesWithPrivilege">
+            <list>
+                <value>ROLE_CALENDAR_ADMINISTRATOR</value>
+            </list>
+        </property>
+    </bean>
+
 </beans>
