@@ -18,7 +18,8 @@
     "dueDate.label": "ru_Due Date",
     "state.label": "ru_State",
     "overdue.tooltip": "ru_Task is Overdue",
-    "deadline.tooltip": "ru_Deadline is Approaching"
+    "deadline.tooltip": "ru_Deadline is Approaching",
+    "owningGroup.label": "Owning Group"
   },
   "tasks.comp.parentinfo": {
     "taskId": "ru_Task id:",
@@ -291,7 +292,7 @@
   "tasks.comp.approvalRouting": {
     "title": "ru_Future Approvers",
     "addNewTooltip": "ru_Add new approver",
-    "noBuckslipMessage":"No Data",
+    "noBuckslipMessage": "No Data",
     "button": {
       "save.tooltip": "ru_Save Changes"
     },
@@ -301,7 +302,7 @@
   },
   "tasks.comp.pastApprovals": {
     "title": "ru_Past Approvers",
-    "noBuckslipMessage":"No Data",
+    "noBuckslipMessage": "No Data",
     "table.columns": {
       "approvalDate": "ru_Approval Date",
       "approverId": "ru_Approver",
