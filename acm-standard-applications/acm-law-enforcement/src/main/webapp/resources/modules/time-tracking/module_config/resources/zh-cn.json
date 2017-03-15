@@ -11,6 +11,9 @@
   },
   "timeTracking.tree": {
   },
+  "timeTracking.comp.info": {
+    "lastModified.label": "zh-cn_Last Modified"
+  },
   "timeTracking.comp.actions": {
     "new.button": "zh-cn_New Timesheet",
     "edit.button": "zh-cn_Edit Timesheet"
@@ -49,12 +52,12 @@
       "createdBy": "zh-cn_Created By"
     },
     "modal": {
-    "title": "zh-cn_Tag",
-    "search": "zh-cn_Search for Tag",
-    "buttons": {
-          "cancel": "zh-cn_Cancel",
-          "ok": "zh-cn_Add Tag"
-     }
+      "title": "zh-cn_Tag",
+      "search": "zh-cn_Search for Tag",
+      "buttons": {
+        "cancel": "zh-cn_Cancel",
+        "ok": "zh-cn_Add Tag"
+      }
     },
     "message": {
       "tagExists": "zh-cn_Tag with that name or description or text already exists",
