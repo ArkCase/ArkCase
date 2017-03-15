@@ -33,6 +33,11 @@
             <artifactId>acm-encryption</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-calendar-config</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>

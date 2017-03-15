@@ -1,4 +1,4 @@
-package com.armedia.acm.plugins.outlook.service;
+package com.armedia.acm.calendar.config.service;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Mar 13, 2017

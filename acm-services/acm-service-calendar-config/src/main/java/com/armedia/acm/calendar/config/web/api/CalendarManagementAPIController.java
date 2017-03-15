@@ -1,8 +1,9 @@
-package com.armedia.acm.plugins.outlook.web.api;
+package com.armedia.acm.calendar.config.web.api;
 
+import com.armedia.acm.calendar.config.service.CalendarAdminService;
+import com.armedia.acm.calendar.config.service.CalendarConfiguration;
+import com.armedia.acm.calendar.config.service.CalendarConfigurationException;
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
-import com.armedia.acm.plugins.outlook.service.CalendarAdminService;
-import com.armedia.acm.plugins.outlook.service.CalendarConfigurationException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,9 +36,9 @@ public class CalendarManagementAPIController
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public CalendarConfiguration getConfiguration()
+    public CalendarConfiguration getConfiguration() throws AcmEncryptionException, CalendarConfigurationException
     {
-        return calendarService.readConfiguration();
+        return calendarService.readConfiguration(false);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
@@ -70,7 +71,7 @@ public class CalendarManagementAPIController
         } else
         {
             response = ResponseEntity.status(HttpStatus.BAD_REQUEST);
-            errorDetails.put("error_cause", "Invalid input excpetion.");
+            errorDetails.put("error_cause", "Invalid input exception.");
         }
 
         errorDetails.put("error_message", ce.getMessage());

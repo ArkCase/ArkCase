@@ -50,7 +50,8 @@
         <module>acm-service-timesheet</module>
         <module>acm-service-users</module>
         <module>acm-service-webdav</module>
-    </modules>
+    <module>acm-service-calendar-config</module>
+  </modules>
 
 
 </project>
