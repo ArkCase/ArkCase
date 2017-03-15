@@ -70,6 +70,7 @@ import java.util.Formatter;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -197,7 +198,10 @@ public class ProxyServlet extends HttpServlet
     protected URI targetUriObj;//new URI(targetUri)
     protected HttpHost targetHost;//URIUtils.extractHost(targetUriObj);
 
-    private HashMap<String, Pattern> compiledPatterns = new HashMap<>();
+    /**
+     * container for compiled pattern for further reuse
+     */
+    private Map<String, Pattern> compiledPatterns = new HashMap<>();
 
     private HttpClient proxyClient;
 
@@ -469,7 +473,7 @@ public class ProxyServlet extends HttpServlet
     protected HttpResponse doExecute(HttpServletRequest servletRequest, HttpServletResponse servletResponse,
                                      HttpRequest proxyRequest) throws IOException
     {
-        logger.warn("proxy [{} {}] -- [{}]", servletRequest.getMethod(), servletRequest.getRequestURI(), proxyRequest.getRequestLine().getUri());
+        logger.debug("proxy [{} {}] -- [{}]", servletRequest.getMethod(), servletRequest.getRequestURI(), proxyRequest.getRequestLine().getUri());
         return proxyClient.execute(getTargetHost(servletRequest), proxyRequest);
     }
 
@@ -614,7 +618,7 @@ public class ProxyServlet extends HttpServlet
             {
                 headerValue = getRealCookie(headerValue);
             }
-            logger.warn("Copying response header [{}: {}]", headerName, headerValue);
+            logger.debug("Copying response header [{}: {}]", headerName, headerValue);
             //don't add header if value is empty
             if (!StringUtils.isEmpty(headerValue))
             {
@@ -676,7 +680,7 @@ public class ProxyServlet extends HttpServlet
             servletResponse.addHeader(headerName, rewriteUrlFromResponse(servletRequest, headerValue));
         } else
         {
-            logger.warn("Copying response header [{}: {}]", headerName, headerValue);
+            logger.debug("Copying response header [{}: {}]", headerName, headerValue);
             servletResponse.addHeader(headerName, headerValue);
         }
     }
@@ -786,7 +790,7 @@ public class ProxyServlet extends HttpServlet
             //check if content needs to be skipped depending on content type
             for (String pattern : skipResponseContentTypes)
             {
-                if (matches(pattern, entity.getContentType().getValue()))
+                if (entity.getContentType() != null && matches(pattern, entity.getContentType().getValue()))
                 {
                     shouldBeSkipped = true;
                     break;
