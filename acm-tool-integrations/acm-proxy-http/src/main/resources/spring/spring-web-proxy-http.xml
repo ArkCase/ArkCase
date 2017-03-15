@@ -3,10 +3,25 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
+    <!-- property placeholder for all properties needed for the proxy -->
+    <bean id="arkCasePropertyConfigurerProxy"
+          class="com.armedia.acm.crypto.properties.AcmEncryptablePropertySourcesPlaceholderConfigurer">
+        <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
+        <property name="order" value="42"/>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+        <property name="locations">
+            <list>
+                <value>file:${user.home}/.arkcase/acm/acm-reports-server-config.properties</value>
+            </list>
+        </property>
+    </bean>
+
     <!-- Map URLs to Controllers based on bean id -->
     <bean id="beanNameUrlHandlerMapping" class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"/>
 
     <!-- Configuration is externalized in .arkcase/acm/spring-->
-    <import resource="file:${user.home}/.arkcase/acm/spring/spring-config-proxy.xml"/>
+    <import resource="file:${user.home}/.arkcase/acm/spring/proxy-config/spring-config-proxy.xml"/>
 
 </beans>
