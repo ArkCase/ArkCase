@@ -238,6 +238,7 @@
         {
           "name": "parentType",
           "displayName": "costTracking.comp.summary.table.columns.parentType",
+          "cellFilter": "mapKeyValue: grid.appScope.customization.labels",
           "headerCellFilter": "translate"
         },
         {
