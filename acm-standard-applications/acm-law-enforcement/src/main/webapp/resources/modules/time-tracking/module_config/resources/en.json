@@ -11,6 +11,9 @@
   },
   "timeTracking.tree": {
   },
+  "timeTracking.comp.info": {
+    "lastModified.label": "Last Modified"
+  },
   "timeTracking.comp.actions": {
     "new.button": "New Timesheet",
     "edit.button": "Edit Timesheet"
@@ -49,12 +52,12 @@
       "createdBy": "Created By"
     },
     "modal": {
-    "title": "Tag",
-    "search": "Search for Tag",
-    "buttons": {
-          "cancel": "Cancel",
-          "ok": "Add Tag"
-     }
+      "title": "Tag",
+      "search": "Search for Tag",
+      "buttons": {
+        "cancel": "Cancel",
+        "ok": "Add Tag"
+      }
     },
     "message": {
       "tagExists": "Tag with that name or description or text already exists",

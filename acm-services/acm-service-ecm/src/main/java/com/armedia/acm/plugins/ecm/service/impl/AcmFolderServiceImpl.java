@@ -16,10 +16,10 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.services.participants.dao.AcmParticipantDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
-
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.client.api.Folder;
@@ -38,7 +38,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
-
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,6 +65,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     private FolderAndFilesUtils folderAndFilesUtils;
     private Properties ecmFileServiceProperties;
     private AcmParticipantDao participantDao;
+    private CmisConfigUtils cmisConfigUtils;
 
     @Override
     public AcmFolder addNewFolder(Long parentFolderId, String newFolderName)
@@ -102,18 +102,26 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         Map<String, Object> properties = new HashMap<>();
         properties.put(AcmFolderConstants.PARENT_FOLDER_ID, parentFolder.getCmisFolderId());
         properties.put(AcmFolderConstants.NEW_FOLDER_NAME, uniqueFolderName);
+
+        String cmisRepositoryId = parentFolder.getCmisRepositoryId();
+        if (cmisRepositoryId == null)
+        {
+            cmisRepositoryId = ecmFileServiceProperties.getProperty("ecm.defaultCmisId");
+        }
+        properties.put(AcmFolderConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
         String cmisFolderId = null;
         try
         {
 
             cmisFolderId = createNewFolderAndReturnCmisID(parentFolder, properties);
             log.debug("Folder with name: {}  exists inside the folder: {}", newFolderName, parentFolder.getName());
-            return prepareFolder(parentFolder, cmisFolderId, newFolderName);
+            return prepareFolder(parentFolder, cmisFolderId, newFolderName, cmisRepositoryId);
         } catch (NoResultException e)
         {
             AcmFolder newFolder = new AcmFolder();
             if (cmisFolderId != null)
             {
+                newFolder.setCmisRepositoryId(parentFolder.getCmisRepositoryId());
                 newFolder.setCmisFolderId(cmisFolderId);
             } else
             {
@@ -201,6 +209,16 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
         Map<String, Object> findFolderProperties = new HashMap<>();
         findFolderProperties.put("parentFolderId", cmisFolderObjectId);
+
+        AcmFolder acmFolder = folderDao.findByCmisFolderId(cmisFolderObjectId);
+        if (acmFolder != null && acmFolder.getCmisRepositoryId() != null)
+        {
+            findFolderProperties.put(AcmFolderConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(acmFolder.getCmisRepositoryId()));
+        } else
+        {
+            String defaultCmisId = ecmFileServiceProperties.getProperty("ecm.defaultCmisId");
+            findFolderProperties.put(AcmFolderConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(defaultCmisId));
+        }
         MuleMessage findFolderMessage = getMuleContextManager().send(AcmFolderConstants.MULE_ENDPOINT_GET_FOLDER, null,
                 findFolderProperties);
         if (findFolderMessage.getInboundPropertyNames().contains(AcmFolderConstants.GET_FOLDER_EXCEPTION_INBOUND_PROPERTY))
@@ -296,6 +314,14 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         Map<String, Object> properties = new HashMap<>();
         properties.put(AcmFolderConstants.ACM_FOLDER_ID, folderForMoving.getCmisFolderId());
         properties.put(AcmFolderConstants.DESTINATION_FOLDER_ID, dstFolder.getCmisFolderId());
+
+        String cmisRepositoryId = folderForMoving.getCmisRepositoryId();
+        if (cmisRepositoryId == null)
+        {
+            cmisRepositoryId = ecmFileServiceProperties.getProperty("ecm.defaultCmisId");
+        }
+        properties.put(AcmFolderConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
+
         try
         {
             MuleMessage message = getMuleContextManager().send(AcmFolderConstants.MULE_ENDPOINT_MOVE_FOLDER, folderForMoving, properties);
@@ -311,6 +337,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             CmisObject cmisObject = message.getPayload(CmisObject.class);
             String newFolderId = cmisObject.getId();
 
+            folderForMoving.setCmisRepositoryId(cmisRepositoryId);
             folderForMoving.setCmisFolderId(newFolderId);
             folderForMoving.setParentFolder(dstFolder);
             getParticipantDao().removeAllOtherParticipantsForObject(AcmFolderConstants.OBJECT_FOLDER_TYPE, folderForMoving.getId(),
@@ -351,6 +378,13 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         Map<String, Object> properties = new HashMap<>();
         properties.put(AcmFolderConstants.ACM_FOLDER_ID, folderForMoving.getCmisFolderId());
         properties.put(AcmFolderConstants.DESTINATION_FOLDER_ID, dstFolder.getCmisFolderId());
+        String cmisRepositoryId = folderForMoving.getCmisRepositoryId();
+        if (cmisRepositoryId == null)
+        {
+            cmisRepositoryId = ecmFileServiceProperties.getProperty("ecm.defaultCmisId");
+        }
+        properties.put(AcmFolderConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
+
         try
         {
             MuleMessage message = getMuleContextManager().send(AcmFolderConstants.MULE_ENDPOINT_MOVE_FOLDER, folderForMoving, properties);
@@ -366,6 +400,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             CmisObject cmisObject = message.getPayload(CmisObject.class);
             String newFolderId = cmisObject.getId();
 
+            folderForMoving.setCmisRepositoryId(cmisRepositoryId);
             folderForMoving.setCmisFolderId(newFolderId);
             folderForMoving.setParentFolder(dstFolder);
             movedFolder = getFolderDao().save(folderForMoving);
@@ -413,8 +448,16 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         Map<String, Object> toBeCopiedFolderProperties = new HashMap<>();
         toBeCopiedFolderProperties.put(AcmFolderConstants.PARENT_FOLDER_ID, toBeCopied.getCmisFolderId());
 
+        String cmisRepositoryId = toBeCopied.getCmisRepositoryId();
+        if (cmisRepositoryId == null)
+        {
+            cmisRepositoryId = ecmFileServiceProperties.getProperty("ecm.defaultCmisId");
+        }
+        toBeCopiedFolderProperties.put(AcmFolderConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
+
         Map<String, Object> parentFolderProperties = new HashMap<>();
         parentFolderProperties.put(AcmFolderConstants.PARENT_FOLDER_ID, dstFolder.getCmisFolderId());
+        parentFolderProperties.put(AcmFolderConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
 
         Folder folderToBeCopied;
         Folder parentFolder;
@@ -460,11 +503,11 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
                         toBeCopied.getId(), "Folder  " + toBeCopied.getName() + "was not fetched successfully", e);
             }
         }
-        copiedFolder = copyDir(parentFolder, folderToBeCopied, targetObjectId, targetObjectType);
+        copiedFolder = copyDir(parentFolder, folderToBeCopied, targetObjectId, targetObjectType, cmisRepositoryId);
         return copiedFolder;
     }
 
-    private AcmFolder copyDir(Folder parentFolder, Folder toBeCopiedFolder, Long targetObjectId, String targetObjectType)
+    private AcmFolder copyDir(Folder parentFolder, Folder toBeCopiedFolder, Long targetObjectId, String targetObjectType, String cmisRepositoryId)
             throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
 
@@ -475,6 +518,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
         newFolderProperties.put(AcmFolderConstants.PARENT_FOLDER_ID, parentFolder.getId());
         newFolderProperties.put(AcmFolderConstants.NEW_FOLDER_NAME, uniqueFolderName);
+        newFolderProperties.put(AcmFolderConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
 
         Folder newFolder;
         AcmFolder copiedFolder = null;
@@ -493,6 +537,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             CmisObject cmisObjectNewFolder = message.getPayload(CmisObject.class);
             newFolder = (Folder) cmisObjectNewFolder;
 
+            acmNewFolder.setCmisRepositoryId(cmisRepositoryId);
             acmNewFolder.setCmisFolderId(newFolder.getId());
             AcmFolder pFolder = getFolderDao().findByCmisFolderId(parentFolder.getId());
             acmNewFolder.setParentFolder(pFolder);
@@ -504,12 +549,12 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
                     null, "Folder was not created under " + toBeCopiedFolder.getName() + " successfully", e);
         }
-        copyChildren(newFolder, toBeCopiedFolder, targetObjectId, targetObjectType);
+        copyChildren(newFolder, toBeCopiedFolder, targetObjectId, targetObjectType, cmisRepositoryId);
 
         return copiedFolder;
     }
 
-    private void copyChildren(Folder parentFolder, Folder toCopyFolder, Long targetObjectId, String targetObjectType)
+    private void copyChildren(Folder parentFolder, Folder toCopyFolder, Long targetObjectId, String targetObjectType, String cmisRepositoryId)
             throws AcmObjectNotFoundException, AcmUserActionFailedException
     {
         ItemIterable<CmisObject> immediateChildren = toCopyFolder.getChildren();
@@ -540,7 +585,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
                 }
             } else if (child instanceof Folder)
             {
-                copyDir(parentFolder, (Folder) child, targetObjectId, targetObjectType);
+                copyDir(parentFolder, (Folder) child, targetObjectId, targetObjectType, cmisRepositoryId);
             }
         }
     }
@@ -557,6 +602,14 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
         Map<String, Object> properties = new HashMap<>();
         properties.put(AcmFolderConstants.ACM_FOLDER_ID, folder.getCmisFolderId());
+
+        String cmisRepositoryId = folder.getCmisRepositoryId();
+        if (cmisRepositoryId == null)
+        {
+            cmisRepositoryId = ecmFileServiceProperties.getProperty("ecm.defaultCmisId");
+        }
+        properties.put(AcmFolderConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
+
         try
         {
 
@@ -583,12 +636,13 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         }
     }
 
-    private AcmFolder prepareFolder(AcmFolder folder, String cmisFolderId, String folderName)
+    private AcmFolder prepareFolder(AcmFolder folder, String cmisFolderId, String folderName, String cmisRepositoryId)
             throws AcmUserActionFailedException, PersistenceException, AcmFolderException
     {
         AcmFolder newFolder = new AcmFolder();
         if (cmisFolderId != null)
         {
+            newFolder.setCmisRepositoryId(cmisRepositoryId);
             newFolder.setCmisFolderId(cmisFolderId);
         } else
         {
@@ -1025,5 +1079,15 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     public void setParticipantDao(AcmParticipantDao participantDao)
     {
         this.participantDao = participantDao;
+    }
+
+    public CmisConfigUtils getCmisConfigUtils()
+    {
+        return cmisConfigUtils;
+    }
+
+    public void setCmisConfigUtils(CmisConfigUtils cmisConfigUtils)
+    {
+        this.cmisConfigUtils = cmisConfigUtils;
     }
 }
