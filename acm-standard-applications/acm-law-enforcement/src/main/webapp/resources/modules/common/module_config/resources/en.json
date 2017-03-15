@@ -206,7 +206,20 @@
   "common.directive.coreCalendar": {
     "title": "Calendar",
     "start.label": "Start: ",
-    "end.label": "End: "
+    "end.label": "End: ",
+    "btnAddEvent": "Add Event",
+    "addEventModal": {
+      "title": "Add Event",
+      "btnCancel": "Cancel",
+      "btnAdd": "Add",
+      "form": {
+        "lblStartDate": "Start Date",
+        "lblEndDate": "End Date",
+        "lblSubject": "Subject",
+        "lblAllDayEvent": "All Day Event",
+        "btnDatePickerClose": "Close"
+      }
+    }
   },
   "common.directive.coreParticipants": {
     "title": "Participants",
