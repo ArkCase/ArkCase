@@ -27,7 +27,7 @@ import java.util.Map;
  *
  */
 @Controller
-@RequestMapping({ "/api/v1/plugin/outlook/calendar/admin", "/api/latest/plugin/outlook/calendar/admin" })
+@RequestMapping({ "/api/v1/service/calendar/configuration", "/api/latest/service/calendar/configuration" })
 public class CalendarManagementAPIController
 {
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -63,15 +63,15 @@ public class CalendarManagementAPIController
             Class<? extends Throwable> causeClass = cause.getClass();
             if (causeClass.equals(AcmEncryptionException.class))
             {
-                errorDetails.put("error_cause", "Encryption exception.");
+                errorDetails.put("error_cause", "Could not encrypt the system user password.");
             } else if (causeClass.equals(IOException.class))
             {
-                errorDetails.put("error_cause", "Properties writing exception.");
+                errorDetails.put("error_cause", "Could not update calendar configuration.");
             }
         } else
         {
             response = ResponseEntity.status(HttpStatus.BAD_REQUEST);
-            errorDetails.put("error_cause", "Invalid input exception.");
+            errorDetails.put("error_cause", "Both system user id and password are needed.");
         }
 
         errorDetails.put("error_message", ce.getMessage());
