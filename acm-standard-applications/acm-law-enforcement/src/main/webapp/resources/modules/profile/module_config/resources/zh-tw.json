@@ -1,10 +1,10 @@
 {
   "profile": {
-    "title": "zh-tw_User Profile",
+    "title": "用戶資料",
     "unknown":"Unknown"
   },
   "profile.menus": {
-    "usermenu.item": "zh-tw_Profile"
+    "usermenu.item": "用戶資料"
   },
    "profile.subscriptions" : {
     "title":"Subscriptions",

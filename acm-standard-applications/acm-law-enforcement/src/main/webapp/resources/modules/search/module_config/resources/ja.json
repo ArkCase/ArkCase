@@ -1,11 +1,11 @@
 {
   "search": {
-    "title": "ja_Search",
-    "search.btn": "ja_Search",
+    "title": "検索",
+    "search.btn": "検索",
     "export.btn": "ja_Export",
     "search.placeholder": "ja_Type in to search",
     "menus": {
-      "leftnav.item": "ja_Search"
+      "leftnav.item": "検索"
     },
     "comp":{
       "grid": {

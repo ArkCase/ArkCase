@@ -1,8 +1,8 @@
 {
   "reports": {
-    "title": "pt_Reports",
+    "title": "Relatórios",
     "menus": {
-      "leftnav.item": "pt_Reports"
+      "leftnav.item": "Relatórios"
     },
     "selectReport" : {
       "label": "pt_Report",

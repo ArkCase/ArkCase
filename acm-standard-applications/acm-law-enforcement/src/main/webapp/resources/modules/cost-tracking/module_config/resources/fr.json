@@ -1,13 +1,13 @@
 {
   "costTracking": {
-    "title": "fr_Cost Tracking",
+    "title": "Suivi des coûts",
     "progressNoCostsheet": "fr_[ No costsheet is selected ]",
     "progressLoading": "fr_Loading costsheet ",
     "progressError": "fr_Failed to load costsheet"
   },
   "costTracking.menus": {
-    "leftnav.item": "fr_Cost Tracking",
-    "topbar.item": "fr_Costsheet"
+    "leftnav.item": "Suivi des coûts",
+    "topbar.item": "Coûts"
   },
   "costTracking.tree": {
   },

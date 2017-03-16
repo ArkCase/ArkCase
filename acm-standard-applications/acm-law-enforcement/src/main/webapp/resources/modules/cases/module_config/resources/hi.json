@@ -1,13 +1,13 @@
 {
   "cases": {
-    "title": "hi_Cases",
+    "title": "केस",
     "progressNoCase": "hi_[ No case file data ]",
     "progressLoading": "hi_Loading case file ",
     "progressError": "hi_Failed to load case file"
   },
   "cases.menus": {
-    "leftnav.item": "hi_Case Files",
-    "topbar.item": "hi_Case"
+    "leftnav.item": "मामला फ़ाइलें",
+    "topbar.item": "कार्य"
   },
   "cases.error": {
     "invalidData": "hi_"
