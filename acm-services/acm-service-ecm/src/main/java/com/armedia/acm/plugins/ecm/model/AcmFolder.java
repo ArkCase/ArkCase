@@ -91,6 +91,7 @@ public class AcmFolder implements AcmEntity, Serializable, AcmObject, AcmAssigne
     protected void beforeInsert()
     {
         setupChildPointers();
+        setDefaultCmisRepositoryId();
     }
 
     @PreUpdate
@@ -105,6 +106,14 @@ public class AcmFolder implements AcmEntity, Serializable, AcmObject, AcmAssigne
         {
             ap.setObjectId(getId());
             ap.setObjectType(getObjectType());
+        }
+    }
+
+    protected void setDefaultCmisRepositoryId()
+    {
+        if (getCmisRepositoryId() == null)
+        {
+            setCmisRepositoryId("alfresco");
         }
     }
 
