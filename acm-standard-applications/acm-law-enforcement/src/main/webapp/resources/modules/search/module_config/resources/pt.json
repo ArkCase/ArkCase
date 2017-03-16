@@ -1,11 +1,11 @@
 {
   "search": {
-    "title": "pt_Search",
-    "search.btn": "pt_Search",
+    "title": "Pesquisa",
+    "search.btn": "Pesquisa",
     "export.btn": "pt_Export",
     "search.placeholder": "pt_Type in to search",
     "menus": {
-      "leftnav.item": "pt_Search"
+      "leftnav.item": "Pesquisa"
     },
     "comp":{
       "grid": {

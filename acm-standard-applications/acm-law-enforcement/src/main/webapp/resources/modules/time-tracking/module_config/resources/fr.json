@@ -1,13 +1,13 @@
 {
   "timeTracking": {
-    "title": "fr_Time Tracking",
+    "title": "Suivi du temps",
     "progressNoTimesheet": "fr_[ No timesheet is selected ]",
     "progressLoading": "fr_Loading timesheet ",
     "progressError": "fr_Failed to load timesheet"
   },
   "timeTracking.menus": {
-    "leftnav.item": "fr_Time Tracking",
-    "topbar.item": "fr_Timesheet"
+    "leftnav.item": "Suivi du temps",
+    "topbar.item": "Temp"
   },
   "timeTracking.tree": {
   },

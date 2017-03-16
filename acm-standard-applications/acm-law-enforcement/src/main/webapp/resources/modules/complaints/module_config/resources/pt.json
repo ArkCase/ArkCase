@@ -1,13 +1,13 @@
 {
   "complaints": {
-    "title": "pt_Complaints",
+    "title": "Queixas",
     "progressNoComplaint": "pt_[ No complaint data ]",
     "progressLoading": "pt_Loading complaint ",
     "progressError": "pt_Failed to load complaint "
   },
   "complaints.menus": {
-    "leftnav.item": "pt_Complaints",
-    "topbar.item": "pt_Complaint"
+    "leftnav.item": "Queixas",
+    "topbar.item": "Queixa"
   },
   "complaints.comp.info": {
     "complaintId": "pt_Complaint id:",

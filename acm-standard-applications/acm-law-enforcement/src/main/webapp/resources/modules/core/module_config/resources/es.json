@@ -2,17 +2,18 @@
   "core": {
     "userInfo": {
       "addedMenu": {
-        "help": "es_Help",
-        "logout": "es_Logout"
+        "help": "Ayuda",
+        "logout": "Cerrar sesión"
       }
     },
     "leftNav": {
-      "title": "es_Navigation"
+      "title": "Dirección"
     },
     "topBar": {
-      "new": "es_New",
+      "new": "Nuevo",
       "toggle.btn": "es_Toggle navigation",
-      "search.placeholder": "es_Search ArkCase"
+      "search.placeholder": "es_Search ArkCase",
+      "locale.updateList": "Actualización"
     },
     "loginWarning": {
       "btnOK.text": "es_OK",
