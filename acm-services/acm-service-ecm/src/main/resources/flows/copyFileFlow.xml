@@ -6,8 +6,7 @@
       xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
       version="CE-3.7.0"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="
-http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+      xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
 http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmis/current/mule-cmis.xsd">
 
@@ -32,12 +31,12 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
 
         <!--Get the content stream of a target file-->
         <enricher target="#[flowVars['stream']]">
-            <cmis:get-content-stream objectId="#[message.inboundProperties.ecmFileId]"/>
+            <cmis:get-content-stream config-ref="#[message.inboundProperties.configRef]" objectId="#[message.inboundProperties.ecmFileId]"/>
         </enricher>
 
 
         <enricher target="#[flowVars['dstFolderObject']]">
-            <cmis:get-object-by-id objectId="#[message.inboundProperties.dstFolderId]"/>
+            <cmis:get-object-by-id config-ref="#[message.inboundProperties.configRef]" objectId="#[message.inboundProperties.dstFolderId]"/>
         </enricher>
 
 
@@ -45,15 +44,16 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
         <!--TODO check if file exists with same name!-->
 
         <!--create new copy document -->
-        <cmis:create-document-by-id-from-content folderId="#[flowVars['dstFolderObject'].id]"
+        <cmis:create-document-by-id-from-content config-ref="#[message.inboundProperties.configRef]"
+                                                 folderId="#[flowVars['dstFolderObject'].id]"
                                                  filename="#[message.inboundProperties.fileName]"
                                                  mimeType="#[message.inboundProperties.fileMimeType]"
-                                                 versioningState="MAJOR"
+                                                 versioningState="#[message.inboundProperties.versioningState]"
                                                  objectType="cmis:document"
                                                  content-ref="#[flowVars['stream'].stream]"/>
 
 
-        <cmis:get-object-by-id objectId="#[payload.id]"/>
+        <cmis:get-object-by-id config-ref="#[message.inboundProperties.configRef]" objectId="#[payload.id]"/>
 
 
         <catch-exception-strategy>

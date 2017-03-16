@@ -9,7 +9,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileDownloadedEvent;
+import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
@@ -19,6 +21,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mule.api.MuleMessage;
+import org.mule.module.cmis.connectivity.CMISCloudConnectorConnectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +39,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "/spring/spring-library-ecm-plugin-test.xml", "/spring/spring-web-acm-web.xml" })
@@ -53,6 +58,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
     private MuleMessage mockMuleMessage;
     private ContentStream mockContentStream;
     private FolderAndFilesUtils mockFolderAndFilesUtils;
+    private CmisConfigUtils mockCmisConfigUtils;
 
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
@@ -70,6 +76,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         mockMuleMessage = createMock(MuleMessage.class);
         mockContentStream = createMock(ContentStream.class);
         mockFolderAndFilesUtils = createMock(FolderAndFilesUtils.class);
+        mockCmisConfigUtils = createMock(CmisConfigUtils.class);
 
         unit = new FileDownloadAPIController();
 
@@ -77,6 +84,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         unit.setApplicationEventPublisher(mockEventPublisher);
         unit.setMuleContextManager(mockMuleContextManager);
         unit.setFolderAndFilesUtils(mockFolderAndFilesUtils);
+        unit.setCmisConfigUtils(mockCmisConfigUtils);
 
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
     }
@@ -99,19 +107,25 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         fromDb.setFileId(ecmFileId);
         fromDb.setVersionSeriesId(cmisId);
         fromDb.setFileActiveVersionNameExtension(fileNameExtension);
+        fromDb.setCmisRepositoryId("cmisRepositoryId");
 
         Capture<EcmFileDownloadedEvent> capturedEvent = new Capture<>();
 
         expect(mockAuthentication.getName()).andReturn(user).atLeastOnce();
         expect(mockFileDao.find(ecmFileId)).andReturn(fromDb);
         expect(mockFolderAndFilesUtils.getActiveVersionCmisId(fromDb)).andReturn(cmisId);
-        expect(mockMuleContextManager.send("vm://downloadFileFlow.in", "cmisId")).andReturn(mockMuleMessage);
         expect(mockMuleMessage.getPayload()).andReturn(mockContentStream).anyTimes();
         expect(mockContentStream.getMimeType()).andReturn(mimeType);
         expect(mockContentStream.getFileName()).andReturn(fileName);
         expect(fromDb.getFileActiveVersionNameExtension()).andReturn(fileNameExtension).anyTimes();
         expect(mockContentStream.getStream()).andReturn(log4jis);
         mockEventPublisher.publishEvent(capture(capturedEvent));
+
+        CMISCloudConnectorConnectionManager cmisConfig = new CMISCloudConnectorConnectionManager();
+        expect(mockCmisConfigUtils.getCmisConfiguration(fromDb.getCmisRepositoryId())).andReturn(cmisConfig);
+        Map<String, Object> messageProps = new HashMap<>();
+        messageProps.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfig);
+        expect(mockMuleContextManager.send("vm://downloadFileFlow.in", "cmisId", messageProps)).andReturn(mockMuleMessage);
 
         replayAll();
         MvcResult result = mockMvc.perform(

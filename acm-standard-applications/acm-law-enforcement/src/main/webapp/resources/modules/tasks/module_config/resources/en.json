@@ -13,12 +13,13 @@
     "taskId": "Task id:",
     "percentage.label": "% of Completion",
     "assignee.label": "Assignee",
-    "Priority.label": "Priority",
+    "priority.label": "Priority",
     "startDate.label": "Start Date",
     "dueDate.label": "Due Date",
     "state.label": "State",
     "overdue.tooltip": "Task is Overdue",
-    "deadline.tooltip": "Deadline is Approaching"
+    "deadline.tooltip": "Deadline is Approaching",
+    "owningGroup.label": "Owning Group"
   },
   "tasks.comp.parentinfo": {
     "taskId": "Task id:",
@@ -308,7 +309,7 @@
   "tasks.comp.approvalRouting": {
     "title": "Future Approvers",
     "addNewTooltip": "Add new approver",
-    "noBuckslipMessage":"No Data",
+    "noBuckslipMessage": "No Data",
     "button": {
       "save.tooltip": "Save Changes"
     },
@@ -318,7 +319,7 @@
   },
   "tasks.comp.pastApprovals": {
     "title": "Past Approvers",
-    "noBuckslipMessage":"No Data",
+    "noBuckslipMessage": "No Data",
     "table.columns": {
       "approvalDate": "Approval Date",
       "approverId": "Approver",
