@@ -98,6 +98,7 @@ public class AcmFolder implements AcmEntity, Serializable, AcmObject, AcmAssigne
     protected void beforeUpdate()
     {
         setupChildPointers();
+        setDefaultCmisRepositoryId();
     }
 
     protected void setupChildPointers()
