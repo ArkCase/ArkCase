@@ -72,9 +72,12 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                 var promiseUsers = gridHelper.getUsers();
 
                 scope.$watchCollection('config', function (config, oldValue) {
-                    if (!scope.notesInit.noteTitle) {
-                        scope.notesInit.noteTitle = $translate.instant("common.directive.coreNotes.title");
+                    if (scope.notesInit) {
+                        if (!scope.notesInit.noteTitle) {
+                            scope.notesInit.noteTitle = $translate.instant("common.directive.coreNotes.title");
+                        }
                     }
+
                     if (config) {
                     	
                             // if buttons were defined in config, try to use the getConfigurableButton method
@@ -121,23 +124,23 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
 
                 scope.retrieveGridData = function () {
                     var info = scope.notesInit;
+                    if (info) {
+                        var promiseQueryNotes = ObjectNoteService.queryNotesPage(
+                            info.objectType
+                            , info.currentObjectId
+                            , info.showAllNotes ? 'ALL' : info.noteType
+                            , Util.goodValue(scope.start, 0)
+                            , Util.goodValue(scope.pageSize, 10)
+                            , Util.goodMapValue(scope.sort, "by")
+                            , Util.goodMapValue(scope.sort, "dir")
+                        );
 
-                    var promiseQueryNotes = ObjectNoteService.queryNotesPage(
-                        info.objectType
-                        , info.currentObjectId
-                        , info.showAllNotes ? 'ALL' : info.noteType
-                        , Util.goodValue(scope.start, 0)
-                        , Util.goodValue(scope.pageSize, 10)
-                        , Util.goodMapValue(scope.sort, "by")
-                        , Util.goodMapValue(scope.sort, "dir")
-                    );
-
-                    promiseQueryNotes.then(function (data) {
-                        scope.gridOptions = scope.gridOptions || {};
-                        scope.gridOptions.data = data.resultPage;
-                        scope.gridOptions.totalItems = data.totalCount;
-                    });
-
+                        promiseQueryNotes.then(function (data) {
+                            scope.gridOptions = scope.gridOptions || {};
+                            scope.gridOptions.data = data.resultPage;
+                            scope.gridOptions.totalItems = data.totalCount;
+                        });
+                    }
                 };
 
                 scope.addNew = function () {
