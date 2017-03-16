@@ -94,4 +94,8 @@ public interface EcmFileConstants
 
     String FIND_CONTAINER_BY_CALENDAR_FOLDER_QUERY = "SELECT c FROM AcmContainer c WHERE c.calendarFolderId = :folderId";
     String FILE_MIME_TYPE = "fileMimeType";
+
+    // Multiple CMIS configurations constants
+    String CONFIGURATION_REFERENCE = "configRef";
+    String VERSIONING_STATE = "versioningState";
 }
