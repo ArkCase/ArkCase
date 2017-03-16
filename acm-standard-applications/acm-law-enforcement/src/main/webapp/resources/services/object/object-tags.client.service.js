@@ -67,7 +67,7 @@ angular.module('services').factory('Object.TagsService', ['$resource', '$transla
              * @param {Object} params Map of input parameter
              * @param {String} params.objectId  Object ID
              * @param {String} params.objectType  Object type
-             * @param {String} params.parentTitle  Parent Title
+             * @param {String} params.objectTitle  Object Parent Title
              * @param {String} params.tagId  Tag ID
              * @param {Function} onSuccess (Optional)Callback function of success query
              * @param {Function} onError (Optional) Callback function when fail
@@ -76,7 +76,7 @@ angular.module('services').factory('Object.TagsService', ['$resource', '$transla
              */
             _associateTag: {
                 method: 'PUT',
-                url: 'api/latest/service/tag/:objectId/:objectType/:parentTitle/:tagId'
+                url: 'api/latest/service/tag/:objectId/:objectType/:objectTitle/:tagId'
             },
 
             /**
@@ -98,7 +98,7 @@ angular.module('services').factory('Object.TagsService', ['$resource', '$transla
              */
             _createTag: {
                 method: 'PUT',
-                url: 'api/latest/service/tag?name=:tagName&desc=:tagDesc&text=:tagText&parent=:tagParentTitle'
+                url: 'api/latest/service/tag?name=:tagName&desc=:tagDesc&text=:tagText'
             },
 
             /**
@@ -191,13 +191,13 @@ angular.module('services').factory('Object.TagsService', ['$resource', '$transla
          *
          * @returns {Object} Promise
          */
-        Service.associateTag = function (objectId, objectType, parentTitle, tagId) {
+        Service.associateTag = function (objectId, objectType, objectTitle, tagId) {
             return Util.serviceCall({
                 service: Service._associateTag
                 , param: {
                     objectId: objectId,
                     objectType: objectType,
-                    parentTitle: parentTitle,
+                    objectTitle: objectTitle,
                     tagId: tagId
                 }
                 , data: {}
@@ -223,14 +223,13 @@ angular.module('services').factory('Object.TagsService', ['$resource', '$transla
          *
          * @returns {Object} Promise
          */
-        Service.createTag = function (tagName, tagDesc, tagText, tagParentTitle) {
+        Service.createTag = function (tagName, tagDesc, tagText) {
             return Util.serviceCall({
                 service: Service._createTag
                 , param: {
                     tagName: tagName,
                     tagDesc: tagDesc,
-                    tagText: tagText,
-                    tagParentTitle: tagParentTitle
+                    tagText: tagText
                 }
                 , data: {}
                 , onSuccess: function (data) {

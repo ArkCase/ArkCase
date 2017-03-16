@@ -1,23 +1,46 @@
 'use strict';
 
 angular.module('cases').controller('Cases.NotesController', ['$scope', '$stateParams', 'ConfigService', 'ObjectService'
-    , 'Case.InfoService'
-    , function ($scope, $stateParams, ConfigService, ObjectService, CaseInfoService) {
+    , 'Case.InfoService', 'Helper.ObjectBrowserService'
+    , function ($scope, $stateParams, ConfigService, ObjectService, CaseInfoService, HelperObjectBrowserService) {
 
-        ConfigService.getComponentConfig("cases", "notes").then(function (config) {
-            CaseInfoService.getCaseInfo($stateParams.id).then(function (data) {
-                $scope.parentTitleFromCase = data.caseNumber;
-
-                $scope.notesInit = {
-                    objectType: ObjectService.ObjectTypes.CASE_FILE,
-                    currentObjectId: $stateParams.id,
-                    parentTitle: $scope.parentTitleFromCase,
-                    noteType: "GENERAL"
-                };
-                $scope.config = config;
-                return config;
+        var componentHelper = new HelperObjectBrowserService.Component(
+            {
+                scope : $scope,
+                stateParams : $stateParams,
+                moduleId : "cases",
+                componentId : "notes",
+                retrieveObjectInfo: CaseInfoService.getCaseInfo,
+                validateObjectInfo: CaseInfoService.validateCaseInfo,
+                onConfigRetrieved : function(
+                    componentConfig) {
+                    return onConfigRetrieved(componentConfig);
+                },
+                onObjectInfoRetrieved : function(objectInfo) {
+                    onObjectInfoRetrieved(objectInfo);
+                }
             });
 
-        });
+        var onConfigRetrieved = function(config) {
+
+            $scope.config = config;
+
+        };
+
+        var onObjectInfoRetrieved = function(objectInfo) {
+
+            $scope.objectInfo = objectInfo;
+            $scope.parentObjectTitle = $scope.objectInfo.caseNumber;
+
+            $scope.notesInit = {
+                noteTitle: "Notes",
+                objectType: ObjectService.ObjectTypes.CASE_FILE,
+                currentObjectId: $stateParams.id,
+                parentTitle: $scope.parentObjectTitle,
+                noteType: "GENERAL"
+            };
+
+        };
+
     }
 ]);

@@ -47,7 +47,6 @@ angular.module('services').factory('Helper.NoteService', ['UtilService', 'Object
 
             createNote: function (parentObjId, parentObjType, parentObjTitle, parentObjVersion, creator, noteType, author) {
                 noteType = noteType || "GENERAL";
-                console.log(parentObjTitle);
                 return {
                     parentId: parentObjId,
                     parentType: parentObjType,

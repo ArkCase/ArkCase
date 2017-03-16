@@ -42,13 +42,12 @@ public class TagService {
         return getTagDao().find(tagId);
     }
 
-    public  AcmTag saveTag(String name,String desc, String value, String parentTitle){
+    public  AcmTag saveTag(String name,String desc, String value){
 
         AcmTag newTag = new AcmTag();
         newTag.setTagText(value);
         newTag.setTagName(name);
         newTag.setTagDescription(desc);
-        newTag.setTagParentTitle(parentTitle);
         newTag.setTagToken(value+"-"+System.currentTimeMillis());
 
         return getTagDao().save(newTag);

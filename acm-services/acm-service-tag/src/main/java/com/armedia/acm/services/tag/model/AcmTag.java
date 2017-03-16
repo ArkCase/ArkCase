@@ -42,9 +42,6 @@ public class AcmTag implements AcmEntity, Serializable, AcmObject {
     @Column(name = "cm_tag_name")
     private String tagName;
 
-    @Column(name = "cm_tag_parent_title")
-    private String tagParentTitle;
-
     @Column(name = "cm_tag_creator", nullable = false, insertable = true, updatable = false)
     private String creator;
 
@@ -146,7 +143,4 @@ public class AcmTag implements AcmEntity, Serializable, AcmObject {
         return id;
     }
 
-    public String getTagParentTitle() { return tagParentTitle; }
-
-    public void setTagParentTitle(String tagParentTitle) { this.tagParentTitle = tagParentTitle; }
 }

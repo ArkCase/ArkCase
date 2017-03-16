@@ -69,18 +69,14 @@ angular.module('tasks').controller('Tasks.TagsController', ['$scope', '$q', '$st
                             }
                         }
                         else {
-                            TaskInfoService.getTaskInfo($stateParams.id).then(function (data) {
-                            $scope.parentTitleFromTask = data.taskNumber;
-
-                                ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.TASK, 
-                                $scope.parentTitleFromTask, tag.id).then(
-                                    function () {
-                                        $scope.tags.push(tag);
-                                        $scope.gridOptions.data = $scope.tags;
-                                        $scope.gridOptions.totalItems = $scope.tags.length;
-                                    }
-                                );
-                            });
+                            ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.TASK, 
+                            $scope.objectParentTitle, tag.id).then(
+                                function () {
+                                    $scope.tags.push(tag);
+                                    $scope.gridOptions.data = $scope.tags;
+                                    $scope.gridOptions.totalItems = $scope.tags.length;
+                                }
+                            );
                         }
                     }
                 });
@@ -103,6 +99,7 @@ angular.module('tasks').controller('Tasks.TagsController', ['$scope', '$q', '$st
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
+            $scope.objectParentTitle = $scope.objectInfo.parentObjectName;
 
             var currentObjectId = Util.goodMapValue(objectInfo, "taskId");
             if (Util.goodPositive(currentObjectId, false)) {
