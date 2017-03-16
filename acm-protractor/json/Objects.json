@@ -89,7 +89,10 @@
             "docAssigneeSnowBView": ".//div[@class='row']/div[2]/div",
             "docCreatedDateSnowBView": ".//div[@class='row']/div[3]/div",
             "docTypeSnowBView": ".//div[@class='row']/div[4]/div",
-            "docStatusSnowBView": ".//div[@class='row']/div[5]/div"
+            "docStatusSnowBView": ".//div[@class='row']/div[5]/div",
+            "auditModule": "a[href*='#!/audit']",
+            "loadPending": ".pending"
+
 
 
 
@@ -112,7 +115,8 @@
             "defaultCaseFileTitle": "Case File",
             "defaultCaseFileType": "Case File",
             "defaultCaseFileAuthor": "Samuel Supervisor",
-            "defaultCaseFileStatus": "ACTIVE"
+            "defaultCaseFileStatus": "ACTIVE",
+            "sally": "Sally Supervisor"
 
         }
 
@@ -362,7 +366,7 @@
             "userName": "profilePicTitle",
             "userNavigation": ".fullname",
             "userNavigationProfile": "Profile",
-            "userPageHeader": ".//*[@class='module-header']/h3/span",
+            "pageHeader": ".//*[@class='module-header']/h3/span",
             "userLocation": "profileContactLocation",
             "inputField": "$data",
             "confirmBtn": ".btn.btn-primary.btn-sm",
@@ -380,7 +384,8 @@
             "fax": "profileCompanyFax",
             "website": "profileCompanyWebsite",
             "changeProfilePic": "//*[@id='lnkChangePicture']/u/span",
-            "picture": "picLoading"
+            "picture": "picLoading",
+            "userProfileTitle": "profile.title"
 
         },
 
@@ -742,6 +747,7 @@
             "chargeCodeAlertMessage":".//*[@class='f-status f-table-status s-alert']",
             "timeTotal": "rowTotal",
             "chargeCode": "objectNumber"
+
         },
         "data": {
 
@@ -805,7 +811,17 @@
             "notAuthorizedListBox": "selectedNotAuthorized",
             "authorizedListBox": "selectedAuthorized",
             "Col" : "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
-            "tableRow": ".//*[@class='ui-grid-cell-contents ng-binding ng-scope']"
+            "tableRow": ".//*[@class='ui-grid-cell-contents ng-binding ng-scope']",
+            "chooseHeaderLogoBtn": "headerLogo",
+            "selectModuleLabelConfig": "selectedNamespace",
+            "filterLabelId": "colFilter.term",
+            "updateField": "$data",
+            "resetModuleButtonText": ".//div[@id='navbar']/form[2]/button[2]/span",
+            "adminLabelsTableRow": ".//*[@class='ng-scope ng-binding editable editable-click']",
+            "addToAuthorizedButton": ".//button[@data-title='common.directive.objectAuthorizationRoles.move_right']",
+            "removeFromAuthorizedButton": ".//button[@data-title='common.directive.objectAuthorizationRoles.move_left']",
+            "headerLogoFileName": "selectedHeaderFile.name",
+            "saveFile": ".//button[@ng-click='saveFiles()']"
         },
         "data":{
             "ArmediaDirectoryName": "armedia",
@@ -822,7 +838,9 @@
             "docApprovalBussinesProcessName": "ACM Document Approval Process",
             "docApprovalBPDescription": "",
             "docApprovalBPModified": "07/11/2016",
-            "docApprovalBPAuthor": ""
+            "docApprovalBPAuthor": "",
+            "LabelUpdate": "Reset Module Updated",
+            "labelId": "admin.application.labels.config.resetModule"
         }
     },
     "reportPage": {

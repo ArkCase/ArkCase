@@ -1,10 +1,13 @@
 package com.armedia.acm.services.users.service.ldap;
 
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapUserDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.model.ldap.AcmLdapAuthenticateConfig;
+import com.armedia.acm.spring.SpringContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.LdapTemplate;
@@ -20,6 +23,7 @@ public class LdapAuthenticateService
     private SpringLdapUserDao ldapUserDao;
     private SpringLdapDao ldapDao;
     private AcmLdapAuthenticateConfig ldapAuthenticateConfig;
+    private SpringContextHolder acmContextHolder;
 
     /*
      * Authenticates user against LDAP
@@ -40,13 +44,20 @@ public class LdapAuthenticateService
     }
 
 
-    public void changeUserPassword(String userName, String password)
+    public void changeUserPassword(String userName, String password) throws AcmUserActionFailedException
     {
         log.debug("Changing password for user:{}", userName);
         LdapTemplate ldapTemplate = getLdapDao().buildLdapTemplate(getLdapAuthenticateConfig());
         AcmUser acmUser = userDao.findByUserId(userName);
-        ldapUserDao.changeUserPassword(acmUser.getDistinguishedName(), password, ldapTemplate, getLdapAuthenticateConfig());
-        log.debug("Password changed successfully for user:{}", userName);
+        try
+        {
+            ldapUserDao.changeUserPassword(acmUser.getDistinguishedName(), password, ldapTemplate, getLdapAuthenticateConfig());
+            log.debug("Password changed successfully for user:{}", userName);
+        } catch (AcmLdapActionFailedException e)
+        {
+            throw new AcmUserActionFailedException("change password", "USER", null,
+                    "Change password action failed!", null);
+        }
     }
 
     public SpringLdapDao getLdapDao()
@@ -88,5 +99,15 @@ public class LdapAuthenticateService
     public void setLdapUserDao(SpringLdapUserDao ldapUserDao)
     {
         this.ldapUserDao = ldapUserDao;
+    }
+
+    public SpringContextHolder getAcmContextHolder()
+    {
+        return acmContextHolder;
+    }
+
+    public void setAcmContextHolder(SpringContextHolder acmContextHolder)
+    {
+        this.acmContextHolder = acmContextHolder;
     }
 }

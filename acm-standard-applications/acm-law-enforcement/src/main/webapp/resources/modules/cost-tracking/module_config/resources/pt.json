@@ -1,0 +1,76 @@
+{
+  "costTracking": {
+    "title": "pt_Cost Tracking",
+    "progressNoCostsheet": "pt_[ No costsheet is selected ]",
+    "progressLoading": "pt_Loading costsheet ",
+    "progressError": "pt_Failed to load costsheet"
+  },
+  "costTracking.menus": {
+    "leftnav.item": "pt_Cost Tracking",
+    "topbar.item": "pt_Costsheet"
+  },
+  "costTracking.tree": {
+  },
+  "costTracking.comp.info": {
+    "incidentDate": "pt_Incident Date",
+    "priority": "pt_Priority",
+    "assignedTo": "pt_Assigned To",
+    "subjectType": "pt_Subject Type",
+    "state": "pt_State"
+  },
+  "costTracking.comp.actions": {
+    "new.button": "pt_New Costsheet",
+    "edit.button": "pt_Edit Costsheet"
+  },
+  "costTracking.comp.details": {
+    "title": "pt_Details",
+    "informSaved": "pt_Costsheet details saved",
+    "table.columns": {
+      "title": "pt_Details",
+      "modified": "pt_Date Last Modified",
+      "modifier": "pt_User Last Modified"
+    }
+  },
+  "costTracking.comp.people": {
+    "title": "pt_Person",
+    "table.columns": {
+      "fullName": "pt_Full Name",
+      "userId": "pt_Username"
+    }
+  },
+  "costTracking.comp.summary": {
+    "title": "pt_Cost Summary",
+    "table.columns": {
+      "parentId": "pt_ID",
+      "parentNumber": "pt_Parent ID",
+      "parentType": "pt_Parent Type",
+      "value": "pt_Total Cost",
+      "title": "pt_Title",
+      "description": "pt_Description"
+    }
+  },
+  "costTracking.comp.tags": {
+    "title": "pt_Tags",
+    "table.columns": {
+      "tag": "pt_Tag",
+      "created": "pt_Created",
+      "createdBy": "pt_Created By"
+    },
+    "modal": {
+    "title": "pt_Tag",
+    "search": "pt_Search for Tag",
+    "buttons": {
+          "cancel": "pt_Cancel",
+          "ok": "pt_Add Tag"
+     }
+    },
+    "message": {
+      "tagExists": "pt_Tag with that name or description or text already exists",
+      "tagAssociated": "pt_already associated",
+      "delete": {
+        "success": "pt_Tag deleted successfully",
+        "error": "pt_Error deleting tag"
+      }
+    }
+  }
+}

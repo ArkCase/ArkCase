@@ -95,7 +95,7 @@ public class JsonPropertiesManagementService
         try
         {
             File file = FileUtils.getFile(propertiesFileLocation);
-            String resource = FileUtils.readFileToString(file);
+            String resource = FileUtils.readFileToString(file, "UTF-8");
             return new JSONObject(resource);
 
         } catch (Exception e)
@@ -116,7 +116,7 @@ public class JsonPropertiesManagementService
         try
         {
             File file = FileUtils.getFile(propertiesFileLocation);
-            FileUtils.writeStringToFile(file, newProps.toString());
+            FileUtils.writeStringToFile(file, newProps.toString(), "UTF-8");
         } catch (Exception e)
         {
             log.error(String.format("Can't update properties file %s", propertiesFileLocation));

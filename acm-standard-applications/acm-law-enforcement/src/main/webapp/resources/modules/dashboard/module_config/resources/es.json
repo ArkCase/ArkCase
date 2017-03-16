@@ -1,0 +1,224 @@
+{
+  "dashboard": {
+    "title": "es_Dashboard",
+    "menus": {
+      "leftnav.item": "es_Dashboard"
+    },
+    "widgets": {
+      "casesByQueue": {
+        "title": "es_Active Case Files by Queue",
+        "description": "es_Displays active case files by queue",
+        "xAxis": "es_Queues",
+        "yAxis": "es_Number of Case Files",
+        "noDataMessage": "es_Currently there are no cases info"
+      },
+      "casesByStatus": {
+        "title": "es_Cases By Status",
+        "description": "es_Displays cases by status",
+        "timePeriod": {
+          "label": "es_Select Time Period",
+          "lastWeek": "es_Last Week",
+          "lastMonth": "es_Last Month",
+          "lastYear": "es_Last Year",
+          "all": "es_All"
+        },
+        "noDataMessage": "es_Currently there are no cases info"
+      },
+      "myCases": {
+        "title": "es_My Cases",
+        "description": "es_Displays my cases",
+        "noDataMessage": "es_Currently there are no cases info",
+        "table": {
+          "header": {
+            "caseId": "es_ID",
+            "title": "es_Title",
+            "priority": "es_Priority",
+            "status": "es_Status"
+          }
+        }
+      },
+      "myComplaints": {
+        "title": "es_My Complaints",
+        "description": "es_Displays my complaints",
+        "table": {
+          "header": {
+            "number": "es_ID",
+            "title": "es_Title",
+            "priority": "es_Priority",
+            "created": "es_Created",
+            "status": "es_Status"
+          },
+          "noDataMessage": "es_Currently there are no complaints info"
+        }
+      },
+      "myTasks": {
+        "title": "es_My Tasks",
+        "description": "es_Displays my tasks",
+        "rowNumbers.label": "es_Default Row Numbers",
+        "rowNumbers.placeholder": "es_Enter Default Row Numbers",
+        "table": {
+          "header": {
+            "taskId": "es_ID",
+            "title": "es_Title",
+            "priority": "es_Priority",
+            "dueDate": "es_Due",
+            "status": "es_Status",
+            "objectId": "es_Object ID"
+          },
+          "overdue.tooltip": "es_Task is Overdue",
+          "deadline.tooltip": "es_Deadline is Approaching"
+        },
+        "noDataMessage": "es_Currently there are no tasks info"
+      },
+      "newComplaints": {
+        "title": "es_New Complaints",
+        "description": "es_Displays new complaints",
+        "dueDate": {
+          "label": "es_Select Due Date Period",
+          "pastDue": "es_Past Due",
+          "dueTomorrow": "es_Due Tomorrow",
+          "dueWeek": "es_Due in 7 Days",
+          "dueMonth": "es_Due in Month",
+          "all": "es_All"
+        },
+        "noDataMessage": "es_Currently there are no complaints info"
+      },
+      "newCases": {
+        "title": "es_New Cases",
+        "description": "es_Displays new cases",
+        "noDataMessage": "es_Currently there are no cases info"
+      },
+      "teamWorkload": {
+        "title": "es_Team Workload",
+        "description": "es_Displays team workload",
+        "dueDate": {
+          "label": "es_Select Due Date Period",
+          "pastDue": "es_Past Due",
+          "dueTomorrow": "es_Due Tomorrow",
+          "dueWeek": "es_Due in 7 Days",
+          "dueMonth": "es_Due in Month",
+          "all": "es_All"
+        },
+        "noDataMessage": "es_Currently there are no team tasks info"
+      },
+      "weather": {
+        "description": "es_Displays weather",
+        "label": {
+          "current": "es_Current:",
+          "enterLocation": "es_Enter Location",
+          "description": "es_Display the current temperature of a city",
+          "location": "es_Location",
+          "insertLocationInConfiguration": "es_Please insert a location in the widget configuration"
+        },
+        "title": "es_Weather",
+        "noDataMessage": "es_Currently there are no weather info"
+      },
+      "news": {
+        "description": "es_Displays news",
+        "label": {
+          "enterFeedUrl": "es_Enter Feed url",
+          "description": "es_Displays a RSS/Atom feed",
+          "feedUrl": "es_Feed Url",
+          "insertUrl": "es_Please insert a feed url in the widget configuration"
+        },
+        "title": "es_News",
+        "noDataMessage": "es_Currently there is no RSS/info"
+      },
+      "details": {
+        "title": "es_Details",
+        "description": "es_Displays case details",
+        "noDataMessage": "es_Currently there are no details"
+      },
+      "people": {
+        "title": "es_People",
+        "description": "es_Displays people details",
+        "noDataMessage": "es_Currently there are no people to display"
+      },
+      "documents": {
+        "title": "es_Documents",
+        "description": "es_Displays chart of documents by folder",
+        "noDataMessage": "es_Currently there are no documents to display"
+      },
+      "locations": {
+        "title": "es_Locations",
+        "description": "es_Displays location details",
+        "noDataMessage": "es_Currently there are no locations to display"
+      },
+      "tasks": {
+        "title": "es_Tasks",
+        "description": "es_Displays task details",
+        "noDataMessage": "es_Currently there are no tasks to display"
+      },
+      "participants": {
+        "title": "es_Participants",
+        "description": "es_Displays participant details",
+        "noDataMessage": "es_Currently there are no participant to display"
+      },
+      "references": {
+        "title": "es_References",
+        "description": "es_Displays reference details",
+        "noDataMessage": "es_Currently there are no references to display"
+      },
+      "history": {
+        "title": "es_History",
+        "description": "es_Displays chart of history events",
+        "noDataMessage": "es_Currently there are no events to display"
+      },
+      "notes": {
+        "title": "es_Notes",
+        "description": "es_Displays note details",
+        "noDataMessage": "es_Currently there are no notes to display"
+      },
+      "time": {
+        "title": "es_Time",
+        "description": "es_Displays chart for hours per user",
+        "noDataMessage": "es_Currently there is no time information to display"
+      },
+      "cost": {
+        "title": "es_Cost",
+        "description": "es_Displays chart for cost per user",
+        "noDataMessage": "es_Currently there is no cost information to display"
+      },
+      "calendar": {
+        "title": "es_Calendar",
+        "description": "es_Displays chart of scheduled events per day",
+        "noDataMessage": "es_Currently there are no events to display"
+      },
+      "reworkDetails": {
+        "title": "es_Rework Details",
+        "description": "es_Shows most recent rework details",
+        "noDataMessage": "es_Currently there no are no rework details to display"
+      },
+      "docReview": {
+        "title": "es_Documents Under Review",
+        "description": "es_Shows documents under review",
+        "noDataMessage": "es_Currently there no are no documents under review to display"
+      },
+      "workflow": {
+        "title": "es_Workflow Overview",
+        "description": "es_Overview of pending workflows",
+        "noDataMessage": "es_Currently there are no workflows to display"
+      },
+      "signature": {
+        "title": "es_eSignature",
+        "description": "es_eSignature widget",
+        "noDataMessage": "es_Currently there are no eSignatures to display"
+      },
+      "person": {
+        "title": "es_Person",
+        "description": "es_Person widget for Cost and Time modules",
+        "noDataMessage": "es_Currently there are no persons to display"
+      },
+      "hoursSummary": {
+        "title": "es_Hours Summary",
+        "description": "es_Displays a summary of hours worked",
+        "noDataMessage": "es_Currently there is no summary to display"
+      },
+      "expenses": {
+        "title": "es_Expenses",
+        "description": "es_Displays a cost-to-user graph",
+        "noDataMessage": "es_Currently no expense data to display"
+      }
+    }
+  }
+}

@@ -1,17 +1,11 @@
 <div ng-controller="Admin.OrganizationalHierarchyController">
     <div class="pull-right well">
-        <select id="selectDirectories" class="custom-select" ng-model="userPickedDirectoryServerConfig"
-                ng-change="checkEditing()" ng-options="ds as ds for ds in directoryServers">
-            <option value="">{{ 'admin.security.organizationalHierarchy.createGroupDialog.selectDirectory'
-                | translate }}
-            </option>
-        </select>
         <div class="btn-group">
             <button class="btn btn-xs btn-link" ng-click="createGroup()">
                 <i class="glyphicon glyphicon-plus-sign"></i>
                 <span>{{ addAdHocGroupBtn | translate }}</span>
             </button>
-            <button class="btn btn-xs btn-link" ng-click="createLdapGroup()" ng-if="enableEditingLdapUsers">
+            <button class="btn btn-xs btn-link" ng-click="createLdapGroup()">
                 <i class="glyphicon glyphicon-plus-sign"></i>
                 {{ addLdapGroupBtn | translate }}
             </button>

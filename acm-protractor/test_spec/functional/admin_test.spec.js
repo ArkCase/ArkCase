@@ -52,16 +52,16 @@ describe('Validate that group in which is logged in user is in authorized group'
 
     //have to be checked what is Role what is group and how they are connected in order to test this
 
-    // using([{widgetName: "News Widget"}, {widgetName: "My Tasks Widget"}, {widgetName: "My Cases Widget"}, {widgetName: "My Complaints Widget"}, {widgetName: "New Complaints"}, {widgetName: "Weather Widget"}, {widgetName: "Team Workload"}, {widgetName: "Cases By Status"} ], function(data){
-    //     it('should validate that samuel supervisor is enabled to add ' + data.widgetName, function () {
-    //         adminPage.navigateToPage("Admin").clickSubLink("Dashboard Configuration").ChooseListBoxValue(data.widgetName);
-    //         var groups = utils.readGroupsFromJson("samuel-acm");
-    //         for (var i in groups)
-    //         {
-    //             expect(adminPage.returnAuthorized()).toContain(groups[i]);
-    //         }
-    //     });
-    // });
+    using([{widgetName: "News Widget"}, {widgetName: "My Tasks Widget"}, {widgetName: "My Cases Widget"}, {widgetName: "My Complaints Widget"}, {widgetName: "New Complaints"}, {widgetName: "Weather Widget"}, {widgetName: "Team Workload"}, {widgetName: "Cases By Status"} ], function(data){
+        it('should validate that samuel supervisor is enabled to add ' + data.widgetName, function () {
+            adminPage.navigateToPage("Admin").clickSubLink("Dashboard Configuration").ChooseListBoxValue(data.widgetName);
+            var groups = utils.readGroupsFromJson("samuel-acm");
+            for (var i in groups)
+            {
+                expect(adminPage.returnAuthorized()).toContain(groups[i]);
+            }
+        });
+    });
 
     it('should validate that report of investigation form is configured correctly', function () {
         adminPage.navigateToPage("Admin").clickSubLink("Form Configuration");

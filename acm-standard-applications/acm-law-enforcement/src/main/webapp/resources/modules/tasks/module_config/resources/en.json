@@ -5,16 +5,21 @@
     "progressLoading": "Loading task ",
     "progressError": "Failed to load task"
   },
+  "tasks.menus": {
+    "leftnav.item": "Tasks",
+    "topbar.item": "Task"
+  },
   "tasks.comp.info": {
     "taskId": "Task id:",
     "percentage.label": "% of Completion",
     "assignee.label": "Assignee",
-    "Priority.label": "Priority",
+    "priority.label": "Priority",
     "startDate.label": "Start Date",
     "dueDate.label": "Due Date",
     "state.label": "State",
     "overdue.tooltip": "Task is Overdue",
-    "deadline.tooltip": "Deadline is Approaching"
+    "deadline.tooltip": "Deadline is Approaching",
+    "owningGroup.label": "Owning Group"
   },
   "tasks.comp.parentinfo": {
     "taskId": "Task id:",
@@ -210,6 +215,23 @@
       "username": "Username"
     }
   },
+  "tasks.owningGroupSearch": {
+    "id": "owningGroupSearch",
+    "title": "Search for this user's group(s)",
+    "search": {
+      "btn": "Search",
+      "placeholder": "Search for the group(s) this user is a member of."
+    },
+    "cancelButton": "Cancel",
+    "confirmButton": "Confirm",
+    "enabled": true,
+    "assigneeGridColumns": {
+      "name": "Name",
+      "type": "Type",
+      "title": "Title",
+      "username": "Username"
+    }
+  },
   "tasks.objectSearch": {
     "id": "objectSearch",
     "title": "Object Search",
@@ -287,7 +309,7 @@
   "tasks.comp.approvalRouting": {
     "title": "Future Approvers",
     "addNewTooltip": "Add new approver",
-    "noBuckslipMessage":"No Data",
+    "noBuckslipMessage": "No Data",
     "button": {
       "save.tooltip": "Save Changes"
     },
@@ -297,7 +319,7 @@
   },
   "tasks.comp.pastApprovals": {
     "title": "Past Approvers",
-    "noBuckslipMessage":"No Data",
+    "noBuckslipMessage": "No Data",
     "table.columns": {
       "approvalDate": "Approval Date",
       "approverId": "Approver",

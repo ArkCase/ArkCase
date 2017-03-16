@@ -75,6 +75,9 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     @Column(name = "cm_file_modifier")
     private String modifier;
 
+    @Column(name = "cm_file_cmis_repository_id", nullable = false)
+    private String cmisRepositoryId;
+
     @Column(name = "cm_version_series_id")
     private String versionSeriesId;
 
@@ -144,12 +147,14 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
         }
 
         fixChildPointers();
+        setDefaultCmisRepositoryId();
     }
 
     @PreUpdate
     protected void beforeUpdate()
     {
         fixChildPointers();
+        setDefaultCmisRepositoryId();
     }
 
     private void fixChildPointers()
@@ -157,6 +162,14 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
         for (EcmFileVersion version : getVersions())
         {
             version.setFile(this);
+        }
+    }
+
+    protected void setDefaultCmisRepositoryId()
+    {
+        if (getCmisRepositoryId() == null)
+        {
+            setCmisRepositoryId(EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
         }
     }
 
@@ -268,6 +281,16 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     public void setFileType(String fileType)
     {
         this.fileType = fileType;
+    }
+
+    public String getCmisRepositoryId()
+    {
+        return cmisRepositoryId;
+    }
+
+    public void setCmisRepositoryId(String cmisRepositoryId)
+    {
+        this.cmisRepositoryId = cmisRepositoryId;
     }
 
     public String getVersionSeriesId()

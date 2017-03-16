@@ -5,6 +5,8 @@ package com.armedia.acm.services.users.model.ldap;
  */
 public interface AcmLdapConstants
 {
+    int RETRY_ATTEMPTS = 3;
+    long RETRY_TIMEOUT = 500L;
     String DEFAULT_AUDIT_USER = "LDAP-SYNC";
     String GROUP_OBJECT_TYPE = "LDAP_GROUP";
     String LDAP_USER_FULL_NAME_ATTR = "fullName";

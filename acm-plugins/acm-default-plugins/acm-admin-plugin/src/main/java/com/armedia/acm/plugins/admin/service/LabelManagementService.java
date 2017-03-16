@@ -132,6 +132,10 @@ public class LabelManagementService
      */
     public JSONObject getAdminResource(String moduleId, String lang) throws AcmLabelManagementException
     {
+        return getAdminResource(moduleId, lang, true);
+    }
+    public JSONObject getAdminResource(String moduleId, String lang, boolean loadMenu) throws AcmLabelManagementException
+    {
         // 1. Load module's resource file
         JSONObject moduleResource = normalizeResource(loadModuleResource(moduleId, lang));
         if (!baseLanguage.equals(lang))
@@ -142,9 +146,9 @@ public class LabelManagementService
 
 
         // If module is core, them inject information about menus that are stored in configuration file
-        if (MODULE_CORE_ID.equals(moduleId))
+        if (loadMenu && MODULE_CORE_ID.equals(moduleId))
         {
-            JSONObject menusInfo = loadMenusResources();
+            JSONObject menusInfo = loadMenusResources(lang);
             JSONObject coreModuleResource = mergeResources(moduleResource, menusInfo);
             moduleResource = coreModuleResource;
         }
@@ -279,7 +283,7 @@ public class LabelManagementService
         // If module is core, them inject information about menus that are stored in configuration file
         if (MODULE_CORE_ID.equals(moduleId))
         {
-            JSONObject menusInfo = loadMenusResources();
+            JSONObject menusInfo = loadMenusResources(lang);
             JSONObject coreModuleResource = mergeResources(moduleResource, menusInfo);
             moduleResource = coreModuleResource;
         }
@@ -295,7 +299,9 @@ public class LabelManagementService
         try
         {
             File resourceFile = new File(fileName);
-            FileUtils.writeStringToFile(resourceFile, resource.toString());
+            FileUtils.writeStringToFile(resourceFile, resource.toString(), "UTF-8");
+
+
         } catch (Exception e)
         {
             String msg = String.format("Can't write resource into the file %s", fileName);
@@ -333,7 +339,7 @@ public class LabelManagementService
                 String id = newValue.getString("id");
                 customRes.put(id, newValue);
                 File file = new File(fileName);
-                FileUtils.writeStringToFile(file, customRes.toString(4));
+                FileUtils.writeStringToFile(file, customRes.toString(4), "UTF-8");
 
                 // Update also resource file
                 updateResource(moduleId, lang);
@@ -375,7 +381,7 @@ public class LabelManagementService
                 customRes.put(key, customValue);
             }
             File file = new File(fileName);
-            FileUtils.writeStringToFile(file, customRes.toString(4));
+            FileUtils.writeStringToFile(file, customRes.toString(4), "UTF-8");
             return customRes;
         } catch (Exception e)
         {
@@ -396,7 +402,7 @@ public class LabelManagementService
         try
         {
             File file = FileUtils.getFile(settingsFileLocation);
-            FileUtils.writeStringToFile(file, objSettings.toString());
+            FileUtils.writeStringToFile(file, objSettings.toString(), "UTF-8");
         } catch (Exception e)
         {
             log.error(String.format("Can't write settings data in to the file %s", settingsFileLocation));
@@ -618,7 +624,7 @@ public class LabelManagementService
         try
         {
             File file = FileUtils.getFile(fileName);
-            String resource = FileUtils.readFileToString(file);
+            String resource = FileUtils.readFileToString(file, "UTF-8");
             return new JSONObject(resource);
 
         } catch (Exception e)
@@ -634,7 +640,7 @@ public class LabelManagementService
      * @return
      * @throws AcmLabelManagementException
      */
-    private JSONObject loadMenusResources() throws AcmLabelManagementException
+    private JSONObject loadMenusResources(String lang) throws AcmLabelManagementException
     {
         // 1. Get list of modules
         List<String> modulesNames = getModulesNames();
@@ -647,6 +653,8 @@ public class LabelManagementService
             JSONObject configResource = loadResource(configFileName);
             if (configResource.has("menus"))
             {
+                JSONObject moduleResource = getAdminResource(moduleName, lang, false);
+
                 JSONArray menus = configResource.getJSONArray("menus");
                 for (int i = 0; i < menus.length(); i++)
                 {
@@ -655,7 +663,16 @@ public class LabelManagementService
                     if (menuInfo.has("menuId") && menuInfo.has("menuItemTitle") && menuInfo.has("menuItemURL"))
                     {
                         String key = MODULE_CORE_ID + ".menus." + menuInfo.getString("menuId") + "." + menuInfo.getString("menuItemURL");
-                        modulesMenus.put(key, menuInfo.get("menuItemTitle"));
+                        String menuItemTitle = (String)menuInfo.get("menuItemTitle");
+                        if (moduleResource.has(menuItemTitle))
+                        {
+                            try {
+                                JSONObject titleTranslatedObj = (JSONObject)moduleResource.get(menuItemTitle);
+                                menuItemTitle = (String)titleTranslatedObj.get("value");
+                            } catch (Exception e) {}
+                        }
+
+                        modulesMenus.put(key, menuItemTitle);
                     }
                 }
             }

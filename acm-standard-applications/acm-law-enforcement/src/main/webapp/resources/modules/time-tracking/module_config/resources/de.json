@@ -1,0 +1,72 @@
+{
+  "timeTracking": {
+    "title": "Zeiterfassung",
+    "progressNoTimesheet": "de_[ No timesheet is selected ]",
+    "progressLoading": "de_Loading timesheet ",
+    "progressError": "de_Failed to load timesheet"
+  },
+  "timeTracking.menus": {
+    "leftnav.item": "Zeiterfassung",
+    "topbar.item": "Zeiterfassung"
+  },
+  "timeTracking.tree": {
+  },
+  "timeTracking.comp.info": {
+    "lastModified.label": "de_Last Modified"
+  },
+  "timeTracking.comp.actions": {
+    "new.button": "de_New Timesheet",
+    "edit.button": "de_Edit Timesheet"
+  },
+  "timeTracking.comp.details": {
+    "title": "de_Details",
+    "informSaved": "de_Timesheet details saved",
+    "table.columns": {
+      "title": "de_Details",
+      "modified": "de_Date Last Modified",
+      "modifier": "de_User Last Modified"
+    }
+  },
+  "timeTracking.comp.people": {
+    "title": "de_Person",
+    "table.columns": {
+      "fullName": "de_Full Name",
+      "userId": "de_Username"
+    }
+  },
+  "timeTracking.comp.summary": {
+    "title": "de_Hours Summary",
+    "table.columns": {
+      "code": "de_Parent ID",
+      "type": "de_Parent Type",
+      "value": "de_Total Hours",
+      "date": "de_Date Charged",
+      "modified": "de_Modified Date"
+    }
+  },
+  "timeTracking.comp.tags": {
+    "title": "de_Tags",
+    "table.columns": {
+      "tag": "de_Tag",
+      "created": "de_Created",
+      "createdBy": "de_Created By"
+    },
+    "modal": {
+      "title": "de_Tag",
+      "search": "de_Search for Tag",
+      "buttons": {
+        "cancel": "de_Cancel",
+        "ok": "de_Add Tag"
+      }
+    },
+    "message": {
+      "tagExists": "de_Tag with that name or description or text already exists",
+      "tagAssociated": "de_already associated",
+      "delete": {
+        "success": "de_Tag deleted successfully",
+        "error": "de_Error deleting tag"
+      }
+    }
+  }
+}
+

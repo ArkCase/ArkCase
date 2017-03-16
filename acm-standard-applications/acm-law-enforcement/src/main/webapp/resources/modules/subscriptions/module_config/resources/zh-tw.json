@@ -1,0 +1,22 @@
+{
+  "subscriptions": {
+    "title": "zh-tw_Subscriptions",
+    "search.btn": "zh-tw_Search",
+    "export.btn": "zh-tw_Export",
+    "search.placeholder": "zh-tw_Search for subscriptions",
+    "menus": {
+      "leftnav.item": "zh-tw_Subscriptions"
+    },
+    "comp":{
+      "grid": {
+        "columns": {
+          "id": "zh-tw_ID",
+          "event": "zh-tw_Event",
+          "parentName": "zh-tw_Parent Name",
+          "parentType": "zh-tw_Parent Type",
+          "modified": "zh-tw_Modified"
+        }
+      }
+    }
+  }
+}

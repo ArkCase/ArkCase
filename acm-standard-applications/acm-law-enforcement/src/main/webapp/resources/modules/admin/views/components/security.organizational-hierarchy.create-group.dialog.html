@@ -5,18 +5,33 @@
         </h4>
     </div>
     <div class="modal-body">
+        <div class="form-group">
+            <select id="selectDirectories" class="form-control" name="config" ng-model="selectedConfig.directory"
+                    ng-options="ds.id for ds in directoryServers" ng-if="addGroupModal">
+                <option value="">{{ 'admin.security.organizationalHierarchy.createGroupDialog.selectDirectory'
+                    | translate }}
+                </option>
+            </select>
+        </div>
         <div class="form-group" ng-class="{ 'has-error' : error }">
             <label>{{ 'admin.security.organizationalHierarchy.createGroupDialog.name' | translate }}</label>
-            <input type="text" ng-model="group.name" class="form-control" required
-                   placeholder="{{ 'admin.security.organizationalHierarchy.createGroupDialog.namePlaceholder'| translate }}">
+            <input type="text" ng-model="group.name" class="form-control"
+                   ng-disabled="!selectedConfig.directory.enabled && addGroupModal"
+                   placeholder="{{ 'admin.security.organizationalHierarchy.createGroupDialog.namePlaceholder'
+                   | translate }}" ng-required="selectedConfig.directory.enabled || !addGroupModal">
             <p class="help-block" ng-show="error">
                 {{ error }}
+            </p>
+            <p class="text-danger" ng-if="selectedConfig.directory.enabled == false">
+                {{ 'admin.security.organizationalHierarchy.createGroupDialog.disabledGroupWarning' | translate }}
             </p>
         </div>
         <div class="form-group">
             <label>{{ 'admin.security.organizationalHierarchy.createGroupDialog.description' | translate }}</label>
             <textarea type="text" ng-model="group.description" class="form-control"
-                      placeholder="{{ 'admin.security.organizationalHierarchy.createGroupDialog.descriptionPlaceholder'| translate }}">
+                      ng-disabled="!selectedConfig.directory.enabled && addGroupModal"
+                      placeholder="{{ 'admin.security.organizationalHierarchy.createGroupDialog.descriptionPlaceholder'
+                      | translate }}">
         </textarea>
         </div>
     </div>

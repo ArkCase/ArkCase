@@ -1,0 +1,313 @@
+{
+  "tasks": {
+    "title": "pt_Tasks",
+    "progressNoTask": "pt_[ No task data ]",
+    "progressLoading": "pt_Loading task ",
+    "progressError": "pt_Failed to load task"
+  },
+  "tasks.menus": {
+    "leftnav.item": "pt_Tasks",
+    "topbar.item": "pt_Task"
+  },
+  "tasks.comp.info": {
+    "taskId": "pt_Task id:",
+    "percentage.label": "pt_% of Completion",
+    "assignee.label": "pt_Assignee",
+    "Priority.label": "pt_Priority",
+    "startDate.label": "pt_Start Date",
+    "dueDate.label": "pt_Due Date",
+    "state.label": "pt_State",
+    "overdue.tooltip": "pt_Task is Overdue",
+    "deadline.tooltip": "pt_Deadline is Approaching",
+    "owningGroup.label": "Owning Group"
+  },
+  "tasks.comp.parentinfo": {
+    "taskId": "pt_Task id:",
+    "case": {
+      "subjectType.label": "pt_Subject Type",
+      "incidentDate.label": "pt_Incident Date",
+      "priority.label": "pt_Priority",
+      "assignee.label": "pt_Assigned To",
+      "owningGroup.label": "pt_Owning Group"
+    },
+    "complaint": {
+      "subjectType.label": "pt_Subject Type",
+      "incidentDate.label": "pt_Incident Date",
+      "priority.label": "pt_Priority",
+      "assignee.label": "pt_Assigned To",
+      "owningGroup.label": "pt_Owning Group"
+    },
+    "costsheet": {
+      "approver.label": "pt_Approver"
+    },
+    "timesheet": {
+      "approver.label": "pt_Approver"
+    },
+    "_xxx_courtRoomName": "pt_Court Room Name:"
+  },
+  "tasks.comp.actions": {
+    "eSignature.button": "pt_Sign",
+    "subscribe.button": "pt_Subscribe",
+    "unsubscribe.button": "pt_Unsubscribe",
+    "reject.button": "pt_Reject",
+    "delete.button": "pt_Delete",
+    "complete.button": "pt_Complete",
+    "approve.button": "pt_Approve Document",
+    "rework.button": "pt_Send for Rework",
+    "claim.button": "pt_Claim",
+    "unclaim.button": "pt_Unclaim",
+    "error.outcomeFieldMissing": "pt_Cannot complete task because of missing required value",
+    "modal": {
+      "errorHeaderText": "pt_Error",
+      "btnOk.text": "pt_OK"
+    }
+  },
+  "tasks.comp.details": {
+    "title": "pt_Task Details",
+    "informSaved": "pt_Task details saved",
+    "table.columns": {
+      "details": "pt_Details",
+      "modified": "pt_Date Last Modified",
+      "modifier": "pt_User Last Modified"
+    }
+  },
+  "tasks.comp.reworkdetails": {
+    "title": "pt_Rework Details",
+    "informSaved": "pt_Rework details saved",
+    "table.columns": {
+      "title": "pt_Rework Details",
+      "modified": "pt_Date Last Modified",
+      "modifier": "pt_User Last Modified"
+    }
+  },
+  "tasks.comp.parentdocs": {
+    "title": "pt_Parent Documents",
+    "noParentDataMessage": "pt_No parent documents for standalone task"
+  },
+  "tasks.comp.attachments": {
+    "title": "pt_Attachments"
+  },
+  "tasks.comp.notes": {
+    "title": "pt_Notes",
+    "table.columns": {
+      "note": "pt_Note",
+      "created": "pt_Created",
+      "creator": "pt_Author"
+    }
+  },
+  "tasks.comp.references": {
+    "title": "pt_References",
+    "table.columns": {
+      "targetName": "pt_Number",
+      "targetTitle": "pt_Title",
+      "modified": "pt_Modified",
+      "targetType": "pt_Reference Type",
+      "status": "pt_Status"
+    }
+  },
+  "tasks.comp.rejcomments": {
+    "title": "pt_Reject Comments",
+    "table.columns": {
+      "note": "pt_Comment",
+      "created": "pt_Created",
+      "creator": "pt_Author"
+    }
+  },
+  "tasks.comp.workflow": {
+    "title": "pt_Workflow",
+    "table.columns": {
+      "participant": "pt_Participant",
+      "role": "pt_Role",
+      "status": "pt_Status",
+      "startDateTime": "pt_Start",
+      "endDateTime": "pt_End"
+    }
+  },
+  "tasks.comp.signatures": {
+    "title": "pt_eSignatures",
+    "table.columns": {
+      "signedDate": "pt_Date",
+      "signedBy": "pt_Signed By"
+    }
+  },
+  "tasks.comp.docsreview": {
+    "title": "pt_Documents Under Review",
+    "table.columns": {
+      "fileId": "pt_ID",
+      "fileName": "pt_Title",
+      "created": "pt_Created",
+      "creator": "pt_Author",
+      "status": "pt_Status"
+    }
+  },
+  "tasks.comp.history": {
+    "title": "pt_History",
+    "table.columns": {
+      "eventType": "pt_Event Name",
+      "eventDate": "pt_Date",
+      "userId": "pt_User"
+    }
+  },
+  "tasks.comp.tags": {
+    "title": "pt_Tags",
+    "table.columns": {
+      "tag": "pt_Tag",
+      "created": "pt_Created",
+      "createdBy": "pt_Created By"
+    },
+    "modal": {
+      "title": "pt_Tag",
+      "search": "pt_Search for Tag",
+      "buttons": {
+        "cancel": "pt_Cancel",
+        "ok": "pt_Add Tag"
+      }
+    },
+    "message": {
+      "tagExists": "pt_Tag with that name or description or text already exists",
+      "tagAssociated": "pt_already associated",
+      "delete": {
+        "success": "pt_Tag deleted successfully",
+        "error": "pt_Error deleting tag"
+      }
+    }
+  },
+  "tasks.newTask": {
+    "title": "pt_New Task",
+    "assignee.button": "pt_Choose Assignee",
+    "assignee.label": "pt_Assign To",
+    "assignee.placeholder": "pt_Please choose assignee by clicking the button above",
+    "assigneeOrGroup.placeholder": "pt_Please choose assignee or group by clicking the button above",
+    "priority.placeholder": "pt_Select Priority",
+    "priority.label": "pt_Priority",
+    "status.placeholder": "pt_Select Status",
+    "status.label": "pt_Status",
+    "associateNumber.label": "pt_Associate with Complaint or Case",
+    "associateNumber.placeholder": "pt_Complaint or Case #",
+    "associateType.label": "pt_Parent Type",
+    "subject.label": "pt_Subject",
+    "taskStartDate.label": "pt_Start Date",
+    "dueDate.label": "pt_Due Date",
+    "datepicker.close": "pt_Done",
+    "percentComplete.label": "pt_% Complete",
+    "notes.label": "pt_Notes",
+    "saveButton": "pt_Save",
+    "overdue.tooltip": "pt_Task is Overdue",
+    "deadline.tooltip": "pt_Deadline is Approaching",
+    "groupToggle.label": "pt_Group Task?",
+    "group.placeholder": "pt_Please select a group."
+  },
+  "tasks.userOrGroupSearch": {
+    "id": "pt_userSearch",
+    "title": "pt_User/Group Search",
+    "search": {
+      "btn": "pt_Search",
+      "placeholder": "pt_Search for the user or group to assign to this task."
+    },
+    "cancelButton": "pt_Cancel",
+    "confirmButton": "pt_Confirm",
+    "enabled": true,
+    "userOrGroupFacetFilter": "pt_\"object_type_s\":(GROUP OR USER)",
+    "assigneeGridColumns": {
+      "name": "pt_Name",
+      "type": "pt_Type",
+      "title": "pt_Title",
+      "username": "pt_Username"
+    }
+  },
+  "tasks.objectSearch": {
+    "id": "pt_objectSearch",
+    "title": "pt_Object Search",
+    "search": {
+      "btn": "pt_Search",
+      "placeholder": "pt_Search for the case or complaint to this task."
+    },
+    "cancelButton": "pt_Cancel",
+    "confirmButton": "pt_Confirm",
+    "enabled": true,
+    "userFacetFilter": "pt_\"Object Type\": ",
+    "objectGridColumns": {
+      "name": "pt_Number",
+      "type": "pt_Type",
+      "title": "pt_Title",
+      "username": "pt_Assignee"
+    }
+  },
+  "tasks.comp.addreference": {
+    "title": "pt_Add Reference",
+    "cancelButton": "pt_Cancel",
+    "confirmButton": "pt_Add",
+    "search": {
+      "placeholder": "pt_Search for case, complaint, file, task",
+      "btn": "pt_Search"
+    },
+    "grid": {
+      "columns": {
+        "id": "pt_Id",
+        "name": "pt_Name",
+        "type": "pt_Type",
+        "title": "pt_Title",
+        "parent": "pt_Parent",
+        "assignee": "pt_Assignee",
+        "modified": "pt_Modified"
+      }
+    }
+  },
+  "tasks.comp.participants": {
+    "title": "pt_Participants",
+    "table.columns": {
+      "type": "pt_Type",
+      "name": "pt_Name"
+    },
+    "dialogUserPicker": {
+      "header": "pt_Choose User",
+      "table.columns": {
+        "name": "pt_Name",
+        "type": "pt_Type",
+        "title": "pt_Title",
+        "id": "pt_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "pt_Choose Group",
+      "table.columns": {
+        "name": "pt_Name"
+      }
+    }
+  },
+  "tasks.comp.assigneePickerModal": {
+    "title": "pt_Change Assignee",
+    "assigneeNamelabel": "pt_Assignee Name",
+    "btnCancelText": "pt_Cancel",
+    "btnSaveText": "pt_Save",
+    "searchAssigneeHeader": "pt_Search Assignee"
+  },
+  "tasks.comp.groupPickerModal": {
+    "title": "pt_Change Group",
+    "groupNamelabel": "pt_Group Name",
+    "btnCancelText": "pt_Cancel",
+    "btnSaveText": "pt_Save",
+    "searchGroupHeader": "pt_Search Group"
+  },
+  "tasks.comp.approvalRouting": {
+    "title": "pt_Future Approvers",
+    "addNewTooltip": "pt_Add new approver",
+    "noBuckslipMessage": "No Data",
+    "button": {
+      "save.tooltip": "pt_Save Changes"
+    },
+    "table.columns": {
+      "fullName": "pt_Full Name"
+    }
+  },
+  "tasks.comp.pastApprovals": {
+    "title": "pt_Past Approvers",
+    "noBuckslipMessage": "No Data",
+    "table.columns": {
+      "approvalDate": "pt_Approval Date",
+      "approverId": "pt_Approver",
+      "approverFullName": "pt_Full Name",
+      "approverDecision": "pt_Approver Decision"
+    }
+  }
+}

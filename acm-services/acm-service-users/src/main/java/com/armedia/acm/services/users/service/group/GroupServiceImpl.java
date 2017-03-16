@@ -15,6 +15,7 @@ import org.mule.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -109,6 +110,37 @@ public class GroupServiceImpl implements GroupService
     public boolean isUUIDPresentInTheGroupName(String str)
     {
         return pattern.matcher(str).matches();
+    }
+
+    /**
+     * Creates or updates ad-hoc group based on the client info coming in from CRM
+     *
+     * @param acmGroup group we want to rename
+     * @param newName  group new name
+     */
+    @Override
+    @Transactional
+    public void renameGroup(AcmGroup acmGroup, String newName)
+    {
+        AcmGroup newGroup = new AcmGroup();
+
+        newGroup.setName(String.format("%s-UUID-%s", newName, UUID.getUUID()));
+        // copy the properties from the original found group.
+        newGroup.setSupervisor(acmGroup.getSupervisor());
+        newGroup.setType(acmGroup.getType());
+        newGroup.setStatus(acmGroup.getStatus());
+        newGroup.setDescription(acmGroup.getDescription());
+        newGroup.setChildGroups(acmGroup.getChildGroups());
+        newGroup.setCreator(acmGroup.getCreator());
+        newGroup.setMembers(acmGroup.getMembers());
+        newGroup.setParentGroup(acmGroup.getParentGroup());
+
+        AcmGroup saved = getGroupDao().save(newGroup);
+
+        // after saving the group, remove the members and delete the original group
+        // new set is created to avoid ConcurrentModificationException
+        getGroupDao().removeMembersFromGroup(acmGroup.getName(), new HashSet<>(acmGroup.getMembers()));
+        getGroupDao().markGroupDelete(acmGroup.getName());
     }
 
     public UserDao getUserDao()

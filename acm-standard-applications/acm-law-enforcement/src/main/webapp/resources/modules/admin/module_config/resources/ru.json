@@ -1,0 +1,395 @@
+{
+  "admin": {
+    "title": "Отслеживание",
+    "security.title": "ru_Security",
+    "security.functionalAccessControl": "ru_Functional Access Control",
+    "security.functionalAccessControl.applicationRole": "ru_Application Role",
+    "security.ldapConfig": "ru_LDAP Configuration",
+    "security.ldapConfig.addNewDirectory": "ru_Add New Directory",
+    "security.ldapConfig.table.ldapUrl": "ru_LDAP Url",
+    "security.ldapConfig.table.directoryName": "ru_Directory Name",
+    "security.ldapConfig.data": {
+      "addNewDirectory": "ru_Add New Directory",
+      "editRecord": "ru_Edit Record",
+      "id": "ru_ID",
+      "ldapUrl": "ru_LDAP Url",
+      "base": "ru_Base",
+      "directoryName": "ru_Directory Name",
+      "authUserDn": "ru_Auth User Dn",
+      "authUserPassword": "ru_Auth User Password",
+      "userSearchBase": "ru_Users Search Base",
+      "userSearchFilter": "ru_User Search Filter",
+      "allUsersFilter": "ru_All Users Filter",
+      "allUsersPageFilter": "ru_All Users Page Filter",
+      "allUsersSortingAttribute": "ru_Sorting attribute for users",
+      "groupSearchBase": "ru_Group Search Base",
+      "groupSearchFilterForUser": "ru_Group Search Filter For User",
+      "userIdAttributeName": "ru_User Id Attribute Name",
+      "userDomain": "ru_User domain",
+      "userDomainNote": "ru_(Note: Fill in the user domain for SSO scenario. For LDAP authentication leave it blank)",
+      "syncPageSize": "ru_Sync Page Size",
+      "groupSearchFilter": "ru_Group Search Filter",
+      "groupsSortingAttribute": "ru_Sorting attribute for groups",
+      "groupSearchPageFilter": "ru_Group Search Page Filter",
+      "enableEditingLdapUsers": "ru_Enable managing users and groups",
+      "cancel": "ru_Cancel",
+      "ok": "ru_OK"
+    },
+    "menus": {
+      "leftnav.item": "Отслеживание"
+    },
+    "security.ldapConfig.data.placeholders": {
+      "id": "ru_Enter directory name",
+      "ldapUrl": "ru_Enter connection URL",
+      "base": "ru_Enter base domain component (e.g. dc=example,dc=com)",
+      "authUserDn": "ru_Enter user DN for authentication (e.g. cn=John Doe,ou=users,dc=example,dc=com)",
+      "authUserPassword": "ru_Enter password for authentication user",
+      "userSearchBase": "ru_Enter users search base (e.g. ou=users)",
+      "userSearchFilter": "ru_Enter search filter for single user (e.g. (&(objectClass=person)(uid=%s))",
+      "allUsersFilter": "ru_Enter search filter for all users (e.g. (objectClass=person))",
+      "allUsersPageFilter": "ru_Enter filter including sort-attribute(e.g. (&(objectClass=person)(uidNumber>=%s)))",
+      "allUsersSortingAttribute": "ru_Enter sorting attribute for users (e.g. 'uidNumber')",
+      "groupSearchBase": "ru_Enter search base for groups (e.g. ou=groups)",
+      "groupSearchFilterForUser": "ru_Enter search filter for user in group (e.g. (&(objectClass=group)(member=%s)))",
+      "userIdAttributeName": "ru_Enter attribute used for user id (e.g. 'uid')",
+      "userDomain": "ru_Enter user domain",
+      "syncPageSize": "ru_Enter paging size",
+      "groupSearchFilter": "ru_Enter search filter for groups (e.g. (objectClass=group))",
+      "groupsSortingAttribute": "ru_Enter attribute for sorting groups (e.g. 'gidNumber')",
+      "groupSearchPageFilter": "ru_Enter filter including sort-attribute (e.g. (&(objectClass=group)(gidNumber>=%s)))",
+      "enableEditingLdapUsers": "ru_Check if managing users and groups to your DS is allowed"
+    },
+    "security.ldapConfig.messages": {
+      "delete.success": "ru_Successfully deleted row.",
+      "delete.error": "ru_Error deleting row.",
+      "insert.success": "ru_Successfully inserted new row.",
+      "insert.error": "ru_Error inserting new row.",
+      "update.success": "ru_Successfully updated row.",
+      "update.error": "ru_Error updating row."
+    },
+    "security.ldapConfig.dialog": {
+      "cancel": "ru_Cancel",
+      "ok": "ru_OK",
+      "confirm.delete": {
+        "deleteBtn": "ru_Delete",
+        "cancelBtn": "ru_Cancel",
+        "headerText": "ru_Are you sure?",
+        "bodyText": "ru_This record will be deleted. Are you sure?"
+      }
+    },
+    "admin.security.addNew": "ru_Add New Directory",
+    "security.organizationalHierarchy": {
+      "title": "ru_Organizational Hierarchy",
+      "btn": {
+        "createAdHocGroup": "ru_createAdHocGroup"
+      },
+      "createGroupDialog": {
+        "ldapGroup": {
+          "title": "ru_Add LDAP Group"
+        },
+        "adHocGroup": {
+          "title": "ru_Add Ad-Hoc Group"
+        },
+        "selectDirectory": "ru_--Choose Directory Config--",
+        "disabledGroupWarning": "ru_Adding new LDAP groups is not allowed for this directory!",
+        "name": "ru_Name",
+        "namePlaceholder": "ru_Enter group name",
+        "description": "ru_Description",
+        "descriptionPlaceholder": "ru_Enter Description",
+        "btn": {
+          "ok": "ru_Add Ad-Hoc Group",
+          "cancel": "ru_Cancel"
+        }
+      },
+      "addSubGroupDialog": {
+        "title": "ru_Add Subgroup to",
+        "name": "ru_Name",
+        "namePlaceholder": "ru_Enter group name",
+        "description": "ru_Description",
+        "descriptionPlaceholder": "ru_Enter Description",
+        "btn": {
+          "ok": "ru_Add Ad-Hoc Group",
+          "cancel": "ru_Cancel"
+        }
+      },
+      "addMembers": {
+        "title": "ru_Add Members",
+        "btn": {
+          "search": "ru_Go!",
+          "cancel": "ru_Cancel",
+          "ok": "ru_Add",
+          "searchPlaceholder": "ru_Enter to search for members."
+        }
+      },
+      "createUserDialog": {
+        "addLdapMember": {
+          "title": "ru_Add Ldap Member",
+          "btn": {
+            "cancel": "ru_Cancel",
+            "ok": "ru_Add Ldap User"
+          }
+        },
+        "editLdapMember": {
+          "title": "ru_Edit Ldap Member",
+          "btn": {
+            "cancel": "ru_Cancel",
+            "ok": "ru_Edit Ldap User"
+          }
+        },
+        "username": "ru_Username",
+        "firstName": "ru_FirstName",
+        "lastName": "ru_LastName",
+        "email": "ru_Email",
+        "password": "ru_Password"
+      },
+      "addMembersGridColumns": {
+        "name": "ru_Name",
+        "type": "ru_Type",
+        "title": "ru_Title",
+        "parent": "ru_Parent",
+        "assignee": "ru_Assignee",
+        "modified": "ru_Modified"
+      },
+      "addSupervisor": {
+        "title": "ru_Add Supervisor",
+        "btn": {
+          "search": "ru_Go!",
+          "cancel": "ru_Cancel",
+          "ok": "ru_Add",
+          "searchPlaceholder": "ru_Enter to search for supervisor."
+        }
+      },
+      "addSupervisorGridColumns": {
+        "name": "ru_Name",
+        "type": "ru_Type",
+        "title": "ru_Title",
+        "parent": "ru_Parent",
+        "assignee": "ru_Assignee",
+        "modified": "ru_Modified"
+      },
+      "dialog.group": {
+        "confirm.delete": {
+          "cancelBtn": "ru_Cancel",
+          "deleteBtn": "ru_Delete",
+          "headerText": "ru_You are about to delete group: ",
+          "bodyText": "ru_Are you sure?"
+        }
+      },
+      "dialog.member": {
+        "confirm.delete": {
+          "cancelBtn": "ru_Cancel",
+          "deleteBtn": "ru_Delete",
+          "headerText": "ru_You are about to delete member: ",
+          "bodyText": "ru_Are you sure?"
+        }
+      },
+      "messages": {
+        "delete": {
+          "group": {
+            "success": "ru_success",
+            "error": "ru_error"
+          },
+          "member": {
+            "success": "ru_success",
+            "error": "ru_error"
+          }
+        }
+      }
+    },
+    "security.selectPrivileges": "ru_Create Role/Select Privileges",
+    "security.selectPrivileges.applicationRole": "ru_Application Role",
+    "security.selectPrivileges.createRole": "ru_Create Role",
+    "security.selectPrivileges.editRole": "ru_Edit Role",
+    "security.selectPrivileges.applyChanges": "ru_Apply Changes",
+    "security.selectPrivileges.enterRoleName": "ru_Enter the role name in the box below.",
+    "security.selectPrivileges.cancel": "ru_Cancel",
+    "security.selectPrivileges.name": "ru_Name",
+    "security.modules": "ru_Modules",
+    "security.modules.module": "ru_Module",
+    "dashboard.title": "ru_Dashboard",
+    "dashboard.config": "ru_Dashboard Configuration",
+    "dashboard.widgets": "ru_Widgets",
+    "reports.title": "ru_Reports",
+    "reports.config": "ru_Reports Configuration",
+    "forms.title": "ru_Forms",
+    "forms.config": "ru_Form Configuration",
+    "workflows.title": "ru_Workflows",
+    "workflows.config": "ru_Workflow Configuration",
+    "workflows.config.activate": {
+      "error": "ru_Cant make this process active!",
+      "success": "ru_Process succesfully activated."
+    },
+    "workflows.config.showHistory.dialog": {
+      "title": "ru_History",
+      "body": "ru_Below is a history of previous BPMN files. To reinstate a previous workflow, select the workflow and click Make Active",
+      "cancel": "ru_Cancel",
+      "activate": "ru_Make Active"
+    },
+    "workflows.config.grid": {
+      "businessProcess": "ru_Business Process",
+      "description": "ru_Description",
+      "active": "ru_Active",
+      "modified": "ru_Modified",
+      "creator": "ru_Author"
+    },
+    "workflows.config.btn": {
+      "createNew": "ru_Create New Model",
+      "uploadNew": "ru_Upload New BPMN"
+    },
+    "workflows.config.links": {
+      "download": "ru_Download",
+      "replaceFile": "ru_Replace File",
+      "versionHistory": "ru_Version History"
+    },
+    "workflows.config.upload": {
+      "success": "ru_Successfully uploaded new process definition",
+      "error": "ru_Error uploading new process definition"
+    },
+    "formWorkflows.title": "ru_Form/Workflow Link",
+    "formWorkflows.link": "ru_Link Forms/Workflows",
+    "formWorkflows.link.undo": "ru_Undo",
+    "formWorkflows.link.saveChanges": "ru_Save Changes",
+    "formWorkflows.link.editRole.save.success": "ru_Link Forms/Workflows configuration saved successfully",
+    "formWorkflows.link.editRole.save.error": "ru_Can't save Link Forms/Workflows configuration",
+    "application": {
+      "title": "ru_Application",
+      "labels.config": {
+        "defaultLabel": "ru_Default",
+        "applyBtn": "ru_Apply",
+        "resetModule": "ru_Reset Module",
+        "resetModule.confirm": "ru_Are you sure you want reset custom resources for current module?",
+        "resetModule.title": "ru_Reset current module (delete custom resources)",
+        "resetAll": "ru_Reset All",
+        "resetAll.confirm": "ru_Are you sure you want reset all custom resources for all modules?",
+        "resetAll.title": "ru_Reset all resources (delete all custom resources)",
+        "refreshAll": "ru_Refresh All",
+        "refreshAll.title": "ru_Refresh all resources (keep custom resources)",
+        "title": "ru_Label Configuration",
+        "filterBy": "ru_Filter By Id",
+        "filterByValue": "ru_Filter By Value",
+        "data": {
+          "description": "ru_Description",
+          "defaultValue": "ru_Default Value",
+          "id": "ru_ID",
+          "value": "ru_Value"
+        }
+      },
+      "module.config": {
+        "title": "ru_Module Configuration"
+      },
+      "userName.config": {
+        "title": "ru_Username Display Configuration",
+        "userId.label": "ru_Use User Identifier",
+        "userName.label": "ru_Use Full Username",
+        "apply": "ru_Apply",
+        "modal.title": "ru_Information",
+        "modal.info": "ru_Settings will take effect after refresh",
+        "modal.ok": "ru_OK"
+      },
+      "login.config": {
+        "title": "ru_Login Configuration",
+        "idleLimit.label": "ru_Login idle limit (in milliseconds)",
+        "inform": "ru_Settings will take effect for all new user sessions",
+        "apply.label": "ru_Apply"
+      },
+      "auditHistory.config": {
+        "title": "ru_Audit History",
+        "historyDays.label": "ru_Keep Audit and Notification events (in days)",
+        "inform": "ru_Setting successfully saved",
+        "apply.label": "ru_Apply"
+      }
+    },
+    "branding.title": "ru_Branding",
+    "branding.logo": "ru_Logo",
+    "branding.logo.messages": {
+      "upload.success": "ru_Custom logo files updated. Refresh browser page to see result.",
+      "upload.error": "ru_Error uploading custom logo files."
+    },
+    "branding.logo.header.title": "ru_Header",
+    "branding.logo.login.title": "ru_Login Page",
+    "branding.logo.warningMessage": "ru_Only PNG format is allowed. Recommended ratio is 1 to 4. Minimum height is 50px.",
+    "branding.logo.btn": {
+      "chooseHeader": "ru_Choose Header logo",
+      "chooseLogin": "ru_Choose Login logo",
+      "saveFiles": "ru_Save"
+    },
+    "branding": {
+      "customCss": "ru_Custom CSS",
+      "customCss.save.success": "ru_Custom CSS updated. Refresh browser page to see result.",
+      "customCss.save.error": "ru_Error saving Custom CSS.",
+      "customCss.save": "ru_Save"
+    },
+    "correspondenceManagement": {
+      "title": "ru_Correspondence Management",
+      "templates": "ru_Correspondence Templates",
+      "templates.addNewTemplate": "ru_Upload Template",
+      "templates.addTemplate": "ru_Upload",
+      "templates.versionTemplate": "ru_Versions",
+      "templates.deleteTemplate": "ru_Delete",
+      "templates.editTemplate": "ru_Edit Template",
+      "templates.grid": {
+        "id": "ru_ID",
+        "title": "ru_Title",
+        "label": "ru_Display Name",
+        "path": "ru_Path",
+        "created": "ru_Created",
+        "modified": "ru_Modified",
+        "creator": "ru_Creator",
+        "modifier": "ru_Modifier",
+        "activated": "ru_Status",
+        "objectType": "ru_Object Type",
+        "version": "ru_Version",
+        "templateVersionActive" : "ru_Active"
+      },
+      "templates.fieldNames.label": "ru_Map fields to values from the template",
+      "templates.querySelect": {
+        "header.text": "ru_Select Query",
+        "btnCancel.text": "ru_Cancel",
+        "btnOk.text": "ru_Select Query",
+        "table.columns": {
+          "beanId": "ru_Bean ID",
+          "jpaQuery": "ru_JPA Query",
+          "queryType": "ru_Query Type"
+        }
+      },
+      "templates.modal": {
+        "objectTypes.label": "ru_Object Types",
+        "querySelect.label": "ru_Query Select",
+        "label.label": "ru_Display Name",
+        "btnCancel.text": "ru_Cancel",
+        "btnOk.text": "ru_Upload Template"
+      },
+      "templates.version.modal": {
+        "btnOk.text": "ru_OK"
+      },
+      "mergefields": "ru_Merge Fields Configuration",
+      "mergefields.saveMergeFields": "ru_Save",
+      "mergefields.versionMergeFields": "ru_Versions",
+      "mergefields.grid": {
+      "fieldId": "ru_ID",
+      "fieldValue": "ru_Value",
+      "fieldDescription": "ru_Description"
+      },
+      "mergefields.version.grid": {
+        "mergingVersion": "ru_Version",
+        "modified": "ru_Modified",
+        "modifier": "ru_Modifier",
+        "mergingActiveVersion": "ru_Active"
+      },
+      "mergefields.version.modal": {
+        "btnLoadVersion.text": "ru_Load Version",
+        "btnCancel.text": "ru_Cancel"
+      }
+    },
+    "forms.defaultValue": "ru_Select Target",
+    "forms.addForm": "ru_Add Plain Form",
+    "forms.data": {
+      "name": "ru_Form Name",
+      "applicationName": "ru_Application name",
+      "description": "ru_Description",
+      "target": "ru_Target"
+    },
+    "forms.message.delete.success": "ru_Successfully deleted row.",
+    "forms.message.delete.error": "ru_Error deleting row."
+  }
+}

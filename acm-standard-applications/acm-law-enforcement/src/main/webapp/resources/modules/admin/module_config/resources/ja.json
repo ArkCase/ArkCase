@@ -1,0 +1,395 @@
+{
+  "admin": {
+    "title": "ja_Admin",
+    "security.title": "ja_Security",
+    "security.functionalAccessControl": "ja_Functional Access Control",
+    "security.functionalAccessControl.applicationRole": "ja_Application Role",
+    "security.ldapConfig": "ja_LDAP Configuration",
+    "security.ldapConfig.addNewDirectory": "ja_Add New Directory",
+    "security.ldapConfig.table.ldapUrl": "ja_LDAP Url",
+    "security.ldapConfig.table.directoryName": "ja_Directory Name",
+    "security.ldapConfig.data": {
+      "addNewDirectory": "ja_Add New Directory",
+      "editRecord": "ja_Edit Record",
+      "id": "ja_ID",
+      "ldapUrl": "ja_LDAP Url",
+      "base": "ja_Base",
+      "directoryName": "ja_Directory Name",
+      "authUserDn": "ja_Auth User Dn",
+      "authUserPassword": "ja_Auth User Password",
+      "userSearchBase": "ja_Users Search Base",
+      "userSearchFilter": "ja_User Search Filter",
+      "allUsersFilter": "ja_All Users Filter",
+      "allUsersPageFilter": "ja_All Users Page Filter",
+      "allUsersSortingAttribute": "ja_Sorting attribute for users",
+      "groupSearchBase": "ja_Group Search Base",
+      "groupSearchFilterForUser": "ja_Group Search Filter For User",
+      "userIdAttributeName": "ja_User Id Attribute Name",
+      "userDomain": "ja_User domain",
+      "userDomainNote": "ja_(Note: Fill in the user domain for SSO scenario. For LDAP authentication leave it blank)",
+      "syncPageSize": "ja_Sync Page Size",
+      "groupSearchFilter": "ja_Group Search Filter",
+      "groupsSortingAttribute": "ja_Sorting attribute for groups",
+      "groupSearchPageFilter": "ja_Group Search Page Filter",
+      "enableEditingLdapUsers": "ja_Enable managing users and groups",
+      "cancel": "ja_Cancel",
+      "ok": "ja_OK"
+    },
+    "menus": {
+      "leftnav.item": "ja_Admin"
+    },
+    "security.ldapConfig.data.placeholders": {
+      "id": "ja_Enter directory name",
+      "ldapUrl": "ja_Enter connection URL",
+      "base": "ja_Enter base domain component (e.g. dc=example,dc=com)",
+      "authUserDn": "ja_Enter user DN for authentication (e.g. cn=John Doe,ou=users,dc=example,dc=com)",
+      "authUserPassword": "ja_Enter password for authentication user",
+      "userSearchBase": "ja_Enter users search base (e.g. ou=users)",
+      "userSearchFilter": "ja_Enter search filter for single user (e.g. (&(objectClass=person)(uid=%s))",
+      "allUsersFilter": "ja_Enter search filter for all users (e.g. (objectClass=person))",
+      "allUsersPageFilter": "ja_Enter filter including sort-attribute(e.g. (&(objectClass=person)(uidNumber>=%s)))",
+      "allUsersSortingAttribute": "ja_Enter sorting attribute for users (e.g. 'uidNumber')",
+      "groupSearchBase": "ja_Enter search base for groups (e.g. ou=groups)",
+      "groupSearchFilterForUser": "ja_Enter search filter for user in group (e.g. (&(objectClass=group)(member=%s)))",
+      "userIdAttributeName": "ja_Enter attribute used for user id (e.g. 'uid')",
+      "userDomain": "ja_Enter user domain",
+      "syncPageSize": "ja_Enter paging size",
+      "groupSearchFilter": "ja_Enter search filter for groups (e.g. (objectClass=group))",
+      "groupsSortingAttribute": "ja_Enter attribute for sorting groups (e.g. 'gidNumber')",
+      "groupSearchPageFilter": "ja_Enter filter including sort-attribute (e.g. (&(objectClass=group)(gidNumber>=%s)))",
+      "enableEditingLdapUsers": "ja_Check if managing users and groups to your DS is allowed"
+    },
+    "security.ldapConfig.messages": {
+      "delete.success": "ja_Successfully deleted row.",
+      "delete.error": "ja_Error deleting row.",
+      "insert.success": "ja_Successfully inserted new row.",
+      "insert.error": "ja_Error inserting new row.",
+      "update.success": "ja_Successfully updated row.",
+      "update.error": "ja_Error updating row."
+    },
+    "security.ldapConfig.dialog": {
+      "cancel": "ja_Cancel",
+      "ok": "ja_OK",
+      "confirm.delete": {
+        "deleteBtn": "ja_Delete",
+        "cancelBtn": "ja_Cancel",
+        "headerText": "ja_Are you sure?",
+        "bodyText": "ja_This record will be deleted. Are you sure?"
+      }
+    },
+    "admin.security.addNew": "ja_Add New Directory",
+    "security.organizationalHierarchy": {
+      "title": "ja_Organizational Hierarchy",
+      "btn": {
+        "createAdHocGroup": "ja_createAdHocGroup"
+      },
+      "createGroupDialog": {
+        "ldapGroup": {
+          "title": "ja_Add LDAP Group"
+        },
+        "adHocGroup": {
+          "title": "ja_Add Ad-Hoc Group"
+        },
+        "selectDirectory": "ja_--Choose Directory Config--",
+        "disabledGroupWarning": "ja_Adding new LDAP groups is not allowed for this directory!",
+        "name": "ja_Name",
+        "namePlaceholder": "ja_Enter group name",
+        "description": "ja_Description",
+        "descriptionPlaceholder": "ja_Enter Description",
+        "btn": {
+          "ok": "ja_Add Ad-Hoc Group",
+          "cancel": "ja_Cancel"
+        }
+      },
+      "addSubGroupDialog": {
+        "title": "ja_Add Subgroup to",
+        "name": "ja_Name",
+        "namePlaceholder": "ja_Enter group name",
+        "description": "ja_Description",
+        "descriptionPlaceholder": "ja_Enter Description",
+        "btn": {
+          "ok": "ja_Add Ad-Hoc Group",
+          "cancel": "ja_Cancel"
+        }
+      },
+      "addMembers": {
+        "title": "ja_Add Members",
+        "btn": {
+          "search": "ja_Go!",
+          "cancel": "ja_Cancel",
+          "ok": "ja_Add",
+          "searchPlaceholder": "ja_Enter to search for members."
+        }
+      },
+      "createUserDialog": {
+        "addLdapMember": {
+          "title": "ja_Add Ldap Member",
+          "btn": {
+            "cancel": "ja_Cancel",
+            "ok": "ja_Add Ldap User"
+          }
+        },
+        "editLdapMember": {
+          "title": "ja_Edit Ldap Member",
+          "btn": {
+            "cancel": "ja_Cancel",
+            "ok": "ja_Edit Ldap User"
+          }
+        },
+        "username": "ja_Username",
+        "firstName": "ja_FirstName",
+        "lastName": "ja_LastName",
+        "email": "ja_Email",
+        "password": "ja_Password"
+      },
+      "addMembersGridColumns": {
+        "name": "ja_Name",
+        "type": "ja_Type",
+        "title": "ja_Title",
+        "parent": "ja_Parent",
+        "assignee": "ja_Assignee",
+        "modified": "ja_Modified"
+      },
+      "addSupervisor": {
+        "title": "ja_Add Supervisor",
+        "btn": {
+          "search": "ja_Go!",
+          "cancel": "ja_Cancel",
+          "ok": "ja_Add",
+          "searchPlaceholder": "ja_Enter to search for supervisor."
+        }
+      },
+      "addSupervisorGridColumns": {
+        "name": "ja_Name",
+        "type": "ja_Type",
+        "title": "ja_Title",
+        "parent": "ja_Parent",
+        "assignee": "ja_Assignee",
+        "modified": "ja_Modified"
+      },
+      "dialog.group": {
+        "confirm.delete": {
+          "cancelBtn": "ja_Cancel",
+          "deleteBtn": "ja_Delete",
+          "headerText": "ja_You are about to delete group: ",
+          "bodyText": "ja_Are you sure?"
+        }
+      },
+      "dialog.member": {
+        "confirm.delete": {
+          "cancelBtn": "ja_Cancel",
+          "deleteBtn": "ja_Delete",
+          "headerText": "ja_You are about to delete member: ",
+          "bodyText": "ja_Are you sure?"
+        }
+      },
+      "messages": {
+        "delete": {
+          "group": {
+            "success": "ja_success",
+            "error": "ja_error"
+          },
+          "member": {
+            "success": "ja_success",
+            "error": "ja_error"
+          }
+        }
+      }
+    },
+    "security.selectPrivileges": "ja_Create Role/Select Privileges",
+    "security.selectPrivileges.applicationRole": "ja_Application Role",
+    "security.selectPrivileges.createRole": "ja_Create Role",
+    "security.selectPrivileges.editRole": "ja_Edit Role",
+    "security.selectPrivileges.applyChanges": "ja_Apply Changes",
+    "security.selectPrivileges.enterRoleName": "ja_Enter the role name in the box below.",
+    "security.selectPrivileges.cancel": "ja_Cancel",
+    "security.selectPrivileges.name": "ja_Name",
+    "security.modules": "ja_Modules",
+    "security.modules.module": "ja_Module",
+    "dashboard.title": "ja_Dashboard",
+    "dashboard.config": "ja_Dashboard Configuration",
+    "dashboard.widgets": "ja_Widgets",
+    "reports.title": "ja_Reports",
+    "reports.config": "ja_Reports Configuration",
+    "forms.title": "ja_Forms",
+    "forms.config": "ja_Form Configuration",
+    "workflows.title": "ja_Workflows",
+    "workflows.config": "ja_Workflow Configuration",
+    "workflows.config.activate": {
+      "error": "ja_Cant make this process active!",
+      "success": "ja_Process succesfully activated."
+    },
+    "workflows.config.showHistory.dialog": {
+      "title": "ja_History",
+      "body": "ja_Below is a history of previous BPMN files. To reinstate a previous workflow, select the workflow and click Make Active",
+      "cancel": "ja_Cancel",
+      "activate": "ja_Make Active"
+    },
+    "workflows.config.grid": {
+      "businessProcess": "ja_Business Process",
+      "description": "ja_Description",
+      "active": "ja_Active",
+      "modified": "ja_Modified",
+      "creator": "ja_Author"
+    },
+    "workflows.config.btn": {
+      "createNew": "ja_Create New Model",
+      "uploadNew": "ja_Upload New BPMN"
+    },
+    "workflows.config.links": {
+      "download": "ja_Download",
+      "replaceFile": "ja_Replace File",
+      "versionHistory": "ja_Version History"
+    },
+    "workflows.config.upload": {
+      "success": "ja_Successfully uploaded new process definition",
+      "error": "ja_Error uploading new process definition"
+    },
+    "formWorkflows.title": "ja_Form/Workflow Link",
+    "formWorkflows.link": "ja_Link Forms/Workflows",
+    "formWorkflows.link.undo": "ja_Undo",
+    "formWorkflows.link.saveChanges": "ja_Save Changes",
+    "formWorkflows.link.editRole.save.success": "ja_Link Forms/Workflows configuration saved successfully",
+    "formWorkflows.link.editRole.save.error": "ja_Can't save Link Forms/Workflows configuration",
+    "application": {
+      "title": "ja_Application",
+      "labels.config": {
+        "defaultLabel": "ja_Default",
+        "applyBtn": "ja_Apply",
+        "resetModule": "ja_Reset Module",
+        "resetModule.confirm": "ja_Are you sure you want reset custom resources for current module?",
+        "resetModule.title": "ja_Reset current module (delete custom resources)",
+        "resetAll": "ja_Reset All",
+        "resetAll.confirm": "ja_Are you sure you want reset all custom resources for all modules?",
+        "resetAll.title": "ja_Reset all resources (delete all custom resources)",
+        "refreshAll": "ja_Refresh All",
+        "refreshAll.title": "ja_Refresh all resources (keep custom resources)",
+        "title": "ja_Label Configuration",
+        "filterBy": "ja_Filter By Id",
+        "filterByValue": "ja_Filter By Value",
+        "data": {
+          "description": "ja_Description",
+          "defaultValue": "ja_Default Value",
+          "id": "ja_ID",
+          "value": "ja_Value"
+        }
+      },
+      "module.config": {
+        "title": "ja_Module Configuration"
+      },
+      "userName.config": {
+        "title": "ja_Username Display Configuration",
+        "userId.label": "ja_Use User Identifier",
+        "userName.label": "ja_Use Full Username",
+        "apply": "ja_Apply",
+        "modal.title": "ja_Information",
+        "modal.info": "ja_Settings will take effect after refresh",
+        "modal.ok": "ja_OK"
+      },
+      "login.config": {
+        "title": "ja_Login Configuration",
+        "idleLimit.label": "ja_Login idle limit (in milliseconds)",
+        "inform": "ja_Settings will take effect for all new user sessions",
+        "apply.label": "ja_Apply"
+      },
+      "auditHistory.config": {
+        "title": "ja_Audit History",
+        "historyDays.label": "ja_Keep Audit and Notification events (in days)",
+        "inform": "ja_Setting successfully saved",
+        "apply.label": "ja_Apply"
+      }
+    },
+    "branding.title": "ja_Branding",
+    "branding.logo": "ja_Logo",
+    "branding.logo.messages": {
+      "upload.success": "ja_Custom logo files updated. Refresh browser page to see result.",
+      "upload.error": "ja_Error uploading custom logo files."
+    },
+    "branding.logo.header.title": "ja_Header",
+    "branding.logo.login.title": "ja_Login Page",
+    "branding.logo.warningMessage": "ja_Only PNG format is allowed. Recommended ratio is 1 to 4. Minimum height is 50px.",
+    "branding.logo.btn": {
+      "chooseHeader": "ja_Choose Header logo",
+      "chooseLogin": "ja_Choose Login logo",
+      "saveFiles": "ja_Save"
+    },
+    "branding": {
+      "customCss": "ja_Custom CSS",
+      "customCss.save.success": "ja_Custom CSS updated. Refresh browser page to see result.",
+      "customCss.save.error": "ja_Error saving Custom CSS.",
+      "customCss.save": "ja_Save"
+    },
+    "correspondenceManagement": {
+      "title": "ja_Correspondence Management",
+      "templates": "ja_Correspondence Templates",
+      "templates.addNewTemplate": "ja_Upload Template",
+      "templates.addTemplate": "ja_Upload",
+      "templates.versionTemplate": "ja_Versions",
+      "templates.deleteTemplate": "ja_Delete",
+      "templates.editTemplate": "ja_Edit Template",
+      "templates.grid": {
+        "id": "ja_ID",
+        "title": "ja_Title",
+        "label": "ja_Display Name",
+        "path": "ja_Path",
+        "created": "ja_Created",
+        "modified": "ja_Modified",
+        "creator": "ja_Creator",
+        "modifier": "ja_Modifier",
+        "activated": "ja_Status",
+        "objectType": "ja_Object Type",
+        "version": "ja_Version",
+        "templateVersionActive" : "ja_Active"
+      },
+      "templates.fieldNames.label": "ja_Map fields to values from the template",
+      "templates.querySelect": {
+        "header.text": "ja_Select Query",
+        "btnCancel.text": "ja_Cancel",
+        "btnOk.text": "ja_Select Query",
+        "table.columns": {
+          "beanId": "ja_Bean ID",
+          "jpaQuery": "ja_JPA Query",
+          "queryType": "ja_Query Type"
+        }
+      },
+      "templates.modal": {
+        "objectTypes.label": "ja_Object Types",
+        "querySelect.label": "ja_Query Select",
+        "label.label": "ja_Display Name",
+        "btnCancel.text": "ja_Cancel",
+        "btnOk.text": "ja_Upload Template"
+      },
+      "templates.version.modal": {
+        "btnOk.text": "ja_OK"
+      },
+      "mergefields": "ja_Merge Fields Configuration",
+      "mergefields.saveMergeFields": "ja_Save",
+      "mergefields.versionMergeFields": "ja_Versions",
+      "mergefields.grid": {
+      "fieldId": "ja_ID",
+      "fieldValue": "ja_Value",
+      "fieldDescription": "ja_Description"
+      },
+      "mergefields.version.grid": {
+        "mergingVersion": "ja_Version",
+        "modified": "ja_Modified",
+        "modifier": "ja_Modifier",
+        "mergingActiveVersion": "ja_Active"
+      },
+      "mergefields.version.modal": {
+        "btnLoadVersion.text": "ja_Load Version",
+        "btnCancel.text": "ja_Cancel"
+      }
+    },
+    "forms.defaultValue": "ja_Select Target",
+    "forms.addForm": "ja_Add Plain Form",
+    "forms.data": {
+      "name": "ja_Form Name",
+      "applicationName": "ja_Application name",
+      "description": "ja_Description",
+      "target": "ja_Target"
+    },
+    "forms.message.delete.success": "ja_Successfully deleted row.",
+    "forms.message.delete.error": "ja_Error deleting row."
+  }
+}

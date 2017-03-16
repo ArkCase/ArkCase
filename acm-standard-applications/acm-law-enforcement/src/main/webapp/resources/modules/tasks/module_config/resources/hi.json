@@ -1,0 +1,313 @@
+{
+  "tasks": {
+    "title": "hi_Tasks",
+    "progressNoTask": "hi_[ No task data ]",
+    "progressLoading": "hi_Loading task ",
+    "progressError": "hi_Failed to load task"
+  },
+  "tasks.menus": {
+    "leftnav.item": "hi_Tasks",
+    "topbar.item": "hi_Task"
+  },
+  "tasks.comp.info": {
+    "taskId": "hi_Task id:",
+    "percentage.label": "hi_% of Completion",
+    "assignee.label": "hi_Assignee",
+    "Priority.label": "hi_Priority",
+    "startDate.label": "hi_Start Date",
+    "dueDate.label": "hi_Due Date",
+    "state.label": "hi_State",
+    "overdue.tooltip": "hi_Task is Overdue",
+    "deadline.tooltip": "hi_Deadline is Approaching",
+    "owningGroup.label": "Owning Group"
+  },
+  "tasks.comp.parentinfo": {
+    "taskId": "hi_Task id:",
+    "case": {
+      "subjectType.label": "hi_Subject Type",
+      "incidentDate.label": "hi_Incident Date",
+      "priority.label": "hi_Priority",
+      "assignee.label": "hi_Assigned To",
+      "owningGroup.label": "hi_Owning Group"
+    },
+    "complaint": {
+      "subjectType.label": "hi_Subject Type",
+      "incidentDate.label": "hi_Incident Date",
+      "priority.label": "hi_Priority",
+      "assignee.label": "hi_Assigned To",
+      "owningGroup.label": "hi_Owning Group"
+    },
+    "costsheet": {
+      "approver.label": "hi_Approver"
+    },
+    "timesheet": {
+      "approver.label": "hi_Approver"
+    },
+    "_xxx_courtRoomName": "hi_Court Room Name:"
+  },
+  "tasks.comp.actions": {
+    "eSignature.button": "hi_Sign",
+    "subscribe.button": "hi_Subscribe",
+    "unsubscribe.button": "hi_Unsubscribe",
+    "reject.button": "hi_Reject",
+    "delete.button": "hi_Delete",
+    "complete.button": "hi_Complete",
+    "approve.button": "hi_Approve Document",
+    "rework.button": "hi_Send for Rework",
+    "claim.button": "hi_Claim",
+    "unclaim.button": "hi_Unclaim",
+    "error.outcomeFieldMissing": "hi_Cannot complete task because of missing required value",
+    "modal": {
+      "errorHeaderText": "hi_Error",
+      "btnOk.text": "hi_OK"
+    }
+  },
+  "tasks.comp.details": {
+    "title": "hi_Task Details",
+    "informSaved": "hi_Task details saved",
+    "table.columns": {
+      "details": "hi_Details",
+      "modified": "hi_Date Last Modified",
+      "modifier": "hi_User Last Modified"
+    }
+  },
+  "tasks.comp.reworkdetails": {
+    "title": "hi_Rework Details",
+    "informSaved": "hi_Rework details saved",
+    "table.columns": {
+      "title": "hi_Rework Details",
+      "modified": "hi_Date Last Modified",
+      "modifier": "hi_User Last Modified"
+    }
+  },
+  "tasks.comp.parentdocs": {
+    "title": "hi_Parent Documents",
+    "noParentDataMessage": "hi_No parent documents for standalone task"
+  },
+  "tasks.comp.attachments": {
+    "title": "hi_Attachments"
+  },
+  "tasks.comp.notes": {
+    "title": "hi_Notes",
+    "table.columns": {
+      "note": "hi_Note",
+      "created": "hi_Created",
+      "creator": "hi_Author"
+    }
+  },
+  "tasks.comp.references": {
+    "title": "hi_References",
+    "table.columns": {
+      "targetName": "hi_Number",
+      "targetTitle": "hi_Title",
+      "modified": "hi_Modified",
+      "targetType": "hi_Reference Type",
+      "status": "hi_Status"
+    }
+  },
+  "tasks.comp.rejcomments": {
+    "title": "hi_Reject Comments",
+    "table.columns": {
+      "note": "hi_Comment",
+      "created": "hi_Created",
+      "creator": "hi_Author"
+    }
+  },
+  "tasks.comp.workflow": {
+    "title": "hi_Workflow",
+    "table.columns": {
+      "participant": "hi_Participant",
+      "role": "hi_Role",
+      "status": "hi_Status",
+      "startDateTime": "hi_Start",
+      "endDateTime": "hi_End"
+    }
+  },
+  "tasks.comp.signatures": {
+    "title": "hi_eSignatures",
+    "table.columns": {
+      "signedDate": "hi_Date",
+      "signedBy": "hi_Signed By"
+    }
+  },
+  "tasks.comp.docsreview": {
+    "title": "hi_Documents Under Review",
+    "table.columns": {
+      "fileId": "hi_ID",
+      "fileName": "hi_Title",
+      "created": "hi_Created",
+      "creator": "hi_Author",
+      "status": "hi_Status"
+    }
+  },
+  "tasks.comp.history": {
+    "title": "hi_History",
+    "table.columns": {
+      "eventType": "hi_Event Name",
+      "eventDate": "hi_Date",
+      "userId": "hi_User"
+    }
+  },
+  "tasks.comp.tags": {
+    "title": "hi_Tags",
+    "table.columns": {
+      "tag": "hi_Tag",
+      "created": "hi_Created",
+      "createdBy": "hi_Created By"
+    },
+    "modal": {
+      "title": "hi_Tag",
+      "search": "hi_Search for Tag",
+      "buttons": {
+        "cancel": "hi_Cancel",
+        "ok": "hi_Add Tag"
+      }
+    },
+    "message": {
+      "tagExists": "hi_Tag with that name or description or text already exists",
+      "tagAssociated": "hi_already associated",
+      "delete": {
+        "success": "hi_Tag deleted successfully",
+        "error": "hi_Error deleting tag"
+      }
+    }
+  },
+  "tasks.newTask": {
+    "title": "hi_New Task",
+    "assignee.button": "hi_Choose Assignee",
+    "assignee.label": "hi_Assign To",
+    "assignee.placeholder": "hi_Please choose assignee by clicking the button above",
+    "assigneeOrGroup.placeholder": "hi_Please choose assignee or group by clicking the button above",
+    "priority.placeholder": "hi_Select Priority",
+    "priority.label": "hi_Priority",
+    "status.placeholder": "hi_Select Status",
+    "status.label": "hi_Status",
+    "associateNumber.label": "hi_Associate with Complaint or Case",
+    "associateNumber.placeholder": "hi_Complaint or Case #",
+    "associateType.label": "hi_Parent Type",
+    "subject.label": "hi_Subject",
+    "taskStartDate.label": "hi_Start Date",
+    "dueDate.label": "hi_Due Date",
+    "datepicker.close": "hi_Done",
+    "percentComplete.label": "hi_% Complete",
+    "notes.label": "hi_Notes",
+    "saveButton": "hi_Save",
+    "overdue.tooltip": "hi_Task is Overdue",
+    "deadline.tooltip": "hi_Deadline is Approaching",
+    "groupToggle.label": "hi_Group Task?",
+    "group.placeholder": "hi_Please select a group."
+  },
+  "tasks.userOrGroupSearch": {
+    "id": "hi_userSearch",
+    "title": "hi_User/Group Search",
+    "search": {
+      "btn": "hi_Search",
+      "placeholder": "hi_Search for the user or group to assign to this task."
+    },
+    "cancelButton": "hi_Cancel",
+    "confirmButton": "hi_Confirm",
+    "enabled": true,
+    "userOrGroupFacetFilter": "hi_\"object_type_s\":(GROUP OR USER)",
+    "assigneeGridColumns": {
+      "name": "hi_Name",
+      "type": "hi_Type",
+      "title": "hi_Title",
+      "username": "hi_Username"
+    }
+  },
+  "tasks.objectSearch": {
+    "id": "hi_objectSearch",
+    "title": "hi_Object Search",
+    "search": {
+      "btn": "hi_Search",
+      "placeholder": "hi_Search for the case or complaint to this task."
+    },
+    "cancelButton": "hi_Cancel",
+    "confirmButton": "hi_Confirm",
+    "enabled": true,
+    "userFacetFilter": "hi_\"Object Type\": ",
+    "objectGridColumns": {
+      "name": "hi_Number",
+      "type": "hi_Type",
+      "title": "hi_Title",
+      "username": "hi_Assignee"
+    }
+  },
+  "tasks.comp.addreference": {
+    "title": "hi_Add Reference",
+    "cancelButton": "hi_Cancel",
+    "confirmButton": "hi_Add",
+    "search": {
+      "placeholder": "hi_Search for case, complaint, file, task",
+      "btn": "hi_Search"
+    },
+    "grid": {
+      "columns": {
+        "id": "hi_Id",
+        "name": "hi_Name",
+        "type": "hi_Type",
+        "title": "hi_Title",
+        "parent": "hi_Parent",
+        "assignee": "hi_Assignee",
+        "modified": "hi_Modified"
+      }
+    }
+  },
+  "tasks.comp.participants": {
+    "title": "hi_Participants",
+    "table.columns": {
+      "type": "hi_Type",
+      "name": "hi_Name"
+    },
+    "dialogUserPicker": {
+      "header": "hi_Choose User",
+      "table.columns": {
+        "name": "hi_Name",
+        "type": "hi_Type",
+        "title": "hi_Title",
+        "id": "hi_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "hi_Choose Group",
+      "table.columns": {
+        "name": "hi_Name"
+      }
+    }
+  },
+  "tasks.comp.assigneePickerModal": {
+    "title": "hi_Change Assignee",
+    "assigneeNamelabel": "hi_Assignee Name",
+    "btnCancelText": "hi_Cancel",
+    "btnSaveText": "hi_Save",
+    "searchAssigneeHeader": "hi_Search Assignee"
+  },
+  "tasks.comp.groupPickerModal": {
+    "title": "hi_Change Group",
+    "groupNamelabel": "hi_Group Name",
+    "btnCancelText": "hi_Cancel",
+    "btnSaveText": "hi_Save",
+    "searchGroupHeader": "hi_Search Group"
+  },
+  "tasks.comp.approvalRouting": {
+    "title": "hi_Future Approvers",
+    "addNewTooltip": "hi_Add new approver",
+    "noBuckslipMessage": "No Data",
+    "button": {
+      "save.tooltip": "hi_Save Changes"
+    },
+    "table.columns": {
+      "fullName": "hi_Full Name"
+    }
+  },
+  "tasks.comp.pastApprovals": {
+    "title": "hi_Past Approvers",
+    "noBuckslipMessage": "No Data",
+    "table.columns": {
+      "approvalDate": "hi_Approval Date",
+      "approverId": "hi_Approver",
+      "approverFullName": "hi_Full Name",
+      "approverDecision": "hi_Approver Decision"
+    }
+  }
+}

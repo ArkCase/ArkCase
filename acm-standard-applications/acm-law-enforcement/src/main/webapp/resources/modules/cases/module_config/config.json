@@ -8,7 +8,7 @@
     {
       "menuId": "leftnav",
       "menuItemURL": "cases.main",
-      "menuItemTitle": "Case Files",
+      "menuItemTitle": "cases.menus.leftnav.item",
       "moduleId": "case",
       "iconClass": "fa fa-folder",
       "position": 50
@@ -16,7 +16,7 @@
     {
       "menuId": "topbar",
       "menuItemURL": "frevvo.new-case",
-      "menuItemTitle": "Case",
+      "menuItemTitle": "cases.menus.topbar.item",
       "moduleId": "case",
       "iconClass": "fa fa-folder",
       "position": 20
