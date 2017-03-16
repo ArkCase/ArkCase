@@ -169,7 +169,7 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     {
         if (getCmisRepositoryId() == null)
         {
-            setCmisRepositoryId("alfresco");
+            setCmisRepositoryId(EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
         }
     }
 
