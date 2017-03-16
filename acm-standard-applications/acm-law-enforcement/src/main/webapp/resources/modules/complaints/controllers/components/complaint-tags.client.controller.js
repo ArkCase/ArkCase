@@ -69,18 +69,14 @@ angular.module('complaints').controller('Complaints.TagsController', ['$scope', 
                             }
                         }
                         else {
-                            ComplaintInfoService.getComplaintInfo($stateParams.id).then(function (data) {
-                                $scope.parentTitleFromComplaint = data.complaintNumber;
-
-                                ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.COMPLAINT, 
-                                $scope.parentTitleFromComplaint, tag.id).then(
-                                    function () {
-                                        $scope.tags.push(tag);
-                                        $scope.gridOptions.data = $scope.tags;
-                                        $scope.gridOptions.totalItems = $scope.tags.length;
-                                    }
-                                );
-                            });
+                            ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.COMPLAINT, 
+                            $scope.objectParentTitle, tag.id).then(
+                                function () {
+                                    $scope.tags.push(tag);
+                                    $scope.gridOptions.data = $scope.tags;
+                                    $scope.gridOptions.totalItems = $scope.tags.length;
+                                }
+                            );
                         }
                     }
                 });
@@ -103,6 +99,7 @@ angular.module('complaints').controller('Complaints.TagsController', ['$scope', 
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
+            $scope.objectParentTitle = $scope.objectInfo.complaintNumber;
 
             var currentObjectId = Util.goodMapValue(objectInfo, "complaintId");
             if (Util.goodPositive(currentObjectId, false)) {

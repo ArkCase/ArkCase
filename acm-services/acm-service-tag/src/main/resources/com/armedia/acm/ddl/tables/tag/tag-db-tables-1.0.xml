@@ -260,4 +260,8 @@
 		</addColumn>
 	</changeSet>
 
+	<changeSet id="14-acm_tag-drop-parent-title" author="john.faniyi">
+		<dropColumn tableName="acm_tag" columnName="cm_tag_parent_title"/>
+	</changeSet>
+
 </databaseChangeLog>

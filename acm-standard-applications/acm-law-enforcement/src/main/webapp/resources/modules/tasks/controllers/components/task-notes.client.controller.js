@@ -4,22 +4,6 @@ angular.module('tasks').controller('Tasks.NotesController', ['$scope', '$statePa
     , 'PermissionsService', 'Task.InfoService'
     , function ($scope, $stateParams, ConfigService, ObjectService, HelperObjectBrowserService, PermissionsService, TaskInfoService) {
 
-        ConfigService.getComponentConfig("tasks", "notes").then(function (config) {
-            TaskInfoService.getTaskInfo($stateParams.id).then(function (data) {
-                $scope.parentTitleFromTask = data.parentObjectName;
-
-                $scope.notesInit = {
-                    objectType: ObjectService.ObjectTypes.TASK,
-                    currentObjectId: $stateParams.id,
-                    parentTitle: $scope.parentTitleFromTask,
-                    isReadOnly: false
-                };
-                $scope.config = config;
-                return config;
-            });
-
-        });
-
         var componentHelper = new HelperObjectBrowserService.Component(
             {
                 scope : $scope,
@@ -46,6 +30,16 @@ angular.module('tasks').controller('Tasks.NotesController', ['$scope', '$statePa
         var onObjectInfoRetrieved = function(objectInfo) {
 
             $scope.objectInfo = objectInfo;
+            $scope.parentObjectTitle = $scope.objectInfo.parentObjectName;
+
+            $scope.notesInit = {
+                noteTitle: "Notes",
+                objectType: ObjectService.ObjectTypes.TASK,
+                currentObjectId: $stateParams.id,
+                parentTitle: $scope.parentObjectTitle,
+                isReadOnly: false
+            };
+
             PermissionsService.getActionPermission('editNote', objectInfo).then(function(result) {
 
                 $scope.notesInit.isReadOnly = !result;

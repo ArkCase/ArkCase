@@ -34,24 +34,19 @@ angular.module('cases').controller('Cases.TagsModalController', ['$scope', '$q',
                         || tag.tagText == selectedTag.tags_s;
                 });
                 if (tagsCreated.length == 0) {
-                    CaseInfoService.getCaseInfo($stateParams.id).then(function (data) {
-                    $scope.parentTitleFromCase = data.caseNumber;
-
-                        ObjectTagsService.createTag(selectedTag.tags_s, selectedTag.tags_s, selectedTag.tags_s, $scope.parentTitleFromCase).then(
-                            function (tagCreated) {
-                                //add newly created tag 
-                                _.remove($scope.tags, function (tag) {
-                                    return selectedTag.tags_s == tag.tags_s;
-                                });
-                                var tagToAdd = angular.copy(tagCreated);
-                                tagToAdd.tags_s = selectedTag.tags_s;
-                                tagToAdd.title_parseable = selectedTag.tags_s;
-                                tagToAdd.id = tagToAdd.id+'-TAG';
-                                tagToAdd.parentTitle = $scope.parentTitleFromCase;
-                                $scope.tags.push(tagToAdd);
-                            }
-                        )
-                    }); 
+                    ObjectTagsService.createTag(selectedTag.tags_s, selectedTag.tags_s, selectedTag.tags_s).then(
+                        function (tagCreated) {
+                            //add newly created tag
+                            _.remove($scope.tags, function (tag) {
+                                return selectedTag.tags_s == tag.tags_s;
+                            });
+                            var tagToAdd = angular.copy(tagCreated);
+                            tagToAdd.tags_s = selectedTag.tags_s;
+                            tagToAdd.title_parseable = selectedTag.tags_s;
+                            tagToAdd.id = tagToAdd.id+'-TAG';
+                            $scope.tags.push(tagToAdd);
+                        }
+                    );
                 }
                 else {
                     messageService.info($translate.instant('cases.comp.tags.message.tagExists'));

@@ -69,18 +69,14 @@ angular.module('cases').controller('Cases.TagsController', ['$scope', '$q', '$st
                             }
                         }
                         else {
-                            CaseInfoService.getCaseInfo($stateParams.id).then(function (data) {
-                                $scope.parentTitleFromCase = data.caseNumber;
-
-                                ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.CASE_FILE, 
-                                    $scope.parentTitleFromCase, tag.id).then(
-                                    function () {
-                                        $scope.tags.push(tag);
-                                        $scope.gridOptions.data = $scope.tags;
-                                        $scope.gridOptions.totalItems = $scope.tags.length;
-                                    }
-                                );
-                            });
+                            ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.CASE_FILE, 
+                                $scope.objectParentTitle, tag.id).then(
+                                function () {
+                                    $scope.tags.push(tag);
+                                    $scope.gridOptions.data = $scope.tags;
+                                    $scope.gridOptions.totalItems = $scope.tags.length;
+                                }
+                            );
                         }
                     }
                 });
@@ -103,6 +99,7 @@ angular.module('cases').controller('Cases.TagsController', ['$scope', '$q', '$st
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
+            $scope.objectParentTitle = $scope.objectInfo.caseNumber;
 
             var currentObjectId = Util.goodMapValue(objectInfo, "id");
             if (Util.goodPositive(currentObjectId, false)) {
