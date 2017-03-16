@@ -63,7 +63,7 @@ public class EcmFileMergeHandler implements PipelineHandler<EcmFile, EcmFileTran
 
                     // We need to pull the original file contents from Alfresco in order to merge with the new file
                     log.debug("Pulling original document contents from repository");
-                    InputStream originalFileStream = ecmFileMuleUtils.downloadFile(matchFile.getVersionSeriesId());
+                    InputStream originalFileStream = ecmFileMuleUtils.downloadFile(matchFile.getCmisRepositoryId(), matchFile.getVersionSeriesId());
                     if (originalFileStream == null)
                     {
                         throw new Exception("Failed to pull document " + matchFile.getFileId() + " from the repository");

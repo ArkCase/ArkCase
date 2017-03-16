@@ -42,6 +42,7 @@
         {
           "name": "parent_type_s",
           "displayName": "notifications.comp.grid.columns.objType",
+          "cellFilter": "mapKeyValue: grid.appScope.customization.labels",
           "headerCellFilter": "translate"
         },
         {

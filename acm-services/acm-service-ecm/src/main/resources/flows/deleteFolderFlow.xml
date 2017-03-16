@@ -24,12 +24,12 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
 
 
         <enricher target="#[flowVars['children']]">
-            <cmis:folder get="CHILDREN" folderId="#[message.inboundProperties.acmFolderId]"/>
+            <cmis:folder config-ref="#[message.inboundProperties.configRef]" get="CHILDREN" folderId="#[message.inboundProperties.acmFolderId]"/>
         </enricher>
 
         <choice>
             <when expression="#[flowVars['children'].pageNumItems == 0]">
-                <cmis:delete objectId="#[message.inboundProperties.acmFolderId]"/>
+                <cmis:delete config-ref="#[message.inboundProperties.configRef]" objectId="#[message.inboundProperties.acmFolderId]"/>
             </when>
             <otherwise>
                 <set-property propertyName="isFolderNotEmpty" value="true"/>
@@ -37,7 +37,7 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
         </choice>
 
 
-		<catch-exception-strategy>
+        <catch-exception-strategy>
             <logger level="ERROR" category="com.armedia.acm.plugins.ecm" message="Exception saving: #[exception.message]"/>
             <set-property propertyName="deleteFolderException" value="#[exception]"/>
         </catch-exception-strategy>

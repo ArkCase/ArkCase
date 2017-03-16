@@ -33,7 +33,6 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
 
         var promiseFormTypes = ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.CASE_FILE);
         var promiseFileTypes = ObjectLookupService.getFileTypes();
-        //var promiseCorrespondenceForms = ObjectLookupService.getCaseFileCorrespondenceForms();
         var promiseCorrespondenceForms = CorrespondenceService.getActivatedTemplatesData(ObjectService.ObjectTypes.CASE_FILE);
         var onConfigRetrieved = function (config) {
             $scope.treeConfig = config.docTree;
@@ -44,6 +43,7 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
                     $scope.treeConfig.formTypes = data[0];
                     $scope.treeConfig.fileTypes = data[1];
                     $scope.treeConfig.correspondenceForms = data[2];
+                    $scope.treeControl.refreshTree();
                 });
         };
 

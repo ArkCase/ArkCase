@@ -138,12 +138,6 @@
                     <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
                 </bean>
                 <bean class="com.armedia.acm.services.config.model.PropertyConfig">
-                    <property name="configName" value="cmis"/>
-                    <property name="configDescription" value="Cmis"/>
-                    <property name="properties" ref="cmisProperties"/>
-                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-                </bean>
-                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
                     <property name="configName" value="correspondence"/>
                     <property name="configDescription" value="Correspondence"/>
                     <property name="properties" ref="correspondencePluginProperties"/>
