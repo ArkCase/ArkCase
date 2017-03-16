@@ -114,7 +114,7 @@ public class AcmFolder implements AcmEntity, Serializable, AcmObject, AcmAssigne
     {
         if (getCmisRepositoryId() == null)
         {
-            setCmisRepositoryId("alfresco");
+            setCmisRepositoryId(EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
         }
     }
 
