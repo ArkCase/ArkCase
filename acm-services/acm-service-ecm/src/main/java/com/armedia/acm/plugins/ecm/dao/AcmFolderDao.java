@@ -33,7 +33,7 @@ public class AcmFolderDao extends AcmAbstractDao<AcmFolder> {
 
     public AcmFolder findFolderByNameInTheGivenParentFolder(String folderName, Long parentFolderId) throws NoResultException {
 
-        String jpql = "SELECT e FROM AcmFolder e WHERE e.name=:folderName AND e.parentFolderId=:parentFolderId";
+        String jpql = "SELECT e FROM AcmFolder e WHERE e.name=:folderName AND e.parentFolder.id = :parentFolderId";
 
         TypedQuery<AcmFolder> query = getEm().createQuery(jpql, getPersistenceClass());
         query.setParameter("folderName", folderName);

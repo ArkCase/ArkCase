@@ -414,9 +414,21 @@
     <changeSet id="21-add-ldap-columns-to-group-table" author="nadica.cuculova">
         <addColumn tableName="acm_group">
             <column name="cm_distinguished_name" type="VARCHAR(255)"/>
-            <column name="cm_directory_name" type="VARCHAR(${cmUserDirectoryNameLength})">
+            <column name="cm_directory_name" type="VARCHAR(${cmUserDirectoryNameLength})" defaultValue="armedia">
                 <constraints nullable="false"/>
             </column>
         </addColumn>
     </changeSet>
+
+    <changeSet id="22-remove-directory-name-constraint" author="ilinpetar" dbms="mysql">
+        <comment>Directory name is not applicable to ad-hoc groups</comment>
+        <dropNotNullConstraint tableName="acm_group" columnName="cm_directory_name"
+                               columnDataType="VARCHAR(${cmUserDirectoryNameLength})"/>
+    </changeSet>
+
+    <changeSet id="22-remove-directory-name-constraint" author="ilinpetar" dbms="oracle,postgresql,mssql">
+        <comment>Directory name is not applicable to ad-hoc groups</comment>
+        <dropNotNullConstraint tableName="acm_group" columnName="cm_directory_name"/>
+    </changeSet>
+
 </databaseChangeLog>

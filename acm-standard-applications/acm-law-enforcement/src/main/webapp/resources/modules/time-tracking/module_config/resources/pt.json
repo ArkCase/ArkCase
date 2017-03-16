@@ -1,0 +1,71 @@
+{
+  "timeTracking": {
+    "title": "pt_Time Tracking",
+    "progressNoTimesheet": "pt_[ No timesheet is selected ]",
+    "progressLoading": "pt_Loading timesheet ",
+    "progressError": "pt_Failed to load timesheet"
+  },
+  "timeTracking.menus": {
+    "leftnav.item": "pt_Time Tracking",
+    "topbar.item": "pt_Timesheet"
+  },
+  "timeTracking.tree": {
+  },
+  "timeTracking.comp.info": {
+    "lastModified.label": "pt_Last Modified"
+  },
+  "timeTracking.comp.actions": {
+    "new.button": "pt_New Timesheet",
+    "edit.button": "pt_Edit Timesheet"
+  },
+  "timeTracking.comp.details": {
+    "title": "pt_Details",
+    "informSaved": "pt_Timesheet details saved",
+    "table.columns": {
+      "title": "pt_Details",
+      "modified": "pt_Date Last Modified",
+      "modifier": "pt_User Last Modified"
+    }
+  },
+  "timeTracking.comp.people": {
+    "title": "pt_Person",
+    "table.columns": {
+      "fullName": "pt_Full Name",
+      "userId": "pt_Username"
+    }
+  },
+  "timeTracking.comp.summary": {
+    "title": "pt_Hours Summary",
+    "table.columns": {
+      "code": "pt_Parent ID",
+      "type": "pt_Parent Type",
+      "value": "pt_Total Hours",
+      "date": "pt_Date Charged",
+      "modified": "pt_Modified Date"
+    }
+  },
+  "timeTracking.comp.tags": {
+    "title": "pt_Tags",
+    "table.columns": {
+      "tag": "pt_Tag",
+      "created": "pt_Created",
+      "createdBy": "pt_Created By"
+    },
+    "modal": {
+      "title": "pt_Tag",
+      "search": "pt_Search for Tag",
+      "buttons": {
+        "cancel": "pt_Cancel",
+        "ok": "pt_Add Tag"
+      }
+    },
+    "message": {
+      "tagExists": "pt_Tag with that name or description or text already exists",
+      "tagAssociated": "pt_already associated",
+      "delete": {
+        "success": "pt_Tag deleted successfully",
+        "error": "pt_Error deleting tag"
+      }
+    }
+  }
+}

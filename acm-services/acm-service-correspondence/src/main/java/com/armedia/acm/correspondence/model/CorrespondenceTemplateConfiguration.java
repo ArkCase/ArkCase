@@ -1,7 +1,6 @@
 package com.armedia.acm.correspondence.model;
 
 import java.util.Date;
-import java.util.Map;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jan 26, 2017
@@ -10,15 +9,19 @@ import java.util.Map;
 public class CorrespondenceTemplateConfiguration
 {
 
-    private String displayName;
+    private String templateId;
+
+    private String templateVersion;
+
+    private boolean templateVersionActive;
+
+    private String label;
 
     private String documentType;
 
     private String templateFilename;
 
-    private String correspondenceQueryBeanId;
-
-    private Map<String, String> templateSubstitutionVariables;
+    private String objectType;
 
     private String dateFormatString;
 
@@ -30,20 +33,69 @@ public class CorrespondenceTemplateConfiguration
 
     private Date modified;
 
-    /**
-     * @return the dislpayName
-     */
-    public String getDisplayName()
+    public String getTemplateId()
     {
-        return displayName;
+        return templateId;
     }
 
     /**
-     * @param displayName the dislpayName to set
+     * @param templateId
+     *            the templateId to set
      */
-    public void setDisplayName(String displayName)
+    public void setTemplateId(String templateId)
     {
-        this.displayName = displayName;
+        this.templateId = templateId;
+    }
+
+    /**
+     * @return the templateVersion
+     */
+    public String getTemplateVersion()
+    {
+        return templateVersion;
+    }
+
+    /**
+     * @param templateVersion
+     *            the templateVersion to set
+     */
+    public void setTemplateVersion(String templateVersion)
+    {
+        this.templateVersion = templateVersion;
+    }
+
+    /**
+     * @return the templateVersionActive
+     */
+    public boolean isTemplateVersionActive()
+    {
+        return templateVersionActive;
+    }
+
+    /**
+     * @param templateVersionActive
+     *            the templateVersionActive to set
+     */
+    public void setTemplateVersionActive(boolean templateVersionActive)
+    {
+        this.templateVersionActive = templateVersionActive;
+    }
+
+    /**
+     * @return the label
+     */
+    public String getLabel()
+    {
+        return label;
+    }
+
+    /**
+     * @param label
+     *            the label to set
+     */
+    public void setLabel(String label)
+    {
+        this.label = label;
     }
 
     /**
@@ -55,7 +107,8 @@ public class CorrespondenceTemplateConfiguration
     }
 
     /**
-     * @param documentType the documentType to set
+     * @param documentType
+     *            the documentType to set
      */
     public void setDocumentType(String documentType)
     {
@@ -71,7 +124,8 @@ public class CorrespondenceTemplateConfiguration
     }
 
     /**
-     * @param templateFilename the templateFilename to set
+     * @param templateFilename
+     *            the templateFilename to set
      */
     public void setTemplateFilename(String templateFilename)
     {
@@ -79,35 +133,20 @@ public class CorrespondenceTemplateConfiguration
     }
 
     /**
-     * @return the correspondenceQueryBeanId
+     * @return the objectType
      */
-    public String getCorrespondenceQueryBeanId()
+    public String getObjectType()
     {
-        return correspondenceQueryBeanId;
+        return objectType;
     }
 
     /**
-     * @param correspondenceQueryBeanId the correspondenceQueryBeanId to set
+     * @param objectType
+     *            the objectType to set
      */
-    public void setCorrespondenceQueryBeanId(String correspondenceQueryBeanId)
+    public void setObjectType(String objectType)
     {
-        this.correspondenceQueryBeanId = correspondenceQueryBeanId;
-    }
-
-    /**
-     * @return the templateSubstitutionVariables
-     */
-    public Map<String, String> getTemplateSubstitutionVariables()
-    {
-        return templateSubstitutionVariables;
-    }
-
-    /**
-     * @param templateSubstitutionVariables the templateSubstitutionVariables to set
-     */
-    public void setTemplateSubstitutionVariables(Map<String, String> templateSubstitutionVariables)
-    {
-        this.templateSubstitutionVariables = templateSubstitutionVariables;
+        this.objectType = objectType;
     }
 
     /**
@@ -119,7 +158,8 @@ public class CorrespondenceTemplateConfiguration
     }
 
     /**
-     * @param dateFormatString the dateFormatString to set
+     * @param dateFormatString
+     *            the dateFormatString to set
      */
     public void setDateFormatString(String dateFormatString)
     {
@@ -135,7 +175,8 @@ public class CorrespondenceTemplateConfiguration
     }
 
     /**
-     * @param numberFormatString the numberFormatString to set
+     * @param numberFormatString
+     *            the numberFormatString to set
      */
     public void setNumberFormatString(String numberFormatString)
     {
@@ -151,7 +192,8 @@ public class CorrespondenceTemplateConfiguration
     }
 
     /**
-     * @param activated the activated to set
+     * @param activated
+     *            the activated to set
      */
     public void setActivated(boolean activated)
     {
@@ -167,7 +209,8 @@ public class CorrespondenceTemplateConfiguration
     }
 
     /**
-     * @param modifier the modifier to set
+     * @param modifier
+     *            the modifier to set
      */
     public void setModifier(String modifier)
     {
@@ -183,7 +226,8 @@ public class CorrespondenceTemplateConfiguration
     }
 
     /**
-     * @param modified the modified to set
+     * @param modified
+     *            the modified to set
      */
     public void setModified(Date modified)
     {

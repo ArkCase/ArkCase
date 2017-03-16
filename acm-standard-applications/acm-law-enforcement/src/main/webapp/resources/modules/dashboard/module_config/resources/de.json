@@ -1,0 +1,225 @@
+{
+  "dashboard": {
+    "title": "Übersicht",
+    "menus": {
+      "leftnav.item": "Übersicht"
+    },
+    "widgets": {
+      "casesByQueue": {
+        "title": "de_Active Case Files by Queue",
+        "description": "de_Displays active case files by queue",
+        "xAxis": "de_Queues",
+        "yAxis": "de_Number of Case Files",
+        "noDataMessage": "de_Currently there are no cases info"
+      },
+      "casesByStatus": {
+        "title": "de_Cases By Status",
+        "description": "de_Displays cases by status",
+        "timePeriod": {
+          "label": "de_Select Time Period",
+          "lastWeek": "de_Last Week",
+          "lastMonth": "de_Last Month",
+          "lastYear": "de_Last Year",
+          "all": "de_All"
+        },
+        "noDataMessage": "de_Currently there are no cases info"
+      },
+      "myCases": {
+        "title": "de_My Cases",
+        "description": "de_Displays my cases",
+        "noDataMessage": "de_Currently there are no cases info",
+        "table": {
+          "header": {
+            "caseId": "de_ID",
+            "title": "de_Title",
+            "priority": "de_Priority",
+            "status": "de_Status"
+          }
+        }
+      },
+      "myComplaints": {
+        "title": "de_My Complaints",
+        "description": "de_Displays my complaints",
+        "table": {
+          "header": {
+            "number": "de_ID",
+            "title": "de_Title",
+            "priority": "de_Priority",
+            "created": "de_Created",
+            "status": "de_Status"
+          },
+          "noDataMessage": "de_Currently there are no complaints info"
+        }
+      },
+      "myTasks": {
+        "title": "de_My Tasks",
+        "description": "de_Displays my tasks",
+        "rowNumbers.label": "de_Default Row Numbers",
+        "rowNumbers.placeholder": "de_Enter Default Row Numbers",
+        "table": {
+          "header": {
+            "taskId": "de_ID",
+            "title": "de_Title",
+            "priority": "de_Priority",
+            "dueDate": "de_Due",
+            "status": "de_Status",
+            "objectId": "de_Object ID"
+          },
+          "overdue.tooltip": "de_Task is Overdue",
+          "deadline.tooltip": "de_Deadline is Approaching"
+        },
+        "noDataMessage": "de_Currently there are no tasks info"
+      },
+      "newComplaints": {
+        "title": "de_New Complaints",
+        "description": "de_Displays new complaints",
+        "dueDate": {
+          "label": "de_Select Due Date Period",
+          "pastDue": "de_Past Due",
+          "dueTomorrow": "de_Due Tomorrow",
+          "dueWeek": "de_Due in 7 Days",
+          "dueMonth": "de_Due in Month",
+          "all": "de_All"
+        },
+        "noDataMessage": "de_Currently there are no complaints info"
+      },
+      "newCases": {
+        "title": "de_New Cases",
+        "description": "de_Displays new cases",
+        "noDataMessage": "de_Currently there are no cases info"
+      },
+      "teamWorkload": {
+        "title": "de_Team Workload",
+        "description": "de_Displays team workload",
+        "dueDate": {
+          "label": "de_Select Due Date Period",
+          "pastDue": "de_Past Due",
+          "dueTomorrow": "de_Due Tomorrow",
+          "dueWeek": "de_Due in 7 Days",
+          "dueMonth": "de_Due in Month",
+          "all": "de_All"
+        },
+        "noDataMessage": "de_Currently there are no team tasks info"
+      },
+      "weather": {
+        "description": "de_Displays weather",
+        "label": {
+          "current": "de_Current:",
+          "enterLocation": "de_Enter Location",
+          "description": "de_Display the current temperature of a city",
+          "location": "de_Location",
+          "insertLocationInConfiguration": "de_Please insert a location in the widget configuration"
+        },
+        "title": "de_Weather",
+        "noDataMessage": "de_Currently there are no weather info"
+      },
+      "news": {
+        "description": "de_Displays news",
+        "label": {
+          "enterFeedUrl": "de_Enter Feed url",
+          "description": "de_Displays a RSS/Atom feed",
+          "feedUrl": "de_Feed Url",
+          "insertUrl": "de_Please insert a feed url in the widget configuration"
+        },
+        "title": "de_News",
+        "noDataMessage": "de_Currently there is no RSS/info"
+      },
+      "details": {
+        "title": "de_Details",
+        "description": "de_Displays case details",
+        "noDataMessage": "de_Currently there are no details"
+      },
+      "people": {
+        "title": "de_People",
+        "description": "de_Displays people details",
+        "noDataMessage": "de_Currently there are no people to display"
+      },
+      "documents": {
+        "title": "de_Documents",
+        "description": "de_Displays chart of documents by folder",
+        "noDataMessage": "de_Currently there are no documents to display"
+      },
+      "locations": {
+        "title": "de_Locations",
+        "description": "de_Displays location details",
+        "noDataMessage": "de_Currently there are no locations to display"
+      },
+      "tasks": {
+        "title": "de_Tasks",
+        "description": "de_Displays task details",
+        "noDataMessage": "de_Currently there are no tasks to display"
+      },
+      "participants": {
+        "title": "de_Participants",
+        "description": "de_Displays participant details",
+        "noDataMessage": "de_Currently there are no participant to display"
+      },
+      "references": {
+        "title": "de_References",
+        "description": "de_Displays reference details",
+        "noDataMessage": "de_Currently there are no references to display"
+      },
+      "history": {
+        "title": "de_History",
+        "description": "de_Displays chart of history events",
+        "noDataMessage": "de_Currently there are no events to display"
+      },
+      "notes": {
+        "title": "de_Notes",
+        "description": "de_Displays note details",
+        "noDataMessage": "de_Currently there are no notes to display"
+      },
+      "time": {
+        "title": "de_Time",
+        "description": "de_Displays chart for hours per user",
+        "noDataMessage": "de_Currently there is no time information to display"
+      },
+      "cost": {
+        "title": "de_Cost",
+        "description": "de_Displays chart for cost per user",
+        "noDataMessage": "de_Currently there is no cost information to display"
+      },
+      "calendar": {
+        "title": "de_Calendar",
+        "description": "de_Displays chart of scheduled events per day",
+        "noDataMessage": "de_Currently there are no events to display"
+      },
+      "reworkDetails": {
+        "title": "de_Rework Details",
+        "description": "de_Shows most recent rework details",
+        "noDataMessage": "de_Currently there no are no rework details to display"
+      },
+      "docReview": {
+        "title": "de_Documents Under Review",
+        "description": "de_Shows documents under review",
+        "noDataMessage": "de_Currently there no are no documents under review to display"
+      },
+      "workflow": {
+        "title": "de_Workflow Overview",
+        "description": "de_Overview of pending workflows",
+        "noDataMessage": "de_Currently there are no workflows to display"
+      },
+      "signature": {
+        "title": "de_eSignature",
+        "description": "de_eSignature widget",
+        "noDataMessage": "de_Currently there are no eSignatures to display"
+      },
+      "person": {
+        "title": "de_Person",
+        "description": "de_Person widget for Cost and Time modules",
+        "noDataMessage": "de_Currently there are no persons to display"
+      },
+      "hoursSummary": {
+        "title": "de_Hours Summary",
+        "description": "de_Displays a summary of hours worked",
+        "noDataMessage": "de_Currently there is no summary to display"
+      },
+      "expenses": {
+        "title": "de_Expenses",
+        "description": "de_Displays a cost-to-user graph",
+        "noDataMessage": "de_Currently no expense data to display"
+      }
+    }
+  }
+}
+

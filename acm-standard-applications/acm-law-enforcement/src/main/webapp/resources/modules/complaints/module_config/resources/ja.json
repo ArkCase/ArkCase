@@ -1,0 +1,324 @@
+{
+  "complaints": {
+    "title": "ja_Complaints",
+    "progressNoComplaint": "ja_[ No complaint data ]",
+    "progressLoading": "ja_Loading complaint ",
+    "progressError": "ja_Failed to load complaint "
+  },
+  "complaints.menus": {
+    "leftnav.item": "ja_Complaints",
+    "topbar.item": "ja_Complaint"
+  },
+  "complaints.comp.info": {
+    "complaintId": "ja_Complaint id:",
+    "complaintNumber": "ja_Complaint ID:",
+    "courtRoomName": "ja_Court Room Name:",
+    "type.label": "Type",
+    "created.label": "Created Date",
+    "priority.label": "Priority",
+    "assignee.label": "Assigned To",
+    "owningGroup.label": "Owning Group",
+    "dueDate.label": "Due Date"
+  },
+  "complaints.comp.actions": {
+    "restrict": "ja_Restrict?",
+    "new.button": "ja_New Complaint",
+    "close.button": "ja_Close Complaint",
+    "subscribe.button": "ja_Subscribe",
+    "unsubscribe.button": "ja_Unsubscribe",
+    "claim.button": "ja_Claim",
+    "unclaim.button": "ja_Unclaim"
+  },
+  "complaints.comp.details": {
+    "title": "ja_Details",
+    "informSaved": "ja_Complaint details saved",
+    "table.columns": {
+      "title": "ja_Details",
+      "modified": "ja_Date Last Modified",
+      "modifier": "ja_User Last Modified"
+    }
+  },
+  "complaints.comp.documents": {
+    "title": "ja_Documents"
+  },
+  "complaints.comp.people": {
+    "title": "ja_People",
+    "table.columns": {
+      "entity": "ja_Entity",
+      "type": "ja_Type",
+      "firstName": "ja_FirstName",
+      "lastName": "ja_LastName"
+    },
+    "contactMethods": {
+      "title": "ja_ContactMethods",
+      "table.columns": {
+        "type": "ja_Type",
+        "value": "ja_Value",
+        "created": "ja_Date Added",
+        "creator": "ja_Added By",
+        "modified": "ja_Last Modified",
+        "modifier": "ja_Modified By"
+      }
+    },
+    "organizations": {
+      "title": "ja_Organizations",
+      "table.columns": {
+        "type": "ja_Type",
+        "value": "ja_Value",
+        "created": "ja_Date Added",
+        "creator": "ja_Added By",
+        "modified": "ja_Last Modified",
+        "modifier": "ja_Modified By"
+      }
+    },
+    "addresses": {
+      "title": "ja_Locations",
+      "table.columns": {
+        "type": "ja_Type",
+        "streetAddress": "ja_Address",
+        "city": "ja_City",
+        "state": "ja_State",
+        "zip": "ja_Zip",
+        "country": "ja_Country",
+        "created": "ja_Date Added",
+        "creator": "ja_Added By",
+        "modified": "ja_Last Modified",
+        "modifier": "ja_Modified By"
+      }
+    },
+    "aliases": {
+      "title": "ja_Aliases",
+      "table.columns": {
+        "type": "ja_Type",
+        "value": "ja_Value",
+        "created": "ja_Date Added",
+        "creator": "ja_Added By",
+        "modified": "ja_Last Modified",
+        "modifier": "ja_Modified By"
+      }
+    },
+    "securityTags": {
+      "title": "ja_Security Tags",
+      "table.columns": {
+        "type": "ja_Type",
+        "value": "ja_Value",
+        "created": "ja_Date Added",
+        "creator": "ja_Added By",
+        "modified": "ja_Last Modified",
+        "modifier": "ja_Modified By"
+      }
+    }
+  },
+  "complaints.comp.participants": {
+    "title": "ja_Participants",
+    "table.columns": {
+      "type": "ja_Type",
+      "name": "ja_Name"
+    },
+    "dialogUserPicker": {
+      "header": "ja_Choose User",
+      "table.columns": {
+        "name": "ja_Name",
+        "type": "ja_Type",
+        "title": "ja_Title",
+        "id": "ja_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "ja_Choose Group",
+      "table.columns": {
+        "name": "ja_Name"
+      }
+    }
+  },
+  "complaints.comp.locations": {
+    "title": "ja_Locations",
+    "table.columns": {
+      "address": "ja_Address",
+      "type": "ja_Type",
+      "city": "ja_City",
+      "state": "ja_State",
+      "zip": "ja_Zip",
+      "modified": "ja_Date Last Modified",
+      "modifier": "ja_User Last Modified"
+    },
+    "modal": {
+      "addLocation": "ja_Add Location",
+      "editLocation": "ja_Edit Record",
+      "type.label": "ja_Type",
+      "street.label": "ja_Street",
+      "city.label": "ja_City",
+      "state.label": "ja_State",
+      "zip.label": "ja_Zip",
+      "btnOk.text": "ja_Save",
+      "btnCancel.text": "ja_Cancel"
+    }
+  },
+  "complaints.comp.notes": {
+    "title": "ja_Notes",
+    "table.columns": {
+      "note": "ja_Note",
+      "created": "ja_Created",
+      "creator": "ja_Author"
+    }
+  },
+  "complaints.comp.tasks": {
+    "title": "ja_Tasks",
+    "table.columns": {
+      "title": "ja_Title",
+      "assignee": "ja_Assignee",
+      "created": "ja_Created",
+      "priority": "ja_Priority",
+      "due": "ja_Due",
+      "status": "ja_Status"
+    },
+    "table.overdue.tooltip": "ja_Task is Overdue",
+    "table.deadline.tooltip": "ja_Deadline is Approaching"
+  },
+  "complaints.comp.references": {
+    "title": "ja_References",
+    "table.columns": {
+      "targetName": "ja_Number",
+      "targetTitle": "ja_Title",
+      "parentName": "ja_Parent",
+      "modified": "ja_Modified",
+      "targetType": "ja_Reference Type",
+      "status": "ja_Status"
+    }
+  },
+  "complaints.comp.history": {
+    "title": "ja_History",
+    "table.columns": {
+      "eventType": "ja_Event Name",
+      "eventDate": "ja_Date",
+      "userId": "ja_User"
+    }
+  },
+  "complaints.comp.time": {
+    "title": "ja_Time",
+    "table.columns": {
+      "name": "ja_Form Name",
+      "user": "ja_User",
+      "tally": "ja_Total Hours",
+      "modified": "ja_Modified Date",
+      "status": "ja_Status"
+    },
+    "formNamePrefix": "ja_Timesheet"
+  },
+  "complaints.comp.cost": {
+    "title": "ja_Cost",
+    "table.columns": {
+      "name": "ja_Form Name",
+      "user": "ja_User",
+      "tally": "ja_Total Cost",
+      "modified": "ja_Modified Date",
+      "status": "ja_Status"
+    },
+    "formNamePrefix": "ja_Costsheet"
+  },
+  "complaints.comp.tags": {
+    "title": "ja_Tags",
+    "table.columns": {
+      "tag": "ja_Tag",
+      "created": "ja_Created",
+      "createdBy": "ja_Created By"
+    },
+    "modal": {
+      "title": "ja_Tag",
+      "search": "ja_Search for Tag",
+      "buttons": {
+        "cancel": "ja_Cancel",
+        "ok": "ja_Add Tag"
+      }
+    },
+    "message": {
+      "tagExists": "ja_Tag with that name or description or text already exists",
+      "tagAssociated": "ja_already associated",
+      "delete": {
+        "success": "ja_Tag deleted successfully",
+        "error": "ja_Error deleting tag"
+      }
+    }
+  },
+  "complaints.comp.calendar": {
+    "title": "ja_Calendar"
+  },
+  "complaints.comp.addreference": {
+    "title": "ja_Add Reference",
+    "cancelButton": "ja_Cancel",
+    "confirmButton": "ja_Add",
+    "search": {
+      "placeholder": "ja_Search for case, complaint, file, task",
+      "btn": "ja_Search"
+    },
+    "grid": {
+      "columns": {
+        "id": "ja_Id",
+        "name": "ja_Name",
+        "type": "ja_Type",
+        "title": "ja_Title",
+        "parent": "ja_Parent",
+        "assignee": "ja_Assignee",
+        "modified": "ja_Modified"
+      }
+    }
+  },
+  "complaints.comp.assigneePickerModal": {
+    "title": "ja_Change Assignee",
+    "assigneeNamelabel": "ja_Assignee Name",
+    "btnCancelText": "ja_Cancel",
+    "btnSaveText": "ja_Save",
+    "searchAssigneeHeader": "ja_Search Assignee"
+  },
+  "complaints.comp.groupPickerModal": {
+    "title": "ja_Change Group",
+    "groupNamelabel": "ja_Group Name",
+    "btnCancelText": "ja_Cancel",
+    "btnSaveText": "ja_Save",
+    "searchGroupHeader": "ja_Search Group"
+  },
+  "complaints.comp.approvalRouting": {
+    "title": "ja_Future Approvers",
+    "addNewTooltip": "ja_Add new approver",
+    "noBuckslipMessage": "ja_No Data",
+    "button": {
+      "save.tooltip": "ja_Save Changes"
+    },
+    "table.columns": {
+      "fullName": "ja_Full Name"
+    },
+    "assignee.label": "ja_Assignee",
+    "owningGroup.label": "ja_Owning Group",
+    "priority.label": "ja_Priority",
+    "startDate.label": "ja_Start Date",
+    "dueDate.label": "ja_Due Date",
+    "state.label": "ja_State"
+  },
+  "complaints.comp.pastApprovals": {
+    "title": "ja_Past Approvers",
+    "noBuckslipMessage": "ja_No Data",
+    "table.columns": {
+      "approvalDate": "ja_Approval Date",
+      "approverId": "ja_Approver",
+      "approverDecision": "ja_Approver Decision"
+    }
+  },
+  "complaints.userOrGroupSearch": {
+    "id": "ja_userSearch",
+    "title": "ja_User/Group Search",
+    "search": {
+      "btn": "ja_Search",
+      "placeholder": "ja_Search for the user or group."
+    },
+    "cancelButton": "ja_Cancel",
+    "confirmButton": "ja_Confirm",
+    "enabled": true,
+    "userOrGroupFacetFilter": "ja_\"object_type_s\":(GROUP OR USER)",
+    "assigneeGridColumns": {
+      "name": "ja_Name",
+      "type": "ja_Type",
+      "title": "ja_Title",
+      "username": "ja_Username"
+    }
+  }
+}

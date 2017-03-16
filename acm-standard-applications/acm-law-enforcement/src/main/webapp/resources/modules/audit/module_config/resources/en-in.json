@@ -1,0 +1,26 @@
+{
+  "audit": {
+    "title": "en-in_Audit",
+    "menus": {
+      "leftnav.item": "en-in_Audit"
+    },
+    "navigation": {
+      "label": {
+        "reportName": "en-in_Report Name",
+        "inputID": "en-in_ID",
+        "dateFrom": "en-in_From",
+        "dateTo": "en-in_To"
+      },
+      "placeholder": {
+        "selectAudit": "en-in_ALL",
+        "inputId": "en-in_#"
+      },
+      "button": {
+        "generateAuditReport.btn": "en-in_Generate Audit Report"
+      }
+    },
+    "datepickers":{
+      "close": "en-in_Done"
+    }
+  }
+}

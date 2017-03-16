@@ -1,0 +1,71 @@
+{
+  "timeTracking": {
+    "title": "zh-tw_Time Tracking",
+    "progressNoTimesheet": "zh-tw_[ No timesheet is selected ]",
+    "progressLoading": "zh-tw_Loading timesheet ",
+    "progressError": "zh-tw_Failed to load timesheet"
+  },
+  "timeTracking.menus": {
+    "leftnav.item": "zh-tw_Time Tracking",
+    "topbar.item": "zh-tw_Timesheet"
+  },
+  "timeTracking.tree": {
+  },
+  "timeTracking.comp.info": {
+    "lastModified.label": "zh-tw_Last Modified"
+  },
+  "timeTracking.comp.actions": {
+    "new.button": "zh-tw_New Timesheet",
+    "edit.button": "zh-tw_Edit Timesheet"
+  },
+  "timeTracking.comp.details": {
+    "title": "zh-tw_Details",
+    "informSaved": "zh-tw_Timesheet details saved",
+    "table.columns": {
+      "title": "zh-tw_Details",
+      "modified": "zh-tw_Date Last Modified",
+      "modifier": "zh-tw_User Last Modified"
+    }
+  },
+  "timeTracking.comp.people": {
+    "title": "zh-tw_Person",
+    "table.columns": {
+      "fullName": "zh-tw_Full Name",
+      "userId": "zh-tw_Username"
+    }
+  },
+  "timeTracking.comp.summary": {
+    "title": "zh-tw_Hours Summary",
+    "table.columns": {
+      "code": "zh-tw_Parent ID",
+      "type": "zh-tw_Parent Type",
+      "value": "zh-tw_Total Hours",
+      "date": "zh-tw_Date Charged",
+      "modified": "zh-tw_Modified Date"
+    }
+  },
+  "timeTracking.comp.tags": {
+    "title": "zh-tw_Tags",
+    "table.columns": {
+      "tag": "zh-tw_Tag",
+      "created": "zh-tw_Created",
+      "createdBy": "zh-tw_Created By"
+    },
+    "modal": {
+      "title": "zh-tw_Tag",
+      "search": "zh-tw_Search for Tag",
+      "buttons": {
+        "cancel": "zh-tw_Cancel",
+        "ok": "zh-tw_Add Tag"
+      }
+    },
+    "message": {
+      "tagExists": "zh-tw_Tag with that name or description or text already exists",
+      "tagAssociated": "zh-tw_already associated",
+      "delete": {
+        "success": "zh-tw_Tag deleted successfully",
+        "error": "zh-tw_Error deleting tag"
+      }
+    }
+  }
+}

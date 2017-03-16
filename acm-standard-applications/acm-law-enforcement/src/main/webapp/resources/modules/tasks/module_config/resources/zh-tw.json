@@ -1,0 +1,313 @@
+{
+  "tasks": {
+    "title": "zh-tw_Tasks",
+    "progressNoTask": "zh-tw_[ No task data ]",
+    "progressLoading": "zh-tw_Loading task ",
+    "progressError": "zh-tw_Failed to load task"
+  },
+  "tasks.menus": {
+    "leftnav.item": "zh-tw_Tasks",
+    "topbar.item": "zh-tw_Task"
+  },
+  "tasks.comp.info": {
+    "taskId": "zh-tw_Task id:",
+    "percentage.label": "zh-tw_% of Completion",
+    "assignee.label": "zh-tw_Assignee",
+    "Priority.label": "zh-tw_Priority",
+    "startDate.label": "zh-tw_Start Date",
+    "dueDate.label": "zh-tw_Due Date",
+    "state.label": "zh-tw_State",
+    "overdue.tooltip": "zh-tw_Task is Overdue",
+    "deadline.tooltip": "zh-tw_Deadline is Approaching",
+    "owningGroup.label": "Owning Group"
+  },
+  "tasks.comp.parentinfo": {
+    "taskId": "zh-tw_Task id:",
+    "case": {
+      "subjectType.label": "zh-tw_Subject Type",
+      "incidentDate.label": "zh-tw_Incident Date",
+      "priority.label": "zh-tw_Priority",
+      "assignee.label": "zh-tw_Assigned To",
+      "owningGroup.label": "zh-tw_Owning Group"
+    },
+    "complaint": {
+      "subjectType.label": "zh-tw_Subject Type",
+      "incidentDate.label": "zh-tw_Incident Date",
+      "priority.label": "zh-tw_Priority",
+      "assignee.label": "zh-tw_Assigned To",
+      "owningGroup.label": "zh-tw_Owning Group"
+    },
+    "costsheet": {
+      "approver.label": "zh-tw_Approver"
+    },
+    "timesheet": {
+      "approver.label": "zh-tw_Approver"
+    },
+    "_xxx_courtRoomName": "zh-tw_Court Room Name:"
+  },
+  "tasks.comp.actions": {
+    "eSignature.button": "zh-tw_Sign",
+    "subscribe.button": "zh-tw_Subscribe",
+    "unsubscribe.button": "zh-tw_Unsubscribe",
+    "reject.button": "zh-tw_Reject",
+    "delete.button": "zh-tw_Delete",
+    "complete.button": "zh-tw_Complete",
+    "approve.button": "zh-tw_Approve Document",
+    "rework.button": "zh-tw_Send for Rework",
+    "claim.button": "zh-tw_Claim",
+    "unclaim.button": "zh-tw_Unclaim",
+    "error.outcomeFieldMissing": "zh-tw_Cannot complete task because of missing required value",
+    "modal": {
+      "errorHeaderText": "zh-tw_Error",
+      "btnOk.text": "zh-tw_OK"
+    }
+  },
+  "tasks.comp.details": {
+    "title": "zh-tw_Task Details",
+    "informSaved": "zh-tw_Task details saved",
+    "table.columns": {
+      "details": "zh-tw_Details",
+      "modified": "zh-tw_Date Last Modified",
+      "modifier": "zh-tw_User Last Modified"
+    }
+  },
+  "tasks.comp.reworkdetails": {
+    "title": "zh-tw_Rework Details",
+    "informSaved": "zh-tw_Rework details saved",
+    "table.columns": {
+      "title": "zh-tw_Rework Details",
+      "modified": "zh-tw_Date Last Modified",
+      "modifier": "zh-tw_User Last Modified"
+    }
+  },
+  "tasks.comp.parentdocs": {
+    "title": "zh-tw_Parent Documents",
+    "noParentDataMessage": "zh-tw_No parent documents for standalone task"
+  },
+  "tasks.comp.attachments": {
+    "title": "zh-tw_Attachments"
+  },
+  "tasks.comp.notes": {
+    "title": "zh-tw_Notes",
+    "table.columns": {
+      "note": "zh-tw_Note",
+      "created": "zh-tw_Created",
+      "creator": "zh-tw_Author"
+    }
+  },
+  "tasks.comp.references": {
+    "title": "zh-tw_References",
+    "table.columns": {
+      "targetName": "zh-tw_Number",
+      "targetTitle": "zh-tw_Title",
+      "modified": "zh-tw_Modified",
+      "targetType": "zh-tw_Reference Type",
+      "status": "zh-tw_Status"
+    }
+  },
+  "tasks.comp.rejcomments": {
+    "title": "zh-tw_Reject Comments",
+    "table.columns": {
+      "note": "zh-tw_Comment",
+      "created": "zh-tw_Created",
+      "creator": "zh-tw_Author"
+    }
+  },
+  "tasks.comp.workflow": {
+    "title": "zh-tw_Workflow",
+    "table.columns": {
+      "participant": "zh-tw_Participant",
+      "role": "zh-tw_Role",
+      "status": "zh-tw_Status",
+      "startDateTime": "zh-tw_Start",
+      "endDateTime": "zh-tw_End"
+    }
+  },
+  "tasks.comp.signatures": {
+    "title": "zh-tw_eSignatures",
+    "table.columns": {
+      "signedDate": "zh-tw_Date",
+      "signedBy": "zh-tw_Signed By"
+    }
+  },
+  "tasks.comp.docsreview": {
+    "title": "zh-tw_Documents Under Review",
+    "table.columns": {
+      "fileId": "zh-tw_ID",
+      "fileName": "zh-tw_Title",
+      "created": "zh-tw_Created",
+      "creator": "zh-tw_Author",
+      "status": "zh-tw_Status"
+    }
+  },
+  "tasks.comp.history": {
+    "title": "zh-tw_History",
+    "table.columns": {
+      "eventType": "zh-tw_Event Name",
+      "eventDate": "zh-tw_Date",
+      "userId": "zh-tw_User"
+    }
+  },
+  "tasks.comp.tags": {
+    "title": "zh-tw_Tags",
+    "table.columns": {
+      "tag": "zh-tw_Tag",
+      "created": "zh-tw_Created",
+      "createdBy": "zh-tw_Created By"
+    },
+    "modal": {
+      "title": "zh-tw_Tag",
+      "search": "zh-tw_Search for Tag",
+      "buttons": {
+        "cancel": "zh-tw_Cancel",
+        "ok": "zh-tw_Add Tag"
+      }
+    },
+    "message": {
+      "tagExists": "zh-tw_Tag with that name or description or text already exists",
+      "tagAssociated": "zh-tw_already associated",
+      "delete": {
+        "success": "zh-tw_Tag deleted successfully",
+        "error": "zh-tw_Error deleting tag"
+      }
+    }
+  },
+  "tasks.newTask": {
+    "title": "zh-tw_New Task",
+    "assignee.button": "zh-tw_Choose Assignee",
+    "assignee.label": "zh-tw_Assign To",
+    "assignee.placeholder": "zh-tw_Please choose assignee by clicking the button above",
+    "assigneeOrGroup.placeholder": "zh-tw_Please choose assignee or group by clicking the button above",
+    "priority.placeholder": "zh-tw_Select Priority",
+    "priority.label": "zh-tw_Priority",
+    "status.placeholder": "zh-tw_Select Status",
+    "status.label": "zh-tw_Status",
+    "associateNumber.label": "zh-tw_Associate with Complaint or Case",
+    "associateNumber.placeholder": "zh-tw_Complaint or Case #",
+    "associateType.label": "zh-tw_Parent Type",
+    "subject.label": "zh-tw_Subject",
+    "taskStartDate.label": "zh-tw_Start Date",
+    "dueDate.label": "zh-tw_Due Date",
+    "datepicker.close": "zh-tw_Done",
+    "percentComplete.label": "zh-tw_% Complete",
+    "notes.label": "zh-tw_Notes",
+    "saveButton": "zh-tw_Save",
+    "overdue.tooltip": "zh-tw_Task is Overdue",
+    "deadline.tooltip": "zh-tw_Deadline is Approaching",
+    "groupToggle.label": "zh-tw_Group Task?",
+    "group.placeholder": "zh-tw_Please select a group."
+  },
+  "tasks.userOrGroupSearch": {
+    "id": "zh-tw_userSearch",
+    "title": "zh-tw_User/Group Search",
+    "search": {
+      "btn": "zh-tw_Search",
+      "placeholder": "zh-tw_Search for the user or group to assign to this task."
+    },
+    "cancelButton": "zh-tw_Cancel",
+    "confirmButton": "zh-tw_Confirm",
+    "enabled": true,
+    "userOrGroupFacetFilter": "zh-tw_\"object_type_s\":(GROUP OR USER)",
+    "assigneeGridColumns": {
+      "name": "zh-tw_Name",
+      "type": "zh-tw_Type",
+      "title": "zh-tw_Title",
+      "username": "zh-tw_Username"
+    }
+  },
+  "tasks.objectSearch": {
+    "id": "zh-tw_objectSearch",
+    "title": "zh-tw_Object Search",
+    "search": {
+      "btn": "zh-tw_Search",
+      "placeholder": "zh-tw_Search for the case or complaint to this task."
+    },
+    "cancelButton": "zh-tw_Cancel",
+    "confirmButton": "zh-tw_Confirm",
+    "enabled": true,
+    "userFacetFilter": "zh-tw_\"Object Type\": ",
+    "objectGridColumns": {
+      "name": "zh-tw_Number",
+      "type": "zh-tw_Type",
+      "title": "zh-tw_Title",
+      "username": "zh-tw_Assignee"
+    }
+  },
+  "tasks.comp.addreference": {
+    "title": "zh-tw_Add Reference",
+    "cancelButton": "zh-tw_Cancel",
+    "confirmButton": "zh-tw_Add",
+    "search": {
+      "placeholder": "zh-tw_Search for case, complaint, file, task",
+      "btn": "zh-tw_Search"
+    },
+    "grid": {
+      "columns": {
+        "id": "zh-tw_Id",
+        "name": "zh-tw_Name",
+        "type": "zh-tw_Type",
+        "title": "zh-tw_Title",
+        "parent": "zh-tw_Parent",
+        "assignee": "zh-tw_Assignee",
+        "modified": "zh-tw_Modified"
+      }
+    }
+  },
+  "tasks.comp.participants": {
+    "title": "zh-tw_Participants",
+    "table.columns": {
+      "type": "zh-tw_Type",
+      "name": "zh-tw_Name"
+    },
+    "dialogUserPicker": {
+      "header": "zh-tw_Choose User",
+      "table.columns": {
+        "name": "zh-tw_Name",
+        "type": "zh-tw_Type",
+        "title": "zh-tw_Title",
+        "id": "zh-tw_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "zh-tw_Choose Group",
+      "table.columns": {
+        "name": "zh-tw_Name"
+      }
+    }
+  },
+  "tasks.comp.assigneePickerModal": {
+    "title": "zh-tw_Change Assignee",
+    "assigneeNamelabel": "zh-tw_Assignee Name",
+    "btnCancelText": "zh-tw_Cancel",
+    "btnSaveText": "zh-tw_Save",
+    "searchAssigneeHeader": "zh-tw_Search Assignee"
+  },
+  "tasks.comp.groupPickerModal": {
+    "title": "zh-tw_Change Group",
+    "groupNamelabel": "zh-tw_Group Name",
+    "btnCancelText": "zh-tw_Cancel",
+    "btnSaveText": "zh-tw_Save",
+    "searchGroupHeader": "zh-tw_Search Group"
+  },
+  "tasks.comp.approvalRouting": {
+    "title": "zh-tw_Future Approvers",
+    "addNewTooltip": "zh-tw_Add new approver",
+    "noBuckslipMessage": "No Data",
+    "button": {
+      "save.tooltip": "zh-tw_Save Changes"
+    },
+    "table.columns": {
+      "fullName": "zh-tw_Full Name"
+    }
+  },
+  "tasks.comp.pastApprovals": {
+    "title": "zh-tw_Past Approvers",
+    "noBuckslipMessage": "No Data",
+    "table.columns": {
+      "approvalDate": "zh-tw_Approval Date",
+      "approverId": "zh-tw_Approver",
+      "approverFullName": "zh-tw_Full Name",
+      "approverDecision": "zh-tw_Approver Decision"
+    }
+  }
+}

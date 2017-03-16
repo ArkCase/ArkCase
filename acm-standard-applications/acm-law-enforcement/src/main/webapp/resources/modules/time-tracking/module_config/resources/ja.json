@@ -1,0 +1,71 @@
+{
+  "timeTracking": {
+    "title": "ja_Time Tracking",
+    "progressNoTimesheet": "ja_[ No timesheet is selected ]",
+    "progressLoading": "ja_Loading timesheet ",
+    "progressError": "ja_Failed to load timesheet"
+  },
+  "timeTracking.menus": {
+    "leftnav.item": "ja_Time Tracking",
+    "topbar.item": "ja_Timesheet"
+  },
+  "timeTracking.tree": {
+  },
+  "timeTracking.comp.info": {
+    "lastModified.label": "ja_Last Modified"
+  },
+  "timeTracking.comp.actions": {
+    "new.button": "ja_New Timesheet",
+    "edit.button": "ja_Edit Timesheet"
+  },
+  "timeTracking.comp.details": {
+    "title": "ja_Details",
+    "informSaved": "ja_Timesheet details saved",
+    "table.columns": {
+      "title": "ja_Details",
+      "modified": "ja_Date Last Modified",
+      "modifier": "ja_User Last Modified"
+    }
+  },
+  "timeTracking.comp.people": {
+    "title": "ja_Person",
+    "table.columns": {
+      "fullName": "ja_Full Name",
+      "userId": "ja_Username"
+    }
+  },
+  "timeTracking.comp.summary": {
+    "title": "ja_Hours Summary",
+    "table.columns": {
+      "code": "ja_Parent ID",
+      "type": "ja_Parent Type",
+      "value": "ja_Total Hours",
+      "date": "ja_Date Charged",
+      "modified": "ja_Modified Date"
+    }
+  },
+  "timeTracking.comp.tags": {
+    "title": "ja_Tags",
+    "table.columns": {
+      "tag": "ja_Tag",
+      "created": "ja_Created",
+      "createdBy": "ja_Created By"
+    },
+    "modal": {
+      "title": "ja_Tag",
+      "search": "ja_Search for Tag",
+      "buttons": {
+        "cancel": "ja_Cancel",
+        "ok": "ja_Add Tag"
+      }
+    },
+    "message": {
+      "tagExists": "ja_Tag with that name or description or text already exists",
+      "tagAssociated": "ja_already associated",
+      "delete": {
+        "success": "ja_Tag deleted successfully",
+        "error": "ja_Error deleting tag"
+      }
+    }
+  }
+}
