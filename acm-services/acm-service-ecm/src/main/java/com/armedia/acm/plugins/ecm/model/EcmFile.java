@@ -154,6 +154,7 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     protected void beforeUpdate()
     {
         fixChildPointers();
+        setDefaultCmisRepositoryId();
     }
 
     private void fixChildPointers()
