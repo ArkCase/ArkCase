@@ -12,6 +12,7 @@
         <property name="muleContextManager" ref="muleContextManager"/>
         <property name="fileDao" ref="ecmFileDao"/>
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
+        <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
     </bean>
 
     <bean id="documentUiController" class="com.armedia.acm.plugins.ecm.web.DocumentUiController">

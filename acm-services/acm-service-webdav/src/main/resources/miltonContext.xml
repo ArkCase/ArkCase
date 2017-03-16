@@ -29,6 +29,7 @@
         <property name="maxAgeSeconds" value="300"/>
         <property name="filterMapping" value="webdav"/>
         <property name="fileExtensionPattern" ref="extensionPattern"/>
+        <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
     </bean>
 
     <bean id="milton.http.manager" class="io.milton.ent.config.HttpManagerBuilderEnt">

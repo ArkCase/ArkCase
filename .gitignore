@@ -14,6 +14,7 @@ atlassian-ide-plugin.xml
 .externalToolBuilders/
 .checkstyle
 .mule/
+.configuration
 
 # Package Files #
 nbactions.xml
