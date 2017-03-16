@@ -147,12 +147,14 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
         }
 
         fixChildPointers();
+        setDefaultCmisRepositoryId();
     }
 
     @PreUpdate
     protected void beforeUpdate()
     {
         fixChildPointers();
+        setDefaultCmisRepositoryId();
     }
 
     private void fixChildPointers()
@@ -160,6 +162,14 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
         for (EcmFileVersion version : getVersions())
         {
             version.setFile(this);
+        }
+    }
+
+    protected void setDefaultCmisRepositoryId()
+    {
+        if (getCmisRepositoryId() == null)
+        {
+            setCmisRepositoryId(EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
         }
     }
 
