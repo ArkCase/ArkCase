@@ -9,8 +9,8 @@
  *
  * This service contains functionality for Snowbound Viewer management.
  */
-angular.module('services').factory('SnowboundService', ['$log',
-    function ($log) {
+angular.module('services').factory('SnowboundService', ['UtilService',
+    function (Util) {
         return {
 
             /**
@@ -57,36 +57,11 @@ angular.module('services').factory('SnowboundService', ['$log',
                 // Forces the viewer iframe to be reloaded with the latest version of the document
                 var randomUrlArgToCauseIframeRefresh = (new Date()).getTime();
 
-                return viewerBaseUrl +
+                return viewerBaseUrl + Util.encryptString(
                     "?documentId=ecmFileId=" + file.id + "&acm_ticket=" + acmTicket + "&userid=" + userId +
                     "&refreshCacheTimestamp=" + randomUrlArgToCauseIframeRefresh + "&documentName=" + file.name +
-                    "&parentObjectId=" + file.containerId + "&parentObjectType=" + file.containerType + "&selectedIds=" + file.selectedIds;
-            }
-
-            /**
-             * @ngdoc method
-             * @name encryptSnowboundUrlQueryString
-             * @methodOf services.service:SnowboundService
-             *
-             * @param {String} queryString part of Snowbound viewer URL
-             * @param {JSON} ecmFileProperties properties from the ecmFileService.properties configuration file
-             *
-             * @description
-             * This method takes the configuration from ecmFileService.properties and takes
-             * given encryption key and iv to provide AES encrypted string
-             */
-            , encryptSnowboundUrlQueryString: function (queryString, ecmFileProperties) {
-                var encryptionKey = ecmFileProperties['ecm.viewer.snowbound.encryptionKey'];
-                if (encryptionKey) {
-                    try {
-                        var encrypted = CryptoJS.AES.encrypt(queryString, encryptionKey);
-                        return encrypted.toString();
-                    }
-                    catch (e) {
-                        $log.warn("Error on encryption, returning plain query string");
-                    }
-                }
-                return queryString;
+                    "&parentObjectId=" + file.containerId + "&parentObjectType=" + file.containerType +
+                    "&selectedIds=" + file.selectedIds);
             }
         }
     }
