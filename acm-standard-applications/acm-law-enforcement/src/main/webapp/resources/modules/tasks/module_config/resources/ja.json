@@ -1,13 +1,13 @@
 {
   "tasks": {
-    "title": "ja_Tasks",
+    "title": "仕事",
     "progressNoTask": "ja_[ No task data ]",
     "progressLoading": "ja_Loading task ",
     "progressError": "ja_Failed to load task"
   },
   "tasks.menus": {
-    "leftnav.item": "ja_Tasks",
-    "topbar.item": "ja_Task"
+    "leftnav.item": "仕事",
+    "topbar.item": "仕事"
   },
   "tasks.comp.info": {
     "taskId": "ja_Task id:",
@@ -18,7 +18,8 @@
     "dueDate.label": "ja_Due Date",
     "state.label": "ja_State",
     "overdue.tooltip": "ja_Task is Overdue",
-    "deadline.tooltip": "ja_Deadline is Approaching"
+    "deadline.tooltip": "ja_Deadline is Approaching",
+    "owningGroup.label": "Owning Group"
   },
   "tasks.comp.parentinfo": {
     "taskId": "ja_Task id:",
@@ -291,7 +292,7 @@
   "tasks.comp.approvalRouting": {
     "title": "ja_Future Approvers",
     "addNewTooltip": "ja_Add new approver",
-    "noBuckslipMessage":"No Data",
+    "noBuckslipMessage": "No Data",
     "button": {
       "save.tooltip": "ja_Save Changes"
     },
@@ -301,7 +302,7 @@
   },
   "tasks.comp.pastApprovals": {
     "title": "ja_Past Approvers",
-    "noBuckslipMessage":"No Data",
+    "noBuckslipMessage": "No Data",
     "table.columns": {
       "approvalDate": "ja_Approval Date",
       "approverId": "ja_Approver",

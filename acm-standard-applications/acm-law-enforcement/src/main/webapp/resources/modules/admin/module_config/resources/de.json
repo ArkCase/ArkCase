@@ -84,7 +84,14 @@
         "createAdHocGroup": "de_createAdHocGroup"
       },
       "createGroupDialog": {
-        "title": "de_Add Ad-Hoc Group",
+        "ldapGroup": {
+          "title": "de_Add LDAP Group"
+        },
+        "adHocGroup": {
+          "title": "de_Add Ad-Hoc Group"
+        },
+        "selectDirectory": "de_--Choose Directory Config--",
+        "disabledGroupWarning": "de_Adding new LDAP groups is not allowed for this directory!",
         "name": "de_Name",
         "namePlaceholder": "de_Enter group name",
         "description": "de_Description",
@@ -113,6 +120,27 @@
           "ok": "de_Add",
           "searchPlaceholder": "de_Enter to search for members."
         }
+      },
+      "createUserDialog": {
+        "addLdapMember": {
+          "title": "de_Add Ldap Member",
+          "btn": {
+            "cancel": "de_Cancel",
+            "ok": "de_Add Ldap User"
+          }
+        },
+        "editLdapMember": {
+          "title": "de_Edit Ldap Member",
+          "btn": {
+            "cancel": "de_Cancel",
+            "ok": "de_Edit Ldap User"
+          }
+        },
+        "username": "de_Username",
+        "firstName": "de_FirstName",
+        "lastName": "de_LastName",
+        "email": "de_Email",
+        "password": "de_Password"
       },
       "addMembersGridColumns": {
         "name": "de_Name",
@@ -295,19 +323,23 @@
       "title": "de_Correspondence Management",
       "templates": "de_Correspondence Templates",
       "templates.addNewTemplate": "de_Upload Template",
-      "templates.addTemplate": "de_Add Template",
+      "templates.addTemplate": "de_Upload",
+      "templates.versionTemplate": "de_Versions",
+      "templates.deleteTemplate": "de_Delete",
       "templates.editTemplate": "de_Edit Template",
       "templates.grid": {
         "id": "de_ID",
         "title": "de_Title",
-        "displayName": "de_Display Name",
+        "label": "de_Display Name",
         "path": "de_Path",
         "created": "de_Created",
         "modified": "de_Modified",
         "creator": "de_Creator",
         "modifier": "de_Modifier",
-        "activated": "de_Active",
-        "queryType": "de_Object Type"
+        "activated": "de_Status",
+        "objectType": "de_Object Type",
+        "version": "de_Version",
+        "templateVersionActive" : "de_Active"
       },
       "templates.fieldNames.label": "de_Map fields to values from the template",
       "templates.querySelect": {
@@ -323,9 +355,30 @@
       "templates.modal": {
         "objectTypes.label": "de_Object Types",
         "querySelect.label": "de_Query Select",
-        "displayName.label": "de_Display Name",
+        "label.label": "de_Display Name",
         "btnCancel.text": "de_Cancel",
-        "btnOk.text": "de_Save"
+        "btnOk.text": "de_Upload Template"
+      },
+      "templates.version.modal": {
+        "btnOk.text": "de_OK"
+      },
+      "mergefields": "de_Merge Fields Configuration",
+      "mergefields.saveMergeFields": "de_Save",
+      "mergefields.versionMergeFields": "de_Versions",
+      "mergefields.grid": {
+      "fieldId": "de_ID",
+      "fieldValue": "de_Value",
+      "fieldDescription": "de_Description"
+      },
+      "mergefields.version.grid": {
+        "mergingVersion": "de_Version",
+        "modified": "de_Modified",
+        "modifier": "de_Modifier",
+        "mergingActiveVersion": "de_Active"
+      },
+      "mergefields.version.modal": {
+        "btnLoadVersion.text": "de_Load Version",
+        "btnCancel.text": "de_Cancel"
       }
     },
     "forms.defaultValue": "de_Select Target",
@@ -340,4 +393,3 @@
     "forms.message.delete.error": "de_Error deleting row."
   }
 }
-

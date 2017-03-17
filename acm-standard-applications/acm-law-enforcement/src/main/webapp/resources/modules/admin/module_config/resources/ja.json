@@ -1,6 +1,6 @@
 {
   "admin": {
-    "title": "ja_Admin",
+    "title": "管理",
     "security.title": "ja_Security",
     "security.functionalAccessControl": "ja_Functional Access Control",
     "security.functionalAccessControl.applicationRole": "ja_Application Role",
@@ -36,7 +36,7 @@
       "ok": "ja_OK"
     },
     "menus": {
-      "leftnav.item": "ja_Admin"
+      "leftnav.item": "管理"
     },
     "security.ldapConfig.data.placeholders": {
       "id": "ja_Enter directory name",
@@ -84,7 +84,14 @@
         "createAdHocGroup": "ja_createAdHocGroup"
       },
       "createGroupDialog": {
-        "title": "ja_Add Ad-Hoc Group",
+        "ldapGroup": {
+          "title": "ja_Add LDAP Group"
+        },
+        "adHocGroup": {
+          "title": "ja_Add Ad-Hoc Group"
+        },
+        "selectDirectory": "ja_--Choose Directory Config--",
+        "disabledGroupWarning": "ja_Adding new LDAP groups is not allowed for this directory!",
         "name": "ja_Name",
         "namePlaceholder": "ja_Enter group name",
         "description": "ja_Description",
@@ -113,6 +120,27 @@
           "ok": "ja_Add",
           "searchPlaceholder": "ja_Enter to search for members."
         }
+      },
+      "createUserDialog": {
+        "addLdapMember": {
+          "title": "ja_Add Ldap Member",
+          "btn": {
+            "cancel": "ja_Cancel",
+            "ok": "ja_Add Ldap User"
+          }
+        },
+        "editLdapMember": {
+          "title": "ja_Edit Ldap Member",
+          "btn": {
+            "cancel": "ja_Cancel",
+            "ok": "ja_Edit Ldap User"
+          }
+        },
+        "username": "ja_Username",
+        "firstName": "ja_FirstName",
+        "lastName": "ja_LastName",
+        "email": "ja_Email",
+        "password": "ja_Password"
       },
       "addMembersGridColumns": {
         "name": "ja_Name",
@@ -295,19 +323,23 @@
       "title": "ja_Correspondence Management",
       "templates": "ja_Correspondence Templates",
       "templates.addNewTemplate": "ja_Upload Template",
-      "templates.addTemplate": "ja_Add Template",
+      "templates.addTemplate": "ja_Upload",
+      "templates.versionTemplate": "ja_Versions",
+      "templates.deleteTemplate": "ja_Delete",
       "templates.editTemplate": "ja_Edit Template",
       "templates.grid": {
         "id": "ja_ID",
         "title": "ja_Title",
-        "displayName": "ja_Display Name",
+        "label": "ja_Display Name",
         "path": "ja_Path",
         "created": "ja_Created",
         "modified": "ja_Modified",
         "creator": "ja_Creator",
         "modifier": "ja_Modifier",
-        "activated": "ja_Active",
-        "queryType": "ja_Object Type"
+        "activated": "ja_Status",
+        "objectType": "ja_Object Type",
+        "version": "ja_Version",
+        "templateVersionActive" : "ja_Active"
       },
       "templates.fieldNames.label": "ja_Map fields to values from the template",
       "templates.querySelect": {
@@ -323,9 +355,30 @@
       "templates.modal": {
         "objectTypes.label": "ja_Object Types",
         "querySelect.label": "ja_Query Select",
-        "displayName.label": "ja_Display Name",
+        "label.label": "ja_Display Name",
         "btnCancel.text": "ja_Cancel",
-        "btnOk.text": "ja_Save"
+        "btnOk.text": "ja_Upload Template"
+      },
+      "templates.version.modal": {
+        "btnOk.text": "ja_OK"
+      },
+      "mergefields": "ja_Merge Fields Configuration",
+      "mergefields.saveMergeFields": "ja_Save",
+      "mergefields.versionMergeFields": "ja_Versions",
+      "mergefields.grid": {
+      "fieldId": "ja_ID",
+      "fieldValue": "ja_Value",
+      "fieldDescription": "ja_Description"
+      },
+      "mergefields.version.grid": {
+        "mergingVersion": "ja_Version",
+        "modified": "ja_Modified",
+        "modifier": "ja_Modifier",
+        "mergingActiveVersion": "ja_Active"
+      },
+      "mergefields.version.modal": {
+        "btnLoadVersion.text": "ja_Load Version",
+        "btnCancel.text": "ja_Cancel"
       }
     },
     "forms.defaultValue": "ja_Select Target",

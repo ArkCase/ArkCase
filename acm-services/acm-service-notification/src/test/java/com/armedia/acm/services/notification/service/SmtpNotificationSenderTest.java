@@ -5,6 +5,7 @@ import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.service.outlook.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksDTO;
@@ -239,12 +240,16 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         mockInputStream.close();
         EasyMock.expectLastCall();
 
-        expect(mockAcmUser.getUserId()).andReturn("ann-acm");
+        expect(mockAcmUser.getUserId()).andReturn("ann-acm").atLeastOnce();
         expect(mockEcmFile.getParentObjectId()).andReturn(103L);
         expect(mockEcmFile.getParentObjectType()).andReturn("COMPLAINT");
 
+        // expected calls to raise the file emailed event on the file itself - AFDP-3029
+        expect(mockEcmFile.getId()).andReturn(attachmentIds.get(0));
+        expect(mockEcmFile.getObjectType()).andReturn(EcmFileConstants.OBJECT_FILE_TYPE);
+
         mockApplicationEventPublisher.publishEvent(EasyMock.anyObject(SmtpEventSentEvent.class));
-        EasyMock.expectLastCall();
+        EasyMock.expectLastCall().times(2);
 
         // when
         replayAll();

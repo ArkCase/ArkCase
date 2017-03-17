@@ -84,7 +84,14 @@
         "createAdHocGroup": "ru_createAdHocGroup"
       },
       "createGroupDialog": {
-        "title": "ru_Add Ad-Hoc Group",
+        "ldapGroup": {
+          "title": "ru_Add LDAP Group"
+        },
+        "adHocGroup": {
+          "title": "ru_Add Ad-Hoc Group"
+        },
+        "selectDirectory": "ru_--Choose Directory Config--",
+        "disabledGroupWarning": "ru_Adding new LDAP groups is not allowed for this directory!",
         "name": "ru_Name",
         "namePlaceholder": "ru_Enter group name",
         "description": "ru_Description",
@@ -113,6 +120,27 @@
           "ok": "ru_Add",
           "searchPlaceholder": "ru_Enter to search for members."
         }
+      },
+      "createUserDialog": {
+        "addLdapMember": {
+          "title": "ru_Add Ldap Member",
+          "btn": {
+            "cancel": "ru_Cancel",
+            "ok": "ru_Add Ldap User"
+          }
+        },
+        "editLdapMember": {
+          "title": "ru_Edit Ldap Member",
+          "btn": {
+            "cancel": "ru_Cancel",
+            "ok": "ru_Edit Ldap User"
+          }
+        },
+        "username": "ru_Username",
+        "firstName": "ru_FirstName",
+        "lastName": "ru_LastName",
+        "email": "ru_Email",
+        "password": "ru_Password"
       },
       "addMembersGridColumns": {
         "name": "ru_Name",
@@ -295,19 +323,23 @@
       "title": "ru_Correspondence Management",
       "templates": "ru_Correspondence Templates",
       "templates.addNewTemplate": "ru_Upload Template",
-      "templates.addTemplate": "ru_Add Template",
+      "templates.addTemplate": "ru_Upload",
+      "templates.versionTemplate": "ru_Versions",
+      "templates.deleteTemplate": "ru_Delete",
       "templates.editTemplate": "ru_Edit Template",
       "templates.grid": {
         "id": "ru_ID",
         "title": "ru_Title",
-        "displayName": "ru_Display Name",
+        "label": "ru_Display Name",
         "path": "ru_Path",
         "created": "ru_Created",
         "modified": "ru_Modified",
         "creator": "ru_Creator",
         "modifier": "ru_Modifier",
-        "activated": "ru_Active",
-        "queryType": "ru_Object Type"
+        "activated": "ru_Status",
+        "objectType": "ru_Object Type",
+        "version": "ru_Version",
+        "templateVersionActive" : "ru_Active"
       },
       "templates.fieldNames.label": "ru_Map fields to values from the template",
       "templates.querySelect": {
@@ -323,9 +355,30 @@
       "templates.modal": {
         "objectTypes.label": "ru_Object Types",
         "querySelect.label": "ru_Query Select",
-        "displayName.label": "ru_Display Name",
+        "label.label": "ru_Display Name",
         "btnCancel.text": "ru_Cancel",
-        "btnOk.text": "ru_Save"
+        "btnOk.text": "ru_Upload Template"
+      },
+      "templates.version.modal": {
+        "btnOk.text": "ru_OK"
+      },
+      "mergefields": "ru_Merge Fields Configuration",
+      "mergefields.saveMergeFields": "ru_Save",
+      "mergefields.versionMergeFields": "ru_Versions",
+      "mergefields.grid": {
+      "fieldId": "ru_ID",
+      "fieldValue": "ru_Value",
+      "fieldDescription": "ru_Description"
+      },
+      "mergefields.version.grid": {
+        "mergingVersion": "ru_Version",
+        "modified": "ru_Modified",
+        "modifier": "ru_Modifier",
+        "mergingActiveVersion": "ru_Active"
+      },
+      "mergefields.version.modal": {
+        "btnLoadVersion.text": "ru_Load Version",
+        "btnCancel.text": "ru_Cancel"
       }
     },
     "forms.defaultValue": "ru_Select Target",
@@ -340,4 +393,3 @@
     "forms.message.delete.error": "ru_Error deleting row."
   }
 }
-

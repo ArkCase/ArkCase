@@ -18,12 +18,17 @@ angular.module('admin').service('Admin.CMTemplatesService', ['$http', 'Upload',
     function ($http, Upload) {
         return ({
             retrieveTemplatesList: retrieveTemplatesList,
+            retrieveActiveVersionTemplatesList : retrieveActiveVersionTemplatesList,
             retrieveQuerySelectList: retrieveQuerySelectList,
             downloadByFilename: downloadByFilename,
             uploadTemplate: uploadTemplate,
+            uploadTemplateWithTimestamp: uploadTemplateWithTimestamp,
             getTemplateData: getTemplateData,
+            getActivatedTemplatesData : getActivatedTemplatesData,
+            getTemplateVersionData: getTemplateVersionData,
             saveTemplateData: saveTemplateData,
-            deleteTemplate: deleteTemplate
+            deleteTemplate: deleteTemplate,
+            deleteTemplateByIdAndVersion : deleteTemplateByIdAndVersion
         });
 
         /**
@@ -44,6 +49,24 @@ angular.module('admin').service('Admin.CMTemplatesService', ['$http', 'Upload',
             });
         };
 
+        /**
+         * @ngdoc method
+         * @name retrieveActiveVersionTemplatesList
+         * @methodOf admin.service:Admin.CMTemplatesService
+         *
+         * @description
+         * Performs retrieving correspondence management active version templates.
+         *
+         * @returns {HttpPromise} Future info about widgets
+         */
+        function retrieveActiveVersionTemplatesList() {
+            return $http({
+                method: "GET",
+                url: "api/latest/plugin/admin/templates/active",
+                cache: false
+            });
+        };
+        
         /**
          * @ngdoc method
          * @name retrieveQuerySelectList
@@ -84,6 +107,64 @@ angular.module('admin').service('Admin.CMTemplatesService', ['$http', 'Upload',
 
         /**
          * @ngdoc method
+         * @name getTemplateData
+         * @methodOf admin.service:Admin.CMTemplatesService
+         *
+         * @description
+         * Get data for template.
+         *
+         * @param {string} templateId Id of template
+         * @param {string} fileName File name of template
+         *
+         * @returns {HttpPromise} Future info about widgets
+         */
+        function getTemplateData(templateId, fileName) {
+            return $http({
+                method: "GET",
+                url: 'api/latest/plugin/admin/template/' + templateId + '/' + fileName
+            });
+        };        
+
+        /**
+         * @ngdoc method
+         * @name getTemplateVersionData
+         * @methodOf admin.service:Admin.CMTemplatesService
+         *
+         * @description
+         * Get version data for template.
+         *
+         * @param {string} templateId Id of template
+         *
+         * @returns {HttpPromise} Future info about widgets
+         */
+        function getTemplateVersionData(templateId) {
+            return $http({
+                method: "GET",
+                url: 'api/latest/plugin/admin/template/versions/' + templateId
+            });
+        };        
+
+        /**
+         * @ngdoc method
+         * @name getActivatedTemplatesData
+         * @methodOf admin.service:Admin.CMTemplatesService
+         *
+         * @description
+         * Get activated templates data.
+         *
+         * @param {string} objectType type of Object
+         *
+         * @returns {HttpPromise} Future info about widgets
+         */
+        function getActivatedTemplatesData(objectType) {
+            return $http({
+                method: "GET",
+                url: 'api/latest/plugin/admin/templates/activated/' + objectType
+            });
+        };
+        
+        /**
+         * @ngdoc method
          * @name saveTemplateData
          * @methodOf admin.service:Admin.CMTemplatesService
          *
@@ -103,22 +184,41 @@ angular.module('admin').service('Admin.CMTemplatesService', ['$http', 'Upload',
 
         /**
          * @ngdoc method
-         * @name saveTemplateData
+         * @name deleteTemplateData
+         * @methodOf admin.service:Admin.CMTemplatesService
+         *
+         * @description
+         * Delete template.
+         *
+         * @param {string} templateId Id of template
+         * @returns {HttpPromise} Future info about widgets
+         */
+        function deleteTemplate(templateId) {
+            return $http({
+                method: "DELETE",
+                url: 'api/latest/plugin/admin/template/' + templateId
+            });
+        };
+
+        /**
+         * @ngdoc method
+         * @name deleteTemplateByIdAndFilename
          * @methodOf admin.service:Admin.CMTemplatesService
          *
          * @description
          * Saving query and mapped fields for template.
          *
-         * @param {string} fileName FileName
+         * @param {string} templateId Id of template
+         * @param {string} templateVersion File name of template
          * @returns {HttpPromise} Future info about widgets
          */
-        function deleteTemplate(fileName) {
+        function deleteTemplateByIdAndVersion(templateId, templateVersion) {
             return $http({
                 method: "DELETE",
-                url: 'api/latest/plugin/admin/template/' + fileName
+                url: 'api/latest/plugin/admin/template/' + templateId + '/' + templateVersion
             });
         };
-
+        
         /**
          * @ngdoc method
          * @name fullDownloadPath
@@ -150,6 +250,25 @@ angular.module('admin').service('Admin.CMTemplatesService', ['$http', 'Upload',
         function uploadTemplate(files) {
             return Upload.upload({
                 url: 'api/latest/plugin/admin/template',
+                file: files
+            });
+        };
+
+        /**
+         * @ngdoc method
+         * @name uploadTemplateTimestamp
+         * @methodOf admin.service:Admin.CMTemplatesService
+         *
+         * @description
+         * Uploads correspondence management template with timestamp name
+         *
+         * @param {array} files array of files
+         *
+         * @returns {HttpPromise} Future info about file upload
+         */
+        function uploadTemplateWithTimestamp(files) {
+            return Upload.upload({
+                url: 'api/latest/plugin/admin/template/timestamp',
                 file: files
             });
         };

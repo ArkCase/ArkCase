@@ -323,19 +323,23 @@
       "title": "Correspondence Management",
       "templates": "Correspondence Templates",
       "templates.addNewTemplate": "Upload Template",
-      "templates.addTemplate": "Add Template",
+      "templates.addTemplate": "Upload",
+      "templates.versionTemplate": "Versions",
+      "templates.deleteTemplate": "Delete",
       "templates.editTemplate": "Edit Template",
       "templates.grid": {
         "id": "ID",
         "title": "Title",
-        "displayName": "Display Name",
+        "label": "Display Name",
         "path": "Path",
         "created": "Created",
         "modified": "Modified",
         "creator": "Creator",
         "modifier": "Modifier",
-        "activated": "Active",
-        "queryType": "Object Type"
+        "activated": "Status",
+        "objectType": "Object Type",
+        "version": "Version",
+        "templateVersionActive" : "Active"
       },
       "templates.fieldNames.label": "Map fields to values from the template",
       "templates.querySelect": {
@@ -345,15 +349,36 @@
         "table.columns": {
           "beanId": "Bean ID",
           "jpaQuery": "JPA Query",
-          "queryType": "Query Type"
+          "objectType": "Query Type"
         }
       },
       "templates.modal": {
         "objectTypes.label": "Object Types",
         "querySelect.label": "Query Select",
-        "displayName.label": "Display Name",
+        "label.label": "Display Name",
         "btnCancel.text": "Cancel",
-        "btnOk.text": "Save"
+        "btnOk.text": "Upload Template"
+      },
+      "templates.version.modal": {
+        "btnOk.text": "OK"
+      },
+      "mergefields": "Merge Fields Configuration",
+      "mergefields.saveMergeFields": "Save",
+      "mergefields.versionMergeFields": "Versions",
+      "mergefields.grid": {
+      "fieldId": "ID",
+      "fieldValue": "Value",
+      "fieldDescription": "Description"
+      },
+      "mergefields.version.grid": {
+        "mergingVersion": "Version",
+        "modified": "Modified",
+        "modifier": "Modifier",
+        "mergingActiveVersion": "Active"
+      },
+      "mergefields.version.modal": {
+        "btnLoadVersion.text": "Load Version",
+        "btnCancel.text": "Cancel"
       }
     },
     "forms.defaultValue": "Select Target",

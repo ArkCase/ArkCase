@@ -1,7 +1,11 @@
 'use strict';
 
-angular.module('core').controller('HeaderController', ['$scope', 'Authentication', 'Menus', '$q', '$state', 'ServCommService', 'Search.AutoSuggestService'
-    , function ($scope, Authentication, Menus, $q, $state, ServCommService, AutoSuggestService) {
+angular.module('core').controller('HeaderController', ['$scope', '$q', '$state', '$translate'
+    , 'UtilService', 'Acm.StoreService', 'Authentication', 'Menus', 'ServCommService', 'Search.AutoSuggestService'
+    , 'Config.LocaleService'
+    , function ($scope, $q, $state, $translate
+        , Util, Store, Authentication, Menus, ServCommService, AutoSuggestService
+        , LocaleService, LabelsConfigService) {
         $scope.$emit('req-component-config', 'header');
         $scope.authentication = Authentication;
         $scope.isCollapsed = false;
@@ -16,7 +20,6 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
         $scope.data = {};
         $scope.data.inputQuery = '';
         $scope.$on('component-config', applyConfig);
-        // $scope.$emit('req-component-config', 'header');
         function applyConfig(e, componentId, config) {
             if (componentId == 'header') {
                 $scope.config = config;
@@ -24,7 +27,7 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
                 $scope.count = config.searchParams.n;
                 $scope.typeAheadColumn = config.typeAheadColumn;
             }
-        };
+        }
 
         ServCommService.handleRequest();
 
@@ -41,7 +44,7 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
                 });
                 return deferred.promise;
             }
-        }
+        };
 
         var isSelected = false;
         $scope.onSelect = function ($item, $model, $label) {
@@ -74,5 +77,40 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
             }
             isSelected = false;
         };
+
+
+        var cacheLocale = new Store.LocalData({name: "AcmLocale", noOwner: true, noRegistry: true});
+        var lastLocale = cacheLocale.get();
+        if (Util.isEmpty(lastLocale)) {
+            lastLocale = {"locales": [LocaleService.DEFAULT_LOCALE], "selected": LocaleService.DEFAULT_LOCALE};
+            cacheLocale.set(lastLocale);
+            $scope.localeCurrent = LocaleService.DEFAULT_LOCALE;
+            $scope.localeDropdownOptions = [LocaleService.DEFAULT_LOCALE];
+        } else {
+            $scope.localeCurrent = Util.goodMapValue(lastLocale, "selected");
+            $scope.localeDropdownOptions = Util.goodMapValue(lastLocale, "locales", []);
+        }
+        $translate.use($scope.localeCurrent);
+
+        $scope.changeLocale = function ($event, localeNew) {
+            $event.preventDefault();
+            $scope.localeCurrent = localeNew;
+            var lastLocale = cacheLocale.get();
+            lastLocale.selected = localeNew;
+            cacheLocale.set(lastLocale);
+            $translate.use(localeNew);
+        };
+
+        $scope.updateLocales = function($event) {
+            $event.preventDefault();
+            LocaleService.getSettings().then(function(data){
+                $scope.localeDropdownOptions = Util.goodMapValue(data, "languages", []);
+
+                lastLocale = cacheLocale.get();
+                lastLocale.locales = $scope.localeDropdownOptions;
+                cacheLocale.set(lastLocale);
+                return data;
+            });
+        }
     }
 ]);

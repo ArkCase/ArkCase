@@ -1,8 +1,8 @@
 {
   "preference": {
-    "title": "pt_Preferences",
+    "title": "Preferências",
     "menus": {
-      "usermenu.item": "pt_Preferences"
+      "usermenu.item": "Preferências"
     }
   }
 }

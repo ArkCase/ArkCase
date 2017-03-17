@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "/spring/spring-library-mule-context-manager.xml",
@@ -21,7 +24,6 @@ public class MuleCmisIT
     @Autowired
     private MuleContextManager muleContextManager;
 
-
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Test
@@ -29,10 +31,11 @@ public class MuleCmisIT
     {
         String path = "/Sites/acm/documentLibrary/Complaints/testComplaint";
 
-        MuleMessage reply = muleContextManager.send("vm://createFolder.in", path, null);
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("configRef", muleContextManager.getMuleContext().getRegistry().lookupObject("alfresco"));
+
+        MuleMessage reply = muleContextManager.send("vm://createFolder.in", path, properties);
 
         log.info("Reply payload of type: " + reply.getPayload().getClass().getName());
-
-
     }
 }

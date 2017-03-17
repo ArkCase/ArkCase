@@ -1,13 +1,13 @@
 {
   "tasks": {
-    "title": "es_Tasks",
+    "title": "Tareas",
     "progressNoTask": "es_[ No task data ]",
     "progressLoading": "es_Loading task ",
     "progressError": "es_Failed to load task"
   },
   "tasks.menus": {
-    "leftnav.item": "es_Tasks",
-    "topbar.item": "es_Task"
+    "leftnav.item": "Tareas",
+    "topbar.item": "Tarea"
   },
   "tasks.comp.info": {
     "taskId": "es_Task id:",
@@ -18,7 +18,8 @@
     "dueDate.label": "es_Due Date",
     "state.label": "es_State",
     "overdue.tooltip": "es_Task is Overdue",
-    "deadline.tooltip": "es_Deadline is Approaching"
+    "deadline.tooltip": "es_Deadline is Approaching",
+    "owningGroup.label": "Owning Group"
   },
   "tasks.comp.parentinfo": {
     "taskId": "es_Task id:",
@@ -291,7 +292,7 @@
   "tasks.comp.approvalRouting": {
     "title": "es_Future Approvers",
     "addNewTooltip": "es_Add new approver",
-    "noBuckslipMessage":"No Data",
+    "noBuckslipMessage": "No Data",
     "button": {
       "save.tooltip": "es_Save Changes"
     },
@@ -301,7 +302,7 @@
   },
   "tasks.comp.pastApprovals": {
     "title": "es_Past Approvers",
-    "noBuckslipMessage":"No Data",
+    "noBuckslipMessage": "No Data",
     "table.columns": {
       "approvalDate": "es_Approval Date",
       "approverId": "es_Approver",

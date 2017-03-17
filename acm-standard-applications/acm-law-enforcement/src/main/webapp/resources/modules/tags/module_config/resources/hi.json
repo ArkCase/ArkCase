@@ -1,10 +1,10 @@
 {
   "tags": {
-    "title": "hi_Tags",
+    "title": "टैग",
     "search.btn": "hi_Search",
     "search.placeholder": "hi_Search for tags",
     "menus": {
-      "leftnav.item": "hi_Tags"
+      "leftnav.item": "टैग"
     },
     "comp":{
       "grid": {

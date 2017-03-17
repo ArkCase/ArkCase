@@ -2,10 +2,13 @@ package com.armedia.acm.correspondence.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
+import com.armedia.acm.correspondence.model.CorrespondenceQuery;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
 import com.armedia.acm.correspondence.utils.PoiWordGenerator;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.spring.SpringContextHolder;
 
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
@@ -43,6 +46,10 @@ public class CorrespondenceGenerator
     private EcmFileService ecmFileService;
 
     private String correspondenceFolderName;
+
+    private SpringContextHolder springContextHolder;
+
+    private CorrespondenceService correspondenceService;
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -113,20 +120,22 @@ public class CorrespondenceGenerator
         return template.getDocumentType() + " " + sdf.format(new Date()) + ".docx";
     }
 
-    private Map<String, String> prepareSubstitutionMap(CorrespondenceTemplate template, Map<String, Object> queryResult)
+    private Map<String, String> prepareSubstitutionMap(CorrespondenceTemplate template, Map<String, Object> queryResult) throws IOException
     {
         Map<String, String> retval = new HashMap<>();
 
-        for (String key : template.getTemplateSubstitutionVariables().keySet())
+        List<CorrespondenceMergeField> mergeFields = getCorrespondenceService().getActiveVersionMergeFieldsByType(template.getObjectType());
+
+        for (CorrespondenceMergeField mergeField : mergeFields)
         {
-            Object value = queryResult.get(key);
+            Object value = queryResult.get(mergeField.getFieldId());
             value = formatValue(value, Date.class, new SimpleDateFormat(template.getDateFormatString()));
             value = formatValue(value, Number.class, new DecimalFormat(template.getNumberFormatString()));
 
             // Remove all HTML elements if the value is not null
             String columnValue = value == null ? null : Jsoup.parse(value.toString()).text();
+            retval.put(mergeField.getFieldValue(), columnValue);
 
-            retval.put(template.getTemplateSubstitutionVariables().get(key), columnValue);
         }
 
         return retval;
@@ -145,7 +154,11 @@ public class CorrespondenceGenerator
 
     private Map<String, Object> query(CorrespondenceTemplate template, Object[] queryArguments)
     {
-        Query select = getEntityManager().createQuery(template.getQuery().getJpaQuery());
+        Map<String, CorrespondenceQuery> correspondenceQueryBeansMap = springContextHolder.getAllBeansOfType(CorrespondenceQuery.class);
+        CorrespondenceQuery correspondenceQuery = correspondenceQueryBeansMap.values().stream()
+                .filter(cQuery -> cQuery.getType().toString().equals(template.getObjectType())).findFirst().get();
+
+        Query select = getEntityManager().createQuery(correspondenceQuery.getJpaQuery());
 
         for (int a = 0; a < queryArguments.length; a++)
         {
@@ -156,7 +169,7 @@ public class CorrespondenceGenerator
         List<Object[]> results = select.getResultList();
 
         Map<String, Object> resultMap = new HashMap<>();
-        List<String> queryFields = template.getQuery().getFieldNames();
+        List<String> queryFields = correspondenceQuery.getFieldNames();
         if (results != null && !results.isEmpty() && queryFields != null && !queryFields.isEmpty())
         {
             Object[] queryValues = results.get(0);
@@ -211,8 +224,35 @@ public class CorrespondenceGenerator
         return correspondenceFolderName;
     }
 
+    /**
+     * @param correspondenceFolderName
+     *            the correspondenceFolderName to set
+     */
     public void setCorrespondenceFolderName(String correspondenceFolderName)
     {
         this.correspondenceFolderName = correspondenceFolderName;
+    }
+
+    /**
+     * @param springContextHolder
+     *            the springContextHolder to set
+     */
+    public void setSpringContextHolder(SpringContextHolder springContextHolder)
+    {
+        this.springContextHolder = springContextHolder;
+    }
+
+    public CorrespondenceService getCorrespondenceService()
+    {
+        return correspondenceService;
+    }
+
+    /**
+     * @param correspondenceService
+     *            the correspondenceService to set
+     */
+    public void setCorrespondenceService(CorrespondenceService correspondenceService)
+    {
+        this.correspondenceService = correspondenceService;
     }
 }

@@ -1,13 +1,13 @@
 {
   "costTracking": {
-    "title": "zh-tw_Cost Tracking",
+    "title": "成本跟踪",
     "progressNoCostsheet": "zh-tw_[ No costsheet is selected ]",
     "progressLoading": "zh-tw_Loading costsheet ",
     "progressError": "zh-tw_Failed to load costsheet"
   },
   "costTracking.menus": {
-    "leftnav.item": "zh-tw_Cost Tracking",
-    "topbar.item": "zh-tw_Costsheet"
+    "leftnav.item": "成本跟踪",
+    "topbar.item": "成本項目"
   },
   "costTracking.tree": {
   },

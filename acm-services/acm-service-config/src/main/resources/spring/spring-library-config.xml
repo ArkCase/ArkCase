@@ -31,24 +31,6 @@
         </constructor-arg>
     </bean>
 
-    <bean id="caseCorrespondenceFormsJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
-        <constructor-arg type="java.io.InputStream">
-            <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File"
-                                 value="${user.home}/.arkcase/acm/lookups/caseCorrespondenceForms.json"/>
-            </bean>
-        </constructor-arg>
-    </bean>
-
-    <bean id="complaintCorrespondenceFormsJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
-        <constructor-arg type="java.io.InputStream">
-            <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File"
-                                 value="${user.home}/.arkcase/acm/lookups/complaintCorrespondenceForms.json"/>
-            </bean>
-        </constructor-arg>
-    </bean>
-
     <bean id="fileTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
         <constructor-arg type="java.io.InputStream">
             <bean class="java.io.FileInputStream" destroy-method="close">
@@ -105,6 +87,14 @@
         </constructor-arg>
     </bean>
 
+    <bean id="localeSettingsJson" class="org.apache.commons.io.IOUtils" factory-method="toString">
+        <constructor-arg type="java.io.InputStream">
+            <bean class="java.io.FileInputStream" destroy-method="close">
+                <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/resources/settings/settings.json"/>
+            </bean>
+        </constructor-arg>
+    </bean>
+
     <bean id="configList" class="java.util.ArrayList">
         <constructor-arg>
             <list>
@@ -153,12 +143,6 @@
                     <property name="configName" value="complaint"/>
                     <property name="configDescription" value="Complaint"/>
                     <property name="properties" ref="complaintPluginProperties"/>
-                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-                </bean>
-                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
-                    <property name="configName" value="cmis"/>
-                    <property name="configDescription" value="Cmis"/>
-                    <property name="properties" ref="cmisProperties"/>
                     <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
                 </bean>
                 <bean class="com.armedia.acm.services.config.model.PropertyConfig">
@@ -315,16 +299,6 @@
                     <property name="json" ref="contactMethodTypesJsonConfig"/>
                 </bean>
                 <bean class="com.armedia.acm.services.config.model.JsonConfig">
-                    <property name="configName" value="caseCorrespondenceForms"/>
-                    <property name="configDescription" value="Case Correspondence Forms"/>
-                    <property name="json" ref="caseCorrespondenceFormsJsonConfig"/>
-                </bean>
-                <bean class="com.armedia.acm.services.config.model.JsonConfig">
-                    <property name="configName" value="complaintCorrespondenceForms"/>
-                    <property name="configDescription" value="Complaint Correspondence Forms"/>
-                    <property name="json" ref="complaintCorrespondenceFormsJsonConfig"/>
-                </bean>
-                <bean class="com.armedia.acm.services.config.model.JsonConfig">
                     <property name="configName" value="fileTypes"/>
                     <property name="configDescription" value="File Types"/>
                     <property name="json" ref="fileTypesJsonConfig"/>
@@ -359,6 +333,12 @@
                     <property name="configDescription" value="Security Field Types"/>
                     <property name="json" ref="securityFieldTypesJsonConfig"/>
                 </bean>
+                <bean class="com.armedia.acm.services.config.model.JsonConfig">
+                    <property name="configName" value="localeSettings"/>
+                    <property name="configDescription" value="Locale Setting"/>
+                    <property name="json" ref="localeSettingsJson"/>
+                </bean>
+
             </list>
         </constructor-arg>
     </bean>
