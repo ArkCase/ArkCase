@@ -28,15 +28,9 @@ angular.module('document-details').controller('DocumentDetailsController', ['$sc
                 selectedIds: $stateParams['selectedIds']
             };
             var viewerUrl = SnowboundService.buildSnowboundUrl($scope.ecmFileProperties, $scope.acmTicket, $scope.userId, fileInfo);
-
-            // make GET Request to test decryption for the query string on server side
-            var queryString = viewerUrl.split("?")[1];
-            var encryptedString = SnowboundService.encryptSnowboundUrlQueryString(queryString, $scope.ecmFileProperties);
-            var url = "api/latest/viewer?" + encryptedString;
-            console.log("URL: " + url);
-            EcmService.get(url);
-
-            $scope.documentViewerUrl = $sce.trustAsResourceUrl(viewerUrl);
+            console.log("Viewer url");
+            console.log(viewerUrl);
+          //  $scope.documentViewerUrl = $sce.trustAsResourceUrl(viewerUrl);
         };
 
         // Obtains authentication token for ArkCase
