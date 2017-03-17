@@ -12,7 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by armdev on 10/21/14.
@@ -66,7 +68,7 @@ public class SendDocumentsToSolr
         {
             for (SolrDeleteDocumentByIdRequest doc : deletes)
             {
-                sendToJmsQueue(doc, "jms://solrContentFile.in");
+                sendToJmsQueue(doc, "jms://solrAdvancedSearch.in");
             }
         }
     }
@@ -126,7 +128,10 @@ public class SendDocumentsToSolr
             {
                 log.debug("Sending POJO to SOLR: " + solrDocument);
             }
-            getMuleContextManager().dispatch(queueName, solrDocument);
+
+            Map<String, Object> messageProperties = new HashMap<>();
+            messageProperties.put("additionalProperties", solrDocument.getAdditionalProperties());
+            getMuleContextManager().dispatch(queueName, solrDocument, messageProperties);
         } catch (MuleException e)
         {
             log.error("Could not send document to SOLR: " + e.getMessage(), e);
