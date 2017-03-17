@@ -4,7 +4,9 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileDownloadedEvent;
+import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.mule.api.MuleException;
@@ -23,6 +25,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 @RequestMapping({"/api/v1/plugin/ecm", "/api/latest/plugin/ecm"})
 public class FileDownloadAPIController implements ApplicationEventPublisherAware
@@ -34,6 +38,8 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
     private ApplicationEventPublisher applicationEventPublisher;
 
     private FolderAndFilesUtils folderAndFilesUtils;
+
+    private CmisConfigUtils cmisConfigUtils;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -72,7 +78,9 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
             throws IOException, MuleException, AcmObjectNotFoundException
     {
 
-        MuleMessage downloadedFile = getMuleContextManager().send("vm://downloadFileFlow.in", fileId);
+        Map<String, Object> messageProps = new HashMap<>();
+        messageProps.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(ecmFile.getCmisRepositoryId()));
+        MuleMessage downloadedFile = getMuleContextManager().send("vm://downloadFileFlow.in", fileId, messageProps);
 
         if (downloadedFile.getPayload() instanceof ContentStream)
         {
@@ -181,5 +189,15 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
     public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils)
     {
         this.folderAndFilesUtils = folderAndFilesUtils;
+    }
+
+    public CmisConfigUtils getCmisConfigUtils()
+    {
+        return cmisConfigUtils;
+    }
+
+    public void setCmisConfigUtils(CmisConfigUtils cmisConfigUtils)
+    {
+        this.cmisConfigUtils = cmisConfigUtils;
     }
 }

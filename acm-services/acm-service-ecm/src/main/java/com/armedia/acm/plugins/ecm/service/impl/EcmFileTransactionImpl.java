@@ -6,9 +6,11 @@ import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 import com.armedia.acm.plugins.ecm.service.FileEventPublisher;
+import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.spring.SpringContextHolder;
@@ -25,6 +27,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by armdev on 4/22/14.
@@ -38,24 +42,25 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     private EcmTikaFileServiceImpl ecmTikaFileService;
     private FileEventPublisher fileEventPublisher;
     private SpringContextHolder springContextHolder;
+    private CmisConfigUtils cmisConfigUtils;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     public EcmFile addFileTransaction(String originalFileName, Authentication authentication, String fileType, InputStream fileInputStream,
-                                      String mimeType, String fileName, String cmisFolderId, AcmContainer container) throws MuleException, IOException
+                                      String mimeType, String fileName, String cmisFolderId, AcmContainer container, String cmisRepositoryId) throws MuleException, IOException
     {
         // by default, files are documents
         String category = "Document";
         EcmFile retval = addFileTransaction(originalFileName, authentication, fileType, category, fileInputStream, mimeType, fileName,
-                cmisFolderId, container);
+                cmisFolderId, container, cmisRepositoryId);
 
         return retval;
     }
 
     @Override
     public EcmFile addFileTransaction(String originalFileName, Authentication authentication, String fileType, String fileCategory,
-                                      InputStream fileInputStream, String mimeType, String fileName, String cmisFolderId, AcmContainer container)
+                                      InputStream fileInputStream, String mimeType, String fileName, String cmisFolderId, AcmContainer container, String cmisRepositoryId)
             throws MuleException, IOException
     {
 
@@ -99,6 +104,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         ecmFile.setFileName(fileName);
         ecmFile.setFileType(fileType);
         ecmFile.setCategory(fileCategory);
+        ecmFile.setCmisRepositoryId(cmisRepositoryId);
         try
         {
             log.debug("Calling pipeline manager handlers");
@@ -196,7 +202,9 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     {
         try
         {
-            MuleMessage message = getMuleContextManager().send("vm://downloadFileFlow.in", ecmFile.getVersionSeriesId());
+            Map<String, Object> messageProps = new HashMap<>();
+            messageProps.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(ecmFile.getCmisRepositoryId()));
+            MuleMessage message = getMuleContextManager().send("vm://downloadFileFlow.in", ecmFile.getVersionSeriesId(), messageProps);
 
             String result = getContent((ContentStream) message.getPayload());
 
@@ -213,7 +221,9 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     {
         try
         {
-            MuleMessage message = getMuleContextManager().send("vm://downloadFileFlow.in", ecmFile.getVersionSeriesId());
+            Map<String, Object> messageProps = new HashMap<>();
+            messageProps.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(ecmFile.getCmisRepositoryId()));
+            MuleMessage message = getMuleContextManager().send("vm://downloadFileFlow.in", ecmFile.getVersionSeriesId(), messageProps);
 
             InputStream result = ((ContentStream) message.getPayload()).getStream();
 
@@ -324,5 +334,15 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     public void setEcmTikaFileService(EcmTikaFileServiceImpl ecmTikaFileService)
     {
         this.ecmTikaFileService = ecmTikaFileService;
+    }
+
+    public CmisConfigUtils getCmisConfigUtils()
+    {
+        return cmisConfigUtils;
+    }
+
+    public void setCmisConfigUtils(CmisConfigUtils cmisConfigUtils)
+    {
+        this.cmisConfigUtils = cmisConfigUtils;
     }
 }

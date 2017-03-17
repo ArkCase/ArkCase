@@ -1,10 +1,10 @@
 {
   "tags": {
-    "title": "fr_Tags",
-    "search.btn": "fr_Search",
+    "title": "Étiquettes",
+    "search.btn": "Recherche",
     "search.placeholder": "fr_Search for tags",
     "menus": {
-      "leftnav.item": "fr_Tags"
+      "leftnav.item": "Étiquettes"
     },
     "comp":{
       "grid": {

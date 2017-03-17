@@ -1,6 +1,6 @@
 {
   "admin": {
-    "title": "fr_Admin",
+    "title": "Administration",
     "security.title": "fr_Security",
     "security.functionalAccessControl": "fr_Functional Access Control",
     "security.functionalAccessControl.applicationRole": "fr_Application Role",
@@ -36,7 +36,7 @@
       "ok": "fr_OK"
     },
     "menus": {
-      "leftnav.item": "fr_Admin"
+      "leftnav.item": "Administration"
     },
     "security.ldapConfig.data.placeholders": {
       "id": "fr_Enter directory name",
@@ -84,7 +84,14 @@
         "createAdHocGroup": "fr_createAdHocGroup"
       },
       "createGroupDialog": {
-        "title": "fr_Add Ad-Hoc Group",
+        "ldapGroup": {
+          "title": "fr_Add LDAP Group"
+        },
+        "adHocGroup": {
+          "title": "fr_Add Ad-Hoc Group"
+        },
+        "selectDirectory": "fr_--Choose Directory Config--",
+        "disabledGroupWarning": "fr_Adding new LDAP groups is not allowed for this directory!",
         "name": "fr_Name",
         "namePlaceholder": "fr_Enter group name",
         "description": "fr_Description",
@@ -113,6 +120,27 @@
           "ok": "fr_Add",
           "searchPlaceholder": "fr_Enter to search for members."
         }
+      },
+      "createUserDialog": {
+        "addLdapMember": {
+          "title": "fr_Add Ldap Member",
+          "btn": {
+            "cancel": "fr_Cancel",
+            "ok": "fr_Add Ldap User"
+          }
+        },
+        "editLdapMember": {
+          "title": "fr_Edit Ldap Member",
+          "btn": {
+            "cancel": "fr_Cancel",
+            "ok": "fr_Edit Ldap User"
+          }
+        },
+        "username": "fr_Username",
+        "firstName": "fr_FirstName",
+        "lastName": "fr_LastName",
+        "email": "fr_Email",
+        "password": "fr_Password"
       },
       "addMembersGridColumns": {
         "name": "fr_Name",
@@ -295,19 +323,23 @@
       "title": "fr_Correspondence Management",
       "templates": "fr_Correspondence Templates",
       "templates.addNewTemplate": "fr_Upload Template",
-      "templates.addTemplate": "fr_Add Template",
+      "templates.addTemplate": "fr_Upload",
+      "templates.versionTemplate": "fr_Versions",
+      "templates.deleteTemplate": "fr_Delete",
       "templates.editTemplate": "fr_Edit Template",
       "templates.grid": {
         "id": "fr_ID",
         "title": "fr_Title",
-        "displayName": "fr_Display Name",
+        "label": "fr_Display Name",
         "path": "fr_Path",
         "created": "fr_Created",
         "modified": "fr_Modified",
         "creator": "fr_Creator",
         "modifier": "fr_Modifier",
-        "activated": "fr_Active",
-        "queryType": "fr_Object Type"
+        "activated": "fr_Status",
+        "objectType": "fr_Object Type",
+        "version": "fr_Version",
+        "templateVersionActive" : "fr_Active"
       },
       "templates.fieldNames.label": "fr_Map fields to values from the template",
       "templates.querySelect": {
@@ -323,9 +355,30 @@
       "templates.modal": {
         "objectTypes.label": "fr_Object Types",
         "querySelect.label": "fr_Query Select",
-        "displayName.label": "fr_Display Name",
+        "label.label": "fr_Display Name",
         "btnCancel.text": "fr_Cancel",
-        "btnOk.text": "fr_Save"
+        "btnOk.text": "fr_Upload Template"
+      },
+      "templates.version.modal": {
+        "btnOk.text": "fr_OK"
+      },
+      "mergefields": "fr_Merge Fields Configuration",
+      "mergefields.saveMergeFields": "fr_Save",
+      "mergefields.versionMergeFields": "fr_Versions",
+      "mergefields.grid": {
+      "fieldId": "fr_ID",
+      "fieldValue": "fr_Value",
+      "fieldDescription": "fr_Description"
+      },
+      "mergefields.version.grid": {
+        "mergingVersion": "fr_Version",
+        "modified": "fr_Modified",
+        "modifier": "fr_Modifier",
+        "mergingActiveVersion": "fr_Active"
+      },
+      "mergefields.version.modal": {
+        "btnLoadVersion.text": "fr_Load Version",
+        "btnCancel.text": "fr_Cancel"
       }
     },
     "forms.defaultValue": "fr_Select Target",

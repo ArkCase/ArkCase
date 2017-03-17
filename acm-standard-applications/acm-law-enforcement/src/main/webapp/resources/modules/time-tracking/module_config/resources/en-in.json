@@ -1,67 +1,70 @@
 {
   "timeTracking": {
-    "title": "en-in_Time Tracking",
-    "progressNoTimesheet": "en-in_[ No timesheet is selected ]",
-    "progressLoading": "en-in_Loading timesheet ",
-    "progressError": "en-in_Failed to load timesheet"
+    "title": "Time Tracking",
+    "progressNoTimesheet": "[ No timesheet is selected ]",
+    "progressLoading": "Loading timesheet ",
+    "progressError": "Failed to load timesheet"
   },
   "timeTracking.menus": {
-    "leftnav.item": "en-in_Time Tracking",
-    "topbar.item": "en-in_Timesheet"
+    "leftnav.item": "Time Tracking",
+    "topbar.item": "Timesheet"
   },
   "timeTracking.tree": {
   },
+  "timeTracking.comp.info": {
+    "lastModified.label": "Last Modified"
+  },
   "timeTracking.comp.actions": {
-    "new.button": "en-in_New Timesheet",
-    "edit.button": "en-in_Edit Timesheet"
+    "new.button": "New Timesheet",
+    "edit.button": "Edit Timesheet"
   },
   "timeTracking.comp.details": {
-    "title": "en-in_Details",
-    "informSaved": "en-in_Timesheet details saved",
+    "title": "Details",
+    "informSaved": "Timesheet details saved",
     "table.columns": {
-      "title": "en-in_Details",
-      "modified": "en-in_Date Last Modified",
-      "modifier": "en-in_User Last Modified"
+      "title": "Details",
+      "modified": "Date Last Modified",
+      "modifier": "User Last Modified"
     }
   },
   "timeTracking.comp.people": {
-    "title": "en-in_Person",
+    "title": "Person",
     "table.columns": {
-      "fullName": "en-in_Full Name",
-      "userId": "en-in_Username"
+      "fullName": "Full Name",
+      "userId": "Username"
     }
   },
   "timeTracking.comp.summary": {
-    "title": "en-in_Hours Summary",
+    "title": "Hours Summary",
     "table.columns": {
-      "code": "en-in_Parent ID",
-      "type": "en-in_Parent Type",
-      "value": "en-in_Total Hours",
-      "date": "en-in_Date Charged",
-      "modified": "en-in_Modified Date"
+      "code": "Parent ID",
+      "type": "Parent Type",
+      "value": "Total Hours",
+      "date": "Date Charged",
+      "modified": "Modified Date"
     }
   },
   "timeTracking.comp.tags": {
-    "title": "en-in_Tags",
+    "title": "Tags",
     "table.columns": {
-      "tag": "en-in_Tag",
-      "created": "en-in_Created",
-      "createdBy": "en-in_Created By"
+      "tag": "Tag",
+      "created": "Created",
+      "createdBy": "Created By"
     },
     "modal": {
-    "title": "en-in_Tag",
-    "search": "en-in_Search for Tag",
-    "buttons": {
-          "cancel": "en-in_Cancel",
-          "ok": "en-in_Add Tag"
-     }
+      "title": "Tag",
+      "search": "Search for Tag",
+      "buttons": {
+        "cancel": "Cancel",
+        "ok": "Add Tag"
+      }
     },
     "message": {
-      "tagExists": "en-in_Tag with that name or description or text already exists",
-      "tagAssociated": "en-in_already associated",
+      "tagExists": "Tag with that name or description or text already exists",
+      "tagAssociated": "already associated",
       "delete": {
-        "success": "en-in_Tag deleted successfully",
-        "error": "en-in_Error deleting tag"
+        "success": "Tag deleted successfully",
+        "error": "Error deleting tag"
       }
     }
   }

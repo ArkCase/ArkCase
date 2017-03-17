@@ -76,11 +76,92 @@
       ]
     },
     {
-      "id": "correspondenceManagementTemplates",
-      "title": "Correspondance Management Templates grid",
+      "id": "correspondenceManagementMergeFields",
+      "title": "Correspondence Management Merge Fields grid",
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
+      "columnDefs": [
+        {
+          "name": "fieldId",
+          "displayName": "admin.correspondenceManagement.mergefields.grid.fieldId",
+          "visible": true,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "fieldValue",
+          "displayName": "admin.correspondenceManagement.mergefields.grid.fieldValue",
+          "visible": true,
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a href='#' editable-text='row.entity.fieldValue'>{{ row.entity.fieldValue}}</a>"
+        },
+        {
+          "name": "fieldDescription",
+          "displayName": "admin.correspondenceManagement.mergefields.grid.fieldDescription",
+          "visible": true,
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a href='#' editable-text='row.entity.fieldDescription'>{{ row.entity.fieldDescription}}</a>"
+        }
+      ],
+      "objectTypes": [
+        {
+          "name": "Case File",
+          "id": "CASE_FILE"
+        },
+        {
+          "name": "Complaint",
+          "id": "COMPLAINT"
+        }
+      ]
+    },
+    {
+      "id": "correspondenceManagementMergeFieldsVersions",
+      "title": "Correspondence Management Merge Fields version grid",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": false,
+      "columnDefs": [
+        {
+          "name": "mergingActiveVersion",
+          "displayName": "admin.correspondenceManagement.mergefields.version.grid.mergingActiveVersion",
+          "visible": true,
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div align='center'><span ng-if='!row.entity.mergingActiveVersion' class='label label-warning'>No</span><span ng-if='row.entity.mergingActiveVersion' class='label label-success'>Yes</span></div>'",
+          "width": 70
+        },
+        {
+          "name": "mergingVersion",
+          "displayName": "admin.correspondenceManagement.mergefields.version.grid.mergingVersion",
+          "visible": true,
+          "headerCellFilter": "translate",
+          "sort" : {"direction": "desc"},
+          "width": 80
+        },
+        {
+          "name": "modified",
+          "displayName": "admin.correspondenceManagement.mergefields.version.grid.modified",
+          "visible": true,
+          "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "modifier",
+          "displayName": "admin.correspondenceManagement.mergefields.version.grid.modifier",
+          "visible": true,
+          "headerCellFilter": "translate",
+          "lookup": "userFullNames"
+        }
+      ]
+    },
+    {
+      "id": "correspondenceManagementTemplates",
+      "title": "Correspondence Management Templates grid",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": false,
+      "enableRowSelection": true,
+      "enableRowHeaderSelection": true,
+      "enableFullRowSelection": true,
       "columnDefs": [
         {
           "name": "id",
@@ -89,8 +170,8 @@
           "headerCellFilter": "translate"
         },
         {
-          "name": "displayName",
-          "displayName": "admin.correspondenceManagement.templates.grid.displayName",
+          "name": "label",
+          "displayName": "admin.correspondenceManagement.templates.grid.label",
           "visible": true,
           "headerCellFilter": "translate"
         },
@@ -98,21 +179,23 @@
           "name": "templateFilename",
           "displayName": "admin.correspondenceManagement.templates.grid.title",
           "visible": true,
-          "cellTemplate": "<a target='_blank' ng-href='{{row.entity.downloadFileName}}'>{{ row.entity.templateFilename}}</a>",
+          "cellTemplate": "<a target='_blank' ng-href='{{row.entity.downloadFileName}}'><span ng-if=\"row.entity.templateFilename.indexOf('_') > 0\">{{row.entity.templateFilename.substring(row.entity.templateFilename.indexOf('_') + 1)}}</span><span ng-if=\"row.entity.templateFilename.indexOf('_') == -1\">{{row.entity.templateFilename}}</span></a>",
           "headerCellFilter": "translate"
         },
         {
-          "name": "queryType",
-          "displayName": "admin.correspondenceManagement.templates.grid.queryType",
+          "name": "objectType",
+          "displayName": "admin.correspondenceManagement.templates.grid.objectType",
           "visible": true,
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "width": 120
         },
         {
           "name": "modified",
           "displayName": "admin.correspondenceManagement.templates.grid.modified",
           "visible": true,
           "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "width": 120
         },
         {
           "name": "modifier",
@@ -126,10 +209,11 @@
           "displayName": "admin.correspondenceManagement.templates.grid.activated",
           "visible": true,
           "headerCellFilter": "translate",
-          "cellTemplate": "<div align='center'><span ng-if='!row.entity.activated' class='label label-warning' ng-click='grid.appScope.activate(row.entity)'>Activate</span><span ng-if='row.entity.activated' class='label label-success' ng-click='grid.appScope.activate(row.entity)'>Deactivate</span></div>'"
+          "cellTemplate": "<div align='center'><span ng-if='!row.entity.activated' class='label label-warning' ng-click='grid.appScope.activate(row.entity)'>Deactivated</span><span ng-if='row.entity.activated' class='label label-success' ng-click='grid.appScope.activate(row.entity)'>Activated</span></div>'",
+          "width": 120
         }
       ],
-      "queryObjectTypes": [
+      "objectTypes": [
         {
           "name": "Case File",
           "id": "CASE_FILE"
@@ -138,36 +222,67 @@
           "name": "Complaint",
           "id": "COMPLAINT"
         }
-      ],
-      "dialogQuerySelect": {
-        "enableFiltering": false,
-        "multiSelect": false,
-        "columnDefs": [
-          {
-            "name": "beanId",
-            "displayName": "admin.correspondenceManagement.templates.querySelect.table.columns.beanId",
-            "headerCellFilter": "translate"
-          },
-          {
-            "name": "jpaQuery",
-            "displayName": "admin.correspondenceManagement.templates.querySelect.table.columns.jpaQuery",
-            "headerCellFilter": "translate"
-          },
-          {
-            "name": "queryType",
-            "displayName": "admin.correspondenceManagement.templates.querySelect.table.columns.queryType",
-            "headerCellFilter": "translate"
-          }
-        ],
-        "paginationPageSizes": [
-          5,
-          10,
-          20,
-          50
-        ],
-        "paginationPageSize": 10,
-        "start": 0
-      }
+      ]
+    },
+    {
+      "id": "correspondenceManagementTemplateVersions",
+      "title": "Correspondance Management Template Versions grid",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": false,
+      "columnDefs": [
+        {
+          "name": "templateVersionActive",
+          "displayName": "admin.correspondenceManagement.templates.grid.templateVersionActive",
+          "visible": true,
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div align='center'><span ng-if='!row.entity.templateVersionActive' class='label label-warning'>No</span><span ng-if='row.entity.templateVersionActive' class='label label-success'>Yes</span></div>'",
+          "width": 70
+        },
+        {
+          "name": "templateVersion",
+          "displayName": "admin.correspondenceManagement.templates.grid.version",
+          "visible": true,
+          "headerCellFilter": "translate",
+          "sort" : {"direction": "desc"},
+          "width": 80
+        },
+        {
+          "name": "label",
+          "displayName": "admin.correspondenceManagement.templates.grid.label",
+          "visible": true,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "templateFilename",
+          "displayName": "admin.correspondenceManagement.templates.grid.title",
+          "visible": true,
+          "cellTemplate": "<a target='_blank' ng-href='{{row.entity.downloadFileName}}'><span ng-if=\"row.entity.templateFilename.indexOf('_') > 0\">{{row.entity.templateFilename.substring(row.entity.templateFilename.indexOf('_') + 1)}}</span><span ng-if=\"row.entity.templateFilename.indexOf('_') == -1\">{{row.entity.templateFilename}}</span></a>",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "objectType",
+          "displayName": "admin.correspondenceManagement.templates.grid.objectType",
+          "visible": true,
+          "headerCellFilter": "translate",
+          "width": 100
+        },
+        {
+          "name": "modified",
+          "displayName": "admin.correspondenceManagement.templates.grid.modified",
+          "visible": true,
+          "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "headerCellFilter": "translate",
+          "width": 100
+        },
+        {
+          "name": "modifier",
+          "displayName": "admin.correspondenceManagement.templates.grid.modifier",
+          "visible": true,
+          "headerCellFilter": "translate",
+          "lookup": "userFullNames"
+        }
+      ]
     },
     {
       "id": "labelsConfig",
@@ -654,8 +769,12 @@
       "expanded": "true",
       "children": [
         {
+          "title": "admin.correspondenceManagement.mergefields",
+          "templateName": "correspondence-management-mergefields"
+        },
+        {
           "title": "admin.correspondenceManagement.templates",
-          "templateName": "cm.templates"
+          "templateName": "correspondence-management-templates"
         }
       ]
     },

@@ -1,7 +1,6 @@
 package com.armedia.acm.muletools.mulecontextmanager;
 
 import com.armedia.acm.web.api.MDCConstants;
-
 import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
@@ -28,7 +27,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import javax.activation.DataHandler;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
