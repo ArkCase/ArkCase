@@ -664,6 +664,31 @@ angular.module('services').factory('UtilService', ['$q', '$log'
                 });
                 return filteredModel;
             }
+
+            /**
+             * @ngdoc method
+             * @name encryptString
+             * @methodOf services.service:UtilService
+             *
+             * @param {String} string to encrypt
+             * @param {String} passphrase used for encryption
+             *
+             * @description
+             * This method returns AES encrypted string
+             * using the provided passphrase
+             */
+            , encryptString: function (string, passphrase) {
+                if (passphrase) {
+                    try {
+                        var encrypted = CryptoJS.AES.encrypt(queryString, passphrase);
+                        return encrypted.toString();
+                    }
+                    catch (e) {
+                        $log.warn("Error on encryption, returning plain query string");
+                    }
+                }
+                return string;
+            }
         };
 
 
