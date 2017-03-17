@@ -1,26 +1,26 @@
 {
   "audit": {
-    "title": "en-in_Audit",
+    "title": "Audit",
     "menus": {
-      "leftnav.item": "en-in_Audit"
+      "leftnav.item": "Audit"
     },
     "navigation": {
       "label": {
-        "reportName": "en-in_Report Name",
-        "inputID": "en-in_ID",
-        "dateFrom": "en-in_From",
-        "dateTo": "en-in_To"
+        "reportName": "Report Name",
+        "inputID": "ID",
+        "dateFrom": "From",
+        "dateTo": "To"
       },
       "placeholder": {
-        "selectAudit": "en-in_ALL",
-        "inputId": "en-in_#"
+        "selectAudit": "ALL",
+        "inputId": "#"
       },
       "button": {
-        "generateAuditReport.btn": "en-in_Generate Audit Report"
+        "generateAuditReport.btn": "Generate Audit Report"
       }
     },
     "datepickers":{
-      "close": "en-in_Done"
+      "close": "Done"
     }
   }
 }

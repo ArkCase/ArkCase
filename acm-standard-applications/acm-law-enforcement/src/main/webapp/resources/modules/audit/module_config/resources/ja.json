@@ -1,8 +1,8 @@
 {
   "audit": {
-    "title": "ja_Audit",
+    "title": "監査",
     "menus": {
-      "leftnav.item": "ja_Audit"
+      "leftnav.item": "監査"
     },
     "navigation": {
       "label": {

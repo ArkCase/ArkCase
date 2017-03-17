@@ -12,7 +12,8 @@
     "topBar": {
       "new": "创建",
       "toggle.btn": "切换导航",
-      "search.placeholder": "搜索ArkCase"
+      "search.placeholder": "搜索ArkCase",
+      "locale.updateList": "更新"
     },
     "loginWarning": {
       "btnOK.text": "确认",

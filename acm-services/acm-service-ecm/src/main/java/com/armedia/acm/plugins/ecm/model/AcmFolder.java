@@ -91,12 +91,14 @@ public class AcmFolder implements AcmEntity, Serializable, AcmObject, AcmAssigne
     protected void beforeInsert()
     {
         setupChildPointers();
+        setDefaultCmisRepositoryId();
     }
 
     @PreUpdate
     protected void beforeUpdate()
     {
         setupChildPointers();
+        setDefaultCmisRepositoryId();
     }
 
     protected void setupChildPointers()
@@ -105,6 +107,14 @@ public class AcmFolder implements AcmEntity, Serializable, AcmObject, AcmAssigne
         {
             ap.setObjectId(getId());
             ap.setObjectType(getObjectType());
+        }
+    }
+
+    protected void setDefaultCmisRepositoryId()
+    {
+        if (getCmisRepositoryId() == null)
+        {
+            setCmisRepositoryId(EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
         }
     }
 

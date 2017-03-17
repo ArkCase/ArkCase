@@ -1,8 +1,8 @@
 {
   "dashboard": {
-    "title": "zh-tw_Dashboard",
+    "title": "板面",
     "menus": {
-      "leftnav.item": "zh-tw_Dashboard"
+      "leftnav.item": "板面"
     },
     "widgets": {
       "casesByQueue": {
