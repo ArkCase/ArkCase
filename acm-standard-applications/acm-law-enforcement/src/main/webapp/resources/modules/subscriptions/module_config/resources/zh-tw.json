@@ -1,11 +1,11 @@
 {
   "subscriptions": {
-    "title": "zh-tw_Subscriptions",
-    "search.btn": "zh-tw_Search",
+    "title": "訂閱",
+    "search.btn": "搜索",
     "export.btn": "zh-tw_Export",
     "search.placeholder": "zh-tw_Search for subscriptions",
     "menus": {
-      "leftnav.item": "zh-tw_Subscriptions"
+      "leftnav.item": "訂閱"
     },
     "comp":{
       "grid": {

@@ -7,7 +7,7 @@
   },
   "costTracking.menus": {
     "leftnav.item": "成本跟踪",
-    "topbar.item": "成本文表"
+    "topbar.item": "成本项目"
   },
   "costTracking.tree": {
   },

@@ -63,6 +63,9 @@ public class AcmFolder implements AcmEntity, Serializable, AcmObject, AcmAssigne
     @Column(name = "cm_folder_name")
     private String name;
 
+    @Column(name = "cm_folder_cmis_repository_id", nullable = false)
+    private String cmisRepositoryId;
+
     @Column(name = "cm_cmis_folder_id")
     private String cmisFolderId;
 
@@ -88,12 +91,14 @@ public class AcmFolder implements AcmEntity, Serializable, AcmObject, AcmAssigne
     protected void beforeInsert()
     {
         setupChildPointers();
+        setDefaultCmisRepositoryId();
     }
 
     @PreUpdate
     protected void beforeUpdate()
     {
         setupChildPointers();
+        setDefaultCmisRepositoryId();
     }
 
     protected void setupChildPointers()
@@ -102,6 +107,14 @@ public class AcmFolder implements AcmEntity, Serializable, AcmObject, AcmAssigne
         {
             ap.setObjectId(getId());
             ap.setObjectType(getObjectType());
+        }
+    }
+
+    protected void setDefaultCmisRepositoryId()
+    {
+        if (getCmisRepositoryId() == null)
+        {
+            setCmisRepositoryId(EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
         }
     }
 
@@ -179,6 +192,16 @@ public class AcmFolder implements AcmEntity, Serializable, AcmObject, AcmAssigne
     public void setName(String name)
     {
         this.name = name;
+    }
+
+    public String getCmisRepositoryId()
+    {
+        return cmisRepositoryId;
+    }
+
+    public void setCmisRepositoryId(String cmisRepositoryId)
+    {
+        this.cmisRepositoryId = cmisRepositoryId;
     }
 
     public String getCmisFolderId()

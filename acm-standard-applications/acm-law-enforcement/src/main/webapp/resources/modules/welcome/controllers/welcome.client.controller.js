@@ -1,12 +1,11 @@
 'use strict';
 
 angular.module('welcome').controller(
-    'WelcomeController', [
-        '$state',
-        '$window',
-        'Acm.LoginService',
-        'Acm.AppService',
-        function ($state, $window, AcmLoginService, AcmAppService) {
+    'WelcomeController', ['$state', '$window', '$translate'
+        , 'UtilService', 'Acm.LoginService', 'Acm.AppService'
+        , function ($state, $window, $translate
+            , Util, AcmLoginService, AcmAppService) {
+
             AcmLoginService.setLogin(true);
             AcmLoginService.setLastIdle();
 
@@ -32,5 +31,6 @@ angular.module('welcome').controller(
             } else {
                 $state.go("dashboard");
             }
+
         }
     ]);

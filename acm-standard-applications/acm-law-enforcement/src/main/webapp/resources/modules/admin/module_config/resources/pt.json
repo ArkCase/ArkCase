@@ -1,6 +1,6 @@
 {
   "admin": {
-    "title": "pt_Admin",
+    "title": "Administração",
     "security.title": "pt_Security",
     "security.functionalAccessControl": "pt_Functional Access Control",
     "security.functionalAccessControl.applicationRole": "pt_Application Role",
@@ -36,7 +36,7 @@
       "ok": "pt_OK"
     },
     "menus": {
-      "leftnav.item": "pt_Admin"
+      "leftnav.item": "Administração"
     },
     "security.ldapConfig.data.placeholders": {
       "id": "pt_Enter directory name",
@@ -84,7 +84,14 @@
         "createAdHocGroup": "pt_createAdHocGroup"
       },
       "createGroupDialog": {
-        "title": "pt_Add Ad-Hoc Group",
+        "ldapGroup": {
+          "title": "pt_Add LDAP Group"
+        },
+        "adHocGroup": {
+          "title": "pt_Add Ad-Hoc Group"
+        },
+        "selectDirectory": "pt_--Choose Directory Config--",
+        "disabledGroupWarning": "pt_Adding new LDAP groups is not allowed for this directory!",
         "name": "pt_Name",
         "namePlaceholder": "pt_Enter group name",
         "description": "pt_Description",
@@ -113,6 +120,27 @@
           "ok": "pt_Add",
           "searchPlaceholder": "pt_Enter to search for members."
         }
+      },
+      "createUserDialog": {
+        "addLdapMember": {
+          "title": "pt_Add Ldap Member",
+          "btn": {
+            "cancel": "pt_Cancel",
+            "ok": "pt_Add Ldap User"
+          }
+        },
+        "editLdapMember": {
+          "title": "pt_Edit Ldap Member",
+          "btn": {
+            "cancel": "pt_Cancel",
+            "ok": "pt_Edit Ldap User"
+          }
+        },
+        "username": "pt_Username",
+        "firstName": "pt_FirstName",
+        "lastName": "pt_LastName",
+        "email": "pt_Email",
+        "password": "pt_Password"
       },
       "addMembersGridColumns": {
         "name": "pt_Name",
@@ -295,19 +323,23 @@
       "title": "pt_Correspondence Management",
       "templates": "pt_Correspondence Templates",
       "templates.addNewTemplate": "pt_Upload Template",
-      "templates.addTemplate": "pt_Add Template",
+      "templates.addTemplate": "pt_Upload",
+      "templates.versionTemplate": "pt_Versions",
+      "templates.deleteTemplate": "pt_Delete",
       "templates.editTemplate": "pt_Edit Template",
       "templates.grid": {
         "id": "pt_ID",
         "title": "pt_Title",
-        "displayName": "pt_Display Name",
+        "label": "pt_Display Name",
         "path": "pt_Path",
         "created": "pt_Created",
         "modified": "pt_Modified",
         "creator": "pt_Creator",
         "modifier": "pt_Modifier",
-        "activated": "pt_Active",
-        "queryType": "pt_Object Type"
+        "activated": "pt_Status",
+        "objectType": "pt_Object Type",
+        "version": "pt_Version",
+        "templateVersionActive" : "pt_Active"
       },
       "templates.fieldNames.label": "pt_Map fields to values from the template",
       "templates.querySelect": {
@@ -323,9 +355,30 @@
       "templates.modal": {
         "objectTypes.label": "pt_Object Types",
         "querySelect.label": "pt_Query Select",
-        "displayName.label": "pt_Display Name",
+        "label.label": "pt_Display Name",
         "btnCancel.text": "pt_Cancel",
-        "btnOk.text": "pt_Save"
+        "btnOk.text": "pt_Upload Template"
+      },
+      "templates.version.modal": {
+        "btnOk.text": "pt_OK"
+      },
+      "mergefields": "pt_Merge Fields Configuration",
+      "mergefields.saveMergeFields": "pt_Save",
+      "mergefields.versionMergeFields": "pt_Versions",
+      "mergefields.grid": {
+      "fieldId": "pt_ID",
+      "fieldValue": "pt_Value",
+      "fieldDescription": "pt_Description"
+      },
+      "mergefields.version.grid": {
+        "mergingVersion": "pt_Version",
+        "modified": "pt_Modified",
+        "modifier": "pt_Modifier",
+        "mergingActiveVersion": "pt_Active"
+      },
+      "mergefields.version.modal": {
+        "btnLoadVersion.text": "pt_Load Version",
+        "btnCancel.text": "pt_Cancel"
       }
     },
     "forms.defaultValue": "pt_Select Target",

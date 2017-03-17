@@ -84,7 +84,14 @@
         "createAdHocGroup": "zh-cn_createAdHocGroup"
       },
       "createGroupDialog": {
-        "title": "zh-cn_Add Ad-Hoc Group",
+        "ldapGroup": {
+          "title": "zh-cn_Add LDAP Group"
+        },
+        "adHocGroup": {
+          "title": "zh-cn_Add Ad-Hoc Group"
+        },
+        "selectDirectory": "zh-cn_--Choose Directory Config--",
+        "disabledGroupWarning": "zh-cn_Adding new LDAP groups is not allowed for this directory!",
         "name": "zh-cn_Name",
         "namePlaceholder": "zh-cn_Enter group name",
         "description": "zh-cn_Description",
@@ -113,6 +120,27 @@
           "ok": "zh-cn_Add",
           "searchPlaceholder": "zh-cn_Enter to search for members."
         }
+      },
+      "createUserDialog": {
+        "addLdapMember": {
+          "title": "zh-cn_Add Ldap Member",
+          "btn": {
+            "cancel": "zh-cn_Cancel",
+            "ok": "zh-cn_Add Ldap User"
+          }
+        },
+        "editLdapMember": {
+          "title": "zh-cn_Edit Ldap Member",
+          "btn": {
+            "cancel": "zh-cn_Cancel",
+            "ok": "zh-cn_Edit Ldap User"
+          }
+        },
+        "username": "zh-cn_Username",
+        "firstName": "zh-cn_FirstName",
+        "lastName": "zh-cn_LastName",
+        "email": "zh-cn_Email",
+        "password": "zh-cn_Password"
       },
       "addMembersGridColumns": {
         "name": "zh-cn_Name",
@@ -295,19 +323,23 @@
       "title": "zh-cn_Correspondence Management",
       "templates": "zh-cn_Correspondence Templates",
       "templates.addNewTemplate": "zh-cn_Upload Template",
-      "templates.addTemplate": "zh-cn_Add Template",
+      "templates.addTemplate": "zh-cn_Upload",
+      "templates.versionTemplate": "zh-cn_Versions",
+      "templates.deleteTemplate": "zh-cn_Delete",
       "templates.editTemplate": "zh-cn_Edit Template",
       "templates.grid": {
         "id": "zh-cn_ID",
         "title": "zh-cn_Title",
-        "displayName": "zh-cn_Display Name",
+        "label": "zh-cn_Display Name",
         "path": "zh-cn_Path",
         "created": "zh-cn_Created",
         "modified": "zh-cn_Modified",
         "creator": "zh-cn_Creator",
         "modifier": "zh-cn_Modifier",
-        "activated": "zh-cn_Active",
-        "queryType": "zh-cn_Object Type"
+        "activated": "zh-cn_Status",
+        "objectType": "zh-cn_Object Type",
+        "version": "zh-cn_Version",
+        "templateVersionActive" : "zh-cn_Active"
       },
       "templates.fieldNames.label": "zh-cn_Map fields to values from the template",
       "templates.querySelect": {
@@ -323,9 +355,30 @@
       "templates.modal": {
         "objectTypes.label": "zh-cn_Object Types",
         "querySelect.label": "zh-cn_Query Select",
-        "displayName.label": "zh-cn_Display Name",
+        "label.label": "zh-cn_Display Name",
         "btnCancel.text": "zh-cn_Cancel",
-        "btnOk.text": "zh-cn_Save"
+        "btnOk.text": "zh-cn_Upload Template"
+      },
+      "templates.version.modal": {
+        "btnOk.text": "zh-cn_OK"
+      },
+      "mergefields": "zh-cn_Merge Fields Configuration",
+      "mergefields.saveMergeFields": "zh-cn_Save",
+      "mergefields.versionMergeFields": "zh-cn_Versions",
+      "mergefields.grid": {
+      "fieldId": "zh-cn_ID",
+      "fieldValue": "zh-cn_Value",
+      "fieldDescription": "zh-cn_Description"
+      },
+      "mergefields.version.grid": {
+        "mergingVersion": "zh-cn_Version",
+        "modified": "zh-cn_Modified",
+        "modifier": "zh-cn_Modifier",
+        "mergingActiveVersion": "zh-cn_Active"
+      },
+      "mergefields.version.modal": {
+        "btnLoadVersion.text": "zh-cn_Load Version",
+        "btnCancel.text": "zh-cn_Cancel"
       }
     },
     "forms.defaultValue": "zh-cn_Select Target",
@@ -340,4 +393,3 @@
     "forms.message.delete.error": "zh-cn_Error deleting row."
   }
 }
-

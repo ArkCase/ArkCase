@@ -1,11 +1,11 @@
 {
   "notifications": {
-    "title": "ja_Notifications",
-    "search.btn": "ja_Search",
+    "title": "通知",
+    "search.btn": "検索",
     "export.btn": "ja_Export",
     "search.placeholder": "ja_Search for notifications",
     "menus": {
-      "leftnav.item": "ja_Notifications"
+      "leftnav.item": "通知"
     },
     "comp":{
       "grid": {

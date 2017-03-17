@@ -18,7 +18,8 @@
     "dueDate.label": "zh-cn_Due Date",
     "state.label": "zh-cn_State",
     "overdue.tooltip": "zh-cn_Task is Overdue",
-    "deadline.tooltip": "zh-cn_Deadline is Approaching"
+    "deadline.tooltip": "zh-cn_Deadline is Approaching",
+    "owningGroup.label": "Owning Group"
   },
   "tasks.comp.parentinfo": {
     "taskId": "zh-cn_Task id:",
@@ -291,7 +292,7 @@
   "tasks.comp.approvalRouting": {
     "title": "zh-cn_Future Approvers",
     "addNewTooltip": "zh-cn_Add new approver",
-    "noBuckslipMessage":"No Data",
+    "noBuckslipMessage": "No Data",
     "button": {
       "save.tooltip": "zh-cn_Save Changes"
     },
@@ -301,7 +302,7 @@
   },
   "tasks.comp.pastApprovals": {
     "title": "zh-cn_Past Approvers",
-    "noBuckslipMessage":"No Data",
+    "noBuckslipMessage": "No Data",
     "table.columns": {
       "approvalDate": "zh-cn_Approval Date",
       "approverId": "zh-cn_Approver",

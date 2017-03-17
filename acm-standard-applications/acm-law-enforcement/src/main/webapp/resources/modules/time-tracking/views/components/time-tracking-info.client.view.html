@@ -6,7 +6,8 @@
                     {{objectInfo.container.containerObjectTitle || 'Unknown' | uppercase}}
                 </div>
                 <small class="text-muted">
-                    Last Modified {{objectInfo.modified | date: ('common.defaultDateUIFormat' | translate)}}
+                    <span translate>timeTracking.comp.info.lastModified.label</span>
+                    {{objectInfo.modified | date: ('common.defaultDateUIFormat' | translate)}}
                 </small>
             </div>
         </div>

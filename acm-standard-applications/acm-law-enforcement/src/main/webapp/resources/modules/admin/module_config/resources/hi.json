@@ -1,6 +1,6 @@
 {
   "admin": {
-    "title": "hi_Admin",
+    "title": "प्रशासन",
     "security.title": "hi_Security",
     "security.functionalAccessControl": "hi_Functional Access Control",
     "security.functionalAccessControl.applicationRole": "hi_Application Role",
@@ -36,7 +36,7 @@
       "ok": "hi_OK"
     },
     "menus": {
-      "leftnav.item": "hi_Admin"
+      "leftnav.item": "प्रशासन"
     },
     "security.ldapConfig.data.placeholders": {
       "id": "hi_Enter directory name",
@@ -84,7 +84,14 @@
         "createAdHocGroup": "hi_createAdHocGroup"
       },
       "createGroupDialog": {
-        "title": "hi_Add Ad-Hoc Group",
+        "ldapGroup": {
+          "title": "hi_Add LDAP Group"
+        },
+        "adHocGroup": {
+          "title": "hi_Add Ad-Hoc Group"
+        },
+        "selectDirectory": "hi_--Choose Directory Config--",
+        "disabledGroupWarning": "hi_Adding new LDAP groups is not allowed for this directory!",
         "name": "hi_Name",
         "namePlaceholder": "hi_Enter group name",
         "description": "hi_Description",
@@ -113,6 +120,27 @@
           "ok": "hi_Add",
           "searchPlaceholder": "hi_Enter to search for members."
         }
+      },
+      "createUserDialog": {
+        "addLdapMember": {
+          "title": "hi_Add Ldap Member",
+          "btn": {
+            "cancel": "hi_Cancel",
+            "ok": "hi_Add Ldap User"
+          }
+        },
+        "editLdapMember": {
+          "title": "hi_Edit Ldap Member",
+          "btn": {
+            "cancel": "hi_Cancel",
+            "ok": "hi_Edit Ldap User"
+          }
+        },
+        "username": "hi_Username",
+        "firstName": "hi_FirstName",
+        "lastName": "hi_LastName",
+        "email": "hi_Email",
+        "password": "hi_Password"
       },
       "addMembersGridColumns": {
         "name": "hi_Name",
@@ -295,19 +323,23 @@
       "title": "hi_Correspondence Management",
       "templates": "hi_Correspondence Templates",
       "templates.addNewTemplate": "hi_Upload Template",
-      "templates.addTemplate": "hi_Add Template",
+      "templates.addTemplate": "hi_Upload",
+      "templates.versionTemplate": "hi_Versions",
+      "templates.deleteTemplate": "hi_Delete",
       "templates.editTemplate": "hi_Edit Template",
       "templates.grid": {
         "id": "hi_ID",
         "title": "hi_Title",
-        "displayName": "hi_Display Name",
+        "label": "hi_Display Name",
         "path": "hi_Path",
         "created": "hi_Created",
         "modified": "hi_Modified",
         "creator": "hi_Creator",
         "modifier": "hi_Modifier",
-        "activated": "hi_Active",
-        "queryType": "hi_Object Type"
+        "activated": "hi_Status",
+        "objectType": "hi_Object Type",
+        "version": "hi_Version",
+        "templateVersionActive" : "hi_Active"
       },
       "templates.fieldNames.label": "hi_Map fields to values from the template",
       "templates.querySelect": {
@@ -323,9 +355,30 @@
       "templates.modal": {
         "objectTypes.label": "hi_Object Types",
         "querySelect.label": "hi_Query Select",
-        "displayName.label": "hi_Display Name",
+        "label.label": "hi_Display Name",
         "btnCancel.text": "hi_Cancel",
-        "btnOk.text": "hi_Save"
+        "btnOk.text": "hi_Upload Template"
+      },
+      "templates.version.modal": {
+        "btnOk.text": "hi_OK"
+      },
+      "mergefields": "hi_Merge Fields Configuration",
+      "mergefields.saveMergeFields": "hi_Save",
+      "mergefields.versionMergeFields": "hi_Versions",
+      "mergefields.grid": {
+      "fieldId": "hi_ID",
+      "fieldValue": "hi_Value",
+      "fieldDescription": "hi_Description"
+      },
+      "mergefields.version.grid": {
+        "mergingVersion": "hi_Version",
+        "modified": "hi_Modified",
+        "modifier": "hi_Modifier",
+        "mergingActiveVersion": "hi_Active"
+      },
+      "mergefields.version.modal": {
+        "btnLoadVersion.text": "hi_Load Version",
+        "btnCancel.text": "hi_Cancel"
       }
     },
     "forms.defaultValue": "hi_Select Target",

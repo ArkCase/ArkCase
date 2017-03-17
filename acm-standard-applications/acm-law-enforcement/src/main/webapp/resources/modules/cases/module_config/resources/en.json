@@ -15,7 +15,13 @@
   "cases.comp.info": {
     "caseId": "Case id:",
     "caseNumber": "Case Number:",
-    "courtRoomName": "Court Room Name:"
+    "courtRoomName": "Court Room Name:",
+    "type.label": "Type",
+    "created.label": "Created Date",
+    "priority.label": "Priority",
+    "assignee.label": "Assigned To",
+    "owningGroup.label": "Owning Group",
+    "dueDate.label": "Due Date"
   },
   "cases.comp.actions": {
     "restrict": "Restrict?",
@@ -286,7 +292,13 @@
     },
     "table.columns": {
       "fullName": "Full Name"
-    }
+    },
+    "assignee.label": "Assignee",
+    "owningGroup.label": "Owning Group",
+    "priority.label": "Priority",
+    "startDate.label": "Start Date",
+    "dueDate.label": "Due Date",
+    "state.label": "State"
   },
   "cases.comp.pastApprovals": {
     "title": "Past Approvers",

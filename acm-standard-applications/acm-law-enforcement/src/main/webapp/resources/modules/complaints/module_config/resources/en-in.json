@@ -12,7 +12,13 @@
   "complaints.comp.info": {
     "complaintId": "en-in_Complaint id:",
     "complaintNumber": "en-in_Complaint ID:",
-    "courtRoomName": "en-in_Court Room Name:"
+    "courtRoomName": "en-in_Court Room Name:",
+    "type.label": "Type",
+    "created.label": "Created Date",
+    "priority.label": "Priority",
+    "assignee.label": "Assigned To",
+    "owningGroup.label": "Owning Group",
+    "dueDate.label": "Due Date"
   },
   "complaints.comp.actions": {
     "restrict": "en-in_Restrict?",
@@ -280,7 +286,13 @@
     },
     "table.columns": {
       "fullName": "en-in_Full Name"
-    }
+    },
+    "assignee.label": "en-in_Assignee",
+    "owningGroup.label": "en-in_Owning Group",
+    "priority.label": "en-in_Priority",
+    "startDate.label": "en-in_Start Date",
+    "dueDate.label": "en-in_Due Date",
+    "state.label": "en-in_State"
   },
   "complaints.comp.pastApprovals": {
     "title": "en-in_Past Approvers",

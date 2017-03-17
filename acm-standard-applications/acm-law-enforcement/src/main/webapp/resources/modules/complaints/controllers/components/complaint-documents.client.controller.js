@@ -50,6 +50,7 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
                     $scope.treeConfig.formTypes = data[0];
                     $scope.treeConfig.fileTypes = data[1];
                     $scope.treeConfig.correspondenceForms = data[2];
+                    $scope.treeControl.refreshTree();
                 });
         };
 

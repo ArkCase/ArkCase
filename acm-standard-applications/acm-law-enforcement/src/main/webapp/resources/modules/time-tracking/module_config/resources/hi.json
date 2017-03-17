@@ -1,15 +1,18 @@
 {
   "timeTracking": {
-    "title": "hi_Time Tracking",
+    "title": "समय ट्रैकिंग ",
     "progressNoTimesheet": "hi_[ No timesheet is selected ]",
     "progressLoading": "hi_Loading timesheet ",
     "progressError": "hi_Failed to load timesheet"
   },
   "timeTracking.menus": {
-    "leftnav.item": "hi_Time Tracking",
-    "topbar.item": "hi_Timesheet"
+    "leftnav.item": "समय ट्रैकिंग",
+    "topbar.item": "टाइम्सशीट"
   },
   "timeTracking.tree": {
+  },
+  "timeTracking.comp.info": {
+    "lastModified.label": "hi_Last Modified"
   },
   "timeTracking.comp.actions": {
     "new.button": "hi_New Timesheet",
@@ -49,12 +52,12 @@
       "createdBy": "hi_Created By"
     },
     "modal": {
-    "title": "hi_Tag",
-    "search": "hi_Search for Tag",
-    "buttons": {
-          "cancel": "hi_Cancel",
-          "ok": "hi_Add Tag"
-     }
+      "title": "hi_Tag",
+      "search": "hi_Search for Tag",
+      "buttons": {
+        "cancel": "hi_Cancel",
+        "ok": "hi_Add Tag"
+      }
     },
     "message": {
       "tagExists": "hi_Tag with that name or description or text already exists",
