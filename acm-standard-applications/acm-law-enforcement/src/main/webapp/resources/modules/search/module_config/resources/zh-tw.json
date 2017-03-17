@@ -1,11 +1,11 @@
 {
   "search": {
-    "title": "zh-tw_Search",
-    "search.btn": "zh-tw_Search",
+    "title": "搜索",
+    "search.btn": "搜索",
     "export.btn": "zh-tw_Export",
     "search.placeholder": "zh-tw_Type in to search",
     "menus": {
-      "leftnav.item": "zh-tw_Search"
+      "leftnav.item": "搜索"
     },
     "comp":{
       "grid": {

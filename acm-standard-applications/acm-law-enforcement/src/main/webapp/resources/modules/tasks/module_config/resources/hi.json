@@ -1,13 +1,13 @@
 {
   "tasks": {
-    "title": "hi_Tasks",
+    "title": "कार्य",
     "progressNoTask": "hi_[ No task data ]",
     "progressLoading": "hi_Loading task ",
     "progressError": "hi_Failed to load task"
   },
   "tasks.menus": {
-    "leftnav.item": "hi_Tasks",
-    "topbar.item": "hi_Task"
+    "leftnav.item": "कार्य",
+    "topbar.item": "कार्य"
   },
   "tasks.comp.info": {
     "taskId": "hi_Task id:",

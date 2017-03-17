@@ -1,8 +1,8 @@
 {
   "audit": {
-    "title": "es_Audit",
+    "title": "Auditoría",
     "menus": {
-      "leftnav.item": "es_Audit"
+      "leftnav.item": "Auditoría"
     },
     "navigation": {
       "label": {
