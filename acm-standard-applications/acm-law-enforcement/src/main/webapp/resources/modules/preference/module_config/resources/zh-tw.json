@@ -1,8 +1,8 @@
 {
   "preference": {
-    "title": "zh-tw_Preferences",
+    "title": "用戶設置",
     "menus": {
-      "usermenu.item": "zh-tw_Preferences"
+      "usermenu.item": "用戶設置"
     }
   }
 }

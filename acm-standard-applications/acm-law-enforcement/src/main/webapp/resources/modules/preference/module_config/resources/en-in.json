@@ -1,8 +1,8 @@
 {
   "preference": {
-    "title": "en-in_Preferences",
+    "title": "Preferences",
     "menus": {
-      "usermenu.item": "en-in_Preferences"
+      "usermenu.item": "Preferences"
     }
   }
 }

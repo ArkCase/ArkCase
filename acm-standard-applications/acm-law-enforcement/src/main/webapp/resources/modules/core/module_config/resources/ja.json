@@ -2,17 +2,18 @@
   "core": {
     "userInfo": {
       "addedMenu": {
-        "help": "ja_Help",
-        "logout": "ja_Logout"
+        "help": "助け",
+        "logout": "切断"
       }
     },
     "leftNav": {
-      "title": "ja_Navigation"
+      "title": "参照"
     },
     "topBar": {
-      "new": "ja_New",
+      "new": "新しい",
       "toggle.btn": "ja_Toggle navigation",
-      "search.placeholder": "ja_Search ArkCase"
+      "search.placeholder": "ja_Search ArkCase",
+      "locale.updateList": "更新"
     },
     "loginWarning": {
       "btnOK.text": "ja_OK",

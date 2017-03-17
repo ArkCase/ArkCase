@@ -26,7 +26,6 @@
                 <value>file:${user.home}/.arkcase/acm/auditPlugin.properties</value>
                 <value>file:${user.home}/.arkcase/acm/capture.properties</value>
                 <value>file:${user.home}/.arkcase/acm/caseFilePlugin.properties</value>
-                <value>file:${user.home}/.arkcase/acm/cmis.properties</value>
                 <value>file:${user.home}/.arkcase/acm/complaintPlugin.properties</value>
                 <value>file:${user.home}/.arkcase/acm/correspondencePlugin.properties</value>
                 <value>file:${user.home}/.arkcase/acm/compressor.properties</value>

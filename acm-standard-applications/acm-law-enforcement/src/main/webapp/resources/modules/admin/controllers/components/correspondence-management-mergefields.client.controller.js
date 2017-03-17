@@ -56,7 +56,7 @@ angular.module('admin').controller('Admin.CMMergeFieldsController', ['$scope', '
                 var modalInstance = $modal.open({
                     scope: modalScope,
                     animation: true,
-                    templateUrl: 'modules/admin/views/components/cm.mergefield-versions.modal.client.view.html',
+                    templateUrl: 'modules/admin/views/components/correspondence-management-mergefield-versions.modal.client.view.html',
                     controller: function ($scope, $modalInstance) {
 
                         $scope.gridOptions = {

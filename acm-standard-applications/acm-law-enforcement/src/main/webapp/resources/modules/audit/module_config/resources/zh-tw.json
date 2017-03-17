@@ -1,8 +1,8 @@
 {
   "audit": {
-    "title": "zh-tw_Audit",
+    "title": "審計",
     "menus": {
-      "leftnav.item": "zh-tw_Audit"
+      "leftnav.item": "審計"
     },
     "navigation": {
       "label": {

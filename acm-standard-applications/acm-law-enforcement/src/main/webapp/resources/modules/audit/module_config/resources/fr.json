@@ -1,8 +1,8 @@
 {
   "audit": {
-    "title": "fr_Audit",
+    "title": "Vérification",
     "menus": {
-      "leftnav.item": "fr_Audit"
+      "leftnav.item": "Vérification"
     },
     "navigation": {
       "label": {

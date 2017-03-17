@@ -379,7 +379,7 @@
       "mergefields.version.modal": {
         "btnLoadVersion.text": "Load Version",
         "btnCancel.text": "Cancel"
-      },
+      }
     },
     "forms.defaultValue": "Select Target",
     "forms.addForm": "Add Plain Form",

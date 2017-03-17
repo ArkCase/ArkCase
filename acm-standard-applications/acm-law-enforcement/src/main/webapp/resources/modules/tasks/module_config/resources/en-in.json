@@ -18,7 +18,8 @@
     "dueDate.label": "en-in_Due Date",
     "state.label": "en-in_State",
     "overdue.tooltip": "en-in_Task is Overdue",
-    "deadline.tooltip": "en-in_Deadline is Approaching"
+    "deadline.tooltip": "en-in_Deadline is Approaching",
+    "owningGroup.label": "Owning Group"
   },
   "tasks.comp.parentinfo": {
     "taskId": "en-in_Task id:",
@@ -291,7 +292,7 @@
   "tasks.comp.approvalRouting": {
     "title": "en-in_Future Approvers",
     "addNewTooltip": "en-in_Add new approver",
-    "noBuckslipMessage":"No Data",
+    "noBuckslipMessage": "No Data",
     "button": {
       "save.tooltip": "en-in_Save Changes"
     },
@@ -301,7 +302,7 @@
   },
   "tasks.comp.pastApprovals": {
     "title": "en-in_Past Approvers",
-    "noBuckslipMessage":"No Data",
+    "noBuckslipMessage": "No Data",
     "table.columns": {
       "approvalDate": "en-in_Approval Date",
       "approverId": "en-in_Approver",
