@@ -47,7 +47,7 @@ public class AssociateTagAPIController
             throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException
     {
 
-        log.info("Creating new tag association on object [{}]:[{}] and tagId: {}", objectType, objectTitle, objectId, tagId);
+        log.info("Creating new tag association on object type [{}], title [{}], id [{}], and tagId: {}", objectType, objectTitle, objectId, tagId);
 
         AcmTag tagForAssociating = getTagService().findTag(tagId);
         AcmAssociatedTag newAssociatedTag = null;

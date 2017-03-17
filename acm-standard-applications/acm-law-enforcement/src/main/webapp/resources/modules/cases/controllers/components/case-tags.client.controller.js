@@ -45,21 +45,17 @@ angular.module('cases').controller('Cases.TagsController', ['$scope', '$q', '$st
                                 return tagAss.id == tag.object_id_s;
                             });
                             if (tagsFound.length == 0) {
-                                CaseInfoService.getCaseInfo($stateParams.id).then(function (data) {
-                                    $scope.parentTitleFromCase = data.caseNumber;
-
-                                    ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.CASE_FILE, 
-                                    $scope.parentTitleFromCase, tag.object_id_s).then(
-                                        function (returnedTag) {
-                                            var tagToAdd = angular.copy(returnedTag);
-                                            tagToAdd.tagName = tag.tags_s;
-                                            tagToAdd.id = returnedTag.tagId;
-                                            $scope.tags.push(tagToAdd);
-                                            $scope.gridOptions.data = $scope.tags;
-                                            $scope.gridOptions.totalItems = $scope.tags.length;
-                                        }
-                                    );
-                                });
+                                ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.CASE_FILE,
+                                    $scope.objectParentTitle, tag.object_id_s).then(
+                                    function (returnedTag) {
+                                        var tagToAdd = angular.copy(returnedTag);
+                                        tagToAdd.tagName = tag.tags_s;
+                                        tagToAdd.id = returnedTag.tagId;
+                                        $scope.tags.push(tagToAdd);
+                                        $scope.gridOptions.data = $scope.tags;
+                                        $scope.gridOptions.totalItems = $scope.tags.length;
+                                    }
+                                );
                             }
                             else {
                                 messageService.info(tag.tags_s + " " + $translate.instant('cases.comp.tags.message.tagAssociated'));
