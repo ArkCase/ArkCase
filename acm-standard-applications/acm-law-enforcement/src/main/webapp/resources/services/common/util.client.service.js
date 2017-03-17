@@ -680,7 +680,7 @@ angular.module('services').factory('UtilService', ['$q', '$log'
             , encryptString: function (string, passphrase) {
                 if (passphrase) {
                     try {
-                        var encrypted = CryptoJS.AES.encrypt(queryString, passphrase);
+                        var encrypted = CryptoJS.AES.encrypt(string, passphrase);
                         return encrypted.toString();
                     }
                     catch (e) {
