@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('document-details').controller('DocumentDetailsController', ['$scope', '$stateParams', '$sce', '$log', '$q'
+angular.module('document-details').controller('DocumentDetailsController', ['$scope', '$stateParams', '$sce', '$q'
     , '$timeout', '$http', 'TicketService', 'ConfigService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService'
-    , function ($scope, $stateParams, $sce, $log, $q, $timeout, $http
+    , function ($scope, $stateParams, $sce, $q, $timeout, $http
         , TicketService, ConfigService, LookupService, SnowboundService, Authentication, EcmService) {
 
         $scope.acmTicket = '';
@@ -28,9 +28,7 @@ angular.module('document-details').controller('DocumentDetailsController', ['$sc
                 selectedIds: $stateParams['selectedIds']
             };
             var viewerUrl = SnowboundService.buildSnowboundUrl($scope.ecmFileProperties, $scope.acmTicket, $scope.userId, fileInfo);
-            console.log("Viewer url");
-            console.log(viewerUrl);
-          //  $scope.documentViewerUrl = $sce.trustAsResourceUrl(viewerUrl);
+            $scope.documentViewerUrl = $sce.trustAsResourceUrl(viewerUrl);
         };
 
         // Obtains authentication token for ArkCase

@@ -53,15 +53,14 @@ angular.module('services').factory('SnowboundService', ['UtilService',
 
                 // Obtains the base portion of the viewer url (host/port, etc)
                 var viewerBaseUrl = this.extractViewerBaseUrl(ecmFileProperties);
-
+                var encryptionPassphrase = ecmFileProperties['ecm.viewer.snowbound.encryptionKey'];
                 // Forces the viewer iframe to be reloaded with the latest version of the document
                 var randomUrlArgToCauseIframeRefresh = (new Date()).getTime();
-
-                return viewerBaseUrl + Util.encryptString(
-                    "?documentId=ecmFileId=" + file.id + "&acm_ticket=" + acmTicket + "&userid=" + userId +
+                return viewerBaseUrl + "?" + Util.encryptString(
+                    "documentId=ecmFileId=" + file.id + "&acm_ticket=" + acmTicket + "&userid=" + userId +
                     "&refreshCacheTimestamp=" + randomUrlArgToCauseIframeRefresh + "&documentName=" + file.name +
                     "&parentObjectId=" + file.containerId + "&parentObjectType=" + file.containerType +
-                    "&selectedIds=" + file.selectedIds);
+                    "&selectedIds=" + file.selectedIds, encryptionPassphrase);
             }
         }
     }
