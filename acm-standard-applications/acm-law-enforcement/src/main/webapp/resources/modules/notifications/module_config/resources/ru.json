@@ -1,0 +1,23 @@
+{
+  "notifications": {
+    "title": "Уведомления",
+    "search.btn": "ru_Search",
+    "export.btn": "ru_Export",
+    "search.placeholder": "ru_Search for notifications",
+    "menus": {
+      "leftnav.item": "Уведомления"
+    },
+    "comp":{
+      "grid": {
+        "columns": {
+          "id": "ru_ID",
+          "description": "ru_Description",
+          "objNumber": "ru_Object Number",
+          "parentNumber": "ru_Parent Number",
+          "objType": "ru_Object Type",
+          "modified": "ru_Modified"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "audit": {
+    "title": "審計",
+    "menus": {
+      "leftnav.item": "審計"
+    },
+    "navigation": {
+      "label": {
+        "reportName": "zh-tw_Report Name",
+        "inputID": "zh-tw_ID",
+        "dateFrom": "zh-tw_From",
+        "dateTo": "zh-tw_To"
+      },
+      "placeholder": {
+        "selectAudit": "zh-tw_ALL",
+        "inputId": "zh-tw_#"
+      },
+      "button": {
+        "generateAuditReport.btn": "zh-tw_Generate Audit Report"
+      }
+    },
+    "datepickers":{
+      "close": "zh-tw_Done"
+    }
+  }
+}

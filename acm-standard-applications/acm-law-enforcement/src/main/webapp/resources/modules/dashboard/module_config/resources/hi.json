@@ -1,0 +1,224 @@
+{
+  "dashboard": {
+    "title": "डैशबोर्ड",
+    "menus": {
+      "leftnav.item": "डैशबोर्ड"
+    },
+    "widgets": {
+      "casesByQueue": {
+        "title": "hi_Active Case Files by Queue",
+        "description": "hi_Displays active case files by queue",
+        "xAxis": "hi_Queues",
+        "yAxis": "hi_Number of Case Files",
+        "noDataMessage": "hi_Currently there are no cases info"
+      },
+      "casesByStatus": {
+        "title": "hi_Cases By Status",
+        "description": "hi_Displays cases by status",
+        "timePeriod": {
+          "label": "hi_Select Time Period",
+          "lastWeek": "hi_Last Week",
+          "lastMonth": "hi_Last Month",
+          "lastYear": "hi_Last Year",
+          "all": "hi_All"
+        },
+        "noDataMessage": "hi_Currently there are no cases info"
+      },
+      "myCases": {
+        "title": "hi_My Cases",
+        "description": "hi_Displays my cases",
+        "noDataMessage": "hi_Currently there are no cases info",
+        "table": {
+          "header": {
+            "caseId": "hi_ID",
+            "title": "hi_Title",
+            "priority": "hi_Priority",
+            "status": "hi_Status"
+          }
+        }
+      },
+      "myComplaints": {
+        "title": "hi_My Complaints",
+        "description": "hi_Displays my complaints",
+        "table": {
+          "header": {
+            "number": "hi_ID",
+            "title": "hi_Title",
+            "priority": "hi_Priority",
+            "created": "hi_Created",
+            "status": "hi_Status"
+          },
+          "noDataMessage": "hi_Currently there are no complaints info"
+        }
+      },
+      "myTasks": {
+        "title": "hi_My Tasks",
+        "description": "hi_Displays my tasks",
+        "rowNumbers.label": "hi_Default Row Numbers",
+        "rowNumbers.placeholder": "hi_Enter Default Row Numbers",
+        "table": {
+          "header": {
+            "taskId": "hi_ID",
+            "title": "hi_Title",
+            "priority": "hi_Priority",
+            "dueDate": "hi_Due",
+            "status": "hi_Status",
+            "objectId": "hi_Object ID"
+          },
+          "overdue.tooltip": "hi_Task is Overdue",
+          "deadline.tooltip": "hi_Deadline is Approaching"
+        },
+        "noDataMessage": "hi_Currently there are no tasks info"
+      },
+      "newComplaints": {
+        "title": "hi_New Complaints",
+        "description": "hi_Displays new complaints",
+        "dueDate": {
+          "label": "hi_Select Due Date Period",
+          "pastDue": "hi_Past Due",
+          "dueTomorrow": "hi_Due Tomorrow",
+          "dueWeek": "hi_Due in 7 Days",
+          "dueMonth": "hi_Due in Month",
+          "all": "hi_All"
+        },
+        "noDataMessage": "hi_Currently there are no complaints info"
+      },
+      "newCases": {
+        "title": "hi_New Cases",
+        "description": "hi_Displays new cases",
+        "noDataMessage": "hi_Currently there are no cases info"
+      },
+      "teamWorkload": {
+        "title": "hi_Team Workload",
+        "description": "hi_Displays team workload",
+        "dueDate": {
+          "label": "hi_Select Due Date Period",
+          "pastDue": "hi_Past Due",
+          "dueTomorrow": "hi_Due Tomorrow",
+          "dueWeek": "hi_Due in 7 Days",
+          "dueMonth": "hi_Due in Month",
+          "all": "hi_All"
+        },
+        "noDataMessage": "hi_Currently there are no team tasks info"
+      },
+      "weather": {
+        "description": "hi_Displays weather",
+        "label": {
+          "current": "hi_Current:",
+          "enterLocation": "hi_Enter Location",
+          "description": "hi_Display the current temperature of a city",
+          "location": "hi_Location",
+          "insertLocationInConfiguration": "hi_Please insert a location in the widget configuration"
+        },
+        "title": "hi_Weather",
+        "noDataMessage": "hi_Currently there are no weather info"
+      },
+      "news": {
+        "description": "hi_Displays news",
+        "label": {
+          "enterFeedUrl": "hi_Enter Feed url",
+          "description": "hi_Displays a RSS/Atom feed",
+          "feedUrl": "hi_Feed Url",
+          "insertUrl": "hi_Please insert a feed url in the widget configuration"
+        },
+        "title": "hi_News",
+        "noDataMessage": "hi_Currently there is no RSS/info"
+      },
+      "details": {
+        "title": "hi_Details",
+        "description": "hi_Displays case details",
+        "noDataMessage": "hi_Currently there are no details"
+      },
+      "people": {
+        "title": "hi_People",
+        "description": "hi_Displays people details",
+        "noDataMessage": "hi_Currently there are no people to display"
+      },
+      "documents": {
+        "title": "hi_Documents",
+        "description": "hi_Displays chart of documents by folder",
+        "noDataMessage": "hi_Currently there are no documents to display"
+      },
+      "locations": {
+        "title": "hi_Locations",
+        "description": "hi_Displays location details",
+        "noDataMessage": "hi_Currently there are no locations to display"
+      },
+      "tasks": {
+        "title": "hi_Tasks",
+        "description": "hi_Displays task details",
+        "noDataMessage": "hi_Currently there are no tasks to display"
+      },
+      "participants": {
+        "title": "hi_Participants",
+        "description": "hi_Displays participant details",
+        "noDataMessage": "hi_Currently there are no participant to display"
+      },
+      "references": {
+        "title": "hi_References",
+        "description": "hi_Displays reference details",
+        "noDataMessage": "hi_Currently there are no references to display"
+      },
+      "history": {
+        "title": "hi_History",
+        "description": "hi_Displays chart of history events",
+        "noDataMessage": "hi_Currently there are no events to display"
+      },
+      "notes": {
+        "title": "hi_Notes",
+        "description": "hi_Displays note details",
+        "noDataMessage": "hi_Currently there are no notes to display"
+      },
+      "time": {
+        "title": "hi_Time",
+        "description": "hi_Displays chart for hours per user",
+        "noDataMessage": "hi_Currently there is no time information to display"
+      },
+      "cost": {
+        "title": "hi_Cost",
+        "description": "hi_Displays chart for cost per user",
+        "noDataMessage": "hi_Currently there is no cost information to display"
+      },
+      "calendar": {
+        "title": "hi_Calendar",
+        "description": "hi_Displays chart of scheduled events per day",
+        "noDataMessage": "hi_Currently there are no events to display"
+      },
+      "reworkDetails": {
+        "title": "hi_Rework Details",
+        "description": "hi_Shows most recent rework details",
+        "noDataMessage": "hi_Currently there no are no rework details to display"
+      },
+      "docReview": {
+        "title": "hi_Documents Under Review",
+        "description": "hi_Shows documents under review",
+        "noDataMessage": "hi_Currently there no are no documents under review to display"
+      },
+      "workflow": {
+        "title": "hi_Workflow Overview",
+        "description": "hi_Overview of pending workflows",
+        "noDataMessage": "hi_Currently there are no workflows to display"
+      },
+      "signature": {
+        "title": "hi_eSignature",
+        "description": "hi_eSignature widget",
+        "noDataMessage": "hi_Currently there are no eSignatures to display"
+      },
+      "person": {
+        "title": "hi_Person",
+        "description": "hi_Person widget for Cost and Time modules",
+        "noDataMessage": "hi_Currently there are no persons to display"
+      },
+      "hoursSummary": {
+        "title": "hi_Hours Summary",
+        "description": "hi_Displays a summary of hours worked",
+        "noDataMessage": "hi_Currently there is no summary to display"
+      },
+      "expenses": {
+        "title": "hi_Expenses",
+        "description": "hi_Displays a cost-to-user graph",
+        "noDataMessage": "hi_Currently no expense data to display"
+      }
+    }
+  }
+}

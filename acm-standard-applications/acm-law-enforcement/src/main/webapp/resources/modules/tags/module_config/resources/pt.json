@@ -1,0 +1,23 @@
+{
+  "tags": {
+    "title": "Etiquetas",
+    "search.btn": "Pesquisa",
+    "search.placeholder": "pt_Search for tags",
+    "menus": {
+      "leftnav.item": "Etiquetas"
+    },
+    "comp":{
+      "grid": {
+        "columns": {
+          "id": "pt_ID",
+          "name": "pt_Name",
+          "type": "pt_Type",
+          "title": "pt_Title",
+          "parent": "pt_Parent",
+          "assignee": "pt_Assignee",
+          "modified": "pt_Modified"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "core": {
+    "userInfo": {
+      "addedMenu": {
+        "help": "Ayuda",
+        "logout": "Cerrar sesión"
+      }
+    },
+    "leftNav": {
+      "title": "Dirección"
+    },
+    "topBar": {
+      "new": "Nuevo",
+      "toggle.btn": "es_Toggle navigation",
+      "search.placeholder": "es_Search ArkCase",
+      "locale.updateList": "Actualización"
+    },
+    "loginWarning": {
+      "btnOK.text": "es_OK",
+      "btnCancel.text": "es_Cancel",
+      "checkbox_warning.label": "es_I acknowledge this warning."
+    }
+  }
+}

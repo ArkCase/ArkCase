@@ -1,0 +1,60 @@
+{
+  "profile": {
+    "title": "Perfil de usuario",
+    "unknown":"Unknown"
+  },
+  "profile.menus": {
+    "usermenu.item": "Perfil"
+  },
+   "profile.subscriptions" : {
+    "title":"Subscriptions",
+    "unsubscribeSelect":"Unsubscribe Selected",
+    "table.columns": {
+      "title": "es_Title",
+      "created":"Created",
+      "parentId":"Parent ID",
+      "userId":"User ID"
+    }
+    },
+   "profile.company": {
+     "title":"Company Detail",
+     "name":"Company Name",
+     "address1":"Address 1",
+     "address2":"Address 2",
+     "city":"City",
+     "state":"State",
+     "zip":"Zip",
+     "mainPhone":"Main Office Phone",
+     "fax":"Fax",
+     "website":"Website"
+   },
+   "profile.contact":{
+       "title":"Contact Information",
+       "location":"Location",
+       "im":"IM Account",
+       "officePhone":"Office Phone",
+       "mobilePhone":"Mobile Phone"
+   },
+   "profile.groups":{
+       "title":"Groups"
+   },
+   "profile.buttons":{
+       "password":"Change Password",
+       "message":"Enter your new password.",
+       "confirmation":"Enter your new password again.",
+       "cancel":"Cancel"
+   },
+   "profile.picture":{
+       "title":"Change Picture",
+       "email":"Email Address",
+       "uploadImgError": "es_You have uploaded an invalid image file type"
+   },
+   "profile.modal":{
+       "title":"Info",
+       "emptyPassword":"Password Can not be Empty",
+       "comfirmation":"Please re-enter your password.",
+       "differentPasswords":"Passwords do not match. Please try again.",
+       "ok":"OK",
+       "success":"Successfully Changed Outlook Password"
+   }
+}

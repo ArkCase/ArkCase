@@ -33,15 +33,15 @@
             "newButton": ".//a[@class='dropdown-toggle']/i",
             "root": ".//span[@title='root']",
             "newCorrespondence": ".//li[@data-command='subMenuCorrespondenceForms']",
-            "docRow": "//table/tbody/tr[3]",
-            "docTitle": "//table/tbody/tr[2]/td[3]/span/span[3]",
-            "docExtension": "//table/tbody/tr[3]/td[4]",
-            "docType": "//table/tbody/tr[3]/td[5]",
-            "docCreated": "//table/tbody/tr[3]/td[6]",
-            "docModified": "//table/tbody/tr[3]/td[7]",
-            "docAuthor": "//table/tbody/tr[3]/td[8]",
-            "docVersion": "//table/tbody/tr[2]/td[9]/span/select/option",
-            "docStatus": "//table/tbody/tr[3]/td[10]",
+            "docRow": "//table/tbody/tr[2]",
+            "docTitle": "//table[2]/tbody/tr[2]/td[3]/span/span[3]",
+            "docExtension": "//table[2]/tbody/tr[2]/td[4]",
+            "docType": "//table[2]/tbody/tr[2]/td[5]",
+            "docCreated": "//table[2]/tbody/tr[2]/td[6]",
+            "docModified": "//table[2]/tbody/tr[2]/td[7]",
+            "docAuthor": "//table[2]/tbody/tr[2]/td[8]",
+            "docVersion": "//table[2]/tbody/tr[2]/td[9]/span/select/option",
+            "docStatus": "//table[2]/tbody/tr[2]/td[10]",
             "deleteDoc": ".//li[@data-command='remove']",
             "downloadDoc": ".//li[@data-command='download']",
             "fadeElementDeleteNote": "//*[@modal-animation-class='fade']",
@@ -79,14 +79,44 @@
             "timeCanvasData":"[chart-data='time.data']",
             "owningGroupDropDown": ".//*[@class='editable-controls form-group']/..//select",
             "owningGroupConfirmBtn": ".//*[@class='editable-controls form-group']/..//button[1]",
-            "assigneeNameModelInput": "participant.selectedAssigneeName"
+            "assigneeNameModelInput": "participant.selectedAssigneeName",
+            "treeSortersBtn": "[ng-show='treeConfig.sorters']",
+            "sortByIdDesc": "//*[@class='dropdown-menu text-left text-sm treeSorter']//li[4]",
+            "objectStatus": ".//div[@class='col-xs-6']/h4/node()[2]",
+            "editNoteBtn": "[ng-click='grid.appScope.editRow(row.entity)']",
+            "documentNoteName": "//*[@class='panel-body']/..//div[2]/div[1]/div/div/div/div/div/div/div[1]",
+            "docTitleSnowBView": ".//div[@class='row']/div[1]/div",
+            "docAssigneeSnowBView": ".//div[@class='row']/div[2]/div",
+            "docCreatedDateSnowBView": ".//div[@class='row']/div[3]/div",
+            "docTypeSnowBView": ".//div[@class='row']/div[4]/div",
+            "docStatusSnowBView": ".//div[@class='row']/div[5]/div",
+            "auditModule": "a[href*='#!/audit']",
+            "loadPending": ".pending"
+
+
+
+
         },
         "data": {
             "reportTitle": "Report of Investigation Title",
             "note": "NoteText",
             "email": "sanja.paskova@armedia.com",
             "owningGroupAdministratorDev":"ACM_ADMINISTRATOR_DEV",
-            "IanInvestigator":"Ian Investigator"
+            "IanInvestigator":"Ian Investigator",
+            "sortByIdDesc": "Sort Case ID Desc",
+            "docGridColumn1": "Title",
+            "docGridColumn2": "Extension",
+            "docGridColumn3": "Type",
+            "docGridColumn4": "Created",
+            "docGridColumn5": "Modified",
+            "docGridColumn6": "Author",
+            "docGridColumn7": "Version",
+            "docGridColumn8": "Status",
+            "defaultCaseFileTitle": "Case File",
+            "defaultCaseFileType": "Case File",
+            "defaultCaseFileAuthor": "Samuel Supervisor",
+            "defaultCaseFileStatus": "ACTIVE",
+            "sally": "Sally Supervisor"
 
         }
 
@@ -124,7 +154,7 @@
             "linkInputUrl": "/html/body/div[1]/div[2]/div/div/div[2]/div[2]/input",
             "chooseFilesBtn": ".//*[@class='form-group row note-group-select-from-files']/input",
             "associateNumberInput": "associateNumber",
-            "taskState": ".//*[@class='clearfix']/div[2]/div[6]/div",
+            "taskState": ".//*[@class='clearfix']/div[2]/div[7]/div",
             "editSubmitButton": ".btn.btn-primary.btn-sm",
             "groupTask": "groupToggle",
             "selectGroup": "chosenGroup"
@@ -310,7 +340,8 @@
             "removeWidgetBtn": ".//*[@class='panel-title ng-binding ng-scope']/span/a[7]",
             "myTasks": "My Tasks",
             "dashboardTitleInput": "dashboardTitle",
-            "dashboardTitle": "//*[@class='module-header']/h3/span"
+            "dashboardTitle": "//*[@class='module-header']/h3/span",
+            "pageSize": "grid.options.paginationPageSize"
 
         },
 
@@ -323,7 +354,7 @@
             "widgetTitleWeather": "Weather",
             "widgetTitleNews": "News",
             "widgetTitleMyTasks": "My Tasks",
-            "DashbordTitle": "Dashbord Title"
+            "DashbordTitle": "Dashboard Title"
         }
     },
 
@@ -332,55 +363,29 @@
 
         "locators": {
 
-            "userName": ".//*[@class='col-xs-8']/h4[2]/a",
-            "userNameInput": ".//*[@class='col-xs-8']/h4[2]/form/div/input",
-            "userNameConfirmBtn": ".//*[@class='col-xs-8']/h4[2]/form/div/span/button[1]",
+            "userName": "profilePicTitle",
             "userNavigation": ".fullname",
             "userNavigationProfile": "Profile",
-            "userPageHeader": ".//*[@class='module-header']/h3",
-            "userLocation": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[1]/a",
-            "userLocationInput": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[1]/form/div/input",
-            "userLocationConfirmBtn": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[1]//form/div/span/button[1]",
-            "officePhone": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[1]/a",
-            "officePhoneInput": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[1]/form/div/input",
-            "officePhoneConfirmBtn": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[1]/form/div/span/button[1]",
-            "imAccount": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[2]/a[1]",
-            "imAccountInput": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[2]/form/div/input",
-            "imAccountConfirmBtn": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[2]/form/div/span/button[1]",
-            "shortImAccount": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[2]/a[2]",
-            "shortImAccountInput": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[2]/form/div/input",
-            "shortImAccountConfirmBtn": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[2]/form/div/span/button[1]",
-            "mobilephone": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[2]/a",
-            "mobilephoneInput": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[2]/form/div/input",
-            "mobilephoneConfirmBtn": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[2]/form/div/span/button[1]",
-            "companyName": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[1]/a",
-            "companyNameInput": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[1]/form/div/input",
-            "companyNameConfirmBtn": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[1]/form/div/span/button[1]",
-            "addressOne": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[2]/a",
-            "addressOneInput": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[2]/form/div/input",
-            "addressOneConfirmBtn": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[2]/form/div/span/button[1]",
-            "addressTwo": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[3]/a",
-            "addressTwoInput": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[3]/form/div/input",
-            "addressTwoConfirmBtn": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[3]/form/div/span/button[1]",
-            "city": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[4]/a",
-            "cityInput": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[4]/form/div/input",
-            "cityInputConfirmBtn": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[4]/form/div/span/button[1]",
-            "state": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[5]/a",
-            "stateInput": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[5]/form/div/input",
-            "stateInputConfirmBtn": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[5]/form/div/span/button[1]",
-            "zip": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[6]/a",
-            "zipInput": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[6]/form/div/input",
-            "zipInputConfirmBtn": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[1]/h4[6]/form/div/span/button[1]",
-            "mainOfficePhone": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[1]/a",
-            "mainOfficePhoneInput": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[1]/form/div/input",
-            "mainOfficePhoneConfirmBtn": ".btn.btn-primary.btn-sm",
-            "fax": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[2]/a",
-            "faxInput": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[2]/form/div/input",
-            "faxConfirmBtn": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[2]/form/div/span/button[1]",
-            "website": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[3]/a",
-            "websiteInput": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[3]/form/div/input",
-            "websiteConfirmBtn": ".//*[@class='scroll-body ng-scope']/section/ul/li/div/div[2]/h4[3]/form/div/span/button[1]",
-            "changeProfilePic": "//*[@id='lnkChangePicture']/u/span"
+            "pageHeader": ".//*[@class='module-header']/h3/span",
+            "userLocation": "profileContactLocation",
+            "inputField": "$data",
+            "confirmBtn": ".btn.btn-primary.btn-sm",
+            "officePhone": "profileContactOfficephone",
+            "imAccount": "profileContactIM",
+            "shortImAccount": "profileContactIMSystem",
+            "mobilephone": "profileContactMobilephone",
+            "companyName": "profileCompanyName",
+            "addressOne": "profileCompanyAddress1",
+            "addressTwo": "profileCompanyAddress2",
+            "city": "profileCompanyCity",
+            "state": "profileCompanyState",
+            "zip": "profileCompanyZip",
+            "mainOfficePhone": "profileContactOfficephone",
+            "fax": "profileCompanyFax",
+            "website": "profileCompanyWebsite",
+            "changeProfilePic": "//*[@id='lnkChangePicture']/u/span",
+            "picture": "picLoading",
+            "userProfileTitle": "profile.title"
 
         },
 
@@ -483,7 +488,8 @@
             "description": "Description",
             "approver": "samuel",
             "titleComplaint": "NewComplaint",
-            "automaticTaskNameCloseComplaint": "Review Request to Close Complaint"
+            "automaticTaskNameCloseComplaint": "Review Request to Close Complaint",
+            "detailsInfoInOpenInvestigationCase": "This case file is based on Complaint"
         }
     },
     "casepage": {
@@ -623,7 +629,7 @@
             "searchForUserInput": "//*[@class='modal-search-header']/..//input",
             "searchUserBtn": "Search",
             "OkBtn": "OK",
-            "searchedUserName":".//*[@class='ui-grid-canvas']/div/div[1]/div[2]",
+            "searchedUserName":".//*[@class='modal-columns']/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div",
             "participantLinkBtn": ".//*[@class='fa fa-users']",
             "participantTableRow": ".//*[@class='ui-grid-cell-contents ng-binding ng-scope']",
             "participantTable": ".//*[@class='panel panel-success panel-grid']",
@@ -633,7 +639,7 @@
             "modalParticipantName": "participant.participantLdapId",
             "saveParticipantBtn": "Save",
             "participantDeleteBtn": "[ng-click='grid.appScope.deleteRow(row.entity)']",
-            "owningGroup": ".//a[@editable-select='owningGroup']",
+            "owningGroup": "[ng-click='openGroupPickerModal()']",
             "caseTitleWithStatus" : ".//*[@class='col-xs-6']/h4",
             "initiatorDeleteBtn": "//*[@class='fa fa-trash-o fa-lg']",
             "claimButton": "[ng-click='claim(objectInfo)']",
@@ -643,7 +649,8 @@
             "tagPriority": ".//*[@class='ui-grid-cell-contents ui-grid-header-cell-primary-focus']",
             "participantTypeConflictMessage": "[extid='warningParticipantTypeConflict']",
             "addParticipantTypeSecondRowbtn": "//table/tbody/..//td[2]/span",
-            "selectParticipantTypeSecondRow": "//table/tbody/tr[2]/td[5]"
+            "selectParticipantTypeSecondRow": "//table/tbody/tr[2]/td[5]",
+            "doc": "vvCurrentPage"
 
         },
 
@@ -700,7 +707,7 @@
             "tagname": "tag1",
             "unsubscribeBtn": "Unsubscribe",
             "subscribeBtn": "Subscribe",
-            "caseName": "NewCaseNew",
+            "caseName": "EditCase",
             "referenceCaseName": "Reference case",
             "referenceType": "CASE_FILE",
             "referenceStatusDraft": "DRAFT",
@@ -738,12 +745,14 @@
             "timeTrackingModule": "a[href*='#!/time-tracking//main']",
             "timeTrackingDate": ".//*[@class='f-control Three columns  f-output  s-valid  s-prepend   s-linked Message s-new-line s-color-None']",
             "chargeCodeAlertMessage":".//*[@class='f-status f-table-status s-alert']",
-            "timeTotal": "rowTotal"
+            "timeTotal": "rowTotal",
+            "chargeCode": "objectNumber"
+
         },
         "data": {
 
             "date": "1",
-            "tagname": "milan"
+            "tagname": "Text 1"
         }
     },
 
@@ -761,7 +770,8 @@
             "saveBtn": "Save",
             "expensesDropDown": ".//*[@class='input _frevvo-disable-backspace']",
             "costsheetPageTitle": ".//*[@class='module-header']/..//h3/span",
-            "costTrackingModule": "a[href='#!/cost-tracking//main']"
+            "costTrackingModule": "a[href='#!/cost-tracking//main']",
+            "codeInput": "objectNumber"
 
 
         },
@@ -786,11 +796,12 @@
             "facets": "[ng-if='field.count > 0']",
              "notificationsInput": "searchQuery",
              "searchBtn": "[ng-click='queryExistingItems()']",
-              "sort": ".//*[@class='ng-scope sortable']"
-
+            "sort": ".//*[@class='ng-scope sortable']",
+            "notificationTitle" : "//div[@class='module-header']/h3"
 
         },
         "data": {
+            "notificationsTitle": "Notifications"
 
         }
     },
@@ -800,7 +811,17 @@
             "notAuthorizedListBox": "selectedNotAuthorized",
             "authorizedListBox": "selectedAuthorized",
             "Col" : "(colRenderIndex, col) in colContainer.renderedColumns track by col.uid",
-            "tableRow": ".//*[@class='ui-grid-cell-contents ng-binding ng-scope']"
+            "tableRow": ".//*[@class='ui-grid-cell-contents ng-binding ng-scope']",
+            "chooseHeaderLogoBtn": "headerLogo",
+            "selectModuleLabelConfig": "selectedNamespace",
+            "filterLabelId": "colFilter.term",
+            "updateField": "$data",
+            "resetModuleButtonText": ".//div[@id='navbar']/form[2]/button[2]/span",
+            "adminLabelsTableRow": ".//*[@class='ng-scope ng-binding editable editable-click']",
+            "addToAuthorizedButton": ".//button[@data-title='common.directive.objectAuthorizationRoles.move_right']",
+            "removeFromAuthorizedButton": ".//button[@data-title='common.directive.objectAuthorizationRoles.move_left']",
+            "headerLogoFileName": "selectedHeaderFile.name",
+            "saveFile": ".//button[@ng-click='saveFiles()']"
         },
         "data":{
             "ArmediaDirectoryName": "armedia",
@@ -817,7 +838,9 @@
             "docApprovalBussinesProcessName": "ACM Document Approval Process",
             "docApprovalBPDescription": "",
             "docApprovalBPModified": "07/11/2016",
-            "docApprovalBPAuthor": ""
+            "docApprovalBPAuthor": "",
+            "LabelUpdate": "Reset Module Updated",
+            "labelId": "admin.application.labels.config.resetModule"
         }
     },
     "reportPage": {

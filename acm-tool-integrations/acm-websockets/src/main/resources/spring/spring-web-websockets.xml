@@ -32,6 +32,8 @@
                 <prop key="acm.websockets.stomp_broker_relay.relay_port">61613</prop>
                 <prop key="acm.websockets.stomp_broker_relay.heartbeat_send_interval">20000</prop>
                 <prop key="acm.websockets.stomp_broker_relay.heartbeat_receive_interval">20000</prop>
+                <prop key="acm.websockets.stomp_broker_relay.client_login">guest</prop>
+                <prop key="acm.websockets.stomp_broker_relay.client_passcode">guest</prop>
                 <prop key="acm.websockets.stomp_broker_relay.system_login">guest</prop>
                 <prop key="acm.websockets.stomp_broker_relay.system_passcode">guest</prop>
                 <prop key="acm.websockets.socksjs.enabled">true</prop>
@@ -47,13 +49,23 @@
 
     <websocket:message-broker application-destination-prefix="${acm.websockets.application_destination_prefix}">
         <websocket:stomp-endpoint path="${acm.websockets.stomp_endpoint}">
-            <websocket:sockjs websocket-enabled="true"/>
+            <!--
+                client-library-url: sockjs version must be always aligned with bower dependency;
+                the path is relative to /sockjs/iframe.html, iframe URL created by sockjs
+                (make sure sockjs bower dependency is still copied there, it may change over time)
+            -->
+            <websocket:sockjs
+                    websocket-enabled="true"
+                    client-library-url="../lib/sockjs-client/dist/sockjs.min.js">
+            </websocket:sockjs>
         </websocket:stomp-endpoint>
         <websocket:stomp-broker-relay prefix="/topic,/queue"
                                       relay-host="${acm.websockets.stomp_broker_relay.relay_host}"
                                       relay-port="${acm.websockets.stomp_broker_relay.relay_port}"
                                       heartbeat-send-interval="${acm.websockets.stomp_broker_relay.heartbeat_send_interval}"
                                       heartbeat-receive-interval="${acm.websockets.stomp_broker_relay.heartbeat_receive_interval}"
+                                      client-login="${acm.websockets.stomp_broker_relay.client_login}"
+                                      client-passcode="${acm.websockets.stomp_broker_relay.client_passcode}"
                                       system-login="${acm.websockets.stomp_broker_relay.system_login}"
                                       system-passcode="${acm.websockets.stomp_broker_relay.system_passcode}"/>
         <websocket:client-inbound-channel>

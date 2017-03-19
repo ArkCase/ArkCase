@@ -1,0 +1,24 @@
+{
+  "search": {
+    "title": "Búsqueda",
+    "search.btn": "Búsqueda",
+    "export.btn": "es_Export",
+    "search.placeholder": "es_Type in to search",
+    "menus": {
+      "leftnav.item": "Búsqueda"
+    },
+    "comp":{
+      "grid": {
+        "columns": {
+          "id": "es_ID",
+          "name": "es_Name",
+          "type": "es_Type",
+          "title": "es_Title",
+          "parent": "es_Parent",
+          "assignee": "es_Assignee",
+          "modified": "es_Modified"
+        }
+      }
+    }
+  }
+}

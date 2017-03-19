@@ -66,8 +66,17 @@ describe('notification page test', function() {
             notificationPage.navigateToPage("Notifications");
             notificationPage.selectNotification(data.parentType)
             notificationPage.clicksortObjectType();
+            notificationPage.waitForSorting(data.expected);
             expect(notificationPage.returnObjectType()).toEqual(data.expected, "Object type is not correct in result table");
         });
 
     });
+
+    //Click on the Notification Module and verify that description date/time is equal to modified column date/time
+
+    it('should verify that description date/time is equal to modified column date/time', function() {
+        notificationPage.navigateToPage("Notifications");
+        expect(notificationPage.returnDescription()).toContain(notificationPage.returnModifiedBy(), "In description of notification modified date is not correct");
+    });
+
 });

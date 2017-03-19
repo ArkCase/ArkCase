@@ -1,0 +1,250 @@
+{
+  "common": {
+    "select.option.none": "(Select One)",
+    "defaultDateFormat": "MM/DD/YYYY",
+    "defaultTimeFormat": "hh:mm:ss",
+    "defaultDateTimeFormat": "MM/DD/YYYY hh:mm",
+    "defaultDatePickerFormat": "MM/dd/yyyy",
+    "defaultDateUIFormat": "MM/dd/yyyy",
+    "defaultDateTimeUIFormat": "MM/dd/yyyy HH:mm"
+  },
+  "common.service": {
+    "error.invalidData": "Invalid data"
+  },
+  "common.objects": {
+    "progressNoData": "[ No data ]",
+    "progressLoading": "Loading data ",
+    "progressError": "Failed to load data "
+  },
+  "common.frevvo": {
+    "defaultDateFormat": "YYYY-MM-DD"
+  },
+  "common.service.messageService": {
+    "authorizationError": "You are not authorized to take this action",
+    "actionMessages": {
+      "success": "Action was successful",
+      "error": "Action error"
+    }
+  },
+  "common.directive.docTree": {
+    "btnRefresh": "Refresh",
+    "waitUploading": "Uploading...",
+    "confirmVersion": "Are you sure to set back to older version?",
+    "declareSuccessful": "Declare successful. Refreshing Document Tree...",
+    "prevItems": " items above...",
+    "prevItemsTooltip": "Review previous items",
+    "moreItems": " more items...",
+    "moreItemsTooltip": "Load more items",
+    "moreItemsBegin": "More items...",
+    "email": {
+      "defaultTitle": "ArkCase Documents",
+      "headerForLinks": "Please follow the links below to view the document(s). Links expire in 3 days.",
+      "footerForLinks": "Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com",
+      "subjectForAttachment": "Documents from ArkCase",
+      "bodyForAttachment": "Please find attached the documents sent to you from ArkCase.",
+      "headerForAttachment": "Hello,",
+      "footerForAttachment": "Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com"
+    },
+    "menu": {
+      "noop": "(Select Item)",
+      "editWithWebDAV": "Edit"
+    },
+    "table.columns": {
+      "title": "Title",
+      "type": "Type",
+      "created": "Created",
+      "modified": "Modified",
+      "author": "Author",
+      "version": "Version",
+      "status": "Status"
+    },
+    "dndDialog": {
+      "title": "Drag and Drop",
+      "radReplace.text": "Replace document (If more then one files are dropped, only first one is used)",
+      "radUploadToParent.text": "Create document(s) in parent folder",
+      "selFileTypes.label": "File Type:",
+      "optFileType.prompt": "[choose file type]",
+      "btnCancel.text": "Cancel",
+      "btnOk.text": "OK"
+    },
+    "emailDialog": {
+      "title": "Email",
+      "recipients": "Recipients:",
+      "btnCancel.text": "Cancel",
+      "btnOk.text": "Send Email",
+      "gridColumns": {
+        "name": "Name",
+        "email": "Email"
+      }
+    },
+    "comment": {
+      "title": "Checkin New Document",
+      "addComent": "Detailed Note",
+      "btnCancel.text": "Cancel",
+      "btnOk.text": "Checkin",
+      "chooseFiles": "Choose Files",
+      "noFiles": "No Files Selected"
+    },
+    "error": {
+      "nodeTitle": "(Error)"
+    },
+    "lockedTitle": "This document is locked by "
+  },
+  "common.directive.objectTree": {
+    "btnPrev.title": " records above...",
+    "btnPrev.toolTip": "Review previous records",
+    "btnNext.titleUnknownSize": "More records...",
+    "btnNext.title": " more records...",
+    "btnNext.toolTip": "Load more records",
+    "edtQuery.placeHolder": "Search",
+    "btnQuery.text": "Go!",
+    "errorNode.title": "(Error)",
+    "errorNode.toolTip": "(Error)",
+    "noAccessNode.title": "(No Access)",
+    "noAccessNode.toolTip": "(No Access)"
+  },
+  "common.directive.simplePager": {
+    "rowCountLabel": "items per page",
+    "pagerCountMiddleLabel": " of ",
+    "pagerCountLabel": " items"
+  },
+  "common.directive.objectAuthorizationRoles": {
+    "choose": "Choose",
+    "not_authorized": "Not Authorized",
+    "tooltip.move_right": "Move Right",
+    "tooltip.move_left": "Move Left",
+    "authorized": "Authorized"
+  },
+  "common.directive.searchModal": {
+    "header": "Search",
+    "btnSearch.text": "Search",
+    "btnOk.text": "OK",
+    "btnCancel.text": "Cancel",
+    "edtPlaceholder": "Type in to search",
+    "noData.text": "No Results"
+  },
+  "common.directive.coreNotes": {
+    "title": "Notes",
+    "modal.addNote": "Add Note",
+    "modal.editNote": "Edit Record",
+    "modal.notes.label": "Note",
+    "modal.btnOk.text": "Save",
+    "modal.btnCancel.text": "Cancel"
+  },
+  "common.directive.corePeople": {
+    "title": "People",
+    "contactMethods": {
+      "title": "Contact Methods",
+      "modal": {
+        "addContactMethod": "Add Contact Method",
+        "editContactMethod": "Edit Record",
+        "contactMethodTypes.label": "Contact Method Types",
+        "value.label": "Value",
+        "btnCancel.text": "Cancel",
+        "btnOk.text": "Save"
+      }
+    },
+    "organizations": {
+      "title": "Organizations",
+      "modal": {
+        "addOrganization": "Add Organization",
+        "editOrganization": "Edit Record",
+        "organizationTypes.label": "Organization Types",
+        "selectExisting.label": "Select Existing",
+        "addNew.label": "Add New",
+        "value.label": "Value",
+        "btnCancel.text": "Cancel",
+        "btnOk.text": "Save",
+        "dialogOrganizationPicker": {
+          "header": "Choose Organization",
+          "table.columns": {
+            "type": "Organization Type",
+            "name": "Value"
+          }
+        }
+      }
+    },
+    "addresses": {
+      "title": "Addresses",
+      "modal": {
+        "addAddress": "Add Address",
+        "editAddress": "Edit Record",
+        "addressTypes.label": "Address Types",
+        "street.label": "Street",
+        "city.label": "City",
+        "zip.label": "Zip",
+        "state.label": "State",
+        "country.label": "Country",
+        "btnCancel.text": "Cancel",
+        "btnOk.text": "Save"
+      }
+    },
+    "aliases": {
+      "title": "Aliases",
+      "modal": {
+        "addAlias": "Add Alias",
+        "editAlias": "Edit Record",
+        "aliasTypes.label": "Alias Types",
+        "value.label": "Value",
+        "btnCancel.text": "Cancel",
+        "btnOk.text": "Save"
+      }
+    },
+    "people": {
+      "title": "People",
+      "modal": {
+        "addPeople": "Add Person",
+        "editPeople": "Edit Record",
+        "personTypes.label": "Person Types",
+        "givenName.label": "First Name",
+        "familyName.label": "Last Name",
+        "btnCancel.text": "Cancel",
+        "btnOk.text": "Save"
+      }
+    }
+  },
+  "common.directive.coreCalendar": {
+    "title": "Calendar",
+    "start.label": "Start: ",
+    "end.label": "End: "
+  },
+  "common.directive.coreParticipants": {
+    "title": "Participants",
+    "modal.addParticipant.label": "Add Participant",
+    "modal.editParticipant.label": "Edit Record",
+    "modal.participantType.label": "Participant Type ",
+    "modal.participantName.label": "Participant Name",
+    "modal.btnOk.text": "Save",
+    "modal.btnCancel.text": "Cancel",
+    "modal.dialogUserPicker.header": "Search User",
+    "modal.dialogGroupPicker.header": "Search Group",
+    "message": {
+      "error.groupType": "The owning group cannot be a person.",
+      "error.userType": " User type cannot be a group.",
+      "error.assigneeUnique": "Only one assignee is allowed.",
+      "error.owninggroupUnique": "Only one owning group is allowed.",
+      "error.noAccessCombo": "The combination of No Access and Assignee is not allowed."
+    }
+  },
+  "common.comp.acmLogin": {
+    "confirmLogout": "For your protection, application is about to logout. Click Cancel to stay logged in."
+  },
+  "common.objectTypes": {
+    "CASE_FILE": "Case File",
+    "COMPLAINT": "Complaint",
+    "TASK": "Task",
+    "TIMESHEET": "Timesheet",
+    "COSTSHEET": "Costsheet",
+    "FILE": "File"
+  },
+  "frevvo.dialogUserPicker": {
+    "header": "Choose User",
+    "table.columns": {
+      "name": "Name",
+      "type": "Type",
+      "title": "Title",
+      "id": "Username"
+    }
+  },
+  "common.objects.objectWasCreatedMessage": "{{objectTypeString}} with id {{objectId}} was created."
+}

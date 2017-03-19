@@ -1,0 +1,22 @@
+{
+  "subscriptions": {
+    "title": "購読",
+    "search.btn": "検索",
+    "export.btn": "ja_Export",
+    "search.placeholder": "ja_Search for subscriptions",
+    "menus": {
+      "leftnav.item": "購読"
+    },
+    "comp":{
+      "grid": {
+        "columns": {
+          "id": "ja_ID",
+          "event": "ja_Event",
+          "parentName": "ja_Parent Name",
+          "parentType": "ja_Parent Type",
+          "modified": "ja_Modified"
+        }
+      }
+    }
+  }
+}

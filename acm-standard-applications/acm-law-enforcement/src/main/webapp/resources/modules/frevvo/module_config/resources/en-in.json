@@ -1,0 +1,27 @@
+{
+  "frevvo": {
+    "title": "Frevvo",
+    "errorForm": "Frevvo form not specified"
+  },
+  "frevvo.dialogUserPicker": {
+    "header": "Choose User",
+    "table.columns": {
+      "name": "Name",
+      "type": "Type",
+      "title": "Title",
+      "id": "Username"
+    }
+  },
+  "frevvo.dialogObjectPicker": {
+    "header": "Search for object",
+    "table.columns": {
+      "name": "Name",
+      "type": "Type",
+      "title": "Title",
+      "id": "ID"
+    }
+  },
+  "frevvo.timesheetCustomPicker": {
+    "header": "Select charge code"
+  }
+}

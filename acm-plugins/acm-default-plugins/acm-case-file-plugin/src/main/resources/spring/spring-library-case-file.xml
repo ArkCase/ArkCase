@@ -159,6 +159,7 @@
         <property name="onEnterQueueBusinessRule" ref="onEnterQueueBusinessRule"/>
         <property name="queueService" ref="queueService"/>
         <property name="startBusinessProcessService" ref="startBusinessProcessService"/>
+        <property name="saveCaseFileBusinessRule" ref="saveCaseFileBusinessRule"/>
     </bean>
 
 </beans>

@@ -1,0 +1,395 @@
+{
+  "admin": {
+    "title": "Admin",
+    "security.title": "Security",
+    "security.functionalAccessControl": "Functional Access Control",
+    "security.functionalAccessControl.applicationRole": "Application Role",
+    "security.ldapConfig": "LDAP Configuration",
+    "security.ldapConfig.addNewDirectory": "Add New Directory",
+    "security.ldapConfig.table.ldapUrl": "LDAP Url",
+    "security.ldapConfig.table.directoryName": "Directory Name",
+    "security.ldapConfig.data": {
+      "addNewDirectory": "Add New Directory",
+      "editRecord": "Edit Record",
+      "id": "ID",
+      "ldapUrl": "LDAP Url",
+      "base": "Base",
+      "directoryName": "Directory Name",
+      "authUserDn": "Auth User Dn",
+      "authUserPassword": "Auth User Password",
+      "userSearchBase": "Users Search Base",
+      "userSearchFilter": "User Search Filter",
+      "allUsersFilter": "All Users Filter",
+      "allUsersPageFilter": "All Users Page Filter",
+      "allUsersSortingAttribute": "Sorting attribute for users",
+      "groupSearchBase": "Group Search Base",
+      "groupSearchFilterForUser": "Group Search Filter For User",
+      "userIdAttributeName": "User Id Attribute Name",
+      "userDomain": "User domain",
+      "userDomainNote": "(Note: Fill in the user domain for SSO scenario. For LDAP authentication leave it blank)",
+      "syncPageSize": "Sync Page Size",
+      "groupSearchFilter": "Group Search Filter",
+      "groupsSortingAttribute": "Sorting attribute for groups",
+      "groupSearchPageFilter": "Group Search Page Filter",
+      "enableEditingLdapUsers": "Enable managing users and groups",
+      "cancel": "Cancel",
+      "ok": "OK"
+    },
+    "menus": {
+      "leftnav.item": "Admin"
+    },
+    "security.ldapConfig.data.placeholders": {
+      "id": "Enter directory name",
+      "ldapUrl": "Enter connection URL",
+      "base": "Enter base domain component (e.g. dc=example,dc=com)",
+      "authUserDn": "Enter user DN for authentication (e.g. cn=John Doe,ou=users,dc=example,dc=com)",
+      "authUserPassword": "Enter password for authentication user",
+      "userSearchBase": "Enter users search base (e.g. ou=users)",
+      "userSearchFilter": "Enter search filter for single user (e.g. (&(objectClass=person)(uid=%s))",
+      "allUsersFilter": "Enter search filter for all users (e.g. (objectClass=person))",
+      "allUsersPageFilter": "Enter filter including sort-attribute(e.g. (&(objectClass=person)(uidNumber>=%s)))",
+      "allUsersSortingAttribute": "Enter sorting attribute for users (e.g. 'uidNumber')",
+      "groupSearchBase": "Enter search base for groups (e.g. ou=groups)",
+      "groupSearchFilterForUser": "Enter search filter for user in group (e.g. (&(objectClass=group)(member=%s)))",
+      "userIdAttributeName": "Enter attribute used for user id (e.g. 'uid')",
+      "userDomain": "Enter user domain",
+      "syncPageSize": "Enter paging size",
+      "groupSearchFilter": "Enter search filter for groups (e.g. (objectClass=group))",
+      "groupsSortingAttribute": "Enter attribute for sorting groups (e.g. 'gidNumber')",
+      "groupSearchPageFilter": "Enter filter including sort-attribute (e.g. (&(objectClass=group)(gidNumber>=%s)))",
+      "enableEditingLdapUsers": "Check if managing users and groups to your DS is allowed"
+    },
+    "security.ldapConfig.messages": {
+      "delete.success": "Successfully deleted row.",
+      "delete.error": "Error deleting row.",
+      "insert.success": "Successfully inserted new row.",
+      "insert.error": "Error inserting new row.",
+      "update.success": "Successfully updated row.",
+      "update.error": "Error updating row."
+    },
+    "security.ldapConfig.dialog": {
+      "cancel": "Cancel",
+      "ok": "OK",
+      "confirm.delete": {
+        "deleteBtn": "Delete",
+        "cancelBtn": "Cancel",
+        "headerText": "Are you sure?",
+        "bodyText": "This record will be deleted. Are you sure?"
+      }
+    },
+    "admin.security.addNew": "Add New Directory",
+    "security.organizationalHierarchy": {
+      "title": "Organizational Hierarchy",
+      "btn": {
+        "createAdHocGroup": "createAdHocGroup"
+      },
+      "createGroupDialog": {
+        "ldapGroup": {
+          "title": "Add LDAP Group"
+        },
+        "adHocGroup": {
+          "title": "Add Ad-Hoc Group"
+        },
+        "selectDirectory": "--Choose Directory Config--",
+        "disabledGroupWarning": "Adding new LDAP groups is not allowed for this directory!",
+        "name": "Name",
+        "namePlaceholder": "Enter group name",
+        "description": "Description",
+        "descriptionPlaceholder": "Enter Description",
+        "btn": {
+          "ok": "Add Ad-Hoc Group",
+          "cancel": "Cancel"
+        }
+      },
+      "addSubGroupDialog": {
+        "title": "Add Subgroup to",
+        "name": "Name",
+        "namePlaceholder": "Enter group name",
+        "description": "Description",
+        "descriptionPlaceholder": "Enter Description",
+        "btn": {
+          "ok": "Add Ad-Hoc Group",
+          "cancel": "Cancel"
+        }
+      },
+      "addMembers": {
+        "title": "Add Members",
+        "btn": {
+          "search": "Go!",
+          "cancel": "Cancel",
+          "ok": "Add",
+          "searchPlaceholder": "Enter to search for members."
+        }
+      },
+      "createUserDialog": {
+        "addLdapMember": {
+          "title": "Add Ldap Member",
+          "btn": {
+            "cancel": "Cancel",
+            "ok": "Add Ldap User"
+          }
+        },
+        "editLdapMember": {
+          "title": "Edit Ldap Member",
+          "btn": {
+            "cancel": "Cancel",
+            "ok": "Edit Ldap User"
+          }
+        },
+        "username": "Username",
+        "firstName": "FirstName",
+        "lastName": "LastName",
+        "email": "Email",
+        "password": "Password"
+      },
+      "addMembersGridColumns": {
+        "name": "Name",
+        "type": "Type",
+        "title": "Title",
+        "parent": "Parent",
+        "assignee": "Assignee",
+        "modified": "Modified"
+      },
+      "addSupervisor": {
+        "title": "Add Supervisor",
+        "btn": {
+          "search": "Go!",
+          "cancel": "Cancel",
+          "ok": "Add",
+          "searchPlaceholder": "Enter to search for supervisor."
+        }
+      },
+      "addSupervisorGridColumns": {
+        "name": "Name",
+        "type": "Type",
+        "title": "Title",
+        "parent": "Parent",
+        "assignee": "Assignee",
+        "modified": "Modified"
+      },
+      "dialog.group": {
+        "confirm.delete": {
+          "cancelBtn": "Cancel",
+          "deleteBtn": "Delete",
+          "headerText": "You are about to delete group: ",
+          "bodyText": "Are you sure?"
+        }
+      },
+      "dialog.member": {
+        "confirm.delete": {
+          "cancelBtn": "Cancel",
+          "deleteBtn": "Delete",
+          "headerText": "You are about to delete member: ",
+          "bodyText": "Are you sure?"
+        }
+      },
+      "messages": {
+        "delete": {
+          "group": {
+            "success": "success",
+            "error": "error"
+          },
+          "member": {
+            "success": "success",
+            "error": "error"
+          }
+        }
+      }
+    },
+    "security.selectPrivileges": "Create Role/Select Privileges",
+    "security.selectPrivileges.applicationRole": "Application Role",
+    "security.selectPrivileges.createRole": "Create Role",
+    "security.selectPrivileges.editRole": "Edit Role",
+    "security.selectPrivileges.applyChanges": "Apply Changes",
+    "security.selectPrivileges.enterRoleName": "Enter the role name in the box below.",
+    "security.selectPrivileges.cancel": "Cancel",
+    "security.selectPrivileges.name": "Name",
+    "security.modules": "Modules",
+    "security.modules.module": "Module",
+    "dashboard.title": "Dashboard",
+    "dashboard.config": "Dashboard Configuration",
+    "dashboard.widgets": "Widgets",
+    "reports.title": "Reports",
+    "reports.config": "Reports Configuration",
+    "forms.title": "Forms",
+    "forms.config": "Form Configuration",
+    "workflows.title": "Workflows",
+    "workflows.config": "Workflow Configuration",
+    "workflows.config.activate": {
+      "error": "Cant make this process active!",
+      "success": "Process succesfully activated."
+    },
+    "workflows.config.showHistory.dialog": {
+      "title": "History",
+      "body": "Below is a history of previous BPMN files. To reinstate a previous workflow, select the workflow and click Make Active",
+      "cancel": "Cancel",
+      "activate": "Make Active"
+    },
+    "workflows.config.grid": {
+      "businessProcess": "Business Process",
+      "description": "Description",
+      "active": "Active",
+      "modified": "Modified",
+      "creator": "Author"
+    },
+    "workflows.config.btn": {
+      "createNew": "Create New Model",
+      "uploadNew": "Upload New BPMN"
+    },
+    "workflows.config.links": {
+      "download": "Download",
+      "replaceFile": "Replace File",
+      "versionHistory": "Version History"
+    },
+    "workflows.config.upload": {
+      "success": "Successfully uploaded new process definition",
+      "error": "Error uploading new process definition"
+    },
+    "formWorkflows.title": "Form/Workflow Link",
+    "formWorkflows.link": "Link Forms/Workflows",
+    "formWorkflows.link.undo": "Undo",
+    "formWorkflows.link.saveChanges": "Save Changes",
+    "formWorkflows.link.editRole.save.success": "Link Forms/Workflows configuration saved successfully",
+    "formWorkflows.link.editRole.save.error": "Can't save Link Forms/Workflows configuration",
+    "application": {
+      "title": "Application",
+      "labels.config": {
+        "defaultLabel": "Default",
+        "applyBtn": "Apply",
+        "resetModule": "Reset Module",
+        "resetModule.confirm": "Are you sure you want reset custom resources for current module?",
+        "resetModule.title": "Reset current module (delete custom resources)",
+        "resetAll": "Reset All",
+        "resetAll.confirm": "Are you sure you want reset all custom resources for all modules?",
+        "resetAll.title": "Reset all resources (delete all custom resources)",
+        "refreshAll": "Refresh All",
+        "refreshAll.title": "Refresh all resources (keep custom resources)",
+        "title": "Label Configuration",
+        "filterBy": "Filter By Id",
+        "filterByValue": "Filter By Value",
+        "data": {
+          "description": "Description",
+          "defaultValue": "Default Value",
+          "id": "ID",
+          "value": "Value"
+        }
+      },
+      "module.config": {
+        "title": "Module Configuration"
+      },
+      "userName.config": {
+        "title": "Username Display Configuration",
+        "userId.label": "Use User Identifier",
+        "userName.label": "Use Full Username",
+        "apply": "Apply",
+        "modal.title": "Information",
+        "modal.info": "Settings will take effect after refresh",
+        "modal.ok": "OK"
+      },
+      "login.config": {
+        "title": "Login Configuration",
+        "idleLimit.label": "Login idle limit (in milliseconds)",
+        "inform": "Settings will take effect for all new user sessions",
+        "apply.label": "Apply"
+      },
+      "auditHistory.config": {
+        "title": "Audit History",
+        "historyDays.label": "Keep Audit and Notification events (in days)",
+        "inform": "Setting successfully saved",
+        "apply.label": "Apply"
+      }
+    },
+    "branding.title": "Branding",
+    "branding.logo": "Logo",
+    "branding.logo.messages": {
+      "upload.success": "Custom logo files updated. Refresh browser page to see result.",
+      "upload.error": "Error uploading custom logo files."
+    },
+    "branding.logo.header.title": "Header",
+    "branding.logo.login.title": "Login Page",
+    "branding.logo.warningMessage": "Only PNG format is allowed. Recommended ratio is 1 to 4. Minimum height is 50px.",
+    "branding.logo.btn": {
+      "chooseHeader": "Choose Header logo",
+      "chooseLogin": "Choose Login logo",
+      "saveFiles": "Save"
+    },
+    "branding": {
+      "customCss": "Custom CSS",
+      "customCss.save.success": "Custom CSS updated. Refresh browser page to see result.",
+      "customCss.save.error": "Error saving Custom CSS.",
+      "customCss.save": "Save"
+    },
+    "correspondenceManagement": {
+      "title": "Correspondence Management",
+      "templates": "Correspondence Templates",
+      "templates.addNewTemplate": "Upload Template",
+      "templates.addTemplate": "Upload",
+      "templates.versionTemplate": "Versions",
+      "templates.deleteTemplate": "Delete",
+      "templates.editTemplate": "Edit Template",
+      "templates.grid": {
+        "id": "ID",
+        "title": "Title",
+        "label": "Display Name",
+        "path": "Path",
+        "created": "Created",
+        "modified": "Modified",
+        "creator": "Creator",
+        "modifier": "Modifier",
+        "activated": "Status",
+        "objectType": "Object Type",
+        "version": "Version",
+        "templateVersionActive" : "Active"
+      },
+      "templates.fieldNames.label": "Map fields to values from the template",
+      "templates.querySelect": {
+        "header.text": "Select Query",
+        "btnCancel.text": "Cancel",
+        "btnOk.text": "Select Query",
+        "table.columns": {
+          "beanId": "Bean ID",
+          "jpaQuery": "JPA Query",
+          "queryType": "Query Type"
+        }
+      },
+      "templates.modal": {
+        "objectTypes.label": "Object Types",
+        "querySelect.label": "Query Select",
+        "label.label": "Display Name",
+        "btnCancel.text": "Cancel",
+        "btnOk.text": "Upload Template"
+      },
+      "templates.version.modal": {
+        "btnOk.text": "OK"
+      },
+      "mergefields": "Merge Fields Configuration",
+      "mergefields.saveMergeFields": "Save",
+      "mergefields.versionMergeFields": "Versions",
+      "mergefields.grid": {
+        "fieldId": "ID",
+        "fieldValue": "Value",
+        "fieldDescription": "Description"
+      },
+      "mergefields.version.grid": {
+        "mergingVersion": "Version",
+        "modified": "Modified",
+        "modifier": "Modifier",
+        "mergingActiveVersion": "Active"
+      },
+      "mergefields.version.modal": {
+        "btnLoadVersion.text": "Load Version",
+        "btnCancel.text": "Cancel"
+      }
+    },
+    "forms.defaultValue": "Select Target",
+    "forms.addForm": "Add Plain Form",
+    "forms.data": {
+      "name": "Form Name",
+      "applicationName": "Application name",
+      "description": "Description",
+      "target": "Target"
+    },
+    "forms.message.delete.success": "Successfully deleted row.",
+    "forms.message.delete.error": "Error deleting row."
+  }
+}

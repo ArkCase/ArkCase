@@ -1,0 +1,23 @@
+{
+  "tags": {
+    "title": "標籤",
+    "search.btn": "搜索",
+    "search.placeholder": "zh-tw_Search for tags",
+    "menus": {
+      "leftnav.item": "標籤"
+    },
+    "comp":{
+      "grid": {
+        "columns": {
+          "id": "zh-tw_ID",
+          "name": "zh-tw_Name",
+          "type": "zh-tw_Type",
+          "title": "zh-tw_Title",
+          "parent": "zh-tw_Parent",
+          "assignee": "zh-tw_Assignee",
+          "modified": "zh-tw_Modified"
+        }
+      }
+    }
+  }
+}

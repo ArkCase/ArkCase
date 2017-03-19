@@ -1,0 +1,395 @@
+{
+  "admin": {
+    "title": "Verwaltung",
+    "security.title": "de_Security",
+    "security.functionalAccessControl": "de_Functional Access Control",
+    "security.functionalAccessControl.applicationRole": "de_Application Role",
+    "security.ldapConfig": "de_LDAP Configuration",
+    "security.ldapConfig.addNewDirectory": "de_Add New Directory",
+    "security.ldapConfig.table.ldapUrl": "de_LDAP Url",
+    "security.ldapConfig.table.directoryName": "de_Directory Name",
+    "security.ldapConfig.data": {
+      "addNewDirectory": "de_Add New Directory",
+      "editRecord": "de_Edit Record",
+      "id": "de_ID",
+      "ldapUrl": "de_LDAP Url",
+      "base": "de_Base",
+      "directoryName": "de_Directory Name",
+      "authUserDn": "de_Auth User Dn",
+      "authUserPassword": "de_Auth User Password",
+      "userSearchBase": "de_Users Search Base",
+      "userSearchFilter": "de_User Search Filter",
+      "allUsersFilter": "de_All Users Filter",
+      "allUsersPageFilter": "de_All Users Page Filter",
+      "allUsersSortingAttribute": "de_Sorting attribute for users",
+      "groupSearchBase": "de_Group Search Base",
+      "groupSearchFilterForUser": "de_Group Search Filter For User",
+      "userIdAttributeName": "de_User Id Attribute Name",
+      "userDomain": "de_User domain",
+      "userDomainNote": "de_(Note: Fill in the user domain for SSO scenario. For LDAP authentication leave it blank)",
+      "syncPageSize": "de_Sync Page Size",
+      "groupSearchFilter": "de_Group Search Filter",
+      "groupsSortingAttribute": "de_Sorting attribute for groups",
+      "groupSearchPageFilter": "de_Group Search Page Filter",
+      "enableEditingLdapUsers": "de_Enable managing users and groups",
+      "cancel": "de_Cancel",
+      "ok": "de_OK"
+    },
+    "menus": {
+      "leftnav.item": "Verwaltung"
+    },
+    "security.ldapConfig.data.placeholders": {
+      "id": "de_Enter directory name",
+      "ldapUrl": "de_Enter connection URL",
+      "base": "de_Enter base domain component (e.g. dc=example,dc=com)",
+      "authUserDn": "de_Enter user DN for authentication (e.g. cn=John Doe,ou=users,dc=example,dc=com)",
+      "authUserPassword": "de_Enter password for authentication user",
+      "userSearchBase": "de_Enter users search base (e.g. ou=users)",
+      "userSearchFilter": "de_Enter search filter for single user (e.g. (&(objectClass=person)(uid=%s))",
+      "allUsersFilter": "de_Enter search filter for all users (e.g. (objectClass=person))",
+      "allUsersPageFilter": "de_Enter filter including sort-attribute(e.g. (&(objectClass=person)(uidNumber>=%s)))",
+      "allUsersSortingAttribute": "de_Enter sorting attribute for users (e.g. 'uidNumber')",
+      "groupSearchBase": "de_Enter search base for groups (e.g. ou=groups)",
+      "groupSearchFilterForUser": "de_Enter search filter for user in group (e.g. (&(objectClass=group)(member=%s)))",
+      "userIdAttributeName": "de_Enter attribute used for user id (e.g. 'uid')",
+      "userDomain": "de_Enter user domain",
+      "syncPageSize": "de_Enter paging size",
+      "groupSearchFilter": "de_Enter search filter for groups (e.g. (objectClass=group))",
+      "groupsSortingAttribute": "de_Enter attribute for sorting groups (e.g. 'gidNumber')",
+      "groupSearchPageFilter": "de_Enter filter including sort-attribute (e.g. (&(objectClass=group)(gidNumber>=%s)))",
+      "enableEditingLdapUsers": "de_Check if managing users and groups to your DS is allowed"
+    },
+    "security.ldapConfig.messages": {
+      "delete.success": "de_Successfully deleted row.",
+      "delete.error": "de_Error deleting row.",
+      "insert.success": "de_Successfully inserted new row.",
+      "insert.error": "de_Error inserting new row.",
+      "update.success": "de_Successfully updated row.",
+      "update.error": "de_Error updating row."
+    },
+    "security.ldapConfig.dialog": {
+      "cancel": "de_Cancel",
+      "ok": "de_OK",
+      "confirm.delete": {
+        "deleteBtn": "de_Delete",
+        "cancelBtn": "de_Cancel",
+        "headerText": "de_Are you sure?",
+        "bodyText": "de_This record will be deleted. Are you sure?"
+      }
+    },
+    "admin.security.addNew": "de_Add New Directory",
+    "security.organizationalHierarchy": {
+      "title": "de_Organizational Hierarchy",
+      "btn": {
+        "createAdHocGroup": "de_createAdHocGroup"
+      },
+      "createGroupDialog": {
+        "ldapGroup": {
+          "title": "de_Add LDAP Group"
+        },
+        "adHocGroup": {
+          "title": "de_Add Ad-Hoc Group"
+        },
+        "selectDirectory": "de_--Choose Directory Config--",
+        "disabledGroupWarning": "de_Adding new LDAP groups is not allowed for this directory!",
+        "name": "de_Name",
+        "namePlaceholder": "de_Enter group name",
+        "description": "de_Description",
+        "descriptionPlaceholder": "de_Enter Description",
+        "btn": {
+          "ok": "de_Add Ad-Hoc Group",
+          "cancel": "de_Cancel"
+        }
+      },
+      "addSubGroupDialog": {
+        "title": "de_Add Subgroup to",
+        "name": "de_Name",
+        "namePlaceholder": "de_Enter group name",
+        "description": "de_Description",
+        "descriptionPlaceholder": "de_Enter Description",
+        "btn": {
+          "ok": "de_Add Ad-Hoc Group",
+          "cancel": "de_Cancel"
+        }
+      },
+      "addMembers": {
+        "title": "de_Add Members",
+        "btn": {
+          "search": "de_Go!",
+          "cancel": "de_Cancel",
+          "ok": "de_Add",
+          "searchPlaceholder": "de_Enter to search for members."
+        }
+      },
+      "createUserDialog": {
+        "addLdapMember": {
+          "title": "de_Add Ldap Member",
+          "btn": {
+            "cancel": "de_Cancel",
+            "ok": "de_Add Ldap User"
+          }
+        },
+        "editLdapMember": {
+          "title": "de_Edit Ldap Member",
+          "btn": {
+            "cancel": "de_Cancel",
+            "ok": "de_Edit Ldap User"
+          }
+        },
+        "username": "de_Username",
+        "firstName": "de_FirstName",
+        "lastName": "de_LastName",
+        "email": "de_Email",
+        "password": "de_Password"
+      },
+      "addMembersGridColumns": {
+        "name": "de_Name",
+        "type": "de_Type",
+        "title": "de_Title",
+        "parent": "de_Parent",
+        "assignee": "de_Assignee",
+        "modified": "de_Modified"
+      },
+      "addSupervisor": {
+        "title": "de_Add Supervisor",
+        "btn": {
+          "search": "de_Go!",
+          "cancel": "de_Cancel",
+          "ok": "de_Add",
+          "searchPlaceholder": "de_Enter to search for supervisor."
+        }
+      },
+      "addSupervisorGridColumns": {
+        "name": "de_Name",
+        "type": "de_Type",
+        "title": "de_Title",
+        "parent": "de_Parent",
+        "assignee": "de_Assignee",
+        "modified": "de_Modified"
+      },
+      "dialog.group": {
+        "confirm.delete": {
+          "cancelBtn": "de_Cancel",
+          "deleteBtn": "de_Delete",
+          "headerText": "de_You are about to delete group: ",
+          "bodyText": "de_Are you sure?"
+        }
+      },
+      "dialog.member": {
+        "confirm.delete": {
+          "cancelBtn": "de_Cancel",
+          "deleteBtn": "de_Delete",
+          "headerText": "de_You are about to delete member: ",
+          "bodyText": "de_Are you sure?"
+        }
+      },
+      "messages": {
+        "delete": {
+          "group": {
+            "success": "de_success",
+            "error": "de_error"
+          },
+          "member": {
+            "success": "de_success",
+            "error": "de_error"
+          }
+        }
+      }
+    },
+    "security.selectPrivileges": "de_Create Role/Select Privileges",
+    "security.selectPrivileges.applicationRole": "de_Application Role",
+    "security.selectPrivileges.createRole": "de_Create Role",
+    "security.selectPrivileges.editRole": "de_Edit Role",
+    "security.selectPrivileges.applyChanges": "de_Apply Changes",
+    "security.selectPrivileges.enterRoleName": "de_Enter the role name in the box below.",
+    "security.selectPrivileges.cancel": "de_Cancel",
+    "security.selectPrivileges.name": "de_Name",
+    "security.modules": "de_Modules",
+    "security.modules.module": "de_Module",
+    "dashboard.title": "de_Dashboard",
+    "dashboard.config": "de_Dashboard Configuration",
+    "dashboard.widgets": "de_Widgets",
+    "reports.title": "de_Reports",
+    "reports.config": "de_Reports Configuration",
+    "forms.title": "de_Forms",
+    "forms.config": "de_Form Configuration",
+    "workflows.title": "de_Workflows",
+    "workflows.config": "de_Workflow Configuration",
+    "workflows.config.activate": {
+      "error": "de_Cant make this process active!",
+      "success": "de_Process succesfully activated."
+    },
+    "workflows.config.showHistory.dialog": {
+      "title": "de_History",
+      "body": "de_Below is a history of previous BPMN files. To reinstate a previous workflow, select the workflow and click Make Active",
+      "cancel": "de_Cancel",
+      "activate": "de_Make Active"
+    },
+    "workflows.config.grid": {
+      "businessProcess": "de_Business Process",
+      "description": "de_Description",
+      "active": "de_Active",
+      "modified": "de_Modified",
+      "creator": "de_Author"
+    },
+    "workflows.config.btn": {
+      "createNew": "de_Create New Model",
+      "uploadNew": "de_Upload New BPMN"
+    },
+    "workflows.config.links": {
+      "download": "de_Download",
+      "replaceFile": "de_Replace File",
+      "versionHistory": "de_Version History"
+    },
+    "workflows.config.upload": {
+      "success": "de_Successfully uploaded new process definition",
+      "error": "de_Error uploading new process definition"
+    },
+    "formWorkflows.title": "de_Form/Workflow Link",
+    "formWorkflows.link": "de_Link Forms/Workflows",
+    "formWorkflows.link.undo": "de_Undo",
+    "formWorkflows.link.saveChanges": "de_Save Changes",
+    "formWorkflows.link.editRole.save.success": "de_Link Forms/Workflows configuration saved successfully",
+    "formWorkflows.link.editRole.save.error": "de_Can't save Link Forms/Workflows configuration",
+    "application": {
+      "title": "de_Application",
+      "labels.config": {
+        "defaultLabel": "de_Default",
+        "applyBtn": "de_Apply",
+        "resetModule": "de_Reset Module",
+        "resetModule.confirm": "de_Are you sure you want reset custom resources for current module?",
+        "resetModule.title": "de_Reset current module (delete custom resources)",
+        "resetAll": "de_Reset All",
+        "resetAll.confirm": "de_Are you sure you want reset all custom resources for all modules?",
+        "resetAll.title": "de_Reset all resources (delete all custom resources)",
+        "refreshAll": "de_Refresh All",
+        "refreshAll.title": "de_Refresh all resources (keep custom resources)",
+        "title": "de_Label Configuration",
+        "filterBy": "de_Filter By Id",
+        "filterByValue": "de_Filter By Value",
+        "data": {
+          "description": "de_Description",
+          "defaultValue": "de_Default Value",
+          "id": "de_ID",
+          "value": "de_Value"
+        }
+      },
+      "module.config": {
+        "title": "de_Module Configuration"
+      },
+      "userName.config": {
+        "title": "de_Username Display Configuration",
+        "userId.label": "de_Use User Identifier",
+        "userName.label": "de_Use Full Username",
+        "apply": "de_Apply",
+        "modal.title": "de_Information",
+        "modal.info": "de_Settings will take effect after refresh",
+        "modal.ok": "de_OK"
+      },
+      "login.config": {
+        "title": "de_Login Configuration",
+        "idleLimit.label": "de_Login idle limit (in milliseconds)",
+        "inform": "de_Settings will take effect for all new user sessions",
+        "apply.label": "de_Apply"
+      },
+      "auditHistory.config": {
+        "title": "de_Audit History",
+        "historyDays.label": "de_Keep Audit and Notification events (in days)",
+        "inform": "de_Setting successfully saved",
+        "apply.label": "de_Apply"
+      }
+    },
+    "branding.title": "de_Branding",
+    "branding.logo": "de_Logo",
+    "branding.logo.messages": {
+      "upload.success": "de_Custom logo files updated. Refresh browser page to see result.",
+      "upload.error": "de_Error uploading custom logo files."
+    },
+    "branding.logo.header.title": "de_Header",
+    "branding.logo.login.title": "de_Login Page",
+    "branding.logo.warningMessage": "de_Only PNG format is allowed. Recommended ratio is 1 to 4. Minimum height is 50px.",
+    "branding.logo.btn": {
+      "chooseHeader": "de_Choose Header logo",
+      "chooseLogin": "de_Choose Login logo",
+      "saveFiles": "de_Save"
+    },
+    "branding": {
+      "customCss": "de_Custom CSS",
+      "customCss.save.success": "de_Custom CSS updated. Refresh browser page to see result.",
+      "customCss.save.error": "de_Error saving Custom CSS.",
+      "customCss.save": "de_Save"
+    },
+    "correspondenceManagement": {
+      "title": "de_Correspondence Management",
+      "templates": "de_Correspondence Templates",
+      "templates.addNewTemplate": "de_Upload Template",
+      "templates.addTemplate": "de_Upload",
+      "templates.versionTemplate": "de_Versions",
+      "templates.deleteTemplate": "de_Delete",
+      "templates.editTemplate": "de_Edit Template",
+      "templates.grid": {
+        "id": "de_ID",
+        "title": "de_Title",
+        "label": "de_Display Name",
+        "path": "de_Path",
+        "created": "de_Created",
+        "modified": "de_Modified",
+        "creator": "de_Creator",
+        "modifier": "de_Modifier",
+        "activated": "de_Status",
+        "objectType": "de_Object Type",
+        "version": "de_Version",
+        "templateVersionActive" : "de_Active"
+      },
+      "templates.fieldNames.label": "de_Map fields to values from the template",
+      "templates.querySelect": {
+        "header.text": "de_Select Query",
+        "btnCancel.text": "de_Cancel",
+        "btnOk.text": "de_Select Query",
+        "table.columns": {
+          "beanId": "de_Bean ID",
+          "jpaQuery": "de_JPA Query",
+          "queryType": "de_Query Type"
+        }
+      },
+      "templates.modal": {
+        "objectTypes.label": "de_Object Types",
+        "querySelect.label": "de_Query Select",
+        "label.label": "de_Display Name",
+        "btnCancel.text": "de_Cancel",
+        "btnOk.text": "de_Upload Template"
+      },
+      "templates.version.modal": {
+        "btnOk.text": "de_OK"
+      },
+      "mergefields": "de_Merge Fields Configuration",
+      "mergefields.saveMergeFields": "de_Save",
+      "mergefields.versionMergeFields": "de_Versions",
+      "mergefields.grid": {
+      "fieldId": "de_ID",
+      "fieldValue": "de_Value",
+      "fieldDescription": "de_Description"
+      },
+      "mergefields.version.grid": {
+        "mergingVersion": "de_Version",
+        "modified": "de_Modified",
+        "modifier": "de_Modifier",
+        "mergingActiveVersion": "de_Active"
+      },
+      "mergefields.version.modal": {
+        "btnLoadVersion.text": "de_Load Version",
+        "btnCancel.text": "de_Cancel"
+      }
+    },
+    "forms.defaultValue": "de_Select Target",
+    "forms.addForm": "de_Add Plain Form",
+    "forms.data": {
+      "name": "de_Form Name",
+      "applicationName": "de_Application name",
+      "description": "de_Description",
+      "target": "de_Target"
+    },
+    "forms.message.delete.success": "de_Successfully deleted row.",
+    "forms.message.delete.error": "de_Error deleting row."
+  }
+}

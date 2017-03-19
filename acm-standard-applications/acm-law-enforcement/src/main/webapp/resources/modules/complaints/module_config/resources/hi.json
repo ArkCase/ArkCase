@@ -1,0 +1,324 @@
+{
+  "complaints": {
+    "title": "शिकायतें",
+    "progressNoComplaint": "hi_[ No complaint data ]",
+    "progressLoading": "hi_Loading complaint ",
+    "progressError": "hi_Failed to load complaint "
+  },
+  "complaints.menus": {
+    "leftnav.item": "शिकायतें",
+    "topbar.item": "शिकायत"
+  },
+  "complaints.comp.info": {
+    "complaintId": "hi_Complaint id:",
+    "complaintNumber": "hi_Complaint ID:",
+    "courtRoomName": "hi_Court Room Name:",
+    "type.label": "Type",
+    "created.label": "Created Date",
+    "priority.label": "Priority",
+    "assignee.label": "Assigned To",
+    "owningGroup.label": "Owning Group",
+    "dueDate.label": "Due Date"
+  },
+  "complaints.comp.actions": {
+    "restrict": "hi_Restrict?",
+    "new.button": "hi_New Complaint",
+    "close.button": "hi_Close Complaint",
+    "subscribe.button": "hi_Subscribe",
+    "unsubscribe.button": "hi_Unsubscribe",
+    "claim.button": "hi_Claim",
+    "unclaim.button": "hi_Unclaim"
+  },
+  "complaints.comp.details": {
+    "title": "hi_Details",
+    "informSaved": "hi_Complaint details saved",
+    "table.columns": {
+      "title": "hi_Details",
+      "modified": "hi_Date Last Modified",
+      "modifier": "hi_User Last Modified"
+    }
+  },
+  "complaints.comp.documents": {
+    "title": "hi_Documents"
+  },
+  "complaints.comp.people": {
+    "title": "hi_People",
+    "table.columns": {
+      "entity": "hi_Entity",
+      "type": "hi_Type",
+      "firstName": "hi_FirstName",
+      "lastName": "hi_LastName"
+    },
+    "contactMethods": {
+      "title": "hi_ContactMethods",
+      "table.columns": {
+        "type": "hi_Type",
+        "value": "hi_Value",
+        "created": "hi_Date Added",
+        "creator": "hi_Added By",
+        "modified": "hi_Last Modified",
+        "modifier": "hi_Modified By"
+      }
+    },
+    "organizations": {
+      "title": "hi_Organizations",
+      "table.columns": {
+        "type": "hi_Type",
+        "value": "hi_Value",
+        "created": "hi_Date Added",
+        "creator": "hi_Added By",
+        "modified": "hi_Last Modified",
+        "modifier": "hi_Modified By"
+      }
+    },
+    "addresses": {
+      "title": "hi_Locations",
+      "table.columns": {
+        "type": "hi_Type",
+        "streetAddress": "hi_Address",
+        "city": "hi_City",
+        "state": "hi_State",
+        "zip": "hi_Zip",
+        "country": "hi_Country",
+        "created": "hi_Date Added",
+        "creator": "hi_Added By",
+        "modified": "hi_Last Modified",
+        "modifier": "hi_Modified By"
+      }
+    },
+    "aliases": {
+      "title": "hi_Aliases",
+      "table.columns": {
+        "type": "hi_Type",
+        "value": "hi_Value",
+        "created": "hi_Date Added",
+        "creator": "hi_Added By",
+        "modified": "hi_Last Modified",
+        "modifier": "hi_Modified By"
+      }
+    },
+    "securityTags": {
+      "title": "hi_Security Tags",
+      "table.columns": {
+        "type": "hi_Type",
+        "value": "hi_Value",
+        "created": "hi_Date Added",
+        "creator": "hi_Added By",
+        "modified": "hi_Last Modified",
+        "modifier": "hi_Modified By"
+      }
+    }
+  },
+  "complaints.comp.participants": {
+    "title": "hi_Participants",
+    "table.columns": {
+      "type": "hi_Type",
+      "name": "hi_Name"
+    },
+    "dialogUserPicker": {
+      "header": "hi_Choose User",
+      "table.columns": {
+        "name": "hi_Name",
+        "type": "hi_Type",
+        "title": "hi_Title",
+        "id": "hi_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "hi_Choose Group",
+      "table.columns": {
+        "name": "hi_Name"
+      }
+    }
+  },
+  "complaints.comp.locations": {
+    "title": "hi_Locations",
+    "table.columns": {
+      "address": "hi_Address",
+      "type": "hi_Type",
+      "city": "hi_City",
+      "state": "hi_State",
+      "zip": "hi_Zip",
+      "modified": "hi_Date Last Modified",
+      "modifier": "hi_User Last Modified"
+    },
+    "modal": {
+      "addLocation": "hi_Add Location",
+      "editLocation": "hi_Edit Record",
+      "type.label": "hi_Type",
+      "street.label": "hi_Street",
+      "city.label": "hi_City",
+      "state.label": "hi_State",
+      "zip.label": "hi_Zip",
+      "btnOk.text": "hi_Save",
+      "btnCancel.text": "hi_Cancel"
+    }
+  },
+  "complaints.comp.notes": {
+    "title": "hi_Notes",
+    "table.columns": {
+      "note": "hi_Note",
+      "created": "hi_Created",
+      "creator": "hi_Author"
+    }
+  },
+  "complaints.comp.tasks": {
+    "title": "hi_Tasks",
+    "table.columns": {
+      "title": "hi_Title",
+      "assignee": "hi_Assignee",
+      "created": "hi_Created",
+      "priority": "hi_Priority",
+      "due": "hi_Due",
+      "status": "hi_Status"
+    },
+    "table.overdue.tooltip": "hi_Task is Overdue",
+    "table.deadline.tooltip": "hi_Deadline is Approaching"
+  },
+  "complaints.comp.references": {
+    "title": "hi_References",
+    "table.columns": {
+      "targetName": "hi_Number",
+      "targetTitle": "hi_Title",
+      "parentName": "hi_Parent",
+      "modified": "hi_Modified",
+      "targetType": "hi_Reference Type",
+      "status": "hi_Status"
+    }
+  },
+  "complaints.comp.history": {
+    "title": "hi_History",
+    "table.columns": {
+      "eventType": "hi_Event Name",
+      "eventDate": "hi_Date",
+      "userId": "hi_User"
+    }
+  },
+  "complaints.comp.time": {
+    "title": "hi_Time",
+    "table.columns": {
+      "name": "hi_Form Name",
+      "user": "hi_User",
+      "tally": "hi_Total Hours",
+      "modified": "hi_Modified Date",
+      "status": "hi_Status"
+    },
+    "formNamePrefix": "hi_Timesheet"
+  },
+  "complaints.comp.cost": {
+    "title": "hi_Cost",
+    "table.columns": {
+      "name": "hi_Form Name",
+      "user": "hi_User",
+      "tally": "hi_Total Cost",
+      "modified": "hi_Modified Date",
+      "status": "hi_Status"
+    },
+    "formNamePrefix": "hi_Costsheet"
+  },
+  "complaints.comp.tags": {
+    "title": "hi_Tags",
+    "table.columns": {
+      "tag": "hi_Tag",
+      "created": "hi_Created",
+      "createdBy": "hi_Created By"
+    },
+    "modal": {
+      "title": "hi_Tag",
+      "search": "hi_Search for Tag",
+      "buttons": {
+        "cancel": "hi_Cancel",
+        "ok": "hi_Add Tag"
+      }
+    },
+    "message": {
+      "tagExists": "hi_Tag with that name or description or text already exists",
+      "tagAssociated": "hi_already associated",
+      "delete": {
+        "success": "hi_Tag deleted successfully",
+        "error": "hi_Error deleting tag"
+      }
+    }
+  },
+  "complaints.comp.calendar": {
+    "title": "hi_Calendar"
+  },
+  "complaints.comp.addreference": {
+    "title": "hi_Add Reference",
+    "cancelButton": "hi_Cancel",
+    "confirmButton": "hi_Add",
+    "search": {
+      "placeholder": "hi_Search for case, complaint, file, task",
+      "btn": "hi_Search"
+    },
+    "grid": {
+      "columns": {
+        "id": "hi_Id",
+        "name": "hi_Name",
+        "type": "hi_Type",
+        "title": "hi_Title",
+        "parent": "hi_Parent",
+        "assignee": "hi_Assignee",
+        "modified": "hi_Modified"
+      }
+    }
+  },
+  "complaints.comp.assigneePickerModal": {
+    "title": "hi_Change Assignee",
+    "assigneeNamelabel": "hi_Assignee Name",
+    "btnCancelText": "hi_Cancel",
+    "btnSaveText": "hi_Save",
+    "searchAssigneeHeader": "hi_Search Assignee"
+  },
+  "complaints.comp.groupPickerModal": {
+    "title": "hi_Change Group",
+    "groupNamelabel": "hi_Group Name",
+    "btnCancelText": "hi_Cancel",
+    "btnSaveText": "hi_Save",
+    "searchGroupHeader": "hi_Search Group"
+  },
+  "complaints.comp.approvalRouting": {
+    "title": "hi_Future Approvers",
+    "addNewTooltip": "hi_Add new approver",
+    "noBuckslipMessage": "hi_No Data",
+    "button": {
+      "save.tooltip": "hi_Save Changes"
+    },
+    "table.columns": {
+      "fullName": "hi_Full Name"
+    },
+    "assignee.label": "hi_Assignee",
+    "owningGroup.label": "hi_Owning Group",
+    "priority.label": "hi_Priority",
+    "startDate.label": "hi_Start Date",
+    "dueDate.label": "hi_Due Date",
+    "state.label": "hi_State"
+  },
+  "complaints.comp.pastApprovals": {
+    "title": "hi_Past Approvers",
+    "noBuckslipMessage": "hi_No Data",
+    "table.columns": {
+      "approvalDate": "hi_Approval Date",
+      "approverId": "hi_Approver",
+      "approverDecision": "hi_Approver Decision"
+    }
+  },
+  "complaints.userOrGroupSearch": {
+    "id": "hi_userSearch",
+    "title": "hi_User/Group Search",
+    "search": {
+      "btn": "hi_Search",
+      "placeholder": "hi_Search for the user or group."
+    },
+    "cancelButton": "hi_Cancel",
+    "confirmButton": "hi_Confirm",
+    "enabled": true,
+    "userOrGroupFacetFilter": "hi_\"object_type_s\":(GROUP OR USER)",
+    "assigneeGridColumns": {
+      "name": "hi_Name",
+      "type": "hi_Type",
+      "title": "hi_Title",
+      "username": "hi_Username"
+    }
+  }
+}

@@ -12,17 +12,16 @@
       "addNewDirectory": "Add New Directory",
       "editRecord": "Edit Record",
       "id": "ID",
-      "name": "Name",
       "ldapUrl": "LDAP Url",
       "base": "Base",
       "directoryName": "Directory Name",
       "authUserDn": "Auth User Dn",
       "authUserPassword": "Auth User Password",
-      "userSearchBase": "User Search Base",
+      "userSearchBase": "Users Search Base",
       "userSearchFilter": "User Search Filter",
       "allUsersFilter": "All Users Filter",
       "allUsersPageFilter": "All Users Page Filter",
-      "allUsersSearchBase": "All Users Search Base",
+      "allUsersSortingAttribute": "Sorting attribute for users",
       "groupSearchBase": "Group Search Base",
       "groupSearchFilterForUser": "Group Search Filter For User",
       "userIdAttributeName": "User Id Attribute Name",
@@ -30,9 +29,35 @@
       "userDomainNote": "(Note: Fill in the user domain for SSO scenario. For LDAP authentication leave it blank)",
       "syncPageSize": "Sync Page Size",
       "groupSearchFilter": "Group Search Filter",
+      "groupsSortingAttribute": "Sorting attribute for groups",
       "groupSearchPageFilter": "Group Search Page Filter",
+      "enableEditingLdapUsers": "Enable managing users and groups",
       "cancel": "Cancel",
       "ok": "OK"
+    },
+    "menus": {
+      "leftnav.item": "Admin"
+    },
+    "security.ldapConfig.data.placeholders": {
+      "id": "Enter directory name",
+      "ldapUrl": "Enter connection URL",
+      "base": "Enter base domain component (e.g. dc=example,dc=com)",
+      "authUserDn": "Enter user DN for authentication (e.g. cn=John Doe,ou=users,dc=example,dc=com)",
+      "authUserPassword": "Enter password for authentication user",
+      "userSearchBase": "Enter users search base (e.g. ou=users)",
+      "userSearchFilter": "Enter search filter for single user (e.g. (&(objectClass=person)(uid=%s))",
+      "allUsersFilter": "Enter search filter for all users (e.g. (objectClass=person))",
+      "allUsersPageFilter": "Enter filter including sort-attribute(e.g. (&(objectClass=person)(uidNumber>=%s)))",
+      "allUsersSortingAttribute": "Enter sorting attribute for users (e.g. 'uidNumber')",
+      "groupSearchBase": "Enter search base for groups (e.g. ou=groups)",
+      "groupSearchFilterForUser": "Enter search filter for user in group (e.g. (&(objectClass=group)(member=%s)))",
+      "userIdAttributeName": "Enter attribute used for user id (e.g. 'uid')",
+      "userDomain": "Enter user domain",
+      "syncPageSize": "Enter paging size",
+      "groupSearchFilter": "Enter search filter for groups (e.g. (objectClass=group))",
+      "groupsSortingAttribute": "Enter attribute for sorting groups (e.g. 'gidNumber')",
+      "groupSearchPageFilter": "Enter filter including sort-attribute (e.g. (&(objectClass=group)(gidNumber>=%s)))",
+      "enableEditingLdapUsers": "Check if managing users and groups to your DS is allowed"
     },
     "security.ldapConfig.messages": {
       "delete.success": "Successfully deleted row.",
@@ -59,13 +84,20 @@
         "createAdHocGroup": "createAdHocGroup"
       },
       "createGroupDialog": {
-        "title": "Add Ad-Hoc Group",
+        "ldapGroup": {
+          "title": "Add LDAP Group"
+        },
+        "adHocGroup": {
+          "title": "Add Ad-Hoc Group"
+        },
+        "selectDirectory": "--Choose Directory Config--",
+        "disabledGroupWarning": "Adding new LDAP groups is not allowed for this directory!",
         "name": "Name",
         "namePlaceholder": "Enter group name",
         "description": "Description",
         "descriptionPlaceholder": "Enter Description",
         "btn": {
-          "ok": "Add Ad-Hoc Group",
+          "ok": "Add Group",
           "cancel": "Cancel"
         }
       },
@@ -88,6 +120,27 @@
           "ok": "Add",
           "searchPlaceholder": "Enter to search for members."
         }
+      },
+      "createUserDialog": {
+        "addLdapMember": {
+          "title": "Add Ldap Member",
+          "btn": {
+            "cancel": "Cancel",
+            "ok": "Add Ldap User"
+          }
+        },
+        "editLdapMember": {
+          "title": "Edit Ldap Member",
+          "btn": {
+            "cancel": "Cancel",
+            "ok": "Edit Ldap User"
+          }
+        },
+        "username": "Username",
+        "firstName": "FirstName",
+        "lastName": "LastName",
+        "email": "Email",
+        "password": "Password"
       },
       "addMembersGridColumns": {
         "name": "Name",
@@ -269,16 +322,24 @@
     "correspondenceManagement": {
       "title": "Correspondence Management",
       "templates": "Correspondence Templates",
-      "templates.addNewTemplate": "Map Fields to Values",
-      "templates.addTemplate": "Map Fields to Values",
-      "templates.editTemplate": "Edit Field Mapping",
+      "templates.addNewTemplate": "Upload Template",
+      "templates.addTemplate": "Upload",
+      "templates.versionTemplate": "Versions",
+      "templates.deleteTemplate": "Delete",
+      "templates.editTemplate": "Edit Template",
       "templates.grid": {
         "id": "ID",
         "title": "Title",
+        "label": "Display Name",
         "path": "Path",
         "created": "Created",
         "modified": "Modified",
-        "creator": "Creator"
+        "creator": "Creator",
+        "modifier": "Modifier",
+        "activated": "Status",
+        "objectType": "Object Type",
+        "version": "Version",
+        "templateVersionActive" : "Active"
       },
       "templates.fieldNames.label": "Map fields to values from the template",
       "templates.querySelect": {
@@ -288,14 +349,36 @@
         "table.columns": {
           "beanId": "Bean ID",
           "jpaQuery": "JPA Query",
-          "queryType": "Query Type"
+          "objectType": "Query Type"
         }
       },
       "templates.modal": {
         "objectTypes.label": "Object Types",
-        "querySelect.label": "Select Query",
+        "querySelect.label": "Query Select",
+        "label.label": "Display Name",
         "btnCancel.text": "Cancel",
-        "btnOk.text": "Map Fields"
+        "btnOk.text": "Upload Template"
+      },
+      "templates.version.modal": {
+        "btnOk.text": "OK"
+      },
+      "mergefields": "Merge Fields Configuration",
+      "mergefields.saveMergeFields": "Save",
+      "mergefields.versionMergeFields": "Versions",
+      "mergefields.grid": {
+      "fieldId": "ID",
+      "fieldValue": "Value",
+      "fieldDescription": "Description"
+      },
+      "mergefields.version.grid": {
+        "mergingVersion": "Version",
+        "modified": "Modified",
+        "modifier": "Modifier",
+        "mergingActiveVersion": "Active"
+      },
+      "mergefields.version.modal": {
+        "btnLoadVersion.text": "Load Version",
+        "btnCancel.text": "Cancel"
       }
     },
     "forms.defaultValue": "Select Target",

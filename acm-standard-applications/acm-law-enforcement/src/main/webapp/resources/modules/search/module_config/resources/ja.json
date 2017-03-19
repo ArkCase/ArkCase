@@ -1,0 +1,24 @@
+{
+  "search": {
+    "title": "検索",
+    "search.btn": "検索",
+    "export.btn": "ja_Export",
+    "search.placeholder": "ja_Type in to search",
+    "menus": {
+      "leftnav.item": "検索"
+    },
+    "comp":{
+      "grid": {
+        "columns": {
+          "id": "ja_ID",
+          "name": "ja_Name",
+          "type": "ja_Type",
+          "title": "ja_Title",
+          "parent": "ja_Parent",
+          "assignee": "ja_Assignee",
+          "modified": "ja_Modified"
+        }
+      }
+    }
+  }
+}

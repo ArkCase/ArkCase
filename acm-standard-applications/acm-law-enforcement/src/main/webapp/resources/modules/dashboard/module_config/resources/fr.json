@@ -1,0 +1,224 @@
+{
+  "dashboard": {
+    "title": "Tableau de bord",
+    "menus": {
+      "leftnav.item": "Tableau de bord"
+    },
+    "widgets": {
+      "casesByQueue": {
+        "title": "fr_Active Case Files by Queue",
+        "description": "fr_Displays active case files by queue",
+        "xAxis": "fr_Queues",
+        "yAxis": "fr_Number of Case Files",
+        "noDataMessage": "fr_Currently there are no cases info"
+      },
+      "casesByStatus": {
+        "title": "fr_Cases By Status",
+        "description": "fr_Displays cases by status",
+        "timePeriod": {
+          "label": "fr_Select Time Period",
+          "lastWeek": "fr_Last Week",
+          "lastMonth": "fr_Last Month",
+          "lastYear": "fr_Last Year",
+          "all": "fr_All"
+        },
+        "noDataMessage": "fr_Currently there are no cases info"
+      },
+      "myCases": {
+        "title": "fr_My Cases",
+        "description": "fr_Displays my cases",
+        "noDataMessage": "fr_Currently there are no cases info",
+        "table": {
+          "header": {
+            "caseId": "fr_ID",
+            "title": "fr_Title",
+            "priority": "fr_Priority",
+            "status": "fr_Status"
+          }
+        }
+      },
+      "myComplaints": {
+        "title": "fr_My Complaints",
+        "description": "fr_Displays my complaints",
+        "table": {
+          "header": {
+            "number": "fr_ID",
+            "title": "fr_Title",
+            "priority": "fr_Priority",
+            "created": "fr_Created",
+            "status": "fr_Status"
+          },
+          "noDataMessage": "fr_Currently there are no complaints info"
+        }
+      },
+      "myTasks": {
+        "title": "fr_My Tasks",
+        "description": "fr_Displays my tasks",
+        "rowNumbers.label": "fr_Default Row Numbers",
+        "rowNumbers.placeholder": "fr_Enter Default Row Numbers",
+        "table": {
+          "header": {
+            "taskId": "fr_ID",
+            "title": "fr_Title",
+            "priority": "fr_Priority",
+            "dueDate": "fr_Due",
+            "status": "fr_Status",
+            "objectId": "fr_Object ID"
+          },
+          "overdue.tooltip": "fr_Task is Overdue",
+          "deadline.tooltip": "fr_Deadline is Approaching"
+        },
+        "noDataMessage": "fr_Currently there are no tasks info"
+      },
+      "newComplaints": {
+        "title": "fr_New Complaints",
+        "description": "fr_Displays new complaints",
+        "dueDate": {
+          "label": "fr_Select Due Date Period",
+          "pastDue": "fr_Past Due",
+          "dueTomorrow": "fr_Due Tomorrow",
+          "dueWeek": "fr_Due in 7 Days",
+          "dueMonth": "fr_Due in Month",
+          "all": "fr_All"
+        },
+        "noDataMessage": "fr_Currently there are no complaints info"
+      },
+      "newCases": {
+        "title": "fr_New Cases",
+        "description": "fr_Displays new cases",
+        "noDataMessage": "fr_Currently there are no cases info"
+      },
+      "teamWorkload": {
+        "title": "fr_Team Workload",
+        "description": "fr_Displays team workload",
+        "dueDate": {
+          "label": "fr_Select Due Date Period",
+          "pastDue": "fr_Past Due",
+          "dueTomorrow": "fr_Due Tomorrow",
+          "dueWeek": "fr_Due in 7 Days",
+          "dueMonth": "fr_Due in Month",
+          "all": "fr_All"
+        },
+        "noDataMessage": "fr_Currently there are no team tasks info"
+      },
+      "weather": {
+        "description": "fr_Displays weather",
+        "label": {
+          "current": "fr_Current:",
+          "enterLocation": "fr_Enter Location",
+          "description": "fr_Display the current temperature of a city",
+          "location": "fr_Location",
+          "insertLocationInConfiguration": "fr_Please insert a location in the widget configuration"
+        },
+        "title": "fr_Weather",
+        "noDataMessage": "fr_Currently there are no weather info"
+      },
+      "news": {
+        "description": "fr_Displays news",
+        "label": {
+          "enterFeedUrl": "fr_Enter Feed url",
+          "description": "fr_Displays a RSS/Atom feed",
+          "feedUrl": "fr_Feed Url",
+          "insertUrl": "fr_Please insert a feed url in the widget configuration"
+        },
+        "title": "fr_News",
+        "noDataMessage": "fr_Currently there is no RSS/info"
+      },
+      "details": {
+        "title": "fr_Details",
+        "description": "fr_Displays case details",
+        "noDataMessage": "fr_Currently there are no details"
+      },
+      "people": {
+        "title": "fr_People",
+        "description": "fr_Displays people details",
+        "noDataMessage": "fr_Currently there are no people to display"
+      },
+      "documents": {
+        "title": "fr_Documents",
+        "description": "fr_Displays chart of documents by folder",
+        "noDataMessage": "fr_Currently there are no documents to display"
+      },
+      "locations": {
+        "title": "fr_Locations",
+        "description": "fr_Displays location details",
+        "noDataMessage": "fr_Currently there are no locations to display"
+      },
+      "tasks": {
+        "title": "fr_Tasks",
+        "description": "fr_Displays task details",
+        "noDataMessage": "fr_Currently there are no tasks to display"
+      },
+      "participants": {
+        "title": "fr_Participants",
+        "description": "fr_Displays participant details",
+        "noDataMessage": "fr_Currently there are no participant to display"
+      },
+      "references": {
+        "title": "fr_References",
+        "description": "fr_Displays reference details",
+        "noDataMessage": "fr_Currently there are no references to display"
+      },
+      "history": {
+        "title": "fr_History",
+        "description": "fr_Displays chart of history events",
+        "noDataMessage": "fr_Currently there are no events to display"
+      },
+      "notes": {
+        "title": "fr_Notes",
+        "description": "fr_Displays note details",
+        "noDataMessage": "fr_Currently there are no notes to display"
+      },
+      "time": {
+        "title": "fr_Time",
+        "description": "fr_Displays chart for hours per user",
+        "noDataMessage": "fr_Currently there is no time information to display"
+      },
+      "cost": {
+        "title": "fr_Cost",
+        "description": "fr_Displays chart for cost per user",
+        "noDataMessage": "fr_Currently there is no cost information to display"
+      },
+      "calendar": {
+        "title": "fr_Calendar",
+        "description": "fr_Displays chart of scheduled events per day",
+        "noDataMessage": "fr_Currently there are no events to display"
+      },
+      "reworkDetails": {
+        "title": "fr_Rework Details",
+        "description": "fr_Shows most recent rework details",
+        "noDataMessage": "fr_Currently there no are no rework details to display"
+      },
+      "docReview": {
+        "title": "fr_Documents Under Review",
+        "description": "fr_Shows documents under review",
+        "noDataMessage": "fr_Currently there no are no documents under review to display"
+      },
+      "workflow": {
+        "title": "fr_Workflow Overview",
+        "description": "fr_Overview of pending workflows",
+        "noDataMessage": "fr_Currently there are no workflows to display"
+      },
+      "signature": {
+        "title": "fr_eSignature",
+        "description": "fr_eSignature widget",
+        "noDataMessage": "fr_Currently there are no eSignatures to display"
+      },
+      "person": {
+        "title": "fr_Person",
+        "description": "fr_Person widget for Cost and Time modules",
+        "noDataMessage": "fr_Currently there are no persons to display"
+      },
+      "hoursSummary": {
+        "title": "fr_Hours Summary",
+        "description": "fr_Displays a summary of hours worked",
+        "noDataMessage": "fr_Currently there is no summary to display"
+      },
+      "expenses": {
+        "title": "fr_Expenses",
+        "description": "fr_Displays a cost-to-user graph",
+        "noDataMessage": "fr_Currently no expense data to display"
+      }
+    }
+  }
+}

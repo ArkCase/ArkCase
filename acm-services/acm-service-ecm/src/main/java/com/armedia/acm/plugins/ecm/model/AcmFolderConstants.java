@@ -62,4 +62,7 @@ public interface AcmFolderConstants {
 
     String PROPERTY_KEY_DEFAULT_FOLDER_BASE_PATH = "ecm.defaultBasePath";
     String PROPERTY_PREFIX_FOLDER_PATH_BY_TYPE = "ecm.defaultPath.";
+
+    // Multiple CMIS configurations constants
+    String CONFIGURATION_REFERENCE = "configRef";
 }

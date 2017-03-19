@@ -24,7 +24,7 @@ public class LabelManagementRetrieveDefaultLanguage
     private LabelManagementService labelManagementService;
 
     @RequestMapping(value = "/labelmanagement/default-language", method = RequestMethod.GET, produces = {
-            MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
+            MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
     @ResponseBody
     public String retrieveSettings(HttpServletResponse response) throws AcmLabelManagementException

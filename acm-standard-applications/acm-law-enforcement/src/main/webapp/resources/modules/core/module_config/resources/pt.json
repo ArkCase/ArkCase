@@ -1,0 +1,24 @@
+{
+  "core": {
+    "userInfo": {
+      "addedMenu": {
+        "help": "Ajuda",
+        "logout": "Sair"
+      }
+    },
+    "leftNav": {
+      "title": "Nevigação"
+    },
+    "topBar": {
+      "new": "Novo",
+      "toggle.btn": "pt_Toggle navigation",
+      "search.placeholder": "pt_Search ArkCase",
+      "locale.updateList": "Atualização"
+    },
+    "loginWarning": {
+      "btnOK.text": "pt_OK",
+      "btnCancel.text": "pt_Cancel",
+      "checkbox_warning.label": "pt_I acknowledge this warning."
+    }
+  }
+}

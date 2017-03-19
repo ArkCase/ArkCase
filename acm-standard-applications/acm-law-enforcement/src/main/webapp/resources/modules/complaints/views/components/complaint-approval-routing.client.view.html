@@ -1,0 +1,45 @@
+<div ng-controller="Complaints.ApprovalRoutingController">
+    <div class="clearfix">
+        <div class="row">
+            <div class="col-xs-6">
+                <h4><a ng-click="onClickTitle()">{{objectInfo.title || "Unknown"}}</a>
+                </h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-9 col-md-3">
+                <div class="h4 font-bold no-margin">
+                    <user-full-name userId="objectInfo.assignee" fallback="None"/>
+                </div>
+                <small class="text-muted"><span translate>complaints.comp.approvalRouting.assignee.label</span></small>
+            </div>
+            <div class="col-xs-9 col-md-3">
+                <div class="h4 font-bold no-margin">{{owningGroup || 'Unknown'}}</div>
+                <small class="text-muted"><span translate>complaints.comp.approvalRouting.owningGroup.label</span>
+                </small>
+            </div>
+            <div class="col-xs-9 col-md-3">
+                <div class="h4 font-bold no-margin">{{ objectInfo.priority || 'Unknown'}}</div>
+                <small class="text-muted"><span translate>complaints.comp.approvalRouting.priority.label</span></small>
+            </div>
+            <div class="col-xs-9 col-md-3">
+                <div class="h4 font-bold no-margin">{{ (dateInfo.taskStartDate | date: ('common.defaultDateUIFormat' |
+                    translate)) || 'Unknown'}}
+                </div>
+                <small class="text-muted"><span translate>complaints.comp.approvalRouting.startDate.label</span></small>
+            </div>
+            <div class="col-xs-9 col-md-3">
+                <div class="h4 font-bold no-margin">{{ (dateInfo.dueDate | date: ('common.defaultDateUIFormat' |
+                    translate)) || 'Unknown' }}
+                </div>
+                <small class="text-muted"><span translate>complaints.comp.approvalRouting.dueDate.label</span></small>
+            </div>
+            <div class="col-xs-9 col-md-3">
+                <div class="h4 font-bold no-margin">{{objectInfo.status || 'Unknown'}}</div>
+                <small class="text-muted"><span translate>complaints.comp.approvalRouting.state.label</span></small>
+            </div>
+        </div>
+    </div>
+    <div ng-include="'modules/complaints/views/components/complaint-future-approvals.client.view.html'"></div>
+    <div ng-include="'modules/complaints/views/components/complaint-past-approvals.client.view.html'"></div>
+</div>

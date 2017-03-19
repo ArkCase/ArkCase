@@ -29,6 +29,8 @@
         <property name="wordGenerator" ref="poiWordGenerator"/>
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="correspondenceFolderName" value="${user.home}/.arkcase/acm/correspondenceTemplates"/>
+        <property name="springContextHolder" ref="acmContextHolder"/>
+        <property name="correspondenceService" ref="correspondenceService"/>
     </bean>
 
     <bean id="correspondenceService" class="com.armedia.acm.correspondence.service.CorrespondenceService">
@@ -36,13 +38,18 @@
         <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="eventPublisher" ref="correspondenceEventPublisher"/>
         <property name="templateManager" ref="correspondenceTemplateManager"/>
+        <property name="mergeFieldManager" ref="correspondenceMergeFieldManager"/>
     </bean>
 
     <bean id="correspondenceTemplateManager" class="com.armedia.acm.correspondence.service.CorrespondenceTemplateManager">
         <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="correspondenceTemplatesConfiguration" value="file:${user.home}/.arkcase/acm/correspondence-templates-configuration.json"/>
-        <property name="caseCorrespondenceForms" value="file:${user.home}/.arkcase/acm/lookups/caseCorrespondenceForms.json"/>
-        <property name="complaintCorrespondenceForms" value="file:${user.home}/.arkcase/acm/lookups/complaintCorrespondenceForms.json"/>
+    </bean>
+
+    <bean id="correspondenceMergeFieldManager" class="com.armedia.acm.correspondence.service.CorrespondenceMergeFieldManager">
+        <property name="correspondenceMergeFieldsConfiguration" value="file:${user.home}/.arkcase/acm/correspondence-merge-fields.json"/>
+        <property name="correspondenceMergeFieldsVersionConfiguration" value="file:${user.home}/.arkcase/acm/correspondence-merge-fields-version.json"/>
+        <property name="springContextHolder" ref="acmContextHolder"/>
     </bean>
 
     <bean id="correspondenceEventPublisher" class="com.armedia.acm.correspondence.service.CorrespondenceEventPublisher"/>

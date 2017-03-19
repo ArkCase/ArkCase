@@ -98,7 +98,7 @@ angular.module('services').factory('DocTreeExt.Template', ['$q', 'UtilService', 
              */
             , onConfigUpdated: function(DocTree) {
                 var correspondenceForms = Util.goodMapValue(DocTree.treeConfig, "correspondenceForms", []);
-                DocTree.correspondenceForms = correspondenceForms;
+                DocTree.correspondenceForms = correspondenceForms.data;
                 var jqTreeBody = DocTree.jqTree.find("tbody");
                 DocTree.Menu.useContextMenu(jqTreeBody);
             }

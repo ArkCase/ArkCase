@@ -6,6 +6,7 @@ var helpers = function helpers() {
     var uplaodPathDocx = home + '\\.arkcase\\seleniumTests\\filesForUpload\\ArkCaseTesting.docx';
     var uploadPathPdf = home + '\\.arkcase\\seleniumTests\\filesForUpload\\caseSummary.pdf';
     var uplaodPathXlsx = home + '\\.arkcase\\seleniumTests\\filesForUpload\\caseSummary.xlsx';
+    var uploadPathLogo = home + '\\.arkcase\\seleniumTests\\filesForUpload\\ArkCaseLogo.png';
     var Users = require('../json/Users.json');
 
     this.uploadPng = function() {
@@ -13,6 +14,7 @@ var helpers = function helpers() {
             sleep(2000);
             robot.typeStringDelayed(uplaodPathPng, 14000);
             robot.keyTap("enter");
+            browser.sleep(5000);
         },
 
         this.uploadPdf = function() {
@@ -20,6 +22,7 @@ var helpers = function helpers() {
             sleep(2000);
             robot.typeStringDelayed(uploadPathPdf, 14000);
             robot.keyTap("enter");
+            browser.sleep(5000);
         },
 
         this.uploadXlsx = function() {
@@ -27,6 +30,7 @@ var helpers = function helpers() {
             sleep(2000);
             robot.typeStringDelayed(uplaodPathXlsx, 14000);
             robot.keyTap("enter");
+            browser.sleep(5000);
         },
 
         this.uploadDocx = function() {
@@ -34,8 +38,19 @@ var helpers = function helpers() {
             sleep(2000);
             robot.typeStringDelayed(uplaodPathDocx, 14000);
             robot.keyTap("enter");
+            browser.sleep(5000);
 
         },
+
+        this.uploadLogo = function() {
+
+            sleep(2000);
+            robot.typeStringDelayed(uploadPathLogo, 14000);
+            robot.keyTap("enter");
+            browser.sleep(5000);
+
+        },
+
         this.mouseMoveToRoot = function() {
 
             robot.moveMouse(853, 508);
@@ -118,13 +133,13 @@ var helpers = function helpers() {
     this.previousWeek = function() {
 
         var now = new Date();
-        var day1 = ("0" + now.getDate()).slice(-2) - 1;
-        var day2 = ("0" + now.getDate()).slice(-2) - 2;
-        var day3 = ("0" + now.getDate()).slice(-2) - 3;
-        var day4 = ("0" + now.getDate()).slice(-2) - 4;
-        var day5 = ("0" + now.getDate()).slice(-2) - 5;
-        var day6 = ("0" + now.getDate()).slice(-2) - 6;
-        var day7 = ("0" + now.getDate()).slice(-2) - 7;
+        var day1 = ("0" + now.getDate()).slice(-2);
+        var day2 = ("0" + now.getDate()).slice(-2) - 1;
+        var day3 = ("0" + now.getDate()).slice(-2) - 2;
+        var day4 = ("0" + now.getDate()).slice(-2) - 3;
+        var day5 = ("0" + now.getDate()).slice(-2) - 4;
+        var day6 = ("0" + now.getDate()).slice(-2) - 5;
+        var day7 = ("0" + now.getDate()).slice(-2) - 6;
         var week = "" + [day1, day2, day3, day4, day5, day6, day7] + "";
         return week;
 
@@ -148,6 +163,8 @@ var helpers = function helpers() {
             }
         }
     }
+
+
 };
 
 module.exports = new helpers();

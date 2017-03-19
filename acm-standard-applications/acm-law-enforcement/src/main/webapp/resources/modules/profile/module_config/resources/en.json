@@ -3,9 +3,12 @@
     "title": "User Profile",
     "unknown":"Unknown"
   },
+  "profile.menus": {
+    "usermenu.item": "Profile"
+  },
    "profile.subscriptions" : {
-    "title":"Subscriptions",
-    "unsubscribeSelect":"Unsubscribe Selected",
+    "title": "Subscriptions",
+    "unsubscribeSelect": "Unsubscribe Selected",
     "table.columns": {
       "title": "Title",
       "created":"Created",
@@ -32,9 +35,9 @@
        "officePhone":"Office Phone",
        "mobilePhone":"Mobile Phone"
    },
-   "profile.groups":{
-       "title":"Groups"
-   },
+  "profile.groups":{
+    "title":"Groups"
+  },
    "profile.buttons":{
        "password":"Change Password",
        "message":"Enter your new password.",

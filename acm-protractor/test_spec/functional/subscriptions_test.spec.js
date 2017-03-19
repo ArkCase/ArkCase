@@ -39,6 +39,7 @@ describe('Subscriptions page tests', function() {
             subscriptionPage.clickSubcriptionsModule();
             subscriptionPage.selectSubscription(data.parentType);
             subscriptionPage.clickParentTypeSort();
+            subscriptionPage.waitForSorting(data.expected);
             expect(subscriptionPage.returnResultParentType()).toEqual(data.expected, "result parent is not correct for " + data.parentType);
 
         });

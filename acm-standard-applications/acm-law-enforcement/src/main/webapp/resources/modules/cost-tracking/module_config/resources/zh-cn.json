@@ -1,0 +1,77 @@
+{
+  "costTracking": {
+    "title": "成本跟踪",
+    "progressNoCostsheet": "zh-cn_[ No costsheet is selected ]",
+    "progressLoading": "zh-cn_Loading costsheet ",
+    "progressError": "zh-cn_Failed to load costsheet"
+  },
+  "costTracking.menus": {
+    "leftnav.item": "成本跟踪",
+    "topbar.item": "成本项目"
+  },
+  "costTracking.tree": {
+  },
+  "costTracking.comp.info": {
+    "incidentDate": "zh-cn_Incident Date",
+    "priority": "zh-cn_Priority",
+    "assignedTo": "zh-cn_Assigned To",
+    "subjectType": "zh-cn_Subject Type",
+    "state": "zh-cn_State"
+  },
+  "costTracking.comp.actions": {
+    "new.button": "zh-cn_New Costsheet",
+    "edit.button": "zh-cn_Edit Costsheet"
+  },
+  "costTracking.comp.details": {
+    "title": "zh-cn_Details",
+    "informSaved": "zh-cn_Costsheet details saved",
+    "table.columns": {
+      "title": "zh-cn_Details",
+      "modified": "zh-cn_Date Last Modified",
+      "modifier": "zh-cn_User Last Modified"
+    }
+  },
+  "costTracking.comp.people": {
+    "title": "zh-cn_Person",
+    "table.columns": {
+      "fullName": "zh-cn_Full Name",
+      "userId": "zh-cn_Username"
+    }
+  },
+  "costTracking.comp.summary": {
+    "title": "zh-cn_Cost Summary",
+    "table.columns": {
+      "parentId": "zh-cn_ID",
+      "parentNumber": "zh-cn_Parent ID",
+      "parentType": "zh-cn_Parent Type",
+      "value": "zh-cn_Total Cost",
+      "title": "zh-cn_Title",
+      "description": "zh-cn_Description"
+    }
+  },
+  "costTracking.comp.tags": {
+    "title": "zh-cn_Tags",
+    "table.columns": {
+      "tag": "zh-cn_Tag",
+      "created": "zh-cn_Created",
+      "createdBy": "zh-cn_Created By"
+    },
+    "modal": {
+    "title": "zh-cn_Tag",
+    "search": "zh-cn_Search for Tag",
+    "buttons": {
+          "cancel": "zh-cn_Cancel",
+          "ok": "zh-cn_Add Tag"
+     }
+    },
+    "message": {
+      "tagExists": "zh-cn_Tag with that name or description or text already exists",
+      "tagAssociated": "zh-cn_already associated",
+      "delete": {
+        "success": "zh-cn_Tag deleted successfully",
+        "error": "zh-cn_Error deleting tag"
+      }
+    }
+  }
+}
+

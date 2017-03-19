@@ -1,0 +1,25 @@
+{
+  "core": {
+    "userInfo": {
+      "addedMenu": {
+        "help": "帮助",
+        "logout": "退出"
+      }
+    },
+    "leftNav": {
+      "title": "导航"
+    },
+    "topBar": {
+      "new": "创建",
+      "toggle.btn": "切换导航",
+      "search.placeholder": "搜索ArkCase",
+      "locale.updateList": "更新"
+    },
+    "loginWarning": {
+      "btnOK.text": "确认",
+      "btnCancel.text": "取消",
+      "checkbox_warning.label": "我承认此警告。"
+    }
+  }
+}
+

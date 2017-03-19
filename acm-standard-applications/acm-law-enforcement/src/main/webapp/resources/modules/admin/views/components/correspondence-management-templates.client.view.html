@@ -1,0 +1,35 @@
+<div ng-controller="Admin.CMTemplatesController">
+    <div class="pull-right well">
+        <div class="btn-group">
+            <button class="btn btn-xs btn-link" ng-click="addTemplate()" ng-disabled="selectedRows.length > 1">
+                <i class="glyphicon glyphicon-plus-sign"></i>
+                <span translate>admin.correspondenceManagement.templates.addTemplate</span>
+            </button>
+        </div>
+    </div>
+    <div class="pull-right well">
+        <div class="btn-group">
+            <button class="btn btn-xs btn-link" ng-click="versionTemplate()" ng-disabled="selectedRows.length != 1">
+                <i class="glyphicon glyphicon-info-sign"></i>
+                <span translate>admin.correspondenceManagement.templates.versionTemplate</span>
+            </button>
+        </div>
+    </div>
+    <div class="pull-right well">
+        <div class="btn-group">
+            <button class="btn btn-xs btn-link" ng-click="deleteTemplate()" ng-disabled="selectedRows.length < 1">
+                <i class="glyphicon glyphicon-minus-sign"></i>
+                <span translate>admin.correspondenceManagement.templates.deleteTemplate</span>
+            </button>
+        </div>
+    </div>
+    <panel-view header="{{'admin.correspondenceManagement.templates' | translate}}" collapsible="false">
+        <div ui-grid="gridOptions"
+             ui-grid-resize-columns
+             adjust-table-height="gridOptions.data.length"
+             ui-grid-auto-resize
+             ui-grid-selection
+             class="grid">
+        </div>
+    </panel-view>
+</div>

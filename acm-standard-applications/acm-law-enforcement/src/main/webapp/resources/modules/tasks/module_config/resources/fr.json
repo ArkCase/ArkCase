@@ -1,0 +1,313 @@
+{
+  "tasks": {
+    "title": "Tâches",
+    "progressNoTask": "fr_[ No task data ]",
+    "progressLoading": "fr_Loading task ",
+    "progressError": "fr_Failed to load task"
+  },
+  "tasks.menus": {
+    "leftnav.item": "Tâches",
+    "topbar.item": "Tâches"
+  },
+  "tasks.comp.info": {
+    "taskId": "fr_Task id:",
+    "percentage.label": "fr_% of Completion",
+    "assignee.label": "fr_Assignee",
+    "Priority.label": "fr_Priority",
+    "startDate.label": "fr_Start Date",
+    "dueDate.label": "fr_Due Date",
+    "state.label": "fr_State",
+    "overdue.tooltip": "fr_Task is Overdue",
+    "deadline.tooltip": "fr_Deadline is Approaching",
+    "owningGroup.label": "Owning Group"
+  },
+  "tasks.comp.parentinfo": {
+    "taskId": "fr_Task id:",
+    "case": {
+      "subjectType.label": "fr_Subject Type",
+      "incidentDate.label": "fr_Incident Date",
+      "priority.label": "fr_Priority",
+      "assignee.label": "fr_Assigned To",
+      "owningGroup.label": "fr_Owning Group"
+    },
+    "complaint": {
+      "subjectType.label": "fr_Subject Type",
+      "incidentDate.label": "fr_Incident Date",
+      "priority.label": "fr_Priority",
+      "assignee.label": "fr_Assigned To",
+      "owningGroup.label": "fr_Owning Group"
+    },
+    "costsheet": {
+      "approver.label": "fr_Approver"
+    },
+    "timesheet": {
+      "approver.label": "fr_Approver"
+    },
+    "_xxx_courtRoomName": "fr_Court Room Name:"
+  },
+  "tasks.comp.actions": {
+    "eSignature.button": "fr_Sign",
+    "subscribe.button": "fr_Subscribe",
+    "unsubscribe.button": "fr_Unsubscribe",
+    "reject.button": "fr_Reject",
+    "delete.button": "fr_Delete",
+    "complete.button": "fr_Complete",
+    "approve.button": "fr_Approve Document",
+    "rework.button": "fr_Send for Rework",
+    "claim.button": "fr_Claim",
+    "unclaim.button": "fr_Unclaim",
+    "error.outcomeFieldMissing": "fr_Cannot complete task because of missing required value",
+    "modal": {
+      "errorHeaderText": "fr_Error",
+      "btnOk.text": "fr_OK"
+    }
+  },
+  "tasks.comp.details": {
+    "title": "fr_Task Details",
+    "informSaved": "fr_Task details saved",
+    "table.columns": {
+      "details": "fr_Details",
+      "modified": "fr_Date Last Modified",
+      "modifier": "fr_User Last Modified"
+    }
+  },
+  "tasks.comp.reworkdetails": {
+    "title": "fr_Rework Details",
+    "informSaved": "fr_Rework details saved",
+    "table.columns": {
+      "title": "fr_Rework Details",
+      "modified": "fr_Date Last Modified",
+      "modifier": "fr_User Last Modified"
+    }
+  },
+  "tasks.comp.parentdocs": {
+    "title": "fr_Parent Documents",
+    "noParentDataMessage": "fr_No parent documents for standalone task"
+  },
+  "tasks.comp.attachments": {
+    "title": "fr_Attachments"
+  },
+  "tasks.comp.notes": {
+    "title": "fr_Notes",
+    "table.columns": {
+      "note": "fr_Note",
+      "created": "fr_Created",
+      "creator": "fr_Author"
+    }
+  },
+  "tasks.comp.references": {
+    "title": "fr_References",
+    "table.columns": {
+      "targetName": "fr_Number",
+      "targetTitle": "fr_Title",
+      "modified": "fr_Modified",
+      "targetType": "fr_Reference Type",
+      "status": "fr_Status"
+    }
+  },
+  "tasks.comp.rejcomments": {
+    "title": "fr_Reject Comments",
+    "table.columns": {
+      "note": "fr_Comment",
+      "created": "fr_Created",
+      "creator": "fr_Author"
+    }
+  },
+  "tasks.comp.workflow": {
+    "title": "fr_Workflow",
+    "table.columns": {
+      "participant": "fr_Participant",
+      "role": "fr_Role",
+      "status": "fr_Status",
+      "startDateTime": "fr_Start",
+      "endDateTime": "fr_End"
+    }
+  },
+  "tasks.comp.signatures": {
+    "title": "fr_eSignatures",
+    "table.columns": {
+      "signedDate": "fr_Date",
+      "signedBy": "fr_Signed By"
+    }
+  },
+  "tasks.comp.docsreview": {
+    "title": "fr_Documents Under Review",
+    "table.columns": {
+      "fileId": "fr_ID",
+      "fileName": "fr_Title",
+      "created": "fr_Created",
+      "creator": "fr_Author",
+      "status": "fr_Status"
+    }
+  },
+  "tasks.comp.history": {
+    "title": "fr_History",
+    "table.columns": {
+      "eventType": "fr_Event Name",
+      "eventDate": "fr_Date",
+      "userId": "fr_User"
+    }
+  },
+  "tasks.comp.tags": {
+    "title": "fr_Tags",
+    "table.columns": {
+      "tag": "fr_Tag",
+      "created": "fr_Created",
+      "createdBy": "fr_Created By"
+    },
+    "modal": {
+      "title": "fr_Tag",
+      "search": "fr_Search for Tag",
+      "buttons": {
+        "cancel": "fr_Cancel",
+        "ok": "fr_Add Tag"
+      }
+    },
+    "message": {
+      "tagExists": "fr_Tag with that name or description or text already exists",
+      "tagAssociated": "fr_already associated",
+      "delete": {
+        "success": "fr_Tag deleted successfully",
+        "error": "fr_Error deleting tag"
+      }
+    }
+  },
+  "tasks.newTask": {
+    "title": "fr_New Task",
+    "assignee.button": "fr_Choose Assignee",
+    "assignee.label": "fr_Assign To",
+    "assignee.placeholder": "fr_Please choose assignee by clicking the button above",
+    "assigneeOrGroup.placeholder": "fr_Please choose assignee or group by clicking the button above",
+    "priority.placeholder": "fr_Select Priority",
+    "priority.label": "fr_Priority",
+    "status.placeholder": "fr_Select Status",
+    "status.label": "fr_Status",
+    "associateNumber.label": "fr_Associate with Complaint or Case",
+    "associateNumber.placeholder": "fr_Complaint or Case #",
+    "associateType.label": "fr_Parent Type",
+    "subject.label": "fr_Subject",
+    "taskStartDate.label": "fr_Start Date",
+    "dueDate.label": "fr_Due Date",
+    "datepicker.close": "fr_Done",
+    "percentComplete.label": "fr_% Complete",
+    "notes.label": "fr_Notes",
+    "saveButton": "fr_Save",
+    "overdue.tooltip": "fr_Task is Overdue",
+    "deadline.tooltip": "fr_Deadline is Approaching",
+    "groupToggle.label": "fr_Group Task?",
+    "group.placeholder": "fr_Please select a group."
+  },
+  "tasks.userOrGroupSearch": {
+    "id": "fr_userSearch",
+    "title": "fr_User/Group Search",
+    "search": {
+      "btn": "fr_Search",
+      "placeholder": "fr_Search for the user or group to assign to this task."
+    },
+    "cancelButton": "fr_Cancel",
+    "confirmButton": "fr_Confirm",
+    "enabled": true,
+    "userOrGroupFacetFilter": "fr_\"object_type_s\":(GROUP OR USER)",
+    "assigneeGridColumns": {
+      "name": "fr_Name",
+      "type": "fr_Type",
+      "title": "fr_Title",
+      "username": "fr_Username"
+    }
+  },
+  "tasks.objectSearch": {
+    "id": "fr_objectSearch",
+    "title": "fr_Object Search",
+    "search": {
+      "btn": "fr_Search",
+      "placeholder": "fr_Search for the case or complaint to this task."
+    },
+    "cancelButton": "fr_Cancel",
+    "confirmButton": "fr_Confirm",
+    "enabled": true,
+    "userFacetFilter": "fr_\"Object Type\": ",
+    "objectGridColumns": {
+      "name": "fr_Number",
+      "type": "fr_Type",
+      "title": "fr_Title",
+      "username": "fr_Assignee"
+    }
+  },
+  "tasks.comp.addreference": {
+    "title": "fr_Add Reference",
+    "cancelButton": "fr_Cancel",
+    "confirmButton": "fr_Add",
+    "search": {
+      "placeholder": "fr_Search for case, complaint, file, task",
+      "btn": "fr_Search"
+    },
+    "grid": {
+      "columns": {
+        "id": "fr_Id",
+        "name": "fr_Name",
+        "type": "fr_Type",
+        "title": "fr_Title",
+        "parent": "fr_Parent",
+        "assignee": "fr_Assignee",
+        "modified": "fr_Modified"
+      }
+    }
+  },
+  "tasks.comp.participants": {
+    "title": "fr_Participants",
+    "table.columns": {
+      "type": "fr_Type",
+      "name": "fr_Name"
+    },
+    "dialogUserPicker": {
+      "header": "fr_Choose User",
+      "table.columns": {
+        "name": "fr_Name",
+        "type": "fr_Type",
+        "title": "fr_Title",
+        "id": "fr_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "fr_Choose Group",
+      "table.columns": {
+        "name": "fr_Name"
+      }
+    }
+  },
+  "tasks.comp.assigneePickerModal": {
+    "title": "fr_Change Assignee",
+    "assigneeNamelabel": "fr_Assignee Name",
+    "btnCancelText": "fr_Cancel",
+    "btnSaveText": "fr_Save",
+    "searchAssigneeHeader": "fr_Search Assignee"
+  },
+  "tasks.comp.groupPickerModal": {
+    "title": "fr_Change Group",
+    "groupNamelabel": "fr_Group Name",
+    "btnCancelText": "fr_Cancel",
+    "btnSaveText": "fr_Save",
+    "searchGroupHeader": "fr_Search Group"
+  },
+  "tasks.comp.approvalRouting": {
+    "title": "fr_Future Approvers",
+    "addNewTooltip": "fr_Add new approver",
+    "noBuckslipMessage": "No Data",
+    "button": {
+      "save.tooltip": "fr_Save Changes"
+    },
+    "table.columns": {
+      "fullName": "fr_Full Name"
+    }
+  },
+  "tasks.comp.pastApprovals": {
+    "title": "fr_Past Approvers",
+    "noBuckslipMessage": "No Data",
+    "table.columns": {
+      "approvalDate": "fr_Approval Date",
+      "approverId": "fr_Approver",
+      "approverFullName": "fr_Full Name",
+      "approverDecision": "fr_Approver Decision"
+    }
+  }
+}

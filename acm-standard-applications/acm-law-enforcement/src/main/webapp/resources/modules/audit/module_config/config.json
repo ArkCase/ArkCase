@@ -5,7 +5,7 @@
     {
       "menuId": "leftnav",
       "menuItemURL": "audit",
-      "menuItemTitle": "Audit",
+      "menuItemTitle": "audit.menus.leftnav.item",
       "moduleId": "audit",
       "iconClass": "fa fa-bolt",
       "position": 140

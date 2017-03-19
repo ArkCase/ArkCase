@@ -100,7 +100,9 @@ var selectGroup = new SelectWrapper(by.model(Objects.taskpage.locators.selectGro
 
 var TaskPage = function() {
     this.clickTaskButton = function() {
-        taskBtn.click();
+        browser.wait(EC.visibilityOf(element(by.linkText(Objects.taskpage.locators.taskButton))), 30000, "Task button is not visible after click on new").then(function() {
+            taskBtn.click();
+        });
         return this;
     }
     this.insertSubject = function(subject) {
@@ -225,11 +227,33 @@ var TaskPage = function() {
     this.returnSubscribeButtonText = function() {
         return subscribeBtn.getText();
     }
-    this.returnTasksTitle = function() {
-        return tasksTitle.getText();
+    this.returnTasksTitle = function(title) {
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskpage.locators.tasksTitle))), 30000, "New task title is not visible").then(function() {
+               return tasksTitle.getText();
+            });
     }
+
+    this.validateNewTaskTitle = function(title) {
+        browser.wait(EC.visibilityOf(element(by.id(Objects.taskpage.locators.assigneeInput))), 30000, "Assignee field is not visible").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskpage.locators.tasksTitle))), 30000, "New task title is not visible").then(function() {
+                expect(tasksTitle.getText()).toEqual(title);
+            });
+        });
+    }
+
+    this.validateTasksTitle = function(title){
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskpage.locators.tasksTitle))), 30000, "Tasks title after click on save is not visible").then(function() {
+            expect(tasksTitle.getText()).toEqual(title);
+        });
+    }
+
+    this.waitForTaskTitle = function() {
+
+        browser.wait(EC.visibilityOf(element(by.xpath(Objects.casepage.locators.casesTitle))), 30000, "Task title is not visible");
+    }
+
     this.returnStartDateInput = function() {
-        return startDate.getText();
+        return StartDateInput.getText();
     }
     this.returnDueDateInput = function() {
         return DueDateInput.getText();
@@ -537,8 +561,12 @@ var TaskPage = function() {
     this.clickApproveBtn = function() {
 
         browser.wait(EC.presenceOf(element(by.xpath(Objects.taskspage.locators.approveBtn))), 30000, "Approve button is not displayed").then(function() {
-            approveBtn.click().then(function() {
-                browser.wait(EC.textToBePresentInElement((taskState), Objects.taskspage.data.taskStateClosed), 10000, "Task state is not changed into Closed");
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.taskspage.locators.approveBtn))), 30000, "Approve button is not displayed").then(function() {
+                browser.wait(EC.elementToBeClickable(element(by.xpath(Objects.taskspage.locators.approveBtn))), 30000, "Approve button is not clickable").then(function() {
+                    approveBtn.click().then(function() {
+                        browser.wait(EC.textToBePresentInElement((taskState), Objects.taskspage.data.taskStateClosed), 30000, "Task state is not changed into Closed");
+                    });
+                });
             });
         });
         return this;

@@ -16,9 +16,9 @@
                 address="vm://addNewFolder.in"
                 exchange-pattern="request-response"/>
 
-        <cmis:create-folder folderName="#[message.inboundProperties.newFolderName]" parentObjectId="#[message.inboundProperties.parentFolderId]"/>
+        <cmis:create-folder config-ref="#[message.inboundProperties.configRef]" folderName="#[message.inboundProperties.newFolderName]" parentObjectId="#[message.inboundProperties.parentFolderId]"/>
 
-        <cmis:get-object-by-id objectId="#[payload.id]"/>
+        <cmis:get-object-by-id config-ref="#[message.inboundProperties.configRef]" objectId="#[payload.id]"/>
 
         <catch-exception-strategy>
             <logger level="ERROR" category="com.armedia.acm.plugins.ecm" message="Exception creating new folder: #[exception.message]"/>

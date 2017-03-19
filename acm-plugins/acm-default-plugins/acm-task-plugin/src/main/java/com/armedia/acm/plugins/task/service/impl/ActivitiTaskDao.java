@@ -1141,7 +1141,7 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
                 .mapToInt(acmToActiviti -> acmToActiviti.getValue()).findFirst().orElse(TaskConstants.DEFAULT_PRIORITY);
     }
 
-    private AcmTask createAcmTask(Task activitiTask, Map<String, Object> processVariables, Map<String, Object> localVariables)
+    private AcmTask createAcmTask(Task activitiTask, Map<String, Object> processVariables, Map<String, Object> localVariables, String taskEventName)
     {
         if (activitiTask == null)
         {
@@ -1199,8 +1199,11 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
             acmTask.setAdhocTask(true);
         }
 
-        // if the task already has an assignee, we don't care about the candidate group.
-        if (acmTask.getAssignee() == null || acmTask.getAssignee().isEmpty())
+
+        // if we lookup candidate groups during event processing for complete or delete events, MySQL throws up.
+        // Plus, we don't care about candidate groups for delete or complete events anyway.
+        boolean skipCandidateGroups = "complete".equals(taskEventName) || "delete".equals(taskEventName);
+        if ( !skipCandidateGroups )
         {
             List<String> candidateGroups = findCandidateGroups(activitiTask.getId());
             acmTask.setCandidateGroups(candidateGroups);
@@ -1219,13 +1222,20 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
     @Override
     public AcmTask acmTaskFromActivitiTask(Task activitiTask)
     {
-        return createAcmTask(activitiTask, activitiTask.getProcessVariables(), activitiTask.getTaskLocalVariables());
+        return createAcmTask(activitiTask, activitiTask.getProcessVariables(), activitiTask.getTaskLocalVariables(), null);
     }
 
     @Override
     public AcmTask acmTaskFromActivitiTask(Task activitiTask, Map<String, Object> processVariables, Map<String, Object> localVariables)
     {
-        return createAcmTask(activitiTask, processVariables, localVariables);
+        return acmTaskFromActivitiTask(activitiTask, processVariables, localVariables, null);
+    }
+
+    @Override
+    public AcmTask acmTaskFromActivitiTask(Task activitiTask, Map<String, Object> processVariables,
+                                           Map<String, Object> localVariables, String taskEventName)
+    {
+        return createAcmTask(activitiTask, processVariables, localVariables, taskEventName);
     }
 
     private List<String> findCandidateGroups(String taskId)
