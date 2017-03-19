@@ -1,0 +1,25 @@
+{
+  "core": {
+    "userInfo": {
+      "addedMenu": {
+        "help": "Hilfe",
+        "logout": "Abmelden"
+      }
+    },
+    "leftNav": {
+      "title": "Navigieren"
+    },
+    "topBar": {
+      "new": "Neu",
+      "toggle.btn": "Richtung ändern",
+      "search.placeholder": "Suche ArkCase",
+      "locale.updateList": "Bijwerken"
+    },
+    "loginWarning": {
+      "btnOK.text": "Bestätigen",
+      "btnCancel.text": "Abbrechen",
+      "checkbox_warning.label": "Ich erkenne diese Warnung an."
+    }
+  }
+}
+

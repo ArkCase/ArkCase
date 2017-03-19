@@ -8,7 +8,7 @@
     {
       "menuId": "leftnav",
       "menuItemURL": "cases.main",
-      "menuItemTitle": "Case Files",
+      "menuItemTitle": "cases.menus.leftnav.item",
       "moduleId": "case",
       "iconClass": "fa fa-folder",
       "position": 50
@@ -16,7 +16,7 @@
     {
       "menuId": "topbar",
       "menuItemURL": "frevvo.new-case",
-      "menuItemTitle": "Case",
+      "menuItemTitle": "cases.menus.topbar.item",
       "moduleId": "case",
       "iconClass": "fa fa-folder",
       "position": 20
@@ -114,7 +114,8 @@
           "time",
           "cost",
           "tags",
-          "calendar"
+          "calendar",
+          "approvalrouting"
         ]
       },
       {
@@ -211,6 +212,14 @@
         "icon": "fa fa-calendar",
         "components": [
           "calendar"
+        ]
+      },
+      {
+        "type": "p/CASE_FILE/apr",
+        "label": "Approval Routing",
+        "icon": "fa fa-sort-amount-desc",
+        "components": [
+          "approvalrouting"
         ]
       }
     ]
@@ -317,7 +326,7 @@
               "width": 150
             },
             {
-              "name": "creator",
+              "name": "author",
               "displayName": "cases.comp.notes.table.columns.creator",
               "headerCellFilter": "translate",
               "enableCellEdit": false,
@@ -935,13 +944,19 @@
           "name": "targetName",
           "displayName": "cases.comp.references.table.columns.targetName",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.targetName}}</a>"
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity, true)'>{{row.entity.targetName}}</a>"
         },
         {
           "name": "targetTitle",
           "displayName": "cases.comp.references.table.columns.targetTitle",
           "headerCellFilter": "translate",
           "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.targetTitle}}</a>"
+        },
+        {
+          "name": "parentName",
+          "displayName": "cases.comp.references.table.columns.parentName",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity, true)'>{{row.entity.parentName}}</a>"
         },
         {
           "name": "modified",
@@ -1248,6 +1263,124 @@
       "filter": "",
       "filterName": "",
       "reportFileName": "search"
+    },
+    {
+      "id": "approvalrouting",
+      "title": "Approval Routing",
+      "icon": "fa fa-sort-amount-desc",
+      "addNewTooltip": "cases.comp.approvalRouting.addNewTooltip",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": false,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
+      "columnDefs": [
+        {
+          "name": "order",
+          "displayName": "",
+          "headerCellFilter": "translate",
+          "enableSorting": false,
+          "enableColumnMenu": false,
+          "cellEditableCondition": false,
+          "width": "50",
+          "cellTemplate": ""
+        },
+        {
+          "name": "fullName",
+          "displayName": "cases.comp.approvalRouting.table.columns.fullName",
+          "cellEditableCondition": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "act",
+          "cellEditableCondition": false,
+          "width": "70",
+          "headerCellTemplate": "<span></span>",
+          "cellTemplate": ""
+        }
+      ],
+      "userSearch": {
+        "userFacetFilter": "\"Object Type\": USER",
+        "userFacetExtraFilter": "&fq=\"name\": "
+      }
+    },
+    {
+      "id": "pastapprovals",
+      "title": "Past Approvals",
+      "icon": "fa fa-sort-amount-desc",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": false,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
+      "columnDefs": [
+        {
+          "name": "approvalDate",
+          "displayName": "cases.comp.pastApprovals.table.columns.approvalDate",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.approvalDate | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>",
+          "cellEditableCondition": false
+        },
+        {
+          "name": "approverId",
+          "displayName": "cases.comp.pastApprovals.table.columns.approverId",
+          "headerCellFilter": "translate",
+          "cellEditableCondition": false
+        },
+        {
+          "name": "approverDecision",
+          "displayName": "cases.comp.pastApprovals.table.columns.approverDecision",
+          "headerCellFilter": "translate",
+          "cellEditableCondition": false
+        }
+      ]
+    },
+    {
+      "id": "userSearch",
+      "title": "Select users",
+      "enableFiltering": false,
+      "multiSelect": false,
+      "showFacets": false,
+      "columnDefs": [
+        {
+          "name": "name",
+          "displayName": "cases.userOrGroupSearch.assigneeGridColumns.name",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "object_type_s",
+          "displayName": "cases.userOrGroupSearch.assigneeGridColumns.type",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "title",
+          "displayName": "cases.userOrGroupSearch.assigneeGridColumns.title",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "object_id_s",
+          "displayName": "cases.userOrGroupSearch.assigneeGridColumns.username",
+          "headerCellFilter": "translate"
+        }
+      ],
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
+      "start": 0
     }
   ]
 }

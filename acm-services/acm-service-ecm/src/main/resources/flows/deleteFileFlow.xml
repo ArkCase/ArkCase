@@ -24,10 +24,10 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
 
         <logger level="DEBUG" category="com.armedia.acm.plugins.ecm"/>
 
-        <cmis:delete objectId="#[message.inboundProperties.ecmFileId]"/>
+        <cmis:delete config-ref="#[message.inboundProperties.configRef]" objectId="#[message.inboundProperties.ecmFileId]"/>
 
 
-		<catch-exception-strategy>
+        <catch-exception-strategy>
             <logger level="ERROR" category="com.armedia.acm.plugins.ecm" message="Exception saving: #[exception.message]"/>
             <set-property propertyName="deleteException" value="#[exception]"/>
         </catch-exception-strategy>

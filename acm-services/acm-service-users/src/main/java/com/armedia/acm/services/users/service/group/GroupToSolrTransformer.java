@@ -35,7 +35,7 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmGroup in)
     {
-        LOG.info("Creating Solr advnced search document for Group.");
+        LOG.info("Creating Solr advanced search document for Group.");
 
         SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
 
@@ -90,6 +90,8 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
         {
             solr.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
         }
+
+        solr.setAdditionalProperty("directory_name_s", in.getDirectoryName());
 
         return solr;
     }

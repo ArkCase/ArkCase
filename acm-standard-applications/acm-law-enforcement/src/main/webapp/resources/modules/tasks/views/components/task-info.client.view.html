@@ -2,52 +2,55 @@
     <div class="clearfix">
         <div class="row">
             <div class="col-xs-6">
-                <h4><a href="#" editable-text="objectInfo.title" onaftersave="saveTask()" permission="editTask" permission-properties="objectInfo" permission-action="disable">{{objectInfo.title ||
+                <h4><a href="#" editable-text="objectInfo.title" onaftersave="saveTask()" permission="editTask"
+                       permission-properties="objectInfo" permission-action="disable">{{objectInfo.title ||
                     "Unknown"}}</a>
-                    <!-- <span permission="editTask" permission-properties="objectInfo" permission-action="show">{{objectInfo.title || "Unknown"}}</span> -->
                 </h4>
             </div>
 
         </div>
         <div class="row">
-            <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">
-                    <a href="#" editable-number="objectInfo.percentComplete" onbeforesave="validatePercentComplete($data)" onaftersave="saveTask()" permission="editTask" permission-properties="objectInfo" permission-action="disable">
+            <div class="col-xs-9 col-md-3">
+                <div class="h4 font-bold no-margin">
+                    <a href="#" editable-number="objectInfo.percentComplete"
+                       onbeforesave="validatePercentComplete($data)" onaftersave="saveTask()" permission="editTask"
+                       permission-properties="objectInfo" permission-action="disable">
                         {{ objectInfo.percentComplete }}
                     </a>
-                    <!-- <span permission="editTask" permission-properties="objectInfo" permission-action="show">{{objectInfo.percentComplete || "Unknown"}}</span> -->
                 </div>
-                <small class="text-muted">"% of Completion"</small>
+                <small class="text-muted"><span translate>tasks.comp.info.percentage.label</span></small>
             </div>
-            <div class="col-xs-12 col-md-4">
-                <div ng-if="objectInfo.assignee">
-                    <div class="h4 font-bold">
-                        <a href="" class="editable-click no-outline" ng-click="showAssigneePicker()" permission="editTask" permission-properties="objectInfo" permission-action="disable">
+            <div class="col-xs-9 col-md-3">
+                <div>
+                    <div class="h4 font-bold no-margin">
+                        <a href="" class="editable-click no-outline" ng-click="openAssigneePickerModal()"
+                           permission="editTask" permission-properties="objectInfo" permission-action="disable">
                             <user-full-name userId="objectInfo.assignee" fallback="None"/>
                         </a>
                     </div>
-                    <small class="text-muted">Assignee</small>
-                </div>
-                <div ng-if="objectInfo.candidateGroups[0]">
-                    <div class="h4 font-bold">
-                        <a href="" class="editable-click no-outline" ng-click="showAssigneePicker()"  permission="editTask" permission-properties="objectInfo" permission-action="disable">
-                            {{objectInfo.candidateGroups[0] || 'None'}}
-                        </a>
-                    </div>
-                    <small class="text-muted">Group Bucket</small>
+                    <small class="text-muted"><span translate>tasks.comp.info.assignee.label</span></small>
                 </div>
             </div>
-            <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">
+            <div class="col-xs-9 col-md-3">
+                <div class="h4 font-bold no-margin">
+                    <a href="" class="editable-click no-outline" ng-click="openGroupPickerModal()"
+                       permission="editTask" permission-properties="objectInfo" permission-action="disable">
+                        {{owningGroup || 'Unknown'}}
+                    </a>
+                </div>
+                <small class="text-muted"><span translate>tasks.comp.info.owningGroup.label</span></small>
+            </div>
+            <div class="col-xs-9 col-md-3">
+                <div class="h4 font-bold no-margin">
                     <a href="#" editable-select="objectInfo.priority" onaftersave="saveTask()"
-                       e-ng-options="p.value as p.text for p in priorities" permission="editTask" permission-properties="objectInfo" permission-action="disable">{{ objectInfo.priority ||
+                       e-ng-options="p.value as p.text for p in priorities" permission="editTask"
+                       permission-properties="objectInfo" permission-action="disable">{{ objectInfo.priority ||
                         'Unknown'}}</a>
-                    <!-- <span permission="editTask" permission-properties="objectInfo" permission-action="show">{{objectInfo.priority || "Unknown"}}</span> -->
                 </div>
-                <small class="text-muted">Priority</small>
+                <small class="text-muted"><span translate>tasks.comp.info.priority.label</span></small>
             </div>
-            <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">
+            <div class="col-xs-9 col-md-3">
+                <div class="h4 font-bold no-margin">
                     <a href="#" editable-bsdate="dateInfo.taskStartDate"
                        e-datepicker-popup="{{defaultDatePickerFormat}}"
                        e-ng-click="onPickerClick()" e-is-open="picker.opened"
@@ -55,13 +58,13 @@
                        e-on-open-focus="false"
                        onaftersave="updateStartDate(dateInfo.taskStartDate)"
                        permission="editTask" permission-properties="objectInfo" permission-action="disable">
-                        {{ (dateInfo.taskStartDate | date: ('common.defaultDateUIFormat' | translate)) || 'Unknown' }}</a>
-                    <!-- <span permission="editTask" permission-properties="objectInfo" permission-action="show">{{ (dateInfo.taskStartDate | ('common.defaultDateUIFormat' | translate)) || 'Unknown' }}</span> -->
+                        {{ (dateInfo.taskStartDate | date: ('common.defaultDateUIFormat' | translate)) || 'Unknown'
+                        }}</a>
                 </div>
-                <small class="text-muted">Start Date</small>
+                <small class="text-muted"><span translate>tasks.comp.info.startDate.label</span></small>
             </div>
-            <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">
+            <div class="col-xs-9 col-md-3">
+                <div class="h4 font-bold no-margin">
                     <a href="#" editable-bsdate="dateInfo.dueDate"
                        e-datepicker-popup="{{defaultDatePickerFormat}}"
                        e-ng-click="onPickerClick()" e-is-open="picker.opened"
@@ -70,30 +73,22 @@
                        onaftersave="updateDueDate(dateInfo.dueDate)"
                        permission="editTask" permission-properties="objectInfo" permission-action="disable">
                         {{ (dateInfo.dueDate | date: ('common.defaultDateUIFormat' | translate)) || 'Unknown' }}</a>
-                    <!-- <span permission="editTask" permission-properties="objectInfo" permission-action="show">{{ (dateInfo.dueDate | date: ('common.defaultDateUIFormat' | translate)) || 'Unknown' }}</span> -->
-                    <a ng-if="dateInfo.isOverdue" tooltip="{{'tasks.comp.info.overdue.tooltip' | translate}}" tooltip-append-to-body="true" tooltip-class="tooltip-overdue">
+                    <a ng-if="dateInfo.isOverdue" tooltip="{{'tasks.comp.info.overdue.tooltip' | translate}}"
+                       tooltip-append-to-body="true" tooltip-class="tooltip-overdue">
                         <i class="fa fa-exclamation-circle icon-overdue"></i>
                     </a>
-                    <a ng-if="dateInfo.isDeadline" tooltip="{{'tasks.comp.info.deadline.tooltip' | translate}}" tooltip-append-to-body="true" tooltip-class="tooltip-due-soon">
+                    <a ng-if="dateInfo.isDeadline" tooltip="{{'tasks.comp.info.deadline.tooltip' | translate}}"
+                       tooltip-append-to-body="true" tooltip-class="tooltip-due-soon">
                         <i class="fa fa-exclamation-triangle icon-due-soon"></i>
                     </a>
                 </div>
-                <small class="text-muted">Due Date</small>
+                <small class="text-muted"><span translate>tasks.comp.info.dueDate.label</span></small>
             </div>
-            <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">{{objectInfo.status || 'Unknown'}}</div>
-                <small class="text-muted">State</small>
+            <div class="col-xs-9 col-md-3">
+                <div class="h4 font-bold no-margin">{{objectInfo.status || 'Unknown'}}</div>
+                <small class="text-muted"><span translate>tasks.comp.info.state.label</span></small>
             </div>
 
         </div>
-        <!--<div class="row">-->
-        <!--<div class="col-xs-12 col-md-4">-->
-        <!--<div class="h4 font-bold">-->
-        <!--<a href="#" editable-select="owningGroup" onaftersave="updateOwningGroup()"-->
-        <!--e-ng-options="o.value as o.text for o in owningGroups"> {{owningGroup || 'Unknown'}}</a>-->
-        <!--</div>-->
-        <!--<small class="text-muted">Owning Group</small>-->
-        <!--</div>-->
-        <!--</div>-->
     </div>
 </div>

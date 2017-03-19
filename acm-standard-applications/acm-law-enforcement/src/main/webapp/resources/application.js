@@ -1,9 +1,5 @@
 'use strict';
 
-var ACM_SETTINGS = {
-    LANG: 'en'
-};
-
 // Start by defining the main module and adding the module dependencies
 var app = angular.module(ApplicationConfiguration.applicationModuleName,
     ApplicationConfiguration.applicationModuleVendorDependencies);
@@ -45,15 +41,25 @@ angular
                 }
 
                 // Initialize angular-translate
-                $translateProvider
-                    .useLoader(
-                        '$translatePartialLoader', {
-                            urlTemplate: 'api/latest/plugin/admin/labelmanagement/resource?ns={part}&lang={lang}'
-                        });
+                $translateProvider.useLoader('$translatePartialLoader', {
+                    urlTemplate: 'api/latest/plugin/admin/labelmanagement/resource?ns={part}&lang={lang}'
+                });
+                $translateProvider.determinePreferredLanguage(function () {
+                    var preferredLocale = "en";
+                    if (localStorage.AcmLocale) {
+                        var lastLocale = angular.fromJson(localStorage.AcmLocale);
+                        if (lastLocale.selected) {
+                            preferredLocale = lastLocale.selected;
+                        }
+                    }
+                    return preferredLocale;
+                });
 
-                $translateProvider
-                    .preferredLanguage(ACM_SETTINGS.LANG);
-                // $translateProvider.useSanitizeValueStrategy('sanitize');
+                // The 'escape' strategy seems to cause failed translation of {{'xxx' | translate}}, and also
+                // when texts contain '&'. Disable this until the bug is fixed by Angular.
+                //
+                //$translateProvider.useSanitizeValueStrategy('escape');
+
 
                 // Add HTTP error interceptor
                 function httpInterceptor($q, $window, $rootScope,
@@ -131,35 +137,17 @@ angular
                     }
                 }
             }
-        ]).run(
-    ['$translate', '$translatePartialLoader',
-        function ($translate, $translatePartialLoader) {
-            $translatePartialLoader.addPart('core');
-            $translatePartialLoader.addPart('welcome');
-            $translate.refresh();
-        }
-    ]);
+        ]).run(['$translate', '$translatePartialLoader',
+            function ($translate, $translatePartialLoader) {
+                $translatePartialLoader.addPart('core');
+                $translatePartialLoader.addPart('welcome');
+                $translate.refresh();
+            }
+        ]);
 
-// Load language info before start Angular application
+
 angular
     .element(document)
-    .ready(
-        function () {
-            $
-                .getJSON(
-                    'api/latest/plugin/admin/labelmanagement/default-language',
-                    function (result) {
-                        ACM_SETTINGS.LANG = result.defaultLang || ACM_SETTINGS.LANG;
-                        angular
-                            .bootstrap(
-                                document, [ApplicationConfiguration.applicationModuleName]);
-                    })
-                .fail(
-                    function () {
-                        // If language is missed then use
-                        // default lang settings (en)
-                        angular
-                            .bootstrap(
-                                document, [ApplicationConfiguration.applicationModuleName]);
-                    });
-        });
+    .ready(function () {
+        angular.bootstrap(document, [ApplicationConfiguration.applicationModuleName]);
+    });

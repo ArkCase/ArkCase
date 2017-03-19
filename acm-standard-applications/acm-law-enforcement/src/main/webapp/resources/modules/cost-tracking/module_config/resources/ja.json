@@ -1,0 +1,76 @@
+{
+  "costTracking": {
+    "title": "トラック費用",
+    "progressNoCostsheet": "ja_[ No costsheet is selected ]",
+    "progressLoading": "ja_Loading costsheet ",
+    "progressError": "ja_Failed to load costsheet"
+  },
+  "costTracking.menus": {
+    "leftnav.item": "トラック費用",
+    "topbar.item": "費用項目"
+  },
+  "costTracking.tree": {
+  },
+  "costTracking.comp.info": {
+    "incidentDate": "ja_Incident Date",
+    "priority": "ja_Priority",
+    "assignedTo": "ja_Assigned To",
+    "subjectType": "ja_Subject Type",
+    "state": "ja_State"
+  },
+  "costTracking.comp.actions": {
+    "new.button": "ja_New Costsheet",
+    "edit.button": "ja_Edit Costsheet"
+  },
+  "costTracking.comp.details": {
+    "title": "ja_Details",
+    "informSaved": "ja_Costsheet details saved",
+    "table.columns": {
+      "title": "ja_Details",
+      "modified": "ja_Date Last Modified",
+      "modifier": "ja_User Last Modified"
+    }
+  },
+  "costTracking.comp.people": {
+    "title": "ja_Person",
+    "table.columns": {
+      "fullName": "ja_Full Name",
+      "userId": "ja_Username"
+    }
+  },
+  "costTracking.comp.summary": {
+    "title": "ja_Cost Summary",
+    "table.columns": {
+      "parentId": "ja_ID",
+      "parentNumber": "ja_Parent ID",
+      "parentType": "ja_Parent Type",
+      "value": "ja_Total Cost",
+      "title": "ja_Title",
+      "description": "ja_Description"
+    }
+  },
+  "costTracking.comp.tags": {
+    "title": "ja_Tags",
+    "table.columns": {
+      "tag": "ja_Tag",
+      "created": "ja_Created",
+      "createdBy": "ja_Created By"
+    },
+    "modal": {
+    "title": "ja_Tag",
+    "search": "ja_Search for Tag",
+    "buttons": {
+          "cancel": "ja_Cancel",
+          "ok": "ja_Add Tag"
+     }
+    },
+    "message": {
+      "tagExists": "ja_Tag with that name or description or text already exists",
+      "tagAssociated": "ja_already associated",
+      "delete": {
+        "success": "ja_Tag deleted successfully",
+        "error": "ja_Error deleting tag"
+      }
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "preference": {
+    "title": "Preferencias",
+    "menus": {
+      "usermenu.item": "Preferencias"
+    }
+  }
+}

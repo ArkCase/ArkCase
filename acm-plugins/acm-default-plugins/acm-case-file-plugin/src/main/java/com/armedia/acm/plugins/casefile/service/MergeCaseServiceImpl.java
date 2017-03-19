@@ -1,5 +1,8 @@
+
+
 package com.armedia.acm.plugins.casefile.service;
 
+import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
@@ -20,7 +23,6 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
 import com.armedia.acm.services.participants.service.AcmParticipantService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
-
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +50,7 @@ public class MergeCaseServiceImpl implements MergeCaseService
     @Override
     @Transactional
     public CaseFile mergeCases(Authentication auth, String ipAddress, MergeCaseOptions mergeCaseOptions)
-            throws PipelineProcessException, MergeCaseFilesException, AcmUserActionFailedException, AcmCreateObjectFailedException
+            throws PipelineProcessException, MergeCaseFilesException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmAccessControlException
     {
 
         CaseFile source = caseFileDao.find(mergeCaseOptions.getSourceCaseFileId());
@@ -99,7 +101,7 @@ public class MergeCaseServiceImpl implements MergeCaseService
         return target;
     }
 
-    private void handleParticipants(Authentication auth, CaseFile target) throws MergeCaseFilesException
+    private void handleParticipants(Authentication auth, CaseFile target) throws MergeCaseFilesException, AcmAccessControlException
     {
         // 1. if current user is already assignee do nothing
         // 2. change case file assignee into follower
@@ -224,3 +226,4 @@ public class MergeCaseServiceImpl implements MergeCaseService
                 ? Arrays.asList(excludeDocumentTypes.trim().replaceAll(",[\\s]*", ",").split(",")) : new ArrayList<>();
     }
 }
+

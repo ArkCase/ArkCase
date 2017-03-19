@@ -1,8 +1,7 @@
 package com.armedia.acm.correspondence.service;
 
-import static com.armedia.acm.correspondence.service.TemplateMapper.mapConfigurationFromTemplate;
-import static com.armedia.acm.correspondence.service.TemplateMapper.mapTemplateFromConfiguration;
-import static com.armedia.acm.correspondence.service.TemplateMapper.updateTemplateState;
+import static com.armedia.acm.correspondence.service.CorrespondenceMapper.mapConfigurationFromTemplate;
+import static com.armedia.acm.correspondence.service.CorrespondenceMapper.mapTemplateFromConfiguration;
 
 import com.armedia.acm.correspondence.model.CorrespondenceQuery;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
@@ -27,14 +26,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.function.Function;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jan 26, 2017
- *
  */
 public class CorrespondenceTemplateManager implements ApplicationListener<ContextRefreshedEvent>
 {
@@ -43,16 +41,13 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
 
     private Resource correspondenceTemplatesConfiguration;
 
-    private Resource caseCorrespondenceForms;
-
-    private Resource complaintCorrespondenceForms;
-
-    private Map<String, CorrespondenceTemplate> templates = new HashMap<>();
+    private Map<String, Map<String, CorrespondenceTemplate>> templates = new ConcurrentHashMap<>();
 
     private Pattern camelCase = Pattern.compile("[A-Za-z].*?(?=([A-Z]|\\.))");
 
     /**
-     * @param springContextHolder the springContextHolder to set
+     * @param springContextHolder
+     *            the springContextHolder to set
      */
     public void setSpringContextHolder(SpringContextHolder springContextHolder)
     {
@@ -60,27 +55,12 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
     }
 
     /**
-     * @param correspondenceTemplatesConfiguration the correspondenceTemplatesConfiguration to set
+     * @param correspondenceTemplatesConfiguration
+     *            the correspondenceTemplatesConfiguration to set
      */
     public void setCorrespondenceTemplatesConfiguration(Resource correspondenceTemplatesConfiguration)
     {
         this.correspondenceTemplatesConfiguration = correspondenceTemplatesConfiguration;
-    }
-
-    /**
-     * @param caseCorrespondenceForms the caseCorrespondenceForms to set
-     */
-    public void setCaseCorrespondenceForms(Resource caseCorrespondenceForms)
-    {
-        this.caseCorrespondenceForms = caseCorrespondenceForms;
-    }
-
-    /**
-     * @param complaintCorrespondenceForms the complaintsCorrespondenceForms to set
-     */
-    public void setComplaintCorrespondenceForms(Resource complaintCorrespondenceForms)
-    {
-        this.complaintCorrespondenceForms = complaintCorrespondenceForms;
     }
 
     /*
@@ -94,7 +74,15 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
         try
         {
             File file = correspondenceTemplatesConfiguration.getFile();
+            if (!file.exists())
+            {
+                file.createNewFile();
+            }
             String resource = FileUtils.readFileToString(file);
+            if (resource.isEmpty())
+            {
+                resource = "[]";
+            }
 
             ObjectMapper mapper = new ObjectMapper();
 
@@ -103,11 +91,16 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
                     {
                     });
 
-            Map<String, CorrespondenceQuery> correspondenceQueryBeansMap = springContextHolder.getAllBeansOfType(CorrespondenceQuery.class);
-
-            templates.putAll(templateConfigurations.stream().map(c -> mapTemplateFromConfiguration(c, correspondenceQueryBeansMap))
-                    .collect(Collectors.toMap(CorrespondenceTemplate::getTemplateFilename, Function.identity())));
-
+            templateConfigurations.stream().forEach(configuration -> {
+                CorrespondenceTemplate template = mapTemplateFromConfiguration(configuration);
+                if (templates.containsKey(template.getTemplateId()))
+                {
+                    templates.get(template.getTemplateId()).put(template.getTemplateVersion(), template);
+                } else
+                {
+                    templates.put(template.getTemplateId(), getVersionToTemplateMap(template));
+                }
+            });
         } catch (IOException ioe)
         {
             throw new IllegalStateException(ioe);
@@ -118,9 +111,39 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
     /**
      * @return the templates
      */
-    List<CorrespondenceTemplate> getTemplates()
+    List<CorrespondenceTemplate> getActiveVersionTemplates()
     {
-        return new ArrayList<>(templates.values());
+        List<CorrespondenceTemplate> list = new ArrayList<CorrespondenceTemplate>();
+
+        templates.values().stream().forEach(versionMap -> {
+            Optional<CorrespondenceTemplate> template = versionMap.values().stream().filter(ct -> ct.isTemplateVersionActive()).findFirst();
+            if (template.isPresent())
+            {
+                list.add(template.get());
+            }
+        });
+
+        return list;
+    }
+
+    /**
+     * @param objectType
+     * @return the templates
+     */
+    List<CorrespondenceTemplate> getActivatedActiveVersionTemplatesByObjectType(String objectType)
+    {
+        List<CorrespondenceTemplate> list = new ArrayList<CorrespondenceTemplate>();
+
+        templates.values().stream().forEach(versionMap -> {
+            Optional<CorrespondenceTemplate> template = versionMap.values().stream().filter(ct -> ct.isTemplateVersionActive())
+                    .filter(ct -> ct.getObjectType().equals(objectType)).filter(ct -> ct.isActivated()).findFirst();
+            if (template.isPresent())
+            {
+                list.add(template.get());
+            }
+        });
+
+        return list;
     }
 
     /**
@@ -142,80 +165,182 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
         return null;
     }
 
+    /**
+     * @return the templates
+     */
+    List<CorrespondenceTemplate> getAllTemplates()
+    {
+        List<CorrespondenceTemplate> list = new ArrayList<CorrespondenceTemplate>();
+
+        templates.values().stream().forEach(versionMap -> {
+            list.addAll(versionMap.values());
+        });
+
+        return list;
+    }
+
+    /**
+     * @param template
+     * @return
+     * @throws IOException
+     */
     Optional<CorrespondenceTemplate> updateTemplate(CorrespondenceTemplate template) throws IOException
     {
-        Optional<CorrespondenceTemplate> existing = findTemplate(template.getTemplateFilename());
-        if (existing.isPresent())
+        Optional<CorrespondenceTemplate> optExisting = findActiveVersionTemplate(template.getTemplateId());
+        if (optExisting.isPresent())
         {
-            CorrespondenceTemplate existingTemplate = existing.get();
-            updateTemplateState(existingTemplate, template);
+            CorrespondenceTemplate existing = optExisting.get();
+            templates.get(existing.getTemplateId()).put(template.getTemplateVersion(), template);
+            if (!existing.getTemplateVersion().equals(template.getTemplateVersion()))
+            {
+                existing.setTemplateVersionActive(false);
+                existing.setActivated(false);
+            }
         } else
         {
-            templates.put(template.getTemplateFilename(), template);
+            templates.put(template.getTemplateId(), getVersionToTemplateMap(template));
         }
 
-        updateConfiguration(templates.values());
-        updateLabels(template, templateLabels -> {
-            Optional<TemplateLabel> label = templateLabels.stream().filter(tl -> tl.getTemplate().equals(template.getTemplateFilename()))
-                    .findAny();
-            if (label.isPresent())
+        updateConfiguration(getAllTemplates());
+        return Optional.of(template);
+    }
+
+    /**
+     * @param templateId
+     * @return
+     * @throws IOException
+     */
+    Optional<CorrespondenceTemplate> deleteActiveVersionTemplate(String templateId) throws IOException
+    {
+        Optional<CorrespondenceTemplate> optTemplate = findActiveVersionTemplate(templateId);
+        if (optTemplate.isPresent())
+        {
+            CorrespondenceTemplate template = optTemplate.get();
+            templates.get(template.getTemplateId()).remove(template.getTemplateVersion());
+            if (templates.get(template.getTemplateId()).isEmpty())
             {
-                label.get().setLabel(template.getDocumentType());
-            } else
-            {
-                templateLabels.add(new TemplateLabel(template.getTemplateFilename(), template.getDocumentType()));
+                templates.remove(template.getTemplateId());
             }
-        });
+            updateConfiguration(getAllTemplates());
+            return optTemplate;
+        }
+
+        return Optional.empty();
+    }
+
+    /**
+     * @param templateId
+     * @param templateVersion
+     * @return
+     * @throws IOException
+     */
+    Optional<CorrespondenceTemplate> deleteTemplateByIdAndVersion(String templateId, String templateVersion) throws IOException
+    {
+        Optional<CorrespondenceTemplate> optTemplate = findTemplateByIdAndVersion(templateId, templateVersion);
+        if (optTemplate.isPresent())
+        {
+            CorrespondenceTemplate template = optTemplate.get();
+            templates.get(template.getTemplateId()).remove(template.getTemplateVersion());
+            if (templates.get(template.getTemplateId()).isEmpty())
+            {
+                templates.remove(template.getTemplateId());
+            }
+            updateConfiguration(getAllTemplates());
+            return optTemplate;
+        }
+
+        return Optional.empty();
+    }
+
+    /**
+     * @param templateId
+     * @param templateFilename
+     * @return
+     */
+    Optional<CorrespondenceTemplate> getTemplateByIdAndFilename(String templateId, String templateFilename)
+    {
+        CorrespondenceTemplate template = new CorrespondenceTemplate();
+        Optional<CorrespondenceTemplate> optExistingTemplate = findActiveVersionTemplate(templateId);
+        if (optExistingTemplate.isPresent())
+        {
+            CorrespondenceTemplate existingTemplate = optExistingTemplate.get();
+            template.setTemplateId(existingTemplate.getTemplateId());
+            template.setTemplateVersion(Double.toString(templates.get(templateId).keySet().stream()
+                    .mapToDouble(key -> Double.parseDouble(key)).reduce(0, (a, b) -> Double.max(a, b) + 1)));
+            template.setTemplateVersionActive(true);
+            template.setActivated(true);
+            template.setTemplateFilename(templateFilename);
+            template.setDateFormatString(existingTemplate.getDateFormatString());
+            template.setNumberFormatString(existingTemplate.getNumberFormatString());
+            template.setDocumentType(existingTemplate.getDocumentType());
+            template.setObjectType(existingTemplate.getObjectType());
+        } else
+        {
+            template.setTemplateId(Integer
+                    .toString(templates.keySet().stream().mapToInt(id -> Integer.parseInt(id)).reduce(0, (a, b) -> Integer.max(a, b)) + 1));
+            template.setTemplateVersion("1.0");
+            template.setTemplateVersionActive(true);
+            template.setActivated(true);
+            template.setTemplateFilename(templateFilename);
+            template.setDocumentType(generateDocumentTypeFromFilename(templateFilename));
+            template.setDateFormatString("MM/dd/yyyy");
+            template.setNumberFormatString("###,###,###");
+        }
 
         return Optional.of(template);
     }
 
     /**
-     * @param templateFileName
+     * @param templateId
      * @return
-     * @throws IOException
      */
-    Optional<CorrespondenceTemplate> deleteTemplate(String templateFileName) throws IOException
+    Optional<CorrespondenceTemplate> getActiveTemplateById(String templateId)
     {
-        Optional<CorrespondenceTemplate> result = findTemplate(templateFileName);
-        if (result.isPresent())
-        {
-            CorrespondenceTemplate template = result.get();
-            templates.remove(template.getTemplateFilename());
-            updateConfiguration(templates.values());
-            updateLabels(template, templateLabels -> {
-                Optional<TemplateLabel> label = templateLabels.stream()
-                        .filter(tl -> tl.getTemplate().equals(template.getTemplateFilename())).findAny();
-                if (label.isPresent())
-                {
-                    templateLabels.remove(label.get());
-                }
-            });
-            return result;
-        }
-        return Optional.empty();
+        return findActiveVersionTemplate(templateId);
     }
 
     /**
-     * @param templateFileName
+     * @param templateId
      * @return
      */
-    Optional<CorrespondenceTemplate> getTemplateByFileName(String templateFileName)
+    List<CorrespondenceTemplate> getTemplateVersionsById(String templateId)
     {
-        return Optional.of(findTemplate(templateFileName).orElseGet(() -> {
-            CorrespondenceTemplate template = new CorrespondenceTemplate();
-            template.setTemplateFilename(templateFileName);
-            template.setDocumentType(generateDocumentTypeFromFilename(templateFileName));
-            template.setDateFormatString("MM/dd/yyyy");
-            template.setNumberFormatString("###,###,###");
-            template.setTemplateSubstitutionVariables(new HashMap<>());
-            return template;
-        }));
+        return new ArrayList<>(templates.get(templateId).values());
     }
 
-    private Optional<CorrespondenceTemplate> findTemplate(String templateFileName)
+    /**
+     * @param templateId
+     * @param templateVersion
+     * @return
+     */
+    Optional<CorrespondenceTemplate> getTemplateByIdAndVersion(String templateId, String templateVersion)
     {
-        return Optional.ofNullable(templates.get(templateFileName));
+        return findTemplateByIdAndVersion(templateId, templateVersion);
+    }
+
+    /**
+     * @param templateId
+     * @param templateVersion
+     * @return
+     */
+    private Optional<CorrespondenceTemplate> findTemplateByIdAndVersion(String templateId, String templateVersion)
+    {
+        return Optional.ofNullable(templates.get(templateId).get(templateVersion));
+    }
+
+    /**
+     * @param templateId
+     * @return
+     */
+    private Optional<CorrespondenceTemplate> findActiveVersionTemplate(String templateId)
+    {
+        if (templates.get(templateId) != null)
+        {
+            return templates.get(templateId).values().stream().filter(ct -> ct.isTemplateVersionActive()).findFirst();
+
+        }
+        return Optional.empty();
+
     }
 
     /**
@@ -228,19 +353,19 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
         List<String> matches = new LinkedList<>();
         while (matcher.find())
         {
-            matches.add((matcher.group()));
+            matches.add((matcher.group().trim()));
         }
         return matches.stream().collect(Collectors.joining(" "));
     }
 
     /**
-     * @param templates2
+     * @param templates
      * @throws IOException
      */
     private void updateConfiguration(Collection<CorrespondenceTemplate> templates) throws IOException
     {
         List<CorrespondenceTemplateConfiguration> configurations = templates.stream()
-                .map(template -> mapConfigurationFromTemplate(template, this::getQueryId)).collect(Collectors.toList());
+                .map(template -> mapConfigurationFromTemplate(template)).collect(Collectors.toList());
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
@@ -251,42 +376,11 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
 
     }
 
-    @FunctionalInterface
-    private static interface LabelsUpdater
+    private Map<String, CorrespondenceTemplate> getVersionToTemplateMap(CorrespondenceTemplate correspondenceTemplate)
     {
-        void updateLabels(List<TemplateLabel> templateLabels);
-    }
-
-    /**
-     * @param template
-     * @throws IOException
-     */
-    private void updateLabels(CorrespondenceTemplate template, LabelsUpdater updater) throws IOException
-    {
-        File file;
-        switch (template.getQuery().getType())
-        {
-        case CASE_FILE:
-            file = caseCorrespondenceForms.getFile();
-            break;
-        case COMPLAINT:
-            file = complaintCorrespondenceForms.getFile();
-        default:
-            throw new IllegalArgumentException();
-        }
-        String resource = FileUtils.readFileToString(file);
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.enable(SerializationFeature.INDENT_OUTPUT);
-
-        List<TemplateLabel> templateLabels = mapper.readValue(resource, new TypeReference<List<TemplateLabel>>()
-        {
-        });
-
-        updater.updateLabels(templateLabels);
-
-        FileUtils.writeStringToFile(file, mapper.writeValueAsString(templateLabels));
-
+        Map<String, CorrespondenceTemplate> versionToTempateMap = new HashMap<String, CorrespondenceTemplate>();
+        versionToTempateMap.put(correspondenceTemplate.getTemplateVersion(), correspondenceTemplate);
+        return versionToTempateMap;
     }
 
 }

@@ -1282,3 +1282,19 @@ tags-input .tags {
 a.no-outline:hover, a.no-outline:focus {
     outline: none;
 }
+
+/* Fix selection */
+.ui-grid-pinned-container .ui-grid-cell .ui-grid-cell-contents,
+.ui-grid-pinned-container .ui-grid-cell .ui-grid-cell-contents .ui-grid-selection-row-header-buttons {
+    padding: 0;
+}
+
+.ui-grid-cell.ui-grid-disable-selection.ui-grid-row-header-cell {
+    pointer-events: all !important;
+}
+
+.no-margin {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    font-size: 15px;
+}

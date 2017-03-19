@@ -1,0 +1,224 @@
+{
+  "dashboard": {
+    "title": "板面",
+    "menus": {
+      "leftnav.item": "板面"
+    },
+    "widgets": {
+      "casesByQueue": {
+        "title": "zh-tw_Active Case Files by Queue",
+        "description": "zh-tw_Displays active case files by queue",
+        "xAxis": "zh-tw_Queues",
+        "yAxis": "zh-tw_Number of Case Files",
+        "noDataMessage": "zh-tw_Currently there are no cases info"
+      },
+      "casesByStatus": {
+        "title": "zh-tw_Cases By Status",
+        "description": "zh-tw_Displays cases by status",
+        "timePeriod": {
+          "label": "zh-tw_Select Time Period",
+          "lastWeek": "zh-tw_Last Week",
+          "lastMonth": "zh-tw_Last Month",
+          "lastYear": "zh-tw_Last Year",
+          "all": "zh-tw_All"
+        },
+        "noDataMessage": "zh-tw_Currently there are no cases info"
+      },
+      "myCases": {
+        "title": "zh-tw_My Cases",
+        "description": "zh-tw_Displays my cases",
+        "noDataMessage": "zh-tw_Currently there are no cases info",
+        "table": {
+          "header": {
+            "caseId": "zh-tw_ID",
+            "title": "zh-tw_Title",
+            "priority": "zh-tw_Priority",
+            "status": "zh-tw_Status"
+          }
+        }
+      },
+      "myComplaints": {
+        "title": "zh-tw_My Complaints",
+        "description": "zh-tw_Displays my complaints",
+        "table": {
+          "header": {
+            "number": "zh-tw_ID",
+            "title": "zh-tw_Title",
+            "priority": "zh-tw_Priority",
+            "created": "zh-tw_Created",
+            "status": "zh-tw_Status"
+          },
+          "noDataMessage": "zh-tw_Currently there are no complaints info"
+        }
+      },
+      "myTasks": {
+        "title": "zh-tw_My Tasks",
+        "description": "zh-tw_Displays my tasks",
+        "rowNumbers.label": "zh-tw_Default Row Numbers",
+        "rowNumbers.placeholder": "zh-tw_Enter Default Row Numbers",
+        "table": {
+          "header": {
+            "taskId": "zh-tw_ID",
+            "title": "zh-tw_Title",
+            "priority": "zh-tw_Priority",
+            "dueDate": "zh-tw_Due",
+            "status": "zh-tw_Status",
+            "objectId": "zh-tw_Object ID"
+          },
+          "overdue.tooltip": "zh-tw_Task is Overdue",
+          "deadline.tooltip": "zh-tw_Deadline is Approaching"
+        },
+        "noDataMessage": "zh-tw_Currently there are no tasks info"
+      },
+      "newComplaints": {
+        "title": "zh-tw_New Complaints",
+        "description": "zh-tw_Displays new complaints",
+        "dueDate": {
+          "label": "zh-tw_Select Due Date Period",
+          "pastDue": "zh-tw_Past Due",
+          "dueTomorrow": "zh-tw_Due Tomorrow",
+          "dueWeek": "zh-tw_Due in 7 Days",
+          "dueMonth": "zh-tw_Due in Month",
+          "all": "zh-tw_All"
+        },
+        "noDataMessage": "zh-tw_Currently there are no complaints info"
+      },
+      "newCases": {
+        "title": "zh-tw_New Cases",
+        "description": "zh-tw_Displays new cases",
+        "noDataMessage": "zh-tw_Currently there are no cases info"
+      },
+      "teamWorkload": {
+        "title": "zh-tw_Team Workload",
+        "description": "zh-tw_Displays team workload",
+        "dueDate": {
+          "label": "zh-tw_Select Due Date Period",
+          "pastDue": "zh-tw_Past Due",
+          "dueTomorrow": "zh-tw_Due Tomorrow",
+          "dueWeek": "zh-tw_Due in 7 Days",
+          "dueMonth": "zh-tw_Due in Month",
+          "all": "zh-tw_All"
+        },
+        "noDataMessage": "zh-tw_Currently there are no team tasks info"
+      },
+      "weather": {
+        "description": "zh-tw_Displays weather",
+        "label": {
+          "current": "zh-tw_Current:",
+          "enterLocation": "zh-tw_Enter Location",
+          "description": "zh-tw_Display the current temperature of a city",
+          "location": "zh-tw_Location",
+          "insertLocationInConfiguration": "zh-tw_Please insert a location in the widget configuration"
+        },
+        "title": "zh-tw_Weather",
+        "noDataMessage": "zh-tw_Currently there are no weather info"
+      },
+      "news": {
+        "description": "zh-tw_Displays news",
+        "label": {
+          "enterFeedUrl": "zh-tw_Enter Feed url",
+          "description": "zh-tw_Displays a RSS/Atom feed",
+          "feedUrl": "zh-tw_Feed Url",
+          "insertUrl": "zh-tw_Please insert a feed url in the widget configuration"
+        },
+        "title": "zh-tw_News",
+        "noDataMessage": "zh-tw_Currently there is no RSS/info"
+      },
+      "details": {
+        "title": "zh-tw_Details",
+        "description": "zh-tw_Displays case details",
+        "noDataMessage": "zh-tw_Currently there are no details"
+      },
+      "people": {
+        "title": "zh-tw_People",
+        "description": "zh-tw_Displays people details",
+        "noDataMessage": "zh-tw_Currently there are no people to display"
+      },
+      "documents": {
+        "title": "zh-tw_Documents",
+        "description": "zh-tw_Displays chart of documents by folder",
+        "noDataMessage": "zh-tw_Currently there are no documents to display"
+      },
+      "locations": {
+        "title": "zh-tw_Locations",
+        "description": "zh-tw_Displays location details",
+        "noDataMessage": "zh-tw_Currently there are no locations to display"
+      },
+      "tasks": {
+        "title": "zh-tw_Tasks",
+        "description": "zh-tw_Displays task details",
+        "noDataMessage": "zh-tw_Currently there are no tasks to display"
+      },
+      "participants": {
+        "title": "zh-tw_Participants",
+        "description": "zh-tw_Displays participant details",
+        "noDataMessage": "zh-tw_Currently there are no participant to display"
+      },
+      "references": {
+        "title": "zh-tw_References",
+        "description": "zh-tw_Displays reference details",
+        "noDataMessage": "zh-tw_Currently there are no references to display"
+      },
+      "history": {
+        "title": "zh-tw_History",
+        "description": "zh-tw_Displays chart of history events",
+        "noDataMessage": "zh-tw_Currently there are no events to display"
+      },
+      "notes": {
+        "title": "zh-tw_Notes",
+        "description": "zh-tw_Displays note details",
+        "noDataMessage": "zh-tw_Currently there are no notes to display"
+      },
+      "time": {
+        "title": "zh-tw_Time",
+        "description": "zh-tw_Displays chart for hours per user",
+        "noDataMessage": "zh-tw_Currently there is no time information to display"
+      },
+      "cost": {
+        "title": "zh-tw_Cost",
+        "description": "zh-tw_Displays chart for cost per user",
+        "noDataMessage": "zh-tw_Currently there is no cost information to display"
+      },
+      "calendar": {
+        "title": "zh-tw_Calendar",
+        "description": "zh-tw_Displays chart of scheduled events per day",
+        "noDataMessage": "zh-tw_Currently there are no events to display"
+      },
+      "reworkDetails": {
+        "title": "zh-tw_Rework Details",
+        "description": "zh-tw_Shows most recent rework details",
+        "noDataMessage": "zh-tw_Currently there no are no rework details to display"
+      },
+      "docReview": {
+        "title": "zh-tw_Documents Under Review",
+        "description": "zh-tw_Shows documents under review",
+        "noDataMessage": "zh-tw_Currently there no are no documents under review to display"
+      },
+      "workflow": {
+        "title": "zh-tw_Workflow Overview",
+        "description": "zh-tw_Overview of pending workflows",
+        "noDataMessage": "zh-tw_Currently there are no workflows to display"
+      },
+      "signature": {
+        "title": "zh-tw_eSignature",
+        "description": "zh-tw_eSignature widget",
+        "noDataMessage": "zh-tw_Currently there are no eSignatures to display"
+      },
+      "person": {
+        "title": "zh-tw_Person",
+        "description": "zh-tw_Person widget for Cost and Time modules",
+        "noDataMessage": "zh-tw_Currently there are no persons to display"
+      },
+      "hoursSummary": {
+        "title": "zh-tw_Hours Summary",
+        "description": "zh-tw_Displays a summary of hours worked",
+        "noDataMessage": "zh-tw_Currently there is no summary to display"
+      },
+      "expenses": {
+        "title": "zh-tw_Expenses",
+        "description": "zh-tw_Displays a cost-to-user graph",
+        "noDataMessage": "zh-tw_Currently no expense data to display"
+      }
+    }
+  }
+}

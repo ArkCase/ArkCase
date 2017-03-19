@@ -1,0 +1,38 @@
+{
+  "reports": {
+    "title": "Rapports",
+    "menus": {
+      "leftnav.item": "Rapports"
+    },
+    "selectReport" : {
+      "label": "fr_Report",
+      "placeholder": "fr_Select Report"
+    },
+    "selectState" : {
+      "label": "fr_State",
+      "placeholder": "fr_Select State"
+    },
+    "startDate": {
+      "label": "fr_From"
+    },
+    "endDate" : {
+      "label": "fr_To"
+    },
+
+    "dropdown": {
+      "turnaround": "fr_Turnaround Time by Requester",
+      "requester": "fr_Requester Type Summary",
+      "pending": "fr_Pending Orders Report",
+      "associate": "fr_Associate Productivity Report",
+      "origination": "fr_Origination Count",
+      "transfers": "fr_Transfers Report",
+      "exceptions": "fr_Exceptions Report (Non-Compliance)"
+    },
+    "datepicker":{
+      "close": "fr_Done"
+    },
+    "btn": {
+      "generateReport": "fr_Generate report"
+    }
+  }
+}

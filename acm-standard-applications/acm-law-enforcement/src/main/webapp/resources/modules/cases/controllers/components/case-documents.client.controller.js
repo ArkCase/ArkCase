@@ -3,11 +3,11 @@
 angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$stateParams', '$modal', '$q', '$timeout'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Case.InfoService', 'DocTreeService'
     , 'Helper.ObjectBrowserService', 'Authentication', 'PermissionsService', 'Object.ModelService'
-    , 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin'
+    , 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin', 'Admin.CMTemplatesService'
     , function ($scope, $stateParams, $modal, $q, $timeout
         , Util, ConfigService, ObjectService, ObjectLookupService, CaseInfoService, DocTreeService
         , HelperObjectBrowserService, Authentication, PermissionsService, ObjectModelService
-        , DocTreeExtWebDAV, DocTreeExtCheckin) {
+        , DocTreeExtWebDAV, DocTreeExtCheckin, CorrespondenceService) {
 
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -33,7 +33,7 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
 
         var promiseFormTypes = ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.CASE_FILE);
         var promiseFileTypes = ObjectLookupService.getFileTypes();
-        var promiseCorrespondenceForms = ObjectLookupService.getCaseFileCorrespondenceForms();
+        var promiseCorrespondenceForms = CorrespondenceService.getActivatedTemplatesData(ObjectService.ObjectTypes.CASE_FILE);
         var onConfigRetrieved = function (config) {
             $scope.treeConfig = config.docTree;
             $scope.allowParentOwnerToCancel = config.docTree.allowParentOwnerToCancel;
@@ -43,6 +43,7 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
                     $scope.treeConfig.formTypes = data[0];
                     $scope.treeConfig.fileTypes = data[1];
                     $scope.treeConfig.correspondenceForms = data[2];
+                    $scope.treeControl.refreshTree();
                 });
         };
 

@@ -1,0 +1,330 @@
+{
+  "cases": {
+    "title": "Дела",
+    "progressNoCase": "ru_[ No case file data ]",
+    "progressLoading": "ru_Loading case file ",
+    "progressError": "ru_Failed to load case file"
+  },
+  "cases.menus": {
+    "leftnav.item": "Дело Файл",
+    "topbar.item": "Дело"
+  },
+  "cases.error": {
+    "invalidData": "ru_"
+  },
+  "cases.comp.info": {
+    "caseId": "ru_Case id:",
+    "caseNumber": "ru_Case Number:",
+    "courtRoomName": "ru_Court Room Name:",
+    "type.label": "ru_Type",
+    "created.label": "ru_Created Date",
+    "priority.label": "ru_Priority",
+    "assignee.label": "ru_Assigned To",
+    "owningGroup.label": "ru_Owning Group",
+    "dueDate.label": "ru_Due Date"
+  },
+  "cases.comp.actions": {
+    "restrict": "ru_Restrict?",
+    "new.button": "ru_New",
+    "edit.button": "ru_Edit",
+    "status.button": "ru_Change Case Status",
+    "reinvestigate.button": "ru_Reinvestigate",
+    "subscribe.button": "ru_Subscribe",
+    "unsubscribe.button": "ru_Unsubscribe",
+    "merge.button": "ru_Merge",
+    "claim.button": "ru_Claim",
+    "unclaim.button": "ru_Unclaim",
+    "split.button": "ru_Split"
+  },
+  "cases.comp.details": {
+    "title": "ru_Details",
+    "informSaved": "ru_Case details saved",
+    "table.columns": {
+      "title": "ru_Details",
+      "modified": "ru_Date Last Modified",
+      "modifier": "ru_User Last Modified"
+    }
+  },
+  "cases.comp.documents": {
+    "title": "ru_Documents"
+  },
+  "cases.comp.people": {
+    "title": "ru_People",
+    "table.columns": {
+      "entity": "ru_Entity",
+      "type": "ru_Type",
+      "firstName": "ru_FirstName",
+      "lastName": "ru_LastName"
+    },
+    "contactMethods": {
+      "title": "ru_ContactMethods",
+      "table.columns": {
+        "type": "ru_Type",
+        "value": "ru_Value",
+        "created": "ru_Date Added",
+        "creator": "ru_Added By",
+        "modified": "ru_Last Modified",
+        "modifier": "ru_Modified By"
+      }
+    },
+    "organizations": {
+      "title": "ru_Organizations",
+      "table.columns": {
+        "type": "ru_Type",
+        "value": "ru_Value",
+        "created": "ru_Date Added",
+        "creator": "ru_Added By",
+        "modified": "ru_Last Modified",
+        "modifier": "ru_Modified By"
+      }
+    },
+    "addresses": {
+      "title": "ru_Locations",
+      "table.columns": {
+        "type": "ru_Type",
+        "streetAddress": "ru_Address",
+        "city": "ru_City",
+        "state": "ru_State",
+        "zip": "ru_Zip",
+        "country": "ru_Country",
+        "created": "ru_Date Added",
+        "creator": "ru_Added By",
+        "modified": "ru_Last Modified",
+        "modifier": "ru_Modified By"
+      }
+    },
+    "aliases": {
+      "title": "ru_Aliases",
+      "table.columns": {
+        "type": "ru_Type",
+        "value": "ru_Value",
+        "created": "ru_Date Added",
+        "creator": "ru_Added By",
+        "modified": "ru_Last Modified",
+        "modifier": "ru_Modified By"
+      }
+    },
+    "securityTags": {
+      "title": "ru_Security Tags",
+      "table.columns": {
+        "type": "ru_Type",
+        "value": "ru_Value",
+        "created": "ru_Date Added",
+        "creator": "ru_Added By",
+        "modified": "ru_Last Modified",
+        "modifier": "ru_Modified By"
+      }
+    }
+  },
+  "cases.comp.participants": {
+    "title": "ru_Participants",
+    "table.columns": {
+      "type": "ru_Type",
+      "name": "ru_Name"
+    },
+    "dialogUserPicker": {
+      "header": "ru_Choose User",
+      "table.columns": {
+        "name": "ru_Name",
+        "type": "ru_Type",
+        "title": "ru_Title",
+        "id": "ru_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "ru_Choose Group",
+      "table.columns": {
+        "name": "ru_Name"
+      }
+    }
+  },
+  "cases.comp.notes": {
+    "title": "ru_Notes",
+    "table.columns": {
+      "note": "ru_Note",
+      "created": "ru_Created",
+      "creator": "ru_Author"
+    }
+  },
+  "cases.comp.tasks": {
+    "title": "ru_Tasks",
+    "table.columns": {
+      "title": "ru_Title",
+      "assignee": "ru_Assignee",
+      "created": "ru_Created",
+      "priority": "ru_Priority",
+      "due": "ru_Due",
+      "status": "ru_Status"
+    },
+    "table.overdue.tooltip": "ru_Task is Overdue",
+    "table.deadline.tooltip": "ru_Deadline is Approaching"
+  },
+  "cases.comp.references": {
+    "title": "ru_References",
+    "table.columns": {
+      "targetName": "ru_Number",
+      "parentName": "ru_Parent",
+      "targetTitle": "ru_Title",
+      "modified": "ru_Modified",
+      "targetType": "ru_Reference Type",
+      "status": "ru_Status"
+    }
+  },
+  "cases.comp.history": {
+    "title": "ru_History",
+    "table.columns": {
+      "eventType": "ru_Event Name",
+      "eventDate": "ru_Date",
+      "userId": "ru_User"
+    }
+  },
+  "cases.comp.time": {
+    "title": "ru_Time",
+    "table.columns": {
+      "name": "ru_Form Name",
+      "user": "ru_User",
+      "tally": "ru_Total Hours",
+      "modified": "ru_Modified Date",
+      "status": "ru_Status"
+    },
+    "formNamePrefix": "ru_Timesheet"
+  },
+  "cases.comp.cost": {
+    "title": "ru_Cost",
+    "table.columns": {
+      "name": "ru_Form Name",
+      "user": "ru_User",
+      "tally": "ru_Total Cost",
+      "modified": "ru_Modified Date",
+      "status": "ru_Status"
+    },
+    "formNamePrefix": "ru_Costsheet"
+  },
+  "cases.comp.tags": {
+    "title": "ru_Tags",
+    "table.columns": {
+      "tag": "ru_Tag",
+      "created": "ru_Created",
+      "createdBy": "ru_Created By"
+    },
+    "modal": {
+      "title": "ru_Tag",
+      "search": "ru_Search for Tag",
+      "buttons": {
+        "cancel": "ru_Cancel",
+        "ok": "ru_Add Tag"
+      }
+    },
+    "message": {
+      "tagExists": "ru_Tag with that name or description or text already exists",
+      "tagAssociated": "ru_already associated",
+      "delete": {
+        "success": "ru_Tag deleted successfully",
+        "error": "ru_Error deleting tag"
+      }
+    }
+  },
+  "cases.comp.calendar": {
+    "title": "ru_Calendar"
+  },
+  "cases.comp.merge": {
+    "id": "ru_merge",
+    "title": "ru_Merge",
+    "cancel.btn": "ru_Cancel",
+    "merge.btn": "ru_Merge",
+    "search.placeholder": "ru_Search for case file.",
+    "search.btn": "ru_Search",
+    "enabled": true,
+    "table.columns": {
+      "incident": "ru_Type",
+      "name": "ru_Name",
+      "assignee": "ru_Assignee",
+      "title": "ru_Title",
+      "parent": "ru_Parent",
+      "modified": "ru_Modified"
+    }
+  },
+  "cases.comp.split": {
+    "title": "ru_Split",
+    "cancel": "ru_Cancel",
+    "split": "ru_Split"
+  },
+  "cases.comp.addreference": {
+    "title": "ru_Add Reference",
+    "cancelButton": "ru_Cancel",
+    "confirmButton": "ru_Add",
+    "search": {
+      "placeholder": "ru_Search for case, complaint, file, task",
+      "btn": "ru_Search"
+    },
+    "grid": {
+      "columns": {
+        "id": "ru_Id",
+        "name": "ru_Name",
+        "type": "ru_Type",
+        "title": "ru_Title",
+        "parent": "ru_Parent",
+        "assignee": "ru_Assignee",
+        "modified": "ru_Modified"
+      }
+    }
+  },
+  "cases.comp.assigneePickerModal": {
+    "title": "ru_Change Assignee",
+    "assigneeNamelabel": "ru_Assignee Name",
+    "btnCancelText": "ru_Cancel",
+    "btnSaveText": "ru_Save",
+    "searchAssigneeHeader": "ru_Search Assignee"
+  },
+  "cases.comp.groupPickerModal": {
+    "title": "ru_Change Group",
+    "groupNamelabel": "ru_Group Name",
+    "btnCancelText": "ru_Cancel",
+    "btnSaveText": "ru_Save",
+    "searchGroupHeader": "ru_Search Group"
+  },
+  "cases.comp.approvalRouting": {
+    "title": "ru_Future Approvers",
+    "addNewTooltip": "ru_Add new approver",
+    "noBuckslipMessage": "ru_No Data",
+    "button": {
+      "save.tooltip": "ru_Save Changes"
+    },
+    "table.columns": {
+      "fullName": "ru_Full Name"
+    },
+    "assignee.label": "ru_Assignee",
+    "owningGroup.label": "ru_Owning Group",
+    "priority.label": "ru_Priority",
+    "startDate.label": "ru_Start Date",
+    "dueDate.label": "ru_Due Date",
+    "state.label": "ru_State"
+  },
+  "cases.comp.pastApprovals": {
+    "title": "ru_Past Approvers",
+    "noBuckslipMessage": "ru_No Data",
+    "table.columns": {
+      "approvalDate": "ru_Approval Date",
+      "approverId": "ru_Approver",
+      "approverDecision": "ru_Approver Decision"
+    }
+  },
+  "cases.userOrGroupSearch": {
+    "id": "ru_userSearch",
+    "title": "ru_User/Group Search",
+    "search": {
+      "btn": "ru_Search",
+      "placeholder": "ru_Search for the user or group."
+    },
+    "cancelButton": "ru_Cancel",
+    "confirmButton": "ru_Confirm",
+    "enabled": true,
+    "userOrGroupFacetFilter": "ru_\"object_type_s\":(GROUP OR USER)",
+    "assigneeGridColumns": {
+      "name": "ru_Name",
+      "type": "ru_Type",
+      "title": "ru_Title",
+      "username": "ru_Username"
+    }
+  }
+}

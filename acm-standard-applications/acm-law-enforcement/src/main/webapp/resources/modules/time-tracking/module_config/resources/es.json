@@ -1,0 +1,71 @@
+{
+  "timeTracking": {
+    "title": "Seguimiento de Tiempo",
+    "progressNoTimesheet": "es_[ No timesheet is selected ]",
+    "progressLoading": "es_Loading timesheet ",
+    "progressError": "es_Failed to load timesheet"
+  },
+  "timeTracking.menus": {
+    "leftnav.item": "Seguimiento de Tiempo",
+    "topbar.item": "Tiempo"
+  },
+  "timeTracking.tree": {
+  },
+  "timeTracking.comp.info": {
+    "lastModified.label": "es_Last Modified"
+  },
+  "timeTracking.comp.actions": {
+    "new.button": "es_New Timesheet",
+    "edit.button": "es_Edit Timesheet"
+  },
+  "timeTracking.comp.details": {
+    "title": "es_Details",
+    "informSaved": "es_Timesheet details saved",
+    "table.columns": {
+      "title": "es_Details",
+      "modified": "es_Date Last Modified",
+      "modifier": "es_User Last Modified"
+    }
+  },
+  "timeTracking.comp.people": {
+    "title": "es_Person",
+    "table.columns": {
+      "fullName": "es_Full Name",
+      "userId": "es_Username"
+    }
+  },
+  "timeTracking.comp.summary": {
+    "title": "es_Hours Summary",
+    "table.columns": {
+      "code": "es_Parent ID",
+      "type": "es_Parent Type",
+      "value": "es_Total Hours",
+      "date": "es_Date Charged",
+      "modified": "es_Modified Date"
+    }
+  },
+  "timeTracking.comp.tags": {
+    "title": "es_Tags",
+    "table.columns": {
+      "tag": "es_Tag",
+      "created": "es_Created",
+      "createdBy": "es_Created By"
+    },
+    "modal": {
+      "title": "es_Tag",
+      "search": "es_Search for Tag",
+      "buttons": {
+        "cancel": "es_Cancel",
+        "ok": "es_Add Tag"
+      }
+    },
+    "message": {
+      "tagExists": "es_Tag with that name or description or text already exists",
+      "tagAssociated": "es_already associated",
+      "delete": {
+        "success": "es_Tag deleted successfully",
+        "error": "es_Error deleting tag"
+      }
+    }
+  }
+}

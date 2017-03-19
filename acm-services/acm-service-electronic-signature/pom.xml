@@ -4,7 +4,7 @@
     <parent>
         <artifactId>acm-services</artifactId>
         <groupId>com.armedia.acm</groupId>
-        <version>3.1.8</version>
+        <version>3.1.9</version>
     </parent>
 
     <groupId>com.armedia.acm.acm-services</groupId>
@@ -105,11 +105,6 @@
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.oracle</groupId>
-            <artifactId>jdbc</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>

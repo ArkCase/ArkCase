@@ -3,9 +3,11 @@ package com.armedia.acm.services.email.service;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.web.api.MDCConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.security.core.Authentication;
 
 import javax.mail.BodyPart;
@@ -41,13 +43,17 @@ public class AcmProcessMailServiceImpl implements AcmProcessMailService
     @Override
     public void extractAttachmentsAndUpload(Message message, Long parentObjectId, String parentObjectType, AcmFolder containingFolder, Authentication auth)
     {
+        // set the Alfresco user id, so as to upload the files.
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
+
         String tempDir = System.getProperty("java.io.tmpdir");
         String bodyFileName = parentObjectId + "_" + parentObjectType + "_" + System.currentTimeMillis() + ".eml";//we must make sure that file name is unique that's why we add timestamp as sufix
         File messageFile = new File(tempDir + File.separator + bodyFileName);
 
         try
         {
-            try (OutputStream os = new FileOutputStream(messageFile))
+            try ( OutputStream os = new FileOutputStream(messageFile) )
             {
                 message.writeTo(os);
             }
@@ -56,7 +62,7 @@ public class AcmProcessMailServiceImpl implements AcmProcessMailService
             AcmFolder folder = containingFolder != null ? containingFolder : acmFolderService.getRootFolder(parentObjectId, parentObjectType);
 
             //upload message body
-            try (InputStream bodyIS = new FileInputStream(messageFile))
+            try ( InputStream bodyIS = new FileInputStream(messageFile) )
             {
                 ecmFileService.upload(bodyFileName, "mail", "Document",
                         bodyIS, "message/rfc822", bodyFileName, auth,
@@ -75,16 +81,16 @@ public class AcmProcessMailServiceImpl implements AcmProcessMailService
 
             //find attachments and upload
             Multipart multipart = (Multipart) message.getContent();
-            for (int i = 0; i < multipart.getCount(); i++)
+            for ( int i = 0; i < multipart.getCount(); i++ )
             {
                 BodyPart bodyPart = multipart.getBodyPart(i);
-                if (!Part.ATTACHMENT.equalsIgnoreCase(bodyPart.getDisposition()) &&
-                        !StringUtils.isNotBlank(bodyPart.getFileName()))
+                if ( !Part.ATTACHMENT.equalsIgnoreCase(bodyPart.getDisposition()) &&
+                        !StringUtils.isNotBlank(bodyPart.getFileName()) )
                 {
                     continue; // dealing with attachments only
                 }
 
-                try (InputStream attachmentIS = bodyPart.getInputStream())
+                try ( InputStream attachmentIS = bodyPart.getInputStream() )
                 {
                     String fileName = System.currentTimeMillis() + "_" + bodyPart.getFileName();//we must make sure that file name is unique that's why we add timestamp as prefix
                     ecmFileService.upload(fileName, "attachment", "Document",

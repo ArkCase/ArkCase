@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.armedia.acm</groupId>
         <artifactId>acm-services</artifactId>
-        <version>3.1.8</version>
+        <version>3.1.9</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -85,11 +85,6 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.oracle</groupId>
-            <artifactId>jdbc</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.easymock</groupId>

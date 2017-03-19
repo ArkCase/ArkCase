@@ -1,0 +1,395 @@
+{
+  "admin": {
+    "title": "Administração",
+    "security.title": "pt_Security",
+    "security.functionalAccessControl": "pt_Functional Access Control",
+    "security.functionalAccessControl.applicationRole": "pt_Application Role",
+    "security.ldapConfig": "pt_LDAP Configuration",
+    "security.ldapConfig.addNewDirectory": "pt_Add New Directory",
+    "security.ldapConfig.table.ldapUrl": "pt_LDAP Url",
+    "security.ldapConfig.table.directoryName": "pt_Directory Name",
+    "security.ldapConfig.data": {
+      "addNewDirectory": "pt_Add New Directory",
+      "editRecord": "pt_Edit Record",
+      "id": "pt_ID",
+      "ldapUrl": "pt_LDAP Url",
+      "base": "pt_Base",
+      "directoryName": "pt_Directory Name",
+      "authUserDn": "pt_Auth User Dn",
+      "authUserPassword": "pt_Auth User Password",
+      "userSearchBase": "pt_Users Search Base",
+      "userSearchFilter": "pt_User Search Filter",
+      "allUsersFilter": "pt_All Users Filter",
+      "allUsersPageFilter": "pt_All Users Page Filter",
+      "allUsersSortingAttribute": "pt_Sorting attribute for users",
+      "groupSearchBase": "pt_Group Search Base",
+      "groupSearchFilterForUser": "pt_Group Search Filter For User",
+      "userIdAttributeName": "pt_User Id Attribute Name",
+      "userDomain": "pt_User domain",
+      "userDomainNote": "pt_(Note: Fill in the user domain for SSO scenario. For LDAP authentication leave it blank)",
+      "syncPageSize": "pt_Sync Page Size",
+      "groupSearchFilter": "pt_Group Search Filter",
+      "groupsSortingAttribute": "pt_Sorting attribute for groups",
+      "groupSearchPageFilter": "pt_Group Search Page Filter",
+      "enableEditingLdapUsers": "pt_Enable managing users and groups",
+      "cancel": "pt_Cancel",
+      "ok": "pt_OK"
+    },
+    "menus": {
+      "leftnav.item": "Administração"
+    },
+    "security.ldapConfig.data.placeholders": {
+      "id": "pt_Enter directory name",
+      "ldapUrl": "pt_Enter connection URL",
+      "base": "pt_Enter base domain component (e.g. dc=example,dc=com)",
+      "authUserDn": "pt_Enter user DN for authentication (e.g. cn=John Doe,ou=users,dc=example,dc=com)",
+      "authUserPassword": "pt_Enter password for authentication user",
+      "userSearchBase": "pt_Enter users search base (e.g. ou=users)",
+      "userSearchFilter": "pt_Enter search filter for single user (e.g. (&(objectClass=person)(uid=%s))",
+      "allUsersFilter": "pt_Enter search filter for all users (e.g. (objectClass=person))",
+      "allUsersPageFilter": "pt_Enter filter including sort-attribute(e.g. (&(objectClass=person)(uidNumber>=%s)))",
+      "allUsersSortingAttribute": "pt_Enter sorting attribute for users (e.g. 'uidNumber')",
+      "groupSearchBase": "pt_Enter search base for groups (e.g. ou=groups)",
+      "groupSearchFilterForUser": "pt_Enter search filter for user in group (e.g. (&(objectClass=group)(member=%s)))",
+      "userIdAttributeName": "pt_Enter attribute used for user id (e.g. 'uid')",
+      "userDomain": "pt_Enter user domain",
+      "syncPageSize": "pt_Enter paging size",
+      "groupSearchFilter": "pt_Enter search filter for groups (e.g. (objectClass=group))",
+      "groupsSortingAttribute": "pt_Enter attribute for sorting groups (e.g. 'gidNumber')",
+      "groupSearchPageFilter": "pt_Enter filter including sort-attribute (e.g. (&(objectClass=group)(gidNumber>=%s)))",
+      "enableEditingLdapUsers": "pt_Check if managing users and groups to your DS is allowed"
+    },
+    "security.ldapConfig.messages": {
+      "delete.success": "pt_Successfully deleted row.",
+      "delete.error": "pt_Error deleting row.",
+      "insert.success": "pt_Successfully inserted new row.",
+      "insert.error": "pt_Error inserting new row.",
+      "update.success": "pt_Successfully updated row.",
+      "update.error": "pt_Error updating row."
+    },
+    "security.ldapConfig.dialog": {
+      "cancel": "pt_Cancel",
+      "ok": "pt_OK",
+      "confirm.delete": {
+        "deleteBtn": "pt_Delete",
+        "cancelBtn": "pt_Cancel",
+        "headerText": "pt_Are you sure?",
+        "bodyText": "pt_This record will be deleted. Are you sure?"
+      }
+    },
+    "admin.security.addNew": "pt_Add New Directory",
+    "security.organizationalHierarchy": {
+      "title": "pt_Organizational Hierarchy",
+      "btn": {
+        "createAdHocGroup": "pt_createAdHocGroup"
+      },
+      "createGroupDialog": {
+        "ldapGroup": {
+          "title": "pt_Add LDAP Group"
+        },
+        "adHocGroup": {
+          "title": "pt_Add Ad-Hoc Group"
+        },
+        "selectDirectory": "pt_--Choose Directory Config--",
+        "disabledGroupWarning": "pt_Adding new LDAP groups is not allowed for this directory!",
+        "name": "pt_Name",
+        "namePlaceholder": "pt_Enter group name",
+        "description": "pt_Description",
+        "descriptionPlaceholder": "pt_Enter Description",
+        "btn": {
+          "ok": "pt_Add Ad-Hoc Group",
+          "cancel": "pt_Cancel"
+        }
+      },
+      "addSubGroupDialog": {
+        "title": "pt_Add Subgroup to",
+        "name": "pt_Name",
+        "namePlaceholder": "pt_Enter group name",
+        "description": "pt_Description",
+        "descriptionPlaceholder": "pt_Enter Description",
+        "btn": {
+          "ok": "pt_Add Ad-Hoc Group",
+          "cancel": "pt_Cancel"
+        }
+      },
+      "addMembers": {
+        "title": "pt_Add Members",
+        "btn": {
+          "search": "pt_Go!",
+          "cancel": "pt_Cancel",
+          "ok": "pt_Add",
+          "searchPlaceholder": "pt_Enter to search for members."
+        }
+      },
+      "createUserDialog": {
+        "addLdapMember": {
+          "title": "pt_Add Ldap Member",
+          "btn": {
+            "cancel": "pt_Cancel",
+            "ok": "pt_Add Ldap User"
+          }
+        },
+        "editLdapMember": {
+          "title": "pt_Edit Ldap Member",
+          "btn": {
+            "cancel": "pt_Cancel",
+            "ok": "pt_Edit Ldap User"
+          }
+        },
+        "username": "pt_Username",
+        "firstName": "pt_FirstName",
+        "lastName": "pt_LastName",
+        "email": "pt_Email",
+        "password": "pt_Password"
+      },
+      "addMembersGridColumns": {
+        "name": "pt_Name",
+        "type": "pt_Type",
+        "title": "pt_Title",
+        "parent": "pt_Parent",
+        "assignee": "pt_Assignee",
+        "modified": "pt_Modified"
+      },
+      "addSupervisor": {
+        "title": "pt_Add Supervisor",
+        "btn": {
+          "search": "pt_Go!",
+          "cancel": "pt_Cancel",
+          "ok": "pt_Add",
+          "searchPlaceholder": "pt_Enter to search for supervisor."
+        }
+      },
+      "addSupervisorGridColumns": {
+        "name": "pt_Name",
+        "type": "pt_Type",
+        "title": "pt_Title",
+        "parent": "pt_Parent",
+        "assignee": "pt_Assignee",
+        "modified": "pt_Modified"
+      },
+      "dialog.group": {
+        "confirm.delete": {
+          "cancelBtn": "pt_Cancel",
+          "deleteBtn": "pt_Delete",
+          "headerText": "pt_You are about to delete group: ",
+          "bodyText": "pt_Are you sure?"
+        }
+      },
+      "dialog.member": {
+        "confirm.delete": {
+          "cancelBtn": "pt_Cancel",
+          "deleteBtn": "pt_Delete",
+          "headerText": "pt_You are about to delete member: ",
+          "bodyText": "pt_Are you sure?"
+        }
+      },
+      "messages": {
+        "delete": {
+          "group": {
+            "success": "pt_success",
+            "error": "pt_error"
+          },
+          "member": {
+            "success": "pt_success",
+            "error": "pt_error"
+          }
+        }
+      }
+    },
+    "security.selectPrivileges": "pt_Create Role/Select Privileges",
+    "security.selectPrivileges.applicationRole": "pt_Application Role",
+    "security.selectPrivileges.createRole": "pt_Create Role",
+    "security.selectPrivileges.editRole": "pt_Edit Role",
+    "security.selectPrivileges.applyChanges": "pt_Apply Changes",
+    "security.selectPrivileges.enterRoleName": "pt_Enter the role name in the box below.",
+    "security.selectPrivileges.cancel": "pt_Cancel",
+    "security.selectPrivileges.name": "pt_Name",
+    "security.modules": "pt_Modules",
+    "security.modules.module": "pt_Module",
+    "dashboard.title": "pt_Dashboard",
+    "dashboard.config": "pt_Dashboard Configuration",
+    "dashboard.widgets": "pt_Widgets",
+    "reports.title": "pt_Reports",
+    "reports.config": "pt_Reports Configuration",
+    "forms.title": "pt_Forms",
+    "forms.config": "pt_Form Configuration",
+    "workflows.title": "pt_Workflows",
+    "workflows.config": "pt_Workflow Configuration",
+    "workflows.config.activate": {
+      "error": "pt_Cant make this process active!",
+      "success": "pt_Process succesfully activated."
+    },
+    "workflows.config.showHistory.dialog": {
+      "title": "pt_History",
+      "body": "pt_Below is a history of previous BPMN files. To reinstate a previous workflow, select the workflow and click Make Active",
+      "cancel": "pt_Cancel",
+      "activate": "pt_Make Active"
+    },
+    "workflows.config.grid": {
+      "businessProcess": "pt_Business Process",
+      "description": "pt_Description",
+      "active": "pt_Active",
+      "modified": "pt_Modified",
+      "creator": "pt_Author"
+    },
+    "workflows.config.btn": {
+      "createNew": "pt_Create New Model",
+      "uploadNew": "pt_Upload New BPMN"
+    },
+    "workflows.config.links": {
+      "download": "pt_Download",
+      "replaceFile": "pt_Replace File",
+      "versionHistory": "pt_Version History"
+    },
+    "workflows.config.upload": {
+      "success": "pt_Successfully uploaded new process definition",
+      "error": "pt_Error uploading new process definition"
+    },
+    "formWorkflows.title": "pt_Form/Workflow Link",
+    "formWorkflows.link": "pt_Link Forms/Workflows",
+    "formWorkflows.link.undo": "pt_Undo",
+    "formWorkflows.link.saveChanges": "pt_Save Changes",
+    "formWorkflows.link.editRole.save.success": "pt_Link Forms/Workflows configuration saved successfully",
+    "formWorkflows.link.editRole.save.error": "pt_Can't save Link Forms/Workflows configuration",
+    "application": {
+      "title": "pt_Application",
+      "labels.config": {
+        "defaultLabel": "pt_Default",
+        "applyBtn": "pt_Apply",
+        "resetModule": "pt_Reset Module",
+        "resetModule.confirm": "pt_Are you sure you want reset custom resources for current module?",
+        "resetModule.title": "pt_Reset current module (delete custom resources)",
+        "resetAll": "pt_Reset All",
+        "resetAll.confirm": "pt_Are you sure you want reset all custom resources for all modules?",
+        "resetAll.title": "pt_Reset all resources (delete all custom resources)",
+        "refreshAll": "pt_Refresh All",
+        "refreshAll.title": "pt_Refresh all resources (keep custom resources)",
+        "title": "pt_Label Configuration",
+        "filterBy": "pt_Filter By Id",
+        "filterByValue": "pt_Filter By Value",
+        "data": {
+          "description": "pt_Description",
+          "defaultValue": "pt_Default Value",
+          "id": "pt_ID",
+          "value": "pt_Value"
+        }
+      },
+      "module.config": {
+        "title": "pt_Module Configuration"
+      },
+      "userName.config": {
+        "title": "pt_Username Display Configuration",
+        "userId.label": "pt_Use User Identifier",
+        "userName.label": "pt_Use Full Username",
+        "apply": "pt_Apply",
+        "modal.title": "pt_Information",
+        "modal.info": "pt_Settings will take effect after refresh",
+        "modal.ok": "pt_OK"
+      },
+      "login.config": {
+        "title": "pt_Login Configuration",
+        "idleLimit.label": "pt_Login idle limit (in milliseconds)",
+        "inform": "pt_Settings will take effect for all new user sessions",
+        "apply.label": "pt_Apply"
+      },
+      "auditHistory.config": {
+        "title": "pt_Audit History",
+        "historyDays.label": "pt_Keep Audit and Notification events (in days)",
+        "inform": "pt_Setting successfully saved",
+        "apply.label": "pt_Apply"
+      }
+    },
+    "branding.title": "pt_Branding",
+    "branding.logo": "pt_Logo",
+    "branding.logo.messages": {
+      "upload.success": "pt_Custom logo files updated. Refresh browser page to see result.",
+      "upload.error": "pt_Error uploading custom logo files."
+    },
+    "branding.logo.header.title": "pt_Header",
+    "branding.logo.login.title": "pt_Login Page",
+    "branding.logo.warningMessage": "pt_Only PNG format is allowed. Recommended ratio is 1 to 4. Minimum height is 50px.",
+    "branding.logo.btn": {
+      "chooseHeader": "pt_Choose Header logo",
+      "chooseLogin": "pt_Choose Login logo",
+      "saveFiles": "pt_Save"
+    },
+    "branding": {
+      "customCss": "pt_Custom CSS",
+      "customCss.save.success": "pt_Custom CSS updated. Refresh browser page to see result.",
+      "customCss.save.error": "pt_Error saving Custom CSS.",
+      "customCss.save": "pt_Save"
+    },
+    "correspondenceManagement": {
+      "title": "pt_Correspondence Management",
+      "templates": "pt_Correspondence Templates",
+      "templates.addNewTemplate": "pt_Upload Template",
+      "templates.addTemplate": "pt_Upload",
+      "templates.versionTemplate": "pt_Versions",
+      "templates.deleteTemplate": "pt_Delete",
+      "templates.editTemplate": "pt_Edit Template",
+      "templates.grid": {
+        "id": "pt_ID",
+        "title": "pt_Title",
+        "label": "pt_Display Name",
+        "path": "pt_Path",
+        "created": "pt_Created",
+        "modified": "pt_Modified",
+        "creator": "pt_Creator",
+        "modifier": "pt_Modifier",
+        "activated": "pt_Status",
+        "objectType": "pt_Object Type",
+        "version": "pt_Version",
+        "templateVersionActive" : "pt_Active"
+      },
+      "templates.fieldNames.label": "pt_Map fields to values from the template",
+      "templates.querySelect": {
+        "header.text": "pt_Select Query",
+        "btnCancel.text": "pt_Cancel",
+        "btnOk.text": "pt_Select Query",
+        "table.columns": {
+          "beanId": "pt_Bean ID",
+          "jpaQuery": "pt_JPA Query",
+          "queryType": "pt_Query Type"
+        }
+      },
+      "templates.modal": {
+        "objectTypes.label": "pt_Object Types",
+        "querySelect.label": "pt_Query Select",
+        "label.label": "pt_Display Name",
+        "btnCancel.text": "pt_Cancel",
+        "btnOk.text": "pt_Upload Template"
+      },
+      "templates.version.modal": {
+        "btnOk.text": "pt_OK"
+      },
+      "mergefields": "pt_Merge Fields Configuration",
+      "mergefields.saveMergeFields": "pt_Save",
+      "mergefields.versionMergeFields": "pt_Versions",
+      "mergefields.grid": {
+      "fieldId": "pt_ID",
+      "fieldValue": "pt_Value",
+      "fieldDescription": "pt_Description"
+      },
+      "mergefields.version.grid": {
+        "mergingVersion": "pt_Version",
+        "modified": "pt_Modified",
+        "modifier": "pt_Modifier",
+        "mergingActiveVersion": "pt_Active"
+      },
+      "mergefields.version.modal": {
+        "btnLoadVersion.text": "pt_Load Version",
+        "btnCancel.text": "pt_Cancel"
+      }
+    },
+    "forms.defaultValue": "pt_Select Target",
+    "forms.addForm": "pt_Add Plain Form",
+    "forms.data": {
+      "name": "pt_Form Name",
+      "applicationName": "pt_Application name",
+      "description": "pt_Description",
+      "target": "pt_Target"
+    },
+    "forms.message.delete.success": "pt_Successfully deleted row.",
+    "forms.message.delete.error": "pt_Error deleting row."
+  }
+}

@@ -31,24 +31,6 @@
         </constructor-arg>
     </bean>
 
-    <bean id="caseCorrespondenceFormsJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
-        <constructor-arg type="java.io.InputStream">
-            <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File"
-                                 value="${user.home}/.arkcase/acm/lookups/caseCorrespondenceForms.json"/>
-            </bean>
-        </constructor-arg>
-    </bean>
-
-    <bean id="complaintCorrespondenceFormsJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
-        <constructor-arg type="java.io.InputStream">
-            <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File"
-                                 value="${user.home}/.arkcase/acm/lookups/complaintCorrespondenceForms.json"/>
-            </bean>
-        </constructor-arg>
-    </bean>
-
     <bean id="fileTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
         <constructor-arg type="java.io.InputStream">
             <bean class="java.io.FileInputStream" destroy-method="close">
@@ -102,6 +84,262 @@
             <bean class="java.io.FileInputStream" destroy-method="close">
                 <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/lookups/securityFieldTypes.json"/>
             </bean>
+        </constructor-arg>
+    </bean>
+
+    <bean id="localeSettingsJson" class="org.apache.commons.io.IOUtils" factory-method="toString">
+        <constructor-arg type="java.io.InputStream">
+            <bean class="java.io.FileInputStream" destroy-method="close">
+                <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/resources/settings/settings.json"/>
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <bean id="configList" class="java.util.ArrayList">
+        <constructor-arg>
+            <list>
+                <bean class="com.armedia.acm.services.config.model.AppConfig">
+                    <property name="configName" value="app"/>
+                    <property name="configDescription" value="App"/>
+                    <property name="acmApplication" ref="acmApplication"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="thisApp"/>
+                    <property name="configDescription" value="This App"/>
+                    <property name="properties" ref="lawEnforcementAppProperties"/>
+                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="admin"/>
+                    <property name="configDescription" value="Admin"/>
+                    <property name="properties" ref="adminPluginProperties"/>
+                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="alfrescoRma"/>
+                    <property name="configDescription" value="Alfresco rma"/>
+                    <property name="properties" ref="alfrescoRmaPluginPropertiesForSpring"/>
+                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="applicationRoleToUserGroup"/>
+                    <property name="configDescription" value="Application Role To User Group"/>
+                    <property name="properties" ref="applicationRoleToUserGroupProperties"/>
+                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="audit"/>
+                    <property name="configDescription" value="Audit"/>
+                    <property name="properties" ref="auditPluginProperties"/>
+                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="caseFile"/>
+                    <property name="configDescription" value="Case File"/>
+                    <property name="properties" ref="caseFilePluginProperties"/>
+                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="complaint"/>
+                    <property name="configDescription" value="Complaint"/>
+                    <property name="properties" ref="complaintPluginProperties"/>
+                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="correspondence"/>
+                    <property name="configDescription" value="Correspondence"/>
+                    <property name="properties" ref="correspondencePluginProperties"/>
+                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="cost"/>
+                    <property name="configDescription" value="Cost"/>
+                    <property name="properties" ref="costProperties"/>
+                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="dacService"/>
+                    <property name="configDescription" value="Dac Service"/>
+                    <property name="properties" ref="dacServicePluginProperties"/>
+                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="dashboard"/>
+                    <property name="configDescription" value="Dashboard"/>
+                    <property name="properties" ref="dashboardPluginProperties"/>
+                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="datasource"/>
+                    <property name="configDescription" value="Data Source"/>
+                    <property name="properties" ref="datasourceProperties"/>
+                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="ecmFileService"/>
+                    <property name="configDescription" value="Ecm File Service"/>
+                    <property name="properties" ref="ecmFileServiceProperties"/>
+                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="eventType"/>
+                    <property name="configDescription" value="Event Type"/>
+                    <property name="properties" ref="eventTypeProperties"/>
+                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="acm-forms"/>
+                    <property name="configDescription" value="Acm Forms"/>
+                    <property name="properties" ref="acm-forms-properties"/>
+                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="msOutlookIntegration"/>
+                    <property name="configDescription" value="MS Outlook Integration"/>
+                    <property name="properties" ref="msOutlookIntegrationProperties"/>
+                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="notification"/>
+                    <property name="configDescription" value="Notification"/>
+                    <property name="properties" ref="notificationProperties"/>
+                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="participant"/>
+                    <property name="configDescription" value="Participant"/>
+                    <property name="properties" ref="participantProperties"/>
+                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="profile"/>
+                    <property name="configDescription" value="Profile"/>
+                    <property name="properties" ref="profilePluginProperties"/>
+                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="acm-reports"/>
+                    <property name="configDescription" value="Acm Reports"/>
+                    <property name="properties" ref="reportPluginProperties"/>
+                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="acm-reports-server-config"/>
+                    <property name="configDescription" value="Acm Reports Server config"/>
+                    <property name="properties" ref="reportServerConfigurationProperties"/>
+                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="reportToGroupsMap"/>
+                    <property name="configDescription" value="Reports to Group map"/>
+                    <property name="properties" ref="reportToGroupsMapProperties"/>
+                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="acm-roles"/>
+                    <property name="configDescription" value="Acm Roles"/>
+                    <property name="properties" ref="acm-roles-properties"/>
+                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="search"/>
+                    <property name="configDescription" value="Search"/>
+                    <property name="properties" ref="searchProperties"/>
+                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="solr"/>
+                    <property name="configDescription" value="Solr"/>
+                    <property name="properties" ref="searchPluginProperties"/>
+                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="subscription"/>
+                    <property name="configDescription" value="Subscription"/>
+                    <property name="properties" ref="subscriptionProperties"/>
+                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="tag"/>
+                    <property name="configDescription" value="Tag"/>
+                    <property name="properties" ref="tagProperties"/>
+                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="task"/>
+                    <property name="configDescription" value="Task"/>
+                    <property name="properties" ref="taskPluginProperties"/>
+                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="time"/>
+                    <property name="configDescription" value="Time"/>
+                    <property name="properties" ref="timeProperties"/>
+                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="activiti"/>
+                    <property name="configDescription" value="Activiti BPMN properties"/>
+                    <property name="properties" ref="activitiProperties"/>
+                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.JsonConfig">
+                    <property name="configName" value="addressTypes"/>
+                    <property name="configDescription" value="Address Types"/>
+                    <property name="json" ref="addressTypesJsonConfig"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.JsonConfig">
+                    <property name="configName" value="aliasTypes"/>
+                    <property name="configDescription" value="Alias Types"/>
+                    <property name="json" ref="aliasTypesJsonConfig"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.JsonConfig">
+                    <property name="configName" value="contactMethodTypes"/>
+                    <property name="configDescription" value="Contact Method Types"/>
+                    <property name="json" ref="contactMethodTypesJsonConfig"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.JsonConfig">
+                    <property name="configName" value="fileTypes"/>
+                    <property name="configDescription" value="File Types"/>
+                    <property name="json" ref="fileTypesJsonConfig"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.JsonConfig">
+                    <property name="configName" value="objectTypes"/>
+                    <property name="configDescription" value="Object Types"/>
+                    <property name="json" ref="objectTypesJsonConfig"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.JsonConfig">
+                    <property name="configName" value="organizationTypes"/>
+                    <property name="configDescription" value="Organization Types"/>
+                    <property name="json" ref="organizationTypesJsonConfig"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.JsonConfig">
+                    <property name="configName" value="participantTypes"/>
+                    <property name="configDescription" value="Participant Types"/>
+                    <property name="json" ref="participantTypesJsonConfig"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.JsonConfig">
+                    <property name="configName" value="personTitles"/>
+                    <property name="configDescription" value="Person Titles"/>
+                    <property name="json" ref="personTitlesJsonConfig"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.JsonConfig">
+                    <property name="configName" value="securityTagTypes"/>
+                    <property name="configDescription" value="Security Tag Types"/>
+                    <property name="json" ref="securityTagTypesJsonConfig"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.JsonConfig">
+                    <property name="configName" value="securityFieldTypes"/>
+                    <property name="configDescription" value="Security Field Types"/>
+                    <property name="json" ref="securityFieldTypesJsonConfig"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.JsonConfig">
+                    <property name="configName" value="localeSettings"/>
+                    <property name="configDescription" value="Locale Setting"/>
+                    <property name="json" ref="localeSettingsJson"/>
+                </bean>
+
+            </list>
         </constructor-arg>
     </bean>
 

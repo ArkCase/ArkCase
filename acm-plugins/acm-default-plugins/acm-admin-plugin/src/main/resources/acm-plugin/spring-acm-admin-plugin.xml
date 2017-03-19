@@ -121,7 +121,7 @@
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
                     <property name="url" value="/api/{version}/plugin/admin/labelmanagement/languages"/>
-                    <property name="requiredPrivilege" ref="adminPrivilege"/>
+                    <property name="requiredPrivilege" ref="acmGlobalAllowPrivilege"/>
                 </bean>
 
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
@@ -144,7 +144,7 @@
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
                     <property name="url" value="/api/{version}/plugin/admin/labelmanagement/settings"/>
-                    <property name="requiredPrivilege" ref="adminPrivilege"/>
+                    <property name="requiredPrivilege" ref="acmGlobalAllowPrivilege"/>
                 </bean>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="PUT"/>
@@ -321,6 +321,11 @@
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
                     <property name="url" value="/api/latest/plugin/admin/query/{queryBeanId}"/>
+                    <property name="requiredPrivilege" ref="adminPrivilege"/>
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/latest/plugin/admin/templates"/>
                     <property name="requiredPrivilege" ref="adminPrivilege"/>
                 </bean>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">

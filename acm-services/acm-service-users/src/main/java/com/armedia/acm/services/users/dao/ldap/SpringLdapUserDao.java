@@ -2,13 +2,18 @@ package com.armedia.acm.services.users.dao.ldap;
 
 
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
+import com.armedia.acm.services.users.model.ldap.AcmLdapConfig;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.AcmUserGroupsContextMapper;
+import com.armedia.acm.services.users.model.ldap.MapperUtils;
+import com.armedia.acm.services.users.service.RetryExecutor;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
@@ -24,9 +29,7 @@ public class SpringLdapUserDao
         SearchControls searchControls = new SearchControls();
         searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
 
-        AcmUserGroupsContextMapper userGroupsContextMapper = new AcmUserGroupsContextMapper();
-        userGroupsContextMapper.setUserIdAttributeName(config.getUserIdAttributeName());
-        userGroupsContextMapper.setMailAttributeName(config.getMailAttributeName());
+        AcmUserGroupsContextMapper userGroupsContextMapper = new AcmUserGroupsContextMapper(config);
 
         if (attributes != null)
         {
@@ -46,11 +49,27 @@ public class SpringLdapUserDao
 
             // append user domain name if set. Used in Single Sign-On scenario.
             String userDomainSuffix = (StringUtils.isBlank(config.getUserDomain()) ? "" : "@" + config.getUserDomain());
-            log.debug("Adding user domain sufix to the username: {}", userDomainSuffix);
+            log.debug("Adding user domain suffix to the username: {}", userDomainSuffix);
             acmUser.setUserId(acmUser.getUserId() + userDomainSuffix);
             return acmUser;
         }
 
         throw new UsernameNotFoundException("User with id [" + username + "] cannot be found");
+    }
+
+    public void changeUserPassword(String dn, String password, LdapTemplate ldapTemplate, AcmLdapConfig config)
+            throws AcmLdapActionFailedException
+    {
+        String strippedBaseDn = MapperUtils.stripBaseFromDn(dn, config.getBaseDC());
+        try
+        {
+            DirContextOperations context = new RetryExecutor<DirContextOperations>()
+                    .retryResult(() -> ldapTemplate.lookupContext(strippedBaseDn));
+            context.setAttributeValue("userPassword", password.getBytes());
+            new RetryExecutor().retry(() -> ldapTemplate.modifyAttributes(context));
+        } catch (Exception e)
+        {
+            throw new AcmLdapActionFailedException("LDAP Action Failed Exception", e);
+        }
     }
 }

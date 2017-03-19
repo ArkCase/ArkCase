@@ -1,0 +1,71 @@
+{
+  "timeTracking": {
+    "title": "समय ट्रैकिंग ",
+    "progressNoTimesheet": "hi_[ No timesheet is selected ]",
+    "progressLoading": "hi_Loading timesheet ",
+    "progressError": "hi_Failed to load timesheet"
+  },
+  "timeTracking.menus": {
+    "leftnav.item": "समय ट्रैकिंग",
+    "topbar.item": "टाइम्सशीट"
+  },
+  "timeTracking.tree": {
+  },
+  "timeTracking.comp.info": {
+    "lastModified.label": "hi_Last Modified"
+  },
+  "timeTracking.comp.actions": {
+    "new.button": "hi_New Timesheet",
+    "edit.button": "hi_Edit Timesheet"
+  },
+  "timeTracking.comp.details": {
+    "title": "hi_Details",
+    "informSaved": "hi_Timesheet details saved",
+    "table.columns": {
+      "title": "hi_Details",
+      "modified": "hi_Date Last Modified",
+      "modifier": "hi_User Last Modified"
+    }
+  },
+  "timeTracking.comp.people": {
+    "title": "hi_Person",
+    "table.columns": {
+      "fullName": "hi_Full Name",
+      "userId": "hi_Username"
+    }
+  },
+  "timeTracking.comp.summary": {
+    "title": "hi_Hours Summary",
+    "table.columns": {
+      "code": "hi_Parent ID",
+      "type": "hi_Parent Type",
+      "value": "hi_Total Hours",
+      "date": "hi_Date Charged",
+      "modified": "hi_Modified Date"
+    }
+  },
+  "timeTracking.comp.tags": {
+    "title": "hi_Tags",
+    "table.columns": {
+      "tag": "hi_Tag",
+      "created": "hi_Created",
+      "createdBy": "hi_Created By"
+    },
+    "modal": {
+      "title": "hi_Tag",
+      "search": "hi_Search for Tag",
+      "buttons": {
+        "cancel": "hi_Cancel",
+        "ok": "hi_Add Tag"
+      }
+    },
+    "message": {
+      "tagExists": "hi_Tag with that name or description or text already exists",
+      "tagAssociated": "hi_already associated",
+      "delete": {
+        "success": "hi_Tag deleted successfully",
+        "error": "hi_Error deleting tag"
+      }
+    }
+  }
+}

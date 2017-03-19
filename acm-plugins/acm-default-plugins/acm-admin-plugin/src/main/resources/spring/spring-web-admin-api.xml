@@ -8,6 +8,7 @@
 
     <bean id="downloadCorrespondenceTemplate"
           class="com.armedia.acm.plugins.admin.web.api.TemplateDownloadControllerAPI">
+          <property name="correspondenceFolderName" value="${user.home}/.arkcase/acm/correspondenceTemplates"/>
     </bean>
 
     <bean id="listCorrespondenceTemplates" class="com.armedia.acm.plugins.admin.web.api.ListAllTemplatesControllerAPI">
@@ -18,6 +19,11 @@
     </bean>
 
     <bean id="correspondenceTemplateController" class="com.armedia.acm.plugins.admin.web.api.CorrespondenceTemplateAPIController">
+        <property name="correspondenceService" ref="correspondenceService"/>
+        <property name="correspondenceFolderName" value="${user.home}/.arkcase/acm/correspondenceTemplates"/>
+    </bean>
+
+    <bean id="correspondenceMergeFieldController" class="com.armedia.acm.plugins.admin.web.api.CorrespondenceMergeFieldAPIController">
         <property name="correspondenceService" ref="correspondenceService"/>
     </bean>
 

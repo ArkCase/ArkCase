@@ -1,0 +1,224 @@
+{
+  "dashboard": {
+    "title": "ダッシュボード",
+    "menus": {
+      "leftnav.item": "ダッシュボード"
+    },
+    "widgets": {
+      "casesByQueue": {
+        "title": "ja_Active Case Files by Queue",
+        "description": "ja_Displays active case files by queue",
+        "xAxis": "ja_Queues",
+        "yAxis": "ja_Number of Case Files",
+        "noDataMessage": "ja_Currently there are no cases info"
+      },
+      "casesByStatus": {
+        "title": "ja_Cases By Status",
+        "description": "ja_Displays cases by status",
+        "timePeriod": {
+          "label": "ja_Select Time Period",
+          "lastWeek": "ja_Last Week",
+          "lastMonth": "ja_Last Month",
+          "lastYear": "ja_Last Year",
+          "all": "ja_All"
+        },
+        "noDataMessage": "ja_Currently there are no cases info"
+      },
+      "myCases": {
+        "title": "ja_My Cases",
+        "description": "ja_Displays my cases",
+        "noDataMessage": "ja_Currently there are no cases info",
+        "table": {
+          "header": {
+            "caseId": "ja_ID",
+            "title": "ja_Title",
+            "priority": "ja_Priority",
+            "status": "ja_Status"
+          }
+        }
+      },
+      "myComplaints": {
+        "title": "ja_My Complaints",
+        "description": "ja_Displays my complaints",
+        "table": {
+          "header": {
+            "number": "ja_ID",
+            "title": "ja_Title",
+            "priority": "ja_Priority",
+            "created": "ja_Created",
+            "status": "ja_Status"
+          },
+          "noDataMessage": "ja_Currently there are no complaints info"
+        }
+      },
+      "myTasks": {
+        "title": "ja_My Tasks",
+        "description": "ja_Displays my tasks",
+        "rowNumbers.label": "ja_Default Row Numbers",
+        "rowNumbers.placeholder": "ja_Enter Default Row Numbers",
+        "table": {
+          "header": {
+            "taskId": "ja_ID",
+            "title": "ja_Title",
+            "priority": "ja_Priority",
+            "dueDate": "ja_Due",
+            "status": "ja_Status",
+            "objectId": "ja_Object ID"
+          },
+          "overdue.tooltip": "ja_Task is Overdue",
+          "deadline.tooltip": "ja_Deadline is Approaching"
+        },
+        "noDataMessage": "ja_Currently there are no tasks info"
+      },
+      "newComplaints": {
+        "title": "ja_New Complaints",
+        "description": "ja_Displays new complaints",
+        "dueDate": {
+          "label": "ja_Select Due Date Period",
+          "pastDue": "ja_Past Due",
+          "dueTomorrow": "ja_Due Tomorrow",
+          "dueWeek": "ja_Due in 7 Days",
+          "dueMonth": "ja_Due in Month",
+          "all": "ja_All"
+        },
+        "noDataMessage": "ja_Currently there are no complaints info"
+      },
+      "newCases": {
+        "title": "ja_New Cases",
+        "description": "ja_Displays new cases",
+        "noDataMessage": "ja_Currently there are no cases info"
+      },
+      "teamWorkload": {
+        "title": "ja_Team Workload",
+        "description": "ja_Displays team workload",
+        "dueDate": {
+          "label": "ja_Select Due Date Period",
+          "pastDue": "ja_Past Due",
+          "dueTomorrow": "ja_Due Tomorrow",
+          "dueWeek": "ja_Due in 7 Days",
+          "dueMonth": "ja_Due in Month",
+          "all": "ja_All"
+        },
+        "noDataMessage": "ja_Currently there are no team tasks info"
+      },
+      "weather": {
+        "description": "ja_Displays weather",
+        "label": {
+          "current": "ja_Current:",
+          "enterLocation": "ja_Enter Location",
+          "description": "ja_Display the current temperature of a city",
+          "location": "ja_Location",
+          "insertLocationInConfiguration": "ja_Please insert a location in the widget configuration"
+        },
+        "title": "ja_Weather",
+        "noDataMessage": "ja_Currently there are no weather info"
+      },
+      "news": {
+        "description": "ja_Displays news",
+        "label": {
+          "enterFeedUrl": "ja_Enter Feed url",
+          "description": "ja_Displays a RSS/Atom feed",
+          "feedUrl": "ja_Feed Url",
+          "insertUrl": "ja_Please insert a feed url in the widget configuration"
+        },
+        "title": "ja_News",
+        "noDataMessage": "ja_Currently there is no RSS/info"
+      },
+      "details": {
+        "title": "ja_Details",
+        "description": "ja_Displays case details",
+        "noDataMessage": "ja_Currently there are no details"
+      },
+      "people": {
+        "title": "ja_People",
+        "description": "ja_Displays people details",
+        "noDataMessage": "ja_Currently there are no people to display"
+      },
+      "documents": {
+        "title": "ja_Documents",
+        "description": "ja_Displays chart of documents by folder",
+        "noDataMessage": "ja_Currently there are no documents to display"
+      },
+      "locations": {
+        "title": "ja_Locations",
+        "description": "ja_Displays location details",
+        "noDataMessage": "ja_Currently there are no locations to display"
+      },
+      "tasks": {
+        "title": "ja_Tasks",
+        "description": "ja_Displays task details",
+        "noDataMessage": "ja_Currently there are no tasks to display"
+      },
+      "participants": {
+        "title": "ja_Participants",
+        "description": "ja_Displays participant details",
+        "noDataMessage": "ja_Currently there are no participant to display"
+      },
+      "references": {
+        "title": "ja_References",
+        "description": "ja_Displays reference details",
+        "noDataMessage": "ja_Currently there are no references to display"
+      },
+      "history": {
+        "title": "ja_History",
+        "description": "ja_Displays chart of history events",
+        "noDataMessage": "ja_Currently there are no events to display"
+      },
+      "notes": {
+        "title": "ja_Notes",
+        "description": "ja_Displays note details",
+        "noDataMessage": "ja_Currently there are no notes to display"
+      },
+      "time": {
+        "title": "ja_Time",
+        "description": "ja_Displays chart for hours per user",
+        "noDataMessage": "ja_Currently there is no time information to display"
+      },
+      "cost": {
+        "title": "ja_Cost",
+        "description": "ja_Displays chart for cost per user",
+        "noDataMessage": "ja_Currently there is no cost information to display"
+      },
+      "calendar": {
+        "title": "ja_Calendar",
+        "description": "ja_Displays chart of scheduled events per day",
+        "noDataMessage": "ja_Currently there are no events to display"
+      },
+      "reworkDetails": {
+        "title": "ja_Rework Details",
+        "description": "ja_Shows most recent rework details",
+        "noDataMessage": "ja_Currently there no are no rework details to display"
+      },
+      "docReview": {
+        "title": "ja_Documents Under Review",
+        "description": "ja_Shows documents under review",
+        "noDataMessage": "ja_Currently there no are no documents under review to display"
+      },
+      "workflow": {
+        "title": "ja_Workflow Overview",
+        "description": "ja_Overview of pending workflows",
+        "noDataMessage": "ja_Currently there are no workflows to display"
+      },
+      "signature": {
+        "title": "ja_eSignature",
+        "description": "ja_eSignature widget",
+        "noDataMessage": "ja_Currently there are no eSignatures to display"
+      },
+      "person": {
+        "title": "ja_Person",
+        "description": "ja_Person widget for Cost and Time modules",
+        "noDataMessage": "ja_Currently there are no persons to display"
+      },
+      "hoursSummary": {
+        "title": "ja_Hours Summary",
+        "description": "ja_Displays a summary of hours worked",
+        "noDataMessage": "ja_Currently there is no summary to display"
+      },
+      "expenses": {
+        "title": "ja_Expenses",
+        "description": "ja_Displays a cost-to-user graph",
+        "noDataMessage": "ja_Currently no expense data to display"
+      }
+    }
+  }
+}

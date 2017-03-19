@@ -4,7 +4,7 @@
 
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>3.1.8</version>
+    <version>3.1.9</version>
     <packaging>pom</packaging>
 
     <name>ArkCase Case Management System</name>
@@ -75,7 +75,6 @@
         <mule.version>3.7.0</mule.version>
         <mule-cmis-connector.version>1.14.1</mule-cmis-connector.version>
         <!--<mule-cmis-connector.version>2.0.0</mule-cmis-connector.version> -->
-        <oracle.jdbc.version>6</oracle.jdbc.version>
         <org.json.version>20140107</org.json.version>
         <org.mvel.version>2.2.1.Final</org.mvel.version>
         <rome.version>1.0</rome.version>
@@ -89,14 +88,14 @@
         <!-- by default spring.security.saml2.core uses opensaml version 2.6.1, which uses bouncycastle version 1.46, but we require version 1.54 -->
         <opensaml.version>2.6.4</opensaml.version>
         <spring.surf.version>1.0.0</spring.surf.version>
-        <spring.version>4.1.6.RELEASE</spring.version>
+        <spring.version>4.2.9.RELEASE</spring.version>
         <springframework-addons.version>0.1</springframework-addons.version>
         <tomcat-jdbc.version>8.0.14</tomcat-jdbc.version>
         <asm.version>5.0.3</asm.version>
         <org.apache.poi.version>3.10.1</org.apache.poi.version>
         <frevvo.forms.version>6.3</frevvo.forms.version>
-        <java.mail.version>1.5.4</java.mail.version>
-        <spring.integration.version>4.1.6.RELEASE</spring.integration.version>
+        <java.mail.version>1.5.6</java.mail.version>
+        <spring.integration.version>4.2.9.RELEASE</spring.integration.version>
         <com.google.guava.version>18.0</com.google.guava.version>
         <postgresql.version>9.3-1100-jdbc41</postgresql.version>
         <mysql.version>5.1.35</mysql.version>
@@ -113,9 +112,11 @@
         <jai-imageio-core.version>1.3.1</jai-imageio-core.version>
         <milton.version>2.7.1.3</milton.version>
         <hamcrest.version>1.3</hamcrest.version>
-        <reactor-spring.version>1.1.3.RELEASE</reactor-spring.version>
-        <reactor.version>1.1.6.RELEASE</reactor.version>
+        <reactor-spring.version>2.0.7.RELEASE</reactor-spring.version>
+        <reactor.version>2.0.8.RELEASE</reactor.version>
         <powermock.version>1.6.5</powermock.version>
+        <netty.version>4.1.7.Final</netty.version>
+        <json-path.version>2.2.0</json-path.version>
     </properties>
 
     <organization>
@@ -577,7 +578,8 @@
                         WEB-INF/lib/workbench-*.jar,
                         WEB-INF/lib/runtime-*.jar,
                         WEB-INF/lib/mule-devkit-*.jar,
-                        WEB-INF/lib/mule-module-devkit-*.jar
+                        WEB-INF/lib/mule-module-devkit-*.jar,
+                        WEB-INF/lib/mail-1.4*.jar
                     </packagingExcludes>
                 </configuration>
             </plugin>
@@ -815,6 +817,53 @@
     <dependencyManagement>
         <dependencies>
 
+            <!-- milton -->
+            <dependency>
+                <groupId>io.milton</groupId>
+                <artifactId>milton-server-ent</artifactId>
+                <version>${milton.version}</version>
+            </dependency>
+
+            <!-- frevvo forms -->
+            <dependency>
+                <groupId>com.frevvo</groupId>
+                <artifactId>forms-java</artifactId>
+                <version>${frevvo.forms.version}</version>
+                <classifier>mailfix</classifier>
+            </dependency>
+
+            <!-- Java mail-->
+            <dependency>
+                <groupId>javax.mail</groupId>
+                <artifactId>javax.mail-api</artifactId>
+                <version>${java.mail.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.mail</groupId>
+                <artifactId>imap</artifactId>
+                <version>${java.mail.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.mail</groupId>
+                <artifactId>javax.mail</artifactId>
+                <version>${java.mail.version}</version>
+            </dependency>
+            <!-- exclude the mail.jar 1.4 from the war file -->
+            <dependency>
+                <groupId>javax.mail</groupId>
+                <artifactId>mail</artifactId>
+                <version>(,1.5)</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>javax.mail</groupId>
+                <artifactId>mailapi</artifactId>
+                <version>(,1.5)</version>
+                <scope>provided</scope>
+            </dependency>
+
             <!-- date time -->
             <dependency>
                 <groupId>joda-time</groupId>
@@ -978,22 +1027,33 @@
             </dependency>
 
             <dependency>
-                <groupId>org.projectreactor</groupId>
+                <groupId>io.projectreactor</groupId>
                 <artifactId>reactor-core</artifactId>
                 <version>${reactor.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.projectreactor</groupId>
+                <groupId>io.projectreactor</groupId>
                 <artifactId>reactor-net</artifactId>
                 <version>${reactor.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>org.projectreactor.spring</groupId>
+                <groupId>io.projectreactor.spring</groupId>
                 <artifactId>reactor-spring-context</artifactId>
                 <version>${reactor-spring.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-all</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.jayway.jsonpath</groupId>
+                <artifactId>json-path</artifactId>
+                <version>${json-path.version}</version>
+            </dependency>
 
             <!-- spring utilities -->
             <dependency>
@@ -1204,6 +1264,11 @@
                 <artifactId>mule-transport-file</artifactId>
                 <version>${mule.version}</version>
                 <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mule.transports</groupId>
+                <artifactId>mule-transport-email</artifactId>
+                <version>${mule.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.mule.transports</groupId>
@@ -1462,14 +1527,6 @@
                 </exclusions>
             </dependency>
 
-            <!-- jdbc drivers (needed to run liquibase dbDoc reports) -->
-            <dependency>
-                <groupId>com.oracle</groupId>
-                <artifactId>jdbc</artifactId>
-                <version>${oracle.jdbc.version}</version>
-                <scope>provided</scope>
-            </dependency>
-
             <!-- jpa -->
             <dependency>
                 <groupId>org.eclipse.persistence</groupId>
@@ -1693,6 +1750,7 @@
                 <groupId>org.powermock</groupId>
                 <artifactId>powermock-api-easymock</artifactId>
                 <version>${powermock.version}</version>
+                <scope>test</scope>
                 <exclusions>
                     <exclusion>
                         <!-- powermock pulls in an older version of cglib that breaks our unit tests -->

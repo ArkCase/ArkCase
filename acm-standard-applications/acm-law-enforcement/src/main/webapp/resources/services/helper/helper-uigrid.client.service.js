@@ -103,10 +103,11 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
                 that.scope.config = config;
 
                 that.scope.gridOptions.enableColumnResizing = true;
-                that.scope.gridOptions.enableRowSelection = false;
-                that.scope.gridOptions.enableRowHeaderSelection = false;
-                that.scope.gridOptions.multiSelect = false;
-                that.scope.gridOptions.noUnselect = false;
+                that.scope.gridOptions.enableRowSelection = config.enableRowSelection;
+                that.scope.gridOptions.enableRowHeaderSelection = config.enableRowHeaderSelection;
+                that.scope.gridOptions.enableFullRowSelection = config.enableFullRowSelection;
+                that.scope.gridOptions.multiSelect = config.multiSelect;
+                that.scope.gridOptions.noUnselect = config.noUnselect;
 
                 that.scope.gridOptions.paginationPageSizes = config.paginationPageSizes;
                 that.scope.gridOptions.paginationPageSize = config.paginationPageSize;
@@ -472,6 +473,23 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
             , showObject: function (objTypeKey, objId) {
                 return ObjectService.showObject(objTypeKey, objId);
 
+            }
+            
+            /**
+             * @ngdoc method
+             * @name openObject
+             * @methodOf services:Helper.UiGridService
+             *
+             * @param {String} parentType, Lookup parent Type of the file.
+             * @param {String} fileName Lookup name.
+             * @param {Number} targetId, target id of the file.
+             * @param {Number} parentId,  parent id of the file.
+             *
+             * @description
+             * Go to a page state that show the specified ArkCase File viewer.
+             */
+            , openObject: function (targetId, parentId, parentType, fileName) {
+                return ObjectService.openObject(targetId, parentId, parentType, fileName);
             }
 
             /**

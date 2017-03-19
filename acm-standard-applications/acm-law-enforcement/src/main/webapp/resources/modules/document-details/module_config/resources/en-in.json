@@ -1,0 +1,92 @@
+{
+  "documentDetails": {
+    "title": "Document details",
+    "creator": "Creator",
+    "created": "Created",
+    "assignee": "Assignee",
+    "fileType": "File type",
+    "status": "Status",
+    "name": "Name",
+    "comp.eventHistory": {
+      "title": "Event History",
+      "table.columns": {
+        "eventType": "Event Name",
+        "eventDate": "Created",
+        "userId": "User"
+      }
+    },
+    "comp.tags": {
+      "title": "Tags",
+      "table.columns": {
+        "tag": "Tag"
+      },
+      "modal": {
+        "title": "Tag",
+        "search": "Search for Tag",
+        "buttons": {
+          "cancel": "Cancel",
+          "ok": "Add Tag"
+        }
+      },
+      "message.tagExists": "Tag with that name or description or text already exists",
+      "message.tagAssociated": "already associated",
+      "message.delete.success": "Tag deleted successfully",
+      "message.delete.error": "Error deleting tag"
+    },
+    "comp.participants": {
+      "title": "Participants",
+      "table.columns": {
+        "name": "Name",
+        "type": "Type"
+      },
+      "message.delete.success": "Successfully deleted row.",
+      "message.delete.error": "Error deleting row.",
+      "role": {
+        "title": "Change participant Role",
+        "dropdownLabel": "Available Roles",
+        "buttons": {
+          "cancel": "Cancel",
+          "ok": "Change Role"
+        }
+      }
+    },
+    "comp.notes": {
+      "title": "Notes",
+      "table.columns": {
+        "note": "Note",
+        "tag": "Document Version",
+        "created": "Created",
+        "creator": "Author"
+      }
+    },
+    "comp.versionHistory": {
+      "title": "Version History",
+      "table.columns": {
+        "creator": "User",
+        "created": "Created",
+        "versionTag": "Version"
+      }
+    },
+    "userSearch": {
+      "id": "userSearch",
+      "title": "Add New Participant",
+      "search": {
+        "btn": "Go!",
+        "placeholder": "Enter to search for a participant"
+      },
+      "cancelButton": "Cancel",
+      "confirmButton": "Select",
+      "enabled": true,
+      "userFacetFilter": "\"Object Type\": USER",
+      "userGridColumns": {
+        "name": "Name",
+        "type": "Type",
+        "title": "Title",
+        "parent": "Parent",
+        "assignee": "Assignee",
+        "modified": "Modified"
+      },
+      "dropdownLabel": "Participant Type"
+    }
+  }
+}

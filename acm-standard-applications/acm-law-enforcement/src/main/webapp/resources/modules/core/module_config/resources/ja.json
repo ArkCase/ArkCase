@@ -1,0 +1,24 @@
+{
+  "core": {
+    "userInfo": {
+      "addedMenu": {
+        "help": "助け",
+        "logout": "切断"
+      }
+    },
+    "leftNav": {
+      "title": "参照"
+    },
+    "topBar": {
+      "new": "新しい",
+      "toggle.btn": "ja_Toggle navigation",
+      "search.placeholder": "ja_Search ArkCase",
+      "locale.updateList": "更新"
+    },
+    "loginWarning": {
+      "btnOK.text": "ja_OK",
+      "btnCancel.text": "ja_Cancel",
+      "checkbox_warning.label": "ja_I acknowledge this warning."
+    }
+  }
+}

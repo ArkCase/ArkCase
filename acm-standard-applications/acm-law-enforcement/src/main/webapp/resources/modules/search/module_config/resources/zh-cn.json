@@ -1,0 +1,24 @@
+{
+  "search": {
+    "title": "搜索",
+    "search.btn": "搜索",
+    "export.btn": "zh-cn_Export",
+    "search.placeholder": "zh-cn_Type in to search",
+    "menus": {
+      "leftnav.item": "搜索"
+    },
+    "comp":{
+      "grid": {
+        "columns": {
+          "id": "zh-cn_ID",
+          "name": "zh-cn_Name",
+          "type": "zh-cn_Type",
+          "title": "zh-cn_Title",
+          "parent": "zh-cn_Parent",
+          "assignee": "zh-cn_Assignee",
+          "modified": "zh-cn_Modified"
+        }
+      }
+    }
+  }
+}

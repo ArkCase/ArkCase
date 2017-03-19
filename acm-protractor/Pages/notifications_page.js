@@ -13,8 +13,7 @@ var searchNotificationInput = element(by.model(Objects.notificationPage.locators
 var searchBtn = element(by.css(Objects.notificationPage.locators.searchBtn));
 var sortObjectType = element.all(by.xpath(Objects.notificationPage.locators.sort)).get(2);
 var sortModifiedBy = element.all(by.xpath(Objects.notificationPage.locators.sort)).get(3);
-
-
+var notificationTitle = element(by.xpath(Objects.notificationPage.locators.notificationTitle));
 
 
 var NotificationPage = function() {
@@ -52,30 +51,44 @@ var NotificationPage = function() {
 
 
     this.returnObjectType = function() {
+     
         return objectType.getText();
     }
+
+   this.waitForSorting=function(type){
+     browser.wait(EC.textToBePresentInElement((objectType), type), 10000, type + "Is not present in the table first row after sorting");
+   }
+
 
     this.returnDescription = function() {
         return description.getText();
     };
 
+    this.returnModifiedBy = function() {
+        return modifiedBy.getText();
+    }
+
     this.returnModifiedByMonth = function() {
 
-        modifiedBy.getText().then(function(text) {
-            var res = text.substring(0, 2);
-            var months = [util.returnCurrentMonth(), util.returnPreviousMonth()];
-            expect(months).toContain(res);
-
+        browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.notificationPage.locators.notificationCol)).get(3)), 20000, "ModifiedBy column is not visible").then(function() {
+            modifiedBy.getText().then(function(text) {
+                var res = text.substring(0, 2);
+                var months = [util.returnCurrentMonth(), util.returnPreviousMonth()];
+                expect(months).toContain(res);
+            });
         });
+        return this;
     }
 
     this.returnModifiedByYear = function() {
-
+        browser.wait(EC.visibilityOf(element.all(by.repeater(Objects.notificationPage.locators.notificationCol)).get(2)), 10000, "Notification column after search is not visible");
         modifiedBy.getText().then(function(text) {
             var res = text.substring(6, 10);
             var years = [util.returnpreviousYear(), util.returnCurrentYear()];
             expect(years).toContain(res);
+
         });
+        return this;
 
     }
 
@@ -83,18 +96,27 @@ var NotificationPage = function() {
 
         modifiedBy.getText().then(function(text) {
             var res = text.substring(3, 5);
-            var week=util.previousWeek();
+            var week = util.previousWeek();
             expect(week).toContain(res);
         });
     }
 
     this.clickSortModifiedBy = function() {
         sortModifiedBy.click();
+
     }
 
 
     this.returnParentNnumber = function() {
         return parentNumber.getText();
+    }
+
+    this.vaidateNotificationTitle = function () {
+        browser.wait(EC.visibilityOf(element(by.model(Objects.notificationPage.locators.notificationsInput))), 30000, "Search input for notification is not displayed").then(function() {
+            browser.wait(EC.visibilityOf(element(by.xpath(Objects.notificationPage.locators.notificationTitle))), 30000, "Notification title is not visible");
+            expect(notificationTitle.getText()).toEqual(Objects.notificationPage.data.notificationsTitle, "Notification page is not succesfully opened");
+        });
+
     }
 
 };

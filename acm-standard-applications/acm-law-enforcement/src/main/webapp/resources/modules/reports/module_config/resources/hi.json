@@ -1,0 +1,38 @@
+{
+  "reports": {
+    "title": "रिपोर्ट",
+    "menus": {
+      "leftnav.item": "रिपोर्ट"
+    },
+    "selectReport" : {
+      "label": "hi_Report",
+      "placeholder": "hi_Select Report"
+    },
+    "selectState" : {
+      "label": "hi_State",
+      "placeholder": "hi_Select State"
+    },
+    "startDate": {
+      "label": "hi_From"
+    },
+    "endDate" : {
+      "label": "hi_To"
+    },
+
+    "dropdown": {
+      "turnaround": "hi_Turnaround Time by Requester",
+      "requester": "hi_Requester Type Summary",
+      "pending": "hi_Pending Orders Report",
+      "associate": "hi_Associate Productivity Report",
+      "origination": "hi_Origination Count",
+      "transfers": "hi_Transfers Report",
+      "exceptions": "hi_Exceptions Report (Non-Compliance)"
+    },
+    "datepicker":{
+      "close": "hi_Done"
+    },
+    "btn": {
+      "generateReport": "hi_Generate report"
+    }
+  }
+}

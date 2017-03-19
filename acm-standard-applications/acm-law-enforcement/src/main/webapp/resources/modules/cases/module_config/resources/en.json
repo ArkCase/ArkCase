@@ -5,13 +5,23 @@
     "progressLoading": "Loading case file ",
     "progressError": "Failed to load case file"
   },
+  "cases.menus": {
+    "leftnav.item": "Case Files",
+    "topbar.item": "Case"
+  },
   "cases.error": {
     "invalidData": ""
   },
   "cases.comp.info": {
     "caseId": "Case id:",
     "caseNumber": "Case Number:",
-    "courtRoomName": "Court Room Name:"
+    "courtRoomName": "Court Room Name:",
+    "type.label": "Type",
+    "created.label": "Created Date",
+    "priority.label": "Priority",
+    "assignee.label": "Assigned To",
+    "owningGroup.label": "Owning Group",
+    "dueDate.label": "Due Date"
   },
   "cases.comp.actions": {
     "restrict": "Restrict?",
@@ -153,6 +163,7 @@
     "title": "References",
     "table.columns": {
       "targetName": "Number",
+      "parentName": "Parent",
       "targetTitle": "Title",
       "modified": "Modified",
       "targetType": "Reference Type",
@@ -264,5 +275,56 @@
     "btnCancelText": "Cancel",
     "btnSaveText": "Save",
     "searchAssigneeHeader": "Search Assignee"
+  },
+  "cases.comp.groupPickerModal": {
+    "title": "Change Group",
+    "groupNamelabel": "Group Name",
+    "btnCancelText": "Cancel",
+    "btnSaveText": "Save",
+    "searchGroupHeader": "Search Group"
+  },
+  "cases.comp.approvalRouting": {
+    "title": "Future Approvers",
+    "addNewTooltip": "Add new approver",
+    "noBuckslipMessage": "No Data",
+    "button": {
+      "save.tooltip": "Save Changes"
+    },
+    "table.columns": {
+      "fullName": "Full Name"
+    },
+    "assignee.label": "Assignee",
+    "owningGroup.label": "Owning Group",
+    "priority.label": "Priority",
+    "startDate.label": "Start Date",
+    "dueDate.label": "Due Date",
+    "state.label": "State"
+  },
+  "cases.comp.pastApprovals": {
+    "title": "Past Approvers",
+    "noBuckslipMessage": "No Data",
+    "table.columns": {
+      "approvalDate": "Approval Date",
+      "approverId": "Approver",
+      "approverDecision": "Approver Decision"
+    }
+  },
+  "cases.userOrGroupSearch": {
+    "id": "userSearch",
+    "title": "User/Group Search",
+    "search": {
+      "btn": "Search",
+      "placeholder": "Search for the user or group."
+    },
+    "cancelButton": "Cancel",
+    "confirmButton": "Confirm",
+    "enabled": true,
+    "userOrGroupFacetFilter": "\"object_type_s\":(GROUP OR USER)",
+    "assigneeGridColumns": {
+      "name": "Name",
+      "type": "Type",
+      "title": "Title",
+      "username": "Username"
+    }
   }
 }

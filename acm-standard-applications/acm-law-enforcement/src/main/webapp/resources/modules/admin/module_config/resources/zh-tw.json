@@ -1,0 +1,395 @@
+{
+  "admin": {
+    "title": "管理",
+    "security.title": "zh-tw_Security",
+    "security.functionalAccessControl": "zh-tw_Functional Access Control",
+    "security.functionalAccessControl.applicationRole": "zh-tw_Application Role",
+    "security.ldapConfig": "zh-tw_LDAP Configuration",
+    "security.ldapConfig.addNewDirectory": "zh-tw_Add New Directory",
+    "security.ldapConfig.table.ldapUrl": "zh-tw_LDAP Url",
+    "security.ldapConfig.table.directoryName": "zh-tw_Directory Name",
+    "security.ldapConfig.data": {
+      "addNewDirectory": "zh-tw_Add New Directory",
+      "editRecord": "zh-tw_Edit Record",
+      "id": "zh-tw_ID",
+      "ldapUrl": "zh-tw_LDAP Url",
+      "base": "zh-tw_Base",
+      "directoryName": "zh-tw_Directory Name",
+      "authUserDn": "zh-tw_Auth User Dn",
+      "authUserPassword": "zh-tw_Auth User Password",
+      "userSearchBase": "zh-tw_Users Search Base",
+      "userSearchFilter": "zh-tw_User Search Filter",
+      "allUsersFilter": "zh-tw_All Users Filter",
+      "allUsersPageFilter": "zh-tw_All Users Page Filter",
+      "allUsersSortingAttribute": "zh-tw_Sorting attribute for users",
+      "groupSearchBase": "zh-tw_Group Search Base",
+      "groupSearchFilterForUser": "zh-tw_Group Search Filter For User",
+      "userIdAttributeName": "zh-tw_User Id Attribute Name",
+      "userDomain": "zh-tw_User domain",
+      "userDomainNote": "zh-tw_(Note: Fill in the user domain for SSO scenario. For LDAP authentication leave it blank)",
+      "syncPageSize": "zh-tw_Sync Page Size",
+      "groupSearchFilter": "zh-tw_Group Search Filter",
+      "groupsSortingAttribute": "zh-tw_Sorting attribute for groups",
+      "groupSearchPageFilter": "zh-tw_Group Search Page Filter",
+      "enableEditingLdapUsers": "zh-tw_Enable managing users and groups",
+      "cancel": "zh-tw_Cancel",
+      "ok": "zh-tw_OK"
+    },
+    "menus": {
+      "leftnav.item": "管理"
+    },
+    "security.ldapConfig.data.placeholders": {
+      "id": "zh-tw_Enter directory name",
+      "ldapUrl": "zh-tw_Enter connection URL",
+      "base": "zh-tw_Enter base domain component (e.g. dc=example,dc=com)",
+      "authUserDn": "zh-tw_Enter user DN for authentication (e.g. cn=John Doe,ou=users,dc=example,dc=com)",
+      "authUserPassword": "zh-tw_Enter password for authentication user",
+      "userSearchBase": "zh-tw_Enter users search base (e.g. ou=users)",
+      "userSearchFilter": "zh-tw_Enter search filter for single user (e.g. (&(objectClass=person)(uid=%s))",
+      "allUsersFilter": "zh-tw_Enter search filter for all users (e.g. (objectClass=person))",
+      "allUsersPageFilter": "zh-tw_Enter filter including sort-attribute(e.g. (&(objectClass=person)(uidNumber>=%s)))",
+      "allUsersSortingAttribute": "zh-tw_Enter sorting attribute for users (e.g. 'uidNumber')",
+      "groupSearchBase": "zh-tw_Enter search base for groups (e.g. ou=groups)",
+      "groupSearchFilterForUser": "zh-tw_Enter search filter for user in group (e.g. (&(objectClass=group)(member=%s)))",
+      "userIdAttributeName": "zh-tw_Enter attribute used for user id (e.g. 'uid')",
+      "userDomain": "zh-tw_Enter user domain",
+      "syncPageSize": "zh-tw_Enter paging size",
+      "groupSearchFilter": "zh-tw_Enter search filter for groups (e.g. (objectClass=group))",
+      "groupsSortingAttribute": "zh-tw_Enter attribute for sorting groups (e.g. 'gidNumber')",
+      "groupSearchPageFilter": "zh-tw_Enter filter including sort-attribute (e.g. (&(objectClass=group)(gidNumber>=%s)))",
+      "enableEditingLdapUsers": "zh-tw_Check if managing users and groups to your DS is allowed"
+    },
+    "security.ldapConfig.messages": {
+      "delete.success": "zh-tw_Successfully deleted row.",
+      "delete.error": "zh-tw_Error deleting row.",
+      "insert.success": "zh-tw_Successfully inserted new row.",
+      "insert.error": "zh-tw_Error inserting new row.",
+      "update.success": "zh-tw_Successfully updated row.",
+      "update.error": "zh-tw_Error updating row."
+    },
+    "security.ldapConfig.dialog": {
+      "cancel": "zh-tw_Cancel",
+      "ok": "zh-tw_OK",
+      "confirm.delete": {
+        "deleteBtn": "zh-tw_Delete",
+        "cancelBtn": "zh-tw_Cancel",
+        "headerText": "zh-tw_Are you sure?",
+        "bodyText": "zh-tw_This record will be deleted. Are you sure?"
+      }
+    },
+    "admin.security.addNew": "zh-tw_Add New Directory",
+    "security.organizationalHierarchy": {
+      "title": "zh-tw_Organizational Hierarchy",
+      "btn": {
+        "createAdHocGroup": "zh-tw_createAdHocGroup"
+      },
+      "createGroupDialog": {
+        "ldapGroup": {
+          "title": "zh-tw_Add LDAP Group"
+        },
+        "adHocGroup": {
+          "title": "zh-tw_Add Ad-Hoc Group"
+        },
+        "selectDirectory": "zh-tw_--Choose Directory Config--",
+        "disabledGroupWarning": "zh-tw_Adding new LDAP groups is not allowed for this directory!",
+        "name": "zh-tw_Name",
+        "namePlaceholder": "zh-tw_Enter group name",
+        "description": "zh-tw_Description",
+        "descriptionPlaceholder": "zh-tw_Enter Description",
+        "btn": {
+          "ok": "zh-tw_Add Ad-Hoc Group",
+          "cancel": "zh-tw_Cancel"
+        }
+      },
+      "addSubGroupDialog": {
+        "title": "zh-tw_Add Subgroup to",
+        "name": "zh-tw_Name",
+        "namePlaceholder": "zh-tw_Enter group name",
+        "description": "zh-tw_Description",
+        "descriptionPlaceholder": "zh-tw_Enter Description",
+        "btn": {
+          "ok": "zh-tw_Add Ad-Hoc Group",
+          "cancel": "zh-tw_Cancel"
+        }
+      },
+      "addMembers": {
+        "title": "zh-tw_Add Members",
+        "btn": {
+          "search": "zh-tw_Go!",
+          "cancel": "zh-tw_Cancel",
+          "ok": "zh-tw_Add",
+          "searchPlaceholder": "zh-tw_Enter to search for members."
+        }
+      },
+      "createUserDialog": {
+        "addLdapMember": {
+          "title": "zh-tw_Add Ldap Member",
+          "btn": {
+            "cancel": "zh-tw_Cancel",
+            "ok": "zh-tw_Add Ldap User"
+          }
+        },
+        "editLdapMember": {
+          "title": "zh-tw_Edit Ldap Member",
+          "btn": {
+            "cancel": "zh-tw_Cancel",
+            "ok": "zh-tw_Edit Ldap User"
+          }
+        },
+        "username": "zh-tw_Username",
+        "firstName": "zh-tw_FirstName",
+        "lastName": "zh-tw_LastName",
+        "email": "zh-tw_Email",
+        "password": "zh-tw_Password"
+      },
+      "addMembersGridColumns": {
+        "name": "zh-tw_Name",
+        "type": "zh-tw_Type",
+        "title": "zh-tw_Title",
+        "parent": "zh-tw_Parent",
+        "assignee": "zh-tw_Assignee",
+        "modified": "zh-tw_Modified"
+      },
+      "addSupervisor": {
+        "title": "zh-tw_Add Supervisor",
+        "btn": {
+          "search": "zh-tw_Go!",
+          "cancel": "zh-tw_Cancel",
+          "ok": "zh-tw_Add",
+          "searchPlaceholder": "zh-tw_Enter to search for supervisor."
+        }
+      },
+      "addSupervisorGridColumns": {
+        "name": "zh-tw_Name",
+        "type": "zh-tw_Type",
+        "title": "zh-tw_Title",
+        "parent": "zh-tw_Parent",
+        "assignee": "zh-tw_Assignee",
+        "modified": "zh-tw_Modified"
+      },
+      "dialog.group": {
+        "confirm.delete": {
+          "cancelBtn": "zh-tw_Cancel",
+          "deleteBtn": "zh-tw_Delete",
+          "headerText": "zh-tw_You are about to delete group: ",
+          "bodyText": "zh-tw_Are you sure?"
+        }
+      },
+      "dialog.member": {
+        "confirm.delete": {
+          "cancelBtn": "zh-tw_Cancel",
+          "deleteBtn": "zh-tw_Delete",
+          "headerText": "zh-tw_You are about to delete member: ",
+          "bodyText": "zh-tw_Are you sure?"
+        }
+      },
+      "messages": {
+        "delete": {
+          "group": {
+            "success": "zh-tw_success",
+            "error": "zh-tw_error"
+          },
+          "member": {
+            "success": "zh-tw_success",
+            "error": "zh-tw_error"
+          }
+        }
+      }
+    },
+    "security.selectPrivileges": "zh-tw_Create Role/Select Privileges",
+    "security.selectPrivileges.applicationRole": "zh-tw_Application Role",
+    "security.selectPrivileges.createRole": "zh-tw_Create Role",
+    "security.selectPrivileges.editRole": "zh-tw_Edit Role",
+    "security.selectPrivileges.applyChanges": "zh-tw_Apply Changes",
+    "security.selectPrivileges.enterRoleName": "zh-tw_Enter the role name in the box below.",
+    "security.selectPrivileges.cancel": "zh-tw_Cancel",
+    "security.selectPrivileges.name": "zh-tw_Name",
+    "security.modules": "zh-tw_Modules",
+    "security.modules.module": "zh-tw_Module",
+    "dashboard.title": "zh-tw_Dashboard",
+    "dashboard.config": "zh-tw_Dashboard Configuration",
+    "dashboard.widgets": "zh-tw_Widgets",
+    "reports.title": "zh-tw_Reports",
+    "reports.config": "zh-tw_Reports Configuration",
+    "forms.title": "zh-tw_Forms",
+    "forms.config": "zh-tw_Form Configuration",
+    "workflows.title": "zh-tw_Workflows",
+    "workflows.config": "zh-tw_Workflow Configuration",
+    "workflows.config.activate": {
+      "error": "zh-tw_Cant make this process active!",
+      "success": "zh-tw_Process succesfully activated."
+    },
+    "workflows.config.showHistory.dialog": {
+      "title": "zh-tw_History",
+      "body": "zh-tw_Below is a history of previous BPMN files. To reinstate a previous workflow, select the workflow and click Make Active",
+      "cancel": "zh-tw_Cancel",
+      "activate": "zh-tw_Make Active"
+    },
+    "workflows.config.grid": {
+      "businessProcess": "zh-tw_Business Process",
+      "description": "zh-tw_Description",
+      "active": "zh-tw_Active",
+      "modified": "zh-tw_Modified",
+      "creator": "zh-tw_Author"
+    },
+    "workflows.config.btn": {
+      "createNew": "zh-tw_Create New Model",
+      "uploadNew": "zh-tw_Upload New BPMN"
+    },
+    "workflows.config.links": {
+      "download": "zh-tw_Download",
+      "replaceFile": "zh-tw_Replace File",
+      "versionHistory": "zh-tw_Version History"
+    },
+    "workflows.config.upload": {
+      "success": "zh-tw_Successfully uploaded new process definition",
+      "error": "zh-tw_Error uploading new process definition"
+    },
+    "formWorkflows.title": "zh-tw_Form/Workflow Link",
+    "formWorkflows.link": "zh-tw_Link Forms/Workflows",
+    "formWorkflows.link.undo": "zh-tw_Undo",
+    "formWorkflows.link.saveChanges": "zh-tw_Save Changes",
+    "formWorkflows.link.editRole.save.success": "zh-tw_Link Forms/Workflows configuration saved successfully",
+    "formWorkflows.link.editRole.save.error": "zh-tw_Can't save Link Forms/Workflows configuration",
+    "application": {
+      "title": "zh-tw_Application",
+      "labels.config": {
+        "defaultLabel": "zh-tw_Default",
+        "applyBtn": "zh-tw_Apply",
+        "resetModule": "zh-tw_Reset Module",
+        "resetModule.confirm": "zh-tw_Are you sure you want reset custom resources for current module?",
+        "resetModule.title": "zh-tw_Reset current module (delete custom resources)",
+        "resetAll": "zh-tw_Reset All",
+        "resetAll.confirm": "zh-tw_Are you sure you want reset all custom resources for all modules?",
+        "resetAll.title": "zh-tw_Reset all resources (delete all custom resources)",
+        "refreshAll": "zh-tw_Refresh All",
+        "refreshAll.title": "zh-tw_Refresh all resources (keep custom resources)",
+        "title": "zh-tw_Label Configuration",
+        "filterBy": "zh-tw_Filter By Id",
+        "filterByValue": "zh-tw_Filter By Value",
+        "data": {
+          "description": "zh-tw_Description",
+          "defaultValue": "zh-tw_Default Value",
+          "id": "zh-tw_ID",
+          "value": "zh-tw_Value"
+        }
+      },
+      "module.config": {
+        "title": "zh-tw_Module Configuration"
+      },
+      "userName.config": {
+        "title": "zh-tw_Username Display Configuration",
+        "userId.label": "zh-tw_Use User Identifier",
+        "userName.label": "zh-tw_Use Full Username",
+        "apply": "zh-tw_Apply",
+        "modal.title": "zh-tw_Information",
+        "modal.info": "zh-tw_Settings will take effect after refresh",
+        "modal.ok": "zh-tw_OK"
+      },
+      "login.config": {
+        "title": "zh-tw_Login Configuration",
+        "idleLimit.label": "zh-tw_Login idle limit (in milliseconds)",
+        "inform": "zh-tw_Settings will take effect for all new user sessions",
+        "apply.label": "zh-tw_Apply"
+      },
+      "auditHistory.config": {
+        "title": "zh-tw_Audit History",
+        "historyDays.label": "zh-tw_Keep Audit and Notification events (in days)",
+        "inform": "zh-tw_Setting successfully saved",
+        "apply.label": "zh-tw_Apply"
+      }
+    },
+    "branding.title": "zh-tw_Branding",
+    "branding.logo": "zh-tw_Logo",
+    "branding.logo.messages": {
+      "upload.success": "zh-tw_Custom logo files updated. Refresh browser page to see result.",
+      "upload.error": "zh-tw_Error uploading custom logo files."
+    },
+    "branding.logo.header.title": "zh-tw_Header",
+    "branding.logo.login.title": "zh-tw_Login Page",
+    "branding.logo.warningMessage": "zh-tw_Only PNG format is allowed. Recommended ratio is 1 to 4. Minimum height is 50px.",
+    "branding.logo.btn": {
+      "chooseHeader": "zh-tw_Choose Header logo",
+      "chooseLogin": "zh-tw_Choose Login logo",
+      "saveFiles": "zh-tw_Save"
+    },
+    "branding": {
+      "customCss": "zh-tw_Custom CSS",
+      "customCss.save.success": "zh-tw_Custom CSS updated. Refresh browser page to see result.",
+      "customCss.save.error": "zh-tw_Error saving Custom CSS.",
+      "customCss.save": "zh-tw_Save"
+    },
+    "correspondenceManagement": {
+      "title": "zh-tw_Correspondence Management",
+      "templates": "zh-tw_Correspondence Templates",
+      "templates.addNewTemplate": "zh-tw_Upload Template",
+      "templates.addTemplate": "zh-tw_Upload",
+      "templates.versionTemplate": "zh-tw_Versions",
+      "templates.deleteTemplate": "zh-tw_Delete",
+      "templates.editTemplate": "zh-tw_Edit Template",
+      "templates.grid": {
+        "id": "zh-tw_ID",
+        "title": "zh-tw_Title",
+        "label": "zh-tw_Display Name",
+        "path": "zh-tw_Path",
+        "created": "zh-tw_Created",
+        "modified": "zh-tw_Modified",
+        "creator": "zh-tw_Creator",
+        "modifier": "zh-tw_Modifier",
+        "activated": "zh-tw_Status",
+        "objectType": "zh-tw_Object Type",
+        "version": "zh-tw_Version",
+        "templateVersionActive" : "zh-tw_Active"
+      },
+      "templates.fieldNames.label": "zh-tw_Map fields to values from the template",
+      "templates.querySelect": {
+        "header.text": "zh-tw_Select Query",
+        "btnCancel.text": "zh-tw_Cancel",
+        "btnOk.text": "zh-tw_Select Query",
+        "table.columns": {
+          "beanId": "zh-tw_Bean ID",
+          "jpaQuery": "zh-tw_JPA Query",
+          "queryType": "zh-tw_Query Type"
+        }
+      },
+      "templates.modal": {
+        "objectTypes.label": "zh-tw_Object Types",
+        "querySelect.label": "zh-tw_Query Select",
+        "label.label": "zh-tw_Display Name",
+        "btnCancel.text": "zh-tw_Cancel",
+        "btnOk.text": "zh-tw_Upload Template"
+      },
+      "templates.version.modal": {
+        "btnOk.text": "zh-tw_OK"
+      },
+      "mergefields": "zh-tw_Merge Fields Configuration",
+      "mergefields.saveMergeFields": "zh-tw_Save",
+      "mergefields.versionMergeFields": "zh-tw_Versions",
+      "mergefields.grid": {
+      "fieldId": "zh-tw_ID",
+      "fieldValue": "zh-tw_Value",
+      "fieldDescription": "zh-tw_Description"
+      },
+      "mergefields.version.grid": {
+        "mergingVersion": "zh-tw_Version",
+        "modified": "zh-tw_Modified",
+        "modifier": "zh-tw_Modifier",
+        "mergingActiveVersion": "zh-tw_Active"
+      },
+      "mergefields.version.modal": {
+        "btnLoadVersion.text": "zh-tw_Load Version",
+        "btnCancel.text": "zh-tw_Cancel"
+      }
+    },
+    "forms.defaultValue": "zh-tw_Select Target",
+    "forms.addForm": "zh-tw_Add Plain Form",
+    "forms.data": {
+      "name": "zh-tw_Form Name",
+      "applicationName": "zh-tw_Application name",
+      "description": "zh-tw_Description",
+      "target": "zh-tw_Target"
+    },
+    "forms.message.delete.success": "zh-tw_Successfully deleted row.",
+    "forms.message.delete.error": "zh-tw_Error deleting row."
+  }
+}

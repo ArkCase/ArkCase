@@ -113,6 +113,7 @@
       {
         "name": "object_type_s",
         "displayName": "frevvo.dialogObjectPicker.table.columns.type",
+        "cellFilter": "mapKeyValue: grid.appScope.customization.labels",
         "headerCellFilter": "translate"
       },
       {

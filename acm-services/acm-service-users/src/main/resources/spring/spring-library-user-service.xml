@@ -7,9 +7,6 @@
 
     <task:scheduler id="ldapSyncTaskScheduler" pool-size="1"/>
 
-    <bean id="acmUserGroupsContextMapper" class="com.armedia.acm.services.users.model.ldap.AcmUserGroupsContextMapper"/>
-    <bean id="acmGroupContextMapper" class="com.armedia.acm.services.users.model.ldap.AcmGroupContextMapper"/>
-
     <bean id="springLdapPagedDao" class="com.armedia.acm.services.users.dao.ldap.SpringLdapPagedDao"/>
 
     <bean id="customPagedLdapDao" class="com.armedia.acm.services.users.dao.ldap.CustomPagedLdapDao"/>
@@ -80,4 +77,17 @@
         <property name="groupService" ref="groupService"/>
     </bean>
 
+    <bean id="ldapUserService" class="com.armedia.acm.services.users.service.ldap.LdapUserService">
+        <property name="ldapDao" ref="springLdapPagedDao"/>
+        <property name="userDao" ref="userJpaDao"/>
+        <property name="groupDao" ref="groupDao"/>
+        <property name="acmContextHolder" ref="acmContextHolder"/>
+    </bean>
+
+    <bean id="ldapGroupService" class="com.armedia.acm.services.users.service.group.LdapGroupService">
+        <property name="groupDao" ref="groupDao"/>
+        <property name="ldapDao" ref="springLdapPagedDao"/>
+        <property name="userDao" ref="userJpaDao"/>
+        <property name="acmContextHolder" ref="acmContextHolder"/>
+    </bean>
 </beans>

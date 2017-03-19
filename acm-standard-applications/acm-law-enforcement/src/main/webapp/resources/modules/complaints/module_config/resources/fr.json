@@ -1,0 +1,324 @@
+{
+  "complaints": {
+    "title": "Plaintes",
+    "progressNoComplaint": "fr_[ No complaint data ]",
+    "progressLoading": "fr_Loading complaint ",
+    "progressError": "fr_Failed to load complaint "
+  },
+  "complaints.menus": {
+    "leftnav.item": "Plaintes",
+    "topbar.item": "Plainte"
+  },
+  "complaints.comp.info": {
+    "complaintId": "fr_Complaint id:",
+    "complaintNumber": "fr_Complaint ID:",
+    "courtRoomName": "fr_Court Room Name:",
+    "type.label": "Type",
+    "created.label": "Created Date",
+    "priority.label": "Priority",
+    "assignee.label": "Assigned To",
+    "owningGroup.label": "Owning Group",
+    "dueDate.label": "Due Date"
+  },
+  "complaints.comp.actions": {
+    "restrict": "fr_Restrict?",
+    "new.button": "fr_New Complaint",
+    "close.button": "fr_Close Complaint",
+    "subscribe.button": "fr_Subscribe",
+    "unsubscribe.button": "fr_Unsubscribe",
+    "claim.button": "fr_Claim",
+    "unclaim.button": "fr_Unclaim"
+  },
+  "complaints.comp.details": {
+    "title": "fr_Details",
+    "informSaved": "fr_Complaint details saved",
+    "table.columns": {
+      "title": "fr_Details",
+      "modified": "fr_Date Last Modified",
+      "modifier": "fr_User Last Modified"
+    }
+  },
+  "complaints.comp.documents": {
+    "title": "fr_Documents"
+  },
+  "complaints.comp.people": {
+    "title": "fr_People",
+    "table.columns": {
+      "entity": "fr_Entity",
+      "type": "fr_Type",
+      "firstName": "fr_FirstName",
+      "lastName": "fr_LastName"
+    },
+    "contactMethods": {
+      "title": "fr_ContactMethods",
+      "table.columns": {
+        "type": "fr_Type",
+        "value": "fr_Value",
+        "created": "fr_Date Added",
+        "creator": "fr_Added By",
+        "modified": "fr_Last Modified",
+        "modifier": "fr_Modified By"
+      }
+    },
+    "organizations": {
+      "title": "fr_Organizations",
+      "table.columns": {
+        "type": "fr_Type",
+        "value": "fr_Value",
+        "created": "fr_Date Added",
+        "creator": "fr_Added By",
+        "modified": "fr_Last Modified",
+        "modifier": "fr_Modified By"
+      }
+    },
+    "addresses": {
+      "title": "fr_Locations",
+      "table.columns": {
+        "type": "fr_Type",
+        "streetAddress": "fr_Address",
+        "city": "fr_City",
+        "state": "fr_State",
+        "zip": "fr_Zip",
+        "country": "fr_Country",
+        "created": "fr_Date Added",
+        "creator": "fr_Added By",
+        "modified": "fr_Last Modified",
+        "modifier": "fr_Modified By"
+      }
+    },
+    "aliases": {
+      "title": "fr_Aliases",
+      "table.columns": {
+        "type": "fr_Type",
+        "value": "fr_Value",
+        "created": "fr_Date Added",
+        "creator": "fr_Added By",
+        "modified": "fr_Last Modified",
+        "modifier": "fr_Modified By"
+      }
+    },
+    "securityTags": {
+      "title": "fr_Security Tags",
+      "table.columns": {
+        "type": "fr_Type",
+        "value": "fr_Value",
+        "created": "fr_Date Added",
+        "creator": "fr_Added By",
+        "modified": "fr_Last Modified",
+        "modifier": "fr_Modified By"
+      }
+    }
+  },
+  "complaints.comp.participants": {
+    "title": "fr_Participants",
+    "table.columns": {
+      "type": "fr_Type",
+      "name": "fr_Name"
+    },
+    "dialogUserPicker": {
+      "header": "fr_Choose User",
+      "table.columns": {
+        "name": "fr_Name",
+        "type": "fr_Type",
+        "title": "fr_Title",
+        "id": "fr_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "fr_Choose Group",
+      "table.columns": {
+        "name": "fr_Name"
+      }
+    }
+  },
+  "complaints.comp.locations": {
+    "title": "fr_Locations",
+    "table.columns": {
+      "address": "fr_Address",
+      "type": "fr_Type",
+      "city": "fr_City",
+      "state": "fr_State",
+      "zip": "fr_Zip",
+      "modified": "fr_Date Last Modified",
+      "modifier": "fr_User Last Modified"
+    },
+    "modal": {
+      "addLocation": "fr_Add Location",
+      "editLocation": "fr_Edit Record",
+      "type.label": "fr_Type",
+      "street.label": "fr_Street",
+      "city.label": "fr_City",
+      "state.label": "fr_State",
+      "zip.label": "fr_Zip",
+      "btnOk.text": "fr_Save",
+      "btnCancel.text": "fr_Cancel"
+    }
+  },
+  "complaints.comp.notes": {
+    "title": "fr_Notes",
+    "table.columns": {
+      "note": "fr_Note",
+      "created": "fr_Created",
+      "creator": "fr_Author"
+    }
+  },
+  "complaints.comp.tasks": {
+    "title": "fr_Tasks",
+    "table.columns": {
+      "title": "fr_Title",
+      "assignee": "fr_Assignee",
+      "created": "fr_Created",
+      "priority": "fr_Priority",
+      "due": "fr_Due",
+      "status": "fr_Status"
+    },
+    "table.overdue.tooltip": "fr_Task is Overdue",
+    "table.deadline.tooltip": "fr_Deadline is Approaching"
+  },
+  "complaints.comp.references": {
+    "title": "fr_References",
+    "table.columns": {
+      "targetName": "fr_Number",
+      "targetTitle": "fr_Title",
+      "parentName": "fr_Parent",
+      "modified": "fr_Modified",
+      "targetType": "fr_Reference Type",
+      "status": "fr_Status"
+    }
+  },
+  "complaints.comp.history": {
+    "title": "fr_History",
+    "table.columns": {
+      "eventType": "fr_Event Name",
+      "eventDate": "fr_Date",
+      "userId": "fr_User"
+    }
+  },
+  "complaints.comp.time": {
+    "title": "fr_Time",
+    "table.columns": {
+      "name": "fr_Form Name",
+      "user": "fr_User",
+      "tally": "fr_Total Hours",
+      "modified": "fr_Modified Date",
+      "status": "fr_Status"
+    },
+    "formNamePrefix": "fr_Timesheet"
+  },
+  "complaints.comp.cost": {
+    "title": "fr_Cost",
+    "table.columns": {
+      "name": "fr_Form Name",
+      "user": "fr_User",
+      "tally": "fr_Total Cost",
+      "modified": "fr_Modified Date",
+      "status": "fr_Status"
+    },
+    "formNamePrefix": "fr_Costsheet"
+  },
+  "complaints.comp.tags": {
+    "title": "fr_Tags",
+    "table.columns": {
+      "tag": "fr_Tag",
+      "created": "fr_Created",
+      "createdBy": "fr_Created By"
+    },
+    "modal": {
+      "title": "fr_Tag",
+      "search": "fr_Search for Tag",
+      "buttons": {
+        "cancel": "fr_Cancel",
+        "ok": "fr_Add Tag"
+      }
+    },
+    "message": {
+      "tagExists": "fr_Tag with that name or description or text already exists",
+      "tagAssociated": "fr_already associated",
+      "delete": {
+        "success": "fr_Tag deleted successfully",
+        "error": "fr_Error deleting tag"
+      }
+    }
+  },
+  "complaints.comp.calendar": {
+    "title": "fr_Calendar"
+  },
+  "complaints.comp.addreference": {
+    "title": "fr_Add Reference",
+    "cancelButton": "fr_Cancel",
+    "confirmButton": "fr_Add",
+    "search": {
+      "placeholder": "fr_Search for case, complaint, file, task",
+      "btn": "fr_Search"
+    },
+    "grid": {
+      "columns": {
+        "id": "fr_Id",
+        "name": "fr_Name",
+        "type": "fr_Type",
+        "title": "fr_Title",
+        "parent": "fr_Parent",
+        "assignee": "fr_Assignee",
+        "modified": "fr_Modified"
+      }
+    }
+  },
+  "complaints.comp.assigneePickerModal": {
+    "title": "fr_Change Assignee",
+    "assigneeNamelabel": "fr_Assignee Name",
+    "btnCancelText": "fr_Cancel",
+    "btnSaveText": "fr_Save",
+    "searchAssigneeHeader": "fr_Search Assignee"
+  },
+  "complaints.comp.groupPickerModal": {
+    "title": "fr_Change Group",
+    "groupNamelabel": "fr_Group Name",
+    "btnCancelText": "fr_Cancel",
+    "btnSaveText": "fr_Save",
+    "searchGroupHeader": "fr_Search Group"
+  },
+  "complaints.comp.approvalRouting": {
+    "title": "fr_Future Approvers",
+    "addNewTooltip": "fr_Add new approver",
+    "noBuckslipMessage": "fr_No Data",
+    "button": {
+      "save.tooltip": "fr_Save Changes"
+    },
+    "table.columns": {
+      "fullName": "fr_Full Name"
+    },
+    "assignee.label": "fr_Assignee",
+    "owningGroup.label": "fr_Owning Group",
+    "priority.label": "fr_Priority",
+    "startDate.label": "fr_Start Date",
+    "dueDate.label": "fr_Due Date",
+    "state.label": "fr_State"
+  },
+  "complaints.comp.pastApprovals": {
+    "title": "fr_Past Approvers",
+    "noBuckslipMessage": "fr_No Data",
+    "table.columns": {
+      "approvalDate": "fr_Approval Date",
+      "approverId": "fr_Approver",
+      "approverDecision": "fr_Approver Decision"
+    }
+  },
+  "complaints.userOrGroupSearch": {
+    "id": "fr_userSearch",
+    "title": "fr_User/Group Search",
+    "search": {
+      "btn": "fr_Search",
+      "placeholder": "fr_Search for the user or group."
+    },
+    "cancelButton": "fr_Cancel",
+    "confirmButton": "fr_Confirm",
+    "enabled": true,
+    "userOrGroupFacetFilter": "fr_\"object_type_s\":(GROUP OR USER)",
+    "assigneeGridColumns": {
+      "name": "fr_Name",
+      "type": "fr_Type",
+      "title": "fr_Title",
+      "username": "fr_Username"
+    }
+  }
+}
