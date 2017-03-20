@@ -2,6 +2,8 @@ package com.armedia.acm.plugins.alfrescorma.service;
 
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.mule.api.MuleMessage;
@@ -25,10 +27,17 @@ public class CmisFileWriter
 
     public Document writeTestFile(MuleContextManager muleContextManager) throws Exception
     {
+        CmisConfigUtils cmisConfigUtils = new CmisConfigUtils();
+        cmisConfigUtils.setMuleContextManager(muleContextManager);
+
         // create a file that we can then declare as a record and set metadata on it
+        Map<String, Object> properties = new HashMap<>();
+        String cmisRepositoryId = "alfresco";
+        Object alfresco = muleContextManager.getMuleContext().getRegistry().lookupObject(cmisRepositoryId);
+        properties.put("configRef", alfresco);
 
         String testPath = "/acm/test/folder";
-        MuleMessage createFolderMessage = muleContextManager.send("vm://createFolder.in", testPath, null);
+        MuleMessage createFolderMessage = muleContextManager.send("vm://createFolder.in", testPath, properties);
         CmisObject folder = (CmisObject) createFolderMessage.getPayload();
         String folderId = folder.getId();
 
@@ -43,6 +52,8 @@ public class CmisFileWriter
         Map<String, Object> messageProperties = new HashMap<>();
         messageProperties.put("cmisFolderId", folderId);
         messageProperties.put("inputStream", is);
+        messageProperties.put("configRef", alfresco);
+        messageProperties.put(EcmFileConstants.VERSIONING_STATE, cmisConfigUtils.getVersioningState(cmisRepositoryId));
 
         MuleMessage addFileMessage = muleContextManager.send("vm://addFile.in", ecmFile, messageProperties);
 
