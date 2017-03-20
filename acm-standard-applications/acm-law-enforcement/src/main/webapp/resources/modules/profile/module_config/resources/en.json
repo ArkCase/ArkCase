@@ -35,9 +35,9 @@
        "officePhone":"Office Phone",
        "mobilePhone":"Mobile Phone"
    },
-   "profile.groups":{
-       "title":"Groups"
-   },
+  "profile.groups":{
+    "title":"Groups"
+  },
    "profile.buttons":{
        "password":"Change Password",
        "message":"Enter your new password.",

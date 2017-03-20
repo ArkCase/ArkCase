@@ -42,6 +42,7 @@
         {
           "name": "parent_type_s",
           "displayName": "subscriptions.comp.grid.columns.parentType",
+          "cellFilter": "mapKeyValue: grid.appScope.customization.labels",
           "headerCellFilter": "translate"
         },
         {

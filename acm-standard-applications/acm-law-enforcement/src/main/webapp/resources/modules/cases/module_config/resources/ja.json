@@ -1,13 +1,13 @@
 {
   "cases": {
-    "title": "ja_Cases",
+    "title": "案件",
     "progressNoCase": "ja_[ No case file data ]",
     "progressLoading": "ja_Loading case file ",
     "progressError": "ja_Failed to load case file"
   },
   "cases.menus": {
-    "leftnav.item": "ja_Case Files",
-    "topbar.item": "ja_Case"
+    "leftnav.item": "案件文書",
+    "topbar.item": "案件"
   },
   "cases.error": {
     "invalidData": "ja_"
@@ -15,7 +15,13 @@
   "cases.comp.info": {
     "caseId": "ja_Case id:",
     "caseNumber": "ja_Case Number:",
-    "courtRoomName": "ja_Court Room Name:"
+    "courtRoomName": "ja_Court Room Name:",
+    "type.label": "ja_Type",
+    "created.label": "ja_Created Date",
+    "priority.label": "ja_Priority",
+    "assignee.label": "ja_Assigned To",
+    "owningGroup.label": "ja_Owning Group",
+    "dueDate.label": "ja_Due Date"
   },
   "cases.comp.actions": {
     "restrict": "ja_Restrict?",
@@ -286,7 +292,13 @@
     },
     "table.columns": {
       "fullName": "ja_Full Name"
-    }
+    },
+    "assignee.label": "ja_Assignee",
+    "owningGroup.label": "ja_Owning Group",
+    "priority.label": "ja_Priority",
+    "startDate.label": "ja_Start Date",
+    "dueDate.label": "ja_Due Date",
+    "state.label": "ja_State"
   },
   "cases.comp.pastApprovals": {
     "title": "ja_Past Approvers",

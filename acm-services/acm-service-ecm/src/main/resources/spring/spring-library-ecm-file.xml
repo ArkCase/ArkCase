@@ -18,6 +18,7 @@
                 <prop key="ecm.defaultPath.COMPLAINT">/Complaints</prop>
                 <prop key="ecm.defaultPath.TASK">/Tasks</prop>
                 <prop key="ecm.defaultPath.CASE_FILE">/Case Files</prop>
+                <prop key="ecm.defaultCmisId">alfresco</prop>
             </props>
         </property>
     </bean>
@@ -39,6 +40,7 @@
     <!-- Mule Utility Bean for downloading, updating, adding files -->
     <bean id="ecmFileMuleUtils" class="com.armedia.acm.plugins.ecm.utils.EcmFileMuleUtils">
         <property name="muleContextManager" ref="muleContextManager"/>
+        <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
     </bean>
 
     <!-- Bactes specific pipeline pre save handlers -->
@@ -66,7 +68,7 @@
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="folderDao" ref="acmFolderDao"/>
         <property name="pageCountService" ref="pageCountService"/>
-        
+
     </bean>
     <bean id="ecmFileSendForPdfConversionHandler"
           class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileSendForPdfConversionHandler">
@@ -122,6 +124,7 @@
         <property name="ecmTikaFileService" ref="ecmTikaFileService"/>
         <property name="fileEventPublisher" ref="fileEventPublisher"/>
         <property name="springContextHolder" ref="acmContextHolder"/>
+        <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
     </bean>
 
     <bean id="ecmFileService" class="com.armedia.acm.plugins.ecm.service.impl.EcmFileServiceImpl">
@@ -159,6 +162,7 @@
         </property>
         <property name="folderDao" ref="acmFolderDao"/>
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
+        <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
     </bean>
 
 
@@ -194,6 +198,7 @@
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
         <property name="ecmFileServiceProperties" ref="ecmFileServiceProperties"/>
         <property name="participantDao" ref="acmParticipantDao"/>
+        <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
     </bean>
 
     <bean id="folderAndFilesUtils" class="com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils"/>
@@ -222,11 +227,15 @@
             </list>
         </property>
     </bean>
-    
+
     <bean id="pageCountService" class="com.armedia.acm.plugins.ecm.service.impl.PageCountServiceImpl"/>
 
     <bean id="fileCreatedWorkflowHandler" class="com.armedia.acm.plugins.ecm.handler.FileCreatedBuckslipWorkflowHandler">
         <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
         <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
+    </bean>
+
+    <bean id="cmisConfigUtils" class="com.armedia.acm.plugins.ecm.utils.CmisConfigUtils">
+        <property name="muleContextManager" ref="muleContextManager"/>
     </bean>
 </beans>

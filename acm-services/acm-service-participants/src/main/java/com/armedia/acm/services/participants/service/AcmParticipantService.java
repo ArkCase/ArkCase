@@ -33,7 +33,7 @@ public class AcmParticipantService
 
         CheckParticipantListModel model = new CheckParticipantListModel();
         List<String> errorListAfterRules = applyParticipantRules(participant, model);
-        if (errorListAfterRules != null)
+        if (errorListAfterRules != null && !errorListAfterRules.isEmpty() )
         {
             throw new AcmAccessControlException(errorListAfterRules, "Conflict permissions combination has occurred for the chosen participants");
         }

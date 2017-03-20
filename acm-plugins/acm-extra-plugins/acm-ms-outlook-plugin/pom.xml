@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-extra-plugins</artifactId>
         <groupId>com.armedia.acm.acm-plugins</groupId>
-        <version>3.1.9-SNAPSHOT</version>
+        <version>3.1.10-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -31,11 +31,6 @@
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-encryption</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-calendar-config</artifactId>
             <version>${acm.version}</version>
         </dependency>
 

@@ -57,6 +57,24 @@
             </li>
         </ul>
 
+        <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <span translate></span>{{localeCurrent}}<span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li ng-repeat="locale in localeDropdownOptions">
+                        <a href="#" ng-click="changeLocale($event, locale)">{{locale}}</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="#" ng-click="updateLocales($event)" translate>core.topBar.locale.updateList</a>
+                    </li>
+
+                </ul>
+            </li>
+        </ul>
+
         <form class="navbar-form navbar-right" role="search">
             <div class="form-group">
                 <div class="input-group input-group-sm">
@@ -80,6 +98,5 @@
                 </div>
             </div>
         </form>
-
     </nav>
 </div>

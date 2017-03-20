@@ -128,4 +128,7 @@ public interface TaskDao
     AcmTask acmTaskFromActivitiTask(Task activitiTask);
 
     AcmTask acmTaskFromActivitiTask(Task activitiTask, Map<String, Object> processVariables, Map<String, Object> localVariables);
+
+    AcmTask acmTaskFromActivitiTask(Task activitiTask, Map<String, Object> processVariables, Map<String, Object> localVariables,
+                                    String taskEventName);
 }
