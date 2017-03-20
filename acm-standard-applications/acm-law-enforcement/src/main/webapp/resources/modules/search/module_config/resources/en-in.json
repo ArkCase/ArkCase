@@ -1,22 +1,22 @@
 {
   "search": {
-    "title": "en-in_Search",
-    "search.btn": "en-in_Search",
-    "export.btn": "en-in_Export",
-    "search.placeholder": "en-in_Type in to search",
+    "title": "Search",
+    "search.btn": "Search",
+    "export.btn": "Export",
+    "search.placeholder": "Type in to search",
     "menus": {
-      "leftnav.item": "en-in_Search"
+      "leftnav.item": "Search"
     },
     "comp":{
       "grid": {
         "columns": {
-          "id": "en-in_ID",
-          "name": "en-in_Name",
-          "type": "en-in_Type",
-          "title": "en-in_Title",
-          "parent": "en-in_Parent",
-          "assignee": "en-in_Assignee",
-          "modified": "en-in_Modified"
+          "id": "ID",
+          "name": "Name",
+          "type": "Type",
+          "title": "Title",
+          "parent": "Parent",
+          "assignee": "Assignee",
+          "modified": "Modified"
         }
       }
     }

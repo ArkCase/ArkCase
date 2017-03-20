@@ -1,13 +1,13 @@
 {
   "tasks": {
-    "title": "zh-tw_Tasks",
+    "title": "任務",
     "progressNoTask": "zh-tw_[ No task data ]",
     "progressLoading": "zh-tw_Loading task ",
     "progressError": "zh-tw_Failed to load task"
   },
   "tasks.menus": {
-    "leftnav.item": "zh-tw_Tasks",
-    "topbar.item": "zh-tw_Task"
+    "leftnav.item": "任務",
+    "topbar.item": "任務"
   },
   "tasks.comp.info": {
     "taskId": "zh-tw_Task id:",

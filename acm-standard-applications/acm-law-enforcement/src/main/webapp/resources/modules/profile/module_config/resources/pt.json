@@ -1,10 +1,10 @@
 {
   "profile": {
-    "title": "pt_User Profile",
+    "title": "Perfil do Usuário",
     "unknown":"Unknown"
   },
   "profile.menus": {
-    "usermenu.item": "pt_Profile"
+    "usermenu.item": "Perfil"
   },
    "profile.subscriptions" : {
     "title":"Subscriptions",

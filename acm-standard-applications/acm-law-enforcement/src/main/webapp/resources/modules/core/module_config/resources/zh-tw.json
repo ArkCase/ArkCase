@@ -2,22 +2,23 @@
   "core": {
     "userInfo": {
       "addedMenu": {
-        "help": "zh-tw_Help",
-        "logout": "zh-tw_Logout"
+        "help": "幫助",
+        "logout": "退出"
       }
     },
     "leftNav": {
-      "title": "zh-tw_Navigation"
+      "title": "導航"
     },
     "topBar": {
-      "new": "zh-tw_New",
-      "toggle.btn": "zh-tw_Toggle navigation",
-      "search.placeholder": "zh-tw_Search ArkCase"
+      "new": "創建",
+      "toggle.btn": "切換導航",
+      "search.placeholder": "搜索ArkCase",
+      "locale.updateList": "更新"
     },
     "loginWarning": {
-      "btnOK.text": "zh-tw_OK",
-      "btnCancel.text": "zh-tw_Cancel",
-      "checkbox_warning.label": "zh-tw_I acknowledge this warning."
+      "btnOK.text": "確認",
+      "btnCancel.text": "取消",
+      "checkbox_warning.label": "我承認此警告。"
     }
   }
 }

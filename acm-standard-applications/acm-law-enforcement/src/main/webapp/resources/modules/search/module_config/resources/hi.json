@@ -1,11 +1,11 @@
 {
   "search": {
-    "title": "hi_Search",
-    "search.btn": "hi_Search",
+    "title": "खोज",
+    "search.btn": "खोज",
     "export.btn": "hi_Export",
     "search.placeholder": "hi_Type in to search",
     "menus": {
-      "leftnav.item": "hi_Search"
+      "leftnav.item": "खोज"
     },
     "comp":{
       "grid": {

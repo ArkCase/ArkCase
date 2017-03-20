@@ -1,395 +1,395 @@
 {
   "admin": {
-    "title": "en-in_Admin",
-    "security.title": "en-in_Security",
-    "security.functionalAccessControl": "en-in_Functional Access Control",
-    "security.functionalAccessControl.applicationRole": "en-in_Application Role",
-    "security.ldapConfig": "en-in_LDAP Configuration",
-    "security.ldapConfig.addNewDirectory": "en-in_Add New Directory",
-    "security.ldapConfig.table.ldapUrl": "en-in_LDAP Url",
-    "security.ldapConfig.table.directoryName": "en-in_Directory Name",
+    "title": "Admin",
+    "security.title": "Security",
+    "security.functionalAccessControl": "Functional Access Control",
+    "security.functionalAccessControl.applicationRole": "Application Role",
+    "security.ldapConfig": "LDAP Configuration",
+    "security.ldapConfig.addNewDirectory": "Add New Directory",
+    "security.ldapConfig.table.ldapUrl": "LDAP Url",
+    "security.ldapConfig.table.directoryName": "Directory Name",
     "security.ldapConfig.data": {
-      "addNewDirectory": "en-in_Add New Directory",
-      "editRecord": "en-in_Edit Record",
-      "id": "en-in_ID",
-      "ldapUrl": "en-in_LDAP Url",
-      "base": "en-in_Base",
-      "directoryName": "en-in_Directory Name",
-      "authUserDn": "en-in_Auth User Dn",
-      "authUserPassword": "en-in_Auth User Password",
-      "userSearchBase": "en-in_Users Search Base",
-      "userSearchFilter": "en-in_User Search Filter",
-      "allUsersFilter": "en-in_All Users Filter",
-      "allUsersPageFilter": "en-in_All Users Page Filter",
-      "allUsersSortingAttribute": "en-in_Sorting attribute for users",
-      "groupSearchBase": "en-in_Group Search Base",
-      "groupSearchFilterForUser": "en-in_Group Search Filter For User",
-      "userIdAttributeName": "en-in_User Id Attribute Name",
-      "userDomain": "en-in_User domain",
-      "userDomainNote": "en-in_(Note: Fill in the user domain for SSO scenario. For LDAP authentication leave it blank)",
-      "syncPageSize": "en-in_Sync Page Size",
-      "groupSearchFilter": "en-in_Group Search Filter",
-      "groupsSortingAttribute": "en-in_Sorting attribute for groups",
-      "groupSearchPageFilter": "en-in_Group Search Page Filter",
-      "enableEditingLdapUsers": "en-in_Enable managing users and groups",
-      "cancel": "en-in_Cancel",
-      "ok": "en-in_OK"
+      "addNewDirectory": "Add New Directory",
+      "editRecord": "Edit Record",
+      "id": "ID",
+      "ldapUrl": "LDAP Url",
+      "base": "Base",
+      "directoryName": "Directory Name",
+      "authUserDn": "Auth User Dn",
+      "authUserPassword": "Auth User Password",
+      "userSearchBase": "Users Search Base",
+      "userSearchFilter": "User Search Filter",
+      "allUsersFilter": "All Users Filter",
+      "allUsersPageFilter": "All Users Page Filter",
+      "allUsersSortingAttribute": "Sorting attribute for users",
+      "groupSearchBase": "Group Search Base",
+      "groupSearchFilterForUser": "Group Search Filter For User",
+      "userIdAttributeName": "User Id Attribute Name",
+      "userDomain": "User domain",
+      "userDomainNote": "(Note: Fill in the user domain for SSO scenario. For LDAP authentication leave it blank)",
+      "syncPageSize": "Sync Page Size",
+      "groupSearchFilter": "Group Search Filter",
+      "groupsSortingAttribute": "Sorting attribute for groups",
+      "groupSearchPageFilter": "Group Search Page Filter",
+      "enableEditingLdapUsers": "Enable managing users and groups",
+      "cancel": "Cancel",
+      "ok": "OK"
     },
     "menus": {
-      "leftnav.item": "en-in_Admin"
+      "leftnav.item": "Admin"
     },
     "security.ldapConfig.data.placeholders": {
-      "id": "en-in_Enter directory name",
-      "ldapUrl": "en-in_Enter connection URL",
-      "base": "en-in_Enter base domain component (e.g. dc=example,dc=com)",
-      "authUserDn": "en-in_Enter user DN for authentication (e.g. cn=John Doe,ou=users,dc=example,dc=com)",
-      "authUserPassword": "en-in_Enter password for authentication user",
-      "userSearchBase": "en-in_Enter users search base (e.g. ou=users)",
-      "userSearchFilter": "en-in_Enter search filter for single user (e.g. (&(objectClass=person)(uid=%s))",
-      "allUsersFilter": "en-in_Enter search filter for all users (e.g. (objectClass=person))",
-      "allUsersPageFilter": "en-in_Enter filter including sort-attribute(e.g. (&(objectClass=person)(uidNumber>=%s)))",
-      "allUsersSortingAttribute": "en-in_Enter sorting attribute for users (e.g. 'uidNumber')",
-      "groupSearchBase": "en-in_Enter search base for groups (e.g. ou=groups)",
-      "groupSearchFilterForUser": "en-in_Enter search filter for user in group (e.g. (&(objectClass=group)(member=%s)))",
-      "userIdAttributeName": "en-in_Enter attribute used for user id (e.g. 'uid')",
-      "userDomain": "en-in_Enter user domain",
-      "syncPageSize": "en-in_Enter paging size",
-      "groupSearchFilter": "en-in_Enter search filter for groups (e.g. (objectClass=group))",
-      "groupsSortingAttribute": "en-in_Enter attribute for sorting groups (e.g. 'gidNumber')",
-      "groupSearchPageFilter": "en-in_Enter filter including sort-attribute (e.g. (&(objectClass=group)(gidNumber>=%s)))",
-      "enableEditingLdapUsers": "en-in_Check if managing users and groups to your DS is allowed"
+      "id": "Enter directory name",
+      "ldapUrl": "Enter connection URL",
+      "base": "Enter base domain component (e.g. dc=example,dc=com)",
+      "authUserDn": "Enter user DN for authentication (e.g. cn=John Doe,ou=users,dc=example,dc=com)",
+      "authUserPassword": "Enter password for authentication user",
+      "userSearchBase": "Enter users search base (e.g. ou=users)",
+      "userSearchFilter": "Enter search filter for single user (e.g. (&(objectClass=person)(uid=%s))",
+      "allUsersFilter": "Enter search filter for all users (e.g. (objectClass=person))",
+      "allUsersPageFilter": "Enter filter including sort-attribute(e.g. (&(objectClass=person)(uidNumber>=%s)))",
+      "allUsersSortingAttribute": "Enter sorting attribute for users (e.g. 'uidNumber')",
+      "groupSearchBase": "Enter search base for groups (e.g. ou=groups)",
+      "groupSearchFilterForUser": "Enter search filter for user in group (e.g. (&(objectClass=group)(member=%s)))",
+      "userIdAttributeName": "Enter attribute used for user id (e.g. 'uid')",
+      "userDomain": "Enter user domain",
+      "syncPageSize": "Enter paging size",
+      "groupSearchFilter": "Enter search filter for groups (e.g. (objectClass=group))",
+      "groupsSortingAttribute": "Enter attribute for sorting groups (e.g. 'gidNumber')",
+      "groupSearchPageFilter": "Enter filter including sort-attribute (e.g. (&(objectClass=group)(gidNumber>=%s)))",
+      "enableEditingLdapUsers": "Check if managing users and groups to your DS is allowed"
     },
     "security.ldapConfig.messages": {
-      "delete.success": "en-in_Successfully deleted row.",
-      "delete.error": "en-in_Error deleting row.",
-      "insert.success": "en-in_Successfully inserted new row.",
-      "insert.error": "en-in_Error inserting new row.",
-      "update.success": "en-in_Successfully updated row.",
-      "update.error": "en-in_Error updating row."
+      "delete.success": "Successfully deleted row.",
+      "delete.error": "Error deleting row.",
+      "insert.success": "Successfully inserted new row.",
+      "insert.error": "Error inserting new row.",
+      "update.success": "Successfully updated row.",
+      "update.error": "Error updating row."
     },
     "security.ldapConfig.dialog": {
-      "cancel": "en-in_Cancel",
-      "ok": "en-in_OK",
+      "cancel": "Cancel",
+      "ok": "OK",
       "confirm.delete": {
-        "deleteBtn": "en-in_Delete",
-        "cancelBtn": "en-in_Cancel",
-        "headerText": "en-in_Are you sure?",
-        "bodyText": "en-in_This record will be deleted. Are you sure?"
+        "deleteBtn": "Delete",
+        "cancelBtn": "Cancel",
+        "headerText": "Are you sure?",
+        "bodyText": "This record will be deleted. Are you sure?"
       }
     },
-    "admin.security.addNew": "en-in_Add New Directory",
+    "admin.security.addNew": "Add New Directory",
     "security.organizationalHierarchy": {
-      "title": "en-in_Organizational Hierarchy",
+      "title": "Organizational Hierarchy",
       "btn": {
-        "createAdHocGroup": "en-in_createAdHocGroup"
+        "createAdHocGroup": "createAdHocGroup"
       },
       "createGroupDialog": {
         "ldapGroup": {
-          "title": "en-in_Add LDAP Group"
+          "title": "Add LDAP Group"
         },
         "adHocGroup": {
-          "title": "en-in_Add Ad-Hoc Group"
+          "title": "Add Ad-Hoc Group"
         },
-        "selectDirectory": "en-in_--Choose Directory Config--",
-        "disabledGroupWarning": "en-in_Adding new LDAP groups is not allowed for this directory!",
-        "name": "en-in_Name",
-        "namePlaceholder": "en-in_Enter group name",
-        "description": "en-in_Description",
-        "descriptionPlaceholder": "en-in_Enter Description",
+        "selectDirectory": "--Choose Directory Config--",
+        "disabledGroupWarning": "Adding new LDAP groups is not allowed for this directory!",
+        "name": "Name",
+        "namePlaceholder": "Enter group name",
+        "description": "Description",
+        "descriptionPlaceholder": "Enter Description",
         "btn": {
-          "ok": "en-in_Add Ad-Hoc Group",
-          "cancel": "en-in_Cancel"
+          "ok": "Add Ad-Hoc Group",
+          "cancel": "Cancel"
         }
       },
       "addSubGroupDialog": {
-        "title": "en-in_Add Subgroup to",
-        "name": "en-in_Name",
-        "namePlaceholder": "en-in_Enter group name",
-        "description": "en-in_Description",
-        "descriptionPlaceholder": "en-in_Enter Description",
+        "title": "Add Subgroup to",
+        "name": "Name",
+        "namePlaceholder": "Enter group name",
+        "description": "Description",
+        "descriptionPlaceholder": "Enter Description",
         "btn": {
-          "ok": "en-in_Add Ad-Hoc Group",
-          "cancel": "en-in_Cancel"
+          "ok": "Add Ad-Hoc Group",
+          "cancel": "Cancel"
         }
       },
       "addMembers": {
-        "title": "en-in_Add Members",
+        "title": "Add Members",
         "btn": {
-          "search": "en-in_Go!",
-          "cancel": "en-in_Cancel",
-          "ok": "en-in_Add",
-          "searchPlaceholder": "en-in_Enter to search for members."
+          "search": "Go!",
+          "cancel": "Cancel",
+          "ok": "Add",
+          "searchPlaceholder": "Enter to search for members."
         }
       },
       "createUserDialog": {
         "addLdapMember": {
-          "title": "en-in_Add Ldap Member",
+          "title": "Add Ldap Member",
           "btn": {
-            "cancel": "en-in_Cancel",
-            "ok": "en-in_Add Ldap User"
+            "cancel": "Cancel",
+            "ok": "Add Ldap User"
           }
         },
         "editLdapMember": {
-          "title": "en-in_Edit Ldap Member",
+          "title": "Edit Ldap Member",
           "btn": {
-            "cancel": "en-in_Cancel",
-            "ok": "en-in_Edit Ldap User"
+            "cancel": "Cancel",
+            "ok": "Edit Ldap User"
           }
         },
-        "username": "en-in_Username",
-        "firstName": "en-in_FirstName",
-        "lastName": "en-in_LastName",
-        "email": "en-in_Email",
-        "password": "en-in_Password"
+        "username": "Username",
+        "firstName": "FirstName",
+        "lastName": "LastName",
+        "email": "Email",
+        "password": "Password"
       },
       "addMembersGridColumns": {
-        "name": "en-in_Name",
-        "type": "en-in_Type",
-        "title": "en-in_Title",
-        "parent": "en-in_Parent",
-        "assignee": "en-in_Assignee",
-        "modified": "en-in_Modified"
+        "name": "Name",
+        "type": "Type",
+        "title": "Title",
+        "parent": "Parent",
+        "assignee": "Assignee",
+        "modified": "Modified"
       },
       "addSupervisor": {
-        "title": "en-in_Add Supervisor",
+        "title": "Add Supervisor",
         "btn": {
-          "search": "en-in_Go!",
-          "cancel": "en-in_Cancel",
-          "ok": "en-in_Add",
-          "searchPlaceholder": "en-in_Enter to search for supervisor."
+          "search": "Go!",
+          "cancel": "Cancel",
+          "ok": "Add",
+          "searchPlaceholder": "Enter to search for supervisor."
         }
       },
       "addSupervisorGridColumns": {
-        "name": "en-in_Name",
-        "type": "en-in_Type",
-        "title": "en-in_Title",
-        "parent": "en-in_Parent",
-        "assignee": "en-in_Assignee",
-        "modified": "en-in_Modified"
+        "name": "Name",
+        "type": "Type",
+        "title": "Title",
+        "parent": "Parent",
+        "assignee": "Assignee",
+        "modified": "Modified"
       },
       "dialog.group": {
         "confirm.delete": {
-          "cancelBtn": "en-in_Cancel",
-          "deleteBtn": "en-in_Delete",
-          "headerText": "en-in_You are about to delete group: ",
-          "bodyText": "en-in_Are you sure?"
+          "cancelBtn": "Cancel",
+          "deleteBtn": "Delete",
+          "headerText": "You are about to delete group: ",
+          "bodyText": "Are you sure?"
         }
       },
       "dialog.member": {
         "confirm.delete": {
-          "cancelBtn": "en-in_Cancel",
-          "deleteBtn": "en-in_Delete",
-          "headerText": "en-in_You are about to delete member: ",
-          "bodyText": "en-in_Are you sure?"
+          "cancelBtn": "Cancel",
+          "deleteBtn": "Delete",
+          "headerText": "You are about to delete member: ",
+          "bodyText": "Are you sure?"
         }
       },
       "messages": {
         "delete": {
           "group": {
-            "success": "en-in_success",
-            "error": "en-in_error"
+            "success": "success",
+            "error": "error"
           },
           "member": {
-            "success": "en-in_success",
-            "error": "en-in_error"
+            "success": "success",
+            "error": "error"
           }
         }
       }
     },
-    "security.selectPrivileges": "en-in_Create Role/Select Privileges",
-    "security.selectPrivileges.applicationRole": "en-in_Application Role",
-    "security.selectPrivileges.createRole": "en-in_Create Role",
-    "security.selectPrivileges.editRole": "en-in_Edit Role",
-    "security.selectPrivileges.applyChanges": "en-in_Apply Changes",
-    "security.selectPrivileges.enterRoleName": "en-in_Enter the role name in the box below.",
-    "security.selectPrivileges.cancel": "en-in_Cancel",
-    "security.selectPrivileges.name": "en-in_Name",
-    "security.modules": "en-in_Modules",
-    "security.modules.module": "en-in_Module",
-    "dashboard.title": "en-in_Dashboard",
-    "dashboard.config": "en-in_Dashboard Configuration",
-    "dashboard.widgets": "en-in_Widgets",
-    "reports.title": "en-in_Reports",
-    "reports.config": "en-in_Reports Configuration",
-    "forms.title": "en-in_Forms",
-    "forms.config": "en-in_Form Configuration",
-    "workflows.title": "en-in_Workflows",
-    "workflows.config": "en-in_Workflow Configuration",
+    "security.selectPrivileges": "Create Role/Select Privileges",
+    "security.selectPrivileges.applicationRole": "Application Role",
+    "security.selectPrivileges.createRole": "Create Role",
+    "security.selectPrivileges.editRole": "Edit Role",
+    "security.selectPrivileges.applyChanges": "Apply Changes",
+    "security.selectPrivileges.enterRoleName": "Enter the role name in the box below.",
+    "security.selectPrivileges.cancel": "Cancel",
+    "security.selectPrivileges.name": "Name",
+    "security.modules": "Modules",
+    "security.modules.module": "Module",
+    "dashboard.title": "Dashboard",
+    "dashboard.config": "Dashboard Configuration",
+    "dashboard.widgets": "Widgets",
+    "reports.title": "Reports",
+    "reports.config": "Reports Configuration",
+    "forms.title": "Forms",
+    "forms.config": "Form Configuration",
+    "workflows.title": "Workflows",
+    "workflows.config": "Workflow Configuration",
     "workflows.config.activate": {
-      "error": "en-in_Cant make this process active!",
-      "success": "en-in_Process succesfully activated."
+      "error": "Cant make this process active!",
+      "success": "Process succesfully activated."
     },
     "workflows.config.showHistory.dialog": {
-      "title": "en-in_History",
-      "body": "en-in_Below is a history of previous BPMN files. To reinstate a previous workflow, select the workflow and click Make Active",
-      "cancel": "en-in_Cancel",
-      "activate": "en-in_Make Active"
+      "title": "History",
+      "body": "Below is a history of previous BPMN files. To reinstate a previous workflow, select the workflow and click Make Active",
+      "cancel": "Cancel",
+      "activate": "Make Active"
     },
     "workflows.config.grid": {
-      "businessProcess": "en-in_Business Process",
-      "description": "en-in_Description",
-      "active": "en-in_Active",
-      "modified": "en-in_Modified",
-      "creator": "en-in_Author"
+      "businessProcess": "Business Process",
+      "description": "Description",
+      "active": "Active",
+      "modified": "Modified",
+      "creator": "Author"
     },
     "workflows.config.btn": {
-      "createNew": "en-in_Create New Model",
-      "uploadNew": "en-in_Upload New BPMN"
+      "createNew": "Create New Model",
+      "uploadNew": "Upload New BPMN"
     },
     "workflows.config.links": {
-      "download": "en-in_Download",
-      "replaceFile": "en-in_Replace File",
-      "versionHistory": "en-in_Version History"
+      "download": "Download",
+      "replaceFile": "Replace File",
+      "versionHistory": "Version History"
     },
     "workflows.config.upload": {
-      "success": "en-in_Successfully uploaded new process definition",
-      "error": "en-in_Error uploading new process definition"
+      "success": "Successfully uploaded new process definition",
+      "error": "Error uploading new process definition"
     },
-    "formWorkflows.title": "en-in_Form/Workflow Link",
-    "formWorkflows.link": "en-in_Link Forms/Workflows",
-    "formWorkflows.link.undo": "en-in_Undo",
-    "formWorkflows.link.saveChanges": "en-in_Save Changes",
-    "formWorkflows.link.editRole.save.success": "en-in_Link Forms/Workflows configuration saved successfully",
-    "formWorkflows.link.editRole.save.error": "en-in_Can't save Link Forms/Workflows configuration",
+    "formWorkflows.title": "Form/Workflow Link",
+    "formWorkflows.link": "Link Forms/Workflows",
+    "formWorkflows.link.undo": "Undo",
+    "formWorkflows.link.saveChanges": "Save Changes",
+    "formWorkflows.link.editRole.save.success": "Link Forms/Workflows configuration saved successfully",
+    "formWorkflows.link.editRole.save.error": "Can't save Link Forms/Workflows configuration",
     "application": {
-      "title": "en-in_Application",
+      "title": "Application",
       "labels.config": {
-        "defaultLabel": "en-in_Default",
-        "applyBtn": "en-in_Apply",
-        "resetModule": "en-in_Reset Module",
-        "resetModule.confirm": "en-in_Are you sure you want reset custom resources for current module?",
-        "resetModule.title": "en-in_Reset current module (delete custom resources)",
-        "resetAll": "en-in_Reset All",
-        "resetAll.confirm": "en-in_Are you sure you want reset all custom resources for all modules?",
-        "resetAll.title": "en-in_Reset all resources (delete all custom resources)",
-        "refreshAll": "en-in_Refresh All",
-        "refreshAll.title": "en-in_Refresh all resources (keep custom resources)",
-        "title": "en-in_Label Configuration",
-        "filterBy": "en-in_Filter By Id",
-        "filterByValue": "en-in_Filter By Value",
+        "defaultLabel": "Default",
+        "applyBtn": "Apply",
+        "resetModule": "Reset Module",
+        "resetModule.confirm": "Are you sure you want reset custom resources for current module?",
+        "resetModule.title": "Reset current module (delete custom resources)",
+        "resetAll": "Reset All",
+        "resetAll.confirm": "Are you sure you want reset all custom resources for all modules?",
+        "resetAll.title": "Reset all resources (delete all custom resources)",
+        "refreshAll": "Refresh All",
+        "refreshAll.title": "Refresh all resources (keep custom resources)",
+        "title": "Label Configuration",
+        "filterBy": "Filter By Id",
+        "filterByValue": "Filter By Value",
         "data": {
-          "description": "en-in_Description",
-          "defaultValue": "en-in_Default Value",
-          "id": "en-in_ID",
-          "value": "en-in_Value"
+          "description": "Description",
+          "defaultValue": "Default Value",
+          "id": "ID",
+          "value": "Value"
         }
       },
       "module.config": {
-        "title": "en-in_Module Configuration"
+        "title": "Module Configuration"
       },
       "userName.config": {
-        "title": "en-in_Username Display Configuration",
-        "userId.label": "en-in_Use User Identifier",
-        "userName.label": "en-in_Use Full Username",
-        "apply": "en-in_Apply",
-        "modal.title": "en-in_Information",
-        "modal.info": "en-in_Settings will take effect after refresh",
-        "modal.ok": "en-in_OK"
+        "title": "Username Display Configuration",
+        "userId.label": "Use User Identifier",
+        "userName.label": "Use Full Username",
+        "apply": "Apply",
+        "modal.title": "Information",
+        "modal.info": "Settings will take effect after refresh",
+        "modal.ok": "OK"
       },
       "login.config": {
-        "title": "en-in_Login Configuration",
-        "idleLimit.label": "en-in_Login idle limit (in milliseconds)",
-        "inform": "en-in_Settings will take effect for all new user sessions",
-        "apply.label": "en-in_Apply"
+        "title": "Login Configuration",
+        "idleLimit.label": "Login idle limit (in milliseconds)",
+        "inform": "Settings will take effect for all new user sessions",
+        "apply.label": "Apply"
       },
       "auditHistory.config": {
-        "title": "en-in_Audit History",
-        "historyDays.label": "en-in_Keep Audit and Notification events (in days)",
-        "inform": "en-in_Setting successfully saved",
-        "apply.label": "en-in_Apply"
+        "title": "Audit History",
+        "historyDays.label": "Keep Audit and Notification events (in days)",
+        "inform": "Setting successfully saved",
+        "apply.label": "Apply"
       }
     },
-    "branding.title": "en-in_Branding",
-    "branding.logo": "en-in_Logo",
+    "branding.title": "Branding",
+    "branding.logo": "Logo",
     "branding.logo.messages": {
-      "upload.success": "en-in_Custom logo files updated. Refresh browser page to see result.",
-      "upload.error": "en-in_Error uploading custom logo files."
+      "upload.success": "Custom logo files updated. Refresh browser page to see result.",
+      "upload.error": "Error uploading custom logo files."
     },
-    "branding.logo.header.title": "en-in_Header",
-    "branding.logo.login.title": "en-in_Login Page",
-    "branding.logo.warningMessage": "en-in_Only PNG format is allowed. Recommended ratio is 1 to 4. Minimum height is 50px.",
+    "branding.logo.header.title": "Header",
+    "branding.logo.login.title": "Login Page",
+    "branding.logo.warningMessage": "Only PNG format is allowed. Recommended ratio is 1 to 4. Minimum height is 50px.",
     "branding.logo.btn": {
-      "chooseHeader": "en-in_Choose Header logo",
-      "chooseLogin": "en-in_Choose Login logo",
-      "saveFiles": "en-in_Save"
+      "chooseHeader": "Choose Header logo",
+      "chooseLogin": "Choose Login logo",
+      "saveFiles": "Save"
     },
     "branding": {
-      "customCss": "en-in_Custom CSS",
-      "customCss.save.success": "en-in_Custom CSS updated. Refresh browser page to see result.",
-      "customCss.save.error": "en-in_Error saving Custom CSS.",
-      "customCss.save": "en-in_Save"
+      "customCss": "Custom CSS",
+      "customCss.save.success": "Custom CSS updated. Refresh browser page to see result.",
+      "customCss.save.error": "Error saving Custom CSS.",
+      "customCss.save": "Save"
     },
     "correspondenceManagement": {
-      "title": "en-in_Correspondence Management",
-      "templates": "en-in_Correspondence Templates",
-      "templates.addNewTemplate": "en-in_Upload Template",
-      "templates.addTemplate": "en-in_Upload",
-      "templates.versionTemplate": "en-in_Versions",
-      "templates.deleteTemplate": "en-in_Delete",
-      "templates.editTemplate": "en-in_Edit Template",
+      "title": "Correspondence Management",
+      "templates": "Correspondence Templates",
+      "templates.addNewTemplate": "Upload Template",
+      "templates.addTemplate": "Upload",
+      "templates.versionTemplate": "Versions",
+      "templates.deleteTemplate": "Delete",
+      "templates.editTemplate": "Edit Template",
       "templates.grid": {
-        "id": "en-in_ID",
-        "title": "en-in_Title",
-        "label": "en-in_Display Name",
-        "path": "en-in_Path",
-        "created": "en-in_Created",
-        "modified": "en-in_Modified",
-        "creator": "en-in_Creator",
-        "modifier": "en-in_Modifier",
-        "activated": "en-in_Status",
-        "objectType": "en-in_Object Type",
-        "version": "en-in_Version",
-        "templateVersionActive" : "en-in_Active"
+        "id": "ID",
+        "title": "Title",
+        "label": "Display Name",
+        "path": "Path",
+        "created": "Created",
+        "modified": "Modified",
+        "creator": "Creator",
+        "modifier": "Modifier",
+        "activated": "Status",
+        "objectType": "Object Type",
+        "version": "Version",
+        "templateVersionActive" : "Active"
       },
-      "templates.fieldNames.label": "en-in_Map fields to values from the template",
+      "templates.fieldNames.label": "Map fields to values from the template",
       "templates.querySelect": {
-        "header.text": "en-in_Select Query",
-        "btnCancel.text": "en-in_Cancel",
-        "btnOk.text": "en-in_Select Query",
+        "header.text": "Select Query",
+        "btnCancel.text": "Cancel",
+        "btnOk.text": "Select Query",
         "table.columns": {
-          "beanId": "en-in_Bean ID",
-          "jpaQuery": "en-in_JPA Query",
-          "queryType": "en-in_Query Type"
+          "beanId": "Bean ID",
+          "jpaQuery": "JPA Query",
+          "queryType": "Query Type"
         }
       },
       "templates.modal": {
-        "objectTypes.label": "en-in_Object Types",
-        "querySelect.label": "en-in_Query Select",
-        "label.label": "en-in_Display Name",
-        "btnCancel.text": "en-in_Cancel",
-        "btnOk.text": "en-in_Upload Template"
+        "objectTypes.label": "Object Types",
+        "querySelect.label": "Query Select",
+        "label.label": "Display Name",
+        "btnCancel.text": "Cancel",
+        "btnOk.text": "Upload Template"
       },
       "templates.version.modal": {
-        "btnOk.text": "en-in_OK"
+        "btnOk.text": "OK"
       },
-      "mergefields": "en-in_Merge Fields Configuration",
-      "mergefields.saveMergeFields": "en-in_Save",
-      "mergefields.versionMergeFields": "en-in_Versions",
+      "mergefields": "Merge Fields Configuration",
+      "mergefields.saveMergeFields": "Save",
+      "mergefields.versionMergeFields": "Versions",
       "mergefields.grid": {
-      "fieldId": "en-in_ID",
-      "fieldValue": "en-in_Value",
-      "fieldDescription": "en-in_Description"
+        "fieldId": "ID",
+        "fieldValue": "Value",
+        "fieldDescription": "Description"
       },
       "mergefields.version.grid": {
-        "mergingVersion": "en-in_Version",
-        "modified": "en-in_Modified",
-        "modifier": "en-in_Modifier",
-        "mergingActiveVersion": "en-in_Active"
+        "mergingVersion": "Version",
+        "modified": "Modified",
+        "modifier": "Modifier",
+        "mergingActiveVersion": "Active"
       },
       "mergefields.version.modal": {
-        "btnLoadVersion.text": "en-in_Load Version",
-        "btnCancel.text": "en-in_Cancel"
+        "btnLoadVersion.text": "Load Version",
+        "btnCancel.text": "Cancel"
       }
     },
-    "forms.defaultValue": "en-in_Select Target",
-    "forms.addForm": "en-in_Add Plain Form",
+    "forms.defaultValue": "Select Target",
+    "forms.addForm": "Add Plain Form",
     "forms.data": {
-      "name": "en-in_Form Name",
-      "applicationName": "en-in_Application name",
-      "description": "en-in_Description",
-      "target": "en-in_Target"
+      "name": "Form Name",
+      "applicationName": "Application name",
+      "description": "Description",
+      "target": "Target"
     },
-    "forms.message.delete.success": "en-in_Successfully deleted row.",
-    "forms.message.delete.error": "en-in_Error deleting row."
+    "forms.message.delete.success": "Successfully deleted row.",
+    "forms.message.delete.error": "Error deleting row."
   }
 }

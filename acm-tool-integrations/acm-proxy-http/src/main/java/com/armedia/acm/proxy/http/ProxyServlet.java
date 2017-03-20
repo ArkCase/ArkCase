@@ -67,8 +67,11 @@ import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Enumeration;
 import java.util.Formatter;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -135,6 +138,11 @@ public class ProxyServlet extends HttpServlet
      */
     public static final String P_SKIP_RESPONSE_URL_MATCHERS = "skipResponseUrlMatchers";
 
+    /**
+     * A String parameter name to append params for given url matcher
+     */
+    public static final String P_APPEND_URL_PARAMS = "appendUrlParams";
+
 
     /**
      * List containing urls which need to be matched for rewriting strings in the content.
@@ -156,6 +164,11 @@ public class ProxyServlet extends HttpServlet
      * List containing patterns for urls which need to be skipped
      */
     protected List<String> skipResponseUrlMatchers;
+
+    /**
+     * List containing patterns and parameters for urls which need to be added
+     */
+    protected List<String> appendUrlParams;
 
     /**
      * The parameter name for the target (destination) URI to proxy to.
@@ -184,6 +197,11 @@ public class ProxyServlet extends HttpServlet
     protected String targetUri;
     protected URI targetUriObj;//new URI(targetUri)
     protected HttpHost targetHost;//URIUtils.extractHost(targetUriObj);
+
+    /**
+     * container for compiled pattern for further reuse
+     */
+    private Map<String, Pattern> compiledPatterns = new HashMap<>();
 
     private HttpClient proxyClient;
 
@@ -244,6 +262,7 @@ public class ProxyServlet extends HttpServlet
         responseContentRewritePairs = parseCsvAsList(getConfigParam(P_RESPONSE_CONTENT_REWRITE_PAIRS));
         responseUrlMatchers = parseCsvAsList(getConfigParam(P_RESPONSE_URL_MATCHERS));
         skipResponseUrlMatchers = parseCsvAsList(getConfigParam(P_SKIP_RESPONSE_URL_MATCHERS));
+        appendUrlParams = parseCsvAsList(getConfigParam(P_APPEND_URL_PARAMS));
 
         initTarget();//sets target*
 
@@ -454,7 +473,7 @@ public class ProxyServlet extends HttpServlet
     protected HttpResponse doExecute(HttpServletRequest servletRequest, HttpServletResponse servletResponse,
                                      HttpRequest proxyRequest) throws IOException
     {
-        logger.warn("proxy [{} {}] -- [{}]", servletRequest.getMethod(), servletRequest.getRequestURI(), proxyRequest.getRequestLine().getUri());
+        logger.debug("proxy [{} {}] -- [{}]", servletRequest.getMethod(), servletRequest.getRequestURI(), proxyRequest.getRequestLine().getUri());
         return proxyClient.execute(getTargetHost(servletRequest), proxyRequest);
     }
 
@@ -599,7 +618,7 @@ public class ProxyServlet extends HttpServlet
             {
                 headerValue = getRealCookie(headerValue);
             }
-            logger.warn("Copying response header [{}: {}]", headerName, headerValue);
+            logger.debug("Copying response header [{}: {}]", headerName, headerValue);
             //don't add header if value is empty
             if (!StringUtils.isEmpty(headerValue))
             {
@@ -661,7 +680,7 @@ public class ProxyServlet extends HttpServlet
             servletResponse.addHeader(headerName, rewriteUrlFromResponse(servletRequest, headerValue));
         } else
         {
-            logger.warn("Copying response header [{}: {}]", headerName, headerValue);
+            logger.debug("Copying response header [{}: {}]", headerName, headerValue);
             servletResponse.addHeader(headerName, headerValue);
         }
     }
@@ -746,7 +765,7 @@ public class ProxyServlet extends HttpServlet
         //check if request url needs to be skipped
         for (String pattern : skipResponseUrlMatchers)
         {
-            if (servletRequest.getRequestURI().matches(pattern))
+            if (matches(pattern, servletRequest.getRequestURI()))
             {
                 shouldBeSkipped = true;
                 break;
@@ -756,7 +775,7 @@ public class ProxyServlet extends HttpServlet
         //check if url is eligible for content processing
         for (String pattern : responseUrlMatchers)
         {
-            if (servletRequest.getRequestURI().matches(pattern))
+            if (matches(pattern, servletRequest.getRequestURI()))
             {
                 shouldBeProcessed = true;
                 break;
@@ -771,7 +790,7 @@ public class ProxyServlet extends HttpServlet
             //check if content needs to be skipped depending on content type
             for (String pattern : skipResponseContentTypes)
             {
-                if (entity.getContentType().toString().contains(pattern))
+                if (entity.getContentType() != null && matches(pattern, entity.getContentType().getValue()))
                 {
                     shouldBeSkipped = true;
                     break;
@@ -878,6 +897,22 @@ public class ProxyServlet extends HttpServlet
 
     protected String rewriteQueryStringFromRequest(HttpServletRequest servletRequest, String queryString)
     {
+        for (String pair : appendUrlParams)
+        {
+            String[] splitPair = pair.split(":");
+            if (splitPair.length != 2)
+            {
+                logger.warn("Invalid pair [{}] for appending parameters.", pair);
+                continue;
+            }
+            String pattern = splitPair[0];
+            String params = splitPair[1];
+
+            if (matches(pattern, servletRequest.getRequestURI()))
+            {
+                queryString += (queryString.length() > 0 ? "&" : "") + params;
+            }
+        }
         return queryString;
     }
 
@@ -1012,5 +1047,27 @@ public class ProxyServlet extends HttpServlet
             return new ArrayList<>();
         }
         return Arrays.asList(csv.split(",[ ]*"));
+    }
+
+    /**
+     * checks if value matches given pattern.
+     * it compiles pattern and keep in memory for further use
+     *
+     * @param patternStr String regex pattern
+     * @param value      String value that should be tested if matches against pattern
+     * @return boolean
+     */
+    private boolean matches(String patternStr, String value)
+    {
+        Pattern pattern;
+        if (compiledPatterns.containsKey(patternStr))
+        {
+            pattern = compiledPatterns.get(patternStr);
+        } else
+        {
+            pattern = Pattern.compile(patternStr);
+            compiledPatterns.put(patternStr, pattern);
+        }
+        return pattern.matcher(value).matches();
     }
 }
