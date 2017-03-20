@@ -4,6 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
         <bean id="propertyFileCalendarAdminService" class="com.armedia.acm.calendar.config.service.PropertyFileCalendarAdminService">
+            <property name="configurableObjectTypes" value="file:${user.home}/.arkcase/acm/calendarConfiguredObjectTypes.properties"/>
             <property name="calendarPropertiesResource" value="file:${user.home}/.arkcase/acm/calendarService.properties"/>
             <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
         </bean>
