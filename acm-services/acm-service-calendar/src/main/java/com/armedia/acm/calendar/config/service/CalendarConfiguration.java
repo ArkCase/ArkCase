@@ -97,9 +97,4 @@ public class CalendarConfiguration
         this.purgeOptions = purgeOptions;
     }
 
-    public void setPurgeOptions(String purgeOptions)
-    {
-        this.purgeOptions = PurgeOptions.valueOf(purgeOptions != null ? purgeOptions : PurgeOptions.NONE.name());
-    }
-
 }

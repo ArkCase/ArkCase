@@ -1,6 +1,7 @@
 package com.armedia.acm.calendar.config.service;
 
 import com.armedia.acm.calendar.config.service.CalendarConfiguration.CalendarPropertyKeys;
+import com.armedia.acm.calendar.config.service.CalendarConfiguration.PurgeOptions;
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtilsImpl;
 
@@ -61,7 +62,7 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
 
         for (String propertyName : propertyNames)
         {
-            String[] objectTypePropertyName = propertyName.split(":");
+            String[] objectTypePropertyName = propertyName.split("\\.");
 
             if (!objectTypes.contains(objectTypePropertyName[0].toUpperCase()))
             {
@@ -94,7 +95,7 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
                 }
                 break;
             case PURGE_OPTION:
-                configuration.setPurgeOptions(propertyValue);
+                configuration.setPurgeOptions(PurgeOptions.valueOf(propertyValue));
                 break;
             }
         }
@@ -136,16 +137,21 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
                 log.error("System email and password must be provided.");
                 throw new CalendarConfigurationException("System email and password must be provided.");
             }
-            calendarProperties.setProperty(CalendarPropertyKeys.SYSTEM_EMAIL.name(), configuration.getSystemEmail());
+            calendarProperties.setProperty(String.format("%s.%s", entry.getKey(), CalendarPropertyKeys.SYSTEM_EMAIL.name()),
+                    configuration.getSystemEmail());
             try
             {
-                calendarProperties.setProperty(CalendarPropertyKeys.PASSWORD.name(),
+                calendarProperties.setProperty(String.format("%s.%s", entry.getKey(), CalendarPropertyKeys.PASSWORD.name()),
                         encryptablePropertyUtils.encryptPropertyValue(configuration.getSystemEmail()));
             } catch (AcmEncryptionException e)
             {
                 log.error("Could not encrypt password for calendar configuration.");
                 throw new CalendarConfigurationException("Could not encrypt password for calendar configuration.", e);
             }
+            calendarProperties.setProperty(String.format("%s.%s", entry.getKey(), CalendarPropertyKeys.INTEGRATION_ENABLED.name()),
+                    Boolean.toString(configuration.isIntegrationEnabled()));
+            calendarProperties.setProperty(String.format("%s.%s", entry.getKey(), CalendarPropertyKeys.PURGE_OPTION),
+                    configuration.getPurgeOptions().name());
 
         }
 
@@ -241,10 +247,10 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
         String keys = objectTypeProperties.getProperty("configured_object_types").toUpperCase();
         if (keys != null)
         {
-            this.objectTypes = Arrays.asList(keys.split(",\\s*"));
+            objectTypes = Arrays.asList(keys.split(",\\s*"));
         } else
         {
-            this.objectTypes = new ArrayList<>();
+            objectTypes = new ArrayList<>();
         }
     }
 
