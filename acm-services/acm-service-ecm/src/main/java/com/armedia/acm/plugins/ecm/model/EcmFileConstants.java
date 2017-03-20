@@ -98,4 +98,5 @@ public interface EcmFileConstants
     // Multiple CMIS configurations constants
     String CONFIGURATION_REFERENCE = "configRef";
     String VERSIONING_STATE = "versioningState";
+    String DEFAULT_CMIS_REPOSITORY_ID = "alfresco";
 }

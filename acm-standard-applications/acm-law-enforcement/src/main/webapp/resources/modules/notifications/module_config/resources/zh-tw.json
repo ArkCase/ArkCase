@@ -1,11 +1,11 @@
 {
   "notifications": {
-    "title": "zh-tw_Notifications",
-    "search.btn": "zh-tw_Search",
+    "title": "通知",
+    "search.btn": "搜索",
     "export.btn": "zh-tw_Export",
     "search.placeholder": "zh-tw_Search for notifications",
     "menus": {
-      "leftnav.item": "zh-tw_Notifications"
+      "leftnav.item": "通知"
     },
     "comp":{
       "grid": {

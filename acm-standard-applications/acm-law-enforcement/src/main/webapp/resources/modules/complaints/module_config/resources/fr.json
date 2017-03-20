@@ -1,13 +1,13 @@
 {
   "complaints": {
-    "title": "fr_Complaints",
+    "title": "Plaintes",
     "progressNoComplaint": "fr_[ No complaint data ]",
     "progressLoading": "fr_Loading complaint ",
     "progressError": "fr_Failed to load complaint "
   },
   "complaints.menus": {
-    "leftnav.item": "fr_Complaints",
-    "topbar.item": "fr_Complaint"
+    "leftnav.item": "Plaintes",
+    "topbar.item": "Plainte"
   },
   "complaints.comp.info": {
     "complaintId": "fr_Complaint id:",

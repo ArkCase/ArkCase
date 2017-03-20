@@ -1,10 +1,10 @@
 {
   "tags": {
-    "title": "zh-tw_Tags",
-    "search.btn": "zh-tw_Search",
+    "title": "標籤",
+    "search.btn": "搜索",
     "search.placeholder": "zh-tw_Search for tags",
     "menus": {
-      "leftnav.item": "zh-tw_Tags"
+      "leftnav.item": "標籤"
     },
     "comp":{
       "grid": {
