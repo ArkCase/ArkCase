@@ -58,9 +58,9 @@ angular.module('services').factory('SnowboundService', ['UtilService',
                 var randomUrlArgToCauseIframeRefresh = (new Date()).getTime();
                 return viewerBaseUrl + "?documentId=" + Util.encryptString(
                         "ecmFileId=" + file.id + "&acm_ticket=" + acmTicket + "&userid=" + userId +
-                        "&refreshCacheTimestamp=" + randomUrlArgToCauseIframeRefresh + "&documentName=" + file.name +
-                        "&parentObjectId=" + file.containerId + "&parentObjectType=" + file.containerType +
-                        "&selectedIds=" + file.selectedIds, encryptionPassphrase);
+                        "&documentName=" + file.name + "&parentObjectId=" + file.containerId +
+                        "&parentObjectType=" + file.containerType + "&selectedIds=" + file.selectedIds,
+                        encryptionPassphrase) + "&refreshCacheTimestamp=" + randomUrlArgToCauseIframeRefresh;
             }
         }
     }
