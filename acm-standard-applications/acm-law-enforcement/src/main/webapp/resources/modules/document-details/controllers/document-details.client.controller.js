@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('document-details').controller('DocumentDetailsController', ['$scope', '$stateParams', '$sce', '$q'
-    , '$timeout', '$http', 'TicketService', 'ConfigService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService'
-    , function ($scope, $stateParams, $sce, $q, $timeout, $http
+    , '$timeout', 'TicketService', 'ConfigService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService'
+    , function ($scope, $stateParams, $sce, $q, $timeout
         , TicketService, ConfigService, LookupService, SnowboundService, Authentication, EcmService) {
 
         $scope.acmTicket = '';
