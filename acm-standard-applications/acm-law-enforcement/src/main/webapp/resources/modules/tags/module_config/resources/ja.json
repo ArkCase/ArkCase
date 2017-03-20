@@ -1,10 +1,10 @@
 {
   "tags": {
-    "title": "ja_Tags",
-    "search.btn": "ja_Search",
+    "title": "目印を付",
+    "search.btn": "検索",
     "search.placeholder": "ja_Search for tags",
     "menus": {
-      "leftnav.item": "ja_Tags"
+      "leftnav.item": "目印を付"
     },
     "comp":{
       "grid": {

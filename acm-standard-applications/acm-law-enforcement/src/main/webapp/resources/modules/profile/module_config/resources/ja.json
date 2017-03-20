@@ -1,10 +1,10 @@
 {
   "profile": {
-    "title": "ja_User Profile",
+    "title": "顧客情報",
     "unknown":"Unknown"
   },
   "profile.menus": {
-    "usermenu.item": "ja_Profile"
+    "usermenu.item": "顧客情報"
   },
    "profile.subscriptions" : {
     "title":"Subscriptions",

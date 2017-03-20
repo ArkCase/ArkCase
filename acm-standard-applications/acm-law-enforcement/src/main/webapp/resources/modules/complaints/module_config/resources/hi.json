@@ -1,18 +1,24 @@
 {
   "complaints": {
-    "title": "hi_Complaints",
+    "title": "शिकायतें",
     "progressNoComplaint": "hi_[ No complaint data ]",
     "progressLoading": "hi_Loading complaint ",
     "progressError": "hi_Failed to load complaint "
   },
   "complaints.menus": {
-    "leftnav.item": "hi_Complaints",
-    "topbar.item": "hi_Complaint"
+    "leftnav.item": "शिकायतें",
+    "topbar.item": "शिकायत"
   },
   "complaints.comp.info": {
     "complaintId": "hi_Complaint id:",
     "complaintNumber": "hi_Complaint ID:",
-    "courtRoomName": "hi_Court Room Name:"
+    "courtRoomName": "hi_Court Room Name:",
+    "type.label": "Type",
+    "created.label": "Created Date",
+    "priority.label": "Priority",
+    "assignee.label": "Assigned To",
+    "owningGroup.label": "Owning Group",
+    "dueDate.label": "Due Date"
   },
   "complaints.comp.actions": {
     "restrict": "hi_Restrict?",
@@ -280,7 +286,13 @@
     },
     "table.columns": {
       "fullName": "hi_Full Name"
-    }
+    },
+    "assignee.label": "hi_Assignee",
+    "owningGroup.label": "hi_Owning Group",
+    "priority.label": "hi_Priority",
+    "startDate.label": "hi_Start Date",
+    "dueDate.label": "hi_Due Date",
+    "state.label": "hi_State"
   },
   "complaints.comp.pastApprovals": {
     "title": "hi_Past Approvers",

@@ -2,17 +2,18 @@
   "core": {
     "userInfo": {
       "addedMenu": {
-        "help": "pt_Help",
-        "logout": "pt_Logout"
+        "help": "Ajuda",
+        "logout": "Sair"
       }
     },
     "leftNav": {
-      "title": "pt_Navigation"
+      "title": "Nevigação"
     },
     "topBar": {
-      "new": "pt_New",
+      "new": "Novo",
       "toggle.btn": "pt_Toggle navigation",
-      "search.placeholder": "pt_Search ArkCase"
+      "search.placeholder": "pt_Search ArkCase",
+      "locale.updateList": "Atualização"
     },
     "loginWarning": {
       "btnOK.text": "pt_OK",

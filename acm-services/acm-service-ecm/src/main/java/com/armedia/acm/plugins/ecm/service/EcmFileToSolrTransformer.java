@@ -8,7 +8,6 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -167,6 +166,8 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         }
 
         solr.setAdditionalProperty("security_field_lcs", in.getSecurityField());
+
+        solr.setAdditionalProperty("cmis_repository_id_s", in.getCmisRepositoryId());
 
         return solr;
     }

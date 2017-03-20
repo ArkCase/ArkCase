@@ -1,18 +1,24 @@
 {
   "complaints": {
-    "title": "ja_Complaints",
+    "title": "申し立て",
     "progressNoComplaint": "ja_[ No complaint data ]",
     "progressLoading": "ja_Loading complaint ",
     "progressError": "ja_Failed to load complaint "
   },
   "complaints.menus": {
-    "leftnav.item": "ja_Complaints",
-    "topbar.item": "ja_Complaint"
+    "leftnav.item": "申し立て",
+    "topbar.item": "申し立て"
   },
   "complaints.comp.info": {
     "complaintId": "ja_Complaint id:",
     "complaintNumber": "ja_Complaint ID:",
-    "courtRoomName": "ja_Court Room Name:"
+    "courtRoomName": "ja_Court Room Name:",
+    "type.label": "Type",
+    "created.label": "Created Date",
+    "priority.label": "Priority",
+    "assignee.label": "Assigned To",
+    "owningGroup.label": "Owning Group",
+    "dueDate.label": "Due Date"
   },
   "complaints.comp.actions": {
     "restrict": "ja_Restrict?",
@@ -280,7 +286,13 @@
     },
     "table.columns": {
       "fullName": "ja_Full Name"
-    }
+    },
+    "assignee.label": "ja_Assignee",
+    "owningGroup.label": "ja_Owning Group",
+    "priority.label": "ja_Priority",
+    "startDate.label": "ja_Start Date",
+    "dueDate.label": "ja_Due Date",
+    "state.label": "ja_State"
   },
   "complaints.comp.pastApprovals": {
     "title": "ja_Past Approvers",

@@ -1,8 +1,8 @@
 {
   "preference": {
-    "title": "ja_Preferences",
+    "title": "顧客設定",
     "menus": {
-      "usermenu.item": "ja_Preferences"
+      "usermenu.item": "顧客設定"
     }
   }
 }

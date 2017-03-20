@@ -43,7 +43,7 @@ public class AcmTaskActivitiEventHandler implements ApplicationListener<AcmTaskA
         if (getEventList().contains(event.getTaskEvent()))
         {
             AcmTask acmTask = getTaskDao().acmTaskFromActivitiTask((Task) event.getSource(), event.getProcessVariables(),
-                    event.getLocalVariables());
+                    event.getLocalVariables(), event.getTaskEvent());
 
             // ensure we set the right modifier and creator for any objects we end up inserting or updating
             getAuditPropertyEntityAdapter().setUserId(event.getUserId());

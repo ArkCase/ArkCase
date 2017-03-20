@@ -52,9 +52,7 @@ angular.module('audit').factory('AuditController.BuildUrl', ['$sce', '$location'
                     + "&objectType=" + objectType
                     + "&objectId=" + objectId
                     + "&dateFormat=" + encodeURIComponent(dateFormat)
-                    + "&timeZone=" + encodeURIComponent(UtilDateService.getTimeZoneOffset())
-                    + "&userid=" + pentahoUser
-                    + "&password=" + pentahoPassword;
+                    + "&timeZone=" + encodeURIComponent(UtilDateService.getTimeZoneOffset());
                 if (useUrl) {
                     var absUrl = $location.absUrl();
                     var baseHref = $browser.baseHref();
