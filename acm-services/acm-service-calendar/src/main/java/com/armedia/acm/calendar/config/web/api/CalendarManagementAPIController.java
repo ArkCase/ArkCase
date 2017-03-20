@@ -1,8 +1,8 @@
 package com.armedia.acm.calendar.config.web.api;
 
 import com.armedia.acm.calendar.config.service.CalendarAdminService;
-import com.armedia.acm.calendar.config.service.CalendarConfiguration;
 import com.armedia.acm.calendar.config.service.CalendarConfigurationException;
+import com.armedia.acm.calendar.config.service.CalendarConfigurationsByObjectType;
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 
 import org.slf4j.Logger;
@@ -36,13 +36,14 @@ public class CalendarManagementAPIController
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public CalendarConfiguration getConfiguration() throws AcmEncryptionException, CalendarConfigurationException
+    public CalendarConfigurationsByObjectType getConfiguration() throws AcmEncryptionException, CalendarConfigurationException
     {
         return calendarService.readConfiguration(false);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity<?> updateConfiguration(@RequestBody CalendarConfiguration configuration) throws CalendarConfigurationException
+    public ResponseEntity<?> updateConfiguration(@RequestBody CalendarConfigurationsByObjectType configuration)
+            throws CalendarConfigurationException
     {
         calendarService.writeConfiguration(configuration);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -63,15 +64,15 @@ public class CalendarManagementAPIController
             Class<? extends Throwable> causeClass = cause.getClass();
             if (causeClass.equals(AcmEncryptionException.class))
             {
-                errorDetails.put("error_cause", "Could not encrypt the system user password.");
+                errorDetails.put("error_cause", "ENCRYPT_EXCEPTION");
             } else if (causeClass.equals(IOException.class))
             {
-                errorDetails.put("error_cause", "Could not update calendar configuration.");
+                errorDetails.put("error_cause", "UPDATE_CONFIGURATION_EXCEPTION.");
             }
         } else
         {
             response = ResponseEntity.status(HttpStatus.BAD_REQUEST);
-            errorDetails.put("error_cause", "Both system user id and password are needed.");
+            errorDetails.put("error_cause", "INPUT_DATA_EXCEPTION");
         }
 
         errorDetails.put("error_message", ce.getMessage());
