@@ -10,12 +10,18 @@
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
-        <property name="location" value="file:${user.home}/.arkcase/acm/profilePlugin.properties"/>
+        <property name="locations">
+            <list>
+                <value>file:${user.home}/.arkcase/acm/profilePlugin.properties</value>
+                <value>file:${user.home}/.arkcase/acm/ecmFileService.properties</value>
+            </list>
+        </property>
         <property name="ignoreResourceNotFound" value="true"/>
         <property name="localOverride" value="false"/>
         <property name="properties">
             <props>
                 <prop key="user.profile.root.folder">/Sites/acm/documentLibrary/User Profile</prop>
+                <prop key="ecm.defaultCmisId">alfresco</prop>
             </props>
         </property>
     </bean>
@@ -33,6 +39,7 @@
         <property name="eventPublisher" ref="profileEventPublisher"/>
         <property name="groupDao" ref="groupDao"/>
         <property name="groupService" ref="groupService"/>
+        <property name="defaultCmisId" value="${ecm.defaultCmisId}"/>
     </bean>
 
     <bean id="profilePlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
