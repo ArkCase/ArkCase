@@ -33,7 +33,7 @@
                 <value>file:${user.home}/.arkcase/acm/dataAccessControl.properties</value>
                 <value>file:${user.home}/.arkcase/acm/datasource.properties</value>
                 <value>file:${user.home}/.arkcase/acm/dueTasksNotifier.properties</value>
-                <value>file:${user.home}/.arkcase/acm/ecmFileProperties.properties</value>
+                <value>file:${user.home}/.arkcase/acm/ecmFileService.properties</value>
                 <value>file:${user.home}/.arkcase/acm/lawEnforcementApp.properties</value>
                 <value>file:${user.home}/.arkcase/acm/msOutlookIntegration.properties</value>
                 <value>file:${user.home}/.arkcase/acm/msOutlookPlugin.properties</value>
