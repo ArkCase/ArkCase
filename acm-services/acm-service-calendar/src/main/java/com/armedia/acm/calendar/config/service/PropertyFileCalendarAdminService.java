@@ -140,7 +140,7 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
             CalendarConfiguration configuration = entry.getValue();
             CalendarConfiguration loadedConfiguration = loadedConfigurations.getConfiguration(entry.getKey());
 
-            if (checkInput(configuration, loadedConfiguration))
+            if (configuration.isIntegrationEnabled() && checkInput(configuration, loadedConfiguration))
             {
                 log.error("System email and password must be provided.");
                 throw new CalendarConfigurationException("System email and password must be provided.");
@@ -188,8 +188,11 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
      */
     private boolean checkInput(CalendarConfiguration configuration, CalendarConfiguration loadedConfiguration)
     {
+        // for new configurations both system email and password have to be provided
         return (loadedConfiguration == null && StringUtils.isEmpty(configuration.getSystemEmail())
                 || StringUtils.isEmpty(configuration.getPassword()))
+                // for existing configurations email has to be provided, and in case email has changed, an accompanying
+                // password must be provided
                 || (loadedConfiguration != null && (StringUtils.isEmpty(configuration.getSystemEmail())
                         || !configuration.getSystemEmail().equals(loadedConfiguration.getSystemEmail())
                                 && StringUtils.isEmpty(configuration.getPassword())));
