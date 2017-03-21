@@ -247,10 +247,8 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'Acm.Stor
                 , data: noteInfo
                 , onSuccess: function (data) {
                     if (Service.validateNote(data)) {
-                        var noteInfo = data;                       
-                        
+                        var noteInfo = data;
                         Service.clearCache(noteInfo.parentType, noteInfo.parentId);
-                       
                         return noteInfo;
                     }
                 }
