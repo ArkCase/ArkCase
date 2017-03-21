@@ -100,6 +100,14 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
             }
         }
 
+        for (String objectType : objectTypes)
+        {
+            if (!configurationsByType.keySet().contains(objectType))
+            {
+                configurationsByType.put(objectType, new CalendarConfiguration());
+            }
+        }
+
         configurations.setConfigurationsByType(configurationsByType);
 
         return configurations;

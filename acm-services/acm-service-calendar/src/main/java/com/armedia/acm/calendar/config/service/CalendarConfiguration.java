@@ -27,7 +27,7 @@ public class CalendarConfiguration
 
     private String password;
 
-    private PurgeOptions purgeOptions;
+    private PurgeOptions purgeOptions = PurgeOptions.NONE;
 
     /**
      * @return the integrationEnabled
