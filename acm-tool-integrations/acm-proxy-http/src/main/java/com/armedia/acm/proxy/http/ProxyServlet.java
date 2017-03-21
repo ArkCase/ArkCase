@@ -180,7 +180,7 @@ public class ProxyServlet extends HttpServlet
     /**
      * List containing patterns and additional headers for urls which need to be added
      */
-    protected List<String> setAdditionalHeaders;
+    protected List<String> additionalHeaders;
 
     /**
      * The parameter name for the target (destination) URI to proxy to.
@@ -271,7 +271,7 @@ public class ProxyServlet extends HttpServlet
         responseUrlMatchers = parseCsvAsList(getConfigParam(P_RESPONSE_URL_MATCHERS));
         skipResponseUrlMatchers = parseCsvAsList(getConfigParam(P_SKIP_RESPONSE_URL_MATCHERS));
         appendUrlParams = parseCsvAsList(getConfigParam(P_APPEND_URL_PARAMS));
-        setAdditionalHeaders = parseCsvAsList(getConfigParam(P_SET_ADDITIONAL_HEADERS));
+        additionalHeaders = parseCsvAsList(getConfigParam(P_SET_ADDITIONAL_HEADERS));
 
         initTarget();// sets target*
 
@@ -470,6 +470,7 @@ public class ProxyServlet extends HttpServlet
         }
         catch (Exception e)
         {
+            logger.error("Error in proxy servlet!", e);
             // abort request, according to best practice with HttpClient
             if (proxyRequest instanceof AbortableHttpRequest)
             {
@@ -993,7 +994,7 @@ public class ProxyServlet extends HttpServlet
      */
     private void setAdditionalHeaders(HttpServletRequest servletRequest, HttpRequest proxyRequest)
     {
-        for (String pair : setAdditionalHeaders)
+        for (String pair : additionalHeaders)
         {
             String[] splitPair = pair.split(":");
             if (splitPair.length != 2)
@@ -1017,7 +1018,7 @@ public class ProxyServlet extends HttpServlet
 
                 if (headerValue.startsWith("var("))
                 {
-                    headerValue = resolveRuntimeVarible(headerValue.substring(4, headerValue.length() - 1));
+                    headerValue = resolveRuntimeVariаble(headerValue.substring(4, headerValue.length() - 1));
                 }
 
                 proxyRequest.setHeader(headerName, headerValue);
@@ -1032,7 +1033,7 @@ public class ProxyServlet extends HttpServlet
      * @param headerVariableName
      * @return the resolved runtime variable
      */
-    private String resolveRuntimeVarible(String headerVariableName)
+    private String resolveRuntimeVariаble(String headerVariableName)
     {
         switch (headerVariableName)
         {
