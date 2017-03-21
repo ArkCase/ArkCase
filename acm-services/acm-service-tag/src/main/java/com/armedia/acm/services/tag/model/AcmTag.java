@@ -142,4 +142,5 @@ public class AcmTag implements AcmEntity, Serializable, AcmObject {
     public Long getId() {
         return id;
     }
+
 }
