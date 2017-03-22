@@ -67,6 +67,9 @@ public class Person implements Serializable, AcmEntity
     @Column(name = "cm_person_title")
     private String title;
 
+    @Column(name = "cm_person_parent_title")
+    private String parentTitle;
+
     @Column(name = "cm_person_company_name")
     private String company;
 
@@ -515,5 +518,9 @@ public class Person implements Serializable, AcmEntity
     {
         this.className = className;
     }
+
+    public String getParentTitle() { return parentTitle; }
+
+    public void setParentTitle(String parentTitle) { this.parentTitle = parentTitle; }
 
 }
