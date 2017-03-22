@@ -18,6 +18,16 @@
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
+      "directoryTypes": [
+        {
+          "name": "OpenLDAP",
+          "value": "openldap"
+        },
+        {
+          "name": "Active Directory",
+          "value": "activedirectory"
+        }
+      ],
       "columnDefs": [
         {
           "name": "authUserDn",
@@ -134,7 +144,9 @@
           "displayName": "admin.correspondenceManagement.mergefields.version.grid.mergingVersion",
           "visible": true,
           "headerCellFilter": "translate",
-          "sort" : {"direction": "desc"},
+          "sort": {
+            "direction": "desc"
+          },
           "width": 80
         },
         {
@@ -244,7 +256,9 @@
           "displayName": "admin.correspondenceManagement.templates.grid.version",
           "visible": true,
           "headerCellFilter": "translate",
-          "sort" : {"direction": "desc"},
+          "sort": {
+            "direction": "desc"
+          },
           "width": 80
         },
         {

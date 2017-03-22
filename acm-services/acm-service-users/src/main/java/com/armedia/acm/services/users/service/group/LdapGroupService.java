@@ -11,6 +11,7 @@ import com.armedia.acm.services.users.model.ldap.AcmLdapConstants;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.MapperUtils;
 import com.armedia.acm.services.users.service.RetryExecutor;
+import com.armedia.acm.services.users.service.ldap.LdapEntryTransformer;
 import com.armedia.acm.spring.SpringContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,8 @@ public class LdapGroupService
     private SpringLdapDao ldapDao;
 
     private UserDao userDao;
+
+    private LdapEntryTransformer ldapEntryTransformer;
 
     private SpringContextHolder acmContextHolder;
 
@@ -50,10 +53,9 @@ public class LdapGroupService
         AcmGroup acmGroup = getGroupDao().save(group);
         getGroupDao().getEm().flush();
 
-        String strippedBaseGroupDN = MapperUtils.stripBaseFromDn(acmGroup.getDistinguishedName(), ldapSyncConfig.getBaseDC());
         log.debug("Saving Group:{} with DN:{} in LDAP server", group.getName(), group.getDistinguishedName());
         LdapTemplate ldapTemplate = getLdapDao().buildLdapTemplate(ldapSyncConfig);
-        DirContextAdapter context = createContextForGroup(acmGroup.getName(), strippedBaseGroupDN, null);
+        DirContextAdapter context = ldapEntryTransformer.createContextForNewGroupEntry(directoryName, acmGroup, ldapSyncConfig.getBaseDC());
         try
         {
             new RetryExecutor().retry(() -> ldapTemplate.bind(context));
@@ -74,7 +76,6 @@ public class LdapGroupService
                 get(String.format("%s_sync", directoryName));
 
         String groupDN = buildDnForGroup(group.getName(), ldapSyncConfig);
-        String groupDnStrippedBase = MapperUtils.stripBaseFromDn(groupDN, ldapSyncConfig.getBaseDC());
 
         AcmGroup existingGroup = getGroupDao().findByName(group.getName().toUpperCase());
         if (existingGroup != null)
@@ -98,7 +99,8 @@ public class LdapGroupService
 
         log.debug("Saving sub-group:{} with parent-group:{} in LDAP server", acmGroup.getDistinguishedName(), parentGroup.getName());
         LdapTemplate ldapTemplate = getLdapDao().buildLdapTemplate(ldapSyncConfig);
-        DirContextAdapter context = createContextForGroup(acmGroup.getName(), groupDnStrippedBase, parentGroup.getDistinguishedName());
+        DirContextAdapter context = ldapEntryTransformer.createContextForNewGroupEntry(directoryName, acmGroup, ldapSyncConfig.getBaseDC());
+        context.addAttributeValue("memberOf", parentGroup.getDistinguishedName());
         try
         {
             new RetryExecutor().retry(() -> ldapTemplate.bind(context));
@@ -135,21 +137,6 @@ public class LdapGroupService
             throw new AcmUserActionFailedException("create new LDAP subgroup", null, null, "Adding new LDAP subgroup failed!", e);
         }
         return acmGroup;
-    }
-
-    private DirContextAdapter createContextForGroup(String groupName, String groupDN, String parentGroupDN)
-    {
-        DirContextAdapter context = new DirContextAdapter(groupDN);
-        context.setAttributeValues("objectClass", new String[]{"top", "groupOfNames", "sortableGroupofnames"});
-        context.setAttributeValue("cn", groupName);
-        context.setAttributeValue("member", "");
-        long timestamp = System.currentTimeMillis();
-        context.setAttributeValue("gidNumber", Long.toString(timestamp));
-        if (parentGroupDN != null)
-        {
-            context.addAttributeValue("memberOf", parentGroupDN);
-        }
-        return context;
     }
 
     private String buildDnForGroup(String cn, AcmLdapSyncConfig ldapSyncConfig)
@@ -195,5 +182,15 @@ public class LdapGroupService
     public void setUserDao(UserDao userDao)
     {
         this.userDao = userDao;
+    }
+
+    public LdapEntryTransformer getLdapEntryTransformer()
+    {
+        return ldapEntryTransformer;
+    }
+
+    public void setLdapEntryTransformer(LdapEntryTransformer ldapEntryTransformer)
+    {
+        this.ldapEntryTransformer = ldapEntryTransformer;
     }
 }

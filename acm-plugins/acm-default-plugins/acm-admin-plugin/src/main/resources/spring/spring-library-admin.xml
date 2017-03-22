@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:task="http://www.springframework.org/schema/task"
+       xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd">
 
@@ -54,7 +54,7 @@
                   value="#{ systemProperties ['user.home'] }/.arkcase/acm/app-properties/properties.json"/>
     </bean>
 
-    <!-- Roles Priveleges API-->
+    <!-- Roles Privileges API-->
     <bean id="rolesPrivilegesService" class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesService">
         <property name="applicationRolesFile"
                   value="#{ systemProperties ['user.home'] }/.arkcase/acm/applicationRoles.properties"/>
@@ -83,4 +83,42 @@
         <property name="notificationDao" ref="notificationDao"/>
     </bean>
 
+    <bean id="ldapDirectoryConfig" class="com.armedia.acm.plugins.admin.model.LdapDirectoryConfig">
+        <property name="ldapConfigurationTemplatesLocation"
+                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/spring/ldap-config-templates/"/>
+        <property name="ldapTemplateFile" value="spring-config-ldap.xml.ftl"/>
+        <property name="ldapTemplatePropertiesFile" value="spring-config-ldap.properties.ftl"/>
+        <property name="ldapConfigurationLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/spring/"/>
+        <property name="ldapFile" value="spring-config-%s-ldap.xml"/>
+        <property name="ldapPropertiesFile" value="spring-config-%s-ldap.properties"/>
+        <property name="ldapPropertiesFileRegex" value="^spring[-d]config[-d][a-zA-Z0-9.]+[-d]ldap.properties$"/>
+        <property name="ldapUserPropertiesFile" ref="ldapAddUserPropertiesFile"/>
+        <property name="ldapUserPropertiesFileRegex" value="^spring[-d]config[-d]user[-d][a-zA-Z0-9-.]+.properties$"/>
+        <property name="ldapUserFileRegex" value="^spring[-d]config[-d]user[-d][a-zA-Z0-9-.]+.xml$"/>
+        <property name="ldapGroupPropertiesFile" ref="ldapAddGroupPropertiesFile"/>
+        <property name="ldapGroupPropertiesFileRegex" value="^spring[-d]config[-d]group[-d][a-zA-Z0-9-.]+.properties$"/>
+        <property name="ldapGroupFileRegex" value="^spring[-d]config[-d]group[-d][a-zA-Z0-9-.]+.xml$"/>
+    </bean>
+
+    <bean id="openLdapTemplateConfig" class="com.armedia.acm.plugins.admin.model.OpenLdapTemplateConfig">
+        <property name="userPropertiesTemplate" value="spring-config-user-openldap.properties.ftl"/>
+        <property name="userPropertiesTemplateName" value="spring-config-user-%s-openldap.properties"/>
+        <property name="userFileTemplate" value="spring-config-user-openldap.xml.ftl"/>
+        <property name="userFileTemplateName" value="spring-config-user-%s-openldap.xml"/>
+        <property name="groupPropertiesTemplate" value="spring-config-group-openldap.properties.ftl"/>
+        <property name="groupPropertiesTemplateName" value="spring-config-group-%s-openldap.properties"/>
+        <property name="groupFileTemplate" value="spring-config-group-openldap.xml.ftl"/>
+        <property name="groupFileTemplateName" value="spring-config-group-%s-openldap.xml"/>
+    </bean>
+
+    <bean id="adTemplateConfig" class="com.armedia.acm.plugins.admin.model.ADTemplateConfig">
+        <property name="userPropertiesTemplate" value="spring-config-user-ad.properties.ftl"/>
+        <property name="userFileTemplate" value="spring-config-user-ad.ldap.xml.ftl"/>
+        <property name="userPropertiesTemplateName" value="spring-config-user-%s-ad.properties"/>
+        <property name="userFileTemplateName" value="spring-config-user-%s-ad.xml"/>
+        <property name="groupPropertiesTemplate" value="spring-config-group-ad.properties.ftl"/>
+        <property name="groupFileTemplate" value="spring-config-group-ad.xml.ftl"/>
+        <property name="groupPropertiesTemplateName" value="spring-config-group-%s-ad.properties"/>
+        <property name="groupFileTemplateName" value="spring-config-group-%s-ad.xml"/>
+    </bean>
 </beans>

@@ -15,12 +15,10 @@ import java.io.IOException;
 import java.util.HashMap;
 
 
-/**
- * Created by sergey.kolomiets  on 5/26/15.
- */
 @Controller
-@RequestMapping( { "/api/v1/plugin/admin", "/api/latest/plugin/admin"} )
-public class LdapConfigurationCreateDirectory {
+@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+public class LdapConfigurationCreateDirectory
+{
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private LdapConfigurationService ldapConfigurationService;
@@ -28,34 +26,32 @@ public class LdapConfigurationCreateDirectory {
     @RequestMapping(value = "/ldapconfiguration/directories", method = RequestMethod.POST, produces = {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
-
     @ResponseBody
-    public String createDirectory(
-            @RequestBody String resource) throws IOException, AcmLdapConfigurationException {
-
-        try {
+    public String createDirectory(@RequestBody String resource) throws IOException, AcmLdapConfigurationException
+    {
+        try
+        {
             JSONObject newLdapObject = new JSONObject(resource);
             String id = newLdapObject.getString(LdapConfigurationProperties.LDAP_PROP_ID);
+            String directoryType = newLdapObject.getString(LdapConfigurationProperties.LDAP_PROP_DIRECTORY_TYPE);
 
-            if (id == null) {
+            if (id == null)
+            {
                 throw new AcmLdapConfigurationException("ID is undefined");
             }
 
             HashMap<String, Object> props = ldapConfigurationService.getProperties(newLdapObject);
-
-            // Create LDAP Direcotry
-            ldapConfigurationService.createLdapDirectory(id, props);
-
+            ldapConfigurationService.createLdapDirectoryConfigurations(id, directoryType, props);
             return newLdapObject.toString();
-        } catch (Exception e) {
-            if (log.isErrorEnabled()) {
-                log.error("Can't create LDAP directory", e);
-            }
+        } catch (Exception e)
+        {
+            log.error("Can't create LDAP directory", e);
             throw new AcmLdapConfigurationException("Create LDAP directory error", e);
         }
     }
 
-    public void setLdapConfigurationService(LdapConfigurationService ldapConfigurationService) {
+    public void setLdapConfigurationService(LdapConfigurationService ldapConfigurationService)
+    {
         this.ldapConfigurationService = ldapConfigurationService;
     }
 }
