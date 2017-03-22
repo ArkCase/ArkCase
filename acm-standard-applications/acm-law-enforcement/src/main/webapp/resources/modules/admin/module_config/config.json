@@ -74,6 +74,18 @@
           "headerCellFilter": "translate"
         }
       ]
+    },{
+      "id": "securityCalendarConfig",
+      "configurableObjectTypes": [
+        {
+          "label": "admin.security.calendarConfiguration.calendarConfigForm.configurableObjectTypes.cases.label",
+          "id": "CASE_FILE"
+        },
+        {
+          "label": "admin.security.calendarConfiguration.calendarConfigForm.configurableObjectTypes.complaints.label",
+          "id": "COMPLAINT"
+        }
+      ]
     },
     {
       "id": "correspondenceManagementMergeFields",
@@ -564,6 +576,10 @@
         {
           "title": "admin.security.modules",
           "templateName": "security.modules"
+        },
+        {
+          "title": "admin.security.calendarConfiguration.title",
+          "templateName": "security-calendar-configuration"
         }
       ]
     },

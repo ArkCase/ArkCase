@@ -206,6 +206,31 @@
     "security.selectPrivileges.name": "Name",
     "security.modules": "Modules",
     "security.modules.module": "Module",
+    "security.calendarConfiguration": {
+      "title": "Calendar Configuration",
+      "calendarConfigForm": {
+        "email.placeholder": "Enter System Email Address",
+        "password.placeholder": "Enter System Password",
+        "purge.placeholder": "Choose Purge Option",
+        "purgeDays.placeholder": "Enter Days",
+        "save.button": "Save",
+        "validate.button": "Validate",
+        "purge.label": "Purge",
+        "email.label": "System Email Address",
+        "password.label": "System Password",
+        "purgeDays.label": "Days",
+        "enableCalendarIntegration.checkbox": "Enable Calendar Integration",
+        "purgeOptions": {
+          "retainIndefinitely": "Retain Indefinitely",
+          "objectClosed": "Object = 'Closed'",
+          "objectClosedXDays": "Object = 'Closed' + X Days",
+        },
+        "configurableObjectTypes": {
+          "cases.label": "Cases",
+          "complaints.label": "Complaints"
+        }
+      }
+    },
     "dashboard.title": "Dashboard",
     "dashboard.config": "Dashboard Configuration",
     "dashboard.widgets": "Widgets",
@@ -366,9 +391,9 @@
       "mergefields.saveMergeFields": "Save",
       "mergefields.versionMergeFields": "Versions",
       "mergefields.grid": {
-      "fieldId": "ID",
-      "fieldValue": "Value",
-      "fieldDescription": "Description"
+        "fieldId": "ID",
+        "fieldValue": "Value",
+        "fieldDescription": "Description"
       },
       "mergefields.version.grid": {
         "mergingVersion": "Version",

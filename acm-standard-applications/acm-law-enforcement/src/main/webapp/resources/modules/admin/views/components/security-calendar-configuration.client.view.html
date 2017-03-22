@@ -1,0 +1,73 @@
+<div ng-controller="Admin.SecurityCalendarConfigurationController">
+	<ng-form name="calendarConfigurationForm">
+		<div class="pull-right well">
+			<div class="btn-group">
+				<button class="btn btn-xs btn-link" ng-click="applyChanges()" ng-disabled="calendarConfigurationForm.$invalid">
+					<i class="fa fa-save"></i>
+					<span translate>
+	            	admin.security.calendarConfiguration.calendarConfigForm.save.button
+	            </span>
+				</button>
+			</div>
+		</div>
+		<panel-view header="{{'admin.security.calendarConfiguration.title' | translate}}" collapsible="false">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="row" ng-repeat="configurableObjectType in configurableObjectTypes">
+						<div class="col-lg-12">
+							<label translate>
+								{{configurableObjectType.label}}
+							</label>
+						</div>
+						<div class="well-sm">
+							<div class="row">
+								<div class="col-lg-12">
+									<div class="checkbox">
+										<label>
+											<input type="checkbox" ng-model="calendarConfigDataModel.configurationsByType[configurableObjectType.id].integrationEnabled">
+											<span translate>
+					                        admin.security.calendarConfiguration.calendarConfigForm.enableCalendarIntegration.checkbox
+					                    </span>
+										</label>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-lg-4 form-group">
+										<label for="email" translate>
+											admin.security.calendarConfiguration.calendarConfigForm.email.label
+										</label>
+										<input type="email" name="email" placeholder="{{'admin.security.calendarConfiguration.calendarConfigForm.email.placeholder' | translate}}" ng-model="calendarConfigDataModel.configurationsByType[configurableObjectType.id].systemEmail" class="form-control" ng-disabled="!calendarConfigDataModel.configurationsByType[configurableObjectType.id].integrationEnabled" ng-required="calendarConfigDataModel.configurationsByType[configurableObjectType.id].integrationEnabled">
+									</div>
+									<div class="col-lg-4 form-group">
+										<label for="password" translate>
+											admin.security.calendarConfiguration.calendarConfigForm.password.label
+										</label>
+										<input name="password" type="password" placeholder="{{'admin.security.calendarConfiguration.calendarConfigForm.password.placeholder' | translate}}" ng-model="calendarConfigDataModel.configurationsByType[configurableObjectType.id].password" class="form-control" ng-disabled="!calendarConfigDataModel.configurationsByType[configurableObjectType.id].integrationEnabled" ng-required="calendarConfigDataModel.configurationsByType[configurableObjectType.id].integrationEnabled"/>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-lg-4 form-group">
+									<label for="purge" translate>
+										admin.security.calendarConfiguration.calendarConfigForm.purge.label
+									</label>
+									<select name="purge" class="form-control" ng-model="calendarConfigDataModel.configurationsByType[configurableObjectType.id].purgeOptions" ng-disabled="!calendarConfigDataModel.configurationsByType[configurableObjectType.id].integrationEnabled" ng-required="calendarConfigDataModel.configurationsByType[configurableObjectType.id].integrationEnabled">
+										<option ng-repeat="option in purgeSelectOptions" value="{{option.value}}" translate>
+											{{option.label}}
+										</option>
+									</select>
+								</div>
+								<div class="col-lg-2 form-group" ng-if="calendarConfigDataModel.configurationsByType[configurableObjectType.id].purgeOptions === 'CLOSED_X_DAYS'">
+									<label for="purgeDays" translate>
+										admin.security.calendarConfiguration.calendarConfigForm.purgeDays.label
+									</label>
+									<input name="purgeDays" type="number" min="0" placeholder="{{'admin.security.calendarConfiguration.calendarConfigForm.purgeDays.placeholder' | translate}}" class="form-control" ng-model="calendarConfigDataModel.configurationsByType[configurableObjectType.id].daysClosed" ng-required="calendarConfigDataModel.configurationsByType[configurableObjectType.id].purgeOptions === 'CLOSED_X_DAYS'">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</panel-view>
+	</ng-form>
+</div>
