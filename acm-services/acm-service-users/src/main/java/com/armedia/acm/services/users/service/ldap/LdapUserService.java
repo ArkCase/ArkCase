@@ -38,7 +38,7 @@ public class LdapUserService
 
     private SpringContextHolder acmContextHolder;
 
-    private LdapUserTransformer userTransformer;
+    private LdapEntryTransformer userTransformer;
 
     @Transactional
     public AcmUser createLdapUser(AcmUser user, List<String> groupNames, String password, String directoryName) throws AcmUserActionFailedException, AcmLdapActionFailedException
@@ -69,7 +69,7 @@ public class LdapUserService
 
         saveUserRolesInDb(ldapUser.getUserId(), ldapUser.getGroups(), groupToRoleMap);
 
-        DirContextAdapter context = userTransformer.createContextForNewUser(directoryName, user, password,
+        DirContextAdapter context = userTransformer.createContextForNewUserEntry(directoryName, user, password,
                 ldapSyncConfig.getBaseDC());
         LdapTemplate ldapTemplate = getLdapDao().buildLdapTemplate(ldapSyncConfig);
         try
@@ -187,12 +187,9 @@ public class LdapUserService
         {
             DirContextOperations context = new RetryExecutor<DirContextOperations>()
                     .retryResult(() -> ldapTemplate.lookupContext(strippedBaseDdUserDn));
-            context.setAttributeValue("cn", String.format("%s %s", acmUser.getFirstName(), acmUser.getLastName()));
-            context.setAttributeValue("givenName", acmUser.getFirstName());
-            context.setAttributeValue("sn", acmUser.getLastName());
-            context.setAttributeValue("mail", acmUser.getMail());
+            DirContextOperations editContext = userTransformer.createContextForEditUserEntry(context, acmUser, directory);
             log.debug("Modify User:{} with DN:{} in LDAP", acmUser.getUserId(), acmUser.getDistinguishedName());
-            new RetryExecutor().retry(() -> ldapTemplate.modifyAttributes(context));
+            new RetryExecutor().retry(() -> ldapTemplate.modifyAttributes(editContext));
             log.debug("User:{} with DN:{} successfully edited in DB and LDAP", acmUser.getUserId(), acmUser.getDistinguishedName());
         } catch (Exception e)
         {
@@ -203,7 +200,8 @@ public class LdapUserService
     }
 
     @Transactional
-    public List<AcmUser> addExistingLdapUsersToGroup(List<AcmUser> acmUsers, String directoryName, String groupName) throws AcmUserActionFailedException, AcmLdapActionFailedException
+    public List<AcmUser> addExistingLdapUsersToGroup(List<AcmUser> acmUsers, String directoryName, String groupName)
+            throws AcmUserActionFailedException, AcmLdapActionFailedException
     {
         AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).
                 get(String.format("%s_sync", directoryName));
@@ -271,15 +269,6 @@ public class LdapUserService
         return ldapUsers;
     }
 
-    private DirContextOperations createContextForEditUser(AcmUser user, DirContextOperations context)
-    {
-        context.setAttributeValue("cn", String.format("%s %s", user.getFirstName(), user.getLastName()));
-        context.setAttributeValue("givenName", user.getFirstName());
-        context.setAttributeValue("sn", user.getLastName());
-        context.setAttributeValue("mail", user.getMail());
-        return context;
-    }
-
     private String buildDnForUser(String userId, String userSearchBase, String baseDC)
     {
         return String.format("uid=%s,%s,%s", userId, userSearchBase, baseDC);
@@ -325,12 +314,12 @@ public class LdapUserService
         this.acmContextHolder = acmContextHolder;
     }
 
-    public LdapUserTransformer getUserTransformer()
+    public LdapEntryTransformer getUserTransformer()
     {
         return userTransformer;
     }
 
-    public void setUserTransformer(LdapUserTransformer userTransformer)
+    public void setUserTransformer(LdapEntryTransformer userTransformer)
     {
         this.userTransformer = userTransformer;
     }

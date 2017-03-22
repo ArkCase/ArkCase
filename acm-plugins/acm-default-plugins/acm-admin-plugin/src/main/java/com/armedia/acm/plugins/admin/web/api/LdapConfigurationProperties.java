@@ -4,6 +4,7 @@ package com.armedia.acm.plugins.admin.web.api;
 public interface LdapConfigurationProperties
 {
     String LDAP_PROP_ID = "ldapConfig.id";
+    String LDAP_PROP_DIRECTORY_TYPE = "ldapConfig.directoryType";
     String LDAP_PROP_BASE = "ldapConfig.base";
     String LDAP_PROP_AUTH_USER_DN = "ldapConfig.authUserDn";
     String LDAP_PROP_AUTH_USER_PASSWORD = "ldapConfig.authUserPassword";
@@ -22,4 +23,6 @@ public interface LdapConfigurationProperties
     String LDAP_PROP_USER_DOMAIN = "ldapConfig.userDomain";
     String LDAP_PROP_ENABLE_EDITING_LDAP_USERS = "ldapConfig.enableEditingLdapUsers";
     String LDAP_PROP_SYNC_PAGE_SIZE = "ldapConfig.syncPageSize";
+    String LDAP_PROP_ADD_USER_TEMPLATE = "ldapConfig.addUserTemplate";
+    String LDAP_PROP_ADD_GROUP_TEMPLATE = "ldapConfig.addGroupTemplate";
 }
