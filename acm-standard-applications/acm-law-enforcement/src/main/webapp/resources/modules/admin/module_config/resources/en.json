@@ -335,7 +335,7 @@
         "created": "Created",
         "modified": "Modified",
         "creator": "Creator",
-        "modifier": "Modifier",
+        "modifier": "Modified By",
         "activated": "Status",
         "objectType": "Object Type",
         "version": "Version",
@@ -373,7 +373,7 @@
       "mergefields.version.grid": {
         "mergingVersion": "Version",
         "modified": "Modified",
-        "modifier": "Modifier",
+        "modifier": "Modified By",
         "mergingActiveVersion": "Active"
       },
       "mergefields.version.modal": {
