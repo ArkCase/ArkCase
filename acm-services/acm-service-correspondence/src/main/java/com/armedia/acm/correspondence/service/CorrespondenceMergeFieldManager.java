@@ -297,6 +297,7 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
                 defaultMergeFieldVersion.setMergingVersion("1.0");
                 defaultMergeFieldVersion.setMergingType(cq.getType().name());
                 defaultMergeFieldVersion.setModified(new Date());
+                defaultMergeFieldVersion.setModifier("System User");
                 mergeFieldsVersions.add(defaultMergeFieldVersion);
             }
         });
