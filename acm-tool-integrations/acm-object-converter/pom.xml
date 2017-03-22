@@ -1,21 +1,22 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	
-	<parent>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <parent>
         <groupId>com.armedia.acm</groupId>
         <artifactId>acm-tool-integrations</artifactId>
-        <version>3.1.9-SNAPSHOT</version>
+        <version>3.1.10-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    
+
     <groupId>com.armedia.acm.acm-tool-integrations</groupId>
     <artifactId>acm-object-converter</artifactId>
     <name>Tool Integrations: Object Converter</name>
     <description>Convert Object to XML and vice versa.</description>
-    
-  	<dependencies>
-  	
-  		<!-- json -->
+
+    <dependencies>
+
+        <!-- json -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
@@ -38,7 +39,7 @@
             <groupId>com.github.fge</groupId>
             <artifactId>json-schema-validator</artifactId>
         </dependency>
-        
+
         <!-- logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -46,8 +47,20 @@
         </dependency>
 
         <dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-		</dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.9.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.5</version>
+        </dependency>
+
     </dependencies>
 </project>

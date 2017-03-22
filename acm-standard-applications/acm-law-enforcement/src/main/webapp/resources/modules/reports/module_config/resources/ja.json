@@ -1,8 +1,8 @@
 {
   "reports": {
-    "title": "ja_Reports",
+    "title": "報告",
     "menus": {
-      "leftnav.item": "ja_Reports"
+      "leftnav.item": "報告"
     },
     "selectReport" : {
       "label": "ja_Report",

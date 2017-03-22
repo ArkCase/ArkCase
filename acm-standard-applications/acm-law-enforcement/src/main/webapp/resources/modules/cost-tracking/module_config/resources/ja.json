@@ -1,13 +1,13 @@
 {
   "costTracking": {
-    "title": "ja_Cost Tracking",
+    "title": "トラック費用",
     "progressNoCostsheet": "ja_[ No costsheet is selected ]",
     "progressLoading": "ja_Loading costsheet ",
     "progressError": "ja_Failed to load costsheet"
   },
   "costTracking.menus": {
-    "leftnav.item": "ja_Cost Tracking",
-    "topbar.item": "ja_Costsheet"
+    "leftnav.item": "トラック費用",
+    "topbar.item": "費用項目"
   },
   "costTracking.tree": {
   },

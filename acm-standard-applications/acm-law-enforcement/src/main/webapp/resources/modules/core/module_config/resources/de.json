@@ -12,7 +12,8 @@
     "topBar": {
       "new": "Neu",
       "toggle.btn": "Richtung ändern",
-      "search.placeholder": "Suche ArkCase"
+      "search.placeholder": "Suche ArkCase",
+      "locale.updateList": "Bijwerken"
     },
     "loginWarning": {
       "btnOK.text": "Bestätigen",

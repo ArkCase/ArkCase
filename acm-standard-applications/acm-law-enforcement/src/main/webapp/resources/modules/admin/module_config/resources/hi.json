@@ -1,6 +1,6 @@
 {
   "admin": {
-    "title": "hi_Admin",
+    "title": "प्रशासन",
     "security.title": "hi_Security",
     "security.functionalAccessControl": "hi_Functional Access Control",
     "security.functionalAccessControl.applicationRole": "hi_Application Role",
@@ -36,7 +36,7 @@
       "ok": "hi_OK"
     },
     "menus": {
-      "leftnav.item": "hi_Admin"
+      "leftnav.item": "प्रशासन"
     },
     "security.ldapConfig.data.placeholders": {
       "id": "hi_Enter directory name",

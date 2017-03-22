@@ -1,21 +1,21 @@
 {
   "notifications": {
-    "title": "en-in_Notifications",
-    "search.btn": "en-in_Search",
-    "export.btn": "en-in_Export",
-    "search.placeholder": "en-in_Search for notifications",
+    "title": "Notifications",
+    "search.btn": "Search",
+    "export.btn": "Export",
+    "search.placeholder": "Search for notifications",
     "menus": {
-      "leftnav.item": "en-in_Notifications"
+      "leftnav.item": "Notifications"
     },
     "comp":{
       "grid": {
         "columns": {
-          "id": "en-in_ID",
-          "description": "en-in_Description",
-          "objNumber": "en-in_Object Number",
-          "parentNumber": "en-in_Parent Number",
-          "objType": "en-in_Object Type",
-          "modified": "en-in_Modified"
+          "id": "ID",
+          "description": "Description",
+          "objNumber": "Object Number",
+          "parentNumber": "Parent Number",
+          "objType": "Object Type",
+          "modified": "Modified"
         }
       }
     }

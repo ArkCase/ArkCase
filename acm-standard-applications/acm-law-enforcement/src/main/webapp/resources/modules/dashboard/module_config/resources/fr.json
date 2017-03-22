@@ -1,8 +1,8 @@
 {
   "dashboard": {
-    "title": "fr_Dashboard",
+    "title": "Tableau de bord",
     "menus": {
-      "leftnav.item": "fr_Dashboard"
+      "leftnav.item": "Tableau de bord"
     },
     "widgets": {
       "casesByQueue": {

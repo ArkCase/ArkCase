@@ -1,11 +1,11 @@
 {
   "notifications": {
-    "title": "pt_Notifications",
-    "search.btn": "pt_Search",
+    "title": "Notificações",
+    "search.btn": "Pesquisa",
     "export.btn": "pt_Export",
     "search.placeholder": "pt_Search for notifications",
     "menus": {
-      "leftnav.item": "pt_Notifications"
+      "leftnav.item": "Notificações"
     },
     "comp":{
       "grid": {
