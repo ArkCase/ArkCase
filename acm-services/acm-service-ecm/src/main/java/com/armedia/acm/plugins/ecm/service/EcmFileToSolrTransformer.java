@@ -167,7 +167,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
 
         solr.setAdditionalProperty("security_field_lcs", in.getSecurityField());
 
-        solr.setAdditionalProperty("cmis_repository_s", in.getCmisRepositoryId());
+        solr.setAdditionalProperty("cmis_repository_id_s", in.getCmisRepositoryId());
 
         return solr;
     }
