@@ -45,7 +45,8 @@ angular.module('tasks').controller('Tasks.TagsController', ['$scope', '$q', '$st
                                 return tagAss.id == tag.object_id_s;
                             });
                             if (tagsFound.length == 0) {
-                                ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.TASK, tag.object_id_s).then(
+                                ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.TASK,
+                                    $scope.objectParentTitle, tag.object_id_s).then(
                                     function (returnedTag) {
                                         var tagToAdd = angular.copy(returnedTag);
                                         tagToAdd.tagName = tag.tags_s;
@@ -64,7 +65,8 @@ angular.module('tasks').controller('Tasks.TagsController', ['$scope', '$q', '$st
                             }
                         }
                         else {
-                            ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.TASK, tag.id).then(
+                            ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.TASK, 
+                                $scope.objectParentTitle, tag.id).then(
                                 function () {
                                     $scope.tags.push(tag);
                                     $scope.gridOptions.data = $scope.tags;
@@ -93,6 +95,7 @@ angular.module('tasks').controller('Tasks.TagsController', ['$scope', '$q', '$st
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
+            $scope.objectParentTitle = $scope.objectInfo.parentObjectName;
 
             var currentObjectId = Util.goodMapValue(objectInfo, "taskId");
             if (Util.goodPositive(currentObjectId, false)) {
