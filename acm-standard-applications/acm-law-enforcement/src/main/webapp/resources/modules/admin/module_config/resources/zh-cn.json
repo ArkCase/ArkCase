@@ -390,17 +390,6 @@
       "target": "zh-cn_Target"
     },
     "forms.message.delete.success": "zh-cn_Successfully deleted row.",
-    "forms.message.delete.error": "zh-cn_Error deleting row.",
-    "calendarManagement": {
-      "title": "zh-cn_Calendar Management",
-      "config": "zh-cn_Calendar Configuration",
-      "calendarConfigForm": {
-        "btnUserBasedCalendarRadio": "zh-cn_User Based Calendar",
-        "btnSystemBasedCalendarRadio": "zh-cn_System Based Calendar",
-        "emailPlaceholder": "zh-cn_Enter Email",
-        "passwordPlaceholder": "zh-cn_Enter Password",
-        "btnApply": "zh-cn_Apply"
-      }
-    }
+    "forms.message.delete.error": "zh-cn_Error deleting row."
   }
 }
