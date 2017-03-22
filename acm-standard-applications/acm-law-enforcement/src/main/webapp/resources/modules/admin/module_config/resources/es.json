@@ -390,17 +390,6 @@
       "target": "es_Target"
     },
     "forms.message.delete.success": "es_Successfully deleted row.",
-    "forms.message.delete.error": "es_Error deleting row.",
-    "calendarManagement": {
-      "title": "es_Calendar Management",
-      "config": "es_Calendar Configuration",
-      "calendarConfigForm": {
-        "btnUserBasedCalendarRadio": "es_User Based Calendar",
-        "btnSystemBasedCalendarRadio": "es_System Based Calendar",
-        "emailPlaceholder": "es_Enter Email",
-        "passwordPlaceholder": "es_Enter Password",
-        "btnApply": "es_Apply"
-      }
-    }
+    "forms.message.delete.error": "es_Error deleting row."
   }
 }

@@ -415,17 +415,6 @@
       "target": "Target"
     },
     "forms.message.delete.success": "Successfully deleted row.",
-    "forms.message.delete.error": "Error deleting row.",
-    "calendarManagement": {
-      "title": "Calendar Management",
-      "config": "Calendar Configuration",
-      "calendarConfigForm": {
-        "btnUserBasedCalendarRadio": "User Based Calendar",
-        "btnSystemBasedCalendarRadio": "System Based Calendar",
-        "emailPlaceholder": "Enter Email",
-        "passwordPlaceholder": "Enter Password",
-        "btnApply": "Apply"
-      }
-    }
+    "forms.message.delete.error": "Error deleting row."
   }
 }
