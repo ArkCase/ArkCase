@@ -68,6 +68,7 @@ public class SaveNoteAPIController
 
             fakeNote.setParentId(note.getParentId());
             fakeNote.setParentType(note.getParentType());
+            fakeNote.setParentTitle(note.getParentTitle());
             fakeNote.setNote(note.getNote());
             fakeNote.setCreator(note.getCreator());
             fakeNote.setCreated(note.getCreated());
