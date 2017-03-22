@@ -3,7 +3,6 @@ package com.armedia.acm.calendar.config.service;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -40,16 +39,6 @@ public class CalendarConfigurationsByObjectType
     public CalendarConfiguration getConfiguration(String objectType)
     {
         return configurationsByType.get(objectType);
-    }
-
-    public CalendarConfigurationsByObjectType addConfiguration(String objectType, CalendarConfiguration configuration)
-    {
-        if (configurationsByType == null)
-        {
-            configurationsByType = new HashMap<>();
-        }
-        configurationsByType.put(objectType, configuration);
-        return this;
     }
 
 }

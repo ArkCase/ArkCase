@@ -13,12 +13,12 @@ public class CalendarConfiguration
 
     public static enum CalendarPropertyKeys
     {
-        INTEGRATION_ENABLED, SYSTEM_EMAIL, PASSWORD, PURGE_OPTION;
+        INTEGRATION_ENABLED, SYSTEM_EMAIL, PASSWORD, PURGE_OPTION, DAYS_CLOSED;
     }
 
     public static enum PurgeOptions
     {
-        NONE, CLOSED, CLOSED_30, CLOSED_90, CLOSED_180, CLOSED_365;
+        RETAIN_INDEFINITELY, CLOSED, CLOSED_X_DAYS;
     }
 
     private boolean integrationEnabled;
@@ -27,7 +27,9 @@ public class CalendarConfiguration
 
     private String password;
 
-    private PurgeOptions purgeOptions = PurgeOptions.NONE;
+    private PurgeOptions purgeOptions = PurgeOptions.RETAIN_INDEFINITELY;
+
+    private Integer daysClosed;
 
     /**
      * @return the integrationEnabled
@@ -95,6 +97,23 @@ public class CalendarConfiguration
     public void setPurgeOptions(PurgeOptions purgeOptions)
     {
         this.purgeOptions = purgeOptions;
+    }
+
+    /**
+     * @return the daysClosed
+     */
+    public Integer getDaysClosed()
+    {
+        return daysClosed;
+    }
+
+    /**
+     * @param daysClosed
+     *            the daysClosed to set
+     */
+    public void setDaysClosed(Integer daysClosed)
+    {
+        this.daysClosed = daysClosed;
     }
 
 }
