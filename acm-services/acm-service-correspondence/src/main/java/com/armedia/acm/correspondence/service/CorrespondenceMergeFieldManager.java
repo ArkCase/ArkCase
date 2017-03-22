@@ -45,6 +45,9 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
     private List<CorrespondenceMergeField> mergeFields = new ArrayList<>();
     private List<CorrespondenceMergeFieldVersion> mergeFieldsVersions = new ArrayList<>();
 
+    private static final String DEFAULT_MERGE_FIELD_VERSION = "1.0";
+    private static final String DEFAULT_MERGE_FIELD_MODIFIER = "System User";
+
     /*
      * (non-Javadoc)
      *
@@ -294,9 +297,10 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
             {
                 CorrespondenceMergeFieldVersion defaultMergeFieldVersion = new CorrespondenceMergeFieldVersion();
                 defaultMergeFieldVersion.setMergingActiveVersion(true);
-                defaultMergeFieldVersion.setMergingVersion("1.0");
+                defaultMergeFieldVersion.setMergingVersion(DEFAULT_MERGE_FIELD_VERSION);
                 defaultMergeFieldVersion.setMergingType(cq.getType().name());
                 defaultMergeFieldVersion.setModified(new Date());
+                defaultMergeFieldVersion.setModifier(DEFAULT_MERGE_FIELD_MODIFIER);
                 mergeFieldsVersions.add(defaultMergeFieldVersion);
             }
         });
