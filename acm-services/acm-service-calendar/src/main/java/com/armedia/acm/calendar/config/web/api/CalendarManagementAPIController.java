@@ -10,17 +10,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Mar 9, 2017
@@ -51,33 +46,10 @@ public class CalendarManagementAPIController
 
     @ExceptionHandler(CalendarConfigurationException.class)
     @ResponseBody
-    public ResponseEntity<Map<String, String>> handleConfigurationException(CalendarConfigurationException ce)
+    public ResponseEntity<?> handleConfigurationException(CalendarConfigurationException ce)
     {
-
-        BodyBuilder response;
-        Map<String, String> errorDetails = new HashMap<>();
-
-        Throwable cause = ce.getCause();
-        if (cause != null)
-        {
-            response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR);
-            Class<? extends Throwable> causeClass = cause.getClass();
-            if (causeClass.equals(AcmEncryptionException.class))
-            {
-                errorDetails.put("error_cause", "ENCRYPT_EXCEPTION");
-            } else if (causeClass.equals(IOException.class))
-            {
-                errorDetails.put("error_cause", "UPDATE_CONFIGURATION_EXCEPTION.");
-            }
-        } else
-        {
-            response = ResponseEntity.status(HttpStatus.BAD_REQUEST);
-            errorDetails.put("error_cause", "INPUT_DATA_EXCEPTION");
-        }
-
-        errorDetails.put("error_message", ce.getMessage());
-
-        return response.body(errorDetails);
+        Object errorDetails = calendarService.getExceptionMapper().mapException(ce);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorDetails);
     }
 
     /**
