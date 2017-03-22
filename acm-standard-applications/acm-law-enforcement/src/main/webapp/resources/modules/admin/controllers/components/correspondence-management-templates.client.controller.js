@@ -35,6 +35,8 @@ angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$m
                 gridHelper.setUserNameFilterToConfig(promiseUsers, config);
                 $scope.config = config;
                 $scope.gridOptions.columnDefs = config.columnDefs;
+                $scope.gridOptions.paginationPageSizes = config.paginationPageSizes;
+                $scope.gridOptions.paginationPageSize = config.paginationPageSize;
                 
                 gridHelper.setUserNameFilterToConfig(promiseUsers, configVersions);
                 $scope.configVersions = configVersions;
@@ -122,6 +124,8 @@ angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', '$m
                                     enableColumnResizing: true,
                                     enableRowSelection: true,
                                     columnDefs: $scope.config.columnDefs,
+                                    paginationPageSizes: $scope.config.paginationPageSizes,
+                                    paginationPageSize: $scope.config.paginationPageSize,
                                     data: templateVersionData.data
                             };
                             $scope.onClickOk = function () {
