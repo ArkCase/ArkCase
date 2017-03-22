@@ -68,7 +68,7 @@ public class LdapEntryTransformer
             } else if (key.equals(AcmLdapConstants.LDAP_MEMBER_OF_ATTR))
             {
                 user.getGroups().forEach(
-                        group -> context.setAttributeValue(entry.getKey(), group.getDistinguishedName())
+                        group -> context.addAttributeValue(entry.getKey(), group.getDistinguishedName())
                 );
             } else
             {
