@@ -38,6 +38,7 @@ import static org.junit.Assert.*;
         "/spring/spring-library-data-access-control.xml",
         "/spring/spring-library-data-source.xml",
         "/spring/spring-library-ecm-file.xml",
+        "/spring/spring-library-folder-watcher.xml",
         "/spring/spring-library-ms-outlook-integration.xml",
         "/spring/spring-library-note.xml",
         "/spring/spring-library-notification.xml",
@@ -110,6 +111,7 @@ public class BuckslipArkcaseIT
 
     private String startBuckslipProcess()
     {
+
         Long objectId = 500L;
         String objectType = "rockBand";
         String objectNumber = "20170116_101";
@@ -126,6 +128,7 @@ public class BuckslipArkcaseIT
         processVariables.put("documentType", documentType);
         // the process should work with either "approvers" or "futureApprovers"
         processVariables.put("approvers", futureApprovers);
+        processVariables.put("taskDueDateExpression", "P3D");
 
         ProcessInstance pi = rt.startProcessInstanceByKey(processName, processVariables);
 
@@ -265,6 +268,7 @@ public class BuckslipArkcaseIT
     @Test
     public void buckslipRemoveApprover() throws Exception
     {
+
         assertNotNull(processId);
 
         AcmUser samuel = new AcmUser();

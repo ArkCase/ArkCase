@@ -1,11 +1,11 @@
 {
   "subscriptions": {
-    "title": "hi_Subscriptions",
+    "title": "सदस्यता",
     "search.btn": "hi_Search",
     "export.btn": "hi_Export",
     "search.placeholder": "hi_Search for subscriptions",
     "menus": {
-      "leftnav.item": "hi_Subscriptions"
+      "leftnav.item": "सदस्यता"
     },
     "comp":{
       "grid": {

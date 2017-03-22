@@ -1,11 +1,11 @@
 {
   "subscriptions": {
-    "title": "ja_Subscriptions",
-    "search.btn": "ja_Search",
+    "title": "購読",
+    "search.btn": "検索",
     "export.btn": "ja_Export",
     "search.placeholder": "ja_Search for subscriptions",
     "menus": {
-      "leftnav.item": "ja_Subscriptions"
+      "leftnav.item": "購読"
     },
     "comp":{
       "grid": {

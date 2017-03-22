@@ -38,16 +38,19 @@ angular.module('services').factory('Helper.NoteService', ['UtilService', 'Object
              *
              * @param {Number} parentObjId unique identifier for the parent of the note
              * @param {String} parentObjType specifies the ArkCase type for the parent of the note
+             * @param {String} parentObjTitle specifies the ArkCase title for the parent of the note
              * @param {String} parentObjVersion specifies the parent object version when the note was created
              * @param {String} userId the internal username of the note creator
              * @param {String} noteType type of the note
              * @returns {Object} note metadata used to populate a row in the notes table
              */
-            createNote: function (parentObjId, parentObjType, parentObjVersion, creator, noteType, author) {
+
+            createNote: function (parentObjId, parentObjType, parentObjTitle, parentObjVersion, creator, noteType, author) {
                 noteType = noteType || "GENERAL";
                 return {
                     parentId: parentObjId,
                     parentType: parentObjType,
+                    parentTitle: parentObjTitle,
                     tag: parentObjVersion,
                     created: UtilDateService.dateToIso(new Date()),
                     creator: creator,
