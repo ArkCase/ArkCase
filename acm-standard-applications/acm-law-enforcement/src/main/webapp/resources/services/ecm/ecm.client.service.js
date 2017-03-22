@@ -10,8 +10,8 @@
 
  * EcmService contains functions to related to document management.
  */
-angular.module('services').factory('EcmService', ['$resource', 'Acm.StoreService', 'UtilService'
-    , function ($resource, StoreService, Util) {
+angular.module('services').factory('EcmService', ['$resource'
+    , function ($resource) {
 
         var Service = $resource('api/latest/service', {}, {
             retrieveFolderList: {
@@ -103,7 +103,6 @@ angular.module('services').factory('EcmService', ['$resource', 'Acm.StoreService
                 url: 'api/latest/service/ecm/file/:fileId/type/:fileType',
                 cache: false
             }
-
         });
 
         return Service;

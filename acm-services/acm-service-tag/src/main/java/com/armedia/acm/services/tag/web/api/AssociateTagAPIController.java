@@ -40,20 +40,20 @@ public class AssociateTagAPIController
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @PreAuthorize("hasPermission(#objectId, #objectType, 'addTag')")
-    @RequestMapping(value = "{objectId}/{objectType}/{tagId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "{objectId}/{objectType}/{objectTitle}/{tagId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmAssociatedTag associateTag(@PathVariable("objectId") Long objectId, @PathVariable("objectType") String objectType,
-                                         @PathVariable("tagId") Long tagId, Authentication authentication)
+                                         @PathVariable("objectTitle") String objectTitle, @PathVariable("tagId") Long tagId, Authentication authentication)
             throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException
     {
 
-        log.info("Creating new tag association on object [{}]:[{}] and tagId: {}", objectType, objectId, tagId);
+        log.info("Creating new tag association on object type [{}], title [{}], id [{}], and tagId: {}", objectType, objectTitle, objectId, tagId);
 
         AcmTag tagForAssociating = getTagService().findTag(tagId);
         AcmAssociatedTag newAssociatedTag = null;
         try
         {
-            AcmAssociatedTag returnedAssociatedTag = getAssociatedTagService().saveAssociateTag(objectType, objectId, tagForAssociating);
+            AcmAssociatedTag returnedAssociatedTag = getAssociatedTagService().saveAssociateTag(objectType, objectId, objectTitle ,tagForAssociating);
             getAssociatedTagEventPublisher().publishAssociatedTagCreatedEvent(returnedAssociatedTag, authentication, true);
             newAssociatedTag = returnedAssociatedTag;
         } catch (Exception e)

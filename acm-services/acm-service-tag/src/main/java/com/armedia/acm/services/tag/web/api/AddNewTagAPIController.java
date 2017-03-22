@@ -41,7 +41,7 @@ public class AddNewTagAPIController {
             Authentication authentication) throws AcmCreateObjectFailedException {
 
         if ( log.isInfoEnabled() ) {
-            log.info("Creating new tag with text:"+text+" description: " + desc + "and name: "+name );
+            log.info("Creating new tag with text:"+text+" description: " + desc + " name: "+name);
         }
             AcmTag returnedTag = getTagService().getTagByTextOrDescOrName(text, desc, name);
 

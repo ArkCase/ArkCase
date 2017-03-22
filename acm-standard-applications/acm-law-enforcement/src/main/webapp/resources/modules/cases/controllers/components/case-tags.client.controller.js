@@ -37,7 +37,7 @@ angular.module('cases').controller('Cases.TagsController', ['$scope', '$q', '$st
 
             modalInstance.result.then(function (tags) {
                 _.forEach(tags, function (tag) {
-                    tag.object_id_s = tag.id.split("-")[0];
+                    tag.object_id_s = tag.id.split("-")[0]; 
                     tag.tags_s = tag.title_parseable;
                     if (tag.id) {
                         if (tag.object_id_s) {
@@ -45,7 +45,8 @@ angular.module('cases').controller('Cases.TagsController', ['$scope', '$q', '$st
                                 return tagAss.id == tag.object_id_s;
                             });
                             if (tagsFound.length == 0) {
-                                ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.CASE_FILE, tag.object_id_s).then(
+                                ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.CASE_FILE,
+                                    $scope.objectParentTitle, tag.object_id_s).then(
                                     function (returnedTag) {
                                         var tagToAdd = angular.copy(returnedTag);
                                         tagToAdd.tagName = tag.tags_s;
@@ -64,7 +65,8 @@ angular.module('cases').controller('Cases.TagsController', ['$scope', '$q', '$st
                             }
                         }
                         else {
-                            ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.CASE_FILE, tag.id).then(
+                            ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.CASE_FILE, 
+                                $scope.objectParentTitle, tag.id).then(
                                 function () {
                                     $scope.tags.push(tag);
                                     $scope.gridOptions.data = $scope.tags;
@@ -93,6 +95,7 @@ angular.module('cases').controller('Cases.TagsController', ['$scope', '$q', '$st
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
+            $scope.objectParentTitle = $scope.objectInfo.caseNumber;
 
             var currentObjectId = Util.goodMapValue(objectInfo, "id");
             if (Util.goodPositive(currentObjectId, false)) {
