@@ -56,7 +56,10 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
 
         try
         {
-            getKieBase().newStatelessKieSession().execute(businessObject);
+            synchronized (this)
+            {
+                getKieBase().newStatelessKieSession().execute(businessObject);
+            }
         }
         catch (NullPointerException e)
         {
@@ -87,7 +90,7 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
         }
     }
 
-    public void updateRulesFromFile(File configFile)
+    public synchronized void updateRulesFromFile(File configFile)
     {
         SpreadsheetCompiler sc = new SpreadsheetCompiler();
 

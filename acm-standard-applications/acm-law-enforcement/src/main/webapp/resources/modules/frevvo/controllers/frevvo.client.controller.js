@@ -47,9 +47,10 @@ angular.module('frevvo').controller('FrevvoController', ['$rootScope', '$scope',
                     $rootScope.frevvoMessaging.receiver = frevvoIframe;
                     $rootScope.frevvoMessaging.send = function send(message) {
                         if (!Util.isEmpty($rootScope.frevvoMessaging.receiver)) {
-                            $rootScope.frevvoMessaging.receiver.postMessage(message, '*');
+                            var targetOrigin = getTargetOrigin();
+                            $rootScope.frevvoMessaging.receiver.postMessage(message, targetOrigin);
                         }
-                    }
+                    };
                     $rootScope.frevvoMessaging.receive = function receive(e) {
                         if (!Util.isEmpty(e) && !Util.isEmpty(e.data) && !Util.isEmpty(e.data.source) && e.data.source == "frevvo" && !Util.isEmpty(e.data.action)) {
                             // Do actions sent from Frevvo
@@ -60,13 +61,23 @@ angular.module('frevvo').controller('FrevvoController', ['$rootScope', '$scope',
                                 pickObject(e.data);
                             }
                         }
-                    }
+                    };
 
                     window.addEventListener("message", $rootScope.frevvoMessaging.receive);
                 } else {
                     $rootScope.frevvoMessaging.receiver = frevvoIframe;
                 }
             }
+        }
+
+        function getTargetOrigin() {
+            var protocol = $scope.acmFormsProperties['frevvo.protocol'];
+            var host = $scope.acmFormsProperties['frevvo.host'];
+            var targetOrigin = '*';
+            if (protocol && host) {
+                targetOrigin = protocol + "://" + host;
+            }
+            return targetOrigin;
         }
 
         function getFrevvoIframe() {
@@ -120,7 +131,7 @@ angular.module('frevvo').controller('FrevvoController', ['$rootScope', '$scope',
                     $scope.frevvoMessaging.send(message);
                 }
             });
-        };
+        }
 
         function pickObject(data) {
             var modalInstance;
