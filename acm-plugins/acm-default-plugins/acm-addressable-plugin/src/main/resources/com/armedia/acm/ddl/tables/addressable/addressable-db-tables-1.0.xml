@@ -184,5 +184,23 @@
             <column name="cm_seq_name" value="acm_contact_method"></column>
         </insert>
     </changeSet>
+    <changeSet id="04-add-address-contact-method-table" author="nebojsha.davidovikj">
+        <createTable tableName="acm_address_contact_method">
+            <column name="cm_address_id" type="${fkIdType}">
+                <constraints nullable="false" foreignKeyName="fk_address_cntct_address_id"
+                             references="acm_postal_address(cm_address_id)"/>
+            </column>
+            <column name="cm_contact_method_id" type="${fkIdType}">
+                <constraints nullable="false" foreignKeyName="fk_address_cntct_cntct_id"
+                             references="acm_contact_method(cm_contact_method_id)"/>
+            </column>
+        </createTable>
+        <createIndex tableName="acm_address_contact_method" indexName="idx_address_cntct_person_id">
+            <column name="cm_address_id"/>
+        </createIndex>
+        <createIndex tableName="acm_address_contact_method" indexName="idx_address_cntct_cntct_id">
+            <column name="cm_contact_method_id"/>
+        </createIndex>
+    </changeSet>
 </databaseChangeLog>
 

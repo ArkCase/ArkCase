@@ -25,6 +25,18 @@ public class OrganizationServiceImpl implements OrganizationService
         return organization;
     }
 
+    @Override
+    public Organization saveOrganization(Organization organization)
+    {
+        return organizationDao.save(organization);
+    }
+
+    @Override
+    public Organization getOrganization(Long organizationId)
+    {
+        return organizationDao.find(organizationId);
+    }
+
     private Organization prepareNewOrg(String companyName, String userId)
     {
         Organization org = new Organization();
