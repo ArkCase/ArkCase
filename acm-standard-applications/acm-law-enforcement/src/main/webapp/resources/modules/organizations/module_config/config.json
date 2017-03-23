@@ -1,0 +1,172 @@
+{
+  "id": "organizations",
+  "title": "organizations",
+  "initialLinksShown": true,
+  "hasOverviewWidgets": true,
+  "menus": [
+    {
+      "menuId": "leftnav",
+      "menuItemURL": "organizations.main",
+      "menuItemTitle": "organizations.menus.leftnav.item",
+      "moduleId": "organization",
+      "iconClass": "fa fa-exclamation-triangle",
+      "position": 90
+    }
+  ],
+  "tree": {
+    "pageSize": 32,
+    "filters": [
+      {
+        "desc": "All Open organizations",
+        "name": "all-open-organizations",
+        "value": "fq=-status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED",
+        "default": true
+      },
+      {
+        "desc": "All I've Created",
+        "name": "my-organizations-created",
+        "value": "fq=author_s:${user}"
+      },
+      {
+        "desc": "All I'm Assigned",
+        "name": "my-organizations-assigned",
+        "value": "fq=assignee_s:${user}"
+      },
+      {
+        "desc": "All I'm Following",
+        "name": "my-organizations-following",
+        "value": "fq={!join from=parent_object_id_s to=object_id_s}(owner_s:${user} AND object_type_s:SUBSCRIPTION)"
+      },
+      {
+        "desc": "(No Filter)",
+        "name": "",
+        "value": ""
+      }
+    ],
+    "sorters": [
+      {
+        "desc": "Sort Created Date Asc",
+        "name": "sort-created-date-asc",
+        "value": "create_tdt ASC"
+      },
+      {
+        "desc": "Sort Created Date Desc",
+        "name": "sort-created-date-desc",
+        "value": "create_tdt DESC",
+        "default": true
+      },
+      {
+        "desc": "Sort By Name",
+        "name": "sort-by-name-asc",
+        "value": "name ASC"
+      },
+      {
+        "desc": "(No Sort)",
+        "name": "",
+        "value": ""
+      }
+    ],
+    "nodeTypes": [
+      {
+        "type": "prev",
+        "icon": "fa fa-arrow-up"
+      },
+      {
+        "type": "next",
+        "icon": "fa fa-arrow-down"
+      },
+      {
+        "type": "p/ORGANIZATION",
+        "icon": "fa fa-exclamation-triangle",
+        "components": [
+          "details",
+          "history"
+        ]
+      },
+      {
+        "type": "p/ORGANIZATION/det",
+        "label": "Details",
+        "icon": "fa fa-info-circle",
+        "components": [
+          "details"
+        ]
+      },
+      {
+        "type": "p/ORGANIZATION/his",
+        "label": "History",
+        "icon": "fa fa-bell-o",
+        "components": [
+          "history"
+        ]
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "main",
+      "title": "Overview",
+      "icon": "fa fa-tachometer",
+      "enabled": false,
+      "type": "empty",
+      "editable": false,
+      "widgets": [
+      ]
+    },
+    {
+      "id": "info",
+      "title": "Info",
+      "enabled": false,
+      "type": "empty",
+      "editable": false
+    },
+    {
+      "id": "actions",
+      "title": "Actions",
+      "enabled": false,
+      "type": "empty",
+      "editable": false
+    },
+    {
+      "id": "details",
+      "title": "Details",
+      "icon": "fa fa-info-circle",
+      "enabled": true,
+      "type": "empty"
+    },
+    {
+      "id": "history",
+      "title": "History",
+      "icon": "fa fa-bell-o",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
+      "columnDefs": [
+        {
+          "name": "eventType",
+          "displayName": "organizations.comp.history.table.columns.eventType",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div> <span ng-if='row.entity.parentObjectType'>{{('common.objectTypes.'+row.entity.parentObjectType) | translate}} Updated - </span> {{row.entity.eventDescription || row.entity.eventType}}</div>"
+        },
+        {
+          "name": "eventDate",
+          "displayName": "organizations.comp.history.table.columns.eventDate",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.eventDate | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+        },
+        {
+          "name": "userId",
+          "displayName": "organizations.comp.history.table.columns.userId",
+          "headerCellFilter": "translate",
+          "lookup": "userFullNames"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "organizations": {
+    "title": "Organizations",
+    "progressNoComplaint": "[ No organizations data ]",
+    "progressLoading": "Loading organization ",
+    "progressError": "Failed to load organization "
+  },
+  "organizations.menus": {
+    "leftnav.item": "Organizations",
+    "topbar.item": "Organizations"
+  },
+  "organizations.comp.info": {
+    "peopleId": "Organization id:",
+    "type.label": "Type",
+    "created.label": "Created Date",
+    "priority.label": "Priority",
+    "assignee.label": "Assigned To",
+    "owningGroup.label": "Owning Group",
+    "dueDate.label": "Due Date"
+  },
+  "organizations.comp.actions": {
+    "restrict": "Restrict?",
+    "new.button": "New Person",
+    "subscribe.button": "Subscribe",
+    "unsubscribe.button": "Unsubscribe"
+  },
+  "organizations.comp.details": {
+    "title": "Details",
+    "informSaved": "organization details saved",
+    "table.columns": {
+      "title": "Details",
+      "modified": "Date Last Modified",
+      "modifier": "User Last Modified"
+    }
+  },
+  "organizations.comp.history": {
+    "title": "History",
+    "table.columns": {
+      "eventType": "Event Name",
+      "eventDate": "Date",
+      "userId": "User"
+    }
+  }
+}

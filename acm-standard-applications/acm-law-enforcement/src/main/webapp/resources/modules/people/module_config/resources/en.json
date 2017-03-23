@@ -1,0 +1,44 @@
+{
+  "people": {
+    "title": "People",
+    "progressNoComplaint": "[ No people data ]",
+    "progressLoading": "Loading people ",
+    "progressError": "Failed to load people "
+  },
+  "people.menus": {
+    "leftnav.item": "People",
+    "topbar.item": "People"
+  },
+  "people.comp.info": {
+    "peopleId": "People id:",
+    "type.label": "Type",
+    "created.label": "Created Date",
+    "priority.label": "Priority",
+    "assignee.label": "Assigned To",
+    "owningGroup.label": "Owning Group",
+    "dueDate.label": "Due Date"
+  },
+  "people.comp.actions": {
+    "restrict": "Restrict?",
+    "new.button": "New Person",
+    "subscribe.button": "Subscribe",
+    "unsubscribe.button": "Unsubscribe"
+  },
+  "people.comp.details": {
+    "title": "Details",
+    "informSaved": "Person details saved",
+    "table.columns": {
+      "title": "Details",
+      "modified": "Date Last Modified",
+      "modifier": "User Last Modified"
+    }
+  },
+  "people.comp.history": {
+    "title": "History",
+    "table.columns": {
+      "eventType": "Event Name",
+      "eventDate": "Date",
+      "userId": "User"
+    }
+  }
+}
