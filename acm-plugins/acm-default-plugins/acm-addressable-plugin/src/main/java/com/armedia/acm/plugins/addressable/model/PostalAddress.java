@@ -4,11 +4,16 @@ import com.armedia.acm.data.AcmEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
@@ -80,6 +85,13 @@ public class PostalAddress implements Serializable, AcmEntity
 
     @Column(name = "cm_country")
     private String country;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "acm_address_contact_method", joinColumns = {
+            @JoinColumn(name = "cm_address_id", referencedColumnName = "cm_address_id")}, inverseJoinColumns = {
+            @JoinColumn(name = "cm_contact_method_id", referencedColumnName = "cm_contact_method_id")})
+    @OrderBy(value = "id")
+    private List<ContactMethod> contactMethods;
 
     @XmlTransient
     public Long getId()
@@ -246,6 +258,16 @@ public class PostalAddress implements Serializable, AcmEntity
     public PostalAddress returnBase()
     {
         return this;
+    }
+
+    public List<ContactMethod> getContactMethods()
+    {
+        return contactMethods;
+    }
+
+    public void setContactMethods(List<ContactMethod> contactMethods)
+    {
+        this.contactMethods = contactMethods;
     }
 
     @Override public boolean equals(Object o)
