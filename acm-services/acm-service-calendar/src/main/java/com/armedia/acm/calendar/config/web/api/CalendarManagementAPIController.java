@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -44,12 +45,18 @@ public class CalendarManagementAPIController
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/{email}", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> validateEmail(@PathVariable(value = "email") String email)
+    {
+        return ResponseEntity.status(HttpStatus.OK).body("true");
+    }
+
     @ExceptionHandler(CalendarConfigurationException.class)
     @ResponseBody
     public ResponseEntity<?> handleConfigurationException(CalendarConfigurationException ce)
     {
         Object errorDetails = calendarService.getExceptionMapper().mapException(ce);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorDetails);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDetails);
     }
 
     /**
