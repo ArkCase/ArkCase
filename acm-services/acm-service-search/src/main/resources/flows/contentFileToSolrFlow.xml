@@ -4,6 +4,7 @@
       xmlns="http://www.mulesoft.org/schema/mule/core"
       xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
       xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
+      xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
       xmlns:cmis="http://www.mulesoft.org/schema/mule/cmis"
       version="CE-3.7.0"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -11,10 +12,11 @@
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/https/current/mule-https.xsd
 http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmis/current/mule-cmis.xsd
-http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd">
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
 
     <https:endpoint name="submitContentFilesSolrEndpoint"
-                    address="https://${solr.host}:${solr.port}/${solr.contextRoot}/${solr.advancedsearch.core}/${solr.contentFileHandler}?overwrite=true&amp;literal.hidden_b=#[flowVars['hidden']]&amp;literal.parent_ref_s=#[flowVars['parentRef']]&amp;literal.status_lcs=#[flowVars['status']]&amp;literal.protected_object_b=#[flowVars['protectedObject']]&amp;literal.public_doc_b=#[flowVars['publicDoc']]&amp;literal.id=#[flowVars['docId']]&amp;literal.object_type_s=#[flowVars['objectType']]&amp;literal.object_id_s=#[flowVars['objectId']]&amp;literal.modified_date_tdt=#[flowVars['modified']]&amp;literal.modifier_lcs=#[flowVars['modifier']]&amp;literal.create_date_tdt=#[flowVars['created']]&amp;literal.creator_lcs=#[flowVars['creator']]&amp;literal.name=#[flowVars['name']]&amp;literal.parent_id_s=#[flowVars['parentId']]&amp;literal.parent_type_s=#[flowVars['parentType']]&amp;literal.parent_number_lcs=#[flowVars['parentName']]&amp;literal.title_parseable=#[flowVars['titleParseable']]&amp;literal.assignee_full_name_lcs=#[flowVars['assigneeFullName']]"
+                    address="https://${solr.host}:${solr.port}/${solr.contextRoot}/${solr.advancedsearch.core}/${solr.contentFileHandler}?overwrite=true&amp;literal.hidden_b=#[flowVars['hidden']]&amp;literal.parent_ref_s=#[flowVars['parentRef']]&amp;literal.status_lcs=#[flowVars['status']]&amp;literal.protected_object_b=#[flowVars['protectedObject']]&amp;literal.public_doc_b=#[flowVars['publicDoc']]&amp;literal.id=#[flowVars['docId']]&amp;literal.object_type_s=#[flowVars['objectType']]&amp;literal.object_id_s=#[flowVars['objectId']]&amp;literal.modified_date_tdt=#[flowVars['modified']]&amp;literal.modifier_lcs=#[flowVars['modifier']]&amp;literal.create_date_tdt=#[flowVars['created']]&amp;literal.creator_lcs=#[flowVars['creator']]&amp;literal.name=#[flowVars['name']]&amp;literal.parent_id_s=#[flowVars['parentId']]&amp;literal.parent_type_s=#[flowVars['parentType']]&amp;literal.parent_number_lcs=#[flowVars['parentName']]&amp;literal.title_parseable=#[flowVars['titleParseable']]&amp;literal.assignee_full_name_lcs=#[flowVars['assigneeFullName']]&amp;literal.ext_s=#[flowVars['ext']]&amp;literal.creator_full_name_lcs=#[flowVars['creatorFullName']]&amp;literal.modifier_full_name_lcs=#[flowVars['modifierFullName']]&amp;literal.page_count_i=#[flowVars['pageCount']]&amp;literal.security_field_lcs=#[flowVars['securityField']]&amp;literal.cmis_repository_id_s=#[flowVars['cmisRepositoryId']]"
                     encoding="UTF-8"
                     method="POST"
                     exchange-pattern="request-response"
@@ -34,6 +36,25 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
                 doc:name="JMS"/>
 
         <timer-interceptor/>
+
+        <!-- NOTE: Intellij IDEA incorrectly claims scripting:transformer is not allowed here. This XML is valid. -->
+        <scripting:transformer name="obtainCmisConfiguration">
+            <scripting:script engine="groovy">
+                <scripting:text><![CDATA[
+                    import org.mule.module.cmis.connectivity.CMISCloudConnectorConnectionManager;
+
+                    String cmisConfigurationId = message.getInboundProperty("additionalProperties").get("cmis_repository_id_s");
+                    if ( cmisConfigurationId != null )
+                    {
+                        CMISCloudConnectorConnectionManager configuration = muleContext.registry.lookupObject(cmisConfigurationId);
+                        message.setInboundProperty("configRef", configuration);
+                    }
+
+                    return payload;
+                    ]]>
+                </scripting:text>
+            </scripting:script>
+        </scripting:transformer>
 
         <logger category="com.armedia.acm.services.search.service" level="DEBUG"/>
 
@@ -63,6 +84,11 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
         <set-variable variableName="titleParseable" value="#[message.payload.title_parseable]"/>
         <set-variable variableName="assigneeFullName" value="#[message.payload.assignee_full_name_lcs]"/>
         <set-variable variableName="ext" value="#[message.payload.ext_s]"/>
+        <set-variable variableName="creatorFullName" value="#[message.inboundProperties.additionalProperties.creator_full_name_lcs]"/>
+        <set-variable variableName="modifierFullName" value="#[message.inboundProperties.additionalProperties.modifier_full_name_lcs]"/>
+        <set-variable variableName="pageCount" value="#[message.inboundProperties.additionalProperties.page_count_i]"/>
+        <set-variable variableName="securityField" value="#[message.inboundProperties.additionalProperties.security_field_lcs]"/>
+        <set-variable variableName="cmisRepositoryId" value="#[message.inboundProperties.additionalProperties.cmis_repository_id_s]"/>
 
         <logger category="com.armedia.acm.services.search.service" level="DEBUG"
                 message="Doc ID: #[flowVars['docId']]"/>

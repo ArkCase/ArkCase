@@ -3,75 +3,25 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
+    <!-- property placeholder for all properties needed for the proxy -->
+    <bean id="arkCasePropertyConfigurerProxy"
+          class="com.armedia.acm.crypto.properties.AcmEncryptablePropertySourcesPlaceholderConfigurer">
+        <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
+        <property name="order" value="42"/>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+        <property name="locations">
+            <list>
+                <value>file:${user.home}/.arkcase/acm/acm-reports-server-config.properties</value>
+            </list>
+        </property>
+    </bean>
+
     <!-- Map URLs to Controllers based on bean id -->
     <bean id="beanNameUrlHandlerMapping" class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"/>
 
-    <bean id="/VirtualViewerJavaHTML5/**" class="org.springframework.web.servlet.mvc.ServletWrappingController">
-        <property name="servletClass" value="com.armedia.acm.proxy.http.ProxyServlet"/>
-        <property name="servletName" value="snowbound"/>
-        <property name="initParameters">
-            <props>
-                <!-- TODO: parameterize the URLs -->
-                <prop key="targetUri">https://acm-arkcase/</prop>
-                <prop key="http.protocol.handle-redirects">true</prop>
-                <!-- resource names regex patterns separated with comma "," if multiple.
-                Will be processed and override urls inside the response-->
-                <prop key="responseUrlMatchers">^.*config\.js$</prop>
-                <!-- given pairs for replacement pattern1:replacement1,pattern2:replacement2-->
-                <prop key="responseContentRewritePairs">/VirtualViewerJavaHTML5/:/arkcase/VirtualViewerJavaHTML5/</prop>
-            </props>
-        </property>
-    </bean>
+    <!-- Configuration is externalized in .arkcase/acm/spring-->
+    <import resource="file:${user.home}/.arkcase/acm/spring/proxy-config/spring-config-proxy.xml"/>
 
-    <bean id="/pentaho/**" class="org.springframework.web.servlet.mvc.ServletWrappingController">
-        <property name="servletClass" value="com.armedia.acm.proxy.http.ProxyServlet"/>
-        <property name="servletName" value="pentaho"/>
-        <property name="initParameters">
-            <props>
-                <!-- TODO: parameterize the URLs -->
-                <prop key="targetUri">https://acm-arkcase/</prop>
-                <prop key="http.protocol.handle-redirects">true</prop>
-                <!-- resource names regex patterns separated with comma "," if multiple.
-                Will be processed and override urls inside the response-->
-                <prop key="responseUrlMatchers">^.*$</prop>
-                <!-- resource names regex patterns separated with comma "," if multiple.
-                Will be processed and override urls inside the response-->
-                <prop key="skipResponseUrlMatchers">.*ttf$, .*woff$</prop>
-                <!-- given pairs for replacement pattern1:replacement1,pattern2:replacement2-->
-                <prop key="responseContentRewritePairs">(?&lt;=['"])/pentaho/:/arkcase/pentaho/</prop>
-                <!-- comma delimited content types which need to be skip for processing-->
-                <prop key="skipResponseContentTypes">application/x-font-ttf, application/x-font-woff</prop>
-            </props>
-        </property>
-    </bean>
-
-    <bean id="/frevvo/**" class="org.springframework.web.servlet.mvc.ServletWrappingController">
-        <property name="servletClass" value="com.armedia.acm.proxy.http.ProxyServlet"/>
-        <property name="servletName" value="frevvo"/>
-        <property name="initParameters">
-            <props>
-                <!-- TODO: parameterize the URLs -->
-                <prop key="targetUri">https://acm-arkcase/</prop>
-                <prop key="http.protocol.handle-redirects">false</prop>
-                <!-- resource names regex patterns separated with comma "," if multiple.
-                Will be processed and override urls inside the response-->
-                <prop key="responseUrlMatchers">^.*$</prop>
-                <!-- given pairs for replacement pattern1:replacement1,pattern2:replacement2-->
-                <prop key="responseContentRewritePairs">/frevvo/:/arkcase/frevvo/,%2Ffrevvo%2F:%2Farkcase%2Ffrevvo%2F</prop>
-                <!-- comma delimited content types which need to be skip for processing-->
-                <prop key="skipResponseContentTypes">application/x-font-ttf, application/x-font-woff</prop>
-            </props>
-        </property>
-    </bean>
-
-    <bean id="/weather/**" class="org.springframework.web.servlet.mvc.ServletWrappingController">
-        <property name="servletClass" value="com.armedia.acm.proxy.http.ProxyServlet"/>
-        <property name="servletName" value="openweathermap"/>
-        <property name="initParameters">
-            <props>
-                <!-- TODO: parameterize the URLs -->
-                <prop key="targetUri">http://api.openweathermap.org/data/2.5</prop>
-            </props>
-        </property>
-    </bean>
 </beans>
