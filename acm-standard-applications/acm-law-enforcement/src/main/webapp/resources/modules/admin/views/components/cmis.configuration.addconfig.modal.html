@@ -91,16 +91,18 @@
                    required>
         </div>
         <div class="form-group">
-            <label>{{ 'admin.documentManagement.cmisConfiguration.data.repositoryId.label' | translate }}</label>
-            <input class="form-control" type="text" ng-model="cmisConfig.repositoryId"
-                   placeholder="{{ 'admin.documentManagement.cmisConfiguration.data.repositoryId.placeholder' | translate }}"
-                   required>
-        </div>
-        <div class="form-group">
             <label>{{ 'admin.documentManagement.cmisConfiguration.data.versioningState.label' | translate }}</label>
             <input class="form-control" type="text" ng-model="cmisConfig.versioningState"
                    placeholder="{{ 'admin.documentManagement.cmisConfiguration.data.versioningState.placeholder' | translate }}"
                    required>
+        </div>
+
+        <span translate>admin.documentManagement.cmisConfiguration.addNewConfig.modal.guidelineMessage.repositoryId</span>
+        <div class="form-group">
+            <label>{{ 'admin.documentManagement.cmisConfiguration.data.repositoryId.label' | translate }}</label>
+            <input class="form-control" type="text" ng-model="cmisConfig.repositoryId"
+                   placeholder="{{ 'admin.documentManagement.cmisConfiguration.data.repositoryId.placeholder' | translate }}"
+            >
         </div>
     </div>
     <div class="modal-footer">

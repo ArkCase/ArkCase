@@ -8,22 +8,25 @@
 
     <bean id="downloadCorrespondenceTemplate"
           class="com.armedia.acm.plugins.admin.web.api.TemplateDownloadControllerAPI">
-          <property name="correspondenceFolderName" value="${user.home}/.arkcase/acm/correspondenceTemplates"/>
+        <property name="correspondenceFolderName" value="${user.home}/.arkcase/acm/correspondenceTemplates"/>
     </bean>
 
     <bean id="listCorrespondenceTemplates" class="com.armedia.acm.plugins.admin.web.api.ListAllTemplatesControllerAPI">
     </bean>
 
-    <bean id="correspondenceQueryController" class="com.armedia.acm.plugins.admin.web.api.CorrespondenceQueryAPIController">
+    <bean id="correspondenceQueryController"
+          class="com.armedia.acm.plugins.admin.web.api.CorrespondenceQueryAPIController">
         <property name="correspondenceService" ref="correspondenceService"/>
     </bean>
 
-    <bean id="correspondenceTemplateController" class="com.armedia.acm.plugins.admin.web.api.CorrespondenceTemplateAPIController">
+    <bean id="correspondenceTemplateController"
+          class="com.armedia.acm.plugins.admin.web.api.CorrespondenceTemplateAPIController">
         <property name="correspondenceService" ref="correspondenceService"/>
         <property name="correspondenceFolderName" value="${user.home}/.arkcase/acm/correspondenceTemplates"/>
     </bean>
 
-    <bean id="correspondenceMergeFieldController" class="com.armedia.acm.plugins.admin.web.api.CorrespondenceMergeFieldAPIController">
+    <bean id="correspondenceMergeFieldController"
+          class="com.armedia.acm.plugins.admin.web.api.CorrespondenceMergeFieldAPIController">
         <property name="correspondenceService" ref="correspondenceService"/>
     </bean>
 
@@ -332,5 +335,39 @@
     <bean id="getPlainFormTargetsAPIController"
           class="com.armedia.acm.plugins.admin.web.api.GetPlainFormTargetsAPIController">
         <property name="plainConfigurationFormFactory" ref="plainConfigurationFormFactory"/>
+    </bean>
+
+    <!-- CMIS configuration API -->
+    <bean id="cmisConfigurationService" class="com.armedia.acm.plugins.admin.web.api.CmisConfigurationService">
+        <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+        <property name="cmisConfigurationTemplatesLocation"
+                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/cmis/cmis-config-templates/"/>
+        <property name="cmisTemplateFile" value="mule-config-cmis.xml.ftl"/>
+        <property name="cmisTemplatePropertiesFile" value="mule-config-cmis.properties.ftl"/>
+
+        <property name="cmisConfigurationLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/cmis/"/>
+        <property name="cmisFile" value="mule-config-%s-cmis.xml"/>
+        <property name="cmisPropertiesFile" value="mule-config-%s-cmis.properties"/>
+        <property name="cmisPropertiesFileRegex" value="^mule[-d]config[-d][a-zA-Z0-9]+[-d]cmis.properties$"/>
+    </bean>
+
+    <bean id="cmisConfigurationRetrieveDirectories"
+          class="com.armedia.acm.plugins.admin.web.api.CmisConfigurationRetrieveConfigs">
+        <property name="cmisConfigurationService" ref="cmisConfigurationService"/>
+    </bean>
+
+    <bean id="cmisConfigurationCreateDirectory"
+          class="com.armedia.acm.plugins.admin.web.api.CmisConfigurationCreateConfig">
+        <property name="cmisConfigurationService" ref="cmisConfigurationService"/>
+    </bean>
+
+    <bean id="cmisConfigurationDeleteDirectory"
+          class="com.armedia.acm.plugins.admin.web.api.CmisConfigurationDeleteConfig">
+        <property name="cmisConfigurationService" ref="cmisConfigurationService"/>
+    </bean>
+
+    <bean id="cmisConfigurationUpdateDirectory"
+          class="com.armedia.acm.plugins.admin.web.api.CmisConfigurationUpdateConfig">
+        <property name="cmisConfigurationService" ref="cmisConfigurationService"/>
     </bean>
 </beans>
