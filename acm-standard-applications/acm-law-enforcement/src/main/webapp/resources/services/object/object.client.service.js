@@ -23,6 +23,9 @@ angular.module('services').factory('ObjectService', ['$state', '$window', '$log'
                 , COSTSHEET: "COSTSHEET"
                 , DOCUMENT: "DOCUMENT"
                 , FILE: "FILE"
+                , PERSON: "PERSON"
+                , ORGANIZATION: "ORGANIZATION"
+
             }
 
             , LockTypes: {
@@ -82,7 +85,7 @@ angular.module('services').factory('ObjectService', ['$state', '$window', '$log'
                     }
                 );
             }
-            
+
             /**
              * @ngdoc method
              * @name openObject
@@ -100,10 +103,10 @@ angular.module('services').factory('ObjectService', ['$state', '$window', '$log'
             , openObject: function (targetId, parentId, parentType, fileName) {
                 var baseUrl = window.location.href.split('!')[0];
                 var urlArgs = targetId + "/" + parentId + "/" + parentType + "/" + fileName + "/" + targetId;
- 
+
                 window.open(baseUrl + '!/viewer/' + urlArgs);
             }
-            
+
         };
     }
 ]);

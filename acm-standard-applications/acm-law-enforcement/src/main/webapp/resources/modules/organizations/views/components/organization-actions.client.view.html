@@ -1,0 +1,36 @@
+<div ng-controller="Organizations.ActionsController">
+    <div class="col-xs-4">
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" ng-model="restricted" ng-click="onClickRestrict($event)"
+                       permission="restrictComplaint"
+                       permission-properties="objectInfo" permission-action="disabled">
+                <span translate>organizations.comp.actions.restrict</span>
+            </label>
+        </div>
+    </div>
+
+    <div class="pull-right">
+        <div class="btn-group">
+            <a class="btn btn-sm btn-default" ui-sref="frevvo.new-complaint()" ng-show="showCreateAndClose">
+                <i class="fa fa-edit"></i>
+                <span translate>organizations.comp.actions.new.button</span>
+            </a>
+            <button class="btn btn-sm btn-default" ng-click="onClickChildOutcome(outcome.name)"
+                    ng-repeat="outcome in availableChildOutcomes" ng-show="showBtnChildOutcomes">
+                {{outcome.description}}
+            </button>
+            <button class="btn btn-sm btn-default" ng-show="showBtnUnsubscribe" ng-click="unsubscribe(objectInfo)">
+                <i class="fa fa-bullhorn"></i>
+                <span translate>organizations.comp.actions.unsubscribe.button</span>
+            </button>
+            <button class="btn btn-sm btn-default" ng-show="showBtnSubscribe" ng-click="subscribe(objectInfo)">
+                <i class="fa fa-bullhorn"></i>
+                <span translate>organizations.comp.actions.subscribe.button</span>
+            </button>
+            <button class="btn btn-sm btn-default" ng-click="refresh()">
+                <i class="fa fa-refresh"></i>
+            </button>
+        </div>
+    </div>
+</div>

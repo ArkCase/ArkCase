@@ -1,0 +1,17 @@
+<div ng-controller="People.HistoryController">
+    <div class="panel panel-success panel-grid">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <span translate>people.comp.history.title</span>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div ui-grid="gridOptions"
+                 ui-grid-resize-columns
+                 ui-grid-auto-resize
+                 ui-grid-pagination
+                 adjust-table-height="gridOptions.data.length"
+                 class="grid"></div>
+        </div>
+    </div>
+</div>
