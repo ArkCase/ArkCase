@@ -339,7 +339,7 @@
         "activated": "Status",
         "objectType": "Object Type",
         "version": "Version",
-        "templateVersionActive" : "Active"
+        "templateVersionActive": "Active"
       },
       "templates.fieldNames.label": "Map fields to values from the template",
       "templates.querySelect": {
@@ -366,9 +366,9 @@
       "mergefields.saveMergeFields": "Save",
       "mergefields.versionMergeFields": "Versions",
       "mergefields.grid": {
-      "fieldId": "ID",
-      "fieldValue": "Value",
-      "fieldDescription": "Description"
+        "fieldId": "ID",
+        "fieldValue": "Value",
+        "fieldDescription": "Description"
       },
       "mergefields.version.grid": {
         "mergingVersion": "Version",
@@ -403,6 +403,9 @@
         "dialog": {
           "cancel": "Cancel",
           "ok": "OK"
+        },
+        "guidelineMessage": {
+          "repositoryId": "For Alfresco: leave cmis.repositoryId blank. For Documentum: set cmis.repositoryId to the docbase name."
         }
       },
       "cmisConfiguration.data": {
@@ -466,6 +469,20 @@
           "label": "Versioning State",
           "placeholder": "Versioning State"
         }
+      },
+      "cmisConfiguration.deleteDialog": {
+        "cancelBtn": "Cancel",
+        "deleteBtn": "Cofirm Delete",
+        "headerText": "You are about to delete group:",
+        "bodyText": "Are you sure?"
+      },
+      "cmisConfiguration.messages": {
+        "delete.success": "Successfully deleted configuration.",
+        "delete.error": "Error deleting configuration.",
+        "insert.success": "Successfully created new configuration row.",
+        "insert.error": "Error creating new configuration row.",
+        "update.success": "Successfully updated configuration row.",
+        "update.error": "Error updating configuration row."
       }
     }
   }

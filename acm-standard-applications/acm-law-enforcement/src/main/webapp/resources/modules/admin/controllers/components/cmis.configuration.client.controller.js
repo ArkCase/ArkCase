@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('admin').controller('Admin.CMISConfigurationController', ['$scope', '$modal', 'Helper.UiGridService',
-    'Admin.CmisConfigService',
-    function ($scope, $modal, HelperUiGridService, CmisConfigService) {
+angular.module('admin').controller('Admin.CMISConfigurationController', ['$scope', '$modal', 'Helper.UiGridService'
+    , 'Admin.CmisConfigService', 'UtilService', 'Admin.ModalDialogService', 'MessageService', '$translate'
+    , function ($scope, $modal, HelperUiGridService, CmisConfigService, Util, modalDialogService, messageService, $translate) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
@@ -12,7 +12,9 @@ angular.module('admin').controller('Admin.CMISConfigurationController', ['$scope
             $scope.config = config;
 
             gridHelper.addButton(componentConfig, 'edit');
-            gridHelper.addButton(componentConfig, 'delete');
+
+            //Deletion isn't working currently.
+            // gridHelper.addButton(componentConfig, 'delete');
 
             $scope.gridOptions = {
                 enableColumnResizing: true,
@@ -48,15 +50,21 @@ angular.module('admin').controller('Admin.CMISConfigurationController', ['$scope
             });
 
             modalInstance.result.then(function (result) {
-                //TODO Create new configuration file
-
-                console.log(JSON.stringify(result.cmisConfig));
+                addPrefixInKey(result.cmisConfig);
                 if (result.isEdit) {
-                    var toRemove = _.find($scope.gridOptions.data, originalConfig);
-                    _.remove($scope.gridOptions.data, toRemove);
-                    $scope.gridOptions.data.push(result.cmisConfig);
+                    CmisConfigService.updateCmisConfiguration(result.cmisConfig).then(function () {
+                        reloadGrid();
+                        messageService.info($translate.instant('admin.documentManagement.cmisConfiguration.messages.update.success'));
+                    }, function () {
+                        messageService.error($translate.instant('admin.documentManagement.cmisConfiguration.messages.update.error'));
+                    })
                 } else {
-                    $scope.gridOptions.data.push(result.cmisConfig);
+                    CmisConfigService.createCmisConfiguration(result.cmisConfig).then(function () {
+                        reloadGrid();
+                        messageService.info($translate.instant('admin.documentManagement.cmisConfiguration.messages.insert.success'));
+                    }, function () {
+                        messageService.error($translate.instant('admin.documentManagement.cmisConfiguration.messages.insert.error'));
+                    });
                 }
             })
         };
@@ -65,36 +73,59 @@ angular.module('admin').controller('Admin.CMISConfigurationController', ['$scope
             //TODO: Delete configuration
 
             console.log("You clicked DELETE. Here's a cookie (::)");
+
+            $scope.deleteDir = rowEntity;
+            var modalOptions = {
+                closeButtonText: $translate.instant('admin.documentManagement.cmisConfiguration.deleteDialog.cancelBtn'),
+                actionButtonText: $translate.instant('admin.documentManagement.cmisConfiguration.deleteDialog.deleteBtn'),
+                headerText: $translate.instant('admin.documentManagement.cmisConfiguration.deleteDialog.headerText'),
+                bodyText: $translate.instant('admin.documentManagement.cmisConfiguration.deleteDialog.bodyText')
+            };
+            modalDialogService.showModal({}, modalOptions).then(function () {
+                CmisConfigService.deleteCmisConfiguration($scope.deleteDir.id).then(function () {
+                    gridHelper.deleteRow($scope.deleteDir);
+                    messageService.info($translate.instant('admin.documentManagement.cmisConfiguration.messages.delete.success'));
+                }, function () {
+                    messageService.error($translate.instant('admin.documentManagement.cmisConfiguration.messages.delete.error'));
+                });
+            });
         };
 
         $scope.editRow = function (rowEntity) {
-            //TODO: edit configuration
-
-            console.log("You clicked EDIT. Here's Kirby (>'.')>");
             $scope.showModal(angular.copy(rowEntity), true, rowEntity);
         };
 
         function reloadGrid() {
-            //TODO: Look up and format existing properties files.
+            var cmisConfigurationPromise = CmisConfigService.retrieveCmisConfigurations();
+            cmisConfigurationPromise.then(function (configs) {
+                if (Util.goodMapValue(configs, 'data')) {
+                    removePrefixInKey(configs.data);
+                    $scope.gridOptions.data = configs.data;
+                }
+            })
+        }
 
-            var exampleData = {
-                "id": "id",
-                "baseUrl": "baseUrl",
-                "username": "username",
-                "password": "password",
-                "useAlfrescoExtension": "useAlfrescoExtension",
-                "endpoint": "endpoint",
-                "maxIdle": "maxIdle",
-                "maxActive": "maxActive",
-                "maxWait": "maxWait",
-                "minEvictionMillis": "minEvictionMillis",
-                "evictionCheckIntervalMillis": "evictionCheckIntervalMillis",
-                "reconnectCount": "reconnectCount",
-                "reconnectFrequency": "reconnectFrequency",
-                "repositoryId": "repositoryId",
-                "versioningState": "versioningState"
-            };
+        //we need this because key name contains '.'
+        function removePrefixInKey(data) {
+            angular.forEach(data, function (row, index) {
+                angular.forEach(row, function (element, key) {
+                    if (key.match('.') !== -1) {
+                        delete row[key];
+                        var newKey = key.replace(/[a-zA-Z]*?\./, '');
+                        row[newKey] = element;
+                    }
+                });
+            });
+        }
 
-            $scope.gridOptions.data.push(exampleData);
+        //we need this because backend expects keys with 'cmis.' prefix
+        function addPrefixInKey(cmisConfig) {
+            angular.forEach(cmisConfig, function (element, key) {
+                if (key.match('.') !== -1) {
+                    delete cmisConfig[key];
+                    var newKey = 'cmis.' + key;
+                    cmisConfig[newKey] = element;
+                }
+            });
         }
     }]);

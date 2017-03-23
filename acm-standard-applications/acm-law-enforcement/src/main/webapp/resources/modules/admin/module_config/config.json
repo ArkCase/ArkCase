@@ -141,7 +141,9 @@
           "displayName": "admin.correspondenceManagement.mergefields.version.grid.mergingVersion",
           "visible": true,
           "headerCellFilter": "translate",
-          "sort" : {"direction": "desc"},
+          "sort": {
+            "direction": "desc"
+          },
           "width": 80
         },
         {
@@ -265,7 +267,9 @@
           "displayName": "admin.correspondenceManagement.templates.grid.version",
           "visible": true,
           "headerCellFilter": "translate",
-          "sort" : {"direction": "desc"},
+          "sort": {
+            "direction": "desc"
+          },
           "width": 80
         },
         {
@@ -588,19 +592,19 @@
         {
           "name": "username",
           "displayName": "admin.documentManagement.cmisConfiguration.data.username.label",
-          "visible": false,
+          "visible": true,
           "headerCellFilter": "translate"
         },
         {
           "name": "password",
           "displayName": "admin.documentManagement.cmisConfiguration.data.password.label",
-          "visible": false,
+          "visible": true,
           "headerCellFilter": "translate"
         },
         {
           "name": "useAlfrescoExtension",
           "displayName": "admin.documentManagement.cmisConfiguration.data.useAlfrescoExtension.label",
-          "visible": false,
+          "visible": true,
           "headerCellFilter": "translate"
         },
         {
@@ -612,43 +616,43 @@
         {
           "name": "maxIdle",
           "displayName": "admin.documentManagement.cmisConfiguration.data.maxIdle.label",
-          "visible": false,
+          "visible": true,
           "headerCellFilter": "translate"
         },
         {
           "name": "maxActive",
           "displayName": "admin.documentManagement.cmisConfiguration.data.maxActive.label",
-          "visible": false,
+          "visible": true,
           "headerCellFilter": "translate"
         },
         {
           "name": "maxWait",
           "displayName": "admin.documentManagement.cmisConfiguration.data.maxWait.label",
-          "visible": false,
+          "visible": true,
           "headerCellFilter": "translate"
         },
         {
           "name": "minEvictionMillis",
           "displayName": "admin.documentManagement.cmisConfiguration.data.minEvictionMillis.label",
-          "visible": false,
+          "visible": true,
           "headerCellFilter": "translate"
         },
         {
           "name": "evictionCheckIntervalMillis",
           "displayName": "admin.documentManagement.cmisConfiguration.data.evictionCheckIntervalMillis.label",
-          "visible": false,
+          "visible": true,
           "headerCellFilter": "translate"
         },
         {
           "name": "reconnectCount",
           "displayName": "admin.documentManagement.cmisConfiguration.data.reconnectCount.label",
-          "visible": false,
+          "visible": true,
           "headerCellFilter": "translate"
         },
         {
           "name": "reconnectFrequency",
           "displayName": "admin.documentManagement.cmisConfiguration.data.reconnectFrequency.label",
-          "visible": false,
+          "visible": true,
           "headerCellFilter": "translate"
         },
         {
@@ -660,7 +664,7 @@
         {
           "name": "versioningState",
           "displayName": "admin.documentManagement.cmisConfiguration.data.versioningState.label",
-          "visible": false,
+          "visible": true,
           "headerCellFilter": "translate"
         }
       ]
