@@ -174,7 +174,8 @@
 
     <bean id="complaintEventPublisher" class="com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher"/>
 
-    <bean id="saveComplaintBusinessRule" class="com.armedia.acm.plugins.complaint.service.SaveComplaintBusinessRule">
+    <bean id="saveComplaintBusinessRule" class="com.armedia.acm.plugins.complaint.service.SaveComplaintBusinessRule"
+          parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-complaint-number-rules.xlsx"/>
     </bean>
 
@@ -240,7 +241,8 @@
     </bean>
 
     <bean id="participantsBusinessRule"
-          class="com.armedia.acm.services.participants.service.ParticipantsBusinessRule">
+          class="com.armedia.acm.services.participants.service.ParticipantsBusinessRule"
+          parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-participant-assignment-rules.xlsx"/>
     </bean>
 
