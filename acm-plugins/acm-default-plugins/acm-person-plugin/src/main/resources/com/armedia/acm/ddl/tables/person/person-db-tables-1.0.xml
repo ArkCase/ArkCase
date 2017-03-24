@@ -846,4 +846,8 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="40-acm-person-add-parent-title" author="john.faniyi">
+        <dropColumn tableName="acm_person" columnName="cm_person_parent_title"/>
+    </changeSet>
+
 </databaseChangeLog>
