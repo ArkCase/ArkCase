@@ -51,16 +51,14 @@
             <artifactId>guava</artifactId>
         </dependency>
 
+        <!-- apache commons -->
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
-            <version>1.9.2</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.5</version>
         </dependency>
-
     </dependencies>
 </project>
