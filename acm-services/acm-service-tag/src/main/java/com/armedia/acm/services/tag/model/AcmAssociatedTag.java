@@ -57,6 +57,9 @@ public class AcmAssociatedTag implements AcmEntity, Serializable, AcmObject
     @Column(name = "cm_parent_object_type")
     private String parentType;
 
+    @Column(name = "cm_parent_object_title")
+    private String parentTitle;
+
     @Column(name = "cm_associated_tag_modified", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date modified;
@@ -166,5 +169,12 @@ public class AcmAssociatedTag implements AcmEntity, Serializable, AcmObject
     public Long getId()
     {
         return id;
+    }
+
+    public String getParentTitle() {return parentTitle; }
+
+    public void setParentTitle(String parentTitle)
+    {
+        this.parentTitle = parentTitle;
     }
 }

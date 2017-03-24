@@ -1,10 +1,10 @@
 {
   "profile": {
-    "title": "hi_User Profile",
+    "title": "उपयोगकर्ता प्रोफ़ाइल",
     "unknown":"Unknown"
   },
   "profile.menus": {
-    "usermenu.item": "hi_Profile"
+    "usermenu.item": "प्रोफ़ाइल"
   },
    "profile.subscriptions" : {
     "title":"Subscriptions",

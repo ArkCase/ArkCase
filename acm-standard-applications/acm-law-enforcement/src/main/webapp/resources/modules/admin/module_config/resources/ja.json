@@ -1,6 +1,6 @@
 {
   "admin": {
-    "title": "ja_Admin",
+    "title": "管理",
     "security.title": "ja_Security",
     "security.functionalAccessControl": "ja_Functional Access Control",
     "security.functionalAccessControl.applicationRole": "ja_Application Role",
@@ -39,7 +39,7 @@
       "ok": "ja_OK"
     },
     "menus": {
-      "leftnav.item": "ja_Admin"
+      "leftnav.item": "管理"
     },
     "security.ldapConfig.data.placeholders": {
       "id": "ja_Enter directory name",

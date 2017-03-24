@@ -3,7 +3,10 @@ package com.armedia.acm.plugins.complaint;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.casefile.model.Disposition;
 import com.armedia.acm.plugins.complaint.dao.CloseComplaintRequestDao;
+import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.CloseComplaintRequest;
+import com.armedia.acm.plugins.complaint.model.Complaint;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 
@@ -35,6 +40,9 @@ public class CloseComplaintRequestDaoIT
 {
     @Autowired
     private CloseComplaintRequestDao requestDao;
+
+    @Autowired
+    private ComplaintDao complaintDao;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -55,8 +63,22 @@ public class CloseComplaintRequestDaoIT
     public void saveCloseComplaintRequest()
     {
 
+        // MySQL needs the complaint to exist
+        Complaint complaint = new Complaint();
+        complaint.setComplaintTitle("Grateful Dead");
+        complaint.setComplaintNumber("Grateful Dead");
+
+        AcmFolder folder = new AcmFolder();
+        folder.setCmisFolderId("cmisFolderId" + UUID.randomUUID().toString());
+        folder.setName("The Band");
+        complaint.getContainer().setFolder(folder);
+
+        Complaint persisted = complaintDao.save(complaint);
+
+        complaintDao.getEm().flush();
+
         CloseComplaintRequest ccr = new CloseComplaintRequest();
-        ccr.setComplaintId(500L);
+        ccr.setComplaintId(persisted.getComplaintId());
         ccr.setStatus("DRAFT");
 
         AcmParticipant reviewer = new AcmParticipant();

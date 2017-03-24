@@ -1,13 +1,13 @@
 {
   "timeTracking": {
-    "title": "ja_Time Tracking",
+    "title": "トラック時間",
     "progressNoTimesheet": "ja_[ No timesheet is selected ]",
     "progressLoading": "ja_Loading timesheet ",
     "progressError": "ja_Failed to load timesheet"
   },
   "timeTracking.menus": {
-    "leftnav.item": "ja_Time Tracking",
-    "topbar.item": "ja_Timesheet"
+    "leftnav.item": "トラック時間",
+    "topbar.item": "時間ログ"
   },
   "timeTracking.tree": {
   },

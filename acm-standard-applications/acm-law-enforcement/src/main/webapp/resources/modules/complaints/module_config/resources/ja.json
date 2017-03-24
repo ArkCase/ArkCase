@@ -1,13 +1,13 @@
 {
   "complaints": {
-    "title": "ja_Complaints",
+    "title": "申し立て",
     "progressNoComplaint": "ja_[ No complaint data ]",
     "progressLoading": "ja_Loading complaint ",
     "progressError": "ja_Failed to load complaint "
   },
   "complaints.menus": {
-    "leftnav.item": "ja_Complaints",
-    "topbar.item": "ja_Complaint"
+    "leftnav.item": "申し立て",
+    "topbar.item": "申し立て"
   },
   "complaints.comp.info": {
     "complaintId": "ja_Complaint id:",

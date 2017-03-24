@@ -12,7 +12,8 @@
     "topBar": {
       "new": "Новый",
       "toggle.btn": "Изменить направление",
-      "search.placeholder": "Поиск ArkCase"
+      "search.placeholder": "Поиск ArkCase",
+      "locale.updateList": "Обновить"
     },
     "loginWarning": {
       "btnOK.text": "Подтвердить",
