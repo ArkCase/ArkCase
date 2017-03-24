@@ -84,6 +84,11 @@
     <bean id="acmActivitiEventListener" class="com.armedia.acm.activiti.AcmActivitiEventBridge"/>
     <bean id="acmActivitiEntityEventListener" class="com.armedia.acm.activiti.AcmActivitiEntityEventBridge"/>
 
+    <bean id="activitiTaskScheduler" class="com.armedia.acm.activiti.services.ActivitiTaskScheduler"/>
+    <bean id="jobExecutor" class="org.activiti.spring.SpringJobExecutor">
+        <property name="taskExecutor" ref="activitiTaskScheduler"/>
+    </bean>
+
     <bean id="activitiProcessEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration"
           depends-on="liquibase">
         <property name="dataSource" ref="acmDataSource"/>
@@ -105,6 +110,7 @@
             </list>
         </property>
         <property name="jobExecutorActivate" value="${activiti.job.executor.activate}"/>
+        <property name="jobExecutor" ref="jobExecutor"/>
     </bean>
 
     <bean id="activitiProcessEngine" class="org.activiti.spring.ProcessEngineFactoryBean">
