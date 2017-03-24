@@ -8,10 +8,6 @@ angular.module('admin').controller('Admin.SecurityCalendarConfigurationControlle
         $scope.purgeSelectOptions = [
             {
                 value: 'RETAIN_INDEFINETELY',
-                label: 'admin.security.calendarConfiguration.calendarConfigForm.purge.placeholder'
-            },
-            {
-                value: 'RETAIN_INDEFINETELY',
                 label: 'admin.security.calendarConfiguration.calendarConfigForm.purgeOptions.retainIndefinitely'
             },
             {
@@ -24,25 +20,54 @@ angular.module('admin').controller('Admin.SecurityCalendarConfigurationControlle
             }
         ];
 
-        ConfigService.getComponentConfig('admin', 'securityCalendarConfig').then(function(res) {
-            $scope.configurableObjectTypes = res.configurableObjectTypes;
-            buildCalendarConfigDataModel();
-        });
+        $scope.validEmailsByObjectType = {};
+        $scope.noCalendarIntegrationEnabled = true;
 
-        var buildCalendarConfigDataModel = function() {
-            CalendarConfigurationService.getCalendarConfiguration().then(function(res) {
-                $scope.calendarConfigDataModel = res.data;
-            });
+        /*Check if integration is enabled for at least one configurableObjectType to enable save button*/
+        var checkIfCalendarIntegrationEnabled = function() {
+            for(var i = 0; i <= $scope.configurableObjectTypes.length; i++) {
+                if($scope.calendarConfigDataModel.configurationsByType[$scope.configurableObjectTypes[i].id].integrationEnabled) {
+                    $scope.noCalendarIntegrationEnabled = false;
+                    break;
+                } else {
+                    $scope.noCalendarIntegrationEnabled = true;
+                }
+            }
         };
 
-        $scope.validateEmail = function(systemEmail) {
+        /*Get component config and current calendar configuration*/
+        ConfigService.getComponentConfig('admin', 'securityCalendarConfig').then(function(res) {
+            $scope.configurableObjectTypes = res.configurableObjectTypes;
+            CalendarConfigurationService.getCalendarConfiguration().then(function(res) {
+                $scope.calendarConfigDataModel = res.data;
+                checkIfCalendarIntegrationEnabled();
+            });
+        });
+
+        /*Perform validation of the email*/
+        $scope.validateEmail = function(systemEmail, configurableObjectType) {
             CalendarConfigurationService.validateEmail(systemEmail).then(function(res) {
                 if(res.valid) {
                     //TO DO
+                    MessageService.succsessAction();
+                    $scope.validEmailsByObjectType[configurableObjectType.id] = 'VALID';
                 } else {
                     //TO DO
+                    MessageService.errorAction();
+                    $scope.validEmailsByObjectType[configurableObjectType.id] = 'NOT_VALID';
                 }
             });
+        };
+
+        $scope.integrationEnabledChanged = function() {
+            checkIfCalendarIntegrationEnabled();
+        };
+
+        /*Remove success/error validation message when email input is changed*/
+        $scope.systemEmailInputChanged = function(configurableObjectType) {
+            if($scope.validEmailsByObjectType[configurableObjectType.id]) {
+                $scope.validEmailsByObjectType[configurableObjectType.id] = null;
+            }
         };
 
         $scope.applyChanges = function() {
@@ -50,7 +75,15 @@ angular.module('admin').controller('Admin.SecurityCalendarConfigurationControlle
                 .then(function(res) {
                     MessageService.succsessAction();
                 }, function(err) {
-                    MessageService.errorAction();
+                    if(err.status === 400) {
+                        // TO DO
+                        // Email Validation error
+                        MessageService.errorAction();
+                    } else {
+                        // TO DO
+                        // server error
+                        MessageService.errorAction();
+                    }
                 });
         };
     }

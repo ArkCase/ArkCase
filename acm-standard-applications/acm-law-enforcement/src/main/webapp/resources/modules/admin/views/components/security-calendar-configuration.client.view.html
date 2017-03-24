@@ -2,7 +2,7 @@
 	<ng-form name="calendarConfigurationForm">
 		<div class="pull-right well">
 			<div class="btn-group">
-				<button class="btn btn-xs btn-link" ng-click="applyChanges()" ng-disabled="calendarConfigurationForm.$invalid">
+				<button class="btn btn-xs btn-link" ng-click="applyChanges()" ng-disabled="calendarConfigurationForm.$invalid || noCalendarIntegrationEnabled">
 					<i class="fa fa-save"></i>
 					<span translate>
 	            	admin.security.calendarConfiguration.calendarConfigForm.save.button
@@ -24,10 +24,10 @@
 								<div class="col-lg-12">
 									<div class="checkbox">
 										<label>
-											<input type="checkbox" ng-model="calendarConfigDataModel.configurationsByType[configurableObjectType.id].integrationEnabled">
+											<input type="checkbox" ng-model="calendarConfigDataModel.configurationsByType[configurableObjectType.id].integrationEnabled" ng-change="integrationEnabledChanged()">
 											<span translate>
-					                        admin.security.calendarConfiguration.calendarConfigForm.enableCalendarIntegration.checkbox
-					                    </span>
+					                        	admin.security.calendarConfiguration.calendarConfigForm.enableCalendarIntegration.checkbox
+					                    	</span>
 										</label>
 									</div>
 								</div>
@@ -36,13 +36,32 @@
 										<label for="email" translate>
 											admin.security.calendarConfiguration.calendarConfigForm.email.label
 										</label>
-										<input type="email" name="email" placeholder="{{'admin.security.calendarConfiguration.calendarConfigForm.email.placeholder' | translate}}" ng-model="calendarConfigDataModel.configurationsByType[configurableObjectType.id].systemEmail" class="form-control" ng-disabled="!calendarConfigDataModel.configurationsByType[configurableObjectType.id].integrationEnabled" ng-required="calendarConfigDataModel.configurationsByType[configurableObjectType.id].integrationEnabled">
+										<input type="text" name="email" placeholder="{{'admin.security.calendarConfiguration.calendarConfigForm.email.placeholder' | translate}}" ng-model="calendarConfigDataModel.configurationsByType[configurableObjectType.id].systemEmail" class="form-control" ng-disabled="!calendarConfigDataModel.configurationsByType[configurableObjectType.id].integrationEnabled" ng-required="calendarConfigDataModel.configurationsByType[configurableObjectType.id].integrationEnabled" ng-change="systemEmailInputChanged(configurableObjectType)">
+										<span class="text-danger" ng-if="validEmailsByObjectType[configurableObjectType.id] === 'NOT_VALID'">
+											<i class="fa fa-times"></i>
+											<span translate>
+												admin.security.calendarConfiguration.calendarConfigForm.emailNotValid
+											</span>
+										</span>
+										<span class="text-success" ng-if="validEmailsByObjectType[configurableObjectType.id] === 'VALID'">
+											<i class="fa fa-check"></i>
+											<span translate>
+												admin.security.calendarConfiguration.calendarConfigForm.emailValid
+											</span>
+										</span>
 									</div>
 									<div class="col-lg-4 form-group">
 										<label for="password" translate>
 											admin.security.calendarConfiguration.calendarConfigForm.password.label
 										</label>
 										<input name="password" type="password" placeholder="{{'admin.security.calendarConfiguration.calendarConfigForm.password.placeholder' | translate}}" ng-model="calendarConfigDataModel.configurationsByType[configurableObjectType.id].password" class="form-control" ng-disabled="!calendarConfigDataModel.configurationsByType[configurableObjectType.id].integrationEnabled" ng-required="calendarConfigDataModel.configurationsByType[configurableObjectType.id].integrationEnabled"/>
+									</div>
+									<div class="col-lg-12">
+										<button class="btn btn-sm btn-primary" ng-click="validateEmail(calendarConfigDataModel.configurationsByType[configurableObjectType.id].systemEmail, configurableObjectType.id)" ng-disabled="!calendarConfigDataModel.configurationsByType[configurableObjectType.id].integrationEnabled">
+											<span translate>
+							            		admin.security.calendarConfiguration.calendarConfigForm.validate.button
+							            	</span>
+										</button>
 									</div>
 								</div>
 							</div>
@@ -52,6 +71,9 @@
 										admin.security.calendarConfiguration.calendarConfigForm.purge.label
 									</label>
 									<select name="purge" class="form-control" ng-model="calendarConfigDataModel.configurationsByType[configurableObjectType.id].purgeOptions" ng-disabled="!calendarConfigDataModel.configurationsByType[configurableObjectType.id].integrationEnabled" ng-required="calendarConfigDataModel.configurationsByType[configurableObjectType.id].integrationEnabled">
+										<option value="" disabled selected hidden translate>
+											admin.security.calendarConfiguration.calendarConfigForm.purge.placeholder
+										</option>
 										<option ng-repeat="option in purgeSelectOptions" value="{{option.value}}" translate>
 											{{option.label}}
 										</option>
@@ -61,7 +83,8 @@
 									<label for="purgeDays" translate>
 										admin.security.calendarConfiguration.calendarConfigForm.purgeDays.label
 									</label>
-									<input name="purgeDays" type="number" min="0" placeholder="{{'admin.security.calendarConfiguration.calendarConfigForm.purgeDays.placeholder' | translate}}" class="form-control" ng-model="calendarConfigDataModel.configurationsByType[configurableObjectType.id].daysClosed" ng-required="calendarConfigDataModel.configurationsByType[configurableObjectType.id].purgeOptions === 'CLOSED_X_DAYS'">
+									<input name="purgeDays" type="number" min="0" placeholder="{{'admin.security.calendarConfiguration.calendarConfigForm.purgeDays.placeholder' | translate}}" class="form-control" ng-model="calendarConfigDataModel.configurationsByType[configurableObjectType.id].daysClosed" ng-required="calendarConfigDataModel.configurationsByType[configurableObjectType.id].integrationEnabled"
+										   ng-disabled="!calendarConfigDataModel.configurationsByType[configurableObjectType.id].integrationEnabled">
 								</div>
 							</div>
 						</div>
