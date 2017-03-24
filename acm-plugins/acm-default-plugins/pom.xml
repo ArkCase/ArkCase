@@ -27,7 +27,6 @@
         <module>acm-object-lock-plugin</module>
         <module>acm-business-process-plugin</module>
         <module>acm-document-repository-plugin</module>
-    </modules>
-
-
+        <module>acm-analytics-plugin</module>
+  </modules>
 </project>
