@@ -592,19 +592,19 @@
         {
           "name": "username",
           "displayName": "admin.documentManagement.cmisConfiguration.data.username.label",
-          "visible": true,
+          "visible": false,
           "headerCellFilter": "translate"
         },
         {
           "name": "password",
           "displayName": "admin.documentManagement.cmisConfiguration.data.password.label",
-          "visible": true,
+          "visible": false,
           "headerCellFilter": "translate"
         },
         {
           "name": "useAlfrescoExtension",
           "displayName": "admin.documentManagement.cmisConfiguration.data.useAlfrescoExtension.label",
-          "visible": true,
+          "visible": false,
           "headerCellFilter": "translate"
         },
         {
@@ -616,43 +616,43 @@
         {
           "name": "maxIdle",
           "displayName": "admin.documentManagement.cmisConfiguration.data.maxIdle.label",
-          "visible": true,
+          "visible": false,
           "headerCellFilter": "translate"
         },
         {
           "name": "maxActive",
           "displayName": "admin.documentManagement.cmisConfiguration.data.maxActive.label",
-          "visible": true,
+          "visible": false,
           "headerCellFilter": "translate"
         },
         {
           "name": "maxWait",
           "displayName": "admin.documentManagement.cmisConfiguration.data.maxWait.label",
-          "visible": true,
+          "visible": false,
           "headerCellFilter": "translate"
         },
         {
           "name": "minEvictionMillis",
           "displayName": "admin.documentManagement.cmisConfiguration.data.minEvictionMillis.label",
-          "visible": true,
+          "visible": false,
           "headerCellFilter": "translate"
         },
         {
           "name": "evictionCheckIntervalMillis",
           "displayName": "admin.documentManagement.cmisConfiguration.data.evictionCheckIntervalMillis.label",
-          "visible": true,
+          "visible": false,
           "headerCellFilter": "translate"
         },
         {
           "name": "reconnectCount",
           "displayName": "admin.documentManagement.cmisConfiguration.data.reconnectCount.label",
-          "visible": true,
+          "visible": false,
           "headerCellFilter": "translate"
         },
         {
           "name": "reconnectFrequency",
           "displayName": "admin.documentManagement.cmisConfiguration.data.reconnectFrequency.label",
-          "visible": true,
+          "visible": false,
           "headerCellFilter": "translate"
         },
         {
