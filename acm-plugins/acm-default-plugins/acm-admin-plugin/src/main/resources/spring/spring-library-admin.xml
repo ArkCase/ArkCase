@@ -100,7 +100,7 @@
         <property name="ldapGroupFileRegex" value="^spring[-d]config[-d]group[-d][a-zA-Z0-9-.]+.xml$"/>
     </bean>
 
-    <bean id="openLdapTemplateConfig" class="com.armedia.acm.plugins.admin.model.OpenLdapTemplateConfig">
+    <bean id="openLdapTemplateConfig" class="com.armedia.acm.plugins.admin.model.LdapTemplateConfig">
         <property name="userPropertiesTemplate" value="spring-config-user-openldap.properties.ftl"/>
         <property name="userPropertiesTemplateName" value="spring-config-user-%s-openldap.properties"/>
         <property name="userFileTemplate" value="spring-config-user-openldap.xml.ftl"/>
@@ -111,7 +111,7 @@
         <property name="groupFileTemplateName" value="spring-config-group-%s-openldap.xml"/>
     </bean>
 
-    <bean id="adTemplateConfig" class="com.armedia.acm.plugins.admin.model.ADTemplateConfig">
+    <bean id="adTemplateConfig" class="com.armedia.acm.plugins.admin.model.LdapTemplateConfig">
         <property name="userPropertiesTemplate" value="spring-config-user-ad.properties.ftl"/>
         <property name="userFileTemplate" value="spring-config-user-ad.ldap.xml.ftl"/>
         <property name="userPropertiesTemplateName" value="spring-config-user-%s-ad.properties"/>
