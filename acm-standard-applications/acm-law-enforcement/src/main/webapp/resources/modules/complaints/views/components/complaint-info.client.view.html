@@ -17,14 +17,14 @@
                        e-ng-options="c.value as c.text for c in complaintTypes">{{objectInfo.complaintType ||
                         'Unknown'}}</a>
                 </div>
-                <small class="text-muted">Type</small>
+                <small class="text-muted"><span translate>complaints.comp.info.type.label</span></small>
             </div>
             <!--<b>Priority: </b><a href="#" editable-select="objectInfo.priority" e-ng-options="p as p for p in priorities">{{ objectInfo.priority  || 'Unknown'}}</a>-->
             <!--<select ng-model="myselect" ng-options="o as o for o in myoptions"></select>-->
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">{{objectInfo.created | date: ('common.defaultDateUIFormat' | translate)}}
                 </div>
-                <small class="text-muted">Created Date</small>
+                <small class="text-muted"><span translate>complaints.comp.info.created.label</span></small>
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
@@ -33,7 +33,7 @@
                        e-ng-options="p.value as p.text for p in priorities">{{ objectInfo.priority ||
                         'Unknown'}}</a>
                 </div>
-                <small class="text-muted">Priority</small>
+                <small class="text-muted"><span translate>complaints.comp.info.priority.label</span></small>
             </div>
         </div>
         <div class="row">
@@ -41,17 +41,18 @@
                 <div class="h4 font-bold">
                     <a href="javascript:;" class="editable-click no-outline" ng-click="openAssigneePickerModal()"
                        permission="editComplaint" permission-properties="objectInfo" permission-action="disable">
-                       <user-full-name userId="assignee" fallback="None"/></a>
+                        <user-full-name userId="assignee" fallback="None"/>
+                    </a>
                 </div>
-                <small class="text-muted">Assigned To</small>
+                <small class="text-muted"><span translate>complaints.comp.info.assignee.label</span></small>
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
                     <a href="javascript:;" class="editable-click no-outline" ng-click="openGroupPickerModal()"
-                       permission="editComplaint" permission-properties="objectInfo" permission-action="disable"> 
-                       {{owningGroup || 'None'}}</a>
+                       permission="editComplaint" permission-properties="objectInfo" permission-action="disable">
+                        {{owningGroup || 'None'}}</a>
                 </div>
-                <small class="text-muted">Owning Group</small>
+                <small class="text-muted"><span translate>complaints.comp.info.owningGroup.label</span></small>
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
@@ -64,7 +65,7 @@
                        permission="editComplaint" permission-properties="objectInfo" permission-action="disable">
                         {{ (dateInfo.dueDate | date: ('common.defaultDateUIFormat' | translate)) || 'Unknown' }}</a>
                 </div>
-                <small class="text-muted">Due Date</small>
+                <small class="text-muted"><span translate>complaints.comp.info.dueDate.label</span></small>
             </div>
         </div>
     </div>

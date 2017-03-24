@@ -11,6 +11,9 @@
   },
   "timeTracking.tree": {
   },
+  "timeTracking.comp.info": {
+    "lastModified.label": "ru_Last Modified"
+  },
   "timeTracking.comp.actions": {
     "new.button": "ru_New Timesheet",
     "edit.button": "ru_Edit Timesheet"
@@ -49,12 +52,12 @@
       "createdBy": "ru_Created By"
     },
     "modal": {
-    "title": "ru_Tag",
-    "search": "ru_Search for Tag",
-    "buttons": {
-          "cancel": "ru_Cancel",
-          "ok": "ru_Add Tag"
-     }
+      "title": "ru_Tag",
+      "search": "ru_Search for Tag",
+      "buttons": {
+        "cancel": "ru_Cancel",
+        "ok": "ru_Add Tag"
+      }
     },
     "message": {
       "tagExists": "ru_Tag with that name or description or text already exists",

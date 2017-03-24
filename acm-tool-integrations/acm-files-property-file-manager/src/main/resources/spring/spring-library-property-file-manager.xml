@@ -26,13 +26,14 @@
                 <value>file:${user.home}/.arkcase/acm/auditPlugin.properties</value>
                 <value>file:${user.home}/.arkcase/acm/capture.properties</value>
                 <value>file:${user.home}/.arkcase/acm/caseFilePlugin.properties</value>
-                <value>file:${user.home}/.arkcase/acm/cmis.properties</value>
                 <value>file:${user.home}/.arkcase/acm/complaintPlugin.properties</value>
                 <value>file:${user.home}/.arkcase/acm/correspondencePlugin.properties</value>
+                <value>file:${user.home}/.arkcase/acm/compressor.properties</value>
                 <value>file:${user.home}/.arkcase/acm/dashboardPlugin.properties</value>
                 <value>file:${user.home}/.arkcase/acm/dataAccessControl.properties</value>
                 <value>file:${user.home}/.arkcase/acm/datasource.properties</value>
                 <value>file:${user.home}/.arkcase/acm/dueTasksNotifier.properties</value>
+                <value>file:${user.home}/.arkcase/acm/ecmFileService.properties</value>
                 <value>file:${user.home}/.arkcase/acm/lawEnforcementApp.properties</value>
                 <value>file:${user.home}/.arkcase/acm/msOutlookIntegration.properties</value>
                 <value>file:${user.home}/.arkcase/acm/msOutlookPlugin.properties</value>
@@ -47,7 +48,6 @@
                 <value>file:${user.home}/.arkcase/acm/spring/spring-config-kerberos.properties</value>
                 <value>file:${user.home}/.arkcase/acm/spring/spring-config-saml.properties</value>
                 <value>file:${user.home}/.arkcase/acm/spring-security/sessionControl.properties</value>
-                <value>file:${user.home}/.arkcase/acm/compressor.properties</value>
             </list>
         </property>
     </bean>

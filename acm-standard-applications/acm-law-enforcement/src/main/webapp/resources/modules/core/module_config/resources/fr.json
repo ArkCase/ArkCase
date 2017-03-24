@@ -2,17 +2,18 @@
   "core": {
     "userInfo": {
       "addedMenu": {
-        "help": "fr_Help",
-        "logout": "fr_Logout"
+        "help": "Aide",
+        "logout": "Déconnexion"
       }
     },
     "leftNav": {
-      "title": "fr_Navigation"
+      "title": "Navigation"
     },
     "topBar": {
-      "new": "fr_New",
+      "new": "Nouveau",
       "toggle.btn": "fr_Toggle navigation",
-      "search.placeholder": "fr_Search ArkCase"
+      "search.placeholder": "fr_Search ArkCase",
+      "locale.updateList": "Mise à jour"
     },
     "loginWarning": {
       "btnOK.text": "fr_OK",

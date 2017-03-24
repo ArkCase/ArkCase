@@ -1125,6 +1125,7 @@
         {
           "name": "object_type_s",
           "displayName": "tasks.objectSearch.objectGridColumns.type",
+          "cellFilter": "mapKeyValue: grid.appScope.customization.labels",
           "headerCellFilter": "translate"
         },
         {

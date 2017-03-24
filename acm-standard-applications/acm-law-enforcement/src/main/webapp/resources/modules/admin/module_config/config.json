@@ -103,6 +103,13 @@
           "cellTemplate": "<a href='#' editable-text='row.entity.fieldDescription'>{{ row.entity.fieldDescription}}</a>"
         }
       ],
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 20,
       "objectTypes": [
         {
           "name": "Case File",
@@ -151,7 +158,14 @@
           "headerCellFilter": "translate",
           "lookup": "userFullNames"
         }
-      ]
+      ],
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10
     },
     {
       "id": "correspondenceManagementTemplates",
@@ -213,6 +227,13 @@
           "width": 120
         }
       ],
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 20,
       "objectTypes": [
         {
           "name": "Case File",
@@ -282,7 +303,14 @@
           "headerCellFilter": "translate",
           "lookup": "userFullNames"
         }
-      ]
+      ],
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10
     },
     {
       "id": "labelsConfig",

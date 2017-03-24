@@ -1,18 +1,24 @@
 {
   "complaints": {
-    "title": "es_Complaints",
+    "title": "Quejas",
     "progressNoComplaint": "es_[ No complaint data ]",
     "progressLoading": "es_Loading complaint ",
     "progressError": "es_Failed to load complaint "
   },
   "complaints.menus": {
-    "leftnav.item": "es_Complaints",
-    "topbar.item": "es_Complaint"
+    "leftnav.item": "Reclamaciones",
+    "topbar.item": "Queja"
   },
   "complaints.comp.info": {
     "complaintId": "es_Complaint id:",
     "complaintNumber": "es_Complaint ID:",
-    "courtRoomName": "es_Court Room Name:"
+    "courtRoomName": "es_Court Room Name:",
+    "type.label": "Type",
+    "created.label": "Created Date",
+    "priority.label": "Priority",
+    "assignee.label": "Assigned To",
+    "owningGroup.label": "Owning Group",
+    "dueDate.label": "Due Date"
   },
   "complaints.comp.actions": {
     "restrict": "es_Restrict?",
@@ -280,7 +286,13 @@
     },
     "table.columns": {
       "fullName": "es_Full Name"
-    }
+    },
+    "assignee.label": "es_Assignee",
+    "owningGroup.label": "es_Owning Group",
+    "priority.label": "es_Priority",
+    "startDate.label": "es_Start Date",
+    "dueDate.label": "es_Due Date",
+    "state.label": "es_State"
   },
   "complaints.comp.pastApprovals": {
     "title": "es_Past Approvers",

@@ -1,15 +1,18 @@
 {
   "timeTracking": {
-    "title": "zh-tw_Time Tracking",
+    "title": "時間跟踪",
     "progressNoTimesheet": "zh-tw_[ No timesheet is selected ]",
     "progressLoading": "zh-tw_Loading timesheet ",
     "progressError": "zh-tw_Failed to load timesheet"
   },
   "timeTracking.menus": {
-    "leftnav.item": "zh-tw_Time Tracking",
-    "topbar.item": "zh-tw_Timesheet"
+    "leftnav.item": "時間跟踪",
+    "topbar.item": "時間項目"
   },
   "timeTracking.tree": {
+  },
+  "timeTracking.comp.info": {
+    "lastModified.label": "zh-tw_Last Modified"
   },
   "timeTracking.comp.actions": {
     "new.button": "zh-tw_New Timesheet",
@@ -49,12 +52,12 @@
       "createdBy": "zh-tw_Created By"
     },
     "modal": {
-    "title": "zh-tw_Tag",
-    "search": "zh-tw_Search for Tag",
-    "buttons": {
-          "cancel": "zh-tw_Cancel",
-          "ok": "zh-tw_Add Tag"
-     }
+      "title": "zh-tw_Tag",
+      "search": "zh-tw_Search for Tag",
+      "buttons": {
+        "cancel": "zh-tw_Cancel",
+        "ok": "zh-tw_Add Tag"
+      }
     },
     "message": {
       "tagExists": "zh-tw_Tag with that name or description or text already exists",
