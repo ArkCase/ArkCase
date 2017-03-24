@@ -7,7 +7,7 @@ angular.module('admin').controller('Admin.SecurityCalendarConfigurationControlle
         $scope.configurableObjectTypes = [];
         $scope.purgeSelectOptions = [
             {
-                value: 'RETAIN_INDEFINETELY',
+                value: 'RETAIN_INDEFINITELY',
                 label: 'admin.security.calendarConfiguration.calendarConfigForm.purgeOptions.retainIndefinitely'
             },
             {
@@ -38,7 +38,7 @@ angular.module('admin').controller('Admin.SecurityCalendarConfigurationControlle
         /*Get component config and current calendar configuration*/
         ConfigService.getComponentConfig('admin', 'securityCalendarConfig').then(function(res) {
             $scope.configurableObjectTypes = res.configurableObjectTypes;
-            CalendarConfigurationService.getCalendarConfiguration().then(function(res) {
+            CalendarConfigurationService.getCurrentCalendarConfiguration().then(function(res) {
                 $scope.calendarConfigDataModel = res.data;
                 checkIfCalendarIntegrationEnabled();
             });
@@ -46,16 +46,14 @@ angular.module('admin').controller('Admin.SecurityCalendarConfigurationControlle
 
         /*Perform validation of the email*/
         $scope.validateEmail = function(systemEmail, configurableObjectType) {
-            CalendarConfigurationService.validateEmail(systemEmail).then(function(res) {
-                if(res.valid) {
-                    //TO DO
-                    MessageService.succsessAction();
-                    $scope.validEmailsByObjectType[configurableObjectType.id] = 'VALID';
-                } else {
-                    //TO DO
-                    MessageService.errorAction();
-                    $scope.validEmailsByObjectType[configurableObjectType.id] = 'NOT_VALID';
-                }
+            CalendarConfigurationService.validateCalendarConfigurationSystemEmail(systemEmail).then(function(res) {
+                //TO DO
+                MessageService.succsessAction();
+                $scope.validEmailsByObjectType[configurableObjectType.id] = 'VALID';
+            }, function(err) {
+                //TO DO
+                MessageService.errorAction();
+                $scope.validEmailsByObjectType[configurableObjectType.id] = 'NOT_VALID';
             });
         };
 
@@ -70,9 +68,11 @@ angular.module('admin').controller('Admin.SecurityCalendarConfigurationControlle
             }
         };
 
-        $scope.applyChanges = function() {
-            CalendarConfigurationService.applyCalendarConfiguration($scope.calendarConfigDataModel)
+        $scope.saveChanges = function() {
+            CalendarConfigurationService.saveCalendarConfiguration($scope.calendarConfigDataModel)
                 .then(function(res) {
+                    // remove all success/error validation messages
+                    $scope.validEmailsByObjectType = {};
                     MessageService.succsessAction();
                 }, function(err) {
                     if(err.status === 400) {

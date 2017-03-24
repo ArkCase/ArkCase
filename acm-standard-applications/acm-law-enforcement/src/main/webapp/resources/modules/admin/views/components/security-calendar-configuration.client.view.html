@@ -2,7 +2,7 @@
 	<ng-form name="calendarConfigurationForm">
 		<div class="pull-right well">
 			<div class="btn-group">
-				<button class="btn btn-xs btn-link" ng-click="applyChanges()" ng-disabled="calendarConfigurationForm.$invalid || noCalendarIntegrationEnabled">
+				<button class="btn btn-xs btn-link" ng-click="saveChanges()" ng-disabled="calendarConfigurationForm.$invalid || noCalendarIntegrationEnabled">
 					<i class="fa fa-save"></i>
 					<span translate>
 	            	admin.security.calendarConfiguration.calendarConfigForm.save.button
@@ -57,7 +57,7 @@
 										<input name="password" type="password" placeholder="{{'admin.security.calendarConfiguration.calendarConfigForm.password.placeholder' | translate}}" ng-model="calendarConfigDataModel.configurationsByType[configurableObjectType.id].password" class="form-control" ng-disabled="!calendarConfigDataModel.configurationsByType[configurableObjectType.id].integrationEnabled" ng-required="calendarConfigDataModel.configurationsByType[configurableObjectType.id].integrationEnabled"/>
 									</div>
 									<div class="col-lg-12">
-										<button class="btn btn-sm btn-primary" ng-click="validateEmail(calendarConfigDataModel.configurationsByType[configurableObjectType.id].systemEmail, configurableObjectType.id)" ng-disabled="!calendarConfigDataModel.configurationsByType[configurableObjectType.id].integrationEnabled">
+										<button class="btn btn-sm btn-primary" ng-click="validateEmail(calendarConfigDataModel.configurationsByType[configurableObjectType.id].systemEmail, configurableObjectType)" ng-disabled="!calendarConfigDataModel.configurationsByType[configurableObjectType.id].integrationEnabled">
 											<span translate>
 							            		admin.security.calendarConfiguration.calendarConfigForm.validate.button
 							            	</span>

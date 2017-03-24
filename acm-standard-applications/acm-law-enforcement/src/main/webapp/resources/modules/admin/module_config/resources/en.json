@@ -229,7 +229,8 @@
         },
         "configurableObjectTypes": {
           "cases.label": "Cases",
-          "complaints.label": "Complaints"
+          "complaints.label": "Complaints",
+          "tasks.label": "Tasks"
         }
       }
     },

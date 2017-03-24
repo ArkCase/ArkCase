@@ -14,17 +14,17 @@ angular.module('admin').factory('Admin.CalendarConfigurationService', ['$http',
         return {
             /**
              * @ngdoc method
-             * @name applyCalendarConfiguration
+             * @name saveCalendarConfiguration
              * @methodOf admin.service:Admin.CalendarConfigurationService
              *
              * @description
-             * Performs applying of the calendar configuration.
+             * Performs saving of the calendar configuration.
              *
-             * @param {Object} calendarConfig - the configuration that should be applied
+             * @param {Object} calendarConfig - the configuration that should be saved
              *
              * @returns {Object} http promise
              */
-            applyCalendarConfiguration: function(calendarConfig) {
+            saveCalendarConfiguration: function(calendarConfig) {
                 return $http({
                     method: 'PUT',
                     url: 'api/v1/service/calendar/configuration',
@@ -33,16 +33,16 @@ angular.module('admin').factory('Admin.CalendarConfigurationService', ['$http',
             },
             /**
              * @ngdoc method
-             * @name getCalendarConfiguration
+             * @name getCurrentCalendarConfiguration
              * @methodOf admin.service:Admin.CalendarConfigurationService
              *
              * @description
              * Gets the current calendar configurations.
              *
              *
-             * @returns {Object} http promise - the current configuration of the calendar
+             * @returns {Object} http promise
              */
-            getCalendarConfiguration: function() {
+            getCurrentCalendarConfiguration: function() {
                 return $http({
                     method: 'GET',
                     url: 'api/v1/service/calendar/configuration'
@@ -50,7 +50,7 @@ angular.module('admin').factory('Admin.CalendarConfigurationService', ['$http',
             },
             /**
              * @ngdoc method
-             * @name validateEmail
+             * @name validateCalendarConfigurationSystemEmail
              * @methodOf admin.service:Admin.CalendarConfigurationService
              *
              * @description
@@ -60,8 +60,11 @@ angular.module('admin').factory('Admin.CalendarConfigurationService', ['$http',
              *
              * @returns {Object} http promise
              */
-            validateEmail: function(systemEmail) {
-
+            validateCalendarConfigurationSystemEmail: function(systemEmail) {
+                return $http({
+                    method: 'GET',
+                    url: 'api/v1/service/calendar/configuration/' + systemEmail
+                });
             }
         };
     }
