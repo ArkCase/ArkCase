@@ -219,6 +219,8 @@
         "email.label": "System Email Address",
         "password.label": "System Password",
         "purgeDays.label": "Days",
+        "emailValid": "System Email Address is valid",
+        "emailNotValid": "System Email Address is not valid",
         "enableCalendarIntegration.checkbox": "Enable Calendar Integration",
         "purgeOptions": {
           "retainIndefinitely": "Retain Indefinitely",
