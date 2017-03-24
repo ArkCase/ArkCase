@@ -1,13 +1,13 @@
 {
   "cases": {
-    "title": "es_Cases",
+    "title": "Casos",
     "progressNoCase": "es_[ No case file data ]",
     "progressLoading": "es_Loading case file ",
     "progressError": "es_Failed to load case file"
   },
   "cases.menus": {
-    "leftnav.item": "es_Case Files",
-    "topbar.item": "es_Case"
+    "leftnav.item": "Expedientes de Caso",
+    "topbar.item": "Caso"
   },
   "cases.error": {
     "invalidData": "es_"
@@ -15,7 +15,13 @@
   "cases.comp.info": {
     "caseId": "es_Case id:",
     "caseNumber": "es_Case Number:",
-    "courtRoomName": "es_Court Room Name:"
+    "courtRoomName": "es_Court Room Name:",
+    "type.label": "es_Type",
+    "created.label": "es_Created Date",
+    "priority.label": "es_Priority",
+    "assignee.label": "es_Assigned To",
+    "owningGroup.label": "es_Owning Group",
+    "dueDate.label": "es_Due Date"
   },
   "cases.comp.actions": {
     "restrict": "es_Restrict?",
@@ -286,7 +292,13 @@
     },
     "table.columns": {
       "fullName": "es_Full Name"
-    }
+    },
+    "assignee.label": "es_Assignee",
+    "owningGroup.label": "es_Owning Group",
+    "priority.label": "es_Priority",
+    "startDate.label": "es_Start Date",
+    "dueDate.label": "es_Due Date",
+    "state.label": "es_State"
   },
   "cases.comp.pastApprovals": {
     "title": "es_Past Approvers",

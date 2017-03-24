@@ -1,8 +1,8 @@
 {
   "reports": {
-    "title": "es_Reports",
+    "title": "Informes",
     "menus": {
-      "leftnav.item": "es_Reports"
+      "leftnav.item": "Informes"
     },
     "selectReport" : {
       "label": "es_Report",

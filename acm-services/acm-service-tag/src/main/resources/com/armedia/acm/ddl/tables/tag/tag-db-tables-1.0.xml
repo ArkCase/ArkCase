@@ -246,4 +246,22 @@
 		</addColumn>
 	</changeSet>
 
+	<changeSet id="12-acm_associated_tag-add-parent-title" author="johnfaniyi">
+		<addColumn tableName="acm_associated_tag">
+			<column name="cm_parent_object_title" type="VARCHAR(1024)">
+			</column>
+		</addColumn>
+	</changeSet>
+
+	<changeSet id="13-acm_tag-add-parent-title" author="john.faniyi">
+		<addColumn tableName="acm_tag">
+			<column name="cm_tag_parent_title" type="VARCHAR(1024)">
+			</column>
+		</addColumn>
+	</changeSet>
+
+	<changeSet id="14-acm_tag-drop-parent-title" author="john.faniyi">
+		<dropColumn tableName="acm_tag" columnName="cm_tag_parent_title"/>
+	</changeSet>
+
 </databaseChangeLog>

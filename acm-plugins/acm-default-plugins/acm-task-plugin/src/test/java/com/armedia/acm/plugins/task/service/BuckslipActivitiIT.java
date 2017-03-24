@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -78,13 +79,9 @@ public class BuckslipActivitiIT extends EasyMockSupport
     @Test
     public void basicPath_noApproverChanges() throws Exception
     {
-        Capture<String> userIdCapture = EasyMock.newCapture();
-        EasyMock.expect(userDaoMock.findByUserId(EasyMock.capture(userIdCapture))).andAnswer(() ->
-        {
-            AcmUser user = new AcmUser();
-            user.setFullName(userIdCapture.getValue()+" lastName");
-            return user;
-        }).anyTimes();
+        expect(userDaoMock.findByUserId("jerry")).andReturn(new AcmUser());
+        expect(userDaoMock.findByUserId("bob")).andReturn(new AcmUser());
+        expect(userDaoMock.findByUserId("phil")).andReturn(new AcmUser());
 
         replayAll();
 
@@ -100,6 +97,7 @@ public class BuckslipActivitiIT extends EasyMockSupport
         processVariables.put("documentType", documentType);
         // the process should work with either "approvers" or "futureApprovers"
         processVariables.put("approvers", futureApprovers);
+        processVariables.put("taskDueDateExpression", "P3D");
 
         ProcessInstance pi = rt.startProcessInstanceByKey("ArkCaseBuckslipProcess", processVariables);
 
@@ -143,6 +141,8 @@ public class BuckslipActivitiIT extends EasyMockSupport
         List<ProcessInstance> pis = rt.createProcessInstanceQuery().processInstanceId(pi.getId()).list();
         assertEquals(0, pis.size());
 
+        verifyAll();
+
 
     }
 
@@ -155,13 +155,9 @@ public class BuckslipActivitiIT extends EasyMockSupport
     @Test
     public void removeAnApprover() throws Exception
     {
-        Capture<String> userIdCapture = EasyMock.newCapture();
-        EasyMock.expect(userDaoMock.findByUserId(EasyMock.capture(userIdCapture))).andAnswer(() ->
-        {
-            AcmUser user = new AcmUser();
-            user.setFullName(userIdCapture.getValue()+" lastName");
-            return user;
-        }).anyTimes();
+        expect(userDaoMock.findByUserId("jerry")).andReturn(new AcmUser());
+        expect(userDaoMock.findByUserId("bob")).andReturn(new AcmUser());
+        expect(userDaoMock.findByUserId("phil")).andReturn(new AcmUser());
 
         replayAll();
 
@@ -177,6 +173,7 @@ public class BuckslipActivitiIT extends EasyMockSupport
         processVariables.put("documentType", documentType);
         // the process should work with either "approvers" or "futureApprovers"
         processVariables.put("futureApprovers", futureApprovers);
+        processVariables.put("taskDueDateExpression", "P3D");
 
         ProcessInstance pi = rt.startProcessInstanceByKey("ArkCaseBuckslipProcess", processVariables);
 
@@ -224,19 +221,19 @@ public class BuckslipActivitiIT extends EasyMockSupport
         // should not be a current process any more
         List<ProcessInstance> pis = rt.createProcessInstanceQuery().processInstanceId(pi.getId()).list();
         assertEquals(0, pis.size());
+
+        verifyAll();
     }
 
 
     @Test
     public void addAnApprover() throws Exception
     {
-        Capture<String> userIdCapture = EasyMock.newCapture();
-        EasyMock.expect(userDaoMock.findByUserId(EasyMock.capture(userIdCapture))).andAnswer(() ->
-        {
-            AcmUser user = new AcmUser();
-            user.setFullName(userIdCapture.getValue()+" lastName");
-            return user;
-        }).anyTimes();
+
+        expect(userDaoMock.findByUserId("jerry")).andReturn(new AcmUser());
+        expect(userDaoMock.findByUserId("bob")).andReturn(new AcmUser());
+        expect(userDaoMock.findByUserId("phil")).andReturn(new AcmUser());
+        expect(userDaoMock.findByUserId("bill")).andReturn(new AcmUser());
 
         replayAll();
 
@@ -252,6 +249,7 @@ public class BuckslipActivitiIT extends EasyMockSupport
         processVariables.put("documentType", documentType);
         // the process should work with either "approvers" or "futureApprovers"
         processVariables.put("futureApprovers", futureApprovers);
+        processVariables.put("taskDueDateExpression", "P3D");
 
         ProcessInstance pi = rt.startProcessInstanceByKey("ArkCaseBuckslipProcess", processVariables);
 
@@ -313,6 +311,8 @@ public class BuckslipActivitiIT extends EasyMockSupport
         // should not be a current process any more
         pis = rt.createProcessInstanceQuery().processInstanceId(pi.getId()).list();
         assertEquals(0, pis.size());
+
+        verifyAll();
     }
 
 

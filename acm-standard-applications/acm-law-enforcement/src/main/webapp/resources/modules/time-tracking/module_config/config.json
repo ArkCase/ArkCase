@@ -234,6 +234,7 @@
         {
           "name": "type",
           "displayName": "timeTracking.comp.summary.table.columns.type",
+          "cellFilter": "mapKeyValue: grid.appScope.customization.labels",
           "headerCellFilter": "translate"
         },
         {
