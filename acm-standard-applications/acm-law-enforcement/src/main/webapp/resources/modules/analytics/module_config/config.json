@@ -1,0 +1,14 @@
+{
+  "id": "analytics",
+  "title": "Analytics",
+  "menus": [
+    {
+      "menuId": "leftnav",
+      "menuItemURL": "analytics",
+      "menuItemTitle": "analytics.menus.leftnav.item",
+      "moduleId": "analytics",
+      "iconClass": "fa fa-bar-chart",
+      "position": 160
+    }
+  ]
+}
