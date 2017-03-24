@@ -9,10 +9,13 @@ angular.module('admin').controller('Admin.LdapConfigController', ['$scope', 'Adm
         //get config and init grid settings
         $scope.config.$promise.then(function (config) {
             var componentConfig = _.find(config.components, {id: 'securityLdapConfig'});
+            $scope.directoryTypes = componentConfig.directoryTypes;
             var columnDefs = componentConfig.columnDefs;
             var columnDef = addEditColumn();
-            var columnAddUserTemplate = addUserTemplate();
-            columnDefs.push(columnAddUserTemplate);
+            var columnLdapUserTemplate = userTemplate();
+            var columnLdapGroupTemplate = groupTemplate();
+            columnDefs.push(columnLdapGroupTemplate);
+            columnDefs.push(columnLdapUserTemplate);
             columnDefs.push(columnDef);
 
             gridHelper.addDeleteButton(columnDefs, "grid.appScope.deleteRow(row.entity)");
@@ -36,41 +39,43 @@ angular.module('admin').controller('Admin.LdapConfigController', ['$scope', 'Adm
             showModal(angular.copy(rowEntity), true);
         };
 
-        $scope.addUserTemplate = function (rowEntity) {
+        $scope.showUserTemplate = function (rowEntity) {
             var modalScope = $scope.$new();
-            modalScope.directoryName = rowEntity.id;
-            var modalInstance = $modal.open({
+            var attributes = [rowEntity.addUserTemplate];
+            removePrefixInKey(attributes);
+            modalScope.attributes = attributes[0];
+            $modal.open({
                 scope: modalScope,
-                templateUrl: 'modules/admin/views/components/security.ldap-config-add-user-template.popup.html',
+                templateUrl: 'modules/admin/views/components/security.ldap-config-user-template.popup.html',
                 backdrop: 'static',
                 controller: function ($scope, $modalInstance) {
-                    $scope.template = {};
-                    $scope.templateType = "";
                     $scope.ok = function () {
-                        $modalInstance.close({
-                            template: $scope.template,
-                            templateType: $scope.templateType,
-                            templateName: $scope.directoryName
-                        });
+                        $modalInstance.close({});
                     };
                     $scope.cancel = function () {
                         $modalInstance.dismiss('cancel');
                     }
                 }
             });
+        };
 
-            modalInstance.result.then(function (data) {
-                var promiseConfig;
-                if (data.templateType == "openLdap") {
-                    promiseConfig = ldapConfigService.createOpenLdapUserTemplate(data.template, data.templateName)
-                } else if (data.templateType == "activeDirectory") {
-                    promiseConfig = ldapConfigService.createActiveDirectoryUserTemplate(data.template, data.templateName)
+        $scope.showGroupTemplate = function (rowEntity) {
+            var modalScope = $scope.$new();
+            var attributes = [rowEntity.addGroupTemplate];
+            removePrefixInKey(attributes);
+            modalScope.attributes = attributes[0];
+            $modal.open({
+                scope: modalScope,
+                templateUrl: 'modules/admin/views/components/security.ldap-config-group-template.popup.html',
+                backdrop: 'static',
+                controller: function ($scope, $modalInstance) {
+                    $scope.ok = function () {
+                        $modalInstance.close({});
+                    };
+                    $scope.cancel = function () {
+                        $modalInstance.dismiss('cancel');
+                    }
                 }
-                promiseConfig.then(function (data) {
-                    messageService.info($translate.instant('admin.security.ldapConfig.messages.insert.template.success'));
-                }, function () {
-                    messageService.error($translate.instant('admin.security.ldapConfig.messages.insert.template.error'));
-                });
             });
         };
 
@@ -100,6 +105,7 @@ angular.module('admin').controller('Admin.LdapConfigController', ['$scope', 'Adm
             var modalScope = $scope.$new();
             modalScope.dir = dir || {};
             modalScope.isEdit = isEdit || false;
+            modalScope.directoryTypes = $scope.directoryTypes;
 
             var modalInstance = $modal.open({
                 scope: modalScope,
@@ -149,15 +155,30 @@ angular.module('admin').controller('Admin.LdapConfigController', ['$scope', 'Adm
             return columnDef;
         }
 
-        function addUserTemplate() {
+        function userTemplate() {
             var columnDef = {
-                name: "addUserTemplate",
+                name: "userTemplate",
                 cellEditableCondition: false,
                 width: 40,
                 cellClass: 'text-center',
                 headerCellTemplate: "<span></span>",
-                cellTemplate: "<span title='Add user LDAP configuration'><i class='fa fa-user-plus fa-lg' style='cursor :pointer' " +
-                "ng-click='grid.appScope.addUserTemplate(row.entity)'></i></span>"
+                cellTemplate: "<span title='LDAP User Configuration'>" +
+                "<i class='fa fa-user fa-lg' style='cursor :pointer' " +
+                "ng-click='grid.appScope.showUserTemplate(row.entity)'></i></span>"
+            };
+            return columnDef;
+        }
+
+        function groupTemplate() {
+            var columnDef = {
+                name: "addGroupTemplate",
+                cellEditableCondition: false,
+                width: 40,
+                cellClass: 'text-center',
+                headerCellTemplate: "<span></span>",
+                cellTemplate: "<span title='LDAP Group configuration'>" +
+                "<i class='fa fa-users fa-lg' style='cursor :pointer' " +
+                "ng-click='grid.appScope.showGroupTemplate(row.entity)'></i></span>"
             };
             return columnDef;
         }

@@ -10,30 +10,14 @@
  *
  * The Admin.LdapConfigService provides LDAP Config REST calls functionality
  */
-angular.module('admin').service('Admin.LdapConfigService', ['$http', '$resource', 'UtilService'
-    , function ($http, $resource, Util) {
-
-        var Service = $resource('api/latest/plugin/admin/ldapConfig', {}, {
-
-            _openLdapUserTemplate: {
-                method: 'POST',
-                url: 'api/latest/plugin/admin/ldapconfiguration/openLdapUserTemplate/:templateId',
-                cache: false
-            },
-            _adUserTemplate: {
-                method: 'POST',
-                url: 'api/latest/plugin/admin/ldapconfiguration/adUserTemplate/:templateId',
-                cache: false
-            }
-        });
+angular.module('admin').service('Admin.LdapConfigService', ['$http'
+    , function ($http) {
 
         return ({
             retrieveDirectories: retrieveDirectories,
             createDirectory: createDirectory,
             deleteDirectory: deleteDirectory,
-            updateDirectory: updateDirectory,
-            createActiveDirectoryUserTemplate: createActiveDirectoryUserTemplate,
-            createOpenLdapUserTemplate: createOpenLdapUserTemplate
+            updateDirectory: updateDirectory
         });
         /**
          * @ngdoc method
@@ -50,7 +34,8 @@ angular.module('admin').service('Admin.LdapConfigService', ['$http', '$resource'
                 method: "GET",
                 url: "api/latest/plugin/admin/ldapconfiguration/directories"
             });
-        };
+        }
+
         /**
          * @ngdoc method
          * @name createDirectory
@@ -73,7 +58,8 @@ angular.module('admin').service('Admin.LdapConfigService', ['$http', '$resource'
                     "Content-Type": "application/json"
                 }
             });
-        };
+        }
+
         /**
          * @ngdoc method
          * @name deleteDirectory
@@ -117,31 +103,4 @@ angular.module('admin').service('Admin.LdapConfigService', ['$http', '$resource'
                 }
             });
         }
-
-        function createOpenLdapUserTemplate(template, templateId) {
-            return Util.serviceCall({
-                service: Service._openLdapUserTemplate
-                , param: {
-                    templateId: templateId
-                }
-                , data: template
-                , onSuccess: function (data) {
-                    return data;
-                }
-            });
-        }
-
-        function createActiveDirectoryUserTemplate(template, templateId) {
-            return Util.serviceCall({
-                service: Service._adUserTemplate
-                , param: {
-                    templateId: templateId
-                }
-                , data: template
-                , onSuccess: function (data) {
-                    return data;
-                }
-            });
-        }
-
     }]);

@@ -9,9 +9,12 @@
     "security.ldapConfig.table.ldapUrl": "en-in_LDAP Url",
     "security.ldapConfig.table.directoryName": "en-in_Directory Name",
     "security.ldapConfig.data": {
+      "userAttributesTemplate": "en-in_Ldap User Attributes Template",
+      "groupAttributesTemplate": "en-in_Ldap Group Attributes Template",
       "addNewDirectory": "en-in_Add New Directory",
       "editRecord": "en-in_Edit Record",
       "id": "en-in_ID",
+      "directoryType": "en-in_Select directory server",
       "ldapUrl": "en-in_LDAP Url",
       "base": "en-in_Base",
       "directoryName": "en-in_Directory Name",

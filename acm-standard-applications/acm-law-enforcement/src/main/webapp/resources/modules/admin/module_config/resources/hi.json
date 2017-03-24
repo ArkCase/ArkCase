@@ -9,9 +9,12 @@
     "security.ldapConfig.table.ldapUrl": "hi_LDAP Url",
     "security.ldapConfig.table.directoryName": "hi_Directory Name",
     "security.ldapConfig.data": {
+      "userAttributesTemplate": "hi_Ldap User Attributes Template",
+      "groupAttributesTemplate": "hi_Ldap Group Attributes Template",
       "addNewDirectory": "hi_Add New Directory",
       "editRecord": "hi_Edit Record",
       "id": "hi_ID",
+      "directoryType": "hi_Select directory server",
       "ldapUrl": "hi_LDAP Url",
       "base": "hi_Base",
       "directoryName": "hi_Directory Name",

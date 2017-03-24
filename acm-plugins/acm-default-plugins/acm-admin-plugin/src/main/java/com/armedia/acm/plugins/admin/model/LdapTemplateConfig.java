@@ -1,7 +1,7 @@
 package com.armedia.acm.plugins.admin.model;
 
 
-public class ADTemplateConfig implements TemplateConfig
+public class LdapTemplateConfig
 {
     private String userPropertiesTemplate;
     private String userPropertiesTemplateName;
@@ -13,7 +13,6 @@ public class ADTemplateConfig implements TemplateConfig
     private String groupFileTemplate;
     private String groupFileTemplateName;
 
-    @Override
     public String getUserPropertiesTemplate()
     {
         return userPropertiesTemplate;
@@ -24,7 +23,6 @@ public class ADTemplateConfig implements TemplateConfig
         this.userPropertiesTemplate = userPropertiesTemplate;
     }
 
-    @Override
     public String getUserPropertiesTemplateName()
     {
         return userPropertiesTemplateName;
@@ -35,7 +33,6 @@ public class ADTemplateConfig implements TemplateConfig
         this.userPropertiesTemplateName = userPropertiesTemplateName;
     }
 
-    @Override
     public String getUserFileTemplate()
     {
         return userFileTemplate;
@@ -46,7 +43,6 @@ public class ADTemplateConfig implements TemplateConfig
         this.userFileTemplate = userFileTemplate;
     }
 
-    @Override
     public String getUserFileTemplateName()
     {
         return userFileTemplateName;
@@ -57,7 +53,6 @@ public class ADTemplateConfig implements TemplateConfig
         this.userFileTemplateName = userFileTemplateName;
     }
 
-    @Override
     public String getGroupPropertiesTemplate()
     {
         return groupPropertiesTemplate;
@@ -68,7 +63,6 @@ public class ADTemplateConfig implements TemplateConfig
         this.groupPropertiesTemplate = groupPropertiesTemplate;
     }
 
-    @Override
     public String getGroupPropertiesTemplateName()
     {
         return groupPropertiesTemplateName;
@@ -79,7 +73,6 @@ public class ADTemplateConfig implements TemplateConfig
         this.groupPropertiesTemplateName = groupPropertiesTemplateName;
     }
 
-    @Override
     public String getGroupFileTemplate()
     {
         return groupFileTemplate;
@@ -90,7 +83,6 @@ public class ADTemplateConfig implements TemplateConfig
         this.groupFileTemplate = groupFileTemplate;
     }
 
-    @Override
     public String getGroupFileTemplateName()
     {
         return groupFileTemplateName;
