@@ -521,7 +521,6 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                         scope.personAssociation.person.givenName = data.person.givenName;
                         scope.personAssociation.person.familyName = data.person.familyName;
                         scope.personAssociation.personType = data.person.personType;
-                        scope.personAssociation.person.parentTitle = data.person.parentTitle;
                         scope.objectInfo.modifier = scope.userId;
                         if (data.isEdit) {
                             var index = _.indexOf(_.pluck(scope.objectInfo.personAssociations, 'id'), scope.personAssociation.id);
