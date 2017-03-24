@@ -2,17 +2,18 @@
   "core": {
     "userInfo": {
       "addedMenu": {
-        "help": "hi_Help",
-        "logout": "hi_Logout"
+        "help": "सहायता",
+        "logout": "लॉगआउट"
       }
     },
     "leftNav": {
-      "title": "hi_Navigation"
+      "title": "नेविगेशन"
     },
     "topBar": {
-      "new": "hi_New",
+      "new": "बनाएं",
       "toggle.btn": "hi_Toggle navigation",
-      "search.placeholder": "hi_Search ArkCase"
+      "search.placeholder": "hi_Search ArkCase",
+      "locale.updateList": "अपडेट"
     },
     "loginWarning": {
       "btnOK.text": "hi_OK",

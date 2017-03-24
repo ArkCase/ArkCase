@@ -1,8 +1,8 @@
 {
   "audit": {
-    "title": "hi_Audit",
+    "title": "परीक्षा",
     "menus": {
-      "leftnav.item": "hi_Audit"
+      "leftnav.item": "परीक्षा"
     },
     "navigation": {
       "label": {

@@ -1,20 +1,20 @@
 {
   "subscriptions": {
-    "title": "en-in_Subscriptions",
-    "search.btn": "en-in_Search",
-    "export.btn": "en-in_Export",
-    "search.placeholder": "en-in_Search for subscriptions",
+    "title": "Subscriptions",
+    "search.btn": "Search",
+    "export.btn": "Export",
+    "search.placeholder": "Search for subscriptions",
     "menus": {
-      "leftnav.item": "en-in_Subscriptions"
+      "leftnav.item": "Subscriptions"
     },
     "comp":{
       "grid": {
         "columns": {
-          "id": "en-in_ID",
-          "event": "en-in_Event",
-          "parentName": "en-in_Parent Name",
-          "parentType": "en-in_Parent Type",
-          "modified": "en-in_Modified"
+          "id": "ID",
+          "event": "Event",
+          "parentName": "Parent Name",
+          "parentType": "Parent Type",
+          "modified": "Modified"
         }
       }
     }

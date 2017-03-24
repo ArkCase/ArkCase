@@ -1,8 +1,8 @@
 {
   "reports": {
-    "title": "hi_Reports",
+    "title": "रिपोर्ट",
     "menus": {
-      "leftnav.item": "hi_Reports"
+      "leftnav.item": "रिपोर्ट"
     },
     "selectReport" : {
       "label": "hi_Report",

@@ -1,8 +1,8 @@
 {
   "preference": {
-    "title": "hi_Preferences",
+    "title": "प्राथमिकताएं",
     "menus": {
-      "usermenu.item": "hi_Preferences"
+      "usermenu.item": "प्राथमिकताएं"
     }
   }
 }

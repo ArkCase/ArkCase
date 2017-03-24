@@ -1,6 +1,6 @@
 {
   "admin": {
-    "title": "zh-tw_Admin",
+    "title": "管理",
     "security.title": "zh-tw_Security",
     "security.functionalAccessControl": "zh-tw_Functional Access Control",
     "security.functionalAccessControl.applicationRole": "zh-tw_Application Role",
@@ -39,7 +39,7 @@
       "ok": "zh-tw_OK"
     },
     "menus": {
-      "leftnav.item": "zh-tw_Admin"
+      "leftnav.item": "管理"
     },
     "security.ldapConfig.data.placeholders": {
       "id": "zh-tw_Enter directory name",

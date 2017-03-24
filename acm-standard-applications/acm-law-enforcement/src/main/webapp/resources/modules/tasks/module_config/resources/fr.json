@@ -1,13 +1,13 @@
 {
   "tasks": {
-    "title": "fr_Tasks",
+    "title": "Tâches",
     "progressNoTask": "fr_[ No task data ]",
     "progressLoading": "fr_Loading task ",
     "progressError": "fr_Failed to load task"
   },
   "tasks.menus": {
-    "leftnav.item": "fr_Tasks",
-    "topbar.item": "fr_Task"
+    "leftnav.item": "Tâches",
+    "topbar.item": "Tâches"
   },
   "tasks.comp.info": {
     "taskId": "fr_Task id:",

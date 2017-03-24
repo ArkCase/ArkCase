@@ -45,7 +45,8 @@ angular.module('complaints').controller('Complaints.TagsController', ['$scope', 
                                 return tagAss.id == tag.object_id_s;
                             });
                             if (tagsFound.length == 0) {
-                                ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.COMPLAINT, tag.object_id_s).then(
+                                ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.COMPLAINT,
+                                    $scope.objectParentTitle, tag.object_id_s).then(
                                     function (returnedTag) {
                                         var tagToAdd = angular.copy(returnedTag);
                                         tagToAdd.tagName = tag.tags_s;
@@ -64,7 +65,8 @@ angular.module('complaints').controller('Complaints.TagsController', ['$scope', 
                             }
                         }
                         else {
-                            ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.COMPLAINT, tag.id).then(
+                            ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.COMPLAINT, 
+                            $scope.objectParentTitle, tag.id).then(
                                 function () {
                                     $scope.tags.push(tag);
                                     $scope.gridOptions.data = $scope.tags;
@@ -93,6 +95,7 @@ angular.module('complaints').controller('Complaints.TagsController', ['$scope', 
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
+            $scope.objectParentTitle = $scope.objectInfo.complaintNumber;
 
             var currentObjectId = Util.goodMapValue(objectInfo, "complaintId");
             if (Util.goodPositive(currentObjectId, false)) {

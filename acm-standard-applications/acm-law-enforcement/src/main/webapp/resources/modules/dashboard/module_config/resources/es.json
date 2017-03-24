@@ -1,8 +1,8 @@
 {
   "dashboard": {
-    "title": "es_Dashboard",
+    "title": "Painel de Controle",
     "menus": {
-      "leftnav.item": "es_Dashboard"
+      "leftnav.item": "Painel de Controle"
     },
     "widgets": {
       "casesByQueue": {
