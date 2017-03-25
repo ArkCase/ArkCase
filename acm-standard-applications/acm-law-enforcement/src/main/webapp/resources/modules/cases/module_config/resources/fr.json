@@ -306,6 +306,7 @@
     "table.columns": {
       "approvalDate": "fr_Approval Date",
       "approverId": "fr_Approver",
+      "approverFullName": "fr_Approver",
       "approverDecision": "fr_Approver Decision"
     }
   },
