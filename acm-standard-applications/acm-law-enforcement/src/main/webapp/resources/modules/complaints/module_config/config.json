@@ -1371,8 +1371,8 @@
           "cellEditableCondition": false
         },
         {
-          "name": "approverId",
-          "displayName": "complaints.comp.pastApprovals.table.columns.approverId",
+          "name": "approverFullName",
+          "displayName": "complaints.comp.pastApprovals.table.columns.approverFullName",
           "headerCellFilter": "translate",
           "cellEditableCondition": false
         },
