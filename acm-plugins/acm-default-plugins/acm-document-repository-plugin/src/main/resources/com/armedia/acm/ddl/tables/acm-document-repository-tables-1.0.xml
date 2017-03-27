@@ -23,13 +23,13 @@
             <column name="cm_doc_repo_restricted_flag" type="VARCHAR(32)" defaultValue="false">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_doc_repo_created" type="${timestampType}">
+            <column name="cm_doc_repo_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_doc_repo_creator" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_doc_repo_modified" type="${timestampType}">
+            <column name="cm_doc_repo_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_doc_repo_modifier" type="VARCHAR(1024)">
