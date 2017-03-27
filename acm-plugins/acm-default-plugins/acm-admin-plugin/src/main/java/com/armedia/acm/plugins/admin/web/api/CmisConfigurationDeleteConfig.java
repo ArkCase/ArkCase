@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.exception.AcmCmisConfigurationException;
+import com.armedia.acm.plugins.admin.service.CmisConfigurationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -20,18 +21,15 @@ import java.io.IOException;
 public class CmisConfigurationDeleteConfig
 {
     private Logger log = LoggerFactory.getLogger(getClass());
-
     private CmisConfigurationService cmisConfigurationService;
 
     @RequestMapping(value = "/cmisconfiguration/config/{cmisId}", method = RequestMethod.DELETE, produces = {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
-
     @ResponseBody
     public String deleteConfig(
             @PathVariable("cmisId") String cmisId) throws IOException, AcmCmisConfigurationException
     {
-
         try
         {
             if (cmisId == null)
@@ -43,10 +41,7 @@ public class CmisConfigurationDeleteConfig
 
         } catch (Exception e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error("Can't delete CMIS config", e);
-            }
+            log.error("Can't delete CMIS config", e);
             throw new AcmCmisConfigurationException("Delete CMIS config error", e);
         }
     }

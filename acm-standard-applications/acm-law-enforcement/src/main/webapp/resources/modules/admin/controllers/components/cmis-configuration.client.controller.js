@@ -37,7 +37,7 @@ angular.module('admin').controller('Admin.CMISConfigurationController', ['$scope
 
             var modalInstance = $modal.open({
                 scope: modalScope,
-                templateUrl: 'modules/admin/views/components/cmis.configuration.addconfig.modal.html',
+                templateUrl: 'modules/admin/views/components/cmis-configuration.addconfig.modal.html',
                 backdrop: 'static',
                 controller: function ($scope, $modalInstance) {
                     $scope.ok = function () {
@@ -70,10 +70,6 @@ angular.module('admin').controller('Admin.CMISConfigurationController', ['$scope
         };
 
         $scope.deleteRow = function (rowEntity) {
-            //TODO: Delete configuration
-
-            console.log("You clicked DELETE. Here's a cookie (::)");
-
             $scope.deleteDir = rowEntity;
             var modalOptions = {
                 closeButtonText: $translate.instant('admin.documentManagement.cmisConfiguration.deleteDialog.cancelBtn'),

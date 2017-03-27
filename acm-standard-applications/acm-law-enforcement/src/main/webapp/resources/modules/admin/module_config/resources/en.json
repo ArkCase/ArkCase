@@ -473,7 +473,7 @@
       "cmisConfiguration.deleteDialog": {
         "cancelBtn": "Cancel",
         "deleteBtn": "Cofirm Delete",
-        "headerText": "You are about to delete group:",
+        "headerText": "You are about to delete CMIS Configuration:",
         "bodyText": "Are you sure?"
       },
       "cmisConfiguration.messages": {

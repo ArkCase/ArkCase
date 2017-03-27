@@ -8,7 +8,7 @@
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/admin/services/cmis.configuration.client.service.js modules/admin/services/cmis.configuration.client.service.js}
+ * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/admin/services/cmis-configuration.client.service.js modules/admin/services/cmis-configuration.client.service.js}
  *
  * The Admin.CmisConfigService provides CMIS Config REST call functionality
  */

@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.exception.AcmCmisConfigurationException;
+import com.armedia.acm.plugins.admin.service.CmisConfigurationService;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,10 +51,7 @@ public class CmisConfigurationUpdateConfig
 
         } catch (Exception e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error("Can't update CMIS config", e);
-            }
+            log.error("Can't update CMIS config", e);
             throw new AcmCmisConfigurationException("Update CMIS config error", e);
         }
 
