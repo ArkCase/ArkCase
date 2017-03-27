@@ -135,6 +135,7 @@ public class DocumentRepository implements Serializable, AcmAssignedObject, AcmE
     protected void beforeUpdate()
     {
         setupChildPointers();
+        setNameUpperCase(getName().toUpperCase());
     }
 
     @Override
