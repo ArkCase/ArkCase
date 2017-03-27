@@ -50,17 +50,21 @@ angular
                     //handle incompatible old format; this code will be remove soon after user/developers use this version
                     if (localStorage.AcmLocale) {
                         var lastLocale = angular.fromJson(localStorage.AcmLocale);
-                        if (0 < lastLocale.locales.length) {
-                            if (!lastLocale.locales[0].locale) {
-                                localStorage.AcmLocale = null;
-                            }
+                        if (!lastLocale) {
+                            localStorage.AcmLocale = null;
+                        } else if (!lastLocale.locales) {
+                            localStorage.AcmLocale = null;
+                        } else if (0 >= lastLocale.locales.length) {
+                            localStorage.AcmLocale = null;
+                        } else if (!lastLocale.locales[0].locale) {
+                            localStorage.AcmLocale = null;
                         }
                     }
                     //TODO: remove above block
 
-                    if (localStorage.AcmLocale) {
+                    if (localStorage.AcmLocale && "null" != localStorage.AcmLocale) {
                         var lastLocale = angular.fromJson(localStorage.AcmLocale);
-                        if (lastLocale.selected) {
+                        if (lastLocale && lastLocale.selected) {
                             preferredLocale = lastLocale.selected;
                         }
                     }
