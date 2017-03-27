@@ -1,9 +1,9 @@
-package com.armedia.acm.plugins.admin.web.api;
+package com.armedia.acm.plugins.admin.model;
 
 /**
  * Created by nick.ferguson on 3/22/2017.
  */
-public interface CmisConfigurationProperties
+public interface CmisConfigurationConstants
 {
     String CMIS_ID = "cmis.id";
     String CMIS_BASEURL = "cmis.baseUrl";
@@ -20,5 +20,4 @@ public interface CmisConfigurationProperties
     String CMIS_RECONNECTFREQUENCY = "cmis.reconnectFrequency";
     String CMIS_REPOSITORYID = "cmis.repositoryId";
     String CMIS_VERSIONINGSTATE = "cmis.versioningState";
-
 }

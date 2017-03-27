@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.exception.AcmCmisConfigurationException;
+import com.armedia.acm.plugins.admin.service.CmisConfigurationService;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -24,7 +25,7 @@ import java.util.Properties;
 @RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
 public class CmisConfigurationRetrieveConfigs
 {
-    private Logger log = LoggerFactory.getLogger(CmisConfigurationRetrieveConfigs.class);
+    private Logger log = LoggerFactory.getLogger(getClass());
     private CmisConfigurationService cmisConfigurationService;
 
     @RequestMapping(value = "/cmisconfiguration/config", method = RequestMethod.GET, produces = {
@@ -57,11 +58,7 @@ public class CmisConfigurationRetrieveConfigs
 
         } catch (Exception e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error("Can't read CMIS properties file", e);
-            }
-
+            log.error("Can't read CMIS properties file", e);
             throw new AcmCmisConfigurationException("Can't retrieve CMIS properties", e);
         }
     }

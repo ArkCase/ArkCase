@@ -338,19 +338,6 @@
     </bean>
 
     <!-- CMIS configuration API -->
-    <bean id="cmisConfigurationService" class="com.armedia.acm.plugins.admin.web.api.CmisConfigurationService">
-        <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-        <property name="cmisConfigurationTemplatesLocation"
-                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/cmis/cmis-config-templates/"/>
-        <property name="cmisTemplateFile" value="mule-config-cmis.xml.ftl"/>
-        <property name="cmisTemplatePropertiesFile" value="mule-config-cmis.properties.ftl"/>
-
-        <property name="cmisConfigurationLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/cmis/"/>
-        <property name="cmisFile" value="mule-config-%s-cmis.xml"/>
-        <property name="cmisPropertiesFile" value="mule-config-%s-cmis.properties"/>
-        <property name="cmisPropertiesFileRegex" value="^mule[-d]config[-d][a-zA-Z0-9]+[-d]cmis.properties$"/>
-    </bean>
-
     <bean id="cmisConfigurationRetrieveDirectories"
           class="com.armedia.acm.plugins.admin.web.api.CmisConfigurationRetrieveConfigs">
         <property name="cmisConfigurationService" ref="cmisConfigurationService"/>

@@ -1,8 +1,9 @@
-package com.armedia.acm.plugins.admin.web.api;
+package com.armedia.acm.plugins.admin.service;
 
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
 import com.armedia.acm.plugins.admin.exception.AcmCmisConfigurationException;
+import com.armedia.acm.plugins.admin.model.CmisConfigurationConstants;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import org.apache.commons.io.FileUtils;
@@ -27,8 +28,7 @@ import java.util.regex.Pattern;
  */
 public class CmisConfigurationService
 {
-    private Logger log = LoggerFactory.getLogger(CmisConfigurationService.class);
-
+    private Logger log = LoggerFactory.getLogger(getClass());
     private AcmEncryptablePropertyUtils encryptablePropertyUtils;
 
     private String cmisConfigurationLocation;
@@ -105,20 +105,7 @@ public class CmisConfigurationService
     public void deleteCmisConfig(String cmisId) throws AcmCmisConfigurationException
     {
 
-        String[] extensions = new String[]{"properties"};
-        List<File> propertiesFiles = (List<File>) FileUtils.listFiles(new File(cmisConfigurationLocation), extensions, false);
-
-        Pattern pattern = Pattern.compile(cmisPropertiesFileRegex);
-        int matchedFiles = 0;
-        for (File fileIter : propertiesFiles)
-        {
-            String fileName = fileIter.getName();
-            Matcher matcher = pattern.matcher(fileName);
-            if (matcher.find())
-            {
-                matchedFiles++;
-            }
-        }
+        int matchedFiles = countFiles();
 
         if (matchedFiles == 0)
         {
@@ -134,6 +121,31 @@ public class CmisConfigurationService
 
         forceDeleteFileQuietly(getPropertiesFileName(cmisId));
         forceDeleteFileQuietly(getCmisFileName(cmisId));
+    }
+
+    /**
+     * Count number of properties files
+     *
+     * @return int count of files found.
+     */
+    private int countFiles()
+    {
+        String[] extensions = new String[]{"properties"};
+        List<File> propertiesFiles = (List<File>) FileUtils.listFiles(new File(cmisConfigurationLocation), extensions, false);
+
+        Pattern pattern = Pattern.compile(cmisPropertiesFileRegex);
+        int matchedFiles = 0;
+        for (File fileIter : propertiesFiles)
+        {
+            String fileName = fileIter.getName();
+            Matcher matcher = pattern.matcher(fileName);
+            if (matcher.find())
+            {
+                matchedFiles++;
+            }
+        }
+
+        return matchedFiles;
     }
 
     /**
@@ -247,22 +259,22 @@ public class CmisConfigurationService
     public HashMap<String, Object> getProperties(JSONObject jsonObj) throws JSONException, AcmEncryptionException
     {
         HashMap<String, Object> props = new HashMap<>();
-        props.put("id", jsonObj.getString(CmisConfigurationProperties.CMIS_ID));
-        props.put("baseUrl", jsonObj.getString(CmisConfigurationProperties.CMIS_BASEURL));
-        props.put("username", jsonObj.getString(CmisConfigurationProperties.CMIS_USERNAME));
-        props.put("password", encryptablePropertyUtils.encryptPropertyValue(jsonObj.getString(CmisConfigurationProperties.CMIS_PASSWORD)));
-        props.put("useAlfrescoExtension", jsonObj.getString(CmisConfigurationProperties.CMIS_USEALFRESCOEXTENSION));
-        props.put("endpoint", jsonObj.getString(CmisConfigurationProperties.CMIS_ENDPOINT));
-        props.put("maxIdle", jsonObj.getString(CmisConfigurationProperties.CMIS_MAXIDLE));
-        props.put("maxActive", jsonObj.getString(CmisConfigurationProperties.CMIS_MAXACTIVE));
-        props.put("maxWait", jsonObj.getString(CmisConfigurationProperties.CMIS_MAXWAIT));
-        props.put("minEvictionMillis", jsonObj.getString(CmisConfigurationProperties.CMIS_MINEVICTIONMILLIS));
-        props.put("evictionCheckIntervalMillis", jsonObj.getString(CmisConfigurationProperties.CMIS_EVICTIONCHECKINTERVALMILLIS));
-        props.put("reconnectCount", jsonObj.getString(CmisConfigurationProperties.CMIS_RECONNECTCOUNT));
-        props.put("reconnectFrequency", jsonObj.getString(CmisConfigurationProperties.CMIS_RECONNECTFREQUENCY));
-        props.put("repositoryId", jsonObj.has(CmisConfigurationProperties.CMIS_REPOSITORYID)
-                ? jsonObj.getString(CmisConfigurationProperties.CMIS_REPOSITORYID) : "");
-        props.put("versioningState", jsonObj.getString(CmisConfigurationProperties.CMIS_VERSIONINGSTATE));
+        props.put("id", jsonObj.getString(CmisConfigurationConstants.CMIS_ID));
+        props.put("baseUrl", jsonObj.getString(CmisConfigurationConstants.CMIS_BASEURL));
+        props.put("username", jsonObj.getString(CmisConfigurationConstants.CMIS_USERNAME));
+        props.put("password", encryptablePropertyUtils.encryptPropertyValue(jsonObj.getString(CmisConfigurationConstants.CMIS_PASSWORD)));
+        props.put("useAlfrescoExtension", jsonObj.getString(CmisConfigurationConstants.CMIS_USEALFRESCOEXTENSION));
+        props.put("endpoint", jsonObj.getString(CmisConfigurationConstants.CMIS_ENDPOINT));
+        props.put("maxIdle", jsonObj.getString(CmisConfigurationConstants.CMIS_MAXIDLE));
+        props.put("maxActive", jsonObj.getString(CmisConfigurationConstants.CMIS_MAXACTIVE));
+        props.put("maxWait", jsonObj.getString(CmisConfigurationConstants.CMIS_MAXWAIT));
+        props.put("minEvictionMillis", jsonObj.getString(CmisConfigurationConstants.CMIS_MINEVICTIONMILLIS));
+        props.put("evictionCheckIntervalMillis", jsonObj.getString(CmisConfigurationConstants.CMIS_EVICTIONCHECKINTERVALMILLIS));
+        props.put("reconnectCount", jsonObj.getString(CmisConfigurationConstants.CMIS_RECONNECTCOUNT));
+        props.put("reconnectFrequency", jsonObj.getString(CmisConfigurationConstants.CMIS_RECONNECTFREQUENCY));
+        props.put("repositoryId", jsonObj.has(CmisConfigurationConstants.CMIS_REPOSITORYID)
+                ? jsonObj.getString(CmisConfigurationConstants.CMIS_REPOSITORYID) : "");
+        props.put("versioningState", jsonObj.getString(CmisConfigurationConstants.CMIS_VERSIONINGSTATE));
 
         return props;
     }

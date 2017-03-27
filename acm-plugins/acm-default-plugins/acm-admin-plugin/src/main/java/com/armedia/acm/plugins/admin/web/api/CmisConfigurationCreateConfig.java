@@ -1,6 +1,8 @@
 package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.exception.AcmCmisConfigurationException;
+import com.armedia.acm.plugins.admin.model.CmisConfigurationConstants;
+import com.armedia.acm.plugins.admin.service.CmisConfigurationService;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +24,6 @@ import java.util.HashMap;
 public class CmisConfigurationCreateConfig
 {
     private Logger log = LoggerFactory.getLogger(getClass());
-
     private CmisConfigurationService cmisConfigurationService;
 
     @RequestMapping(value = "/cmisconfiguration/config", method = RequestMethod.POST, produces = {
@@ -33,11 +34,10 @@ public class CmisConfigurationCreateConfig
     public String createDirectory(
             @RequestBody String resource) throws IOException, AcmCmisConfigurationException
     {
-
         try
         {
             JSONObject newCmisObject = new JSONObject(resource);
-            String id = newCmisObject.getString(CmisConfigurationProperties.CMIS_ID);
+            String id = newCmisObject.getString(CmisConfigurationConstants.CMIS_ID);
 
             if (id == null)
             {
@@ -52,10 +52,7 @@ public class CmisConfigurationCreateConfig
             return newCmisObject.toString();
         } catch (Exception e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error("Can't create CMIS config", e);
-            }
+            log.error("Can't create CMIS config", e);
             throw new AcmCmisConfigurationException("Create CMIS config error", e);
         }
     }
