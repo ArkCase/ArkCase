@@ -85,7 +85,7 @@
     <bean id="acmActivitiEntityEventListener" class="com.armedia.acm.activiti.AcmActivitiEntityEventBridge"/>
 
     <bean id="activitiTaskScheduler" class="com.armedia.acm.activiti.services.ActivitiTaskScheduler"/>
-    <bean id="jobExecutor" class="org.activiti.spring.SpringJobExecutor">
+    <bean id="activitiJobExecutor" class="org.activiti.spring.SpringJobExecutor">
         <property name="taskExecutor" ref="activitiTaskScheduler"/>
     </bean>
 
@@ -110,7 +110,7 @@
             </list>
         </property>
         <property name="jobExecutorActivate" value="${activiti.job.executor.activate}"/>
-        <property name="jobExecutor" ref="jobExecutor"/>
+        <property name="jobExecutor" ref="activitiJobExecutor"/>
     </bean>
 
     <bean id="activitiProcessEngine" class="org.activiti.spring.ProcessEngineFactoryBean">

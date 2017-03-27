@@ -240,10 +240,5 @@
         <property name="OXMFilePath" value="${user.home}/.arkcase/acm${capture.oxm.file.path}"/>
     </bean>
 
-    <bean id="participantsBusinessRule"
-          class="com.armedia.acm.services.participants.service.ParticipantsBusinessRule"
-          parent="simpleStatelessSingleObjectRuleManager">
-        <property name="ruleSpreadsheetFilename" value="drools-participant-assignment-rules.xlsx"/>
-    </bean>
 
 </beans>

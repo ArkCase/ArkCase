@@ -28,7 +28,6 @@
         </property>
     </bean>
 
-
     <bean id="participantPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Participant Plugin"/>
         <property name="pluginProperties" ref="participantProperties"/>
