@@ -41,11 +41,11 @@
                   value="#{ systemProperties ['user.home'] }/.arkcase/acm/resources/resources/"/>
         <property name="settingsFileLocation"
                   value="#{ systemProperties ['user.home'] }/.arkcase/acm/resources/settings/settings.json"/>
-        <property name="baseLanguage" value="en"/>
-        <property name="languages">
-            <list>
-                <value>en</value>
-            </list>
+        <property name="defaultLocale" value="en"/>
+        <property name="defaultLocales">
+            <map>
+                <entry key="en" value="English"></entry>
+            </map>
         </property>
     </bean>
 

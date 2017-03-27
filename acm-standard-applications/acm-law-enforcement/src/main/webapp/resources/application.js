@@ -46,6 +46,18 @@ angular
                 });
                 $translateProvider.determinePreferredLanguage(function () {
                     var preferredLocale = "en";
+
+                    //handle incompatible old format; this code will be remove soon after user/developers use this version
+                    if (localStorage.AcmLocale) {
+                        var lastLocale = angular.fromJson(localStorage.AcmLocale);
+                        if (0 < lastLocale.locales.length) {
+                            if (!lastLocale.locales[0].locale) {
+                                localStorage.AcmLocale = null;
+                            }
+                        }
+                    }
+                    //TODO: remove above block
+
                     if (localStorage.AcmLocale) {
                         var lastLocale = angular.fromJson(localStorage.AcmLocale);
                         if (lastLocale.selected) {
