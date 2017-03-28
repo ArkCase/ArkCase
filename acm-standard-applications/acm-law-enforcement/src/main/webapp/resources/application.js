@@ -154,9 +154,9 @@ angular
                     }
                 }
 
-                AnalyticsProvider.disableAnalytics(false); // configuration toggle
-                AnalyticsProvider.setAccount('UA-92355326-2'); // configuration property
-                AnalyticsProvider.enterDebugMode(true);
+                AnalyticsProvider.disableAnalytics(!googleAnalyticsEnabled); // configuration toggle
+                AnalyticsProvider.setAccount(googleAnalyticsTrackingId); // configuration property
+                AnalyticsProvider.enterDebugMode(googleAnalyticsDebug); // configuration debug flag
                 AnalyticsProvider.setPageEvent('$stateChangeSuccess');
             }
         ]).run(['$translate', '$translatePartialLoader',
