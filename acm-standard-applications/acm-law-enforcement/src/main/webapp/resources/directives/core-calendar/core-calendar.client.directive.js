@@ -70,11 +70,11 @@ angular.module('directives').directive('coreCalendar', ['$compile', '$translate'
 
 
                 /* Add Event Modal */
-                var addEvent = function() {
+                scope.addNewEvent = function() {
                     var modalInstance = $modal.open({
                         animation: true,
-                        templateUrl: 'directives/core-calendar/core-calendar-add-event-modal.client.view.html',
-                        controller: 'Directives.CoreCalendarAddEventModalController',
+                        templateUrl: 'directives/core-calendar/core-calendar-new-event-modal.client.view.html',
+                        controller: 'Directives.CoreCalendarNewEventModalController',
                         size: 'lg',
                         backdrop: 'static'
                     });
@@ -82,25 +82,17 @@ angular.module('directives').directive('coreCalendar', ['$compile', '$translate'
                     modalInstance.result.then(function (data) {
                         //TO DO modal close
                     }, function () {
-                      // TO DO modal dismiss
+                        // TO DO modal dismiss
                     });
                 };
 
                 /* Calendar config object */
                 scope.uiConfig = {
                     calendar: {
-                        customButtons: {
-                            addEvent: {
-                                text: $translate.instant('common.directive.coreCalendar.btnAddEvent'),
-                                click: function() {
-                                    addEvent();
-                                }
-                            }
-                        },
                         height: 450,
                         editable: false,
                         header: {
-                            left: 'month agendaWeek agendaDay addEvent',
+                            left: 'month agendaWeek agendaDay',
                             center: 'title',
                             right: 'today prev,next'
                         },

@@ -1,0 +1,188 @@
+<!-- Subject -->
+<div class="row">
+    <div class="col-sm-12 form-group">
+        <label for="subject">
+            <span translate>common.directive.coreCalendar.newEventModal.form.subject.label</span>
+            <span class="required-asterisk">*</span>
+        </label>
+        <input name="subject" type="text" class="form-control" ng-model="eventDataModel.subject" placeholder="{{'common.directive.coreCalendar.newEventModal.form.subject.placeholder' | translate}}" required>
+    </div>
+</div>
+<!-- Location -->
+<div class="row">
+    <div class="col-sm-12 form-group">
+        <label for="location">
+            <span translate>common.directive.coreCalendar.newEventModal.form.location.label</span>
+        </label>
+        <input name="location" type="text" class="form-control" ng-model="eventDataModel.location" placeholder="{{'common.directive.coreCalendar.newEventModal.form.location.placeholder' | translate}}">
+    </div>
+</div>
+<!-- Start Date Time and Priority -->
+<div class="row">
+    <div class="col-sm-4 form-group">
+        <label for="startDate">
+            <span translate>common.directive.coreCalendar.newEventModal.form.startDate.label</span>
+            <span class="required-asterisk">*</span>
+        </label>
+        <div class="input-group" name="startDate">
+            <input type="text" class="form-control"
+                   datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
+                   ng-model="eventDataModel.startDate"
+                   is-open="openedStartDate.openedEnd" close-on-date-selection="true" show-button-bar="true"
+                   on-open-focus="false"
+                   ng-change="startDateChanged(eventDataModel.startDate)"
+                   close-text="{{ 'common.directive.coreCalendar.newEventModal.form.datePickerClose.button' | translate }}"
+                   min-date="minStartDate"
+                   placeholder="{{'common.directive.coreCalendar.newEventModal.form.startDate.placeholder' | translate}}"
+                   required/>
+            <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="openedStartDate.openedEnd = !openedStartDate.openedEnd">
+                          <i class="fa fa-calendar"></i>
+                    </button>
+                </span>
+        </div>
+    </div>
+    <div class="col-sm-4 form-group">
+        <label for="startTime">
+            <span translate>common.directive.coreCalendar.newEventModal.form.startTime.label</span>
+            <span ng-if="!eventDataModel.allDayEvent" class="required-asterisk">*</span>
+        </label>
+        <fieldset ng-disabled="eventDataModel.allDayEvent">
+            <div name="startTime" timepicker ng-model="eventDataModel.startDate" hour-step="1" minute-step="1" show-meridian="true" show-spinners="false" placeholder="{{'common.directive.coreCalendar.newEventModal.form.startTime.placeholder' | translate}}"></div>
+        </fieldset>
+    </div>
+    <div class="col-sm-4 form-group">
+        <label for="priority">
+            <span translate>common.directive.coreCalendar.newEventModal.form.priority.label</span>
+        </label>
+        <select name="priority" class="form-control" ng-model="eventDataModel.priority">
+            <option value="" disabled selected hidden translate>
+                common.directive.coreCalendar.newEventModal.form.priority.placeholder
+            </option>
+            <option ng-repeat="option in priorityOptions" value="{{option.value}}" translate>
+                {{option.label}}
+            </option>
+        </select>
+    </div>
+</div>
+<!-- End Date Time and Reminder -->
+<div class="row">
+    <div class="col-sm-4 form-group">
+        <label for="endDate">
+            <span translate>common.directive.coreCalendar.newEventModal.form.endDate.label</span>
+            <span class="required-asterisk">*</span>
+        </label>
+        <div class="input-group" name="endDate">
+            <input type="text" class="form-control"
+                   datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
+                   ng-model="eventDataModel.endDate"
+                   is-open="openedEndDate.openedEnd" close-on-date-selection="true" show-button-bar="true"
+                   on-open-focus="false"
+                   ng-change="endDateChanged(eventDataModel.endDate)"
+                   close-text="{{ 'common.directive.coreCalendar.newEventModal.form.datePickerClose.button' | translate }}"
+                   min-date="minStartDate"
+                   placeholder="{{'common.directive.coreCalendar.newEventModal.form.endDate.placeholder' | translate}}"
+                   required/>
+            <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="openedEndDate.openedEnd = !openedEndDate.openedEnd">
+                            <i class="fa fa-calendar"></i>
+                    </button>
+                </span>
+        </div>
+    </div>
+    <div class="col-sm-4 form-group">
+        <label for="endTime">
+            <span translate>common.directive.coreCalendar.newEventModal.form.endTime.label</span>
+            <span ng-if="!eventDataModel.allDayEvent" class="required-asterisk">*</span>
+        </label>
+        <fieldset ng-disabled="eventDataModel.allDayEvent">
+            <div name="endTime" timepicker ng-model="eventDataModel.endDate" ng-change="endTimeChanged(endTime)" hour-step="1" minute-step="1" show-meridian="true" show-spinners="false" placeholder="{{'common.directive.coreCalendar.newEventModal.form.endTime.placeholder' | translate}}"></div>
+        </fieldset>
+    </div>
+    <div class="col-sm-4 form-group">
+        <label for="reminder">
+            <span translate>common.directive.coreCalendar.newEventModal.form.reminder.label</span>
+        </label>
+        <select name="reminder" class="form-control" ng-model="eventDataModel.reminder">
+            <option value="" disabled selected hidden translate>
+                common.directive.coreCalendar.newEventModal.form.reminder.placeholder
+            </option>
+            <option ng-repeat="option in reminderOptions" value="{{option.value}}" translate>
+                {{option.label}}
+            </option>
+        </select>
+    </div>
+</div>
+<!-- Other Options -->
+<div class="row">
+    <label class="col-sm-12" for="otherOptions">
+        <span translate>common.directive.coreCalendar.newEventModal.form.otherOptions.label</span>
+    </label>
+    <fieldset name="otherOptions" class="col-sm-12 form-group">
+        <div class="row well-sm">
+            <div class="col-sm-4">
+                <label class="checkbox-inline">
+                    <input type="checkbox" ng-model="eventDataModel.recurring">
+                    <span translate>
+                              common.directive.coreCalendar.newEventModal.form.recurring.checkbox
+                          </span>
+                </label>
+            </div>
+            <div class="col-sm-4">
+                <label class="checkbox-inline">
+                    <input type="checkbox" ng-model="eventDataModel.allDayEvent">
+                    <span translate>
+                        common.directive.coreCalendar.newEventModal.form.allDayEvent.checkbox
+                    </span>
+                </label>
+            </div>
+            <div class="col-sm-4">
+                <label class="checkbox-inline">
+                    <input type="checkbox" ng-model="eventDataModel.privateEvent">
+                    <span translate>
+                        common.directive.coreCalendar.newEventModal.form.privateEvent.checkbox
+                    </span>
+                </label>
+            </div>
+        </div>
+    </fieldset>
+</div>
+<!-- Repeats -->
+<div class="row" ng-if="eventDataModel.recurring">
+    <label class="col-sm-12" for="repeats">
+        <span translate>common.directive.coreCalendar.newEventModal.form.repeats.label</span>
+    </label>
+    <fieldset name="repeats" class="col-sm-12 form-group">
+        <div class="row">
+            <div class="col-sm-4">
+                <select class="form-control" ng-model="eventDataModel.repeats">
+                    <option value="" disabled selected hidden translate>
+                        common.directive.coreCalendar.newEventModal.form.repeats.placeholder
+                    </option>
+                    <option ng-repeat="option in repeatsOptions" value="{{option.value}}" translate>
+                        {{option.label}}
+                    </option>
+                </select>
+            </div>
+            <!--             <div class="col-sm-4 form-inline">
+                            Every
+                            <select class="form-control">
+                                <option value="option-1">Option 1</option>
+                            </select>
+                            day
+                        </div> -->
+        </div>
+    </fieldset>
+</div>
+<!-- Recurring days of the week -->
+<div class="row" ng-if="eventDataModel.repeats === 'weekly' && eventDataModel.recurring">
+    <div class="col-sm-12 text-center">
+        <label ng-repeat="day in daysOfTheWeekOptions" class="checkbox-inline">
+            <input type="checkbox" ng-model="eventDataModel.recurringDaysOfTheWeek[day.value]">
+            <span translate>
+                {{day.label}}
+            </span>
+        </label>
+
+    </div>
+</div>

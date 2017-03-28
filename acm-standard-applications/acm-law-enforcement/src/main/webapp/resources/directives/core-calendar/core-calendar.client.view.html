@@ -4,8 +4,14 @@
             <span translate>common.directive.coreCalendar.title</span>
 
             <div class="pull-right">
-                <button class="btn btn-default btn-xs" ng-click="onClickRefresh()"><i
-                        class="fa fa-lg fa-refresh"></i></button>
+                <button class="btn btn-default btn-xs" ng-click="onClickRefresh()">
+                    <i class="fa fa-lg fa-refresh"></i>
+                </button>
+            </div>
+            <div class="pull-right">
+                <button tooltip="{{ 'common.directive.coreCalendar.newEvent.button' | translate }}" class="btn btn-default btn-xs" ng-click="addNewEvent()">
+                    <i class="fa fa-lg fa-plus"></i>
+                </button>
             </div>
         </div>
     </div>

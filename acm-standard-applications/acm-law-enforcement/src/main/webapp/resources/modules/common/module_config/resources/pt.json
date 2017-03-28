@@ -206,20 +206,7 @@
   "common.directive.coreCalendar": {
     "title": "pt_Calendar",
     "start.label": "pt_Start: ",
-    "end.label": "pt_End: ",
-    "btnAddEvent": "pt_Add Event",
-    "addEventModal": {
-      "title": "pt_Add Event",
-      "btnCancel": "pt_Cancel",
-      "btnAdd": "pt_Add",
-      "form": {
-        "lblStartDate": "pt_Start Date",
-        "lblEndDate": "pt_End Date",
-        "lblSubject": "pt_Subject",
-        "lblAllDayEvent": "pt_All Day Event",
-        "btnDatePickerClose": "pt_Close"
-      }
-    }
+    "end.label": "pt_End: "
   },
   "common.directive.coreParticipants": {
     "title": "pt_Participants",
