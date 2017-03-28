@@ -6,9 +6,9 @@
  *
  * @description
  *
- * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/cases/services/case-info.client.service.js modules/cases/services/case-info.client.service.js}
+ * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/document-repository/services/document-repository-info.client.service.js modules/document-repository/services/document-repository-info.client.service.js}
  *
- * Case.InfoService provides functions for Case database data
+ * DocumentRepository.InfoService provides functions for Document Repository database data
  */
 angular.module('services').factory('DocumentRepository.InfoService', ['$resource', '$translate', 'Acm.StoreService'
     , 'UtilService', 'Object.InfoService', 'Object.ModelService'
