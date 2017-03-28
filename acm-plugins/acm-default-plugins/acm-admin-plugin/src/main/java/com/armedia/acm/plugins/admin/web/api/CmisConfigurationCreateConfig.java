@@ -37,10 +37,14 @@ public class CmisConfigurationCreateConfig
         try
         {
             JSONObject newCmisObject = new JSONObject(resource);
+            log.debug("Attempting to create new CMIS configuration from: " + newCmisObject.toString());
+
             String id = newCmisObject.getString(CmisConfigurationConstants.CMIS_ID);
+            log.debug("Found CMIS ID: " + id);
 
             if (id == null)
             {
+                log.error("CMIS ID is undefined, unable to create CMIS config");
                 throw new AcmCmisConfigurationException("ID is undefined");
             }
 

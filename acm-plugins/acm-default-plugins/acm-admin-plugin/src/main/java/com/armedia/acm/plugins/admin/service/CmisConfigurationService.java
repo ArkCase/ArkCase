@@ -36,10 +36,13 @@ public class CmisConfigurationService
     private String cmisPropertiesFile;
 
     private String cmisConfigurationTemplatesLocation;
-    private String cmisTemplateFile;
+    private String cmisTemplateXmlFile;
     private String cmisTemplatePropertiesFile;
 
     private String cmisPropertiesFileRegex;
+
+    private Pattern idPattern = Pattern.compile("^[a-zA-Z0-9.]+$");
+    private Pattern propertiesPattern = Pattern.compile(cmisPropertiesFileRegex);
 
     /**
      * Create CMIS Config config files
@@ -50,8 +53,7 @@ public class CmisConfigurationService
      */
     public void createCmisConfig(String cmisId, Map<String, Object> props) throws AcmCmisConfigurationException
     {
-        Pattern pattern = Pattern.compile("^[a-zA-Z0-9.]+$");
-        Matcher matcher = pattern.matcher(cmisId);
+        Matcher matcher = idPattern.matcher(cmisId);
         if (!matcher.find())
         {
             throw new AcmCmisConfigurationException("ID has wrong format. Only numbers, characters symbols and '.' are allowed");
@@ -105,7 +107,7 @@ public class CmisConfigurationService
     public void deleteCmisConfig(String cmisId) throws AcmCmisConfigurationException
     {
 
-        int matchedFiles = countFiles();
+        int matchedFiles = getPropertiesFiles().size();
 
         if (matchedFiles == 0)
         {
@@ -121,31 +123,6 @@ public class CmisConfigurationService
 
         forceDeleteFileQuietly(getPropertiesFileName(cmisId));
         forceDeleteFileQuietly(getCmisFileName(cmisId));
-    }
-
-    /**
-     * Count number of properties files
-     *
-     * @return int count of files found.
-     */
-    private int countFiles()
-    {
-        String[] extensions = new String[]{"properties"};
-        List<File> propertiesFiles = (List<File>) FileUtils.listFiles(new File(cmisConfigurationLocation), extensions, false);
-
-        Pattern pattern = Pattern.compile(cmisPropertiesFileRegex);
-        int matchedFiles = 0;
-        for (File fileIter : propertiesFiles)
-        {
-            String fileName = fileIter.getName();
-            Matcher matcher = pattern.matcher(fileName);
-            if (matcher.find())
-            {
-                matchedFiles++;
-            }
-        }
-
-        return matchedFiles;
     }
 
     /**
@@ -166,6 +143,31 @@ public class CmisConfigurationService
         writePropertiesFile(cmisId, props);
     }
 
+    private void writeFileFromTemplate(Map<String, Object> props, String fileTemplate, String fileName) throws IOException
+    {
+        // Create Properties file
+        Configuration cfg = new Configuration(Configuration.VERSION_2_3_22);
+        cfg.setDirectoryForTemplateLoading(new File(cmisConfigurationTemplatesLocation));
+
+        Template tmplProperties = cfg.getTemplate(fileTemplate);
+
+        Writer writerProp = null;
+        try
+        {
+            writerProp = new FileWriter(new File(fileName));
+            tmplProperties.process(props, writerProp);
+        } catch (Exception e)
+        {
+            log.error("Failed to write file from template '{}' ", fileTemplate, e);
+        } finally
+        {
+            if (writerProp != null)
+            {
+                writerProp.close();
+            }
+        }
+    }
+
     /**
      * Write data into the properties file
      *
@@ -181,23 +183,8 @@ public class CmisConfigurationService
         try
         {
             // Create Properties file
-            Configuration cfg = new Configuration(Configuration.VERSION_2_3_22);
-            cfg.setDirectoryForTemplateLoading(new File(cmisConfigurationTemplatesLocation));
-
-            Template tmplProperties = cfg.getTemplate(cmisTemplatePropertiesFile);
-
-            Writer writerProp = null;
-            try
-            {
-                writerProp = new FileWriter(new File(propertiesFileName));
-                tmplProperties.process(props, writerProp);
-            } finally
-            {
-                if (writerProp != null)
-                {
-                    writerProp.close();
-                }
-            }
+            log.debug("Writing Properties file with ID '{}' ", cmisId);
+            writeFileFromTemplate(props, cmisTemplatePropertiesFile, propertiesFileName);
 
         } catch (Exception e)
         {
@@ -222,25 +209,13 @@ public class CmisConfigurationService
             throw new AcmCmisConfigurationException(String.format("CMIS file '%s' is present in the system.", cmisFileName));
         }
 
-        Configuration cfg = new Configuration(Configuration.VERSION_2_3_22);
-        cfg.setDirectoryForTemplateLoading(new File(cmisConfigurationTemplatesLocation));
 
         try
         {
             // CMIS file
-            Template tmplSig = cfg.getTemplate(cmisTemplateFile);
-            Writer writerSig = null;
-            try
-            {
-                writerSig = new FileWriter(new File(cmisFileName));
-                tmplSig.process(props, writerSig);
-            } finally
-            {
-                if (writerSig != null)
-                {
-                    writerSig.close();
-                }
-            }
+            log.debug("Writing CMIS XML file with ID '{}' ", cmisId);
+            writeFileFromTemplate(props, cmisTemplateXmlFile, cmisFileName);
+
         } catch (Exception e)
         {
             log.error("Can't create CMIS file with ID '{}' ", cmisId, e);
@@ -286,13 +261,11 @@ public class CmisConfigurationService
         List<File> files = (List<File>) FileUtils.listFiles(new File(cmisConfigurationLocation), extensions, false);
         List<File> propertiesFiles = new ArrayList<>();
 
-        // Get all properties files that match to cmisPropertiesFileRegex
-        Pattern pattern = Pattern.compile(cmisPropertiesFileRegex);
 
         for (File fileIter : files)
         {
             String fileName = fileIter.getName();
-            Matcher matcher = pattern.matcher(fileName);
+            Matcher matcher = propertiesPattern.matcher(fileName);
             if (matcher.find())
             {
                 propertiesFiles.add(fileIter);
@@ -304,6 +277,7 @@ public class CmisConfigurationService
 
     private void forceDeleteFileQuietly(String fileName)
     {
+        log.debug("Attempting to delete " + fileName);
         try
         {
             FileUtils.forceDelete(new File(fileName));
@@ -336,12 +310,14 @@ public class CmisConfigurationService
     public boolean propertiesFileExist(String cmisId)
     {
         String fileName = getPropertiesFileName(cmisId);
+        log.debug("Checking if CMIS Properties file " + fileName + " exists");
         return new File(fileName).exists();
     }
 
     public boolean cmisFileExist(String cmisId)
     {
         String fileName = getCmisFileName(cmisId);
+        log.debug("Checking if CMIS Configuration file " + fileName + " exists");
         return new File(fileName).exists();
     }
 
@@ -365,9 +341,9 @@ public class CmisConfigurationService
         this.cmisConfigurationTemplatesLocation = cmisConfigurationTemplatesLocation;
     }
 
-    public void setCmisTemplateFile(String cmisTemplateFile)
+    public void setCmisTemplateXmlFile(String cmisTemplateXmlFile)
     {
-        this.cmisTemplateFile = cmisTemplateFile;
+        this.cmisTemplateXmlFile = cmisTemplateXmlFile;
     }
 
     public void setCmisTemplatePropertiesFile(String cmisTemplatePropertiesFile)
