@@ -26,7 +26,7 @@ public class SetUserPreferredWidgetsPerModule
     private UserPreferenceService userPreferenceService;
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(value = "/preferred", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/preferred", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public PreferredWidgetsDto setPreferredWidgets(
             @RequestBody PreferredWidgetsDto in,
