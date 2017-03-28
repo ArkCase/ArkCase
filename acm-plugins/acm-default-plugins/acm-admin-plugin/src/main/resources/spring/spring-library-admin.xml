@@ -89,7 +89,7 @@
         <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
         <property name="cmisConfigurationTemplatesLocation"
                   value="#{ systemProperties ['user.home'] }/.arkcase/acm/cmis/cmis-config-templates/"/>
-        <property name="cmisTemplateFile" value="mule-config-cmis.xml.ftl"/>
+        <property name="cmisTemplateXmlFile" value="mule-config-cmis.xml.ftl"/>
         <property name="cmisTemplatePropertiesFile" value="mule-config-cmis.properties.ftl"/>
 
         <property name="cmisConfigurationLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/cmis/"/>
@@ -101,6 +101,7 @@
 
     <bean id="cmisConfigurationPropertiesService"
           class="com.armedia.acm.plugins.admin.service.CmisConfigurationPropertiesService">
+        <property name="cmisConfigurationService" ref="cmisConfigurationService"/>
     </bean>
 
 </beans>

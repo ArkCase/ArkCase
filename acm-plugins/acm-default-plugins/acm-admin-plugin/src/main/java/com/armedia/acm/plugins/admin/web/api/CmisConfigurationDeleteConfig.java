@@ -32,12 +32,16 @@ public class CmisConfigurationDeleteConfig
     {
         try
         {
+            log.debug("Attempting to delete CMIS Configuration with ID: " + cmisId);
             if (cmisId == null)
             {
+                log.debug("CMIS ID is undefined");
                 throw new AcmCmisConfigurationException("Config Id is undefined");
             }
+
+
             cmisConfigurationService.deleteCmisConfig(cmisId);
-            return "{}";
+            return cmisId;
 
         } catch (Exception e)
         {
