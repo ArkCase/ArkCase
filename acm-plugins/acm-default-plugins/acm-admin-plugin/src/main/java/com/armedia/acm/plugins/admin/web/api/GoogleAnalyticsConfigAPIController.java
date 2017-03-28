@@ -55,7 +55,7 @@ public class GoogleAnalyticsConfigAPIController
         StringBuffer sb = new StringBuffer();
 
         // Google Analytics enabled flag
-        sb.append("var googleAnalyticsEnabled = ");
+        sb.append("var GOOGLE_ANALYTICS_ENABLED = ");
         if (properties.containsKey("ga.enabled"))
         {
             sb.append(properties.getProperty("ga.enabled"));
@@ -66,7 +66,7 @@ public class GoogleAnalyticsConfigAPIController
         sb.append(";");
 
         // Google Analytics Tracking ID
-        sb.append("var googleAnalyticsTrackingId = ");
+        sb.append("var GOOGLE_ANALYTICS_TRACKING_ID = ");
         if (properties.containsKey("ga.trackingId"))
         {
             sb.append("'").append(properties.getProperty("ga.trackingId")).append("'");
@@ -77,7 +77,7 @@ public class GoogleAnalyticsConfigAPIController
         sb.append(";");
 
         // Google Analytics debug flag
-        sb.append("var googleAnalyticsDebug = ");
+        sb.append("var GOOGLE_ANALYTICS_DEBUG = ");
         if (properties.containsKey("ga.debug"))
         {
             sb.append(properties.getProperty("ga.debug"));

@@ -154,9 +154,9 @@ angular
                     }
                 }
 
-                AnalyticsProvider.disableAnalytics(!googleAnalyticsEnabled); // configuration toggle
-                AnalyticsProvider.setAccount(googleAnalyticsTrackingId); // configuration property
-                AnalyticsProvider.enterDebugMode(googleAnalyticsDebug); // configuration debug flag
+                AnalyticsProvider.disableAnalytics(!GOOGLE_ANALYTICS_ENABLED); // configuration toggle
+                AnalyticsProvider.setAccount(GOOGLE_ANALYTICS_TRACKING_ID); // configuration property
+                AnalyticsProvider.enterDebugMode(GOOGLE_ANALYTICS_DEBUG); // configuration debug flag
                 AnalyticsProvider.setPageEvent('$stateChangeSuccess');
             }
         ]).run(['$translate', '$translatePartialLoader',
