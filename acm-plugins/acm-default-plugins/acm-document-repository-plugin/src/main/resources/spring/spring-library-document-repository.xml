@@ -5,6 +5,29 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
+    <!-- pre-save handlers -->
+    <bean id="documentRepositoryContainerHandler"
+          class="com.armedia.acm.plugins.documentrepository.pipeline.postsave.DocumentRepositoryContainerHandler"/>
+    <!-- post-save handlers -->
+    <bean id="documentRepositoryEcmFolderHandler"
+          class="com.armedia.acm.plugins.documentrepository.pipeline.postsave.DocumentRepositoryEcmFolderHandler">
+        <property name="ecmFileService" ref="ecmFileService"/>
+    </bean>
+
+    <bean id="documentRepositoryPipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
+        <property name="preSaveHandlers">
+            <list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
+            </list>
+        </property>
+        <property name="postSaveHandlers">
+            <list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
+                <ref bean="documentRepositoryRulesHandler"/>
+                <ref bean="documentRepositoryContainerHandler"/>
+                <ref bean="documentRepositoryEcmFolderHandler"/>
+            </list>
+        </property>
+    </bean>
+
     <bean id="documentRepositoryToSolrTransformer"
           class="com.armedia.acm.plugins.documentrepository.service.DocumentRepositoryToSolrTransformer">
         <property name="userDao" ref="userJpaDao"/>
@@ -16,4 +39,9 @@
         <aop:scoped-proxy proxy-target-class="true"/>
     </bean>
 
+    <bean id="documentRepositoryServiceImpl"
+          class="com.armedia.acm.plugins.documentrepository.service.impl.DocumentRepositoryServiceImpl">
+        <property name="documentRepositoryDao" ref="documentRepositoryDao"/>
+        <property name="pipelineManager" ref="documentRepositoryPipelineManager"/>
+    </bean>
 </beans>
