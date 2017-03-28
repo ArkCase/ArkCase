@@ -13,8 +13,9 @@ angular
             '$translateProvider',
             '$translatePartialLoaderProvider',
             '$httpProvider',
+            'AnalyticsProvider',
             function ($locationProvider, $translateProvider,
-                      $translatePartialLoaderProvider, $httpProvider) {
+                      $translatePartialLoaderProvider, $httpProvider, AnalyticsProvider) {
                 $locationProvider.hashPrefix('!');
 
                 $httpProvider.interceptors.push(httpInterceptor);
@@ -152,6 +153,11 @@ angular
                         return isSuppressed;
                     }
                 }
+
+                AnalyticsProvider.disableAnalytics(false); // configuration toggle
+                AnalyticsProvider.setAccount('UA-92355326-2'); // configuration property
+                AnalyticsProvider.enterDebugMode(true);
+                AnalyticsProvider.setPageEvent('$stateChangeSuccess');
             }
         ]).run(['$translate', '$translatePartialLoader',
             function ($translate, $translatePartialLoader) {
