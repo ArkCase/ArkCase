@@ -206,20 +206,7 @@
   "common.directive.coreCalendar": {
     "title": "zh-cn_Calendar",
     "start.label": "zh-cn_Start: ",
-    "end.label": "zh-cn_End: ",
-    "btnAddEvent": "zh-cn_Add Event",
-    "addEventModal": {
-      "title": "zh-cn_Add Event",
-      "btnCancel": "zh-cn_Cancel",
-      "btnAdd": "zh-cn_Add",
-      "form": {
-        "lblStartDate": "zh-cn_Start Date",
-        "lblEndDate": "zh-cn_End Date",
-        "lblSubject": "zh-cn_Subject",
-        "lblAllDayEvent": "zh-cn_All Day Event",
-        "btnDatePickerClose": "zh-cn_Close"
-      }
-    }
+    "end.label": "zh-cn_End: "
   },
   "common.directive.coreParticipants": {
     "title": "zh-cn_Participants",

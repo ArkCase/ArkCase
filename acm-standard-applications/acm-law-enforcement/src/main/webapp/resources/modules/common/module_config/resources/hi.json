@@ -206,20 +206,7 @@
   "common.directive.coreCalendar": {
     "title": "hi_Calendar",
     "start.label": "hi_Start: ",
-    "end.label": "hi_End: ",
-    "btnAddEvent": "hi_Add Event",
-    "addEventModal": {
-      "title": "hi_Add Event",
-      "btnCancel": "hi_Cancel",
-      "btnAdd": "hi_Add",
-      "form": {
-        "lblStartDate": "hi_Start Date",
-        "lblEndDate": "hi_End Date",
-        "lblSubject": "hi_Subject",
-        "lblAllDayEvent": "hi_All Day Event",
-        "btnDatePickerClose": "hi_Close"
-      }
-    }
+    "end.label": "hi_End: "
   },
   "common.directive.coreParticipants": {
     "title": "hi_Participants",

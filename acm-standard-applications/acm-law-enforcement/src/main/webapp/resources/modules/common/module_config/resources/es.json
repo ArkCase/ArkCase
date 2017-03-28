@@ -206,20 +206,7 @@
   "common.directive.coreCalendar": {
     "title": "es_Calendar",
     "start.label": "es_Start: ",
-    "end.label": "es_End: ",
-    "btnAddEvent": "es_Add Event",
-    "addEventModal": {
-      "title": "es_Add Event",
-      "btnCancel": "es_Cancel",
-      "btnAdd": "es_Add",
-      "form": {
-        "lblStartDate": "es_Start Date",
-        "lblEndDate": "es_End Date",
-        "lblSubject": "es_Subject",
-        "lblAllDayEvent": "es_All Day Event",
-        "btnDatePickerClose": "es_Close"
-      }
-    }
+    "end.label": "es_End: "
   },
   "common.directive.coreParticipants": {
     "title": "es_Participants",
