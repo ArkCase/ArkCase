@@ -174,6 +174,13 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                 scope.objectInfoLoaded = false;
                 var onObjectInfoRetrieved = function (objectInfo) {
                     scope.objectInfo = objectInfo;
+                    
+                    if (scope.objectInfo.caseNumber) {
+                        scope.parentTitle = scope.objectInfo.caseNumber;
+                    } else if (scope.objectInfo.complaintNumber) {
+                        scope.parentTitle = scope.objectInfo.complaintNumber;
+                    } 
+
                     if (!scope.objectInfoLoaded) {
                         scope.objectInfoLoaded = true;
                         $q.all([promiseUsers, promisePersonTypes, promiseContactMethodTypes, promiseOrganizationTypes
@@ -249,6 +256,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                     //we are setting it from controller where directive is used
                     personAssociation.parentId = scope.objectInfo[scope.peopleInit.objectInfoId];
                     personAssociation.parentType = scope.peopleInit.objectType;
+                    personAssociation.parentTitle = scope.parentTitle;
                     personAssociation.person.className = Util.goodValue(scope.config.className); //"com.armedia.acm.plugins.person.model.Person";
                     personAssociation.person.givenName = '';
                     personAssociation.person.familyName = '';
@@ -261,7 +269,8 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                         personType: personAssociation.personType,
                         givenName: personAssociation.person.givenName,
                         familyName: personAssociation.person.familyName,
-                        personTypes: scope.personTypes
+                        personTypes: scope.personTypes,
+                        parentTitle: personAssociation.parentTitle
                     };
                     showModalPeople(person, false);
                 };
@@ -752,6 +761,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                         , personType: ""
                         , parentId: null
                         , parentType: ""
+                        , parentTitle: ""
                         , personDescription: ""
                         , notes: ""
                         , person: {
