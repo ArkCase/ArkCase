@@ -15,11 +15,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
-            <artifactId>acm-person-plugin</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-spring-data-source</artifactId>
             <version>${acm.version}</version>
@@ -27,11 +22,6 @@
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-data</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-mule-context-manager</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <dependency>
@@ -48,32 +38,6 @@
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-login</artifactId>
             <version>${acm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-activiti-actions</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-activemq-configuration</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-report-configuration</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-drools-rule-monitor</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-cmis-configuration</artifactId>
-            <version>${acm.version}</version>
-            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
@@ -98,11 +62,6 @@
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-reload-properties</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-mule-module-cmis</artifactId>
             <version>${acm.version}</version>
         </dependency>
 
