@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.documentrepository.web;
 import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.documentrepository.model.DocumentRepository;
 import com.armedia.acm.plugins.documentrepository.model.DocumentRepositoryConstants;
 import com.armedia.acm.plugins.documentrepository.service.DocumentRepositoryService;
@@ -13,12 +14,14 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.TransactionException;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
+import java.util.Objects;
 
 @Controller
 @RequestMapping({"/api/v1/plugin/documentrepository", "/api/latest/plugin/documentrepository"})
@@ -34,13 +37,12 @@ public class DocumentRepositoryAPIController
             throws AcmCreateObjectFailedException, AcmAppErrorJsonMsg
     {
         DocumentRepository existingDocRepo = getDocumentRepositoryService().findByName(in.getName());
-        if (existingDocRepo != null)
+        if (existingDocRepo != null && (in.getId() == null || !Objects.equals(in.getId(), existingDocRepo.getId())))
         {
             log.warn("Duplicate Document Repository name: {}", in.getName());
-            AcmAppErrorJsonMsg error = new AcmAppErrorJsonMsg(String.format(
+            throw new AcmAppErrorJsonMsg(String.format(
                     "Document Repository with name: [%s] already exists!", in.getName()),
                     DocumentRepositoryConstants.OBJECT_TYPE, "name", null);
-            throw error;
         }
         try
         {
