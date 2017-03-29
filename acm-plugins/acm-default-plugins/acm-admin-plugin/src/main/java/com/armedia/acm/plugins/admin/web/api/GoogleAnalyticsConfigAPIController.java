@@ -1,15 +1,18 @@
 package com.armedia.acm.plugins.admin.web.api;
 
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -39,13 +42,13 @@ public class GoogleAnalyticsConfigAPIController
      */
     @RequestMapping(value = "/googleAnalytics/config.js", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String getGoogleAnalyticsSettings()
+    public String getGoogleAnalyticsSettingsJs()
     {
 
         Properties properties = new Properties();
-        try
+        try (FileInputStream fis = new FileInputStream(configFile))
         {
-            properties.load(new FileInputStream(configFile));
+            properties.load(fis);
 
         } catch (IOException e)
         {
@@ -91,7 +94,62 @@ public class GoogleAnalyticsConfigAPIController
         return sb.toString();
     }
 
-    // TODO: add methods for Administration UI (get and set settings)
+    /**
+     * Retrieve Google Analytics configuration as JSON object (used in Admin UI).
+     *
+     * @return configuration represented as JSON
+     */
+    @RequestMapping(value = "/googleAnalytics", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String getGoogleAnalyticsSettings()
+    {
+        // TODO: this method probably needs improvement/adaptation once Admin UI is developed
+        logger.debug("Retrieving Google Analytics configuration");
+        Properties properties = new Properties();
+        try (FileInputStream fis = new FileInputStream(configFile))
+        {
+            properties.load(fis);
+
+        } catch (IOException e)
+        {
+            logger.error("Cannot read configuration file [{}]", configFile.getAbsolutePath(), e);
+        }
+        JSONObject jsonObject = new JSONObject();
+        for (Object key : properties.keySet())
+        {
+            jsonObject.put((String) key, properties.get(key));
+        }
+        return jsonObject.toString();
+    }
+
+    /**
+     * Store Google Analytics configuration as key-value properties (used in Admin UI).
+     *
+     * @param configuration JSON representation of GA settings
+     * @return properties
+     */
+    @RequestMapping(value = "/googleAnalytics", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String setGoogleAnalyticsSettings(@RequestBody String configuration)
+    {
+        // TODO: this method probably needs improvement/adaptation once Admin UI is developed
+        logger.debug("Storing Google Analytics properties");
+        JSONObject jsonConfiguration = new JSONObject(configuration);
+        Properties properties = new Properties();
+        for (Object key : jsonConfiguration.keySet())
+        {
+            // FIXME: validate keys!
+            properties.put(key, jsonConfiguration.get((String) key));
+        }
+        try (FileOutputStream fos = new FileOutputStream(configFile))
+        {
+            properties.store(fos, "Google Analytics configuration");
+            logger.debug("Google Analytics configuration stored");
+        } catch (IOException e)
+        {
+            logger.error("Cannot write configuration file [{}]", configFile.getAbsolutePath(), e);
+        }
+        return properties.toString();
+    }
 
     public File getConfigFile()
     {
