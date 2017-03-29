@@ -129,6 +129,7 @@ public class GoogleAnalyticsConfigAPIController
      * @return properties
      */
     @RequestMapping(value = "/googleAnalytics", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
     public String setGoogleAnalyticsSettings(@RequestBody String configuration)
     {
         // TODO: this method probably needs improvement/adaptation once Admin UI is developed
