@@ -43,12 +43,12 @@ public class DocumentRepositoryPipelineContext extends AbstractPipelineContext
         this.authentication = authentication;
     }
 
-    public boolean isNewComplaint()
+    public boolean isNewDocumentRepository()
     {
         return newDocumentRepository;
     }
 
-    public void setNewComplaint(boolean newComplaint)
+    public void setNewDocumentRepository(boolean newDocumentRepository)
     {
         this.newDocumentRepository = newDocumentRepository;
     }

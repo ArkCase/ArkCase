@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('document-repository').controller('DocumentRepository.NewDocumentRepositoryController', ['$scope'
-    , '$state', '$stateParams', '$q', '$modal', '$translate', 'ConfigService', 'UtilService', 'Authentication'
-    , 'Profile.UserInfoService', 'DocumentRepository.InfoService', 'MessageService'
-    , function ($scope, $state, $stateParams, $q, $modal, $translate, ConfigService, Util, Authentication
-        , UserInfoService, DocumentRepositoryInfoService, MessageService) {
+    , '$modal', '$translate', 'ConfigService', 'UtilService', 'Authentication'
+    , 'Profile.UserInfoService', 'DocumentRepository.InfoService', 'MessageService', 'ObjectService'
+    , function ($scope, $modal, $translate, ConfigService, Util, Authentication
+        , UserInfoService, DocumentRepositoryInfoService, MessageService, ObjectService) {
 
         $scope.docRepo = {};
         Authentication.queryUserInfo().then(
@@ -58,9 +58,13 @@ angular.module('document-repository').controller('DocumentRepository.NewDocument
         $scope.saveNewDocumentRepository = function () {
             setParticipants();
             DocumentRepositoryInfoService.saveDocumentRepository($scope.docRepo).then(function (data) {
-                $state.go($stateParams.returnState, {id: data.id});
+                ObjectService.showObject(ObjectService.ObjectTypes.DOC_REPO, data.id);
             }, function (error) {
-                MessageService.error(error);
+                if (error.data && error.data.message){
+                    $scope.error = error.data.message;
+                }else{
+                    MessageService.error(error);
+                }
             });
         };
 

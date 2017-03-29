@@ -9,5 +9,7 @@ public interface DocumentRepositoryService
 {
     DocumentRepository findById(Long id);
 
+    DocumentRepository findByName(String name);
+
     DocumentRepository save(DocumentRepository documentRepository, Authentication authentication) throws PipelineProcessException;
 }

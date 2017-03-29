@@ -10,7 +10,8 @@
 
 
     <bean id="documentRepositoryBusinessRule"
-          class="com.armedia.acm.plugins.documentrepository.service.SaveDocumentRepositoryBusinessRule">
+          class="com.armedia.acm.plugins.documentrepository.service.SaveDocumentRepositoryBusinessRule"
+          parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-document-repository-rules.xlsx"/>
     </bean>
 
