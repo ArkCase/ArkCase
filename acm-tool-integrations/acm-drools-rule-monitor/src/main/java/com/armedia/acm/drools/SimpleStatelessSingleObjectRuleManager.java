@@ -3,12 +3,10 @@ package com.armedia.acm.drools;
 import com.armedia.acm.files.AbstractConfigurationFileEvent;
 import com.armedia.acm.files.ConfigurationFileAddedEvent;
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
-
 import org.drools.decisiontable.InputType;
 import org.drools.decisiontable.SpreadsheetCompiler;
 import org.kie.api.KieBase;
 import org.kie.api.io.ResourceType;
-import org.kie.internal.KnowledgeBase;
 import org.kie.internal.builder.DecisionTableConfiguration;
 import org.kie.internal.builder.DecisionTableInputType;
 import org.kie.internal.builder.KnowledgeBuilder;
@@ -17,8 +15,6 @@ import org.kie.internal.builder.KnowledgeBuilderFactory;
 import org.kie.internal.io.ResourceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.BeanInitializationException;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -83,7 +79,7 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
         }
         else
         {
-            throw new BeanInitializationException(String.format("No such file: %s", ruleFileName));
+            log.warn("No such file: {}", ruleFileName);
         }
 
     }
