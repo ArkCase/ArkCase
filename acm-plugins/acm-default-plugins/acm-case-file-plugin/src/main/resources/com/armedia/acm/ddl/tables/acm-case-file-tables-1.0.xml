@@ -511,4 +511,20 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="30-additional-queue-columns" author="dmiller">
+        <addColumn tableName="acm_case_file">
+            <column name="cm_queue_enter_date" type="${timestampType}"/>
+        </addColumn>
+
+
+        <addColumn tableName="acm_case_file">
+            <column name="cm_response_due_date" type="${timestampType}"/>
+        </addColumn>
+
+
+        <addColumn tableName="acm_case_file">
+            <column name="cm_previous_queue_id" type="${idType}"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

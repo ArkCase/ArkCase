@@ -13,6 +13,7 @@
                 <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/lookups/addressTypes.json"/>
             </bean>
         </constructor-arg>
+        <constructor-arg value="UTF-8"/>
     </bean>
 
     <bean id="aliasTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
@@ -21,6 +22,7 @@
                 <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/lookups/aliasTypes.json"/>
             </bean>
         </constructor-arg>
+        <constructor-arg value="UTF-8"/>
     </bean>
 
     <bean id="contactMethodTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
@@ -29,6 +31,7 @@
                 <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/lookups/contactMethodTypes.json"/>
             </bean>
         </constructor-arg>
+        <constructor-arg value="UTF-8"/>
     </bean>
 
     <bean id="fileTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
@@ -37,6 +40,7 @@
                 <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/lookups/fileTypes.json"/>
             </bean>
         </constructor-arg>
+        <constructor-arg value="UTF-8"/>
     </bean>
 
     <bean id="objectTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
@@ -45,6 +49,7 @@
                 <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/lookups/objectTypes.json"/>
             </bean>
         </constructor-arg>
+        <constructor-arg value="UTF-8"/>
     </bean>
 
     <bean id="organizationTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
@@ -53,6 +58,7 @@
                 <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/lookups/organizationTypes.json"/>
             </bean>
         </constructor-arg>
+        <constructor-arg value="UTF-8"/>
     </bean>
 
     <bean id="participantTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
@@ -61,6 +67,7 @@
                 <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/lookups/participantTypes.json"/>
             </bean>
         </constructor-arg>
+        <constructor-arg value="UTF-8"/>
     </bean>
 
     <bean id="personTitlesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
@@ -69,6 +76,7 @@
                 <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/lookups/personTitles.json"/>
             </bean>
         </constructor-arg>
+        <constructor-arg value="UTF-8"/>
     </bean>
 
     <bean id="securityTagTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
@@ -77,6 +85,7 @@
                 <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/lookups/securityTagTypes.json"/>
             </bean>
         </constructor-arg>
+        <constructor-arg value="UTF-8"/>
     </bean>
 
     <bean id="securityFieldTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
@@ -85,6 +94,7 @@
                 <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/lookups/securityFieldTypes.json"/>
             </bean>
         </constructor-arg>
+        <constructor-arg value="UTF-8"/>
     </bean>
 
     <bean id="localeSettingsJson" class="org.apache.commons.io.IOUtils" factory-method="toString">
@@ -93,7 +103,9 @@
                 <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/resources/settings/settings.json"/>
             </bean>
         </constructor-arg>
+        <constructor-arg value="UTF-8"/>
     </bean>
+
 
     <bean id="configList" class="java.util.ArrayList">
         <constructor-arg>
