@@ -18,7 +18,6 @@ public class AnalyticsUiController
     {
         ModelAndView retval = new ModelAndView();
         retval.setViewName("analytics");
-        // retval.addObject("reportUrlsMap", getReportService().getAcmReportsAsMap(reports));
 
         return retval;
     }
