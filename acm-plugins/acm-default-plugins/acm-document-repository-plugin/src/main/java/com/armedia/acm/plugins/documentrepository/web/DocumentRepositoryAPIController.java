@@ -36,7 +36,7 @@ public class DocumentRepositoryAPIController
         DocumentRepository existingDocRepo = getDocumentRepositoryService().findByName(in.getName());
         if (existingDocRepo != null)
         {
-            log.error("Duplicate Document Repository name: {}", in.getName());
+            log.warn("Duplicate Document Repository name: {}", in.getName());
             AcmAppErrorJsonMsg error = new AcmAppErrorJsonMsg(String.format(
                     "Document Repository with name: [%s] already exists!", in.getName()),
                     DocumentRepositoryConstants.OBJECT_TYPE, "name", null);
