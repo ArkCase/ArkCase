@@ -25,10 +25,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
+import org.powermock.api.easymock.PowerMock;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.Authentication;
 
 import javax.activation.DataHandler;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +57,8 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
     private EcmFileService mockEcmFileService;
     private InputStream mockInputStream;
     private EcmFile mockEcmFile;
+    private File mockFile;
+    private FileInputStream mockFileInputStream;
     private ApplicationEventPublisher mockApplicationEventPublisher;
     private NotificationUtils mockNotificationUtils;
 
@@ -72,6 +77,8 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         mockAcmUser = createMock(AcmUser.class);
         mockEcmFileService = createMock(EcmFileService.class);
         mockInputStream = createMock(InputStream.class);
+        mockFile = createMock(File.class);
+        mockFileInputStream = createMock(FileInputStream.class);
         mockEcmFile = createMock(EcmFile.class);
         mockApplicationEventPublisher = createMock(ApplicationEventPublisher.class);
         mockNotificationUtils = createMock(NotificationUtils.class);
@@ -219,6 +226,10 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         attachmentIds.add(new Long(999));
         emailWithAttachmentsDTO.setAttachmentIds(attachmentIds);
 
+        List<String> filePaths = new ArrayList<>();
+        filePaths.add("C:\\apache-tomcat-8.0.36\\temp\\temp.zip");
+        emailWithAttachmentsDTO.setFilePaths(filePaths);
+
         Capture<Map<String, Object>> messagePropsCapture = EasyMock.newCapture();
         Capture<String> capturedNote = EasyMock.newCapture();
         Capture<Map<String, DataHandler>> capturedAttachments = EasyMock.newCapture();
@@ -251,6 +262,10 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         mockApplicationEventPublisher.publishEvent(EasyMock.anyObject(SmtpEventSentEvent.class));
         EasyMock.expectLastCall().times(2);
 
+        PowerMock.expectNew(File.class, filePaths.get(0)).andReturn(mockFile);
+        PowerMock.expectNew(FileInputStream.class, mockFile).andReturn(mockFileInputStream);
+        expect(mockFile.getName()).andReturn("temp.zip").anyTimes();
+
         // when
         replayAll();
         smtpNotificationSender.sendEmailWithAttachments(emailWithAttachmentsDTO, mockAuthentication, mockAcmUser);
@@ -261,8 +276,9 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         assertTrue(Pattern.compile(note).matcher(capturedNote.getValue()).matches());
 
         assertNotNull(capturedAttachments.getValue());
-        assertEquals(1, capturedAttachments.getValue().size());
+        assertEquals(2, capturedAttachments.getValue().size());
         assertNotNull(capturedAttachments.getValue().get("fileName.extension"));
+        assertNotNull(capturedAttachments.getValue().get("temp.zip"));
     }
 
     private void setSendExpectations() throws AcmEncryptionException
