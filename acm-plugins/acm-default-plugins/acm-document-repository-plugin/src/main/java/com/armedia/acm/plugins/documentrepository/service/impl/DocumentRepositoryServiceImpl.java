@@ -28,13 +28,19 @@ public class DocumentRepositoryServiceImpl implements DocumentRepositoryService
     }
 
     @Override
+    public DocumentRepository findByName(String name)
+    {
+        return documentRepositoryDao.findByName(name);
+    }
+
+    @Override
     @Transactional
     public DocumentRepository save(DocumentRepository documentRepository, Authentication authentication)
             throws PipelineProcessException
     {
         DocumentRepositoryPipelineContext pipelineContext = new DocumentRepositoryPipelineContext();
         // populate the context
-        pipelineContext.setNewComplaint(documentRepository.getId() == null);
+        pipelineContext.setNewDocumentRepository(documentRepository.getId() == null);
         pipelineContext.setAuthentication(authentication);
         String ipAddress = AuthenticationUtils.getUserIpAddress();
         pipelineContext.setIpAddress(ipAddress);

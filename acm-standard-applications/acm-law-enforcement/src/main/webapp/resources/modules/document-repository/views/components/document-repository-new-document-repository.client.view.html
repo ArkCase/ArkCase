@@ -25,7 +25,8 @@
                         <span class="required-asterisk">*</span>
                         <input type="text" id="assignee" class="input-md form-control"
                                placeholder="{{ 'document-repository.newRepository.assignee.placeholder' | translate}}"
-                               style="background-color: white;" ng-model="assignee.name" ng-click="searchAssignee()" required>
+                               style="background-color: white;" ng-model="assignee.name" ng-click="searchAssignee()"
+                               required>
                     </div>
                     <div class="col-sm-3 form-group">
                         <label for="owningGroup" translate>document-repository.newRepository.owningGroupLabel</label>
@@ -35,11 +36,15 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-6 form-group">
+                    <div class="col-sm-6 form-group" ng-class="{ 'has-error' : error }">
                         <label for="name" translate>document-repository.newRepository.nameLabel</label>
                         <span class="required-asterisk">*</span>
                         <input type="text" id="name" ng-model="docRepo.name" class="input-md form-control"
-                               placeholder="{{ 'document-repository.newRepository.name.placeholder' | translate }}" required>
+                               placeholder="{{ 'document-repository.newRepository.name.placeholder' | translate }}"
+                               required>
+                        <p class="help-block" ng-show="error">
+                            {{ error }}
+                        </p>
                     </div>
                 </div>
                 <div class="row">

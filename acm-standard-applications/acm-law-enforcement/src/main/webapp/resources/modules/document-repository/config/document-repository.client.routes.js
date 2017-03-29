@@ -41,9 +41,6 @@ angular.module('document-repository').config(['$stateProvider',
                         $translatePartialLoader.addPart('document-repository');
                         return $translate.refresh();
                     }]
-                },
-                params: {
-                    "returnState": "document-repository.id"
                 }
             })
 

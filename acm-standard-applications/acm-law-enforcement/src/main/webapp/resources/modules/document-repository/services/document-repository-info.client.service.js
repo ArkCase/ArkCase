@@ -33,8 +33,6 @@ angular.module('services').factory('DocumentRepository.InfoService', ['$resource
          * @returns {Object} Promise
          */
         Service.saveDocumentRepository = function (repository) {
-            console.log("Saving repository...");
-            console.log(repository);
             if (!Service.validateDocumentRepositoryInfo(repository)) {
                 return Util.errorPromise($translate.instant("common.service.error.invalidData"));
             }
@@ -43,8 +41,6 @@ angular.module('services').factory('DocumentRepository.InfoService', ['$resource
                 , param: {type: "documentrepository"}
                 , data: repository
                 , onSuccess: function (data) {
-                    console.log("DATA");
-                    console.log(data);
                     if (Service.validateDocumentRepositoryInfo(data)) {
                         var cacheDocumentRepositoryInfo = new Store.CacheFifo(Service.CacheNames.DOC_REPO_INFO);
                         cacheDocumentRepositoryInfo.put(data.id, data);
