@@ -1,11 +1,14 @@
-<div class="module-content">
-    <div class="module-header">
-        <h3>
-            <span translate>analytics.title</span>
-        </h3>
-    </div>
-    <div class="content-body">
-        <iframe name="analytics-iframe" class="analytics-iframe" frameborder="0"
-            ng-src="https://kibana.logit.io/app/kibana#/dashboard?_g=()" height="600" width="800"> </iframe>
-    </div>
+<div ng-controller="AnalyticsController">
+	<div class="module-content">
+		<div class="module-header">
+			<h3>
+				<span translate>analytics.title</span>
+			</h3>
+		</div>
+		<div class="content-body">
+			<iframe name="analytics-iframe" class="analytics-iframe"
+				frameborder="0" ng-src="{{elkUrl}}" height="600" width="800">
+			</iframe>
+		</div>
+	</div>
 </div>

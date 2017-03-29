@@ -46,6 +46,7 @@
                 <value>file:${user.home}/.arkcase/acm/taskPlugin.properties</value>
                 <value>file:${user.home}/.arkcase/acm/login.properties</value>
                 <value>file:${user.home}/.arkcase/acm/websockets.properties</value>
+                <value>file:${user.home}/.arkcase/acm/acm-elk-config.properties</value>
                 <value>file:${user.home}/.arkcase/acm/spring/spring-config-kerberos.properties</value>
                 <value>file:${user.home}/.arkcase/acm/spring/spring-config-saml.properties</value>
                 <value>file:${user.home}/.arkcase/acm/spring-security/sessionControl.properties</value>
