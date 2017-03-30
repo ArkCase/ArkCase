@@ -1,6 +1,6 @@
 <div class="modal-header">
     <h3>
-        <span translate>common.directive.coreCalendar.newEventModal.title</span>
+        <span translate>common.directive.coreCalendar.addNewEventDialog.title</span>
     </h3>
 </div>
 <div class="modal-body">
@@ -16,15 +16,15 @@
 </div>
 <div class="modal-footer">
     <button class="btn btn-secondary pull-left" ng-click="cancel()">
-        <span translate>common.directive.coreCalendar.newEventModal.cancel.button</span>
+        <span translate>common.directive.coreCalendar.addNewEventDialog.cancel.button</span>
     </button>
-    <button ng-if="formStep !== 1" class="btn btn-primary" ng-click="previousFormStep()" ng-disabled="addEventForm.$invalid">
-        <span translate>common.directive.coreCalendar.newEventModal.previous.button</span>
+    <button ng-if="formStep !== 1" class="btn btn-secondary" ng-click="previousFormStep()" ng-disabled="addEventForm.$invalid">
+        <span translate>common.directive.coreCalendar.addNewEventDialog.previous.button</span>
     </button>
     <button ng-if="formStep !== 3" class="btn btn-primary" ng-click="nextFormStep()" ng-disabled="addEventForm.$invalid">
-        <span translate>common.directive.coreCalendar.newEventModal.next.button</span>
+        <span translate>common.directive.coreCalendar.addNewEventDialog.next.button</span>
     </button>
     <button ng-if="formStep === 3" class="btn btn-primary" ng-click="addEvent()" ng-disabled="addEventForm.$invalid">
-        <span translate>common.directive.coreCalendar.newEventModal.add.button</span>
+        <span translate>common.directive.coreCalendar.addNewEventDialog.add.button</span>
     </button>
 </div>

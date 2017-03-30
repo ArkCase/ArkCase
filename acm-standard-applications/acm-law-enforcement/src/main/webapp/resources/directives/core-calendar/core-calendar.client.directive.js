@@ -30,8 +30,8 @@
  </example>
  */
 angular.module('directives').directive('coreCalendar', ['$compile', '$translate', 'uiCalendarConfig',
-    'Object.CalendarService', 'UtilService', '$modal',
-    function ($compile, $translate, uiCalendarConfig, CalendarService, Util, $modal) {
+    'Object.CalendarService', 'UtilService', '$modal', 'ConfigService',
+    function ($compile, $translate, uiCalendarConfig, CalendarService, Util, $modal, ConfigService) {
         return {
             restrict: 'E',
             scope: {
@@ -68,7 +68,9 @@ angular.module('directives').directive('coreCalendar', ['$compile', '$translate'
                     $compile(element)(scope);
                 };
 
-
+                ConfigService.getModuleConfig("common").then(function (moduleConfig) {
+                    scope.coreCalendarConfig = moduleConfig.coreCalendar;
+                });
                 /* Add Event Modal */
                 scope.addNewEvent = function() {
                     var modalInstance = $modal.open({
@@ -76,7 +78,12 @@ angular.module('directives').directive('coreCalendar', ['$compile', '$translate'
                         templateUrl: 'directives/core-calendar/core-calendar-new-event-modal.client.view.html',
                         controller: 'Directives.CoreCalendarNewEventModalController',
                         size: 'lg',
-                        backdrop: 'static'
+                        backdrop: 'static',
+                        resolve: {
+                            coreCalendarConfig: function() {
+                                return scope.coreCalendarConfig;
+                            }
+                        }
                     });
 
                     modalInstance.result.then(function (data) {

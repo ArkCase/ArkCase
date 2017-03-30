@@ -775,9 +775,11 @@ thead {
     min-height: 270px;
 }
 
-/* Inlined Editing */
+/* Overriding of .form-inline class for the needs of the x-editable popup form. */
+/* This will only affect the element with class .form-inline which is immediately after element with class .editable. */
+/* In this way we localize this override only for x-editable.*/
 
-.form-inline {
+.editable + .form-inline {
     position: fixed;
     margin-top: 30px;
     background-color: #ebeceb;
@@ -790,7 +792,7 @@ thead {
     z-index: 2000;
 }
 
-.form-inline:before {
+.editable + .form-inline:before {
     content: "";
     width: 0;
     height: 0;
@@ -802,7 +804,7 @@ thead {
     left: 40%;
 }
 
-.form-inline:after {
+.editable + .form-inline:after {
     content: "";
     width: 0;
     height: 0;

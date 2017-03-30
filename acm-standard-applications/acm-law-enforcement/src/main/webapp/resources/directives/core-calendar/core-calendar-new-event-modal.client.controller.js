@@ -1,71 +1,22 @@
 'use strict';
 
-angular.module('directives').controller('Directives.CoreCalendarNewEventModalController', ['$scope', '$modalInstance', 'Object.CalendarService', 'MessageService', 'Util.DateService',
-    function($scope, $modalInstance, CalendarService, MessageService, DateService) {
+angular.module('directives').controller('Directives.CoreCalendarNewEventModalController', ['$scope', '$modalInstance', 'Object.CalendarService', 'MessageService', 'Util.DateService', 'coreCalendarConfig', '$modal',
+    function($scope, $modalInstance, CalendarService, MessageService, DateService, coreCalendarConfig, $modal) {
 
         $scope.formStep = 1;
-        $scope.formTitle = 'common.directive.coreCalendar.newEventModal.stepOneTitle';
+        $scope.formTitle = 'common.directive.coreCalendar.addNewEventDialog.stepOneTitle';
 
-        $scope.reminderOptions = [];
-        $scope.priorityOptions = [
-            {
-                value: 'highImportance',
-                label: 'common.directive.coreCalendar.newEventModal.form.priorityOptions.highImportance'
-            },
-            {
-                value: 'lowImportance',
-                label: 'common.directive.coreCalendar.newEventModal.form.priorityOptions.lowImportance'
-            }
-        ];
-        $scope.repeatsOptions = [
-            {
-                value: 'daily',
-                label: 'common.directive.coreCalendar.newEventModal.form.repeatsOptions.daily'
-            },
-            {
-                value: 'weekly',
-                label: 'common.directive.coreCalendar.newEventModal.form.repeatsOptions.weekly'
-            },
-            {
-                value: 'monthly',
-                label: 'common.directive.coreCalendar.newEventModal.form.repeatsOptions.monthly'
-            },
-            {
-                value: 'yearly',
-                label: 'common.directive.coreCalendar.newEventModal.form.repeatsOptions.yearly'
-            }
-        ];
+        $scope.priorityOptions = coreCalendarConfig.addNewEventDialog.priorityOptions;
+        $scope.repeatsOptions = coreCalendarConfig.addNewEventDialog.repeatsOptions;
+        $scope.daysOfTheWeekOptions = coreCalendarConfig.addNewEventDialog.daysOfTheWeekOptions;
+        $scope.reminderOptions = coreCalendarConfig.addNewEventDialog.reminderOptions;
+        $scope.monthsOptions = coreCalendarConfig.addNewEventDialog.monthsOptions;
 
-        $scope.daysOfTheWeekOptions = [
-            {
-                value: 'sunday',
-                label: 'common.directive.coreCalendar.newEventModal.form.sunday.checkbox'
-            },
-            {
-                value: 'monday',
-                label: 'common.directive.coreCalendar.newEventModal.form.monday.checkbox'
-            },
-            {
-                value: 'tuesday',
-                label: 'common.directive.coreCalendar.newEventModal.form.tuesday.checkbox'
-            },
-            {
-                value: 'wednesday',
-                label: 'common.directive.coreCalendar.newEventModal.form.wednesday.checkbox'
-            },
-            {
-                value: 'thursday',
-                label: 'common.directive.coreCalendar.newEventModal.form.thursday.checkbox'
-            },
-            {
-                value: 'friday',
-                label: 'common.directive.coreCalendar.newEventModal.form.friday.checkbox'
-            },
-            {
-                value: 'saturday',
-                label: 'common.directive.coreCalendar.newEventModal.form.saturday.checkbox'
-            }
-        ];
+        $scope.summernoteOptions = {
+            focus: true,
+            dialogsInBody:true,
+            height: 300
+        };
 
         /*Set initial Event data*/
         $scope.eventDataModel = {
@@ -90,17 +41,41 @@ angular.module('directives').controller('Directives.CoreCalendarNewEventModalCon
 
             switch (formStep) {
                 case 1:
-                    formTitle = 'common.directive.coreCalendar.newEventModal.stepOneTitle';
+                    formTitle = 'common.directive.coreCalendar.addNewEventDialog.stepOneTitle';
                     break;
                 case 2:
-                    formTitle = 'common.directive.coreCalendar.newEventModal.stepTwoTitle';
+                    formTitle = 'common.directive.coreCalendar.addNewEventDialog.stepTwoTitle';
                     break;
                 case 3:
-                    formTitle = 'common.directive.coreCalendar.newEventModal.stepThreeTitle';
+                    formTitle = 'common.directive.coreCalendar.addNewEventDialog.stepThreeTitle';
                     break;
             }
 
             return formTitle;
+        };
+
+        $scope.chooseAttendees = function() {
+            var modalInstance = $modal.open({
+                animation: $scope.animationsEnabled,
+                templateUrl: 'directives/core-calendar/core-calendar-choose-event-attendees-modal.client.view.html',
+                controller: 'Directives.CoreCalendarChooseEventAttendeesController',
+                size: 'lg',
+                resolve: {
+                    $config: function () {
+                        return coreCalendarConfig.chooseEventAttendeesDialog.dialogUserPicker;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (attendees) {
+                $scope.eventDataModel.attendees = attendees.object_id_s;
+                $scope.attendeesViewModel = attendees.name;
+
+            }, function () {
+
+            });
+
+
         };
 
         $scope.previousFormStep = function() {
@@ -109,7 +84,6 @@ angular.module('directives').controller('Directives.CoreCalendarNewEventModalCon
         };
 
         $scope.nextFormStep = function() {
-            console.log($scope.eventDataModel)
             $scope.formStep += 1;
             $scope.formTitle = changeFormTitle($scope.formStep);
         };

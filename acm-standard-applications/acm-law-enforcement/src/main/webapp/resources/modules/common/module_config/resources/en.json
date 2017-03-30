@@ -208,7 +208,7 @@
     "start.label": "Start: ",
     "end.label": "End: ",
     "newEvent.button": "New Event",
-    "newEventModal": {
+    "addNewEventDialog": {
       "title": "New Event",
       "cancel.button": "Cancel",
       "add.button": "Add New Event",
@@ -218,6 +218,8 @@
       "stepTwoTitle": "Step 2 – Enter Comments",
       "stepThreeTitle": "Step 3 – Attach Documents",
       "form": {
+        "to.label": "To",
+        "to.placeholder": "Choose People To Invite To Meeting",
         "subject.label": "Subject",
         "subject.placeholder": "Enter Subject",
         "location.label": "Location",
@@ -264,8 +266,59 @@
         "wednesday.checkbox": "Wednesday",
         "thursday.checkbox": "Thursday",
         "friday.checkbox": "Friday",
-        "saturday.checkbox": "Saturday"
+        "saturday.checkbox": "Saturday",
+        "reminderOptions": {
+          "none": "None",
+          "0Minutes": "0 minutes",
+          "5Minutes": "5 minutes",
+          "10Minutes": "10 minutes",
+          "15Minutes": "15 minutes",
+          "30Minutes": "30 minutes",
+          "1Hours": "1 hour",
+          "2Hours": "2 hours",
+          "3Hours": "3 hours",
+          "4Hours": "4 hours",
+          "5Hours": "5 hours",
+          "6Hours": "6 hours",
+          "7Hours": "7 hours",
+          "8Hours": "8 hours",
+          "9Hours": "9 hours",
+          "10Hours": "10 hours",
+          "11Hours": "11 hours",
+          "halfDay": "0.5 days",
+          "18Hours": "18 hours",
+          "1Days": "1 day",
+          "2Days": "2 days",
+          "3Days": "3 days",
+          "4Days": "4 days",
+          "1Week": "1 week",
+          "2Weeks": "2 weeks"
+        },
+        "monthOptions": {
+          "january": "January",
+          "february": "February",
+          "march": "March",
+          "april": "April",
+          "may": "May",
+          "june": "June",
+          "july": "July",
+          "august": "August",
+          "september": "September",
+          "october": "October",
+          "november": "November",
+          "december": "December"
+        }
       }
+    },
+    "chooseEventAttendeesDialog": {
+      "table.columns.name": "Name",
+      "table.columns.email": "Email Address",
+      "title": "Choose Attendees",
+      "attendees.label": "Attendees",
+      "attendees.placeholder": "Enter additional attendees",
+      "searchAttendees.placeholder": "Search Attendees",
+      "cancel.button": "Cancel",
+      "addAttendees.button": "Add Attendees"
     }
   },
   "common.directive.coreParticipants": {
