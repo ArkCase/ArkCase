@@ -32,7 +32,8 @@ var ApplicationConfiguration = (function () {
         'ngHandsontable',
         'ngTagsInput',
         'ui.ace',
-        'cfp.hotkeys'
+        'cfp.hotkeys',
+        'angular-google-analytics'
     ];
 
     // Init list of errors that should not be shown to the end user
