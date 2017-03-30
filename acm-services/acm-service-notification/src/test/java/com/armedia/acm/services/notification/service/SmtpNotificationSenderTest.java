@@ -27,6 +27,8 @@ import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.powermock.api.easymock.PowerMock;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.security.core.Authentication;
 
 import javax.activation.DataHandler;
@@ -227,7 +229,8 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         emailWithAttachmentsDTO.setAttachmentIds(attachmentIds);
 
         List<String> filePaths = new ArrayList<>();
-        filePaths.add("C:\\apache-tomcat-8.0.36\\temp\\temp.zip");
+        Resource resource = new ClassPathResource("temp.zip");
+        filePaths.add(resource.getFile().getAbsolutePath());
         emailWithAttachmentsDTO.setFilePaths(filePaths);
 
         Capture<Map<String, Object>> messagePropsCapture = EasyMock.newCapture();
