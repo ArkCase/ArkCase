@@ -66,6 +66,9 @@ public class PersonAssociation implements Serializable, AcmEntity
     @Column(name = "cm_person_assoc_parent_type")
     private String parentType;
 
+    @Column(name = "cm_person_assoc_parent_title")
+    private String parentTitle;
+
     @Column(name = "cm_person_assoc_person_desc")
     private String personDescription;
 
@@ -240,6 +243,10 @@ public class PersonAssociation implements Serializable, AcmEntity
     {
         this.className = className;
     }
+
+    public String getParentTitle() { return parentTitle; }
+
+    public void setParentTitle(String parentTitle) { this.parentTitle = parentTitle; }
 
     @Override
     public boolean equals(Object obj)

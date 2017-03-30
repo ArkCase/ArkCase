@@ -300,6 +300,7 @@
     "table.columns": {
       "approvalDate": "Approval Date",
       "approverId": "Approver",
+      "approverFullName": "Approver",
       "approverDecision": "Approver Decision"
     }
   },

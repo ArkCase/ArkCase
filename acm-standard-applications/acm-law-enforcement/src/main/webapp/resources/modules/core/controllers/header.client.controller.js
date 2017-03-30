@@ -82,29 +82,32 @@ angular.module('core').controller('HeaderController', ['$scope', '$q', '$state',
         var cacheLocale = new Store.LocalData({name: "AcmLocale", noOwner: true, noRegistry: true});
         var lastLocale = cacheLocale.get();
         if (Util.isEmpty(lastLocale)) {
-            lastLocale = {"locales": [LocaleService.DEFAULT_LOCALE], "selected": LocaleService.DEFAULT_LOCALE};
+            var defaultSettings = LocaleService.DEFAULT_SETTINGS;
+            lastLocale = {};
+            lastLocale.locales = defaultSettings.locales;
+            lastLocale.selected = defaultSettings.defaultLocale;
             cacheLocale.set(lastLocale);
-            $scope.localeCurrent = LocaleService.DEFAULT_LOCALE;
-            $scope.localeDropdownOptions = [LocaleService.DEFAULT_LOCALE];
-        } else {
-            $scope.localeCurrent = Util.goodMapValue(lastLocale, "selected");
-            $scope.localeDropdownOptions = Util.goodMapValue(lastLocale, "locales", []);
         }
-        $translate.use($scope.localeCurrent);
+        var locales = Util.goodMapValue(lastLocale, "locales", []);
+        var localeCode = Util.goodMapValue(lastLocale, "selected", LocaleService.DEFAULT_SETTINGS.defaultLocale);
+        $scope.localeDropdownOptions = locales;
+        $scope.localeSelected = _.find(locales, {locale: localeCode});
+
+        $translate.use($scope.localeSelected.locale);
 
         $scope.changeLocale = function ($event, localeNew) {
             $event.preventDefault();
-            $scope.localeCurrent = localeNew;
+            $scope.localeSelected = localeNew;
             var lastLocale = cacheLocale.get();
-            lastLocale.selected = localeNew;
+            lastLocale.selected = localeNew.locale;
             cacheLocale.set(lastLocale);
-            $translate.use(localeNew);
+            $translate.use(localeNew.locale);
         };
 
         $scope.updateLocales = function($event) {
             $event.preventDefault();
             LocaleService.getSettings().then(function(data){
-                $scope.localeDropdownOptions = Util.goodMapValue(data, "languages", []);
+                $scope.localeDropdownOptions = Util.goodMapValue(data, "locales", []);
 
                 lastLocale = cacheLocale.get();
                 lastLocale.locales = $scope.localeDropdownOptions;
