@@ -1,0 +1,662 @@
+{
+  "id": "document-repository",
+  "title": "Documents",
+  "hasOverviewWidgets": true,
+  "initialLinksShown": true,
+  "documentRepositoryInfoFilter": "\"Object Type\": DOC_REPO",
+  "menus": [
+    {
+      "menuId": "leftnav",
+      "menuItemURL": "document-repository.main",
+      "menuItemTitle": "document-repository.menus.leftnav.item",
+      "moduleId": "document-repository",
+      "iconClass": "fa fa-folder",
+      "position": 50
+    },
+    {
+      "menuId": "topbar",
+      "menuItemURL": "new-document-repository",
+      "menuItemTitle": "document-repository.menus.topbar.item",
+      "moduleId": "document-repository",
+      "iconClass": "fa fa-folder",
+      "position": 20
+    }
+  ],
+  "tree": {
+    "pageSize": 32,
+    "filters": [],
+    "sorters": [
+      {
+        "desc": "Sort Date Asc",
+        "name": "sort-date-asc",
+        "value": "create_tdt ASC"
+      },
+      {
+        "desc": "Sort Date Desc",
+        "name": "sort-date-desc",
+        "value": "create_tdt DESC",
+        "default": true
+      },
+      {
+        "desc": "Sort Repository ID Asc",
+        "name": "sort-document-id-asc",
+        "value": "object_id_s ASC"
+      },
+      {
+        "desc": "Sort Repository ID Desc",
+        "name": "sort-case-id-desc",
+        "value": "object_id_s DESC"
+      },
+      {
+        "desc": "Sort By Repository Name",
+        "name": "sort-by-name-asc",
+        "value": "name ASC"
+      },
+      {
+        "desc": "(No Sort)",
+        "name": "",
+        "value": ""
+      }
+    ],
+    "nodeTypes": [
+      {
+        "type": "prev",
+        "icon": "fa fa-arrow-up"
+      },
+      {
+        "type": "next",
+        "icon": "fa fa-arrow-down"
+      },
+      {
+        "type": "p/DOC_REPO",
+        "icon": "fa fa-folder",
+        "components": [
+          "details",
+          "documents",
+          "participants",
+          "notes",
+          "references",
+          "history"
+        ]
+      },
+      {
+        "type": "p/DOC_REPO/det",
+        "label": "Details",
+        "icon": "fa fa-info-circle",
+        "components": [
+          "details"
+        ]
+      },
+      {
+        "type": "p/DOC_REPO/doc",
+        "label": "Documents",
+        "icon": "fa fa-file",
+        "components": [
+          "documents"
+        ]
+      },
+      {
+        "type": "p/DOC_REPO/par",
+        "label": "Participants",
+        "icon": "fa fa-users",
+        "components": [
+          "participants"
+        ]
+      },
+      {
+        "type": "p/DOC_REPO/note",
+        "label": "Notes",
+        "icon": "fa fa-comments",
+        "components": [
+          "notes"
+        ]
+      },
+      {
+        "type": "p/DOC_REPO/task",
+        "label": "Tasks",
+        "icon": "fa fa-check-circle",
+        "components": [
+          "tasks"
+        ]
+      },
+      {
+        "type": "p/DOC_REPO/ref",
+        "label": "References",
+        "icon": "fa fa-exchange",
+        "components": [
+          "references"
+        ]
+      },
+      {
+        "type": "p/DOC_REPO/his",
+        "label": "History",
+        "icon": "fa fa-bell-o",
+        "components": [
+          "history"
+        ]
+      },
+      {
+        "type": "p/DOC_REPO/tags",
+        "label": "Tags",
+        "icon": "fa fa-tags",
+        "components": [
+          "tags"
+        ]
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "main",
+      "title": "Overview",
+      "icon": "fa fa-tachometer",
+      "enabled": false,
+      "type": "empty",
+      "editable": false,
+      "widgets": [
+        {
+          "id": "details",
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "details",
+              "displayName": "document-repository.comp.details.table.columns.title",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.details' title='{{row.entity.details}}' class='ui-grid-cell-contents'></div>"
+            },
+            {
+              "width": 150,
+              "name": "modified",
+              "displayName": "document-repository.comp.details.table.columns.modified",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+            },
+            {
+              "width": 150,
+              "name": "modifier",
+              "displayName": "document-repository.comp.details.table.columns.modifier",
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
+            }
+          ]
+        },
+        {
+          "id": "documents",
+          "type": "component"
+        },
+        {
+          "id": "participants",
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "participantType",
+              "displayName": "document-repository.comp.participants.table.columns.type",
+              "headerCellFilter": "translate",
+              "lookup": "participantTypes"
+            },
+            {
+              "name": "participantLdapId",
+              "displayName": "document-repository.comp.participants.table.columns.name",
+              "headerCellFilter": "translate",
+              "lookup": "participantNames"
+            }
+          ]
+        },
+        {
+          "id": "notes",
+          "type": "component",
+          "model": "noteCount",
+          "columnDefs": [
+            {
+              "name": "note",
+              "displayName": "document-repository.comp.notes.table.columns.note",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.note' title='{{row.entity.note}}' class='ui-grid-cell-contents'></div>",
+              "enableCellEdit": false
+            },
+            {
+              "name": "created",
+              "displayName": "document-repository.comp.notes.table.columns.created",
+              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "headerCellFilter": "translate",
+              "enableCellEdit": false,
+              "width": 150
+            },
+            {
+              "name": "author",
+              "displayName": "document-repository.comp.notes.table.columns.creator",
+              "headerCellFilter": "translate",
+              "enableCellEdit": false,
+              "lookup": "userFullNames",
+              "width": 150
+            }
+          ]
+        },
+        {
+          "id": "references",
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "targetName",
+              "displayName": "document-repository.comp.references.table.columns.targetName",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.targetName}}</a>"
+            },
+            {
+              "name": "targetTitle",
+              "displayName": "document-repository.comp.references.table.columns.targetTitle",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.targetTitle}}</a>"
+            },
+            {
+              "name": "targetType",
+              "displayName": "document-repository.comp.references.table.columns.targetType",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "status",
+              "displayName": "document-repository.comp.references.table.columns.status",
+              "headerCellFilter": "translate"
+            }
+          ]
+        },
+        {
+          "id": "history",
+          "type": "component"
+        },
+        {
+          "id": "tags",
+          "type": "component"
+        }
+      ]
+    },
+    {
+      "id": "info",
+      "title": "Info",
+      "enabled": false,
+      "type": "empty",
+      "editable": false
+    },
+    {
+      "id": "actions",
+      "title": "Actions",
+      "enabled": false,
+      "type": "empty",
+      "editable": false
+    },
+    {
+      "id": "details",
+      "title": "Details",
+      "icon": "fa fa-info-circle",
+      "enabled": true,
+      "type": "empty"
+    },
+    {
+      "id": "documents",
+      "title": "Documents",
+      "icon": "fa fa-file",
+      "enabled": true,
+      "type": "empty",
+      "docTree": {
+        "email": {
+          "emailSubject": "Case $caseNumber",
+          "subjectRegex": "(.*)\\$([^\\s]+)",
+          "objectTypeRegexGroup": 1,
+          "objectNumberRegexGroup": 2
+        },
+        "noteRequiredOnCheckin": false,
+        "allowParentOwnerToCancel": true
+      }
+    },
+    {
+      "id": "participants",
+      "title": "Participants",
+      "icon": "fa fa-users",
+      "className": "com.armedia.acm.services.participants.model.AcmParticipant",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 5,
+      "typeNoAccess": "No Access",
+      "columnDefs": [
+        {
+          "name": "participantType",
+          "displayName": "document-repository.comp.participants.table.columns.type",
+          "headerCellFilter": "translate",
+          "lookup": "participantTypes"
+        },
+        {
+          "name": "participantLdapId",
+          "displayName": "document-repository.comp.participants.table.columns.name",
+          "headerCellFilter": "translate",
+          "lookup": "participantNames"
+        }
+      ],
+      "dialogUserPicker": {
+        "enableFiltering": false,
+        "multiSelect": false,
+        "showFacets": false,
+        "columnDefs": [
+          {
+            "name": "name",
+            "displayName": "document-repository.comp.participants.dialogUserPicker.table.columns.name",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "object_type_s",
+            "displayName": "document-repository.comp.participants.dialogUserPicker.table.columns.type",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "title",
+            "displayName": "document-repository.comp.participants.dialogUserPicker.table.columns.title",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "object_id_s",
+            "displayName": "document-repository.comp.participants.dialogUserPicker.table.columns.id",
+            "headerCellFilter": "translate"
+          }
+        ],
+        "paginationPageSizes": [
+          5,
+          10,
+          20,
+          50
+        ],
+        "paginationPageSize": 10,
+        "start": 0
+      },
+      "dialogGroupPicker": {
+        "enableFiltering": false,
+        "multiSelect": false,
+        "showFacets": false,
+        "columnDefs": [
+          {
+            "name": "name",
+            "displayName": "document-repository.comp.participants.dialogGroupPicker.table.columns.name",
+            "headerCellFilter": "translate"
+          }
+        ],
+        "paginationPageSizes": [
+          5,
+          10,
+          20,
+          50
+        ],
+        "paginationPageSize": 10,
+        "start": 0
+      }
+    },
+    {
+      "id": "notes",
+      "title": "Notes",
+      "icon": "fa fa-comments",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": true,
+      "enableSorting": true,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 5,
+      "columnDefs": [
+        {
+          "name": "note",
+          "displayName": "document-repository.comp.notes.table.columns.note",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div ng-bind-html='row.entity.note' title='{{row.entity.note}}' class='ui-grid-cell-contents'></div>",
+          "enableCellEdit": false
+        },
+        {
+          "name": "created",
+          "displayName": "document-repository.comp.notes.table.columns.created",
+          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "headerCellFilter": "translate",
+          "enableCellEdit": false,
+          "width": 150
+        },
+        {
+          "name": "creator",
+          "displayName": "document-repository.comp.notes.table.columns.creator",
+          "headerCellFilter": "translate",
+          "enableCellEdit": false,
+          "lookup": "userFullNames",
+          "width": 150
+        }
+      ]
+    },
+    {
+      "id": "references",
+      "title": "References",
+      "icon": "fa fa-exchange",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 5,
+      "columnDefs": [
+        {
+          "name": "targetName",
+          "displayName": "document-repository.comp.references.table.columns.targetName",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity, true)'>{{row.entity.targetName}}</a>"
+        },
+        {
+          "name": "targetTitle",
+          "displayName": "document-repository.comp.references.table.columns.targetTitle",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.targetTitle}}</a>"
+        },
+        {
+          "name": "parentName",
+          "displayName": "document-repository.comp.references.table.columns.parentName",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity, true)'>{{row.entity.parentName}}</a>"
+        },
+        {
+          "name": "modified",
+          "displayName": "document-repository.comp.references.table.columns.modified",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+        },
+        {
+          "name": "targetType",
+          "displayName": "document-repository.comp.references.table.columns.targetType",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "status",
+          "displayName": "document-repository.comp.references.table.columns.status",
+          "headerCellFilter": "translate"
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "History",
+      "icon": "fa fa-bell-o",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
+      "columnDefs": [
+        {
+          "name": "eventType",
+          "displayName": "document-repository.comp.history.table.columns.eventType",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div> <span ng-if='row.entity.parentObjectType'>{{('common.objectTypes.'+row.entity.parentObjectType) | translate}} Updated - </span> {{row.entity.eventDescription || row.entity.eventType}}</div>"
+        },
+        {
+          "name": "eventDate",
+          "displayName": "document-repository.comp.history.table.columns.eventDate",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.eventDate | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+        },
+        {
+          "name": "userId",
+          "displayName": "document-repository.comp.history.table.columns.userId",
+          "headerCellFilter": "translate",
+          "lookup": "userFullNames"
+        }
+      ]
+    },
+    {
+      "id": "tags",
+      "title": "Tags",
+      "icon": "fa fa-tags",
+      "enabled": true,
+      "type": "grid",
+      "autoSuggestObjectType": "TAG",
+      "typeAheadColumn": "title_parseable",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 5,
+      "columnDefs": [
+        {
+          "name": "tagName",
+          "displayName": "document-repository.comp.tags.table.columns.tag",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "created",
+          "displayName": "document-repository.comp.tags.table.columns.created",
+          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "creator",
+          "displayName": "document-repository.comp.tags.table.columns.createdBy",
+          "headerCellFilter": "translate",
+          "lookup": "userFullNames"
+        }
+      ],
+      "filters": "\"Object Type\": TAG",
+      "filterName": "Object Type"
+    },
+    {
+      "id": "referenceSearchGrid",
+      "title": "Reference Search",
+      "enabled": "true",
+      "type": "grid",
+      "enableFiltering": false,
+      "emptySearch": false,
+      "hideTypeahead": true,
+      "showFacets": false,
+      "searchFilter": "\"Object Type\": COMPLAINT|CASE_FILE|TASK|FILE|DOC_REPO",
+      "columnDefs": [
+        {
+          "name": "object_id_s",
+          "displayName": "document-repository.comp.addreference.grid.columns.id",
+          "headerCellFilter": "translate",
+          "visible": false
+        },
+        {
+          "name": "name",
+          "displayName": "document-repository.comp.addreference.grid.columns.name",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "object_type_s",
+          "displayName": "document-repository.comp.addreference.grid.columns.type",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "title_parseable",
+          "sortField": "title_parseable_lcs",
+          "displayName": "document-repository.comp.addreference.grid.columns.title",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "parent_number_lcs",
+          "displayName": "document-repository.comp.addreference.grid.columns.parent",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "assignee_full_name_lcs",
+          "displayName": "document-repository.comp.addreference.grid.columns.assignee",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "modified_date_tdt",
+          "displayName": "document-repository.comp.addreference.grid.columns.modified",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+        }
+      ],
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 20,
+      "start": 0,
+      "filter": "",
+      "filterName": "",
+      "reportFileName": "search"
+    },
+    {
+      "id": "userSearch",
+      "enableFiltering": false,
+      "multiSelect": false,
+      "showFacets": false,
+      "searchFilter": "\"Object Type\": USER",
+      "columnDefs": [
+        {
+          "name": "name",
+          "displayName": "document-repository.dialogUserPicker.table.columns.name",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "object_type_s",
+          "displayName": "document-repository.dialogUserPicker.table.columns.type",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "title",
+          "displayName": "document-repository.dialogUserPicker.table.columns.title",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "object_id_s",
+          "displayName": "document-repository.dialogUserPicker.table.columns.id",
+          "headerCellFilter": "translate"
+        }
+      ],
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
+      "start": 0
+    }
+  ]
+}

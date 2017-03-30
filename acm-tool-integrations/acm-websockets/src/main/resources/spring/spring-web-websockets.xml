@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:websocket="http://www.springframework.org/schema/websocket"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/websocket
@@ -97,12 +97,12 @@
         <property name="properties">
             <props>
                 <prop key="acm.object.changed.notification.filter.include.classNames">
-                    com.armedia.acm.plugins.casefile.model.CaseFile,com.armedia.acm.plugins.complaint.model.Complaint,com.armedia.acm.plugins.task.model.AcmTask,com.armedia.acm.plugins.ecm.model.EcmFile,com.armedia.acm.plugins.casefile.model.ChangeCaseStatus,com.armedia.acm.plugins.complaint.model.CloseComplaintRequest,com.armedia.acm.services.costsheet.model.AcmCostsheet,com.armedia.acm.services.timesheet.model.AcmTimesheet
+                    com.armedia.acm.plugins.casefile.model.CaseFile,com.armedia.acm.plugins.complaint.model.Complaint,com.armedia.acm.plugins.task.model.AcmTask,com.armedia.acm.plugins.ecm.model.EcmFile,com.armedia.acm.plugins.casefile.model.ChangeCaseStatus,com.armedia.acm.plugins.complaint.model.CloseComplaintRequest,com.armedia.acm.services.costsheet.model.AcmCostsheet,com.armedia.acm.services.timesheet.model.AcmTimesheet,com.armedia.acm.plugins.documentrepository.model.DocumentRepository
                 </prop>
-                <prop key="acm.object.changed.notification.filter.include.object_types">CASE_FILE,COMPLAINT,TASK,FILE
+                <prop key="acm.object.changed.notification.filter.include.object_types">CASE_FILE,COMPLAINT,TASK,FILE,DOC_REPO
                 </prop>
                 <prop key="acm.object.changed.notification.filter.include.parent_object_types">
-                    CASE_FILE,COMPLAINT,TASK,FILE
+                    CASE_FILE,COMPLAINT,TASK,FILE,DOC_REPO
                 </prop>
             </props>
         </property>
