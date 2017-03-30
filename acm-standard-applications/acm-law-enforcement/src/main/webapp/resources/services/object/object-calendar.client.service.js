@@ -89,10 +89,10 @@ angular.module('services').factory('Object.CalendarService', ['$resource', 'Util
                 }
             });
         };
-        
+
         /**
          * @ngdoc method
-         * @name addEvent
+         * @name addNewEvent
          * @methodOf services:Object.CalendarService
          *
          * @description
@@ -102,7 +102,24 @@ angular.module('services').factory('Object.CalendarService', ['$resource', 'Util
          *
          * @returns {Object} Promise
          */
-        Service.addEvent = function(eventData) {
+        Service.addNewEvent = function(eventData) {
+            //TO DO
+            //implement http call when backend service is ready
+        };
+
+        /**
+         * @ngdoc method
+         * @name getEventDetails
+         * @methodOf services:Object.CalendarService
+         *
+         * @description
+         * Get the details for existing event.
+         *
+         * @param {Object} eventId  ID of the existing event
+         *
+         * @returns {Object} Promise
+         */
+        Service.getEventDetails = function(eventId) {
             //TO DO
             //implement http call when backend service is ready
         };
