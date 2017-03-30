@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <bean id="documentRepositoryToSolrTransformer"
+          class="com.armedia.acm.plugins.documentrepository.service.DocumentRepositoryToSolrTransformer">
+        <property name="userDao" ref="userJpaDao"/>
+        <property name="searchAccessControlFields" ref="searchAccessControlFields"/>
+        <property name="documentRepositoryDao" ref="documentRepositoryDao"/>
+    </bean>
+
+    <bean id="documentRepositoryDao" class="com.armedia.acm.plugins.documentrepository.dao.DocumentRepositoryDao">
+        <aop:scoped-proxy proxy-target-class="true"/>
+    </bean>
+
+</beans>
