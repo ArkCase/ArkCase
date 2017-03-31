@@ -33,30 +33,49 @@ public class GoogleAnalyticsConfigService
     private File configFile;
 
     /**
+     * config.js Freemarker template
+     */
+    private Template template;
+
+    /**
+     * Default constructor, initialize Freemarker configuration and load the template.
+     */
+    public GoogleAnalyticsConfigService()
+    {
+        Configuration configuration = new Configuration(Configuration.VERSION_2_3_22);
+        configuration.setClassForTemplateLoading(getClass(), "/templates");
+        try
+        {
+            template = configuration.getTemplate("config.js.ftl");
+        } catch (IOException e)
+        {
+            logger.error("Cannot read template [classpath:/templates/config.js.ftl]", e);
+        }
+    }
+
+    /**
      * Retrieve the Google Analytics configuration as a JavaScript file.
      *
      * @return javascript global variables
      */
     public String getGoogleAnalyticsSettingsJs()
     {
-
         Properties properties = new Properties();
         Writer stringWriter = new StringWriter();
         try (FileInputStream fis = new FileInputStream(configFile))
         {
             properties.load(fis);
-            Configuration configuration = new Configuration(Configuration.VERSION_2_3_22);
-            configuration.setClassForTemplateLoading(getClass(), "/templates");
-            Template template = configuration.getTemplate("config.js.ftl");
             template.process(properties, stringWriter);
             stringWriter.close();
-
         } catch (IOException e)
         {
             logger.error("Cannot read configuration file [{}]", configFile.getAbsolutePath(), e);
         } catch (TemplateException e)
         {
             logger.error("Cannot process [config.js.ftl] template", e);
+        } catch (NullPointerException e)
+        {
+            logger.error("Template [config.js.ftl] not loaded", e);
         }
 
         return stringWriter.toString();
