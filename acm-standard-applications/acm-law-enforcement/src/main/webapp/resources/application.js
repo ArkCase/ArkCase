@@ -13,8 +13,9 @@ angular
             '$translateProvider',
             '$translatePartialLoaderProvider',
             '$httpProvider',
+            'AnalyticsProvider',
             function ($locationProvider, $translateProvider,
-                      $translatePartialLoaderProvider, $httpProvider) {
+                      $translatePartialLoaderProvider, $httpProvider, AnalyticsProvider) {
                 $locationProvider.hashPrefix('!');
 
                 $httpProvider.interceptors.push(httpInterceptor);
@@ -152,6 +153,11 @@ angular
                         return isSuppressed;
                     }
                 }
+
+                AnalyticsProvider.disableAnalytics(!GOOGLE_ANALYTICS_ENABLED); // configuration toggle
+                AnalyticsProvider.setAccount(GOOGLE_ANALYTICS_TRACKING_ID); // configuration property
+                AnalyticsProvider.enterDebugMode(GOOGLE_ANALYTICS_DEBUG); // configuration debug flag
+                AnalyticsProvider.setPageEvent('$stateChangeSuccess');
             }
         ]).run(['$translate', '$translatePartialLoader',
             function ($translate, $translatePartialLoader) {

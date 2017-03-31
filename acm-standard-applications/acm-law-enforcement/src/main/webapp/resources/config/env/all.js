@@ -93,7 +93,8 @@ module.exports = {
                 'lib/stomp-websocket/lib/stomp.min.js',
                 'lib/angular-hotkeys/build/hotkeys.js',
                 'lib/angular-dynamic-locale/dist/tmhDynamicLocale.min.js',
-                'lib/crypto-js/crypto-js.js'
+                'lib/crypto-js/crypto-js.js',
+                'lib/angular-google-analytics/dist/angular-google-analytics.js'
             ]
         },
         css: [

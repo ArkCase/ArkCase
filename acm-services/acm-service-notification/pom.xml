@@ -215,6 +215,11 @@
         </dependency>
 
         <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-easymock</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.codehaus.castor</groupId>
             <artifactId>castor-xml</artifactId>
             <scope>test</scope>

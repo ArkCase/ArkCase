@@ -12,9 +12,9 @@
  */
 
 angular.module('services').factory('Acm.LoginService', ['$q', '$state', '$injector', '$log'
-    , 'Acm.StoreService', 'UtilService', 'ConfigService'
+    , 'Acm.StoreService', 'UtilService', 'ConfigService', 'Analytics'
     , function ($q, $state, $injector, $log
-        , Store, Util, ConfigService
+        , Store, Util, ConfigService, Analytics
     ) {
         var Service = {
             LocalCacheNames: {
@@ -152,6 +152,9 @@ angular.module('services').factory('Acm.LoginService', ['$q', '$state', '$inject
                 var loginInfo = Util.goodValue(cacheLoginInfo.get(), {});
                 loginInfo.userId = userId;
                 cacheLoginInfo.set(loginInfo);
+
+                // set user id sent to Google Analytics
+                Analytics.set('dimension1', userId);
             }
 
 
