@@ -2372,8 +2372,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 dfd.resolve(copyFolderInfo);
                             }
                             , function (errorData) {
-                                console.log("ERROR DATA ON COPING");
-                                console.log(errorData);
                                 DocTree.markNodeError(newNode);
                                 dfd.reject();
                             }
