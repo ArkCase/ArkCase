@@ -9,6 +9,7 @@ public class EmailWithAttachmentsDTO extends MessageBodyFactory
 {
 
     private List<Long> attachmentIds;
+    private List<String> filePaths;
     private String objectType;
     private Long objectId;
     private String subject;
@@ -111,6 +112,16 @@ public class EmailWithAttachmentsDTO extends MessageBodyFactory
     public String getMessageBody()
     {
         return buildMessageBodyFromTemplate(getBody(), getHeader(), getFooter());
+    }
+
+    public List<String> getFilePaths()
+    {
+        return filePaths;
+    }
+
+    public void setFilePaths(List<String> filePaths)
+    {
+        this.filePaths = filePaths;
     }
 
 }

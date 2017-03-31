@@ -106,11 +106,10 @@ public class DocumentRepository implements Serializable, AcmAssignedObject, AcmE
     @PrePersist
     protected void beforeInsert()
     {
-        if (StringUtils.isNotBlank(getStatus()))
+        if (StringUtils.isBlank(getStatus()))
         {
             setStatus("DRAFT");
         }
-
         setNameUpperCase(getName().toUpperCase());
         setupChildPointers();
     }
