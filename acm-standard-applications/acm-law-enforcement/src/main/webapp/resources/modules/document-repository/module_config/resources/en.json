@@ -10,10 +10,9 @@
     "invalidData": ""
   },
   "document-repository.comp.info": {
-    "docRepoId": "Document Repository id:",
+    "docRepoId": "Repository ID:",
     "docRepoName": "Document Repository Name:",
-    "type.label": "Type",
-    "created.label": "Created Date",
+    "modified.label": "Modified Date",
     "assignee.label": "Assigned To",
     "owningGroup.label": "Owning Group"
   },
