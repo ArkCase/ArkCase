@@ -28,5 +28,6 @@
         <module>acm-business-process-plugin</module>
         <module>acm-document-repository-plugin</module>
         <module>acm-analytics-plugin</module>
-    </modules>
+        <module>acm-analytics-audit-plugin</module>
+  </modules>
 </project>
