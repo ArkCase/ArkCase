@@ -347,7 +347,8 @@ public class DocumentRepository implements Serializable, AcmAssignedObject, AcmE
         return getChildObjects()
                 .stream()
                 .filter(
-                        child -> ObjectAssociationConstants.OBJECT_TYPE.equals(child.getAssociationType()))
+                        child -> ObjectAssociationConstants.OBJECT_TYPE.equals(child.getAssociationType())
+                )
                 .collect(Collectors.toList());
     }
 }
