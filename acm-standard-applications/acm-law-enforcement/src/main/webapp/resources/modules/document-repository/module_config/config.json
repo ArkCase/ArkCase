@@ -17,14 +17,31 @@
       "menuId": "topbar",
       "menuItemURL": "new-document-repository",
       "menuItemTitle": "document-repository.menus.topbar.item",
-      "moduleId": "document-repository",
+      "moduleId": "none",
+      "permissionAction": "createDocumentRepository",
       "iconClass": "fa fa-folder",
       "position": 20
     }
   ],
   "tree": {
     "pageSize": 32,
-    "filters": [],
+    "filters": [
+      {
+        "desc": "All I've Created",
+        "name": "my-created-document-repositories",
+        "value": "fq=author_s:${user}"
+      },
+      {
+        "desc": "All I'm Following",
+        "name": "my-following-document-repositories",
+        "value": "fq={!join from=parent_object_id_s to=object_id_s}(owner_s:${user} AND object_type_s:SUBSCRIPTION)"
+      },
+      {
+        "desc": "(No Filter)",
+        "name": "",
+        "value": ""
+      }
+    ],
     "sorters": [
       {
         "desc": "Sort Date Asc",
@@ -39,18 +56,18 @@
       },
       {
         "desc": "Sort Repository ID Asc",
-        "name": "sort-document-id-asc",
+        "name": "sort-document-repository-id-asc",
         "value": "object_id_s ASC"
       },
       {
         "desc": "Sort Repository ID Desc",
-        "name": "sort-case-id-desc",
+        "name": "sort-document-repository-id-desc",
         "value": "object_id_s DESC"
       },
       {
         "desc": "Sort By Repository Name",
-        "name": "sort-by-name-asc",
-        "value": "name ASC"
+        "name": "sort-by-document-repository-name-asc",
+        "value": "title_parseable_lcs ASC"
       },
       {
         "desc": "(No Sort)",
@@ -74,8 +91,9 @@
           "details",
           "documents",
           "participants",
-          "notes",
+          "tags",
           "references",
+          "notes",
           "history"
         ]
       },
@@ -104,19 +122,11 @@
         ]
       },
       {
-        "type": "p/DOC_REPO/note",
-        "label": "Notes",
-        "icon": "fa fa-comments",
+        "type": "p/DOC_REPO/tags",
+        "label": "Tags",
+        "icon": "fa fa-tags",
         "components": [
-          "notes"
-        ]
-      },
-      {
-        "type": "p/DOC_REPO/task",
-        "label": "Tasks",
-        "icon": "fa fa-check-circle",
-        "components": [
-          "tasks"
+          "tags"
         ]
       },
       {
@@ -128,19 +138,19 @@
         ]
       },
       {
+        "type": "p/DOC_REPO/note",
+        "label": "Notes",
+        "icon": "fa fa-comments",
+        "components": [
+          "notes"
+        ]
+      },
+      {
         "type": "p/DOC_REPO/his",
         "label": "History",
         "icon": "fa fa-bell-o",
         "components": [
           "history"
-        ]
-      },
-      {
-        "type": "p/DOC_REPO/tags",
-        "label": "Tags",
-        "icon": "fa fa-tags",
-        "components": [
-          "tags"
         ]
       }
     ]
@@ -568,7 +578,7 @@
       "emptySearch": false,
       "hideTypeahead": true,
       "showFacets": false,
-      "searchFilter": "\"Object Type\": COMPLAINT|CASE_FILE|TASK|FILE|DOC_REPO",
+      "searchFilter": "\"Object Type\": COMPLAINT|CASE_FILE|TASK|FILE",
       "columnDefs": [
         {
           "name": "object_id_s",

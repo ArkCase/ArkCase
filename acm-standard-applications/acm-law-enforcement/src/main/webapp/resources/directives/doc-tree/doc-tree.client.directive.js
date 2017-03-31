@@ -2335,7 +2335,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             , param: {
                                 subFolderId: subFolderId
                                 , folderId: toFolderId
-                                , objType: DocTree.getObjTyupe()
+                                , objType: DocTree.getObjType()
                                 , objId: DocTree.getObjId()
                             }
                             , data: {}
@@ -2372,6 +2372,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 dfd.resolve(copyFolderInfo);
                             }
                             , function (errorData) {
+                                console.log("ERROR DATA ON COPING");
+                                console.log(errorData);
                                 DocTree.markNodeError(newNode);
                                 dfd.reject();
                             }
