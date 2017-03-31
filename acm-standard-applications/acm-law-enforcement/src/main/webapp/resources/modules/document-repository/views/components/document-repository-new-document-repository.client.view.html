@@ -1,0 +1,60 @@
+<div class="module-content" ng-controller="DocumentRepository.NewDocumentRepositoryController">
+    <div class="content-body">
+        <form name="repository" ng-submit="saveNewDocumentRepository()" novalidate>
+            <div class="module-header">
+                <h3><span translate>document-repository.newRepository.title</span></h3>
+            </div>
+            <div class="well-sm">
+                <div class="row">
+                    <div class="well-sm col-sm-6 form-group">
+                        <div class="pull-right">
+                            <div class="btn-group">
+                                <button type="submit" ng-disabled="repository.$invalid || saved"
+                                        class="btn btn-primary btn-sm" data-toggle="tooltip"
+                                        id="saveButton" data-title="Save">
+                                    <i class="fa fa-floppy-o"></i>
+                                    <span translate>document-repository.newRepository.saveButton</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3 form-group">
+                        <label for="assignee" translate>document-repository.newRepository.assigneeLabel</label>
+                        <span class="required-asterisk">*</span>
+                        <input type="text" id="assignee" class="input-md form-control"
+                               placeholder="{{ 'document-repository.newRepository.assignee.placeholder' | translate}}"
+                               style="background-color: white;" ng-model="assignee.name" ng-click="searchAssignee()"
+                               required>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <label for="owningGroup" translate>document-repository.newRepository.owningGroupLabel</label>
+                        <span class="required-asterisk">*</span>
+                        <select class="form-control" id="owningGroup" ng-model="owningGroup.participantLdapId"
+                                ng-options="group for group in userGroups" required></select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 form-group" ng-class="{ 'has-error' : error }">
+                        <label for="name" translate>document-repository.newRepository.nameLabel</label>
+                        <span class="required-asterisk">*</span>
+                        <input type="text" id="name" ng-model="docRepo.name" class="input-md form-control"
+                               placeholder="{{ 'document-repository.newRepository.name.placeholder' | translate }}"
+                               required>
+                        <p class="help-block" ng-show="error">
+                            {{ error }}
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 form-group">
+                        <label translate>document-repository.newRepository.descriptionLabel</label>
+                        <textarea class="form-control" rows="3" ng-model="docRepo.details"
+                                  placeholder="{{ 'document-repository.newRepository.description.placeholder' | translate}}"></textarea>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

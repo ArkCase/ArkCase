@@ -150,6 +150,9 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
             if (objectType == 'COMPLAINT') {
                 cacheInfoStoreName = 'ComplaintInfo';
             }
+            if (objectType == 'DOC_REPO') {
+                cacheInfoStoreName = 'DocumentRepositoryInfo';
+            }
             if (objectType == 'TASK') {
                 cacheInfoStoreName = 'TaskInfo';
             }
@@ -169,6 +172,9 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
             }
             if (objectType == 'COMPLAINT') {
                 cacheListStoreName = 'ComplaintList';
+            }
+            if (objectType == 'DOC_REPO') {
+                cacheListStoreName = 'DocumentRepositoryInfo';
             }
             if (objectType == 'TASK') {
                 cacheListStoreName = 'TaskList';
