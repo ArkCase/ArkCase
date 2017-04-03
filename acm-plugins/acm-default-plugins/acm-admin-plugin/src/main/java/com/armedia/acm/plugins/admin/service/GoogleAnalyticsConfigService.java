@@ -1,4 +1,4 @@
-package com.armedia.acm.plugins.admin.web.api;
+package com.armedia.acm.plugins.admin.service;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
