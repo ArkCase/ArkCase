@@ -2335,7 +2335,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             , param: {
                                 subFolderId: subFolderId
                                 , folderId: toFolderId
-                                , objType: DocTree.getObjTyupe()
+                                , objType: DocTree.getObjType()
                                 , objId: DocTree.getObjId()
                             }
                             , data: {}
@@ -4333,6 +4333,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 , uploadForm: '&'
                 , onInitTree: '&'
                 , readOnly: '@'
+                , topNodeExpanded: '='
             }
 
             , link: function (scope, element, attrs) {
@@ -4344,6 +4345,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 DocTree.setObjId(scope.objectId);
                 DocTree.treeConfig = {};
                 DocTree.objectInfo = null;
+                DocTree.topNodeExpanded = scope.topNodeExpanded ? scope.topNodeExpanded : false;
                 DocTree.doUploadForm = ("undefined" != typeof attrs.uploadForm) ? scope.uploadForm() : (function () {
                 }); //if not defined, do nothing
                 DocTree.readOnly = ("true" === attrs.readOnly);
@@ -4421,6 +4423,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                         extService.onConfigUpdated(DocTree);
                                     }
                                 }
+                            }
+
+                            if(DocTree.topNodeExpanded){
+                                DocTree.expandTopNode();
                             }
                         }
 

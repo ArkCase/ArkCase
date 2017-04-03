@@ -1,0 +1,22 @@
+<div class="modal-header">
+    <h3><span translate>document-repository.comp.tags.modal.title</span></h3>
+</div>
+<div class="modal-body">
+    <label translate>document-repository.comp.tags.modal.search</label>
+    <tags-input
+            ng-model="tags"
+            display-property="title_parseable"
+            key-property="id"
+            replace-spaces-with-dashes="false"
+            on-tag-adding="checkTag($tag)">
+        <auto-complete min-length="2" max-results-to-show="10" source="loadTags($query)"></auto-complete>
+    </tags-input>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-secondary" ng-click="onClickCancel()">
+        <span translate>document-repository.comp.tags.modal.buttons.cancel</span>
+    </button>
+    <button class="btn btn-primary" ng-click="onClickOk()">
+        <span translate>document-repository.comp.tags.modal.buttons.ok</span>
+    </button>
+</div>
