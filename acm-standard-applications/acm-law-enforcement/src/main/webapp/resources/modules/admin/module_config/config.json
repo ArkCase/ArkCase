@@ -817,7 +817,7 @@
       "children": [
         {
           "title": "admin.documentManagement.cmisConfiguration",
-          "templateName": "cmis.configuration"
+          "templateName": "cmis-configuration"
         }
       ]
     }
