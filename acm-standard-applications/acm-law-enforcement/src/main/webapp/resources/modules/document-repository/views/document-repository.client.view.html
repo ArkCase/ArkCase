@@ -3,10 +3,42 @@
         <div class="left-sidebar scroll-body" ng-slimscroll="">
             <div class="module-header">
                 <h3>
-                    <span translate>Document Repository</span>
+                    <span translate>document-repository.title</span>
                 </h3>
             </div>
-            <div ng-include="'modules/document-repository/views/document-repository-list.client.view.html'"/>
+            <div ng-include="'modules/document-repository/views/document-repository-list.client.view.html'"></div>
         </div>
+        <section class="content-body" ng-show="objectInfo">
+            <div class="module-header">
+                <div ng-include="'modules/document-repository/views/components/document-repository-info.client.view.html'"></div>
+            </div>
+            <div class="clearfix well-sm">
+                <div ng-include="'modules/document-repository/views/components/document-repository-actions.client.view.html'"></div>
+            </div>
+
+            <div class="well-sm">
+                <div data-ui-view></div>
+            </div>
+
+
+            <div class="tabbed-footer">
+                <a href title="{{linksShown ? 'Hide links' : 'Show links'}}"
+                   ng-click="toggleShowLinks()" class="collapsed-button">
+                    <i x-ng-class="{'fa fa-angle-double-left' : !linksShown, 'fa fa-angle-double-right' : linksShown}"></i>
+                </a>
+                <ul ng-if="linksShown" class="nav nav-tabs overview-tabs">
+                    <li class="{{getActive(link.id)}}" ng-repeat="link in componentLinks">
+                        <a ng-click="onClickComponentLink(link.id)">
+                            <i class="{{link.icon}}"></i>
+                            <span>{{link.title}}</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="content-body" ng-hide="objectInfo">
+            <div>{{::progressMsg}}</div>
+        </section>
     </div>
 </div>

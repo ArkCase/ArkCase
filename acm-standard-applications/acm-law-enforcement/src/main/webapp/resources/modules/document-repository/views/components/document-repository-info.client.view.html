@@ -1,0 +1,38 @@
+<div ng-controller="DocumentRepository.InfoController">
+    <div class="clearfix">
+        <div class="row">
+            <div class="col-xs-6">
+                <h4><a href="#" editable-text="objectInfo.name" onaftersave="save()">
+                    {{objectInfo.name || "Unknown" }}</a> ({{objectInfo.status}})</h4></div>
+            <div class="col-xs-6  text-right">
+                <h4>{{ 'document-repository.comp.info.docRepoId' | translate}} {{objectInfo.id}}</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-4">
+                <div class="h4 font-bold">
+                    <a href="javascript:;">
+                        <user-full-name userId="assignee" fallback="None"/>
+                    </a>
+                </div>
+                <small class="text-muted"><span translate>document-repository.comp.info.assignee.label</span></small>
+            </div>
+            <div class="col-xs-12 col-md-4">
+                <div class="h4 font-bold">
+                    <div class="h4 font-bold">
+                        <a href="javascript:;">
+                            {{owningGroup || 'Unknown'}}
+                        </a>
+                    </div>
+                </div>
+                <small class="text-muted"><span translate>document-repository.comp.info.owningGroup.label</span></small>
+            </div>
+            <div class="col-xs-12 col-md-4">
+                <div class="h4 font-bold">
+                    {{ (objectInfo.modified | date: ('common.defaultDateUIFormat' | translate)) || 'Unknown' }}
+                </div>
+                <small class="text-muted"><span translate>document-repository.comp.info.modified.label</span></small>
+            </div>
+        </div>
+    </div>
+</div>
