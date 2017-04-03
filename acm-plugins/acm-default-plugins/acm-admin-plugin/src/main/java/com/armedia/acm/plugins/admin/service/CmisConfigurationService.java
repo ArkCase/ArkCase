@@ -39,10 +39,8 @@ public class CmisConfigurationService
     private String cmisTemplateXmlFile;
     private String cmisTemplatePropertiesFile;
 
-    private String cmisPropertiesFileRegex;
-
-    private Pattern idPattern = Pattern.compile("^[a-zA-Z0-9.]+$");
-    private Pattern propertiesPattern = Pattern.compile(cmisPropertiesFileRegex);
+    private Pattern cmisIdPattern;
+    private Pattern cmisPropertiesPattern;
 
     /**
      * Create CMIS Config config files
@@ -53,7 +51,7 @@ public class CmisConfigurationService
      */
     public void createCmisConfig(String cmisId, Map<String, Object> props) throws AcmCmisConfigurationException
     {
-        Matcher matcher = idPattern.matcher(cmisId);
+        Matcher matcher = cmisIdPattern.matcher(cmisId);
         if (!matcher.find())
         {
             throw new AcmCmisConfigurationException("ID has wrong format. Only numbers, characters symbols and '.' are allowed");
@@ -261,11 +259,10 @@ public class CmisConfigurationService
         List<File> files = (List<File>) FileUtils.listFiles(new File(cmisConfigurationLocation), extensions, false);
         List<File> propertiesFiles = new ArrayList<>();
 
-
         for (File fileIter : files)
         {
             String fileName = fileIter.getName();
-            Matcher matcher = propertiesPattern.matcher(fileName);
+            Matcher matcher = cmisPropertiesPattern.matcher(fileName);
             if (matcher.find())
             {
                 propertiesFiles.add(fileIter);
@@ -351,11 +348,6 @@ public class CmisConfigurationService
         this.cmisTemplatePropertiesFile = cmisTemplatePropertiesFile;
     }
 
-    public void setCmisPropertiesFileRegex(String cmisPropertiesFileRegex)
-    {
-        this.cmisPropertiesFileRegex = cmisPropertiesFileRegex;
-    }
-
     public AcmEncryptablePropertyUtils getEncryptablePropertyUtils()
     {
         return encryptablePropertyUtils;
@@ -364,5 +356,15 @@ public class CmisConfigurationService
     public void setEncryptablePropertyUtils(AcmEncryptablePropertyUtils encryptablePropertyUtils)
     {
         this.encryptablePropertyUtils = encryptablePropertyUtils;
+    }
+
+    public void setCmisIdPattern(Pattern cmisIdPattern)
+    {
+        this.cmisIdPattern = cmisIdPattern;
+    }
+
+    public void setCmisPropertiesPattern(Pattern cmisPropertiesPattern)
+    {
+        this.cmisPropertiesPattern = cmisPropertiesPattern;
     }
 }
