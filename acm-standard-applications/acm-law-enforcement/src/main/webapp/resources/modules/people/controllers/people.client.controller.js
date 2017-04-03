@@ -1,23 +1,23 @@
 'use strict';
 
 angular.module('people').controller('PeopleController', ['$scope', '$state', '$stateParams', '$translate'
-    , 'UtilService', 'ConfigService', 'Complaint.InfoService', 'ObjectService', 'Helper.ObjectBrowserService'
+    , 'UtilService', 'ConfigService', 'Person.InfoService', 'ObjectService', 'Helper.ObjectBrowserService'
     , function ($scope, $state, $stateParams, $translate
-        , Util, ConfigService, ComplaintInfoService, ObjectService, HelperObjectBrowserService) {
+        , Util, ConfigService, PersonInfoService, ObjectService, HelperObjectBrowserService) {
 
         new HelperObjectBrowserService.Content({
             scope: $scope
             , state: $state
             , stateParams: $stateParams
             , moduleId: "people"
-            , resetObjectInfo: ComplaintInfoService.resetComplaintInfo
-            , getObjectInfo: ComplaintInfoService.getComplaintInfo
-            , updateObjectInfo: ComplaintInfoService.updateComplaintInfo
-            , getObjectIdFromInfo: function (complaintInfo) {
-                return Util.goodMapValue(complaintInfo, "complaintId");
+            , resetObjectInfo: PersonInfoService.resetPersonInfo
+            , getObjectInfo: PersonInfoService.getPersonInfo
+            , updateObjectInfo: PersonInfoService.updatePersonInfo
+            , getObjectIdFromInfo: function (personInfo) {
+                return Util.goodMapValue(personInfo, "id");
             }
             , getObjectTypeFromInfo: function (objectInfo) {
-                return ObjectService.ObjectTypes.COMPLAINT;
+                return ObjectService.ObjectTypes.PERSON;
             }
         });
     }

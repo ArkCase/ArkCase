@@ -45,25 +45,25 @@
     ],
     "sorters": [
       {
-        "desc": "Sort Created Date Asc",
-        "name": "sort-created-date-asc",
-        "value": "create_tdt ASC"
-      },
-      {
-        "desc": "Sort Created Date Desc",
-        "name": "sort-created-date-desc",
-        "value": "create_tdt DESC",
+        "desc": "Sort Date Created Ascending",
+        "name": "create_tdt ASC",
         "default": true
       },
       {
-        "desc": "Sort By Name",
-        "name": "sort-by-name-asc",
-        "value": "name ASC"
+        "desc": "Sort Date Created Descending",
+        "name": "create_tdt DESC"
       },
       {
-        "desc": "(No Sort)",
-        "name": "",
-        "value": ""
+        "desc": "Sort Organization ID Ascending",
+        "name": "id ASC"
+      },
+      {
+        "desc": "Sort Organization ID Descending",
+        "name": "id DESC"
+      },
+      {
+        "desc": "Sort By Organization Name",
+        "name": "name DESC"
       }
     ],
     "nodeTypes": [

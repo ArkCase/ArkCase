@@ -8,10 +8,10 @@
  *
  * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/people/services/person-info.client.service.js modules/people/services/person-info.client.service.js}
  *
- * Person.InfoService provides functions for Complaint database data
+ * Person.InfoService provides functions for Person database data
  */
-angular.module('services').factory('Person.InfoService', ['$resource', '$translate', 'Acm.StoreService', 'UtilService', 'Object.InfoService',
-    function ($resource, $translate, Store, Util, ObjectInfoService) {
+angular.module('services').factory('Person.InfoService', ['$resource', '$translate', 'Acm.StoreService', 'UtilService',
+    function ($resource, $translate, Store, Util) {
         var Service = $resource('api/latest/plugin', {}, {
             /**
              * @ngdoc method
@@ -22,7 +22,6 @@ angular.module('services').factory('Person.InfoService', ['$resource', '$transla
              * Save person data
              *
              * @param {Object} params Map of input parameter.
-             * @param {Number} params.id  Person ID
              * @param {Function} onSuccess (Optional)Callback function of success query.
              * @param {Function} onError (Optional) Callback function when fail.
              *
@@ -30,9 +29,31 @@ angular.module('services').factory('Person.InfoService', ['$resource', '$transla
              */
             save: {
                 method: 'POST',
-                url: 'api/latest/plugin/people/save/:id',
+                url: 'api/latest/plugin/people',
+                cache: false
+            },
+
+            /**
+             * @ngdoc method
+             * @name get
+             * @methodOf services:Person.InfoService
+             *
+             * @description
+             * Get person data
+             *
+             * @param {Object} params Map of input parameter.
+             * @param {Number} params.id  Person ID
+             * @param {Function} onSuccess (Optional)Callback function of success query.
+             * @param {Function} onError (Optional) Callback function when fail.
+             *
+             * @returns {Object} Object returned by $resource
+             */
+            get: {
+                method: 'GET',
+                url: 'api/latest/plugin/people/:id',
                 cache: false
             }
+
         });
 
         Service.SessionCacheNames = {};
@@ -61,14 +82,14 @@ angular.module('services').factory('Person.InfoService', ['$resource', '$transla
          * @methodOf services:Person.InfoService
          *
          * @description
-         * Update complaint data in local cache. No REST call to backend.
+         * Update person data in local cache. No REST call to backend.
          *
          * @param {Object} personInfo  Person data
          *
          * @returns {Object} Promise
          */
         Service.updatePersonInfo = function (personInfo) {
-            if (Service.validateComplaintInfo(complaintInfo)) {
+            if (Service.validatePersonInfo(personInfo)) {
                 var cachePersonInfo = new Store.CacheFifo(Service.CacheNames.PERSON_INFO);
                 cachePersonInfo.put(personInfo.id, personInfo);
             }
@@ -80,7 +101,7 @@ angular.module('services').factory('Person.InfoService', ['$resource', '$transla
          * @methodOf services:Person.InfoService
          *
          * @description
-         * Query complaint data
+         * Query person data
          *
          * @param {Number} id  Person ID
          *
@@ -90,11 +111,11 @@ angular.module('services').factory('Person.InfoService', ['$resource', '$transla
             var cachePersonInfo = new Store.CacheFifo(Service.CacheNames.PERSON_INFO);
             var personInfo = cachePersonInfo.get(id);
             return Util.serviceCall({
-                service: ObjectInfoService.get
-                , param: {type: "people", id: id}
+                service: Service.get
+                , param: {id: id}
                 , result: personInfo
                 , onSuccess: function (data) {
-                    if (Service.validateComplaintInfo(data)) {
+                    if (Service.validatePersonInfo(data)) {
                         cachePersonInfo.put(id, data);
                         return data;
                     }
@@ -123,14 +144,14 @@ angular.module('services').factory('Person.InfoService', ['$resource', '$transla
             //but update will be trigger
             personInfo.modified = null;
             return Util.serviceCall({
-                service: ObjectInfoService.save
-                , param: {type: "person"}
+                service: Service.save
+                , param: {}
                 , data: personInfo
                 , onSuccess: function (data) {
                     if (Service.validatePersonInfo(data)) {
                         var personInfo = data;
                         var cachePersonInfo = new Store.CacheFifo(Service.CacheNames.PERSON_INFO);
-                        cachePersonInfo.put(personInfo.personId, personInfo);
+                        cachePersonInfo.put(personInfo.id, personInfo);
                         return personInfo;
                     }
                 }

@@ -61,11 +61,41 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
         return orgDoc;
     }
 
-    // No implementation needed because we don't want Organization indexed in the SolrQuickSearch
     @Override
     public SolrDocument toSolrQuickSearch(Organization in)
     {
-        return null;
+
+        SolrDocument orgDoc = new SolrDocument();
+        orgDoc.setId(in.getOrganizationId() + "-ORGANIZATION");
+        orgDoc.setObject_type_s("ORGANIZATION");
+        orgDoc.setObject_id_s(in.getOrganizationId() + "");
+
+
+        orgDoc.setCreate_tdt(in.getCreated());
+        orgDoc.setAuthor_s(in.getCreator());
+        orgDoc.setLast_modified_tdt(in.getModified());
+        orgDoc.setModifier_s(in.getModifier());
+
+        orgDoc.setType_s(in.getOrganizationType());
+        orgDoc.setData_s(in.getOrganizationValue());
+
+        orgDoc.setName(in.getOrganizationValue());
+        orgDoc.setTitle_parseable(in.getOrganizationValue());
+
+        /** Additional properties for full names instead of ID's */
+        AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
+        if (creator != null)
+        {
+            orgDoc.setAdditionalProperty("creator_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+        }
+
+        AcmUser modifier = getUserDao().quietFindByUserId(in.getModifier());
+        if (modifier != null)
+        {
+            orgDoc.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
+        }
+
+        return orgDoc;
     }
 
     @Override
