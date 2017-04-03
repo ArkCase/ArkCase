@@ -7,8 +7,13 @@ import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
+import com.armedia.acm.plugins.objectassociation.model.AcmChildObjectEntity;
+import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import com.armedia.acm.plugins.objectassociation.model.ObjectAssociationConstants;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.CascadeType;
@@ -32,15 +37,18 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "acm_document_repository")
 public class DocumentRepository implements Serializable, AcmAssignedObject, AcmEntity,
-        AcmContainerEntity, AcmNotifiableEntity, AcmStatefulEntity
+        AcmContainerEntity, AcmNotifiableEntity, AcmStatefulEntity, AcmChildObjectEntity
 {
     @Id
     @TableGenerator(name = "document_repository_gen", table = "acm_document_repository_id",
@@ -103,20 +111,30 @@ public class DocumentRepository implements Serializable, AcmAssignedObject, AcmE
     @JoinColumn(name = "cm_container_id")
     private AcmContainer container = new AcmContainer();
 
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumns({@JoinColumn(name = "cm_parent_id"), @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type")})
+    private Collection<ObjectAssociation> childObjects = new ArrayList<>();
+
     @PrePersist
     protected void beforeInsert()
     {
-        if (StringUtils.isNotBlank(getStatus()))
+        if (StringUtils.isBlank(getStatus()))
         {
             setStatus("DRAFT");
         }
-
         setNameUpperCase(getName().toUpperCase());
         setupChildPointers();
     }
 
     private void setupChildPointers()
     {
+        for (ObjectAssociation childObject : childObjects)
+        {
+            childObject.setParentId(getId());
+            childObject.setParentName(getName());
+            childObject.setParentType(getObjectType());
+        }
+
         for (AcmParticipant ap : getParticipants())
         {
             ap.setObjectId(getId());
@@ -238,6 +256,7 @@ public class DocumentRepository implements Serializable, AcmAssignedObject, AcmE
     }
 
     @Override
+    @JsonIgnore
     public String getObjectType()
     {
         return objectType;
@@ -294,14 +313,42 @@ public class DocumentRepository implements Serializable, AcmAssignedObject, AcmE
     }
 
     @Override
+    @JsonIgnore
     public Set<AcmNotificationReceiver> getReceivers()
     {
         return new HashSet<>(participants);
     }
 
     @Override
+    @JsonIgnore
     public String getNotifiableEntityTitle()
     {
         return name;
+    }
+
+    @Override
+    public Collection<ObjectAssociation> getChildObjects()
+    {
+        return Collections.unmodifiableCollection(childObjects);
+    }
+
+    @Override
+    public void addChildObject(ObjectAssociation childObject)
+    {
+        childObjects.add(childObject);
+        childObject.setParentName(getName());
+        childObject.setParentType(getObjectType());
+        childObject.setParentId(getId());
+    }
+
+    @JsonGetter
+    public List<ObjectAssociation> getReferences()
+    {
+        return getChildObjects()
+                .stream()
+                .filter(
+                        child -> ObjectAssociationConstants.OBJECT_TYPE.equals(child.getAssociationType())
+                )
+                .collect(Collectors.toList());
     }
 }

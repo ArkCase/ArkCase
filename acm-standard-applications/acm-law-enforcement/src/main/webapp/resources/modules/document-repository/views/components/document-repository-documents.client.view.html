@@ -1,0 +1,21 @@
+<div ng-controller="DocumentRepository.DocumentsController">
+    <div class="panel panel-success panel-grid">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <span translate>document-repository.comp.documents.title</span>
+
+                <div class="pull-right">
+                    <button class="btn btn-default btn-xs" ng-click="onClickRefresh()"><i
+                            class="fa fa-lg fa-refresh"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <doc-tree object-type="objectType" object-id="objectId" tree-control="treeControl"
+                      upload-form="uploadForm" tree-config="treeConfig" top-node-expanded="true"
+                      object-info="objectInfo" on-init-tree="onInitTree" read-only="{{isReadOnly(objectInfo)}}"
+                      ng-if="objectInfo && treeConfig">
+            </doc-tree>
+        </div>
+    </div>
+</div>
