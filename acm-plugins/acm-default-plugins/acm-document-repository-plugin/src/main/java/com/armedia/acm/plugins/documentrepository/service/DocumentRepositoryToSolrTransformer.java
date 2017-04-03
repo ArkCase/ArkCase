@@ -81,6 +81,8 @@ public class DocumentRepositoryToSolrTransformer implements AcmObjectToSolrDocTr
         // This property is used for show in the owning group for the object
         solr.setAdditionalProperty("owning_group_id_lcs", ParticipantUtils.getOwningGroupIdFromParticipants(in.getParticipants()));
 
+        solr.setAdditionalProperty("document_repository_name_s", in.getName());
+
         return solr;
     }
 

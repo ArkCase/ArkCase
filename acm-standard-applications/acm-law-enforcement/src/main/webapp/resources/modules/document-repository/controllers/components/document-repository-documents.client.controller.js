@@ -3,10 +3,10 @@
 angular.module('document-repository').controller('DocumentRepository.DocumentsController', ['$scope', '$stateParams'
     , '$modal', '$q', '$timeout', 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService'
     , 'DocumentRepository.InfoService', 'Helper.ObjectBrowserService', 'DocTreeService', 'Authentication'
-    , 'PermissionsService', 'Object.ModelService', 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin', 'Admin.CMTemplatesService'
+    , 'PermissionsService', 'Object.ModelService', 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin'
     , function ($scope, $stateParams, $modal, $q, $timeout, Util, ConfigService, ObjectService, ObjectLookupService
         , DocumentRepositoryInfoService, HelperObjectBrowserService, DocTreeService, Authentication, PermissionsService
-        , ObjectModelService, DocTreeExtWebDAV, DocTreeExtCheckin, CorrespondenceService) {
+        , ObjectModelService, DocTreeExtWebDAV, DocTreeExtCheckin) {
 
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -38,17 +38,14 @@ angular.module('document-repository').controller('DocumentRepository.DocumentsCo
 
         var promiseFormTypes = ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.DOC_REPO);
         var promiseFileTypes = ObjectLookupService.getFileTypes();
-        var promiseCorrespondenceForms = CorrespondenceService.getActivatedTemplatesData(ObjectService.ObjectTypes.DOC_REPO);
         var onConfigRetrieved = function (config) {
             $scope.treeConfig = config.docTree;
             $scope.allowParentOwnerToCancel = config.docTree.allowParentOwnerToCancel;
 
-            $q.all([promiseFormTypes, promiseFileTypes, promiseCorrespondenceForms]).then(
+            $q.all([promiseFormTypes, promiseFileTypes]).then(
                 function (data) {
                     $scope.treeConfig.formTypes = data[0];
                     $scope.treeConfig.fileTypes = data[1];
-                    $scope.treeConfig.correspondenceForms = data[2];
-                    $scope.treeControl.refreshTree();
                 });
         };
 

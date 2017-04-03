@@ -91,10 +91,10 @@
           "details",
           "documents",
           "participants",
-          "tags",
-          "references",
           "notes",
-          "history"
+          "references",
+          "history",
+          "tags"
         ]
       },
       {
@@ -309,7 +309,6 @@
       "type": "empty",
       "docTree": {
         "email": {
-          "emailSubject": "Case $caseNumber",
           "subjectRegex": "(.*)\\$([^\\s]+)",
           "objectTypeRegexGroup": 1,
           "objectNumberRegexGroup": 2
