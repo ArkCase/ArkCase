@@ -27,26 +27,20 @@ angular.module('tasks').controller('Tasks.NotesController', ['$scope', '$statePa
 
         };
 
-        var onObjectInfoRetrieved = function(objectInfo) {
+        $scope.notesInit = {
+            noteTitle: "Notes",
+            objectType: ObjectService.ObjectTypes.TASK,
+            currentObjectId: $stateParams.id,
+            parentTitle: "",
+            isReadOnly: false
+        };
 
+        var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
-            $scope.parentObjectTitle = $scope.objectInfo.parentObjectName;
-
-            $scope.notesInit = {
-                noteTitle: "Notes",
-                objectType: ObjectService.ObjectTypes.TASK,
-                currentObjectId: $stateParams.id,
-                parentTitle: $scope.parentObjectTitle,
-                isReadOnly: false
-            };
-
-            PermissionsService.getActionPermission('editNote', objectInfo).then(function(result) {
-
+            $scope.notesInit.parentTitle = $scope.objectInfo.parentObjectName;
+            PermissionsService.getActionPermission('editNote', objectInfo).then(function (result) {
                 $scope.notesInit.isReadOnly = !result;
-
             });
-
         };
     }
-
 ]);
