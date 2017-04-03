@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('people').controller('PeopleListController', ['$scope', '$state', '$stateParams', '$translate'
-    , 'UtilService', 'ObjectService', 'People.ListService', 'People.InfoService', 'Helper.ObjectBrowserService'
+    , 'UtilService', 'ObjectService', 'Person.ListService', 'Person.InfoService', 'Helper.ObjectBrowserService'
     , 'ServCommService', 'MessageService'
     , function ($scope, $state, $stateParams, $translate
         , Util, ObjectService, PeopleListService, PeopleInfoService, HelperObjectBrowserService

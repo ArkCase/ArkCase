@@ -10,8 +10,8 @@
  *
  * Organization.InfoService provides functions for Organization database data
  */
-angular.module('services').factory('Organization.InfoService', ['$resource', '$translate', 'Acm.StoreService', 'UtilService', 'Object.InfoService',
-    function ($resource, $translate, Store, Util, ObjectInfoService) {
+angular.module('services').factory('Organization.InfoService', ['$resource', '$translate', 'Acm.StoreService', 'UtilService',
+    function ($resource, $translate, Store, Util) {
         var Service = $resource('api/latest/plugin', {}, {
             /**
              * @ngdoc method
@@ -30,7 +30,28 @@ angular.module('services').factory('Organization.InfoService', ['$resource', '$t
              */
             save: {
                 method: 'POST',
-                url: 'api/latest/plugin/Organizations/save/:id',
+                url: 'api/latest/plugin/organizations',
+                cache: false
+            },
+
+            /**
+             * @ngdoc method
+             * @name get
+             * @methodOf services:Organization.InfoService
+             *
+             * @description
+             * Get Organization data
+             *
+             * @param {Object} params Map of input parameter.
+             * @param {Number} params.id  Person ID
+             * @param {Function} onSuccess (Optional)Callback function of success query.
+             * @param {Function} onError (Optional) Callback function when fail.
+             *
+             * @returns {Object} Object returned by $resource
+             */
+            get: {
+                method: 'GET',
+                url: 'api/latest/plugin/organizations/:id',
                 cache: false
             }
         });
@@ -90,8 +111,8 @@ angular.module('services').factory('Organization.InfoService', ['$resource', '$t
             var cacheOrganizationInfo = new Store.CacheFifo(Service.CacheNames.ORGANIZATION_INFO);
             var organizationInfo = cacheOrganizationInfo.get(id);
             return Util.serviceCall({
-                service: ObjectInfoService.get
-                , param: {type: "organization", id: id}
+                service: Service.get
+                , param: {id: id}
                 , result: organizationInfo
                 , onSuccess: function (data) {
                     if (Service.validateOrganizationInfo(data)) {
@@ -123,8 +144,8 @@ angular.module('services').factory('Organization.InfoService', ['$resource', '$t
             //but update will be trigger
             organizationInfo.modified = null;
             return Util.serviceCall({
-                service: ObjectInfoService.save
-                , param: {type: "organization"}
+                service: Service.save
+                , param: {}
                 , data: organizationInfo
                 , onSuccess: function (data) {
                     if (Service.validateOrganizationInfo(data)) {
