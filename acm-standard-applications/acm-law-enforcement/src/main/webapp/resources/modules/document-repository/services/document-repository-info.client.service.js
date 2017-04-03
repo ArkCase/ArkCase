@@ -13,11 +13,82 @@
 angular.module('services').factory('DocumentRepository.InfoService', ['$resource', '$translate', 'Acm.StoreService'
     , 'UtilService', 'Object.InfoService', 'Object.ModelService'
     , function ($resource, $translate, Store, Util, ObjectInfoService, ObjectModelService) {
-        var Service = $resource('api/latest/plugin', {}, {});
+        var Service = $resource('api/latest/plugin', {}, {
+
+            _getDocumentRepository: {
+                method: 'GET',
+                url: 'api/latest/plugin/documentrepository/:id',
+                cache: false
+            }
+        });
 
         Service.SessionCacheNames = {};
         Service.CacheNames = {
             DOC_REPO_INFO: "DocumentRepositoryInfo"
+        };
+
+        /**
+         * @ngdoc method
+         * @name resetDocumentRepositoryInfo
+         * @methodOf services:DocumentRepository.InfoService
+         *
+         * @description
+         * Reset document repository info
+         *
+         * @returns None
+         */
+        Service.resetDocumentRepositoryInfo = function () {
+            var cacheDocumentRepositoryInfo = new Store.CacheFifo(Service.CacheNames.DOC_REPO_INFO);
+            cacheDocumentRepositoryInfo.reset();
+        };
+
+        /**
+         * @ngdoc method
+         * @name updateDocumentRepositoryInfo
+         * @methodOf services:DocumentRepository.InfoService
+         *
+         * @description
+         * Update document repository data in local cache. No REST call to backend.
+         *
+         * @param {Object} documentRepositoryInfo  Document Repository data
+         *
+         * @returns {Object} Promise
+         */
+        Service.updateDocumentRepositoryInfo = function (documentRepositoryInfo) {
+            if (Service.validateDocumentRepositoryInfo(documentRepositoryInfo)) {
+                var cacheDocumentRepositoryInfo = new Store.CacheFifo(Service.CacheNames.DOC_REPO_INFO);
+                cacheDocumentRepositoryInfo.put(documentRepositoryInfo.id, documentRepositoryInfo);
+            }
+        };
+
+        /**
+         * @ngdoc method
+         * @name getDocumentRepositoryInfo
+         * @methodOf services:DocumentRepository.InfoService
+         *
+         * @description
+         * Query document repository data
+         *
+         * @param {Number} id  Document Repository ID
+         *
+         * @returns {Object} Promise
+         */
+        Service.getDocumentRepositoryInfo = function (id) {
+            var cacheDocumentRepositoryInfo = new Store.CacheFifo(Service.CacheNames.DOC_REPO_INFO);
+            var docRepoInfo = cacheDocumentRepositoryInfo.get(id);
+            return Util.serviceCall({
+                service: Service._getDocumentRepository
+                , param: {
+                    id: id
+                }
+                , result: docRepoInfo
+                , onSuccess: function (data) {
+                    if (Service.validateDocumentRepositoryInfo(data)) {
+                        cacheDocumentRepositoryInfo.put(id, data);
+                        return data;
+                    }
+                }
+            });
         };
 
         /**
@@ -38,7 +109,9 @@ angular.module('services').factory('DocumentRepository.InfoService', ['$resource
             }
             return Util.serviceCall({
                 service: ObjectInfoService.save
-                , param: {type: "documentrepository"}
+                , param: {
+                    type: "documentrepository"
+                }
                 , data: repository
                 , onSuccess: function (data) {
                     if (Service.validateDocumentRepositoryInfo(data)) {
@@ -72,10 +145,10 @@ angular.module('services').factory('DocumentRepository.InfoService', ['$resource
             if (!Util.isArray(data.participants)) {
                 return false;
             }
-            if(!ObjectModelService.getParticipantByType(data, "assignee")){
+            if (!ObjectModelService.getParticipantByType(data, "assignee")) {
                 return false;
             }
-            if(!ObjectModelService.getParticipantByType(data, "owning group")){
+            if (!ObjectModelService.getParticipantByType(data, "owning group")) {
                 return false;
             }
             return true;
