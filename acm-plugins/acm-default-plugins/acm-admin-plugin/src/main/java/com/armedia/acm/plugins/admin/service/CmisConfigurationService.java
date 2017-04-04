@@ -171,7 +171,7 @@ public class CmisConfigurationService
             log.debug("Temp file '{}' copied successfully.", tempFileName);
 
             log.debug("Deleting Temporary File: '{}'", tempFileName);
-            deleteFileQuietly(tempFile);
+            deleteFileQuietly(tempFileName);
         } catch (Exception e)
         {
             log.error("Failed to write file from template '{}' ", fileTemplate, e);
@@ -195,7 +195,7 @@ public class CmisConfigurationService
     private void writePropertiesFile(String cmisId, Map<String, Object> props) throws AcmCmisConfigurationException
     {
         String propertiesFileName = getPropertiesFileName(cmisId);
-        String tempFileName = getPropertiesFileName(cmisId + "_temp");
+        String tempFileName = getTempPropertiesFileName(cmisId);
 
         try
         {
@@ -220,7 +220,8 @@ public class CmisConfigurationService
     private void createCmisFile(String cmisId, Map<String, Object> props) throws IOException, AcmCmisConfigurationException
     {
         String cmisFileName = getCmisFileName(cmisId);
-        String tempFileName = getCmisFileName(cmisId + "_temp");
+        String tempFileName = getTempCmisFileName(cmisId);
+
         if (cmisFileExist(cmisId))
         {
             throw new AcmCmisConfigurationException(String.format("CMIS file '%s' is present in the system.", cmisFileName));
@@ -326,9 +327,19 @@ public class CmisConfigurationService
         FileUtils.deleteQuietly(new File(getCmisFileName(cmisId)));
     }
 
-    private void deleteFileQuietly(File target)
+    private void deleteFileQuietly(String target)
     {
-        FileUtils.deleteQuietly(target);
+        FileUtils.deleteQuietly(new File(target));
+    }
+
+    public String getTempPropertiesFileName(String cmisId)
+    {
+        return FileUtils.getTempDirectoryPath() + String.format(cmisPropertiesFile, cmisId);
+    }
+
+    public String getTempCmisFileName(String cmisId)
+    {
+        return FileUtils.getTempDirectoryPath() + String.format(cmisFile, cmisId);
     }
 
     public String getPropertiesFileName(String cmisId)
