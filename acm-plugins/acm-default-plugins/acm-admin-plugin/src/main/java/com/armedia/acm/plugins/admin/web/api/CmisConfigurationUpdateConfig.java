@@ -39,14 +39,17 @@ public class CmisConfigurationUpdateConfig
 
         try
         {
-
             JSONObject cmisObject = new JSONObject(resource);
             if (cmisId == null)
             {
+                log.error("CMIS ID is undefined");
                 throw new AcmCmisConfigurationException("CMIS Id is undefined");
             }
 
+            log.debug("Creating properties map");
             Map<String, Object> props = cmisConfigurationService.getProperties(cmisObject);
+
+            log.debug("Attempting to update CMIS config with ID '{}'", cmisId);
             cmisConfigurationService.updateCmisConfig(cmisId, props);
 
         } catch (Exception e)
@@ -55,7 +58,7 @@ public class CmisConfigurationUpdateConfig
             throw new AcmCmisConfigurationException("Update CMIS config error", e);
         }
 
-        return "{}";
+        return cmisId;
     }
 
     public void setCmisConfigurationService(CmisConfigurationService cmisConfigurationService)

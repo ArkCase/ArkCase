@@ -2,7 +2,6 @@ package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.exception.AcmCmisConfigurationException;
 import com.armedia.acm.plugins.admin.service.CmisConfigurationPropertiesService;
-import com.armedia.acm.plugins.admin.service.CmisConfigurationService;
 import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +23,6 @@ public class CmisConfigurationRetrieveConfigs
 {
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    private CmisConfigurationService cmisConfigurationService;
     private CmisConfigurationPropertiesService cmisConfigurationPropertiesService;
 
     @RequestMapping(value = "/cmisconfiguration/config", method = RequestMethod.GET, produces = {
@@ -33,13 +31,10 @@ public class CmisConfigurationRetrieveConfigs
     @ResponseBody
     public String retrieveCmisConfigs() throws IOException, AcmCmisConfigurationException
     {
+        log.debug("Retrieving CMIS Properties");
+
         JSONArray cmisPropertiesArray = cmisConfigurationPropertiesService.retrieveProperties();
         return cmisPropertiesArray.toString();
-    }
-
-    public void setCmisConfigurationService(CmisConfigurationService cmisConfigurationService)
-    {
-        this.cmisConfigurationService = cmisConfigurationService;
     }
 
     public void setCmisConfigurationPropertiesService(CmisConfigurationPropertiesService cmisConfigurationPropertiesService)
