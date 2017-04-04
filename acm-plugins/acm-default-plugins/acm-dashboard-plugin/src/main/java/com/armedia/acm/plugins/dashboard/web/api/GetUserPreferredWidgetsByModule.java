@@ -26,7 +26,7 @@ public class GetUserPreferredWidgetsByModule
     private UserPreferenceService userPreferenceService;
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(value = "/preferred/{moduleName}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/preferred/{moduleName}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public PreferredWidgetsDto getPreferredWidgets(@PathVariable("moduleName") String moduleName, Authentication authentication,
                                                    HttpSession session) throws AcmWidgetException, AcmObjectNotFoundException

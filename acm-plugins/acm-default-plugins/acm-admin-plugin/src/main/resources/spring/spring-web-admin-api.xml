@@ -27,58 +27,6 @@
         <property name="correspondenceService" ref="correspondenceService"/>
     </bean>
 
-    <!-- Label configuration API -->
-    <bean id="labelConfigurationRetrieveResource"
-          class="com.armedia.acm.plugins.admin.web.api.LabelConfigurationRetrieveResource">
-        <property name="resourcesFilesLocation"
-                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/labels/%s.%s.json"/>
-    </bean>
-
-    <bean id="labelConfigurationRetrieveAdminResource"
-          class="com.armedia.acm.plugins.admin.web.api.LabelConfigurationRetrieveAdminResource">
-        <property name="resourcesFilesLocation"
-                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/labels/settings/%s.%s.json"/>
-    </bean>
-
-    <bean id="labelConfigurationUpdateResource"
-          class="com.armedia.acm.plugins.admin.web.api.LabelConfigurationUpdateResource">
-        <property name="adminResourcesFilesLocation"
-                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/labels/settings/%s.%s.json"/>
-        <property name="resourcesFilesLocation"
-                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/labels/%s.%s.json"/>
-    </bean>
-
-    <bean id="labelConfigurationRetrieveLanguages"
-          class="com.armedia.acm.plugins.admin.web.api.LabelConfigurationRetrieveLanguages">
-        <property name="languagesFileLocation"
-                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/labels/languages.json"/>
-    </bean>
-
-    <bean id="labelConfigurationRetrieveNamespaces"
-          class="com.armedia.acm.plugins.admin.web.api.LabelConfigurationRetrieveNamespaces">
-        <property name="namespacesFileLocation"
-                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/labels/namespaces.json"/>
-    </bean>
-
-    <bean id="labelConfigurationRetrieveSettings"
-          class="com.armedia.acm.plugins.admin.web.api.LabelConfigurationRetrieveSettings">
-        <property name="settingsFileLocation"
-                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/labels/settings.json"/>
-    </bean>
-
-    <bean id="labelConfigurationUpdateSettings"
-          class="com.armedia.acm.plugins.admin.web.api.LabelConfigurationUpdateSettings">
-        <property name="settingsFileLocation"
-                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/labels/settings.json"/>
-    </bean>
-
-    <bean id="labelConfigurationResetResource"
-          class="com.armedia.acm.plugins.admin.web.api.LabelConfigurationResetResource">
-        <property name="adminResourcesFilesLocation"
-                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/labels/settings/%s.%s.json"/>
-        <property name="resourcesFilesLocation"
-                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/labels/%s.%s.json"/>
-    </bean>
 
     <!-- Label management API -->
     <bean id="labelManagementRetrieveResource"
@@ -112,11 +60,6 @@
 
     <bean id="labelManagementUpdateSettings"
           class="com.armedia.acm.plugins.admin.web.api.LabelManagementUpdateSettings">
-        <property name="labelManagementService" ref="labelManagementService"/>
-    </bean>
-
-    <bean id="labelManagementRetrieveLanguages"
-          class="com.armedia.acm.plugins.admin.web.api.LabelManagementRetrieveLanguages">
         <property name="labelManagementService" ref="labelManagementService"/>
     </bean>
 
@@ -333,4 +276,17 @@
           class="com.armedia.acm.plugins.admin.web.api.GetPlainFormTargetsAPIController">
         <property name="plainConfigurationFormFactory" ref="plainConfigurationFormFactory"/>
     </bean>
+
+    <bean id="googleAnalyticsConfigurationFile" class="java.io.File">
+        <constructor-arg value="${user.home}/.arkcase/acm/googleAnalytics.properties"/>
+    </bean>
+
+    <bean id="googleAnalyticsConfigService" class="com.armedia.acm.plugins.admin.service.GoogleAnalyticsConfigService">
+        <property name="configFile" ref="googleAnalyticsConfigurationFile"/>
+    </bean>
+
+    <bean id="googleAnalyticsConfigAPIController" class="com.armedia.acm.plugins.admin.web.api.GoogleAnalyticsConfigAPIController">
+        <property name="googleAnalyticsConfigService" ref="googleAnalyticsConfigService"/>
+    </bean>
+
 </beans>

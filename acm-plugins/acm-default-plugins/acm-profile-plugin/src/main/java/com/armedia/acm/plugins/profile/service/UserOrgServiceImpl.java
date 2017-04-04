@@ -8,12 +8,9 @@ import com.armedia.acm.plugins.profile.model.ProfileDTO;
 import com.armedia.acm.plugins.profile.model.UserOrg;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
-import com.armedia.acm.services.users.model.AcmRole;
 import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.users.model.RoleType;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.service.group.GroupService;
-import com.armedia.acm.services.users.service.group.GroupServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
@@ -22,7 +19,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class UserOrgServiceImpl implements UserOrgService
@@ -44,6 +44,8 @@ public class UserOrgServiceImpl implements UserOrgService
     private AcmGroupDao groupDao;
 
     private GroupService groupService;
+
+    private String defaultCmisId;
 
     @Override
     public UserOrg getUserOrgForUserId(String userId)
@@ -68,6 +70,7 @@ public class UserOrgServiceImpl implements UserOrgService
     {
         Map<String, Object> messageProps = new HashMap<>();
         messageProps.put("acmUser", authentication);
+        messageProps.put("configRef", muleContextManager.getMuleContext().getRegistry().lookupObject(defaultCmisId));
 
         MuleMessage received = getMuleContextManager().send("vm://saveUserOrg.in", userOrgInfo, messageProps);
 
@@ -286,5 +289,15 @@ public class UserOrgServiceImpl implements UserOrgService
 
     public void setGroupService(GroupService groupService) {
         this.groupService = groupService;
+    }
+
+    public String getDefaultCmisId()
+    {
+        return defaultCmisId;
+    }
+
+    public void setDefaultCmisId(String defaultCmisId)
+    {
+        this.defaultCmisId = defaultCmisId;
     }
 }
