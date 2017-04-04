@@ -54,26 +54,33 @@ public class CmisConfigurationService
         Matcher matcher = cmisIdPattern.matcher(cmisId);
         if (!matcher.find())
         {
+            log.error("Unable to create configuration with ID '{}', ID is the wrong format. Only numbers, characters symbols and '.' are allowed", cmisId);
             throw new AcmCmisConfigurationException("ID has wrong format. Only numbers, characters symbols and '.' are allowed");
         }
 
         // Check if CMIS files exist
         if (propertiesFileExist(cmisId) || cmisFileExist(cmisId))
         {
+            log.error("CMIS config with ID '{}' already exists", cmisId);
             throw new AcmCmisConfigurationException(String.format("CMIS config with ID='%s' exists", cmisId));
         }
 
         try
         {
+            log.debug("Attempting to create CMIS Configuration Properties File");
             createPropertiesFile(cmisId, props);
+
+            log.debug("Attempting to create CMIS Configuration XML file");
             createCmisFile(cmisId, props);
         } catch (Exception e)
         {
+            log.error("Can't create CMIS config '{}' ", cmisId, e);
+            log.debug("Cleaning up created files");
+
             // Delete created files quietly
             deletePropertiesFileQuietly(cmisId);
             deleteCmisFileQuietly(cmisId);
 
-            log.error("Can't create CMIS config '{}' ", cmisId, e);
             throw new AcmCmisConfigurationException(String.format("Can't create CMIS config with ID='%s'", cmisId), e);
         }
     }
@@ -141,7 +148,7 @@ public class CmisConfigurationService
         writePropertiesFile(cmisId, props);
     }
 
-    private void writeFileFromTemplate(Map<String, Object> props, String fileTemplate, String fileName) throws IOException
+    private void writeFileFromTemplate(Map<String, Object> props, String fileTemplate, String fileName, String tempFileName) throws IOException
     {
         // Create Properties file
         Configuration cfg = new Configuration(Configuration.VERSION_2_3_22);
@@ -150,10 +157,21 @@ public class CmisConfigurationService
         Template tmplProperties = cfg.getTemplate(fileTemplate);
 
         Writer writerProp = null;
+
         try
         {
-            writerProp = new FileWriter(new File(fileName));
+            File tempFile = new File(tempFileName);
+            File targetFile = new File(fileName);
+            writerProp = new FileWriter(tempFile);
+
+            log.debug("Writing properties to temp file: '{}'", tempFileName);
             tmplProperties.process(props, writerProp);
+
+            copyOverFile(tempFile, targetFile);
+            log.debug("Temp file '{}' copied successfully.", tempFileName);
+
+            log.debug("Deleting Temporary File: '{}'", tempFileName);
+            deleteFileQuietly(tempFile);
         } catch (Exception e)
         {
             log.error("Failed to write file from template '{}' ", fileTemplate, e);
@@ -177,16 +195,16 @@ public class CmisConfigurationService
     private void writePropertiesFile(String cmisId, Map<String, Object> props) throws AcmCmisConfigurationException
     {
         String propertiesFileName = getPropertiesFileName(cmisId);
+        String tempFileName = getPropertiesFileName(cmisId + "_temp");
 
         try
         {
             // Create Properties file
-            log.debug("Writing Properties file with ID '{}' ", cmisId);
-            writeFileFromTemplate(props, cmisTemplatePropertiesFile, propertiesFileName);
-
+            log.debug("Attempting to write CMIS Properties file with ID '{}' ", cmisId);
+            writeFileFromTemplate(props, cmisTemplatePropertiesFile, propertiesFileName, tempFileName);
         } catch (Exception e)
         {
-            log.error("Can't write CMIS properties file with ID '{}' ", cmisId, e);
+            log.error("Failed to write CMIS Properties file with ID '{}' ", cmisId, e);
             throw new AcmCmisConfigurationException("Can't write CMIS properties file ", e);
         }
     }
@@ -202,17 +220,17 @@ public class CmisConfigurationService
     private void createCmisFile(String cmisId, Map<String, Object> props) throws IOException, AcmCmisConfigurationException
     {
         String cmisFileName = getCmisFileName(cmisId);
+        String tempFileName = getCmisFileName(cmisId + "_temp");
         if (cmisFileExist(cmisId))
         {
             throw new AcmCmisConfigurationException(String.format("CMIS file '%s' is present in the system.", cmisFileName));
         }
 
-
         try
         {
             // CMIS file
             log.debug("Writing CMIS XML file with ID '{}' ", cmisId);
-            writeFileFromTemplate(props, cmisTemplateXmlFile, cmisFileName);
+            writeFileFromTemplate(props, cmisTemplateXmlFile, cmisFileName, tempFileName);
 
         } catch (Exception e)
         {
@@ -266,6 +284,7 @@ public class CmisConfigurationService
             if (matcher.find())
             {
                 propertiesFiles.add(fileIter);
+                log.debug("Found CMIS property file: '{}'", fileName);
             }
         }
 
@@ -284,6 +303,19 @@ public class CmisConfigurationService
         }
     }
 
+    private void copyOverFile(File source, File target)
+    {
+
+        log.debug("Copying temp file '{}' to '{}'", source.getName(), target.getName());
+        try
+        {
+            FileUtils.copyFile(source, target);
+        } catch (IOException e)
+        {
+            log.error("Failed to copy file {} to {}", source.getName(), target.getName(), e);
+        }
+    }
+
     private void deletePropertiesFileQuietly(String cmisId)
     {
         FileUtils.deleteQuietly(new File(getPropertiesFileName(cmisId)));
@@ -292,6 +324,11 @@ public class CmisConfigurationService
     private void deleteCmisFileQuietly(String cmisId)
     {
         FileUtils.deleteQuietly(new File(getCmisFileName(cmisId)));
+    }
+
+    private void deleteFileQuietly(File target)
+    {
+        FileUtils.deleteQuietly(target);
     }
 
     public String getPropertiesFileName(String cmisId)

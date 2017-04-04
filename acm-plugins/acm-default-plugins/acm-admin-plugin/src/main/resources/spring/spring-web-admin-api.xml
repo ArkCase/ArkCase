@@ -283,7 +283,6 @@
     <!-- CMIS configuration API -->
     <bean id="cmisConfigurationRetrieveDirectories"
           class="com.armedia.acm.plugins.admin.web.api.CmisConfigurationRetrieveConfigs">
-        <property name="cmisConfigurationService" ref="cmisConfigurationService"/>
         <property name="cmisConfigurationPropertiesService" ref="cmisConfigurationPropertiesService"/>
     </bean>
 
