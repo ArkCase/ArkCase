@@ -12,25 +12,24 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <select ng-model="selectedLanguage" class="form-control input-sm"
-                                    ng-options="lang for lang in languagesDropdownOptions"
+                            <select ng-model="selectedLocale" class="form-control input-sm"
+                                    ng-options="item as item.desc for item in languagesDropdownOptions track by item.locale"
                                     ng-change="reloadGrid()"
                                     ng-disabled="disabledInputs">
                             </select>
                         </div>
                     </form>
 
-
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <span translate>admin.application.labels.config.defaultLabel</span>
-                                ({{settings.defaultLang}})
+                                ({{defaultLocale.desc}})
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li ng-repeat="lang in languagesDropdownOptions">
-                                    <a href="#" ng-click="changeDefaultLng($event, lang)">{{lang}}</a>
+                                <li ng-repeat="x in languagesDropdownOptions">
+                                    <a href="#" ng-click="changeDefaultLocale($event, x.locale)">{{x.desc}}</a>
                                 </li>
                             </ul>
                         </li>

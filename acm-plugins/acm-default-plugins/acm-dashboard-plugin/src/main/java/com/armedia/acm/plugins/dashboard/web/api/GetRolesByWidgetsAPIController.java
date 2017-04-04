@@ -35,7 +35,7 @@ public class GetRolesByWidgetsAPIController
     private WidgetEventPublisher eventPublisher;
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(value = "/rolesByWidget/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/rolesByWidget/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public List<RolesGroupByWidgetDto> getRolesGroupedByWidget(Authentication authentication, HttpSession session) throws AcmWidgetException, AcmObjectNotFoundException
     {

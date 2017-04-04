@@ -67,6 +67,7 @@ angular.module('services').factory('Object.TagsService', ['$resource', '$transla
              * @param {Object} params Map of input parameter
              * @param {String} params.objectId  Object ID
              * @param {String} params.objectType  Object type
+             * @param {String} params.objectTitle  Object Parent Title
              * @param {String} params.tagId  Tag ID
              * @param {Function} onSuccess (Optional)Callback function of success query
              * @param {Function} onError (Optional) Callback function when fail
@@ -75,7 +76,7 @@ angular.module('services').factory('Object.TagsService', ['$resource', '$transla
              */
             _associateTag: {
                 method: 'PUT',
-                url: 'api/latest/service/tag/:objectId/:objectType/:tagId'
+                url: 'api/latest/service/tag/:objectId/:objectType/:objectTitle/:tagId'
             },
 
             /**
@@ -185,16 +186,18 @@ angular.module('services').factory('Object.TagsService', ['$resource', '$transla
          *
          * @param {Number} objectId  Object ID
          * @param {String} objectType  Object type
+         * @param {String} parentTitle  Object (which happens to the the parent) title
          * @param {Number} tagId  Tag ID
          *
          * @returns {Object} Promise
          */
-        Service.associateTag = function (objectId, objectType, tagId) {
+        Service.associateTag = function (objectId, objectType, objectTitle, tagId) {
             return Util.serviceCall({
                 service: Service._associateTag
                 , param: {
                     objectId: objectId,
                     objectType: objectType,
+                    objectTitle: objectTitle,
                     tagId: tagId
                 }
                 , data: {}
