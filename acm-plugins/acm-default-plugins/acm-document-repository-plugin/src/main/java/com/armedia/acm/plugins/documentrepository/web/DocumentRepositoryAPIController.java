@@ -58,6 +58,21 @@ public class DocumentRepositoryAPIController
         }
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public DocumentRepository findById(@PathVariable(value = "id") Long id) throws AcmObjectNotFoundException
+    {
+        DocumentRepository docRepo = getDocumentRepositoryService().findById(id);
+
+        if (docRepo == null)
+        {
+            log.warn("Document Repository with id: [{}] not found!", id);
+            throw new AcmObjectNotFoundException(DocumentRepositoryConstants.OBJECT_TYPE, id,
+                    String.format("Document Repository with id: [%d] not found!", id));
+        }
+        return docRepo;
+    }
+
     public DocumentRepositoryService getDocumentRepositoryService()
     {
         return documentRepositoryService;

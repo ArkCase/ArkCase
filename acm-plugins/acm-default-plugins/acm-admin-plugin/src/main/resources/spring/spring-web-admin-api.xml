@@ -281,7 +281,7 @@
         <constructor-arg value="${user.home}/.arkcase/acm/googleAnalytics.properties"/>
     </bean>
 
-    <bean id="googleAnalyticsConfigService" class="com.armedia.acm.plugins.admin.web.api.GoogleAnalyticsConfigService">
+    <bean id="googleAnalyticsConfigService" class="com.armedia.acm.plugins.admin.service.GoogleAnalyticsConfigService">
         <property name="configFile" ref="googleAnalyticsConfigurationFile"/>
     </bean>
 

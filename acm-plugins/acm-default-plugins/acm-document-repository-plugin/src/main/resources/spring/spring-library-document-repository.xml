@@ -43,5 +43,29 @@
           class="com.armedia.acm.plugins.documentrepository.service.impl.DocumentRepositoryServiceImpl">
         <property name="documentRepositoryDao" ref="documentRepositoryDao"/>
         <property name="pipelineManager" ref="documentRepositoryPipelineManager"/>
+        <property name="documentRepositoryEventPublisher" ref="documentRepositoryEventPublisher"/>
     </bean>
+
+    <bean id="documentRepositoryPluginProperties"
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <!-- note: must leave "file:" at the start of the file name for spring
+            to be able to read the file; otherwise it will try to read from the classpath -->
+        <property name="location"
+                  value="file:${user.home}/.arkcase/acm/documentRepositoryPlugin.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
+    </bean>
+
+    <bean id="documentRepositoryPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
+        <property name="pluginName" value="Document Repository Plugin"/>
+        <property name="pluginProperties" ref="documentRepositoryPluginProperties"/>
+        <property name="suportedObjectTypesNames">
+            <list>
+                <value>DOC_REPO</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="documentRepositoryEventPublisher"
+          class="com.armedia.acm.plugins.documentrepository.service.DocumentRepositoryEventPublisher"/>
 </beans>
