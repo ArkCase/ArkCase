@@ -109,13 +109,7 @@
         <mvc:interceptor>
             <mvc:mapping path="/plugin/**"/>
             <mvc:mapping path="/api/*/plugin/**"/>
-            <mvc:mapping path="/api/*/service/**"/>
             <mvc:mapping path="/modules/*/views/**.html"/>
-            <mvc:mapping path="api/*/authenticationtoken/**"/>
-            <mvc:mapping path="api/*forms/**"/>
-            <mvc:mapping path="api/*/functionalaccess/**"/>
-            <mvc:mapping path="api/*/users/**"/>
-            <mvc:mapping path="api/*/milestonebyname/**"/>
             <ref bean="acmPluginRoleBasedAccessInterceptor"/>
         </mvc:interceptor>
         <mvc:interceptor>
