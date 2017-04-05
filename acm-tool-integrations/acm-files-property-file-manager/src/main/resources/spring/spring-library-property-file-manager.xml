@@ -32,6 +32,7 @@
                 <value>file:${user.home}/.arkcase/acm/dashboardPlugin.properties</value>
                 <value>file:${user.home}/.arkcase/acm/dataAccessControl.properties</value>
                 <value>file:${user.home}/.arkcase/acm/datasource.properties</value>
+                <value>file:${user.home}/.arkcase/acm/documentRepositoryPlugin.properties</value>
                 <value>file:${user.home}/.arkcase/acm/dueTasksNotifier.properties</value>
                 <value>file:${user.home}/.arkcase/acm/ecmFileService.properties</value>
                 <value>file:${user.home}/.arkcase/acm/lawEnforcementApp.properties</value>

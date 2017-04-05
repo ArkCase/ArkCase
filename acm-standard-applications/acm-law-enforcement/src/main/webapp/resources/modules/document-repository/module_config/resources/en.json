@@ -10,21 +10,16 @@
     "invalidData": ""
   },
   "document-repository.comp.info": {
-    "docRepoId": "Document Repository id:",
+    "docRepoId": "Repository ID:",
     "docRepoName": "Document Repository Name:",
-    "type.label": "Type",
-    "created.label": "Created Date",
+    "modified.label": "Modified Date",
     "assignee.label": "Assigned To",
     "owningGroup.label": "Owning Group"
   },
   "document-repository.comp.actions": {
     "restrict": "Restrict?",
-    "new.button": "New",
-    "edit.button": "Edit",
     "subscribe.button": "Subscribe",
-    "unsubscribe.button": "Unsubscribe",
-    "claim.button": "Claim",
-    "unclaim.button": "Unclaim"
+    "unsubscribe.button": "Unsubscribe"
   },
   "document-repository.comp.details": {
     "title": "Details",

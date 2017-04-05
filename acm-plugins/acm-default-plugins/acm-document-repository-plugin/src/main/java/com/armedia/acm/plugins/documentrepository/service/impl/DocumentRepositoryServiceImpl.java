@@ -5,6 +5,7 @@ import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.plugins.documentrepository.dao.DocumentRepositoryDao;
 import com.armedia.acm.plugins.documentrepository.model.DocumentRepository;
 import com.armedia.acm.plugins.documentrepository.pipeline.DocumentRepositoryPipelineContext;
+import com.armedia.acm.plugins.documentrepository.service.DocumentRepositoryEventPublisher;
 import com.armedia.acm.plugins.documentrepository.service.DocumentRepositoryService;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
@@ -15,11 +16,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 public class DocumentRepositoryServiceImpl implements DocumentRepositoryService
 {
-    final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     private DocumentRepositoryDao documentRepositoryDao;
 
     private PipelineManager<DocumentRepository, DocumentRepositoryPipelineContext> pipelineManager;
+
+    private DocumentRepositoryEventPublisher documentRepositoryEventPublisher;
 
     @Override
     public DocumentRepository findById(Long id)
@@ -38,9 +41,11 @@ public class DocumentRepositoryServiceImpl implements DocumentRepositoryService
     public DocumentRepository save(DocumentRepository documentRepository, Authentication authentication)
             throws PipelineProcessException
     {
+        boolean isNew = documentRepository.getId() == null;
+
         DocumentRepositoryPipelineContext pipelineContext = new DocumentRepositoryPipelineContext();
         // populate the context
-        pipelineContext.setNewDocumentRepository(documentRepository.getId() == null);
+        pipelineContext.setNewDocumentRepository(isNew);
         pipelineContext.setAuthentication(authentication);
         String ipAddress = AuthenticationUtils.getUserIpAddress();
         pipelineContext.setIpAddress(ipAddress);
@@ -48,7 +53,15 @@ public class DocumentRepositoryServiceImpl implements DocumentRepositoryService
         return pipelineManager.executeOperation(documentRepository, pipelineContext, () ->
         {
             log.debug("Saving document repository: {}", documentRepository.getName());
-            return documentRepositoryDao.save(documentRepository);
+            DocumentRepository saved = documentRepositoryDao.save(documentRepository);
+            if (isNew)
+            {
+                documentRepositoryEventPublisher.publishCreatedEvent(saved, true);
+            } else
+            {
+                documentRepositoryEventPublisher.publishUpdatedEvent(saved, true);
+            }
+            return saved;
         });
     }
 
@@ -71,5 +84,15 @@ public class DocumentRepositoryServiceImpl implements DocumentRepositoryService
     public void setPipelineManager(PipelineManager<DocumentRepository, DocumentRepositoryPipelineContext> pipelineManager)
     {
         this.pipelineManager = pipelineManager;
+    }
+
+    public DocumentRepositoryEventPublisher getDocumentRepositoryEventPublisher()
+    {
+        return documentRepositoryEventPublisher;
+    }
+
+    public void setDocumentRepositoryEventPublisher(DocumentRepositoryEventPublisher documentRepositoryEventPublisher)
+    {
+        this.documentRepositoryEventPublisher = documentRepositoryEventPublisher;
     }
 }
