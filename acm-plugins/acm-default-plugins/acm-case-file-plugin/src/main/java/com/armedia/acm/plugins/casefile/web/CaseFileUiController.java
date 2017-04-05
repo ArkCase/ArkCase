@@ -111,6 +111,23 @@ public class CaseFileUiController
         return mv;
     }
 
+    @RequestMapping(value = "/split/{parentCasefileId}", method = RequestMethod.GET)
+    public ModelAndView caseFileSplit(@PathVariable(value = "parentCasefileId") Long parentCasefileId)
+    {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("casefileSplit");
+        mv.addObject("parentCasefileId", parentCasefileId);
+
+        Map<String, Object> props = plugin.getPluginProperties();
+        addJsonArrayProp(mv, props, "fileTypes", "fileTypes");
+        mv.addObject("arkcaseUrl", getNotificationProperties().get("arkcase.url"));
+        mv.addObject("arkcasePort", getNotificationProperties().get("arkcase.port"));
+        mv.addObject("allowMailFilesAsAttachments", getNotificationProperties().get("notification.allowMailFilesAsAttachments"));
+        mv.addObject("allowMailFilesToExternalAddresses",
+                getNotificationProperties().get("notification.allowMailFilesToExternalAddresses"));
+        return mv;
+    }
+
     private String getCaseFileUrl()
     {
         // Default one

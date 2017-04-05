@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+    <bean id="createComplaintAPIController" class="com.armedia.acm.plugins.complaint.web.api.CreateComplaintAPIController">
+        <property name="complaintTransaction" ref="saveComplaintTransaction"/>
+        <property name="eventPublisher" ref="complaintEventPublisher"/>
+        <lookup-method name="getComplaintService" bean="complaintService"/>
+    </bean>
+
+    <bean id="getComplaintTypesAPIController" class="com.armedia.acm.plugins.complaint.web.api.GetComplaintListOfValuesAPIController">
+        <property name="complaintProperties" ref="complaintPluginProperties"/>
+    </bean>
+
+    <bean id="findComplaintsByUserAPIController" class="com.armedia.acm.plugins.complaint.web.api.FindComplaintsByUserAPIController">
+        <property name="complaintDao" ref="acmComplaintDao"/>
+        <property name="eventPublisher" ref="complaintEventPublisher"/>
+    </bean>
+
+    <bean id="complaintWorkflowAPIController" class="com.armedia.acm.plugins.complaint.web.api.ComplaintWorkflowAPIController">
+        <property name="eventPublisher" ref="complaintEventPublisher"/>
+    </bean>
+
+    <bean id="findComplaintByIdAPIController" class="com.armedia.acm.plugins.complaint.web.api.FindComplaintByIdAPIController">
+        <property name="complaintDao" ref="acmComplaintDao"/>
+        <property name="eventPublisher" ref="complaintEventPublisher"/>
+    </bean>
+
+    <bean id="listComplaintsAPIController" class="com.armedia.acm.plugins.complaint.web.api.ListComplaintsAPIController">
+        <property name="complaintDao" ref="acmComplaintDao"/>
+        <property name="eventPublisher" ref="complaintEventPublisher"/>
+    </bean>
+
+</beans>
