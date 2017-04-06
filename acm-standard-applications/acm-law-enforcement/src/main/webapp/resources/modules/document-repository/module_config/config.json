@@ -435,7 +435,7 @@
           "width": 150
         },
         {
-          "name": "creator",
+          "name": "author",
           "displayName": "document-repository.comp.notes.table.columns.creator",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
