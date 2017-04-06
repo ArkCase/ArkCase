@@ -13,6 +13,10 @@
           class="com.armedia.acm.plugins.documentrepository.pipeline.postsave.DocumentRepositoryEcmFolderHandler">
         <property name="ecmFileService" ref="ecmFileService"/>
     </bean>
+    <bean id="documentRepositoryAuditHandler"
+          class="com.armedia.acm.plugins.documentrepository.pipeline.postsave.DocumentRepositoryAuditHandler">
+        <property name="documentRepositoryEventPublisher" ref="documentRepositoryEventPublisher"/>
+    </bean>
 
     <bean id="documentRepositoryPipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
         <property name="preSaveHandlers">
@@ -24,6 +28,7 @@
                 <ref bean="documentRepositoryRulesHandler"/>
                 <ref bean="documentRepositoryContainerHandler"/>
                 <ref bean="documentRepositoryEcmFolderHandler"/>
+                <ref bean="documentRepositoryAuditHandler"/>
             </list>
         </property>
     </bean>

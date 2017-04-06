@@ -27,7 +27,9 @@ public class DocumentRepositoryServiceImpl implements DocumentRepositoryService
     @Override
     public DocumentRepository findById(Long id)
     {
-        return documentRepositoryDao.find(id);
+        DocumentRepository documentRepository = documentRepositoryDao.find(id);
+        documentRepositoryEventPublisher.publishSearchedEvent(documentRepository, true);
+        return documentRepository;
     }
 
     @Override
@@ -38,30 +40,23 @@ public class DocumentRepositoryServiceImpl implements DocumentRepositoryService
 
     @Override
     @Transactional
-    public DocumentRepository save(DocumentRepository documentRepository, Authentication authentication)
+    public DocumentRepository save(DocumentRepository existingDocumentRepository,
+                                   DocumentRepository documentRepository, Authentication authentication)
             throws PipelineProcessException
     {
-        boolean isNew = documentRepository.getId() == null;
 
         DocumentRepositoryPipelineContext pipelineContext = new DocumentRepositoryPipelineContext();
         // populate the context
-        pipelineContext.setNewDocumentRepository(isNew);
+        pipelineContext.setNewDocumentRepository(documentRepository.getId() == null);
         pipelineContext.setAuthentication(authentication);
         String ipAddress = AuthenticationUtils.getUserIpAddress();
         pipelineContext.setIpAddress(ipAddress);
+        pipelineContext.setDocumentRepository(existingDocumentRepository);
 
         return pipelineManager.executeOperation(documentRepository, pipelineContext, () ->
         {
             log.debug("Saving document repository: {}", documentRepository.getName());
-            DocumentRepository saved = documentRepositoryDao.save(documentRepository);
-            if (isNew)
-            {
-                documentRepositoryEventPublisher.publishCreatedEvent(saved, true);
-            } else
-            {
-                documentRepositoryEventPublisher.publishUpdatedEvent(saved, true);
-            }
-            return saved;
+            return documentRepositoryDao.save(documentRepository);
         });
     }
 

@@ -20,6 +20,11 @@ public class DocumentRepositoryEventPublisher implements ApplicationEventPublish
         eventPublisher = applicationEventPublisher;
     }
 
+    public void publishEvent(DocumentRepositoryEvent event)
+    {
+        eventPublisher.publishEvent(event);
+    }
+
     public void publishCreatedEvent(DocumentRepository source, boolean succeeded)
     {
         log.debug("Publishing a Document Repository created event.");
@@ -38,4 +43,12 @@ public class DocumentRepositoryEventPublisher implements ApplicationEventPublish
         eventPublisher.publishEvent(event);
     }
 
+    public void publishSearchedEvent(DocumentRepository source, boolean succeeded)
+    {
+        log.debug("Publishing a Document Repository searched event.");
+        DocumentRepositoryEvent event = new DocumentRepositoryEvent(source, "search");
+        event.setSucceeded(succeeded);
+        event.setIpAddress(AuthenticationUtils.getUserIpAddress());
+        eventPublisher.publishEvent(event);
+    }
 }

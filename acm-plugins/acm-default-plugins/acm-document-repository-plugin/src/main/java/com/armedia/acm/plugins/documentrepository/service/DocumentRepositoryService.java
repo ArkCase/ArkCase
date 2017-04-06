@@ -11,5 +11,6 @@ public interface DocumentRepositoryService
 
     DocumentRepository findByName(String name);
 
-    DocumentRepository save(DocumentRepository documentRepository, Authentication authentication) throws PipelineProcessException;
+    DocumentRepository save(DocumentRepository existingDocumentRepository, DocumentRepository documentRepository,
+                            Authentication authentication) throws PipelineProcessException;
 }
