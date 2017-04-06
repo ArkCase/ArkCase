@@ -43,6 +43,8 @@ public interface EcmFileConstants
 
     String FIND_CONTAINER_QUERY = "SELECT e FROM AcmContainer e WHERE e.containerObjectId = :objectId AND e.containerObjectType = :objectType";
 
+    String FIND_CMIS_CONTAINER_QUERY = "SELECT e FROM AcmContainer e WHERE e.containerObjectId = :objectId AND e.containerObjectType = :objectType AND e.cmisRepositoryId = :cmisRepositoryId";
+
     String FIND_CONTAINERS_QUERY = "SELECT e FROM AcmContainer e WHERE e.containerObjectId IN :objectIds AND e.containerObjectType = :objectType";
 
     String PROPERTY_KEY_DEFAULT_FOLDER_BASE_PATH = "ecm.defaultBasePath";
@@ -99,4 +101,5 @@ public interface EcmFileConstants
     String CONFIGURATION_REFERENCE = "configRef";
     String VERSIONING_STATE = "versioningState";
     String DEFAULT_CMIS_REPOSITORY_ID = "alfresco";
+    String ALL_VERSIONS = "allVersions";
 }
