@@ -50,7 +50,7 @@ public class DocumentRepositoryAPIController
             // fixes problem when some child objects are changed (e.g participants) and solr document is not updated
             in.setModifier(AuthenticationUtils.getUsername());
             in.setModified(new Date());
-            return getDocumentRepositoryService().save(in, auth);
+            return getDocumentRepositoryService().save(existingDocRepo, in, auth);
         } catch (PipelineProcessException | TransactionException e)
         {
             log.error("Could not save Document Repository: {}", in.getName(), e);

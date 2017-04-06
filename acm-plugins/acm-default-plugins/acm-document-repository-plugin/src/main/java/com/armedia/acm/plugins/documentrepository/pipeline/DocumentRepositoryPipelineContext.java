@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.documentrepository.pipeline;
 
+import com.armedia.acm.plugins.documentrepository.model.DocumentRepository;
 import com.armedia.acm.services.pipeline.AbstractPipelineContext;
 import org.springframework.security.core.Authentication;
 
@@ -22,6 +23,11 @@ public class DocumentRepositoryPipelineContext extends AbstractPipelineContext
      * IP Address.
      */
     private String ipAddress;
+
+    /**
+     * Existing version of documentRepository, to be checked for updates and audit the changes
+     */
+    private DocumentRepository documentRepository;
 
     public String getIpAddress()
     {
@@ -51,5 +57,15 @@ public class DocumentRepositoryPipelineContext extends AbstractPipelineContext
     public void setNewDocumentRepository(boolean newDocumentRepository)
     {
         this.newDocumentRepository = newDocumentRepository;
+    }
+
+    public DocumentRepository getDocumentRepository()
+    {
+        return documentRepository;
+    }
+
+    public void setDocumentRepository(DocumentRepository documentRepository)
+    {
+        this.documentRepository = documentRepository;
     }
 }
