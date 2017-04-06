@@ -114,12 +114,23 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                           String fileName, Authentication authentication, String targetCmisFolderId, String parentObjectType, Long parentObjectId)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
-        if ( log.isInfoEnabled() )
+        String cmisRepositoryId = ecmFileServiceProperties.getProperty("ecm.defaultCmisId");
+        return upload(originalFileName, fileType, fileCategory, fileContents, fileContentType,
+                fileName, authentication, targetCmisFolderId, parentObjectType, parentObjectId, cmisRepositoryId);
+    }
+
+    @Override
+    @Transactional
+    public EcmFile upload(String originalFileName, String fileType, String fileCategory, InputStream fileContents, String fileContentType,
+                          String fileName, Authentication authentication, String targetCmisFolderId, String parentObjectType, Long parentObjectId, String cmisRepositoryId)
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException
+    {
+        if (log.isInfoEnabled())
         {
             log.info("The user '" + authentication.getName() + "' uploaded file: '" + fileName + "'");
         }
 
-        AcmContainer container = getOrCreateContainer(parentObjectType, parentObjectId);
+        AcmContainer container = getOrCreateContainer(parentObjectType, parentObjectId, cmisRepositoryId);
 
         // TODO: disgusting hack here.  getOrCreateContainer is transactional, and may update the container or the
         // container folder, e.g. by adding participants.  If it does, the object we get back won't have those changes,
@@ -132,7 +143,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         try
         {
-            String cmisRepositoryId = ecmFileServiceProperties.getProperty("ecm.defaultCmisId");
             EcmFile uploaded = getEcmFileTransaction().addFileTransaction(originalFileName, authentication, fileType, fileCategory,
                     fileContents, fileContentType, fileName, targetCmisFolderId, container, cmisRepositoryId);
 
@@ -144,7 +154,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             return uploaded;
         } catch (IOException | MuleException e)
         {
-            if ( event != null )
+            if (event != null)
             {
                 event.setSucceeded(false);
                 applicationEventPublisher.publishEvent(event);
@@ -279,10 +289,16 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     @Override
     public String createFolder(String folderPath) throws AcmCreateObjectFailedException
     {
+        String cmisRepositoryId = ecmFileServiceProperties.getProperty("ecm.defaultCmisId");
+        return createFolder(folderPath, cmisRepositoryId);
+    }
+
+    @Override
+    public String createFolder(String folderPath, String cmisRepositoryId) throws AcmCreateObjectFailedException
+    {
         try
         {
             Map<String, Object> properties = new HashMap<>();
-            String cmisRepositoryId = ecmFileServiceProperties.getProperty("ecm.defaultCmisId");
             properties.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
 
             MuleMessage message = getMuleContextManager().send(EcmFileConstants.MULE_ENDPOINT_CREATE_FOLDER, folderPath, properties);
@@ -301,15 +317,24 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public AcmContainer getOrCreateContainer(String objectType, Long objectId)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
+        String cmisRepositoryId = ecmFileServiceProperties.getProperty("ecm.defaultCmisId");
+        return getOrCreateContainer(objectType, objectId, cmisRepositoryId);
+    }
+
+    @Override
+    @Transactional
+    public AcmContainer getOrCreateContainer(String objectType, Long objectId, String cmisRepositoryId)
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException
+    {
         log.info("Finding folder for object " + objectType + " id " + objectId);
 
         try
         {
-            AcmContainer retval = getContainerFolderDao().findFolderByObjectTypeAndId(objectType, objectId);
+            AcmContainer retval = getContainerFolderDao().findFolderByObjectTypeIdAndRepositoryId(objectType, objectId, cmisRepositoryId);
             return retval;
         } catch (AcmObjectNotFoundException e)
         {
-            return createContainerFolder(objectType, objectId);
+            return createContainerFolder(objectType, objectId, cmisRepositoryId);
         } catch (PersistenceException pe)
         {
             throw new AcmUserActionFailedException("Find container folder", objectType, objectId, pe.getMessage(), pe);
@@ -326,19 +351,35 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
      */
     private AcmContainer createContainerFolder(String objectType, Long objectId) throws AcmCreateObjectFailedException
     {
+        String cmisRepositoryId = ecmFileServiceProperties.getProperty("ecm.defaultCmisId");
+        return createContainerFolder(objectType, objectId, cmisRepositoryId);
+    }
+
+    /**
+     * Objects should really have a folder already. Since we got here the object does not actually have one. The
+     * application doesn't really care where the folder is, so we'll just create a folder in a sensible location.
+     *
+     * @param objectType
+     * @param objectId
+     * @return
+     */
+    @Override
+    public AcmContainer createContainerFolder(String objectType, Long objectId, String cmisRepositoryId) throws AcmCreateObjectFailedException
+    {
         log.debug("Creating new folder for object " + objectType + " id " + objectId);
 
         String path = getEcmFileServiceProperties().getProperty(EcmFileConstants.PROPERTY_KEY_DEFAULT_FOLDER_BASE_PATH);
         path += getEcmFileServiceProperties().getProperty(EcmFileConstants.PROPERTY_PREFIX_FOLDER_PATH_BY_TYPE + objectType);
         path += "/" + objectId;
 
-        String cmisFolderId = createFolder(path);
+        String cmisFolderId = createFolder(path, cmisRepositoryId);
 
         log.info("Created new folder " + cmisFolderId + "for object " + objectType + " id " + objectId);
 
         AcmContainer newContainer = new AcmContainer();
         newContainer.setContainerObjectId(objectId);
         newContainer.setContainerObjectType(objectType);
+        newContainer.setCmisRepositoryId(cmisRepositoryId);
 
         // the container needs a container name, so we'll make one up here, just like we made up a CMIS folder path
         String containerName = objectType + "-" + objectId;
@@ -346,6 +387,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         AcmFolder newFolder = new AcmFolder();
         newFolder.setCmisFolderId(cmisFolderId);
+        newFolder.setCmisRepositoryId(cmisRepositoryId);
         newFolder.setName(EcmFileConstants.CONTAINER_FOLDER_NAME);
         newContainer.setFolder(newFolder);
         newContainer.setAttachmentFolder(newFolder);
@@ -1011,6 +1053,12 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     @Override
     public void deleteFile(Long objectId) throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
+        deleteFile(objectId, false);
+    }
+
+    @Override
+    public void deleteFile(Long objectId, Boolean allVersions) throws AcmUserActionFailedException, AcmObjectNotFoundException
+    {
 
         EcmFile file = getEcmFileDao().find(objectId);
 
@@ -1027,6 +1075,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             cmisRepositoryId = ecmFileServiceProperties.getProperty("ecm.defaultCmisId");
         }
         props.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
+        props.put(EcmFileConstants.ALL_VERSIONS, allVersions);
 
         try
         {
