@@ -156,14 +156,11 @@ public class CmisConfigurationService
 
         Template tmplProperties = cfg.getTemplate(fileTemplate);
 
-        Writer writerProp = null;
+        File tempFile = new File(tempFileName);
+        File targetFile = new File(fileName);
 
-        try
+        try (Writer writerProp = new FileWriter(tempFile))
         {
-            File tempFile = new File(tempFileName);
-            File targetFile = new File(fileName);
-            writerProp = new FileWriter(tempFile);
-
             log.debug("Writing properties to temp file: '{}'", tempFileName);
             tmplProperties.process(props, writerProp);
 
@@ -175,12 +172,6 @@ public class CmisConfigurationService
         } catch (Exception e)
         {
             log.error("Failed to write file from template '{}' ", fileTemplate, e);
-        } finally
-        {
-            if (writerProp != null)
-            {
-                writerProp.close();
-            }
         }
     }
 
@@ -355,14 +346,14 @@ public class CmisConfigurationService
     public boolean propertiesFileExist(String cmisId)
     {
         String fileName = getPropertiesFileName(cmisId);
-        log.debug("Checking if CMIS Properties file " + fileName + " exists");
+        log.debug("Checking if CMIS Properties file '{}' exists", fileName);
         return new File(fileName).exists();
     }
 
     public boolean cmisFileExist(String cmisId)
     {
         String fileName = getCmisFileName(cmisId);
-        log.debug("Checking if CMIS Configuration file " + fileName + " exists");
+        log.debug("Checking if CMIS Configuration file '{}' exists", fileName);
         return new File(fileName).exists();
     }
 
