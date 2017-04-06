@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>3.1.10-SNAPSHOT</version>
+    <version>3.1.11-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>ArkCase Case Management System</name>
@@ -1251,6 +1250,18 @@
             </dependency>
             <dependency>
                 <groupId>org.mule.modules</groupId>
+                <artifactId>mule-module-http</artifactId>
+                <version>${mule.version}</version>
+                <scope>runtime</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.mail</groupId>
+                        <artifactId>mail</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.mule.modules</groupId>
                 <artifactId>mule-module-spring-config</artifactId>
                 <version>${mule.version}</version>
                 <scope>compile</scope>
@@ -1271,6 +1282,12 @@
                 <groupId>org.mule.transports</groupId>
                 <artifactId>mule-transport-email</artifactId>
                 <version>${mule.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.mail</groupId>
+                        <artifactId>mail</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.mule.transports</groupId>
@@ -1339,6 +1356,12 @@
                 <artifactId>mule-module-json</artifactId>
                 <version>${mule.version}</version>
                 <scope>runtime</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.mail</groupId>
+                        <artifactId>mail</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.mule.modules</groupId>
