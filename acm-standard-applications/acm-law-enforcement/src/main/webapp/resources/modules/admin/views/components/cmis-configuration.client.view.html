@@ -1,0 +1,18 @@
+<div ng-controller="Admin.CMISConfigurationController">
+    <div class="pull-right well">
+        <div class="btn-group">
+            <button class="btn btn-xs btn-link" ng-click="showModal()">
+                <i class="glyphicon glyphicon-plus-sign"></i>
+                <span translate>admin.documentManagement.cmisConfiguration.addNewConfig</span>
+            </button>
+        </div>
+    </div>
+    <panel-view header="{{'admin.documentManagement.cmisConfiguration' | translate}}" collapsible="false">
+        <div ui-grid="gridOptions"
+             ui-grid-resize-columns
+             adjust-table-height="gridOptions.data.length"
+             ui-grid-auto-resize
+             class="grid">
+        </div>
+    </panel-view>
+</div>

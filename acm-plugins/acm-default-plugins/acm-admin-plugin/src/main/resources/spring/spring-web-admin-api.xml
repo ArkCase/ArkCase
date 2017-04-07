@@ -8,22 +8,25 @@
 
     <bean id="downloadCorrespondenceTemplate"
           class="com.armedia.acm.plugins.admin.web.api.TemplateDownloadControllerAPI">
-          <property name="correspondenceFolderName" value="${user.home}/.arkcase/acm/correspondenceTemplates"/>
+        <property name="correspondenceFolderName" value="${user.home}/.arkcase/acm/correspondenceTemplates"/>
     </bean>
 
     <bean id="listCorrespondenceTemplates" class="com.armedia.acm.plugins.admin.web.api.ListAllTemplatesControllerAPI">
     </bean>
 
-    <bean id="correspondenceQueryController" class="com.armedia.acm.plugins.admin.web.api.CorrespondenceQueryAPIController">
+    <bean id="correspondenceQueryController"
+          class="com.armedia.acm.plugins.admin.web.api.CorrespondenceQueryAPIController">
         <property name="correspondenceService" ref="correspondenceService"/>
     </bean>
 
-    <bean id="correspondenceTemplateController" class="com.armedia.acm.plugins.admin.web.api.CorrespondenceTemplateAPIController">
+    <bean id="correspondenceTemplateController"
+          class="com.armedia.acm.plugins.admin.web.api.CorrespondenceTemplateAPIController">
         <property name="correspondenceService" ref="correspondenceService"/>
         <property name="correspondenceFolderName" value="${user.home}/.arkcase/acm/correspondenceTemplates"/>
     </bean>
 
-    <bean id="correspondenceMergeFieldController" class="com.armedia.acm.plugins.admin.web.api.CorrespondenceMergeFieldAPIController">
+    <bean id="correspondenceMergeFieldController"
+          class="com.armedia.acm.plugins.admin.web.api.CorrespondenceMergeFieldAPIController">
         <property name="correspondenceService" ref="correspondenceService"/>
     </bean>
 
@@ -277,6 +280,26 @@
         <property name="plainConfigurationFormFactory" ref="plainConfigurationFormFactory"/>
     </bean>
 
+    <!-- CMIS configuration API -->
+    <bean id="cmisConfigurationRetrieveDirectories"
+          class="com.armedia.acm.plugins.admin.web.api.CmisConfigurationRetrieveConfigs">
+        <property name="cmisConfigurationPropertiesService" ref="cmisConfigurationPropertiesService"/>
+    </bean>
+
+    <bean id="cmisConfigurationCreateDirectory"
+          class="com.armedia.acm.plugins.admin.web.api.CmisConfigurationCreateConfig">
+        <property name="cmisConfigurationService" ref="cmisConfigurationService"/>
+    </bean>
+
+    <bean id="cmisConfigurationDeleteDirectory"
+          class="com.armedia.acm.plugins.admin.web.api.CmisConfigurationDeleteConfig">
+        <property name="cmisConfigurationService" ref="cmisConfigurationService"/>
+    </bean>
+
+    <bean id="cmisConfigurationUpdateDirectory"
+          class="com.armedia.acm.plugins.admin.web.api.CmisConfigurationUpdateConfig">
+        <property name="cmisConfigurationService" ref="cmisConfigurationService"/>
+    </bean>
     <bean id="googleAnalyticsConfigurationFile" class="java.io.File">
         <constructor-arg value="${user.home}/.arkcase/acm/googleAnalytics.properties"/>
     </bean>
@@ -285,7 +308,8 @@
         <property name="configFile" ref="googleAnalyticsConfigurationFile"/>
     </bean>
 
-    <bean id="googleAnalyticsConfigAPIController" class="com.armedia.acm.plugins.admin.web.api.GoogleAnalyticsConfigAPIController">
+    <bean id="googleAnalyticsConfigAPIController"
+          class="com.armedia.acm.plugins.admin.web.api.GoogleAnalyticsConfigAPIController">
         <property name="googleAnalyticsConfigService" ref="googleAnalyticsConfigService"/>
     </bean>
 
