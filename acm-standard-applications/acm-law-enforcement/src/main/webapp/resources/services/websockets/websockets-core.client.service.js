@@ -80,7 +80,7 @@ angular.module("services").factory("WebSocketsListener", ['$q', '$timeout', 'Web
                 var timeout = Math.random() * (timeoutMax - timeoutMin) + timeoutMin;
                 setTimeout(function () {
                     target.RECONNECT_ATTEMPTS++;
-                    target.connect();
+                    //target.connect();
                 }, timeout > target.MAX_RECONNECT_INTERVAL ? target.MAX_RECONNECT_INTERVAL : timeout);
             }
         };

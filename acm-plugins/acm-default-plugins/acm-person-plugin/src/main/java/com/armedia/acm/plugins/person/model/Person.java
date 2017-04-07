@@ -4,6 +4,7 @@ import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.converter.LocalDateConverter;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -27,6 +28,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -157,6 +159,19 @@ public class Person implements Serializable, AcmEntity
 
     @Column(name = "cm_class_name")
     private String className = this.getClass().getName();
+
+    /**
+     * Container folder where the case file's attachments/content files are stored.
+     */
+    @OneToOne
+    @JoinColumn(name = "cm_container_id")
+    private AcmContainer container;
+
+    /**
+     * id for EcmFile which picture is default
+     */
+    @Column(name = "cm_default_picture_id")
+    private Long defaultPictureId;
 
     @PrePersist
     protected void beforeInsert()
@@ -516,4 +531,23 @@ public class Person implements Serializable, AcmEntity
         this.className = className;
     }
 
+    public void setContainer(AcmContainer container)
+    {
+        this.container = container;
+    }
+
+    public void setDefaultPictureId(Long defaultPictureId)
+    {
+        this.defaultPictureId = defaultPictureId;
+    }
+
+    public AcmContainer getContainer()
+    {
+        return container;
+    }
+
+    public Long getDefaultPictureId()
+    {
+        return defaultPictureId;
+    }
 }

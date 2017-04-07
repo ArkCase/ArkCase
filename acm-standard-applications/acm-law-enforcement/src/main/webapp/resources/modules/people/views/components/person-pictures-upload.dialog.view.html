@@ -1,0 +1,21 @@
+<div class="modal-header">
+    <h3><span translate>people.comp.pictures.dialog.title</span></h3>
+</div>
+<div class="modal-body">
+    <button ngf-select ng-model="userPicture" id="file"
+            ngf-pattern="'image/*'" ngf-accept="'image/*'"
+            class="btn btn-sm btn-default" ngf-change="upload()">people.comp.pictures.dialog.browse</button>
+    {{userPicture.name}}
+    <div>
+        <p translate>people.comp.pictures.dialog.setPrimary</p>
+        <input type="radio" ng-model="isDefault" ng-value="true">
+        <translate>people.comp.pictures.dialog.yes</translate>
+        <input type="radio" ng-model="isDefault" ng-value="false">
+        <translate>people.comp.pictures.dialog.no</translate>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="onClickCancel()" translate>people.comp.pictures.dialog.cancel</button>
+    <button type="button" class="btn btn-primary" ng-click="onClickOk()" )>people.comp.pictures.dialog.upload</button>
+</div>
+

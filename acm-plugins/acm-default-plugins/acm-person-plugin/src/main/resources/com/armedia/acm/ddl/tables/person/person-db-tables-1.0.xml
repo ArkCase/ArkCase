@@ -492,7 +492,7 @@
                 <constraints
                         primaryKey="true"
                         primaryKeyName="pk_person_identification"
-                        />
+                />
             </column>
             <column name="cm_person" type="${fkIdType}">
                 <constraints nullable="false"/>
@@ -707,7 +707,8 @@
         <renameTable oldTableName="acm_person_identification" newTableName="acm_identification"/>
     </changeSet>
     <changeSet id="30-2-rename-person-identification-mssql" author="riste.tutureski" dbms="mssql">
-        <renameColumn tableName="acm_identification" oldColumnName="cm_person_identification_id" newColumnName="cm_identification_id"/>
+        <renameColumn tableName="acm_identification" oldColumnName="cm_person_identification_id"
+                      newColumnName="cm_identification_id"/>
         <renameColumn tableName="acm_identification" oldColumnName="cm_person_id_created" newColumnName="cm_created"/>
         <renameColumn tableName="acm_identification" oldColumnName="cm_person_id_creator" newColumnName="cm_creator"/>
         <renameColumn tableName="acm_identification" oldColumnName="cm_person_id_modified" newColumnName="cm_modified"/>
@@ -827,10 +828,25 @@
             </column>
         </addColumn>
     </changeSet>
-    
+
     <changeSet id="37-acm-person-add-middle-name" author="lazo.lazarev">
         <addColumn tableName="acm_person">
             <column name="cm_middle_name" type="VARCHAR(1024)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="38-add-container-id-in-acm-person-table" author="nebojsha.davidovikj">
+        <addColumn tableName="acm_person">
+            <column name="cm_container_id" type="${fkIdType}">
+                <constraints nullable="true" foreignKeyName="fk_container_id"
+                             references="acm_container(cm_container_id)"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="acm_person">
+            <column name="cm_default_picture_id" type="${fkIdType}">
+                <constraints nullable="true" foreignKeyName="fk_default_picture_id"
+                             references="acm_file(cm_file_id)"/>
+            </column>
         </addColumn>
     </changeSet>
 
