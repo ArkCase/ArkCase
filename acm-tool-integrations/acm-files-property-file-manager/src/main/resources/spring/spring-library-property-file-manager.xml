@@ -5,7 +5,7 @@
 
     <import resource="file:${user.home}/.arkcase/acm/encryption/spring-properties-encryption.xml"/>
 
-    <!-- property placeholder for all properties files -->
+    <!-- property placeholder for all properties files. When adding new sort it alphabetically -->
     <bean id="arkCasePropertyConfigurer"
           class="com.armedia.acm.crypto.properties.AcmEncryptablePropertySourcesPlaceholderConfigurer">
         <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
@@ -35,19 +35,20 @@
                 <value>file:${user.home}/.arkcase/acm/dueTasksNotifier.properties</value>
                 <value>file:${user.home}/.arkcase/acm/ecmFileService.properties</value>
                 <value>file:${user.home}/.arkcase/acm/lawEnforcementApp.properties</value>
+                <value>file:${user.home}/.arkcase/acm/login.properties</value>
                 <value>file:${user.home}/.arkcase/acm/msOutlookIntegration.properties</value>
                 <value>file:${user.home}/.arkcase/acm/msOutlookPlugin.properties</value>
                 <value>file:${user.home}/.arkcase/acm/notification.properties</value>
                 <value>file:${user.home}/.arkcase/acm/profilePlugin.properties</value>
+                <value>file:${user.home}/.arkcase/acm/personPlugin.properties</value>
+                <value>file:${user.home}/.arkcase/acm/spring/spring-config-kerberos.properties</value>
+                <value>file:${user.home}/.arkcase/acm/spring/spring-config-saml.properties</value>
+                <value>file:${user.home}/.arkcase/acm/spring-security/sessionControl.properties</value>
                 <value>file:${user.home}/.arkcase/acm/solr.properties</value>
                 <value>file:${user.home}/.arkcase/acm/sso/spring-config-armedia-sso.properties</value>
                 <value>file:${user.home}/.arkcase/acm/subscriptionPlugin.properties</value>
                 <value>file:${user.home}/.arkcase/acm/taskPlugin.properties</value>
-                <value>file:${user.home}/.arkcase/acm/login.properties</value>
                 <value>file:${user.home}/.arkcase/acm/websockets.properties</value>
-                <value>file:${user.home}/.arkcase/acm/spring/spring-config-kerberos.properties</value>
-                <value>file:${user.home}/.arkcase/acm/spring/spring-config-saml.properties</value>
-                <value>file:${user.home}/.arkcase/acm/spring-security/sessionControl.properties</value>
             </list>
         </property>
     </bean>

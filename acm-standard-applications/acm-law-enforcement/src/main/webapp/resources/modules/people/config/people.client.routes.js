@@ -42,5 +42,9 @@ angular.module('people').config(['$stateProvider',
                 templateUrl: 'modules/people/views/components/person-history.client.view.html'
             })
 
+            .state('people.pictures', {
+                url: '/:id/pictures',
+                templateUrl: 'modules/people/views/components/person-pictures.client.view.html'
+            })
     }
 ]);
