@@ -1251,6 +1251,18 @@
             </dependency>
             <dependency>
                 <groupId>org.mule.modules</groupId>
+                <artifactId>mule-module-http</artifactId>
+                <version>${mule.version}</version>
+                <scope>runtime</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.mail</groupId>
+                        <artifactId>mail</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.mule.modules</groupId>
                 <artifactId>mule-module-spring-config</artifactId>
                 <version>${mule.version}</version>
                 <scope>compile</scope>
@@ -1271,6 +1283,12 @@
                 <groupId>org.mule.transports</groupId>
                 <artifactId>mule-transport-email</artifactId>
                 <version>${mule.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.mail</groupId>
+                        <artifactId>mail</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.mule.transports</groupId>
@@ -1339,6 +1357,12 @@
                 <artifactId>mule-module-json</artifactId>
                 <version>${mule.version}</version>
                 <scope>runtime</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.mail</groupId>
+                        <artifactId>mail</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.mule.modules</groupId>
