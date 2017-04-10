@@ -41,15 +41,16 @@
                   value="#{ systemProperties ['user.home'] }/.arkcase/acm/resources/resources/"/>
         <property name="settingsFileLocation"
                   value="#{ systemProperties ['user.home'] }/.arkcase/acm/resources/settings/settings.json"/>
-        <property name="baseLanguage" value="en"/>
-        <property name="languages">
-            <list>
-                <value>en</value>
-            </list>
+        <property name="defaultLocale" value="en"/>
+        <property name="defaultLocales">
+            <map>
+                <entry key="en" value="English"></entry>
+            </map>
         </property>
     </bean>
 
-    <bean id="angularPropertiesManagementService" class="com.armedia.acm.plugins.admin.service.JsonPropertiesManagementService">
+    <bean id="angularPropertiesManagementService"
+          class="com.armedia.acm.plugins.admin.service.JsonPropertiesManagementService">
         <property name="propertiesFileLocation"
                   value="#{ systemProperties ['user.home'] }/.arkcase/acm/app-properties/properties.json"/>
     </bean>
@@ -81,6 +82,31 @@
         <property name="jsonPropertiesManagementService" ref="angularPropertiesManagementService"/>
         <property name="auditDao" ref="auditDao"/>
         <property name="notificationDao" ref="notificationDao"/>
+    </bean>
+
+    <bean id="cmisConfigurationService" class="com.armedia.acm.plugins.admin.service.CmisConfigurationService">
+        <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+        <property name="cmisConfigurationTemplatesLocation"
+                  value="${user.home}/.arkcase/acm/cmis/cmis-config-templates/"/>
+        <property name="cmisTemplateXmlFile" value="mule-config-cmis.xml.ftl"/>
+        <property name="cmisTemplatePropertiesFile" value="mule-config-cmis.properties.ftl"/>
+        <property name="cmisConfigurationLocation" value="${user.home}/.arkcase/acm/cmis/"/>
+        <property name="cmisFile" value="mule-config-%s-cmis.xml"/>
+        <property name="cmisPropertiesFile" value="mule-config-%s-cmis.properties"/>
+        <property name="cmisIdPattern" ref="cmisIdPattern"/>
+        <property name="cmisPropertiesPattern" ref="cmisPropertiesPattern"/>
+    </bean>
+
+    <bean id="cmisPropertiesPattern" class="java.util.regex.Pattern" factory-method="compile">
+        <constructor-arg value="^mule[-d]config[-d][a-zA-Z0-9]+[-d]cmis.properties$"/>
+    </bean>
+    <bean id="cmisIdPattern" class="java.util.regex.Pattern" factory-method="compile">
+        <constructor-arg value="^[a-zA-Z0-9.]+$"/>
+    </bean>
+
+    <bean id="cmisConfigurationPropertiesService"
+          class="com.armedia.acm.plugins.admin.service.CmisConfigurationPropertiesService">
+        <property name="cmisConfigurationService" ref="cmisConfigurationService"/>
     </bean>
 
 </beans>

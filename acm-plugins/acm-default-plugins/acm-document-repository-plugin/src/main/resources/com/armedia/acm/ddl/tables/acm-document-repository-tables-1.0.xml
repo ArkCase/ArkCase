@@ -1,0 +1,54 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="document-repository-01-acm-document-repository-table" author="ncuculova"
+               dbms="oracle,postgresql,mssql,mysql">
+        <createTable tableName="acm_document_repository">
+            <column name="cm_doc_repo_id" type="${idType}">
+                <constraints primaryKeyName="pk_acm_document_repository" primaryKey="true"/>
+            </column>
+            <column name="cm_doc_repo_name" type="varchar(1000)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uk_doc_repo_name"/>
+            </column>
+            <column name="cm_doc_repo_name_uc" type="varchar(1000)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uk_doc_repo_name_uc"/>
+            </column>
+            <column name="cm_doc_repo_details" type="CLOB"/>
+            <column name="cm_doc_repo_status" type="VARCHAR(4000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_doc_repo_restricted_flag" type="VARCHAR(32)" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_doc_repo_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_doc_repo_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_doc_repo_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_doc_repo_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_object_type" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_container_id" type="${fkIdType}"/>
+        </createTable>
+
+        <createTable tableName="acm_document_repository_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_document_repository_id">
+            <column name="cm_seq_num" value="100"/>
+            <column name="cm_seq_name" value="acm_document_repository"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

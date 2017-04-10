@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.io.Resource;
@@ -44,6 +45,9 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
 
     private List<CorrespondenceMergeField> mergeFields = new ArrayList<>();
     private List<CorrespondenceMergeFieldVersion> mergeFieldsVersions = new ArrayList<>();
+
+    private static final String DEFAULT_MERGE_FIELD_VERSION = "1.0";
+    private static final String DEFAULT_MERGE_FIELD_MODIFIER = "System User";
 
     /*
      * (non-Javadoc)
@@ -276,7 +280,8 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
                     CorrespondenceMergeField defaultMergeField = new CorrespondenceMergeField();
                     defaultMergeField.setFieldVersion("1.0");
                     defaultMergeField.setFieldId(fieldName);
-                    defaultMergeField.setFieldDescription(fieldName + " place holder");
+                    defaultMergeField.setFieldDescription(
+                            StringUtils.join(StringUtils.splitByCharacterTypeCamelCase(fieldName), ' ') + " Place Holder");
                     defaultMergeField.setFieldType(cq.getType().name());
                     defaultMergeField.setFieldValue(fieldName);
                     mergeFields.add(defaultMergeField);
@@ -294,9 +299,10 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
             {
                 CorrespondenceMergeFieldVersion defaultMergeFieldVersion = new CorrespondenceMergeFieldVersion();
                 defaultMergeFieldVersion.setMergingActiveVersion(true);
-                defaultMergeFieldVersion.setMergingVersion("1.0");
+                defaultMergeFieldVersion.setMergingVersion(DEFAULT_MERGE_FIELD_VERSION);
                 defaultMergeFieldVersion.setMergingType(cq.getType().name());
                 defaultMergeFieldVersion.setModified(new Date());
+                defaultMergeFieldVersion.setModifier(DEFAULT_MERGE_FIELD_MODIFIER);
                 mergeFieldsVersions.add(defaultMergeFieldVersion);
             }
         });

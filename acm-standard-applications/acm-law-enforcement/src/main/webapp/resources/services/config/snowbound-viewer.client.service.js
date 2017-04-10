@@ -9,8 +9,8 @@
  *
  * This service contains functionality for Snowbound Viewer management.
  */
-angular.module('services').factory('SnowboundService', [
-    function () {
+angular.module('services').factory('SnowboundService', ['UtilService',
+    function (Util) {
         return {
 
             /**
@@ -53,14 +53,14 @@ angular.module('services').factory('SnowboundService', [
 
                 // Obtains the base portion of the viewer url (host/port, etc)
                 var viewerBaseUrl = this.extractViewerBaseUrl(ecmFileProperties);
-
+                var encryptionPassphrase = ecmFileProperties['ecm.viewer.snowbound.encryptionKey'];
                 // Forces the viewer iframe to be reloaded with the latest version of the document
                 var randomUrlArgToCauseIframeRefresh = (new Date()).getTime();
-
-                return viewerBaseUrl +
-                    "?documentId=ecmFileId=" + file.id + "&acm_ticket=" + acmTicket + "&userid=" + userId +
-                    "&refreshCacheTimestamp=" + randomUrlArgToCauseIframeRefresh + "&documentName=" + file.name +
-                    "&parentObjectId=" + file.containerId + "&parentObjectType=" + file.containerType + "&selectedIds=" + file.selectedIds;
+                return viewerBaseUrl + "?documentId=" + Util.encryptString(
+                        "ecmFileId=" + file.id + "&acm_ticket=" + acmTicket + "&userid=" + userId +
+                        "&documentName=" + file.name + "&parentObjectId=" + file.containerId +
+                        "&parentObjectType=" + file.containerType + "&selectedIds=" + file.selectedIds,
+                        encryptionPassphrase) + "&refreshCacheTimestamp=" + randomUrlArgToCauseIframeRefresh;
             }
         }
     }
