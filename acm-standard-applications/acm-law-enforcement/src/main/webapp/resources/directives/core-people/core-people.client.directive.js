@@ -521,6 +521,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                         scope.personAssociation.person.givenName = data.person.givenName;
                         scope.personAssociation.person.familyName = data.person.familyName;
                         scope.personAssociation.personType = data.person.personType;
+                        scope.personAssociation.parentTitle = data.person.parentTitle;
                         scope.objectInfo.modifier = scope.userId;
                         if (data.isEdit) {
                             var index = _.indexOf(_.pluck(scope.objectInfo.personAssociations, 'id'), scope.personAssociation.id);
@@ -531,6 +532,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                             ObjectPersonService.addPersonAssociation(scope.personAssociation).then(
                                 function (personAssociation) {
                                     refresh();
+                                    console.log(personAssociation);
                                     scope.objectInfo.personAssociations.push(personAssociation);
                                     scope.retrieveGridData();
                                 }
