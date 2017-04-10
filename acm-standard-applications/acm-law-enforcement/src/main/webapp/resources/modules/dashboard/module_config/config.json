@@ -214,6 +214,10 @@
     {
       "name": "TASK",
       "configName": "tasks"
+    },
+    {
+      "name": "DOC_REPO",
+      "configName": "document-repository"
     }
   ],
   "objectWidgets": [

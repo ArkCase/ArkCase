@@ -37,7 +37,7 @@ public class GetDashboardConfigAPIController
     private DashboardService dashboardService;
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(value = "/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public DashboardDto getDashboardConfig(
             @RequestParam(value = "moduleName", required = false, defaultValue = "DASHBOARD") String moduleName,
