@@ -1,0 +1,181 @@
+{
+  "document-repository": {
+    "title": "en-in_Documents"
+  },
+  "document-repository.menus": {
+    "leftnav.item": "en-in_Documents",
+    "topbar.item": "en-in_Document Repository"
+  },
+  "document-repository.error": {
+    "invalidData": ""
+  },
+  "document-repository.comp.info": {
+    "docRepoId": "en-in_Repository ID:",
+    "docRepoName": "en-in_Document Repository Name:",
+    "modified.label": "en-in_Modified Date",
+    "assignee.label": "en-in_Assigned To",
+    "owningGroup.label": "en-in_Owning Group",
+    "description.label": "en-in_Description"
+  },
+  "document-repository.comp.actions": {
+    "restrict": "en-in_Restrict?",
+    "subscribe.button": "en-in_Subscribe",
+    "unsubscribe.button": "en-in_Unsubscribe"
+  },
+  "document-repository.comp.details": {
+    "title": "en-in_Details",
+    "informSaved": "en-in_Document Repository details saved",
+    "table.columns": {
+      "title": "en-in_Details",
+      "modified": "en-in_Date Last Modified",
+      "modifier": "en-in_User Last Modified"
+    }
+  },
+  "document-repository.comp.documents": {
+    "title": "en-in_Documents"
+  },
+  "document-repository.comp.participants": {
+    "title": "en-in_Participants",
+    "table.columns": {
+      "type": "en-in_Type",
+      "name": "en-in_Name"
+    },
+    "dialogUserPicker": {
+      "header": "en-in_Choose User",
+      "table.columns": {
+        "name": "en-in_Name",
+        "type": "en-in_Type",
+        "title": "en-in_Title",
+        "id": "en-in_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "en-in_Choose Group",
+      "table.columns": {
+        "name": "en-in_Name"
+      }
+    }
+  },
+  "document-repository.comp.notes": {
+    "title": "en-in_Notes",
+    "table.columns": {
+      "note": "en-in_Note",
+      "created": "en-in_Created",
+      "creator": "en-in_Author"
+    }
+  },
+  "document-repository.comp.references": {
+    "title": "en-in_References",
+    "table.columns": {
+      "targetName": "en-in_Number",
+      "parentName": "en-in_Parent",
+      "targetTitle": "en-in_Title",
+      "modified": "en-in_Modified",
+      "targetType": "en-in_Reference Type",
+      "status": "en-in_Status"
+    }
+  },
+  "document-repository.comp.history": {
+    "title": "en-in_History",
+    "table.columns": {
+      "eventType": "en-in_Event Name",
+      "eventDate": "en-in_Date",
+      "userId": "en-in_User"
+    }
+  },
+  "document-repository.comp.tags": {
+    "title": "en-in_Tags",
+    "table.columns": {
+      "tag": "en-in_Tag",
+      "created": "en-in_Created",
+      "createdBy": "en-in_Created By"
+    },
+    "modal": {
+      "title": "en-in_Tag",
+      "search": "en-in_Search for Tag",
+      "buttons": {
+        "cancel": "en-in_Cancel",
+        "ok": "en-in_Add Tag"
+      }
+    },
+    "message": {
+      "tagExists": "en-in_Tag with that name or description or text already exists",
+      "tagAssociated": "en-in_already associated",
+      "delete": {
+        "success": "en-in_Tag deleted successfully",
+        "error": "en-in_Error deleting tag"
+      }
+    }
+  },
+  "document-repository.comp.addreference": {
+    "title": "en-in_Add Reference",
+    "cancelButton": "en-in_Cancel",
+    "confirmButton": "en-in_Add",
+    "search": {
+      "placeholder": "en-in_Search for case, complaint, file, task",
+      "btn": "en-in_Search"
+    },
+    "grid": {
+      "columns": {
+        "id": "en-in_Id",
+        "name": "en-in_Name",
+        "type": "en-in_Type",
+        "title": "en-in_Title",
+        "parent": "en-in_Parent",
+        "assignee": "en-in_Assignee",
+        "modified": "en-in_Modified"
+      }
+    }
+  },
+  "document-repository.comp.assigneePickerModal": {
+    "title": "en-in_Change Assignee",
+    "assigneeNamelabel": "en-in_Assignee Name",
+    "btnCancelText": "en-in_Cancel",
+    "btnSaveText": "en-in_Save",
+    "searchAssigneeHeader": "en-in_Search Assignee"
+  },
+  "document-repository.comp.groupPickerModal": {
+    "title": "en-in_Change Group",
+    "groupNamelabel": "en-in_Group Name",
+    "btnCancelText": "en-in_Cancel",
+    "btnSaveText": "en-in_Save",
+    "searchGroupHeader": "en-in_Search Group"
+  },
+  "document-repository.userOrGroupSearch": {
+    "id": "en-in_userSearch",
+    "title": "en-in_User/Group Search",
+    "search": {
+      "btn": "en-in_Search",
+      "placeholder": "en-in_Search for the user or group."
+    },
+    "cancelButton": "en-in_Cancel",
+    "confirmButton": "en-in_Confirm",
+    "enabled": true,
+    "userOrGroupFacetFilter": "\"object_type_s\":(GROUP OR USER)",
+    "assigneeGridColumns": {
+      "name": "en-in_Name",
+      "type": "en-in_Type",
+      "title": "en-in_Title",
+      "username": "en-in_Username"
+    }
+  },
+  "document-repository.newRepository": {
+    "title": "en-in_Create Repository",
+    "assigneeLabel": "en-in_Assignee",
+    "owningGroupLabel": "en-in_Owning Group",
+    "assignee.placeholder": "en-in_Search Assignee",
+    "saveButton": "en-in_Create Repository",
+    "cancelButton": "en-in_Cancel",
+    "nameLabel": "en-in_Name",
+    "name.placeholder": "en-in_Enter Name",
+    "descriptionLabel": "en-in_Description",
+    "description.placeholder": "en-in_Enter Description",
+    "searchUser": "en-in_Search User"
+  },
+  "document-repository.dialogUserPicker":{
+    "table.columns.name": "en-in_Name",
+    "table.columns.type": "en-in_Type",
+    "table.columns.title": "en-in_Title",
+    "table.columns.id": "en-in_Username"
+  }
+}
