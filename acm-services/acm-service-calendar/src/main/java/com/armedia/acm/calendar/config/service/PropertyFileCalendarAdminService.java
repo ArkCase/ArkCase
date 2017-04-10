@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -36,7 +37,8 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
      * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Mar 22, 2017
      *
      */
-    private class PropertyFileCalendarConfigurationExceptionMapper implements CalendarConfigurationExceptionMapper
+    private class PropertyFileCalendarConfigurationExceptionMapper
+            implements CalendarConfigurationExceptionMapper<CalendarConfigurationException>
     {
 
         /*
@@ -89,6 +91,17 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
             errorDetails.put("validationFailures", validationFailures);
 
             return errorDetails;
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see com.armedia.acm.calendar.config.service.CalendarConfigurationExceptionMapper#getStatusCode()
+         */
+        @Override
+        public HttpStatus getStatusCode()
+        {
+            return HttpStatus.BAD_REQUEST;
         }
 
     }
@@ -254,7 +267,7 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
      * @see com.armedia.acm.calendar.config.service.CalendarAdminService#getExceptionMapper()
      */
     @Override
-    public CalendarConfigurationExceptionMapper getExceptionMapper()
+    public CalendarConfigurationExceptionMapper<CalendarConfigurationException> getExceptionMapper(CalendarConfigurationException cce)
     {
         return new PropertyFileCalendarConfigurationExceptionMapper();
     }
