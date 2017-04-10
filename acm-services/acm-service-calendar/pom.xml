@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.armedia.acm</groupId>
         <artifactId>acm-services</artifactId>
-        <version>3.1.10-SNAPSHOT</version>
+        <version>3.1.11-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     
@@ -59,6 +59,12 @@
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
             <scope>provided</scope>
         </dependency>
         

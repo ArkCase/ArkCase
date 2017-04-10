@@ -17,9 +17,7 @@ import org.junit.Test;
 import java.time.DayOfWeek;
 import java.time.Month;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.List;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Apr 3, 2017
@@ -35,11 +33,11 @@ public class AcmCalendarEventTest
         event.setStart(ZonedDateTime.now());
         event.setDetails("details");
         event.setRemindIn(30);
-        List<String> invitees = new ArrayList<>();
-        invitees.add("aron@armedia.com");
-        invitees.add("bob@armedia.com");
-        invitees.add("charlie@armedia.com");
-        event.setInvitees(invitees);
+        // List<String> invitees = new ArrayList<>();
+        // invitees.add("aron@armedia.com");
+        // invitees.add("bob@armedia.com");
+        // invitees.add("charlie@armedia.com");
+        // event.setInvitees(invitees);
     }
 
     private void printJSON(AcmCalendarEvent event, String test) throws Exception
