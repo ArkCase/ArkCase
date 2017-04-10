@@ -9,6 +9,7 @@ import com.armedia.acm.services.email.service.SMTPConfiguration;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -30,6 +31,13 @@ public class AcmMailConfigurationServiceAPIController
 {
 
     private AcmMailService mailService;
+
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public SMTPConfiguration getSMTPConfiguration(HttpSession session, Authentication auth)
+    {
+        AcmUser user = (AcmUser) session.getAttribute("acm_user");
+        return mailService.getSMTPConfiguration(user, auth);
+    }
 
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity<?> updateSMTPConfiguration(HttpSession session, Authentication auth, @RequestBody SMTPConfiguration configuration)

@@ -29,6 +29,13 @@ public interface AcmMailService
     /**
      * @param user
      * @param auth
+     * @return
+     */
+    SMTPConfiguration getSMTPConfiguration(AcmUser user, Authentication auth);
+
+    /**
+     * @param user
+     * @param auth
      * @param configuration
      */
     void updateSMTPConfiguration(AcmUser user, Authentication auth, SMTPConfiguration configuration)
