@@ -11,6 +11,6 @@ public interface CalendarAdminService
 
     void writeConfiguration(CalendarConfigurationsByObjectType configuration) throws CalendarConfigurationException;
 
-    CalendarConfigurationExceptionMapper getExceptionMapper();
+    <CCE extends CalendarConfigurationException> CalendarConfigurationExceptionMapper<CCE> getExceptionMapper(CCE e);
 
 }

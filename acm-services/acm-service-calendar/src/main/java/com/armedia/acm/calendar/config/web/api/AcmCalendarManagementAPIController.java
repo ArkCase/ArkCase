@@ -2,8 +2,8 @@ package com.armedia.acm.calendar.config.web.api;
 
 import com.armedia.acm.calendar.config.service.CalendarAdminService;
 import com.armedia.acm.calendar.config.service.CalendarConfigurationException;
+import com.armedia.acm.calendar.config.service.CalendarConfigurationExceptionMapper;
 import com.armedia.acm.calendar.config.service.CalendarConfigurationsByObjectType;
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +23,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
  *
  */
 @Controller
-@RequestMapping({ "/api/v1/service/calendar/configuration", "/api/latest/service/calendar/configuration" })
-public class CalendarManagementAPIController
+@RequestMapping({ "/api/v1/service/calendar/configure", "/api/latest/service/calendar/configure" })
+public class AcmCalendarManagementAPIController
 {
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -32,7 +32,7 @@ public class CalendarManagementAPIController
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public CalendarConfigurationsByObjectType getConfiguration() throws AcmEncryptionException, CalendarConfigurationException
+    public CalendarConfigurationsByObjectType getConfiguration() throws CalendarConfigurationException
     {
         return calendarService.readConfiguration(false);
     }
@@ -55,8 +55,9 @@ public class CalendarManagementAPIController
     @ResponseBody
     public ResponseEntity<?> handleConfigurationException(CalendarConfigurationException ce)
     {
-        Object errorDetails = calendarService.getExceptionMapper().mapException(ce);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDetails);
+        CalendarConfigurationExceptionMapper<CalendarConfigurationException> exceptionMapper = calendarService.getExceptionMapper(ce);
+        Object errorDetails = exceptionMapper.mapException(ce);
+        return ResponseEntity.status(exceptionMapper.getStatusCode()).body(errorDetails);
     }
 
     /**
