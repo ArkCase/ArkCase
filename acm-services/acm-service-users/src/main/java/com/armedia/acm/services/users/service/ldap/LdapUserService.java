@@ -40,7 +40,7 @@ public class LdapUserService
 
     private LdapEntryTransformer userTransformer;
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public AcmUser createLdapUser(AcmUser user, List<String> groupNames, String password, String directoryName) throws AcmUserActionFailedException, AcmLdapActionFailedException
     {
         AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).
@@ -165,7 +165,7 @@ public class LdapUserService
         }
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public AcmUser editLdapUser(AcmUser acmUser, String userId, String directory) throws AcmLdapActionFailedException
     {
         log.debug("Saving edited User:{} in database", acmUser.getUserId());
@@ -199,7 +199,7 @@ public class LdapUserService
         return acmUser;
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public List<AcmUser> addExistingLdapUsersToGroup(List<AcmUser> acmUsers, String directoryName, String groupName)
             throws AcmUserActionFailedException, AcmLdapActionFailedException
     {
