@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-plugins</artifactId>
         <groupId>com.armedia.acm</groupId>
-        <version>3.1.10-SNAPSHOT</version>
+        <version>3.1.11-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -27,6 +27,7 @@
         <module>acm-object-lock-plugin</module>
         <module>acm-business-process-plugin</module>
         <module>acm-category-plugin</module>
-  </modules>
+        <module>acm-document-repository-plugin</module>
+    </modules>
 
 </project>

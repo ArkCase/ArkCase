@@ -60,11 +60,11 @@
         <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    <span translate></span>{{localeCurrent}}<span class="caret"></span>
+                    <span translate></span>{{localeSelected.desc}}<span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li ng-repeat="locale in localeDropdownOptions">
-                        <a href="#" ng-click="changeLocale($event, locale)">{{locale}}</a>
+                    <li ng-repeat="x in localeDropdownOptions">
+                        <a href="#" ng-click="changeLocale($event, x)">{{x.desc}}</a>
                     </li>
                     <li class="divider"></li>
                     <li>

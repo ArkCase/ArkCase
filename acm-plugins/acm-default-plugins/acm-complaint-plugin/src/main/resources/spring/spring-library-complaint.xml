@@ -174,7 +174,8 @@
 
     <bean id="complaintEventPublisher" class="com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher"/>
 
-    <bean id="saveComplaintBusinessRule" class="com.armedia.acm.plugins.complaint.service.SaveComplaintBusinessRule">
+    <bean id="saveComplaintBusinessRule" class="com.armedia.acm.plugins.complaint.service.SaveComplaintBusinessRule"
+          parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-complaint-number-rules.xlsx"/>
     </bean>
 
@@ -239,9 +240,5 @@
         <property name="OXMFilePath" value="${user.home}/.arkcase/acm${capture.oxm.file.path}"/>
     </bean>
 
-    <bean id="participantsBusinessRule"
-          class="com.armedia.acm.services.participants.service.ParticipantsBusinessRule">
-        <property name="ruleSpreadsheetFilename" value="drools-participant-assignment-rules.xlsx"/>
-    </bean>
 
 </beans>

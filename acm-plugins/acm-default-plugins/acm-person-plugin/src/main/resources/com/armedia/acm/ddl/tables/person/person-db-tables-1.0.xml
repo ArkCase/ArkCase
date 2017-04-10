@@ -834,4 +834,20 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="38-acm-person-add-parent-title" author="john.faniyi">
+        <addColumn tableName="acm_person">
+            <column name="cm_person_parent_title" type="VARCHAR(1024)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="39-acm-person-assoc-add-parent-title" author="john.faniyi">
+        <addColumn tableName="acm_person_assoc">
+            <column name="cm_person_assoc_parent_title" type="VARCHAR(1024)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="40-acm-person-add-parent-title" author="john.faniyi">
+        <dropColumn tableName="acm_person" columnName="cm_person_parent_title"/>
+    </changeSet>
+
 </databaseChangeLog>
