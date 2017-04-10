@@ -165,6 +165,7 @@
     "owningGroupLabel": "Owning Group",
     "assignee.placeholder": "Search Assignee",
     "saveButton": "Create Repository",
+    "cancelButton": "Cancel",
     "nameLabel": "Name",
     "name.placeholder": "Enter Name",
     "descriptionLabel": "Description",

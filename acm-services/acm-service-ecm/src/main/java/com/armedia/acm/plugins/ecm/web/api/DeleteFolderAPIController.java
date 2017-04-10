@@ -49,7 +49,7 @@ public class DeleteFolderAPIController
 
         try
         {
-            getFolderService().deleteFolderTree(folderId);
+            getFolderService().deleteFolderIfEmpty(folderId);
             log.info("Folder with id: [{}] successfully deleted", folderId);
             getFolderEventPublisher().publishFolderDeletedEvent(source, authentication, ipAddress, false);
             return prepareResult(AcmFolderConstants.SUCCESS_FOLDER_DELETE_MSG, folderId);
