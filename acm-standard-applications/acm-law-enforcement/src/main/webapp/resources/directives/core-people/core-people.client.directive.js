@@ -532,7 +532,6 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                             ObjectPersonService.addPersonAssociation(scope.personAssociation).then(
                                 function (personAssociation) {
                                     refresh();
-                                    console.log(personAssociation);
                                     scope.objectInfo.personAssociations.push(personAssociation);
                                     scope.retrieveGridData();
                                 }
