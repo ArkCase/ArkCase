@@ -13,8 +13,9 @@ angular
             '$translateProvider',
             '$translatePartialLoaderProvider',
             '$httpProvider',
+            'AnalyticsProvider',
             function ($locationProvider, $translateProvider,
-                      $translatePartialLoaderProvider, $httpProvider) {
+                      $translatePartialLoaderProvider, $httpProvider, AnalyticsProvider) {
                 $locationProvider.hashPrefix('!');
 
                 $httpProvider.interceptors.push(httpInterceptor);
@@ -46,9 +47,25 @@ angular
                 });
                 $translateProvider.determinePreferredLanguage(function () {
                     var preferredLocale = "en";
+
+                    //handle incompatible old format; this code will be remove soon after user/developers use this version
                     if (localStorage.AcmLocale) {
                         var lastLocale = angular.fromJson(localStorage.AcmLocale);
-                        if (lastLocale.selected) {
+                        if (!lastLocale) {
+                            localStorage.AcmLocale = null;
+                        } else if (!lastLocale.locales) {
+                            localStorage.AcmLocale = null;
+                        } else if (0 >= lastLocale.locales.length) {
+                            localStorage.AcmLocale = null;
+                        } else if (!lastLocale.locales[0].locale) {
+                            localStorage.AcmLocale = null;
+                        }
+                    }
+                    //TODO: remove above block
+
+                    if (localStorage.AcmLocale && "null" != localStorage.AcmLocale) {
+                        var lastLocale = angular.fromJson(localStorage.AcmLocale);
+                        if (lastLocale && lastLocale.selected) {
                             preferredLocale = lastLocale.selected;
                         }
                     }
@@ -135,6 +152,17 @@ angular
                                 });
                         return isSuppressed;
                     }
+                }
+
+                if (typeof GOOGLE_ANALYTICS_ENABLED === 'undefined') { // sanity check
+                    // this means that "api/latest/plugin/admin/googleAnalytics/config.js" couldn't
+                    // be generated (very unlikely, but possible) and we are disabling Google Analytics
+                    AnalyticsProvider.disableAnalytics(true);
+                } else {
+                    AnalyticsProvider.disableAnalytics(!GOOGLE_ANALYTICS_ENABLED); // configuration toggle
+                    AnalyticsProvider.setAccount(GOOGLE_ANALYTICS_TRACKING_ID); // configuration property
+                    AnalyticsProvider.enterDebugMode(GOOGLE_ANALYTICS_DEBUG); // configuration debug flag
+                    AnalyticsProvider.setPageEvent('$stateChangeSuccess');
                 }
             }
         ]).run(['$translate', '$translatePartialLoader',

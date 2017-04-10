@@ -37,6 +37,19 @@ public interface EcmFileService
             String parentObjectType,
             Long parentObjectId) throws AcmCreateObjectFailedException, AcmUserActionFailedException;
 
+    EcmFile upload(
+            String originalFileName,
+            String fileType,
+            String fileCategory,
+            InputStream fileContents,
+            String fileContentType,
+            String fileName,
+            Authentication authentication,
+            String targetCmisFolderId,
+            String parentObjectType,
+            Long parentObjectId,
+            String cmisRepositoryId) throws AcmCreateObjectFailedException, AcmUserActionFailedException;
+
     /** This method is meant to be called via Frevvo form submissions and any other file upload method aside from the
      * webapp file uploader.
      *
@@ -103,6 +116,7 @@ public interface EcmFileService
 
     InputStream downloadAsInputStream(Long id) throws MuleException, AcmUserActionFailedException;
 
+    AcmContainer createContainerFolder(String objectType, Long objectId, String cmisRepositoryId) throws AcmCreateObjectFailedException;
 
     /**
      * Create a folder in the CMIS repository
@@ -113,10 +127,25 @@ public interface EcmFileService
      */
     String createFolder(String folderPath) throws AcmCreateObjectFailedException;
 
+    /**
+     * Create a folder in the CMIS repository
+     *
+     * @param folderPath       The path to be created.  If it already exists, the ID of the existing folder is returned.
+     * @param cmisRepositoryId CMIS repository identifier
+     * @return CMIS Object ID of the new folder (if it was created), or the existing folder (if the folderPath already
+     * existed).  Either way, the object ID represents the folder at the requested folderPath.
+     * @throws AcmCreateObjectFailedException If the folder could not be created.
+     */
+    String createFolder(String folderPath, String cmisRepositoryId) throws AcmCreateObjectFailedException;
+
 
 
     @Transactional
     AcmContainer getOrCreateContainer(String objectType, Long objectId) throws
+            AcmCreateObjectFailedException, AcmUserActionFailedException;
+
+    @Transactional
+    AcmContainer getOrCreateContainer(String objectType, Long objectId, String cmisRepositoryId) throws
             AcmCreateObjectFailedException, AcmUserActionFailedException;
 
     AcmCmisObjectList allFilesForContainer(Authentication auth,
@@ -154,6 +183,8 @@ public interface EcmFileService
     EcmFile moveFile(Long fileId, Long targetObjectId, String targetObjectType, AcmFolder folder) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException;
 
     void deleteFile(Long fileId) throws AcmUserActionFailedException, AcmObjectNotFoundException;
+
+    void deleteFile(Long fileId, Boolean allVersions) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
     void deleteFile(Long fileId, Long parentId, String parentType) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 

@@ -21,6 +21,8 @@ import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
 
 import javax.activation.DataHandler;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -135,22 +137,35 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
             {
                 messageProps.put("to", emailAddress);
                 Map<String, DataHandler> attachments = new HashMap<>();
-                for (Long attachmentId : in.getAttachmentIds())
+                if (in.getAttachmentIds() != null && !in.getAttachmentIds().isEmpty())
                 {
-                    InputStream contents = getEcmFileService().downloadAsInputStream(attachmentId);
-                    EcmFile ecmFile = getEcmFileService().findById(attachmentId);
-                    String fileName = ecmFile.getFileName();
-                    if (ecmFile.getFileActiveVersionNameExtension() != null)
+                    for (Long attachmentId : in.getAttachmentIds())
                     {
-                        fileName = fileName + ecmFile.getFileActiveVersionNameExtension();
-                    }
-                    attachments.put(fileName, new DataHandler(new InputStreamDataSource(contents, fileName)));
+                        InputStream contents = getEcmFileService().downloadAsInputStream(attachmentId);
+                        EcmFile ecmFile = getEcmFileService().findById(attachmentId);
+                        String fileName = ecmFile.getFileName();
+                        if (ecmFile.getFileActiveVersionNameExtension() != null)
+                        {
+                            fileName = fileName + ecmFile.getFileActiveVersionNameExtension();
+                        }
+                        attachments.put(fileName, new DataHandler(new InputStreamDataSource(contents, fileName)));
 
-                    if (firstIteration)
+                        if (firstIteration)
+                        {
+                            sentEvents.add(new SmtpEventSentEvent(ecmFile, user.getUserId(), ecmFile.getParentObjectId(),
+                                    ecmFile.getParentObjectType()));
+                            sentEvents.add(new SmtpEventSentEvent(ecmFile, user.getUserId(), ecmFile.getId(), ecmFile.getObjectType()));
+                        }
+                    }
+                }
+                // Adding non ecmFile(s) as attachments
+                if (in.getFilePaths() != null && !in.getFilePaths().isEmpty())
+                {
+                    for (String filePath : in.getFilePaths())
                     {
-                        sentEvents.add(new SmtpEventSentEvent(ecmFile, user.getUserId(), ecmFile.getParentObjectId(),
-                                ecmFile.getParentObjectType()));
-                        sentEvents.add(new SmtpEventSentEvent(ecmFile, user.getUserId(), ecmFile.getId(), ecmFile.getObjectType()));
+                        File file = new File(filePath);
+                        FileInputStream contents = new FileInputStream(file);
+                        attachments.put(file.getName(), new DataHandler(new InputStreamDataSource(contents, file.getName())));
                     }
                 }
                 MuleMessage received = getMuleContextManager().send(flow, in.getMessageBody(), attachments, messageProps);
@@ -220,7 +235,7 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
         return emailResultList;
     }
 
-    private Map<String, Object> loadSmtpAndOriginatingProperties() throws AcmEncryptionException
+    protected Map<String, Object> loadSmtpAndOriginatingProperties() throws AcmEncryptionException
     {
         Map<String, Object> messageProps = new HashMap<>();
 
@@ -238,7 +253,7 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
         return messageProps;
     }
 
-    private String makeNote(String emailAddress, EmailWithEmbeddedLinksDTO emailWithEmbeddedLinksDTO, Authentication authentication)
+    protected String makeNote(String emailAddress, EmailWithEmbeddedLinksDTO emailWithEmbeddedLinksDTO, Authentication authentication) throws AcmEncryptionException
     {
         String body = "";
         for (Long fileId : emailWithEmbeddedLinksDTO.getFileIds())
@@ -249,14 +264,14 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
         return emailWithEmbeddedLinksDTO.buildMessageBodyFromTemplate(body);
     }
 
-    private String generateAndSaveAuthenticationToken(Long fileId, String emailAddress, Authentication authentication)
+    protected String generateAndSaveAuthenticationToken(Long fileId, String emailAddress, Authentication authentication)
     {
         String token = getAuthenticationTokenService().getUncachedTokenForAuthentication(authentication);
         saveAuthenticationToken(emailAddress, fileId, token);
         return token;
     }
 
-    private void saveAuthenticationToken(String email, Long fileId, String token)
+    protected void saveAuthenticationToken(String email, Long fileId, String token)
     {
         AuthenticationToken authenticationToken = new AuthenticationToken();
         authenticationToken.setKey(token);

@@ -269,14 +269,14 @@ public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants{
         XSSFCellStyle cellStyle = cell.getCellStyle();
         XSSFFont cellFont = cellStyle.getFont();
 
-        String color = "#" + Hex.encodeHexString(cellFont.getXSSFColor().getRgb());
+        String color = "#" + Hex.encodeHexString(cellFont.getXSSFColor().getRGB());
         Boolean isLocked = false;
         String bgColor = "";
         if (cellStyle != null) {
             if (cellStyle.getFillForegroundColorColor() != null) {
-                bgColor = "#" + Hex.encodeHexString(((XSSFColor) cellStyle.getFillForegroundColorColor()).getRgb());
+                bgColor = "#" + Hex.encodeHexString(((XSSFColor) cellStyle.getFillForegroundColorColor()).getRGB());
             } else if (cellStyle.getFillBackgroundColorColor() != null) {
-                bgColor = "#" + Hex.encodeHexString(((XSSFColor) cellStyle.getFillBackgroundColorColor()).getRgb());
+                bgColor = "#" + Hex.encodeHexString(((XSSFColor) cellStyle.getFillBackgroundColorColor()).getRGB());
             } else {
                 bgColor = DEFAULT_BG_COLOR;
             }

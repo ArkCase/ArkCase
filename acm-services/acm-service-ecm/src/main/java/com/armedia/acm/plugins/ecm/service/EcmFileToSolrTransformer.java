@@ -141,6 +141,8 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
 
         solr.setEcmFileId(in.getVersionSeriesId());
 
+        solr.setType_lcs(in.getFileType());
+
         solr.setPublic_doc_b(true);
         solr.setProtected_object_b(false);
 
