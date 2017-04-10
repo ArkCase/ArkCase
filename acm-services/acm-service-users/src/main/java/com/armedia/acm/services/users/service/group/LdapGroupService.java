@@ -36,7 +36,7 @@ public class LdapGroupService
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public AcmGroup createLdapGroup(AcmGroup group, String directoryName) throws AcmLdapActionFailedException
     {
         AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).
@@ -68,7 +68,7 @@ public class LdapGroupService
         return acmGroup;
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public AcmGroup createLdapSubgroup(AcmGroup group, String parentGroupName, String directoryName)
             throws AcmUserActionFailedException, AcmLdapActionFailedException
     {
