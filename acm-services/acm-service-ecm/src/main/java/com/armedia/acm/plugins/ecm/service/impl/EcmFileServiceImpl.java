@@ -900,6 +900,26 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    public EcmFile updateFile(EcmFile file, Authentication authentication) throws AcmUserActionFailedException {
+
+        EcmFileUpdatedEvent event;
+        try {
+            file = getEcmFileDao().save(file);
+            event = new EcmFileUpdatedEvent(file, authentication);
+            event.setSucceeded(true);
+            applicationEventPublisher.publishEvent(event);
+            log.info("Update file successful", file.getId());
+            return file;
+        } catch (PersistenceException e) {
+            event = new EcmFileUpdatedEvent(file, authentication);
+            event.setSucceeded(false);
+            applicationEventPublisher.publishEvent(event);
+            log.error("Could not update file " + e.getMessage(), e);
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_UPDATE_FILE, EcmFileConstants.OBJECT_FILE_TYPE, file.getId(),"Could not update file", e);
+        }
+    }
+
+    @Override
     public int getTotalPageCount(String parentObjectType, Long parentObjectId, List<String> totalPageCountFileTypes,
                                  List<String> totalPageCountMimeTypes, Authentication auth)
     {
