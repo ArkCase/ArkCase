@@ -14,7 +14,8 @@
     "docRepoName": "Document Repository Name:",
     "modified.label": "Modified Date",
     "assignee.label": "Assigned To",
-    "owningGroup.label": "Owning Group"
+    "owningGroup.label": "Owning Group",
+    "description.label": "Description"
   },
   "document-repository.comp.actions": {
     "restrict": "Restrict?",
@@ -163,7 +164,8 @@
     "assigneeLabel": "Assignee",
     "owningGroupLabel": "Owning Group",
     "assignee.placeholder": "Search Assignee",
-    "saveButton": "Save",
+    "saveButton": "Create Repository",
+    "cancelButton": "Cancel",
     "nameLabel": "Name",
     "name.placeholder": "Enter Name",
     "descriptionLabel": "Description",
