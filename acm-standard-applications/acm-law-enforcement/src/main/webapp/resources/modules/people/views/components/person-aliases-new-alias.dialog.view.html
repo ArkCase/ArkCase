@@ -1,0 +1,27 @@
+<div class="modal-header">
+    <h3><span translate>people.comp.aliases.dialog.title</span></h3>
+</div>
+<div class="modal-body">
+    <label for="aliasValue"/>
+    <input id="aliasValue" ng-model="alias.aliasValue">
+    <label for="aliasType"/>
+    <select id="aliasType" ng-model="alias.aliasType">
+        <option ng-repeat="option in aliasTypes" value="{{option.type}}">{{option.name}}</option>
+    </select>
+    <div>
+        <p translate>people.comp.pictures.dialog.setPrimary</p>
+        <input type="radio" ng-model="isDefault" ng-value="true">
+        <translate>people.comp.pictures.dialog.yes</translate>
+        <input type="radio" ng-model="isDefault" ng-value="false">
+        <translate>people.comp.pictures.dialog.no</translate>
+    </div>
+    <label for="aliasDescription"/>
+    <textarea id="aliasDescription" ng-model="alias.description"></textarea>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="onClickCancel()" translate>
+        people.comp.aliases.dialog.cancel
+    </button>
+    <button type="button" class="btn btn-primary" ng-click="onClickOk()" )>people.comp.aliases.dialog.ok</button>
+</div>
+
