@@ -235,7 +235,7 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
         return emailResultList;
     }
 
-    private Map<String, Object> loadSmtpAndOriginatingProperties() throws AcmEncryptionException
+    protected Map<String, Object> loadSmtpAndOriginatingProperties() throws AcmEncryptionException
     {
         Map<String, Object> messageProps = new HashMap<>();
 
@@ -253,7 +253,7 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
         return messageProps;
     }
 
-    private String makeNote(String emailAddress, EmailWithEmbeddedLinksDTO emailWithEmbeddedLinksDTO, Authentication authentication)
+    protected String makeNote(String emailAddress, EmailWithEmbeddedLinksDTO emailWithEmbeddedLinksDTO, Authentication authentication) throws AcmEncryptionException
     {
         String body = "";
         for (Long fileId : emailWithEmbeddedLinksDTO.getFileIds())
@@ -264,14 +264,14 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
         return emailWithEmbeddedLinksDTO.buildMessageBodyFromTemplate(body);
     }
 
-    private String generateAndSaveAuthenticationToken(Long fileId, String emailAddress, Authentication authentication)
+    protected String generateAndSaveAuthenticationToken(Long fileId, String emailAddress, Authentication authentication)
     {
         String token = getAuthenticationTokenService().getUncachedTokenForAuthentication(authentication);
         saveAuthenticationToken(emailAddress, fileId, token);
         return token;
     }
 
-    private void saveAuthenticationToken(String email, Long fileId, String token)
+    protected void saveAuthenticationToken(String email, Long fileId, String token)
     {
         AuthenticationToken authenticationToken = new AuthenticationToken();
         authenticationToken.setKey(token);

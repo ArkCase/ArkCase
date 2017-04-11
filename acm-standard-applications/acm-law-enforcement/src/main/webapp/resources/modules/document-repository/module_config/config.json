@@ -17,7 +17,7 @@
       "menuId": "topbar",
       "menuItemURL": "new-document-repository",
       "menuItemTitle": "document-repository.menus.topbar.item",
-      "moduleId": "none",
+      "moduleId": "document-repository",
       "permissionAction": "createDocumentRepository",
       "iconClass": "fa fa-folder",
       "position": 20
@@ -435,7 +435,7 @@
           "width": 150
         },
         {
-          "name": "creator",
+          "name": "author",
           "displayName": "document-repository.comp.notes.table.columns.creator",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
