@@ -35,16 +35,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -632,7 +636,82 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         {
             log.error("Folder {} not deleted successfully {}", folder.getName(), e.getMessage(), e);
             throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
-                    folder.getId(), "Folder was no added under " + folder.getName() + " successfully", e);
+                    folder.getId(), "Folder was not deleted under " + folder.getName() + " successfully", e);
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteFolderTree(Long folderId) throws AcmUserActionFailedException, AcmObjectNotFoundException
+    {
+        AcmFolder folder = getFolderDao().find(folderId);
+
+        if (folder == null)
+        {
+            throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE, folderId, "Folder not found", null);
+        }
+
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(AcmFolderConstants.ACM_FOLDER_ID, folder.getCmisFolderId());
+
+        String cmisRepositoryId = folder.getCmisRepositoryId();
+        if (cmisRepositoryId == null)
+        {
+            cmisRepositoryId = ecmFileServiceProperties.getProperty("ecm.defaultCmisId");
+        }
+        properties.put(AcmFolderConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
+
+        try
+        {
+            deleteFolderContent(folderId);
+
+            MuleMessage message = getMuleContextManager().send(AcmFolderConstants.MULE_ENDPOINT_DELETE_FOLDER_TREE, folder, properties);
+            if (message.getInboundPropertyNames().contains(AcmFolderConstants.DELETE_FOLDER_TREE_EXCEPTION_INBOUND_PROPERTY))
+            {
+                MuleException muleException = message.getInboundProperty(AcmFolderConstants.DELETE_FOLDER_TREE_EXCEPTION_INBOUND_PROPERTY);
+                log.error("Folder not deleted successfully {}", muleException.getMessage(), muleException);
+                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_DELETE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
+                        folder.getId(), "Folder " + folder.getName() + " was not deleted successfully", muleException);
+            }
+        } catch (PersistenceException | MuleException e)
+        {
+            log.error("Folder {} not deleted successfully {}", folder.getName(), e.getMessage(), e);
+            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_DELETE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
+                    folder.getId(), "Folder was not deleted successfully", e);
+        }
+    }
+
+    @Transactional
+    private void deleteFolderContent(Long folderId)
+    {
+        AcmFolder folder = getFolderDao().find(folderId);
+        Set<EcmFile> childrenFiles = new HashSet<>();
+        Set<AcmFolder> childrenFolders = new HashSet<>();
+
+        if (folder != null)
+        {
+            findFolderChildren(folder, childrenFiles, childrenFolders);
+        }
+        childrenFiles.forEach(file -> fileDao.deleteFile(file.getFileId()));
+
+        // sort by latest entry to avoid constraint violation
+        childrenFolders.stream()
+                .sorted(Comparator.comparing(AcmFolder::getId).reversed())
+                .forEach(subFolder -> folderDao.deleteFolder(subFolder.getId()));
+
+        folderDao.deleteFolder(folderId);
+    }
+
+    void findFolderChildren(AcmFolder folder, Set<EcmFile> childFiles, Set<AcmFolder> childFolders)
+    {
+        if (folder == null) return;
+
+        childFiles.addAll(fileDao.findByFolderId(folder.getId()));
+
+        for (AcmFolder childFolder : folder.getChildrenFolders())
+        {
+            childFolders.add(childFolder);
+            findFolderChildren(childFolder, childFiles, childFolders);
         }
     }
 
@@ -1000,15 +1079,15 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         this.fileDao = fileDao;
     }
 
+    public ApplicationEventPublisher getApplicationEventPublisher()
+    {
+        return applicationEventPublisher;
+    }
+
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
     {
         this.applicationEventPublisher = applicationEventPublisher;
-    }
-
-    public ApplicationEventPublisher getApplicationEventPublisher()
-    {
-        return applicationEventPublisher;
     }
 
     public AcmFolderDao getFolderDao()

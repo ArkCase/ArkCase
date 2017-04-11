@@ -68,6 +68,9 @@ public class DocumentRepository implements Serializable, AcmAssignedObject, AcmE
     @Column(name = "cm_doc_repo_details")
     private String details;
 
+    @Column(name = "cm_doc_repo_description")
+    private String description;
+
     @Column(name = "cm_doc_repo_status", nullable = false)
     private String status;
 
@@ -278,6 +281,16 @@ public class DocumentRepository implements Serializable, AcmAssignedObject, AcmE
         this.participants = participants;
     }
 
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public void setDescription(String description)
+    {
+        this.description = description;
+    }
+
     @Override
     public String getStatus()
     {
@@ -346,9 +359,7 @@ public class DocumentRepository implements Serializable, AcmAssignedObject, AcmE
     {
         return getChildObjects()
                 .stream()
-                .filter(
-                        child -> ObjectAssociationConstants.OBJECT_TYPE.equals(child.getAssociationType())
-                )
+                .filter(child -> ObjectAssociationConstants.OBJECT_TYPE.equals(child.getAssociationType()))
                 .collect(Collectors.toList());
     }
 }

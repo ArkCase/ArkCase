@@ -6,15 +6,16 @@
        http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <!-- pre-save handlers -->
-    <bean id="documentRepositoryContainerHandler"
-          class="com.armedia.acm.plugins.documentrepository.pipeline.postsave.DocumentRepositoryContainerHandler"/>
     <bean id="documentRepositoryAuditHandler"
           class="com.armedia.acm.plugins.documentrepository.pipeline.presave.DocumentRepositoryAuditHandler"/>
+
     <!-- post-save handlers -->
     <bean id="documentRepositoryEcmFolderHandler"
           class="com.armedia.acm.plugins.documentrepository.pipeline.postsave.DocumentRepositoryEcmFolderHandler">
         <property name="ecmFileService" ref="ecmFileService"/>
     </bean>
+    <bean id="documentRepositoryContainerHandler"
+          class="com.armedia.acm.plugins.documentrepository.pipeline.postsave.DocumentRepositoryContainerHandler"/>
 
     <bean id="documentRepositoryPipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
         <property name="preSaveHandlers">
