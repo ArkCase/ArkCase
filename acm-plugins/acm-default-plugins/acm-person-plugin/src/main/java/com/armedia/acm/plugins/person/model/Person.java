@@ -1,10 +1,12 @@
 package com.armedia.acm.plugins.person.model;
 
+import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.converter.LocalDateConverter;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -43,7 +45,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Created by armdev on 4/7/14.
@@ -56,7 +57,7 @@ import java.util.Objects;
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.plugins.person.model.Person")
 @JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@UUID", scope = Person.class)
-public class Person implements Serializable, AcmEntity
+public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerEntity
 {
     private static final long serialVersionUID = 7413755227864370548L;
 
@@ -172,6 +173,9 @@ public class Person implements Serializable, AcmEntity
      */
     @Column(name = "cm_default_picture_id")
     private Long defaultPictureId;
+
+    @Column(name = "cm_object_type", updatable = false)
+    private String objectType = PersonConstants.PERSON_OBJECT_TYPE;
 
     @PrePersist
     protected void beforeInsert()
@@ -318,6 +322,12 @@ public class Person implements Serializable, AcmEntity
     public void setModifier(String modifier)
     {
         this.modifier = modifier;
+    }
+
+    @Override
+    public String getObjectType()
+    {
+        return objectType;
     }
 
     @XmlTransient

@@ -1,18 +1,18 @@
 package com.armedia.acm.plugins.person.service;
 
-import java.io.IOException;
-import java.util.List;
-
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.Identification;
+import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.xml.FrevvoPerson;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.List;
 
 
 public interface PersonService
@@ -65,24 +65,25 @@ public interface PersonService
     List<String> getPersonIdentificationKeys(FrevvoPerson person);
 
     /**
-     * delete existing image for given Person
+     * delete existing image for given Person. If default image in person is same as we want to delete, than operation throws an exception.
      *
      * @param personId id of the Person
      * @param imageId  id of the image
-     * @return boolean true if successfully removed
      */
-    boolean deleteImageForPerson(Long personId, Long imageId);
+    @Transactional
+    void deleteImageForPerson(Long personId, Long imageId) throws AcmObjectNotFoundException, AcmUserActionFailedException;
 
     /**
-     * insert image for a person
+     * insert image for a person. If is the only image than is set as default image for the person
      *
-     * @param personId Long personId
-     * @param image    MultipartFile image
-     * @param auth     Authentication authentication
+     * @param personId  Long personId
+     * @param image     MultipartFile image
+     * @param isDefault boolean should this picture be set as default
+     * @param auth      Authentication authentication
      * @return boolean true if successfully inserted
      */
-
-    EcmFile insertImageForPerson(Long personId, MultipartFile image, Authentication auth) throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException;
+    @Transactional
+    EcmFile insertImageForPerson(Long personId, MultipartFile image, boolean isDefault, Authentication auth) throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException;
 
     /**
      * Creates new Person and persists in database
@@ -97,8 +98,10 @@ public interface PersonService
     /**
      * save person data
      *
-     * @param person person data
+     * @param person         person data
+     * @param authentication authentication
      * @return Person saved person
      */
-    Person savePerson(Person person);
+    @Transactional
+    Person savePerson(Person person, Authentication authentication);
 }

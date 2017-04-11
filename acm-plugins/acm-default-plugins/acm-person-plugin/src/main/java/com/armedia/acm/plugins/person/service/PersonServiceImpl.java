@@ -4,6 +4,7 @@
 package com.armedia.acm.plugins.person.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.frevvo.config.FrevvoFormUtils;
@@ -33,11 +34,11 @@ import java.util.List;
 
 /**
  * @author riste.tutureski
+ * @author nebojsha.davidovikj
  */
 public class PersonServiceImpl implements PersonService
 {
-
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     private PersonDao personDao;
     /**
@@ -140,7 +141,7 @@ public class PersonServiceImpl implements PersonService
                     person = (Person) FrevvoFormUtils.set(person, key, value);
                 } catch (Exception e)
                 {
-                    LOG.debug("Silent catch of exeption while setting value of the property in the object Person. The property name maybe not exist, but execution should go forward.");
+                    log.debug("Silent catch of exception while setting value of the property in the object Person. The property name maybe not exist, but execution should go forward.");
                 }
             }
         }
@@ -171,23 +172,38 @@ public class PersonServiceImpl implements PersonService
     }
 
     @Override
-    public boolean deleteImageForPerson(Long personId, Long imageId)
+    public void deleteImageForPerson(Long personId, Long imageId) throws AcmObjectNotFoundException, AcmUserActionFailedException
     {
-        return false;
+        Person person = get(personId);
+        if (person.getDefaultPictureId() == imageId)
+        {
+            throw new AcmUserActionFailedException("Delete picture", "FILE", imageId, "Can't delete picture which is already set as default.", null);
+        }
+        ecmFileService.deleteFile(imageId);
     }
 
     @Override
-    public EcmFile insertImageForPerson(Long personId, MultipartFile image, Authentication auth) throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException
+    public EcmFile insertImageForPerson(Long personId, MultipartFile image, boolean isDefault, Authentication auth) throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException
     {
         Person person = personDao.find(personId);
 
-
         AcmFolder picturesFolderObj = acmFolderService.findByNameAndParent(picturesFolder, person.getContainer().getFolder());
+        try
+        {
+            List objects = ecmFileService.allFilesForFolder(auth, person.getContainer(), picturesFolderObj.getId()).getChildren();
+            if (objects.size() < 1)
+            {
+                //there are not images in pictures folder, so first uploaded image is the default image
+                isDefault = true;
+            }
+        } catch (AcmListObjectsFailedException e)
+        {
+            log.error("Could't list files for folder [{}].", picturesFolderObj.getId(), e);
+        }
 
-
-        return ecmFileService.upload(image.getOriginalFilename(),
-                "image",
-                "Document",
+        EcmFile uploaded = ecmFileService.upload(image.getOriginalFilename(),
+                PersonConstants.PERSON_PICTURE_FILE_TYPE,
+                PersonConstants.PERSON_PICTURE_CATEGORY,
                 image.getInputStream(),
                 image.getContentType(),
                 image.getOriginalFilename(),
@@ -195,19 +211,23 @@ public class PersonServiceImpl implements PersonService
                 picturesFolderObj.getCmisFolderId(),
                 PersonConstants.PERSON_OBJECT_TYPE,
                 personId);
+        if (isDefault)
+        {
+            person.setDefaultPictureId(uploaded.getId());
+            savePerson(person, auth);
+        }
+
+        return uploaded;
     }
 
     @Override
     public Person createPerson(Person person, Authentication auth) throws AcmCreateObjectFailedException, AcmObjectNotFoundException, AcmUserActionFailedException
     {
         //save person
-        person = personDao.save(person);
+        person = savePerson(person, auth);
 
         //generate person root folder
-        ExpressionParser ep = new SpelExpressionParser();
-        Expression exp = ep.parseExpression(personOwnFolder);
-        EvaluationContext ec = new StandardEvaluationContext();
-        String personRootFolderName = exp.getValue(ec, person, String.class);
+        String personRootFolderName = getPersonRootFolderName(person);
 
 
         //created container and add root folder
@@ -226,7 +246,7 @@ public class PersonServiceImpl implements PersonService
 
         person.setContainer(container);
 
-        person = personDao.save(person);
+        person = savePerson(person, auth);
 
         //create Pictures folder
         acmFolderService.addNewFolder(person.getContainer().getFolder(), picturesFolder);
@@ -234,8 +254,16 @@ public class PersonServiceImpl implements PersonService
         return person;
     }
 
+    private String getPersonRootFolderName(Person person)
+    {
+        ExpressionParser ep = new SpelExpressionParser();
+        Expression exp = ep.parseExpression(personOwnFolder);
+        EvaluationContext ec = new StandardEvaluationContext();
+        return exp.getValue(ec, person, String.class);
+    }
+
     @Override
-    public Person savePerson(Person person)
+    public Person savePerson(Person person, Authentication authentication)
     {
         return personDao.save(person);
     }
