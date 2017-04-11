@@ -30,9 +30,7 @@ public class DocumentRepositoryServiceImpl implements DocumentRepositoryService
     @Override
     public DocumentRepository findById(Long id)
     {
-        DocumentRepository documentRepository = documentRepositoryDao.find(id);
-        documentRepositoryEventPublisher.publishViewedEvent(documentRepository, true);
-        return documentRepository;
+        return documentRepositoryDao.find(id);
     }
 
     @Override
