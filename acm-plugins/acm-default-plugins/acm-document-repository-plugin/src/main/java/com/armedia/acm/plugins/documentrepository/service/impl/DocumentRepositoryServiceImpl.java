@@ -31,7 +31,7 @@ public class DocumentRepositoryServiceImpl implements DocumentRepositoryService
     public DocumentRepository findById(Long id)
     {
         DocumentRepository documentRepository = documentRepositoryDao.find(id);
-        documentRepositoryEventPublisher.publishSearchedEvent(documentRepository, true);
+        documentRepositoryEventPublisher.publishViewedEvent(documentRepository, true);
         return documentRepository;
     }
 
