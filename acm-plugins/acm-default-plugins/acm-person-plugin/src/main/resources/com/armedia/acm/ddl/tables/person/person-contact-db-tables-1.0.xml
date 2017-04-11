@@ -4,9 +4,6 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <property name="cmObjectTypeLength" value="1024" dbms="postgresql,oracle"/>
-    <property name="cmObjectTypeLength" value="255" dbms="mysql,mssql"/>
-
     <changeSet id="01-create-person-contact-table" author="nebojsha.davidovikj" dbms="oracle,postgresql,mssql">
         <createTable tableName="acm_person_contact">
             <column name="cm_person_contact_id" type="${idType}">
@@ -129,14 +126,6 @@
             <column name="cm_person_contact_first_name" type="VARCHAR(1024)"/>
             <column name="cm_person_contact_middle_inits" type="VARCHAR(1024)"/>
             <column name="cm_person_contact_last_name" type="VARCHAR(1024)"/>
-        </addColumn>
-    </changeSet>
-
-    <changeSet id="08-acm_person-add-object_type-column" author="nebojsha.davidovikj">
-        <addColumn tableName="acm_person">
-            <column name="cm_object_type" type="VARCHAR(${cmObjectTypeLength})" defaultValue="PERSON">
-                <constraints nullable="false"/>
-            </column>
         </addColumn>
     </changeSet>
 

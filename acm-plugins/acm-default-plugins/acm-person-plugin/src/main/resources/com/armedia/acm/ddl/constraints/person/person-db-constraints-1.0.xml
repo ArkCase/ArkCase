@@ -70,4 +70,21 @@
                                  deferrable="${deferrable}"
                                  initiallyDeferred="${initially.deferred}"/>
     </changeSet>
+
+    <changeSet id="07-person-foreign-keys" author="nebojsha.davidovikj">
+        <addForeignKeyConstraint baseTableName="acm_person"
+                                 baseColumnNames="cm_container_id"
+                                 constraintName="fk_container_id"
+                                 referencedTableName="acm_container"
+                                 referencedColumnNames="cm_container_id"
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_person"
+                                 baseColumnNames="cm_default_picture_id"
+                                 constraintName="fk_default_picture_id"
+                                 referencedTableName="acm_file"
+                                 referencedColumnNames="cm_file_id"
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
+    </changeSet>
 </databaseChangeLog>
