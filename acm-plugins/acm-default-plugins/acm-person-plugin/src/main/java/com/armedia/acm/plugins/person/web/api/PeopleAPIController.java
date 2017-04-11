@@ -3,8 +3,6 @@ package com.armedia.acm.plugins.person.web.api;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.service.PersonService;
 import com.armedia.acm.services.search.model.SolrCore;
@@ -25,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.IOException;
 
@@ -38,7 +35,6 @@ public class PeopleAPIController
 
     private PersonService personService;
     private ExecuteSolrQuery executeSolrQuery;
-    private EcmFileService ecmFileService;
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -55,7 +51,7 @@ public class PeopleAPIController
             return personService.createPerson(in, auth);
         } else
         {
-            return personService.savePerson(in);
+            return personService.savePerson(in, auth);
         }
     }
 
@@ -133,15 +129,7 @@ public class PeopleAPIController
 
         log.debug("Insert Image for a Person: [{}];", personId);
 
-        EcmFile uploadedImage = personService.insertImageForPerson(personId, image, auth);
-
-        if (isDefault)
-        {
-            Person person = personService.get(personId);
-            person.setDefaultPictureId(uploadedImage.getId());
-
-            personService.savePerson(person);
-        }
+        personService.insertImageForPerson(personId, image, isDefault, auth);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -151,7 +139,7 @@ public class PeopleAPIController
             @PathVariable("personId") Long personId,
             @PathVariable("imageId") Long imageId,
             Authentication auth
-    ) throws AcmCreateObjectFailedException
+    ) throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
     {
 
         log.debug("Delete Image for a Person: [{}];", personId);
@@ -169,10 +157,5 @@ public class PeopleAPIController
     public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
     {
         this.executeSolrQuery = executeSolrQuery;
-    }
-
-    public void setEcmFileService(EcmFileService ecmFileService)
-    {
-        this.ecmFileService = ecmFileService;
     }
 }
