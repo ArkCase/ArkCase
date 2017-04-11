@@ -91,6 +91,21 @@ public class AcmCalendarAPIController
         return calendar.listItems(toZonedDate(after), toZonedDate(before), sort, sortDirection, start, maxItems);
     }
 
+    @RequestMapping(value = "/calendarevents/{objectType}/{objectId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<AcmCalendarEvent> listEventsFullDetails(HttpSession session, Authentication auth,
+            @PathVariable(value = "objectType") String objectType, @PathVariable(value = "objectId") String objectId,
+            @RequestParam(value = "after", required = false) String after, @RequestParam(value = "before", required = false) String before,
+            @RequestParam(value = "sort", required = false, defaultValue = "eventDate") String sort,
+            @RequestParam(value = "sortDirection", required = false, defaultValue = "ASC") String sortDirection)
+            throws CalendarServiceException
+    {
+        AcmUser user = (AcmUser) session.getAttribute("acm_user");
+        AcmCalendar calendar = calendarService.retrieveCalendar(user, auth, objectType, objectId)
+                .orElseThrow(() -> new CalendarServiceException());
+        return calendar.listItems(toZonedDate(after), toZonedDate(before), sort, sortDirection);
+    }
+
     @RequestMapping(value = "/calendarevents/{objectType}/{objectId}/{eventId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmCalendarEvent getEvent(HttpSession session, Authentication auth, @PathVariable(value = "objectType") String objectType,
