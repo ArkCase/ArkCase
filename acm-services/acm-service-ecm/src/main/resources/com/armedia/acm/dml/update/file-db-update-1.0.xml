@@ -812,7 +812,7 @@
         <addUniqueConstraint tableName="acm_container" columnNames="cm_object_id, cm_object_type, cm_cmis_repository_id"/>
     </changeSet>
     
-    <changeSet id="files-43-add-container-discriminator" author="ilinpetar" dbms="mysql>
+    <changeSet id="files-43-add-container-discriminator" author="ilinpetar" dbms="mysql">
         <addColumn tableName="acm_container">
             <column name="cm_cmis_repository_id" type="VARCHAR(255)" defaultValue="alfresco">
                 <constraints nullable="false"/>
