@@ -25,28 +25,10 @@ public class DocumentRepositoryEventPublisher implements ApplicationEventPublish
         eventPublisher.publishEvent(event);
     }
 
-    public void publishCreatedEvent(DocumentRepository source, boolean succeeded)
-    {
-        log.debug("Publishing a Document Repository created event.");
-        DocumentRepositoryEvent event = new DocumentRepositoryEvent(source, "created");
-        event.setSucceeded(succeeded);
-        event.setIpAddress(AuthenticationUtils.getUserIpAddress());
-        eventPublisher.publishEvent(event);
-    }
-
-    public void publishUpdatedEvent(DocumentRepository source, boolean succeeded)
-    {
-        log.debug("Publishing a Document Repository updated event.");
-        DocumentRepositoryEvent event = new DocumentRepositoryEvent(source, "updated");
-        event.setSucceeded(succeeded);
-        event.setIpAddress(AuthenticationUtils.getUserIpAddress());
-        eventPublisher.publishEvent(event);
-    }
-
     public void publishSearchedEvent(DocumentRepository source, boolean succeeded)
     {
-        log.debug("Publishing a Document Repository searched event.");
-        DocumentRepositoryEvent event = new DocumentRepositoryEvent(source, "search");
+        log.debug("Publishing a Document Repository viewed event.");
+        DocumentRepositoryEvent event = new DocumentRepositoryEvent(source, "viewed");
         event.setSucceeded(succeeded);
         event.setIpAddress(AuthenticationUtils.getUserIpAddress());
         eventPublisher.publishEvent(event);

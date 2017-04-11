@@ -4,6 +4,7 @@ package com.armedia.acm.plugins.documentrepository.service.impl;
 import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.plugins.documentrepository.dao.DocumentRepositoryDao;
 import com.armedia.acm.plugins.documentrepository.model.DocumentRepository;
+import com.armedia.acm.plugins.documentrepository.model.DocumentRepositoryEvent;
 import com.armedia.acm.plugins.documentrepository.pipeline.DocumentRepositoryPipelineContext;
 import com.armedia.acm.plugins.documentrepository.service.DocumentRepositoryEventPublisher;
 import com.armedia.acm.plugins.documentrepository.service.DocumentRepositoryService;
@@ -13,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 public class DocumentRepositoryServiceImpl implements DocumentRepositoryService
 {
@@ -40,23 +43,40 @@ public class DocumentRepositoryServiceImpl implements DocumentRepositoryService
 
     @Override
     @Transactional
-    public DocumentRepository save(DocumentRepository existingDocumentRepository,
-                                   DocumentRepository documentRepository, Authentication authentication)
+    public DocumentRepository save(DocumentRepository documentRepository, Authentication authentication)
             throws PipelineProcessException
     {
-
+        boolean isNew = documentRepository.getId() == null;
         DocumentRepositoryPipelineContext pipelineContext = new DocumentRepositoryPipelineContext();
         // populate the context
-        pipelineContext.setNewDocumentRepository(documentRepository.getId() == null);
+        pipelineContext.setNewDocumentRepository(isNew);
         pipelineContext.setAuthentication(authentication);
         String ipAddress = AuthenticationUtils.getUserIpAddress();
         pipelineContext.setIpAddress(ipAddress);
-        pipelineContext.setDocumentRepository(existingDocumentRepository);
+
+        if (!isNew)
+        {
+            DocumentRepository existingDocumentRepository = documentRepositoryDao.find(documentRepository.getId());
+            pipelineContext.setDocumentRepository(existingDocumentRepository);
+        }
 
         return pipelineManager.executeOperation(documentRepository, pipelineContext, () ->
         {
             log.debug("Saving document repository: {}", documentRepository.getName());
-            return documentRepositoryDao.save(documentRepository);
+            DocumentRepository savedDocumentRepository = documentRepositoryDao.save(documentRepository);
+            publishAuditEvents(pipelineContext.getAuditEventTypes(), savedDocumentRepository);
+            return savedDocumentRepository;
+        });
+    }
+
+    private void publishAuditEvents(List<String> auditEventTypes, DocumentRepository documentRepository)
+    {
+        auditEventTypes.forEach(eventType ->
+        {
+            DocumentRepositoryEvent event = new DocumentRepositoryEvent(documentRepository, eventType);
+            event.setIpAddress(AuthenticationUtils.getUserIpAddress());
+            event.setSucceeded(true);
+            documentRepositoryEventPublisher.publishEvent(event);
         });
     }
 
