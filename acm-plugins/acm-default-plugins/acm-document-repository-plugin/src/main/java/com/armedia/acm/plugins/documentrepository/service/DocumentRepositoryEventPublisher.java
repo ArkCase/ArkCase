@@ -25,7 +25,7 @@ public class DocumentRepositoryEventPublisher implements ApplicationEventPublish
         eventPublisher.publishEvent(event);
     }
 
-    public void publishSearchedEvent(DocumentRepository source, boolean succeeded)
+    public void publishViewedEvent(DocumentRepository source, boolean succeeded)
     {
         log.debug("Publishing a Document Repository viewed event.");
         DocumentRepositoryEvent event = new DocumentRepositoryEvent(source, "viewed");

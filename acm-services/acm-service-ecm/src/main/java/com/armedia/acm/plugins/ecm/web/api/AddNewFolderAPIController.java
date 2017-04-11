@@ -57,9 +57,6 @@ public class AddNewFolderAPIController
             // create mock source to audit the event
             AcmFolder mockFolder = new AcmFolder();
             mockFolder.setName(newFolderName);
-            mockFolder.setId(1L);
-            mockFolder.setModified(new Date());
-            mockFolder.setModifier(AuthenticationUtils.getUsername());
             getFolderEventPublisher().publishFolderCreatedEvent(mockFolder, false, null,
                     null);
             throw e;
