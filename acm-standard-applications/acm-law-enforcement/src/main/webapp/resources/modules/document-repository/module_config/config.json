@@ -18,6 +18,7 @@
       "menuItemURL": "new-document-repository",
       "menuItemTitle": "document-repository.menus.topbar.item",
       "moduleId": "document-repository",
+      "permissionAction": "createDocumentRepository",
       "iconClass": "fa fa-folder",
       "position": 20
     }
