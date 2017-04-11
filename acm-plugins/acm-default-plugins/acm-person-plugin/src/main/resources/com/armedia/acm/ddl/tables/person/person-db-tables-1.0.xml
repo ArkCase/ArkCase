@@ -15,6 +15,10 @@
 
     <property name="cmPersonAliasTypeLength" value="4000" dbms="postgresql,oracle"/>
     <property name="cmPersonAliasTypeLength" value="255" dbms="mysql,mssql"/>
+
+    <property name="cmObjectTypeLength" value="1024" dbms="postgresql,oracle"/>
+    <property name="cmObjectTypeLength" value="255" dbms="mysql,mssql"/>
+
     <changeSet id="01-create-person-table" author="dmiller" dbms="oracle,postgresql,mssql">
         <createTable tableName="acm_person">
             <column name="cm_person_id" type="${idType}">
@@ -838,14 +842,20 @@
     <changeSet id="38-add-container-id-in-acm-person-table" author="nebojsha.davidovikj">
         <addColumn tableName="acm_person">
             <column name="cm_container_id" type="${fkIdType}">
-                <constraints nullable="true" foreignKeyName="fk_container_id"
-                             references="acm_container(cm_container_id)"/>
+                <constraints nullable="true"/>
             </column>
         </addColumn>
         <addColumn tableName="acm_person">
             <column name="cm_default_picture_id" type="${fkIdType}">
-                <constraints nullable="true" foreignKeyName="fk_default_picture_id"
-                             references="acm_file(cm_file_id)"/>
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="39-acm_person-add-object_type-column" author="nebojsha.davidovikj">
+        <addColumn tableName="acm_person">
+            <column name="cm_object_type" type="VARCHAR(${cmObjectTypeLength})" defaultValue="PERSON">
+                <constraints nullable="false"/>
             </column>
         </addColumn>
     </changeSet>
