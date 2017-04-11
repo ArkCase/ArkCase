@@ -16,6 +16,12 @@
 
     <bean id="personService" class="com.armedia.acm.plugins.person.service.PersonServiceImpl">
         <property name="personDao" ref="acmPersonDao"/>
+        <property name="acmFolderService" ref="acmFolderService"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="peopleRootFolder" value="${person.folder.root}"/>
+        <property name="personOwnFolder" value="${person.folder.own.spel}"/>
+        <property name="picturesFolder" value="${person.folder.pictures}"/>
+
     </bean>
 
     <bean id="savePersonTransaction" class="com.armedia.acm.plugins.person.service.SavePersonTransaction">
@@ -56,7 +62,7 @@
 
     <bean id="personAliasToSolrTransformer"
           class="com.armedia.acm.plugins.person.service.PersonAliasToSolrTransformer">
-        <property name="personAliasDao" ref="acmPersonAliasDao" />
+        <property name="personAliasDao" ref="acmPersonAliasDao"/>
         <property name="userDao" ref="userJpaDao"/>
     </bean>
 

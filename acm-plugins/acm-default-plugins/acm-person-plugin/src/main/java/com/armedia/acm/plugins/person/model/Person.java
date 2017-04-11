@@ -1,9 +1,12 @@
 package com.armedia.acm.plugins.person.model;
 
+import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.converter.LocalDateConverter;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -27,6 +30,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -41,7 +45,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Created by armdev on 4/7/14.
@@ -54,7 +57,7 @@ import java.util.Objects;
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.plugins.person.model.Person")
 @JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@UUID", scope = Person.class)
-public class Person implements Serializable, AcmEntity
+public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerEntity
 {
     private static final long serialVersionUID = 7413755227864370548L;
 
@@ -157,6 +160,22 @@ public class Person implements Serializable, AcmEntity
 
     @Column(name = "cm_class_name")
     private String className = this.getClass().getName();
+
+    /**
+     * Container folder where the case file's attachments/content files are stored.
+     */
+    @OneToOne
+    @JoinColumn(name = "cm_container_id")
+    private AcmContainer container;
+
+    /**
+     * id for EcmFile which picture is default
+     */
+    @Column(name = "cm_default_picture_id")
+    private Long defaultPictureId;
+
+    @Column(name = "cm_object_type", updatable = false)
+    private String objectType = PersonConstants.PERSON_OBJECT_TYPE;
 
     @PrePersist
     protected void beforeInsert()
@@ -303,6 +322,12 @@ public class Person implements Serializable, AcmEntity
     public void setModifier(String modifier)
     {
         this.modifier = modifier;
+    }
+
+    @Override
+    public String getObjectType()
+    {
+        return objectType;
     }
 
     @XmlTransient
@@ -516,4 +541,23 @@ public class Person implements Serializable, AcmEntity
         this.className = className;
     }
 
+    public void setContainer(AcmContainer container)
+    {
+        this.container = container;
+    }
+
+    public void setDefaultPictureId(Long defaultPictureId)
+    {
+        this.defaultPictureId = defaultPictureId;
+    }
+
+    public AcmContainer getContainer()
+    {
+        return container;
+    }
+
+    public Long getDefaultPictureId()
+    {
+        return defaultPictureId;
+    }
 }
