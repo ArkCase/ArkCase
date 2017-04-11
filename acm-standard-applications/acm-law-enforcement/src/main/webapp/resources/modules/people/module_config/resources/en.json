@@ -40,5 +40,30 @@
       "eventDate": "Date",
       "userId": "User"
     }
+  },
+  "people.comp.pictures": {
+    "title": "Pictures",
+    "actions": {
+      "delete": "Delete",
+      "setPrimary": "Set as Primary",
+      "upload": "Upload"
+    },
+    "table.columns": {
+      "thumbnail": "Thumbnail",
+      "title": "Filename",
+      "description": "Description",
+      "created": "Created",
+      "creator": "Author"
+    },
+    "dialog": {
+      "title": "Upload Picture",
+      "setPrimary": "Set as Primary?",
+      "yes": "Yes",
+      "no": "No",
+      "cancel": "Cancel",
+      "upload": "Upload Picture",
+      "noPictureSelected": "No Files Selected.",
+      "browse": "Browse"
+    }
   }
 }
