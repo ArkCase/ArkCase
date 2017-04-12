@@ -65,5 +65,30 @@
       "noPictureSelected": "No Files Selected.",
       "browse": "Browse"
     }
+  },
+  "people.comp.aliases": {
+    "title": "Aliases",
+    "actions": {
+      "delete": "Delete",
+      "setPrimary": "Set as Primary",
+      "upload": "New Alias"
+    },
+    "table.columns": {
+      "aliasValue": "Alias",
+      "description": "Description",
+      "created": "Created",
+      "creator": "Author"
+    },
+    "dialog": {
+      "title": "Insert New Alias",
+      "setPrimary": "Set as Primary?",
+      "yes": "Yes",
+      "no": "No",
+      "cancel": "Cancel",
+      "ok": "Ok",
+      "alias": "Alias",
+      "description": "Description",
+      "aliasType": "Alias Type"
+    }
   }
 }

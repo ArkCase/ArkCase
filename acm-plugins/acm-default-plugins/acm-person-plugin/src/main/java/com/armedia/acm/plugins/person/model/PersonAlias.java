@@ -65,6 +65,9 @@ public class PersonAlias implements Serializable, AcmEntity
     @Column(name = "cm_person_alias_modifier")
     private String modifier;
 
+    @Column(name = "cm_description")
+    private String description;
+
     @XmlTransient
     public Long getId()
     {
@@ -169,4 +172,13 @@ public class PersonAlias implements Serializable, AcmEntity
     	return this;
     }
 
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public void setDescription(String description)
+    {
+        this.description = description;
+    }
 }

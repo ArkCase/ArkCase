@@ -46,5 +46,10 @@ angular.module('people').config(['$stateProvider',
                 url: '/:id/pictures',
                 templateUrl: 'modules/people/views/components/person-pictures.client.view.html'
             })
+
+            .state('people.aliases', {
+                url: '/:id/aliases',
+                templateUrl: 'modules/people/views/components/person-aliases.client.view.html'
+            })
     }
 ]);
