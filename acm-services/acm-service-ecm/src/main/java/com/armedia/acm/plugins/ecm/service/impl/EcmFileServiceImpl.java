@@ -900,23 +900,16 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
-    public EcmFile updateFile(EcmFile file, Authentication authentication) throws AcmUserActionFailedException {
+    public EcmFile updateFile(EcmFile ecmFile) throws AcmObjectNotFoundException {
 
-        EcmFileUpdatedEvent event;
-        try {
-            file = getEcmFileDao().save(file);
-            event = new EcmFileUpdatedEvent(file, authentication);
-            event.setSucceeded(true);
-            applicationEventPublisher.publishEvent(event);
-            log.info("Update file successful", file.getId());
-            return file;
-        } catch (PersistenceException e) {
-            event = new EcmFileUpdatedEvent(file, authentication);
-            event.setSucceeded(false);
-            applicationEventPublisher.publishEvent(event);
-            log.error("Could not update file " + e.getMessage(), e);
-            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_UPDATE_FILE, EcmFileConstants.OBJECT_FILE_TYPE, file.getId(),"Could not update file", e);
+        EcmFile file = getEcmFileDao().find(ecmFile.getId());
+        if ( file == null )
+        {
+            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, ecmFile.getId(), "File  not found", null);
         }
+
+        file = getEcmFileDao().save(ecmFile);
+        return file;
     }
 
     @Override

@@ -1,8 +1,11 @@
 package com.armedia.acm.plugins.ecm.web.api;
 
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.easymock.Capture;
@@ -13,6 +16,7 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -24,6 +28,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
+import static junit.framework.TestCase.assertTrue;
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -46,6 +51,7 @@ public class UpdateFileAPIControllerTest extends EasyMockSupport
     private UpdateFileAPIController unit;
     private EcmFileService mockEcmFileService;
     private Authentication mockAuthentication;
+    private ApplicationEventPublisher mockApplicationEventPublisher;
 
     @Autowired
     private ExceptionHandlerExceptionResolver filePluginExceptionResolver;
@@ -56,7 +62,9 @@ public class UpdateFileAPIControllerTest extends EasyMockSupport
         unit = new UpdateFileAPIController();
 
         mockEcmFileService = createMock(EcmFileService.class);
+        mockApplicationEventPublisher = createMock(ApplicationEventPublisher.class);
         unit.setEcmFileService(mockEcmFileService);
+        unit.setApplicationEventPublisher(mockApplicationEventPublisher);
         mockAuthentication = createMock(Authentication.class);
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(filePluginExceptionResolver).build();
         SecurityContextHolder.getContext().setAuthentication(mockAuthentication);
@@ -81,29 +89,40 @@ public class UpdateFileAPIControllerTest extends EasyMockSupport
         out.setContainer(acmContainer);
 
         Capture<EcmFile> saved = Capture.newInstance();
-        expect(mockEcmFileService.updateFile(capture(saved), eq(mockAuthentication))).andReturn(out);
-        expect(mockAuthentication.getName()).andReturn("user");
+        Capture<EcmFileUpdatedEvent> capturedEvent = Capture.newInstance();
+
+        expect(mockEcmFileService.updateFile(capture(saved))).andReturn(out);
+        expect(mockAuthentication.getName()).andReturn("user").anyTimes();
+        expect(mockAuthentication.getDetails()).andReturn("details").anyTimes();
+        mockApplicationEventPublisher.publishEvent(capture(capturedEvent));
+        expectLastCall();
 
         replayAll();
 
         MvcResult result = mockMvc.perform(
-                post("/api/latest/service/ecm/file/update")
+                post("/api/latest/service/ecm/file/{fileId}", "100")
                         .content(new ObjectMapper().writeValueAsString(in))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .principal(mockAuthentication))
                 .andReturn();
 
-        String returned = result.getResponse().getContentAsString();
-        LOG.info("results: " + returned);
 
 
         verifyAll();
 
+        String returned = result.getResponse().getContentAsString();
+        LOG.info("results: " + returned);
+
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
 
-        assertEquals(out.getFileId(), saved.getValue().getFileId());
-        assertEquals(out.getStatus(), saved.getValue().getStatus());
+        assertEquals(in.getFileId(), saved.getValue().getFileId());
+        assertEquals(in.getStatus(), saved.getValue().getStatus());
+
+        EcmFileUpdatedEvent event = capturedEvent.getValue();
+        assertEquals(in.getFileId(), event.getObjectId());
+        assertEquals("FILE", event.getObjectType());
+        assertTrue(event.isSucceeded());
     }
 
 
@@ -121,22 +140,26 @@ public class UpdateFileAPIControllerTest extends EasyMockSupport
         in.setContainer(acmContainer);
 
         Capture<EcmFile> saved = Capture.newInstance();
-        expect(mockEcmFileService.updateFile(capture(saved), eq(mockAuthentication)))
-                .andThrow(new AcmUserActionFailedException("testMessage", null, null, null, null));
-        expect(mockAuthentication.getName()).andReturn("user");
+
+        expect(mockEcmFileService.updateFile(capture(saved))).andReturn(null);
+        expect(mockAuthentication.getName()).andReturn("user").anyTimes();
 
         replayAll();
 
-        mockMvc.perform(
-                post("/api/latest/service/ecm/file/update")
-                        .content(new ObjectMapper().writeValueAsString(in))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .principal(mockAuthentication))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(MediaType.TEXT_PLAIN));
+        try{
+            mockMvc.perform(
+                    post("/api/latest/service/ecm/file/{fileId}", "100")
+                            .content(new ObjectMapper().writeValueAsString(in))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .principal(mockAuthentication))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(content().contentType(MediaType.TEXT_PLAIN));
+        }
+        catch(Exception e){
+            // do nothing, exception expected
+        }
 
         verifyAll();
-        assertEquals(in.getId(), saved.getValue().getId());
     }
 }
