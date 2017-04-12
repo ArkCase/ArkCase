@@ -5,10 +5,9 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
-    <!-- pre-save handlers -->
+    <!-- post-save handlers -->
     <bean id="documentRepositoryContainerHandler"
           class="com.armedia.acm.plugins.documentrepository.pipeline.postsave.DocumentRepositoryContainerHandler"/>
-    <!-- post-save handlers -->
     <bean id="documentRepositoryEcmFolderHandler"
           class="com.armedia.acm.plugins.documentrepository.pipeline.postsave.DocumentRepositoryEcmFolderHandler">
         <property name="ecmFileService" ref="ecmFileService"/>
