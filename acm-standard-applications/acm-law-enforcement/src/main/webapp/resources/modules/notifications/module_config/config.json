@@ -67,7 +67,8 @@
       "autoSuggestObjectType": "NOTIFICATION",
       "isAutoSuggestActive": true,
       "hiddenFacets": [
-        "Owner"
+        "Owner",
+        "Document Repository Name"
       ]
     }
   ]

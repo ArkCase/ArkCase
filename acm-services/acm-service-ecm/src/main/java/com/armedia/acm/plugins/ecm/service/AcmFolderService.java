@@ -9,6 +9,7 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import org.json.JSONArray;
 import org.mule.api.MuleException;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -34,6 +35,9 @@ public interface AcmFolderService {
     AcmFolder copyFolder(AcmFolder toBeCopied, AcmFolder dstFolder, Long targetObjectId, String targetObjectType) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmFolderException;
 
     void deleteFolderIfEmpty(Long folderId) throws AcmUserActionFailedException, AcmObjectNotFoundException;
+
+    @Transactional
+    void deleteFolderTree(Long folderId) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
     AcmFolder findById(Long folderId);
 

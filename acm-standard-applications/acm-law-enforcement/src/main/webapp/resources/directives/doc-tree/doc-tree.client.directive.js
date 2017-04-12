@@ -661,9 +661,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 if (Validator.validateFancyTreeNode(node)) {
                     $(node.span).addClass("pending");
                     if (!node.folder) {
-                        if(fileName){
+                        if (fileName) {
                             node.title = $translate.instant("common.directive.docTree.waitUploading") + fileName;
-                        }else {
+                        } else {
                             node.title = $translate.instant("common.directive.docTree.waitUploading") + node.data.name;
                         }
                         node.renderTitle();
@@ -1412,8 +1412,15 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                                 // Opens the snowbound viewer and loads the selected document(s) into it
                                 var baseUrl = window.location.href.split('!')[0];
-                                var urlArgs = node.data.objectId + "/" + node.parent.data.containerObjectId + "/" +
-                                    node.parent.data.containerObjectType + "/" + node.data.name + "/" + selectedIdsList;
+                                var parentNode;
+                                if (DocTree.isTopNode(node.parent)) {
+                                    parentNode = node.parent.data;
+                                } else {
+                                    var root = DocTree.getTopNode();
+                                    parentNode = root.data;
+                                }
+                                var urlArgs = node.data.objectId + "/" + parentNode.containerObjectId + "/" +
+                                    parentNode.containerObjectType + "/" + node.data.name + "/" + selectedIdsList;
                                 window.open(baseUrl + '!/viewer/' + urlArgs);
                             }
                         }
@@ -2335,7 +2342,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             , param: {
                                 subFolderId: subFolderId
                                 , folderId: toFolderId
-                                , objType: DocTree.getObjTyupe()
+                                , objType: DocTree.getObjType()
                                 , objId: DocTree.getObjId()
                             }
                             , data: {}
@@ -3721,12 +3728,13 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         $scope.width = (params.w + 200) + "px";
                         $scope.widthDialogBox = (params.w + 20) + "px";
                         $scope.frevvoFormUrl = params.frevvoFormUrl;
-                        $scope.iframeLoaded = function(){
+                        $scope.iframeLoaded = function () {
                             startCheckFrevvoSubmission();
                             startInitFrevvoMessaging();
                         };
 
                         var initFrevvoMessagingPromise;
+
                         function startInitFrevvoMessaging() {
                             stopInitFrevvoMessaging();
                             initFrevvoMessagingPromise = $interval(initFrevvoMessaging, 250);
@@ -3770,7 +3778,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 !Util.isEmpty(document.getElementById('frevvoFormIframe').contentWindow) &&
                                 !Util.isEmpty(document.getElementById('frevvoFormIframe').contentWindow.document) &&
                                 !Util.isEmpty(document.getElementById('frevvoFormIframe').contentWindow.document.getElementsByTagName('iframe')) &&
-                                 document.getElementById('frevvoFormIframe').contentWindow.document.getElementsByTagName('iframe').length > 0 &&
+                                document.getElementById('frevvoFormIframe').contentWindow.document.getElementsByTagName('iframe').length > 0 &&
                                 !Util.isEmpty(document.getElementById('frevvoFormIframe').contentWindow.document.getElementsByTagName('iframe')[0]) &&
                                 !Util.isEmpty(document.getElementById('frevvoFormIframe').contentWindow.document.getElementsByTagName('iframe')[0].contentWindow)
                             ) {
@@ -3818,6 +3826,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         }
 
                         var promise;
+
                         function startCheckFrevvoSubmission() {
                             stopCheckFrevvoSubmission();
                             promise = $interval(checkFrevvoSubmission, 250);
@@ -3842,7 +3851,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 !Util.isEmpty($rootScope.frevvoMessaging.receiver.document.body) &&
                                 !Util.isEmpty($rootScope.frevvoMessaging.receiver.document.body.getElementsByTagName('div')) &&
                                 $rootScope.frevvoMessaging.receiver.document.body.getElementsByTagName('div').length > 0 &&
-                                !Util.isEmpty($rootScope.frevvoMessaging.receiver.document.body.getElementsByTagName('div')[0])  &&
+                                !Util.isEmpty($rootScope.frevvoMessaging.receiver.document.body.getElementsByTagName('div')[0]) &&
                                 !Util.isEmpty($rootScope.frevvoMessaging.receiver.document.body.getElementsByTagName('div')[0].innerHTML.trim()) &&
                                 !Util.isEmpty($rootScope.frevvoMessaging.receiver.document.body.getElementsByTagName('div')[0].innerHTML.trim()) &&
                                 angular.equals("Closing ...", $rootScope.frevvoMessaging.receiver.document.body.getElementsByTagName('div')[0].innerHTML.trim())
@@ -4333,6 +4342,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 , uploadForm: '&'
                 , onInitTree: '&'
                 , readOnly: '@'
+                , topNodeExpanded: '='
             }
 
             , link: function (scope, element, attrs) {
@@ -4344,6 +4354,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 DocTree.setObjId(scope.objectId);
                 DocTree.treeConfig = {};
                 DocTree.objectInfo = null;
+                DocTree.topNodeExpanded = scope.topNodeExpanded ? scope.topNodeExpanded : false;
                 DocTree.doUploadForm = ("undefined" != typeof attrs.uploadForm) ? scope.uploadForm() : (function () {
                 }); //if not defined, do nothing
                 DocTree.readOnly = ("true" === attrs.readOnly);
@@ -4421,6 +4432,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                         extService.onConfigUpdated(DocTree);
                                     }
                                 }
+                            }
+
+                            if (DocTree.topNodeExpanded) {
+                                DocTree.expandTopNode();
                             }
                         }
 

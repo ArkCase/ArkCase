@@ -1,0 +1,181 @@
+{
+  "document-repository": {
+    "title": "zh-cn_Documents"
+  },
+  "document-repository.menus": {
+    "leftnav.item": "zh-cn_Documents",
+    "topbar.item": "zh-cn_Document Repository"
+  },
+  "document-repository.error": {
+    "invalidData": ""
+  },
+  "document-repository.comp.info": {
+    "docRepoId": "zh-cn_Repository ID:",
+    "docRepoName": "zh-cn_Document Repository Name:",
+    "modified.label": "zh-cn_Modified Date",
+    "assignee.label": "zh-cn_Assigned To",
+    "owningGroup.label": "zh-cn_Owning Group",
+    "description.label": "zh-cn_Description"
+  },
+  "document-repository.comp.actions": {
+    "restrict": "zh-cn_Restrict?",
+    "subscribe.button": "zh-cn_Subscribe",
+    "unsubscribe.button": "zh-cn_Unsubscribe"
+  },
+  "document-repository.comp.details": {
+    "title": "zh-cn_Details",
+    "informSaved": "zh-cn_Document Repository details saved",
+    "table.columns": {
+      "title": "zh-cn_Details",
+      "modified": "zh-cn_Date Last Modified",
+      "modifier": "zh-cn_User Last Modified"
+    }
+  },
+  "document-repository.comp.documents": {
+    "title": "zh-cn_Documents"
+  },
+  "document-repository.comp.participants": {
+    "title": "zh-cn_Participants",
+    "table.columns": {
+      "type": "zh-cn_Type",
+      "name": "zh-cn_Name"
+    },
+    "dialogUserPicker": {
+      "header": "zh-cn_Choose User",
+      "table.columns": {
+        "name": "zh-cn_Name",
+        "type": "zh-cn_Type",
+        "title": "zh-cn_Title",
+        "id": "zh-cn_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "zh-cn_Choose Group",
+      "table.columns": {
+        "name": "zh-cn_Name"
+      }
+    }
+  },
+  "document-repository.comp.notes": {
+    "title": "zh-cn_Notes",
+    "table.columns": {
+      "note": "zh-cn_Note",
+      "created": "zh-cn_Created",
+      "creator": "zh-cn_Author"
+    }
+  },
+  "document-repository.comp.references": {
+    "title": "zh-cn_References",
+    "table.columns": {
+      "targetName": "zh-cn_Number",
+      "parentName": "zh-cn_Parent",
+      "targetTitle": "zh-cn_Title",
+      "modified": "zh-cn_Modified",
+      "targetType": "zh-cn_Reference Type",
+      "status": "zh-cn_Status"
+    }
+  },
+  "document-repository.comp.history": {
+    "title": "zh-cn_History",
+    "table.columns": {
+      "eventType": "zh-cn_Event Name",
+      "eventDate": "zh-cn_Date",
+      "userId": "zh-cn_User"
+    }
+  },
+  "document-repository.comp.tags": {
+    "title": "zh-cn_Tags",
+    "table.columns": {
+      "tag": "zh-cn_Tag",
+      "created": "zh-cn_Created",
+      "createdBy": "zh-cn_Created By"
+    },
+    "modal": {
+      "title": "zh-cn_Tag",
+      "search": "zh-cn_Search for Tag",
+      "buttons": {
+        "cancel": "zh-cn_Cancel",
+        "ok": "zh-cn_Add Tag"
+      }
+    },
+    "message": {
+      "tagExists": "zh-cn_Tag with that name or description or text already exists",
+      "tagAssociated": "zh-cn_already associated",
+      "delete": {
+        "success": "zh-cn_Tag deleted successfully",
+        "error": "zh-cn_Error deleting tag"
+      }
+    }
+  },
+  "document-repository.comp.addreference": {
+    "title": "zh-cn_Add Reference",
+    "cancelButton": "zh-cn_Cancel",
+    "confirmButton": "zh-cn_Add",
+    "search": {
+      "placeholder": "zh-cn_Search for case, complaint, file, task",
+      "btn": "zh-cn_Search"
+    },
+    "grid": {
+      "columns": {
+        "id": "zh-cn_Id",
+        "name": "zh-cn_Name",
+        "type": "zh-cn_Type",
+        "title": "zh-cn_Title",
+        "parent": "zh-cn_Parent",
+        "assignee": "zh-cn_Assignee",
+        "modified": "zh-cn_Modified"
+      }
+    }
+  },
+  "document-repository.comp.assigneePickerModal": {
+    "title": "zh-cn_Change Assignee",
+    "assigneeNamelabel": "zh-cn_Assignee Name",
+    "btnCancelText": "zh-cn_Cancel",
+    "btnSaveText": "zh-cn_Save",
+    "searchAssigneeHeader": "zh-cn_Search Assignee"
+  },
+  "document-repository.comp.groupPickerModal": {
+    "title": "zh-cn_Change Group",
+    "groupNamelabel": "zh-cn_Group Name",
+    "btnCancelText": "zh-cn_Cancel",
+    "btnSaveText": "zh-cn_Save",
+    "searchGroupHeader": "zh-cn_Search Group"
+  },
+  "document-repository.userOrGroupSearch": {
+    "id": "zh-cn_userSearch",
+    "title": "zh-cn_User/Group Search",
+    "search": {
+      "btn": "zh-cn_Search",
+      "placeholder": "zh-cn_Search for the user or group."
+    },
+    "cancelButton": "zh-cn_Cancel",
+    "confirmButton": "zh-cn_Confirm",
+    "enabled": true,
+    "userOrGroupFacetFilter": "\"object_type_s\":(GROUP OR USER)",
+    "assigneeGridColumns": {
+      "name": "zh-cn_Name",
+      "type": "zh-cn_Type",
+      "title": "zh-cn_Title",
+      "username": "zh-cn_Username"
+    }
+  },
+  "document-repository.newRepository": {
+    "title": "zh-cn_Create Repository",
+    "assigneeLabel": "zh-cn_Assignee",
+    "owningGroupLabel": "zh-cn_Owning Group",
+    "assignee.placeholder": "zh-cn_Search Assignee",
+    "saveButton": "zh-cn_Create Repository",
+    "cancelButton": "zh-cn_Cancel",
+    "nameLabel": "zh-cn_Name",
+    "name.placeholder": "zh-cn_Enter Name",
+    "descriptionLabel": "zh-cn_Description",
+    "description.placeholder": "zh-cn_Enter Description",
+    "searchUser": "zh-cn_Search User"
+  },
+  "document-repository.dialogUserPicker":{
+    "table.columns.name": "zh-cn_Name",
+    "table.columns.type": "zh-cn_Type",
+    "table.columns.title": "zh-cn_Title",
+    "table.columns.id": "zh-cn_Username"
+  }
+}

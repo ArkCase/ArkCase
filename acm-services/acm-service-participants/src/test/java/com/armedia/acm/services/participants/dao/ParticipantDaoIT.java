@@ -31,7 +31,8 @@ import static org.junit.Assert.*;
         "/spring/spring-library-acm-encryption.xml",
         "/spring/spring-library-user-service.xml",
         "/spring/spring-library-search.xml",
-        "/spring/spring-config-participant-service-test-beans.xml"
+        "/spring/spring-config-participant-service-test-beans.xml",
+        "/spring/spring-library-drools-rule-monitor.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
 public class ParticipantDaoIT
