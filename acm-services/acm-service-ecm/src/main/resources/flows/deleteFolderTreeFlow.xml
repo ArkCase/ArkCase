@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+      xmlns:cmis="http://www.mulesoft.org/schema/mule/cmis"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns="http://www.mulesoft.org/schema/mule/core"
+      version="CE-3.7.0"
+      xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
+http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmis/current/mule-cmis.xsd">
+
+    <flow name="deleteFolderTree" doc:name="Delete Folder Tree">
+        <description>
+            The folder tree will be deleted recursively.
+        </description>
+
+        <vm:inbound-endpoint
+                address="vm://deleteFolderTree.in"
+                exchange-pattern="request-response"
+                doc:name="Delete Folder Tree">
+        </vm:inbound-endpoint>
+
+
+        <cmis:delete-tree config-ref="#[message.inboundProperties.configRef]"
+                          folderId="#[message.inboundProperties.acmFolderId]" continueOnFailure="false"
+                          allversions="true"/>
+
+        <catch-exception-strategy>
+            <logger level="ERROR" category="com.armedia.acm.plugins.ecm"
+                    message="Exception saving: #[exception.message]"/>
+            <set-property propertyName="deleteFolderTreeException" value="#[exception]"/>
+        </catch-exception-strategy>
+    </flow>
+</mule>
