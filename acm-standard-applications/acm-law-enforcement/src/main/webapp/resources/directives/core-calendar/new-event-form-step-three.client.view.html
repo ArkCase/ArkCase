@@ -1,0 +1,50 @@
+<div class="panel-body">
+    <div class="row">
+        <div class="col-sm-12 form-group">
+            <button type="file" ngf-select ng-model="attachmentModel.files" multiple ngf-max-size="20MB" ngf-keep="true" ngf-keep-distinct="true" class="btn btn-secondary">
+				<span translate>
+					Browse Files
+				</span>
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <label>
+				<span translate>
+					Selected files to attach:
+				</span>
+            </label>
+        </div>
+        <div class="col-sm-12 form-group">
+			<span ng-if="attachmentModel.files.length === 0" class="well-sm" translate>
+				No Files Selected.
+			</span>
+            <ul ng-if="attachmentModel.files.length > 0" class="list-unstyled well-sm">
+                <li ng-repeat="file in attachmentModel.files">
+                    <i class="fa fa-file" aria-hidden="true"></i>
+                    <strong>{{file.name}}</strong>
+                    <i class="fa fa-times cursor-pointer" aria-hidden="true" ng-click="removeSelectedFile($index)"></i>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row" ng-if="eventDataModel.files.length > 0">
+        <div class="col-sm-12">
+            <label>
+				<span translate>
+					Attached files:
+				</span>
+            </label>
+        </div>
+        <div class="col-sm-12 form-group">
+            <ul class="list-unstyled well-sm">
+                <li ng-repeat="file in eventDataModel.files">
+                    <i class="fa fa-file" aria-hidden="true"></i>
+                    <strong>{{file.name}}</strong>
+                    <i class="fa fa-times cursor-pointer" aria-hidden="true" ng-click="removeAttachedFile($index)"></i>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
