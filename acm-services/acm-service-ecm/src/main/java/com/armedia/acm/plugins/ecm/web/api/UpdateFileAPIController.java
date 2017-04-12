@@ -46,6 +46,7 @@ public class UpdateFileAPIController
         file = getEcmFileService().updateFile(file);
         if ( file != null ) {
             publishFileUpdatedEvent(file,authentication,true);
+            log.info("File update successful [{}]", file);
             return file;
         }
         throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_UPDATE_FILE,EcmFileConstants.OBJECT_FILE_TYPE,fileId,"Failed to update file with fileId: "+ fileId, null);
