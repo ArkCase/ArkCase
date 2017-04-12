@@ -1,0 +1,181 @@
+{
+  "document-repository": {
+    "title": "Documents"
+  },
+  "document-repository.menus": {
+    "leftnav.item": "Documents",
+    "topbar.item": "Document Repository"
+  },
+  "document-repository.error": {
+    "invalidData": ""
+  },
+  "document-repository.comp.info": {
+    "docRepoId": "Repository ID:",
+    "docRepoName": "Document Repository Name:",
+    "modified.label": "Modified Date",
+    "assignee.label": "Assigned To",
+    "owningGroup.label": "Owning Group",
+    "description.label": "Description"
+  },
+  "document-repository.comp.actions": {
+    "restrict": "Restrict?",
+    "subscribe.button": "Subscribe",
+    "unsubscribe.button": "Unsubscribe"
+  },
+  "document-repository.comp.details": {
+    "title": "Details",
+    "informSaved": "Document Repository details saved",
+    "table.columns": {
+      "title": "Details",
+      "modified": "Date Last Modified",
+      "modifier": "User Last Modified"
+    }
+  },
+  "document-repository.comp.documents": {
+    "title": "Documents"
+  },
+  "document-repository.comp.participants": {
+    "title": "Participants",
+    "table.columns": {
+      "type": "Type",
+      "name": "Name"
+    },
+    "dialogUserPicker": {
+      "header": "Choose User",
+      "table.columns": {
+        "name": "Name",
+        "type": "Type",
+        "title": "Title",
+        "id": "Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "Choose Group",
+      "table.columns": {
+        "name": "Name"
+      }
+    }
+  },
+  "document-repository.comp.notes": {
+    "title": "Notes",
+    "table.columns": {
+      "note": "Note",
+      "created": "Created",
+      "creator": "Author"
+    }
+  },
+  "document-repository.comp.references": {
+    "title": "References",
+    "table.columns": {
+      "targetName": "Number",
+      "parentName": "Parent",
+      "targetTitle": "Title",
+      "modified": "Modified",
+      "targetType": "Reference Type",
+      "status": "Status"
+    }
+  },
+  "document-repository.comp.history": {
+    "title": "History",
+    "table.columns": {
+      "eventType": "Event Name",
+      "eventDate": "Date",
+      "userId": "User"
+    }
+  },
+  "document-repository.comp.tags": {
+    "title": "Tags",
+    "table.columns": {
+      "tag": "Tag",
+      "created": "Created",
+      "createdBy": "Created By"
+    },
+    "modal": {
+      "title": "Tag",
+      "search": "Search for Tag",
+      "buttons": {
+        "cancel": "Cancel",
+        "ok": "Add Tag"
+      }
+    },
+    "message": {
+      "tagExists": "Tag with that name or description or text already exists",
+      "tagAssociated": "already associated",
+      "delete": {
+        "success": "Tag deleted successfully",
+        "error": "Error deleting tag"
+      }
+    }
+  },
+  "document-repository.comp.addreference": {
+    "title": "Add Reference",
+    "cancelButton": "Cancel",
+    "confirmButton": "Add",
+    "search": {
+      "placeholder": "Search for case, complaint, file, task",
+      "btn": "Search"
+    },
+    "grid": {
+      "columns": {
+        "id": "Id",
+        "name": "Name",
+        "type": "Type",
+        "title": "Title",
+        "parent": "Parent",
+        "assignee": "Assignee",
+        "modified": "Modified"
+      }
+    }
+  },
+  "document-repository.comp.assigneePickerModal": {
+    "title": "Change Assignee",
+    "assigneeNamelabel": "Assignee Name",
+    "btnCancelText": "Cancel",
+    "btnSaveText": "Save",
+    "searchAssigneeHeader": "Search Assignee"
+  },
+  "document-repository.comp.groupPickerModal": {
+    "title": "Change Group",
+    "groupNamelabel": "Group Name",
+    "btnCancelText": "Cancel",
+    "btnSaveText": "Save",
+    "searchGroupHeader": "Search Group"
+  },
+  "document-repository.userOrGroupSearch": {
+    "id": "userSearch",
+    "title": "User/Group Search",
+    "search": {
+      "btn": "Search",
+      "placeholder": "Search for the user or group."
+    },
+    "cancelButton": "Cancel",
+    "confirmButton": "Confirm",
+    "enabled": true,
+    "userOrGroupFacetFilter": "\"object_type_s\":(GROUP OR USER)",
+    "assigneeGridColumns": {
+      "name": "Name",
+      "type": "Type",
+      "title": "Title",
+      "username": "Username"
+    }
+  },
+  "document-repository.newRepository": {
+    "title": "Create Repository",
+    "assigneeLabel": "Assignee",
+    "owningGroupLabel": "Owning Group",
+    "assignee.placeholder": "Search Assignee",
+    "saveButton": "Create Repository",
+    "cancelButton": "Cancel",
+    "nameLabel": "Name",
+    "name.placeholder": "Enter Name",
+    "descriptionLabel": "Description",
+    "description.placeholder": "Enter Description",
+    "searchUser": "Search User"
+  },
+  "document-repository.dialogUserPicker":{
+   "table.columns.name": "Name",
+    "table.columns.type": "Type",
+    "table.columns.title": "Title",
+    "table.columns.id": "Username"
+  }
+}

@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.io.Resource;
@@ -279,7 +280,8 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
                     CorrespondenceMergeField defaultMergeField = new CorrespondenceMergeField();
                     defaultMergeField.setFieldVersion("1.0");
                     defaultMergeField.setFieldId(fieldName);
-                    defaultMergeField.setFieldDescription(fieldName + " place holder");
+                    defaultMergeField.setFieldDescription(
+                            StringUtils.join(StringUtils.splitByCharacterTypeCamelCase(fieldName), ' ') + " Place Holder");
                     defaultMergeField.setFieldType(cq.getType().name());
                     defaultMergeField.setFieldValue(fieldName);
                     mergeFields.add(defaultMergeField);
