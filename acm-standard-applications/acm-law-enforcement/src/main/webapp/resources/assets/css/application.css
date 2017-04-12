@@ -1317,3 +1317,13 @@ a.no-link:hover, a.no-link:focus, a.no-link:visited {
     cursor: not-allowed;
     pointer-events: none;
 }
+
+/*Custom style for user picker read only input*/
+.user-picker-input {
+    background-color: white !important;
+    cursor: pointer;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}

@@ -17,7 +17,7 @@
         </label>
     </div>
     <div class="col-sm-12">
-        <tags-input ng-model="attendees" display-property="email_lcs" allowed-tags-pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$" placeholder="{{'common.directive.coreCalendar.chooseEventAttendeesDialog.attendees.placeholder' | translate}}"></tags-input>
+        <tags-input ng-model="attendees" display-property="email" allowed-tags-pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$" placeholder="{{'common.directive.coreCalendar.chooseEventAttendeesDialog.attendees.placeholder' | translate}}" on-tag-added="addAdditionalAttendees($tag)"></tags-input>
     </div>
 </div>
 <div class="modal-footer">
@@ -25,7 +25,7 @@
     <button type="button" class="btn btn-secondary" ng-click="cancel()" translate>
         common.directive.coreCalendar.chooseEventAttendeesDialog.cancel.button
     </button>
-    <button type="button" class="btn btn-primary" ng-click="addAttendees()" ng-disabled="disableOk()" translate>
+    <button type="button" class="btn btn-primary" ng-click="addAttendees()"translate>
         common.directive.coreCalendar.chooseEventAttendeesDialog.addAttendees.button
     </button>
 </div>

@@ -1,0 +1,297 @@
+<div class="modal-header">
+    <h3 translate>Event Recurrence</h3>
+</div>
+
+<div class="modal-body">
+    <ng-form name="setRecurrenceForm">
+        <!-- Event Time -->
+        <div class="row">
+            <div class="col-sm-4 form-group">
+                <label for="startDate">
+                    <span translate>common.directive.coreCalendar.addNewEventDialog.form.startDate.label</span>
+                    <span class="required-asterisk">*</span>
+                </label>
+                <div class="input-group" name="startDate">
+                    <input type="text" class="form-control"
+                           datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
+                           ng-model="recurrenceTmpModel.start"
+                           is-open="openedStartDate.openedEnd" close-on-date-selection="true" show-button-bar="true"
+                           on-open-focus="false"
+                           ng-change="onDateChanged(recurrenceTmpModel.start, recurrenceTmpModel.end)"
+                           close-text="{{ 'common.directive.coreCalendar.addNewEventDialog.form.datePickerClose.button' | translate }}"
+                           min-date="recurrenceTmpModel.minStartDate"
+                           placeholder="{{'common.directive.coreCalendar.addNewEventDialog.form.startDate.placeholder' | translate}}"
+                           required/>
+                    <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="openedStartDate.openedEnd = !openedStartDate.openedEnd">
+                                  <i class="fa fa-calendar"></i>
+                            </button>
+                        </span>
+                </div>
+            </div>
+            <div class="col-sm-4 form-group">
+                <label for="startTime">
+                    <span translate>common.directive.coreCalendar.addNewEventDialog.form.startTime.label</span>
+                    <span class="required-asterisk">*</span>
+                </label>
+                <fieldset>
+                    <timepicker ng-model="recurrenceTmpModel.start" hour-step="1" minute-step="1" show-meridian="true" show-spinners="false" ng-change="onTimeChanged(recurrenceTmpModel.start, recurrenceTmpModel.end)"></timepicker>
+                </fieldset>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4 form-group">
+                <label for="endDate">
+                    <span translate>common.directive.coreCalendar.addNewEventDialog.form.endDate.label</span>
+                </label>
+                <div class="input-group" name="endDate">
+                    <input type="text" class="form-control"
+                           datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
+                           ng-model="recurrenceTmpModel.end"
+                           is-open="openedEndDate.openedEnd" close-on-date-selection="true" show-button-bar="true"
+                           on-open-focus="false"
+                           ng-change="onDateChanged(recurrenceTmpModel.start, recurrenceTmpModel.end)"
+                           close-text="{{ 'common.directive.coreCalendar.addNewEventDialog.form.datePickerClose.button' | translate }}"
+                           min-date="recurrenceTmpModel.minEndDate"
+                           placeholder="{{'common.directive.coreCalendar.addNewEventDialog.form.endDate.placeholder' | translate}}"/>
+                    <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="openedEndDate.openedEnd = !openedEndDate.openedEnd">
+                                    <i class="fa fa-calendar"></i>
+                            </button>
+                        </span>
+                </div>
+            </div>
+            <div class="col-sm-4 form-group">
+                <label for="endTime">
+                    <span translate>common.directive.coreCalendar.addNewEventDialog.form.endTime.label</span>
+                </label>
+                <fieldset>
+                    <timepicker ng-model="recurrenceTmpModel.end" hour-step="1" minute-step="1" show-meridian="true" show-spinners="false" ng-change="onTimeChanged(recurrenceTmpModel.start, recurrenceTmpModel.end)"></timepicker>
+                </fieldset>
+            </div>
+            <div class="col-sm-12 form-group" ng-if="!validDuration">
+                <p class="text-danger">
+                    The duration of the event must be shorter than how frequenlty it occurs.
+                </p>
+            </div>
+        </div>
+        <!-- Recurrence Pattern -->
+        <div class="row">
+            <label class="col-sm-12" for="recurrencePattern">
+                <span translate>Recurrence Pattern</span>
+            </label>
+            <fieldset name="recurrencePattern" class="col-sm-12 form-group">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <select class="form-control" ng-model="recurrenceType" ng-change="onRecurrenceTypeChange(recurrenceType)" required>
+                            <option value="" disabled selected hidden translate>
+                                common.directive.coreCalendar.addNewEventDialog.form.repeats.placeholder
+                            </option>
+                            <option ng-repeat="option in repeatsOptions" value="{{option.value}}" translate>
+                                {{option.label}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="row">
+            <!-- Daily recurrence -->
+            <div ng-if="recurrenceType === 'DAILY'">
+                <div class="col-sm-12 form-group form-inline">
+                    <label class="radio-inline">
+                        <input type="radio" value="EVERY_DAY" ng-model="recurrenceTmpModel.recurrencePattern" ng-change="onDailyRecurrencePatternChange(recurrenceTmpModel.recurrencePattern)">
+                        <span translate>
+                    Every
+                </span>
+                    </label>
+                    <input type="number" class="form-control" ng-model="dailyRecurrence.interval" min="1" max="999" ng-required="recurrenceTmpModel.recurrencePattern === 'EVERY_DAY' && recurrenceType === 'DAILY'" ng-change="onDailyRecurrencePatternChange(recurrenceTmpModel.recurrencePattern)">
+                    <span>day(s)</span>
+                </div>
+                <div class="col-sm-12 form-group form-inline">
+                    <label class="radio-inline">
+                        <input type="radio" value="EVERY_WEEKDAY" ng-model="recurrenceTmpModel.recurrencePattern" ng-change="onDailyRecurrencePatternChange(recurrenceTmpModel.recurrencePattern)">
+                        <span translate>
+                    Every weekday
+                </span>
+                    </label>
+                </div>
+            </div>
+            <!-- Weekly recurrence -->
+            <div ng-if="recurrenceType === 'WEEKLY'">
+                <div class="col-sm-12 form-group form-inline">
+                    <span>Recur every</span>
+                    <input type="number" name="" class="form-control" ng-model="weeklyRecurrence.interval" ng-required="recurrenceTmpModel.recurrencePattern === 'WEEKLY' && recurrenceType === 'WEEKLY'" min="1" max="99" ng-change="onWeeklyRecurrencePatternChange(day)">
+                    <span>week(s) on:</span>
+                </div>
+                <div class="col-sm-12 form-group form-inline">
+                    <label ng-repeat="day in daysOfTheWeekOptions" class="checkbox-inline">
+                        <input
+                                type="checkbox"
+                                value="{{day.value}}"
+                                ng-click="onWeeklyRecurrencePatternChange(day)"
+                                ng-checked="selectedDayOfTheWeek.indexOf(day.value) > -1">
+                        <span translate>
+                             {{day.label}}
+                         </span>
+                    </label>
+                </div>
+            </div>
+            <!-- Monthly recurrence -->
+            <div ng-if="recurrenceType === 'MONTHLY'">
+                <div class="col-sm-12 form-group form-inline">
+                    <label class="radio-inline">
+                        <input type="radio" value="MONTHLY_ABSOLUTE" ng-model="recurrenceTmpModel.recurrencePattern" ng-change="onMonthlyRecurrencePatternChange(recurrenceTmpModel.recurrencePattern)">
+                        <span translate>
+                    Day
+                </span>
+                    </label>
+                    <input type="number" min="1" max="31" class="form-control" ng-model="absoluteMonthlyRecurrence.day" ng-required="recurrenceTmpModel.recurrencePattern === 'MONTHLY_ABSOLUTE' && recurrenceType === 'MONTHLY'" ng-change="onMonthlyRecurrencePatternChange(recurrenceTmpModel.recurrencePattern)">
+                    <span>of every</span>
+                    <input type="number" min="1" max="99" class="form-control" ng-model="absoluteMonthlyRecurrence.interval"  ng-required="recurrenceTmpModel.recurrencePattern === 'MONTHLY_ABSOLUTE' && recurrenceType === 'MONTHLY'" ng-change="onMonthlyRecurrencePatternChange(recurrenceTmpModel.recurrencePattern)">
+                    <span>month(s)</span>
+                </div>
+                <div class="col-sm-12 form-group form-inline">
+                    <label class="radio-inline">
+                        <input type="radio" value="MONTHLY_RELATIVE" ng-model="recurrenceTmpModel.recurrencePattern" ng-change="onMonthlyRecurrencePatternChange(recurrenceTmpModel.recurrencePattern)">
+                        <span translate>
+                    The
+                </span>
+                    </label>
+                    <select class="form-control" ng-model="relativeMonthlyRecurrence.dayOuccurrenceInMonth" ng-required="recurrenceTmpModel.recurrencePattern === 'MONTHLY_RELATIVE' && recurrenceType === 'MONTHLY'" ng-change="onMonthlyRecurrencePatternChange(recurrenceTmpModel.recurrencePattern)">
+                        <option ng-repeat="option in dayOuccurrenceInMonthOptions" value="{{option.value}}" translate>
+                            {{option.label}}
+                        </option>
+                    </select>
+                    <select class="form-control" ng-model="relativeMonthlyRecurrence.day" ng-required="recurrenceTmpModel.recurrencePattern === 'MONTHLY_RELATIVE' && recurrenceType === 'MONTHLY'" ng-change="onMonthlyRecurrencePatternChange(recurrenceTmpModel.recurrencePattern)">
+                        <option ng-repeat="option in relativeDayOptions" value="{{option.value}}" translate>
+                            {{option.label}}
+                        </option>
+                    </select>
+                    <span>Of every</span>
+                    <input type="number" min="1" max="99" class="form-control" ng-model="relativeMonthlyRecurrence.interval" ng-required="recurrenceTmpModel.recurrencePattern === 'MONTHLY_RELATIVE' && recurrenceType === 'MONTHLY'" ng-change="onMonthlyRecurrencePatternChange(recurrenceTmpModel.recurrencePattern)">
+                    <span>month(s)</span>
+                </div>
+            </div>
+            <!-- Yearly recurrence -->
+            <div ng-if="recurrenceType === 'YEARLY'">
+                <div class="col-sm-12 form-group form-inline">
+                    <span>Recur every</span>
+                    <input type="number" min="1" max="99" class="form-control" ng-model="yearlyRecurrence.interval" ng-required="recurrenceType === 'YEARLY'" ng-change="onYearlyRecurrencePatternChange(recurrenceTmpModel.recurrencePattern)">
+                    <span>year(s)</span>
+                </div>
+                <div class="col-sm-12 form-group form-inline">
+                    <label class="radio-inline">
+                        <input type="radio" value="YEARLY_ABSOLUTE" ng-model="recurrenceTmpModel.recurrencePattern" ng-change="onYearlyRecurrencePatternChange(recurrenceTmpModel.recurrencePattern)">
+                        <span translate>
+                    On:
+                </span>
+                    </label>
+                    <select class="form-control" ng-model="absoluteYearlyRecurrence.month" ng-required="recurrenceTmpModel.recurrencePattern === 'YEARLY_ABSOLUTE' && recurrenceType === 'YEARLY'" ng-change="onYearlyRecurrencePatternChange(recurrenceTmpModel.recurrencePattern, absoluteYearlyRecurrence.month)">
+                        <option ng-repeat="option in monthsOptions" value="{{option.value}}" translate>
+                            {{option.label}}
+                        </option>
+                    </select>
+                    <input type="number" min="1" max="{{maxDaysInMonth}}" class="form-control" ng-model="absoluteYearlyRecurrence.day" ng-required="recurrenceTmpModel.recurrencePattern === 'YEARLY_ABSOLUTE' && recurrenceType === 'YEARLY'" ng-change="onYearlyRecurrencePatternChange(recurrenceTmpModel.recurrencePattern)">
+                </div>
+                <div class="col-sm-12 form-group form-inline">
+                    <label class="radio-inline">
+                        <input type="radio" value="YEARLY_RELATIVE" ng-model="recurrenceTmpModel.recurrencePattern" ng-change="onYearlyRecurrencePatternChange(recurrenceTmpModel.recurrencePattern)">
+                        <span translate>
+                            On the:
+                        </span>
+                    </label>
+                    <select class="form-control" ng-model="relativeYearlyRecurrence.dayOuccurrenceInMonth" ng-required="recurrenceTmpModel.recurrencePattern === 'YEARLY_RELATIVE' && recurrenceType === 'YEARLY'" ng-change="onYearlyRecurrencePatternChange(recurrenceTmpModel.recurrencePattern)">
+                        <option ng-repeat="option in dayOuccurrenceInMonthOptions" value="{{option.value}}" translate>
+                            {{option.label}}
+                        </option>
+                    </select>
+                    <select class="form-control" ng-model="relativeYearlyRecurrence.day" ng-required="recurrenceTmpModel.recurrencePattern === 'YEARLY_RELATIVE' && recurrenceType === 'YEARLY'" ng-change="onYearlyRecurrencePatternChange(recurrenceTmpModel.recurrencePattern)">
+                        <option ng-repeat="option in relativeDayOptions" value="{{option.value}}" translate>
+                            {{option.label}}
+                        </option>
+                    </select>
+                    <span>of</span>
+                    <select class="form-control" ng-model="relativeYearlyRecurrence.month" ng-required="recurrenceTmpModel.recurrencePattern === 'YEARLY_RELATIVE' && recurrenceType === 'YEARLY'" ng-change="onYearlyRecurrencePatternChange(recurrenceTmpModel.recurrencePattern)">
+                        <option ng-repeat="option in monthsOptions" value="{{option.value}}" translate>
+                            {{option.label}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <!-- Recurrence Range -->
+        <div class="row" ng-if="recurrenceType">
+            <label class="col-sm-12" for="recurrenceRange">
+                <span translate>Recurrence Range</span>
+            </label>
+            <fieldset name="recurrenceRange" class="col-sm-12 form-group">
+                <div class="row">
+                    <!--<div class="col-sm-12 form-inline form-group">-->
+                    <!--<span>-->
+                    <!--Start Date:-->
+                    <!--</span>-->
+                    <!--<input type="text" class="form-control"-->
+                    <!--datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"-->
+                    <!--ng-model="recurrenceTmpModel.eventStartDate"-->
+                    <!--readonly-->
+                    <!--disabled />-->
+                    <!--</div>-->
+                    <div class="col-sm-12 form-inline form-group">
+                        <label class="radio-inline">
+                            <input type="radio" value="NO_END_DATE" ng-model="recurrenceTmpModel.recurrenceRangeType">
+                            <span translate>
+                        No end date
+                    </span>
+                        </label>
+                    </div>
+                    <div class="col-sm-12 form-inline form-group">
+                        <label class="radio-inline">
+                            <input type="radio" value="END_AFTER" ng-model="recurrenceTmpModel.recurrenceRangeType">
+                            <span translate>
+                        End after:
+                    </span>
+                        </label>
+                        <input type="number" min="1" max="999" class="form-control" ng-model="recurrenceTmpModel.endAfterOccurrances" ng-change="onRecurrenceCountChange(recurrenceType, recurrenceTmpModel.recurrencePattern)">
+                        <span>occurrences</span>
+                    </div>
+                    <div class="col-sm-12 form-inline form-group">
+                        <label class="radio-inline">
+                            <input type="radio" value="END_BY" ng-model="recurrenceTmpModel.recurrenceRangeType">
+                            <span translate>
+                        End by:
+                    </span>
+                        </label>
+                        <div class="input-group" name="endDate">
+                            <input type="text" class="form-control"
+                                   datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
+                                   ng-model="recurrenceTmpModel.recurrenceEndBy"
+                                   is-open="openedEndDate.openedEndBy" close-on-date-selection="true" show-button-bar="true"
+                                   on-open-focus="false"
+                                   close-text="{{ 'common.directive.coreCalendar.addNewEventDialog.form.datePickerClose.button' | translate }}"
+                                   min-date="recurrenceTmpModel.minEndDate"
+                                   placeholder="{{'common.directive.coreCalendar.addNewEventDialog.form.endDate.placeholder' | translate}}"/>
+                            <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="openedEndDate.openedEndBy = !openedEndDate.openedEndBy">
+                                    <i class="fa fa-calendar"></i>
+                            </button>
+                        </span>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </ng-form>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary pull-left" ng-click="cancel()" translate>
+        Cancel
+    </button>
+    <button type="button" class="btn btn-secondary" ng-if="recurrentEvent" ng-click="removeCurrentRecurrence()" translate>
+        Remove current event recurrence
+    </button>
+    <button type="button" class="btn btn-primary" ng-click="setEventRecurrence()" ng-disabled="setRecurrenceForm.$invalid || (recurrenceType === 'WEEKLY' && selectedDayOfTheWeek.length === 0)" translate>
+        Set event recurrence
+    </button>
+</div>

@@ -10,8 +10,8 @@
 
  * Object.CalendarService includes group of REST calls to retrieve and save Calendar info;
  */
-angular.module('services').factory('Object.CalendarService', ['$resource', 'UtilService', 'Acm.StoreService',
-    function ($resource, Util, Store) {
+angular.module('services').factory('Object.CalendarService', ['$resource', 'UtilService', 'Acm.StoreService', 'Upload', '$q',
+    function ($resource, Util, Store, Upload, $q) {
         var Service = this;
         Service.SessionCacheNames = {};
         Service.CacheNames = {
@@ -92,19 +92,26 @@ angular.module('services').factory('Object.CalendarService', ['$resource', 'Util
 
         /**
          * @ngdoc method
-         * @name addNewEvent
+         * @name createNewEvent
          * @methodOf services:Object.CalendarService
          *
          * @description
          * Add new event to the calendar.
          *
          * @param {Object} eventData  the data of the calendar event
+         * @param {Array} files the files that should be attached on the event
          *
          * @returns {Object} Promise
          */
-        Service.addNewEvent = function(eventData) {
-            //TO DO
-            //implement http call when backend service is ready
+        Service.createNewEvent = function(eventData, files) {
+            var upload = Upload.upload({
+                url: 'api/upload',
+                method: 'POST',
+                data: angular.toJson(eventData),
+                file: files
+            });
+
+            return upload;
         };
 
         /**
