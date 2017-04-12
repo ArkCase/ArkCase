@@ -51,4 +51,10 @@
         </insert>
     </changeSet>
 
+    <changeSet id="02-add-description-column" author="ncuculova">
+        <addColumn tableName="acm_document_repository">
+            <column name="cm_doc_repo_description" type="VARCHAR(1024)"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

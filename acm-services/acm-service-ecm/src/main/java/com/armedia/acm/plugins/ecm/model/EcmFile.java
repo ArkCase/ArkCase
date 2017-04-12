@@ -10,6 +10,7 @@ import com.armedia.acm.services.tag.model.AcmAssociatedTag;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.google.common.base.Objects;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
@@ -478,5 +479,20 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
             fileExtension = FilenameUtils.getExtension(getFileName());
         }
         return fileExtension;
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EcmFile ecmFile = (EcmFile) o;
+        return Objects.equal(fileId, ecmFile.fileId);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hashCode(fileId);
     }
 }
