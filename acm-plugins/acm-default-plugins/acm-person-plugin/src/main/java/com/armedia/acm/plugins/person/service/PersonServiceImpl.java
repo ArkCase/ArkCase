@@ -31,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author riste.tutureski
@@ -175,6 +176,7 @@ public class PersonServiceImpl implements PersonService
     public void deleteImageForPerson(Long personId, Long imageId) throws AcmObjectNotFoundException, AcmUserActionFailedException
     {
         Person person = get(personId);
+        Objects.requireNonNull(person, "Person must not be null");
         if (person.getDefaultPictureId() == imageId)
         {
             throw new AcmUserActionFailedException("Delete picture", "FILE", imageId, "Can't delete picture which is already set as default.", null);
@@ -186,8 +188,9 @@ public class PersonServiceImpl implements PersonService
     public EcmFile insertImageForPerson(Long personId, MultipartFile image, boolean isDefault, Authentication auth) throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException
     {
         Person person = personDao.find(personId);
-
+        Objects.requireNonNull(person, "Person not found.");
         AcmFolder picturesFolderObj = acmFolderService.findByNameAndParent(picturesFolder, person.getContainer().getFolder());
+        Objects.requireNonNull(picturesFolderObj, "Pictures folder not found.");
         try
         {
             List objects = ecmFileService.allFilesForFolder(auth, person.getContainer(), picturesFolderObj.getId()).getChildren();

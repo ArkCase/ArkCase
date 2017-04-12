@@ -860,4 +860,21 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="40-acm_person-add-columns-for-default-values" author="nebojsha.davidovikj">
+        <addColumn tableName="acm_person">
+            <column name="cm_default_phone" type="${fkIdType}"/>
+            <column name="cm_default_email" type="${fkIdType}"/>
+            <column name="cm_default_url" type="${fkIdType}"/>
+            <column name="cm_default_address" type="${fkIdType}"/>
+            <column name="cm_default_alias" type="${fkIdType}"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="41-acm_person_alias-add-columns-description" author="nebojsha.davidovikj">
+        <addColumn tableName="acm_person_alias">
+            <column name="cm_description" type="VARCHAR(1024)"/>
+        </addColumn>
+    </changeSet>
+
+
 </databaseChangeLog>

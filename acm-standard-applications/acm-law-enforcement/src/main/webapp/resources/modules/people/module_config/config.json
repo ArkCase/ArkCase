@@ -81,6 +81,7 @@
         "components": [
           "details",
           "pictures",
+          "aliases",
           "history"
         ]
       },
@@ -98,6 +99,14 @@
         "icon": "fa fa-info-circle",
         "components": [
           "pictures"
+        ]
+      },
+      {
+        "type": "p/PERSON/ali",
+        "label": "aliases",
+        "icon": "fa fa-info-circle",
+        "components": [
+          "aliases"
         ]
       },
       {
@@ -161,6 +170,7 @@
           "name": "thumbnail",
           "displayName": "people.comp.pictures.table.columns.thumbnail",
           "headerCellFilter": "translate",
+          "enableCellEdit": false,
           "cellTemplate": "<center><img src='api/latest/plugin/ecm/download?ecmFileId={{row.entity.object_id_s}}' height='50px'></img></center>",
           "width": 100
         },
@@ -169,11 +179,13 @@
           "field": "title_parseable",
           "displayName": "people.comp.pictures.table.columns.title",
           "headerCellFilter": "translate",
+          "enableCellEdit": false,
           "cellTemplate": "<div ng-bind-html='row.entity.title_parseable' title='{{row.entity.title_parseable}}' class='ui-grid-cell-contents'></div>"
         },
         {
           "name": "description",
           "displayName": "people.comp.pictures.table.columns.description",
+          "enableCellEdit": false,
           "headerCellFilter": "translate"
         },
         {
@@ -187,6 +199,59 @@
         {
           "name": "author",
           "field": "creator_full_name_lcs",
+          "displayName": "people.comp.pictures.table.columns.creator",
+          "headerCellFilter": "translate",
+          "enableCellEdit": false,
+          "width": 150
+        }
+      ]
+    },
+    {
+      "id": "aliases",
+      "title": "Aliases",
+      "icon": "fa fa-info-circle",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": false,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
+      "columnDefs": [
+        {
+          "name": "aliasValue",
+          "field": "aliasValue",
+          "displayName": "people.comp.aliases.table.columns.aliasValue",
+          "enableCellEdit": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "aliasType",
+          "field": "aliasType",
+          "displayName": "people.comp.aliases.table.columns.aliasType",
+          "enableCellEdit": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "description",
+          "displayName": "people.comp.pictures.table.columns.description",
+          "enableCellEdit": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "created",
+          "displayName": "people.comp.pictures.table.columns.created",
+          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "headerCellFilter": "translate",
+          "enableCellEdit": false,
+          "width": 150
+        },
+        {
+          "name": "author",
+          "field": "creator",
           "displayName": "people.comp.pictures.table.columns.creator",
           "headerCellFilter": "translate",
           "enableCellEdit": false,

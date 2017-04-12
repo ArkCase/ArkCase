@@ -177,6 +177,41 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     @Column(name = "cm_object_type", updatable = false)
     private String objectType = PersonConstants.PERSON_OBJECT_TYPE;
 
+    /**
+     * ContactMethod which is default as phone
+     */
+    @OneToOne
+    @JoinColumn(name = "cm_default_phone")
+    private ContactMethod defaultPhone;
+
+    /**
+     * ContactMethod which is default as email
+     */
+    @OneToOne
+    @JoinColumn(name = "cm_default_email")
+    private ContactMethod defaultEmail;
+
+    /**
+     * PostalAddress which is default
+     */
+    @OneToOne
+    @JoinColumn(name = "cm_default_address")
+    private PostalAddress defaultAddress;
+
+    /**
+     * ContactMethod which is default as url
+     */
+    @OneToOne
+    @JoinColumn(name = "cm_default_url")
+    private ContactMethod defaultUrl;
+
+    /**
+     * PersonAlias which is default from personAliases
+     */
+    @OneToOne
+    @JoinColumn(name = "cm_default_alias")
+    private PersonAlias defaultAlias;
+
     @PrePersist
     protected void beforeInsert()
     {
@@ -559,5 +594,55 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     public Long getDefaultPictureId()
     {
         return defaultPictureId;
+    }
+
+    public ContactMethod getDefaultPhone()
+    {
+        return defaultPhone;
+    }
+
+    public void setDefaultPhone(ContactMethod defaultPhone)
+    {
+        this.defaultPhone = defaultPhone;
+    }
+
+    public ContactMethod getDefaultEmail()
+    {
+        return defaultEmail;
+    }
+
+    public void setDefaultEmail(ContactMethod defaultEmail)
+    {
+        this.defaultEmail = defaultEmail;
+    }
+
+    public PostalAddress getDefaultAddress()
+    {
+        return defaultAddress;
+    }
+
+    public void setDefaultAddress(PostalAddress defaultAddress)
+    {
+        this.defaultAddress = defaultAddress;
+    }
+
+    public ContactMethod getDefaultUrl()
+    {
+        return defaultUrl;
+    }
+
+    public void setDefaultUrl(ContactMethod defaultUrl)
+    {
+        this.defaultUrl = defaultUrl;
+    }
+
+    public PersonAlias getDefaultAlias()
+    {
+        return defaultAlias;
+    }
+
+    public void setDefaultAlias(PersonAlias defaultAlias)
+    {
+        this.defaultAlias = defaultAlias;
     }
 }
