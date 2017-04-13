@@ -115,7 +115,7 @@ public class SignatureAPIControllerTest extends EasyMockSupport
 
         String returned = result.getResponse().getContentAsString();
 
-        log.info("results: " + returned);
+        log.info("results: [{}]", returned);
 
         ObjectMapper objectMapper = new ObjectMapper();
 
