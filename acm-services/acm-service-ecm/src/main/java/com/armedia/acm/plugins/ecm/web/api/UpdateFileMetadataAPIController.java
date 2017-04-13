@@ -13,7 +13,11 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * Created by manoj.dhungana 04/10/2017.
@@ -21,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping({"/api/v1/service/ecm", "/api/latest/service/ecm"})
-public class UpdateFileAPIController
+public class UpdateFileMetadataAPIController
 {
 
     private EcmFileService ecmFileService;
@@ -30,29 +34,33 @@ public class UpdateFileAPIController
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @PreAuthorize("hasPermission(#parentObjectId, #parentObjectType, 'uploadOrReplaceFile')")
-    @RequestMapping(value = "/file/{fileId}",  method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/file/metadata/{fileId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public EcmFile updateFile(
             @RequestBody EcmFile file,
             @PathVariable("fileId") Long fileId,
-            Authentication authentication) throws AcmUserActionFailedException, AcmObjectNotFoundException {
+            Authentication authentication) throws AcmUserActionFailedException, AcmObjectNotFoundException
+    {
 
-        if ( file == null || file.getFileId() == null || fileId == null || !fileId.equals(file.getFileId())) {
+        if (file == null || file.getFileId() == null || fileId == null || !fileId.equals(file.getFileId()))
+        {
             log.error("Invalid incoming file [{}]", file.toString());
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_UPDATE_FILE, EcmFileConstants.OBJECT_FILE_TYPE, null, "Invalid incoming file", null);
         }
 
         log.debug("Incoming file id to be updated [{}]", file.getId());
         file = getEcmFileService().updateFile(file);
-        if ( file != null ) {
-            publishFileUpdatedEvent(file,authentication,true);
+        if (file != null)
+        {
+            publishFileUpdatedEvent(file, authentication, true);
             log.info("File update successful [{}]", file);
             return file;
         }
-        throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_UPDATE_FILE,EcmFileConstants.OBJECT_FILE_TYPE,fileId,"Failed to update file with fileId: "+ fileId, null);
+        throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_UPDATE_FILE, EcmFileConstants.OBJECT_FILE_TYPE, fileId, "Failed to update file with fileId: " + fileId, null);
     }
 
-    private void publishFileUpdatedEvent(EcmFile file, Authentication authentication, boolean success){
+    private void publishFileUpdatedEvent(EcmFile file, Authentication authentication, boolean success)
+    {
         EcmFileUpdatedEvent event;
         event = new EcmFileUpdatedEvent(file, authentication);
         event.setSucceeded(success);
@@ -69,11 +77,13 @@ public class UpdateFileAPIController
         this.ecmFileService = ecmFileService;
     }
 
-    public ApplicationEventPublisher getApplicationEventPublisher() {
+    public ApplicationEventPublisher getApplicationEventPublisher()
+    {
         return applicationEventPublisher;
     }
 
-    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+    {
         this.applicationEventPublisher = applicationEventPublisher;
     }
 }
