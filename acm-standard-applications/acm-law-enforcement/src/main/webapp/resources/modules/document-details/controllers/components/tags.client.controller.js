@@ -71,7 +71,8 @@ angular.module('document-details').controller('Document.TagsController', ['$scop
                             }
                         }
                         else {
-                            ObjectTagsService.associateTag($stateParams.id, ObjectService.ObjectTypes.FILE, " ", tag.id).then(
+                            ObjectTagsService.associateTag($stateParams.id, ObjectService.ObjectTypes.FILE,
+                                $scope.parentTitle, tag.id).then(
                                 function () {
                                     $scope.tags.push(tag);
                                     $scope.gridOptions.data = $scope.tags;
