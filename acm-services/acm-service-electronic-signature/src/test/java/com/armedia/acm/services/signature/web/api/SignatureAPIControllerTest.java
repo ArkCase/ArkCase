@@ -31,185 +31,188 @@ import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { 
-		 "classpath:/spring/spring-web-acm-web.xml",
-		"classpath:/spring/spring-library-electronic-signature-test.xml" })
-public class SignatureAPIControllerTest extends EasyMockSupport {
+@ContextConfiguration(locations = {
+        "classpath:/spring/spring-web-acm-web.xml",
+        "classpath:/spring/spring-library-electronic-signature-test.xml"})
+public class SignatureAPIControllerTest extends EasyMockSupport
+{
 
-	private MockMvc mockMvc;
-	private MockHttpSession mockHttpSession;
-	private Authentication mockAuthentication;
+    private MockMvc mockMvc;
+    private MockHttpSession mockHttpSession;
+    private Authentication mockAuthentication;
 
-	private SignatureAPIController unit;
+    private SignatureAPIController unit;
 
-	private SignatureDao mockSignatureDao;
-	private SignatureEventPublisher mockSignatureEventPublisher;
-	private LdapAuthenticateManager mockLdapAuthenticateManager;
-	
+    private SignatureDao mockSignatureDao;
+    private SignatureEventPublisher mockSignatureEventPublisher;
+    private LdapAuthenticateManager mockLdapAuthenticateManager;
 
-	@Autowired
-	private ExceptionHandlerExceptionResolver exceptionResolver;
 
-	private Logger log = LoggerFactory.getLogger(getClass());
+    @Autowired
+    private ExceptionHandlerExceptionResolver exceptionResolver;
 
-	@Before
-	public void setUp() throws Exception {
-		mockSignatureDao = createMock(SignatureDao.class);
-		mockSignatureEventPublisher = createMock(SignatureEventPublisher.class);
-		mockLdapAuthenticateManager = createMock(LdapAuthenticateManager.class);
-		mockHttpSession = new MockHttpSession();
-		mockAuthentication = createMock(Authentication.class);
+    private Logger log = LoggerFactory.getLogger(getClass());
 
-		unit = new SignatureAPIController();
+    @Before
+    public void setUp() throws Exception
+    {
+        mockSignatureDao = createMock(SignatureDao.class);
+        mockSignatureEventPublisher = createMock(SignatureEventPublisher.class);
+        mockLdapAuthenticateManager = createMock(LdapAuthenticateManager.class);
+        mockHttpSession = new MockHttpSession();
+        mockAuthentication = createMock(Authentication.class);
 
-		unit.setSignatureDao(mockSignatureDao);
-		unit.setSignatureEventPublisher(mockSignatureEventPublisher);
-		unit.setLdapAuthenticateManager(mockLdapAuthenticateManager);
+        unit = new SignatureAPIController();
 
-		mockMvc = MockMvcBuilders.standaloneSetup(unit)
-				.setHandlerExceptionResolvers(exceptionResolver).build();
-	}
+        unit.setSignatureDao(mockSignatureDao);
+        unit.setSignatureEventPublisher(mockSignatureEventPublisher);
+        unit.setLdapAuthenticateManager(mockLdapAuthenticateManager);
 
-	@Test
-	public void signObject_Task_authenticated() throws Exception {
-		Long objectId = 500L;
-		String objectType = "TASK";
-		String ipAddress = "ipAddress";
-		String password = "password";
-		String userName = "userName";
-		
-		Signature foundSignature = new Signature();
-		foundSignature.setObjectId(objectId);
-		foundSignature.setObjectType(objectType);
+        mockMvc = MockMvcBuilders.standaloneSetup(unit)
+                .setHandlerExceptionResolvers(exceptionResolver).build();
+    }
 
-		Capture<Signature> signatureToSave = new Capture<>();
-		Capture<ApplicationSignatureEvent> capturedEvent = new Capture<>();
+    @Test
+    public void signObject_Task_authenticated() throws Exception
+    {
+        Long objectId = 500L;
+        String objectType = "TASK";
+        String ipAddress = "ipAddress";
+        String password = "password";
+        String userName = "userName";
 
-		mockHttpSession.setAttribute("acm_ip_address", ipAddress);
+        Signature foundSignature = new Signature();
+        foundSignature.setObjectId(objectId);
+        foundSignature.setObjectType(objectType);
 
-		expect(mockLdapAuthenticateManager.authenticate(userName, password)).andReturn(true);
-		expect(mockSignatureDao.save(capture(signatureToSave))).andReturn(foundSignature);
-		mockSignatureEventPublisher.publishSignatureEvent(capture(capturedEvent));
-		// MVC test classes must call getName() somehow
-		expect(mockAuthentication.getName()).andReturn(userName).atLeastOnce();
+        Capture<Signature> signatureToSave = new Capture<>();
+        Capture<ApplicationSignatureEvent> capturedEvent = new Capture<>();
 
-		replayAll();
+        mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
-		// To see details on the HTTP calls, change .andReturn() to .andDo(print())
-		MvcResult result = mockMvc
-				.perform(
-						post("/api/v1/plugin/signature/confirm/{objectType}/{objectId}", objectType, objectId)
-								.param("confirmPassword", password)
-								.contentType(
-										MediaType.APPLICATION_FORM_URLENCODED)
-								.session(mockHttpSession)
-								.principal(mockAuthentication)).andReturn();
+        expect(mockLdapAuthenticateManager.authenticate(userName, password)).andReturn(true);
+        expect(mockSignatureDao.save(capture(signatureToSave))).andReturn(foundSignature);
+        mockSignatureEventPublisher.publishSignatureEvent(capture(capturedEvent));
+        // MVC test classes must call getName() somehow
+        expect(mockAuthentication.getName()).andReturn(userName).atLeastOnce();
 
-		verifyAll();
+        replayAll();
 
-		assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
-		assertTrue(result.getResponse().getContentType()
-				.startsWith(MediaType.APPLICATION_JSON_VALUE));
+        // To see details on the HTTP calls, change .andReturn() to .andDo(print())
+        MvcResult result = mockMvc
+                .perform(
+                        post("/api/v1/plugin/signature/confirm/{objectType}/{objectId}", objectType, objectId)
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content("{\"confirmPassword\":\"password\"}")
+                                .session(mockHttpSession)
+                                .principal(mockAuthentication)).andReturn();
 
-		String returned = result.getResponse().getContentAsString();
+        verifyAll();
 
-		log.info("results: " + returned);
+        assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
+        assertTrue(result.getResponse().getContentType()
+                .startsWith(MediaType.APPLICATION_JSON_VALUE));
 
-		ObjectMapper objectMapper = new ObjectMapper();
+        String returned = result.getResponse().getContentAsString();
 
-		Signature signedSignature = objectMapper.readValue(returned, Signature.class);
+        log.info("results: " + returned);
 
-		assertNotNull(signedSignature);
-		assertEquals(signedSignature.getObjectId(), objectId);
+        ObjectMapper objectMapper = new ObjectMapper();
 
-		ApplicationSignatureEvent event = capturedEvent.getValue();
-		assertEquals(objectId, event.getParentObjectId());
-		assertEquals(objectType, event.getParentObjectType());
-		assertTrue(event.isSucceeded());
-	}
-	
-	@Test
-	public void signObject_Task_notauthenticated() throws Exception {
-		Long objectId = 500L;
-		String objectType = "TASK";
-		String ipAddress = "ipAddress";
-		String password = "password";
-		String userName = "userName";
-		
-		Signature foundSignature = new Signature();
-		foundSignature.setObjectId(objectId);
+        Signature signedSignature = objectMapper.readValue(returned, Signature.class);
 
-		Capture<ApplicationSignatureEvent> capturedEvent = new Capture<>();
+        assertNotNull(signedSignature);
+        assertEquals(signedSignature.getObjectId(), objectId);
 
-		mockHttpSession.setAttribute("acm_ip_address", ipAddress);
+        ApplicationSignatureEvent event = capturedEvent.getValue();
+        assertEquals(objectId, event.getParentObjectId());
+        assertEquals(objectType, event.getParentObjectType());
+        assertTrue(event.isSucceeded());
+    }
 
-		expect(mockLdapAuthenticateManager.authenticate(userName, password)).andReturn(false);
-		mockSignatureEventPublisher.publishSignatureEvent(capture(capturedEvent));
-		// MVC test classes must call getName() somehow
-		expect(mockAuthentication.getName()).andReturn(userName).atLeastOnce();
+    @Test
+    public void signObject_Task_notauthenticated() throws Exception
+    {
+        Long objectId = 500L;
+        String objectType = "TASK";
+        String ipAddress = "ipAddress";
+        String password = "password";
+        String userName = "userName";
 
-		replayAll();
+        Signature foundSignature = new Signature();
+        foundSignature.setObjectId(objectId);
 
-		// To see details on the HTTP calls, change .andReturn() to .andDo(print())
-		MvcResult result = mockMvc
-				.perform(
-						post("/api/v1/plugin/signature/confirm/{objectType}/{objectId}", objectType, objectId)
-								.param("confirmPassword", password)
-								.contentType(
-										MediaType.APPLICATION_FORM_URLENCODED)
-								.session(mockHttpSession)
-								.principal(mockAuthentication)).andReturn();
+        Capture<ApplicationSignatureEvent> capturedEvent = new Capture<>();
 
-		verifyAll();
+        mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
-		ApplicationSignatureEvent event = capturedEvent.getValue();
-		assertEquals(objectId, event.getParentObjectId());
-		assertEquals(objectType, event.getParentObjectType());
-		assertFalse(event.isSucceeded());
-	}
+        expect(mockLdapAuthenticateManager.authenticate(userName, password)).andReturn(false);
+        mockSignatureEventPublisher.publishSignatureEvent(capture(capturedEvent));
+        // MVC test classes must call getName() somehow
+        expect(mockAuthentication.getName()).andReturn(userName).atLeastOnce();
 
-	@Test
-	 public void signTask_exception() throws Exception
-	 {
-		Long objectId = 500L;
-		String objectType = "TASK";
-		String ipAddress = "ipAddress";
-		String password = "password";
-		String userName = "userName";
+        replayAll();
 
-		Signature foundSignature = new Signature();
-		foundSignature.setObjectId(objectId);
+        // To see details on the HTTP calls, change .andReturn() to .andDo(print())
+        MvcResult result = mockMvc
+                .perform(
+                        post("/api/v1/plugin/signature/confirm/{objectType}/{objectId}", objectType, objectId)
+                                .content("{\"confirmPassword\":\"password\"}")
+                                .contentType(
+                                        MediaType.APPLICATION_JSON_VALUE)
+                                .session(mockHttpSession)
+                                .principal(mockAuthentication)).andReturn();
 
-		Capture<Signature> signatureToSave = new Capture<>();
-		Capture<ApplicationSignatureEvent> capturedEvent = new Capture<>();
+        verifyAll();
 
-		mockHttpSession.setAttribute("acm_ip_address", ipAddress);
-		
-		expect(mockLdapAuthenticateManager.authenticate(userName, password)).andReturn(true);
-		expect(mockSignatureDao.save(capture(signatureToSave))).andThrow(new RuntimeException("testException"));
-		mockSignatureEventPublisher.publishSignatureEvent(capture(capturedEvent));
-		// MVC test classes must call getName() somehow
-		expect(mockAuthentication.getName()).andReturn(userName).atLeastOnce();
+        ApplicationSignatureEvent event = capturedEvent.getValue();
+        assertEquals(objectId, event.getParentObjectId());
+        assertEquals(objectType, event.getParentObjectType());
+        assertFalse(event.isSucceeded());
+    }
 
-		replayAll();
+    @Test
+    public void signTask_exception() throws Exception
+    {
+        Long objectId = 500L;
+        String objectType = "TASK";
+        String ipAddress = "ipAddress";
+        String password = "password";
+        String userName = "userName";
 
-		// To see details on the HTTP calls, change .andReturn() to .andDo(print())
-		MvcResult result = mockMvc
-				.perform(
-						post("/api/v1/plugin/signature/confirm/{objectType}/{objectId}", objectType, objectId)
-								.param("confirmPassword", password)
-								.contentType(
-										MediaType.APPLICATION_FORM_URLENCODED)
-								.session(mockHttpSession)
-								.principal(mockAuthentication)).andReturn();
+        Signature foundSignature = new Signature();
+        foundSignature.setObjectId(objectId);
 
-		verifyAll();
+        Capture<Signature> signatureToSave = new Capture<>();
+        Capture<ApplicationSignatureEvent> capturedEvent = new Capture<>();
 
-		ApplicationSignatureEvent event = capturedEvent.getValue();
-		assertEquals(objectId, event.getParentObjectId());
-		assertEquals(objectType, event.getParentObjectType());
-		assertFalse(event.isSucceeded());
+        mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
-	 }
+        expect(mockLdapAuthenticateManager.authenticate(userName, password)).andReturn(true);
+        expect(mockSignatureDao.save(capture(signatureToSave))).andThrow(new RuntimeException("testException"));
+        mockSignatureEventPublisher.publishSignatureEvent(capture(capturedEvent));
+        // MVC test classes must call getName() somehow
+        expect(mockAuthentication.getName()).andReturn(userName).atLeastOnce();
+
+        replayAll();
+
+        // To see details on the HTTP calls, change .andReturn() to .andDo(print())
+        MvcResult result = mockMvc
+                .perform(
+                        post("/api/v1/plugin/signature/confirm/{objectType}/{objectId}", objectType, objectId)
+                                .content("{\"confirmPassword\":\"password\"}")
+                                .contentType(
+                                        MediaType.APPLICATION_JSON_VALUE)
+                                .session(mockHttpSession)
+                                .principal(mockAuthentication)).andReturn();
+
+        verifyAll();
+
+        ApplicationSignatureEvent event = capturedEvent.getValue();
+        assertEquals(objectId, event.getParentObjectId());
+        assertEquals(objectType, event.getParentObjectType());
+        assertFalse(event.isSucceeded());
+
+    }
 
 }
