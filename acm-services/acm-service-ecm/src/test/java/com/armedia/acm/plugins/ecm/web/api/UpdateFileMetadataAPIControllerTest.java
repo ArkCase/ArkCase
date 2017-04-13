@@ -1,10 +1,7 @@
 package com.armedia.acm.plugins.ecm.web.api;
 
-import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,7 +27,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 
 import static junit.framework.TestCase.assertTrue;
 import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -43,12 +40,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(locations = {
         "classpath:/spring/spring-library-ecm-plugin-test.xml"
 })
-public class UpdateFileAPIControllerTest extends EasyMockSupport
+public class UpdateFileMetadataAPIControllerTest extends EasyMockSupport
 {
     private Logger LOG = LoggerFactory.getLogger(getClass());
 
     private MockMvc mockMvc;
-    private UpdateFileAPIController unit;
+    private UpdateFileMetadataAPIController unit;
     private EcmFileService mockEcmFileService;
     private Authentication mockAuthentication;
     private ApplicationEventPublisher mockApplicationEventPublisher;
@@ -59,7 +56,7 @@ public class UpdateFileAPIControllerTest extends EasyMockSupport
     @Before
     public void setUp() throws Exception
     {
-        unit = new UpdateFileAPIController();
+        unit = new UpdateFileMetadataAPIController();
 
         mockEcmFileService = createMock(EcmFileService.class);
         mockApplicationEventPublisher = createMock(ApplicationEventPublisher.class);
@@ -108,7 +105,6 @@ public class UpdateFileAPIControllerTest extends EasyMockSupport
                 .andReturn();
 
 
-
         verifyAll();
 
         String returned = result.getResponse().getContentAsString();
@@ -146,7 +142,8 @@ public class UpdateFileAPIControllerTest extends EasyMockSupport
 
         replayAll();
 
-        try{
+        try
+        {
             mockMvc.perform(
                     post("/api/latest/service/ecm/file/{fileId}", "100")
                             .content(new ObjectMapper().writeValueAsString(in))
@@ -155,8 +152,8 @@ public class UpdateFileAPIControllerTest extends EasyMockSupport
                             .principal(mockAuthentication))
                     .andExpect(status().isBadRequest())
                     .andExpect(content().contentType(MediaType.TEXT_PLAIN));
-        }
-        catch(Exception e){
+        } catch (Exception e)
+        {
             // do nothing, exception expected
         }
 
