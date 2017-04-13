@@ -41,10 +41,7 @@ public class SignatureAPIController
     ) throws AcmUserActionFailedException
     {
         String password = body.get("confirmPassword");
-        if (log.isInfoEnabled())
-        {
-            log.info("Electronically signing object['" + objectType + "][" + objectId + "]");
-        }
+        log.info("Electronically signing object [{}] [{}] ", objectType, objectId);
 
         try
         {
@@ -94,7 +91,7 @@ public class SignatureAPIController
     {
         String ipAddress = (String) httpSession.getAttribute("acm_ip_address");
         ApplicationSignatureEvent event = new ApplicationSignatureEvent(signed, String.format("%s.%s", "com.armedia.acm.app.signature.signed", signed.getObjectType().toLowerCase()), succeeded, ipAddress);
-        log.debug("Sign event type: " + event.getEventType());
+        log.debug("Sign event type: [{}]", event.getEventType());
         getSignatureEventPublisher().publishSignatureEvent(event);
     }
 
