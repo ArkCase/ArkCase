@@ -900,6 +900,19 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    public EcmFile updateFile(EcmFile ecmFile) throws AcmObjectNotFoundException {
+
+        EcmFile file = getEcmFileDao().find(ecmFile.getId());
+        if ( file == null )
+        {
+            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, ecmFile.getId(), "File  not found", null);
+        }
+
+        file = getEcmFileDao().save(ecmFile);
+        return file;
+    }
+
+    @Override
     public int getTotalPageCount(String parentObjectType, Long parentObjectId, List<String> totalPageCountFileTypes,
                                  List<String> totalPageCountMimeTypes, Authentication auth)
     {
