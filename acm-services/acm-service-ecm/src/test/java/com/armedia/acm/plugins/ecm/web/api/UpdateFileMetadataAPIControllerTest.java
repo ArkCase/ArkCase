@@ -97,7 +97,7 @@ public class UpdateFileMetadataAPIControllerTest extends EasyMockSupport
         replayAll();
 
         MvcResult result = mockMvc.perform(
-                post("/api/latest/service/ecm/file/{fileId}", "100")
+                post("/api/latest/service/ecm/file/metadata/{fileId}", "100")
                         .content(new ObjectMapper().writeValueAsString(in))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -145,7 +145,7 @@ public class UpdateFileMetadataAPIControllerTest extends EasyMockSupport
         try
         {
             mockMvc.perform(
-                    post("/api/latest/service/ecm/file/{fileId}", "100")
+                    post("/api/latest/service/ecm/file/metadata/{fileId}", "100")
                             .content(new ObjectMapper().writeValueAsString(in))
                             .contentType(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON)
