@@ -7,7 +7,6 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Repository;
 
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
@@ -31,6 +30,25 @@ public class AcmContainerDao extends AcmAbstractDao<AcmContainer>
         {
             AcmContainer found = query.getSingleResult();
             log.debug("Found existing container '{}' for object '{}' with id '{}'", found.getId(), objectType, objectId);
+            return found;
+        } catch (NoResultException e)
+        {
+            throw new AcmObjectNotFoundException(objectType, objectId, e.getMessage(), e);
+        }
+    }
+
+    public AcmContainer findFolderByObjectTypeIdAndRepositoryId(String objectType, Long objectId, String cmisRepositoryId) throws AcmObjectNotFoundException
+    {
+        TypedQuery<AcmContainer> query = getEm().createQuery(EcmFileConstants.FIND_CMIS_CONTAINER_QUERY, getPersistenceClass());
+
+        query.setParameter("objectId", objectId);
+        query.setParameter("objectType", objectType);
+        query.setParameter("cmisRepositoryId", cmisRepositoryId);
+
+        try
+        {
+            AcmContainer found = query.getSingleResult();
+            log.debug("Found existing container '{}' for object '{}' with id '{}' CMIS repo '{}'", found.getId(), objectType, objectId, cmisRepositoryId);
             return found;
         } catch (NoResultException e)
         {

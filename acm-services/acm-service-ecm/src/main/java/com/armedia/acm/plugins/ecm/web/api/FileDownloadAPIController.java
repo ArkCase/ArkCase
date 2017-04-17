@@ -98,8 +98,14 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
     {
 
         String mimeType = filePayload.getMimeType();
-        String fileName = filePayload.getFileName();
+        // OpenCMIS thinks this is an application/octet-stream since the file has no extension
+        // we will use what Tika detected in such cases
+        if (ecmFile != null && (mimeType == null || !mimeType.equals(ecmFile.getFileActiveVersionMimeType())))
+        {
+            mimeType = ecmFile.getFileActiveVersionMimeType();
+        }
 
+        String fileName = filePayload.getFileName();
         // endWith will throw a NullPointerException on a null argument.  But a file is not required to have an
         // extension... so the extension can be null.  So we have to guard against it.
         if (ecmFile != null && ecmFile.getFileActiveVersionNameExtension() != null
