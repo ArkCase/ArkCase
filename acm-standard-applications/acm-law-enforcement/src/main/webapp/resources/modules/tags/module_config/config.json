@@ -33,23 +33,8 @@
           "headerCellFilter": "translate"
         },
         {
-          "name": "description_parseable",
-          "displayName": "tags.comp.grid.columns.description",
-          "headerCellFilter": "translate"
-        },
-        {
-          "name": "name",
-          "displayName": "tags.comp.grid.columns.tagname",
-          "headerCellFilter": "translate"
-        },
-        {
-          "name": "tag_s",
-          "displayName": "tags.comp.grid.columns.tag",
-          "headerCellFilter": "translate"
-        },
-        {
           "name": "title_parseable",
-          "displayName": "tags.comp.grid.columns.tagtitle",
+          "displayName": "tags.comp.grid.columns.title",
           "headerCellFilter": "translate"
         },
         {
@@ -58,19 +43,8 @@
           "headerCellFilter": "translate"
         },
         {
-          "name": "title_parseable",
-          "sortField": "title_parseable_lcs",
-          "displayName": "tags.comp.grid.columns.title",
-          "headerCellFilter": "translate"
-        },
-        {
           "name": "parent_type_s",
           "displayName": "tags.comp.grid.columns.parent",
-          "headerCellFilter": "translate"
-        },
-        {
-          "name": "assignee_full_name_lcs",
-          "displayName": "tags.comp.grid.columns.assignee",
           "headerCellFilter": "translate"
         },
         {
@@ -90,6 +64,7 @@
       "start": 0,
       "filter": "\"Object Type\": ASSOCIATED_TAG",
       "filterName": "Object Type",
+      "reportFileName": "tags",
       "autoSuggestObjectType": "TAG",
       "isAutoSuggestActive": true
     }

@@ -12,6 +12,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
@@ -72,6 +74,29 @@ public class AcmContainer implements AcmEntity, Serializable, AcmObject
 
     @Column(name = "cm_outlook_folder_id", nullable = true)
     private String calendarFolderId;
+
+    @Column(name = "cm_cmis_repository_id", nullable = false)
+    private String cmisRepositoryId;
+
+    @PrePersist
+    protected void beforeInsert()
+    {
+        setDefaultCmisRepositoryId();
+    }
+
+    @PreUpdate
+    protected void beforeUpdate()
+    {
+        setDefaultCmisRepositoryId();
+    }
+
+    protected void setDefaultCmisRepositoryId()
+    {
+        if (getCmisRepositoryId() == null)
+        {
+            setCmisRepositoryId(EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
+        }
+    }
 
     @Override
     public Date getCreated()
@@ -199,6 +224,16 @@ public class AcmContainer implements AcmEntity, Serializable, AcmObject
         this.calendarFolderId = calendarFolderId;
     }
 
+    public String getCmisRepositoryId()
+    {
+        return cmisRepositoryId;
+    }
+
+    public void setCmisRepositoryId(String cmisRepositoryId)
+    {
+        this.cmisRepositoryId = cmisRepositoryId;
+    }
+
     @Override
     public String toString()
     {
@@ -214,6 +249,7 @@ public class AcmContainer implements AcmEntity, Serializable, AcmObject
                 ", folder=" + folder +
                 ", attachmentFolder=" + attachmentFolder +
                 ", calendarFolderId='" + calendarFolderId + '\'' +
+                ", cmisRepositoryId='" + cmisRepositoryId + '\'' +
                 '}';
     }
 }

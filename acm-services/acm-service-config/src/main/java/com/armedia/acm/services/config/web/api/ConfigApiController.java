@@ -30,7 +30,7 @@ public class ConfigApiController {
      *
      */
     @RequestMapping(method = RequestMethod.GET
-            ,produces = {MediaType.APPLICATION_JSON_VALUE}
+            ,produces = {MediaType.APPLICATION_JSON_UTF8_VALUE}
     )
     @ResponseBody
     public List<Map<String, String>> getInfo (
@@ -65,7 +65,7 @@ public class ConfigApiController {
 
     @RequestMapping(value = "/{name}"
             ,method = RequestMethod.GET
-            ,produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE}
+            ,produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.TEXT_PLAIN_VALUE}
     )
     @ResponseBody
     public Object getConfig (

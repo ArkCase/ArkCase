@@ -23,6 +23,7 @@ angular.module('services').factory('ObjectService', ['$state', '$window', '$log'
                 , COSTSHEET: "COSTSHEET"
                 , DOCUMENT: "DOCUMENT"
                 , FILE: "FILE"
+                , DOC_REPO: "DOC_REPO"
                 , PERSON: "PERSON"
                 , ORGANIZATION: "ORGANIZATION"
 

@@ -126,27 +126,32 @@
     </bean>
 
     <bean id="caseFileNextPossibleQueuesBusinessRule"
-          class="com.armedia.acm.plugins.casefile.service.CaseFileNextPossibleQueuesBusinessRule">
+          class="com.armedia.acm.plugins.casefile.service.CaseFileNextPossibleQueuesBusinessRule"
+          parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-next-possible-queues-rules.xlsx"/>
     </bean>
     
     <bean id="leaveCurrentQueueBusinessRule"
-          class="com.armedia.acm.plugins.casefile.service.LeaveCurrentQueueBusinessRule">
+          class="com.armedia.acm.plugins.casefile.service.LeaveCurrentQueueBusinessRule"
+          parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-leave-current-queue-rules.xlsx"/>
     </bean>
     
     <bean id="enterQueueBusinessRule"
-          class="com.armedia.acm.plugins.casefile.service.EnterQueueBusinessRule">
+          class="com.armedia.acm.plugins.casefile.service.EnterQueueBusinessRule"
+          parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-enter-queue-rules.xlsx"/>
     </bean>
     
     <bean id="onLeaveQueueBusinessRule"
-          class="com.armedia.acm.plugins.casefile.service.OnLeaveQueueBusinessRule">
+          class="com.armedia.acm.plugins.casefile.service.OnLeaveQueueBusinessRule"
+          parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-on-leave-queue-rules.xlsx"/>
     </bean>
     
     <bean id="onEnterQueueBusinessRule"
-          class="com.armedia.acm.plugins.casefile.service.OnEnterQueueBusinessRule">
+          class="com.armedia.acm.plugins.casefile.service.OnEnterQueueBusinessRule"
+          parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-on-enter-queue-rules.xlsx"/>
     </bean>
     

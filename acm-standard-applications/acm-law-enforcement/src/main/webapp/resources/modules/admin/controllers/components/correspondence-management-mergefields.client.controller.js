@@ -68,6 +68,8 @@ angular.module('admin').controller('Admin.CMMergeFieldsController', ['$scope', '
                                 multiSelect: false,
                                 noUnselect: false,
                                 columnDefs: $scope.config.columnDefs,
+                                paginationPageSizes: $scope.config.paginationPageSizes,
+                                paginationPageSize: $scope.config.paginationPageSize,
                                 data: mergeFieldVersionsData.data,
                                 onRegisterApi: function (gridApi) {
                                     $scope.modalGridApi = gridApi;
