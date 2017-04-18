@@ -24,7 +24,7 @@ public class PropertyFileManagerIT
     Properties properties = new Properties();
     PropertyFileManager propertyFileManager = new PropertyFileManager();
     String tmpFolder = System.getProperty("java.io.tmpdir");
-    String fullPath = tmpFolder + FILE_NAME;
+    String fullPath = tmpFolder + File.separator + FILE_NAME;
 
     @Before
     public void setUp() throws Exception
