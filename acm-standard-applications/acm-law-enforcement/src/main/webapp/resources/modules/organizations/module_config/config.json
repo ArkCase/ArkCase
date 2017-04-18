@@ -80,6 +80,9 @@
         "icon": "fa fa-exclamation-triangle",
         "components": [
           "details",
+          "phones",
+          "emails",
+          "urls",
           "history"
         ]
       },
@@ -92,9 +95,33 @@
         ]
       },
       {
+        "type": "p/ORGANIZATION/pho",
+        "label": "Phones",
+        "icon": "fa fa-phone",
+        "components": [
+          "phones"
+        ]
+      },
+      {
+        "type": "p/ORGANIZATION/ema",
+        "label": "Emails",
+        "icon": "fa fa-address-book-o",
+        "components": [
+          "emails"
+        ]
+      },
+      {
+        "type": "p/ORGANIZATION/url",
+        "label": "URLs",
+        "icon": "fa fa-info-circle",
+        "components": [
+          "urls"
+        ]
+      },
+      {
         "type": "p/ORGANIZATION/his",
         "label": "History",
-        "icon": "fa fa-bell-o",
+        "icon": "fa fa-link",
         "components": [
           "history"
         ]
@@ -165,6 +192,150 @@
           "displayName": "organizations.comp.history.table.columns.userId",
           "headerCellFilter": "translate",
           "lookup": "userFullNames"
+        }
+      ]
+    },
+    {
+      "id": "phones",
+      "title": "Phone Numbers",
+      "icon": "fa fa-phone",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
+      "columnDefs": [
+        {
+          "name": "subType",
+          "displayName": "organizations.comp.phones.table.columns.type",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "value",
+          "displayName": "organizations.comp.phones.table.columns.value",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "description",
+          "displayName": "organizations.comp.phones.table.columns.description",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "author",
+          "field": "creator",
+          "displayName": "organizations.comp.phones.table.columns.creator",
+          "headerCellFilter": "translate",
+          "lookup": "userFullNames",
+          "width": 150
+        },
+        {
+          "name": "created",
+          "displayName": "organizations.comp.phones.table.columns.created",
+          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "headerCellFilter": "translate",
+          "enableCellEdit": false,
+          "width": 150
+        }
+      ]
+    },
+    {
+      "id": "emails",
+      "title": "Email Addresses",
+      "icon": "fa fa-address-book-o",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
+      "columnDefs": [
+        {
+          "name": "subType",
+          "displayName": "organizations.comp.emails.table.columns.type",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "value",
+          "displayName": "organizations.comp.emails.table.columns.value",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "description",
+          "displayName": "organizations.comp.emails.table.columns.description",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "author",
+          "field": "creator",
+          "displayName": "organizations.comp.emails.table.columns.creator",
+          "headerCellFilter": "translate",
+          "lookup": "userFullNames",
+          "width": 150
+        },
+        {
+          "name": "created",
+          "displayName": "organizations.comp.emails.table.columns.created",
+          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "headerCellFilter": "translate",
+          "enableCellEdit": false,
+          "width": 150
+        }
+      ]
+    },
+    {
+      "id": "urls",
+      "title": "URLs",
+      "icon": "fa fa-link",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
+      "columnDefs": [
+        {
+          "name": "subType",
+          "displayName": "organizations.comp.urls.table.columns.type",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "value",
+          "displayName": "organizations.comp.urls.table.columns.value",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "description",
+          "displayName": "organizations.comp.urls.table.columns.description",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "author",
+          "field": "creator",
+          "displayName": "organizations.comp.urls.table.columns.creator",
+          "headerCellFilter": "translate",
+          "lookup": "userFullNames",
+          "width": 150
+        },
+        {
+          "name": "created",
+          "displayName": "organizations.comp.urls.table.columns.created",
+          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "headerCellFilter": "translate",
+          "enableCellEdit": false,
+          "width": 150
         }
       ]
     }

@@ -1,72 +1,60 @@
 <div ng-controller="People.InfoController">
     <div class="clearfix">
         <div class="row">
-            <div class="col-xs-6">
-                <h4><a href="#" editable-text="objectInfo.personTitle" onaftersave="savePerson()"
-                       permission="editPerson" permission-properties="objectInfo" permission-action="disable">
-                    {{objectInfo.personTitle || "Unknown" }}</a> ({{objectInfo.status}})</h4></div>
-            <div class="col-xs-6  text-right">
-                <h4>{{objectInfo.personNumber}}</h4>
+            <div class="col-xs-12 col-md-3">
+                <img ng-src='api/latest/plugin/ecm/download?ecmFileId={{objectInfo.defaultPictureId}}'>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">
-                    <a href="#" editable-select="objectInfo.personType" onaftersave="savePerson()"
-                       permission="editPerson" permission-properties="objectInfo" permission-action="disable"
-                       e-ng-options="c.value as c.text for c in personTypes">{{objectInfo.personType ||
-                        'Unknown'}}</a>
+            <div class="col-xs-12 col-md-8">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <h4><a href="#" editable-text="objectInfo.givenName" onaftersave="savePerson()"
+                               permission="editCase" permission-properties="objectInfo" permission-action="disable">
+                            {{objectInfo.givenName || "Unknown"}}</a>
+                            ,<a href="#" editable-text="objectInfo.familyName" onaftersave="savePerson()"
+                                permission="editCase" permission-properties="objectInfo" permission-action="disable">
+                                {{objectInfo.familyName || "Unknown"}}</a></h4></div>
+                    <div class="col-xs-6  text-right">
+                        <h4>{{objectInfo.id}}</h4>
+                    </div>
+
                 </div>
-                <small class="text-muted"><span translate>people.comp.info.type.label</span></small>
-            </div>
-            <!--<b>Priority: </b><a href="#" editable-select="objectInfo.priority" e-ng-options="p as p for p in priorities">{{ objectInfo.priority  || 'Unknown'}}</a>-->
-            <!--<select ng-model="myselect" ng-options="o as o for o in myoptions"></select>-->
-            <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">{{objectInfo.created | date: ('common.defaultDateUIFormat' | translate)}}
+                <div class="row">
+                    <div class="col-xs-12 col-md-4">
+                        <div class="h4 font-bold">
+                            {{objectInfo.defaultPhone.value}}({{objectInfo.defaultPhone.subType}})
+                        </div>
+                        <small class="text-muted"><span translate>people.comp.info.phone.label</span></small>
+                    </div>
+                    <div class="col-xs-12 col-md-4">
+                        <div class="h4 font-bold">
+                            {{objectInfo.organizations[0].name}}
+                        </div>
+                        <small class="text-muted"><span translate>people.comp.info.organization.label</span></small>
+                    </div>
+                    <div class="col-xs-12 col-md-4">
+                        <div class="h4 font-bold">
+                            {{objectInfo.organizations[0].id}}
+                        </div>
+                        <small class="text-muted"><span translate>people.comp.info.organizationId.label</span></small>
+                    </div>
                 </div>
-                <small class="text-muted"><span translate>people.comp.info.created.label</span></small>
-            </div>
-            <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">
-                    <a href="#" editable-select="objectInfo.priority" onaftersave="savePerson()"
-                       permission="editPerson" permission-properties="objectInfo" permission-action="disable"
-                       e-ng-options="p.value as p.text for p in priorities">{{ objectInfo.priority ||
-                        'Unknown'}}</a>
+                <div class="row">
+                    <div class="col-xs-12 col-md-4">
+                        <div class="h4 font-bold">
+                            {{objectInfo.defaultEmail.value}}({{objectInfo.defaultEmail.subType}})
+                        </div>
+                        <small class="text-muted"><span translate>people.comp.info.email.label</span></small>
+                    </div>
+                    <div class="col-xs-12 col-md-4">
+                        <div class="h4 font-bold">
+                            {{objectInfo.status}}
+                        </div>
+                        <small class="text-muted"><span translate>people.comp.info.status.label</span></small>
+                    </div>
+
                 </div>
-                <small class="text-muted"><span translate>people.comp.info.priority.label</span></small>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">
-                    <a href="javascript:;" class="editable-click no-outline" ng-click="openAssigneePickerModal()"
-                       permission="editPerson" permission-properties="objectInfo" permission-action="disable">
-                        <user-full-name userId="assignee" fallback="None"/>
-                    </a>
-                </div>
-                <small class="text-muted"><span translate>people.comp.info.assignee.label</span></small>
-            </div>
-            <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">
-                    <a href="javascript:;" class="editable-click no-outline" ng-click="openGroupPickerModal()"
-                       permission="editPerson" permission-properties="objectInfo" permission-action="disable">
-                        {{owningGroup || 'None'}}</a>
-                </div>
-                <small class="text-muted"><span translate>people.comp.info.owningGroup.label</span></small>
-            </div>
-            <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">
-                    <a href="#" editable-bsdate="dateInfo.dueDate"
-                       e-datepicker-popup="{{defaultDatePickerFormat}}"
-                       e-ng-click="onPickerClick()" e-is-open="picker.opened"
-                       e-init-date="dateInfo.dueDate"
-                       e-on-open-focus="false"
-                       onaftersave="updateDueDate(dateInfo.dueDate)"
-                       permission="editPerson" permission-properties="objectInfo" permission-action="disable">
-                        {{ (dateInfo.dueDate | date: ('common.defaultDateUIFormat' | translate)) || 'Unknown' }}</a>
-                </div>
-                <small class="text-muted"><span translate>people.comp.info.dueDate.label</span></small>
-            </div>
+
         </div>
     </div>
 </div>
